@@ -1,14 +1,14 @@
 # Remaining fix plan
 
-Current through product/test `e13b596e` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `26ef84b7` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 167 | 34 | 62 | 263 |
-| Other historical claims | 3 | 4 | 52 | 59 |
-| All claims | 170 | 38 | 114 | 322 |
+| Tasks with merged PR evidence | 167 | 35 | 61 | 263 |
+| Other historical claims | 3 | 5 | 51 | 59 |
+| All claims | 170 | 40 | 112 | 322 |
 
 **152 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
@@ -16,7 +16,7 @@ Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repe
 
 ## Next step
 
-Continue **R03-errors**,PR29/61. Core control repairs ate13b596e pass24 distinct browser cases,49 UI cases and42 budgets with final quality gates. Then return to remaining auxiliary UI/consumer states in R03. Counts remain170 verified/38 partial/114 pending;149 closed/24 open/128 unreviewed PRs. [Review](evidence/step-reviews.json#R03-controls).
+Continue **R03-correlation**,PR29 and exact qualified keys in progress.json. Error/CSP repairs at26ef84b7 pass their focused checks,42 budgets and real proxy/browser verification. Current170 verified/40 partial/112 pending;149 closed/26 open/126 unreviewed saved PRs. Complete originating request IDs through queued work and remaining151 legacy-code metadata; retain pending native CSP CSRF decision. Then return to auxiliary UI/consumer states. [Review](evidence/step-reviews.json#R03-errors).
 
 Earlier checkpoints, retained for evidence reuse:
 
@@ -134,7 +134,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
-For all38 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
+For all40 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
 
 ## Remaining merged-PR review
 

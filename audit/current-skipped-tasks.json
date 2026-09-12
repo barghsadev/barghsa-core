@@ -3,7 +3,7 @@
   "scope": "Historical skips reconciled with recorded acceptance; not a dispatch queue",
   "source_sha256": {
     "audit/skipped-tasks.json": "e4394d905111e9f5d319185eb47aeb26bd75927b6fc2ac99c449b10cd42e4947",
-    "audit/acceptance-closure.json": "ac910d15c70a754c8efc3866c5b98b7ca0fb87415b3974173f78e028286b42cd"
+    "audit/acceptance-closure.json": "02230f2c713db2d69e40554af7e797ea6ce420145d4d66820dfbb8beba58824e"
   },
   "historically_skipped": 58,
   "acceptance_verified": 3,
@@ -269,9 +269,11 @@
       "historical_skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
       "historical_assessment": "existing_implementation_revalidate",
       "direct_merged_prs": [],
-      "acceptance_status": "acceptance_pending",
-      "reviewed_sha": null,
-      "limitations": [],
+      "acceptance_status": "partial",
+      "reviewed_sha": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+      "limitations": [
+        "The59 shared root definitions have title/httpStatus/retryable metadata and localized messages.151 existing legacy public domain identifiers are preserved in an API allowlist; complete their shared metadata/catalogue disposition before claiming T-06.01.04 fully verified."
+      ],
       "next_action": "Review current implementation against requirements; build only unmet remainder"
     },
     {
@@ -362,9 +364,9 @@
       "historical_assessment": "existing_implementation_revalidate",
       "direct_merged_prs": [],
       "acceptance_status": "partial",
-      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
       "limitations": [
-        "Other shared controls still contain physical select/dropdown placements and incomplete focus styling. Complete their RTL/theme/state checks in R03-controls."
+        "Remaining auxiliary shared components and implemented consumer RTL/theme acceptance continues after R03 errors. Toast, command, avatar and progress still contain physical placement classes; do not claim full library acceptance."
       ],
       "next_action": "Review current implementation against requirements; build only unmet remainder"
     },
@@ -375,9 +377,9 @@
       "historical_assessment": "acceptance_gap",
       "direct_merged_prs": [],
       "acceptance_status": "partial",
-      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
       "limitations": [
-        "Buttons, alerts and terms dialogs now pass targeted contrast/focus/motion checks. Remaining select/input/checkbox/radio/tab/switch and consumer keyboard/focus/state acceptance is R03-controls; this is not a full WCAG certification."
+        "Core form/select/menu/tab/switch/slider/scroll/badge focus, contrast, keyboard and orientation verified. Other auxiliary shared controls, complete consumer states and full WCAG acceptance remain R03; no whole-library certification."
       ],
       "next_action": "Review current implementation against requirements; build only unmet remainder"
     },
@@ -414,9 +416,9 @@
       "historical_assessment": "partial",
       "direct_merged_prs": [],
       "acceptance_status": "partial",
-      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
       "limitations": [
-        "Empty/error/retry/support and hidden loading semantics are implemented and covered by shared tests. Exact skeleton shape/dimension and remaining consumer loading-state acceptance still needs R03-controls review."
+        "Existing shared empty/error/retry/support behavior remains verified. Exact skeleton dimensions/shimmer and all remaining consumer loading/error-state acceptance still require R03 review."
       ],
       "next_action": "Review current implementation against requirements; build only unmet remainder"
     },

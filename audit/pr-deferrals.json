@@ -1937,7 +1937,17 @@
     "historical_deferrals": [
       "- [ ] Nonce generation in app — deferred; not needed in Report-Only mode"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Nonce deferral satisfied; authenticated native reporting remains pending CSRF disposition.",
+    "reviewed_source_revision": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+    "review_record": "audit/evidence/step-reviews.json#R03-errors",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied by later implementation",
+        "evidence": "audit/evidence/step-reviews.json#R03-errors",
+        "detail": "26ef84b7 generates fresh192-bit HTML nonces, annotates trusted scripts/modulepreloads and forwards matching report-only CSP through NGINX.13 server cases,2 native browser cases and real proxy checks pass."
+      }
+    ]
   },
   {
     "pr": 56,

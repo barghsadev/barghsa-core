@@ -4,13 +4,15 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **e13b596e**. **170 verified /38 partial /114 pending** of322 claims. Saved PRs: **149 closed /24 open /128 unreviewed**,301 total.58 skips:3 verified/4 partial/51 pending.2919 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **26ef84b7**. **170 verified /40 partial /112 pending** of322 claims. Saved PRs: **149 closed /26 open /126 unreviewed**,301 total.58 skips:3 verified/5 partial/50 pending.2966 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
 
-R03 core controls complete ate13b596e: keyboard focus/Enter handling, stable contrast, RTL placement, scalar/range sliders and actual orientation layouts repaired.24 distinct current browser cases and49 UI cases support the work; latest13 orientation cases overlap that total. Final builds/types/lint/format and42 budgets pass. Visual checks pass. [Review](evidence/step-reviews.json#R03-controls). Prior public/terms/branding repairs retained. PR156 and shared tasks remain partial for exact remaining consumer/auxiliary acceptance.
+R03 error/CSP repairs are reviewed at26ef84b7: private application messages and unregistered codes suppressed,59 shared codes have metadata, six missing FA/EN messages supplied, fresh CSP nonces match HTML/proxy headers, and native reports are parsed/validated/sanitized.186 distinct error/compatibility cases across recorded runs plus9 CSP HTTP,50 i18n,13 server and2 real Chromium cases support the work. Final types/lint/format and42 budgets pass; real proxy checks pass. [Review](evidence/step-reviews.json#R03-errors). Four immediate-base bindings refreshed;38 older retained. Prior theme/core-control/consent evidence remains valid.
 
 ## Next action
 
-Continue **R03-errors**, exact PR29/61 and qualified membership in progress.json. Arbitrary application4xx messages still escape the filter. Review safe code/message mapping, structured online-limit errors, downstream correlation and native CSP reports. Preserve earlier parser/prelogin/worker evidence and pending signed-webhook wording.
+Continue **R03-correlation**, exact PR29 and two qualified task keys in progress.json. Current API notification/auth outboxes do not consistently persist the originating request ID through worker dispatch/logs. Preserve delivery, transactional and retry semantics. Complete metadata/catalogue disposition for151 preserved legacy public error identifiers before closing T-06.01.04.
+
+CSP decision asked once September13: native reports carry same-origin session cookies but cannot add X-CSRF-Token. Signed-in collection currently returns403. Safe parsing/nonces are committed; no CSRF exception implemented. Do not reask or silently waive the requirement. PR61 remains open for this and external rollout evidence.
 
 Then return to R03 auxiliary toast/command/avatar/progress and remaining consumer/timezone/skeleton states before R04/R05/V01/R06/V02/B01. T-06.03.05 unbuilt editor/per-user controls remain B01. Full regression staysV02. The plan is unfinished.
 

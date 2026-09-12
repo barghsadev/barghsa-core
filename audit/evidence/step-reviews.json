@@ -17769,6 +17769,183 @@
           "evidence": "audit/evidence/step-reviews.json#R03-controls"
         }
       ]
+    },
+    {
+      "id": "R03-errors",
+      "date": "2026-09-13",
+      "source_revision": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+      "base_revision": "639f1f4115e6da86a9e1e5bf33fc1204362b5b92",
+      "product_commits": [
+        "e73eecd7",
+        "5a4abf6a",
+        "26ef84b7"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.05.01",
+        "01-platform-infrastructure.md#T-06.01.04",
+        "01-platform-infrastructure.md#T-04.04.02",
+        "02-auth-users-admin.md#T-02.02.03"
+      ],
+      "summary": "Application errors now expose only registered codes and localized messages. Shared catalogue metadata and six missing bilingual messages are repaired. CSP now uses app-generated nonces, bounded native report parsing and safe diagnostics. Remaining correlation/catalogue/CSRF acceptance stays explicit.",
+      "review": [
+        "Read exact task blocks and both saved PR bodies. PR61 nonce deferral was real; current repository has only the NGINX pilot path, not a remaining Caddyfile.",
+        "Filter baseline reproduced private4xx messages and arbitrary error identifiers leaking to responses/logs. Codes now come from59 shared definitions or151 fixed legacy domain identifiers, including verification, gift codes and contract templates. Structured online limits, step-up prompts, Retry-After, request privacy and correlation binding remain.",
+        "The initial184-case compatibility run passed181; three gift authority tests waited for a later SQL lock than the current session-validation lock. Diagnostic identified the actual earlier lock. Tests now explicitly verify role withdrawal during session validation; all34 gift cases pass. No product authority changed.",
+        "Added title/retryable metadata to59 shared codes. Resolved six missing English/Persian keys including CSRF. Exhaustive filter checks run all59 definitions in both languages. Rate-limit errors retain their own localized message unless validated retry timing supplies the countdown.",
+        "Native reports previously skipped the JSON parser, silently discarded bodies and accepted malformed input. Report media type now has16KiB/uncompressed parsing, runtime validation and sanitized origin/directive/position diagnostics. Raw URLs, credentials, script samples and nonce-bearing original policies are not logged.",
+        "Fresh192-bit app nonces annotate trusted built scripts/modulepreloads and match the report-only header. HTML is private/no-store. NGINX forwards the upstream policy exactly and ignores client nonce headers. Static asset caching remains verified.",
+        "Two actual Chromium cases confirm nonce-bearing modules load and inline event-handler violations are reported. Native reports include same-origin session cookies and no CSRF header. Existing guard rejects authenticated reports; no exception or requirements waiver is claimed.",
+        "Baseline/format/type failures and diagnostic logs are retained. Final API/web types, scoped lint/format and proxy checks pass. Shared catalogue budgets remain42/42. No push, deployment, merge or production execution."
+      ],
+      "verification": {
+        "api": "186 distinct filter/HTTP/compatibility cases across final recorded runs: original184 population plus2 exhaustive catalogue cases. Final30 filter cases supersede28 earlier ones; final34 gift cases supersede31 passing/3 failing. CSP adds9 HTTP cases; reused11 parser/route cases overlap the184 and are not added again. Latest9 CSP cases pass after directive allowlist refinement.",
+        "i18n": "50 cases pass.",
+        "web": "13 static-server cases and2 real Chromium CSP cases pass. Proxy container checks validate exact upstream CSP forwarding plus retained TLS/routing/limits/stream behavior.",
+        "quality": "API/shared/web types, scoped lint/format, production web build and42 unchanged budgets pass. Web artifacts changed only for catalogue messages/metadata; server/CSP work adds no frontend bundle code. Full regression remainsV02."
+      },
+      "remaining": [
+        "Queued notification and auth delivery work does not consistently persist/propagate the originating request correlation ID. Continue R03-correlation across API producers, worker dispatch and logs; preserve transactional and retry semantics.",
+        "The59 shared root definitions have title/httpStatus/retryable metadata and localized messages.151 existing legacy public domain identifiers are preserved in an API allowlist; complete their shared metadata/catalogue disposition before claiming T-06.01.04 fully verified.",
+        "Native same-origin CSP reports carry session cookies without X-CSRF-Token. Authenticated requests currently return403. A narrow telemetry exception was asked once September13 and remains pending. No token exemption implemented.",
+        "Production CSP enforcement requires observed violation resolution and deployment evidence; report-only mode remains. UI auxiliary controls/consumer/timezone/skeleton acceptance follows this error/correlation workflow."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/gift-code-http.integration.test.ts",
+          "sha256": "a310dbadfaca6ff7b9cdcadf49d4f99d67d8c651d5c1b5d03739a30551f4ae76"
+        },
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "f81f7f7d69220c5e8bcf2a6f4e25d91ea4535f1a9f3aa2c1ddd4bc0005c4cb8f"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "f7cc498fd7c57f800b8bb87056f49e3e8ce6f4162b20e6d34dd56bfa35fccb22"
+        },
+        {
+          "path": "apps/api/src/common/public-domain-error-codes.ts",
+          "sha256": "fe7ecc2dc41948a65b88f6b1cde86b9c7c3da28f90d4507a5d41fef0b1e034c0"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
+          "sha256": "aa66d8c949bb949cf38c8122ba9e011c2a05bc44d1bfcf905e229c864ee541fa"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report.controller.ts",
+          "sha256": "1e941552eeb2e5d323bffde93fd4622b6d704cb52dcf4e91cb8fd5059e41b79b"
+        },
+        {
+          "path": "apps/api/test/http-exception-filter.spec.ts",
+          "sha256": "571471a9bc2ea2f66609ac70aa290c8cd9c7a46e7a5d96a005743ee570bba987"
+        },
+        {
+          "path": "apps/web/e2e/csp-reports.spec.ts",
+          "sha256": "e7d0a90fa8a79dff3cb5824290a3d698da461e58a79d09552deb6c89f194a508"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
+        },
+        {
+          "path": "apps/web/test/server.spec.ts",
+          "sha256": "d90aa39b15e1653eaee6613fd1bde020344623e2e53d40f71f916c86f7af55f1"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "76ee4ab925fddae4824f857f1b500483f6dba536210d1513af4bdef658355157"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "9819141838be566fa1ab0eaaa39745993c53f22e7373a83a69f1f20385a97ba1"
+        },
+        {
+          "path": "packages/shared/src/errors/error-codes.ts",
+          "sha256": "eb3939ab2803138aa18a77c020aaa083e7bbea878bdec600c40174adbb25fdd2"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "beb268d547e59dfe5f9d557991c992809eae97dec947a7f6dd0299a6756aa22f"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "37431a4bb49b6674a35c29766a4c9d8192b16ce648ed6570aba4637ef3785a24"
+        }
+      ],
+      "logs": [
+        "/tmp/r03-csp-api-types-final.log",
+        "/tmp/r03-csp-api-types.log",
+        "/tmp/r03-csp-browser-format-final.log",
+        "/tmp/r03-csp-browser-format.log",
+        "/tmp/r03-csp-browser.log",
+        "/tmp/r03-csp-format-check.log",
+        "/tmp/r03-csp-format.log",
+        "/tmp/r03-csp-http-baseline.log",
+        "/tmp/r03-csp-http-final.log",
+        "/tmp/r03-csp-http.log",
+        "/tmp/r03-csp-lint.log",
+        "/tmp/r03-csp-proxy-format.log",
+        "/tmp/r03-csp-proxy.log",
+        "/tmp/r03-csp-server-baseline.log",
+        "/tmp/r03-csp-server.log",
+        "/tmp/r03-csp-tests-format-final.log",
+        "/tmp/r03-csp-tests-format.log",
+        "/tmp/r03-csp-types-format.log",
+        "/tmp/r03-csp-web-types.log",
+        "/tmp/r03-errors-catalogue-api-final.log",
+        "/tmp/r03-errors-catalogue-api-pass.log",
+        "/tmp/r03-errors-catalogue-api-types-final.log",
+        "/tmp/r03-errors-catalogue-api-types.log",
+        "/tmp/r03-errors-catalogue-api.log",
+        "/tmp/r03-errors-catalogue-budgets.log",
+        "/tmp/r03-errors-catalogue-format-check.log",
+        "/tmp/r03-errors-catalogue-format-final.log",
+        "/tmp/r03-errors-catalogue-format.log",
+        "/tmp/r03-errors-catalogue-i18n.log",
+        "/tmp/r03-errors-catalogue-lint.log",
+        "/tmp/r03-errors-catalogue-shared-types-final.log",
+        "/tmp/r03-errors-catalogue-shared-types.log",
+        "/tmp/r03-errors-catalogue-web-build.log",
+        "/tmp/r03-errors-catalogue-web-types.log",
+        "/tmp/r03-errors-filter-api.log",
+        "/tmp/r03-errors-filter-baseline.log",
+        "/tmp/r03-errors-filter-compatibility.log",
+        "/tmp/r03-errors-filter-final-format.log",
+        "/tmp/r03-errors-filter-format-check.log",
+        "/tmp/r03-errors-filter-format-final.log",
+        "/tmp/r03-errors-filter-format.log",
+        "/tmp/r03-errors-filter-lint.log",
+        "/tmp/r03-errors-filter-types.log",
+        "/tmp/r03-errors-gift-final.log",
+        "/tmp/r03-errors-gift-isolated.log",
+        "/tmp/r03-errors-gift-lint.log",
+        "/tmp/r03-errors-gift-lock-diagnostic.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 29,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.05.01"
+          ],
+          "reason": "Queued notification and auth delivery work does not consistently persist/propagate the originating request correlation ID. Continue R03-correlation across API producers, worker dispatch and logs; preserve transactional and retry semantics.",
+          "source_revision": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+          "evidence": "audit/evidence/step-reviews.json#R03-errors"
+        },
+        {
+          "pr": 61,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.04.02"
+          ],
+          "reason": "Historical app nonce deferral repaired and verified. Authenticated native report collection awaits the separate CSRF decision; deployment/enforcement evidence remains external.",
+          "source_revision": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+          "evidence": "audit/evidence/step-reviews.json#R03-errors"
+        }
+      ],
+      "references": [
+        "https://www.w3.org/TR/CSP/#report-violation",
+        "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/report-uri"
+      ]
     }
   ]
 }

@@ -606,7 +606,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "reviewed_sha": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 129,
       "requirement": "- **T-01.03.01:** Configure Vite SPA build pipeline in `apps/web`\n  - **Notes:** Use the Vite build command with TanStack Router and client-side React rendering, as approved in ADR 004. Keep route-level CSS/JS splitting and avoid inlining all dynamic imports. The production server serves the HTML shell and static assets; authorization, pricing and state transitions stay in backend modules. TanStack Start and server-side React rendering are not required.\n  - **Dependencies:** S-01.02, packages/i18n, packages/shared, packages/ui\n  - **Complexity:** L",
@@ -626,7 +626,7 @@
         },
         {
           "path": "apps/web/server.js",
-          "sha256": "dcfcda14e2f86914a8863e3bfb5817cdcc94610efbd80e3718db9498f5076c0c"
+          "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
         },
         {
           "path": "docs/adr/004-web-spa.md",
@@ -655,7 +655,8 @@
       },
       "evidence_reuse": [
         "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
-      ]
+      ],
+      "source_refresh_review": "audit/evidence/step-reviews.json#R03-errors"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.04.02",
@@ -2351,7 +2352,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "reviewed_sha": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 150,
       "requirement": "- **T-01.03.05:** Configure hashed filenames and CDN-ready public asset output\n  - **Notes:** Vite config sets `build.assetsDir: 'assets'` with content-hash filenames. Set `build.cssCodeSplit: true`. Output manifest for CDN cache invalidation. Ensure public assets set `Cache-Control: public, immutable, max-age=31536000`. Authenticated API responses set `private, no-cache`.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** S\n  - **UI/UX:** N/A",
@@ -2363,11 +2364,11 @@
         },
         {
           "path": "apps/web/server.js",
-          "sha256": "dcfcda14e2f86914a8863e3bfb5817cdcc94610efbd80e3718db9498f5076c0c"
+          "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
         },
         {
           "path": "apps/web/test/server.spec.ts",
-          "sha256": "44066f741c773c3426927cfc3d4765f8596d31e12b891709adf6015ddd2fd0c7"
+          "sha256": "d90aa39b15e1653eaee6613fd1bde020344623e2e53d40f71f916c86f7af55f1"
         },
         {
           "path": "apps/api/src/common/cache-control.interceptor.ts",
@@ -2465,7 +2466,8 @@
       ],
       "evidence_reuse": [
         "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
-      ]
+      ],
+      "source_refresh_review": "audit/evidence/step-reviews.json#R03-errors"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.04.03",
@@ -2597,39 +2599,79 @@
     {
       "task_key": "01-platform-infrastructure.md#T-01.05.01",
       "status": "partial",
-      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "reviewed_sha": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 217,
       "requirement": "- **T-01.05.01:** Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware`\n  - **Notes:** Filter catches `HttpException`, `ZodError` (validation), and unhandled `Error`. Maps to codes from `@barghsa/shared/errors`. Resolves localized messages via i18n service. Logs the error with correlation ID and request metadata at appropriate severity (debug for 4xx, error for 5xx). Middleware generates UUIDv7 correlation ID on every request, stores in `cls-rtracer` or `AsyncLocalStorage`, and sets `X-Correlation-ID` response header. Backend services log correlation ID for traceability.\n  - **Dependencies:** T-06.01.04 (error codes), S-06.02 (i18n)\n  - **Complexity:** M",
       "requirement_sha256": "2b33d7de5e8e1e323a8fb578b17cadefca11629138b2e7a7d609c2b28b9541b5",
       "source_evidence": [
         {
+          "path": "apps/api/src/admin/gift-code-http.integration.test.ts",
+          "sha256": "a310dbadfaca6ff7b9cdcadf49d4f99d67d8c651d5c1b5d03739a30551f4ae76"
+        },
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "f81f7f7d69220c5e8bcf2a6f4e25d91ea4535f1a9f3aa2c1ddd4bc0005c4cb8f"
+        },
+        {
           "path": "apps/api/src/common/http-exception.filter.ts",
-          "sha256": "4c5e7d19eb5dd56c5494af981d804ee15bd187b27032ac66639e959d5b4674bb"
+          "sha256": "f7cc498fd7c57f800b8bb87056f49e3e8ce6f4162b20e6d34dd56bfa35fccb22"
         },
         {
-          "path": "apps/api/src/common/correlation-id.middleware.ts",
-          "sha256": "b127659fda54ecb4543d5dbbbfbcb873538f912ce5e0cf4d93ee4043ac36903e"
+          "path": "apps/api/src/common/public-domain-error-codes.ts",
+          "sha256": "fe7ecc2dc41948a65b88f6b1cde86b9c7c3da28f90d4507a5d41fef0b1e034c0"
         },
         {
-          "path": "apps/api/src/common/body-parser-errors.ts",
-          "sha256": "e8f59c9c9d3aecbe7d28d773d0d4ee92d1b206d4a4687563dce248aa21e9c0ef"
+          "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
+          "sha256": "aa66d8c949bb949cf38c8122ba9e011c2a05bc44d1bfcf905e229c864ee541fa"
         },
         {
-          "path": "apps/api/src/common/error-http.integration.test.ts",
-          "sha256": "64f4834b1f79f44ace0c45ae0c5915a6faf0a0a723a3322fbb8fbc6a5fd042f1"
+          "path": "apps/api/src/csp-report/csp-report.controller.ts",
+          "sha256": "1e941552eeb2e5d323bffde93fd4622b6d704cb52dcf4e91cb8fd5059e41b79b"
         },
         {
           "path": "apps/api/test/http-exception-filter.spec.ts",
-          "sha256": "9adbaf8883d43187081809d22700f39fda4b73cf399f34fd173a630abcb0d5f4"
+          "sha256": "571471a9bc2ea2f66609ac70aa290c8cd9c7a46e7a5d96a005743ee570bba987"
+        },
+        {
+          "path": "apps/web/e2e/csp-reports.spec.ts",
+          "sha256": "e7d0a90fa8a79dff3cb5824290a3d698da461e58a79d09552deb6c89f194a508"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
+        },
+        {
+          "path": "apps/web/test/server.spec.ts",
+          "sha256": "d90aa39b15e1653eaee6613fd1bde020344623e2e53d40f71f916c86f7af55f1"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "76ee4ab925fddae4824f857f1b500483f6dba536210d1513af4bdef658355157"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "9819141838be566fa1ab0eaaa39745993c53f22e7373a83a69f1f20385a97ba1"
+        },
+        {
+          "path": "packages/shared/src/errors/error-codes.ts",
+          "sha256": "eb3939ab2803138aa18a77c020aaa083e7bbea878bdec600c40174adbb25fdd2"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "beb268d547e59dfe5f9d557991c992809eae97dec947a7f6dd0299a6756aa22f"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "37431a4bb49b6674a35c29766a4c9d8192b16ce648ed6570aba4637ef3785a24"
         }
       ],
       "checks": [
-        "Generated UUIDv7 and valid inbound-ID propagation are tested. The filter now generates an ID for parser failures outside AsyncLocalStorage and binds response header/body/log.",
-        "Malformed JSON no longer echoes submitted text, and both JSON parsers return stable localized validation errors in English/Persian. All 52 selected HTTP/filter checks pass."
+        "audit/evidence/step-reviews.json#R03-errors",
+        "See consolidated review for exact baseline/final populations, supersession and source-bound evidence."
       ],
       "limitations": [
-        "Built-in Nest labels/default messages are normalized. Unmatched route details were repaired in9f00e2c. Application-specific raw messages and complete downstream outbox/worker correlation remain under review."
+        "Queued notification and auth delivery work does not consistently persist/propagate the originating request correlation ID. Continue R03-correlation across API producers, worker dispatch and logs; preserve transactional and retry semantics."
       ],
       "merged_prs": [
         29
@@ -2682,7 +2724,8 @@
           "remaining_work_reconciled_at": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
           "remaining_work_evidence": "audit/evidence/acceptance-refresh.json"
         }
-      ]
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R03-errors"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.01.01",
@@ -3716,7 +3759,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.04.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "9827e96c6e439e07c85daead4655a03fff84becd",
+      "reviewed_sha": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 185,
       "requirement": "**T-02.04.01 — Auth rate limit enforcement**\n\n- Description: Enforce auth-specific rate limits at edge (reverse proxy) and application layers. Return 429 with Retry-After header and localized recovery message.\n- Technical notes: Limits:\n  - OTP send: 1 per destination per 60s, 5 per hour, 10 per day\n  - OTP verify: 5 failed attempts per issued challenge, then invalidate\n  - Login: progressive delay after 5 failed attempts per account-and-IP in 15 min\n  - Password reset: 5 starts per account or destination per hour\n  - Registration: 3 per IP per minute, 10 per hour per destination\n  - Critical account counters durable in PostgreSQL; Redis may accelerate but Redis loss must not remove protection.\n- UI/UX: Clear message: \"Too many attempts. Please try again in [time].\" Countdown timer optional. Link to contact support.\n- Dependencies: T-02.01.02, T-01.01.06, T-02.03.01\n- Complexity: L\n\n---",
@@ -3760,7 +3803,7 @@
         },
         {
           "path": "deploy/pilot/nginx.conf",
-          "sha256": "5c30f43b9626cc39a3143e2d5fed1ee22f8bb19e22357d80f516ca47eb431f24"
+          "sha256": "76ee4ab925fddae4824f857f1b500483f6dba536210d1513af4bdef658355157"
         },
         {
           "path": "apps/web/src/lib/auth-errors.ts",
@@ -3899,12 +3942,13 @@
         ],
         "review": "Reconciled only immediate-predecessor source bindings against the reviewed guard/staff-creation diffs. Existing permissions/helper bodies and unrelated controller behavior are unchanged. This reuses earlier task evidence without claiming a whole-task rerun or clearing older drift.",
         "record": "audit/evidence/step-reviews.json#R01-guard-boundaries"
-      }
+      },
+      "source_refresh_review": "audit/evidence/step-reviews.json#R03-errors"
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.03.03",
       "status": "partial",
-      "reviewed_sha": "169568059f71e16b9f00cd3522a412fdb6b3f375",
+      "reviewed_sha": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 175,
       "requirement": "**T-02.03.03 — Account recovery support path**\n\n- Description: On forgot-password page, include \"Having trouble? Contact support\" link for users who no longer control their registered email/phone. Support recovery requires identity verification, full audit history.\n- Technical notes: Link opens ticket creation or directs to support contact. Support path documented in runbook. Staff have verified identity procedure.\n- UI/UX: Styled as secondary link below the form.\n- Dependencies: T-02.03.01\n- Complexity: S",
@@ -3928,7 +3972,7 @@
         },
         {
           "path": "packages/i18n/src/auth.ts",
-          "sha256": "23cacd41e4d3712dcf60d5d6e3e34e0396cf591e2ef93ce32131e7ac5703a51a"
+          "sha256": "9819141838be566fa1ab0eaaa39745993c53f22e7373a83a69f1f20385a97ba1"
         }
       ],
       "checks": [
@@ -4004,7 +4048,8 @@
         "note": "Original source bindings and assessment remain available in this committed ledger revision; older nested assessments are preserved."
       },
       "review_record": "audit/evidence/step-reviews.json#R01-session-recovery",
-      "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed."
+      "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed.",
+      "source_refresh_review": "audit/evidence/step-reviews.json#R03-errors"
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
@@ -19886,6 +19931,171 @@
       "limitations": [
         "Existing shared empty/error/retry/support behavior remains verified. Exact skeleton dimensions/shimmer and all remaining consumer loading/error-state acceptance still require R03 review."
       ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.01.04",
+      "status": "partial",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 1004,
+      "requirement": "- **T-06.01.04:** Create stable error code enum with HTTP status mapping\n  - **Notes:** Error codes as `const` object or TypeScript `enum`. Each code maps to: `httpStatus: number`, `title: string` (English), `retryable: boolean`. Backend returns `{ error: { code: string, message: string (localized), correlationId: string } }`. Never expose stack traces or raw provider/database errors.\n  - **Dependencies:** T-06.01.01\n  - **Complexity:** S",
+      "requirement_sha256": "47858c3b74c1185a1d258c58594215629f1d87c6c74d172e9fccfe25ae46b38a",
+      "merged_prs": [],
+      "historically_skipped": true,
+      "reviewed_sha": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/gift-code-http.integration.test.ts",
+          "sha256": "a310dbadfaca6ff7b9cdcadf49d4f99d67d8c651d5c1b5d03739a30551f4ae76"
+        },
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "f81f7f7d69220c5e8bcf2a6f4e25d91ea4535f1a9f3aa2c1ddd4bc0005c4cb8f"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "f7cc498fd7c57f800b8bb87056f49e3e8ce6f4162b20e6d34dd56bfa35fccb22"
+        },
+        {
+          "path": "apps/api/src/common/public-domain-error-codes.ts",
+          "sha256": "fe7ecc2dc41948a65b88f6b1cde86b9c7c3da28f90d4507a5d41fef0b1e034c0"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
+          "sha256": "aa66d8c949bb949cf38c8122ba9e011c2a05bc44d1bfcf905e229c864ee541fa"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report.controller.ts",
+          "sha256": "1e941552eeb2e5d323bffde93fd4622b6d704cb52dcf4e91cb8fd5059e41b79b"
+        },
+        {
+          "path": "apps/api/test/http-exception-filter.spec.ts",
+          "sha256": "571471a9bc2ea2f66609ac70aa290c8cd9c7a46e7a5d96a005743ee570bba987"
+        },
+        {
+          "path": "apps/web/e2e/csp-reports.spec.ts",
+          "sha256": "e7d0a90fa8a79dff3cb5824290a3d698da461e58a79d09552deb6c89f194a508"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
+        },
+        {
+          "path": "apps/web/test/server.spec.ts",
+          "sha256": "d90aa39b15e1653eaee6613fd1bde020344623e2e53d40f71f916c86f7af55f1"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "76ee4ab925fddae4824f857f1b500483f6dba536210d1513af4bdef658355157"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "9819141838be566fa1ab0eaaa39745993c53f22e7373a83a69f1f20385a97ba1"
+        },
+        {
+          "path": "packages/shared/src/errors/error-codes.ts",
+          "sha256": "eb3939ab2803138aa18a77c020aaa083e7bbea878bdec600c40174adbb25fdd2"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "beb268d547e59dfe5f9d557991c992809eae97dec947a7f6dd0299a6756aa22f"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "37431a4bb49b6674a35c29766a4c9d8192b16ce648ed6570aba4637ef3785a24"
+        }
+      ],
+      "checks": [
+        "audit/evidence/step-reviews.json#R03-errors",
+        "See consolidated review for exact baseline/final populations, supersession and source-bound evidence."
+      ],
+      "limitations": [
+        "The59 shared root definitions have title/httpStatus/retryable metadata and localized messages.151 existing legacy public domain identifiers are preserved in an API allowlist; complete their shared metadata/catalogue disposition before claiming T-06.01.04 fully verified."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R03-errors"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.04.02",
+      "status": "partial",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 704,
+      "requirement": "- **T-04.04.02:** Configure security headers in reverse proxy\n  - **Notes:** Set `X-Content-Type-Options: nosniff` on every response. Set `Referrer-Policy: strict-origin-when-cross-origin`. Set `Permissions-Policy: camera=(), microphone=(), geolocation=()`. Set `frame-ancestors 'none'`. Start CSP in Report-Only mode: `Content-Security-Policy-Report-Only` with restrictive `default-src 'self'`, `object-src 'none'`, `base-uri 'self'`, `script-src 'strict-dynamic' 'nonce-<random>'` (app generates nonces), `style-src 'self' 'unsafe-inline'` (shadcn requires inline), `img-src 'self' data: blob:`, `font-src 'self'`, `connect-src 'self'`, `form-action 'self'`. Collect reports to a CSP reporting endpoint. Enforce only after all violations are resolved.\n  - **Dependencies:** T-04.04.01\n  - **Complexity:** L",
+      "requirement_sha256": "bce5aa068e212d4ad46f39f96967dc124b2bcac381105c8af238f42fd3147c74",
+      "merged_prs": [
+        61
+      ],
+      "historically_skipped": false,
+      "reviewed_sha": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/gift-code-http.integration.test.ts",
+          "sha256": "a310dbadfaca6ff7b9cdcadf49d4f99d67d8c651d5c1b5d03739a30551f4ae76"
+        },
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "f81f7f7d69220c5e8bcf2a6f4e25d91ea4535f1a9f3aa2c1ddd4bc0005c4cb8f"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "f7cc498fd7c57f800b8bb87056f49e3e8ce6f4162b20e6d34dd56bfa35fccb22"
+        },
+        {
+          "path": "apps/api/src/common/public-domain-error-codes.ts",
+          "sha256": "fe7ecc2dc41948a65b88f6b1cde86b9c7c3da28f90d4507a5d41fef0b1e034c0"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
+          "sha256": "aa66d8c949bb949cf38c8122ba9e011c2a05bc44d1bfcf905e229c864ee541fa"
+        },
+        {
+          "path": "apps/api/src/csp-report/csp-report.controller.ts",
+          "sha256": "1e941552eeb2e5d323bffde93fd4622b6d704cb52dcf4e91cb8fd5059e41b79b"
+        },
+        {
+          "path": "apps/api/test/http-exception-filter.spec.ts",
+          "sha256": "571471a9bc2ea2f66609ac70aa290c8cd9c7a46e7a5d96a005743ee570bba987"
+        },
+        {
+          "path": "apps/web/e2e/csp-reports.spec.ts",
+          "sha256": "e7d0a90fa8a79dff3cb5824290a3d698da461e58a79d09552deb6c89f194a508"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
+        },
+        {
+          "path": "apps/web/test/server.spec.ts",
+          "sha256": "d90aa39b15e1653eaee6613fd1bde020344623e2e53d40f71f916c86f7af55f1"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "76ee4ab925fddae4824f857f1b500483f6dba536210d1513af4bdef658355157"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "9819141838be566fa1ab0eaaa39745993c53f22e7373a83a69f1f20385a97ba1"
+        },
+        {
+          "path": "packages/shared/src/errors/error-codes.ts",
+          "sha256": "eb3939ab2803138aa18a77c020aaa083e7bbea878bdec600c40174adbb25fdd2"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "beb268d547e59dfe5f9d557991c992809eae97dec947a7f6dd0299a6756aa22f"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "37431a4bb49b6674a35c29766a4c9d8192b16ce648ed6570aba4637ef3785a24"
+        }
+      ],
+      "checks": [
+        "audit/evidence/step-reviews.json#R03-errors",
+        "See consolidated review for exact baseline/final populations, supersession and source-bound evidence."
+      ],
+      "limitations": [
+        "Native same-origin CSP reports carry session cookies without X-CSRF-Token. Authenticated requests currently return403. A narrow telemetry exception was asked once September13 and remains pending. No token exemption implemented.",
+        "Deployment and enforcement after violation resolution remain external."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R03-errors"
     }
   ],
   "pending_task_keys": [
@@ -19928,7 +20138,6 @@
     "01-platform-infrastructure.md#T-04.03.04",
     "01-platform-infrastructure.md#T-04.03.05",
     "01-platform-infrastructure.md#T-04.04.01",
-    "01-platform-infrastructure.md#T-04.04.02",
     "01-platform-infrastructure.md#T-04.04.03",
     "01-platform-infrastructure.md#T-04.04.04",
     "01-platform-infrastructure.md#T-04.04.05",
@@ -19955,7 +20164,6 @@
     "01-platform-infrastructure.md#T-06.01.01",
     "01-platform-infrastructure.md#T-06.01.02",
     "01-platform-infrastructure.md#T-06.01.03",
-    "01-platform-infrastructure.md#T-06.01.04",
     "01-platform-infrastructure.md#T-06.01.05",
     "01-platform-infrastructure.md#T-06.02.01",
     "01-platform-infrastructure.md#T-06.02.02",
@@ -23896,6 +24104,18 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R03-controls",
       "note": "Matching immediate-base bindings only;38 older source refreshes retained."
+    },
+    {
+      "source_revision": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.03.01",
+        "01-platform-infrastructure.md#T-01.03.05",
+        "02-auth-users-admin.md#T-02.04.01",
+        "02-auth-users-admin.md#T-02.03.03"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R03-errors",
+      "note": "Matching immediate-base bindings only; prior38 refreshes retained. Public identifiers, business/transaction logic and non-error UI flows unchanged. Relevant error/translation/budget/proxy checks support this bounded refresh."
     }
   ]
 }

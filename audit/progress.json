@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "e13b596e7650404c1acc5b717dd6ffd657433178",
+  "source_revision": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
   "active_step": "R03",
-  "next_action": "Continue R03-errors: normalize unsafe application error messages, verify stable codes and downstream correlation, then CSP report behavior. Reuse valid filter/parser/provider/worker evidence. Return to remaining auxiliary UI/consumer states afterward.",
+  "next_action": "Continue R03-correlation: carry originating request IDs through current notification/auth outboxes and worker diagnostics without changing delivery or retries. Complete the legacy domain-code metadata disposition. CSP native-report exception is pending; do not reask. Then return to R03 auxiliary UI/consumer states.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -737,6 +737,10 @@
     {
       "id": "R03-controls",
       "review_record": "audit/evidence/step-reviews.json#R03-controls"
+    },
+    {
+      "id": "R03-errors",
+      "review_record": "audit/evidence/step-reviews.json#R03-errors"
     }
   ],
   "deferred_improvements": [
@@ -761,12 +765,12 @@
   "counts": {
     "historical_tasks": 322,
     "acceptance_verified": 170,
-    "partial": 38,
-    "pending": 114,
+    "partial": 40,
+    "pending": 112,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
-    "skips_pending": 51
+    "skips_pending": 50
   },
   "user_decisions": [
     "Retain Vite SPA under ADR004.",
@@ -791,6 +795,13 @@
       "status": "awaiting_owner",
       "independent_work": "Complete current provider/expiry and saved PR reviews. Browser confirmation already requires session CSRF.",
       "asked_once": "2026-09-09 via request_user_input_async; do not repeat."
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.03",
+      "question": "Allow a narrow native same-origin CSP telemetry exception and document it in T-02.02.03? Browser supplies session cookies but cannot supply X-CSRF-Token.",
+      "status": "awaiting_owner",
+      "asked_once": "2026-09-13 via request_user_input_async; do not repeat.",
+      "independent_work": "R03-correlation; existing CSP guard remains enforced."
     }
   ],
   "inventory_freshness": {
@@ -1052,34 +1063,30 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R03-errors",
-    "name": "Safe localized errors, correlation and CSP reports",
+    "id": "R03-correlation",
+    "name": "Request correlation through queued work and remaining domain error catalogue",
     "status": "reviewing",
     "prs": [
-      29,
-      61
+      29
     ],
     "task_keys": [
       "01-platform-infrastructure.md#T-01.05.01",
-      "01-platform-infrastructure.md#T-06.01.04",
-      "01-platform-infrastructure.md#T-04.04.02",
-      "02-auth-users-admin.md#T-02.02.03"
+      "01-platform-infrastructure.md#T-06.01.04"
     ],
     "remaining_checklist": [
-      "Read exact task/PR29/61 requirements and historical nonce deferral. Preserve earlier parser/correlation and prelogin CSRF evidence.",
-      "Repair raw application HttpException message exposure and verify safe code normalization, current structured online-limit payload and localized responses.",
-      "Trace current request-to-outbox/worker correlation and native CSP reports. Keep signed-webhook owner wording pending; do not reask or waive it."
+      "Queued notification and auth delivery work does not consistently persist/propagate the originating request correlation ID. Continue R03-correlation across API producers, worker dispatch and logs; preserve transactional and retry semantics.",
+      "The59 shared root definitions have title/httpStatus/retryable metadata and localized messages.151 existing legacy public domain identifiers are preserved in an API allowlist; complete their shared metadata/catalogue disposition before claiming T-06.01.04 fully verified."
     ],
     "confirmed_defects": [
-      "HttpExceptionFilter still returns arbitrary application 4xx raw messages, including possible provider/database details."
+      "Queued notification and auth delivery work does not consistently persist/propagate the originating request correlation ID. Continue R03-correlation across API producers, worker dispatch and logs; preserve transactional and retry semantics."
     ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R03-controls",
-      "audit/acceptance-closure.json#01-platform-infrastructure.md#T-01.05.01"
+      "audit/evidence/step-reviews.json#R03-errors",
+      "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Continue R03-errors: normalize unsafe application error messages, verify stable codes and downstream correlation, then CSP report behavior. Reuse valid filter/parser/provider/worker evidence. Return to remaining auxiliary UI/consumer states afterward."
+    "next_action": "Continue R03-correlation: carry originating request IDs through current notification/auth outboxes and worker diagnostics without changing delivery or retries. Complete the legacy domain-code metadata disposition. CSP native-report exception is pending; do not reask. Then return to R03 auxiliary UI/consumer states."
   },
   "open_domain_reviews": [
     {
@@ -1126,7 +1133,8 @@
       "task_key": "02-auth-users-admin.md#T-02.02.03",
       "owner_batch": "R03 telemetry",
       "criteria": "Actual browser CSP report transport, cookie context, payload safety and CSRF disposition",
-      "status": "pending linked acceptance"
+      "status": "Nonce/parser/sanitization repaired. Native signed-in reports are403; narrow CSRF decision pending.",
+      "evidence": "audit/evidence/step-reviews.json#R03-errors"
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.04",

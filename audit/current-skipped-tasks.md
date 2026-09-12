@@ -32,7 +32,7 @@ Use [current canonical requirements](current-task-requirements.json) and [accept
 | 01-platform-infrastructure.md#T-06.01.01 | Initialize `packages/shared` with tsconfig and dependencies | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
 | 01-platform-infrastructure.md#T-06.01.02 | Create username validation and normalization helpers | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
 | 01-platform-infrastructure.md#T-06.01.03 | Create password validation with strength meter logic | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
-| 01-platform-infrastructure.md#T-06.01.04 | Create stable error code enum with HTTP status mapping | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
+| 01-platform-infrastructure.md#T-06.01.04 | Create stable error code enum with HTTP status mapping | partial | Review current implementation against requirements; build only unmet remainder |
 | 01-platform-infrastructure.md#T-06.01.05 | Create pagination helper schemas | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
 | 01-platform-infrastructure.md#T-06.02.01 | Initialize `packages/i18n` with message dictionary structure | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
 | 01-platform-infrastructure.md#T-06.02.02 | Create Jalali calendar date utilities | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
