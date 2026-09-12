@@ -20,8 +20,14 @@ const mockService = {
   addPrice: mockAddPrice,
 } as unknown as CatalogueProductsService;
 
+const adminSession = {
+  isAdmin: true,
+  userId: 'admin-1',
+  sessionId: 'test-session',
+  csrfToken: 'test-csrf',
+};
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: adminSession,
   ip: '10.0.0.8',
   socket: { remoteAddress: '10.0.0.8' },
 } as never;
@@ -169,6 +175,7 @@ describe('CatalogueProductsController (T-09.12.01)', () => {
         status: 'active',
         categories: [],
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -224,7 +231,7 @@ describe('CatalogueProductsController (T-09.12.01)', () => {
     it('archives the product', async () => {
       mockArchive.mockResolvedValue(undefined);
       await controller.archive(adminReq, PRODUCT_ID);
-      expect(mockArchive).toHaveBeenCalledWith(PRODUCT_ID, 'admin-1', '10.0.0.8');
+      expect(mockArchive).toHaveBeenCalledWith(PRODUCT_ID, 'admin-1', '10.0.0.8', adminSession);
     });
   });
 

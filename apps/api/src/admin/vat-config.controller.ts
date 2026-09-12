@@ -225,6 +225,7 @@ export class VatConfigController {
         ? { effectiveFrom: parsed.data.effectiveFrom }
         : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -262,6 +263,7 @@ export class VatConfigController {
         ? { effectiveUntil: parsed.data.effectiveUntil }
         : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -299,6 +301,7 @@ export class VatConfigController {
         ? { effectiveFrom: parsed.data.effectiveFrom }
         : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -336,6 +339,7 @@ export class VatConfigController {
         ? { effectiveUntil: parsed.data.effectiveUntil }
         : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }

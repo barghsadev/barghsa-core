@@ -228,6 +228,7 @@ export class CatalogueProductsController {
       status: d.status ?? 'inactive',
       categories: (d.categories ?? []) as ProductCategory[],
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -274,6 +275,7 @@ export class CatalogueProductsController {
       ...(d.minKwh !== undefined ? { minKwh: d.minKwh } : {}),
       ...(d.maxKwh !== undefined ? { maxKwh: d.maxKwh } : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -293,7 +295,7 @@ export class CatalogueProductsController {
   async archive(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
     this.assertCataloguePermission(req);
     assertUuid(id);
-    return this.service.archive(id, req.session.userId, requestIp(req));
+    return this.service.archive(id, req.session.userId, requestIp(req), req.session);
   }
 
   @Post(':id/prices')
@@ -329,6 +331,7 @@ export class CatalogueProductsController {
       price: parsed.data.price,
       effectiveFrom: parsed.data.effectiveFrom ?? new Date().toISOString(),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }

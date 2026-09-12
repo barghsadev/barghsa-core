@@ -1,3 +1,6 @@
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import {
   DEFAULT_GREEN_ELECTRICITY_CONFIG,
   GREEN_ELECTRICITY_CONFIG_KEY,
@@ -9,6 +12,8 @@ import { requireStaffMutationPermission } from '../admin/staff-mutation-permissi
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+
+type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 /**
  * Admin product catalogue service (S-09.12, T-09.12.01) — API slice.
@@ -126,6 +131,7 @@ export interface CreateProductInput {
   status: 'active' | 'inactive';
   categories: ProductCategory[];
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -139,6 +145,7 @@ export interface UpdateProductInput {
   minKwh?: string;
   maxKwh?: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -149,6 +156,7 @@ export interface AddPriceInput {
   /** ISO timestamp the new price takes effect (tagged-timestamptz). */
   effectiveFrom: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -305,7 +313,7 @@ export class CatalogueProductsService {
    * electricity — they arrive through `update`.
    */
   create(input: CreateProductInput): Promise<ProductDetailDto> {
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       input = { ...input, categories: [...new Set(input.categories)] };
       const id = uuidv7();
       this.assertCategorySetForType(input.type, input.categories);
@@ -339,13 +347,20 @@ export class CatalogueProductsService {
         });
       }
 
-      await this.recordAudit(q, 'catalogue_product_created', input.actorUserId, input.ip, {
-        productId: id,
-        type: input.type,
-        title: input.title,
-        status: input.status,
-        ...(input.price !== null ? { initialPrice: input.price } : {}),
-      });
+      await this.recordAudit(
+        verifiedAt,
+        q,
+        'catalogue_product_created',
+        input.actorUserId,
+        input.ip,
+        {
+          productId: id,
+          type: input.type,
+          title: input.title,
+          status: input.status,
+          ...(input.price !== null ? { initialPrice: input.price } : {}),
+        }
+      );
       this.logger.log(
         `Catalogue product created: id=${id}, type=${input.type}, actor=${input.actorUserId}`
       );
@@ -362,7 +377,7 @@ export class CatalogueProductsService {
    * nothing emits no audit (no-op discipline).
    */
   update(id: string, input: UpdateProductInput): Promise<ProductDetailDto> {
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       const current = await this.findProduct(q, id, true);
       if (!current) throw this.productNotFound(id);
 
@@ -514,23 +529,30 @@ export class CatalogueProductsService {
         await this.upsertElectricityLimits(q, id, mergedLimits.minKwh, mergedLimits.maxKwh);
       }
 
-      await this.recordAudit(q, 'catalogue_product_updated', input.actorUserId, input.ip, {
-        productId: id,
-        ...(titleChanged ? { title: input.title } : {}),
-        ...(descriptionChanged ? { description: input.description } : {}),
-        ...(statusChanged ? { statusBefore: current.status, statusAfter: input.status } : {}),
-        ...(limitsChanged
-          ? {
-              limits: {
-                minKwhBefore: currentLimits?.min_kwh ?? null,
-                maxKwhBefore: currentLimits?.max_kwh ?? null,
-                minKwhAfter: mergedLimits?.minKwh ?? null,
-                maxKwhAfter: mergedLimits?.maxKwh ?? null,
-              },
-            }
-          : {}),
-        ...(categoriesChanged ? { categories: input.categories } : {}),
-      });
+      await this.recordAudit(
+        verifiedAt,
+        q,
+        'catalogue_product_updated',
+        input.actorUserId,
+        input.ip,
+        {
+          productId: id,
+          ...(titleChanged ? { title: input.title } : {}),
+          ...(descriptionChanged ? { description: input.description } : {}),
+          ...(statusChanged ? { statusBefore: current.status, statusAfter: input.status } : {}),
+          ...(limitsChanged
+            ? {
+                limits: {
+                  minKwhBefore: currentLimits?.min_kwh ?? null,
+                  maxKwhBefore: currentLimits?.max_kwh ?? null,
+                  minKwhAfter: mergedLimits?.minKwh ?? null,
+                  maxKwhAfter: mergedLimits?.maxKwh ?? null,
+                },
+              }
+            : {}),
+          ...(categoriesChanged ? { categories: input.categories } : {}),
+        }
+      );
       this.logger.log(`Catalogue product updated: id=${id}, actor=${input.actorUserId}`);
 
       return this.readDetail(q, id);
@@ -543,8 +565,8 @@ export class CatalogueProductsService {
    * referenceable. System products (system_key set) cannot be archived.
    * Archiving an already-archived product is a no-op (no audit).
    */
-  archive(id: string, actorUserId: string, ip: string): Promise<void> {
-    return this.withTransaction(actorUserId, async (q) => {
+  archive(id: string, actorUserId: string, ip: string, session: MutationSession): Promise<void> {
+    return this.withTransaction(actorUserId, session, async (q, verifiedAt) => {
       const current = await this.findProduct(q, id, true);
       if (!current) throw this.productNotFound(id);
 
@@ -568,7 +590,7 @@ export class CatalogueProductsService {
         'archived',
         id,
       ]);
-      await this.recordAudit(q, 'catalogue_product_archived', actorUserId, ip, {
+      await this.recordAudit(verifiedAt, q, 'catalogue_product_archived', actorUserId, ip, {
         productId: id,
         type: current.type,
         statusBefore: current.status,
@@ -590,7 +612,7 @@ export class CatalogueProductsService {
    * product delete (FK race) surfaces as a 409.
    */
   addPrice(input: AddPriceInput): Promise<ProductDetailDto> {
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       const current = await this.findProduct(q, input.productId, true);
       if (!current) throw this.productNotFound(input.productId);
 
@@ -635,11 +657,18 @@ export class CatalogueProductsService {
         return this.readDetail(q, input.productId);
       }
 
-      await this.recordAudit(q, 'catalogue_product_price_changed', input.actorUserId, input.ip, {
-        productId: input.productId,
-        price: input.price,
-        effectiveFrom: input.effectiveFrom,
-      });
+      await this.recordAudit(
+        verifiedAt,
+        q,
+        'catalogue_product_price_changed',
+        input.actorUserId,
+        input.ip,
+        {
+          productId: input.productId,
+          price: input.price,
+          effectiveFrom: input.effectiveFrom,
+        }
+      );
       this.logger.log(
         `Catalogue product price changed: id=${input.productId}, ` +
           `price=${input.price}, effectiveFrom=${input.effectiveFrom}, actor=${input.actorUserId}`
@@ -994,14 +1023,19 @@ export class CatalogueProductsService {
   /** Run `fn` inside a single DB transaction on one client; any error rolls back. */
   private async withTransaction<T>(
     actorUserId: string,
-    fn: (q: DbExecutor) => Promise<T>
+    session: MutationSession,
+    fn: (q: DbExecutor, verifiedAt: Date) => Promise<T>
   ): Promise<T> {
+    if (!session || session.userId !== actorUserId)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
     const client = await getDbPool().connect();
     let committed = false;
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:catalogue:edit');
-      const result = await fn(client);
+      const verifiedAt = await requireSessionStepUp(client, session);
+      const result = await fn(client, verifiedAt);
+      await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       committed = true;
       return result;
@@ -1015,6 +1049,7 @@ export class CatalogueProductsService {
   }
 
   private async recordAudit(
+    verifiedAt: Date,
     q: DbExecutor,
     event: string,
     actorUserId: string,
@@ -1024,7 +1059,19 @@ export class CatalogueProductsService {
     await q.query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-      [uuidv7(), actorUserId, event, JSON.stringify(meta), uuidv7(), ip, new Date()]
+      [
+        uuidv7(),
+        actorUserId,
+        event,
+        JSON.stringify({
+          ...meta,
+          stepUpVerified: true,
+          stepUpVerifiedAt: verifiedAt.toISOString(),
+        }),
+        uuidv7(),
+        ip,
+        new Date(),
+      ]
     );
   }
 }

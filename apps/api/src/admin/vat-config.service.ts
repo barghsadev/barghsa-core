@@ -1,7 +1,12 @@
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+
+type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 import {
   CHARGE_CATEGORIES,
   isChargeCategory,
@@ -56,6 +61,7 @@ export interface CreateVatRateInput {
   /** ISO timestamp the rate takes effect (inclusive). Defaults to now. */
   effectiveFrom?: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -64,6 +70,7 @@ export interface EndVatRateInput {
   /** ISO timestamp the rate stops applying (exclusive). Defaults to now. */
   effectiveUntil?: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -74,6 +81,7 @@ export interface CreateProductOverrideInput {
   /** ISO timestamp the override takes effect (inclusive). Defaults to now. */
   effectiveFrom?: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -82,6 +90,7 @@ export interface EndProductOverrideInput {
   /** ISO timestamp the override stops applying (exclusive). Defaults to now. */
   effectiveUntil?: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -298,7 +307,7 @@ export class VatConfigService {
       throw this.invalidEffectiveDate('effectiveFrom');
     }
 
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       const open = await this.findOpenRate(q, input.category);
       if (open !== null) {
         const openFrom = new Date(open.effective_from);
@@ -370,7 +379,7 @@ export class VatConfigService {
          VALUES ($1, $2, $3, $4, NULL, $5, $6, $6)`,
         [id, input.category, input.rateBasisPoints, effectiveFrom, input.actorUserId, new Date()]
       );
-      await this.recordChange(q, {
+      await this.recordChange(verifiedAt, q, {
         actorUserId: input.actorUserId,
         ip: input.ip,
         entity: 'vat_configuration',
@@ -403,7 +412,7 @@ export class VatConfigService {
       throw this.invalidEffectiveDate('effectiveUntil');
     }
 
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       const current = await this.findConfigById(q, input.id);
       if (!current) throw this.vatConfigNotFound(input.id);
 
@@ -433,7 +442,7 @@ export class VatConfigService {
           WHERE id = $2 AND effective_until IS NULL`,
         [effectiveUntil, input.id]
       );
-      await this.recordChange(q, {
+      await this.recordChange(verifiedAt, q, {
         actorUserId: input.actorUserId,
         ip: input.ip,
         entity: 'vat_configuration',
@@ -472,7 +481,7 @@ export class VatConfigService {
       throw this.invalidEffectiveDate('effectiveFrom');
     }
 
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       // The config row must exist and be override-eligible.
       const config = await this.findConfigById(q, input.vatConfigId);
       if (!config) throw this.vatConfigNotFound(input.vatConfigId);
@@ -543,7 +552,7 @@ export class VatConfigService {
          VALUES ($1, $2, $3, $4, NULL, $5, $6, $6)`,
         [id, input.productId, input.vatConfigId, effectiveFrom, input.actorUserId, new Date()]
       );
-      await this.recordChange(q, {
+      await this.recordChange(verifiedAt, q, {
         actorUserId: input.actorUserId,
         ip: input.ip,
         entity: 'vat_product_override',
@@ -577,7 +586,7 @@ export class VatConfigService {
       throw this.invalidEffectiveDate('effectiveUntil');
     }
 
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q, verifiedAt) => {
       const current = await this.findOverrideById(q, input.id);
       if (!current) throw this.overrideNotFound(input.id);
 
@@ -606,7 +615,7 @@ export class VatConfigService {
           WHERE id = $2 AND effective_until IS NULL`,
         [effectiveUntil, input.id]
       );
-      await this.recordChange(q, {
+      await this.recordChange(verifiedAt, q, {
         actorUserId: input.actorUserId,
         ip: input.ip,
         entity: 'vat_product_override',
@@ -780,8 +789,11 @@ export class VatConfigService {
   /** Run `fn` inside a single DB transaction on one client; any error rolls back. */
   private async withTransaction<T>(
     actorUserId: string,
-    fn: (q: DbExecutor) => Promise<T>
+    session: MutationSession,
+    fn: (q: DbExecutor, verifiedAt: Date) => Promise<T>
   ): Promise<T> {
+    if (!session || session.userId !== actorUserId)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
     const client = await getDbPool().connect();
     let committed = false;
     try {
@@ -791,7 +803,9 @@ export class VatConfigService {
       await client.query(
         "SELECT pg_advisory_xact_lock(hashtextextended('barghsa:vat-configuration', 0))"
       );
-      const result = await fn(client);
+      const verifiedAt = await requireSessionStepUp(client, session);
+      const result = await fn(client, verifiedAt);
+      await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       committed = true;
       return result;
@@ -830,6 +844,7 @@ export class VatConfigService {
 
   /** Record the epic's `change_recorded` audit event. */
   private async recordChange(
+    verifiedAt: Date,
     q: DbExecutor,
     input: {
       actorUserId: string;
@@ -848,7 +863,13 @@ export class VatConfigService {
       [
         uuidv7(),
         input.actorUserId,
-        JSON.stringify({ entity: input.entity, action: input.action, ...input.meta }),
+        JSON.stringify({
+          entity: input.entity,
+          action: input.action,
+          ...input.meta,
+          stepUpVerified: true,
+          stepUpVerifiedAt: verifiedAt.toISOString(),
+        }),
         correlationId,
         input.ip,
         new Date(),

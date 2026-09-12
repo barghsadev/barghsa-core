@@ -112,7 +112,7 @@ it.each(['create', 'end', 'override', 'endOverride'] as const)(
           Number(
             (
               await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM users u JOIN sessions s%FOR UPDATE OF u%'"
               )
             ).rows[0].count
           )
@@ -224,4 +224,50 @@ it('exposes only product choices to the finance editor', async () => {
   const rows = (await response.json()) as Array<Record<string, unknown>>;
   expect(rows.find((row) => row.id === productId)).toMatchObject({ title: { en: 'VAT product' } });
   for (const row of rows) expect(Object.keys(row).sort()).toEqual(['id', 'title', 'type']);
+});
+
+async function expireAtAudit(run: () => Promise<void>) {
+  await http.pool
+    .query(`CREATE OR REPLACE FUNCTION expire_price_session() RETURNS trigger LANGUAGE plpgsql AS $$
+ BEGIN UPDATE sessions SET expires_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='vat-admin'; RETURN NEW; END $$;
+ CREATE TRIGGER expire_price_session BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event LIKE 'change_recorded') EXECUTE FUNCTION expire_price_session()`);
+  try {
+    await run();
+  } finally {
+    await http.pool.query('DROP TRIGGER expire_price_session ON audit_log');
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day' WHERE user_id='vat-admin'"
+    );
+  }
+}
+
+it.each(['create', 'end', 'override', 'endOverride'] as const)(
+  'rolls back VAT %s when session expires before commit',
+  async (action) => {
+    await expireAtAudit(async () => {
+      expect((await mutation(action)).status).toBe(401);
+      await unchanged();
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+      ).toHaveLength(0);
+    });
+  }
+);
+
+it('records verified step-up time in the price configuration audit', async () => {
+  const verifiedAt = new Date(Date.now() - 60_000);
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=$1 WHERE user_id='vat-admin'", [
+    verifiedAt,
+  ]);
+  expect((await mutation('create')).ok).toBe(true);
+  const rows = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event LIKE 'change_recorded'"
+    )
+  ).rows;
+  expect(rows).toHaveLength(1);
+  expect(rows[0].metadata).toMatchObject({
+    stepUpVerified: true,
+    stepUpVerifiedAt: verifiedAt.toISOString(),
+  });
 });

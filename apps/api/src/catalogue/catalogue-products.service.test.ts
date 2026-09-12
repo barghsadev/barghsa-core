@@ -1,3 +1,6 @@
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { CatalogueProductsService as ServiceType } from './catalogue-products.service.js';
 
@@ -78,6 +81,7 @@ function priceVersionRow(over: Record<string, unknown> = {}) {
 }
 
 const ACTOR = 'user-admin-1';
+const SESSION = { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' };
 const PRODUCT_ID = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 
 /** Load CatalogueProductsService with a mocked @barghsa/db pool. */
@@ -186,6 +190,7 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       status: 'active' as const,
       categories: ['electricity_generation_station_consultation'] as unknown as never[],
       actorUserId: ACTOR,
+      session: SESSION,
       ip: '10.0.0.8',
     };
 
@@ -296,6 +301,7 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
         service.update(PRODUCT_ID, {
           title: { fa: 'x', en: 'y' },
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '10.0.0.8',
         })
       ).rejects.toMatchObject({ status: 404 });
@@ -306,7 +312,7 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       service = await loadService(pool);
       router.on('FROM products', () => ({ rows: [productRow()] }));
       await expect(
-        service.update(PRODUCT_ID, { actorUserId: ACTOR, ip: '10.0.0.8' })
+        service.update(PRODUCT_ID, { actorUserId: ACTOR, session: SESSION, ip: '10.0.0.8' })
       ).rejects.toMatchObject({ status: 400 });
     });
 
@@ -319,6 +325,7 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       const result = await service.update(PRODUCT_ID, {
         title: { fa: 'مشاوره', en: 'Consultation' },
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '10.0.0.8',
       });
 
@@ -353,6 +360,7 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
         status: 'active',
         categories: ['electricity_saving_certificate_consultation'] as unknown as never[],
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '10.0.0.8',
       });
 
@@ -369,7 +377,12 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       service = await loadService(pool);
       router.on('FROM products', () => ({ rows: [productRow()] }));
       await expect(
-        service.update(PRODUCT_ID, { minKwh: '100', actorUserId: ACTOR, ip: '10.0.0.8' })
+        service.update(PRODUCT_ID, {
+          minKwh: '100',
+          actorUserId: ACTOR,
+          session: SESSION,
+          ip: '10.0.0.8',
+        })
       ).rejects.toMatchObject({ status: 400 });
     });
 
@@ -381,7 +394,12 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       router.on('FROM product_categories', () => ({ rows: [] }));
       router.on('FROM electricity_product_limits', () => ({ rows: [] }));
       await expect(
-        service.update(PRODUCT_ID, { minKwh: '100', actorUserId: ACTOR, ip: '10.0.0.8' })
+        service.update(PRODUCT_ID, {
+          minKwh: '100',
+          actorUserId: ACTOR,
+          session: SESSION,
+          ip: '10.0.0.8',
+        })
       ).rejects.toMatchObject({ status: 400 });
     });
 
@@ -399,6 +417,7 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
         service.update(PRODUCT_ID, {
           minKwh: '500',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '10.0.0.8',
         })
       ).rejects.toMatchObject({ status: 400 });
@@ -427,6 +446,7 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
         minKwh: '100',
         maxKwh: '500',
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '10.0.0.8',
       });
 
@@ -439,7 +459,7 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
     it('throws 404 when the product does not exist', async () => {
       const { pool } = makeDb();
       service = await loadService(pool);
-      await expect(service.archive(PRODUCT_ID, ACTOR, '10.0.0.8')).rejects.toMatchObject({
+      await expect(service.archive(PRODUCT_ID, ACTOR, '10.0.0.8', SESSION)).rejects.toMatchObject({
         status: 404,
       });
     });
@@ -450,7 +470,7 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       router.on('FROM products', () => ({
         rows: [productRow({ type: 'electricity', system_key: 'thermal_electricity' })],
       }));
-      await expect(service.archive(PRODUCT_ID, ACTOR, '10.0.0.8')).rejects.toMatchObject({
+      await expect(service.archive(PRODUCT_ID, ACTOR, '10.0.0.8', SESSION)).rejects.toMatchObject({
         status: 400,
       });
     });
@@ -462,7 +482,7 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       router.on('UPDATE products', () => ({ rows: [], rowCount: 1 }));
       router.on('INSERT INTO audit_log', () => ({ rows: [], rowCount: 1 }));
 
-      await service.archive(PRODUCT_ID, ACTOR, '10.0.0.8');
+      await service.archive(PRODUCT_ID, ACTOR, '10.0.0.8', SESSION);
 
       const update = router.queries('UPDATE products')[0];
       expect(update!.values).toEqual(['archived', PRODUCT_ID]);
@@ -476,7 +496,7 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       service = await loadService(pool);
       router.on('FROM products', () => ({ rows: [productRow({ status: 'archived' })] }));
 
-      await service.archive(PRODUCT_ID, ACTOR, '10.0.0.8');
+      await service.archive(PRODUCT_ID, ACTOR, '10.0.0.8', SESSION);
 
       expect(router.queries('INSERT INTO audit_log').length).toBe(0);
       expect(router.queries('UPDATE products').length).toBe(0);
@@ -489,6 +509,7 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       price: '1800000',
       effectiveFrom: '2026-09-01T00:00:00.000Z',
       actorUserId: ACTOR,
+      session: SESSION,
       ip: '10.0.0.8',
       ...over,
     });

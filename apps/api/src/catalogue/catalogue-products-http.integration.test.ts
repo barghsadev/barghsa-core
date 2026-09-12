@@ -81,7 +81,7 @@ it.each(['create', 'update', 'archive', 'price'])(
           Number(
             (
               await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' "
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM users u JOIN sessions s%FOR UPDATE OF u%' "
               )
             ).rows[0].count
           )
@@ -228,7 +228,16 @@ it('validates category types on edit and treats repeated categories as a set', a
         "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='catalogue_product_updated'"
       )
     ).rows
-  ).toEqual([{ metadata: { productId: product.id, categories: [changed] } }]);
+  ).toEqual([
+    {
+      metadata: {
+        productId: product.id,
+        categories: [changed],
+        stepUpVerified: true,
+        stepUpVerifiedAt: expect.any(String),
+      },
+    },
+  ]);
 });
 
 it('rejects unknown fields, blank localized titles and ambiguous price dates without mutations', async () => {
@@ -323,4 +332,71 @@ it('reports enabled green rules and intersecting current or scheduled VAT refere
   } finally {
     await http.pool.query("DELETE FROM app_config WHERE key='electricity.green_mandatory_rules'");
   }
+});
+
+async function expireAtAudit(run: () => Promise<void>) {
+  await http.pool
+    .query(`CREATE OR REPLACE FUNCTION expire_price_session() RETURNS trigger LANGUAGE plpgsql AS $$
+ BEGIN UPDATE sessions SET expires_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='operator'; RETURN NEW; END $$;
+ CREATE TRIGGER expire_price_session BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event LIKE 'catalogue_product_%') EXECUTE FUNCTION expire_price_session()`);
+  try {
+    await run();
+  } finally {
+    await http.pool.query('DROP TRIGGER expire_price_session ON audit_log');
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day' WHERE user_id='operator'"
+    );
+  }
+}
+
+it.each(['create', 'update', 'archive', 'price'] as const)(
+  'rolls back %s when session expires before commit',
+  async (action) => {
+    const id = await seed();
+    const before = (await http.pool.query('SELECT count(*)::int AS count FROM products')).rows[0]
+      .count;
+    await expireAtAudit(async () => {
+      const response =
+        action === 'create'
+          ? await request('', 'POST', createBody)
+          : action === 'update'
+            ? await request(`/${id}`, 'PUT', { status: 'inactive' })
+            : action === 'archive'
+              ? await request(`/${id}`, 'DELETE')
+              : await request(`/${id}/prices`, 'POST', { price: '2000' });
+      expect(response.status).toBe(401);
+      expect(
+        (await http.pool.query('SELECT count(*)::int AS count FROM products')).rows[0].count
+      ).toBe(before);
+      expect(
+        (await http.pool.query('SELECT status,price FROM products WHERE id=$1', [id])).rows
+      ).toEqual([{ status: 'active', price: '1000' }]);
+      expect(
+        (await http.pool.query('SELECT id FROM product_price_versions WHERE product_id=$1', [id]))
+          .rows
+      ).toHaveLength(0);
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'"))
+          .rows
+      ).toHaveLength(0);
+    });
+  }
+);
+
+it('records verified step-up time in the price configuration audit', async () => {
+  const verifiedAt = new Date(Date.now() - 60_000);
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=$1 WHERE user_id='operator'", [
+    verifiedAt,
+  ]);
+  expect((await request('', 'POST', createBody)).ok).toBe(true);
+  const rows = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event LIKE 'catalogue_product_%'"
+    )
+  ).rows;
+  expect(rows).toHaveLength(1);
+  expect(rows[0].metadata).toMatchObject({
+    stepUpVerified: true,
+    stepUpVerifiedAt: verifiedAt.toISOString(),
+  });
 });

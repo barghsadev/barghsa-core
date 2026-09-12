@@ -6,8 +6,14 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 
 // ─── Fixtures ──────────────────────────────────────────────────────────
 
+const adminSession = {
+  isAdmin: true,
+  userId: 'admin-1',
+  sessionId: 'test-session',
+  csrfToken: 'test-csrf',
+};
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: adminSession,
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
@@ -123,6 +129,7 @@ describe('VAT config payload validation (T-09.12.02)', () => {
       rateBasisPoints: 900,
       effectiveFrom: undefined,
       actorUserId: 'admin-1',
+      session: adminSession,
       ip: '127.0.0.1',
     });
   });

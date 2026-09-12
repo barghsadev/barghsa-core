@@ -1,3 +1,6 @@
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
 vi.mock('./staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
@@ -73,6 +76,7 @@ function overrideRow(over: Record<string, unknown> = {}) {
 }
 
 const ACTOR = 'user-admin-1';
+const SESSION = { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' };
 const CONFIG_ID = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc';
 const PRODUCT_ID = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const OVERRIDE_ID = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
@@ -151,6 +155,7 @@ describe('VatConfigService (T-09.12.02)', () => {
         category: 'electricity',
         rateBasisPoints: 900,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '127.0.0.1',
       });
 
@@ -164,13 +169,20 @@ describe('VatConfigService (T-09.12.02)', () => {
       const { pool } = makeDb();
       service = await loadService(pool);
       await expect(
-        service.createRate({ category: 'bogus', rateBasisPoints: 900, actorUserId: ACTOR, ip: '' })
+        service.createRate({
+          category: 'bogus',
+          rateBasisPoints: 900,
+          actorUserId: ACTOR,
+          session: SESSION,
+          ip: '',
+        })
       ).rejects.toMatchObject({ status: 400 });
       await expect(
         service.createRate({
           category: 'electricity',
           rateBasisPoints: 10_001,
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '',
         })
       ).rejects.toMatchObject({ status: 400 });
@@ -179,6 +191,7 @@ describe('VatConfigService (T-09.12.02)', () => {
           category: 'electricity',
           rateBasisPoints: -1,
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '',
         })
       ).rejects.toMatchObject({ status: 400 });
@@ -202,6 +215,7 @@ describe('VatConfigService (T-09.12.02)', () => {
         rateBasisPoints: 1000,
         effectiveFrom: '2026-09-01T00:00:00.000Z',
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '127.0.0.1',
       });
 
@@ -223,6 +237,7 @@ describe('VatConfigService (T-09.12.02)', () => {
         category: 'electricity',
         rateBasisPoints: 900,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '127.0.0.1',
       });
 
@@ -243,6 +258,7 @@ describe('VatConfigService (T-09.12.02)', () => {
           rateBasisPoints: 1000,
           effectiveFrom: '2026-08-01T00:00:00.000Z', // before open rate
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '',
         })
       ).rejects.toMatchObject({ status: 400 });
@@ -270,6 +286,7 @@ describe('VatConfigService (T-09.12.02)', () => {
           productId: PRODUCT_ID,
           vatConfigId: CONFIG_ID,
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '',
         })
       ).rejects.toMatchObject({ status: 409 });
@@ -294,6 +311,7 @@ describe('VatConfigService (T-09.12.02)', () => {
       const result = await service.endRate({
         id: CONFIG_ID,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '127.0.0.1',
       });
 
@@ -312,7 +330,12 @@ describe('VatConfigService (T-09.12.02)', () => {
         rows: [configRow({ id: CONFIG_ID, effective_until: '2026-06-01T00:00:00.000Z' })],
       }));
 
-      const result = await service.endRate({ id: CONFIG_ID, actorUserId: ACTOR, ip: '' });
+      const result = await service.endRate({
+        id: CONFIG_ID,
+        actorUserId: ACTOR,
+        session: SESSION,
+        ip: '',
+      });
 
       expect(result.effectiveUntil).toBe('2026-06-01T00:00:00.000Z');
       expect(router.queries('UPDATE vat_configurations')).toHaveLength(0);
@@ -324,7 +347,7 @@ describe('VatConfigService (T-09.12.02)', () => {
       service = await loadService(pool);
       router.on('FROM vat_configurations\n        WHERE id', () => ({ rows: [] }));
       await expect(
-        service.endRate({ id: CONFIG_ID, actorUserId: ACTOR, ip: '' })
+        service.endRate({ id: CONFIG_ID, actorUserId: ACTOR, session: SESSION, ip: '' })
       ).rejects.toMatchObject({
         status: 404,
       });
@@ -355,6 +378,7 @@ describe('VatConfigService (T-09.12.02)', () => {
         productId: PRODUCT_ID,
         vatConfigId: CONFIG_ID,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '127.0.0.1',
       });
 
@@ -387,6 +411,7 @@ describe('VatConfigService (T-09.12.02)', () => {
       const result = await service.endProductOverride({
         id: OVERRIDE_ID,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '127.0.0.1',
       });
 
@@ -531,6 +556,7 @@ describe('VatConfigService (T-09.12.02)', () => {
         category: 'product_override',
         rateBasisPoints: 500,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '127.0.0.1',
       });
 
@@ -560,6 +586,7 @@ describe('VatConfigService (T-09.12.02)', () => {
           rateBasisPoints: 1000,
           effectiveFrom: '2026-03-01T00:00:00.000Z', // inside ended window
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '',
         })
       ).rejects.toMatchObject({ status: 400 });
@@ -577,6 +604,7 @@ describe('VatConfigService (T-09.12.02)', () => {
           productId: PRODUCT_ID,
           vatConfigId: CONFIG_ID,
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '',
         })
       ).rejects.toMatchObject({ status: 400 });
@@ -594,6 +622,7 @@ describe('VatConfigService (T-09.12.02)', () => {
           productId: PRODUCT_ID,
           vatConfigId: CONFIG_ID,
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '',
         })
       ).rejects.toMatchObject({ status: 400 });
@@ -622,6 +651,7 @@ describe('VatConfigService (T-09.12.02)', () => {
         productId: PRODUCT_ID,
         vatConfigId: CONFIG_ID,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '127.0.0.1',
       });
 
