@@ -1842,7 +1842,7 @@ export class AdminController {
     @Req() req: AuthenticatedRequest,
     @Query('notificationId') notificationId?: string,
     @Query('channel') channel?: 'in_app' | 'email' | 'sms',
-    @Query('status') status?: 'delivered' | 'failed',
+    @Query('status') status?: 'delivered' | 'failed' | 'sending' | 'unknown',
     @Query('limit') limit?: string,
     @Query('offset') offset?: string
   ) {
@@ -1856,7 +1856,7 @@ export class AdminController {
     const options: {
       notificationId?: string;
       channel?: 'in_app' | 'email' | 'sms';
-      status?: 'delivered' | 'failed';
+      status?: 'delivered' | 'failed' | 'sending' | 'unknown';
       limit?: number;
       offset?: number;
     } = {};

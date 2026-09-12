@@ -863,7 +863,7 @@ it('delivers a queued email with the recipient locale, template and durable rece
           [id]
         )
       ).rows
-    ).toEqual([{ attempt_number: 1, latency_ms: null }]);
+    ).toEqual([{ attempt_number: 1, latency_ms: expect.any(Number) }]);
     expect(
       (
         await pool.query(
@@ -1171,7 +1171,7 @@ for (const channel of ['email', 'sms'] as const) {
             [id, channel]
           )
         ).rows[0].latency_ms
-      ).toBeNull();
+      ).toEqual(expect.any(Number));
     } finally {
       await pool.query(
         "UPDATE users SET notification_preferences='IN_APP,EMAIL,SMS' WHERE user_id='delivery-recipient'"

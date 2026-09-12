@@ -17,7 +17,7 @@ interface DeliveryAttempt {
   id: string;
   notificationId: string;
   channel: string;
-  status: 'delivered' | 'failed';
+  status: 'delivered' | 'failed' | 'sending' | 'unknown';
   attemptNumber: number;
   providerRef: string | null;
   latencyMs: number | null;
@@ -51,7 +51,8 @@ function isAttempt(value: unknown, filters: Filters): value is DeliveryAttempt {
     ['in_app', 'email', 'sms'].includes(row.channel) &&
     (!filters.channel || row.channel === filters.channel) &&
     (!filters.status || row.status === filters.status) &&
-    (row.status === 'delivered' || row.status === 'failed') &&
+    typeof row.status === 'string' &&
+    ['delivered', 'failed', 'sending', 'unknown'].includes(row.status) &&
     Number.isSafeInteger(row.attemptNumber) &&
     Number(row.attemptNumber) > 0 &&
     (row.latencyMs === null ||
@@ -196,7 +197,7 @@ export function NotificationDeliveryHistory({
                 onChange={(event) => setDraft({ ...draft, status: event.target.value })}
               >
                 <option value="">{label('all')}</option>
-                {['delivered', 'failed'].map((status) => (
+                {['delivered', 'failed', 'sending', 'unknown'].map((status) => (
                   <option key={status} value={status}>
                     {label(status)}
                   </option>

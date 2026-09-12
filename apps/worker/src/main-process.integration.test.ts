@@ -407,6 +407,15 @@ for (const mode of ['graceful', 'forced', 'bookkeeping-failure'] as const) {
           )
         ).rows[0].status
       ).toBe('sending');
+      const sendHistory = (
+        await worker.pool.query(
+          "SELECT id,status,send_attempt_token FROM notification_delivery_log WHERE notification_id=$1 AND channel='sms'",
+          [id]
+        )
+      ).rows;
+      expect(sendHistory).toEqual([
+        { id: expect.any(String), status: 'sending', send_attempt_token: expect.any(String) },
+      ]);
       const stopping = worker.stop();
       await expect.poll(() => worker.logs()).toContain('starting graceful shutdown');
       // A new row after drain begins must remain queued until another worker starts.
@@ -478,6 +487,15 @@ for (const mode of ['graceful', 'forced', 'bookkeeping-failure'] as const) {
           { timeout: 5000 }
         )
         .toBe(mode === 'forced' ? 'dead_letter' : 'done');
+      expect(
+        (
+          await worker.pool.query(
+            "SELECT id,status,send_attempt_token FROM notification_delivery_log WHERE notification_id=$1 AND channel='sms'",
+            [id]
+          )
+        ).rows
+      ).toEqual([{ ...sendHistory[0], status: mode === 'forced' ? 'sending' : 'delivered' }]);
+
       await expect
         .poll(
           async () =>

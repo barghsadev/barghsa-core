@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { check, foreignKey, pgTable, primaryKey, text, uuid } from 'drizzle-orm/pg-core';
+import { check, foreignKey, integer, pgTable, primaryKey, text, uuid } from 'drizzle-orm/pg-core';
 import { timestamptz } from '../types.js';
 import { notificationJob } from './notification-outbox.js';
 
@@ -14,6 +14,7 @@ export const notificationSendReceipts = pgTable(
     transport: text('transport', { enum: ['smtp', 'resend', 'smsir'] }),
     idempotencyKey: text('idempotency_key').notNull(),
     attemptToken: uuid('attempt_token').notNull(),
+    attemptNumber: integer('attempt_number').notNull().default(1),
     providerRef: text('provider_ref'),
     lastError: text('last_error'),
     acceptedAt: timestamptz('accepted_at'),
@@ -26,6 +27,7 @@ export const notificationSendReceipts = pgTable(
       columns: [table.outboxId, table.channel],
       foreignColumns: [notificationJob.outboxId, notificationJob.channel],
     }).onDelete('cascade'),
+    check('notification_send_attempt_check', sql`${table.attemptNumber} > 0`),
     check('notification_send_channel_check', sql`${table.channel} IN ('email','sms')`),
     check(
       'notification_send_status_check',

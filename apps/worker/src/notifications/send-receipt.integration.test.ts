@@ -5,6 +5,7 @@ import { Pool } from 'pg';
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { DeliveryRejected } from '@barghsa/shared/notification-delivery';
 import { durableDelivery, readDeliveryReceipt, DeliveryOutcomeUnknown } from './send-receipt.js';
+import { writeDeliveryLog } from './delivery-log.js';
 
 const database = `test_receipt_${randomUUID().replaceAll('-', '')}`;
 let management: Pool, pool: Pool, profileId: string;
@@ -141,6 +142,27 @@ it('retries a proven rejection while preserving provider and occurrence identity
     'accepted-on-retry'
   );
   expect(send).toHaveBeenCalledTimes(2);
+  // No worker bookkeeping ran between attempts, as on a crash after rejection.
+  const history = (
+    await pool.query(
+      'SELECT status,attempt_number,provider_ref,error_detail,send_attempt_token FROM notification_delivery_log WHERE notification_id=$1 ORDER BY attempt_number',
+      [id]
+    )
+  ).rows;
+  expect(history).toMatchObject([
+    { status: 'failed', attempt_number: 1, provider_ref: null, error_detail: 'recipient refused' },
+    {
+      status: 'delivered',
+      attempt_number: 2,
+      provider_ref: 'accepted-on-retry',
+      error_detail: null,
+    },
+  ]);
+  expect(new Set(history.map((row) => row.send_attempt_token)).size).toBe(2);
+  expect(
+    (await pool.query('SELECT attempts FROM notification_job WHERE outbox_id=$1', [id])).rows[0]
+      .attempts
+  ).toBe(0);
 });
 for (const committed of [false, true]) {
   it(`never resends when the receipt write ${committed ? 'commits but its response is lost' : 'fails after provider acceptance'}`, async () => {
@@ -162,13 +184,27 @@ for (const committed of [false, true]) {
     if (committed) expect(await retry).toBe('accepted-receipt');
     else await expect(retry).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
     expect(send).toHaveBeenCalledOnce();
+    expect(
+      (
+        await pool.query(
+          'SELECT status,provider_ref FROM notification_delivery_log WHERE notification_id=$1',
+          [id]
+        )
+      ).rows
+    ).toEqual([
+      {
+        status: committed ? 'delivered' : 'sending',
+        provider_ref: committed ? 'accepted-receipt' : null,
+      },
+    ]);
   });
 }
 it('refuses a new send when its durable claim cannot be written', async () => {
   const send = vi.fn(async () => 'not-sent');
   const unavailable = {
     query: async (sql: string) => {
-      if (sql.startsWith('INSERT')) throw new Error('claim storage unavailable');
+      if (sql.includes('INSERT INTO notification_send_receipts'))
+        throw new Error('claim storage unavailable');
       return { rows: [] };
     },
   };
@@ -193,4 +229,120 @@ it('enforces receipt and provider invariants in PostgreSQL', async () => {
       )
     ).rejects.toMatchObject({ code: '23514' });
   }
+});
+
+it('stores the attempt before I/O and never duplicates it during recovered bookkeeping', async () => {
+  const id = await queue();
+  await durableDelivery(
+    pool,
+    id,
+    'email',
+    'occurrence'
+  )(provider, async () => {
+    expect(
+      (
+        await pool.query(
+          'SELECT status,provider_ref,latency_ms FROM notification_delivery_log WHERE notification_id=$1',
+          [id]
+        )
+      ).rows
+    ).toEqual([{ status: 'sending', provider_ref: null, latency_ms: null }]);
+    return 'durable-reference';
+  });
+  const before = (
+    await pool.query('SELECT * FROM notification_delivery_log WHERE notification_id=$1', [id])
+  ).rows;
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await writeDeliveryLog(client, {
+      notificationId: id,
+      channel: 'email',
+      delivered: true,
+      attemptNumber: 1,
+      providerRef: 'durable-reference',
+      latencyMs: null,
+    });
+    await client.query('ROLLBACK');
+  } finally {
+    client.release();
+  }
+  await writeDeliveryLog(pool, {
+    notificationId: id,
+    channel: 'email',
+    delivered: true,
+    attemptNumber: 1,
+    providerRef: 'durable-reference',
+    latencyMs: null,
+  });
+  expect(
+    (await pool.query('SELECT * FROM notification_delivery_log WHERE notification_id=$1', [id]))
+      .rows
+  ).toEqual(before);
+});
+for (const suppressed of [false, true]) {
+  it(`prevents I/O if durable history insertion ${suppressed ? 'is suppressed' : 'fails'}`, async () => {
+    const id = await queue(),
+      send = vi.fn(async () => 'must-not-send');
+    await pool.query(`CREATE FUNCTION fail_history_insert() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN ${suppressed ? 'RETURN NULL;' : "RAISE EXCEPTION 'history storage unavailable';"} END $$;
+      CREATE TRIGGER fail_history_insert BEFORE INSERT ON notification_delivery_log FOR EACH ROW EXECUTE FUNCTION fail_history_insert()`);
+    try {
+      await expect(
+        durableDelivery(pool, id, 'email', 'occurrence')(provider, send)
+      ).rejects.toThrow();
+      expect(send).not.toHaveBeenCalled();
+      expect(
+        (await pool.query('SELECT status FROM notification_send_receipts WHERE outbox_id=$1', [id]))
+          .rows
+      ).toEqual(suppressed ? [{ status: 'sending' }] : []);
+    } finally {
+      await pool.query(
+        'DROP TRIGGER fail_history_insert ON notification_delivery_log; DROP FUNCTION fail_history_insert()'
+      );
+    }
+  });
+}
+it('keeps acceptance and history unresolved together if the history update is suppressed', async () => {
+  const id = await queue(),
+    send = vi.fn(async () => 'provider-accepted');
+  await pool.query(`CREATE FUNCTION suppress_history_update() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RETURN NULL; END $$;
+    CREATE TRIGGER suppress_history_update BEFORE UPDATE ON notification_delivery_log FOR EACH ROW EXECUTE FUNCTION suppress_history_update()`);
+  try {
+    await expect(
+      durableDelivery(pool, id, 'email', 'occurrence')(provider, send)
+    ).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
+  } finally {
+    await pool.query(
+      'DROP TRIGGER suppress_history_update ON notification_delivery_log; DROP FUNCTION suppress_history_update()'
+    );
+  }
+  await expect(
+    durableDelivery(pool, id, 'email', 'occurrence')(provider, send)
+  ).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
+  expect(send).toHaveBeenCalledOnce();
+  for (const table of ['notification_send_receipts', 'notification_delivery_log']) {
+    const column = table === 'notification_send_receipts' ? 'outbox_id' : 'notification_id';
+    expect((await pool.query(`SELECT status FROM ${table} WHERE ${column}=$1`, [id])).rows).toEqual(
+      [{ status: 'sending' }]
+    );
+  }
+});
+it('preserves legacy hold evidence with unknown duration and leaves untouched jobs without history', async () => {
+  for (const id of [legacy, aggregateAttempt]) {
+    expect(
+      (
+        await pool.query(
+          'SELECT status,latency_ms,send_attempt_token FROM notification_delivery_log WHERE notification_id=$1',
+          [id]
+        )
+      ).rows
+    ).toEqual([{ status: 'unknown', latency_ms: null, send_attempt_token: expect.any(String) }]);
+  }
+  expect(
+    (
+      await pool.query('SELECT id FROM notification_delivery_log WHERE notification_id=$1', [
+        untouched,
+      ])
+    ).rows
+  ).toEqual([]);
 });

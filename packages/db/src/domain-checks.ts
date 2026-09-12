@@ -20,7 +20,7 @@ const definitions: Record<string, Array<[string, string]>> = {
   ],
   notification_delivery_log: [
     ['chk_ndl_channel', "(channel IN ('in_app', 'email', 'sms'))"],
-    ['chk_ndl_status', "(status IN ('delivered', 'failed'))"],
+    ['chk_ndl_status', "(status IN ('delivered', 'failed', 'sending', 'unknown'))"],
     ['chk_ndl_error_category', "(error_category IN ('transient', 'permanent', 'provider'))"],
   ],
   notification_dead_letter: [

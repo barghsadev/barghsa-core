@@ -158,6 +158,19 @@ it('searches successful and failed delivery logs without requiring a dead-letter
   expect(await failed.json()).toMatchObject([
     { notificationId: row.outbox, status: 'failed', attemptNumber: 1 },
   ]);
+  for (const status of ['sending', 'unknown']) {
+    await db.pool.query(
+      "INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number) VALUES ($1,'email',$2,3)",
+      [row.outbox, status]
+    );
+    const response = await fetch(`${url}?notificationId=${row.outbox}&status=${status}`, {
+      headers,
+    });
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject([
+      { notificationId: row.outbox, status, providerRef: null, latencyMs: null },
+    ]);
+  }
   await db.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='triage-role'");
   expect((await fetch(`${url}?status=delivered`, { headers })).status).toBe(403);
 });

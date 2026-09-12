@@ -4,11 +4,9 @@ import { sanitizeError } from './error-redact.js';
 /**
  * Delivery log writer (E-05, T-05.01.05).
  *
- * Appends one `notification_delivery_log` row per delivery attempt so the
- * admin panel can reconstruct a notification's full delivery history. The
- * worker calls `writeDeliveryLog` after each transport attempt (success or
- * failure) and on the exception path, capturing the channel, attempt number,
- * provider ref, latency, and a sanitized, classified error.
+ * Records local/preflight outcomes. Durable external send attempts have their
+ * own row, written before I/O by durableDelivery and finalized with its receipt.
+ * Recovery and later bookkeeping must not duplicate those send records.
  *
  * `error_detail` is always run through the same redaction used for
  * `notification_outbox.last_error` so provider messages can never leak
@@ -80,7 +78,12 @@ export async function writeDeliveryLog(
     `INSERT INTO notification_delivery_log
        (notification_id, channel, status, attempt_number, provider_ref,
         latency_ms, error_category, error_detail)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+     SELECT $1, $2, $3, $4, $5, $6, $7, $8
+     WHERE NOT EXISTS (
+       SELECT 1 FROM notification_send_receipts r
+       JOIN notification_delivery_log l ON l.send_attempt_token=r.attempt_token
+       WHERE r.outbox_id=$1 AND r.channel=$2
+     )`,
     [
       input.notificationId,
       input.channel,

@@ -38,7 +38,7 @@ export interface DeliveryLogRow {
   id: string;
   notificationId: string;
   channel: 'in_app' | 'email' | 'sms';
-  status: 'delivered' | 'failed';
+  status: 'delivered' | 'failed' | 'sending' | 'unknown';
   attemptNumber: number;
   providerRef: string | null;
   latencyMs: number | null;
@@ -182,7 +182,7 @@ export class NotificationsService {
   async findDeliveryLogs(options: {
     notificationId?: string;
     channel?: 'in_app' | 'email' | 'sms';
-    status?: 'delivered' | 'failed';
+    status?: 'delivered' | 'failed' | 'sending' | 'unknown';
     limit?: number;
     offset?: number;
   }): Promise<DeliveryLogRow[]> {

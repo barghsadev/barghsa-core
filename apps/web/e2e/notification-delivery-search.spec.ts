@@ -29,7 +29,7 @@ for (const locale of ['en', 'fa'] as const) {
       errorDetail: null,
       createdAt: '2026-09-01T01:00:00Z',
     }));
-    let mode: 'valid' | 'mismatch' | 'denied' | 'empty' = 'valid';
+    let mode: 'valid' | 'mismatch' | 'denied' | 'empty' | 'uncertain' = 'valid';
     const queries: URLSearchParams[] = [];
     await page.route('**/api/admin/notifications/delivery-logs?*', (route) => {
       const query = new URL(route.request().url()).searchParams;
@@ -37,13 +37,15 @@ for (const locale of ['en', 'fa'] as const) {
       if (mode === 'denied') return route.fulfill({ status: 403, json: {} });
       return route.fulfill({
         json:
-          mode === 'empty'
-            ? []
-            : mode === 'mismatch'
-              ? [{ ...entries[0], channel: 'sms' }]
-              : query.get('notificationId') || query.get('offset') === '25'
-                ? [entries[0]]
-                : entries,
+          mode === 'uncertain'
+            ? [{ ...entries[0], status: query.get('status'), providerRef: null, latencyMs: null }]
+            : mode === 'empty'
+              ? []
+              : mode === 'mismatch'
+                ? [{ ...entries[0], channel: 'sms' }]
+                : query.get('notificationId') || query.get('offset') === '25'
+                  ? [entries[0]]
+                  : entries,
       });
     });
     await page.goto(fa ? '/admin/notifications' : '/admin/failed-notifications');
@@ -100,6 +102,19 @@ for (const locale of ['en', 'fa'] as const) {
     mode = 'valid';
     await error.getByRole('button').click();
     await expect(dialog.locator('tbody tr')).toHaveCount(1);
+    mode = 'uncertain';
+    for (const [status, text] of [
+      ['sending', fa ? 'آغاز شده؛ نتیجه ثبت نشده' : 'Started; outcome not recorded'],
+      ['unknown', fa ? 'نتیجه نامشخص' : 'Outcome unknown'],
+    ]) {
+      await dialog
+        .getByRole('combobox', { name: fa ? 'نتیجه' : 'Outcome', exact: true })
+        .selectOption(status!);
+      await search.click();
+      await expect(dialog.locator('tbody tr')).toHaveCount(1);
+      await expect(dialog.locator('tbody')).toContainText(text!);
+      expect(queries.at(-1)?.get('status')).toBe(status);
+    }
     mode = 'denied';
     await search.click();
     await expect(error).toBeVisible();

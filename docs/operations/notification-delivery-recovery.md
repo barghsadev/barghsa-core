@@ -72,3 +72,11 @@ provider-side exactly-once delivery or eventual delivery.
 
 Authentication delivery and provider self-tests use separate workflows. This
 notification receipt table does not certify their crash recovery.
+
+## Durable attempt history rollout
+
+Deploy the API and web status readers before enabling migration0128 and the updated worker. Drain every older notification worker first; older senders do not write the new durable history. Migration0128 expands the existing log and snapshots retained receipts without deleting legacy processing rows. It cannot reconstruct attempts already missing before migration. Do not add legacy processing rows and receipt snapshots to infer a physical-send total.
+
+New external attempts commit a unique history token and receipt claim together before provider I/O. Each retry after a proven rejection advances a receipt-owned counter and appends a new row, even if no worker outcome transaction committed. Acceptance/rejection and history updates share one database statement. Bookkeeping and recovered receipts reuse the original row and duration. In-app delivery and preflight failures without a receipt retain transaction-local processing history.
+
+`Sending` means an attempt started but its outcome was not recorded. A dead process may leave this state indefinitely. `Unknown` means the provider result was ambiguous. Neither authorizes another send. If history insertion fails, no request is sent; if its outcome update fails, the durable receipt remains held. Existing provider-reconciliation prerequisites still apply.
