@@ -90,6 +90,17 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     variables: [],
   },
   {
+    eventKey: 'auth.refresh_token_reused',
+    faSubject: 'هشدار امنیتی نشست',
+    enSubject: 'Session security alert',
+    faBody:
+      'استفادهٔ دوباره از توکن نشست شما شناسایی شد. نشست‌های مرتبط برای محافظت از حساب باطل شدند. اگر این فعالیت را نمی‌شناسید، رمز عبور خود را تغییر دهید و با پشتیبانی تماس بگیرید.',
+    enBody:
+      'Reuse of a session token was detected. Related sessions were revoked to protect your account. If you do not recognize this activity, change your password and contact support.',
+    channels: ['email', 'in_app'],
+    variables: [],
+  },
+  {
     eventKey: 'auth.new_device_login',
     faSubject: 'ورود از دستگاه جدید',
     enSubject: 'New device sign-in',
@@ -493,7 +504,7 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
       'این یک اعلان تستی از بارق‌سا است. اگر این پیام را دریافت می‌کنید، قالب به درستی کار می‌کند.',
     enBody:
       'This is a test notification from Barghsa. If you received it, the template works correctly.',
-    channels: ['email', 'in_app'],
+    channels: ['email', 'sms', 'in_app'],
     variables: [],
   },
   {

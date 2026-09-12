@@ -24,6 +24,7 @@
     "db:generate": "tsx ./node_modules/drizzle-kit/bin.cjs generate",
     "db:migrate": "tsx src/migrate.ts",
     "db:migrate:run": "tsx src/migrate.ts",
+    "db:migrate:notification-templates": "tsx src/seed/index.ts --notification-templates-only",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:verify-restore": "./scripts/backup/verify-restore.sh",

@@ -293,67 +293,61 @@ async function seedGeography(db: DbInstance, _force: boolean): Promise<SeederRes
  * is_active `true`, and published_at set, so they are immediately usable by the
  * notification engine.
  *
- * Idempotency: matching is on (event_key, channel, locale). If an active
- * template already exists for a combo, that combo is skipped so re-running the
- * seed never creates duplicates or shadows admin-authored edits. Inactive
- * (archived/draft-only) combos are re-seeded to guarantee an active version
- * exists for every event.
+ * Existing families, including drafts and archived versions, are preserved.
+ * The complete catalog commits atomically. Family locks match the admin API,
+ * so concurrent imports and authoring cannot allocate the same first version.
  */
-async function seedNotificationTemplates(db: DbInstance, _force: boolean): Promise<SeederResult> {
+export async function seedNotificationTemplates(
+  db: DbInstance,
+  _force: boolean
+): Promise<SeederResult> {
   const result: SeederResult = {
     entity: 'notification_templates',
     created: 0,
     skipped: 0,
     errors: [],
   };
-
-  const templates = buildSeedTemplates();
-  const now = new Date();
-
-  for (const tpl of templates) {
-    try {
-      // Skip when an active template already exists for the combo.
-      const existing = await db
-        .select({ id: notificationTemplates.id })
-        .from(notificationTemplates)
-        .where(
-          and(
-            eq(notificationTemplates.eventKey, tpl.eventKey),
-            eq(notificationTemplates.channel, tpl.channel),
-            eq(notificationTemplates.locale, tpl.locale),
-            eq(notificationTemplates.isActive, true)
+  try {
+    await db.transaction(async (tx) => {
+      for (const tpl of buildSeedTemplates()) {
+        const family = JSON.stringify([
+          'notification-template',
+          tpl.eventKey,
+          tpl.channel,
+          tpl.locale,
+        ]);
+        await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${family},0))`);
+        const existing = await tx
+          .select({ id: notificationTemplates.id })
+          .from(notificationTemplates)
+          .where(
+            and(
+              eq(notificationTemplates.eventKey, tpl.eventKey),
+              eq(notificationTemplates.channel, tpl.channel),
+              eq(notificationTemplates.locale, tpl.locale)
+            )
           )
-        )
-        .limit(1);
-
-      if (existing.length > 0) {
-        result.skipped++;
-        continue;
+          .limit(1);
+        if (existing.length) {
+          result.skipped++;
+          continue;
+        }
+        await tx.insert(notificationTemplates).values({
+          id: uuidv7(),
+          ...tpl,
+          status: 'active',
+          isActive: true,
+          version: 1,
+          publishedAt: new Date(),
+        });
+        result.created++;
       }
-
-      await db.insert(notificationTemplates).values({
-        id: uuidv7(),
-        eventKey: tpl.eventKey,
-        channel: tpl.channel,
-        locale: tpl.locale,
-        subject: tpl.subject,
-        bodyTemplate: tpl.bodyTemplate,
-        variables: tpl.variables,
-        status: 'active',
-        isActive: true,
-        version: 1,
-        publishedAt: now,
-        createdAt: now,
-        updatedAt: now,
-      });
-
-      result.created++;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      result.errors.push(`template[${tpl.eventKey}/${tpl.channel}/${tpl.locale}]: ${message}`);
-    }
+    });
+  } catch (err) {
+    result.created = 0;
+    result.skipped = 0;
+    result.errors.push(err instanceof Error ? err.message : String(err));
   }
-
   return result;
 }
 
@@ -382,7 +376,8 @@ export interface SeedRunResult {
 export async function runSeed(
   force: boolean = false,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dbOverride?: any
+  dbOverride?: any,
+  notificationTemplatesOnly = false
 ): Promise<SeedRunResult> {
   let pool: Pool | null = null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -399,7 +394,7 @@ export async function runSeed(
   const errors: string[] = [];
 
   try {
-    for (const seeder of seeders) {
+    for (const seeder of notificationTemplatesOnly ? [seedNotificationTemplates] : seeders) {
       try {
         const result = await seeder(db, force);
         results.push(result);
@@ -428,16 +423,17 @@ export async function runSeed(
 // Parse CLI args
 // ---------------------------------------------------------------------------
 
-function parseArgs(): { force: boolean } {
+function parseArgs(): { force: boolean; notificationTemplatesOnly: boolean } {
   const args = process.argv.slice(2);
   return {
     force: args.includes('--force'),
+    notificationTemplatesOnly: args.includes('--notification-templates-only'),
   };
 }
 
 async function main(): Promise<void> {
-  const { force } = parseArgs();
-  const result = await runSeed(force);
+  const { force, notificationTemplatesOnly } = parseArgs();
+  const result = await runSeed(force, undefined, notificationTemplatesOnly);
 
   for (const r of result.results) {
     const parts: string[] = [];

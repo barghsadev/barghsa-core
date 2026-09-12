@@ -1,12 +1,17 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { sql, eq } from 'drizzle-orm';
 import { createMigratedTestDb } from '../test/migrated-db';
-import { runSeed } from './index';
+import { runSeed, seedNotificationTemplates } from './index';
 import { products } from '../schema/products';
 import { users } from '../schema/users';
 import { notificationTemplates } from '../schema/notification-templates';
 import { buildSeedTemplates } from './notification-templates';
 import { NOTIFICATION_TYPE_REGISTRY } from '@barghsa/shared/notifications';
+import { renderTemplate, collectVariables, validateTemplate } from '@barghsa/shared/notifications';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 
 /**
  * Integration tests for the seed runner (T-02.04.05, updated for T-03.01.01.01).
@@ -339,6 +344,143 @@ describe('notification template seeding', () => {
           `${row.eventKey}/${row.channel}/${row.locale} uses undeclared {{${p}}}`
         ).toBe(true);
       }
+    }
+  });
+
+  it('covers every Appendix channel and locale and renders each declared variable contract', () => {
+    const rows = buildSeedTemplates();
+    const appendix = readFileSync(
+      resolve(__dirname, '../../../../kanban/epics/05-notifications-documents-ai.md'),
+      'utf8'
+    )
+      .split('## 3. Appendix: Business Notification Events')[1]!
+      .split('## 4.')[0]!;
+    const events = [...appendix.matchAll(/^\| `([^`]+)` \| [^|]+ \| [^|]+ \| ([^|]+) \|/gm)];
+    expect(events.length).toBe(35);
+    for (const [, event, channels] of events) {
+      for (const channel of channels!
+        .split(',')
+        .flatMap((value) =>
+          value.trim().toLowerCase() === 'any'
+            ? ['email', 'sms', 'in_app']
+            : [value.trim().toLowerCase().replace('in-app', 'in_app')]
+        )) {
+        for (const locale of ['fa', 'en']) {
+          expect(
+            rows.filter(
+              (row) => row.eventKey === event && row.channel === channel && row.locale === locale
+            ),
+            `${event}/${channel}/${locale}`
+          ).toHaveLength(1);
+        }
+      }
+    }
+    for (const row of rows) {
+      const names = row.variables.map((variable) => variable.name);
+      expect(row.variables.every((variable) => variable.description.trim())).toBe(true);
+      const data = Object.fromEntries(
+        names.map((name) => [name, '<img src=x onerror=attack()> & "sample"'])
+      );
+      for (const template of [row.subject, row.bodyTemplate].filter(
+        (value): value is string => value !== null
+      )) {
+        expect(validateTemplate(template, names)).toEqual([]);
+        const rendered = renderTemplate(template, names, {
+          data: { ...data, internalSecret: 'DO_NOT_EXPOSE' },
+        });
+        expect(rendered.missing).toEqual([]);
+        expect(rendered.unknown).toEqual([]);
+        expect(rendered.output).not.toContain('<img');
+        expect(rendered.output).not.toContain('DO_NOT_EXPOSE');
+        if (collectVariables(template).length) expect(rendered.output).toContain('&lt;img');
+        expect(renderTemplate(template, names).missing.sort()).toEqual(
+          collectVariables(template).sort()
+        );
+      }
+    }
+  });
+
+  it('runs the notification data migration without seeding products, geography or admins', async () => {
+    const isolated = await createMigratedTestDb();
+    try {
+      const { stdout } = await promisify(execFile)('pnpm', ['db:migrate:notification-templates'], {
+        cwd: resolve(__dirname, '../..'),
+        env: { ...process.env, PGDIRECT_URL: isolated.connectionString },
+        timeout: 15000,
+      });
+      expect(stdout).toContain(
+        `[seed:notification_templates] created ${buildSeedTemplates().length}`
+      );
+      expect(stdout).not.toContain('[seed:products]');
+      expect((await isolated.db.select().from(notificationTemplates)).length).toBe(
+        buildSeedTemplates().length
+      );
+      expect(await isolated.db.select().from(products)).toEqual([]);
+      expect(await isolated.db.select().from(users)).toEqual([]);
+      expect(
+        (await isolated.pool.query('SELECT count(*)::int AS count FROM provinces')).rows[0]?.count
+      ).toBe(0);
+    } finally {
+      await isolated.close();
+    }
+  }, 20000);
+
+  it('preserves customized drafts and archived families, including force runs', async () => {
+    const family = 'auth.password_changed';
+    await ctx.db.delete(notificationTemplates).where(eq(notificationTemplates.eventKey, family));
+    await ctx.pool.query(`INSERT INTO notification_templates
+      (event_key,channel,locale,body_template,version,status,is_active)
+      VALUES ('auth.password_changed','email','en','Custom draft',1,'draft',false),
+             ('auth.password_changed','email','fa','Custom archive',2,'archived',false)`);
+    const before = (
+      await ctx.pool.query(
+        "SELECT * FROM notification_templates WHERE event_key=$1 AND channel='email' ORDER BY locale",
+        [family]
+      )
+    ).rows;
+    const result = await seedNotificationTemplates(ctx.db, true);
+    expect(result.errors).toEqual([]);
+    const after = (
+      await ctx.pool.query(
+        "SELECT * FROM notification_templates WHERE event_key=$1 AND channel='email' ORDER BY locale",
+        [family]
+      )
+    ).rows;
+    expect(after).toEqual(before);
+  });
+
+  it('serializes concurrent seeders without duplicate versions or errors', async () => {
+    await ctx.db.delete(notificationTemplates);
+    const results = await Promise.all([
+      seedNotificationTemplates(ctx.db, false),
+      seedNotificationTemplates(ctx.db, false),
+    ]);
+    expect(results.flatMap((result) => result.errors)).toEqual([]);
+    expect(results.reduce((sum, result) => sum + result.created, 0)).toBe(
+      buildSeedTemplates().length
+    );
+    expect((await ctx.db.select().from(notificationTemplates)).length).toBe(
+      buildSeedTemplates().length
+    );
+  });
+
+  it('rolls back the entire catalog when a template insert fails', async () => {
+    await ctx.db.delete(notificationTemplates);
+    await ctx.pool
+      .query(`CREATE FUNCTION reject_seed_fixture() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF NEW.event_key='auth.password_changed' THEN RAISE EXCEPTION 'seed fixture rejection'; END IF;
+      RETURN NEW; END $$;
+      CREATE TRIGGER reject_seed_fixture BEFORE INSERT ON notification_templates
+      FOR EACH ROW EXECUTE FUNCTION reject_seed_fixture()`);
+    try {
+      const result = await seedNotificationTemplates(ctx.db, false);
+      expect(result.errors.length).toBeGreaterThan(0);
+      expect(result.created).toBe(0);
+      expect(await ctx.db.select().from(notificationTemplates)).toEqual([]);
+    } finally {
+      await ctx.pool.query(
+        'DROP TRIGGER reject_seed_fixture ON notification_templates; DROP FUNCTION reject_seed_fixture()'
+      );
     }
   });
 });
