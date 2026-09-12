@@ -1673,14 +1673,14 @@
     "historical_deferrals": [
       "- [ ] Full notification infrastructure (email/SMS transport, outbox, worker) belongs to E-05"
     ],
-    "status": "In-app implementation verified; required email/SMS/outbox/worker delivery remainsR02.",
-    "reviewed_source_revision": "709d28bf895627d6c0becd9056a41abafded30b6",
-    "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
+    "status": "Manual in-app and external delivery verified; automatic provider prerequisite remains.",
+    "reviewed_source_revision": "47f15aecc2397432f9988c1b0b92b9ee5be684b4",
+    "review_record": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
     "dispositions": [
       {
         "statement_index": 0,
-        "disposition": "confirmed_repair_remaining",
-        "evidence": "Manual in-app verification notices, profile name, reason/corrective guidance, dashboard banner and inbox entry are verified. Actual email/SMS delivery per current preferences and versioned delivery templates remainR02. Automatic result notifications depend on T-07.01.02 and a real provider. audit/evidence/step-reviews.json#R01-verification-policy"
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: actual manual producer/outbox/worker/email/SMS transport and preference checks pass. Template/mapping rollout is documented. Automatic provider integration remains a separate task prerequisite."
       }
     ]
   },
@@ -1866,14 +1866,14 @@
       "- [ ] Wire step-up to specific sensitive endpoints (role changes, credentials, etc.) — Slice 2 (separate PR)",
       "- [ ] Frontend step-up modal dialog — Slice 2"
     ],
-    "status": "Catalogue/VAT and existing domain callers verified; final provider/storage evidence reconciliation and future refund/contract prerequisites remain.",
-    "reviewed_source_revision": "d59499003a4accdf87b99288480f17437ed8bc50",
-    "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization",
+    "status": "Existing required sensitive consumers verified; separate future refund/contract/provider consumers remain.",
+    "reviewed_source_revision": "47f15aecc2397432f9988c1b0b92b9ee5be684b4",
+    "review_record": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
     "dispositions": [
       {
         "statement_index": 0,
-        "disposition": "pending_domain_review",
-        "evidence": "Current staff/profile/ownership/session and finance domain evidence linked in audit/evidence/step-reviews.json#R01-cross-domain-authorization. Remaining R02 provider/storage/price consumers and exact future refund/contract prerequisites retain partial acceptance. Catalogue/VAT verified at audit/evidence/step-reviews.json#R02-catalogue-vat."
+        "disposition": "separate_future_dependency",
+        "evidence": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: existing staff/profile/session/ownership/finance/provider/AI/catalogue/VAT/storage callers verified. Exact refund/contract/no-provider prerequisites remain in progress.json."
       },
       {
         "statement_index": 1,

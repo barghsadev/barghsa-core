@@ -4,15 +4,15 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **15c0ceb5**. **170 verified /34 partial /118 pending** of322 claims. Saved PRs: **149 closed /24 open /128 unreviewed**,301 total.58 historical skips:3 verified/55 pending.2851 logs indexed;38 older evidence refreshes remain. Saved GitHub inventory ends September3; no current GitHub or deployed-state claim.
+Branch `codex/audit-fixes`. Latest product/test **47f15aec**. **170 verified /34 partial /118 pending** of322 claims. Saved PRs: **149 closed /24 open /128 unreviewed**,301 total.58 skips:3 verified/55 pending.2871 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
 
-Catalogue/VAT: transaction session authority and exact step-up audits repaired. VAT history now uses accessible tables and linked-rate status matches invoice calculation.124 API,14 distinct browser,17 shared VAT and17 DB schema cases pass; applicable types/scoped lint/format/build and42 budgets pass. PR212/213 close locally;PR92 remains partial. [Review](evidence/step-reviews.json#R02-catalogue-vat). Preserve completed AI settings, KB and invoice evidence in prior step records.
+R02 local repairs complete: storage credential probes/sign/remove preserve current authority and exact step-up audits; manual verification queues named bilingual email/SMS atomically with status/audit/inbox.72 distinct API cases,2 real storage browser cases and9 notification seed cases pass; API/DB types, scoped lint/format pass. Existing provider/AI/catalogue/finance and unchanged UI evidence reused. PR92/146 remain open for explicit future/operational prerequisites. [Review](evidence/step-reviews.json#R02-sensitive-actions-verification-delivery). Catalogue/VAT PR212/213 remain closed at15c0ceb5.
 
 ## Next action
 
-Continue **R02-sensitive-actions-verification-delivery**, PR92/146. Reconcile remaining provider/storage/AI sensitive-action proof with completed batches and verify manual identity notices reach actual email/SMS delivery consumers. Avoid rebuilding completed work. Retain exact unbuilt refund/contract and real-provider prerequisites. Reconcile obsolete open-domain entries for already verified receipt/reminder/preferences tasks.
+Continue **R03-theme-contrast**, PR156 and exact shared-theme/component keys in progress.json. Read their criteria; repair confirmed terms-banner dark contrast and shared button/link/destructive states. Preserve completed components and focused evidence. Error/localization/correlation work remains in R03 after this theme batch.
 
-Then R03/R04/R05/V01/R06/V02/B01. Full regression staysV02. The plan is unfinished.
+Then R04/R05/V01/R06/V02/B01. Full regression staysV02. The plan is unfinished.
 
 ## Preserve completed work and prerequisites
 

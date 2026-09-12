@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `15c0ceb5` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `47f15aec` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -16,7 +16,7 @@ Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repe
 
 ## Next step
 
-Continue **R02-sensitive-actions-verification-delivery**,PR92/146. Catalogue/VAT closes PR212/213 at15c0ceb5. Current170 verified/34 partial/118 pending;149 closed/24 open/128 unreviewed saved PRs. Reuse completed provider/AI/notification evidence; retain future consumers. [Review](evidence/step-reviews.json#R02-catalogue-vat).
+Continue **R03-theme-contrast**,PR156 and shared component/theme criteria. R02 implemented consumer repairs and caller linkage complete locally at47f15aec; exact future/operational prerequisites remain. Current170 verified/34 partial/118 pending;149 closed/24 open/128 unreviewed saved PRs. [Review](evidence/step-reviews.json#R02-sensitive-actions-verification-delivery).
 
 Earlier checkpoints, retained for evidence reuse:
 
@@ -90,7 +90,7 @@ Fix confirmed defects in feature batches. Review each meaningful change with foc
 | V02 / affected groups | One final regression checkpoint after local repairs. | Required unit/integration/browser/coverage/types/lint/OpenAPI/migrations/snapshots/budgets/loop/image checks pass at recorded revisions. |
 | B01 / F22 | Dependency-ordered handoff of unmet skipped work. | Exact keys, criteria and prerequisites; preserve verified and incidental implementation. Build new features after repair closure. |
 
-Audit cleanup and inventory reconciliation are complete. R01 is partial for explicit R02, owner-policy and future/operational dependencies; R02 is active and seven phases are queued. Their sizes differ, so phase counts are not an effort estimate. The original 23 groups and their remaining requirements remain in progress.json.
+Audit cleanup and inventory reconciliation are complete. R01 is partial for explicit R02, owner-policy and future/operational dependencies; R02 local repairs are complete with explicit future/operational prerequisites; R03 is active and six phases are queued. Their sizes differ, so phase counts are not an effort estimate. The original 23 groups and their remaining requirements remain in progress.json.
 
 Invoice corrections consolidated at `0aae9d5`: **4 tasks verified /4 PR reviews closed**, saved PRs247–250. Paid Overdue correction, missing staff API/UI, safe retries and customer read authority are repaired.54 correction service/HTTP,30 customer read/assembly,5 deadline compatibility and40 DB cases support the batch; counts overlap earlier runs.12 current production Chromium cases,3 host cases and42 unchanged budgets pass. [Consolidated review](evidence/step-reviews.json#R01-invoice-corrections) preserves failed logs and valid evidence reuse; one snapshot refresh closes,10 remain. Credit wallet payout belongs to S-04.4.01; old-writer retirement and legacy CHECK validation remain V01 operational work. No external execution claimed. Active next batch: wallet invoice payments and reversals,13 saved PRs for5 tasks.
 
@@ -142,13 +142,13 @@ For all34 partial records, use the exact limitations in [acceptance](acceptance-
 
 | Current mapping | PRs |
 | --- | ---: |
-| At least one unresolved mapped task | 116 |
-| Only recorded verified tasks | 181 |
+| At least one unresolved mapped task | 103 |
+| Only recorded verified tasks | 194 |
 | No current task mapping | 4 |
 
 These are mapping counts, not completed PR-review counts. Even a PR mapped only to verified tasks may have an unresolved deferral or stale source evidence.
 
-Review the combined implementation once per qualified task, then associate every contributing PR. The 109 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 36, core business 4, finance 7, notifications 9 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
+Review the combined implementation once per qualified task, then associate every contributing PR. There are96 unresolved PR-backed task claims. Another 56 unresolved claims have no direct PR mapping.
 
 For each of the 170 deferrals, record one disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. PR-body checkboxes are author claims. Twelve statements in PR92/106/115/129/132/218/252/254 now have explicit dispositions in [pr-deferrals.json](pr-deferrals.json): required initial roles, email delivery, staff UI, invitation withdrawal/decisions and the invitation expiry worker are implemented locally; the proposed re-enable endpoint is outside T-10.01.01. PR92's frontend modal is satisfied; its other statement retains pending domain acceptance. PR106's legal frontend is satisfied by PR108 and the current repaired form. PR130 is covered by current role-assignment acceptance. PR115 remains open: electricity integration is satisfied, while required savings/solar consumers remain with their unbuilt product prerequisites.
 
@@ -167,7 +167,7 @@ Keep obsolete keys `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users
 | Deployment, operations and CI, T-05.* | 20 |
 | Total | 55 |
 
-Task dependencies override batch order. These55 overlap the165 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
+Task dependencies override batch order. These55 overlap the152 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
 
 Separately, [queue gaps](archive/queue-gaps.json) and [unstarted backlog](archive/unstarted-backlog.csv) retain 1,033 historical gaps: 737 earlier and 296 later tasks. They are historical evidence, not a dispatch queue or proof of missing implementation.
 

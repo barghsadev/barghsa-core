@@ -3294,7 +3294,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-02.02.04",
       "status": "partial",
-      "reviewed_sha": "d59499003a4accdf87b99288480f17437ed8bc50",
+      "reviewed_sha": "47f15aecc2397432f9988c1b0b92b9ee5be684b4",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 149,
       "requirement": "**T-02.02.04 — Step-up authentication for sensitive actions**\n\n- Description: Sensitive actions require recent step-up authentication (re-enter password or OTP). Actions include: role changes, storage/payment credentials change, payment confirmation, refunds, contract cancellation, price changes, session revocation, profile deletion, ownership transfer.\n- Technical notes: Step-up requirement lasts for a short configured period (default 15 min) after verification. Audit flag: `stepUpVerified: true` with timestamp. If session idle exceeds the step-up window, re-prompt. API returns `requiresStepUp` flag; frontend shows step-up dialog.\n- UI/UX: Modal dialog asking for password or OTP before proceeding. Shows which action requires it.\n- Dependencies: T-02.02.01, T-02.01.02\n- Complexity: L",
@@ -3427,6 +3427,90 @@
         {
           "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
           "sha256": "9d060d8d745c973f9f4610831a09f4b33bbf36432d998b5932b1b7eeb6907f7a"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "4d2efa0157bd8bf5ddebbf35d96bfbe8aa756ce65e524c41978095dddbdde446"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "fadf34273f6cf1b5d4fd7d1f6a039fa09facc112dcd936bfeb72c212c78d9685"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "07e7bb2f5428d23c3d0d13cd95105b7befb8dac2aebacd3a4f2ea47f6f143f15"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "2201400dd7b853e680452a8c139fe4e6fa375a72917d971f285ad565eb3bc31c"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "d6ee4db6830e21722a5f60c9e9db81b96db3c7343ae41d8fec96354d4a224690"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "2bbd786bd038ba8e222cab32a976418e8986b300a0d74c7b60d617c5d979d801"
+        },
+        {
+          "path": "apps/api/src/storage/storage-admin.controller.ts",
+          "sha256": "6b59591a1f8baabf5e54279b23444d75ae3712b6e5372b3ff827ac07d2ee27ad"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "bf1accb1c17723fb7cc1ebf314bc21f41c7c56e8b1546dc85f5e4e8a2d4ef8f6"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config.service.ts",
+          "sha256": "9a5ff55ada33a00ffc62e0809220ef26379921f23dba62bfc1573ddfa72d11a3"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-admin.service.ts",
+          "sha256": "364a8acfc2c76eb5d7333f3afccdb8243e570bbd0b94a1bb8f2bdbeca4370ce7"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "8b7cfea5f9208aadced9d75cdaac687054d33cc1e5bef9c91f093088541a4b26"
+        },
+        {
+          "path": "apps/api/src/storage/storage-records.controller.ts",
+          "sha256": "d5b28152952ba20474c5e475cb0ff5674df23d45ee0293fe492821c30dd57e86"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+        },
+        {
+          "path": "apps/web/e2e/verification-notices.spec.ts",
+          "sha256": "37e06d0efefbcf86271085101a90a586db18b4239e292dcb900c115cabba5204"
+        },
+        {
+          "path": "apps/worker/src/notifications/email-transport.ts",
+          "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "b8428b78fd5fb628e0bf3b29316961a9a764acec21ab962d0a4a0112c336d6e6"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-transport.ts",
+          "sha256": "1fab95452de3dd29691528b3b396cf397c02c0b9af51a1edb69989257bc5eeba"
+        },
+        {
+          "path": "docs/operations/notification-template-seeding.md",
+          "sha256": "7a04643a3b10d8d3c3b43b838520db3d940cadfc90abcb5d405cdd9ea8b135b2"
+        },
+        {
+          "path": "packages/db/src/seed/notification-templates.ts",
+          "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
         }
       ],
       "checks": [
@@ -3442,11 +3526,12 @@
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "audit/evidence/step-reviews.json#R01-session-recovery: Shared step-up rotates session/CSRF, preserves absolute deadline, rejects invalid/future/expired verification and emits requiresStepUp only for the intended403. Current staff, role, ownership, session and trust callers check authority through writes and audit verified timestamp. Password modal/action wording, wrong-password retry and fresh-CSRF retry are already tested. Remaining storage/provider/finance/price/domain consumer criteria are assigned; refunds and contract cancellation remain separate future tasks.",
         "audit/evidence/step-reviews.json#R01-cross-domain-authorization",
-        "audit/evidence/step-reviews.json#R02-catalogue-vat: catalogue/VAT price and configuration callers now preserve transaction authority and exact audit proof.124 API and14 distinct browser cases pass. Broad caller acceptance remains partial pending final provider/storage reconciliation and future refund/contract prerequisites."
+        "audit/evidence/step-reviews.json#R02-catalogue-vat: catalogue/VAT price and configuration callers now preserve transaction authority and exact audit proof.124 API and14 distinct browser cases pass. Broad caller acceptance remains partial pending final provider/storage reconciliation and future refund/contract prerequisites.",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: all four storage mutation/probe routes now preserve session/CSRF/step-up authority through waits and commit, including no-op returns; audits record exact verification time. Provider helper has exact flag/time proof; current email source matches R02-email-provider-callbacks, SMS service/dictionary and added locale tests match R02-invoice-reminder-delivery, and all30 selected AI bindings match R02-ai-settings. Catalogue/VAT authority already closed in R02-catalogue-vat. Existing finance, staff, profile, ownership and session evidence retained."
       ],
       "limitations": [
-        "Remaining R02 provider/storage/AI caller evidence needs final cross-domain linkage; catalogue/VAT callers are verified at audit/evidence/step-reviews.json#R02-catalogue-vat. Existing completed provider/AI repairs must be reused, not rebuilt.",
-        "Refund/contract-cancellation/signing/legal-document and future product consumers remain unbuilt prerequisites. No identity provider exists; retain all recorded prerequisites before enabling one."
+        "Refund/contract-cancellation/signing/legal-document and other unbuilt product consumers retain their exact V01/B01 prerequisite task keys in progress.json. No real identity provider exists; activation prerequisites remain.",
+        "Operational/deployed-state and older recorded source-refresh prerequisites remain; no whole-repository regression claimed."
       ],
       "merged_prs": [
         92
@@ -3467,7 +3552,7 @@
         "ledger_revision": "a4fe3b5",
         "note": "Original source bindings and assessment remain available in this committed ledger revision; older nested assessments are preserved."
       },
-      "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization",
+      "review_record": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
       "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed."
     },
     {
@@ -3932,7 +4017,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "a9e70069d85b358fe00fc6f75cb8c5017711702483b0c5bc0a6cb1488e958a23"
+          "sha256": "fadf34273f6cf1b5d4fd7d1f6a039fa09facc112dcd936bfeb72c212c78d9685"
         },
         {
           "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
@@ -4010,7 +4095,8 @@
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
-        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification."
+        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [],
       "merged_prs": [
@@ -4070,7 +4156,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "a9e70069d85b358fe00fc6f75cb8c5017711702483b0c5bc0a6cb1488e958a23"
+          "sha256": "fadf34273f6cf1b5d4fd7d1f6a039fa09facc112dcd936bfeb72c212c78d9685"
         },
         {
           "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
@@ -4094,7 +4180,8 @@
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy"
+        "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [
         "Manual staff verification is covered. No automatic identity provider or external notification delivery is claimed.",
@@ -4152,7 +4239,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "a9e70069d85b358fe00fc6f75cb8c5017711702483b0c5bc0a6cb1488e958a23"
+          "sha256": "fadf34273f6cf1b5d4fd7d1f6a039fa09facc112dcd936bfeb72c212c78d9685"
         },
         {
           "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
@@ -4188,7 +4275,8 @@
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy"
+        "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [
         "User notices are durable private in-app notices. Email/SMS delivery is not claimed.",
@@ -7146,7 +7234,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "925ab9d54b15fc267a10feac60667512cabbf24c1f1c6c321eaad6824d5f7f54"
+          "sha256": "4d2efa0157bd8bf5ddebbf35d96bfbe8aa756ce65e524c41978095dddbdde446"
         },
         {
           "path": "apps/api/src/crm/crm-address-edit-http.integration.test.ts",
@@ -7191,7 +7279,8 @@
         "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for packages/db/drizzle/production/meta/_journal.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
-        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification."
+        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "merged_prs": [
         115
@@ -9096,7 +9185,7 @@
         },
         {
           "path": "packages/db/src/seed/notification-templates.ts",
-          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
+          "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
         },
         {
           "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
@@ -9130,7 +9219,8 @@
       "checks": [
         "Exact story/task criteria and current implementation reviewed in audit/evidence/step-reviews.json#R01-chargebacks-alerts",
         "Four confirmed repairs and focused current/reused evidence recorded once in the consolidated batch.",
-        "Immediate-base source refresh: audit/evidence/step-reviews.json#R02-template-lifecycle-seeding; preserved template content/history and unrelated seeders. Focused seed/preview checks pass."
+        "Immediate-base source refresh: audit/evidence/step-reviews.json#R02-template-lifecycle-seeding; preserved template content/history and unrelated seeders. Focused seed/preview checks pass.",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "merged_prs": [
         277,
@@ -14115,7 +14205,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-07.01.03",
       "status": "partial",
-      "reviewed_sha": "709d28bf895627d6c0becd9056a41abafded30b6",
+      "reviewed_sha": "47f15aecc2397432f9988c1b0b92b9ee5be684b4",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 588,
       "requirement": "**T-07.01.03 — Verification notification to user**\n\n- Description: When profile is verified (manually or by API), user receives notification. If verification fails/rejected, notification with reason and next steps.\n- Technical notes: Notification via notification service (in-app + email/SMS per preferences). Template: \"Your [profile name] has been verified.\" Or \"Verification failed: [reason]. [Correct and resubmit].\"\n- UI/UX: Dashboard banner, notification center entry.\n- Dependencies: T-07.01.01, notification service\n- Complexity: S\n\n---",
@@ -14123,15 +14213,15 @@
       "source_evidence": [
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "925ab9d54b15fc267a10feac60667512cabbf24c1f1c6c321eaad6824d5f7f54"
+          "sha256": "4d2efa0157bd8bf5ddebbf35d96bfbe8aa756ce65e524c41978095dddbdde446"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "a9e70069d85b358fe00fc6f75cb8c5017711702483b0c5bc0a6cb1488e958a23"
+          "sha256": "fadf34273f6cf1b5d4fd7d1f6a039fa09facc112dcd936bfeb72c212c78d9685"
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
         },
         {
           "path": "apps/api/src/profiles/profiles.service.ts",
@@ -14164,20 +14254,91 @@
         {
           "path": "apps/web/e2e/verification-notices.spec.ts",
           "sha256": "37e06d0efefbcf86271085101a90a586db18b4239e292dcb900c115cabba5204"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "07e7bb2f5428d23c3d0d13cd95105b7befb8dac2aebacd3a4f2ea47f6f143f15"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "2201400dd7b853e680452a8c139fe4e6fa375a72917d971f285ad565eb3bc31c"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "d6ee4db6830e21722a5f60c9e9db81b96db3c7343ae41d8fec96354d4a224690"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "2bbd786bd038ba8e222cab32a976418e8986b300a0d74c7b60d617c5d979d801"
+        },
+        {
+          "path": "apps/api/src/storage/storage-admin.controller.ts",
+          "sha256": "6b59591a1f8baabf5e54279b23444d75ae3712b6e5372b3ff827ac07d2ee27ad"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "bf1accb1c17723fb7cc1ebf314bc21f41c7c56e8b1546dc85f5e4e8a2d4ef8f6"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config.service.ts",
+          "sha256": "9a5ff55ada33a00ffc62e0809220ef26379921f23dba62bfc1573ddfa72d11a3"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-admin.service.ts",
+          "sha256": "364a8acfc2c76eb5d7333f3afccdb8243e570bbd0b94a1bb8f2bdbeca4370ce7"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "8b7cfea5f9208aadced9d75cdaac687054d33cc1e5bef9c91f093088541a4b26"
+        },
+        {
+          "path": "apps/api/src/storage/storage-records.controller.ts",
+          "sha256": "d5b28152952ba20474c5e475cb0ff5674df23d45ee0293fe492821c30dd57e86"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+        },
+        {
+          "path": "apps/worker/src/notifications/email-transport.ts",
+          "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "b8428b78fd5fb628e0bf3b29316961a9a764acec21ab962d0a4a0112c336d6e6"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-transport.ts",
+          "sha256": "1fab95452de3dd29691528b3b396cf397c02c0b9af51a1edb69989257bc5eeba"
+        },
+        {
+          "path": "docs/operations/notification-template-seeding.md",
+          "sha256": "7a04643a3b10d8d3c3b43b838520db3d940cadfc90abcb5d405cdd9ea8b135b2"
+        },
+        {
+          "path": "packages/db/src/seed/notification-templates.ts",
+          "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
         }
       ],
       "checks": [
         "Exact current requirement and saved contributing PR body reviewed; audit/evidence/step-reviews.json#R01-verification-policy",
-        "Implemented behavior, focused checks and unchanged-source reuse are recorded once in the batch review."
+        "Implemented behavior, focused checks and unchanged-source reuse are recorded once in the batch review.",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained.",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: manual verify/unverify/reverify atomically writes profile status, audit, named bilingual inbox notice and email/SMS outbox/jobs. Four producer/rollback checks and six actual producer-to-worker-to-email/SMS transport cases pass. Three outcomes in both languages include name/reason/corrective guidance, one dispatch and current channel preferences. External transport fetches are controlled local fixtures. Existing dashboard/inbox UI is unchanged and prior source-bound evidence is reused."
       ],
       "limitations": [
-        "Manual in-app verification notices, profile name, reason/corrective guidance, dashboard banner and inbox entry are verified. Actual email/SMS delivery per current preferences and versioned delivery templates remainR02. Automatic result notifications depend on T-07.01.02 and a real provider."
+        "Automatic verification results still depend on 02-auth-users-admin.md#T-07.01.02 and a real provider. No automatic approval or provider integration is claimed.",
+        "Deployment must publish both-language profile.verification_status templates and verified SMS mappings before producer rollout. Existing customized families are preserved by seeding; old status-only templates omit guidance. See docs/operations/notification-template-seeding.md. No historical resend/backfill or production send occurred."
       ],
       "merged_prs": [
         146
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R01-verification-policy"
+      "review_record": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery"
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.05.02",
@@ -15554,7 +15715,7 @@
         },
         {
           "path": "packages/db/src/seed/notification-templates.ts",
-          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
+          "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
         },
         {
           "path": "packages/db/src/seed/seed.test.ts",
@@ -15622,14 +15783,15 @@
         },
         {
           "path": "docs/operations/notification-template-seeding.md",
-          "sha256": "2b018f485e4c20c2a791b6660c2c03b37159ae15d2e7a940ce870176dfd21c13"
+          "sha256": "7a04643a3b10d8d3c3b43b838520db3d940cadfc90abcb5d405cdd9ea8b135b2"
         }
       ],
       "checks": [
         "Current schema has unique version identity, active-family uniqueness and supersedes lineage. Admin mutations hold current staff/session/CSRF/step-up authority and family locks through audited commit. Draft creation allocates the next version; publication archives prior active content; published/archived content cannot be edited or deleted. Existing template service, real HTTP and boundary evidence is unchanged and reused.",
         "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
         "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
-        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [],
       "merged_prs": [
@@ -15657,7 +15819,7 @@
         },
         {
           "path": "packages/db/src/seed/notification-templates.ts",
-          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
+          "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
         },
         {
           "path": "packages/db/src/seed/seed.test.ts",
@@ -15725,14 +15887,15 @@
         },
         {
           "path": "docs/operations/notification-template-seeding.md",
-          "sha256": "2b018f485e4c20c2a791b6660c2c03b37159ae15d2e7a940ce870176dfd21c13"
+          "sha256": "7a04643a3b10d8d3c3b43b838520db3d940cadfc90abcb5d405cdd9ea8b135b2"
         }
       ],
       "checks": [
         "The shared engine limits interpolation to declared safe own data properties and escapes variable values. Existing prototype/accessor/secret rejection evidence remains valid. Current catalog tests render every subject/body, check missing values, descriptions and injection escaping; all35 Appendix event/channel/language combinations are present.",
         "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
         "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
-        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [],
       "merged_prs": [
@@ -15760,7 +15923,7 @@
         },
         {
           "path": "packages/db/src/seed/notification-templates.ts",
-          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
+          "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
         },
         {
           "path": "packages/db/src/seed/seed.test.ts",
@@ -15828,14 +15991,15 @@
         },
         {
           "path": "docs/operations/notification-template-seeding.md",
-          "sha256": "2b018f485e4c20c2a791b6660c2c03b37159ae15d2e7a940ce870176dfd21c13"
+          "sha256": "7a04643a3b10d8d3c3b43b838520db3d940cadfc90abcb5d405cdd9ea8b135b2"
         }
       ],
       "checks": [
         "Preview supports event/channel/locale/version selection, descriptions, sample rendering and variable warnings, including archived versions via the status filter. Fixed selector showing draft v3 while body rendered active v2. Two FA/EN regressions and six current branded/isolation/plain-text browser cases pass.",
         "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
         "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
-        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [],
       "merged_prs": [
@@ -15863,7 +16027,7 @@
         },
         {
           "path": "packages/db/src/seed/notification-templates.ts",
-          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
+          "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
         },
         {
           "path": "packages/db/src/seed/seed.test.ts",
@@ -15931,14 +16095,15 @@
         },
         {
           "path": "docs/operations/notification-template-seeding.md",
-          "sha256": "2b018f485e4c20c2a791b6660c2c03b37159ae15d2e7a940ce870176dfd21c13"
+          "sha256": "7a04643a3b10d8d3c3b43b838520db3d940cadfc90abcb5d405cdd9ea8b135b2"
         }
       ],
       "checks": [
         "Existing test-send requires an explicit owned currently verified email/mobile or explicit development/test allowlist, uses active provider adapters, records template timestamp/outcome and a test-marked audit without customer data. Earlier contact, authority, branding, failure and real HTTP evidence remains valid; no production delivery is claimed.",
         "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
         "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
-        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [],
       "merged_prs": [
@@ -15966,7 +16131,7 @@
         },
         {
           "path": "packages/db/src/seed/notification-templates.ts",
-          "sha256": "cafeca5c53eb8996072f03daa0bf2a81273ec7696d0e69183bb492efa20ea383"
+          "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
         },
         {
           "path": "packages/db/src/seed/seed.test.ts",
@@ -16034,14 +16199,15 @@
         },
         {
           "path": "docs/operations/notification-template-seeding.md",
-          "sha256": "2b018f485e4c20c2a791b6660c2c03b37159ae15d2e7a940ce870176dfd21c13"
+          "sha256": "7a04643a3b10d8d3c3b43b838520db3d940cadfc90abcb5d405cdd9ea8b135b2"
         }
       ],
       "checks": [
         "Added missing refresh-token-reuse FA/EN templates and SMS system-test templates. Notification-only data migration creates absent families at active version1, preserves all existing versions, uses the same family lock as admin authoring, and rolls back the whole catalog on failure.18 real-PostgreSQL/catalog cases pass, including the actual CLI entry point, concurrent imports, unchanged custom drafts/archives and fault-injected rollback. This explicit data migration is separate from the schema journal; deployment must run it. Existing customized inactive families require deliberate admin publication.",
         "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
         "Immediate-base bindings refreshed after reviewed additive admin registration/correction UI/copy and focused circuit/send/alert repairs. Existing unrelated methods unchanged; audit/evidence/step-reviews.json#R02-email-provider-callbacks",
-        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+        "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [],
       "merged_prs": [
@@ -16229,7 +16395,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "f401abe228f0c89c35ba2634ac88e7c3d9fb00fd700d8ca2cad68a4f3c347a30"
+          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -16416,7 +16582,8 @@
         "Provider schema and Draft/Test/Active/Superseded/Disabled lifecycle, unique active provider, sole-OTP guard, current session/CSRF/step-up, atomic audit and verified-recipient activation proof remain implemented. Latest controller/mutation/recipient/self-test bindings match prior records; service changes since c6588610 only propagate transient outcomes and are covered by current circuit/lifecycle checks.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
         "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
-        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [],
       "merged_prs": [
@@ -16468,7 +16635,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "f401abe228f0c89c35ba2634ac88e7c3d9fb00fd700d8ca2cad68a4f3c347a30"
+          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -16655,7 +16822,8 @@
         "SMTP preserves all configuration fields, configured handshake and verified-recipient self-send. Fixed DNS rebinding in API tests: dial the validated IP with the original TLS hostname, preserving explicit deployment allowlist exceptions. Both TLS/STARTTLS regressions failed before repair;89 API and60 shared guard cases pass. Existing production sender already pins checked IPs.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
         "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
-        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [],
       "merged_prs": [
@@ -16707,7 +16875,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "f401abe228f0c89c35ba2634ac88e7c3d9fb00fd700d8ca2cad68a4f3c347a30"
+          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -16894,7 +17062,8 @@
         "Resend validates the configured sending domain and sends to the current verified staff email. Tester changes since prior proof only classify transient HTTP/network outcomes; current focused tester and self-delivery suites pass. Actual sender retains from/reply-to settings. No real external email was sent.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
         "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
-        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [],
       "merged_prs": [
@@ -16946,7 +17115,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "f401abe228f0c89c35ba2634ac88e7c3d9fb00fd700d8ca2cad68a4f3c347a30"
+          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -17133,7 +17302,8 @@
         "Provider admin page, API adapter, settings/recovery browser tests and provider dictionary exactly match the verified authoring batch. Reuse19 email browser cases for field preservation, masked write-only secrets, saved draft recovery, test recipient, confirmation and activation gating. Active metadata, rollback and sole-provider warning remain. New correction queue is separate and passes4 FA/EN browser cases;10 neighboring recovery cases pass unchanged.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
         "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
-        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [],
       "merged_prs": [
@@ -17185,7 +17355,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "f401abe228f0c89c35ba2634ac88e7c3d9fb00fd700d8ca2cad68a4f3c347a30"
+          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -17372,7 +17542,8 @@
         "Owner approved limited server-side decryption on September13; canonical T-05.06.05 and current requirement ledger updated. AES-256-GCM field encryption, missing-key refusal for new writes, masked responses and diagnostic redaction remain.18 secret tests pass. Callback verification now decrypts only its signing secret. Legacy plaintext read compatibility remains; production legacy-secret inventory/reconciliation stays the existing V01/operations prerequisite, with no assertion that stored production rows were migrated.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
         "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
-        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [],
       "merged_prs": [
@@ -17424,7 +17595,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "f401abe228f0c89c35ba2634ac88e7c3d9fb00fd700d8ca2cad68a4f3c347a30"
+          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -17611,7 +17782,8 @@
         "Fixed exact rolling consecutive transient threshold, atomic bounded failure timestamps and single cooldown probes. Permanent failures and local bookkeeping errors no longer degrade providers; accepted sends with receipt-persistence errors count as provider success; caller cancellation is not a provider failure.202 API cases plus the additional cancellation case and75 worker cases pass (overlapping reruns excluded). Migration0130 conservatively backfills old earliest-window evidence. Local EmailProviderDegraded rule passes Prometheus tests with replica disagreement/recovery cases. Deployed alert routing/delivery remains unverified, so PR190/task.06 stays open/partial.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
         "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
-        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [
         "Deployed ops alert delivery needs operational execution evidence."
@@ -17665,7 +17837,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "f401abe228f0c89c35ba2634ac88e7c3d9fb00fd700d8ca2cad68a4f3c347a30"
+          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -17852,7 +18024,8 @@
         "Fixed actual Resend recipient-array/nested-bounce payloads and Svix space-separated signature candidates. Migration0129 records every verifying active/superseded config identity. Callback replay, provider/message attribution and early feedback are transactional; callbacks never mutate worker ownership/outbox jobs/accepted receipts or append false sends. History derives feedback on the original accepted email attempt only. Legacy unidentified callbacks are not guessed.25 final HTTP cases cover callback and correction behavior;8 signature and59 neighboring admin/dead-letter cases remain valid. Complaints atomically suppress normalized addresses and create one open staff correction per address. Migration0131 backfills complaint suppressions and retains suppression/history after profile deletion. Current staff read/write authority, CSRF, step-up, strict notes, concurrent idempotent completion, audit rollback and renewed complaints pass actual HTTP checks. Resolution never removes suppression or sends a message. One prior-to-current migration case passes;4 FA/EN browser cases cover denial, malformed responses, pagination, read-only access, step-up, mismatched acknowledgments and completed history.",
         "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
         "Immediate-base bindings refreshed after reminder-only dispatch guards, language-aware SMS mappings/self-tests and additive provider language UI. Existing unrelated behavior preserved; focused checks and reuse: audit/evidence/step-reviews.json#R02-invoice-reminder-delivery",
-        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+        "Expiry notice enqueue and additive localized reason reviewed; existing cutoff/state/callback authority unchanged. audit/evidence/step-reviews.json#R02-receipt-expiry-notices",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [],
       "merged_prs": [
@@ -17912,7 +18085,7 @@
         },
         {
           "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-          "sha256": "f67794707388016a58804013bafd89569212001270114d56331be6d3cfcca598"
+          "sha256": "8b7cfea5f9208aadced9d75cdaac687054d33cc1e5bef9c91f093088541a4b26"
         },
         {
           "path": "apps/web/e2e/ai-agents.spec.ts",
@@ -17982,7 +18155,8 @@
       "checks": [
         "KB/group CRUD, document selection, verified upload and attachment reviewed. Upload cancellation/retry, malformed acknowledgements, FA/EN mobile/accessibility and real storage-record/attachment HTTP contracts pass. Account-level ticket upload now omits null profileId.",
         "167 current KB/agent API cases plus45 unchanged storage HTTP cases =212 distinct API cases.22 upload/helper unit,10 FA/EN browser and32 DB cases pass. Types/scoped lint/format/build and42 budgets pass at recorded revisions.",
-        "All17 mutation entry points require actor-bound session proof, checked after staff locks and again before COMMIT.23 regressions cover expiry, revocation, missing step-up and CSRF rotation; business/link/audit writes roll back together."
+        "All17 mutation entry points require actor-bound session proof, checked after staff locks and again before COMMIT.23 regressions cover expiry, revocation, missing step-up and CSRF rotation; business/link/audit writes roll back together.",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [
         "Actual extraction, chunking, embeddings and retrieval remain unbuilt under 05-notifications-documents-ai.md#T-05.17.02. Stored pending status is not processing completion."
@@ -18044,7 +18218,7 @@
         },
         {
           "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-          "sha256": "f67794707388016a58804013bafd89569212001270114d56331be6d3cfcca598"
+          "sha256": "8b7cfea5f9208aadced9d75cdaac687054d33cc1e5bef9c91f093088541a4b26"
         },
         {
           "path": "apps/web/e2e/ai-agents.spec.ts",
@@ -18114,7 +18288,8 @@
       "checks": [
         "Agent CRUD, active state, model/direct KB/policy/group references and atomic reconciliation reviewed. FA/EN browser checks cover captured group selection, failed load/retry, password failure/retry and permission loss.",
         "167 current KB/agent API cases plus45 unchanged storage HTTP cases =212 distinct API cases.22 upload/helper unit,10 FA/EN browser and32 DB cases pass. Types/scoped lint/format/build and42 budgets pass at recorded revisions.",
-        "All17 mutation entry points require actor-bound session proof, checked after staff locks and again before COMMIT.23 regressions cover expiry, revocation, missing step-up and CSRF rotation; business/link/audit writes roll back together."
+        "All17 mutation entry points require actor-bound session proof, checked after staff locks and again before COMMIT.23 regressions cover expiry, revocation, missing step-up and CSRF rotation; business/link/audit writes roll back together.",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
       ],
       "limitations": [
         "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01–03 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review."
@@ -22800,6 +22975,34 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R02-ai-settings",
       "note": "Only matching immediate-base bindings refreshed. KB/agent audit proof follow-up is additive; previous partial dependencies preserved. Older38 retained."
+    },
+    {
+      "source_revision": "47f15aecc2397432f9988c1b0b92b9ee5be684b4",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.03",
+        "02-auth-users-admin.md#T-05.02.04",
+        "02-auth-users-admin.md#T-03.04.01",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "05-notifications-documents-ai.md#T-05.04.01",
+        "05-notifications-documents-ai.md#T-05.04.02",
+        "05-notifications-documents-ai.md#T-05.04.03",
+        "05-notifications-documents-ai.md#T-05.04.04",
+        "05-notifications-documents-ai.md#T-05.04.05",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.11.02",
+        "02-auth-users-admin.md#T-09.11.04"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
+      "note": "Only matching immediate-base bindings refreshed with scoped review and current evidence.38 older refreshes retained."
     }
   ]
 }

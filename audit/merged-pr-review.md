@@ -121,7 +121,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#89](https://github.com/barghsadev/barghsa-core/pull/89) | 02-auth-users-admin.md#T-02.02.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-session-recovery) | 0 |
 | [#90](https://github.com/barghsadev/barghsa-core/pull/90) | 02-auth-users-admin.md#T-02.02.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-session-recovery) | 0 |
 | [#91](https://github.com/barghsadev/barghsa-core/pull/91) | 02-auth-users-admin.md#T-02.02.03 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-session-recovery) | 0 |
-| [#92](https://github.com/barghsadev/barghsa-core/pull/92) | 02-auth-users-admin.md#T-02.02.04 (partial) | Task review remains | [open](evidence/step-reviews.json#R02-catalogue-vat) | 2 |
+| [#92](https://github.com/barghsadev/barghsa-core/pull/92) | 02-auth-users-admin.md#T-02.02.04 (partial) | Task review remains | [open](evidence/step-reviews.json#R02-sensitive-actions-verification-delivery) | 2 |
 | [#93](https://github.com/barghsadev/barghsa-core/pull/93) | 02-auth-users-admin.md#T-02.03.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-session-recovery) | 0 |
 | [#94](https://github.com/barghsadev/barghsa-core/pull/94) | 01-platform-infrastructure.md#T-03.01.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#95](https://github.com/barghsadev/barghsa-core/pull/95) | 01-platform-infrastructure.md#T-03.01.02 (pending) | Task review remains | Not reviewed | 0 |
@@ -175,7 +175,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#143](https://github.com/barghsadev/barghsa-core/pull/143) | 02-auth-users-admin.md#T-08.01.01 (partial) | Task review remains | Not reviewed | 0 |
 | [#144](https://github.com/barghsadev/barghsa-core/pull/144) | 03-core-business.md#T-03.01.01.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#145](https://github.com/barghsadev/barghsa-core/pull/145) | 03-core-business.md#T-03.01.01.02 (pending) | Task review remains | Not reviewed | 0 |
-| [#146](https://github.com/barghsadev/barghsa-core/pull/146) | 02-auth-users-admin.md#T-07.01.03 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-verification-policy) | 1 |
+| [#146](https://github.com/barghsadev/barghsa-core/pull/146) | 02-auth-users-admin.md#T-07.01.03 (partial) | Task review remains | [open](evidence/step-reviews.json#R02-sensitive-actions-verification-delivery) | 1 |
 | [#147](https://github.com/barghsadev/barghsa-core/pull/147) | 03-core-business.md#T-03.01.01.03 (pending) | Task review remains | Not reviewed | 0 |
 | [#148](https://github.com/barghsadev/barghsa-core/pull/148) | 03-core-business.md#T-03.01.01.04 (pending) | Task review remains | Not reviewed | 0 |
 | [#149](https://github.com/barghsadev/barghsa-core/pull/149) | 04-invoices-wallet-contracts.md#T-04.2.01.01 (acceptance_verified)<br>04-invoices-wallet-contracts.md#T-04.2.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `8c750cb9a99d806442b05771e54aae3fe3e3099d8bb64762fce34b86786aa9b6`
-- `pr-deferrals.json`: `69245f32d0476cad9a9f2a7ad376cbfb60f864d39283367bf9c6e46b070fdfad`
-- `evidence/step-reviews.json`: `fb80624b6e6629bc373a1a5c4032e9162910f37a0ddb5c85e5ebcc18b8b9a12e`
+- `acceptance-closure.json`: `46b752986bebdfffd83399117076dc9dc2eabe679bfafbfad9745be8afc67d0f`
+- `pr-deferrals.json`: `8947250a5759abddf07a605a1cc364d38d544af08750a107f5b3ecf5347760a3`
+- `evidence/step-reviews.json`: `b6d157c0b21361ff4875a7795ed648536dddc944062334b74ca1c25186111b49`

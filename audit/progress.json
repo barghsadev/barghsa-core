@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "15c0ceb510b98c8ca412b5559557dcbc2f2f8f15",
-  "active_step": "R02",
-  "next_action": "Reconcile remaining sensitive-action and manual verification-delivery requirements against completed source-bound provider/AI/notification evidence; repair only confirmed uncovered defects.",
+  "source_revision": "47f15aecc2397432f9988c1b0b92b9ee5be684b4",
+  "active_step": "R03",
+  "next_action": "Repair confirmed shared theme/contrast and terms-banner defects, then finish assigned error/correlation checks. Reuse completed financial/notification and UI evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -24,17 +24,18 @@
       "id": "R01",
       "title": "Critical acceptance and repairs",
       "status": "partial",
-      "remaining": "R02 caller/delivery dependencies; unanswered lost-contact/signed-webhook policy; exact future/operational prerequisites. Confirmed wallet gap repaired and completed domain evidence linked."
+      "remaining": "Local critical repairs and R02 caller/delivery linkage complete; unanswered lost-contact/signed-webhook policy and exact future/operational prerequisites remain."
     },
     {
       "id": "R02",
       "title": "Required administration consumers",
-      "status": "in_progress"
+      "status": "partial",
+      "remaining": "Local implemented consumer repairs complete. Explicit future AI/verification consumers, template/mapping rollout and deployed operational proof remain in V01/B01; theme acceptance continues R03."
     },
     {
       "id": "R03",
       "title": "Errors and UI acceptance",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "R04",
@@ -726,6 +727,10 @@
     {
       "id": "R02-catalogue-vat",
       "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat"
+    },
+    {
+      "id": "R02-sensitive-actions-verification-delivery",
+      "review_record": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery"
     }
   ],
   "deferred_improvements": [
@@ -1041,31 +1046,35 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R02-sensitive-actions-verification-delivery",
-    "name": "Sensitive administration callers and verification notices",
+    "id": "R03-theme-contrast",
+    "name": "Shared theme contrast and terms status",
     "status": "reviewing",
     "prs": [
-      92,
-      146
+      156
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-02.02.04",
-      "02-auth-users-admin.md#T-07.01.03"
+      "02-auth-users-admin.md#T-09.01.02",
+      "01-platform-infrastructure.md#T-06.03.02",
+      "01-platform-infrastructure.md#T-06.03.03",
+      "01-platform-infrastructure.md#T-06.03.05",
+      "01-platform-infrastructure.md#T-06.03.06"
     ],
     "remaining_checklist": [
-      "Read final provider/storage/AI proof bindings and link completed caller evidence.",
-      "Verify actual manual identity-notification delivery against current templates, recipients and channel preferences.",
-      "Keep real-provider and refund/contract prerequisites explicit; reconcile already completed notification domain entries."
+      "Read exact theme/shared-control requirements and PR156 remaining theme deferral.",
+      "Repair confirmed terms-status dark contrast, shared button/link/destructive contrast and required failure states.",
+      "Run focused theme/keyboard/RTL checks; preserve remaining separate R03 error/correlation work."
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      "Terms status banner uses a pale background with dark-theme light text; current VAT dark scan reproduces1.84:1.",
+      "Shared primary-button hover, primary links and destructive alerts have recorded contrast gaps."
+    ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R02-catalogue-vat",
-      "audit/evidence/step-reviews.json#R02-ai-settings",
-      "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+      "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
+      "audit/evidence/step-reviews.json#R02-catalogue-vat"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Reconcile remaining sensitive-action and manual verification-delivery requirements against completed source-bound provider/AI/notification evidence; repair only confirmed uncovered defects."
+    "next_action": "Repair confirmed shared theme/contrast and terms-banner defects, then finish assigned error/correlation checks. Reuse completed financial/notification and UI evidence."
   },
   "open_domain_reviews": [
     {
@@ -1116,10 +1125,10 @@
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.04",
-      "owner_batch": "R02 administration plus V01/B01 future consumers",
+      "owner_batch": "V01/B01 future sensitive consumers",
       "criteria": "Required sensitive caller authorization through writes, verification audit and UI re-prompt; retain separate refund/contract/no-provider prerequisites",
-      "status": "Completed staff/profile/session/ownership/finance callers linked; remaining provider/storage/price consumers assigned to R02.",
-      "evidence": "audit/evidence/step-reviews.json#R01-cross-domain-authorization",
+      "status": "Implemented callers verified, including all four storage routes. Exact future dependencies retained.",
+      "evidence": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
       "prerequisite_task_keys": [
         "04-invoices-wallet-contracts.md#T-04.4.01.01",
         "04-invoices-wallet-contracts.md#T-04.4.01.02",
@@ -1144,13 +1153,6 @@
       "status": "verified for implemented commercial orders"
     },
     {
-      "task_key": "02-auth-users-admin.md#T-03.03.05",
-      "owning_batch": "R02 notification delivery",
-      "remaining": "R02: verify actual delivery recipients and application of per-user channel choices, including historical unverified secondary contacts.",
-      "pr": 113,
-      "review_record": "audit/evidence/step-reviews.json#R01-account-settings"
-    },
-    {
       "task_key": "02-auth-users-admin.md#T-03.03.06",
       "pr": 114,
       "owning_batch": "R03 timestamp consumers",
@@ -1158,38 +1160,11 @@
       "review_record": "audit/evidence/step-reviews.json#R01-account-settings"
     },
     {
-      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.04",
-      "prs": [
-        299
-      ],
-      "owning_batch": "R02 notification delivery",
-      "remaining": "Actual customer rejection delivery, preferences, templates and retries. State/reason/audit/enqueue verified.",
-      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-    },
-    {
-      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.04",
-      "prs": [
-        301
-      ],
-      "owning_batch": "R02 notification delivery",
-      "remaining": "Actual customer wallet confirmation/rejection notice delivery. Staff decision acceptance verified.",
-      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-    },
-    {
       "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.06",
       "owning_batch": "V01/B01 incidental implementation",
       "status": "implemented_and_reviewed_incidentally",
       "remaining": "Retain separate overpayment credit implementation fromPR298; link this evidence during full backlog disposition. Outside322 historical claims; not an unbuilt task.",
       "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
-    },
-    {
-      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.07",
-      "prs": [
-        281
-      ],
-      "owning_batch": "R02 notification delivery",
-      "remaining": "Actual payment.wallet_topup_failed notification on TTL expiry; scanner/state/audit/reconciliation verified.",
-      "review_record": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
     },
     "R02: seed registry check12 pass/1 fail atab17007; auth.refresh_token_reused has no seeded template before or after the chargeback repair. Add/review its intended delivery template in the notification batch; existing/new chargeback templates are valid.",
     {
@@ -1209,24 +1184,6 @@
       "owning_batch": "V01/B01 product prerequisites",
       "remaining": "orderId is a real nullable orders foreign key. contractId and consultationId remain nullable text references because target tables do not exist. Required foreign keys and validated consumer selection remain with the contract/consultation prerequisites in V01/B01.",
       "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
-    },
-    {
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
-      "prs": [
-        243
-      ],
-      "owning_batch": "R02 notification delivery",
-      "remaining": "R02 retains actual versioned FA/EN delivery, recipient/channel/window enforcement and current invoice/deadline revalidation after outbox acceptance. Hourly claiming, current invoice state, atomic outbox insertion and idempotency are verified. A sent schedule row means outbox acceptance, not external delivery.",
-      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
-    },
-    {
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "prs": [
-        245
-      ],
-      "owning_batch": "R02 notification delivery",
-      "remaining": "The repaired UI/API stores offset policy safely; scheduler applies it to new/rebuilt plans. A later toggle does not change existing plans, and sender does not recheck it. R02 must enforce current offset policy on already planned/queued reminders. The historical new-plans-only limit is unfinished acceptance, not a requirements waiver.",
-      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
@@ -1299,9 +1256,9 @@
       "prs": [
         146
       ],
-      "owner_batch": "R02 delivery plus external provider prerequisite",
-      "remaining": "Manual in-app verification notices, profile name, reason/corrective guidance, dashboard banner and inbox entry are verified. Actual email/SMS delivery per current preferences and versioned delivery templates remainR02. Automatic result notifications depend on T-07.01.02 and a real provider.",
-      "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
+      "owner_batch": "V01/B01 provider and deployment prerequisites",
+      "remaining": "Manual in-app/email/SMS delivery verified. Automatic results need the real provider; publish reviewed verification templates and SMS mappings before producer rollout.",
+      "review_record": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
       "prerequisite_task_keys": [
         "02-auth-users-admin.md#T-07.01.02"
       ]

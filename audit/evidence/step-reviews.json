@@ -17272,6 +17272,171 @@
           "evidence": "audit/evidence/step-reviews.json#R02-catalogue-vat"
         }
       ]
+    },
+    {
+      "id": "R02-sensitive-actions-verification-delivery",
+      "date": "2026-09-13",
+      "source_revision": "47f15aecc2397432f9988c1b0b92b9ee5be684b4",
+      "base_revision": "7a1f26cebb2bed551f4fcc2522fabbac4ecd133a",
+      "product_commits": [
+        "3d312580",
+        "835cf563",
+        "47f15aec"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-07.01.03"
+      ],
+      "summary": "Storage credential/record authority repaired; manual verification now delivers named bilingual results through atomic outbox jobs. PR92/146 remain open only for exact future/operational prerequisites. Existing provider/AI/finance evidence linked; R02 local repairs complete.",
+      "review": [
+        "Read both exact tasks, saved PR92/146 bodies and deferrals. Reused completed source-bound provider, AI, catalogue, finance and session evidence; no duplicate implementation.",
+        "Eight valid baseline storage failures reproduce six session/CSRF/step-up probe races, a final-write expiry and absent audit proof. Current authority is checked before/between/after external probes and at commit. Initial baseline fixture used NOW() causing clock-skew rejection; changed restoration to one minute ago. Audit metadata is text and is parsed before comparison.13 config cases pass, including existing encrypted persistence, stale revision, location protection, revoked staff and independent-process consumption.",
+        "Storage sign/remove now check current session before record waits and on every commit path. Four new write-expiry/exact-audit cases plus existing access/upload/cleanup checks pass:19 cases. No direct deletion before commit; signed objects stay retained.",
+        "Four verification baseline failures reproduce absent external jobs and non-atomic delivery. createVerification retains the immediate inbox and queues only email/SMS in the caller transaction, using a unique inbox-bound occurrence. Repeated status changes are no-ops. Existing feedback/recipient/template/lease/transport code is reused.",
+        "Six actual producer-to-worker cases use real seeded templates and real email/SMS transport adapters with controlled fetch. Both languages/three outcomes pass; current channel opt-out prevents queued sends and reruns do not resend. Initial failed runs retained: local targetStatus naming error, fixture used phone instead of mobile, and primary login reservation incorrectly marked verified. These are corrected; actual verified secondary mobile proof is inserted.",
+        "9 notification template seed cases pass; only profile.verification_status catalog family changes. Existing families are not overwritten; reviewed locale templates and SMS mappings must be published before deploying this producer. No real provider, external send, historical backfill or deployment occurred.",
+        "Reused provider proofs match current email service and all30 selected AI sources. Earlier SMS drift is the reviewed locale-mapping repair in R02-invoice-reminder-delivery. Provider-self-test differences since email review are three additive locale tests, already reviewed there. Shared helper records true step-up flag and exact time.",
+        "Refreshed 20 matching immediate-base acceptance bindings only;38 older refreshes retained. R02 future KB processing/actual agent chat/slot runtime, real verification provider and deployed alert delivery remain explicit prerequisites."
+      ],
+      "verification": {
+        "api": "72 distinct cases pass:13 storage config,19 storage records/access,40 CRM/verification.34 CRM cases passed in the combined run; the6 new transport fixture failures are replaced by final6 passes.",
+        "browser": "2 real storage FA/EN cases pass. Prior unchanged verification/dashboard/inbox and provider/AI UI checks reused.",
+        "schema": "9 notification seed cases pass.",
+        "quality": "API/DB types, scoped lint/format and diff checks pass. Prior42 browser budgets reused: web sources/dependencies unchanged in this batch. Full regression remainsV02."
+      },
+      "remaining": [
+        "Automatic identity provider; exact future refund/contract/AI consumers; template/mapping rollout; deployed ops proof;38 older source refreshes."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "4d2efa0157bd8bf5ddebbf35d96bfbe8aa756ce65e524c41978095dddbdde446"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "fadf34273f6cf1b5d4fd7d1f6a039fa09facc112dcd936bfeb72c212c78d9685"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "07e7bb2f5428d23c3d0d13cd95105b7befb8dac2aebacd3a4f2ea47f6f143f15"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "2201400dd7b853e680452a8c139fe4e6fa375a72917d971f285ad565eb3bc31c"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "d6ee4db6830e21722a5f60c9e9db81b96db3c7343ae41d8fec96354d4a224690"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "42842f63239c3dd8a4a6cdc1e53c9171dda9fe8e6c987f52ae9cff72064cafcc"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "2bbd786bd038ba8e222cab32a976418e8986b300a0d74c7b60d617c5d979d801"
+        },
+        {
+          "path": "apps/api/src/storage/storage-admin.controller.ts",
+          "sha256": "6b59591a1f8baabf5e54279b23444d75ae3712b6e5372b3ff827ac07d2ee27ad"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "bf1accb1c17723fb7cc1ebf314bc21f41c7c56e8b1546dc85f5e4e8a2d4ef8f6"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config.service.ts",
+          "sha256": "9a5ff55ada33a00ffc62e0809220ef26379921f23dba62bfc1573ddfa72d11a3"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-admin.service.ts",
+          "sha256": "364a8acfc2c76eb5d7333f3afccdb8243e570bbd0b94a1bb8f2bdbeca4370ce7"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "8b7cfea5f9208aadced9d75cdaac687054d33cc1e5bef9c91f093088541a4b26"
+        },
+        {
+          "path": "apps/api/src/storage/storage-records.controller.ts",
+          "sha256": "d5b28152952ba20474c5e475cb0ff5674df23d45ee0293fe492821c30dd57e86"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+        },
+        {
+          "path": "apps/web/e2e/verification-notices.spec.ts",
+          "sha256": "37e06d0efefbcf86271085101a90a586db18b4239e292dcb900c115cabba5204"
+        },
+        {
+          "path": "apps/worker/src/notifications/email-transport.ts",
+          "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "b8428b78fd5fb628e0bf3b29316961a9a764acec21ab962d0a4a0112c336d6e6"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-transport.ts",
+          "sha256": "1fab95452de3dd29691528b3b396cf397c02c0b9af51a1edb69989257bc5eeba"
+        },
+        {
+          "path": "docs/operations/notification-template-seeding.md",
+          "sha256": "7a04643a3b10d8d3c3b43b838520db3d940cadfc90abcb5d405cdd9ea8b135b2"
+        },
+        {
+          "path": "packages/db/src/seed/notification-templates.ts",
+          "sha256": "48d777547a56e2ef2701f6d2f111bcb37b6cdf7d85858ca25274a9d081e95d31"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-sensitive-records-api.log",
+        "/tmp/r02-sensitive-records-format.log",
+        "/tmp/r02-sensitive-records-quality.log",
+        "/tmp/r02-sensitive-storage-api.log",
+        "/tmp/r02-sensitive-storage-baseline-final.log",
+        "/tmp/r02-sensitive-storage-baseline.log",
+        "/tmp/r02-sensitive-storage-browser.log",
+        "/tmp/r02-sensitive-storage-format.log",
+        "/tmp/r02-sensitive-storage-quality.log",
+        "/tmp/r02-sensitive-verification-api.log",
+        "/tmp/r02-sensitive-verification-baseline.log",
+        "/tmp/r02-sensitive-verification-contact-format.log",
+        "/tmp/r02-sensitive-verification-delivery-api.log",
+        "/tmp/r02-sensitive-verification-delivery-format.log",
+        "/tmp/r02-sensitive-verification-fixture-format.log",
+        "/tmp/r02-sensitive-verification-format.log",
+        "/tmp/r02-sensitive-verification-quality.log",
+        "/tmp/r02-sensitive-verification-seed.log",
+        "/tmp/r02-sensitive-verification-transport-api.log",
+        "/tmp/r02-sensitive-verification-transport-final.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 92,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.02.04"
+          ],
+          "reason": "Required local implemented paths verified; exact future provider/refund/contract and operational prerequisites remain.",
+          "source_revision": "47f15aecc2397432f9988c1b0b92b9ee5be684b4",
+          "evidence": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery"
+        },
+        {
+          "pr": 146,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-07.01.03"
+          ],
+          "reason": "Required local implemented paths verified; exact future provider/refund/contract and operational prerequisites remain.",
+          "source_revision": "47f15aecc2397432f9988c1b0b92b9ee5be684b4",
+          "evidence": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery"
+        }
+      ]
     }
   ]
 }
