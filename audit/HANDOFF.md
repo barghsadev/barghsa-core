@@ -4,13 +4,13 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **47f15aec**. **170 verified /34 partial /118 pending** of322 claims. Saved PRs: **149 closed /24 open /128 unreviewed**,301 total.58 skips:3 verified/55 pending.2871 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **b99c7a76**. **170 verified /38 partial /114 pending** of322 claims. Saved PRs: **149 closed /24 open /128 unreviewed**,301 total.58 skips:3 verified/4 partial/51 pending.2893 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
 
-R02 local repairs complete: storage credential probes/sign/remove preserve current authority and exact step-up audits; manual verification queues named bilingual email/SMS atomically with status/audit/inbox.72 distinct API cases,2 real storage browser cases and9 notification seed cases pass; API/DB types, scoped lint/format pass. Existing provider/AI/catalogue/finance and unchanged UI evidence reused. PR92/146 remain open for explicit future/operational prerequisites. [Review](evidence/step-reviews.json#R02-sensitive-actions-verification-delivery). Catalogue/VAT PR212/213 remain closed at15c0ceb5.
+R03 theme repairs pass34 distinct browser cases,49 UI,8 provider,50 i18n cases and42 unchanged budgets. Terms dark states/RTL close placement, shared buttons/alerts/motion, public links and actual branding preview are repaired. Visual review complete; save/activation checks pass. PR156 stays open for remaining required touchpoint/shared-control acceptance. Four shared-library skips are now explicitly partial, with exact remaining criteria. [Review](evidence/step-reviews.json#R03-theme-contrast).
 
 ## Next action
 
-Continue **R03-theme-contrast**, PR156 and exact shared-theme/component keys in progress.json. Read their criteria; repair confirmed terms-banner dark contrast and shared button/link/destructive states. Preserve completed components and focused evidence. Error/localization/correlation work remains in R03 after this theme batch.
+Continue **R03-controls**, exact membership in progress.json. Fix confirmed shared-control focus/RTL gaps, then finish error/localization/correlation. Preserve current theme evidence. T-06.03.05 background/font/radius/spacing controls and per-user toggle are unbuilt skipped capabilities assigned B01.
 
 Then R04/R05/V01/R06/V02/B01. Full regression staysV02. The plan is unfinished.
 

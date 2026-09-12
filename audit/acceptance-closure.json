@@ -869,7 +869,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-09.01.02",
       "status": "partial",
-      "reviewed_sha": "df62d17d69d844d84dd07c190effa13371594406",
+      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 640,
       "requirement": "**T-09.01.02 — Theme application**\n\n- Description: Branding settings applied to auth pages, public pages, email templates, and notification templates. Full light/dark theme support.\n- Technical notes: CSS custom properties injected from brand config. Email templates reference brand colors. Both themes independently configurable or derived from primary.\n- UI/UX: Instant preview on dashboard. Consistent across all touchpoints.\n- Dependencies: T-09.01.01\n- Complexity: M",
@@ -877,34 +877,135 @@
       "source_evidence": [
         {
           "path": "apps/web/src/providers/BrandThemeProvider.tsx",
-          "sha256": "4f23ee8ac8deadda0917000554ce3c81c6b7d6149bedeca604e1a6edeb03716c"
+          "sha256": "468d4d2f4c9b6f250c636a595b013a041aa94cd8ef348f7b02910227338c818b"
         },
         {
           "path": "apps/web/src/providers/BrandThemeProvider.test.tsx",
-          "sha256": "197efbf763c137d9009620395b372e5b74fbefde516fabe834211a891980724f"
+          "sha256": "03a5a744c58f38a18aee5bb2e024455cdefafa50d1d4c692f814f1cdb2c8235b"
         },
         {
           "path": "apps/web/src/components/AuthLayout.tsx",
-          "sha256": "eecc68905394eabb1b9017f3d51c5e4477739fad69e99a1deac05e3b464c800c"
+          "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
           "sha256": "cd2e193df082b24213dd8bf6922d2e0b8ce6af52f9b450a6cc0a47bc1bb1b5e3"
+        },
+        {
+          "path": "apps/web/e2e/branding-theme.spec.ts",
+          "sha256": "1b181e5ee0188b3917130ac7765b149666765843a263ef4396682493a8f8d4d0"
+        },
+        {
+          "path": "apps/web/e2e/branding-validation.spec.ts",
+          "sha256": "2ce984ac67bde587fac3a640f924d2a495512560d4e081bdb3b77604db6ab1f1"
+        },
+        {
+          "path": "apps/web/e2e/direction-component.spec.ts",
+          "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/index.html",
+          "sha256": "4ea94e81e1d890e6fcbd74e3f8341ebe7d00b314861081bd84b17d52b39f5160"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/main.tsx",
+          "sha256": "794af8bcc0043ce77dc521344b8f64d23cf6b252675a40915e5fd793b9d0c995"
+        },
+        {
+          "path": "apps/web/e2e/public-theme.spec.ts",
+          "sha256": "18f841d95471ceed127bd21795b923e7da4baa8fc7cd4cb272ee7f8d0f04a4d0"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
+        },
+        {
+          "path": "apps/web/e2e/terms-theme.spec.ts",
+          "sha256": "e7abb4fe9281ec84597b5bf7d5d43f31d824163feb5dec18925caad071efa139"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "0017759f839e9799dcf0e80b80553e04f95e1929f813c82850bee46b5f09635d"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "7cc2b3d60c8e36111c4623ec8087e8b5a3b01c36750224b352c667f6d7d76a93"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "566b6447c494f11df5a730dc834e7deaaa7d4ce347cd231337570605beb36b54"
+        },
+        {
+          "path": "apps/web/src/components/TosBanner.tsx",
+          "sha256": "a54074b6645072f702262cea896690ca7ddaf2b210cc8e06e90f836b6278ce0d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "0994d4bc3089d49be239ca499fbc1708ecac50a0dc6742e331a49b9f2de9cfff"
+        },
+        {
+          "path": "apps/web/src/routes/activate.tsx",
+          "sha256": "539969c1ae9fdfab9c2960a0ed0d7d5e8c492ed78bc68a37910ce99f033bc556"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "360e48c5b24fa25b64320cf299bf59bde038f2b373fb42409d856d5664c4a645"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "b78ed42024191c6f7881b1f5f66c33fe7c68319d081c4b707191e4deef63fa87"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "065335299ba370f72ffc27b0ea77c15b5d70ca183f1a31fb66623feb1c145a09"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "ad3b50ca831cb442a719b4213762a7403c7f4d049e7c6921c76ad55d4c730bf8"
+        },
+        {
+          "path": "packages/i18n/src/terms.ts",
+          "sha256": "870d02e6f70fd799a530c30736e1207a6c25b2bed050c34b75873e7ab1ccbc1b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/alert.tsx",
+          "sha256": "d26c81532decb8b0f6b4b958af376ce2b64c21af31bd1a23c1a5c67b582fce98"
+        },
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "sha256": "c6a393b7d3f2c1835af2801ea8e9d302be5f72cb4223bb6254f25339dcdd3019"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dialog.tsx",
+          "sha256": "b1d6360974aace083220f8961c458c53821d7fa2457c8e9fa47d039533120b90"
+        },
+        {
+          "path": "packages/ui/src/components/ui/page-states.tsx",
+          "sha256": "7e7aa6c9832690e0beb6c1f36e4980b92040a96d9707b6cd8d81c6e067828200"
+        },
+        {
+          "path": "packages/ui/src/page-states.test.tsx",
+          "sha256": "4038b40473d0450746f887a4347230d171ca48c58b295c7c4f222eb41b7a222e"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "5d31d3a0d7609cc9a4709b79cd13f412c35c27c313b97d1158d7cc8b6b0850e2"
         }
       ],
       "checks": [
         "Seven provider regression tests pass; all four initial cases failed before repair",
         "Real activation refreshes title and component colors immediately in both languages",
-        "Email/notification branding and actual previews are now verified through R02-email-branding-delivery, R02-branded-admin-previews and subsequent contact/delivery repairs. audit/evidence/step-reviews.json#R02-provider-template-authoring"
+        "Email/notification branding and actual previews are now verified through R02-email-branding-delivery, R02-branded-admin-previews and subsequent contact/delivery repairs. audit/evidence/step-reviews.json#R02-provider-template-authoring",
+        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified."
       ],
       "limitations": [
-        "Full light/dark, contrast and dashboard consistency across all touchpoints remains R03. Earlier auth/public evidence bindings are retained and are not renewed by this frontend authoring checkpoint."
+        "Required theme/contrast review across remaining implemented touchpoints continues in R03. Current public/auth, terms and branding editor checks do not certify every page. Historical email/notification branding deferral remains satisfied by R02."
       ],
       "merged_prs": [
         156
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+      "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.02.03",
@@ -1329,7 +1430,7 @@
         },
         {
           "path": "apps/web/src/components/TosBanner.tsx",
-          "sha256": "400ed7e3b6a316526cfe9cde00a809ee69d7387e8df3add8df5460df23286978"
+          "sha256": "a54074b6645072f702262cea896690ca7ddaf2b210cc8e06e90f836b6278ce0d"
         },
         {
           "path": "apps/web/e2e/shell-navigation.spec.ts",
@@ -1351,7 +1452,8 @@
       "checks": [
         "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
-        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim."
+        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
+        "audit/evidence/step-reviews.json#R03-theme-contrast: matching immediate-base bindings refreshed after scoped review. Shared controls/styles and public links change presentation only; terms consent behavior remains unchanged, dialog close label is localized. Brand preview reuses the unchanged foreground calculation; draft/save/activation logic remains unchanged. Current focused browser/type/lint/budget checks pass; prior behavior evidence retained."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates.",
@@ -1737,11 +1839,11 @@
         },
         {
           "path": "apps/web/src/providers/BrandThemeProvider.tsx",
-          "sha256": "24ab7aa70df4edd5c7ad94c1bd1f82ad77e9cd19c7c1d5d48aa392b6f96379fe"
+          "sha256": "468d4d2f4c9b6f250c636a595b013a041aa94cd8ef348f7b02910227338c818b"
         },
         {
           "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
-          "sha256": "ac4191e5d8c4f9ac65a4970094e9cf82a6298f081e69a37c61d76e783a9fbffc"
+          "sha256": "0994d4bc3089d49be239ca499fbc1708ecac50a0dc6742e331a49b9f2de9cfff"
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
@@ -1829,7 +1931,8 @@
         "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged.",
         "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
-        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed."
+        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
+        "audit/evidence/step-reviews.json#R03-theme-contrast: matching immediate-base bindings refreshed after scoped review. Shared controls/styles and public links change presentation only; terms consent behavior remains unchanged, dialog close label is localized. Brand preview reuses the unchanged foreground calculation; draft/save/activation logic remains unchanged. Current focused browser/type/lint/budget checks pass; prior behavior evidence retained."
       ],
       "limitations": [
         "This certifies the implemented numeral-formatting task, not every F20 localization or screen-reader requirement. Identifiers, customer-authored content, canonical input values and business date strings retain their own semantics. Production deployment and failing combined coverage groups remain separate gates."
@@ -3248,7 +3351,7 @@
         },
         {
           "path": "apps/web/src/routes/forgot-password.tsx",
-          "sha256": "c604329fd4b683f0683ede7ccd8ba991dcb34cb4f642d399987fdd4b116cc22f"
+          "sha256": "360e48c5b24fa25b64320cf299bf59bde038f2b373fb42409d856d5664c4a645"
         }
       ],
       "checks": [
@@ -3263,7 +3366,8 @@
         "At 89e7c53, reviewed the isolated trusted-device authorization/audit repair; 12 HTTP cases, types and lint pass. See audit/evidence/step-reviews.json#R01-trusted-device-deadlines. Other criteria and earlier source drift remain unchanged.",
         "At455ed61, reviewed guard validation/security logs and exact step-up error flag;83 API cases and final types/lint/format pass. Complete metadata inventory is in security-route-review.md. Other criteria and older source drift remain. See evidence/step-reviews.json#R01-guard-boundaries.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
-        "audit/evidence/step-reviews.json#R01-session-recovery: Owner-requested anonymous/current-session pre-login CSRF now protects all11 public-auth POST routes. RefreshCsrfGuard validates X-CSRF-Token against the session linked to the hashed refresh credential; expired/revoked sessions fail and redemption rechecks token consumption/deadlines. Authenticated mutations use the global guard, rotate tokens with sessions and return safe403 plus correlation/security log. Signed payment/email callbacks, payment return GET and actual CSP reporting retain their assigned domain review; the no-exemption task is not closed."
+        "audit/evidence/step-reviews.json#R01-session-recovery: Owner-requested anonymous/current-session pre-login CSRF now protects all11 public-auth POST routes. RefreshCsrfGuard validates X-CSRF-Token against the session linked to the hashed refresh credential; expired/revoked sessions fail and redemption rechecks token consumption/deadlines. Authenticated mutations use the global guard, rotate tokens with sessions and return safe403 plus correlation/security log. Signed payment/email callbacks, payment return GET and actual CSP reporting retain their assigned domain review; the no-exemption task is not closed.",
+        "audit/evidence/step-reviews.json#R03-theme-contrast: matching immediate-base bindings refreshed after scoped review. Shared controls/styles and public links change presentation only; terms consent behavior remains unchanged, dialog close label is localized. Brand preview reuses the unchanged foreground calculation; draft/save/activation logic remains unchanged. Current focused browser/type/lint/budget checks pass; prior behavior evidence retained."
       ],
       "limitations": [
         "Payment signed callbacks and state-changing return GET remain R01 finance review; email callback remains R02 and CSP reporting remains R03. Their policy/handler dispositions are not acceptance passes.",
@@ -5262,7 +5366,7 @@
         },
         {
           "path": "apps/web/src/routes/forgot-password.tsx",
-          "sha256": "c604329fd4b683f0683ede7ccd8ba991dcb34cb4f642d399987fdd4b116cc22f"
+          "sha256": "360e48c5b24fa25b64320cf299bf59bde038f2b373fb42409d856d5664c4a645"
         },
         {
           "path": "packages/db/drizzle/production/0122_password_reset_authorization.sql",
@@ -5311,7 +5415,8 @@
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
-        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification."
+        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
+        "audit/evidence/step-reviews.json#R03-theme-contrast: matching immediate-base bindings refreshed after scoped review. Shared controls/styles and public links change presentation only; terms consent behavior remains unchanged, dialog close label is localized. Brand preview reuses the unchanged foreground calculation; draft/save/activation logic remains unchanged. Current focused browser/type/lint/budget checks pass; prior behavior evidence retained."
       ],
       "limitations": [
         "Preserved reset transaction and migration evidence is supplemented by current preauth and recovery UI checks. Local fixtures do not prove provider operation or deployment."
@@ -6261,12 +6366,13 @@
         },
         {
           "path": "apps/web/src/routes/terms.tsx",
-          "sha256": "8502a9eaccb42d1c1957d21f109dc2cee6b081e9ff17648ca27e1655669c5c33"
+          "sha256": "ad3b50ca831cb442a719b4213762a7403c7f4d049e7c6921c76ad55d4c730bf8"
         }
       ],
       "checks": [
         "Terms acceptance starts unchecked, blocks submission without a publication and resets on language changes. Desktop native anchor opens the exact published UUID and locale; mobile dialog retains the exact displayed text and restores focus. Draft/malformed/mismatched reads fail. Consent ID/time and both content hashes are recorded atomically during user creation.",
-        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp"
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp",
+        "audit/evidence/step-reviews.json#R03-theme-contrast: matching immediate-base bindings refreshed after scoped review. Shared controls/styles and public links change presentation only; terms consent behavior remains unchanged, dialog close label is localized. Brand preview reuses the unchanged foreground calculation; draft/save/activation logic remains unchanged. Current focused browser/type/lint/budget checks pass; prior behavior evidence retained."
       ],
       "limitations": [
         "Local acceptance uses migrated PostgreSQL and compiled HTTP/worker fixtures plus production-built browser tests with API fixtures. Live provider operation, deployment and broad V02/coverage/strict-dependency evidence remain separate."
@@ -6527,11 +6633,12 @@
         },
         {
           "path": "apps/web/src/routes/forgot-password.tsx",
-          "sha256": "c604329fd4b683f0683ede7ccd8ba991dcb34cb4f642d399987fdd4b116cc22f"
+          "sha256": "360e48c5b24fa25b64320cf299bf59bde038f2b373fb42409d856d5664c4a645"
         }
       ],
       "checks": [
-        "audit/evidence/step-reviews.json#R01-session-recovery: Auth-layout email/mobile intake, back-to-login, masked destination and identical generic known/unknown responses are implemented. Normalized destination starts are capped5/hour, alongside shared IP/device/send limits before account lookup. Unknown identifiers receive an opaque synthetic challenge; encrypted delivery configuration failure does not reveal existence. Recovery now uses the same six-digit OtpInput as login/register, including normalized paste, keyboard control, autosubmit, error clear and resend/pending serialization. Current HTTP/rate-limit/delivery and31 affected browser cases supply acceptance."
+        "audit/evidence/step-reviews.json#R01-session-recovery: Auth-layout email/mobile intake, back-to-login, masked destination and identical generic known/unknown responses are implemented. Normalized destination starts are capped5/hour, alongside shared IP/device/send limits before account lookup. Unknown identifiers receive an opaque synthetic challenge; encrypted delivery configuration failure does not reveal existence. Recovery now uses the same six-digit OtpInput as login/register, including normalized paste, keyboard control, autosubmit, error clear and resend/pending serialization. Current HTTP/rate-limit/delivery and31 affected browser cases supply acceptance.",
+        "audit/evidence/step-reviews.json#R03-theme-contrast: matching immediate-base bindings refreshed after scoped review. Shared controls/styles and public links change presentation only; terms consent behavior remains unchanged, dialog close label is localized. Brand preview reuses the unchanged foreground calculation; draft/save/activation logic remains unchanged. Current focused browser/type/lint/budget checks pass; prior behavior evidence retained."
       ],
       "merged_prs": [
         93
@@ -19025,6 +19132,534 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.02",
+      "status": "partial",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 1088,
+      "requirement": "- **T-06.03.02:** Create themed component set with RTL support\n  - **Notes:** Each component uses CSS logical properties (`padding-inline-start` instead of `padding-left`, `margin-inline-end` instead of `margin-right`, `border-inline-start` instead of `border-left`). Use Tailwind `rtl:`/`ltr:` modifiers for any property that can't use logical properties. Theme tokens in CSS variables: `--color-primary`, `--color-background`, `--color-text`, `--border-radius`, `--spacing-*`. Both light and dark variants defined.\n  - **Dependencies:** T-06.03.01\n  - **Complexity:** L",
+      "requirement_sha256": "0b0ec13a345afaaecbe64843f42351635dc66385c02d009ffc3cb74f04bcb55f",
+      "checks": [
+        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/branding-theme.spec.ts",
+          "sha256": "1b181e5ee0188b3917130ac7765b149666765843a263ef4396682493a8f8d4d0"
+        },
+        {
+          "path": "apps/web/e2e/branding-validation.spec.ts",
+          "sha256": "2ce984ac67bde587fac3a640f924d2a495512560d4e081bdb3b77604db6ab1f1"
+        },
+        {
+          "path": "apps/web/e2e/direction-component.spec.ts",
+          "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/index.html",
+          "sha256": "4ea94e81e1d890e6fcbd74e3f8341ebe7d00b314861081bd84b17d52b39f5160"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/main.tsx",
+          "sha256": "794af8bcc0043ce77dc521344b8f64d23cf6b252675a40915e5fd793b9d0c995"
+        },
+        {
+          "path": "apps/web/e2e/public-theme.spec.ts",
+          "sha256": "18f841d95471ceed127bd21795b923e7da4baa8fc7cd4cb272ee7f8d0f04a4d0"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
+        },
+        {
+          "path": "apps/web/e2e/terms-theme.spec.ts",
+          "sha256": "e7abb4fe9281ec84597b5bf7d5d43f31d824163feb5dec18925caad071efa139"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "0017759f839e9799dcf0e80b80553e04f95e1929f813c82850bee46b5f09635d"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "7cc2b3d60c8e36111c4623ec8087e8b5a3b01c36750224b352c667f6d7d76a93"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "566b6447c494f11df5a730dc834e7deaaa7d4ce347cd231337570605beb36b54"
+        },
+        {
+          "path": "apps/web/src/components/TosBanner.tsx",
+          "sha256": "a54074b6645072f702262cea896690ca7ddaf2b210cc8e06e90f836b6278ce0d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "0994d4bc3089d49be239ca499fbc1708ecac50a0dc6742e331a49b9f2de9cfff"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.test.tsx",
+          "sha256": "03a5a744c58f38a18aee5bb2e024455cdefafa50d1d4c692f814f1cdb2c8235b"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "468d4d2f4c9b6f250c636a595b013a041aa94cd8ef348f7b02910227338c818b"
+        },
+        {
+          "path": "apps/web/src/routes/activate.tsx",
+          "sha256": "539969c1ae9fdfab9c2960a0ed0d7d5e8c492ed78bc68a37910ce99f033bc556"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "360e48c5b24fa25b64320cf299bf59bde038f2b373fb42409d856d5664c4a645"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "b78ed42024191c6f7881b1f5f66c33fe7c68319d081c4b707191e4deef63fa87"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "065335299ba370f72ffc27b0ea77c15b5d70ca183f1a31fb66623feb1c145a09"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "ad3b50ca831cb442a719b4213762a7403c7f4d049e7c6921c76ad55d4c730bf8"
+        },
+        {
+          "path": "packages/i18n/src/terms.ts",
+          "sha256": "870d02e6f70fd799a530c30736e1207a6c25b2bed050c34b75873e7ab1ccbc1b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/alert.tsx",
+          "sha256": "d26c81532decb8b0f6b4b958af376ce2b64c21af31bd1a23c1a5c67b582fce98"
+        },
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "sha256": "c6a393b7d3f2c1835af2801ea8e9d302be5f72cb4223bb6254f25339dcdd3019"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dialog.tsx",
+          "sha256": "b1d6360974aace083220f8961c458c53821d7fa2457c8e9fa47d039533120b90"
+        },
+        {
+          "path": "packages/ui/src/components/ui/page-states.tsx",
+          "sha256": "7e7aa6c9832690e0beb6c1f36e4980b92040a96d9707b6cd8d81c6e067828200"
+        },
+        {
+          "path": "packages/ui/src/page-states.test.tsx",
+          "sha256": "4038b40473d0450746f887a4347230d171ca48c58b295c7c4f222eb41b7a222e"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "5d31d3a0d7609cc9a4709b79cd13f412c35c27c313b97d1158d7cc8b6b0850e2"
+        }
+      ],
+      "merged_prs": [],
+      "historically_skipped": true,
+      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast",
+      "limitations": [
+        "Other shared controls still contain physical select/dropdown placements and incomplete focus styling. Complete their RTL/theme/state checks in R03-controls."
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.03",
+      "status": "partial",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 1093,
+      "requirement": "- **T-06.03.03:** Implement WCAG 2.2 AA accessibility in all shared components\n  - **Notes:** Every interactive element has visible focus indicator (2px solid offset ring, not just outline). Color contrast: minimum 4.5:1 for text, 3:1 for large text (18px+). ARIA: `role`, `aria-label`, `aria-describedby`, `aria-errormessage` on form fields. Keyboard: Tab order follows visual order, Escape closes dialogs/dropdowns, Enter toggles selects/checkboxes. Screen reader: live regions for dynamic content (toast, loading state). Reduced motion: `@media (prefers-reduced-motion: reduce)` disables CSS animations and transitions. Components span loading, empty, error, and disabled states.\n  - **Dependencies:** T-06.03.01\n  - **Complexity:** XL",
+      "requirement_sha256": "9816a15613881ecba94df1e7e3f260b797efd982e2d2434f3edcc15287bba9bd",
+      "checks": [
+        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/branding-theme.spec.ts",
+          "sha256": "1b181e5ee0188b3917130ac7765b149666765843a263ef4396682493a8f8d4d0"
+        },
+        {
+          "path": "apps/web/e2e/branding-validation.spec.ts",
+          "sha256": "2ce984ac67bde587fac3a640f924d2a495512560d4e081bdb3b77604db6ab1f1"
+        },
+        {
+          "path": "apps/web/e2e/direction-component.spec.ts",
+          "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/index.html",
+          "sha256": "4ea94e81e1d890e6fcbd74e3f8341ebe7d00b314861081bd84b17d52b39f5160"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/main.tsx",
+          "sha256": "794af8bcc0043ce77dc521344b8f64d23cf6b252675a40915e5fd793b9d0c995"
+        },
+        {
+          "path": "apps/web/e2e/public-theme.spec.ts",
+          "sha256": "18f841d95471ceed127bd21795b923e7da4baa8fc7cd4cb272ee7f8d0f04a4d0"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
+        },
+        {
+          "path": "apps/web/e2e/terms-theme.spec.ts",
+          "sha256": "e7abb4fe9281ec84597b5bf7d5d43f31d824163feb5dec18925caad071efa139"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "0017759f839e9799dcf0e80b80553e04f95e1929f813c82850bee46b5f09635d"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "7cc2b3d60c8e36111c4623ec8087e8b5a3b01c36750224b352c667f6d7d76a93"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "566b6447c494f11df5a730dc834e7deaaa7d4ce347cd231337570605beb36b54"
+        },
+        {
+          "path": "apps/web/src/components/TosBanner.tsx",
+          "sha256": "a54074b6645072f702262cea896690ca7ddaf2b210cc8e06e90f836b6278ce0d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "0994d4bc3089d49be239ca499fbc1708ecac50a0dc6742e331a49b9f2de9cfff"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.test.tsx",
+          "sha256": "03a5a744c58f38a18aee5bb2e024455cdefafa50d1d4c692f814f1cdb2c8235b"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "468d4d2f4c9b6f250c636a595b013a041aa94cd8ef348f7b02910227338c818b"
+        },
+        {
+          "path": "apps/web/src/routes/activate.tsx",
+          "sha256": "539969c1ae9fdfab9c2960a0ed0d7d5e8c492ed78bc68a37910ce99f033bc556"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "360e48c5b24fa25b64320cf299bf59bde038f2b373fb42409d856d5664c4a645"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "b78ed42024191c6f7881b1f5f66c33fe7c68319d081c4b707191e4deef63fa87"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "065335299ba370f72ffc27b0ea77c15b5d70ca183f1a31fb66623feb1c145a09"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "ad3b50ca831cb442a719b4213762a7403c7f4d049e7c6921c76ad55d4c730bf8"
+        },
+        {
+          "path": "packages/i18n/src/terms.ts",
+          "sha256": "870d02e6f70fd799a530c30736e1207a6c25b2bed050c34b75873e7ab1ccbc1b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/alert.tsx",
+          "sha256": "d26c81532decb8b0f6b4b958af376ce2b64c21af31bd1a23c1a5c67b582fce98"
+        },
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "sha256": "c6a393b7d3f2c1835af2801ea8e9d302be5f72cb4223bb6254f25339dcdd3019"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dialog.tsx",
+          "sha256": "b1d6360974aace083220f8961c458c53821d7fa2457c8e9fa47d039533120b90"
+        },
+        {
+          "path": "packages/ui/src/components/ui/page-states.tsx",
+          "sha256": "7e7aa6c9832690e0beb6c1f36e4980b92040a96d9707b6cd8d81c6e067828200"
+        },
+        {
+          "path": "packages/ui/src/page-states.test.tsx",
+          "sha256": "4038b40473d0450746f887a4347230d171ca48c58b295c7c4f222eb41b7a222e"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "5d31d3a0d7609cc9a4709b79cd13f412c35c27c313b97d1158d7cc8b6b0850e2"
+        }
+      ],
+      "merged_prs": [],
+      "historically_skipped": true,
+      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast",
+      "limitations": [
+        "Buttons, alerts and terms dialogs now pass targeted contrast/focus/motion checks. Remaining select/input/checkbox/radio/tab/switch and consumer keyboard/focus/state acceptance is R03-controls; this is not a full WCAG certification."
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.05",
+      "status": "partial",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 1104,
+      "requirement": "- **T-06.03.05:** Implement theme system with admin overrides\n  - **Notes:** CSS variables for all theme tokens. Admin can customize: primary color, background color, font family, border radius, spacing scale. Theme overrides stored in admin config (Draft → Active → Superseded). Apply via CSS custom properties on `<html>` element. Light/dark mode toggle per user. Admin-set theme defaults applied to all users when no per-user override exists. Animations respect `prefers-reduced-motion` — disable all non-essential motion.\n  - **Dependencies:** T-06.03.02\n  - **Complexity:** L\n  - **UI/UX:** Theme settings in admin dashboard with color pickers, preview area showing live component examples, save as draft vs activate immediately.",
+      "requirement_sha256": "0636c68694fc93db1464ae65871005e6b0fac31d4a25125e2c3f32472ffc07ba",
+      "checks": [
+        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/branding-theme.spec.ts",
+          "sha256": "1b181e5ee0188b3917130ac7765b149666765843a263ef4396682493a8f8d4d0"
+        },
+        {
+          "path": "apps/web/e2e/branding-validation.spec.ts",
+          "sha256": "2ce984ac67bde587fac3a640f924d2a495512560d4e081bdb3b77604db6ab1f1"
+        },
+        {
+          "path": "apps/web/e2e/direction-component.spec.ts",
+          "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/index.html",
+          "sha256": "4ea94e81e1d890e6fcbd74e3f8341ebe7d00b314861081bd84b17d52b39f5160"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/main.tsx",
+          "sha256": "794af8bcc0043ce77dc521344b8f64d23cf6b252675a40915e5fd793b9d0c995"
+        },
+        {
+          "path": "apps/web/e2e/public-theme.spec.ts",
+          "sha256": "18f841d95471ceed127bd21795b923e7da4baa8fc7cd4cb272ee7f8d0f04a4d0"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
+        },
+        {
+          "path": "apps/web/e2e/terms-theme.spec.ts",
+          "sha256": "e7abb4fe9281ec84597b5bf7d5d43f31d824163feb5dec18925caad071efa139"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "0017759f839e9799dcf0e80b80553e04f95e1929f813c82850bee46b5f09635d"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "7cc2b3d60c8e36111c4623ec8087e8b5a3b01c36750224b352c667f6d7d76a93"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "566b6447c494f11df5a730dc834e7deaaa7d4ce347cd231337570605beb36b54"
+        },
+        {
+          "path": "apps/web/src/components/TosBanner.tsx",
+          "sha256": "a54074b6645072f702262cea896690ca7ddaf2b210cc8e06e90f836b6278ce0d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "0994d4bc3089d49be239ca499fbc1708ecac50a0dc6742e331a49b9f2de9cfff"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.test.tsx",
+          "sha256": "03a5a744c58f38a18aee5bb2e024455cdefafa50d1d4c692f814f1cdb2c8235b"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "468d4d2f4c9b6f250c636a595b013a041aa94cd8ef348f7b02910227338c818b"
+        },
+        {
+          "path": "apps/web/src/routes/activate.tsx",
+          "sha256": "539969c1ae9fdfab9c2960a0ed0d7d5e8c492ed78bc68a37910ce99f033bc556"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "360e48c5b24fa25b64320cf299bf59bde038f2b373fb42409d856d5664c4a645"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "b78ed42024191c6f7881b1f5f66c33fe7c68319d081c4b707191e4deef63fa87"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "065335299ba370f72ffc27b0ea77c15b5d70ca183f1a31fb66623feb1c145a09"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "ad3b50ca831cb442a719b4213762a7403c7f4d049e7c6921c76ad55d4c730bf8"
+        },
+        {
+          "path": "packages/i18n/src/terms.ts",
+          "sha256": "870d02e6f70fd799a530c30736e1207a6c25b2bed050c34b75873e7ab1ccbc1b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/alert.tsx",
+          "sha256": "d26c81532decb8b0f6b4b958af376ce2b64c21af31bd1a23c1a5c67b582fce98"
+        },
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "sha256": "c6a393b7d3f2c1835af2801ea8e9d302be5f72cb4223bb6254f25339dcdd3019"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dialog.tsx",
+          "sha256": "b1d6360974aace083220f8961c458c53821d7fa2457c8e9fa47d039533120b90"
+        },
+        {
+          "path": "packages/ui/src/components/ui/page-states.tsx",
+          "sha256": "7e7aa6c9832690e0beb6c1f36e4980b92040a96d9707b6cd8d81c6e067828200"
+        },
+        {
+          "path": "packages/ui/src/page-states.test.tsx",
+          "sha256": "4038b40473d0450746f887a4347230d171ca48c58b295c7c4f222eb41b7a222e"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "5d31d3a0d7609cc9a4709b79cd13f412c35c27c313b97d1158d7cc8b6b0850e2"
+        }
+      ],
+      "merged_prs": [],
+      "historically_skipped": true,
+      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast",
+      "limitations": [
+        "Historical skipped task is partly implemented through brand colors, active/draft configuration and theme CSS. Required background/font/radius/spacing administration and per-user light/dark override are not implemented. Keep these new capabilities in B01 with exact T-06.03.05 prerequisites; do not count them as passed."
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.06",
+      "status": "partial",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 1110,
+      "requirement": "- **T-06.03.06:** Create loading/empty/error state components\n  - **Notes:** `<Skeleton>` for content placeholders (matching card/table/input shapes with shimmer animation, disabled when reduced-motion). `<EmptyState icon title description action? />` for zero-data pages. `<ErrorBoundary>` catches rendering errors, displays \"Something went wrong\" with retry button and support contact. `<PageLoading>` full-page spinner/skeleton for route transitions.\n  - **Dependencies:** T-06.03.02\n  - **Complexity:** M\n  - **UI/UX:** Skeleton components match the exact dimensions of the content they replace. Loading never shows raw text \"Loading...\" except as ARIA label. Empty states are informative, not blank.\n\n---",
+      "requirement_sha256": "84cc721b7f86d11a10ff65a8da1231835e874d8331737b88e1d67b2043ad7534",
+      "checks": [
+        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/branding-theme.spec.ts",
+          "sha256": "1b181e5ee0188b3917130ac7765b149666765843a263ef4396682493a8f8d4d0"
+        },
+        {
+          "path": "apps/web/e2e/branding-validation.spec.ts",
+          "sha256": "2ce984ac67bde587fac3a640f924d2a495512560d4e081bdb3b77604db6ab1f1"
+        },
+        {
+          "path": "apps/web/e2e/direction-component.spec.ts",
+          "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/index.html",
+          "sha256": "4ea94e81e1d890e6fcbd74e3f8341ebe7d00b314861081bd84b17d52b39f5160"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/main.tsx",
+          "sha256": "794af8bcc0043ce77dc521344b8f64d23cf6b252675a40915e5fd793b9d0c995"
+        },
+        {
+          "path": "apps/web/e2e/public-theme.spec.ts",
+          "sha256": "18f841d95471ceed127bd21795b923e7da4baa8fc7cd4cb272ee7f8d0f04a4d0"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
+        },
+        {
+          "path": "apps/web/e2e/terms-theme.spec.ts",
+          "sha256": "e7abb4fe9281ec84597b5bf7d5d43f31d824163feb5dec18925caad071efa139"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "0017759f839e9799dcf0e80b80553e04f95e1929f813c82850bee46b5f09635d"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "7cc2b3d60c8e36111c4623ec8087e8b5a3b01c36750224b352c667f6d7d76a93"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "566b6447c494f11df5a730dc834e7deaaa7d4ce347cd231337570605beb36b54"
+        },
+        {
+          "path": "apps/web/src/components/TosBanner.tsx",
+          "sha256": "a54074b6645072f702262cea896690ca7ddaf2b210cc8e06e90f836b6278ce0d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "0994d4bc3089d49be239ca499fbc1708ecac50a0dc6742e331a49b9f2de9cfff"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.test.tsx",
+          "sha256": "03a5a744c58f38a18aee5bb2e024455cdefafa50d1d4c692f814f1cdb2c8235b"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "468d4d2f4c9b6f250c636a595b013a041aa94cd8ef348f7b02910227338c818b"
+        },
+        {
+          "path": "apps/web/src/routes/activate.tsx",
+          "sha256": "539969c1ae9fdfab9c2960a0ed0d7d5e8c492ed78bc68a37910ce99f033bc556"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "360e48c5b24fa25b64320cf299bf59bde038f2b373fb42409d856d5664c4a645"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "b78ed42024191c6f7881b1f5f66c33fe7c68319d081c4b707191e4deef63fa87"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "065335299ba370f72ffc27b0ea77c15b5d70ca183f1a31fb66623feb1c145a09"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "ad3b50ca831cb442a719b4213762a7403c7f4d049e7c6921c76ad55d4c730bf8"
+        },
+        {
+          "path": "packages/i18n/src/terms.ts",
+          "sha256": "870d02e6f70fd799a530c30736e1207a6c25b2bed050c34b75873e7ab1ccbc1b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/alert.tsx",
+          "sha256": "d26c81532decb8b0f6b4b958af376ce2b64c21af31bd1a23c1a5c67b582fce98"
+        },
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "sha256": "c6a393b7d3f2c1835af2801ea8e9d302be5f72cb4223bb6254f25339dcdd3019"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dialog.tsx",
+          "sha256": "b1d6360974aace083220f8961c458c53821d7fa2457c8e9fa47d039533120b90"
+        },
+        {
+          "path": "packages/ui/src/components/ui/page-states.tsx",
+          "sha256": "7e7aa6c9832690e0beb6c1f36e4980b92040a96d9707b6cd8d81c6e067828200"
+        },
+        {
+          "path": "packages/ui/src/page-states.test.tsx",
+          "sha256": "4038b40473d0450746f887a4347230d171ca48c58b295c7c4f222eb41b7a222e"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "5d31d3a0d7609cc9a4709b79cd13f412c35c27c313b97d1158d7cc8b6b0850e2"
+        }
+      ],
+      "merged_prs": [],
+      "historically_skipped": true,
+      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast",
+      "limitations": [
+        "Empty/error/retry/support and hidden loading semantics are implemented and covered by shared tests. Exact skeleton shape/dimension and remaining consumer loading-state acceptance still needs R03-controls review."
+      ]
     }
   ],
   "pending_task_keys": [
@@ -19100,10 +19735,6 @@
     "01-platform-infrastructure.md#T-06.02.02",
     "01-platform-infrastructure.md#T-06.02.04",
     "01-platform-infrastructure.md#T-06.03.01",
-    "01-platform-infrastructure.md#T-06.03.02",
-    "01-platform-infrastructure.md#T-06.03.03",
-    "01-platform-infrastructure.md#T-06.03.05",
-    "01-platform-infrastructure.md#T-06.03.06",
     "01-platform-infrastructure.md#T-06.04.01",
     "01-platform-infrastructure.md#T-07.01.01",
     "01-platform-infrastructure.md#T-07.01.02",
@@ -23003,6 +23634,20 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
       "note": "Only matching immediate-base bindings refreshed with scoped review and current evidence.38 older refreshes retained."
+    },
+    {
+      "source_revision": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-04.01.03",
+        "01-platform-infrastructure.md#T-06.02.05",
+        "02-auth-users-admin.md#T-02.02.03",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-01.01.04",
+        "02-auth-users-admin.md#T-02.03.01"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast",
+      "note": "Only matching immediate-base bindings refreshed after reviewed presentation changes.38 older refreshes retained."
     }
   ]
 }

@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "47f15aecc2397432f9988c1b0b92b9ee5be684b4",
+  "source_revision": "b99c7a76ecae99ff01857740ff2cef045318ea01",
   "active_step": "R03",
-  "next_action": "Repair confirmed shared theme/contrast and terms-banner defects, then finish assigned error/correlation checks. Reuse completed financial/notification and UI evidence.",
+  "next_action": "Continue R03-controls: inspect/fix remaining shared input/select/dropdown/tab/checkbox/radio/switch focus and RTL states, then assigned error/localization/correlation checks. Preserve current theme evidence and B01 unbuilt theme-editor prerequisites.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -267,9 +267,7 @@
       "implementation_status": "partial",
       "acceptance_status": "pending",
       "remaining": [
-        "Finish exact shared-control/implemented-screen locale, RTL, theme, keyboard/focus and failure-state acceptance; preserve three verified historical skips.",
-        "R03: visually review the terms-status error banner under dark admin theme. The failed-status fixture shows light text on its pale background; measure and fix that required error state without reopening the completed correction workflow.",
-        "R03: default shared primary-button hover opacity, primary links and destructive alerts can lose contrast. Login and shared auth-layout text are repaired in R01-login-ui; review other required consumers without broad suppressions."
+        "Current shared/public/terms/branding theme defects repaired in audit/evidence/step-reviews.json#R03-theme-contrast. Remaining controls/consumer locale, RTL, focus, contrast and loading-state acceptance stays R03-controls. Four skipped tasks are partial; unbuilt admin/per-user theme overrides remain B01."
       ]
     },
     {
@@ -731,6 +729,10 @@
     {
       "id": "R02-sensitive-actions-verification-delivery",
       "review_record": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery"
+    },
+    {
+      "id": "R03-theme-contrast",
+      "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast"
     }
   ],
   "deferred_improvements": [
@@ -755,12 +757,12 @@
   "counts": {
     "historical_tasks": 322,
     "acceptance_verified": 170,
-    "partial": 34,
-    "pending": 118,
+    "partial": 38,
+    "pending": 114,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
-    "skips_pending": 55
+    "skips_pending": 51
   },
   "user_decisions": [
     "Retain Vite SPA under ADR004.",
@@ -1046,8 +1048,8 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R03-theme-contrast",
-    "name": "Shared theme contrast and terms status",
+    "id": "R03-controls",
+    "name": "Shared keyboard, focus and RTL states",
     "status": "reviewing",
     "prs": [
       156
@@ -1056,25 +1058,22 @@
       "02-auth-users-admin.md#T-09.01.02",
       "01-platform-infrastructure.md#T-06.03.02",
       "01-platform-infrastructure.md#T-06.03.03",
-      "01-platform-infrastructure.md#T-06.03.05",
       "01-platform-infrastructure.md#T-06.03.06"
     ],
     "remaining_checklist": [
-      "Read exact theme/shared-control requirements and PR156 remaining theme deferral.",
-      "Repair confirmed terms-status dark contrast, shared button/link/destructive contrast and required failure states.",
-      "Run focused theme/keyboard/RTL checks; preserve remaining separate R03 error/correlation work."
+      "Read current shared-control implementations once; exact T-06.03.02/.03/.06 criteria already read.",
+      "Fix physical select/dropdown indicators, weak/non-offset focus and remaining confirmed shared-control contrast/motion defects.",
+      "Review loading/error consumers and remaining implemented touchpoints; preserve current source-bound theme/consent/branding proof."
     ],
     "confirmed_defects": [
-      "Terms status banner uses a pale background with dark-theme light text; current VAT dark scan reproduces1.84:1.",
-      "Shared primary-button hover, primary links and destructive alerts have recorded contrast gaps."
+      "Select and dropdown indicators still use physical right/left placement. Several controls still use translucent3px focus without required2px offset."
     ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
-      "audit/evidence/step-reviews.json#R02-catalogue-vat"
+      "audit/evidence/step-reviews.json#R03-theme-contrast"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Repair confirmed shared theme/contrast and terms-banner defects, then finish assigned error/correlation checks. Reuse completed financial/notification and UI evidence."
+    "next_action": "Continue R03-controls: inspect/fix remaining shared input/select/dropdown/tab/checkbox/radio/switch focus and RTL states, then assigned error/localization/correlation checks. Preserve current theme evidence and B01 unbuilt theme-editor prerequisites."
   },
   "open_domain_reviews": [
     {

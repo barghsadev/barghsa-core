@@ -17437,6 +17437,195 @@
           "evidence": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery"
         }
       ]
+    },
+    {
+      "id": "R03-theme-contrast",
+      "date": "2026-09-13",
+      "source_revision": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "base_revision": "3647d48e3a75f62064170a7a0f5b6be833efed8a",
+      "product_commits": [
+        "765fa7b0",
+        "b99c7a76"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.01.02",
+        "01-platform-infrastructure.md#T-06.03.02",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-06.03.05",
+        "01-platform-infrastructure.md#T-06.03.06"
+      ],
+      "summary": "Shared and public contrast, terms RTL/modal states and branding editor preview repaired. PR156 remains open for remaining touchpoint acceptance. Four historical shared-library skips now explicitly partial; unbuilt theme-editor capabilities remain B01.",
+      "review": [
+        "Read exact five task blocks and saved PR156 body/deferral. Retained R02 branded email/notification delivery and preview evidence. No duplicate implementation or new theme-editor scope.",
+        "Four component baseline cases reproduced primary/secondary hover and destructive/link contrast defects, including transient foreground/background color animation. Shared button color transitions removed; hover keeps stable contrast, focus is a full 2px offset ring, icon padding is logical. Destructive tokens work in both themes. Global reduced-motion disables CSS animations/transitions.",
+        "Production terms status/error/content checks pass in both languages/themes. Visual inspection found the original right-positioned close button overlapping Persian title. Logical end position and reserved header space repair it; localized close label and loading announcement preserve consent behavior.",
+        "White brand no longer hides registration/recovery/activation/terms links. Four public-page cases include hover scans; registration verification hover uses the same safe foreground. Original registration/consent behavior checks retained.",
+        "Branding baseline contains measured contrast/overflow failures and a fixture timeout when clicking the visually hidden native checkbox. Final fixture uses keyboard focus/Space and validates checked state. Editor now uses semantic backgrounds/text, wrapped color/actions layout, shared buttons and the same WCAG foreground helper as actual app branding. Preview reflects draft colors/theme without changing active root theme. Save/activation response validation still passes. Both-language/light-dark screenshots reviewed, including separate preview screenshots.",
+        "Four skipped shared tasks are explicitly partial. Existing page-state source and six behavior tests reviewed inside49 passing UI cases. Remaining shared controls, skeleton/consumer acceptance and unbuilt admin/per-user overrides are listed rather than counted as passes.",
+        "Refreshed6 matching immediate-base bindings only;38 older source refreshes retained."
+      ],
+      "verification": {
+        "browser": "34 distinct Chromium cases:4 shared component cases (3 brand colors plus hover/focus/motion),4 terms theme,4 public theme,4 branding theme,5 direction,11 registration consent,2 branding response validation. Later visual rerun overlaps4 branding cases; not added.",
+        "unit": "49 UI +8 provider +50 i18n cases pass.",
+        "quality": "UI/web types, scoped lint/format, builds and42 unchanged route/interaction budgets pass. Full repository regression remains V02."
+      },
+      "remaining": [
+        "Required theme/contrast review across remaining implemented touchpoints continues in R03. Current public/auth, terms and branding editor checks do not certify every page. Historical email/notification branding deferral remains satisfied by R02.",
+        "Other shared controls still contain physical select/dropdown placements and incomplete focus styling. Complete their RTL/theme/state checks in R03-controls.",
+        "Buttons, alerts and terms dialogs now pass targeted contrast/focus/motion checks. Remaining select/input/checkbox/radio/tab/switch and consumer keyboard/focus/state acceptance is R03-controls; this is not a full WCAG certification.",
+        "Historical skipped task is partly implemented through brand colors, active/draft configuration and theme CSS. Required background/font/radius/spacing administration and per-user light/dark override are not implemented. Keep these new capabilities in B01 with exact T-06.03.05 prerequisites; do not count them as passed.",
+        "Empty/error/retry/support and hidden loading semantics are implemented and covered by shared tests. Exact skeleton shape/dimension and remaining consumer loading-state acceptance still needs R03-controls review."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/branding-theme.spec.ts",
+          "sha256": "1b181e5ee0188b3917130ac7765b149666765843a263ef4396682493a8f8d4d0"
+        },
+        {
+          "path": "apps/web/e2e/branding-validation.spec.ts",
+          "sha256": "2ce984ac67bde587fac3a640f924d2a495512560d4e081bdb3b77604db6ab1f1"
+        },
+        {
+          "path": "apps/web/e2e/direction-component.spec.ts",
+          "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/index.html",
+          "sha256": "4ea94e81e1d890e6fcbd74e3f8341ebe7d00b314861081bd84b17d52b39f5160"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/main.tsx",
+          "sha256": "794af8bcc0043ce77dc521344b8f64d23cf6b252675a40915e5fd793b9d0c995"
+        },
+        {
+          "path": "apps/web/e2e/public-theme.spec.ts",
+          "sha256": "18f841d95471ceed127bd21795b923e7da4baa8fc7cd4cb272ee7f8d0f04a4d0"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
+        },
+        {
+          "path": "apps/web/e2e/terms-theme.spec.ts",
+          "sha256": "e7abb4fe9281ec84597b5bf7d5d43f31d824163feb5dec18925caad071efa139"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "0017759f839e9799dcf0e80b80553e04f95e1929f813c82850bee46b5f09635d"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "7cc2b3d60c8e36111c4623ec8087e8b5a3b01c36750224b352c667f6d7d76a93"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "566b6447c494f11df5a730dc834e7deaaa7d4ce347cd231337570605beb36b54"
+        },
+        {
+          "path": "apps/web/src/components/TosBanner.tsx",
+          "sha256": "a54074b6645072f702262cea896690ca7ddaf2b210cc8e06e90f836b6278ce0d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "0994d4bc3089d49be239ca499fbc1708ecac50a0dc6742e331a49b9f2de9cfff"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.test.tsx",
+          "sha256": "03a5a744c58f38a18aee5bb2e024455cdefafa50d1d4c692f814f1cdb2c8235b"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "468d4d2f4c9b6f250c636a595b013a041aa94cd8ef348f7b02910227338c818b"
+        },
+        {
+          "path": "apps/web/src/routes/activate.tsx",
+          "sha256": "539969c1ae9fdfab9c2960a0ed0d7d5e8c492ed78bc68a37910ce99f033bc556"
+        },
+        {
+          "path": "apps/web/src/routes/forgot-password.tsx",
+          "sha256": "360e48c5b24fa25b64320cf299bf59bde038f2b373fb42409d856d5664c4a645"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "b78ed42024191c6f7881b1f5f66c33fe7c68319d081c4b707191e4deef63fa87"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "065335299ba370f72ffc27b0ea77c15b5d70ca183f1a31fb66623feb1c145a09"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "ad3b50ca831cb442a719b4213762a7403c7f4d049e7c6921c76ad55d4c730bf8"
+        },
+        {
+          "path": "packages/i18n/src/terms.ts",
+          "sha256": "870d02e6f70fd799a530c30736e1207a6c25b2bed050c34b75873e7ab1ccbc1b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/alert.tsx",
+          "sha256": "d26c81532decb8b0f6b4b958af376ce2b64c21af31bd1a23c1a5c67b582fce98"
+        },
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "sha256": "c6a393b7d3f2c1835af2801ea8e9d302be5f72cb4223bb6254f25339dcdd3019"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dialog.tsx",
+          "sha256": "b1d6360974aace083220f8961c458c53821d7fa2457c8e9fa47d039533120b90"
+        },
+        {
+          "path": "packages/ui/src/components/ui/page-states.tsx",
+          "sha256": "7e7aa6c9832690e0beb6c1f36e4980b92040a96d9707b6cd8d81c6e067828200"
+        },
+        {
+          "path": "packages/ui/src/page-states.test.tsx",
+          "sha256": "4038b40473d0450746f887a4347230d171ca48c58b295c7c4f222eb41b7a222e"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "5d31d3a0d7609cc9a4709b79cd13f412c35c27c313b97d1158d7cc8b6b0850e2"
+        }
+      ],
+      "logs": [
+        "/tmp/r03-branding-theme-baseline.log",
+        "/tmp/r03-branding-theme-browser.log",
+        "/tmp/r03-branding-theme-build.log",
+        "/tmp/r03-branding-theme-final-format.log",
+        "/tmp/r03-branding-theme-format.log",
+        "/tmp/r03-branding-theme-quality.log",
+        "/tmp/r03-branding-theme-visual.log",
+        "/tmp/r03-terms-format.log",
+        "/tmp/r03-theme-browser.log",
+        "/tmp/r03-theme-components-baseline.log",
+        "/tmp/r03-theme-components.log",
+        "/tmp/r03-theme-dialog-docs.log",
+        "/tmp/r03-theme-final-build.log",
+        "/tmp/r03-theme-final-format.log",
+        "/tmp/r03-theme-format.log",
+        "/tmp/r03-theme-public-browser.log",
+        "/tmp/r03-theme-quality.log",
+        "/tmp/r03-theme-shadcn-docs.log",
+        "/tmp/r03-theme-shadcn-info.log",
+        "/tmp/r03-theme-ui-build.log",
+        "/tmp/r03-theme-unit-budget.log",
+        "/tmp/r03-theme-web-build.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 156,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.01.02"
+          ],
+          "reason": "Historical branding deferral satisfied; remaining required shared-control and implemented touchpoint acceptance continues R03.",
+          "source_revision": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+          "evidence": "audit/evidence/step-reviews.json#R03-theme-contrast"
+        }
+      ]
     }
   ]
 }

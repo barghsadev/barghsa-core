@@ -20098,6 +20098,160 @@
       "sha256": "7255b4bfa76b674d5e0a8fcfb23169c0c26676b7053fcd70100a9810dc95ee7a",
       "encoding": "gzip",
       "stored_sha256": "b1f386bdbcd9c915f478e73124990a671f923cb96ef7a9def9cbc42ba147fc3f"
+    },
+    {
+      "original_path": "/tmp/r03-branding-theme-baseline.log",
+      "path": "audit/evidence/r03/r03-branding-theme-baseline.log.gz",
+      "sha256": "aeb299f91abc9e656a79acbcc81bcc2292b42e3640595552b6bc5af5f0d1c80d",
+      "encoding": "gzip",
+      "stored_sha256": "37ade978577702c6198446dd28b891b2efebed9ef532929e6e80e4ee88a3b504"
+    },
+    {
+      "original_path": "/tmp/r03-branding-theme-browser.log",
+      "path": "audit/evidence/r03/r03-branding-theme-browser.log.gz",
+      "sha256": "e6b9f1e0402ceed0a63259ccbdf8ca448cb88e0fac370088614769c9bde077b4",
+      "encoding": "gzip",
+      "stored_sha256": "337b8907c4cd12077b7abe4a827233318ce957000e0c9b10344b30200b5dcbf7"
+    },
+    {
+      "original_path": "/tmp/r03-branding-theme-build.log",
+      "path": "audit/evidence/r03/r03-branding-theme-build.log.gz",
+      "sha256": "fd4a85c7682692b76a1a142245c9f8d74765f41b53881f7e87348736b3dd5317",
+      "encoding": "gzip",
+      "stored_sha256": "50b498d532ac20f48b8de044050b0ea74b927b6a4a0edc301bf5dfe3cf5f5758"
+    },
+    {
+      "original_path": "/tmp/r03-branding-theme-final-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r03-branding-theme-format.log",
+      "path": "audit/evidence/r03/r03-branding-theme-format.log.gz",
+      "sha256": "703c618d323e8306867237a10658ea4e34b21dced9625dae5a1786cfa8782994",
+      "encoding": "gzip",
+      "stored_sha256": "9526e46fb2aecc99bd98ab4c2961ebc22c458b0bd802ca5cf39ad2e27505f22b"
+    },
+    {
+      "original_path": "/tmp/r03-branding-theme-quality.log",
+      "path": "audit/evidence/r03/r03-branding-theme-quality.log.gz",
+      "sha256": "1a8343cf9fe9941f1f9840c8bad18ac9dbdb3642f7ca024ffda453a0e21aa2b9",
+      "encoding": "gzip",
+      "stored_sha256": "0c6062318d1082c16263ebef5f120730a4a2aa9b7d39363ea14464a74bdd3ef9"
+    },
+    {
+      "original_path": "/tmp/r03-branding-theme-visual.log",
+      "path": "audit/evidence/r03/r03-branding-theme-visual.log.gz",
+      "sha256": "500e885ed1e484f879c777412194bb1784ee6cf4da7c3702f3a1a24ee428831c",
+      "encoding": "gzip",
+      "stored_sha256": "005dcad4b6761da96467b647b40908c4d646b88171b568109dad5e41fa2379a7"
+    },
+    {
+      "original_path": "/tmp/r03-terms-format.log",
+      "path": "audit/evidence/r03/r03-terms-format.log.gz",
+      "sha256": "ef165fe6d03f70b97fd20d78b94f0a1efc0c2522fd80f1b088642db79de3358b",
+      "encoding": "gzip",
+      "stored_sha256": "1e1a26b0cb2d7c196bc7e364492692d5fa4270f6ada5b1bf77ac14ac9997a339"
+    },
+    {
+      "original_path": "/tmp/r03-theme-browser.log",
+      "path": "audit/evidence/r03/r03-theme-browser.log.gz",
+      "sha256": "9109c877002c820d1b7a9b3db4e37cfd6498c58e66e9fdcf405063c2a3f48969",
+      "encoding": "gzip",
+      "stored_sha256": "03aca03f1b45a73cabc0470d99593fe642077e44e9869ac39162dc57769d8264"
+    },
+    {
+      "original_path": "/tmp/r03-theme-components-baseline.log",
+      "path": "audit/evidence/r03/r03-theme-components-baseline.log.gz",
+      "sha256": "0fef6f0266e10c50fb8bb57a4fc71c29ab850a85abfab82066fdc94bd63b5aff",
+      "encoding": "gzip",
+      "stored_sha256": "11be59cc7a2908a3a40e58722b95c7613cbcddbba05fa2b674c9a042edb3c324"
+    },
+    {
+      "original_path": "/tmp/r03-theme-components.log",
+      "path": "audit/evidence/r03/r03-theme-components.log.gz",
+      "sha256": "cb6a9eac5addf181160dd8b46e529a552d2708160d0133fb0b91fe322f882018",
+      "encoding": "gzip",
+      "stored_sha256": "e61fd60d8192ac480f22eb98141410217f30f1f672cd5392fde54b2bef508b9f"
+    },
+    {
+      "original_path": "/tmp/r03-theme-dialog-docs.log",
+      "path": "audit/evidence/r03/r03-theme-dialog-docs.log.gz",
+      "sha256": "238e222de7ad521c2cde15f820f41cce60fc3226bf486566f8f90bbfbe9cd626",
+      "encoding": "gzip",
+      "stored_sha256": "e62d695db9ccdb081df30021d10755736baa14bf3dc65482cc4e1cd1038623b0"
+    },
+    {
+      "original_path": "/tmp/r03-theme-final-build.log",
+      "path": "audit/evidence/r03/r03-theme-final-build.log.gz",
+      "sha256": "96cd2d05cb428f694f08e5a04d21a03b310dd5b9c3e05e7ba6dbb6b9ec7a4006",
+      "encoding": "gzip",
+      "stored_sha256": "9e88db3474b771adc784d9775f7406fff195a14103dafa75b412f4cb893d6c3c"
+    },
+    {
+      "original_path": "/tmp/r03-theme-final-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r03-theme-format.log",
+      "path": "audit/evidence/r03/r03-theme-format.log.gz",
+      "sha256": "d652a61e47b672065078cb3556d47582793d0acc2e8617832ef5331fecfbcaa6",
+      "encoding": "gzip",
+      "stored_sha256": "ea6f75f1758b156891edbbd3a781c739044e99f6e7595a3ae0def1555e6c7125"
+    },
+    {
+      "original_path": "/tmp/r03-theme-public-browser.log",
+      "path": "audit/evidence/r03/r03-theme-public-browser.log.gz",
+      "sha256": "5d67408cfd3a087d2e01dd6dbac5f45c8caee5c49843c167f4c0322b39581a9f",
+      "encoding": "gzip",
+      "stored_sha256": "4c57a1548cb306b39f2035f406c8d6fc457f545d49cb00ea239e9da4c48a51f0"
+    },
+    {
+      "original_path": "/tmp/r03-theme-quality.log",
+      "path": "audit/evidence/r03/r03-theme-quality.log.gz",
+      "sha256": "34264e0234a6338f96e5d0fe7c9f3a3244f040b7ebc4d73f6d0811538e630d4e",
+      "encoding": "gzip",
+      "stored_sha256": "2fbcd7126bd7cae9864c2115d97eda189e7329d10fa7416f977b76e5de5cdb7c"
+    },
+    {
+      "original_path": "/tmp/r03-theme-shadcn-docs.log",
+      "path": "audit/evidence/r03/r03-theme-shadcn-docs.log.gz",
+      "sha256": "e049759f3c3ac4cbcfebf9a89a26b0a8976653280075f1ec8eafd75dcaa0c09c",
+      "encoding": "gzip",
+      "stored_sha256": "1ee1ff65e8aa06113d9be6dc7cb12488d2cac7fea460e6022ac44950693c17eb"
+    },
+    {
+      "original_path": "/tmp/r03-theme-shadcn-info.log",
+      "path": "audit/evidence/r03/r03-theme-shadcn-info.log.gz",
+      "sha256": "feb64e6a4bc8f08cb0d0326362c8b3922186f21c721062db07912ed69bbbfac6",
+      "encoding": "gzip",
+      "stored_sha256": "42a0f2204d27f249b98b2627d838ffcfdfe7e34a1ff6fa5627b510fd9c78d1dc"
+    },
+    {
+      "original_path": "/tmp/r03-theme-ui-build.log",
+      "path": "audit/evidence/r03/r03-theme-ui-build.log.gz",
+      "sha256": "9bb7ff9bc1620577c6ac034b52678ee57ab7e5ec2fc9bf7e17afbad421f24d85",
+      "encoding": "gzip",
+      "stored_sha256": "686df7471f9ac24c8023c48926119303d1ca3ee7b85473b3a3911b799082be5b"
+    },
+    {
+      "original_path": "/tmp/r03-theme-unit-budget.log",
+      "path": "audit/evidence/r03/r03-theme-unit-budget.log.gz",
+      "sha256": "39e89b36647a71655e5dcceeea6feb84e2f2c687d2bc8499ab2dac3ad1d58cb0",
+      "encoding": "gzip",
+      "stored_sha256": "3dda4ae8df3e0258803f20d0bca78a0358a58d22d093407b77eb83874433e496"
+    },
+    {
+      "original_path": "/tmp/r03-theme-web-build.log",
+      "path": "audit/evidence/r03/r03-theme-web-build.log.gz",
+      "sha256": "d44cbcf7caa18d03b32871223fa885515f1381a85289af343c7a6a81b7ad0dbd",
+      "encoding": "gzip",
+      "stored_sha256": "cdf0dce10e1557ef6fcd0258c0d041d8d45c56f7533f00f506a6acf4a821754c"
     }
   ]
 }

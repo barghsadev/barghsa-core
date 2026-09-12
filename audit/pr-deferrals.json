@@ -1622,14 +1622,14 @@
     "historical_deferrals": [
       "- [ ] Email/notification template branding — follow-up (different PR / modules)"
     ],
-    "status": "Historical deferrals satisfied locally; separate remaining task criteria are recorded in the linked review.",
-    "reviewed_source_revision": "c6588610b2fcd7901f7465ad75e4589cb2d2be70",
-    "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring",
+    "status": "Historical email/notification deferral satisfied; remaining implemented touchpoint and shared-control theme acceptance continues R03.",
+    "reviewed_source_revision": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+    "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast",
     "dispositions": [
       {
         "statement_index": 0,
         "disposition": "satisfied_by_later_implementation",
-        "evidence": "Email/auth notification branding and actual admin previews are implemented and verified by the linked R02 repairs. Full theme/contrast and instant dashboard consistency across public/auth/admin touchpoints remains assigned to R03; the existing partial task stays partial. audit/evidence/step-reviews.json#R02-provider-template-authoring"
+        "evidence": "Email/auth notification branding and actual admin previews are implemented and verified by the linked R02 repairs. Full theme/contrast and instant dashboard consistency across public/auth/admin touchpoints remains assigned to R03; the existing partial task stays partial. audit/evidence/step-reviews.json#R02-provider-template-authoring audit/evidence/step-reviews.json#R03-theme-contrast: public/auth links, terms states and actual draft preview now pass both-theme checks; remaining full component/consumer acceptance is not waived."
       }
     ]
   },

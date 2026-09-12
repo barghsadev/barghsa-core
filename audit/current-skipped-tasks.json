@@ -3,7 +3,7 @@
   "scope": "Historical skips reconciled with recorded acceptance; not a dispatch queue",
   "source_sha256": {
     "audit/skipped-tasks.json": "e4394d905111e9f5d319185eb47aeb26bd75927b6fc2ac99c449b10cd42e4947",
-    "audit/acceptance-closure.json": "46b752986bebdfffd83399117076dc9dc2eabe679bfafbfad9745be8afc67d0f"
+    "audit/acceptance-closure.json": "ac910d15c70a754c8efc3866c5b98b7ca0fb87415b3974173f78e028286b42cd"
   },
   "historically_skipped": 58,
   "acceptance_verified": 3,
@@ -361,9 +361,11 @@
       "historical_skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
       "historical_assessment": "existing_implementation_revalidate",
       "direct_merged_prs": [],
-      "acceptance_status": "acceptance_pending",
-      "reviewed_sha": null,
-      "limitations": [],
+      "acceptance_status": "partial",
+      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "limitations": [
+        "Other shared controls still contain physical select/dropdown placements and incomplete focus styling. Complete their RTL/theme/state checks in R03-controls."
+      ],
       "next_action": "Review current implementation against requirements; build only unmet remainder"
     },
     {
@@ -372,9 +374,11 @@
       "historical_skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
       "historical_assessment": "acceptance_gap",
       "direct_merged_prs": [],
-      "acceptance_status": "acceptance_pending",
-      "reviewed_sha": null,
-      "limitations": [],
+      "acceptance_status": "partial",
+      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "limitations": [
+        "Buttons, alerts and terms dialogs now pass targeted contrast/focus/motion checks. Remaining select/input/checkbox/radio/tab/switch and consumer keyboard/focus/state acceptance is R03-controls; this is not a full WCAG certification."
+      ],
       "next_action": "Review current implementation against requirements; build only unmet remainder"
     },
     {
@@ -396,9 +400,11 @@
       "historical_skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
       "historical_assessment": "existing_implementation_revalidate",
       "direct_merged_prs": [],
-      "acceptance_status": "acceptance_pending",
-      "reviewed_sha": null,
-      "limitations": [],
+      "acceptance_status": "partial",
+      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "limitations": [
+        "Historical skipped task is partly implemented through brand colors, active/draft configuration and theme CSS. Required background/font/radius/spacing administration and per-user light/dark override are not implemented. Keep these new capabilities in B01 with exact T-06.03.05 prerequisites; do not count them as passed."
+      ],
       "next_action": "Review current implementation against requirements; build only unmet remainder"
     },
     {
@@ -407,9 +413,11 @@
       "historical_skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
       "historical_assessment": "partial",
       "direct_merged_prs": [],
-      "acceptance_status": "acceptance_pending",
-      "reviewed_sha": null,
-      "limitations": [],
+      "acceptance_status": "partial",
+      "reviewed_sha": "b99c7a76ecae99ff01857740ff2cef045318ea01",
+      "limitations": [
+        "Empty/error/retry/support and hidden loading semantics are implemented and covered by shared tests. Exact skeleton shape/dimension and remaining consumer loading-state acceptance still needs R03-controls review."
+      ],
       "next_action": "Review current implementation against requirements; build only unmet remainder"
     },
     {

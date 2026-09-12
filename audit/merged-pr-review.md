@@ -185,7 +185,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#153](https://github.com/barghsadev/barghsa-core/pull/153) | 02-auth-users-admin.md#T-08.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
 | [#154](https://github.com/barghsadev/barghsa-core/pull/154) | 02-auth-users-admin.md#T-08.01.03 (partial) | Task review remains | Not reviewed | 1 |
 | [#155](https://github.com/barghsadev/barghsa-core/pull/155) | 02-auth-users-admin.md#T-09.01.01 (partial) | Task review remains | Not reviewed | 0 |
-| [#156](https://github.com/barghsadev/barghsa-core/pull/156) | 02-auth-users-admin.md#T-09.01.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R02-provider-template-authoring) | 1 |
+| [#156](https://github.com/barghsadev/barghsa-core/pull/156) | 02-auth-users-admin.md#T-09.01.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R03-theme-contrast) | 1 |
 | [#157](https://github.com/barghsadev/barghsa-core/pull/157) | 02-auth-users-admin.md#T-09.02.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#158](https://github.com/barghsadev/barghsa-core/pull/158) | 02-auth-users-admin.md#T-09.02.02 (pending) | Task review remains | Not reviewed | 0 |
 | [#159](https://github.com/barghsadev/barghsa-core/pull/159) | 02-auth-users-admin.md#T-09.03.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `46b752986bebdfffd83399117076dc9dc2eabe679bfafbfad9745be8afc67d0f`
-- `pr-deferrals.json`: `8947250a5759abddf07a605a1cc364d38d544af08750a107f5b3ecf5347760a3`
-- `evidence/step-reviews.json`: `b6d157c0b21361ff4875a7795ed648536dddc944062334b74ca1c25186111b49`
+- `acceptance-closure.json`: `ac910d15c70a754c8efc3866c5b98b7ca0fb87415b3974173f78e028286b42cd`
+- `pr-deferrals.json`: `fa2476ad80b9792d45265e97fa73b4f33fdd8a4aa67c62c2836646d736571f42`
+- `evidence/step-reviews.json`: `e6a5402905eee13c5eab341dfa4517abd5025f84479f44fb8a111bee03d65cd4`
