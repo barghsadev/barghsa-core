@@ -15,6 +15,7 @@ import { InAppNotificationTransport } from './in-app-transport.js';
 import { EmailNotificationTransport } from './email-transport.js';
 import { SmsNotificationTransport } from './sms-transport.js';
 import { notificationsDeliveryAttempts } from './worker-metrics.js';
+import { durableDelivery, DeliveryOutcomeUnknown } from './send-receipt.js';
 
 for (const failure of ['inbox', 'job', 'log', 'outbox'] as const) {
   it(`rolls inbox delivery back on transient ${failure} failure and preserves accepted external receipts`, async () => {
@@ -186,7 +187,8 @@ async function queue(
   userId: string,
   profileId: string,
   channels: NotificationChannel[] = ['in_app', 'email', 'sms'],
-  eventKey = 'wallet.topup_completed'
+  eventKey = 'wallet.topup_completed',
+  payload: Record<string, unknown> = {}
 ) {
   const client = await pool.connect();
   try {
@@ -196,6 +198,7 @@ async function queue(
       profileId,
       channels,
       eventKey,
+      payload,
       idempotencyKey: randomUUID(),
     });
     await client.query('COMMIT');
@@ -432,3 +435,335 @@ it.each(['email', 'sms'] as const)(
     ).toEqual({ attempts: 0, last_error: 'skipped: channel_disabled' });
   }
 );
+
+async function queuedReminder() {
+  const recipient = await account();
+  const dueAt = new Date(Date.now() + 6 * 86400000);
+  const invoiceId = randomUUID();
+  await pool.query(
+    `INSERT INTO invoices(id,profile_id,state,total_amount,paid_amount,issued_at,due_at,metadata)
+    VALUES ($1,$2,'Unpaid',100,0,NOW(),$3,'{"due":{"serviceType":"electricity"}}')`,
+    [invoiceId, recipient.profileId, dueAt]
+  );
+  const id = await queue(
+    recipient.userId,
+    recipient.profileId,
+    ['in_app', 'email'],
+    'payment.invoice_reminder',
+    { invoiceId, offset: -7, dueAt: dueAt.toISOString(), scheduledAt: new Date().toISOString() }
+  );
+  const email = vi.fn(async () => ({
+    status: 'delivered' as const,
+    providerRef: 'reminder-accepted',
+  }));
+  const options = {
+    pool,
+    deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 },
+    transports: {
+      in_app: new InAppNotificationTransport(pool),
+      email: { channel: 'email' as const, send: email },
+    },
+  };
+  return { ...recipient, emailAddress: recipient.email, id, invoiceId, email, options };
+}
+for (const change of ['Paid', 'Cancelled', 'Refunded', 'deadline', 'archived'] as const) {
+  it(`suppresses an already queued reminder after ${change}`, async () => {
+    const r = await queuedReminder();
+    if (change === 'deadline')
+      await pool.query("UPDATE invoices SET due_at=due_at+INTERVAL '1 day' WHERE id=$1", [
+        r.invoiceId,
+      ]);
+    else if (change === 'archived')
+      await pool.query('UPDATE profiles SET archived=true WHERE id=$1', [r.profileId]);
+    else
+      await pool.query('UPDATE invoices SET state=$2,paid_amount=$3 WHERE id=$1', [
+        r.invoiceId,
+        change,
+        change === 'Paid' ? 100 : 0,
+      ]);
+    expect(await runOutboxPoll(r.options)).toEqual({ leased: 1, delivered: 1, failed: 0 });
+    expect(r.email).not.toHaveBeenCalled();
+    expect(
+      (
+        await pool.query('SELECT id FROM in_app_notifications WHERE delivery_key=$1', [
+          `outbox:${r.id}`,
+        ])
+      ).rows
+    ).toEqual([]);
+    const jobs = (
+      await pool.query(
+        'SELECT status,attempts,last_error FROM notification_job WHERE outbox_id=$1',
+        [r.id]
+      )
+    ).rows;
+    expect(jobs).toHaveLength(2);
+    for (const job of jobs)
+      expect(job).toMatchObject({
+        status: 'failed',
+        attempts: 0,
+        last_error: expect.stringMatching(/^skipped: reminder_/),
+      });
+    expect(
+      (await pool.query('SELECT id FROM notification_dead_letter WHERE outbox_id=$1', [r.id])).rows
+    ).toEqual([]);
+  });
+}
+it('pauses an already queued disabled offset without consuming retries, then resumes once', async () => {
+  const r = await queuedReminder();
+  await pool.query(
+    `INSERT INTO invoice_reminder_offset_toggles(service_type,"offset",enabled,updated_by)
+ VALUES ('electricity',-7,false,$1) ON CONFLICT(service_type,"offset") DO UPDATE SET enabled=false`,
+    [r.userId]
+  );
+  try {
+    expect(await runOutboxPoll(r.options)).toEqual({ leased: 1, delivered: 0, failed: 0 });
+    expect(r.email).not.toHaveBeenCalled();
+    const jobs = (
+      await pool.query(
+        'SELECT attempts,run_after,status FROM notification_job WHERE outbox_id=$1',
+        [r.id]
+      )
+    ).rows;
+    for (const job of jobs) {
+      expect(job.attempts).toBe(0);
+      expect(job.status).toBe('queued');
+      expect(job.run_after.getTime()).toBeGreaterThan(Date.now());
+    }
+    await pool.query(
+      `UPDATE invoice_reminder_offset_toggles SET enabled=true WHERE service_type='electricity' AND "offset"=-7`
+    );
+    await pool.query(
+      "UPDATE notification_job SET run_after=NOW()-INTERVAL '1 second' WHERE outbox_id=$1",
+      [r.id]
+    );
+    await pool.query(
+      "UPDATE notification_outbox SET scheduled_for=NOW()-INTERVAL '1 second' WHERE id=$1",
+      [r.id]
+    );
+    expect(await runOutboxPoll(r.options)).toEqual({ leased: 1, delivered: 1, failed: 0 });
+    expect(r.email).toHaveBeenCalledOnce();
+    expect(await runOutboxPoll(r.options)).toEqual({ leased: 0, delivered: 0, failed: 0 });
+  } finally {
+    await pool.query(
+      "DELETE FROM invoice_reminder_offset_toggles WHERE service_type='electricity'"
+    );
+  }
+});
+
+for (const accepted of [true, false]) {
+  it(`preserves ${accepted ? 'accepted' : 'unknown'} reminder receipts after payment`, async () => {
+    const r = await queuedReminder();
+    const send = durableDelivery(pool, r.id, 'email', 'existing-reminder-attempt');
+    if (accepted)
+      await send({ id: randomUUID(), transport: 'smtp' }, async () => 'existing-acceptance');
+    else
+      await expect(
+        send({ id: randomUUID(), transport: 'smtp' }, async () => {
+          throw new Error('unknown transport outcome');
+        })
+      ).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
+    await pool.query("UPDATE invoices SET state='Paid',paid_amount=100 WHERE id=$1", [r.invoiceId]);
+    expect(await runOutboxPoll(r.options)).toEqual({
+      leased: 1,
+      delivered: accepted ? 1 : 0,
+      failed: accepted ? 0 : 1,
+    });
+    expect(r.email).not.toHaveBeenCalled();
+    expect(
+      (
+        await pool.query(
+          'SELECT status,attempt_number FROM notification_send_receipts WHERE outbox_id=$1',
+          [r.id]
+        )
+      ).rows
+    ).toEqual([{ status: accepted ? 'accepted' : 'unknown', attempt_number: 1 }]);
+    expect(
+      (
+        await pool.query(
+          "SELECT id FROM notification_delivery_log WHERE notification_id=$1 AND channel='email' AND send_attempt_token IS NOT NULL",
+          [r.id]
+        )
+      ).rows
+    ).toHaveLength(1);
+  });
+}
+it('rechecks payment committed while invoice locking waits', async () => {
+  const r = await queuedReminder(),
+    writer = await pool.connect();
+  await writer.query('BEGIN');
+  await writer.query("UPDATE invoices SET state='Paid',paid_amount=100 WHERE id=$1", [r.invoiceId]);
+  const pid = (await writer.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+  const polling = runOutboxPoll(r.options);
+  try {
+    await vi.waitFor(async () =>
+      expect(
+        (
+          await pool.query('SELECT pid FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid))', [
+            pid,
+          ])
+        ).rows.length
+      ).toBeGreaterThan(0)
+    );
+  } finally {
+    await writer.query('COMMIT');
+    writer.release();
+  }
+  expect(await polling).toEqual({ leased: 1, delivered: 1, failed: 0 });
+  expect(r.email).not.toHaveBeenCalled();
+});
+it('holds invoice eligibility through provider I/O and local persistence', async () => {
+  const r = await queuedReminder();
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  r.email.mockImplementation(async () => {
+    await gate;
+    return { status: 'delivered', providerRef: 'reminder-accepted' };
+  });
+  const polling = runOutboxPoll(r.options);
+  const writer = await pool.connect();
+  const pid = (await writer.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+  let payment: Promise<unknown> | undefined;
+  try {
+    await vi.waitFor(() => expect(r.email).toHaveBeenCalledOnce());
+    payment = writer.query("UPDATE invoices SET state='Paid',paid_amount=100 WHERE id=$1", [
+      r.invoiceId,
+    ]);
+    await vi.waitFor(async () =>
+      expect(
+        (await pool.query('SELECT cardinality(pg_blocking_pids($1)) AS n', [pid])).rows[0].n
+      ).toBeGreaterThan(0)
+    );
+  } finally {
+    release();
+    await polling;
+    await payment;
+    writer.release();
+  }
+  expect(
+    (await pool.query('SELECT state FROM invoices WHERE id=$1', [r.invoiceId])).rows[0].state
+  ).toBe('Paid');
+  expect(
+    (
+      await pool.query('SELECT id FROM in_app_notifications WHERE delivery_key=$1', [
+        `outbox:${r.id}`,
+      ])
+    ).rows
+  ).toHaveLength(1);
+});
+it('serializes reminder policy guards without exhausting the worker pool', async () => {
+  const reminders = [];
+  for (let i = 0; i < 5; i++) reminders.push(await queuedReminder());
+  const first = reminders[0]!;
+  expect(await runOutboxPoll({ ...first.options, leaseSize: 5 })).toEqual({
+    leased: 5,
+    delivered: 5,
+    failed: 0,
+  });
+  expect(first.email).toHaveBeenCalledTimes(5);
+});
+it('rechecks the current recipient window instead of a saved wider window', async () => {
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(new Date('2026-09-13T23:00:00Z'));
+  try {
+    const r = await queuedReminder();
+    await pool.query("UPDATE users SET timezone='UTC' WHERE user_id=$1", [r.userId]);
+    await pool.query(
+      `INSERT INTO app_config(key,value) VALUES ('notification.delivery_window','{"timezone":"UTC","start_hour":9,"end_hour":21}') ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`
+    );
+    await pool.query(
+      `UPDATE notification_job SET delivery_window='{"timezone":"UTC","startHour":0,"endHour":23.983333333333334}' WHERE outbox_id=$1`,
+      [r.id]
+    );
+    expect(await runOutboxPoll({ pool, transports: r.options.transports })).toEqual({
+      leased: 1,
+      delivered: 0,
+      failed: 0,
+    });
+    expect(r.email).not.toHaveBeenCalled();
+    expect(
+      (
+        await pool.query(
+          "SELECT attempts,run_after FROM notification_job WHERE outbox_id=$1 AND channel='email'",
+          [r.id]
+        )
+      ).rows[0]
+    ).toEqual({ attempts: 0, run_after: new Date('2026-09-14T09:00:00Z') });
+    expect(
+      (
+        await pool.query('SELECT id FROM in_app_notifications WHERE delivery_key=$1', [
+          `outbox:${r.id}`,
+        ])
+      ).rows
+    ).toHaveLength(1);
+  } finally {
+    vi.useRealTimers();
+    await pool.query("DELETE FROM app_config WHERE key='notification.delivery_window'");
+  }
+});
+it('pauses dirty queued plans without consuming an attempt', async () => {
+  const r = await queuedReminder();
+  await pool.query(
+    `UPDATE invoices SET metadata=metadata || '{"reminderPlanDirty":true}'::jsonb WHERE id=$1`,
+    [r.invoiceId]
+  );
+  expect(await runOutboxPoll(r.options)).toEqual({ leased: 1, delivered: 0, failed: 0 });
+  expect(r.email).not.toHaveBeenCalled();
+  expect(
+    (await pool.query('SELECT attempts FROM notification_job WHERE outbox_id=$1', [r.id])).rows
+  ).toEqual([{ attempts: 0 }, { attempts: 0 }]);
+});
+
+for (const locale of ['fa', 'en']) {
+  it(`delivers the active localized reminder email and persists its version (${locale})`, async () => {
+    const r = await queuedReminder();
+    await pool.query('UPDATE users SET locale=$2 WHERE user_id=$1', [r.userId, locale]);
+    await pool.query("UPDATE email_provider_configs SET status='superseded' WHERE status='active'");
+    await pool.query(
+      `INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
+      VALUES ('resend','Reminder fixture','active',$1,$2,'passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('resend'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
+      [JSON.stringify({ api_key: 'fixture-only', from_email: 'sender@example.test' }), r.userId]
+    );
+    await pool.query(
+      "UPDATE notification_templates SET status='archived',is_active=false WHERE event_key='payment.invoice_reminder' AND channel='email' AND locale=$1",
+      [locale]
+    );
+    const subject =
+      locale === 'fa' ? 'یادآوری پرداخت {{invoiceId}}' : 'Payment reminder {{invoiceId}}';
+    const template = (
+      await pool.query(
+        `INSERT INTO notification_templates(event_key,channel,locale,version,subject,body_template,variables,status,is_active,created_by)
+      VALUES ('payment.invoice_reminder','email',$1,900,$2,'<p>{{invoiceId}}: {{dueAt}} / {{offset}} / {{scheduledAt}}</p>',
+      '["invoiceId","dueAt","offset","scheduledAt"]','active',true,$3) RETURNING id`,
+        [locale, subject, r.userId]
+      )
+    ).rows[0];
+    const request = vi.fn<typeof fetch>(
+      async () => new Response(JSON.stringify({ id: 'localized-reminder' }), { status: 200 })
+    );
+    const options = {
+      ...r.options,
+      transports: {
+        in_app: new InAppNotificationTransport(pool),
+        email: new EmailNotificationTransport(pool, request),
+      },
+    };
+    expect(await runOutboxPoll(options)).toEqual({ leased: 1, delivered: 1, failed: 0 });
+    expect(request).toHaveBeenCalledOnce();
+    const sent = JSON.parse(String(request.mock.calls[0]?.[1]?.body));
+    expect(sent.subject).toBe(subject.replace('{{invoiceId}}', r.invoiceId));
+    expect(sent.html).toContain(r.invoiceId);
+    expect(sent.to).toContain(r.emailAddress);
+    const job = (
+      await pool.query(
+        "SELECT delivery_payload,status FROM notification_job WHERE outbox_id=$1 AND channel='email'",
+        [r.id]
+      )
+    ).rows[0];
+    expect(job.status).toBe('done');
+    expect(job.delivery_payload).toMatchObject({ templateId: template.id, templateVersion: 900 });
+    expect(await runOutboxPoll(options)).toEqual({ leased: 0, delivered: 0, failed: 0 });
+    expect(request).toHaveBeenCalledOnce();
+  });
+}

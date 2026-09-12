@@ -1,3 +1,8 @@
+import {
+  withReminderDeliveryPolicy,
+  type ReminderDeliveryPolicy,
+} from '../invoices/reminder-delivery-policy.js';
+import { decideDeliverySchedule } from './delivery-window.js';
 import type { QueryPool } from './channel-scheduling.js';
 import type { QueryResultRow } from 'pg';
 import { getDbPool } from '@barghsa/db';
@@ -27,7 +32,6 @@ import { type DeliveryWindowConfig } from './delivery-window.js';
 import {
   resolveChannelAvailability,
   type ChannelAvailabilityContext,
-  type ChannelSkipReason,
 } from './channel-availability.js';
 import {
   loadChannelAvailabilityContext,
@@ -143,38 +147,68 @@ export async function runOutboxPoll(
         const remainingChannels = pendingChannels.filter(
           (channel) => !recovered.some((outcome) => outcome.channel === channel)
         );
-        const availability =
-          remainingChannels.length === 0
-            ? EMPTY_AVAILABILITY_CONTEXT
-            : (options?.availability?.(row) ?? loadChannelAvailabilityContext(pool, row.id));
-        const ctx = (await availability) ?? EMPTY_AVAILABILITY_CONTEXT;
-        const decision = resolveChannelAvailability(row.eventKey, remainingChannels, ctx);
-        const outcomes = [
-          ...recovered,
-          ...(await dispatchOutbox(
-            { ...row, channels: decision.allowed.filter((channel) => channel !== 'in_app') },
-            options?.transports ?? {},
-            lease
-          )),
-        ];
-        // A rollback cannot undo an external send. Retain its actual receipt
-        // if recording the combined inbox/outcome transaction needs another try.
-        externalOutcomes = outcomes.slice();
-        if (lease.signal.aborted) throw new OutboxLeaseLost();
-        const aggregate = await persistOutcomes(
-          pool,
-          row,
-          outcomes,
-          channelJobs,
-          decision.skipped,
-          decision.allowed.includes('in_app') ? (options?.transports ?? {}) : undefined
-        );
-        if (
-          outcomes.some((outcome) => outcome.result.status === 'failed') ||
-          aggregate === 'failed'
-        )
-          result.failed++;
-        else if (aggregate === 'delivered') result.delivered++;
+        const activeLease = lease;
+        const finish = async (policy: ReminderDeliveryPolicy) => {
+          const deferred: { channel: NotificationChannel; until: Date }[] = [];
+          const policySkipped: { channel: NotificationChannel; reason: string }[] = [];
+          const eligible = remainingChannels.filter((channel) => {
+            if (policy.skipReason) {
+              policySkipped.push({ channel, reason: policy.skipReason });
+              return false;
+            }
+            let until = policy.deferUntil;
+            if (!until && policy.window) {
+              const window = decideDeliverySchedule(
+                row.eventKey,
+                [channel],
+                new Date(),
+                policy.window
+              );
+              if (window.kind === 'schedule') until = window.scheduledFor;
+            }
+            if (until) {
+              deferred.push({ channel, until });
+              return false;
+            }
+            return true;
+          });
+          const availability =
+            eligible.length === 0
+              ? EMPTY_AVAILABILITY_CONTEXT
+              : (options?.availability?.(row) ?? loadChannelAvailabilityContext(pool, row.id));
+          const ctx = (await availability) ?? EMPTY_AVAILABILITY_CONTEXT;
+          const decision = resolveChannelAvailability(row.eventKey, eligible, ctx);
+          const outcomes = [
+            ...recovered,
+            ...(await dispatchOutbox(
+              { ...row, channels: decision.allowed.filter((channel) => channel !== 'in_app') },
+              options?.transports ?? {},
+              activeLease
+            )),
+          ];
+          // A rollback cannot undo an external send. Retain its actual receipt
+          // if recording the combined inbox/outcome transaction needs another try.
+          externalOutcomes = outcomes.slice();
+          if (activeLease.signal.aborted) throw new OutboxLeaseLost();
+          const aggregate = await persistOutcomes(
+            pool,
+            row,
+            outcomes,
+            channelJobs,
+            [...decision.skipped, ...policySkipped],
+            decision.allowed.includes('in_app') ? (options?.transports ?? {}) : undefined,
+            deferred
+          );
+          if (
+            outcomes.some((outcome) => outcome.result.status === 'failed') ||
+            aggregate === 'failed'
+          )
+            result.failed++;
+          else if (aggregate === 'delivered') result.delivered++;
+        };
+        if (remainingChannels.length)
+          await withReminderDeliveryPolicy(pool, row, finish, options?.deliveryWindow);
+        else await finish({});
       } catch (error) {
         if (!(error instanceof OutboxLeaseLost)) {
           const message = sanitizeLastError(error instanceof Error ? error.message : String(error));
@@ -249,7 +283,7 @@ interface DispatchOutcome {
 async function markSkippedJobs(
   pool: QueryPool,
   row: OutboxRow,
-  skipped: ReadonlyArray<{ channel: 'email' | 'sms'; reason: ChannelSkipReason }>
+  skipped: ReadonlyArray<{ channel: NotificationChannel; reason: string }>
 ): Promise<void> {
   for (const skip of skipped) {
     await pool.query(
@@ -327,8 +361,9 @@ async function persistOutcomes(
   row: OutboxRow,
   outcomes: DispatchOutcome[],
   jobs: ChannelJob[],
-  skipped: ReadonlyArray<{ channel: 'email' | 'sms'; reason: ChannelSkipReason }> = [],
-  localTransports?: Partial<Record<NotificationChannel, WorkerNotificationTransport>>
+  skipped: ReadonlyArray<{ channel: NotificationChannel; reason: string }> = [],
+  localTransports?: Partial<Record<NotificationChannel, WorkerNotificationTransport>>,
+  deferred: ReadonlyArray<{ channel: NotificationChannel; until: Date }> = []
 ): Promise<'delivered' | 'failed' | 'pending'> {
   // All per-row persistence (inbox, job status, dead-letter, delivery log, outbox
   // state) is committed atomically on a pinned client in production.
@@ -351,6 +386,13 @@ async function persistOutcomes(
       outcomes.push(...localOutcomes);
     }
     await markSkippedJobs(qpool, row, skipped);
+    for (const item of deferred) {
+      await q(
+        `UPDATE notification_job SET run_after=$3,updated_at=NOW()
+        WHERE outbox_id=$1 AND channel=$2 AND status IN ('queued','retrying')`,
+        [row.id, item.channel, item.until]
+      );
+    }
     for (const outcome of outcomes) {
       const job = jobs.find((item) => item.channel === outcome.channel);
       const attempts = (job?.attempts ?? row.attempts) + 1;
