@@ -40,6 +40,8 @@ export type EmailBreakerDecision =
 
 export interface EmailBreakerOutcome {
   ok: boolean;
+  /** False for a permanent provider error; omitted only by callers reporting known transient failures. */
+  transient?: boolean;
   /** Candidate cause recorded in `degraded_reason` when a failure trips. */
   cause?: string;
   /** True when the attempt is the single HALF_OPEN probe (recovery path). */
@@ -115,26 +117,34 @@ export class EmailCircuitBreaker {
     if (outcome.isProbe && !token) return this.readState(providerId);
     const owned = `((NOT degraded AND $3::timestamptz IS NULL) OR
       (degraded AND cooldown_until=$3::timestamptz AND cooldown_until>$2::timestamptz))`;
-    if (outcome.ok) {
+    if (outcome.ok || (outcome.transient === false && !token)) {
       await this.pool.query(
         `UPDATE email_provider_configs SET degraded=false,degraded_reason=NULL,
-        consecutive_failures=0,window_failures=0,window_started_at=NULL,last_failure_at=NULL,opened_at=NULL,cooldown_until=NULL
+        consecutive_failures=0,window_failures=0,recent_failure_times='{}'::timestamptz[],window_started_at=NULL,last_failure_at=NULL,opened_at=NULL,cooldown_until=NULL
         WHERE id=$1 AND ${owned}`,
         [providerId, now, token]
       );
     } else {
-      const inWindow = `(NOT degraded AND window_started_at >= $2::timestamptz - ($4 * interval '1 millisecond'))`;
-      const count = `(CASE WHEN ${inWindow} THEN window_failures+1 ELSE 1 END)`;
+      const count = 'cardinality(recent.failures)';
       const trips = `(degraded OR ${count} >= $5)`;
       await this.pool.query(
-        `UPDATE email_provider_configs SET
+        `WITH locked AS MATERIALIZED (
+          SELECT id,recent_failure_times FROM email_provider_configs WHERE id=$1 FOR UPDATE
+        ), recent AS (
+          SELECT id,ARRAY(
+            SELECT at FROM unnest(recent_failure_times || ARRAY[$2::timestamptz]) at
+            WHERE at >= $2::timestamptz - ($4 * interval '1 millisecond')
+            ORDER BY at DESC LIMIT $5
+          ) AS failures FROM locked
+        ) UPDATE email_provider_configs p SET
         consecutive_failures=consecutive_failures+1, window_failures=${count},
-        window_started_at=CASE WHEN ${inWindow} THEN window_started_at ELSE $2 END,
+        recent_failure_times=recent.failures,
+        window_started_at=(SELECT min(at) FROM unnest(recent.failures) at),
         last_failure_at=$2, degraded=${trips},
         degraded_reason=CASE WHEN ${trips} THEN 'Email provider failure threshold reached' ELSE degraded_reason END,
         opened_at=CASE WHEN ${trips} THEN COALESCE(opened_at,$2) ELSE opened_at END,
         cooldown_until=CASE WHEN ${trips} THEN $2::timestamptz + ($6 * interval '1 millisecond') ELSE cooldown_until END
-        WHERE id=$1 AND ${owned}`,
+        FROM recent WHERE p.id=recent.id AND ${owned}`,
         [
           providerId,
           now,

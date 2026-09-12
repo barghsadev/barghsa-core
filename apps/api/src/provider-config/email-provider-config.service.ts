@@ -621,7 +621,7 @@ export class EmailProviderConfigService {
    */
   private async recordBreakerOutcome(
     id: string,
-    outcome: { ok: boolean; error: string | null },
+    outcome: { ok: boolean; error: string | null; transient?: boolean },
     probeToken?: string,
     query: Pick<ProviderPool, 'query'> = this.db,
     breaker = this.circuitBreaker
@@ -629,6 +629,7 @@ export class EmailProviderConfigService {
     if (breaker) {
       await breaker.recordOutcome(id, {
         ok: outcome.ok,
+        transient: outcome.transient ?? false,
         ...(outcome.error ? { cause: outcome.error } : {}),
         ...(probeToken ? { probeToken } : {}),
       });
@@ -648,6 +649,7 @@ export class EmailProviderConfigService {
     ok: boolean;
     error: string | null;
     result: EmailProviderConfigResult;
+    transient?: boolean;
   }> {
     const saved = await this.readConfig(id, query);
     const parsed = parseSmtpConfig(saved);
@@ -688,7 +690,12 @@ export class EmailProviderConfigService {
       },
       query
     );
-    return { ok: outcome.ok, error: outcome.error ?? null, result: recorded };
+    return {
+      ok: outcome.ok,
+      error: outcome.error ?? null,
+      result: recorded,
+      transient: outcome.transient ?? false,
+    };
   }
 
   /** Resend domain-verification + test-send to the admin's email (T-05.06.03). */
@@ -701,6 +708,7 @@ export class EmailProviderConfigService {
     ok: boolean;
     error: string | null;
     result: EmailProviderConfigResult;
+    transient?: boolean;
   }> {
     const target = await resolveProviderTestRecipient(query, session, 'email', recipient);
 
@@ -746,7 +754,12 @@ export class EmailProviderConfigService {
       },
       query
     );
-    return { ok: outcome.ok, error: outcome.error ?? null, result: recorded };
+    return {
+      ok: outcome.ok,
+      error: outcome.error ?? null,
+      result: recorded,
+      transient: outcome.transient ?? false,
+    };
   }
 
   /* ------------------------- Transaction + helpers ----------------------- */

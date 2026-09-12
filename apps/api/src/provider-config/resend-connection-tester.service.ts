@@ -1,3 +1,4 @@
+import { isTransientEmailError } from '@barghsa/shared/notification-delivery';
 import { Injectable, Inject, Logger, Optional } from '@nestjs/common';
 import type { ResendConfig } from './resend-config.schema';
 
@@ -14,6 +15,7 @@ export interface ResendTestResult {
   ok: boolean;
   /** Safe, non-secret human-readable error when `ok` is false. */
   error?: string;
+  transient?: boolean;
 }
 
 /** A domain record returned by the Resend `/domains` endpoint. */
@@ -29,6 +31,7 @@ export interface ResendEmailResponse {
   id?: string;
   /** Provider error message (Resend returns `message`, sometimes nested). */
   message?: string;
+  httpStatus?: number;
 }
 
 /**
@@ -55,7 +58,9 @@ const defaultApiClient: ResendApiClientLike = {
       signal: AbortSignal.timeout(15_000),
     });
     if (!res.ok) {
-      throw new Error(await safeApiError(res, 'listing domains'));
+      throw Object.assign(new Error(await safeApiError(res, 'listing domains')), {
+        httpStatus: res.status,
+      });
     }
     const body = (await res.json()) as { data?: ResendDomainRecord[] };
     return body.data ?? [];
@@ -74,7 +79,10 @@ const defaultApiClient: ResendApiClientLike = {
       const body = (await res.json()) as { id?: string };
       return body.id ? { id: body.id } : {};
     }
-    return await safeApiError(res, 'sending test email').then((msg) => ({ message: msg }));
+    return await safeApiError(res, 'sending test email').then((msg) => ({
+      message: msg,
+      httpStatus: res.status,
+    }));
   },
 };
 
@@ -135,7 +143,11 @@ export class ResendConnectionTesterService {
     } catch (err) {
       const message = redactApiKey((err as Error).message, config.api_key);
       this.logger.warn(`Resend domain lookup failed for ${domain}: ${message}`);
-      return { ok: false, error: `Could not verify sending domain: ${message}` };
+      return {
+        ok: false,
+        error: `Could not verify sending domain: ${message}`,
+        transient: isTransientEmailError(err),
+      };
     }
     const match = domains.find((d) => d.name.toLowerCase() === domain.toLowerCase());
     if (!match) {
@@ -169,11 +181,11 @@ export class ResendConnectionTesterService {
         config.api_key
       );
       this.logger.warn(`Resend test-send failed: ${message}`);
-      return { ok: false, error: message };
+      return { ok: false, error: message, transient: isTransientEmailError(result) };
     } catch (err) {
       const message = redactApiKey((err as Error).message, config.api_key);
       this.logger.warn(`Resend test-send failed: ${message}`);
-      return { ok: false, error: message };
+      return { ok: false, error: message, transient: isTransientEmailError(err) };
     }
   }
 }

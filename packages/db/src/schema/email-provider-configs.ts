@@ -107,6 +107,12 @@ export const emailProviderConfigs = pgTable(
     /** Failure count inside the current rolling window (drive the threshold). */
     windowFailures: integer('window_failures').notNull().default(0),
 
+    /** Bounded recent transient failure timestamps for the exact rolling window. */
+    recentFailureTimes: timestamptz('recent_failure_times')
+      .array()
+      .notNull()
+      .default(sql`'{}'::timestamptz[]`),
+
     /** Start of the current failure-counting window. */
     windowStartedAt: timestamptz('window_started_at'),
 

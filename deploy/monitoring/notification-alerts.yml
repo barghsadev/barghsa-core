@@ -1,6 +1,13 @@
 groups:
   - name: barghsa-notification-delivery
     rules:
+      - alert: EmailProviderDegraded
+        expr: min without (instance, pod) (provider_email_health) == 0
+        labels:
+          severity: warning
+        annotations:
+          summary: Email provider circuit is open
+          description: 'Provider {{ $labels.provider_id }} stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after 60 seconds.'
       - alert: NotificationDeadLettersPending
         expr: max without (instance, pod) (notifications_dead_letter_count) > 0
         for: 10m

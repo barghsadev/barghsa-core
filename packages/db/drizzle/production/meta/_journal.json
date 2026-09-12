@@ -351,6 +351,13 @@
       "when": 1791331200032,
       "tag": "0129_email_callback_identity",
       "breakpoints": true
+    },
+    {
+      "idx": 130,
+      "version": "7",
+      "when": 1791331200033,
+      "tag": "0130_email_circuit_rolling_window",
+      "breakpoints": true
     }
   ]
 }

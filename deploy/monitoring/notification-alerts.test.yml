@@ -212,6 +212,66 @@
           "exp_alerts": []
         }
       ]
+    },
+    {
+      "name": "Provider alert deduplicates replicas and clears after recovery",
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "provider_email_health{job=\"worker\",provider_id=\"provider-a\",instance=\"a\",pod=\"a\"}",
+          "values": "1 0 0 1 1"
+        },
+        {
+          "series": "provider_email_health{job=\"worker\",provider_id=\"provider-a\",instance=\"b\",pod=\"b\"}",
+          "values": "1 0 1 1 1"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "eval_time": "0m",
+          "alertname": "EmailProviderDegraded",
+          "exp_alerts": []
+        },
+        {
+          "eval_time": "1m",
+          "alertname": "EmailProviderDegraded",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "job": "worker",
+                "provider_id": "provider-a",
+                "severity": "warning"
+              },
+              "exp_annotations": {
+                "summary": "Email provider circuit is open",
+                "description": "Provider provider-a stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after 60 seconds."
+              }
+            }
+          ]
+        },
+        {
+          "eval_time": "2m",
+          "alertname": "EmailProviderDegraded",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "job": "worker",
+                "provider_id": "provider-a",
+                "severity": "warning"
+              },
+              "exp_annotations": {
+                "summary": "Email provider circuit is open",
+                "description": "Provider provider-a stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after 60 seconds."
+              }
+            }
+          ]
+        },
+        {
+          "eval_time": "3m",
+          "alertname": "EmailProviderDegraded",
+          "exp_alerts": []
+        }
+      ]
     }
   ]
 }

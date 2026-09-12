@@ -118,4 +118,32 @@ describe('ResendConnectionTesterService (T-05.06.03)', () => {
     expect(result.ok).toBe(false);
     expect(result.error).toContain('Could not verify sending domain');
   });
+  for (const phase of ['domain', 'send'])
+    for (const status of [401, 429, 503]) {
+      it(`classifies actual Resend ${phase} HTTP ${status} response`, async () => {
+        vi.stubGlobal(
+          'fetch',
+          vi.fn(async (url: string) => {
+            if (phase === 'send' && url.endsWith('/domains'))
+              return new Response(
+                JSON.stringify({
+                  data: [{ id: 'domain', name: 'example.com', status: 'verified' }],
+                })
+              );
+            return new Response(JSON.stringify({ message: 'Provider refused request' }), {
+              status,
+            });
+          })
+        );
+        try {
+          const service = new ResendConnectionTesterService();
+          expect(await service.test(baseConfig, 'staff@example.com')).toMatchObject({
+            ok: false,
+            transient: status !== 401,
+          });
+        } finally {
+          vi.unstubAllGlobals();
+        }
+      });
+    }
 });

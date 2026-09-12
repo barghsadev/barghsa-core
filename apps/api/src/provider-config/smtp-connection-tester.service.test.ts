@@ -161,4 +161,26 @@ describe('SmtpConnectionTesterService (T-05.06.02)', () => {
     // createTransport must never be called for a blocked destination.
     expect(createTransport).not.toHaveBeenCalled();
   });
+  for (const [error, transient] of [
+    [Object.assign(new Error('temporary'), { responseCode: 451 }), true],
+    [Object.assign(new Error('permanent'), { responseCode: 550 }), false],
+    [Object.assign(new Error('timeout'), { code: 'ETIMEDOUT' }), true],
+    [Object.assign(new Error('auth'), { code: 'EAUTH' }), false],
+  ] as const) {
+    it(`classifies SMTP ${error.message} for provider health`, async () => {
+      const service = new SmtpConnectionTesterService(
+        () => ({
+          verify: async () => {
+            throw error;
+          },
+          sendMail: vi.fn(),
+        }),
+        new SmtpNetworkGuard({ resolve: async () => ['93.184.216.34'] })
+      );
+      expect(await service.test(baseConfig, 'staff@example.com')).toMatchObject({
+        ok: false,
+        transient,
+      });
+    });
+  }
 });

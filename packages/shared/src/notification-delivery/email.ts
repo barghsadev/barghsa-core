@@ -1,4 +1,5 @@
-import { EmailCircuitBreaker } from './email-breaker.js';
+import { EmailCircuitBreaker, type EmailBreakerOutcome } from './email-breaker.js';
+import { isTransientEmailError } from './email-errors.js';
 import { lookup } from 'node:dns/promises';
 import { createHash } from 'node:crypto';
 import nodemailer from 'nodemailer';
@@ -56,6 +57,28 @@ export function createEmailSender(
     const breaker = new EmailCircuitBreaker(pool);
     const decision = await breaker.decision(provider.id);
     if (!decision.allow) throw new Error('Email provider circuit is open');
+    let providerOutcome: EmailBreakerOutcome | undefined;
+    const observe = async (deliver: () => Promise<string>): Promise<string> => {
+      try {
+        const receipt = await deliver();
+        providerOutcome = { ok: true };
+        return receipt;
+      } catch (error) {
+        // Caller cancellation provides no provider-health outcome.
+        if (!message.signal?.aborted)
+          providerOutcome = { ok: false, transient: isTransientEmailError(error) };
+        throw error;
+      }
+    };
+    const recordProviderOutcome = async () => {
+      if (!providerOutcome) return;
+      await breaker
+        .recordOutcome(provider.id as string, {
+          ...providerOutcome,
+          ...(decision.probeToken ? { probeToken: decision.probeToken } : {}),
+        })
+        .catch(() => {});
+    };
     const send = async (): Promise<string> => {
       const signal = message.signal
         ? AbortSignal.any([message.signal, AbortSignal.timeout(25_000)])
@@ -82,15 +105,18 @@ export function createEmailSender(
               reply_to: config.reply_to,
             }),
           });
-          if (!response.ok) throw new Error('Email provider rejected message');
+          if (!response.ok)
+            throw Object.assign(new Error('Email provider rejected message'), {
+              httpStatus: response.status,
+            });
           const body = (await response.json()) as { id?: unknown };
           if (typeof body.id !== 'string' || !body.id.trim())
             throw new Error('Email provider returned no receipt');
           return body.id;
         };
         return execute
-          ? execute({ id: provider.id as string, transport: 'resend' }, deliver)
-          : deliver();
+          ? execute({ id: provider.id as string, transport: 'resend' }, () => observe(deliver))
+          : observe(deliver);
       }
       if (provider.transport !== 'smtp') throw new Error('Email transport unavailable');
       const config = SmtpConfigSchema.parse(provider.config);
@@ -152,8 +178,8 @@ export function createEmailSender(
       };
       try {
         return await (execute
-          ? execute({ id: provider.id as string, transport: 'smtp' }, deliver)
-          : deliver());
+          ? execute({ id: provider.id as string, transport: 'smtp' }, () => observe(deliver))
+          : observe(deliver));
       } finally {
         transport.close();
       }
@@ -162,20 +188,10 @@ export function createEmailSender(
     try {
       receipt = await send();
     } catch (error) {
-      await breaker
-        .recordOutcome(provider.id, {
-          ok: false,
-          ...(decision.probeToken ? { probeToken: decision.probeToken } : {}),
-        })
-        .catch(() => {});
+      await recordProviderOutcome();
       throw error;
     }
-    await breaker
-      .recordOutcome(provider.id, {
-        ok: true,
-        ...(decision.probeToken ? { probeToken: decision.probeToken } : {}),
-      })
-      .catch(() => {});
+    await recordProviderOutcome();
     return receipt;
   };
 }

@@ -1,3 +1,4 @@
+import { isTransientEmailError } from '@barghsa/shared/notification-delivery';
 import { Injectable, Inject, Logger, Optional } from '@nestjs/common';
 import nodemailer from 'nodemailer';
 import type { SmtpConfig } from './smtp-config.schema';
@@ -16,6 +17,7 @@ export interface SmtpTestResult {
   ok: boolean;
   /** Safe, non-secret human-readable error when `ok` is false. */
   error?: string;
+  transient?: boolean;
 }
 
 /** Shape minimally exposed by a transport so tests can inject a fake. */
@@ -93,7 +95,7 @@ export class SmtpConnectionTesterService {
       if (err instanceof SmtpDestinationBlockedError) {
         return { ok: false, error: err.detail };
       }
-      return { ok: false, error: (err as Error).message };
+      return { ok: false, error: (err as Error).message, transient: isTransientEmailError(err) };
     }
 
     const factory = this.transportFactory ?? defaultTransportFactory;
@@ -129,7 +131,7 @@ export class SmtpConnectionTesterService {
     } catch (err) {
       const message = sanitizeError(err, config);
       this.logger.warn(`SMTP connection test failed for ${config.host}: ${message}`);
-      return { ok: false, error: message };
+      return { ok: false, error: message, transient: isTransientEmailError(err) };
     } finally {
       transport.close?.();
     }
