@@ -3,9 +3,9 @@
   "updated": "2026-09-12",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "b5c2c463db9942e58970d45e67cfd5d5ee7c2fab",
+  "source_revision": "fe7a366bd2090de6013ef035a6f33bc6bcc9b8bb",
   "active_step": "R02",
-  "next_action": "Distinguish recovered/held receipt bookkeeping from physical sends in delivery history. Verify notification-specific shutdown/claim recovery and finish individual dispositions for the nine-task batch. Audited provider reconciliation remains required before releasing unknown sends; do not bypass durable holds or claim provider-side exactly-once delivery.",
+  "next_action": "Finish individual task/PR dispositions for R02-notification-outbox-delivery (nine tasks, PR163–170/203), reusing recorded evidence. Verify each exact requirement and historical deferral; close proven items individually. Keep SMS provider-level idempotency/authoritative reconciliation and operational alert deployment explicitly unresolved. Then select the next bounded R02 workflow; do not repeat completed delivery/search/shutdown repairs.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -702,6 +702,11 @@
       "task_key": "02-auth-users-admin.md#T-02.01.01",
       "issue": "Noncritical duplicated Register wording in the login footer is recorded for later copy cleanup, outside the controlled repair stopping criteria.",
       "source_revision": "f461e5dd05fb8659d9adfacb2f96688b09492d59"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.05",
+      "issue": "Optional dedicated processing-kind field for historical dispatch/recovery/hold rows. Current requirement specifies per-job attempt_number; UI now says processing attempt, explains receipt reuse and leaves recovered send duration null. No extra schema/history subsystem is required for that clarification. Defer the richer marker outside confirmed repairs.",
+      "source_revision": "fe7a366bd2090de6013ef035a6f33bc6bcc9b8bb"
     }
   ],
   "scope_note": "Group implementation labels summarize recorded repairs, not whole-group acceptance. Historical status counts are generated from the ledger, never inferred from these labels.",
@@ -1032,7 +1037,8 @@
       "Keep remaining inbox/notification classification and event-specific reminder acceptance in later R02 batches. Operational rollout/alerts require truthful evidence.",
       "Current same-worker-transaction inbox delivery, triage session/acknowledgment, scoped history and local alert-rule repairs pass. Preserve them. Operational alert delivery remains external. Generic process drain tests do not by themselves prove notification-specific lease release.",
       "Durable external send ownership/accepted receipts, uncertain-send holds and staff retry conflicts pass53 worker and130 API/provider cases. Eight overlapping migration/guard cases rerun after aggregate legacy-attempt coverage. General history must distinguish receipt recovery from actual provider attempts; reconciliation action and shutdown evidence remain.",
-      "General staff delivery search now covers records without dead-letter entries, filters notification ID/channel/outcome and validates results.47 API cases,14 distinct FA/EN Chromium cases including prior12,50 i18n cases and42 unchanged budgets pass. Applicable types/lint/format/build pass; provider recovery classification and shutdown remain."
+      "General staff delivery search now covers records without dead-letter entries, filters notification ID/channel/outcome and validates results.47 API cases,14 distinct FA/EN Chromium cases including prior12,50 i18n cases and42 unchanged budgets pass. Applicable types/lint/format/build pass; provider recovery classification and shutdown remain.",
+      "History now names processing attempts and explains receipt reuse without another send; recovered/held bookkeeping has null send duration.33 worker and4 focused FA/EN browser cases pass, with50 i18n and42 unchanged budgets. Compiled-process notification shutdown/restart is verified: graceful completion, forced deadline with unknown hold, and accepted-receipt recovery after failed bookkeeping.52 worker cases including9 actual-process cases pass; stale replacement-claim protection is retained. Proceed to individual batch dispositions."
     ],
     "confirmed_defects": [
       {
@@ -1087,6 +1093,11 @@
         "defect": "Admin delivery history is now available for dead-letter records, but general lookup for deliveries without a dead-letter entry is still absent under T-05.01.05.",
         "status": "fixed_verified",
         "source_revision": "b5c2c463db9942e58970d45e67cfd5d5ee7c2fab"
+      },
+      {
+        "defect": "A notification worker finishing after repeated bookkeeping failure stopped lease renewal but left its owned claim locked during a clean shutdown.",
+        "status": "fixed_verified",
+        "source_revision": "fe7a366bd2090de6013ef035a6f33bc6bcc9b8bb"
       }
     ],
     "reused_evidence": [
@@ -1099,7 +1110,7 @@
       "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
     ],
     "pr_dispositions": [],
-    "next_action": "Distinguish recovered/held receipt bookkeeping from physical sends in delivery history. Verify notification-specific shutdown/claim recovery and finish individual dispositions for the nine-task batch. Audited provider reconciliation remains required before releasing unknown sends; do not bypass durable holds or claim provider-side exactly-once delivery."
+    "next_action": "Finish individual task/PR dispositions for R02-notification-outbox-delivery (nine tasks, PR163–170/203), reusing recorded evidence. Verify each exact requirement and historical deferral; close proven items individually. Keep SMS provider-level idempotency/authoritative reconciliation and operational alert deployment explicitly unresolved. Then select the next bounded R02 workflow; do not repeat completed delivery/search/shutdown repairs."
   },
   "open_domain_reviews": [
     {

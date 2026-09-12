@@ -14354,7 +14354,7 @@
     {
       "id": "R02-outbox-delivery-checkpoint",
       "date": "2026-09-12",
-      "source_revision": "b5c2c463db9942e58970d45e67cfd5d5ee7c2fab",
+      "source_revision": "fe7a366bd2090de6013ef035a6f33bc6bcc9b8bb",
       "base_revision": "cadaec40ad77afd3f12ca2d0ad1e26651aa797ef",
       "product_commits": [
         "361f4b82234bf226eb540fb74bde746fbc79112c",
@@ -14366,7 +14366,9 @@
         "7941624d7463d4e912bec7e590b03b6245dbc1bf",
         "04fd2e8d763769cf6f594e5a9e608b887ea6dccb",
         "75fdaea72b5167b3c1b1bc70008b81ca4ec02922",
-        "b5c2c463db9942e58970d45e67cfd5d5ee7c2fab"
+        "b5c2c463db9942e58970d45e67cfd5d5ee7c2fab",
+        "e2f994f45150faad0319c063fc7eb206c1e4fdcf",
+        "fe7a366bd2090de6013ef035a6f33bc6bcc9b8bb"
       ],
       "task_keys": [
         "05-notifications-documents-ai.md#T-05.01.01",
@@ -14379,7 +14381,7 @@
         "05-notifications-documents-ai.md#T-05.02.01",
         "02-auth-users-admin.md#T-09.09.03"
       ],
-      "summary": "In-flight feature-batch checkpoint. Nine confirmed defects repaired locally, including durable external send protection and general staff delivery search. Audited reconciliation, receipt-recovery history semantics and notification shutdown evidence remain. Historical task/PR counts unchanged.",
+      "summary": "In-flight feature-batch checkpoint. Ten confirmed defects repaired locally, including durable external send protection, general staff search and owned-lease release after bookkeeping failure. Processing-history meaning and actual notification shutdown/restart are verified. Individual task/PR dispositions and explicit provider/operational prerequisites remain; closure counts unchanged.",
       "review": [
         "Dead-letter retry/resolve/dismiss now carry the full current session/CSRF identity into the permission-locked transaction and recheck step-up before commit. Atomic audit includes session/proof and the request correlation ID. Both HTTP aliases pass revocation, permission, CSRF and expired-proof races. Queue identity, channel-only retry, snapshots and conflict behavior remain intact.",
         "An old actor-lock test blocked the HTTP session guard before reaching the intended lock. The corrected test calls the actual service with the fixture session and revokes the role while the actor lock is held. All 70 focused API cases pass, including 43 real-database/HTTP cases.",
@@ -14401,19 +14403,24 @@
         "Production email/SMS adapters use the durable guard. Worker recovery reads receipts before current recipient policy and routes ambiguous sends immediately to dead-letter without exhausting the normal retry ladder. Staff Retry rejects sending/unknown receipts inside the existing permission/session-locked transaction; Resolve/Dismiss preserve send evidence. Actual HTTP fixtures accept request bytes and lose the response for both channels; a new poll and forced stale/manual reset never call the provider twice. An accepted email survives repeated real PostgreSQL bookkeeping failures and later completes with its original receipt/content. Changed contacts recover accepted receipts but cannot retarget unsent snapshots.",
         "53 focused worker cases and130 API/provider cases pass. Eight overlapping guard/migration cases rerun after adding legacy aggregate-attempt coverage. Worker/API/DB types, scoped lint/format and isolated migration snapshot check pass within recorded source scope. Initial core SQL fixture UUID/text inference failed, then the stopped Docker engine prevented setup; the engine was restarted locally. Wiring fixture failures were caused by a trigger intercepting snapshot preparation instead of outcome recording, missing mandatory in-app delivery and transaction rollback, invalid ALL preference text, and clearing an obsolete rate-limit table. Corrected fixtures assert the actual send boundary and use the current rolling reset function. All failed logs are retained; failed runs are not acceptance evidence.",
         "The old HTTP503-then-success resend assertion is superseded: ambiguous HTTP/network failure now holds. SMS snapshot stability remains tested across an explicit provider rejection. Existing FA/EN triage/history browser evidence remains revision-bound and unchanged, not rerun for this backend-only repair. Recovery currently writes an outcome log using the worker attempt count; general history must distinguish such bookkeeping recovery from a physical provider send. An audited operator reconciliation action and provider evidence contract are not yet implemented; unresolved sends remain held. Notification-specific process shutdown/release remains unproven by these lease/receipt tests.",
-        "General delivery search reuses the scoped history dialog and existing admin:jobs:view boundary. Both staff hosts expose search even when the dead-letter queue is empty. Optional occurrence/channel/outcome filters reset pagination; returned IDs, channel/status, counters and selected filters are validated before display. Missing or changed access, malformed/mismatched results and empty responses remain explicit. Real HTTP/DB checks find delivered and failed records with no dead-letter entry and deny reads after role revocation.47 API cases pass, overlapping46 previous cases.14 distinct production Chromium cases pass, including the prior12 and two new FA/EN mobile searches with axe, focus return, overflow, paging, invalid input, filtered response mismatch and access-loss recovery.50 i18n cases, applicable API/web/i18n types, scoped lint/format/build and42 unchanged budgets pass. No failed general-search verification run occurred."
+        "General delivery search reuses the scoped history dialog and existing admin:jobs:view boundary. Both staff hosts expose search even when the dead-letter queue is empty. Optional occurrence/channel/outcome filters reset pagination; returned IDs, channel/status, counters and selected filters are validated before display. Missing or changed access, malformed/mismatched results and empty responses remain explicit. Real HTTP/DB checks find delivered and failed records with no dead-letter entry and deny reads after role revocation.47 API cases pass, overlapping46 previous cases.14 distinct production Chromium cases pass, including the prior12 and two new FA/EN mobile searches with axe, focus return, overflow, paging, invalid input, filtered response mismatch and access-loss recovery.50 i18n cases, applicable API/web/i18n types, scoped lint/format/build and42 unchanged budgets pass. No failed general-search verification run occurred.",
+        "Reviewed T-05.01.05 against current per-job attempt_number semantics. Each row records a processing attempt, which may recover an existing receipt. A new schema/history subsystem is not necessary to clarify that distinction and is deferred as noncritical. e2f994f4 changes the FA/EN label and help text and leaves recovered/held send latency null. Actual DB assertions verify a recovered accepted receipt has one processing log with no send duration and repeated unknown holds have no fabricated duration.33 worker cases and4 overlapping scoped/general FA/EN Chromium cases pass, including visible explanation, mobile axe/layout and existing failure/pagination behavior.50 i18n cases, applicable types/lint/format/build and42 unchanged budgets pass.",
+        "Added three notification-specific cases to the actual compiled-worker process fixture, with restart against the same isolated PostgreSQL database and a controlled HTTP SMS provider. Graceful drain stops new polls while awaiting a real send; forced deadline exits1 with a durable sending record that becomes held after lease expiry; repeated bookkeeping rollback preserves acceptance for recovery without another request. A second row inserted after shutdown starts remains queued until the replacement process. All scenarios produce one provider request and one eventual in-app record for the original occurrence.",
+        "The first shutdown fixture used the legacy wallet.topup_completed name, whose external delivery follows daytime scheduling. Its correctly queued SMS never reached the controlled endpoint at night. The fixture now uses registered Immediate event payment.wallet_topup_completed. This is a fixture correction; event-producer/classification reconciliation remains in later R02 scope. With that correction, graceful and forced recovery passed while bookkeeping-failure shutdown reproduced a remaining locked lease.",
+        "fe7a366b releases the finished dispatch owner’s leftover lease after stopping renewal and awaiting any in-flight renewal. The UPDATE compares the exact lease token, so a stale worker cannot clear a successor. Durable provider receipts continue to prevent resends. The failed-bookkeeping process case now exits cleanly with no owned lock and a replacement process completes the accepted receipt without another provider request. All52 focused worker cases pass, including9 real-process tests and existing slow-renewal/replaced-claim checks. Worker types, scoped lint/format and diff checks pass. Full regression and production rollout are not claimed."
       ],
       "verification": {
         "api": "130 staff/provider cases at75fdaea7;47 overlapping staff/history cases after general lookup, including one new no-dead-letter search case. Earlier evidence remains revision-bound.",
-        "worker": "53 focused cases pass;8 overlapping guard/migration cases rerun for aggregate legacy attempts. Earlier80/81-case evidence remains revision-bound; changed503 resend expectations are superseded by durable receipt/unknown-hold tests.",
-        "browser": "14 distinct production Chromium FA/EN cases: prior12 triage/scoped-history cases plus2 general search cases. Mobile axe, overflow, filter/paging, malformed/denied recovery and focus return pass.",
+        "worker": "52 focused cases after lease release, including9 actual compiled-process cases (3 new notification send/shutdown/restart scenarios). Earlier53 guard/recipient cases and33 history-meaning cases remain within their recorded unchanged scope; counts overlap.",
+        "browser": "14 distinct search/triage cases previously passed;4 overlapping scoped/general FA/EN history cases rerun after processing-attempt copy. Mobile axe/layout, explicit no-resend explanation, pagination/failure recovery and focus pass.",
         "quality": "Applicable API/worker/web/DB/i18n types and scoped lint/format pass within recorded source scopes. Current general-search build,50 i18n cases and42 unchanged budgets pass. Full regression remainsV02.",
         "regression": "Full regression/coverage and operational alert delivery remain separate.",
         "alerts": "promtool3.5.0 check2 rules and15 assertions in6 scenarios pass. Deployment/receiver delivery unverified.",
-        "durable_send": "16 shared boundary cases previously passed;53 worker/130 API current checks pass. Eight migration/guard cases include concurrency, receipt write failure/lost response, explicit rejection, legacy holds and PostgreSQL constraints. Worker/API/DB types, scoped lint/format and migration snapshot check pass."
+        "durable_send": "16 shared boundary cases previously passed;53 worker/130 API current checks pass. Eight migration/guard cases include concurrency, receipt write failure/lost response, explicit rejection, legacy holds and PostgreSQL constraints. Worker/API/DB types, scoped lint/format and migration snapshot check pass.",
+        "shutdown": "Actual worker + isolated PostgreSQL + controlled SMS endpoint: graceful completion, forced deadline then expired-lease hold, and failed-bookkeeping receipt recovery pass. New queued work waits for restart; stale lease owners cannot clear replacement claims."
       },
       "remaining": [
-        "Distinguish recovered/held receipt bookkeeping from physical sends in delivery history. Verify notification-specific shutdown/claim recovery and finish individual dispositions for the nine-task batch. Audited provider reconciliation remains required before releasing unknown sends; do not bypass durable holds or claim provider-side exactly-once delivery.",
+        "Finish individual task/PR dispositions for R02-notification-outbox-delivery (nine tasks, PR163–170/203), reusing recorded evidence. Verify each exact requirement and historical deferral; close proven items individually. Keep SMS provider-level idempotency/authoritative reconciliation and operational alert deployment explicitly unresolved. Then select the next bounded R02 workflow; do not repeat completed delivery/search/shutdown repairs.",
         "Load notification rules, verify worker scrapes and record controlled Alertmanager firing/resolution before operational acceptance.",
         "Preserve pending source-evidence refresh records and finalV02 regression/coverage."
       ],
@@ -14456,7 +14463,7 @@
         },
         {
           "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-          "sha256": "1bdfedd6f974bdb9200a326487c1a2bc12c998603d1150cae3f324bb36deae39"
+          "sha256": "2a950742236d07cd603df01d39b94e2fec876e26286a7d7ae5f50634341bcd8f"
         },
         {
           "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -14464,11 +14471,11 @@
         },
         {
           "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-          "sha256": "44015587a086f031a67604268b53fc0c25d1767676b5753b85467fba53c0d521"
+          "sha256": "8e2ac27bdf219e983f69528c52c2b4f1d25fcfc4b23af8c16547e6cbca5c14f6"
         },
         {
           "path": "apps/worker/src/main-process.integration.test.ts",
-          "sha256": "de99606cbcf43139cfba4af48753d84787a3b6b048f8f63f4649ffb7f26ce252"
+          "sha256": "2a84e6738c1674a01db482dbf330f2c6b8fff171a7dead78653fb61ea50ebfe8"
         },
         {
           "path": "apps/worker/src/main.ts",
@@ -14480,7 +14487,7 @@
         },
         {
           "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
-          "sha256": "9d9fa7a768c5558ae95f764fa1805eed024f68e9c486e8fa38d726e40dc74665"
+          "sha256": "03707e33d2bccb94ebc1a5a81a5be0b23c651f333318d5e8e263a84571abf536"
         },
         {
           "path": "apps/worker/src/notifications/delivery-log.ts",
@@ -14495,12 +14502,16 @@
           "sha256": "da86928a19025906061a0a39d77976500ec066ebba0121d785944e65e92b7613"
         },
         {
+          "path": "apps/worker/src/notifications/outbox-lease.ts",
+          "sha256": "5bb8a2abf2e34656aa0c8e2c0c183d1ae61eb801435623a08ceeee0bfb6813e7"
+        },
+        {
           "path": "apps/worker/src/notifications/outbox-reader.ts",
           "sha256": "63777530fcf66f00a068ebbac388dc1424184a2073550416b0c94ace8227fcf9"
         },
         {
           "path": "apps/worker/src/notifications/outbox-runner.ts",
-          "sha256": "defab6c726ce9b1ee87df51f054c337da77a6bdede28e39b7ecb130fb5b659e6"
+          "sha256": "df0126c8c348583c0aaaf97e58d74fa02282b82b3e6221938f233ac7bba2f5a5"
         },
         {
           "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -14532,7 +14543,7 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "5fc21809127c996a7244415191e7489779faef3e0bb81922261383d1e82d7645"
+          "sha256": "1024255e4514db8566ee2fc15baf6d5b0d697e143a12a5527a86f442077250a3"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
@@ -14576,7 +14587,7 @@
         },
         {
           "path": "packages/i18n/src/admin-ui.ts",
-          "sha256": "887274397bc9cb639e6be88156188abf3ec60911d8dc8305efab79e590e2a945"
+          "sha256": "b9622eb9b507076218615961d8cc1a51107b43a6e660e7e2fe0cdc1b878c4c3c"
         },
         {
           "path": "packages/shared/src/auth-delivery/smsir-client.ts",
@@ -14724,7 +14735,36 @@
         "/tmp/r02-search-checkpoint-diff.log",
         "/tmp/r02-search-checkpoint-prs.log",
         "/tmp/r02-search-checkpoint-requirements.log",
-        "/tmp/r02-search-checkpoint-skips.log"
+        "/tmp/r02-search-checkpoint-skips.log",
+        "/tmp/r02-history-meaning-browser-format.log",
+        "/tmp/r02-history-meaning-browser.log",
+        "/tmp/r02-history-meaning-budgets.log",
+        "/tmp/r02-history-meaning-build.log",
+        "/tmp/r02-history-meaning-final-lint.log",
+        "/tmp/r02-history-meaning-format-check.log",
+        "/tmp/r02-history-meaning-format.log",
+        "/tmp/r02-history-meaning-i18n-build.log",
+        "/tmp/r02-history-meaning-i18n.log",
+        "/tmp/r02-history-meaning-lint.log",
+        "/tmp/r02-history-meaning-web-types.log",
+        "/tmp/r02-history-meaning-worker-types.log",
+        "/tmp/r02-history-meaning-worker.log",
+        "/tmp/r02-notification-shutdown-diagnostic.log",
+        "/tmp/r02-notification-shutdown-format-2.log",
+        "/tmp/r02-notification-shutdown-format-3.log",
+        "/tmp/r02-notification-shutdown-format-check.log",
+        "/tmp/r02-notification-shutdown-format.log",
+        "/tmp/r02-notification-shutdown-lint.log",
+        "/tmp/r02-notification-shutdown-types.log",
+        "/tmp/r02-notification-shutdown-worker-2.log",
+        "/tmp/r02-notification-shutdown-worker-3.log",
+        "/tmp/r02-notification-shutdown-worker.log",
+        "/tmp/r02-shutdown-checkpoint-audit.log",
+        "/tmp/r02-shutdown-checkpoint-backlog.log",
+        "/tmp/r02-shutdown-checkpoint-diff.log",
+        "/tmp/r02-shutdown-checkpoint-prs.log",
+        "/tmp/r02-shutdown-checkpoint-requirements.log",
+        "/tmp/r02-shutdown-checkpoint-skips.log"
       ],
       "pr_dispositions": [],
       "pr_counts": {
