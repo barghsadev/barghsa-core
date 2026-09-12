@@ -29,7 +29,7 @@ export interface SmtpTransportLike {
   close?: () => void;
 }
 
-export type SmtpTransportFactory = (config: SmtpConfig) => SmtpTransportLike;
+export type SmtpTransportFactory = (config: SmtpConfig, checkedHost: string) => SmtpTransportLike;
 
 /** Injection token to override the nodemailer builder (used by tests). */
 export const SMTP_TRANSPORT_FACTORY = Symbol('SMTP_TRANSPORT_FACTORY');
@@ -37,15 +37,16 @@ export const SMTP_TRANSPORT_FACTORY = Symbol('SMTP_TRANSPORT_FACTORY');
 /** Injection token to override the SSRF guard (used by tests). */
 export const SMTP_NETWORK_GUARD = Symbol('SMTP_NETWORK_GUARD');
 
-const defaultTransportFactory: SmtpTransportFactory = (config) => {
+const defaultTransportFactory: SmtpTransportFactory = (config, checkedHost) => {
   const implicitTls = config.security === 'TLS';
   return nodemailer.createTransport({
-    host: config.host,
+    host: checkedHost,
     port: config.port,
     // 'TLS'  -> implicit TLS tunnel on connect.
     // 'STARTTLS' -> plaintext then upgrade (secure:false + requireTLS).
     secure: implicitTls,
     requireTLS: !implicitTls,
+    tls: { servername: config.host, minVersion: 'TLSv1.2' },
     connectionTimeout: config.connection_timeout * 1000,
     greetingTimeout: config.connection_timeout * 1000,
     socketTimeout: config.command_timeout * 1000,
@@ -89,8 +90,9 @@ export class SmtpConnectionTesterService {
     if (!recipient?.trim())
       return { ok: false, error: 'A verified recipient is required for the SMTP test' };
     // SSRF guard first: never dial a private/internal destination unless allowed.
+    let checkedHost: string;
     try {
-      await this.guard.assertHostAllowed(config.host);
+      checkedHost = await this.guard.resolveAllowedHost(config.host);
     } catch (err) {
       if (err instanceof SmtpDestinationBlockedError) {
         return { ok: false, error: err.detail };
@@ -99,7 +101,7 @@ export class SmtpConnectionTesterService {
     }
 
     const factory = this.transportFactory ?? defaultTransportFactory;
-    const transport = factory(config);
+    const transport = factory(config, checkedHost);
     try {
       const verified = await transport.verify();
       if (!verified) return { ok: false, error: 'SMTP verification returned no confirmation' };

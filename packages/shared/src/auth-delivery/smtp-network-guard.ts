@@ -186,9 +186,14 @@ export class SmtpNetworkGuard {
    * private/reserved address and is not on the allow-list.
    */
   async assertHostAllowed(host: string): Promise<void> {
+    await this.resolveAllowedHost(host);
+  }
+
+  /** Return the checked address so the caller can dial it without a second DNS lookup. */
+  async resolveAllowedHost(host: string): Promise<string> {
     const h = normalizeHost(host);
     if (!h) throw new SmtpDestinationBlockedError(host, 'empty SMTP host');
-    if (hostIsAllowlisted(h, this.allowlist)) return;
+    if (hostIsAllowlisted(h, this.allowlist)) return h;
     let ips: string[];
     try {
       ips = await this.resolve(h);
@@ -205,5 +210,6 @@ export class SmtpNetworkGuard {
     if (blocked !== undefined) {
       throw new SmtpDestinationBlockedError(host, `resolves to blocked address ${blocked}`);
     }
+    return ips[0]!;
   }
 }

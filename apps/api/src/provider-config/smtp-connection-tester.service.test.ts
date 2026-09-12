@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import nodemailer from 'nodemailer';
 import { SmtpConnectionTesterService } from './smtp-connection-tester.service';
 import { SmtpNetworkGuard } from './smtp-network-guard';
 
@@ -15,6 +16,41 @@ describe('SmtpConnectionTesterService (T-05.06.02)', () => {
     command_timeout: 15,
     from_email: 'noreply@example.com',
   } as const;
+
+  for (const security of ['STARTTLS', 'TLS'] as const) {
+    it(`pins the checked address and retains the TLS hostname (${security})`, async () => {
+      const resolve = vi
+        .fn()
+        .mockResolvedValueOnce(['93.184.216.34'])
+        .mockResolvedValue(['127.0.0.1']);
+      const transport = {
+        verify: vi.fn(async () => true),
+        sendMail: vi.fn(async () => ({ accepted: ['staff@example.com'] })),
+        close: vi.fn(),
+      };
+      const create = vi
+        .spyOn(nodemailer, 'createTransport')
+        .mockReturnValue(transport as unknown as ReturnType<typeof nodemailer.createTransport>);
+      const service = new SmtpConnectionTesterService(
+        undefined,
+        new SmtpNetworkGuard({ allowlist: [], resolve })
+      );
+      expect(await service.test({ ...baseConfig, security }, 'staff@example.com')).toMatchObject({
+        ok: true,
+      });
+      expect(resolve).toHaveBeenCalledExactlyOnceWith(baseConfig.host);
+      expect(create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          host: '93.184.216.34',
+          secure: security === 'TLS',
+          tls: expect.objectContaining({ servername: baseConfig.host, minVersion: 'TLSv1.2' }),
+        })
+      );
+      expect(transport.verify).toHaveBeenCalledOnce();
+      expect(transport.sendMail).toHaveBeenCalledOnce();
+      expect(transport.close).toHaveBeenCalledOnce();
+    });
+  }
 
   it('sends a test message and requires recipient acceptance after the handshake', async () => {
     const verify = vi.fn(async () => true);
