@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Input, Label } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
+import { KnowledgeBaseUpload } from './KnowledgeBaseUpload.js';
 export function KnowledgeBaseDocumentPicker({
   attachedKeys,
   onAttach,
@@ -47,6 +48,7 @@ export function KnowledgeBaseDocumentPicker({
   const available = files.filter((file) => !attachedKeys.includes(file.storageKey));
   return (
     <div className="flex flex-col gap-3">
+      {state === 'ready' && <KnowledgeBaseUpload onAttach={onAttach} />}
       <p className="text-sm">{label('pickerHelp')}</p>
       <form
         className="flex flex-wrap items-end gap-3"

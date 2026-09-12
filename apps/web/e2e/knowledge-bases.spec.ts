@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
@@ -205,3 +206,152 @@ for (const locale of ['en', 'fa'])
       .click();
     await expect(remove).toHaveCount(0);
   });
+
+for (const locale of ['en', 'fa']) {
+  for (const failure of ['verify', 'record']) {
+    test(`KB upload verifies bytes, preserves recovery and requires attachment step-up (${locale}, ${failure})`, async ({
+      page,
+      baseURL,
+    }) => {
+      const fa = locale === 'fa',
+        key = 'uploads/document/new-guide.pdf';
+      await page.addInitScript((value) => {
+        new MutationObserver(() => (document.documentElement.lang = value)).observe(document, {
+          childList: true,
+        });
+        if (document.documentElement) document.documentElement.lang = value;
+      }, locale);
+      await page
+        .context()
+        .addCookies([{ name: 'barghsa_csrf', value: 'kb-fixture', url: baseURL! }]);
+      const kb = {
+        id: '01900000-0000-7000-8000-000000000001',
+        title: 'Operations',
+        description: '',
+        documentCount: 0,
+      };
+      let broken = true,
+        attached = false,
+        verified = false,
+        puts = 0,
+        attachments = 0;
+      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await mockOppositeNumerals(page, locale);
+      await page.route('**/api/admin/knowledge-bases', (route) => route.fulfill({ json: [kb] }));
+      await page.route(`**/api/admin/knowledge-bases/${kb.id}`, (route) =>
+        route.fulfill({
+          json: {
+            ...kb,
+            groups: [],
+            documents: attached
+              ? [
+                  {
+                    id: 'doc',
+                    storageKey: key,
+                    fileName: 'new-guide.pdf',
+                    processingStatus: 'pending',
+                  },
+                ]
+              : [],
+          },
+        })
+      );
+      await page.route('**/api/admin/knowledge-bases/documents/available**', (route) =>
+        route.fulfill({ json: [] })
+      );
+      await page.route(`**/api/admin/knowledge-bases/${kb.id}/documents`, (route) => {
+        expect(route.request().postDataJSON()).toEqual({ storageKey: key });
+        attachments++;
+        if (!verified)
+          return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
+        attached = true;
+        return route.fulfill({ status: 201, json: { id: 'doc', storageKey: key } });
+      });
+      await page.route('**/api/auth/step-up', (route) => {
+        verified = route.request().postDataJSON().password === 'correct';
+        return route.fulfill({ status: verified ? 200 : 401, json: {} });
+      });
+      await page.route('**/api/upload/**', (route) => {
+        expect(route.request().headers()['x-csrf-token']).toBe('kb-fixture');
+        const path = new URL(route.request().url()).pathname;
+        if (path.endsWith('/presigned-url')) {
+          expect(route.request().postDataJSON()).toMatchObject({
+            fileName: 'new-guide.pdf',
+            contentType: 'application/pdf',
+            category: 'document',
+            metadata: { recordType: 'document' },
+          });
+          return route.fulfill({
+            json: { key, presignedUrl: 'https://storage.example.test/kb-document' },
+          });
+        }
+        if (path.endsWith('/verify'))
+          return route.fulfill({
+            json: {
+              key,
+              status: broken && failure === 'verify' ? 'type_mismatch' : 'confirmed',
+              exists: true,
+            },
+          });
+        expect(path.endsWith('/record')).toBe(true);
+        expect(route.request().postDataJSON()).toMatchObject({ purpose: 'knowledge_base' });
+        expect(route.request().postDataJSON()).not.toHaveProperty('profileId');
+        return route.fulfill({
+          json: { key: broken && failure === 'record' ? 'wrong-key' : key, status: 'recorded' },
+        });
+      });
+      await page.route('https://storage.example.test/kb-document', (route) => {
+        puts++;
+        expect(route.request().method()).toBe('PUT');
+        expect(route.request().headers()['x-csrf-token']).toBeUndefined();
+        return route.fulfill({ status: 200 });
+      });
+      await page.goto('/admin/knowledge-bases');
+      await page
+        .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Operations`, exact: true })
+        .click();
+      await page.getByLabel(fa ? 'سند جدید' : 'New document', { exact: true }).setInputFiles({
+        name: 'new-guide.pdf',
+        mimeType: 'application/pdf',
+        buffer: Buffer.from('%PDF-test'),
+      });
+      await page
+        .getByRole('button', { name: fa ? 'بارگذاری سند' : 'Upload document', exact: true })
+        .click();
+      await expect(page.getByRole('alert')).toContainText(
+        fa ? 'بارگذاری یا تأیید' : 'Upload or save'
+      );
+      expect(attachments).toBe(0);
+      await expect(
+        page.getByLabel(fa ? 'سند جدید' : 'New document', { exact: true })
+      ).not.toBeEmpty();
+      broken = false;
+      await page
+        .getByRole('button', { name: fa ? 'بارگذاری سند' : 'Upload document', exact: true })
+        .click();
+      const dialog = page.getByRole('dialog');
+      await expect(dialog).toBeVisible();
+      await dialog.getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true }).click();
+      await page
+        .getByRole('button', {
+          name: fa ? 'پیوست سند بارگذاری‌شده' : 'Attach uploaded document',
+          exact: true,
+        })
+        .click();
+      expect(puts).toBe(2);
+      const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+      await confirm.click();
+      await dialog.locator('input[type="password"]').fill('correct');
+      await confirm.click();
+      await expect(dialog).toHaveCount(0);
+      await expect(page.getByText('new-guide.pdf', { exact: true })).toBeVisible();
+      expect(attachments).toBe(2);
+      expect(puts).toBe(2);
+      await page.setViewportSize({ width: 390, height: 844 });
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true
+      );
+      expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+    });
+  }
+}

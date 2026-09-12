@@ -181,7 +181,7 @@ async function uploadVerifiedAttachment(
       fileSize: file.size,
       category,
       purpose,
-      profileId,
+      ...(profileId ? { profileId } : {}),
     }),
   });
   if (!recordRes.ok) return null;

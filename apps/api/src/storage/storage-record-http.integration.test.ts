@@ -401,3 +401,58 @@ it('validates upload record bodies without changing the reservation', async () =
     expect((await uploadRequest(key, 'record', headers, body)).status).toBe(400);
   expect((await row(key)).status).toBe('removed');
 });
+
+it('records and attaches an owned KB upload through the actual HTTP endpoints', async () => {
+  const key = await issue(),
+    kbId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO knowledge_bases(id,title,description,created_by) VALUES($1,'Uploaded guide','','storage-actor')",
+    [kbId]
+  );
+  const attach = () =>
+    fetch(`${http.base}/api/admin/knowledge-bases/${kbId}/documents`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ storageKey: key }),
+    });
+  expect((await attach()).status).toBe(409);
+  expect((await uploadRequest(key, 'verify')).status).toBe(200);
+  const record = await uploadRequest(key, 'record', headers, {
+    fileName: 'owned.pdf',
+    contentType: 'application/pdf',
+    fileSize: 13,
+    category: 'document',
+    purpose: 'knowledge_base',
+  });
+  expect(record.status).toBe(200);
+  expect(await record.json()).toEqual({ key, status: 'recorded' });
+  const attached = await attach();
+  expect(attached.status).toBe(200);
+  expect(await attached.json()).toMatchObject({
+    storageKey: key,
+    fileName: 'owned.pdf',
+    processingStatus: 'pending',
+  });
+  expect((await attach()).status).toBe(200);
+  expect(
+    (await http.pool.query('SELECT id FROM kb_documents WHERE kb_id=$1', [kbId])).rows
+  ).toHaveLength(1);
+  expect((await row(key)).metadata).toMatchObject({
+    uploadedBy: 'storage-actor',
+    purpose: 'knowledge_base',
+    verified: true,
+  });
+});
+it('accepts account-level ticket uploads with profileId omitted and rejects null', async () => {
+  const key = await issue();
+  expect((await uploadRequest(key, 'verify')).status).toBe(200);
+  expect(
+    (await uploadRequest(key, 'record', headers, { purpose: 'ticket_attachment', profileId: null }))
+      .status
+  ).toBe(400);
+  const record = await uploadRequest(key, 'record', headers, { purpose: 'ticket_attachment' });
+  expect(record.status).toBe(200);
+  expect(await record.json()).toEqual({ key, status: 'recorded' });
+  expect((await row(key)).metadata.purpose).toBe('ticket_attachment');
+  expect((await row(key)).metadata).not.toHaveProperty('profileId');
+});

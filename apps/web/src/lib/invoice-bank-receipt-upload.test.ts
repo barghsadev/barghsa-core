@@ -123,3 +123,31 @@ it('uses the same detected-name MIME for presign and object PUT when browser MIM
   expect(request.mock.calls[1]![1].headers).toEqual({ 'Content-Type': 'image/png' });
   expect(JSON.parse(request.mock.calls[3]![1].body).contentType).toBe('image/png');
 });
+
+it('omits profileId for account-level ticket attachments, matching the upload API contract', async () => {
+  const request = vi
+    .fn()
+    .mockResolvedValueOnce(
+      Response.json({
+        key: 'uploads/document/ticket.pdf',
+        presignedUrl: 'https://storage.example.test/ticket',
+      })
+    )
+    .mockResolvedValueOnce(new Response(null, { status: 200 }))
+    .mockResolvedValueOnce(Response.json({ status: 'confirmed' }))
+    .mockImplementationOnce(async (_path, init) => {
+      const body = JSON.parse(init.body);
+      return Response.json(
+        { status: 'recorded' },
+        { status: body.profileId === undefined ? 200 : 400 }
+      );
+    });
+  vi.stubGlobal('fetch', request);
+  expect(
+    await uploadTicketAttachment(
+      new File(['%PDF'], 'ticket.pdf', { type: 'application/pdf' }),
+      null
+    )
+  ).toBe('uploads/document/ticket.pdf');
+  expect(JSON.parse(request.mock.calls[3]![1].body)).not.toHaveProperty('profileId');
+});
