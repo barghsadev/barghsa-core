@@ -223,7 +223,7 @@ function OtpVerifyPage() {
           <p className="text-center text-sm">
             <Link
               to="/register"
-              className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+              className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
               aria-label={t('auth.otp.backToRegister', locale)}
             >
               {t('auth.otp.backToRegister', locale)}

@@ -87,7 +87,7 @@ function ActivatePage() {
     <AuthLayout
       locale={locale}
       footer={
-        <Link to="/login" className="text-sm text-primary underline">
+        <Link to="/login" className="text-sm text-foreground underline">
           {t('auth.forgotPassword.backToLogin', locale)}
         </Link>
       }

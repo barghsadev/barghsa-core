@@ -298,7 +298,7 @@ function RegisterPage() {
             {t('auth.register.loginLink', locale)}{' '}
             <Link
               to="/login"
-              className="font-medium text-primary underline-offset-4 hover:underline"
+              className="font-medium text-foreground underline underline-offset-4 hover:decoration-2"
               aria-label={t('auth.register.loginLinkLabel', locale)}
             >
               {t('auth.register.loginLinkLabel', locale)}
@@ -307,7 +307,7 @@ function RegisterPage() {
           <p className="text-center text-sm">
             <Link
               to="/forgot-password"
-              className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+              className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
               aria-label={t('auth.register.forgotPasswordLabel', locale)}
             >
               {t('auth.register.forgotPasswordLink', locale)}
@@ -419,7 +419,7 @@ function RegisterPage() {
                       }
                     }}
                     aria-disabled={!currentTos}
-                    className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                    className="font-medium text-foreground underline underline-offset-4 hover:text-foreground"
                     aria-label={t('auth.register.tosLinkText', locale)}
                   >
                     {t('auth.register.tosLinkText', locale)}

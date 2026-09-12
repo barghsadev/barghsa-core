@@ -107,7 +107,7 @@ function TermsPage() {
       <div className="flex md:hidden flex-col items-center py-8 px-4 border-b border-border bg-gradient-to-b from-primary/5 to-background">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-xl font-bold text-primary no-underline"
+          className="inline-flex items-center gap-2 text-xl font-bold text-foreground no-underline"
           aria-label={t('auth.brand.logo.alt', locale)}
         >
           <svg
@@ -130,7 +130,7 @@ function TermsPage() {
       <aside className="hidden md:flex flex-col items-center justify-center py-16 px-8 border-b border-border bg-gradient-to-b from-primary/5 to-background">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-2xl font-bold text-primary no-underline"
+          className="inline-flex items-center gap-2 text-2xl font-bold text-foreground no-underline"
           aria-label={t('auth.brand.logo.alt', locale)}
         >
           <svg
@@ -195,7 +195,7 @@ function TermsPage() {
               </button>
               <Link
                 to="/"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
+                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4 hover:decoration-2"
               >
                 <ArrowLeftIcon className="h-3.5 w-3.5" aria-hidden="true" />
                 {t('tos.page.backToHome', locale)}
@@ -229,7 +229,7 @@ function TermsPage() {
         <div className="mx-auto max-w-3xl">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4 hover:decoration-2"
           >
             <BackIcon className="h-3.5 w-3.5" aria-hidden="true" />
             {t('tos.page.backToHome', locale)}

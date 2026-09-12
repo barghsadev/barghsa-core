@@ -221,7 +221,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
       <div
         role="status"
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
-        className="flex flex-wrap items-center justify-between gap-3 border-b bg-amber-50 px-4 py-3 text-sm"
+        className="flex flex-wrap items-center justify-between gap-3 border-b bg-muted text-foreground px-4 py-3 text-sm"
       >
         <span>{t('tos.banner.checkFailed', locale)}</span>
         <Button size="sm" variant="outline" disabled={checking} onClick={checkTosStatus}>
@@ -239,13 +239,13 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
     <>
       {/* Sticky banner */}
       <div
-        className="sticky top-0 z-40 flex items-center justify-between gap-4 bg-amber-50 border-b border-amber-200 px-4 py-3 text-sm"
+        className="sticky top-0 z-40 flex flex-wrap items-center justify-between gap-4 bg-muted text-foreground border-b px-4 py-3 text-sm"
         role="alert"
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
       >
         <div className="flex items-center gap-2">
-          <AlertCircleIcon className="h-4 w-4 text-amber-600 shrink-0" />
-          <span className="text-amber-800">{t('tos.banner.text', locale)}</span>
+          <AlertCircleIcon className="h-4 w-4 text-foreground shrink-0" />
+          <span className="text-foreground">{t('tos.banner.text', locale)}</span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <Button variant="default" size="sm" onClick={openReviewModal}>
@@ -264,7 +264,10 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
           setShowModal(open);
         }}
       >
-        <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col">
+        <DialogContent
+          className="sm:max-w-lg max-h-[80vh] flex flex-col"
+          closeLabel={t('tos.modal.close', locale)}
+        >
           <DialogHeader>
             <DialogTitle>{t('tos.modal.title', locale)}</DialogTitle>
             {currentTos && (
@@ -279,19 +282,29 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
 
           {time.notice}
           {/* TOS content area */}
-          <div className="flex-1 overflow-y-auto min-h-[200px] max-h-[50vh] border rounded-md p-4 bg-white">
+          <div className="flex-1 overflow-y-auto min-h-[200px] max-h-[50vh] border rounded-md p-4 bg-background">
             {loadingTos && (
-              <div className="flex items-center justify-center h-full">
+              <div
+                role="status"
+                aria-label={t('tos.page.loading', locale)}
+                className="flex items-center justify-center h-full"
+              >
                 <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
               </div>
             )}
             {error && (
-              <div className="flex items-center justify-center h-full text-red-500">
+              <div className="flex items-center justify-center h-full text-destructive">
                 <p>{error}</p>
               </div>
             )}
             {currentTos && !loadingTos && !error && (
-              <Suspense fallback={<p role="status">{t('tos.page.loading', locale)}</p>}>
+              <Suspense
+                fallback={
+                  <p role="status" className="sr-only">
+                    {t('tos.page.loading', locale)}
+                  </p>
+                }
+              >
                 <TosContent content={currentTos.content} language={locale} onReady={markRendered} />
               </Suspense>
             )}
@@ -299,7 +312,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
 
           <DialogFooter>
             {accepted ? (
-              <div className="flex items-center gap-2 text-green-600">
+              <div className="flex items-center gap-2 text-foreground">
                 <CheckIcon className="h-4 w-4" />
                 <span>{t('tos.modal.success', locale)}</span>
               </div>
@@ -312,7 +325,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
               >
                 {accepting ? (
                   <>
-                    <Loader2Icon className="h-4 w-4 mr-2 animate-spin" />
+                    <Loader2Icon className="h-4 w-4 me-2 animate-spin" />
                     {t('tos.modal.accepting', locale)}
                   </>
                 ) : (
