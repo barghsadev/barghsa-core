@@ -96,7 +96,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (httpStatus === 429 && exception instanceof HttpException) {
       const details = exception.getResponse();
       const error = body.error as Record<string, unknown>;
-      error.message = t('error.rate_limit.exceeded', locale);
       if (
         typeof details === 'object' &&
         details !== null &&
@@ -119,7 +118,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     response.status(httpStatus).json(body);
   }
 
-  /** Resolve HTTP status, error code, and optional raw message from the exception */
+  /** Resolve HTTP status and a registered public code from the exception. */
   private resolveError(exception: unknown): {
     httpStatus: number;
     errorCode: string;

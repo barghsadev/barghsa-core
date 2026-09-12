@@ -16,7 +16,7 @@ import {
   CorrelationIdProvider,
   correlationIdStorage,
 } from '../src/common/correlation-id.middleware.js';
-import '@barghsa/shared/errors';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { ZodError, ZodIssue } from 'zod';
 
 // ---------------------------------------------------------------------------
@@ -166,6 +166,32 @@ describe('HttpExceptionFilter', () => {
     expect(json.mock.calls[0][0].error.message).toBe('منبع درخواستی یافت نشد');
     expect(json.mock.calls[0][0].error.code).toBe('NOT_FOUND:RESOURCE');
   });
+
+  it.each(['en', 'fa'])(
+    'resolves every shared public error in %s without exposing details',
+    (locale) => {
+      for (const definition of Object.values(ErrorCodes)) {
+        const { host, json } = createMockHost(
+          definition.httpStatus,
+          {},
+          { 'accept-language': locale }
+        );
+        filter.catch(
+          new HttpException(
+            { error: definition.code, message: 'private-catalogue-detail' },
+            definition.httpStatus
+          ),
+          host
+        );
+        const { error } = json.mock.calls[0][0];
+        expect.soft(error.code).toBe(definition.code);
+        expect.soft(error.message).not.toBe(definition.messageKey);
+        expect.soft(error.message).not.toContain('private-catalogue-detail');
+        if (locale === 'en') expect.soft(error.message).toBe(definition.title);
+        else expect.soft(error.message).toMatch(/[\u0600-\u06ff]/);
+      }
+    }
+  );
 
   it.each(['en', 'fa'])(
     'keeps raw application details and unregistered codes out of %s responses and logs',

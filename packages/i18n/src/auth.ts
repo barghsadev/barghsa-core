@@ -5,6 +5,13 @@ import type { I18nDictionary, Locale } from './index.js';
 export type { Locale } from './index.js';
 
 export const fa: I18nDictionary = {
+  'auth.otp.error.alreadyConsumed': 'این کد تأیید قبلاً استفاده شده است. کد جدیدی درخواست کنید.',
+  'crm.profile.deletion.blocked': 'این پروفایل دارای سوابق وابسته است و نمی‌توان آن را حذف کرد.',
+  'crm.profile.already_archived': 'این پروفایل قبلاً بایگانی شده است.',
+  'crm.profile.last_owner': 'آخرین مالک پروفایل را نمی‌توان حذف کرد.',
+  'error.authz.csrf.invalid': 'توکن امنیتی نامعتبر است. صفحه را تازه‌سازی کنید و دوباره تلاش کنید.',
+  'auth.otp.error.rateLimited':
+    'تعداد درخواست‌های کد بیش از حد مجاز است. کمی صبر کنید و دوباره تلاش کنید.',
   ...termsFa,
   'error.validation.input.invalid': 'مقدار ورودی نامعتبر است',
   'error.validation.input.missing': 'فیلد الزامی وارد نشده است',
@@ -180,6 +187,13 @@ export const fa: I18nDictionary = {
   'auth.changeUsername.error.alreadyHasMobile': 'این حساب قبلاً یک شماره موبایل دارد',
 };
 export const en: I18nDictionary = {
+  'auth.otp.error.alreadyConsumed':
+    'This verification code has already been used. Request a new code.',
+  'crm.profile.deletion.blocked': 'This profile has linked records that prevent deletion.',
+  'crm.profile.already_archived': 'This profile is already archived.',
+  'crm.profile.last_owner': 'The last profile owner cannot be removed.',
+  'error.authz.csrf.invalid': 'The security token is invalid. Refresh the page and try again.',
+  'auth.otp.error.rateLimited': 'Too many code requests. Please wait before trying again.',
   ...termsEn,
   'error.validation.input.invalid': 'Invalid input value',
   'error.validation.input.missing': 'Required field is missing',
