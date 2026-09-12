@@ -14354,7 +14354,7 @@
     {
       "id": "R02-outbox-delivery-checkpoint",
       "date": "2026-09-12",
-      "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
       "base_revision": "cadaec40ad77afd3f12ca2d0ad1e26651aa797ef",
       "product_commits": [
         "361f4b82234bf226eb540fb74bde746fbc79112c",
@@ -14369,7 +14369,9 @@
         "b5c2c463db9942e58970d45e67cfd5d5ee7c2fab",
         "e2f994f45150faad0319c063fc7eb206c1e4fdcf",
         "fe7a366bd2090de6013ef035a6f33bc6bcc9b8bb",
-        "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22"
+        "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+        "4614c8bf5657f9bee9a37d6fa14437c64a71dd18",
+        "05dc4f9b4510451d06b30ffce87bc2d35a26fd69"
       ],
       "task_keys": [
         "05-notifications-documents-ai.md#T-05.01.01",
@@ -14382,7 +14384,7 @@
         "05-notifications-documents-ai.md#T-05.02.01",
         "02-auth-users-admin.md#T-09.09.03"
       ],
-      "summary": "Notification outbox/delivery batch: five tasks verified and five saved PR reviews closed; four tasks remain partial with four PR reviews open. Prior send safety, staff search and shutdown repairs retained. Dashboard configuration repaired; crash-durable physical-attempt history remains a confirmed defect.",
+      "summary": "Notification outbox/delivery consolidated locally:7 tasks verified/7 saved PR reviews closed,2 tasks partial/2 PR reviews open. Durable per-send history repairs the crash gap; isolated Grafana import/query/rendering verifies the dashboard. Provider guarantees/reconciliation and deployed alert delivery remain prerequisites.",
       "review": [
         "Dead-letter retry/resolve/dismiss now carry the full current session/CSRF identity into the permission-locked transaction and recheck step-up before commit. Atomic audit includes session/proof and the request correlation ID. Both HTTP aliases pass revocation, permission, CSRF and expired-proof races. Queue identity, channel-only retry, snapshots and conflict behavior remain intact.",
         "An old actor-lock test blocked the HTTP session guard before reaching the intended lock. The corrected test calls the actual service with the fixture session and revokes the role while the actor lock is held. All 70 focused API cases pass, including 43 real-database/HTTP cases.",
@@ -14415,9 +14417,10 @@
         "Application send ownership and durable accepted receipts prevent automatic uncertain resends. Concurrent claims, response loss, failed receipt writes and process restart are tested for real email/SMS adapters. This establishes application guarding, not provider deduplication.",
         "Required processing-history fields, safe errors, scoped and general staff queries and FA/EN history are implemented. Search works without a dead-letter row. Each physical attempt is not yet crash-durable: provider rejection may commit to the mutable receipt before the outcome/log transaction; a restart can retry and overwrite that receipt without retaining the prior log.",
         "Dead-letter severity/cause/history and authorized Retry/Resolve/Dismiss are tested. Local accumulation alert rules pass actual promtool checks. Unknown send outcomes remain held; no deployed monitoring claim.",
-        "Queue depth, failure ratio, p95 latency and attempt metrics are implemented and tested. Dashboard now declares its Prometheus selector and uses 0.1/0.25 ratio thresholds. JSON/config checks pass; Grafana import/query/rendering remains unverified.",
+        "The four required metrics are implemented and tested. Dashboard now declares its Prometheus selector and uses 0.1/0.25 ratio thresholds. JSON/config checks pass; Grafana import/query/rendering remains unverified.",
         "In-app schema includes required fields, link_params and profile/date index. Adapter synchronously writes through the pinned worker outcome transaction; database failure tests prove rollback with job/history/outbox. This corrects PR170 inline-pool reinterpretation. Business transaction persists outbox intent; inbox materializes in worker transaction.",
-        "Separate Failed notifications staff section exposes masked payload/history and permission-gated actions. Current session/CSRF/step-up and exact acknowledgment validation, negative API paths and FA/EN browser workflows pass. Historical frontend deferral is satisfied."
+        "Separate Failed notifications staff section exposes masked payload/history and permission-gated actions. Current session/CSRF/step-up and exact acknowledgment validation, negative API paths and FA/EN browser workflows pass. Historical frontend deferral is satisfied.",
+        "4614c8bf resolves the subsequently identified physical-attempt history gap. Unique send tokens and a receipt-owned sequence survive process failure. Fault injection proves no I/O without history, no unsafe retry after outcome-write failure, and preservation across rejected retries without worker bookkeeping.05dc4f9b records actual local dashboard runtime verification. Prior partial assessments above are retained as chronology, superseded by current individual dispositions."
       ],
       "verification": {
         "api": "130 staff/provider cases at75fdaea7;47 overlapping staff/history cases after general lookup, including one new no-dead-letter search case. Earlier evidence remains revision-bound.",
@@ -14428,17 +14431,26 @@
         "alerts": "promtool3.5.0 check2 rules and15 assertions in6 scenarios pass. Deployment/receiver delivery unverified.",
         "durable_send": "16 shared boundary cases previously passed;53 worker/130 API current checks pass. Eight migration/guard cases include concurrency, receipt write failure/lost response, explicit rejection, legacy holds and PostgreSQL constraints. Worker/API/DB types, scoped lint/format and migration snapshot check pass.",
         "shutdown": "Actual worker + isolated PostgreSQL + controlled SMS endpoint: graceful completion, forced deadline then expired-lease hold, and failed-bookkeeping receipt recovery pass. New queued work waits for restart; stale lease owners cannot clear replacement claims.",
-        "foundation_closure": "45 focused cases in outbox-writer/retry-schedule/in-app-transport/worker-metrics/delivery-log pass. Bank receipt business-transaction evidence reused with unchanged source/test hashes from R01-bank-receipts-approval. Dashboard JSON and formatting pass, without a Grafana runtime claim."
+        "foundation_closure": "45 focused cases in outbox-writer/retry-schedule/in-app-transport/worker-metrics/delivery-log pass. Bank receipt business-transaction evidence reused with unchanged source/test hashes from R01-bank-receipts-approval. Dashboard JSON and formatting pass, without a Grafana runtime claim.",
+        "attempt_history": {
+          "worker": "40 focused database/history cases pass;9 compiled-process cases pass after correcting generated journal timestamp to remain strictly increasing.49 distinct worker cases total.",
+          "api": "47 existing/extended history and triage API cases pass, including started/unknown filtering.",
+          "browser": "12 FA/EN Chromium cases pass, including mobile history statuses, permission failures and scoped/general search.",
+          "quality": "worker/DB/API/web types, affected lint/format, OpenAPI contract, migration snapshot, web build,50 i18n cases and all42 unchanged budgets pass.",
+          "limits": "No deployed migration or missing historical-attempt reconstruction claimed."
+        },
+        "dashboard_runtime": "Grafana11.2.0/Prometheus3.5.0 isolated local stack, declared datasource binding, all5 actual query expressions, Chromium rendering and12.5% orange ratio verified. Synthetic samples; no production scrape or receiver claim. Screenshot:audit/evidence/r02-outbox-delivery/grafana-dashboard.png. Temporary containers/network/browser cleaned up."
       },
       "remaining": [
-        "Repair crash-durable per-send attempt history, preserving existing accepted/uncertain receipt fencing.",
-        "Verify dashboard import, data-source binding and rendered queries in controlled Grafana.",
-        "Provider-level SMS idempotency is not established; Resend retry-window guarantees and authoritative provider reconciliation remain unverified. Unknown outcomes must stay held.",
-        "Current occurrence-aware v2 keys preserve distinct business events; literal legacy sha256(event+channel+profile) requirement still needs an explicit disposition.",
-        "Deployment owner must load rules, verify scrapes and record controlled Alertmanager firing and resolution. No external execution is claimed.",
-        "Preserve 38 earlier evidence refresh records and final V02 regression/coverage."
+        "PR166: provider-level SMS deduplication, authoritative uncertain-send reconciliation and occurrence-key requirement disposition remain unverified. Unknown outcomes stay held.",
+        "PR168: deployment owner must load rules, verify real scrapes and record intended Alertmanager receiver firing/resolution.",
+        "Preserve38 earlier evidence refresh records and finalV02 regression/coverage."
       ],
       "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
+        },
         {
           "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
           "sha256": "cd3b7e3a67faa6452204aacb960795ffa3dce0d0d0cd208dc27f397b3225ace0"
@@ -14457,7 +14469,7 @@
         },
         {
           "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-          "sha256": "9803fdf3e18f4bc4c9ec0b1055fa09442121639093911e2852832e3c5c3f744a"
+          "sha256": "7eabe2b5a9305730d79033cf548d2cb96c9d3d6fe4207b3f163aa3a408d55e08"
         },
         {
           "path": "apps/api/src/notifications/notifications.module.ts",
@@ -14465,7 +14477,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "68e101f4b489db82b06e312e602af467692547f656d58cdf3368a5fc9be44fa7"
+          "sha256": "97c89ca8804fb28265175e93fe9d8e098d99d53e4e64b106baabf55827226271"
         },
         {
           "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
@@ -14485,7 +14497,7 @@
         },
         {
           "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-          "sha256": "2a950742236d07cd603df01d39b94e2fec876e26286a7d7ae5f50634341bcd8f"
+          "sha256": "eade08c9a733e8268903a60bb6c513ace25253664c71ed93ec7915dda16d4198"
         },
         {
           "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -14493,11 +14505,11 @@
         },
         {
           "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-          "sha256": "8e2ac27bdf219e983f69528c52c2b4f1d25fcfc4b23af8c16547e6cbca5c14f6"
+          "sha256": "e6089a5f26d148391ca0d58db05854deb1fd6a3b434635d629634bb3a2a2e61c"
         },
         {
           "path": "apps/worker/src/main-process.integration.test.ts",
-          "sha256": "2a84e6738c1674a01db482dbf330f2c6b8fff171a7dead78653fb61ea50ebfe8"
+          "sha256": "a857c3d0091063987cd35ee0bfa2103a3276b19ea7dd2dc3c6651b4eddc0f7dd"
         },
         {
           "path": "apps/worker/src/main.ts",
@@ -14509,11 +14521,11 @@
         },
         {
           "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
-          "sha256": "03707e33d2bccb94ebc1a5a81a5be0b23c651f333318d5e8e263a84571abf536"
+          "sha256": "387bd455c51cb14414b87fc99b8497835b979214825c6e942038eadd236a766d"
         },
         {
           "path": "apps/worker/src/notifications/delivery-log.ts",
-          "sha256": "310e6d118946e5569a4695274d24269f13de353ff09dd29a0710a51011d7efa6"
+          "sha256": "e5a7aa2820702c05bbba7068a0fb0cf89a8e1c00d5f4ef210832376d9334b94a"
         },
         {
           "path": "apps/worker/src/notifications/email-transport.ts",
@@ -14561,11 +14573,11 @@
         },
         {
           "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-          "sha256": "586f4589c4e1c6ac4cbde54f8e31e63dd083357c06fa7c62f11b0e6580e10b34"
+          "sha256": "e38601fef136529d8eb2dd3546cd22388a3ce340a60642e8d6ffc9770a9775cb"
         },
         {
           "path": "apps/worker/src/notifications/send-receipt.ts",
-          "sha256": "51fbb098547d4e1c226da7136a6eeb6188a48962d28a19f6de39b383f2b64a3e"
+          "sha256": "adc0bb76eff8692992c20ce88b702624cff55b6e1309684d5fecdcfa9de6235f"
         },
         {
           "path": "apps/worker/src/notifications/sms-transport.ts",
@@ -14578,6 +14590,10 @@
         {
           "path": "apps/worker/src/notifications/worker-metrics.ts",
           "sha256": "58e379e43dd0c3043906e929370b27b999b16abc41f31c74617208b7540a4c02"
+        },
+        {
+          "path": "audit/evidence/r02-outbox-delivery/grafana-dashboard.png",
+          "sha256": "a1c03811f7ea0913df6763db3b670f418a80b57bcaa6b527753d7657ca398f38"
         },
         {
           "path": "deploy/monitoring/grafana-notifications-dashboard.json",
@@ -14593,23 +14609,35 @@
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
-          "sha256": "1024255e4514db8566ee2fc15baf6d5b0d697e143a12a5527a86f442077250a3"
+          "sha256": "a972eb3be72b5ad30193752dc1ad039243b4c0e45898ca74c5dfc3739167aa0d"
         },
         {
           "path": "docs/operations/notification-monitoring.md",
-          "sha256": "f06b27ca55be45b97fb9a3325bc6877ad94c99af45cca77e3b2df96716665b61"
+          "sha256": "9493e4f69cbb6432805eb9d5e7358c3e782b0f4938a5e5a87e84812d56c295f4"
         },
         {
           "path": "packages/db/drizzle/production/0127_notification_send_receipts.sql",
           "sha256": "8bc1291ed49ad025623950a4a8c0c4a1d75aca8a9d7fa63dbb0ac13a00f1cd96"
         },
         {
+          "path": "packages/db/drizzle/production/0128_notification_attempt_history.sql",
+          "sha256": "cd32c1aa92015263166db5932601d24a5b847e530028a47e630dc7eea33aa649"
+        },
+        {
           "path": "packages/db/drizzle/production/meta/0127_snapshot.json",
           "sha256": "64cc9436ed4bd3ef237b55a14a3d8cfb3c612db41a934e9975aa450b0881627d"
         },
         {
+          "path": "packages/db/drizzle/production/meta/0128_snapshot.json",
+          "sha256": "a407b9a19c213799ce199e947e3d0ab48ea69e179ddf2ae3d24a4823d0a3bc69"
+        },
+        {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "28dafce949b634bb56ef468e66efd67b3ad5ab7379c09f8fd513c698da122b24"
+          "sha256": "9af922d307f14f4985b3ae73655e1345a6b1bae59f22720c79d160184fefedb4"
+        },
+        {
+          "path": "packages/db/src/domain-checks.ts",
+          "sha256": "dec8a6ff47742f95a296a72737c63c4d68da96c714803a65a5110579138a916c"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -14625,7 +14653,7 @@
         },
         {
           "path": "packages/db/src/schema/notification-delivery-log.ts",
-          "sha256": "e6ee8a679df6048e31ff2eab866feeb363b4b48433b44c95d202b8d86a8fdb29"
+          "sha256": "dad1ad47401f27199f6d4f39292dc9731c329b0978e3394a32b3ad454036cf00"
         },
         {
           "path": "packages/db/src/schema/notification-outbox.ts",
@@ -14633,11 +14661,11 @@
         },
         {
           "path": "packages/db/src/schema/notification-send-receipts.ts",
-          "sha256": "36c488c8aec165cd8a177b4bb303ded545d8b6995d3d054531951ded89b246c4"
+          "sha256": "3a21136021026ee9f721305488e2e6cc8376870f93dc6cc47397ffb4dd2705a0"
         },
         {
           "path": "packages/i18n/src/admin-ui.ts",
-          "sha256": "b9622eb9b507076218615961d8cc1a51107b43a6e660e7e2fe0cdc1b878c4c3c"
+          "sha256": "3eff2c8f50ca07817d3f49f05701a3dd7c34c62f62955f05472ec0fcb8a159e6"
         },
         {
           "path": "packages/shared/src/auth-delivery/smsir-client.ts",
@@ -14831,7 +14859,39 @@
         "/tmp/r02-individual-closure-backlog.log",
         "/tmp/r02-individual-closure-prs.log",
         "/tmp/r02-individual-closure-requirements.log",
-        "/tmp/r02-individual-closure-skips.log"
+        "/tmp/r02-individual-closure-skips.log",
+        "/tmp/r02-attempt-history-api-types.log",
+        "/tmp/r02-attempt-history-api.log",
+        "/tmp/r02-attempt-history-browser.log",
+        "/tmp/r02-attempt-history-budgets.log",
+        "/tmp/r02-attempt-history-contract.log",
+        "/tmp/r02-attempt-history-db-types.log",
+        "/tmp/r02-attempt-history-format-check.log",
+        "/tmp/r02-attempt-history-format.log",
+        "/tmp/r02-attempt-history-generate-final.log",
+        "/tmp/r02-attempt-history-generate.log",
+        "/tmp/r02-attempt-history-i18n.log",
+        "/tmp/r02-attempt-history-lint.log",
+        "/tmp/r02-attempt-history-process-final.log",
+        "/tmp/r02-attempt-history-snapshot.log",
+        "/tmp/r02-attempt-history-web-build.log",
+        "/tmp/r02-attempt-history-web-types.log",
+        "/tmp/r02-attempt-history-worker-types.log",
+        "/tmp/r02-attempt-history-worker.log",
+        "/tmp/r02-grafana-review/browser-close.log",
+        "/tmp/r02-grafana-review/browser-snapshot.log",
+        "/tmp/r02-grafana-review/cleanup.log",
+        "/tmp/r02-grafana-review/screenshot.log",
+        "/tmp/r02-grafana-review/setup.log",
+        "/tmp/r02-grafana-review/imported-dashboard.json",
+        "/tmp/r02-grafana-review/runtime-query.json",
+        "/tmp/r02-grafana-review/exporter.cjs",
+        "/tmp/r02-grafana-review/prometheus.yml",
+        "/tmp/r02-delivery-complete-audit.log",
+        "/tmp/r02-delivery-complete-backlog.log",
+        "/tmp/r02-delivery-complete-prs.log",
+        "/tmp/r02-delivery-complete-requirements.log",
+        "/tmp/r02-delivery-complete-skips.log"
       ],
       "pr_dispositions": [
         {
@@ -14841,7 +14901,7 @@
             "05-notifications-documents-ai.md#T-05.01.01"
           ],
           "reason": "NotificationsModule, exported transport contract and required schema are present. In-app adapter and business outbox deferrals are satisfied by later integration. Compiled-process notification tests prove graceful drain, deadline recovery and owned-lease release after failed bookkeeping. ",
-          "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+          "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
           "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
         },
         {
@@ -14851,7 +14911,7 @@
             "05-notifications-documents-ai.md#T-05.01.02"
           ],
           "reason": "UUIDv7 outbox schema, unique idempotency, caller-owned business transaction, job creation, claim/renew/release and real PostgreSQL dispatch are verified. Bank receipt confirmation enqueues through the same client before COMMIT; unchanged R01 service/integration hashes retain rollback and no-duplicate evidence. This does not certify all later event-specific producer policies. ",
-          "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+          "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
           "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
         },
         {
@@ -14861,7 +14921,7 @@
             "05-notifications-documents-ai.md#T-05.01.03"
           ],
           "reason": "Retry ladder 1m/5m/30m/2h/final with bounded jitter, per-type caps and urgent ordering are implemented. Focused schedule/writer cases pass; channel budgets, claim renewals and actual worker dispatch reuse recorded integration evidence. ",
-          "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+          "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
           "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
         },
         {
@@ -14871,17 +14931,17 @@
             "05-notifications-documents-ai.md#T-05.01.04"
           ],
           "reason": "Application send ownership and durable accepted receipts prevent automatic uncertain resends. Concurrent claims, response loss, failed receipt writes and process restart are tested for real email/SMS adapters. This establishes application guarding, not provider deduplication. Provider-level SMS idempotency is not established; Resend retry-window guarantees and authoritative provider reconciliation remain unverified. Unknown outcomes must stay held. Current occurrence-aware v2 keys preserve distinct business events; literal legacy sha256(event+channel+profile) requirement still needs an explicit disposition.",
-          "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+          "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
           "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
         },
         {
           "pr": 167,
-          "status": "open",
+          "status": "closed",
           "task_keys": [
             "05-notifications-documents-ai.md#T-05.01.05"
           ],
-          "reason": "Required processing-history fields, safe errors, scoped and general staff queries and FA/EN history are implemented. Search works without a dead-letter row. Each physical attempt is not yet crash-durable: provider rejection may commit to the mutable receipt before the outcome/log transaction; a restart can retry and overwrite that receipt without retaining the prior log. Repair crash-durable per-send-attempt history. Mutable receipt plus later processing log can lose a rejected attempt on process death or outcome rollback. This is separate from the deferred optional processing-kind column.",
-          "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+          "reason": "Each new external send commits its unique history row with receipt claim before I/O. Outcome and receipt update together. Receipt-owned sequence advances on rejected retry even after lost worker bookkeeping; recovery preserves original row/duration. In-app/preflight history remains transactional. Real PostgreSQL fault injection and compiled-process shutdown/restart prove durability and no duplicate sends. Staff status filters/rendering support started-without-outcome and unknown in FA/EN. Migration0128 preserves earlier processing rows and snapshots retained receipts. It cannot reconstruct already missing historical attempts; legacy rows must not be summed as physical sends. Drain old workers before rollout.",
+          "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
           "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
         },
         {
@@ -14891,17 +14951,17 @@
             "05-notifications-documents-ai.md#T-05.01.06"
           ],
           "reason": "Dead-letter severity/cause/history and authorized Retry/Resolve/Dismiss are tested. Local accumulation alert rules pass actual promtool checks. Unknown send outcomes remain held; no deployed monitoring claim. Deployment owner must load rules, verify scrapes and record controlled Alertmanager firing and resolution. No external execution is claimed.",
-          "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+          "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
           "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
         },
         {
           "pr": 169,
-          "status": "open",
+          "status": "closed",
           "task_keys": [
             "05-notifications-documents-ai.md#T-05.01.07"
           ],
-          "reason": "Queue depth, failure ratio, p95 latency and attempt metrics are implemented and tested. Dashboard now declares its Prometheus selector and uses 0.1/0.25 ratio thresholds. JSON/config checks pass; Grafana import/query/rendering remains unverified. Import the dashboard into controlled Grafana, bind Prometheus and verify queries/panels and ratio units before closure.",
-          "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+          "reason": "All four required metrics exist: notifications_outbox_age_seconds, notifications_delivery_attempts_total{channel,status}, notifications_queue_depth and notifications_dead_letter_count. Existing worker metric tests pass. Dashboard imported with declared selector into isolated Grafana11.2.0/Prometheus3.5.0. All five expressions return controlled samples; Chromium renders90s age,12 queued,3 dead letters and orange12.5% failure ratio. Screenshot inspected. Synthetic local metric samples establish dashboard compatibility. Actual production scrapes/Alertmanager receiver firing and resolution remain PR168 operational prerequisites.",
+          "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
           "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
         },
         {
@@ -14911,7 +14971,7 @@
             "05-notifications-documents-ai.md#T-05.02.01"
           ],
           "reason": "In-app schema includes required fields, link_params and profile/date index. Adapter synchronously writes through the pinned worker outcome transaction; database failure tests prove rollback with job/history/outbox. This corrects PR170 inline-pool reinterpretation. Business transaction persists outbox intent; inbox materializes in worker transaction. ",
-          "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+          "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
           "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
         },
         {
@@ -14921,15 +14981,89 @@
             "02-auth-users-admin.md#T-09.09.03"
           ],
           "reason": "Separate Failed notifications staff section exposes masked payload/history and permission-gated actions. Current session/CSRF/step-up and exact acknowledgment validation, negative API paths and FA/EN browser workflows pass. Historical frontend deferral is satisfied. ",
-          "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+          "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
           "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
         }
       ],
       "pr_counts": {
-        "closed": 5,
-        "open": 4,
+        "closed": 7,
+        "open": 2,
         "blocked": 0
-      }
+      },
+      "remaining_task_keys": [
+        "05-notifications-documents-ai.md#T-05.01.04",
+        "05-notifications-documents-ai.md#T-05.01.06"
+      ],
+      "confirmed_defects": [
+        {
+          "defect": "Dead-letter mutations recheck staff permission but drop session/CSRF/step-up identity before the transaction and generate unrelated audit correlation IDs.",
+          "status": "fixed_verified",
+          "source_revision": "361f4b82234bf226eb540fb74bde746fbc79112c"
+        },
+        {
+          "defect": "In-app adapter writes through a pool independently of the transaction that records job status, delivery log and outbox state; rollback can leave inbox delivery committed alone.",
+          "status": "fixed_verified",
+          "source_revision": "315c6c177ff43f9d598d1eb6eb9280508aa2a0df"
+        },
+        {
+          "defect": "Delivery attempt metrics increment during persistence before commit; a recording failure followed by fallback persistence can count the same physical send again.",
+          "status": "fixed_verified",
+          "source_revision": "315c6c177ff43f9d598d1eb6eb9280508aa2a0df"
+        },
+        {
+          "defect": "Staff triage trusted malformed access/list responses and reported success without checking the acknowledged record and transition.",
+          "status": "fixed_verified",
+          "source_revision": "d0d72ec94bb02510616001baf310e7707f88deae"
+        },
+        {
+          "defect": "Staff dead-letter panel shows only attempt totals; the required per-attempt delivery history is not displayed.",
+          "status": "fixed_verified",
+          "source_revision": "8349c0153c8596e0a671d7f622b8074f919c7268"
+        },
+        {
+          "defect": "A Grafana count panel exists but no notification dead-letter accumulation alert rule is configured in the repository.",
+          "status": "fixed_verified_locally",
+          "source_revision": "e8e30195fa64c0aad236e09d0ad145843a96bc77",
+          "remaining": "Deployment owner must load rules and verify receiver delivery/resolution; no operational execution is claimed."
+        },
+        {
+          "defect": "After external acceptance, a transient outcome-persistence failure discarded the real receipt and caused an unnecessary resend.",
+          "status": "fixed_verified",
+          "source_revision": "b27f425852a876c736139845201c5206344cbe8a"
+        },
+        {
+          "defect": "SMS.ir delivery stores an idempotency key in its snapshot but never sends it to the provider. SMTP has only a stable Message-ID. Uncertain requests or a process crash after acceptance can be retried without proven provider deduplication.",
+          "status": "fixed_verified_locally",
+          "source_paths": [
+            "packages/shared/src/notification-delivery/sms.ts",
+            "packages/shared/src/auth-delivery/smsir-client.ts",
+            "packages/shared/src/notification-delivery/email.ts",
+            "apps/worker/src/notifications/outbox-runner.ts"
+          ],
+          "source_revision": "75fdaea72b5167b3c1b1bc70008b81ca4ec02922",
+          "remaining": "Application resend prevention verified; audited provider reconciliation and notification-specific process shutdown evidence remain. No provider-side exactly-once or eventual-delivery claim."
+        },
+        {
+          "defect": "Admin delivery history is now available for dead-letter records, but general lookup for deliveries without a dead-letter entry is still absent under T-05.01.05.",
+          "status": "fixed_verified",
+          "source_revision": "b5c2c463db9942e58970d45e67cfd5d5ee7c2fab"
+        },
+        {
+          "defect": "A notification worker finishing after repeated bookkeeping failure stopped lease renewal but left its owned claim locked during a clean shutdown.",
+          "status": "fixed_verified",
+          "source_revision": "fe7a366bd2090de6013ef035a6f33bc6bcc9b8bb"
+        },
+        {
+          "defect": "Dashboard references undefined DS_PROMETHEUS and uses 10/25 for fractional percentunit thresholds.",
+          "status": "fixed_verified",
+          "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69"
+        },
+        {
+          "defect": "Repair crash-durable per-send-attempt history. Mutable receipt plus later processing log can lose a rejected attempt on process death or outcome rollback. This is separate from the deferred optional processing-kind column.",
+          "status": "fixed_verified",
+          "source_revision": "4614c8bf5657f9bee9a37d6fa14437c64a71dd18"
+        }
+      ]
     }
   ]
 }

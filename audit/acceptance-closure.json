@@ -7851,7 +7851,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3bb82089da692767a7fef29f4dde2b9575256ffcc402007d4bab8fdd3f69f700"
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -8822,7 +8822,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3bb82089da692767a7fef29f4dde2b9575256ffcc402007d4bab8fdd3f69f700"
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
@@ -13775,7 +13775,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3bb82089da692767a7fef29f4dde2b9575256ffcc402007d4bab8fdd3f69f700"
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -14011,7 +14011,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3bb82089da692767a7fef29f4dde2b9575256ffcc402007d4bab8fdd3f69f700"
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -14058,7 +14058,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3bb82089da692767a7fef29f4dde2b9575256ffcc402007d4bab8fdd3f69f700"
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
         },
         {
           "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
@@ -14129,7 +14129,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "3bb82089da692767a7fef29f4dde2b9575256ffcc402007d4bab8fdd3f69f700"
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
@@ -14570,7 +14570,7 @@
       "requirement": "| **T-05.01.01 — Notification module scaffold** | M | P0 |\n| Create NestJS Notifications module. Define transport interface (`INotificationTransport`) with `send(payload)` returning `{providerRef, status}`. Define outbox table, job table schemas Drizzle ORM entities, and base worker structure. | | |",
       "requirement_sha256": "f6a8422322b18934ea1213e87aa51a6ffb4ca5c04d5692cad5985a85c2d0df6f",
       "status": "acceptance_verified",
-      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "reviewed_sha": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
       "source_evidence": [
         {
           "path": "apps/api/src/notifications/notifications.module.ts",
@@ -14586,7 +14586,7 @@
         },
         {
           "path": "apps/worker/src/main-process.integration.test.ts",
-          "sha256": "2a84e6738c1674a01db482dbf330f2c6b8fff171a7dead78653fb61ea50ebfe8"
+          "sha256": "a857c3d0091063987cd35ee0bfa2103a3276b19ea7dd2dc3c6651b4eddc0f7dd"
         },
         {
           "path": "apps/worker/src/notifications/outbox-lease.ts",
@@ -14611,7 +14611,7 @@
       "requirement": "| **T-05.01.02 — Durable outbox table & write pipeline** | L | P0 |\n| Design `notification_outbox` table: `id` (UUIDv7), `event_key`, `profile_id`, `payload` (JSONB), `channels` (text[]), `status`, `idempotency_key` (UNIQUE), `created_at`, `locked_until`, `attempts`, `max_attempts`, `last_error`, `provider_ref`, `scheduled_for`. Write outbox rows in same PG transaction as business event. Outbox reader worker picks unlocked rows, claims lease, dispatches. | | |",
       "requirement_sha256": "3e1628e07bf1d64114cdbf84ccd03ba756ed2ddcb3c30b5a7a3995bde67bac28",
       "status": "acceptance_verified",
-      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "reviewed_sha": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
       "source_evidence": [
         {
           "path": "packages/db/src/schema/notification-outbox.ts",
@@ -14635,7 +14635,7 @@
         },
         {
           "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
-          "sha256": "03707e33d2bccb94ebc1a5a81a5be0b23c651f333318d5e8e263a84571abf536"
+          "sha256": "387bd455c51cb14414b87fc99b8497835b979214825c6e942038eadd236a766d"
         },
         {
           "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
@@ -14664,7 +14664,7 @@
       "requirement": "| **T-05.01.03 — Job queue with retry schedule** | L | P0 |\n| Implement retry schedule in worker: 1min → 5min → 30min → 2hr → final. Exponential backoff with jitter (±20%). Configurable `max_attempts` per notification type. Worker marks `Failed` after max attempts exhausted; moves to dead-letter. Add queue priority for urgent (Immediate) vs daytime. | | |",
       "requirement_sha256": "481a13d1d241563aab3bec6a5bc724e25bd5165c8f37c8e852ab974b283ed861",
       "status": "acceptance_verified",
-      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "reviewed_sha": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
       "source_evidence": [
         {
           "path": "apps/worker/src/notifications/retry-schedule.ts",
@@ -14709,15 +14709,15 @@
       "requirement": "| **T-05.01.04 — Idempotency for delivery** | M | P0 |\n| Idempotency key = `sha256(event_key + channel + profile_id)`. Ensure at-most-once logical delivery even with worker retries or duplicate outbox rows. Unique constraint on `notification_outbox.idempotency_key`. ON CONFLICT DO NOTHING on inserts. Provider-level idempotency for Resend and SMS.ir. | | |",
       "requirement_sha256": "fd378547704af7cb05cf053f8230429e033825e5d56388be2c240d3f4f037b5f",
       "status": "partial",
-      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "reviewed_sha": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
       "source_evidence": [
         {
           "path": "apps/worker/src/notifications/send-receipt.ts",
-          "sha256": "51fbb098547d4e1c226da7136a6eeb6188a48962d28a19f6de39b383f2b64a3e"
+          "sha256": "adc0bb76eff8692992c20ce88b702624cff55b6e1309684d5fecdcfa9de6235f"
         },
         {
           "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-          "sha256": "586f4589c4e1c6ac4cbde54f8e31e63dd083357c06fa7c62f11b0e6580e10b34"
+          "sha256": "e38601fef136529d8eb2dd3546cd22388a3ce340a60642e8d6ffc9770a9775cb"
         },
         {
           "path": "apps/worker/src/notifications/email-transport.ts",
@@ -14734,6 +14734,18 @@
         {
           "path": "packages/shared/src/notification-delivery/sms.ts",
           "sha256": "031b5579025565a7b9c559b188d80c681ea594eb60503a1285f1dcc64a102b07"
+        },
+        {
+          "path": "packages/db/drizzle/production/0128_notification_attempt_history.sql",
+          "sha256": "cd32c1aa92015263166db5932601d24a5b847e530028a47e630dc7eea33aa649"
+        },
+        {
+          "path": "packages/db/src/schema/notification-send-receipts.ts",
+          "sha256": "3a21136021026ee9f721305488e2e6cc8376870f93dc6cc47397ffb4dd2705a0"
+        },
+        {
+          "path": "apps/worker/src/main-process.integration.test.ts",
+          "sha256": "a857c3d0091063987cd35ee0bfa2103a3276b19ea7dd2dc3c6651b4eddc0f7dd"
         }
       ],
       "checks": [
@@ -14756,20 +14768,20 @@
       "requirement_line": 63,
       "requirement": "| **T-05.01.05 — Status tracking & delivery logs** | M | P1 |\n| `notification_delivery_log` table: `id`, `notification_id` (FK), `channel`, `status`, `attempt_number`, `provider_ref`, `latency_ms`, `error_category`, `error_detail` (safe), `created_at`. Queryable in admin panel. Each delivery attempt creates a log row. | | |",
       "requirement_sha256": "09c52a552188ca938404e39ff4755f2904cfaa20a8750bc2012a33e5053ded58",
-      "status": "partial",
-      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "status": "acceptance_verified",
+      "reviewed_sha": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
       "source_evidence": [
         {
           "path": "packages/db/src/schema/notification-delivery-log.ts",
-          "sha256": "e6ee8a679df6048e31ff2eab866feeb363b4b48433b44c95d202b8d86a8fdb29"
+          "sha256": "dad1ad47401f27199f6d4f39292dc9731c329b0978e3394a32b3ad454036cf00"
         },
         {
           "path": "apps/worker/src/notifications/delivery-log.ts",
-          "sha256": "310e6d118946e5569a4695274d24269f13de353ff09dd29a0710a51011d7efa6"
+          "sha256": "e5a7aa2820702c05bbba7068a0fb0cf89a8e1c00d5f4ef210832376d9334b94a"
         },
         {
           "path": "apps/worker/src/notifications/send-receipt.ts",
-          "sha256": "51fbb098547d4e1c226da7136a6eeb6188a48962d28a19f6de39b383f2b64a3e"
+          "sha256": "adc0bb76eff8692992c20ce88b702624cff55b6e1309684d5fecdcfa9de6235f"
         },
         {
           "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -14781,19 +14793,35 @@
         },
         {
           "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
-          "sha256": "8e2ac27bdf219e983f69528c52c2b4f1d25fcfc4b23af8c16547e6cbca5c14f6"
+          "sha256": "e6089a5f26d148391ca0d58db05854deb1fd6a3b434635d629634bb3a2a2e61c"
         },
         {
           "path": "apps/web/e2e/notification-delivery-search.spec.ts",
-          "sha256": "2a950742236d07cd603df01d39b94e2fec876e26286a7d7ae5f50634341bcd8f"
+          "sha256": "eade08c9a733e8268903a60bb6c513ace25253664c71ed93ec7915dda16d4198"
+        },
+        {
+          "path": "packages/db/drizzle/production/0128_notification_attempt_history.sql",
+          "sha256": "cd32c1aa92015263166db5932601d24a5b847e530028a47e630dc7eea33aa649"
+        },
+        {
+          "path": "packages/db/src/schema/notification-send-receipts.ts",
+          "sha256": "3a21136021026ee9f721305488e2e6cc8376870f93dc6cc47397ffb4dd2705a0"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
+          "sha256": "e38601fef136529d8eb2dd3546cd22388a3ce340a60642e8d6ffc9770a9775cb"
+        },
+        {
+          "path": "apps/worker/src/main-process.integration.test.ts",
+          "sha256": "a857c3d0091063987cd35ee0bfa2103a3276b19ea7dd2dc3c6651b4eddc0f7dd"
         }
       ],
       "checks": [
-        "Required processing-history fields, safe errors, scoped and general staff queries and FA/EN history are implemented. Search works without a dead-letter row. Each physical attempt is not yet crash-durable: provider rejection may commit to the mutable receipt before the outcome/log transaction; a restart can retry and overwrite that receipt without retaining the prior log.",
-        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+        "Each new external send commits its unique history row with receipt claim before I/O. Outcome and receipt update together. Receipt-owned sequence advances on rejected retry even after lost worker bookkeeping; recovery preserves original row/duration. In-app/preflight history remains transactional. Real PostgreSQL fault injection and compiled-process shutdown/restart prove durability and no duplicate sends. Staff status filters/rendering support started-without-outcome and unknown in FA/EN.",
+        "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
       ],
       "limitations": [
-        "Repair crash-durable per-send-attempt history. Mutable receipt plus later processing log can lose a rejected attempt on process death or outcome rollback. This is separate from the deferred optional processing-kind column."
+        "Migration0128 preserves earlier processing rows and snapshots retained receipts. It cannot reconstruct already missing historical attempts; legacy rows must not be summed as physical sends. Drain old workers before rollout."
       ],
       "merged_prs": [
         167
@@ -14808,7 +14836,7 @@
       "requirement": "| **T-05.01.06 — Dead-letter queue & admin UI** | M | P1 |\n| Dead-letter table inherits failed delivery data. Admin panel shows dead-letter deliveries with severity (error/critical), cause, attempt history. Actions: **Retry** (re-queues with same idempotency key), **Resolve** (marks final, no retry), **Dismiss**. Operational alerts for dead-letter accumulation. | | |",
       "requirement_sha256": "d89946fa25e765f38777b3c75e4aef70b252f6c9d50c28ed38a55472fc0b2baf",
       "status": "partial",
-      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "reviewed_sha": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
       "source_evidence": [
         {
           "path": "apps/worker/src/notifications/dead-letter.ts",
@@ -14832,7 +14860,7 @@
         },
         {
           "path": "docs/operations/notification-monitoring.md",
-          "sha256": "f06b27ca55be45b97fb9a3325bc6877ad94c99af45cca77e3b2df96716665b61"
+          "sha256": "9493e4f69cbb6432805eb9d5e7358c3e782b0f4938a5e5a87e84812d56c295f4"
         }
       ],
       "checks": [
@@ -14854,8 +14882,8 @@
       "requirement_line": 67,
       "requirement": "| **T-05.01.07 — Metrics & observability** | S | P1 |\n| Prometheus metrics: `notifications_outbox_age_seconds`, `notifications_delivery_attempts_total{channel,status}`, `notifications_queue_depth`, `notifications_dead_letter_count`. Grafana dashboard panel. | | |\n\n---",
       "requirement_sha256": "59458f7e78418d9a84d5b0b4d8a4f23a7133db1c7e5792b010975768d201b4fa",
-      "status": "partial",
-      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "status": "acceptance_verified",
+      "reviewed_sha": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
       "source_evidence": [
         {
           "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -14871,15 +14899,15 @@
         },
         {
           "path": "docs/operations/notification-monitoring.md",
-          "sha256": "f06b27ca55be45b97fb9a3325bc6877ad94c99af45cca77e3b2df96716665b61"
+          "sha256": "9493e4f69cbb6432805eb9d5e7358c3e782b0f4938a5e5a87e84812d56c295f4"
         }
       ],
       "checks": [
-        "Queue depth, failure ratio, p95 latency and attempt metrics are implemented and tested. Dashboard now declares its Prometheus selector and uses 0.1/0.25 ratio thresholds. JSON/config checks pass; Grafana import/query/rendering remains unverified.",
-        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+        "All four required metrics exist: notifications_outbox_age_seconds, notifications_delivery_attempts_total{channel,status}, notifications_queue_depth and notifications_dead_letter_count. Existing worker metric tests pass. Dashboard imported with declared selector into isolated Grafana11.2.0/Prometheus3.5.0. All five expressions return controlled samples; Chromium renders90s age,12 queued,3 dead letters and orange12.5% failure ratio. Screenshot inspected.",
+        "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
       ],
       "limitations": [
-        "Import the dashboard into controlled Grafana, bind Prometheus and verify queries/panels and ratio units before closure."
+        "Synthetic local metric samples establish dashboard compatibility. Actual production scrapes/Alertmanager receiver firing and resolution remain PR168 operational prerequisites."
       ],
       "merged_prs": [
         169
@@ -14894,7 +14922,7 @@
       "requirement": "| **T-05.02.01 — Notification entity & in-app transport** | M | P0 |\n| `in_app_notifications` table: `id`, `profile_id`, `type`, `title_i18n_key`, `body_i18n_key`, `params` (JSONB — interpolation vars), `link_route`, `link_params`, `is_read`, `read_at`, `created_at`. Index on `(profile_id, created_at DESC)`. In-app transport adapter writes to this table synchronously (same transaction). | | |",
       "requirement_sha256": "f817927255da43dbcec15915a4fb6e8091f98e6eff98de572c3ba5b8bf53186f",
       "status": "acceptance_verified",
-      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "reviewed_sha": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
       "source_evidence": [
         {
           "path": "packages/db/src/schema/in-app-notifications.ts",
@@ -14914,7 +14942,7 @@
         },
         {
           "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
-          "sha256": "03707e33d2bccb94ebc1a5a81a5be0b23c651f333318d5e8e263a84571abf536"
+          "sha256": "387bd455c51cb14414b87fc99b8497835b979214825c6e942038eadd236a766d"
         }
       ],
       "checks": [
@@ -14935,7 +14963,7 @@
       "requirement": "**T-09.09.03 — Dead-letter notifications**\n\n- Description: Failed notification deliveries go to dead-letter queue. Staff can view, retry, or dismiss.\n- Technical notes: Same pattern as failed jobs but filtered to notification type. Admin can view raw notification data (masked).\n- UI/UX: Separate \"Failed notifications\" section. Retry/dismiss actions.\n- Dependencies: notification service, T-09.09.02\n- Complexity: M",
       "requirement_sha256": "76e50002555494f9afcef05eede64aa14009dd75b0e5d847d8532a8b4026f8fc",
       "status": "acceptance_verified",
-      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "reviewed_sha": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
       "source_evidence": [
         {
           "path": "apps/api/src/admin/failed-notifications.controller.ts",
@@ -14947,7 +14975,7 @@
         },
         {
           "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-          "sha256": "9803fdf3e18f4bc4c9ec0b1055fa09442121639093911e2852832e3c5c3f744a"
+          "sha256": "7eabe2b5a9305730d79033cf548d2cb96c9d3d6fe4207b3f163aa3a408d55e08"
         },
         {
           "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -18200,6 +18228,28 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring",
       "note": "Only immediate-base hashes refreshed. Older source bindings remain assigned to V01/R03."
+    },
+    {
+      "source_revision": "05dc4f9b4510451d06b30ffce87bc2d35a26fd69",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.07.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "02-auth-users-admin.md#T-07.01.01",
+        "02-auth-users-admin.md#T-10.01.02",
+        "02-auth-users-admin.md#T-09.05.01",
+        "02-auth-users-admin.md#T-09.06.03",
+        "05-notifications-documents-ai.md#T-05.01.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.04",
+        "05-notifications-documents-ai.md#T-05.01.05",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.02.01",
+        "02-auth-users-admin.md#T-09.09.03"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint",
+      "note": "Only bindings equal to the immediate pre-change source were refreshed. Changes add durable send history and display statuses; unrelated controller methods remain unchanged. Forty-nine worker,47 API,12 browser,50 i18n and42 budgets plus types/lint/contract/snapshot support the affected scope. Existing38 older refresh records remain."
     }
   ]
 }

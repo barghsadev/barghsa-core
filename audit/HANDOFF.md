@@ -4,21 +4,23 @@ Read [fix-plan.md](fix-plan.md) and the active batch in [progress.json](progress
 
 ## Current checkpoint
 
-Branch codex/audit-fixes. Product/test HEAD **a9d5f29b**. Active batch **R02-notification-outbox-delivery**, saved PR163–170 and203. Individual review now closes five PRs163/164/165/170/203 with five task acceptances. PR166/167/168/169 remain open/partial.
+Branch codex/audit-fixes. Product/test repair **4614c8bf**; dashboard proof **05dc4f9b**. Notification outbox/delivery batch consolidated locally:7 task acceptances and7 saved PR reviews closed; PR166/168 remain partial/open for provider guarantees/reconciliation/key wording and deployed alerts.
 
-Counts:141 verified/35 partial/146 pending claims;118 closed/27 open/156 unreviewed saved PRs.58 skips,3 verified/55 pending. 2537 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage remainsV02.
+Counts:143 verified/33 partial/146 pending claims;120 closed/25 open/156 unreviewed saved PRs.58 skips,3 verified/55 pending. 2569 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage staysV02.
 
-Preserve all completed send guards, staff search/triage, same-worker-transaction inbox and shutdown repairs.52 worker cases including9 compiled-process cases prove graceful drain, forced restart and receipt recovery after bookkeeping failure. Prior53 guard/recipient,130 API/provider,47 overlapping history API,14 distinct FA/EN browser,50 i18n and42 unchanged budgets remain recorded within source scope. Latest45 focused foundation cases pass; unchanged bank-receipt service/test hashes reuse R01 business-transaction rollback evidence.
+Durable per-send history now commits before I/O and finishes with the receipt. Rejected retries retain prior attempts even without worker bookkeeping; restart/recovery reuses the original row/duration.49 distinct worker cases pass, including9 compiled-process cases;47 API,12 FA/EN Chromium,50 i18n cases and42 unchanged budgets pass. Applicable types/lint/format/build/contract/snapshot pass. Earlier scoped evidence remains recorded; overlapping tests are not additive.
 
-Next confirmed repair: each physical send attempt needs durable history. Rejected receipt state can commit before the processing-log transaction, then be overwritten by a retry after a crash. This differs from the optional processing-kind column already deferred. Application uncertain/accepted resend protection remains verified; preserve it.
+Grafana11.2.0 and Prometheus3.5.0 imported the dashboard in an isolated local stack. All5 queries and rendered panels match controlled samples, including orange12.5% failure ratio. [Screenshot](evidence/r02-outbox-delivery/grafana-dashboard.png). Temporary containers/network/browser removed. Production scrape/Alertmanager evidence remains external.
 
-Dashboard config now declares its Prometheus selector and uses0.1/0.25 ratio thresholds; controlled Grafana import/query/rendering remains required. Provider-level SMS idempotency, occurrence-key requirement disposition, authoritative reconciliation and deployed alert evidence remain explicit prerequisites. Unknown sends stay held. No provider-side exactly-once or operational execution claim. Drain older workers before migration0127 and updated API/workers. [Recovery runbook](../docs/operations/notification-delivery-recovery.md).
+Migration0128 retains legacy processing rows and snapshots retained receipts; it cannot reconstruct already missing attempts. Deploy API/web readers, drain older notification workers, then migrate and start updated workers. Unknown/sending receipts remain held. Do not invent provider-side exactly-once or eventual-delivery guarantees. [Recovery runbook](../docs/operations/notification-delivery-recovery.md).
+
+Active batch **R02-inbox-notification-policy**, saved PR171–176, six qualified tasks in progress.json. Exact requirements, saved bodies and PR174/175 deferrals read. Next: source comparison for center API/UI, polling and classification/timezone/window policy. Preserve valid delivery/recipient/minute-window evidence; do not repeat the previous batch.
 
 Completed R01 work and valid tests remain recorded in progress/step reviews. Do not rebuild or repeat those reviews. The earlier wallet-controller fixture failures are fixed; the interrupted broad run is still not regression evidence.
 
 ## Next action
 
-Repair crash-durable per-send attempt history, preserving existing accepted/uncertain receipt fencing. Then Verify dashboard import, data-source binding and rendered queries in controlled Grafana. Keep other partial provider/operational criteria explicit; close supported items independently. Then continue bounded R02 workflows.
+Review R02 inbox/notification policy: exact PR171–176 requirements and deferrals are read. Compare current source once, reuse unchanged evidence, fix confirmed gaps and validate each meaningful change.
 
 Reuse completed producer, recipient, branding and provider evidence where source remains valid. Keep remaining inbox/classification and event-specific reminders in later R02 batches. Preserve local monitoring rules and their runbook; operational alert delivery needs external execution evidence.
 
