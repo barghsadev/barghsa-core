@@ -16,16 +16,13 @@ export type ResendEmailEventType =
   | 'email.opened'
   | 'email.clicked';
 
-/** Resend bounce severity. Only `hard_bounce` triggers suppression. */
-export type ResendBounceCategory = 'hard_bounce' | 'soft_bounce';
-
 export interface ResendEventData {
   /** Provider message id, used to reconcile a delivery log / outbox row. */
-  email_id?: string;
+  email_id: string;
   from?: string;
-  to?: string;
+  to: string[];
   /** Bounce severity for `email.bounced` events. */
-  category?: ResendBounceCategory;
+  bounce?: { type: string; subType?: string; message?: string };
   subject?: string;
   [key: string]: unknown;
 }

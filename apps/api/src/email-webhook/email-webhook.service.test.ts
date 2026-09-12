@@ -263,7 +263,7 @@ describe('EmailWebhookService (T-05.06.07)', () => {
 
     const payload = JSON.stringify({
       type: 'email.delivered',
-      data: { email_id: 'msg_resend_1', to: 'a@example.com', from: 'no-reply@barghsa.ir' },
+      data: { email_id: 'msg_resend_1', to: ['a@example.com'], from: 'no-reply@barghsa.ir' },
     });
     const outcome = await svc.handle(makeHeaders('msg_svix_1', payload), payload);
 
@@ -299,8 +299,8 @@ describe('EmailWebhookService (T-05.06.07)', () => {
       type: 'email.bounced',
       data: {
         email_id: 'msg_resend_2',
-        to: 'NOBODY@EXAMPLE.COM',
-        category: 'hard_bounce',
+        to: ['NOBODY@EXAMPLE.COM'],
+        bounce: { type: 'Permanent' },
       },
     });
     const outcome = await svc.handle(makeHeaders('msg_svix_2', payload), payload);
@@ -331,7 +331,7 @@ describe('EmailWebhookService (T-05.06.07)', () => {
 
     const payload = JSON.stringify({
       type: 'email.bounced',
-      data: { email_id: 'msg_resend_3', to: 'b@example.com', category: 'soft_bounce' },
+      data: { email_id: 'msg_resend_3', to: ['b@example.com'], bounce: { type: 'Temporary' } },
     });
     const outcome = await svc.handle(makeHeaders('msg_svix_3', payload), payload);
 
@@ -354,7 +354,7 @@ describe('EmailWebhookService (T-05.06.07)', () => {
 
     const payload = JSON.stringify({
       type: 'email.complained',
-      data: { email_id: 'msg_resend_4', to: 'Complainer@Example.COM' },
+      data: { email_id: 'msg_resend_4', to: ['Complainer@Example.COM'] },
     });
     const outcome = await svc.handle(makeHeaders('msg_svix_4', payload), payload);
 
@@ -383,7 +383,7 @@ describe('EmailWebhookService (T-05.06.07)', () => {
 
     const payload = JSON.stringify({
       type: 'email.delivered',
-      data: { email_id: 'msg_resend_5', to: 'a2@example.com' },
+      data: { email_id: 'msg_resend_5', to: ['a2@example.com'] },
     });
     const headers = makeHeaders('msg_svix_replay', payload);
 
@@ -407,7 +407,7 @@ describe('EmailWebhookService (T-05.06.07)', () => {
 
     const payload = JSON.stringify({
       type: 'email.delivered',
-      data: { email_id: 'msg_resend_6', to: 'a3@example.com' },
+      data: { email_id: 'msg_resend_6', to: ['a3@example.com'] },
     });
     const headers = makeHeaders('msg_svix_fail_then_retry', payload);
 

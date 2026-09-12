@@ -7,6 +7,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
+import { z } from 'zod';
 import { getDbPool } from '@barghsa/db';
 import type { ProviderPool, PoolClient } from '../provider-config/provider-config.di';
 import { ProviderSecretsService } from '../provider-config/provider-secrets.service';
@@ -25,6 +26,22 @@ import type {
  * it to `undefined` (via `@Optional()`) and the production pool is used.
  */
 export const EMAIL_WEBHOOK_POOL = Symbol('EMAIL_WEBHOOK_POOL');
+
+// Validate only the fields consumed here. Keep the original signed event in
+// the ledger, including provider fields this receiver does not interpret.
+const eventSchema = z.object({
+  type: z.enum(
+    Object.keys(EVENT_STATUS) as [keyof typeof EVENT_STATUS, ...Array<keyof typeof EVENT_STATUS>]
+  ),
+  data: z.object({
+    email_id: z.string().min(1),
+    from: z.string().optional(),
+    to: z.array(z.email()).min(1),
+    bounce: z
+      .object({ type: z.string(), subType: z.string().optional(), message: z.string().optional() })
+      .optional(),
+  }),
+});
 
 /** Row shape of an outbox row we resolve from a provider message id. */
 interface OutboxRow {
@@ -120,7 +137,7 @@ export class EmailWebhookService {
     } catch {
       throw badPayload();
     }
-    if (!event || typeof event !== 'object' || !event.type) {
+    if (!eventSchema.safeParse(event).success) {
       throw badPayload();
     }
 
@@ -130,7 +147,7 @@ export class EmailWebhookService {
       return await this.processEvent(event, headers);
     } catch (err) {
       if (err instanceof HttpException) throw err;
-      this.logger.error(`Resend webhook processing failed: ${(err as Error).message}`);
+      this.logger.error('Resend webhook processing failed');
       throw new HttpException(
         { statusCode: 500, error: 'webhook_process_failed', message: 'Failed to process webhook' },
         500
@@ -191,7 +208,7 @@ export class EmailWebhookService {
           token,
           event.type,
           event.data.email_id ?? null,
-          event.data.to ?? null,
+          event.data.to.join(', '),
           event.data.from ?? null,
           null,
           EVENT_STATUS[event.type] ?? null,
@@ -276,11 +293,12 @@ export class EmailWebhookService {
     event: ResendWebhookEvent,
     eventId: string
   ): Promise<void> {
-    const hard = event.data.category === 'hard_bounce';
-    const to = normalizeAddress(event.data.to);
+    const hard = event.data.bounce?.type === 'Permanent';
     // Only hard bounces suppress: a soft (temporary) bounce should retry.
-    if (to && hard) {
-      await this.suppress(client, to, 'hard_bounce', outbox?.profileId ?? null, eventId);
+    if (hard) {
+      for (const to of normalizedAddresses(event)) {
+        await this.suppress(client, to, 'hard_bounce', outbox?.profileId ?? null, eventId);
+      }
     }
 
     if (outbox) {
@@ -306,12 +324,9 @@ export class EmailWebhookService {
     event: ResendWebhookEvent,
     eventId: string
   ): Promise<void> {
-    const to = normalizeAddress(event.data.to);
-    if (!to) return;
-    // A spam complaint is both a suppression (stop emailing the address) and an
-    // operational corrective record — captured here; admin tooling reads
-    // email_suppressions reason='complaint'.
-    await this.suppress(client, to, 'complaint', outbox?.profileId ?? null, eventId);
+    for (const to of normalizedAddresses(event)) {
+      await this.suppress(client, to, 'complaint', outbox?.profileId ?? null, eventId);
+    }
   }
 
   /** Insert a suppression row; deduplicated by (address, reason). */
@@ -366,9 +381,8 @@ export class EmailWebhookService {
   }
 }
 
-function normalizeAddress(address: string | undefined): string | null {
-  if (!address) return null;
-  return address.trim().toLowerCase();
+function normalizedAddresses(event: ResendWebhookEvent): string[] {
+  return [...new Set(event.data.to.map((address) => address.toLowerCase()))];
 }
 
 /** Standard 400 for a malformed / missing-payload webhook request. */

@@ -51,7 +51,7 @@ describe('verifySvixSignature (T-05.06.07)', () => {
       {
         id: 'id_x',
         timestamp: String(NOW),
-        signature: `v1,${stale},v1,${current}`,
+        signature: `v1,${stale} v1,${current}`,
       },
       SECRET,
       NOW
