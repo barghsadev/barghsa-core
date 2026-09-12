@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "f61b6c2028f1cbfdd586195c8037326d101d4758",
+  "source_revision": "981e98d64d3f443e480a6085915aa65b04f57adc",
   "active_step": "R02",
-  "next_action": "Review email provider lifecycle, SMTP/Resend configuration, admin UI, encrypted secrets, circuit behavior and callback processing, PR185–191. Read exact requirements/deferrals; reuse prior provider repairs and tests where source matches.",
+  "next_action": "Review invoice reminders PR243/245: current invoice/deadline/offset/channel/window policy at dispatch and actual versioned FA/EN delivery. Preserve current planner/admin UI/authority evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -702,6 +702,10 @@
     {
       "id": "R02-marketing-consent-channels",
       "review_record": "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+    },
+    {
+      "id": "R02-email-provider-callbacks",
+      "review_record": "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
     }
   ],
   "deferred_improvements": [
@@ -725,9 +729,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 157,
-    "partial": 33,
-    "pending": 132,
+    "acceptance_verified": 163,
+    "partial": 34,
+    "pending": 125,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -740,7 +744,8 @@
     "Confirmed support contacts: info@barghsa.com, office 021-26658042, mobile 09002550292. Unsupported response-time promise removed.",
     "September9: owner approved \"Initial-load limit; measure estimator separately\". Auth initial-load gate stays150KB gzip; full estimator measured independently against900KB. Initial registration149.22KB, estimator837.80KB. Eager imports remain counted. Canonical T-01.03.04 updated at06a4b44.",
     "September9: implement a pre-login CSRF-token flow. Do not amend public login/registration to accept JSON-only protection as final CSRF acceptance.",
-    "September9: ticket categories are General, Billing, Orders. Canonical T-06.01.01 now records these values, defaults and display requirements. Implemented at0ad0760."
+    "September9: ticket categories are General, Billing, Orders. Canonical T-06.01.01 now records these values, defaults and display requirements. Implemented at0ad0760.",
+    "September13: permit limited trusted server-side secret decryption for sending workers, authorized verified-recipient provider tests, webhook verification of its signing secret, masking and rollback. T-05.06.05 updated at981e98d6."
   ],
   "pending_questions": [
     {
@@ -1016,40 +1021,29 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R02-email-provider-callbacks",
-    "name": "Email provider lifecycle and callback acceptance",
+    "id": "R02-invoice-reminder-delivery",
+    "name": "Invoice reminder policy and delivery",
     "status": "reviewing",
     "prs": [
-      185,
-      186,
-      187,
-      188,
-      189,
-      190,
-      191
+      243,
+      245
     ],
     "task_keys": [
-      "05-notifications-documents-ai.md#T-05.06.01",
-      "05-notifications-documents-ai.md#T-05.06.02",
-      "05-notifications-documents-ai.md#T-05.06.03",
-      "05-notifications-documents-ai.md#T-05.06.04",
-      "05-notifications-documents-ai.md#T-05.06.05",
-      "05-notifications-documents-ai.md#T-05.06.06",
-      "05-notifications-documents-ai.md#T-05.06.07"
+      "04-invoices-wallet-contracts.md#T-04.1.04.03",
+      "04-invoices-wallet-contracts.md#T-04.1.04.05"
     ],
     "remaining_checklist": [
-      "Read seven exact requirements, saved PR bodies and historical deferrals.",
-      "Compare earlier provider lifecycle/self-test/encryption/activation/authoring evidence.",
-      "Review callback signature/replay/suppression binding and provider circuit behavior."
+      "Read exact story criteria, saved bodies and deferrals.",
+      "Reuse deadline/planner/admin evidence; trace queued reminder dispatch and template payloads.",
+      "Repair confirmed policy/delivery gaps, focused review, one batch checkpoint."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R02-provider-template-authoring",
-      "audit/evidence/step-reviews.json#R02-provider-activation-proof"
+      "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Review email provider lifecycle, SMTP/Resend configuration, admin UI, encrypted secrets, circuit behavior and callback processing, PR185–191. Read exact requirements/deferrals; reuse prior provider repairs and tests where source matches."
+    "next_action": "Review invoice reminders PR243/245: current invoice/deadline/offset/channel/window policy at dispatch and actual versioned FA/EN delivery. Preserve current planner/admin UI/authority evidence."
   },
   "open_domain_reviews": [
     {

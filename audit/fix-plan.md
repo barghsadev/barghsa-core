@@ -1,22 +1,26 @@
 # Remaining fix plan
 
-Current through product/test `f61b6c20`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `3d4868c4` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 154 | 33 | 76 | 263 |
+| Tasks with merged PR evidence | 160 | 34 | 69 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 157 | 33 | 132 | 322 |
+| All claims | 163 | 34 | 125 | 322 |
 
-**165 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**159 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Marketing consent/channel batch PR182–184 complete locally:3 task acceptances verified/3 saved PR reviews closed. Current owned-profile targeting, session/CSRF/selection checks, atomic scoped audit and stable consent dates repaired.43 API/10 schema/2 FA/EN browser cases and API quality/OpenAPI checks pass. Frontend unchanged; prior42 budgets remain valid. Current totals157 verified/33 partial/132 pending;134 closed/25 open/142 unreviewed PRs.2643 logs indexed. Next: email providers/circuit/callbacks, PR185–191. [Handoff](HANDOFF.md), [review](evidence/step-reviews.json#R02-marketing-consent-channels). Legacy opt-ins from the old all-profile endpoint need owner review before production marketing; old audits lack profile identity.
+Email provider/callback batch PR185–191:6 verified/1 partial;6 saved PR reviews closed/1 open. Current totals163 verified/34 partial/125 pending;140 closed/26 open/135 unreviewed PRs.2712 logs indexed. Actual callback payload/signature/identity, send-history ownership, rolling transient circuit, complaint correction queue and SMTP DNS pinning are repaired. Focused backend/browser/migration and42 budget checks pass; matching prior provider lifecycle/UI evidence reused. PR190 remains open for deployed alerts.21 immediate-base bindings refreshed; older38 retained. [Batch review](evidence/step-reviews.json#R02-email-provider-callbacks), [handoff](HANDOFF.md).
+
+Next batch: invoice reminder delivery/current policy, PR243/245. Reuse completed planner/admin authority work. Check queued reminders against current state, deadlines, offsets, channel/window settings and exact active FA/EN templates. Receipt/expiry/rejection producers PR281/299/301 follow. Preserve migration0129–0131 rollout and existing legacy-secret review prerequisites; no production execution claimed.
+
+Marketing consent/channel PR182–184 remains verified. Legacy opt-ins from the old all-profile endpoint need owner review before production marketing; old audits lack profile identity.
 
 Template lifecycle PR177–181 remains5 verified/5 closed. Seed safety/catalog coverage and preview identity repairs pass18 DB/catalog cases and8 browser cases. Preserve the [explicit data migration](../docs/operations/notification-template-seeding.md) and prior provider/engine evidence.
 

@@ -4,9 +4,13 @@ Read [fix-plan.md](fix-plan.md) and the active batch in [progress.json](progress
 
 ## Current checkpoint
 
-Branch codex/audit-fixes. Latest product/test HEAD **f61b6c20**. Marketing consent/channel batch PR182–184 closes locally:3 task acceptances verified/3 saved PR reviews closed. Consent now applies only to the current owned profile, with strict inputs, current session/CSRF/selection checks and atomic scoped audit.
+Branch codex/audit-fixes. Latest product/test commit **3d4868c4**; approved secret requirement **981e98d6**. Email provider/callback batch PR185–191:6 task acceptances verified/1 partial;6 saved PR reviews closed/1 open. PR190 still needs deployed ops alert delivery.
 
-Counts:157 verified/33 partial/132 pending claims;134 closed/25 open/142 unreviewed saved PRs.58 skips,3 verified/55 pending.2643 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage staysV02.
+Counts:163 verified/34 partial/125 pending claims;140 closed/26 open/135 unreviewed saved PRs.58 skips,3 verified/55 pending.2712 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage staysV02.
+
+Fixed actual Resend payload/signatures, callback provider identity and physical-send history, rolling transient circuit thresholds, complaint correction tasks and SMTP DNS address pinning.25 callback/correction HTTP,203 expanded circuit/lifecycle API,75 worker,89 SMTP API,60 shared guard,18 secret,1 migration and4 new FA/EN browser cases pass; counts overlap and must not be summed.10 neighboring browser cases and matching prior provider lifecycle/UI evidence remain valid. Applicable types/lint/format/build/OpenAPI/snapshot checks and42 budgets pass.21 immediate-base source bindings refreshed; older38 retained.
+
+Deploy migrations0129–0131 with coordinated API/worker rollout described in the delivery and monitoring runbooks. Complaints create one open correction per address; audited completion requires current staff authority and step-up, and never removes suppression. Legacy unidentified callbacks, unknown sends and historical plaintext-secret compatibility retain their explicit operational review. No deployment, live sending, GitHub refresh or scheduler change claimed.
 
 Consent evidence:43 distinct API cases,10 schema cases and2 FA/EN Chromium cases pass. API types/lint/format/build and OpenAPI generation pass. Prior42 size budgets remain valid; frontend unchanged.13 consent HTTP cases cover selected-profile isolation, malformed input, foreign/null/default contexts, unchanged timestamps, archive/ownership waits, session/CSRF/disable changes, audit rollback and session expiry before commit. A corrected selection-race test waits in the shared guard before handler selection; it verifies only the newly selected profile is written.2 immediate-base bindings refreshed.
 
@@ -23,13 +27,13 @@ Outbox/delivery remains7 closed/2 open. Durable send history at4614c8bf passes49
 
 Migration0128 retains legacy history and snapshots available receipts; it cannot reconstruct missing attempts. Deploy API/web readers, drain older notification workers, then migrate/start updated workers. [Recovery runbook](../docs/operations/notification-delivery-recovery.md).
 
-Active batch **R02-email-provider-callbacks**, saved PR185–191. Read exact requirements/bodies/deferrals; reuse earlier provider lifecycle/self-test/secret/activation/authoring evidence. Review remaining circuit and callback signature/replay/suppression behavior.
+Active batch **R02-invoice-reminder-delivery**, saved PR243/245. Review current policy at dispatch and actual versioned FA/EN delivery. Reuse prior deadline/planner/admin evidence; receipt/expiry/rejection producers PR281/299/301 follow.
 
 Build changed shared/i18n dependencies before consumer checks or web builds. Preserve completed work, valid evidence and all pending external/future prerequisites. Full regression staysV02.
 
 ## Next action
 
-Review email provider lifecycle, SMTP/Resend configuration, admin UI, encrypted secrets, circuit behavior and callbacks, PR185–191. Read exact seven requirements and deferrals; preserve prior provider repairs and valid evidence.
+Read invoice reminder story/task criteria, PR243/245 bodies and deferrals. Trace already queued reminders against current invoice state/deadline, configured offsets, enabled channels and daytime windows. Verify exact active FA/EN template payloads and repair confirmed gaps. Preserve completed reminder settings/authority and planner work.
 
 Reuse completed producer, recipient, branding and provider evidence where source remains valid. Keep remaining inbox/classification and event-specific reminders in later R02 batches. Preserve local monitoring rules and their runbook; operational alert delivery needs external execution evidence.
 
@@ -49,7 +53,7 @@ Pre-login CSRFf1b879b and shared race71f5e49 are complete. Browser payment-retur
 
 ## Decisions and execution
 
-Retain Vite SPA/ADR004. Dependency licenses waived. No automatic identity provider; supported manual verification remains. Contacts:info@barghsa.com,021-26658042,09002550292. Ticket categories:General,Billing,Orders. Auth150KB covers initial load; estimator900KB separately. Numeric budgets and coverage floors remain unchanged.
+Retain Vite SPA/ADR004. Dependency licenses waived. No automatic identity provider; supported manual verification remains. Contacts:info@barghsa.com,021-26658042,09002550292. Ticket categories:General,Billing,Orders. Auth150KB covers initial load; estimator900KB separately. Numeric budgets and coverage floors remain unchanged. September13: limited trusted server-side secret decryption approved for sending workers, authorized verified-recipient tests, webhook signing-secret verification, masking and rollback; canonical T-05.06.05 updated.
 
 Use rtk and codebase-memory. Keep output small. Save ended logs and inspect failures. Do not edit source/tests while their checks run or overlap shared/API builds with consumer checks. Build web before browser checks. Read every process exit before dependent edits or commits. Reuse valid evidence; do not rerun broad suites at each checkpoint.
 

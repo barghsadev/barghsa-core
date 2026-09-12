@@ -15797,6 +15797,450 @@
         "02-auth-users-admin.md#T-03.03.05",
         "02-auth-users-admin.md#T-03.03.06"
       ]
+    },
+    {
+      "id": "R02-email-provider-callbacks",
+      "date": "2026-09-13",
+      "source_revision": "981e98d64d3f443e480a6085915aa65b04f57adc",
+      "base_revision": "768d8016304ee51304c888ea6a8d667b292dc741",
+      "product_commits": [
+        "429e4da2b34e1ed3eae707f732718e9eec254232",
+        "7e3d73900fa0b6511e3a00a804e4b9591a9ec9b8",
+        "497df68f6eda8a3e9c25324d0462cdb8b8818dcc",
+        "f0a446b6efbf28dbb3ef2d1e8c58eb622198c101",
+        "3d4868c4539f4311a96119920d55bafa33f399c4",
+        "981e98d64d3f443e480a6085915aa65b04f57adc"
+      ],
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07"
+      ],
+      "summary": "Email provider/callback batch PR185–191:6 task acceptances verified/1 partial;6 saved PR reviews closed/1 open. Deployed circuit alerts remain open.",
+      "review": [
+        "Provider schema and Draft/Test/Active/Superseded/Disabled lifecycle, unique active provider, sole-OTP guard, current session/CSRF/step-up, atomic audit and verified-recipient activation proof remain implemented. Latest controller/mutation/recipient/self-test bindings match prior records; service changes since c6588610 only propagate transient outcomes and are covered by current circuit/lifecycle checks.",
+        "SMTP preserves all configuration fields, configured handshake and verified-recipient self-send. Fixed DNS rebinding in API tests: dial the validated IP with the original TLS hostname, preserving explicit deployment allowlist exceptions. Both TLS/STARTTLS regressions failed before repair;89 API and60 shared guard cases pass. Existing production sender already pins checked IPs.",
+        "Resend validates the configured sending domain and sends to the current verified staff email. Tester changes since prior proof only classify transient HTTP/network outcomes; current focused tester and self-delivery suites pass. Actual sender retains from/reply-to settings. No real external email was sent.",
+        "Provider admin page, API adapter, settings/recovery browser tests and provider dictionary exactly match the verified authoring batch. Reuse19 email browser cases for field preservation, masked write-only secrets, saved draft recovery, test recipient, confirmation and activation gating. Active metadata, rollback and sole-provider warning remain. New correction queue is separate and passes4 FA/EN browser cases;10 neighboring recovery cases pass unchanged.",
+        "Owner approved limited server-side decryption on September13; canonical T-05.06.05 and current requirement ledger updated. AES-256-GCM field encryption, missing-key refusal for new writes, masked responses and diagnostic redaction remain.18 secret tests pass. Callback verification now decrypts only its signing secret. Legacy plaintext read compatibility remains; production legacy-secret inventory/reconciliation stays the existing V01/operations prerequisite, with no assertion that stored production rows were migrated.",
+        "Fixed exact rolling consecutive transient threshold, atomic bounded failure timestamps and single cooldown probes. Permanent failures and local bookkeeping errors no longer degrade providers; accepted sends with receipt-persistence errors count as provider success; caller cancellation is not a provider failure.202 API cases plus the additional cancellation case and75 worker cases pass (overlapping reruns excluded). Migration0130 conservatively backfills old earliest-window evidence. Local EmailProviderDegraded rule passes Prometheus tests with replica disagreement/recovery cases. Deployed alert routing/delivery remains unverified, so PR190/task.06 stays open/partial.",
+        "Fixed actual Resend recipient-array/nested-bounce payloads and Svix space-separated signature candidates. Migration0129 records every verifying active/superseded config identity. Callback replay, provider/message attribution and early feedback are transactional; callbacks never mutate worker ownership/outbox jobs/accepted receipts or append false sends. History derives feedback on the original accepted email attempt only. Legacy unidentified callbacks are not guessed.25 final HTTP cases cover callback and correction behavior;8 signature and59 neighboring admin/dead-letter cases remain valid.",
+        "Complaints atomically suppress normalized addresses and create one open staff correction per address. Migration0131 backfills complaint suppressions and retains suppression/history after profile deletion. Current staff read/write authority, CSRF, step-up, strict notes, concurrent idempotent completion, audit rollback and renewed complaints pass actual HTTP checks. Resolution never removes suppression or sends a message. One prior-to-current migration case passes;4 FA/EN browser cases cover denial, malformed responses, pagination, read-only access, step-up, mismatched acknowledgments and completed history.",
+        "Reviewed final diffs and generated schemas. API/web/DB/i18n/shared/worker applicable types, lint/format, builds, OpenAPI, schema snapshot gates and42 route/interaction budgets pass. Prior provider UI/lifecycle checks are reused only where matching source or reviewed circuit-only changes justify reuse. Full regression/coverage remainsV02.",
+        "Failed logs retained: initial missing activation/staff-role fixtures; actual callback and circuit regressions; delivery-history test wrongly assuming an envelope; correction audit JSON cast; browser background hidden by modal and cleared password omitted on retry. Test fixes preserve required assertions. No deployment, GitHub refresh, push, merge or scheduler change occurred."
+      ],
+      "verification": {
+        "callback": "25 final HTTP;8 signature and59 neighboring admin/dead-letter cases. Earlier19/11 callback runs overlap.",
+        "circuit": "203 distinct expanded API cases;75 worker cases; Prometheus rule tests pass.",
+        "smtp": "89 API and60 shared guard cases; overlap with prior self-tests not summed.",
+        "secrets": "18 encryption/masking cases pass.",
+        "corrections": "1 migration case and4 FA/EN Chromium cases, plus10 unchanged recovery cases.",
+        "quality": "Applicable types/lint/format/build/OpenAPI/snapshot checks and42 unchanged budgets pass.",
+        "regression": "Full suite/coverage staysV02. No production send or operational rollout claimed."
+      },
+      "remaining": [
+        "Deployed ops alert routing/delivery (PR190), retained with PR168 operational prerequisite.",
+        "Legacy secret inventory/reconciliation remains existing V01/operations work; no production encryption migration claimed.",
+        "Invoice reminder current policy and actual versioned delivery, PR243/245, next."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.module.ts",
+          "sha256": "dbe66789a71127ae334199619e67d62d97a4ef8010fa07ec7b70c60367a81e9d"
+        },
+        {
+          "path": "apps/api/src/admin/customer-corrections.controller.ts",
+          "sha256": "9612d3920b9b89118038edb2c8cb8104709ed1d4fcb926e2926dbc332251d757"
+        },
+        {
+          "path": "apps/api/src/admin/customer-corrections.service.ts",
+          "sha256": "e6c03efcd1ccb58fc4f702f77e6f168a3d206610c0393104156d9a1f721b9496"
+        },
+        {
+          "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
+          "sha256": "f8b12a2409546dd039e8d3bf844f6a273d4c28402ceee174c7186dff2d935233"
+        },
+        {
+          "path": "apps/api/src/email-webhook/email-webhook.service.ts",
+          "sha256": "8888c2dad4c23ad4c40bc4edf02701f66a3db6a71bb56ae584c1f55ce0b949f5"
+        },
+        {
+          "path": "apps/api/src/email-webhook/email-webhook.types.ts",
+          "sha256": "1fa8cd275877e24794266de861843cc1fc11b7479081bab04fce1b21215e09f1"
+        },
+        {
+          "path": "apps/api/src/email-webhook/svix-verifier.test.ts",
+          "sha256": "370134a511d301e701f5006c7f27db057ec658045f7a638d6ab9727e0ddf51d4"
+        },
+        {
+          "path": "apps/api/src/email-webhook/svix-verifier.ts",
+          "sha256": "c98830d1a4255e5f26c59b8130b9eeb1ad63106d11c0b5b79fdbba969623339e"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "f401abe228f0c89c35ba2634ac88e7c3d9fb00fd700d8ca2cad68a4f3c347a30"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
+          "sha256": "d0507dabbf9998eae78f2d2c14d17b9e52a1ff59bb83f064fbf2f52a267db019"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
+          "sha256": "26ac7b689182276399648807e66211cf36fec4bb88291029cd36006ac6966606"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "07e7bb2f5428d23c3d0d13cd95105b7befb8dac2aebacd3a4f2ea47f6f143f15"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "d6ee4db6830e21722a5f60c9e9db81b96db3c7343ae41d8fec96354d4a224690"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
+          "sha256": "ca4cdff8410d0767d31e39583e436391a428820691cd6d0658548b7b718ccdfd"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-secrets.service.ts",
+          "sha256": "a929e4b046eb4da531d72060041f2c7e9e82509d7f970b6269934bb5288d3891"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "0c6c8fd06841014b65135b91a90d27c6568bb556b092ef8ae44d3d03e9768c94"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-test-recipient.ts",
+          "sha256": "19d353697c73b9c58f170b11edb3144e8d59476ae33266f91107f599776f01c5"
+        },
+        {
+          "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+          "sha256": "35b0bbbd375bf8306a4bb534eeb6be5683f679573237d77365989b5d2308a735"
+        },
+        {
+          "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
+          "sha256": "3e1ee1fdbf644c489b11643cbac5750d8866029dff6b022da0857bcc71fa28b6"
+        },
+        {
+          "path": "apps/api/src/provider-config/smtp-connection-tester.service.test.ts",
+          "sha256": "ba35566323b647108b102f5f8f088299040c0c4b1d76a63d5112c9ff0cad62f9"
+        },
+        {
+          "path": "apps/api/src/provider-config/smtp-connection-tester.service.ts",
+          "sha256": "a6fced59f3bc88a37e68f0d67a2cfb50c7462a072ba001a36ba7375c8841c073"
+        },
+        {
+          "path": "apps/web/e2e/email-customer-corrections.spec.ts",
+          "sha256": "72f0287573b4c864f2a8f3feb11699f62395a49dd3bcfce489761c81e55e6862"
+        },
+        {
+          "path": "apps/web/e2e/email-provider-recovery.spec.ts",
+          "sha256": "84845b7b4cbd1231cc9108856be3d35b4c6a4622e34f0af1eb98f6da4f9b66ff"
+        },
+        {
+          "path": "apps/web/e2e/email-provider-settings.spec.ts",
+          "sha256": "c8d06b2de6c83b8ecc2546f84b022f25f8adee817f946a6d41eedaebca230c49"
+        },
+        {
+          "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
+          "sha256": "6efa1d64964a5cc6e36d281829ebb1e70cae5ac5e21f5af44a4d4e59e8d8d5eb"
+        },
+        {
+          "path": "apps/web/src/lib/email-providers-api.ts",
+          "sha256": "5ade542fdd719ddc0f512e1e3261b8fbeefb4c9e63dc65141d92973201ed7fb5"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
+          "sha256": "c3b6d34ce373d3bbd8e64d397ce1c88720769503d334d806c764d4f02b7e64e7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.test.yml",
+          "sha256": "1aaa47024c771bf9151bda4b7ef0661d6f9ecbb79ef6117791ed2966585be523"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "7acc6ddfbb69f713076e995fcb0fdf78a80b9c7bf88d3978af786c9007b7b6a0"
+        },
+        {
+          "path": "docs/operations/notification-delivery-recovery.md",
+          "sha256": "e41fe88073092777055cbb03546bf89809a069dd471bde83b017ac5d78baa96e"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "4e8ec3e4cb5cab57447187c516f7e408bfcf44dbc62be3cdb0235fc478a7cd89"
+        },
+        {
+          "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
+          "sha256": "e35d9078a52c79b5f2b2d3e622a5938eeebfcdca642bb63b0b779529a3e7cd41"
+        },
+        {
+          "path": "packages/db/drizzle/production/0129_email_callback_identity.sql",
+          "sha256": "8693bd5f8cc3ad37bba927291078a911f671419d3798023ec87d63ffe8ed6919"
+        },
+        {
+          "path": "packages/db/drizzle/production/0130_email_circuit_rolling_window.sql",
+          "sha256": "d165128e7afb53727ca8d7f09f5e1f8c85d91b7362202fa18c70ed0bd18559bf"
+        },
+        {
+          "path": "packages/db/drizzle/production/0131_email_customer_corrections.sql",
+          "sha256": "7865f3582f348a857b511befbb0d157e0ba280d66633ea8b3d894e1184bc4c35"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0129_snapshot.json",
+          "sha256": "e7cd71a78adc2ba3cef6be4d175b4d91042442452514aaf30e5c6af376c98a60"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0130_snapshot.json",
+          "sha256": "870c3e30e7d3fb18e4b99361cd24023ab353fe104e0ec5c4248c6ee4f0c7ffa4"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0131_snapshot.json",
+          "sha256": "1c3e6ea75c18b322a31a783f4740c666f82f14f542d1aee276e6c6927455b600"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "1d4d6f1d29cde400736b697fbfc0f7204d6edb3fda0e21024e8a0a63520d2b6e"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "806645f0da7e28cb8938efbd7cbb6c90f93599a6d13a0dc2055ad9f5daa4756a"
+        },
+        {
+          "path": "packages/db/src/migrate.email-corrections.test.ts",
+          "sha256": "e09830e9f7771ecdfa8160aca085437cdf6501cb6cbe0beae9a33e8f330353c1"
+        },
+        {
+          "path": "packages/db/src/schema/email-customer-corrections.ts",
+          "sha256": "ad5dc19203c2351d048a0f711514de14d2f80f9d3cbb1891c9d904825da2e482"
+        },
+        {
+          "path": "packages/db/src/schema/email-provider-configs.ts",
+          "sha256": "ea53da14ddfeaf8410db372ca05705bee572589505407afba423caa18e1fb85b"
+        },
+        {
+          "path": "packages/db/src/schema/email-suppressions.ts",
+          "sha256": "c9a99fc36363d2a87fb9628c6abd27dddd4f5ae82189c44a2d85cfe36d2fca55"
+        },
+        {
+          "path": "packages/db/src/schema/email-webhook-events.ts",
+          "sha256": "52c3c1f665239c8f19c18c6c0fec75da4944cd844cfc944156a5909e650380e6"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui.ts",
+          "sha256": "c9ba99b5403f5d769832a609a6829a76172d6cce5893fa2910a23c4f0f053740"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/crypto.ts",
+          "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
+          "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email-breaker.ts",
+          "sha256": "a9f51f5343100daf92c262c923ff83be98185f13de381e37484a570ac11ac1fa"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email-errors.ts",
+          "sha256": "f78036567c8b9ae220eba21a489c2e2326b3a1c9525a82d2349ce97494e4a932"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email.ts",
+          "sha256": "2f14950b122ab29e0a223f1711e5c1734fd77c9de8999515ed40f81129a137a2"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/index.ts",
+          "sha256": "d6b66360b749643c94e90b9b9303a28c9dc8c1d85c1cdde1ef3d94e7d6b0ede0"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-email-circuit-alerts.log",
+        "/tmp/r02-email-circuit-baseline.log",
+        "/tmp/r02-email-circuit-baseline2.log",
+        "/tmp/r02-email-circuit-cancel-format.log",
+        "/tmp/r02-email-circuit-cancel-lint.log",
+        "/tmp/r02-email-circuit-cancel-types.log",
+        "/tmp/r02-email-circuit-cancel.log",
+        "/tmp/r02-email-circuit-format-check.log",
+        "/tmp/r02-email-circuit-format.log",
+        "/tmp/r02-email-circuit-generate.log",
+        "/tmp/r02-email-circuit-integration.log",
+        "/tmp/r02-email-circuit-lint.log",
+        "/tmp/r02-email-circuit-openapi.log",
+        "/tmp/r02-email-circuit-snapshot.log",
+        "/tmp/r02-email-circuit-test-format.log",
+        "/tmp/r02-email-circuit-tests.log",
+        "/tmp/r02-email-circuit-types.log",
+        "/tmp/r02-email-circuit-worker.log",
+        "/tmp/r02-email-corrections-api-format.log",
+        "/tmp/r02-email-corrections-browser-final.log",
+        "/tmp/r02-email-corrections-browser-format.log",
+        "/tmp/r02-email-corrections-browser-verified.log",
+        "/tmp/r02-email-corrections-browser.log",
+        "/tmp/r02-email-corrections-budgets.log",
+        "/tmp/r02-email-corrections-data-format.log",
+        "/tmp/r02-email-corrections-dependencies.log",
+        "/tmp/r02-email-corrections-format-write.log",
+        "/tmp/r02-email-corrections-format.log",
+        "/tmp/r02-email-corrections-generate-final.log",
+        "/tmp/r02-email-corrections-generate.log",
+        "/tmp/r02-email-corrections-http-final.log",
+        "/tmp/r02-email-corrections-http-format.log",
+        "/tmp/r02-email-corrections-http.log",
+        "/tmp/r02-email-corrections-lint.log",
+        "/tmp/r02-email-corrections-migration.log",
+        "/tmp/r02-email-corrections-openapi.log",
+        "/tmp/r02-email-corrections-snapshot.log",
+        "/tmp/r02-email-corrections-types.log",
+        "/tmp/r02-email-corrections-ui-format.log",
+        "/tmp/r02-email-corrections-ui-format2.log",
+        "/tmp/r02-email-corrections-web-build.log",
+        "/tmp/r02-email-corrections-web-types.log",
+        "/tmp/r02-provider-current-requirements-check.log",
+        "/tmp/r02-provider-requirements-check.log",
+        "/tmp/r02-provider-secret-boundary.log",
+        "/tmp/r02-provider-secrets-verified.log",
+        "/tmp/r02-smtp-pinning-api.log",
+        "/tmp/r02-smtp-pinning-baseline.log",
+        "/tmp/r02-smtp-pinning-format-write.log",
+        "/tmp/r02-smtp-pinning-format.log",
+        "/tmp/r02-smtp-pinning-lint.log",
+        "/tmp/r02-smtp-pinning-shared.log",
+        "/tmp/r02-smtp-pinning-types.log",
+        "/tmp/r02-webhook-binding-baseline.log",
+        "/tmp/r02-webhook-binding-baseline2.log",
+        "/tmp/r02-webhook-binding-format-check.log",
+        "/tmp/r02-webhook-binding-format.log",
+        "/tmp/r02-webhook-binding-generate.log",
+        "/tmp/r02-webhook-binding-http-final.log",
+        "/tmp/r02-webhook-binding-lint.log",
+        "/tmp/r02-webhook-binding-snapshot.log",
+        "/tmp/r02-webhook-binding-tests.log",
+        "/tmp/r02-webhook-binding-types.log",
+        "/tmp/r02-webhook-contract-baseline.log",
+        "/tmp/r02-webhook-contract-baseline2.log",
+        "/tmp/r02-webhook-contract-format.log",
+        "/tmp/r02-webhook-contract-lint.log",
+        "/tmp/r02-webhook-contract-tests.log",
+        "/tmp/r02-webhook-contract-types.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 185,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.06.01"
+          ],
+          "reason": "Provider schema and Draft/Test/Active/Superseded/Disabled lifecycle, unique active provider, sole-OTP guard, current session/CSRF/step-up, atomic audit and verified-recipient activation proof remain implemented. Latest controller/mutation/recipient/self-test bindings match prior records; service changes since c6588610 only propagate transient outcomes and are covered by current circuit/lifecycle checks.",
+          "source_revision": "981e98d64d3f443e480a6085915aa65b04f57adc",
+          "evidence": "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        },
+        {
+          "pr": 186,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.06.02"
+          ],
+          "reason": "SMTP preserves all configuration fields, configured handshake and verified-recipient self-send. Fixed DNS rebinding in API tests: dial the validated IP with the original TLS hostname, preserving explicit deployment allowlist exceptions. Both TLS/STARTTLS regressions failed before repair;89 API and60 shared guard cases pass. Existing production sender already pins checked IPs.",
+          "source_revision": "981e98d64d3f443e480a6085915aa65b04f57adc",
+          "evidence": "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        },
+        {
+          "pr": 187,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.06.03"
+          ],
+          "reason": "Resend validates the configured sending domain and sends to the current verified staff email. Tester changes since prior proof only classify transient HTTP/network outcomes; current focused tester and self-delivery suites pass. Actual sender retains from/reply-to settings. No real external email was sent.",
+          "source_revision": "981e98d64d3f443e480a6085915aa65b04f57adc",
+          "evidence": "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        },
+        {
+          "pr": 188,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.06.04"
+          ],
+          "reason": "Provider admin page, API adapter, settings/recovery browser tests and provider dictionary exactly match the verified authoring batch. Reuse19 email browser cases for field preservation, masked write-only secrets, saved draft recovery, test recipient, confirmation and activation gating. Active metadata, rollback and sole-provider warning remain. New correction queue is separate and passes4 FA/EN browser cases;10 neighboring recovery cases pass unchanged.",
+          "source_revision": "981e98d64d3f443e480a6085915aa65b04f57adc",
+          "evidence": "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        },
+        {
+          "pr": 189,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.06.05"
+          ],
+          "reason": "Owner approved limited server-side decryption on September13; canonical T-05.06.05 and current requirement ledger updated. AES-256-GCM field encryption, missing-key refusal for new writes, masked responses and diagnostic redaction remain.18 secret tests pass. Callback verification now decrypts only its signing secret. Legacy plaintext read compatibility remains; production legacy-secret inventory/reconciliation stays the existing V01/operations prerequisite, with no assertion that stored production rows were migrated.",
+          "source_revision": "981e98d64d3f443e480a6085915aa65b04f57adc",
+          "evidence": "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        },
+        {
+          "pr": 190,
+          "status": "open",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.06.06"
+          ],
+          "reason": "Fixed exact rolling consecutive transient threshold, atomic bounded failure timestamps and single cooldown probes. Permanent failures and local bookkeeping errors no longer degrade providers; accepted sends with receipt-persistence errors count as provider success; caller cancellation is not a provider failure.202 API cases plus the additional cancellation case and75 worker cases pass (overlapping reruns excluded). Migration0130 conservatively backfills old earliest-window evidence. Local EmailProviderDegraded rule passes Prometheus tests with replica disagreement/recovery cases. Deployed alert routing/delivery remains unverified, so PR190/task.06 stays open/partial.",
+          "source_revision": "981e98d64d3f443e480a6085915aa65b04f57adc",
+          "evidence": "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        },
+        {
+          "pr": 191,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.06.07"
+          ],
+          "reason": "Fixed actual Resend recipient-array/nested-bounce payloads and Svix space-separated signature candidates. Migration0129 records every verifying active/superseded config identity. Callback replay, provider/message attribution and early feedback are transactional; callbacks never mutate worker ownership/outbox jobs/accepted receipts or append false sends. History derives feedback on the original accepted email attempt only. Legacy unidentified callbacks are not guessed.25 final HTTP cases cover callback and correction behavior;8 signature and59 neighboring admin/dead-letter cases remain valid. Complaints atomically suppress normalized addresses and create one open staff correction per address. Migration0131 backfills complaint suppressions and retains suppression/history after profile deletion. Current staff read/write authority, CSRF, step-up, strict notes, concurrent idempotent completion, audit rollback and renewed complaints pass actual HTTP checks. Resolution never removes suppression or sends a message. One prior-to-current migration case passes;4 FA/EN browser cases cover denial, malformed responses, pagination, read-only access, step-up, mismatched acknowledgments and completed history.",
+          "source_revision": "981e98d64d3f443e480a6085915aa65b04f57adc",
+          "evidence": "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+        }
+      ],
+      "pr_counts": {
+        "closed": 6,
+        "open": 1,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R02-provider-template-authoring",
+        "audit/evidence/step-reviews.json#R02-provider-activation-proof",
+        "audit/evidence/step-reviews.json#R02-provider-self-tests"
+      ],
+      "refreshed_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "02-auth-users-admin.md#T-09.04.01",
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.01.04",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.03.03",
+        "05-notifications-documents-ai.md#T-05.04.01",
+        "05-notifications-documents-ai.md#T-05.04.02",
+        "05-notifications-documents-ai.md#T-05.04.03",
+        "05-notifications-documents-ai.md#T-05.04.04",
+        "05-notifications-documents-ai.md#T-05.04.05"
+      ]
     }
   ]
 }

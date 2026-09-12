@@ -1213,7 +1213,21 @@
       "- [ ] Admin UI (T-05.06.04) — separate task; API-only here",
       "- [ ] Secret masking in UI (T-05.06.05) — encryption handled by a later task"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Both historical UI/secret deferrals satisfied by later implementation and current review.",
+    "reviewed_source_revision": "981e98d64d3f443e480a6085915aa65b04f57adc",
+    "review_record": "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Provider admin page, API adapter, settings/recovery browser tests and provider dictionary exactly match the verified authoring batch. Reuse19 email browser cases for field preservation, masked write-only secrets, saved draft recovery, test recipient, confirmation and activation gating. Active metadata, rollback and sole-provider warning remain. New correction queue is separate and passes4 FA/EN browser cases;10 neighboring recovery cases pass unchanged. audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Owner approved limited server-side decryption on September13; canonical T-05.06.05 and current requirement ledger updated. AES-256-GCM field encryption, missing-key refusal for new writes, masked responses and diagnostic redaction remain.18 secret tests pass. Callback verification now decrypts only its signing secret. Legacy plaintext read compatibility remains; production legacy-secret inventory/reconciliation stays the existing V01/operations prerequisite, with no assertion that stored production rows were migrated. audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+      }
+    ]
   },
   {
     "pr": 183,
