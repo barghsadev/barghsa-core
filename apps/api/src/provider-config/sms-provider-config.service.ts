@@ -437,12 +437,19 @@ export class SmsProviderConfigService {
     const problems: string[] = [];
     const events = new Set<string>();
     for (const m of mappings) {
-      if (events.has(m.event_key)) problems.push(`event "${m.event_key}" is mapped more than once`);
-      events.add(m.event_key);
+      const identity = `${m.event_key}:${m.locale ?? '*'}`;
+      if (events.has(identity))
+        problems.push(
+          `event "${m.event_key}" is mapped more than once for ${m.locale ?? 'all languages'}`
+        );
+      events.add(identity);
       if (!m.template_id || m.template_id.trim().length === 0) {
         problems.push(`event "${m.event_key}" has no SMS.ir TemplateId`);
       }
-      if (!available.has(m.event_key)) {
+      const matching = templates.filter(
+        (item) => item.event_key === m.event_key && (!m.locale || item.locale === m.locale)
+      );
+      if (!matching.length) {
         problems.push(
           `event "${m.event_key}" has no active notification template (${[...available].join(', ') || 'none'})`
         );
@@ -452,7 +459,7 @@ export class SmsProviderConfigService {
       if (new Set(variables.map(([, name]) => name)).size !== variables.length) {
         problems.push(`event "${m.event_key}" has duplicate SMS.ir parameters`);
       }
-      for (const template of templates.filter((item) => item.event_key === m.event_key)) {
+      for (const template of matching) {
         const allowed = new Set(
           template.variables.map((v) => (typeof v === 'string' ? v : v.name))
         );
@@ -625,9 +632,14 @@ export class SmsProviderConfigService {
     await requireSessionStepUp(client, session);
     let outcome: { ok: boolean; error?: string } = { ok: true };
     for (const mapping of mappings) {
-      outcome = await this.smsirTester.test(parsed.config, target, mapping.event_key, async () => {
-        await requireSessionStepUp(client, session);
-      });
+      outcome = await this.smsirTester.test(
+        { ...parsed.config, template_mappings: [mapping] },
+        target,
+        mapping.event_key,
+        async () => {
+          await requireSessionStepUp(client, session);
+        }
+      );
       if (!outcome.ok) break;
     }
     const recorded = await this.recordTest(

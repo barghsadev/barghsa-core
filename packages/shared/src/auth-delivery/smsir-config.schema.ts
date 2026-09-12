@@ -30,6 +30,8 @@ const TemplateVariableMappingSchema = z.record(
 export const SmsirTemplateMappingSchema = z.object({
   /** Internal notification event key (e.g. `otp:login`). */
   event_key: z.string().min(1).max(128),
+  /** Omitted legacy mappings apply to all languages; an exact locale overrides them. */
+  locale: z.enum(['fa', 'en']).optional(),
   /** SMS.ir message template id returned by the platform. */
   template_id: z.string().min(1).max(128),
   /** Map of internal template variable name -> SMS.ir parameter name. */

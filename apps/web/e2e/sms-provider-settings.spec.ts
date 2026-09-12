@@ -40,6 +40,82 @@ async function shell(page: Page, locale: 'en' | 'fa', baseURL: string) {
 }
 for (const locale of ['en', 'fa'] as const) {
   const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
+  test(`SMS locale mappings survive save and cannot be silently dropped (${locale})`, async ({
+    page,
+    baseURL,
+  }) => {
+    await shell(page, locale, baseURL!);
+    let row = provider(),
+      writes = 0;
+    await page.route('**/api/admin/sms-providers', (route) => route.fulfill({ json: [row] }));
+    await page.route('**/api/admin/sms-providers/sms-draft', (route) => {
+      const body = route.request().postDataJSON();
+      expect(body.config).not.toHaveProperty('api_key');
+      expect(body.config.template_mappings).toEqual([
+        { event_key: 'auth.otp', locale: 'fa', template_id: '42', variables: { code: 'CODE' } },
+        { event_key: 'auth.otp', locale: 'en', template_id: '43', variables: { code: 'CODE' } },
+      ]);
+      writes++;
+      if (writes === 1)
+        return route.fulfill({
+          json: {
+            ...row,
+            maskedConfig: {
+              ...body.config,
+              api_key: '********live',
+              template_mappings: body.config.template_mappings.map(
+                (m: {
+                  event_key: string;
+                  template_id: string;
+                  variables: Record<string, string>;
+                }) => ({
+                  event_key: m.event_key,
+                  template_id: m.template_id,
+                  variables: m.variables,
+                })
+              ),
+            },
+          },
+        });
+      row = { ...row, maskedConfig: { ...body.config, api_key: '********live' } };
+      return route.fulfill({ json: row });
+    });
+    await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
+    const panel = page.locator('section[aria-labelledby="sms-title"]');
+    await panel.getByRole('button', { name: text('edit'), exact: true }).click();
+    await page
+      .getByRole('combobox', { name: `${text('language')} 1`, exact: true })
+      .selectOption('fa');
+    await panel.getByRole('button', { name: text('addMapping'), exact: true }).click();
+    await page.getByRole('combobox', { name: `${text('event')} 2`, exact: true }).fill('auth.otp');
+    await page
+      .getByRole('combobox', { name: `${text('language')} 2`, exact: true })
+      .selectOption('en');
+    await page.getByRole('textbox', { name: `${text('template')} 2`, exact: true }).fill('43');
+    await page.getByRole('textbox', { name: `${text('variable')} 2.1`, exact: true }).fill('code');
+    await page.getByRole('textbox', { name: `${text('parameter')} 2.1`, exact: true }).fill('CODE');
+    await panel.getByRole('button', { name: text('save'), exact: true }).click();
+    await expect(panel.getByRole('alert')).toContainText(text('unavailable'));
+    await expect(
+      page.getByRole('combobox', { name: `${text('language')} 2`, exact: true })
+    ).toHaveValue('en');
+    await panel.getByRole('button', { name: text('save'), exact: true }).click();
+    await expect(panel.getByRole('status').filter({ hasText: text('saved') })).toBeVisible();
+    await expect(page.locator('#sms-test-event option')).toHaveCount(1);
+    await expect(
+      panel.getByRole('heading', { level: 3 }).filter({ hasText: 'auth.otp' })
+    ).toHaveCount(2);
+    await panel.getByRole('button', { name: text('edit'), exact: true }).click();
+    await expect(
+      page.getByRole('combobox', { name: `${text('language')} 1`, exact: true })
+    ).toHaveValue('fa');
+    await expect(
+      page.getByRole('combobox', { name: `${text('language')} 2`, exact: true })
+    ).toHaveValue('en');
+    expect(
+      (await new AxeBuilder({ page }).include('[aria-labelledby="sms-title"]').analyze()).violations
+    ).toEqual([]);
+  });
   test(`SMS saved settings recover reads, preserve edits and never echo the stored key (${locale})`, async ({
     page,
     baseURL,

@@ -20,7 +20,13 @@ import {
 } from '../lib/sms-providers-api.js';
 
 type Variable = { id: string; internal: string; parameter: string };
-type Mapping = { id: string; event: string; template: string; variables: Variable[] };
+type Mapping = {
+  id: string;
+  event: string;
+  locale: 'all' | 'fa' | 'en';
+  template: string;
+  variables: Variable[];
+};
 type Editor = {
   id: string | null;
   label: string;
@@ -36,6 +42,7 @@ const variable = (): Variable => ({ id: crypto.randomUUID(), internal: '', param
 const mapping = (): Mapping => ({
   id: crypto.randomUUID(),
   event: '',
+  locale: 'all',
   template: '',
   variables: [variable()],
 });
@@ -52,6 +59,7 @@ function editorFor(row?: SmsProvider, clone = false): Editor {
     mappings: row?.config.template_mappings.map((m) => ({
       id: crypto.randomUUID(),
       event: m.event_key,
+      locale: m.locale ?? 'all',
       template: m.template_id,
       variables: Object.entries(m.variables).map(([internal, parameter]) => ({
         id: crypto.randomUUID(),
@@ -81,9 +89,10 @@ function configFor(editor: Editor): SmsConfig {
     throughput_limit: integer(editor.throughput, 1, 10000),
     low_credit_threshold: integer(editor.credit, 0, 1_000_000_000),
     template_mappings: editor.mappings.map((m) => {
-      if (!m.event.trim() || !/^[1-9]\d*$/.test(m.template.trim()) || seen.has(m.event.trim()))
+      const identity = `${m.event.trim()}:${m.locale}`;
+      if (!m.event.trim() || !/^[1-9]\d*$/.test(m.template.trim()) || seen.has(identity))
         throw new Error('invalid');
-      seen.add(m.event.trim());
+      seen.add(identity);
       const names = new Set<string>(),
         parameters = new Set<string>();
       const pairs = m.variables.map((v) => {
@@ -104,6 +113,7 @@ function configFor(editor: Editor): SmsConfig {
       if (!pairs.length) throw new Error('invalid');
       return {
         event_key: m.event.trim(),
+        ...(m.locale === 'all' ? {} : { locale: m.locale }),
         template_id: m.template.trim(),
         variables: Object.fromEntries(pairs),
       };
@@ -474,6 +484,7 @@ export default function AdminSmsProvidersPage() {
                 <thead>
                   <tr>
                     <th>{text('event')}</th>
+                    <th>{text('language')}</th>
                     <th>{text('template')}</th>
                     <th>{text('parameter')}</th>
                     <th>{text('actions')}</th>
@@ -491,6 +502,20 @@ export default function AdminSmsProvidersPage() {
                           required
                           onChange={(e) => changeMapping(m.id, { event: e.target.value })}
                         />
+                      </td>
+                      <td className="p-2">
+                        <select
+                          aria-label={`${text('language')} ${index + 1}`}
+                          value={m.locale}
+                          className="border rounded bg-background p-2"
+                          onChange={(e) =>
+                            changeMapping(m.id, { locale: e.target.value as Mapping['locale'] })
+                          }
+                        >
+                          <option value="all">{text('allLanguages')}</option>
+                          <option value="fa">{text('persian')}</option>
+                          <option value="en">{text('english')}</option>
+                        </select>
                       </td>
                       <td className="p-2">
                         <Input
@@ -606,11 +631,13 @@ export default function AdminSmsProvidersPage() {
             onChange={(e) => setFirstEvent(e.target.value)}
             className="border rounded bg-background p-2"
           >
-            {testProvider.config.template_mappings.map((m) => (
-              <option key={m.event_key} value={m.event_key}>
-                {m.event_key}
-              </option>
-            ))}
+            {[...new Set(testProvider.config.template_mappings.map((m) => m.event_key))].map(
+              (event) => (
+                <option key={event} value={event}>
+                  {event}
+                </option>
+              )
+            )}
           </select>
           <p>
             {text('testNotice').replace(
@@ -619,9 +646,12 @@ export default function AdminSmsProvidersPage() {
             )}
           </p>
           {testMappings.map((m) => (
-            <div key={m.event_key} className="border rounded p-3">
+            <div key={`${m.event_key}:${m.locale ?? '*'}`} className="border rounded p-3">
               <h3 className="font-mono" dir="ltr">
-                {m.event_key} · {m.template_id}
+                {m.event_key} · {m.template_id} ·{' '}
+                {text(
+                  m.locale === 'fa' ? 'persian' : m.locale === 'en' ? 'english' : 'allLanguages'
+                )}
               </h3>
               <dl>
                 {buildSmsTestParameters(m.variables).map((p) => (

@@ -766,4 +766,85 @@ for (const locale of ['fa', 'en']) {
     expect(await runOutboxPoll(options)).toEqual({ leased: 0, delivered: 0, failed: 0 });
     expect(request).toHaveBeenCalledOnce();
   });
+
+  it(`delivers the matching remote SMS template and preserves its snapshot (${locale})`, async () => {
+    const r = await queuedReminder();
+    await verifyMobile(r.userId);
+    await pool.query('UPDATE users SET locale=$2 WHERE user_id=$1', [r.userId, locale]);
+    await pool.query("UPDATE notification_outbox SET channels=ARRAY['in_app','sms'] WHERE id=$1", [
+      r.id,
+    ]);
+    await pool.query(
+      "UPDATE notification_job SET channel='sms' WHERE outbox_id=$1 AND channel='email'",
+      [r.id]
+    );
+    await pool.query("UPDATE sms_provider_configs SET status='superseded' WHERE status='active'");
+    const mappings = [
+      { event_key: 'payment.invoice_reminder', template_id: '99', variables: { invoiceId: 'ID' } },
+      {
+        event_key: 'payment.invoice_reminder',
+        locale: 'fa',
+        template_id: '42',
+        variables: { invoiceId: 'ID' },
+      },
+      {
+        event_key: 'payment.invoice_reminder',
+        locale: 'en',
+        template_id: '43',
+        variables: { invoiceId: 'ID' },
+      },
+    ];
+    await pool.query(
+      `INSERT INTO sms_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
+      VALUES ('smsir','Reminder fixture','active',$1,$2,'passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('smsir'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
+      [
+        JSON.stringify({ api_key: 'fixture-only', sender: '3000', template_mappings: mappings }),
+        r.userId,
+      ]
+    );
+    await pool.query(
+      "UPDATE notification_templates SET status='archived',is_active=false WHERE event_key='payment.invoice_reminder' AND channel='sms' AND locale=$1",
+      [locale]
+    );
+    const template = (
+      await pool.query(
+        `INSERT INTO notification_templates(event_key,channel,locale,version,body_template,variables,status,is_active,created_by)
+      VALUES ('payment.invoice_reminder','sms',$1,900,'{{invoiceId}}','["invoiceId"]','active',true,$2) RETURNING id`,
+        [locale, r.userId]
+      )
+    ).rows[0];
+    const request = vi.fn<typeof fetch>(
+      async () =>
+        new Response(JSON.stringify({ status: 1, data: { messageId: 123 } }), { status: 200 })
+    );
+    const options = {
+      ...r.options,
+      transports: {
+        in_app: new InAppNotificationTransport(pool),
+        sms: new SmsNotificationTransport(pool, request),
+      },
+    };
+    expect(await runOutboxPoll(options)).toEqual({ leased: 1, delivered: 1, failed: 0 });
+    expect(request).toHaveBeenCalledOnce();
+    expect(JSON.parse(String(request.mock.calls[0]?.[1]?.body))).toMatchObject({
+      TemplateId: locale === 'fa' ? 42 : 43,
+      Parameters: [{ Name: 'ID', Value: r.invoiceId }],
+    });
+    const job = (
+      await pool.query(
+        "SELECT delivery_payload,status FROM notification_job WHERE outbox_id=$1 AND channel='sms'",
+        [r.id]
+      )
+    ).rows[0];
+    expect(job).toMatchObject({
+      status: 'done',
+      delivery_payload: {
+        templateId: template.id,
+        templateVersion: 900,
+        message: { templateId: locale === 'fa' ? '42' : '43' },
+      },
+    });
+    expect(await runOutboxPoll(options)).toEqual({ leased: 0, delivered: 0, failed: 0 });
+    expect(request).toHaveBeenCalledOnce();
+  });
 }

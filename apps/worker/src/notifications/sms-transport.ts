@@ -61,7 +61,8 @@ export class SmsNotificationTransport implements INotificationTransport {
         recipient.mobile,
         payload.eventKey,
         names,
-        payload.payload ?? {}
+        payload.payload ?? {},
+        recipient.locale
       );
       const result = await this.pool.query(
         `UPDATE notification_job SET delivery_payload=COALESCE(delivery_payload,$2::jsonb)

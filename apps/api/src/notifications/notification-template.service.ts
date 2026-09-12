@@ -558,7 +558,8 @@ export class NotificationTemplateService {
               destination,
               tpl.eventKey,
               tpl.variables.map((item) => item.name),
-              data
+              data,
+              tpl.locale
             );
             await requireSessionStepUp(client, actor);
             providerRef = await createSmsSender(pool)(message);

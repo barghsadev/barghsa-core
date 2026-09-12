@@ -7,6 +7,7 @@ import {
 
 export interface SmsMapping {
   event_key: string;
+  locale?: 'fa' | 'en';
   template_id: string;
   variables: Record<string, string>;
 }
@@ -87,8 +88,11 @@ export function readSmsProvider(
       template_mappings: mappings.map((value) => {
         const mapping = record(value),
           variables = record(mapping.variables ?? {});
+        if (mapping.locale !== undefined && mapping.locale !== 'fa' && mapping.locale !== 'en')
+          throw new ProviderRequestError();
         return {
           event_key: string(mapping.event_key),
+          ...(mapping.locale ? { locale: mapping.locale } : {}),
           template_id: string(mapping.template_id),
           variables: Object.fromEntries(
             Object.entries(variables).map(([key, v]) => [string(key), string(v)])

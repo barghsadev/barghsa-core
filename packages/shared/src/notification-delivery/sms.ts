@@ -20,7 +20,8 @@ export async function prepareSmsMessage(
   destination: string,
   eventKey: string,
   allowList: string[],
-  data: Record<string, unknown>
+  data: Record<string, unknown>,
+  locale?: 'fa' | 'en'
 ): Promise<SmsMessage> {
   if (!/^(?:\+98|0)9\d{9}$/.test(destination)) throw new Error('Invalid SMS destination');
   const rows = (
@@ -31,7 +32,11 @@ export async function prepareSmsMessage(
   if (rows.length !== 1 || rows[0]!.transport !== 'smsir' || typeof rows[0]!.id !== 'string')
     throw new Error('SMS provider unavailable');
   const config = SmsirConfigSchema.parse(rows[0]!.config);
-  const mappings = config.template_mappings?.filter((item) => item.event_key === eventKey) ?? [];
+  const candidates = config.template_mappings?.filter((item) => item.event_key === eventKey) ?? [];
+  const localized = locale ? candidates.filter((item) => item.locale === locale) : [];
+  const mappings = localized.length
+    ? localized
+    : candidates.filter((item) => item.locale === undefined);
   if (mappings.length !== 1) throw new Error('SMS template mapping unavailable');
   const mapping = mappings[0]!;
   if (!mapping.variables || !Object.keys(mapping.variables).length)

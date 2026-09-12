@@ -259,6 +259,75 @@ for (const transport of ['smtp', 'resend', 'smsir'] as const) {
     });
   }
   if (transport === 'smsir') {
+    for (const failEnglish of [false, true]) {
+      it(`tests both locale mappings for one event before activation; English failure=${failEnglish}`, async () => {
+        const { service, row, config, send } = await fixture();
+        if (!(service instanceof SmsProviderConfigService)) throw new Error('Wrong fixture');
+        await http.pool
+          .query(`INSERT INTO notification_templates(event_key,channel,locale,body_template,variables,status,is_active,version)
+          VALUES ('auth.otp','sms','fa','Code {{code}}','["code"]','active',true,1)`);
+        const mappings = [
+          { event_key: 'auth.otp', locale: 'fa', template_id: '42', variables: { code: 'CODE' } },
+          { event_key: 'auth.otp', locale: 'en', template_id: '43', variables: { code: 'CODE' } },
+        ];
+        await service.update(
+          row.id,
+          { config: { ...config, template_mappings: mappings } },
+          actor.userId,
+          actor
+        );
+        send.mockImplementation(async (value, _recipient, _event, authorize) => {
+          await authorize?.();
+          const mapping = (value as { template_mappings: typeof mappings }).template_mappings;
+          expect(mapping).toHaveLength(1);
+          return { ok: !(failEnglish && mapping[0]?.locale === 'en') };
+        });
+        const result = await service.testConnection(
+          row.id,
+          undefined,
+          'auth.otp',
+          actor.userId,
+          actor
+        );
+        expect(result.ok).toBe(!failEnglish);
+        expect(
+          send.mock.calls.map(
+            (call) => (call[0] as { template_mappings: typeof mappings }).template_mappings[0]
+          )
+        ).toEqual(mappings);
+        if (failEnglish)
+          await expect(service.activate(row.id, actor.userId, actor)).rejects.toMatchObject({
+            status: 409,
+          });
+        else expect((await service.activate(row.id, actor.userId, actor)).status).toBe('active');
+      });
+    }
+    it('requires an active local template for a language-specific SMS mapping', async () => {
+      const { service, row, config, send } = await fixture();
+      if (!(service instanceof SmsProviderConfigService)) throw new Error('Wrong fixture');
+      await service.update(
+        row.id,
+        {
+          config: {
+            ...config,
+            template_mappings: [
+              {
+                event_key: 'auth.otp',
+                locale: 'fa',
+                template_id: '42',
+                variables: { code: 'CODE' },
+              },
+            ],
+          },
+        },
+        actor.userId,
+        actor
+      );
+      await expect(
+        service.testConnection(row.id, undefined, undefined, actor.userId, actor)
+      ).rejects.toMatchObject({ status: 409 });
+      expect(send).not.toHaveBeenCalled();
+    });
     for (const failSecond of [false, true]) {
       it(`SMS tests every mapping even with an explicit event; second failure=${failSecond}`, async () => {
         const { service, row, config, send } = await fixture();

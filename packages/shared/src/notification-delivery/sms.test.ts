@@ -127,3 +127,98 @@ it('rejects missing/unapproved mapping data, quota exhaustion, changed providers
   await expect(createSmsSender(pool, request)(message, AbortSignal.abort())).rejects.toThrow();
   expect(request).not.toHaveBeenCalled();
 });
+
+for (const locale of ['fa', 'en'] as const) {
+  it(`selects the exact ${locale} SMS mapping ahead of a shared legacy mapping`, async () => {
+    const pool = {
+      query: async () => ({
+        rows: [
+          {
+            id: 'provider',
+            transport: 'smsir',
+            config: {
+              api_key: 'fixture-only',
+              sender: '3000',
+              template_mappings: [
+                {
+                  event_key: 'payment.invoice_reminder',
+                  template_id: '1',
+                  variables: { invoiceId: 'ID' },
+                },
+                {
+                  event_key: 'payment.invoice_reminder',
+                  locale: 'fa',
+                  template_id: '2',
+                  variables: { invoiceId: 'ID' },
+                },
+                {
+                  event_key: 'payment.invoice_reminder',
+                  locale: 'en',
+                  template_id: '3',
+                  variables: { invoiceId: 'ID' },
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    };
+    expect(
+      await prepareSmsMessage(
+        pool,
+        '+989121234567',
+        'payment.invoice_reminder',
+        ['invoiceId'],
+        { invoiceId: 'invoice' },
+        locale
+      )
+    ).toMatchObject({
+      templateId: locale === 'fa' ? '2' : '3',
+      parameters: [{ name: 'ID', value: 'invoice' }],
+    });
+  });
+}
+it('never substitutes the other language when no shared mapping exists', async () => {
+  const pool = {
+    query: async () => ({
+      rows: [
+        {
+          id: 'provider',
+          transport: 'smsir',
+          config: {
+            api_key: 'fixture-only',
+            sender: '3000',
+            template_mappings: [
+              { event_key: 'event', locale: 'fa', template_id: '2', variables: { value: 'VALUE' } },
+            ],
+          },
+        },
+      ],
+    }),
+  };
+  await expect(
+    prepareSmsMessage(pool, '+989121234567', 'event', ['value'], { value: 'one' }, 'en')
+  ).rejects.toThrow('mapping unavailable');
+});
+it('rejects unsupported SMS mapping languages', async () => {
+  const pool = {
+    query: async () => ({
+      rows: [
+        {
+          id: 'provider',
+          transport: 'smsir',
+          config: {
+            api_key: 'fixture-only',
+            sender: '3000',
+            template_mappings: [
+              { event_key: 'event', locale: 'de', template_id: '2', variables: { value: 'VALUE' } },
+            ],
+          },
+        },
+      ],
+    }),
+  };
+  await expect(
+    prepareSmsMessage(pool, '+989121234567', 'event', ['value'], { value: 'one' }, 'en')
+  ).rejects.toThrow();
+});

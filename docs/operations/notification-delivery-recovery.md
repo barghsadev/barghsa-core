@@ -51,6 +51,46 @@ these paths using the compiled worker, PostgreSQL and a controlled SMS endpoint.
 
 No production rollout or provider delivery has been verified by the local tests.
 
+## Invoice reminder rollout and holds
+
+Drain older reminder senders and notification workers before starting the updated
+workers. The sender transfers every planned channel for one invoice/offset into
+one outbox occurrence; later channel times become job wake-ups. A schedule row
+marked `sent` means transferred to the outbox, not delivered to a provider.
+
+At dispatch, never-attempted reminders recheck current invoice state, deadline,
+owner, account, service offset, recipient preferences and local delivery window.
+Paid, Cancelled or Refunded invoices and changed deadlines/recipients stop the
+queued reminder. Disabled offsets and dirty deadline plans pause without spending
+delivery attempts. Re-enabling an offset resumes the same occurrence. Existing
+accepted or uncertain receipts are recovered before these policy checks; their
+history is preserved and no replacement message is sent.
+
+Each worker database pool needs at least two connections. Reminder dispatches
+serialize their policy guards within that pool, holding profile/user/invoice and
+policy locks through provider I/O and outcome persistence. Payments and relevant
+policy changes can wait for an in-flight delivery to finish. Keep bounded provider
+timeouts and the existing graceful drain procedure.
+
+Old senders could transfer in-app first and omit later email/SMS jobs. If an
+existing occurrence has missing jobs or a different recipient/deadline, the new
+sender reports `Existing reminder occurrence requires reconciliation` and leaves
+the remaining schedule rows intact. Review its schedule rows, outbox payload,
+channel jobs, receipts and send history together. Do not mark missing channels
+delivered, replace the occurrence key, delete history or resend without
+authoritative provider evidence and an audited recovery action. Repeated holds
+can occupy the oldest-due batch; resolve them operationally before enabling the
+schedule. No historical data reconciliation was executed by the local audit.
+
+SMS mappings may select Persian or English for the same event; an exact language
+mapping takes precedence over an existing All languages mapping. With no exact
+or shared mapping, delivery fails closed. Upgrade API, web and every SMS worker
+together before saving language-specific mappings. Test every configured mapping
+to the authorized staff recipient before activation. Existing mappings remain
+shared, and attempted-message snapshots retain their original template IDs.
+Local tests verify payloads and template selection with controlled providers;
+they do not verify live SMS.ir template text or delivery.
+
 ## Reconciliation
 
 Keep the outbox ID, channel, provider identity, occurrence key, attempt token,
