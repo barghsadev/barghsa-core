@@ -261,3 +261,81 @@ it('loads the durable configuration in another API process without S3 environmen
       });
   }
 });
+
+for (const operation of ['save', 'test'] as const) {
+  for (const failure of ['expiry', 'csrf', 'step-up'] as const) {
+    it(`rejects ${operation} when ${failure} changes during the storage probe`, async () => {
+      const candidate = await update();
+      const session = headers.Cookie!.split('=')[1]!;
+      let changed = false;
+      onProbe = async () => {
+        if (changed) return;
+        changed = true;
+        await http.pool.query(
+          failure === 'expiry'
+            ? "UPDATE sessions SET expires_at=NOW()-INTERVAL '1 minute' WHERE session_id=$1"
+            : failure === 'csrf'
+              ? "UPDATE sessions SET csrf_token='rotated-token' WHERE session_id=$1"
+              : 'UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1',
+          [session]
+        );
+      };
+      const before = authorizations.length;
+      try {
+        expect(
+          (
+            await request(
+              operation === 'save' ? '/config' : '/test-connection',
+              operation === 'save' ? 'PUT' : 'POST',
+              candidate
+            )
+          ).status
+        ).toBe(failure === 'expiry' ? 401 : 403);
+        expect(authorizations.length - before).toBe(1);
+      } finally {
+        onProbe = undefined;
+        await http.pool.query(
+          "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',csrf_token=$2,step_up_verified_at=NOW()-INTERVAL '1 minute' WHERE session_id=$1",
+          [session, headers['X-CSRF-Token']]
+        );
+      }
+      expect((await current()).version).toBe(candidate.version);
+    });
+  }
+}
+
+it('rolls back storage credentials and audit if the session expires during the write', async () => {
+  const candidate = await update();
+  await http.pool
+    .query(`CREATE FUNCTION expire_storage_session() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN IF NEW.event='storage.config.updated' THEN UPDATE sessions SET expires_at=NOW()-INTERVAL '1 minute' WHERE user_id=NEW.user_id; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER expire_storage_session AFTER INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION expire_storage_session()`);
+  try {
+    expect((await request('/config', 'PUT', candidate)).status).toBe(401);
+  } finally {
+    await http.pool.query('DROP TRIGGER expire_storage_session ON audit_log');
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day' WHERE user_id='storage-editor'"
+    );
+  }
+  expect((await current()).version).toBe(candidate.version);
+});
+
+it('records the exact verified timestamp with the storage credential audit', async () => {
+  const at = new Date(Date.now() - 60000).toISOString();
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=$1 WHERE user_id='storage-editor'",
+    [at]
+  );
+  const candidate = await update();
+  expect((await request('/config', 'PUT', candidate)).status).toBe(200);
+  const row = (
+    await http.pool.query(
+      "SELECT metadata FROM audit_log WHERE event='storage.config.updated' ORDER BY created_at DESC LIMIT 1"
+    )
+  ).rows[0];
+  expect(typeof row.metadata === 'string' ? JSON.parse(row.metadata) : row.metadata).toMatchObject({
+    stepUpVerified: true,
+    stepUpVerifiedAt: at,
+  });
+});

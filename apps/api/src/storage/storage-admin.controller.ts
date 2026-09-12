@@ -19,14 +19,14 @@ export class StorageAdminController {
   @RequiresStepUp()
   @HttpCode(200)
   updateConfig(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
-    return this.config.save(body, req.session.userId);
+    return this.config.save(body, req.session);
   }
 
   @Post('test-connection')
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @HttpCode(200)
-  testConnection(@Body() body: unknown) {
-    return this.config.test(body);
+  testConnection(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    return this.config.test(body, req.session);
   }
 }

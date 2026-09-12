@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  UnauthorizedException,
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
@@ -14,7 +15,11 @@ import {
   decryptStorageSecret,
   configuredStorageProviders,
 } from '@barghsa/shared/storage';
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+
+type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 @Injectable()
 export class StorageConfigService {
@@ -73,22 +78,51 @@ export class StorageConfigService {
       throw new BadRequestException({ error: 'STORAGE:CREDENTIAL_PAIR_REQUIRED' });
     return { config, current, locationChanged };
   }
-  private async probe(config: ReturnType<typeof environmentStorageConfig>) {
+  private async authorize(session: MutationSession) {
+    if (!session) throw new UnauthorizedException();
+    const client = await getDbPool().connect();
     try {
-      const providers = configuredStorageProviders(config, true);
-      await providers.internal.listObjects('', 1);
-      await providers.browser.listObjects('', 1);
-    } catch {
-      // SDK errors may contain endpoint or credential details; expose a fixed message.
-      throw new ServiceUnavailableException({ error: 'STORAGE:CONNECTION_FAILED' });
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, session.userId, 'admin:storage:edit');
+      await requireSessionStepUp(client, session);
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
     }
   }
-  async test(raw: unknown) {
+  private async probe(
+    config: ReturnType<typeof environmentStorageConfig>,
+    session: MutationSession
+  ) {
+    let providers: ReturnType<typeof configuredStorageProviders>;
+    try {
+      providers = configuredStorageProviders(config, true);
+    } catch {
+      throw new ServiceUnavailableException({ error: 'STORAGE:CONNECTION_FAILED' });
+    }
+    for (const provider of [providers.internal, providers.browser]) {
+      await this.authorize(session);
+      try {
+        await provider.listObjects('', 1);
+      } catch {
+        // SDK errors may contain endpoint or credential details; expose a fixed message.
+        throw new ServiceUnavailableException({ error: 'STORAGE:CONNECTION_FAILED' });
+      }
+    }
+    await this.authorize(session);
+  }
+  async test(raw: unknown, session: MutationSession) {
+    await this.authorize(session);
     const { config } = await this.candidate(raw);
-    await this.probe(config);
+    await this.probe(config, session);
     return { success: true, message: 'Connection successful' };
   }
-  async save(raw: unknown, actor: string) {
+  async save(raw: unknown, session: MutationSession) {
+    await this.authorize(session);
+    const actor = session.userId;
     const { config, current, locationChanged } = await this.candidate(raw);
     let encryptedSecret: string | null;
     try {
@@ -96,12 +130,13 @@ export class StorageConfigService {
     } catch {
       throw new ServiceUnavailableException({ error: 'STORAGE:ENCRYPTION_UNAVAILABLE' });
     }
-    await this.probe(config);
+    await this.probe(config, session);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor, 'admin:storage:edit');
       await client.query("SELECT pg_advisory_xact_lock(hashtext('storage.active'))");
+      const verifiedAt = await requireSessionStepUp(client, session);
       const row = (
         await client.query<{ version: number }>(
           'SELECT version FROM app_config WHERE key=$1 FOR UPDATE',
@@ -126,8 +161,17 @@ export class StorageConfigService {
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata)
         VALUES (uuid_generate_v7()::text,$1,'storage.config.updated',$2)`,
-        [actor, JSON.stringify({ version, previousVersion: current.version })]
+        [
+          actor,
+          JSON.stringify({
+            version,
+            previousVersion: current.version,
+            stepUpVerified: true,
+            stepUpVerifiedAt: verifiedAt.toISOString(),
+          }),
+        ]
       );
+      await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       return this.mask(config, version);
     } catch (error) {
