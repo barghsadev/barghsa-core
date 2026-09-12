@@ -764,7 +764,6 @@ it('delivers a queued email with the recipient locale, template and durable rece
     VALUES ('{"appTitle":"Published & Energy","primaryColor":"#123456"}',1,'active','delivery-owner'),
     ('{"appTitle":"Unpublished brand"}',2,'draft','delivery-owner')`);
   const received: Array<{ key: string; content: Record<string, unknown> }> = [];
-  let responseCode = 503;
   const server = createServer(async (req, res) => {
     const chunks: Buffer[] = [];
     for await (const chunk of req) chunks.push(Buffer.from(chunk));
@@ -772,7 +771,7 @@ it('delivers a queued email with the recipient locale, template and durable rece
       key: String(req.headers['idempotency-key']),
       content: JSON.parse(Buffer.concat(chunks).toString()),
     });
-    res.writeHead(responseCode, { 'Content-Type': 'application/json' });
+    res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ id: 'queued-email-receipt' }));
   });
   await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
@@ -804,9 +803,22 @@ it('delivers a queued email with the recipient locale, template and durable rece
     transports: { email, in_app: new InAppNotificationTransport(pool) },
     deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 },
   };
+  await pool.query(`CREATE FUNCTION fail_receipt_bookkeeping() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN IF NEW.outbox_id='${id}'::uuid AND NEW.status IN ('done','retrying') THEN RAISE EXCEPTION 'Bookkeeping unavailable'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER fail_receipt_bookkeeping BEFORE UPDATE ON notification_job
+    FOR EACH ROW EXECUTE FUNCTION fail_receipt_bookkeeping()`);
   try {
-    expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, failed: 1 });
-    responseCode = 200;
+    await expect(runOutboxPoll(options)).rejects.toThrow('Notification persistence failed');
+    expect(received).toHaveLength(1);
+    expect(
+      (
+        await pool.query(
+          'SELECT status,provider_ref FROM notification_send_receipts WHERE outbox_id=$1',
+          [id]
+        )
+      ).rows[0]
+    ).toEqual({ status: 'accepted', provider_ref: 'queued-email-receipt' });
+    await pool.query('DROP TRIGGER fail_receipt_bookkeeping ON notification_job');
     await pool.query(
       `UPDATE brand_config SET config='{"appTitle":"Later brand","primaryColor":"#654321"}' WHERE status='active'`
     );
@@ -822,21 +834,20 @@ it('delivers a queued email with the recipient locale, template and durable rece
       [id]
     );
     await pool.query(
-      "UPDATE notification_outbox SET scheduled_for=NOW()-INTERVAL '1 second' WHERE id=$1",
+      "UPDATE notification_outbox SET locked_until=NOW()-INTERVAL '1 second',scheduled_for=NOW()-INTERVAL '1 second' WHERE id=$1",
       [id]
     );
     expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, delivered: 1, failed: 0 });
-    expect(received).toHaveLength(2);
-    expect(received[0]!.key).toBe(received[1]!.key);
-    expect(received[1]!.content).toMatchObject({
+    expect(received).toHaveLength(1);
+    expect(received[0]!.key).toBeTruthy();
+    expect(received[0]!.content).toMatchObject({
       to: ['Recipient@example.test'],
       subject: 'Top-up 5000',
       html: expect.stringContaining('<p>A&amp;B &lt;customer&gt;: 5000</p>'),
     });
-    expect(received[0]!.content).toEqual(received[1]!.content);
-    expect(received[1]!.content.html).toContain('Published &amp; Energy');
-    expect(received[1]!.content.html).toContain('#123456');
-    expect(received[1]!.content.html).not.toMatch(/Later brand|Unpublished brand/);
+    expect(received[0]!.content.html).toContain('Published &amp; Energy');
+    expect(received[0]!.content.html).toContain('#123456');
+    expect(received[0]!.content.html).not.toMatch(/Later brand|Unpublished brand/);
     expect(
       (
         await pool.query(
@@ -854,19 +865,32 @@ it('delivers a queued email with the recipient locale, template and durable rece
       ).rows[0].count
     ).toBe(1);
   } finally {
+    await pool.query(
+      'DROP TRIGGER IF EXISTS fail_receipt_bookkeeping ON notification_job; DROP FUNCTION fail_receipt_bookkeeping()'
+    );
     await new Promise<void>((resolve, reject) =>
       server.close((error) => (error ? reject(error) : resolve()))
     );
   }
 });
 
-it('refuses to retarget a snapshotted email after the recipient changes', async () => {
+it('recovers accepted email after recipient changes but refuses to retarget an unsent snapshot', async () => {
   const saved = (
     await pool.query(
       "SELECT o.id,o.profile_id,j.delivery_payload FROM notification_outbox o JOIN notification_job j ON j.outbox_id=o.id WHERE o.idempotency_key='real-email:test' AND j.channel='email'"
     )
   ).rows[0];
   const request = vi.fn<typeof fetch>();
+  const unsent = randomUUID();
+  await pool.query(
+    `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,channels,idempotency_key)
+     VALUES ($1::uuid,$2,'delivery-recipient','wallet.topup_completed',ARRAY['email'],$1::text)`,
+    [unsent, saved.profile_id]
+  );
+  await pool.query(
+    "INSERT INTO notification_job(outbox_id,channel,delivery_payload) VALUES ($1,'email',$2)",
+    [unsent, saved.delivery_payload]
+  );
   await pool.query(
     "UPDATE users SET email='new-recipient@example.test' WHERE user_id='delivery-recipient'"
   );
@@ -874,16 +898,21 @@ it('refuses to retarget a snapshotted email after the recipient changes', async 
     "INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ('new-recipient@example.test','delivery-recipient','email',NOW())"
   );
   try {
+    const payload = {
+      outboxId: saved.id,
+      profileId: saved.profile_id,
+      eventKey: 'wallet.topup_completed',
+      channel: 'email' as const,
+      recipientId: 'delivery-recipient',
+      payload: {},
+      idempotencyKey: saved.delivery_payload.idempotencyKey,
+    };
+    expect(await new EmailNotificationTransport(pool, request).send(payload)).toEqual({
+      status: 'delivered',
+      providerRef: 'queued-email-receipt',
+    });
     await expect(
-      new EmailNotificationTransport(pool, request).send({
-        outboxId: saved.id,
-        profileId: saved.profile_id,
-        eventKey: 'wallet.topup_completed',
-        channel: 'email',
-        recipientId: 'delivery-recipient',
-        payload: {},
-        idempotencyKey: saved.delivery_payload.idempotencyKey,
-      })
+      new EmailNotificationTransport(pool, request).send({ ...payload, outboxId: unsent })
     ).rejects.toThrow('requires reconciliation');
     expect(request).not.toHaveBeenCalled();
   } finally {
@@ -914,7 +943,7 @@ it('holds an attempted legacy email without deleting its job or retry evidence',
   });
 });
 
-it('sends stable mapped SMS parameters across a retry and shares the provider quota with authentication', async () => {
+it('retries explicitly rejected SMS with stable parameters and shares the provider quota with authentication', async () => {
   await pool.query(
     "UPDATE notification_outbox SET status='cancelled' WHERE status IN ('queued','scheduled','sending')"
   );
@@ -938,14 +967,18 @@ it('sends stable mapped SMS parameters across a retry and shares the provider qu
   );
   await pool.query(`INSERT INTO notification_templates(event_key,channel,locale,body_template,variables,status,is_active,created_by)
     VALUES ('wallet.topup_completed','sms','en','Amount {{amount}}','["amount"]','active',true,'delivery-owner')`);
-  let code = 503;
+  let accepted = false;
   const received: unknown[] = [];
   const server = createServer(async (req, res) => {
     const chunks: Buffer[] = [];
     for await (const chunk of req) chunks.push(Buffer.from(chunk));
     received.push(JSON.parse(Buffer.concat(chunks).toString()));
-    res.writeHead(code, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 1, data: { messageId: 987 } }));
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(
+      JSON.stringify(
+        accepted ? { status: 1, data: { messageId: 987 } } : { status: 11, data: null }
+      )
+    );
   });
   await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
   const address = server.address();
@@ -981,7 +1014,7 @@ it('sends stable mapped SMS parameters across a retry and shares the provider qu
   };
   try {
     expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, failed: 1 });
-    code = 200;
+    accepted = true;
     await pool.query(
       'UPDATE notification_outbox SET payload=\'{"amount":"9000"}\',scheduled_for=NOW()-INTERVAL \'1 second\' WHERE id=$1',
       [id]
@@ -1019,6 +1052,120 @@ it('sends stable mapped SMS parameters across a retry and shares the provider qu
     );
   }
 });
+
+for (const channel of ['email', 'sms'] as const) {
+  it(`holds ${channel} after the provider receives a request but its response is lost`, async () => {
+    await pool.query(
+      "UPDATE notification_outbox SET status='cancelled' WHERE status IN ('queued','scheduled','sending')"
+    );
+    await pool.query(
+      "UPDATE users SET email='Recipient@example.test',notification_preferences='IN_APP,EMAIL,SMS' WHERE user_id='delivery-recipient'"
+    );
+    await pool.query(
+      "SELECT rate_limit_rolling_reset(true,'provider:smsir:'||id::text) FROM sms_provider_configs WHERE status='active'"
+    );
+    const received: unknown[] = [];
+    const server = createServer(async (req, res) => {
+      const chunks: Buffer[] = [];
+      for await (const chunk of req) chunks.push(Buffer.from(chunk));
+      received.push(JSON.parse(Buffer.concat(chunks).toString()));
+      // The request reached the provider. Its acceptance is unknowable to us.
+      res.destroy();
+    });
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('No local endpoint');
+    const request = vi.fn<typeof fetch>(async (_url, options) =>
+      fetch(`http://127.0.0.1:${address.port}`, options)
+    );
+    const client = await pool.connect();
+    let id: string | null;
+    try {
+      await client.query('BEGIN');
+      id = (
+        await enqueueOutbox(client, {
+          profileId,
+          userId: 'delivery-recipient',
+          eventKey: 'wallet.topup_completed',
+          channels: ['in_app', channel],
+          payload: { name: 'Recipient', amount: '5000' },
+          idempotencyKey: `unknown-${channel}`,
+        })
+      ).outboxId;
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      server.close();
+      throw error;
+    } finally {
+      client.release();
+    }
+    const options = {
+      pool,
+      deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 },
+      transports: {
+        in_app: new InAppNotificationTransport(pool),
+        [channel]:
+          channel === 'email'
+            ? new EmailNotificationTransport(pool, request)
+            : new SmsNotificationTransport(pool, request),
+      },
+    };
+    try {
+      expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, failed: 1 });
+      expect(received).toHaveLength(1);
+      expect(
+        (await pool.query('SELECT status FROM notification_send_receipts WHERE outbox_id=$1', [id]))
+          .rows[0].status
+      ).toBe('unknown');
+      expect(
+        (
+          await pool.query(
+            'SELECT status,attempts FROM notification_job WHERE outbox_id=$1 AND channel=$2',
+            [id, channel]
+          )
+        ).rows[0]
+      ).toEqual({ status: 'dead_letter', attempts: 1 });
+      expect(
+        (await pool.query('SELECT cause FROM notification_dead_letter WHERE outbox_id=$1', [id]))
+          .rows[0].cause
+      ).toContain('reconciliation required');
+      expect((await runOutboxPoll(options)).leased).toBe(0);
+      // Even a stale/manual queue reset and changed consent cannot reopen it.
+      await pool.query(
+        "UPDATE users SET notification_preferences='IN_APP' WHERE user_id='delivery-recipient'"
+      );
+      await pool.query(
+        "UPDATE notification_job SET status='queued',attempts=0,run_after=NOW() WHERE outbox_id=$1 AND channel=$2",
+        [id, channel]
+      );
+      await pool.query(
+        "UPDATE notification_outbox SET status='sending',locked_until=NOW()-INTERVAL '1 second' WHERE id=$1",
+        [id]
+      );
+      expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, failed: 1 });
+      expect(
+        (
+          await pool.query(
+            'SELECT status,last_error FROM notification_job WHERE outbox_id=$1 AND channel=$2',
+            [id, channel]
+          )
+        ).rows[0]
+      ).toMatchObject({
+        status: 'dead_letter',
+        last_error: expect.stringContaining('reconciliation required'),
+      });
+      expect(request).toHaveBeenCalledOnce();
+    } finally {
+      await pool.query(
+        "UPDATE users SET notification_preferences='IN_APP,EMAIL,SMS' WHERE user_id='delivery-recipient'"
+      );
+      await new Promise<void>((resolve, reject) =>
+        server.close((error) => (error ? reject(error) : resolve()))
+      );
+    }
+  });
+}
 
 it('migrates legacy inbox text and read history without deleting its source', async () => {
   expect(

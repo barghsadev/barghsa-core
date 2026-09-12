@@ -10,6 +10,7 @@ import { sanitizeError } from './error-redact.js';
 import { deriveChannelIdempotencyKey } from './outbox-writer.js';
 import type { QueryPool } from './channel-scheduling.js';
 import { recordDeliveryAttempt } from './worker-metrics.js';
+import { DeliveryOutcomeUnknown } from './send-receipt.js';
 
 /** Local delivery can share the worker's pinned persistence transaction. */
 export interface WorkerNotificationTransport extends INotificationTransport {
@@ -142,6 +143,8 @@ export interface DispatchOutcome {
   latencyMs: number;
   /** Sanitized failure detail for this channel only. */
   error?: string;
+  /** An uncertain external send must be reconciled before any retry. */
+  requiresReconciliation?: boolean;
 }
 
 /**
@@ -200,6 +203,7 @@ export async function dispatchOutbox(
         result: { providerRef: '', status: 'failed' },
         latencyMs: Math.round(performance.now() - startedAt),
         error: sanitizeError(error instanceof Error ? error.message : String(error)),
+        ...(error instanceof DeliveryOutcomeUnknown ? { requiresReconciliation: true } : {}),
       });
     }
     // Transactional inbox delivery is counted by its commit/rollback owner.

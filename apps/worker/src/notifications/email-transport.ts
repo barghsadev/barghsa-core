@@ -1,4 +1,5 @@
 import { getDbPool } from '@barghsa/db';
+import { durableDelivery, readDeliveryReceipt } from './send-receipt.js';
 import {
   createEmailSender,
   loadEmailBranding,
@@ -26,6 +27,8 @@ export class EmailNotificationTransport implements INotificationTransport {
   async send(payload: NotificationSendPayload): Promise<NotificationSendResult> {
     if (!payload.outboxId || !payload.profileId)
       throw new Error('Email requires a durable queued recipient');
+    const receipt = await readDeliveryReceipt(this.pool, payload.outboxId, 'email');
+    if (receipt) return receipt;
     const recipient = await loadNotificationRecipient(this.pool, payload.outboxId);
     if (!recipient?.email || recipient.profileId !== payload.profileId) {
       throw new Error('Email recipient unavailable');
@@ -124,7 +127,8 @@ export class EmailNotificationTransport implements INotificationTransport {
     );
     const providerRef = await createEmailSender(
       this.pool,
-      this.request
+      this.request,
+      durableDelivery(this.pool, payload.outboxId, 'email', payload.idempotencyKey)
     )({
       destination: recipient.email,
       subject: saved.subject,

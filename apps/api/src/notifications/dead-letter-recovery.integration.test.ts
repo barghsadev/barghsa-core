@@ -126,6 +126,47 @@ it('serves scoped stable delivery-history pages and honors revoked read permissi
   await db.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='triage-role'");
   expect((await read(0)).status).toBe(403);
 });
+for (const status of ['sending', 'unknown']) {
+  it(`blocks manual retry of ${status} external delivery while allowing no-send triage`, async () => {
+    const row = await seed();
+    await db.pool.query(
+      `INSERT INTO notification_send_receipts(outbox_id,channel,status,provider_id,transport,idempotency_key,attempt_token)
+       VALUES ($1,'email',$2,$3,'smtp','original-occurrence',$4)`,
+      [row.outbox, status, randomUUID(), randomUUID()]
+    );
+    await expect(service.deadLetterAction(row.dead, 'retry', 'triage-staff')).rejects.toMatchObject(
+      { status: 409 }
+    );
+    expect(
+      (await db.pool.query('SELECT status,attempts FROM notification_job WHERE id=$1', [row.job]))
+        .rows[0]
+    ).toEqual({ status: 'dead_letter', attempts: 5 });
+    expect(
+      (await db.pool.query('SELECT status FROM notification_outbox WHERE id=$1', [row.outbox]))
+        .rows[0].status
+    ).toBe('failed');
+    expect(
+      (
+        await db.pool.query(
+          "SELECT count(*)::int AS count FROM audit_log WHERE event='notification_retried' AND metadata::jsonb->>'deadLetterId'=$1",
+          [row.dead]
+        )
+      ).rows[0].count
+    ).toBe(0);
+    await service.deadLetterAction(
+      row.dead,
+      status === 'sending' ? 'resolve' : 'dismiss',
+      'triage-staff'
+    );
+    expect(
+      (
+        await db.pool.query('SELECT status FROM notification_send_receipts WHERE outbox_id=$1', [
+          row.outbox,
+        ])
+      ).rows[0].status
+    ).toBe(status);
+  });
+}
 it('requeues once under concurrent actions and keeps the snapshot and audit evidence', async () => {
   const row = await seed();
   const results = await Promise.allSettled(

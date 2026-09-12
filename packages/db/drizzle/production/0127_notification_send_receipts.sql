@@ -28,7 +28,7 @@ SELECT j.outbox_id,j.channel,'unknown','legacy:'||j.outbox_id::text||':'||j.chan
   'Legacy external delivery requires reconciliation before another send'
 FROM notification_job j JOIN notification_outbox o ON o.id=j.outbox_id
 WHERE j.channel IN ('email','sms') AND j.status<>'done' AND (
-  j.attempts>0 OR o.status='sending'
+  j.attempts>0 OR o.attempts>0 OR o.status='sending'
   OR EXISTS (SELECT 1 FROM notification_delivery_log l WHERE l.notification_id=j.outbox_id AND l.channel=j.channel)
   OR EXISTS (SELECT 1 FROM notification_dead_letter d WHERE d.job_id=j.id)
 )

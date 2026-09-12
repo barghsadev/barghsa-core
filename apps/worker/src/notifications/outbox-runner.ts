@@ -22,6 +22,7 @@ import { writeDeliveryLog, classifyDeliveryError } from './delivery-log.js';
 import { writeDeadLetter } from './dead-letter.js';
 import { sanitizeError } from './error-redact.js';
 import { recordDeliveryAttempt } from './worker-metrics.js';
+import { DeliveryOutcomeUnknown, readDeliveryReceipt } from './send-receipt.js';
 import { type DeliveryWindowConfig } from './delivery-window.js';
 import {
   resolveChannelAvailability,
@@ -119,15 +120,43 @@ export async function runOutboxPoll(
             (job) => !terminalJob(job) && (!job.run_after || new Date(job.run_after) <= new Date())
           )
           .map((job) => job.channel);
-        const availability =
-          options?.availability?.(row) ?? loadChannelAvailabilityContext(pool, row.id);
-        const ctx = (await availability) ?? EMPTY_AVAILABILITY_CONTEXT;
-        const decision = resolveChannelAvailability(row.eventKey, pendingChannels, ctx);
-        const outcomes = await dispatchOutbox(
-          { ...row, channels: decision.allowed.filter((channel) => channel !== 'in_app') },
-          options?.transports ?? {},
-          lease
+        // Recover committed acceptance, or hold an ambiguous send, before
+        // current recipient/channel policy can hide the previous attempt.
+        const recovered: DispatchOutcome[] = [];
+        for (const channel of pendingChannels) {
+          if (channel === 'in_app') continue;
+          try {
+            const receipt = await readDeliveryReceipt(pool, row.id, channel);
+            if (receipt) recovered.push({ channel, result: receipt, latencyMs: 0 });
+          } catch (error) {
+            if (!(error instanceof DeliveryOutcomeUnknown)) throw error;
+            recovered.push({
+              channel,
+              result: { status: 'failed', providerRef: '' },
+              latencyMs: 0,
+              error: error.message,
+              requiresReconciliation: true,
+            });
+          }
+        }
+        externalOutcomes = recovered.slice();
+        const remainingChannels = pendingChannels.filter(
+          (channel) => !recovered.some((outcome) => outcome.channel === channel)
         );
+        const availability =
+          remainingChannels.length === 0
+            ? EMPTY_AVAILABILITY_CONTEXT
+            : (options?.availability?.(row) ?? loadChannelAvailabilityContext(pool, row.id));
+        const ctx = (await availability) ?? EMPTY_AVAILABILITY_CONTEXT;
+        const decision = resolveChannelAvailability(row.eventKey, remainingChannels, ctx);
+        const outcomes = [
+          ...recovered,
+          ...(await dispatchOutbox(
+            { ...row, channels: decision.allowed.filter((channel) => channel !== 'in_app') },
+            options?.transports ?? {},
+            lease
+          )),
+        ];
         // A rollback cannot undo an external send. Retain its actual receipt
         // if recording the combined inbox/outcome transaction needs another try.
         externalOutcomes = outcomes.slice();
@@ -203,6 +232,7 @@ interface DispatchOutcome {
   /** Provider round-trip latency in milliseconds for this attempt. */
   latencyMs: number;
   error?: string;
+  requiresReconciliation?: boolean;
 }
 
 /**
@@ -326,7 +356,7 @@ async function persistOutcomes(
       const attempts = (job?.attempts ?? row.attempts) + 1;
       const maxAttempts = job?.max_attempts ?? row.maxAttempts;
       const ok = outcome.result.status === 'delivered';
-      const exhausted = attempts >= maxAttempts;
+      const exhausted = outcome.requiresReconciliation === true || attempts >= maxAttempts;
       // Jittered backoff before the next attempt (null when the budget is spent).
       const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, maxAttempts);
       const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs);

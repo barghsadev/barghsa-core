@@ -1,4 +1,5 @@
 import { getDbPool } from '@barghsa/db';
+import { durableDelivery, readDeliveryReceipt } from './send-receipt.js';
 import {
   createSmsSender,
   prepareSmsMessage,
@@ -24,6 +25,8 @@ export class SmsNotificationTransport implements INotificationTransport {
   async send(payload: NotificationSendPayload): Promise<NotificationSendResult> {
     if (!payload.outboxId || !payload.profileId)
       throw new Error('SMS requires a durable queued recipient');
+    const receipt = await readDeliveryReceipt(this.pool, payload.outboxId, 'sms');
+    if (receipt) return receipt;
     const recipient = await loadNotificationRecipient(this.pool, payload.outboxId);
     if (!recipient?.mobile || recipient.profileId !== payload.profileId)
       throw new Error('SMS recipient unavailable');
@@ -103,7 +106,11 @@ export class SmsNotificationTransport implements INotificationTransport {
       'sms',
       recipient
     );
-    const providerRef = await createSmsSender(this.pool, this.request)(message, payload.signal);
+    const providerRef = await createSmsSender(
+      this.pool,
+      this.request,
+      durableDelivery(this.pool, payload.outboxId, 'sms', payload.idempotencyKey)
+    )(message, payload.signal);
     return { status: 'delivered', providerRef };
   }
 }

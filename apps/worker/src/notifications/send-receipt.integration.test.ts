@@ -9,7 +9,7 @@ import { durableDelivery, readDeliveryReceipt, DeliveryOutcomeUnknown } from './
 const database = `test_receipt_${randomUUID().replaceAll('-', '')}`;
 let management: Pool, pool: Pool, profileId: string;
 const provider = { id: randomUUID(), transport: 'smtp' as const };
-let legacy: string, untouched: string;
+let legacy: string, aggregateAttempt: string, untouched: string;
 const folder = resolve(__dirname, '../../../../packages/db/drizzle/production');
 beforeAll(async () => {
   if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run');
@@ -30,7 +30,9 @@ beforeAll(async () => {
         await pool.query("INSERT INTO profiles(user_id) VALUES ('receipt-owner') RETURNING id")
       ).rows[0].id;
       legacy = await queue();
+      aggregateAttempt = await queue();
       untouched = await queue();
+      await pool.query('UPDATE notification_outbox SET attempts=1 WHERE id=$1', [aggregateAttempt]);
       await pool.query(
         "UPDATE notification_job SET attempts=1,status='retrying' WHERE outbox_id=$1",
         [legacy]
@@ -57,6 +59,9 @@ async function queue() {
 }
 it('holds uncertain legacy sends without deleting their jobs or touching never-attempted messages', async () => {
   await expect(readDeliveryReceipt(pool, legacy, 'email')).rejects.toBeInstanceOf(
+    DeliveryOutcomeUnknown
+  );
+  await expect(readDeliveryReceipt(pool, aggregateAttempt, 'email')).rejects.toBeInstanceOf(
     DeliveryOutcomeUnknown
   );
   expect(await readDeliveryReceipt(pool, untouched, 'email')).toBeUndefined();

@@ -283,6 +283,21 @@ export class FailedNotificationsService {
       }
 
       if (opts.requeue) {
+        const receipt = await client.query(
+          `SELECT status FROM notification_send_receipts
+           WHERE outbox_id=$1 AND channel=$2 FOR UPDATE`,
+          [row.outbox_id, row.channel]
+        );
+        if (receipt.rows.some((item) => item.status === 'sending' || item.status === 'unknown')) {
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: ErrorCodes.CONFLICT_STATE.code,
+              message: 'Provider outcome unknown; reconcile delivery before retrying',
+            },
+            409
+          );
+        }
         // Re-open delivery for a *retryable* row only: the outbox row must be
         // `failed` and not mid-lease, and the channel job must still be
         // `dead_letter`. Guards against racing a worker that may be
