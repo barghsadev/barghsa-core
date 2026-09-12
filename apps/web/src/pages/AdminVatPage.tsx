@@ -45,6 +45,20 @@ export default function AdminVatPage() {
     return product?.title[locale] || product?.title.en || product?.title.fa || label('product');
   };
   const dateText = (value: string) => new Date(value).toLocaleString(locale, { timeZone: zone });
+  function overrideStatus(row: VatProductOverrideDto) {
+    const rate = rates.find((value) => value.id === row.vatConfigId);
+    if (!rate) return 'expired';
+    const from = Math.max(Date.parse(row.effectiveFrom), Date.parse(rate.effectiveFrom));
+    const until = Math.min(
+      row.effectiveUntil ? Date.parse(row.effectiveUntil) : Infinity,
+      rate.effectiveUntil ? Date.parse(rate.effectiveUntil) : Infinity
+    );
+    if (until <= from) return 'expired';
+    return vatWindowStatus(
+      new Date(from).toISOString(),
+      Number.isFinite(until) ? new Date(until).toISOString() : null
+    );
+  }
   useEffect(() => {
     const abort = new AbortController();
     setState('loading');
@@ -311,84 +325,141 @@ export default function AdminVatPage() {
               </div>
             </form>
           )}
-          <section aria-label={label('rates')}>
+          <section>
             <h2 className="text-xl font-semibold">{label('rates')}</h2>
-            {!rates.length && <p>{label('empty')}</p>}
-            <ul className="divide-y">
-              {rates.map((rate) => (
-                <li key={rate.id} className="flex flex-col gap-2 py-4">
-                  <h3 className="font-semibold">
-                    {label(`category.${rate.category}`)} ·{' '}
-                    {numbers.percent(rate.rateBasisPoints / 10000)}
-                  </h3>
-                  <p>{label(`status.${rate.status}`)}</p>
-                  <p>
-                    {label('from')}: {dateText(rate.effectiveFrom)}
-                  </p>
-                  {rate.effectiveUntil && (
-                    <p>
-                      {label('until')}: {dateText(rate.effectiveUntil)}
-                    </p>
-                  )}
-                  {rate.effectiveUntil === null && (
-                    <div>
-                      <Button
-                        variant="outline"
-                        aria-label={`${label('end')} ${label(`category.${rate.category}`)}`}
-                        onClick={() =>
-                          open({
-                            kind: 'endRate',
-                            id: rate.id,
-                            title: label(`category.${rate.category}`),
-                          })
-                        }
-                      >
-                        {label('end')}
-                      </Button>
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
+            {!rates.length ? (
+              <p>{label('empty')}</p>
+            ) : (
+              <div
+                className="mt-3 max-w-full overflow-x-auto rounded-md border"
+                role="region"
+                aria-label={label('rates')}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to scroll every table column.
+                tabIndex={0}
+              >
+                <table className="w-full text-start text-sm" aria-label={label('rates')}>
+                  <thead className="bg-muted">
+                    <tr>
+                      {['category', 'percent', 'from', 'until', 'status', 'actions'].map(
+                        (column) => (
+                          <th key={column} scope="col" className="p-3 text-start">
+                            {label(column)}
+                          </th>
+                        )
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {rates.map((rate) => (
+                      <tr key={rate.id}>
+                        <th scope="row" className="p-3 text-start font-medium">
+                          {label(`category.${rate.category}`)}
+                        </th>
+                        <td className="p-3">{numbers.percent(rate.rateBasisPoints / 10000)}</td>
+                        <td className="p-3">
+                          <time dateTime={rate.effectiveFrom}>{dateText(rate.effectiveFrom)}</time>
+                        </td>
+                        <td className="p-3">
+                          {rate.effectiveUntil ? (
+                            <time dateTime={rate.effectiveUntil}>
+                              {dateText(rate.effectiveUntil)}
+                            </time>
+                          ) : (
+                            label('openEnded')
+                          )}
+                        </td>
+                        <td className="p-3">{label(`status.${rate.status}`)}</td>
+                        <td className="p-3">
+                          {rate.effectiveUntil === null && (
+                            <Button
+                              variant="outline"
+                              aria-label={`${label('end')} ${label(`category.${rate.category}`)}`}
+                              onClick={() =>
+                                open({
+                                  kind: 'endRate',
+                                  id: rate.id,
+                                  title: label(`category.${rate.category}`),
+                                })
+                              }
+                            >
+                              {label('end')}
+                            </Button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </section>
-          <section aria-label={label('overrides')}>
+          <section>
             <h2 className="text-xl font-semibold">{label('overrides')}</h2>
-            {!overrides.length && <p>{label('empty')}</p>}
-            <ul className="divide-y">
-              {overrides.map((row) => (
-                <li key={row.id} className="flex flex-col gap-2 py-4">
-                  <h3 className="break-words font-semibold">
-                    {productTitle(row.productId)} · {numbers.percent(row.rateBasisPoints / 10000)}
-                  </h3>
-                  <p>{label(`status.${vatWindowStatus(row.effectiveFrom, row.effectiveUntil)}`)}</p>
-                  <p>
-                    {label('from')}: {dateText(row.effectiveFrom)}
-                  </p>
-                  {row.effectiveUntil && (
-                    <p>
-                      {label('until')}: {dateText(row.effectiveUntil)}
-                    </p>
-                  )}
-                  {row.effectiveUntil === null && (
-                    <div>
-                      <Button
-                        variant="outline"
-                        aria-label={`${label('endOverride')} ${productTitle(row.productId)}`}
-                        onClick={() =>
-                          open({
-                            kind: 'endOverride',
-                            id: row.id,
-                            title: productTitle(row.productId),
-                          })
-                        }
-                      >
-                        {label('endOverride')}
-                      </Button>
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
+            {!overrides.length ? (
+              <p>{label('empty')}</p>
+            ) : (
+              <div
+                className="mt-3 max-w-full overflow-x-auto rounded-md border"
+                role="region"
+                aria-label={label('overrides')}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to scroll every table column.
+                tabIndex={0}
+              >
+                <table className="w-full text-start text-sm" aria-label={label('overrides')}>
+                  <thead className="bg-muted">
+                    <tr>
+                      {['product', 'percent', 'from', 'until', 'status', 'actions'].map(
+                        (column) => (
+                          <th key={column} scope="col" className="p-3 text-start">
+                            {label(column)}
+                          </th>
+                        )
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {overrides.map((row) => (
+                      <tr key={row.id}>
+                        <th scope="row" className="p-3 text-start font-medium">
+                          {productTitle(row.productId)}
+                        </th>
+                        <td className="p-3">{numbers.percent(row.rateBasisPoints / 10000)}</td>
+                        <td className="p-3">
+                          <time dateTime={row.effectiveFrom}>{dateText(row.effectiveFrom)}</time>
+                        </td>
+                        <td className="p-3">
+                          {row.effectiveUntil ? (
+                            <time dateTime={row.effectiveUntil}>
+                              {dateText(row.effectiveUntil)}
+                            </time>
+                          ) : (
+                            label('openEnded')
+                          )}
+                        </td>
+                        <td className="p-3">{label(`status.${overrideStatus(row)}`)}</td>
+                        <td className="p-3">
+                          {row.effectiveUntil === null && (
+                            <Button
+                              variant="outline"
+                              aria-label={`${label('endOverride')} ${productTitle(row.productId)}`}
+                              onClick={() =>
+                                open({
+                                  kind: 'endOverride',
+                                  id: row.id,
+                                  title: productTitle(row.productId),
+                                })
+                              }
+                            >
+                              {label('endOverride')}
+                            </Button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </section>
         </>
       )}
