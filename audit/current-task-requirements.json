@@ -6,7 +6,7 @@
   "source_sha256": {
     "kanban/epics/01-platform-infrastructure.md": "cf25ecaad4e9a6484a8a69a6e3528efabbc8af7b5f580df4ca527b2dcf9a0dda",
     "kanban/epics/02-auth-users-admin.md": "e532618b099625d9b0c8cae5fc03804183236ae80174ce47b4168180a78a8a55",
-    "kanban/epics/05-notifications-documents-ai.md": "7b2275c3c598e25714d530b5ba410bd98d903e752172a7f8b09b709dd02620be",
+    "kanban/epics/05-notifications-documents-ai.md": "d06e35f969f2550cf824a3bd799ec77f6836fa52ff98e9fbc0ac2521d46a71ab",
     "kanban/epics/04-invoices-wallet-contracts.md": "5d72db3278123cdcf42dd5e14c87ae6cab1a089363755537a4c4083cfa313bf7",
     "kanban/epics/03-core-business.md": "ab7d2420c453a2dfb0a52344ac01b7acc0f5d946a6b2c650a27d8a760bdfae68",
     "kanban/epics/07-ui-ux-design.md": "cf06a0755c787e15e55d128c713307487cd328ef1512c20f7b9a2e44a6080c3a"
@@ -1849,8 +1849,8 @@
       "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
       "requirement_line": 196,
       "story_context": "### Story T-05.06: Email Provider Administration\n\n**Description:** Admin interface for configuring email delivery: SMTP or Resend. Draft → Test → Active → Rollback lifecycle with secrets management.\n\n**Acceptance Criteria:**\n- Two transport options: SMTP (TLS/STARTTLS) and Resend\n- Draft → Test → Active → Superseded lifecycle per provider configuration\n- Secrets: encrypted at rest, masked in UI/responses, write-only after entry\n- Test send to admin-owned destination before activation\n- Connection check on SMTP before activation\n- Rollback preserves previous Active version\n- Circuit breaker: transient failure threshold → pause channel, alert\n- At most one Active provider per channel per environment\n- Disabling the only OTP channel blocked unless alternative recovery path exists\n\n| Task | Complexity | Priority |\n|---|---|---|",
-      "requirement_extract": "| **T-05.06.05 — Secrets encryption & masking** | M | P0 |\n| Use NestJS built-in encryption or a KMS-integrated service. Encrypt at field level before storing in DB. Decrypt only in the outbox worker when sending. Mask in API responses: show last 4 characters only, replace rest with `*`. Never log secrets, never include in analytics, never return to frontend. | | |",
-      "context_sha256": "777a6061c48405b75c838b22b0dc6e2754945b6f789eb4c040285d2cb85b2f98"
+      "requirement_extract": "| **T-05.06.05 — Secrets encryption & masking** | M | P0 |\n| Use NestJS built-in encryption or a KMS-integrated service. Encrypt at field level before storing in DB. Decrypt only within trusted server-side consumers: workers sending messages, authorized verified-recipient provider tests, webhook signature verification using only its signing secret, and internal masking or rollback operations. This limited API-side boundary was approved by the owner on 2026-09-13. Mask in API responses: show last 4 characters only, replace rest with `*`. Never log plaintext secrets, include them in analytics, or return them to the frontend. | | |",
+      "context_sha256": "9748783b57eac9a2edb529254a0ab1abfd8212884ac6256e611b43320477b332"
     },
     {
       "task_key": "05-notifications-documents-ai.md#T-05.06.06",
