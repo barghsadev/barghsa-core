@@ -1,3 +1,6 @@
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
 vi.mock('../admin/staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
@@ -48,6 +51,7 @@ function agentBaseRow(over: Record<string, unknown> = {}) {
 }
 
 const ACTOR = 'user-admin-1';
+const SESSION = { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' };
 
 /** Load AiAgentsService with a mocked @barghsa/db pool. */
 async function loadService(pool: { query: ReturnType<typeof vi.fn> }) {
@@ -169,6 +173,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
         kbIds: ['kb-1'],
         policyIds: ['pol-1'],
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({ id: 'agent-1', enabled: true, kbCount: 1, policyCount: 1 });
@@ -201,6 +206,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
         modelId: 'model-1',
         enabled: false,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({ enabled: false, kbCount: 0, policyCount: 0 });
@@ -218,6 +224,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
           description: '',
           modelId: 'missing',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).rejects.toMatchObject({ status: 404, response: { error: 'AI_MODEL_NOT_FOUND' } });
@@ -241,6 +248,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
           modelId: 'model-1',
           kbIds: ['missing'],
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).rejects.toMatchObject({ status: 404, response: { error: 'AI_KB_NOT_FOUND' } });
@@ -259,6 +267,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
           description: '',
           modelId: 'model-1',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).rejects.toMatchObject({ status: 409, response: { error: 'AI_AGENT_MODEL_MISSING' } });
@@ -273,7 +282,12 @@ describe('AiAgentsService (T-09.11.04)', () => {
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [] }); // findAgent
       await expect(
-        service.update('missing', { title: 'x', actorUserId: ACTOR, ip: '1.2.3.4' })
+        service.update('missing', {
+          title: 'x',
+          actorUserId: ACTOR,
+          session: SESSION,
+          ip: '1.2.3.4',
+        })
       ).rejects.toMatchObject({ status: 404 });
     });
 
@@ -293,6 +307,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
       const result = await service.update('agent-1', {
         enabled: false,
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({ enabled: false });
@@ -323,6 +338,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
       const result = await service.update('agent-1', {
         kbIds: ['kb-1'],
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result.kbCount).toBe(1);
@@ -350,7 +366,12 @@ describe('AiAgentsService (T-09.11.04)', () => {
         .mockResolvedValueOnce({ rows: [{ count: 0 }] }) // policy count
         .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-      await service.update('agent-1', { kbIds: ['kb-1'], actorUserId: ACTOR, ip: '1.2.3.4' });
+      await service.update('agent-1', {
+        kbIds: ['kb-1'],
+        actorUserId: ACTOR,
+        session: SESSION,
+        ip: '1.2.3.4',
+      });
       const audits = mockQuery.mock.calls.filter((c) =>
         String(c[0]).includes('INSERT INTO audit_log')
       );
@@ -365,7 +386,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
       mockQuery
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [] }); // findAgent
-      await expect(service.remove('missing', ACTOR, '1.2.3.4')).rejects.toMatchObject({
+      await expect(service.remove('missing', ACTOR, '1.2.3.4', SESSION)).rejects.toMatchObject({
         status: 404,
       });
     });
@@ -379,7 +400,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
         .mockResolvedValueOnce({ rows: [] }) // DELETE
         .mockResolvedValueOnce({ rows: [] }) // audit
         .mockResolvedValueOnce({ rows: [] }); // COMMIT
-      await service.remove('agent-1', ACTOR, '1.2.3.4');
+      await service.remove('agent-1', ACTOR, '1.2.3.4', SESSION);
       expect(String(mockQuery.mock.calls[2]![0])).toContain('DELETE FROM ai_agents');
       expect(mockQuery.mock.calls[3]![1]).toContain('ai_agent_deleted');
     });
@@ -395,7 +416,13 @@ describe('AiAgentsService (T-09.11.04)', () => {
         .mockResolvedValueOnce({ rows: [kbRow()] }) // findKb
         .mockResolvedValueOnce({ rowCount: 1, rows: [{ agent_id: 'agent-1' }] }) // insert
         .mockResolvedValueOnce({ rows: [] }); // audit
-      await service.addKb({ agentId: 'agent-1', kbId: 'kb-1', actorUserId: ACTOR, ip: '1.2.3.4' });
+      await service.addKb({
+        agentId: 'agent-1',
+        kbId: 'kb-1',
+        actorUserId: ACTOR,
+        session: SESSION,
+        ip: '1.2.3.4',
+      });
       const insertSql = String(mockQuery.mock.calls[3]![0]);
       expect(insertSql).toContain('INSERT INTO ai_agent_kbs');
       expect(insertSql).toContain('ON CONFLICT (agent_id, kb_id) DO NOTHING');
@@ -414,7 +441,13 @@ describe('AiAgentsService (T-09.11.04)', () => {
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [kbRow()] }) // findKb
         .mockResolvedValueOnce({ rowCount: 0, rows: [] }); // insert → conflict
-      await service.addKb({ agentId: 'agent-1', kbId: 'kb-1', actorUserId: ACTOR, ip: '1.2.3.4' });
+      await service.addKb({
+        agentId: 'agent-1',
+        kbId: 'kb-1',
+        actorUserId: ACTOR,
+        session: SESSION,
+        ip: '1.2.3.4',
+      });
       const auditCalls = mockQuery.mock.calls.filter((c) =>
         String(c[0]).includes('INSERT INTO audit_log')
       );
@@ -429,7 +462,13 @@ describe('AiAgentsService (T-09.11.04)', () => {
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [] }); // findKb
       await expect(
-        service.addKb({ agentId: 'agent-1', kbId: 'missing', actorUserId: ACTOR, ip: '1.2.3.4' })
+        service.addKb({
+          agentId: 'agent-1',
+          kbId: 'missing',
+          actorUserId: ACTOR,
+          session: SESSION,
+          ip: '1.2.3.4',
+        })
       ).rejects.toMatchObject({ status: 404, response: { error: 'AI_KB_NOT_FOUND' } });
     });
 
@@ -441,7 +480,9 @@ describe('AiAgentsService (T-09.11.04)', () => {
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rowCount: 1 }) // DELETE
         .mockResolvedValueOnce({ rows: [] }); // audit
-      await expect(service.removeKb('agent-1', 'kb-1', ACTOR, '1.2.3.4')).resolves.toBeUndefined();
+      await expect(
+        service.removeKb('agent-1', 'kb-1', ACTOR, '1.2.3.4', SESSION)
+      ).resolves.toBeUndefined();
       expect(mockQuery.mock.calls[3]![1]).toContain('ai_agent_kb_removed');
     });
 
@@ -452,7 +493,9 @@ describe('AiAgentsService (T-09.11.04)', () => {
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rowCount: 0 }); // DELETE → no row
-      await expect(service.removeKb('agent-1', 'kb-1', ACTOR, '1.2.3.4')).rejects.toMatchObject({
+      await expect(
+        service.removeKb('agent-1', 'kb-1', ACTOR, '1.2.3.4', SESSION)
+      ).rejects.toMatchObject({
         status: 404,
         response: { error: 'AI_AGENT_KB_NOT_FOUND' },
       });
@@ -473,6 +516,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
         agentId: 'agent-1',
         policyId: 'pol-1',
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(String(mockQuery.mock.calls[3]![0])).toContain('INSERT INTO ai_agent_policies');
@@ -491,7 +535,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rowCount: 1 }) // DELETE
         .mockResolvedValueOnce({ rows: [] }); // audit
-      await service.removePolicy('agent-1', 'pol-1', ACTOR, '1.2.3.4');
+      await service.removePolicy('agent-1', 'pol-1', ACTOR, '1.2.3.4', SESSION);
       expect(mockQuery.mock.calls[3]![1]).toContain('ai_agent_policy_removed');
     });
 
@@ -507,6 +551,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
           agentId: 'agent-1',
           policyId: 'missing',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).rejects.toMatchObject({ status: 404, response: { error: 'AI_POLICY_NOT_FOUND' } });

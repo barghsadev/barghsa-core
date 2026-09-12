@@ -84,7 +84,7 @@ it.each(['create', 'update', 'delete'] as const)('rechecks agent %s authority', 
         Number(
           (
             await http.pool.query(
-              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM users u JOIN sessions s%FOR UPDATE OF u%'"
             )
           ).rows[0].count
         )
@@ -243,7 +243,7 @@ it.each(linkCases)('rechecks agent $kind $action link authority', async (entry) 
         Number(
           (
             await http.pool.query(
-              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM users u JOIN sessions s%FOR UPDATE OF u%'"
             )
           ).rows[0].count
         )
@@ -471,3 +471,76 @@ it('exposes only IDs and titles as agent-editor options under agent permission',
     for (const row of rows) expect(Object.keys(row).sort()).toEqual(['id', 'title']);
   expect(JSON.stringify(options)).not.toContain('private-test-only-token');
 });
+
+// Change session proof after the write, before COMMIT, to exercise rollback.
+async function invalidateSessionDuringAudit(change: string, run: () => Promise<void>) {
+  await http.pool.query(`
+    CREATE OR REPLACE FUNCTION invalidate_ai_agents_session() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN UPDATE sessions SET ${change} WHERE user_id='slot-admin'; RETURN NEW; END $$;
+    CREATE TRIGGER invalidate_session BEFORE INSERT ON audit_log FOR EACH ROW
+    WHEN (NEW.event LIKE 'ai_agent_%') EXECUTE FUNCTION invalidate_ai_agents_session()`);
+  try {
+    await run();
+  } finally {
+    await http.pool.query('DROP TRIGGER invalidate_session ON audit_log');
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day', idle_deadline=NOW()+INTERVAL '1 hour', step_up_verified_at=NOW(), revoked_at=NULL, csrf_token=$1 WHERE user_id='slot-admin'",
+      [headers['x-csrf-token']]
+    );
+  }
+}
+
+it.each(['create', 'update', 'delete'] as const)(
+  'rolls back agent %s when the session expires before commit',
+  async (action) => {
+    await invalidateSessionDuringAudit(
+      "expires_at=clock_timestamp()-INTERVAL '1 second'",
+      async () => {
+        expect((await mutation(action)).status).toBe(401);
+        expect((await http.pool.query('SELECT id,title FROM ai_agents')).rows).toEqual([
+          { id: agentId, title: 'Support' },
+        ]);
+        expect(
+          (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+        ).toHaveLength(0);
+      }
+    );
+  }
+);
+it.each(linkCases)(
+  'rolls back agent $kind $action when the session expires before commit',
+  async (entry) => {
+    const id = await prepareLink(entry);
+    await invalidateSessionDuringAudit(
+      "expires_at=clock_timestamp()-INTERVAL '1 second'",
+      async () => {
+        expect((await linkRequest(entry, id)).status).toBe(401);
+        await unchangedLink(entry);
+      }
+    );
+  }
+);
+it.each([
+  ["csrf_token='rotated-proof'", 403],
+  ['step_up_verified_at=NULL', 403],
+  ['revoked_at=clock_timestamp()', 401],
+] as const)(
+  'rejects changed session proof %s before committing agent groups',
+  async (change, status) => {
+    const groups = await createGroups();
+    await invalidateSessionDuringAudit(change, async () => {
+      expect(
+        (await updateGroups({ kbGroupIds: [groups.kb], policyGroupIds: [groups.policy] })).status
+      ).toBe(status);
+      expect((await http.pool.query('SELECT agent_id FROM ai_agent_kb_groups')).rows).toHaveLength(
+        0
+      );
+      expect(
+        (await http.pool.query('SELECT agent_id FROM ai_agent_policy_groups')).rows
+      ).toHaveLength(0);
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+      ).toHaveLength(0);
+    });
+  }
+);

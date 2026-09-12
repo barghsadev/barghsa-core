@@ -1,8 +1,13 @@
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+
+type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 /**
  * Knowledge base management service (S-09.11, T-09.11.02).
@@ -96,6 +101,7 @@ export interface CreateKbInput {
   title: string;
   description: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -103,6 +109,7 @@ export interface UpdateKbInput {
   title?: string;
   description?: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -110,6 +117,7 @@ export interface AttachDocumentInput {
   kbId: string;
   storageKey: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -117,6 +125,7 @@ export interface CreateKbGroupInput {
   title: string;
   description: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -124,6 +133,7 @@ export interface UpdateKbGroupInput {
   title?: string;
   description?: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -131,6 +141,7 @@ export interface AddGroupMemberInput {
   groupId: string;
   kbId: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -256,7 +267,7 @@ export class KnowledgeBasesService {
 
   /** Create a KB. */
   async createKb(input: CreateKbInput): Promise<KbDto> {
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const id = uuidv7();
       const now = new Date();
 
@@ -294,7 +305,7 @@ export class KnowledgeBasesService {
 
   /** Update a KB's title/description. */
   async updateKb(id: string, input: UpdateKbInput): Promise<KbDto> {
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const existing = await this.findKb(id, client);
       if (!existing) throw this.kbNotFound(id);
 
@@ -343,8 +354,13 @@ export class KnowledgeBasesService {
   }
 
   /** Delete a KB (cascades to document links + group memberships). */
-  async removeKb(id: string, actorUserId: string, ip: string): Promise<void> {
-    return this.withTransaction(actorUserId, async (client) => {
+  async removeKb(
+    id: string,
+    actorUserId: string,
+    ip: string,
+    session: MutationSession
+  ): Promise<void> {
+    return this.withTransaction(actorUserId, session, async (client) => {
       const existing = await this.findKb(id, client);
       if (!existing) throw this.kbNotFound(id);
 
@@ -404,7 +420,7 @@ export class KnowledgeBasesService {
    * a no-op returning the existing link (idempotent).
    */
   async attachDocument(input: AttachDocumentInput): Promise<KbDocumentDto> {
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const kb = await this.findKb(input.kbId, client);
       if (!kb) throw this.kbNotFound(input.kbId);
 
@@ -511,9 +527,10 @@ export class KnowledgeBasesService {
     kbId: string,
     documentId: string,
     actorUserId: string,
-    ip: string
+    ip: string,
+    session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client) => {
       const kb = await this.findKb(kbId, client);
       if (!kb) throw this.kbNotFound(kbId);
 
@@ -584,7 +601,7 @@ export class KnowledgeBasesService {
 
   /** Create a KB group. */
   async createGroup(input: CreateKbGroupInput): Promise<KbGroupDto> {
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const id = uuidv7();
       const now = new Date();
 
@@ -622,7 +639,7 @@ export class KnowledgeBasesService {
 
   /** Update a KB group's title/description. */
   async updateGroup(id: string, input: UpdateKbGroupInput): Promise<KbGroupDto> {
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const existing = await this.findGroup(id, client);
       if (!existing) throw this.groupNotFound(id);
 
@@ -668,8 +685,13 @@ export class KnowledgeBasesService {
   }
 
   /** Delete a KB group (cascades to its memberships). */
-  async removeGroup(id: string, actorUserId: string, ip: string): Promise<void> {
-    return this.withTransaction(actorUserId, async (client) => {
+  async removeGroup(
+    id: string,
+    actorUserId: string,
+    ip: string,
+    session: MutationSession
+  ): Promise<void> {
+    return this.withTransaction(actorUserId, session, async (client) => {
       const existing = await this.findGroup(id, client);
       if (!existing) throw this.groupNotFound(id);
 
@@ -692,7 +714,7 @@ export class KnowledgeBasesService {
 
   /** Link a KB into a group (idempotent; both records must exist). */
   async addGroupMember(input: AddGroupMemberInput): Promise<void> {
-    return this.withTransaction(input.actorUserId, async (client) => {
+    return this.withTransaction(input.actorUserId, input.session, async (client) => {
       const group = await this.findGroup(input.groupId, client);
       if (!group) throw this.groupNotFound(input.groupId);
       const kb = await this.findKb(input.kbId, client);
@@ -741,9 +763,10 @@ export class KnowledgeBasesService {
     groupId: string,
     kbId: string,
     actorUserId: string,
-    ip: string
+    ip: string,
+    session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, async (client) => {
+    return this.withTransaction(actorUserId, session, async (client) => {
       const group = await this.findGroup(groupId, client);
       if (!group) throw this.groupNotFound(groupId);
 
@@ -935,13 +958,19 @@ export class KnowledgeBasesService {
 
   private async withTransaction<T>(
     actorUserId: string,
+    session: MutationSession,
     work: (client: PoolClient) => Promise<T>
   ): Promise<T> {
+    if (!session || session.userId !== actorUserId) {
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+    }
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:ai:kb');
+      await requireSessionStepUp(client, session);
       const result = await work(client);
+      await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       return result;
     } catch (error) {

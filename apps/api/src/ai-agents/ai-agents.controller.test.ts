@@ -26,8 +26,14 @@ const mockService = {
   removePolicy: mockRemovePolicy,
 } as unknown as AiAgentsService;
 
+const adminSession = {
+  isAdmin: true,
+  userId: 'admin-1',
+  sessionId: 'test-session',
+  csrfToken: 'test-csrf',
+};
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: adminSession,
   ip: '10.0.0.8',
   socket: { remoteAddress: '10.0.0.8' },
 } as never;
@@ -145,6 +151,7 @@ describe('AgentsController (T-09.11.04)', () => {
         policyIds: ['dddddddd-dddd-4ddd-8ddd-dddddddddddd'],
         enabled: false,
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -192,6 +199,7 @@ describe('AgentsController (T-09.11.04)', () => {
       expect(mockUpdate).toHaveBeenCalledWith('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', {
         enabled: false,
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -206,7 +214,8 @@ describe('AgentsController (T-09.11.04)', () => {
       expect(mockRemove).toHaveBeenCalledWith(
         'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
         'admin-1',
-        '10.0.0.8'
+        '10.0.0.8',
+        adminSession
       );
     });
   });
@@ -223,6 +232,7 @@ describe('AgentsController (T-09.11.04)', () => {
         agentId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
         kbId: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -249,7 +259,8 @@ describe('AgentsController (T-09.11.04)', () => {
         'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
         'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
         'admin-1',
-        '10.0.0.8'
+        '10.0.0.8',
+        adminSession
       );
     });
   });
@@ -266,6 +277,7 @@ describe('AgentsController (T-09.11.04)', () => {
         agentId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
         policyId: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd',
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -283,7 +295,8 @@ describe('AgentsController (T-09.11.04)', () => {
         'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
         'dddddddd-dddd-4ddd-8ddd-dddddddddddd',
         'admin-1',
-        '10.0.0.8'
+        '10.0.0.8',
+        adminSession
       );
     });
   });

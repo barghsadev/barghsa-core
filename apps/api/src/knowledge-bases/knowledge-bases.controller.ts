@@ -168,6 +168,7 @@ export class KnowledgeBasesController {
       title: parsed.data.title,
       description: parsed.data.description ?? '',
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -192,6 +193,7 @@ export class KnowledgeBasesController {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
       ...(parsed.data.description !== undefined ? { description: parsed.data.description } : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -207,7 +209,7 @@ export class KnowledgeBasesController {
     @Param('id', new ParseUUIDPipe()) id: string
   ): Promise<void> {
     this.assertKbPermission(req);
-    return this.service.removeKb(id, req.session.userId, requestIp(req));
+    return this.service.removeKb(id, req.session.userId, requestIp(req), req.session);
   }
 
   @Post(':id/documents')
@@ -236,6 +238,7 @@ export class KnowledgeBasesController {
       kbId: id,
       storageKey: parsed.data.storageKey,
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -258,7 +261,13 @@ export class KnowledgeBasesController {
     @Param('documentId', new ParseUUIDPipe()) documentId: string
   ): Promise<void> {
     this.assertKbPermission(req);
-    return this.service.detachDocument(id, documentId, req.session.userId, requestIp(req));
+    return this.service.detachDocument(
+      id,
+      documentId,
+      req.session.userId,
+      requestIp(req),
+      req.session
+    );
   }
 }
 
@@ -321,6 +330,7 @@ export class KbGroupsController {
       title: parsed.data.title,
       description: parsed.data.description ?? '',
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -345,6 +355,7 @@ export class KbGroupsController {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
       ...(parsed.data.description !== undefined ? { description: parsed.data.description } : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -360,7 +371,7 @@ export class KbGroupsController {
     @Param('id', new ParseUUIDPipe()) id: string
   ): Promise<void> {
     this.assertKbPermission(req);
-    return this.service.removeGroup(id, req.session.userId, requestIp(req));
+    return this.service.removeGroup(id, req.session.userId, requestIp(req), req.session);
   }
 
   @Post(':id/members')
@@ -386,6 +397,7 @@ export class KbGroupsController {
       groupId: id,
       kbId: parsed.data.kbId,
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -402,6 +414,12 @@ export class KbGroupsController {
     @Param('kbId', new ParseUUIDPipe()) kbId: string
   ): Promise<void> {
     this.assertKbPermission(req);
-    return this.service.removeGroupMember(id, kbId, req.session.userId, requestIp(req));
+    return this.service.removeGroupMember(
+      id,
+      kbId,
+      req.session.userId,
+      requestIp(req),
+      req.session
+    );
   }
 }

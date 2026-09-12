@@ -1,3 +1,6 @@
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
 vi.mock('../admin/staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
@@ -51,6 +54,7 @@ function groupBaseRow(over: Record<string, unknown> = {}) {
 }
 
 const ACTOR = 'user-admin-1';
+const SESSION = { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' };
 
 /** Load KnowledgeBasesService with a mocked @barghsa/db pool. */
 async function loadService(pool: { query: ReturnType<typeof mockPool>['mockQuery'] }) {
@@ -144,6 +148,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
         title: 'Customer support FAQ',
         description: 'Common questions',
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({ id: 'kb-1', documentCount: 0, groupCount: 0 });
@@ -161,7 +166,12 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
       mockQuery.mockResolvedValueOnce({ rows: [] }); // findKb
 
       await expect(
-        service.updateKb('missing', { title: 'x', actorUserId: ACTOR, ip: '1.2.3.4' })
+        service.updateKb('missing', {
+          title: 'x',
+          actorUserId: ACTOR,
+          session: SESSION,
+          ip: '1.2.3.4',
+        })
       ).rejects.toMatchObject({ status: 404 });
     });
 
@@ -173,7 +183,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
         .mockResolvedValueOnce({ rows: [] }) // delete
         .mockResolvedValueOnce({ rows: [] }); // audit
 
-      await service.removeKb('kb-1', ACTOR, '1.2.3.4');
+      await service.removeKb('kb-1', ACTOR, '1.2.3.4', SESSION);
       const deleteSql = String(mockQuery.mock.calls[1]![0]);
       expect(deleteSql).toContain('DELETE FROM knowledge_bases');
     });
@@ -192,6 +202,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
           kbId: 'kb-1',
           storageKey: 'uploads/ghost.pdf',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).rejects.toMatchObject({
@@ -222,6 +233,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
           kbId: 'kb-1',
           storageKey: 'uploads/gone.pdf',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).rejects.toMatchObject({
@@ -253,6 +265,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
         kbId: 'kb-1',
         storageKey: 'uploads/faq.pdf',
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({
@@ -288,6 +301,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
         kbId: 'kb-1',
         storageKey: 'uploads/faq.pdf',
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({ processingStatus: 'ready' });
@@ -308,7 +322,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
         .mockResolvedValueOnce({ rows: [] }); // findDocumentLinkById
 
       await expect(
-        service.detachDocument('kb-1', 'doc-ghost', ACTOR, '1.2.3.4')
+        service.detachDocument('kb-1', 'doc-ghost', ACTOR, '1.2.3.4', SESSION)
       ).rejects.toMatchObject({
         status: 404,
         response: { error: 'KB_DOCUMENT_NOT_FOUND' },
@@ -325,7 +339,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
         .mockResolvedValueOnce({ rows: [] }); // audit
 
       await expect(
-        service.detachDocument('kb-1', 'doc-1', ACTOR, '1.2.3.4')
+        service.detachDocument('kb-1', 'doc-1', ACTOR, '1.2.3.4', SESSION)
       ).resolves.toBeUndefined();
       const deleteSql = String(mockQuery.mock.calls[2]![0]);
       expect(deleteSql).toContain('DELETE FROM kb_documents');
@@ -356,6 +370,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
         title: 'Support KBs',
         description: '',
         actorUserId: ACTOR,
+        session: SESSION,
         ip: '1.2.3.4',
       });
       expect(result).toMatchObject({ id: 'grp-1', memberCount: 0 });
@@ -366,9 +381,11 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
       service = await loadService({ query: mockQuery });
       mockQuery.mockResolvedValueOnce({ rows: [] });
 
-      await expect(service.removeGroup('missing', ACTOR, '1.2.3.4')).rejects.toMatchObject({
-        status: 404,
-      });
+      await expect(service.removeGroup('missing', ACTOR, '1.2.3.4', SESSION)).rejects.toMatchObject(
+        {
+          status: 404,
+        }
+      );
     });
   });
 
@@ -387,6 +404,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
           groupId: 'grp-1',
           kbId: 'kb-1',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).resolves.toBeUndefined();
@@ -407,6 +425,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
           groupId: 'grp-1',
           kbId: 'missing',
           actorUserId: ACTOR,
+          session: SESSION,
           ip: '1.2.3.4',
         })
       ).rejects.toMatchObject({ status: 404, response: { error: 'KB_NOT_FOUND' } });
@@ -421,7 +440,7 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
         .mockResolvedValueOnce({ rows: [] }); // audit
 
       await expect(
-        service.removeGroupMember('grp-1', 'kb-1', ACTOR, '1.2.3.4')
+        service.removeGroupMember('grp-1', 'kb-1', ACTOR, '1.2.3.4', SESSION)
       ).resolves.toBeUndefined();
     });
   });

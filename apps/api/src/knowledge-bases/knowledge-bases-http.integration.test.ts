@@ -474,3 +474,73 @@ it('lists only completed owned documents and filters by file name', async () => 
     ).status
   ).toBe(400);
 });
+
+// Change session proof after the write, before COMMIT, to exercise rollback.
+async function invalidateSessionDuringAudit(change: string, run: () => Promise<void>) {
+  await http.pool.query(`
+    CREATE OR REPLACE FUNCTION invalidate_knowledge_bases_session() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN UPDATE sessions SET ${change} WHERE user_id='kb-admin'; RETURN NEW; END $$;
+    CREATE TRIGGER invalidate_session BEFORE INSERT ON audit_log FOR EACH ROW
+    WHEN (NEW.event LIKE 'kb_%') EXECUTE FUNCTION invalidate_knowledge_bases_session()`);
+  try {
+    await run();
+  } finally {
+    await http.pool.query('DROP TRIGGER invalidate_session ON audit_log');
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day', idle_deadline=NOW()+INTERVAL '1 hour', step_up_verified_at=NOW(), revoked_at=NULL, csrf_token=$1 WHERE user_id='kb-admin'",
+      [headers['x-csrf-token']]
+    );
+  }
+}
+
+it.each(cases)('rolls back $kind $action when the session expires before commit', async (entry) => {
+  await invalidateSessionDuringAudit(
+    "expires_at=clock_timestamp()-INTERVAL '1 second'",
+    async () => {
+      expect((await request(entry)).status).toBe(401);
+      expect((await http.pool.query(`SELECT id,title FROM ${entry.table}`)).rows).toEqual([
+        { id: ids[entry.kind], title: entry.title },
+      ]);
+      expect((await http.pool.query('SELECT group_id,kb_id FROM kb_group_members')).rows).toEqual([
+        { group_id: ids.group, kb_id: ids.kb },
+      ]);
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+      ).toHaveLength(0);
+    }
+  );
+});
+it.each(['attach', 'detach', 'add', 'remove'] as const)(
+  'rolls back %s when the session expires before commit',
+  async (action) => {
+    const item = await prepareLink(action);
+    await invalidateSessionDuringAudit(
+      "expires_at=clock_timestamp()-INTERVAL '1 second'",
+      async () => {
+        expect((await linkRequest(action, item)).status).toBe(401);
+        await assertLinkUnchanged(action);
+      }
+    );
+  }
+);
+it.each([
+  ["csrf_token='rotated-proof'", 403],
+  ['step_up_verified_at=NULL', 403],
+  ['revoked_at=clock_timestamp()', 401],
+] as const)(
+  'rejects changed session proof %s before committing a KB update',
+  async (change, status) => {
+    await invalidateSessionDuringAudit(change, async () => {
+      expect(
+        (await request(cases.find((entry) => entry.kind === 'kb' && entry.action === 'update')!))
+          .status
+      ).toBe(status);
+      expect((await http.pool.query('SELECT title FROM knowledge_bases')).rows).toEqual([
+        { title: 'Original KB' },
+      ]);
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+      ).toHaveLength(0);
+    });
+  }
+);

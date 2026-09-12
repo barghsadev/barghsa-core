@@ -1,7 +1,12 @@
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+
+type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 /**
  * AI agent management service (S-09.11, T-09.11.04) — slice 1 (CRUD + links).
@@ -90,6 +95,7 @@ export interface CreateAgentInput {
   description: string;
   modelId: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
   kbIds?: string[];
   policyIds?: string[];
@@ -110,6 +116,7 @@ export interface UpdateAgentInput {
   kbGroupIds?: string[];
   policyGroupIds?: string[];
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -117,6 +124,7 @@ export interface AddAgentKbInput {
   agentId: string;
   kbId: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -124,6 +132,7 @@ export interface AddAgentPolicyInput {
   agentId: string;
   policyId: string;
   actorUserId: string;
+  session: MutationSession;
   ip: string;
 }
 
@@ -269,7 +278,7 @@ export class AiAgentsService {
 
   /** Create an agent, optionally linking KBs and policies in the same call. */
   create(input: CreateAgentInput): Promise<AgentDto> {
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q) => {
       const id = uuidv7();
       const now = new Date();
       const enabled = input.enabled ?? true;
@@ -362,7 +371,7 @@ export class AiAgentsService {
    * half-updated. A links-only change bumps `updated_at`.
    */
   update(id: string, input: UpdateAgentInput): Promise<AgentDto> {
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q) => {
       const existing = await this.findAgent(q, id, true);
       if (!existing) throw this.agentNotFound(id);
 
@@ -511,8 +520,8 @@ export class AiAgentsService {
   }
 
   /** Delete an agent (its KB/policy links cascade). */
-  remove(id: string, actorUserId: string, ip: string): Promise<void> {
-    return this.withTransaction(actorUserId, async (q) => {
+  remove(id: string, actorUserId: string, ip: string, session: MutationSession): Promise<void> {
+    return this.withTransaction(actorUserId, session, async (q) => {
       const existing = await this.findAgent(q, id, true);
       if (!existing) throw this.agentNotFound(id);
 
@@ -529,7 +538,7 @@ export class AiAgentsService {
 
   /** Link a KB to an agent (idempotent; both records must exist). */
   async addKb(input: AddAgentKbInput): Promise<void> {
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q) => {
       const agent = await this.findAgent(q, input.agentId, true);
       if (!agent) throw this.agentNotFound(input.agentId);
       const kb = await this.findKb(q, input.kbId);
@@ -572,8 +581,14 @@ export class AiAgentsService {
   }
 
   /** Remove a KB link from an agent. */
-  async removeKb(agentId: string, kbId: string, actorUserId: string, ip: string): Promise<void> {
-    return this.withTransaction(actorUserId, async (q) => {
+  async removeKb(
+    agentId: string,
+    kbId: string,
+    actorUserId: string,
+    ip: string,
+    session: MutationSession
+  ): Promise<void> {
+    return this.withTransaction(actorUserId, session, async (q) => {
       const agent = await this.findAgent(q, agentId, true);
       if (!agent) throw this.agentNotFound(agentId);
 
@@ -603,7 +618,7 @@ export class AiAgentsService {
 
   /** Link a policy to an agent (idempotent; both records must exist). */
   async addPolicy(input: AddAgentPolicyInput): Promise<void> {
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actorUserId, input.session, async (q) => {
       const agent = await this.findAgent(q, input.agentId, true);
       if (!agent) throw this.agentNotFound(input.agentId);
       const policy = await this.findPolicy(q, input.policyId);
@@ -649,9 +664,10 @@ export class AiAgentsService {
     agentId: string,
     policyId: string,
     actorUserId: string,
-    ip: string
+    ip: string,
+    session: MutationSession
   ): Promise<void> {
-    return this.withTransaction(actorUserId, async (q) => {
+    return this.withTransaction(actorUserId, session, async (q) => {
       const agent = await this.findAgent(q, agentId, true);
       if (!agent) throw this.agentNotFound(agentId);
 
@@ -689,14 +705,20 @@ export class AiAgentsService {
    */
   private async withTransaction<T>(
     actorUserId: string,
+    session: MutationSession,
     fn: (q: DbExecutor) => Promise<T>
   ): Promise<T> {
+    if (!session || session.userId !== actorUserId) {
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+    }
     const client = await getDbPool().connect();
     let committed = false;
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:ai:agents');
+      await requireSessionStepUp(client, session);
       const result = await fn(client);
+      await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       committed = true;
       return result;

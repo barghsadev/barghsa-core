@@ -36,8 +36,14 @@ const mockService = {
   removeGroupMember: mockRemoveGroupMember,
 } as unknown as KnowledgeBasesService;
 
+const adminSession = {
+  isAdmin: true,
+  userId: 'admin-1',
+  sessionId: 'test-session',
+  csrfToken: 'test-csrf',
+};
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: adminSession,
   ip: '10.0.0.8',
   socket: { remoteAddress: '10.0.0.8' },
 } as never;
@@ -149,6 +155,7 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
         title: 'Customer support FAQ',
         description: '',
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -173,6 +180,7 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
       expect(mockUpdateKb).toHaveBeenCalledWith('01900000-0000-7000-8000-000000000001', {
         title: 'Renamed FAQ',
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -187,7 +195,8 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
       expect(mockRemoveKb).toHaveBeenCalledWith(
         '01900000-0000-7000-8000-000000000001',
         'admin-1',
-        '10.0.0.8'
+        '10.0.0.8',
+        adminSession
       );
     });
   });
@@ -216,6 +225,7 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
         kbId: '01900000-0000-7000-8000-000000000001',
         storageKey: 'uploads/faq.pdf',
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -231,7 +241,8 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
         '01900000-0000-7000-8000-000000000001',
         'doc-1',
         'admin-1',
-        '10.0.0.8'
+        '10.0.0.8',
+        adminSession
       );
     });
   });
@@ -278,6 +289,7 @@ describe('KbGroupsController (T-09.11.02)', () => {
         title: 'Support KBs',
         description: '',
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -293,6 +305,7 @@ describe('KbGroupsController (T-09.11.02)', () => {
         groupId: 'grp-1',
         kbId: '01900000-0000-7000-8000-000000000001',
         actorUserId: 'admin-1',
+        session: adminSession,
         ip: '10.0.0.8',
       });
     });
@@ -315,7 +328,8 @@ describe('KbGroupsController (T-09.11.02)', () => {
         'grp-1',
         '01900000-0000-7000-8000-000000000001',
         'admin-1',
-        '10.0.0.8'
+        '10.0.0.8',
+        adminSession
       );
     });
   });

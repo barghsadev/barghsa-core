@@ -179,6 +179,7 @@ export class AgentsController {
         : {}),
       ...(parsed.data.enabled !== undefined ? { enabled: parsed.data.enabled } : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -223,6 +224,7 @@ export class AgentsController {
         : {}),
       ...(parsed.data.enabled !== undefined ? { enabled: parsed.data.enabled } : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -236,7 +238,7 @@ export class AgentsController {
   async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
     this.assertAgentPermission(req);
     assertUuid(id);
-    return this.service.remove(id, req.session.userId, requestIp(req));
+    return this.service.remove(id, req.session.userId, requestIp(req), req.session);
   }
 
   @Post(':id/kbs')
@@ -268,6 +270,7 @@ export class AgentsController {
       agentId: id,
       kbId: parsed.data.kbId,
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -291,7 +294,7 @@ export class AgentsController {
     this.assertAgentPermission(req);
     assertUuid(id);
     assertUuid(kbId, 'kbId');
-    return this.service.removeKb(id, kbId, req.session.userId, requestIp(req));
+    return this.service.removeKb(id, kbId, req.session.userId, requestIp(req), req.session);
   }
 
   @Post(':id/policies')
@@ -323,6 +326,7 @@ export class AgentsController {
       agentId: id,
       policyId: parsed.data.policyId,
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
     });
   }
@@ -346,6 +350,6 @@ export class AgentsController {
     this.assertAgentPermission(req);
     assertUuid(id);
     assertUuid(policyId, 'policyId');
-    return this.service.removePolicy(id, policyId, req.session.userId, requestIp(req));
+    return this.service.removePolicy(id, policyId, req.session.userId, requestIp(req), req.session);
   }
 }
