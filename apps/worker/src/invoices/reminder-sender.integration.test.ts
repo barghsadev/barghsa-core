@@ -14,6 +14,7 @@ import { resolve } from 'node:path';
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
 import type { IsolatedTestDb } from '@barghsa/db/test';
+import type { Pool } from 'pg';
 import { REMINDER_STOP_STATES } from '@barghsa/shared/finance';
 import {
   FIND_DUE_REMINDER_GROUPS_SQL,
@@ -84,6 +85,15 @@ describe('reminder sender — real PostgreSQL (T-04.1.04.03)', () => {
     await ctx.pool.query(readFileSync(REMINDER_MIGRATION, 'utf-8').trim());
     await ctx.pool.query(readFileSync(REMINDER_IDEMPOTENCY_MIGRATION, 'utf-8').trim());
     await ctx.pool.query(readFileSync(OUTBOX_MIGRATION, 'utf-8').trim());
+    await ctx.pool.query(
+      readFileSync(
+        resolve(
+          __dirname,
+          '../../../../packages/db/drizzle/0062_create_invoice_reminder_offset_toggles.sql'
+        ),
+        'utf-8'
+      )
+    );
 
     await ctx.pool.query(
       `INSERT INTO users (user_id, timezone, notification_preferences)
@@ -103,6 +113,7 @@ describe('reminder sender — real PostgreSQL (T-04.1.04.03)', () => {
   });
 
   beforeEach(async () => {
+    await ctx.pool.query('DELETE FROM invoice_reminder_offset_toggles');
     await ctx.pool.query('DELETE FROM notification_job');
     await ctx.pool.query('DELETE FROM notification_outbox');
     await ctx.pool.query('DELETE FROM invoice_reminder_schedule');
@@ -156,6 +167,96 @@ describe('reminder sender — real PostgreSQL (T-04.1.04.03)', () => {
     ).rejects.toMatchObject({
       code: '42883',
     });
+  });
+
+  async function plannedInvoice(serviceType = 'electricity') {
+    const id = await insertInvoice({ state: 'Unpaid' });
+    await ctx.pool.query('UPDATE invoices SET metadata=$2 WHERE id=$1', [
+      id,
+      { due: { serviceType } },
+    ]);
+    await insertSchedule({
+      invoiceId: id,
+      offset: -7,
+      channel: 'in_app',
+      scheduledAt: DUE_SCHEDULED,
+    });
+    return id;
+  }
+  async function disableElectricity() {
+    await ctx.pool.query(
+      `INSERT INTO invoice_reminder_offset_toggles(service_type,"offset",enabled,updated_by) VALUES ('electricity',-7,false,$1)`,
+      [USER_ID]
+    );
+  }
+  it('keeps disabled planned reminders unsent, then sends once after re-enabling', async () => {
+    await plannedInvoice();
+    await disableElectricity();
+    expect(await sendDueInvoiceReminders({ pool: ctx.pool, now: NOW })).toMatchObject({
+      scanned: 0,
+      sent: 0,
+      errors: [],
+    });
+    expect((await ctx.pool.query('SELECT status FROM invoice_reminder_schedule')).rows).toEqual([
+      { status: 'scheduled' },
+    ]);
+    expect((await ctx.pool.query('SELECT id FROM notification_outbox')).rows).toEqual([]);
+    await ctx.pool.query('UPDATE invoice_reminder_offset_toggles SET enabled=true');
+    expect(await sendDueInvoiceReminders({ pool: ctx.pool, now: NOW })).toMatchObject({
+      sent: 1,
+      errors: [],
+    });
+    expect(await sendDueInvoiceReminders({ pool: ctx.pool, now: NOW })).toMatchObject({
+      sent: 0,
+      errors: [],
+    });
+    expect((await ctx.pool.query('SELECT id FROM notification_outbox')).rows).toHaveLength(1);
+  });
+  it('does not let disabled old plans starve eligible service types', async () => {
+    await plannedInvoice();
+    const eligible = await plannedInvoice('consultation');
+    await ctx.pool.query(
+      "UPDATE invoice_reminder_schedule SET scheduled_at=scheduled_at+INTERVAL '1 minute' WHERE invoice_id=$1",
+      [eligible]
+    );
+    await disableElectricity();
+    expect(await sendDueInvoiceReminders({ pool: ctx.pool, now: NOW, batchSize: 1 })).toMatchObject(
+      { sent: 1, errors: [] }
+    );
+    expect(
+      (await ctx.pool.query('SELECT payload FROM notification_outbox')).rows[0]?.payload.invoiceId
+    ).toBe(eligible);
+  });
+  it('rechecks an offset disabled after candidate selection', async () => {
+    await plannedInvoice();
+    const pool = {
+      connect: () => ctx.pool.connect(),
+      query: async (sql: string, params?: unknown[]) => {
+        const rows = await ctx.pool.query(sql, params);
+        if (sql === FIND_DUE_REMINDER_GROUPS_SQL) await disableElectricity();
+        return rows;
+      },
+    } as unknown as Pool;
+    expect(await sendDueInvoiceReminders({ pool, now: NOW })).toMatchObject({
+      scanned: 1,
+      sent: 0,
+      skipped: 1,
+      errors: [],
+    });
+    expect((await ctx.pool.query('SELECT id FROM notification_outbox')).rows).toEqual([]);
+  });
+  it('holds a dirty deadline plan until the scheduler rebuilds it', async () => {
+    const id = await plannedInvoice();
+    await ctx.pool.query(
+      `UPDATE invoices SET metadata=metadata || '{"reminderPlanDirty":true}'::jsonb WHERE id=$1`,
+      [id]
+    );
+    expect(await sendDueInvoiceReminders({ pool: ctx.pool, now: NOW })).toMatchObject({
+      scanned: 0,
+      sent: 0,
+      errors: [],
+    });
+    expect((await ctx.pool.query('SELECT id FROM notification_outbox')).rows).toEqual([]);
   });
 
   it('candidate query returns only due scheduled groups on eligible invoices', async () => {

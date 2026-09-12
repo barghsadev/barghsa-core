@@ -112,6 +112,12 @@ export const FIND_DUE_REMINDER_GROUPS_SQL = `SELECT s.invoice_id, s."offset",
         WHERE s.status = 'scheduled'
           AND s.scheduled_at <= $1
           AND NOT (i.state = ANY($2::invoice_state[]))
+          AND NOT COALESCE(i.metadata @> '{"reminderPlanDirty":true}'::jsonb, false)
+          AND NOT EXISTS (
+            SELECT 1 FROM invoice_reminder_offset_toggles t
+            WHERE t.service_type=i.metadata #>> '{due,serviceType}'
+              AND t."offset"=s."offset" AND t.enabled=false
+          )
         GROUP BY s.invoice_id, s."offset"
         ORDER BY MIN(s.scheduled_at) ASC, s.invoice_id ASC, s."offset" ASC
         LIMIT $3`;
@@ -124,7 +130,9 @@ const LOCK_DUE_ROWS_SQL = `SELECT id, invoice_id, "offset", channel, scheduled_a
           AND scheduled_at <= $3
         FOR UPDATE SKIP LOCKED`;
 
-const LOCK_INVOICE_SQL = `SELECT i.id, i.state, i.profile_id, i.due_at, p.user_id
+const LOCK_INVOICE_SQL = `SELECT i.id, i.state, i.profile_id, i.due_at, p.user_id,
+        i.metadata #>> '{due,serviceType}' AS service_type,
+        COALESCE(i.metadata @> '{"reminderPlanDirty":true}'::jsonb, false) AS reminder_plan_dirty
         FROM invoices i
         LEFT JOIN profiles p ON p.id = i.profile_id
         WHERE i.id = $1
@@ -157,6 +165,8 @@ interface InvoiceRow {
   profile_id: string | null;
   due_at: Date | string | null;
   user_id: string | null;
+  service_type?: string | null;
+  reminder_plan_dirty?: boolean;
 }
 
 /** Stable outbox idempotency key for one (invoice, offset) reminder. */
@@ -265,6 +275,19 @@ async function sendOneGroup(
     return stopped ? 'stopped' : 'skipped';
   }
   if (invoice.profile_id === null || invoice.profile_id === '') return 'skipped';
+  if (invoice.reminder_plan_dirty) return 'skipped';
+  if (invoice.service_type) {
+    // Share the admin writer's lock, including when the pair has no row yet.
+    await client.query(
+      `SELECT pg_advisory_xact_lock(hashtext($1),hashtext($2 || ':' || $3::text))`,
+      ['barghsa.invoice_reminder_offset_toggles', invoice.service_type, group.offset]
+    );
+    const toggle = await client.query<{ enabled: boolean }>(
+      `SELECT enabled FROM invoice_reminder_offset_toggles WHERE service_type=$1 AND "offset"=$2`,
+      [invoice.service_type, group.offset]
+    );
+    if (toggle.rows[0]?.enabled === false) return 'skipped';
+  }
 
   const lockedRows = await client.query<ScheduleRow>(LOCK_DUE_ROWS_SQL, [
     group.invoice_id,
