@@ -21,9 +21,9 @@ import type { NotificationChannel } from '@barghsa/shared/notifications';
  * default 9090) — see `main.ts`. Gauges are recomputed from the database on
  * each scrape; the delivery-attempts counter is incremented in-process as the
  * outbox runner completes each attempt, so it survives only for the worker's
- * lifetime and is reset on restart (labelled counters, not persisted). For
- * crash-safe cumulative totals an operator should instead graph the
- * `notification_delivery_log` table.
+ * lifetime and is reset on restart (labelled counters, not persisted).
+ * `notification_delivery_log` stores processing history, including recovery;
+ * it is not a crash-safe count of physical provider requests.
  *
  * A scoped Registry is used (not prom-client's global default) so the worker
  * never collides with the API process's metrics names if both are ever

@@ -18,8 +18,8 @@ import { users } from './users.js';
  *
  * One row per notification shown in a user's in-app notification center. The
  * in-app transport adapter writes a row here synchronously when the outbox
- * worker dispatches an `in_app` channel, so an in-app notification is durable
- * the moment its business event fires.
+ * worker dispatches an `in_app` channel. The inbox write shares the worker
+ * outcome transaction; the originating business transaction persists outbox intent.
  *
  * Semantics:
  * - `type` — the notification/event type (e.g. 'profile_verified'). The UI

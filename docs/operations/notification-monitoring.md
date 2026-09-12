@@ -2,6 +2,8 @@
 
 The worker exposes delivery metrics on its private `/metrics` endpoint. Import `deploy/monitoring/grafana-notifications-dashboard.json` and load `deploy/monitoring/notification-alerts.yml` in the monitoring stack's `rule_files`. The application repository does not own that stack's deployment or Alertmanager receivers.
 
+Select the intended Prometheus instance in the dashboard's **Prometheus** data-source selector. Its failure-ratio panel uses fractional values: warning at 0.10 and critical at 0.25, displayed as 10% and 25%. The open-dead-letter panel retains count thresholds. This follows Grafana's [data-source variable](https://grafana.com/docs/grafana/latest/visualizations/dashboards/variables/add-template-variables/) and [threshold](https://grafana.com/docs/grafana/latest/panels-visualizations/configure-thresholds/) configuration. Dashboard import, actual query results and rendering still need verification; parsing the JSON alone does not prove them.
+
 The rules use the maximum open dead-letter count across worker replicas, rather than summing copies of the same database count. They remove only `instance` and `pod` labels. Keep identical remaining labels for replicas of one database and distinct environment/database labels for separate deployments.
 
 - Any open failure lasting 10 minutes raises `NotificationDeadLettersPending`.
