@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
-import { encodeCursor } from './notification-center.service.js';
+import { encodeCursor, NotificationCenterService } from './notification-center.service.js';
 import { NotificationsService } from './notifications.service.js';
 const db = vi.hoisted(() => ({ pool: null as unknown as import('pg').Pool }));
 vi.mock('@barghsa/db', async (original) => ({
@@ -228,3 +228,44 @@ it('preserves sub-millisecond database timestamps in page cursors', async () => 
     expect(seen).toEqual(direction === 'newer' ? ids : [...ids].reverse());
   }
 });
+
+for (const action of ['list', 'count', 'read', 'read-all'] as const) {
+  it(`rechecks profile access after resolution before inbox ${action}`, async () => {
+    await db.pool.query(
+      "INSERT INTO profile_agents(profile_id,user_id,role) VALUES ($1,'inbox-agent','Finance') ON CONFLICT DO NOTHING",
+      [profile]
+    );
+    const id = (
+      await db.pool.query(
+        "INSERT INTO in_app_notifications(profile_id,type,title_i18n_key,body_i18n_key) VALUES ($1,'general','title','body') RETURNING id",
+        [profile]
+      )
+    ).rows[0].id;
+    const center = new NotificationCenterService(db.pool);
+    const selected = await center.resolveActiveProfileId('inbox-agent');
+    expect(selected).toBe(profile);
+    await db.pool.query(
+      "DELETE FROM profile_agents WHERE profile_id=$1 AND user_id='inbox-agent'",
+      [profile]
+    );
+    // Resolve and revoke against the same real database before the final statement.
+    // The HTTP fixture is a child process, so an in-process prototype spy cannot
+    // intercept its controller. Existing cases above cover actual route wiring.
+    if (action === 'list')
+      expect(await center.list(selected, {}, 'inbox-agent')).toEqual({
+        data: [],
+        next_cursor: null,
+        unread_count: 0,
+      });
+    if (action === 'count') expect(await center.countUnread(selected, 'inbox-agent')).toBe(0);
+    if (action === 'read')
+      await expect(center.markRead(selected, id, 'inbox-agent')).rejects.toMatchObject({
+        status: 404,
+      });
+    if (action === 'read-all') expect(await center.markAllRead(selected, 'inbox-agent')).toBe(0);
+    expect(
+      (await db.pool.query('SELECT is_read FROM in_app_notifications WHERE id=$1', [id])).rows[0]
+        .is_read
+    ).toBe(false);
+  });
+}

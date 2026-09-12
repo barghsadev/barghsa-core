@@ -309,6 +309,13 @@ export class NotificationCenterService {
   }
 }
 
-/** Account notices are private; profile notices require the current profile. */
-export const notificationScope = `((profile_id=$1 AND recipient_user_id IS NULL)
-  OR (recipient_user_id=$2 AND (profile_id IS NULL OR profile_id=$1)))`;
+/** Recheck selection and access in the statement that reads or updates notices. */
+const currentProfileScope = `EXISTS (
+  SELECT 1 FROM (${activeProfileSql('profile:view').replaceAll('$1', '$2')}) current_profile
+  WHERE current_profile.id=$1
+)`;
+
+/** Account notices stay private; a previously resolved profile grants no authority. */
+export const notificationScope = `((profile_id=$1 AND ${currentProfileScope}
+    AND (recipient_user_id IS NULL OR recipient_user_id=$2))
+  OR (profile_id IS NULL AND recipient_user_id=$2))`;
