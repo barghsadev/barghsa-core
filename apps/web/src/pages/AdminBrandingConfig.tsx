@@ -1,5 +1,6 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { parseBrandConfig } from '../providers/BrandThemeProvider.js';
+import { Button } from '@barghsa/ui';
+import { getContrastForeground, parseBrandConfig } from '../providers/BrandThemeProvider.js';
 import { formatCurrencyIrr, type NumberStyle } from '@barghsa/i18n/numbers';
 import { uploadBrandingLogo } from '../lib/branding-logo-upload.js';
 import { useState, useEffect, useCallback, useId, useRef } from 'react';
@@ -101,8 +102,8 @@ function ColorInput({
   const controlId = useId();
   const locale = useLocale();
   return (
-    <div className="flex items-center gap-3">
-      <label htmlFor={controlId} className="text-sm font-medium text-gray-700 w-32">
+    <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-3">
+      <label htmlFor={controlId} className="text-sm font-medium text-foreground col-span-3">
         {label}
       </label>
       <input
@@ -110,17 +111,17 @@ function ColorInput({
         type="color"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-10 h-10 rounded border border-gray-300 cursor-pointer p-0.5"
+        className="w-10 h-10 rounded border border-input cursor-pointer p-0.5"
       />
       <input
         aria-label={brandingText('hex', locale).replace('{label}', label)}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="border border-gray-300 rounded px-2 py-1 text-sm w-28 font-mono"
+        className="bg-background text-foreground border border-input rounded px-2 py-1 text-sm w-28 font-mono"
         placeholder="#000000"
       />
-      <div className="w-16 h-8 rounded border border-gray-200" style={{ backgroundColor: value }} />
+      <div className="w-16 h-8 rounded border border-border" style={{ backgroundColor: value }} />
     </div>
   );
 }
@@ -256,13 +257,20 @@ export default function AdminBrandingConfig() {
       ? JSON.stringify(config) !== JSON.stringify({ ...DEFAULT_CONFIG, ...activeConfig.config })
       : true);
 
+  const previewColors = (['primary', 'secondary', 'accent'] as const).map((key) => {
+    const field = `${key}Color` as const;
+    return {
+      key,
+      color: /^#[0-9a-f]{6}$/i.test(config[field]) ? config[field] : DEFAULT_CONFIG[field],
+    };
+  });
   const displayedLogo =
     logoPreview ??
     (config.logoUrl?.startsWith('/api/public/branding/assets/')
       ? config.logoUrl.replace('/api/public/', '/api/admin/')
       : config.logoUrl);
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
+    <div className="max-w-3xl mx-auto space-y-8 px-4">
       {action && (
         <TeamActionDialog
           action={action}
@@ -305,20 +313,20 @@ export default function AdminBrandingConfig() {
           }}
         />
       )}
-      <button
+      <Button
         type="button"
         onClick={() => setRevision((value) => value + 1)}
         disabled={action !== null || uploading}
       >
         {text('refresh')}
-      </button>
+      </Button>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{text('title')}</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-foreground">{text('title')}</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             {text('description')}
             {draftInfo && (
-              <span className="ms-2 text-amber-600">
+              <span className="ms-2 text-foreground">
                 {text('draftVersion').replace('{version}', versionText(draftInfo.version))}
                 {timezone.status === 'ready' && (
                   <>
@@ -335,7 +343,7 @@ export default function AdminBrandingConfig() {
               </span>
             )}
             {activeConfig?.status === 'active' && (
-              <span className="ms-2 text-green-600">
+              <span className="ms-2 text-foreground">
                 {text('activeVersion').replace('{version}', versionText(activeConfig.version))}
               </span>
             )}
@@ -347,9 +355,9 @@ export default function AdminBrandingConfig() {
       {timezone.status === 'error' && (
         <div role="alert">
           {text('timezoneFailed')}{' '}
-          <button type="button" onClick={timezone.retry}>
+          <Button type="button" onClick={timezone.retry}>
             {text('retryTimezone')}
-          </button>
+          </Button>
         </div>
       )}
       {uploading && <p role="status">{text('uploading')}</p>}
@@ -358,8 +366,8 @@ export default function AdminBrandingConfig() {
           role={message.type === 'error' ? 'alert' : 'status'}
           className={`px-4 py-3 rounded-lg text-sm ${
             message.type === 'success'
-              ? 'bg-green-50 text-green-700 border border-green-200'
-              : 'bg-red-50 text-red-700 border border-red-200'
+              ? 'bg-muted text-foreground border border-border'
+              : 'bg-destructive/10 text-destructive border border-destructive'
           }`}
         >
           {message.text}
@@ -367,13 +375,13 @@ export default function AdminBrandingConfig() {
       )}
 
       {/* ── App Identity ──────────────────────────────────────────────── */}
-      <section className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-gray-800">{text('identity')}</h2>
+      <section className="bg-background rounded-lg border border-border p-6 space-y-5">
+        <h2 className="text-lg font-semibold text-foreground">{text('identity')}</h2>
 
         <div>
           <label
             htmlFor="adminbrandingconfig-field-2"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-foreground mb-1"
           >
             {text('appTitle')}
           </label>
@@ -382,7 +390,7 @@ export default function AdminBrandingConfig() {
             type="text"
             value={config.appTitle}
             onChange={(e) => updateConfig('appTitle', e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm"
             placeholder="Barghsa"
           />
         </div>
@@ -390,7 +398,7 @@ export default function AdminBrandingConfig() {
         <div>
           <label
             htmlFor="adminbrandingconfig-field-3"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-foreground mb-1"
           >
             {text('slogan')}
           </label>
@@ -399,15 +407,15 @@ export default function AdminBrandingConfig() {
             type="text"
             value={config.slogan}
             onChange={(e) => updateConfig('slogan', e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm"
             placeholder={text('sloganPlaceholder')}
           />
         </div>
       </section>
 
       {/* ── Colors ────────────────────────────────────────────────────── */}
-      <section className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-gray-800">{text('colors')}</h2>
+      <section className="bg-background rounded-lg border border-border p-6 space-y-5">
+        <h2 className="text-lg font-semibold text-foreground">{text('colors')}</h2>
 
         <ColorInput
           label={text('primary')}
@@ -427,14 +435,14 @@ export default function AdminBrandingConfig() {
       </section>
 
       {/* ── Logo ──────────────────────────────────────────────────────── */}
-      <section className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-gray-800">{text('logo')}</h2>
+      <section className="bg-background rounded-lg border border-border p-6 space-y-5">
+        <h2 className="text-lg font-semibold text-foreground">{text('logo')}</h2>
 
-        <div className="flex items-start gap-6">
-          <div className="flex-1">
+        <div className="flex flex-wrap items-start gap-6">
+          <div className="min-w-0 flex-1">
             <label
               htmlFor="adminbrandingconfig-field-4"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-foreground mb-2"
             >
               {text('upload')}
             </label>
@@ -444,9 +452,9 @@ export default function AdminBrandingConfig() {
               accept="image/png,image/jpeg,image/webp"
               disabled={action !== null}
               onChange={handleLogoUpload}
-              className="block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              className="block w-full text-sm text-muted-foreground file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-muted file:text-foreground hover:file:underline"
             />
-            <p className="text-xs text-gray-400 mt-1">{text('logoHint')}</p>
+            <p className="text-xs text-muted-foreground mt-1">{text('logoHint')}</p>
           </div>
 
           {displayedLogo && (
@@ -454,9 +462,9 @@ export default function AdminBrandingConfig() {
               <img
                 src={displayedLogo}
                 alt={text('logoPreview')}
-                className="max-w-32 max-h-16 object-contain border border-gray-200 rounded"
+                className="max-w-32 max-h-16 object-contain border border-border rounded"
               />
-              <button
+              <Button
                 type="button"
                 disabled={action !== null || uploading}
                 onClick={() => {
@@ -464,10 +472,10 @@ export default function AdminBrandingConfig() {
                   setLogoUploadKey(null);
                   updateConfig('logoUrl', null);
                 }}
-                className="text-xs text-red-500 hover:text-red-700 mt-1"
+                className="text-xs text-destructive underline mt-1"
               >
                 {text('remove')}
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -475,7 +483,7 @@ export default function AdminBrandingConfig() {
         <div>
           <label
             htmlFor="adminbrandingconfig-field-5"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-foreground mb-1"
           >
             {text('favicon')}
           </label>
@@ -484,18 +492,18 @@ export default function AdminBrandingConfig() {
             type="text"
             value={config.faviconUrl ?? ''}
             onChange={(e) => updateConfig('faviconUrl', e.target.value || null)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono"
+            className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm font-mono"
             placeholder="https://cdn.example.com/favicon.ico"
           />
         </div>
       </section>
 
       {/* ── Dark Mode ─────────────────────────────────────────────────── */}
-      <section className="bg-white rounded-lg border border-gray-200 p-6">
+      <section className="bg-background rounded-lg border border-border p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-800">{text('darkMode')}</h2>
-            <p className="text-sm text-gray-500">{text('darkHint')}</p>
+            <h2 className="text-lg font-semibold text-foreground">{text('darkMode')}</h2>
+            <p className="text-sm text-muted-foreground">{text('darkHint')}</p>
           </div>
           <label className="relative inline-flex items-center cursor-pointer">
             <span className="sr-only">{text('darkMode')}</span>
@@ -505,19 +513,19 @@ export default function AdminBrandingConfig() {
               onChange={(e) => updateConfig('darkMode', e.target.checked)}
               className="sr-only peer"
             />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600" />
+            <div className="w-11 h-6 bg-muted peer-focus-visible:ring-2 peer-focus-visible:ring-foreground peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-foreground peer-checked:after:bg-primary-foreground after:rounded-full after:h-5 after:w-5 after:transition-transform peer-checked:bg-primary" />
           </label>
         </div>
       </section>
 
-      <section className="bg-white rounded-lg border border-gray-200 p-6 space-y-3">
+      <section className="bg-background rounded-lg border border-border p-6 space-y-3">
         <label
           htmlFor="branding-number-style"
-          className="block text-lg font-semibold text-gray-800"
+          className="block text-lg font-semibold text-foreground"
         >
           {text('numberStyle')}
         </label>
-        <p id="branding-number-style-help" className="text-sm text-gray-500">
+        <p id="branding-number-style-help" className="text-sm text-muted-foreground">
           {text('numberStyleHint')}
         </p>
         <select
@@ -525,7 +533,7 @@ export default function AdminBrandingConfig() {
           aria-describedby="branding-number-style-help"
           value={config.numberStyle}
           onChange={(event) => updateConfig('numberStyle', event.target.value)}
-          className="rounded border border-gray-300 px-3 py-2"
+          className="rounded border border-input px-3 py-2"
         >
           <option value="locale">{text('numberLocale')}</option>
           <option value="persian">{text('numberPersian')}</option>
@@ -539,76 +547,58 @@ export default function AdminBrandingConfig() {
       </section>
 
       {/* ── Preview ───────────────────────────────────────────────────── */}
-      <section className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-gray-800">{text('preview')}</h2>
+      <section className="bg-background rounded-lg border border-border p-6 space-y-4">
+        <h2 className="text-lg font-semibold text-foreground">{text('preview')}</h2>
         <div
           className="rounded-lg p-6 border"
           style={{
-            backgroundColor: config.darkMode ? '#1e293b' : '#ffffff',
-            borderColor: config.primaryColor,
+            backgroundColor: config.darkMode ? 'oklch(0.141 0.005 285.823)' : '#ffffff',
+            color: config.darkMode ? 'oklch(0.985 0 0)' : 'oklch(0.141 0.005 285.823)',
+            borderColor: previewColors[0]!.color,
           }}
         >
           <div className="flex items-center gap-4 mb-4">
             {displayedLogo && <img src={displayedLogo} alt={text('logo')} className="h-10" />}
-            <div>
-              <h3 className="text-xl font-bold" style={{ color: config.primaryColor }}>
-                {config.appTitle || 'Barghsa'}
-              </h3>
-              {config.slogan && (
-                <p className="text-sm" style={{ color: config.secondaryColor }}>
-                  {config.slogan}
-                </p>
-              )}
+            <div className="min-w-0 break-words">
+              <h3 className="text-xl font-bold">{config.appTitle || 'Barghsa'}</h3>
+              {config.slogan && <p className="text-sm">{config.slogan}</p>}
             </div>
           </div>
-          <div className="flex gap-3">
-            <button
-              type="button"
-              className="px-4 py-2 rounded-lg text-white text-sm font-medium"
-              style={{ backgroundColor: config.primaryColor }}
-            >
-              {text('primary')}
-            </button>
-            <button
-              type="button"
-              className="px-4 py-2 rounded-lg text-white text-sm font-medium"
-              style={{ backgroundColor: config.secondaryColor }}
-            >
-              {text('secondary')}
-            </button>
-            <button
-              type="button"
-              className="px-4 py-2 rounded-lg text-white text-sm font-medium"
-              style={{ backgroundColor: config.accentColor }}
-            >
-              {text('accent')}
-            </button>
+          <div className="flex flex-wrap gap-3">
+            {previewColors.map(({ key, color }) => (
+              <Button
+                key={key}
+                type="button"
+                style={{ backgroundColor: color, color: getContrastForeground(color) }}
+              >
+                {text(key)}
+              </Button>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ── Actions ───────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-4 pb-8">
-        <button
+      <div className="flex flex-wrap items-center gap-4 pb-8">
+        <Button
           type="button"
           onClick={handleSave}
           disabled={uploading || action !== null || !activeConfig || !isDirty}
-          className="px-6 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {text('save')}
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
           onClick={handleActivate}
           disabled={uploading || action !== null || !draftInfo || isDirty}
-          className="px-6 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          variant="outline"
         >
           {text('activate')}
-        </button>
+        </Button>
 
         {activeConfig?.status === 'active' && (
-          <span className="text-xs text-green-600 ms-auto">
+          <span className="text-xs text-foreground ms-auto">
             {text('activeVersion').replace('{version}', versionText(activeConfig.version))}
           </span>
         )}

@@ -52,7 +52,7 @@ export function useBrandConfig(): BrandThemeContextValue {
 }
 
 /** Pick the higher WCAG contrast ratio against the configured sRGB background. */
-function getContrastForeground(hex: string): string {
+export function getContrastForeground(hex: string): string {
   const channels = [1, 3, 5].map((start) => {
     const value = Number.parseInt(hex.slice(start, start + 2), 16) / 255;
     return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
