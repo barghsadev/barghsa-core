@@ -14353,8 +14353,8 @@
     },
     {
       "id": "R02-outbox-delivery-checkpoint",
-      "date": "2026-09-09",
-      "source_revision": "b27f425852a876c736139845201c5206344cbe8a",
+      "date": "2026-09-12",
+      "source_revision": "75fdaea72b5167b3c1b1bc70008b81ca4ec02922",
       "base_revision": "cadaec40ad77afd3f12ca2d0ad1e26651aa797ef",
       "product_commits": [
         "361f4b82234bf226eb540fb74bde746fbc79112c",
@@ -14362,7 +14362,10 @@
         "d0d72ec94bb02510616001baf310e7707f88deae",
         "8349c0153c8596e0a671d7f622b8074f919c7268",
         "e8e30195fa64c0aad236e09d0ad145843a96bc77",
-        "b27f425852a876c736139845201c5206344cbe8a"
+        "b27f425852a876c736139845201c5206344cbe8a",
+        "7941624d7463d4e912bec7e590b03b6245dbc1bf",
+        "04fd2e8d763769cf6f594e5a9e608b887ea6dccb",
+        "75fdaea72b5167b3c1b1bc70008b81ca4ec02922"
       ],
       "task_keys": [
         "05-notifications-documents-ai.md#T-05.01.01",
@@ -14375,7 +14378,7 @@
         "05-notifications-documents-ai.md#T-05.02.01",
         "02-auth-users-admin.md#T-09.09.03"
       ],
-      "summary": "In-flight feature-batch checkpoint. Seven confirmed defects repaired locally; uncertain external-delivery recovery and general log lookup remain. Historical task/PR closure counts unchanged pending individual batch dispositions.",
+      "summary": "In-flight feature-batch checkpoint. Eight confirmed defects repaired locally, including durable external send protection. Audited reconciliation, general log lookup/attempt semantics and notification shutdown evidence remain. Historical task/PR counts unchanged.",
       "review": [
         "Dead-letter retry/resolve/dismiss now carry the full current session/CSRF identity into the permission-locked transaction and recheck step-up before commit. Atomic audit includes session/proof and the request correlation ID. Both HTTP aliases pass revocation, permission, CSRF and expired-proof races. Queue identity, channel-only retry, snapshots and conflict behavior remain intact.",
         "An old actor-lock test blocked the HTTP session guard before reaching the intended lock. The corrected test calls the actual service with the fixture session and revokes the role while the actor lock is held. All 70 focused API cases pass, including 43 real-database/HTTP cases.",
@@ -14391,18 +14394,24 @@
         "Review found that rollback recovery replaced already accepted external results with failures. b27f4258 now retains actual external outcomes for the second persistence transaction, still fenced by the current claim. Updated real-database trigger tests prove inbox rollback at four write boundaries, one retained accepted email receipt/log, no repeated external send, and later successful inbox-only completion. This supersedes the earlier fallback expectation that both channels became retrying. A crash or repeated persistence outage before receipts become durable remains unproven and is not claimed fixed.",
         "80 focused worker cases pass after receipt recovery, including real provider fixtures, transaction rollback, retries, safe delivery/dead-letter logs, metrics and compiled worker process/drain/outage tests. Worker types/lint/format pass. Existing unchanged reader/writer/adapter and prior API/browser evidence is retained; overlapping test runs are not cumulative totals.",
         "Exact nine task requirements and historical PR163/164/168/170/203 deferrals were read. Current schemas contain the specified outbox/job/log/inbox fields, unique occurrence/channel identities and inbox indexes; the module and worker wiring exist. Current retry ladder is1m/5m/30m/2h with20 percent jitter and per-type caps. Actual reader tests cover claim renewal/fencing, separate occurrences, terminal-channel reuse, retry exhaustion and controlled provider dispatch. Generic process drain evidence needs an explicit notification-claim check before closing the graceful-release deferral.",
-        "T-05.01.04 remains unresolved. Source confirms that createSmsSender drops the saved idempotency key and SMS.ir requests contain only recipient/template/parameters; SMTP uses a stable Message-ID without deduplication proof. Direct official SMS.ir documentation could not be fetched; third-party search hits were not accepted as a provider contract. A durable ambiguous-send/reconciliation design and supported provider semantics are next. The existing byte-stability retry test proves payload preservation, not provider at-most-once delivery. General staff delivery-log lookup also remains under T-05.01.05; the new dialog currently requires a dead-letter entry."
+        "T-05.01.04 remains unresolved. Source confirms that createSmsSender drops the saved idempotency key and SMS.ir requests contain only recipient/template/parameters; SMTP uses a stable Message-ID without deduplication proof. Direct official SMS.ir documentation could not be fetched; third-party search hits were not accepted as a provider contract. A durable ambiguous-send/reconciliation design and supported provider semantics are next. The existing byte-stability retry test proves payload preservation, not provider at-most-once delivery. General staff delivery-log lookup also remains under T-05.01.05; the new dialog currently requires a dead-letter entry.",
+        "7941624d adds an optional provider execution boundary after validation/configuration preflight. Email health-recording failures no longer discard provider acceptance; SMTP cancellation listeners are cleaned up. Explicit SMS rejection is separated from malformed/conflicting or missing acceptance.16 focused shared cases and shared types/lint passed at that revision; current provider self-test and HTTP integration checks also pass. The SMS wire still has no idempotency-key field; no unsupported provider contract is assumed.",
+        "04fd2e8d and75fdaea7 add independently committed notification_send_receipts. The composite occurrence/channel claim precedes I/O. Accepted receipts survive queue/inbox bookkeeping failure; competing workers, stale leases and administrative attempt resets cannot reopen sending/unknown records. Proven rejection permits only the same provider, transport and occurrence identity. Acceptance-write failure leaves sending unless a later read finds a committed receipt. The migration holds unfinished legacy sends identified by channel or aggregate attempts, sending state, logs or dead-letter history, preserving jobs and snapshots. All old notification senders must drain before migration and the updated API/workers must consume it; no deployment occurred.",
+        "Production email/SMS adapters use the durable guard. Worker recovery reads receipts before current recipient policy and routes ambiguous sends immediately to dead-letter without exhausting the normal retry ladder. Staff Retry rejects sending/unknown receipts inside the existing permission/session-locked transaction; Resolve/Dismiss preserve send evidence. Actual HTTP fixtures accept request bytes and lose the response for both channels; a new poll and forced stale/manual reset never call the provider twice. An accepted email survives repeated real PostgreSQL bookkeeping failures and later completes with its original receipt/content. Changed contacts recover accepted receipts but cannot retarget unsent snapshots.",
+        "53 focused worker cases and130 API/provider cases pass. Eight overlapping guard/migration cases rerun after adding legacy aggregate-attempt coverage. Worker/API/DB types, scoped lint/format and isolated migration snapshot check pass within recorded source scope. Initial core SQL fixture UUID/text inference failed, then the stopped Docker engine prevented setup; the engine was restarted locally. Wiring fixture failures were caused by a trigger intercepting snapshot preparation instead of outcome recording, missing mandatory in-app delivery and transaction rollback, invalid ALL preference text, and clearing an obsolete rate-limit table. Corrected fixtures assert the actual send boundary and use the current rolling reset function. All failed logs are retained; failed runs are not acceptance evidence.",
+        "The old HTTP503-then-success resend assertion is superseded: ambiguous HTTP/network failure now holds. SMS snapshot stability remains tested across an explicit provider rejection. Existing FA/EN triage/history browser evidence remains revision-bound and unchanged, not rerun for this backend-only repair. Recovery currently writes an outcome log using the worker attempt count; general history must distinguish such bookkeeping recovery from a physical provider send. An audited operator reconciliation action and provider evidence contract are not yet implemented; unresolved sends remain held. Notification-specific process shutdown/release remains unproven by these lease/receipt tests."
       ],
       "verification": {
-        "api": "56 focused history/read-boundary cases; prior70 triage and8 chargeback cases retained where applicable. These runs overlap.",
-        "worker": "80 focused cases after receipt recovery; prior81-case checkpoint retained with four transient rollback assertions superseded by stronger receipt-preserving checks. Runs overlap.",
+        "api": "130 focused staff-recovery/service and provider-self-test/HTTP cases pass. Earlier56 history/read-boundary,70 triage and8 chargeback runs retained within their original unchanged scope; counts overlap.",
+        "worker": "53 focused cases pass;8 overlapping guard/migration cases rerun for aggregate legacy attempts. Earlier80/81-case evidence remains revision-bound; changed503 resend expectations are superseded by durable receipt/unknown-hold tests.",
         "browser": "12 distinct Chromium FA/EN cases, including2 mobile history cases across both host pages; axe/focus/pagination/recovery pass.",
         "quality": "Applicable API/worker/web/i18n types, scoped lint/format,50 i18n cases, frontend build and42 unchanged budgets pass.",
         "regression": "Full regression/coverage and operational alert delivery remain separate.",
-        "alerts": "promtool3.5.0 check2 rules and15 assertions in6 scenarios pass. Deployment/receiver delivery unverified."
+        "alerts": "promtool3.5.0 check2 rules and15 assertions in6 scenarios pass. Deployment/receiver delivery unverified.",
+        "durable_send": "16 shared boundary cases previously passed;53 worker/130 API current checks pass. Eight migration/guard cases include concurrency, receipt write failure/lost response, explicit rejection, legacy holds and PostgreSQL constraints. Worker/API/DB types, scoped lint/format and migration snapshot check pass."
       },
       "remaining": [
-        "Repair uncertain external-delivery/crash recovery before claiming at-most-once delivery; inspect provider-supported idempotency and add durable reconciliation where needed. SMS currently drops the snapshot key; SMTP Message-ID is not deduplication proof. Then add general admin delivery-log lookup, verify notification-specific shutdown/claim recovery, and finish individual dispositions for the nine-task batch.",
+        "Add general staff delivery-log lookup and distinguish recovered receipts from physical sends in attempt history. Then verify notification-specific shutdown/claim recovery and finish individual dispositions for the nine-task batch. Audited provider reconciliation remains required before releasing unknown sends; do not bypass durable holds or claim provider-side exactly-once delivery.",
         "Load notification rules, verify worker scrapes and record controlled Alertmanager firing/resolution before operational acceptance.",
         "Preserve pending source-evidence refresh records and finalV02 regression/coverage."
       ],
@@ -14421,11 +14430,11 @@
         },
         {
           "path": "apps/api/src/admin/failed-notifications.service.ts",
-          "sha256": "adef84205d95bb292cb4f3a29c0bab2f734596bd36f2e8ca2b1ff0b865e2a14a"
+          "sha256": "5486d1649c2e5365787e9096eee8a8356b5f413520bd1cd7036c78a9596abdc1"
         },
         {
           "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-          "sha256": "e2027394dbaf09049a4fbb2cdb8dff3fe008526e321f453b071a34dbd5195dd5"
+          "sha256": "fc5adac26fb06aff7f4ae3260d5d0a4559af3995dfe76e0624067b386954876c"
         },
         {
           "path": "apps/api/src/notifications/notifications.module.ts",
@@ -14465,11 +14474,15 @@
         },
         {
           "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
-          "sha256": "6e165111094831d5a25213d89e2e96ddbb3157f4d0f3807b1805a234f9a42ac7"
+          "sha256": "9d9fa7a768c5558ae95f764fa1805eed024f68e9c486e8fa38d726e40dc74665"
         },
         {
           "path": "apps/worker/src/notifications/delivery-log.ts",
           "sha256": "310e6d118946e5569a4695274d24269f13de353ff09dd29a0710a51011d7efa6"
+        },
+        {
+          "path": "apps/worker/src/notifications/email-transport.ts",
+          "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
         },
         {
           "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -14477,11 +14490,11 @@
         },
         {
           "path": "apps/worker/src/notifications/outbox-reader.ts",
-          "sha256": "17d5cbb802168b74972805fc9d68e3fbcaa57e5478b55fbb6ababb0c482cbf7d"
+          "sha256": "63777530fcf66f00a068ebbac388dc1424184a2073550416b0c94ace8227fcf9"
         },
         {
           "path": "apps/worker/src/notifications/outbox-runner.ts",
-          "sha256": "9466f0bc6b18749904c3016321f6aaed0df0159f7cd972d18564b0151f3ce3a4"
+          "sha256": "defab6c726ce9b1ee87df51f054c337da77a6bdede28e39b7ecb130fb5b659e6"
         },
         {
           "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -14492,6 +14505,18 @@
           "sha256": "b0cfa6e5311e047fe403eb1a718fa9777b8e8fce61e23662493ec668b0ba3c84"
         },
         {
+          "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
+          "sha256": "586f4589c4e1c6ac4cbde54f8e31e63dd083357c06fa7c62f11b0e6580e10b34"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.ts",
+          "sha256": "51fbb098547d4e1c226da7136a6eeb6188a48962d28a19f6de39b383f2b64a3e"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-transport.ts",
+          "sha256": "405e2ea4f2a3420a4f0ab46e2d26305def714fdfe44daaace1668dcdb443fd38"
+        },
+        {
           "path": "deploy/monitoring/notification-alerts.test.yml",
           "sha256": "e70df5ebd4b6c6fe1a7e32e7bec57c7de1f077364e35d988c02c22ba277e2ef5"
         },
@@ -14500,8 +14525,28 @@
           "sha256": "5cdd8396507f15dd369ed00cfccd780da33818062fa3b6849beecb5b3e4e01bd"
         },
         {
+          "path": "docs/operations/notification-delivery-recovery.md",
+          "sha256": "5fc21809127c996a7244415191e7489779faef3e0bb81922261383d1e82d7645"
+        },
+        {
           "path": "docs/operations/notification-monitoring.md",
           "sha256": "0d555efdf3fcc939ef8ac7e2564d8a1a5755767e2884d3eaf49d1025c1a9b032"
+        },
+        {
+          "path": "packages/db/drizzle/production/0127_notification_send_receipts.sql",
+          "sha256": "8bc1291ed49ad025623950a4a8c0c4a1d75aca8a9d7fa63dbb0ac13a00f1cd96"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0127_snapshot.json",
+          "sha256": "64cc9436ed4bd3ef237b55a14a3d8cfb3c612db41a934e9975aa450b0881627d"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "28dafce949b634bb56ef468e66efd67b3ad5ab7379c09f8fd513c698da122b24"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "68882f5b0fb5044ab4ab0810465eeea0b6efaaa0cb53c7ea17ddbd55150bcb8f"
         },
         {
           "path": "packages/db/src/schema/in-app-notifications.ts",
@@ -14520,20 +14565,44 @@
           "sha256": "473efaef5f031a3c9c61189155c0ef1135902af2b474e5f2834e56a7c2c2b470"
         },
         {
+          "path": "packages/db/src/schema/notification-send-receipts.ts",
+          "sha256": "36c488c8aec165cd8a177b4bb303ded545d8b6995d3d054531951ded89b246c4"
+        },
+        {
           "path": "packages/i18n/src/admin-ui.ts",
           "sha256": "f3e0ab4a960e2ff23896ee6da1d454fe13414005a823041b75e2f9dfbff1541e"
         },
         {
           "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-          "sha256": "04f4fba63db842951d89fc05bdcea1c18148a441274666c4ac0cf020ff8c2cee"
+          "sha256": "4b4313423c94bbb61491f4541ed7f4f923ce8018944f385e8f341dbfaddfd997"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email.test.ts",
+          "sha256": "7ab99139118a7b793d000ca17d250ceee304e6f48ddbbe0fb489c5bd00a9c393"
         },
         {
           "path": "packages/shared/src/notification-delivery/email.ts",
-          "sha256": "a601759c94975a4d00f1059f0090efa3f9eee31d6bc40b8aedde9bd08df54646"
+          "sha256": "48a63d41182278d8e0b77c454ab4824489bf94756f12b391dcbcfc1550fe7ca4"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/execution.ts",
+          "sha256": "3ea291308d1065d132765bddea2cb59771e895f159925c150510711a0486904f"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/index.ts",
+          "sha256": "09799f22a09d903af0fefa46935c911b17df111a037feccdf58f21d23dffdc70"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.test.ts",
+          "sha256": "5def3c43f947aa771f27326610516859c5ad7086b1e002a4b198646256c91365"
         },
         {
           "path": "packages/shared/src/notification-delivery/sms.ts",
-          "sha256": "141a2ee3cf6e63faa05e0e5baf49363a4c3b7bd5675b784b39d2aef8dfade976"
+          "sha256": "031b5579025565a7b9c559b188d80c681ea594eb60503a1285f1dcc64a102b07"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/smtp.test.ts",
+          "sha256": "8903e89d932a5a0fcafa2f0f2dfcdb42743700f49a2f4c4886b482d7fea93255"
         }
       ],
       "logs": [
@@ -14587,7 +14656,49 @@
         "/tmp/r02-outbox-receipt-recovery-format.log",
         "/tmp/r02-outbox-receipt-recovery-lint.log",
         "/tmp/r02-outbox-receipt-recovery-types.log",
-        "/tmp/r02-outbox-receipt-recovery-worker.log"
+        "/tmp/r02-outbox-receipt-recovery-worker.log",
+        "/tmp/r02-durable-send-boundary-format-2.log",
+        "/tmp/r02-durable-send-boundary-format.log",
+        "/tmp/r02-durable-send-boundary-lint-2.log",
+        "/tmp/r02-durable-send-boundary-lint.log",
+        "/tmp/r02-durable-send-boundary-shared-2.log",
+        "/tmp/r02-durable-send-boundary-shared.log",
+        "/tmp/r02-durable-send-boundary-types-2.log",
+        "/tmp/r02-durable-send-boundary-types.log",
+        "/tmp/r02-send-receipt-core-db-types.log",
+        "/tmp/r02-send-receipt-core-format.log",
+        "/tmp/r02-send-receipt-core-lint.log",
+        "/tmp/r02-send-receipt-core-snapshot.log",
+        "/tmp/r02-send-receipt-core-types.log",
+        "/tmp/r02-send-receipt-core-worker-2.log",
+        "/tmp/r02-send-receipt-core-worker-3.log",
+        "/tmp/r02-send-receipt-core-worker.log",
+        "/tmp/r02-send-receipt-legacy-format.log",
+        "/tmp/r02-send-receipt-legacy-lint.log",
+        "/tmp/r02-send-receipt-legacy-worker.log",
+        "/tmp/r02-send-receipt-schema-format.log",
+        "/tmp/r02-send-receipt-schema-generate-2.log",
+        "/tmp/r02-send-receipt-schema-generate.log",
+        "/tmp/r02-send-receipt-wiring-api-types.log",
+        "/tmp/r02-send-receipt-wiring-api.log",
+        "/tmp/r02-send-receipt-wiring-format-2.log",
+        "/tmp/r02-send-receipt-wiring-format-3.log",
+        "/tmp/r02-send-receipt-wiring-format-4.log",
+        "/tmp/r02-send-receipt-wiring-format-check.log",
+        "/tmp/r02-send-receipt-wiring-format.log",
+        "/tmp/r02-send-receipt-wiring-lint.log",
+        "/tmp/r02-send-receipt-wiring-worker-2.log",
+        "/tmp/r02-send-receipt-wiring-worker-3.log",
+        "/tmp/r02-send-receipt-wiring-worker-4.log",
+        "/tmp/r02-send-receipt-wiring-worker-5.log",
+        "/tmp/r02-send-receipt-wiring-worker-types.log",
+        "/tmp/r02-send-receipt-wiring-worker.log",
+        "/tmp/r02-send-protection-checkpoint-audit.log",
+        "/tmp/r02-send-protection-checkpoint-backlog.log",
+        "/tmp/r02-send-protection-checkpoint-diff.log",
+        "/tmp/r02-send-protection-checkpoint-prs.log",
+        "/tmp/r02-send-protection-checkpoint-requirements.log",
+        "/tmp/r02-send-protection-checkpoint-skips.log"
       ],
       "pr_dispositions": [],
       "pr_counts": {
