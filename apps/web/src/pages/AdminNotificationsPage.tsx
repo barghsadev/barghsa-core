@@ -7,6 +7,7 @@ import type { FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 import DeadLetterPanel from '../components/DeadLetterPanel.js';
+import { CustomerCorrectionsSection } from '../components/CustomerCorrectionsPanel.js';
 import DeliveryWindowConfigPanel from '../components/DeliveryWindowConfigPanel.js';
 import TemplatePreviewPanel from '../components/TemplatePreviewPanel.js';
 import BrandedEmailPreview from '../components/BrandedEmailPreview.js';
@@ -590,6 +591,7 @@ export default function AdminNotificationsPage() {
 
       {/* Dead-letter queue (T-05.01.06) */}
       <DeadLetterPanel uiLocale={uiLocale} />
+      <CustomerCorrectionsSection locale={uiLocale} />
 
       {/* Filters */}
       <div className="flex gap-4 items-center">

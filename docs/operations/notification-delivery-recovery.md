@@ -89,4 +89,10 @@ New callbacks retain the IDs of every active or superseded Resend configuration 
 
 Callbacks do not change worker leases, outbox/job state, accepted receipts or physical send rows. The admin history combines each accepted Resend email attempt with its verified callback feedback using provider ID, message reference and attempt token. A bounce appears as Failed on the original attempt, with its original duration and number. A later delivered callback cannot erase that bounce or authorize another send. Early callbacks remain available when receipt persistence finishes.
 
-Legacy callbacks have an empty verified-provider list. Their original payloads and suppression records remain, but their provider identity is not guessed. Old synthetic attempt rows also remain historical evidence; this repair cannot reconstruct missing sends or safely delete ambiguous history. Complaints suppress the address, but the required customer-correction operational workflow remains unfinished in the provider/callback audit batch.
+Legacy callbacks have an empty verified-provider list. Their original payloads and suppression records remain, but their provider identity is not guessed. Old synthetic attempt rows also remain historical evidence; this repair cannot reconstruct missing sends or safely delete ambiguous history.
+
+## Complaint correction queue
+
+Apply migration0131 before the updated callback/admin API and web. Drain older callback API instances before migrating so complaints cannot bypass task creation. The migration backfills existing complaint suppressions into one open correction per address. New complaints create the suppression and correction in the same transaction. Profile deletion retains both records with a null profile reference.
+
+Staff with `admin:jobs:view` can open Customer contact corrections on the failed-notifications or notification administration page. Completing a correction requires `admin:jobs:retry`, a current session with step-up verification, and a resolution note. Completion is audited and stays in the completed list. It does not remove email suppression, send a message, or claim the recipient consented. A later complaint can open a new correction. No production migration or customer follow-up has been executed by this audit.

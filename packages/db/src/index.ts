@@ -586,6 +586,7 @@ export * from './schema/notification-preferences';
 export * from './schema/email-provider-configs';
 export * from './schema/email-webhook-events';
 export * from './schema/email-suppressions';
+export * from './schema/email-customer-corrections';
 export * from './schema/approval-requests';
 export * from './schema/service-breach-alerts';
 export * from './schema/staff-teams';

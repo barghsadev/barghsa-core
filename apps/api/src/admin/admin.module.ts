@@ -1,3 +1,5 @@
+import { CustomerCorrectionsController } from './customer-corrections.controller.js';
+import { CustomerCorrectionsService } from './customer-corrections.service.js';
 import { AdminBrandAssetController } from './brand-asset.controller.js';
 import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
 import { BrandAssetService } from './brand-asset.service.js';
@@ -54,6 +56,7 @@ import { ServiceDuePeriodService } from './service-due-period.service.js';
     ReconciliationExceptionsController,
     FailedJobsController,
     FailedNotificationsController,
+    CustomerCorrectionsController,
     VatConfigController,
     GiftCodeController,
     ContractTemplateController,
@@ -76,6 +79,7 @@ import { ServiceDuePeriodService } from './service-due-period.service.js';
     ReconciliationExceptionsService,
     FailedJobsService,
     FailedNotificationsService,
+    CustomerCorrectionsService,
     VatConfigService,
     GiftCodeService,
     ContractTemplateService,
@@ -93,6 +97,7 @@ import { ServiceDuePeriodService } from './service-due-period.service.js';
     ReconciliationExceptionsService,
     FailedJobsService,
     FailedNotificationsService,
+    CustomerCorrectionsService,
     VatConfigService,
     GiftCodeService,
   ],

@@ -34,7 +34,7 @@ export const emailSuppressions = pgTable(
 
     /** The receiving profile when the originating outbox row was resolvable. */
     profileId: uuid('profile_id').references(() => profiles.id, {
-      onDelete: 'cascade',
+      onDelete: 'set null',
     }),
 
     /** The verified webhook event that created this suppression. */

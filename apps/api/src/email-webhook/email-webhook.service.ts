@@ -278,7 +278,14 @@ export class EmailWebhookService {
     eventId: string
   ): Promise<void> {
     for (const to of normalizedAddresses(event)) {
-      await this.suppress(client, to, 'complaint', outbox?.profileId ?? null, eventId);
+      const profileId =
+        normalizedAddresses(event).length === 1 ? (outbox?.profileId ?? null) : null;
+      await this.suppress(client, to, 'complaint', profileId, eventId);
+      await client.query(
+        `INSERT INTO email_customer_corrections(address,profile_id,source_event_id)
+        VALUES ($1,$2,$3) ON CONFLICT (address) WHERE resolved_at IS NULL DO NOTHING`,
+        [to, profileId, eventId]
+      );
     }
   }
 

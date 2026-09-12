@@ -8,6 +8,7 @@ const secret = `whsec_${Buffer.from('webhook-http-signing-secret').toString('bas
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const providerId = randomUUID();
 const sessionId = randomUUID();
+const csrfToken = randomUUID();
 let profileId: string;
 
 beforeAll(async () => {
@@ -35,9 +36,9 @@ beforeAll(async () => {
     .query(`INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ('webhook-review','Webhook review','Fixture','["admin:jobs:view"]');
     INSERT INTO user_roles(user_id,role_id) VALUES ('webhook-staff','webhook-review')`);
   await http.pool.query(
-    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
-    VALUES ($1,'webhook-staff',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour')`,
-    [sessionId, randomUUID(), randomUUID()]
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+    VALUES ($1,'webhook-staff',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())`,
+    [sessionId, csrfToken, randomUUID()]
   );
   profileId = (
     await http.pool.query("INSERT INTO profiles(user_id) VALUES ('webhook-staff') RETURNING id")
@@ -48,6 +49,7 @@ afterAll(async () => {
   await http?.close();
 }, 15000);
 beforeEach(async () => {
+  await http.pool.query('DELETE FROM email_customer_corrections');
   await http.pool.query('DELETE FROM email_suppressions');
   await http.pool.query('DELETE FROM email_webhook_events');
   await http.pool.query('DELETE FROM notification_outbox');
@@ -354,4 +356,187 @@ it('rolls back the event if suppression fails, allowing the same event to retry'
   }
   expect((await post(event, { id })).status).toBe(200);
   expect((await http.pool.query('SELECT id FROM email_suppressions')).rowCount).toBe(1);
+});
+
+const correctionsPath = '/api/admin/notifications/customer-corrections';
+const staffHeaders = {
+  Cookie: `barghsa_session=${sessionId}`,
+  'X-CSRF-Token': csrfToken,
+  'Content-Type': 'application/json',
+};
+async function correction() {
+  const event = payload('email.complained');
+  expect((await post(event)).status).toBe(200);
+  return (await http.pool.query('SELECT id FROM email_customer_corrections')).rows[0].id as string;
+}
+async function resolveCorrection(id: string, note: unknown = 'Contact corrected') {
+  return fetch(`${http.base}${correctionsPath}/${id}/resolve`, {
+    method: 'POST',
+    headers: staffHeaders,
+    body: JSON.stringify({ note }),
+  });
+}
+it('creates one actionable task per open recipient and exposes it only to authorized staff', async () => {
+  const id = await correction();
+  expect((await post(payload('email.complained'))).status).toBe(200);
+  expect((await http.pool.query('SELECT id FROM email_customer_corrections')).rows).toEqual([
+    { id },
+  ]);
+  expect((await fetch(`${http.base}${correctionsPath}`)).status).toBe(401);
+  const response = await fetch(`${http.base}${correctionsPath}`, { headers: staffHeaders });
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject([
+    { id, address: 'recipient@example.test', resolvedAt: null },
+  ]);
+  expect((await resolveCorrection(id)).status).toBe(403);
+});
+it('resolves with current authority and an atomic audit, keeps suppression and allows later complaints to create a fresh task', async () => {
+  await http.pool.query(
+    `UPDATE staff_roles SET permissions='["admin:jobs:view","admin:jobs:retry"]' WHERE role_id='webhook-review'`
+  );
+  try {
+    const id = await correction();
+    expect((await resolveCorrection(id, '   ')).status).toBe(400);
+    const responses = await Promise.all([resolveCorrection(id), resolveCorrection(id)]);
+    expect(responses.map((r) => r.status)).toEqual([200, 200]);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT id FROM audit_log WHERE event='email_customer_correction_resolved' AND metadata::jsonb->>'correctionId'=$1",
+          [id]
+        )
+      ).rowCount
+    ).toBe(1);
+    expect((await http.pool.query('SELECT id FROM email_suppressions')).rowCount).toBe(1);
+    expect((await resolveCorrection(id, 'Changed history')).status).toBe(409);
+    expect((await post(payload('email.complained'))).status).toBe(200);
+    expect(
+      (await http.pool.query('SELECT id FROM email_customer_corrections WHERE resolved_at IS NULL'))
+        .rowCount
+    ).toBe(1);
+    expect((await http.pool.query('SELECT id FROM email_customer_corrections')).rowCount).toBe(2);
+  } finally {
+    await http.pool.query(
+      `UPDATE staff_roles SET permissions='["admin:jobs:view"]' WHERE role_id='webhook-review'`
+    );
+  }
+});
+it('rolls back complaint ledger and suppression when task creation fails', async () => {
+  await http.pool
+    .query(`CREATE FUNCTION reject_correction() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fixture task failure'; END $$;
+    CREATE TRIGGER reject_correction BEFORE INSERT ON email_customer_corrections FOR EACH ROW EXECUTE FUNCTION reject_correction()`);
+  const id = randomUUID(),
+    event = payload('email.complained');
+  try {
+    expect((await post(event, { id })).status).toBe(500);
+    expect((await http.pool.query('SELECT id FROM email_suppressions')).rowCount).toBe(0);
+    expect((await http.pool.query('SELECT id FROM email_webhook_events')).rowCount).toBe(0);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER reject_correction ON email_customer_corrections; DROP FUNCTION reject_correction()'
+    );
+  }
+  expect((await post(event, { id })).status).toBe(200);
+  expect((await http.pool.query('SELECT id FROM email_customer_corrections')).rowCount).toBe(1);
+});
+it('retains address suppression and correction history after the associated profile is deleted', async () => {
+  const profile = (
+    await http.pool.query("INSERT INTO profiles(user_id) VALUES ('webhook-staff') RETURNING id")
+  ).rows[0].id;
+  const message = randomUUID(),
+    row = await queue(message);
+  await http.pool.query('UPDATE notification_outbox SET profile_id=$2 WHERE id=$1', [
+    row.id,
+    profile,
+  ]);
+  expect((await post(payload('email.complained', { email_id: message }))).status).toBe(200);
+  await http.pool.query('DELETE FROM profiles WHERE id=$1', [profile]);
+  expect((await http.pool.query('SELECT address,profile_id FROM email_suppressions')).rows).toEqual(
+    [{ address: 'recipient@example.test', profile_id: null }]
+  );
+  expect((await http.pool.query('SELECT profile_id FROM email_customer_corrections')).rows).toEqual(
+    [{ profile_id: null }]
+  );
+});
+
+it('rejects missing CSRF and stale step-up, and rolls back resolution if authority expires during its audit', async () => {
+  await http.pool.query(
+    `UPDATE staff_roles SET permissions='["admin:jobs:view","admin:jobs:retry"]' WHERE role_id='webhook-review'`
+  );
+  const id = await correction();
+  try {
+    expect(
+      (
+        await fetch(`${http.base}${correctionsPath}/${id}/resolve`, {
+          method: 'POST',
+          headers: { Cookie: staffHeaders.Cookie, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ note: 'Correction' }),
+        })
+      ).status
+    ).toBe(403);
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 day' WHERE session_id=$1",
+      [sessionId]
+    );
+    expect((await resolveCorrection(id)).status).toBe(403);
+    await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW() WHERE session_id=$1', [
+      sessionId,
+    ]);
+    await http.pool
+      .query(`CREATE FUNCTION expire_correction_actor() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+      IF NEW.event='email_customer_correction_resolved' THEN UPDATE sessions SET expires_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id='webhook-staff'; END IF;
+      RETURN NEW; END $$;
+      CREATE TRIGGER expire_correction_actor BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION expire_correction_actor()`);
+    try {
+      const response = await resolveCorrection(id);
+      expect([401, 403]).toContain(response.status);
+      expect(
+        (
+          await http.pool.query('SELECT resolved_at FROM email_customer_corrections WHERE id=$1', [
+            id,
+          ])
+        ).rows[0].resolved_at
+      ).toBeNull();
+      expect(
+        (
+          await http.pool.query(
+            "SELECT id FROM audit_log WHERE event='email_customer_correction_resolved' AND metadata::jsonb->>'correctionId'=$1",
+            [id]
+          )
+        ).rowCount
+      ).toBe(0);
+    } finally {
+      await http.pool.query(
+        'DROP TRIGGER expire_correction_actor ON audit_log; DROP FUNCTION expire_correction_actor()'
+      );
+    }
+  } finally {
+    await http.pool.query(
+      `UPDATE staff_roles SET permissions='["admin:jobs:view"]' WHERE role_id='webhook-review'`
+    );
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',step_up_verified_at=NOW() WHERE session_id=$1",
+      [sessionId]
+    );
+  }
+});
+it('enforces current read permission and strict pagination inputs', async () => {
+  const id = await correction();
+  for (const query of ['?completed=maybe', '?offset=-1', '?offset=1.5', '?extra=true'])
+    expect(
+      (await fetch(`${http.base}${correctionsPath}${query}`, { headers: staffHeaders })).status
+    ).toBe(400);
+  await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='webhook-review'");
+  try {
+    expect((await fetch(`${http.base}${correctionsPath}`, { headers: staffHeaders })).status).toBe(
+      403
+    );
+  } finally {
+    await http.pool.query(
+      `UPDATE staff_roles SET permissions='["admin:jobs:view"]' WHERE role_id='webhook-review'`
+    );
+  }
+  expect((await http.pool.query('SELECT id FROM email_customer_corrections')).rows).toEqual([
+    { id },
+  ]);
 });

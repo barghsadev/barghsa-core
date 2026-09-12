@@ -3,6 +3,26 @@ import type { I18nDictionary, Locale } from './index.js';
 import { t as sharedText } from './crm.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'admin.notifications.corrections.title': 'پیگیری اصلاح اطلاعات مشتری',
+  'admin.notifications.corrections.description':
+    'شکایت از ایمیل را بررسی و نتیجه پیگیری اطلاعات تماس مشتری را ثبت کنید. بستن کار، ارسال ایمیل به این نشانی را دوباره فعال نمی‌کند.',
+  'admin.notifications.corrections.completed': 'کارهای انجام‌شده',
+  'admin.notifications.corrections.refresh': 'تازه‌سازی پیگیری‌ها',
+  'admin.notifications.corrections.saved': 'نتیجه پیگیری ثبت شد. ارسال ایمیل همچنان مسدود است.',
+  'admin.notifications.corrections.loading': 'در حال دریافت پیگیری‌ها…',
+  'admin.notifications.corrections.error': 'دریافت پیگیری‌ها انجام نشد. دوباره تازه‌سازی کنید.',
+  'admin.notifications.corrections.denied': 'اجازه انجام این کار را ندارید.',
+  'admin.notifications.corrections.empty': 'کاری در این فهرست نیست.',
+  'admin.notifications.corrections.resolve': 'ثبت نتیجه پیگیری',
+  'admin.notifications.corrections.previous': 'صفحه قبل پیگیری‌ها',
+  'admin.notifications.corrections.next': 'صفحه بعد پیگیری‌ها',
+  'admin.notifications.corrections.confirm':
+    'این نتیجه ثبت و کار بسته شود؟ ارسال ایمیل به این نشانی همچنان مسدود می‌ماند.',
+  'admin.notifications.corrections.note': 'نتیجه پیگیری',
+  'admin.notifications.corrections.save': 'ثبت و بستن کار',
+  'admin.notifications.corrections.cancel': 'انصراف',
+  'admin.notifications.corrections.conflict':
+    'این کار قبلاً با نتیجه دیگری بسته شده است. فهرست را تازه‌سازی کنید.',
   'admin.invoices.stepUp.title': 'تأیید تغییر مهلت پرداخت',
   'admin.invoices.stepUp.description':
     'رمز عبور خود را وارد کنید تا همین تاریخ و دلیل برای فاکتور ثبت شود.',
@@ -899,6 +919,26 @@ export const fa: I18nDictionary = {
   'admin.approvals.walletReceipts': 'نمایش رسیدهای کیف پول',
 };
 export const en: I18nDictionary = {
+  'admin.notifications.corrections.title': 'Customer contact corrections',
+  'admin.notifications.corrections.description':
+    'Review the email complaint and record the customer contact follow-up. Completing a task keeps this address suppressed.',
+  'admin.notifications.corrections.completed': 'Completed tasks',
+  'admin.notifications.corrections.refresh': 'Refresh corrections',
+  'admin.notifications.corrections.saved': 'Follow-up recorded. Email remains suppressed.',
+  'admin.notifications.corrections.loading': 'Loading corrections…',
+  'admin.notifications.corrections.error': 'Could not load corrections. Refresh to try again.',
+  'admin.notifications.corrections.denied': 'You do not have permission for this action.',
+  'admin.notifications.corrections.empty': 'No tasks in this list.',
+  'admin.notifications.corrections.resolve': 'Record follow-up',
+  'admin.notifications.corrections.previous': 'Previous corrections',
+  'admin.notifications.corrections.next': 'Next corrections',
+  'admin.notifications.corrections.confirm':
+    'Record this outcome and complete the task? Email to this address remains suppressed.',
+  'admin.notifications.corrections.note': 'Follow-up outcome',
+  'admin.notifications.corrections.save': 'Save and complete',
+  'admin.notifications.corrections.cancel': 'Cancel',
+  'admin.notifications.corrections.conflict':
+    'This task was completed with another outcome. Refresh the list.',
   'admin.invoices.stepUp.title': 'Verify deadline change',
   'admin.invoices.stepUp.description':
     'Enter your password to apply this deadline and reason to the invoice.',
