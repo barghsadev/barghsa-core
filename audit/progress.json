@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "b820197832524fab16b13bf0389232f34027fdf8",
+  "source_revision": "0e59d835f601cfd7d5525713e33c5678c88308ed",
   "active_step": "R02",
-  "next_action": "Review exact KB upload and agent test-chat requirements, PR208/210 bodies and existing implementation. Reuse storage/provider authority proofs; repair confirmed integration gaps with focused workflow tests.",
+  "next_action": "Review implemented AI model, policy and slot settings together; preserve KB/chat future prerequisites.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -714,6 +714,10 @@
     {
       "id": "R02-receipt-expiry-notices",
       "review_record": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+    },
+    {
+      "id": "R02-kb-agent-integration",
+      "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration"
     }
   ],
   "deferred_improvements": [
@@ -738,8 +742,8 @@
   "counts": {
     "historical_tasks": 322,
     "acceptance_verified": 166,
-    "partial": 31,
-    "pending": 125,
+    "partial": 33,
+    "pending": 123,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -1029,27 +1033,31 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R02-kb-agent-integration",
-    "name": "Knowledge-base uploads and agent test chat",
+    "id": "R02-ai-settings",
+    "name": "AI model, policy and slot settings",
     "status": "reviewing",
     "prs": [
-      208,
-      210
+      207,
+      209,
+      211
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-09.11.02",
-      "02-auth-users-admin.md#T-09.11.04"
+      "02-auth-users-admin.md#T-09.11.01",
+      "02-auth-users-admin.md#T-09.11.03",
+      "02-auth-users-admin.md#T-09.11.05"
     ],
     "remaining_checklist": [
-      "Read exact criteria/PR bodies/deferrals and current integration once.",
-      "Verify integrated KB upload and real configured-agent test chat; a connection probe is insufficient.",
-      "Repair confirmed gaps and record one feature checkpoint."
+      "Read exact requirements and saved deferrals; inspect model tests, policy editors and slot UI.",
+      "Repair current transaction authorization and confirmed integration gaps.",
+      "Run focused checks, then record individual PR dispositions together."
     ],
     "confirmed_defects": [],
-    "reused_evidence": [],
+    "reused_evidence": [
+      "audit/evidence/step-reviews.json#R02-kb-agent-integration"
+    ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Review exact KB upload and agent test-chat requirements, PR208/210 bodies and existing implementation. Reuse storage/provider authority proofs; repair confirmed integration gaps with focused workflow tests."
+    "next_action": "Review implemented AI model, policy and slot settings together; preserve KB/chat future prerequisites."
   },
   "open_domain_reviews": [
     {
@@ -1309,6 +1317,34 @@
         "04-invoices-wallet-contracts.md#T-04.5.04.02"
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.02",
+      "prs": [
+        208
+      ],
+      "owner_batch": "V01/B01 future AI processing and agent chat",
+      "remaining": "Actual extraction, chunking, embeddings and retrieval remain unbuilt under 05-notifications-documents-ai.md#T-05.17.02. Stored pending status is not processing completion.",
+      "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration",
+      "prerequisite_task_keys": [
+        "05-notifications-documents-ai.md#T-05.17.02"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.04",
+      "prs": [
+        210
+      ],
+      "owner_batch": "V01/B01 future AI processing and agent chat",
+      "remaining": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01–03 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
+      "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration",
+      "prerequisite_task_keys": [
+        "05-notifications-documents-ai.md#T-05.17.02",
+        "05-notifications-documents-ai.md#T-05.18.03",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03"
+      ]
     }
   ]
 }

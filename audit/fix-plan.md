@@ -16,7 +16,7 @@ Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repe
 
 ## Next step
 
-Receipt/expiry notices complete locally atb8201978:3 task acceptances verified (1 newly verified,2 preserved);8 contributing saved PR reviews closed,3 newly closed and5 preserved. Current totals166 verified/31 partial/125 pending;145 closed/21 open/135 unreviewed PRs.2771 logs indexed.35 worker and38 shared cases pass, including8 actual seeded FA/EN receipt/expiry delivery cases. Worker/shared types/lint/format pass. Matching prior receipt API/UI and42 budget evidence reused.10 immediate-base bindings refreshed; older38 retained. [Batch review](evidence/step-reviews.json#R02-receipt-expiry-notices).
+Receipt/expiry notices complete locally atb8201978:3 task acceptances verified (1 newly verified,2 preserved);8 contributing saved PR reviews closed,3 newly closed and5 preserved. Current totals166 verified/33 partial/123 pending;145 closed/23 open/133 unreviewed PRs.2771 logs indexed.35 worker and38 shared cases pass, including8 actual seeded FA/EN receipt/expiry delivery cases. Worker/shared types/lint/format pass. Matching prior receipt API/UI and42 budget evidence reused.10 immediate-base bindings refreshed; older38 retained. [Batch review](evidence/step-reviews.json#R02-receipt-expiry-notices).
 
 Next batch: integrated KB uploads and real agent test chat, PR208/210; qualified tasks02-auth-users-admin.md#T-09.11.02 andT-09.11.04. Read exact criteria, bodies and current implementation; a provider connection probe is insufficient. Reuse provider/storage authority work.
 
@@ -96,6 +96,8 @@ Wallet invoice payment/reversal is consolidated at `cb7ac5b`: **5 tasks verified
 
 Notification outbox/delivery has individual dispositions at `05dc4f9b`: seven closed/two open PR reviews. Inbox/policy batch now closes six more reviews atb168ee2b; continue template lifecycle/seeding. Preserve valid delivery/search/shutdown evidence.
 
+KB/agent batch at0e59d835 repaired uploads and transaction authorization. PR208/210 remain open; both tasks partial for future processing/policy/chat prerequisites. Continue AI model/policy/slot settings, PR207/209/211. [Review](evidence/step-reviews.json#R02-kb-agent-integration).
+
 ## Feature-batch rules
 
 Approved September 8 to reduce repeated discovery, checks and audit work. This changes execution granularity, not requirements, acceptance thresholds, authority or phase order. Finish an in-flight change/check safely before switching. The supervisor's one-task/one-PR dispatch protocol remains separate and unchanged.
@@ -126,7 +128,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
-For all31 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
+For all33 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
 
 ## Remaining merged-PR review
 

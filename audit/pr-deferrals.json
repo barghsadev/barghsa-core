@@ -924,7 +924,26 @@
       "- [ ] Test chat UI (deferred slice)",
       "- [ ] Web UI (deferred slice)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Implemented administration reviewed; required processing/chat dependencies remain open.",
+    "reviewed_source_revision": "0e59d835f601cfd7d5525713e33c5678c88308ed",
+    "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "separate_future_dependency",
+        "evidence": "Required processing/actual chat remain future dependencies, not acceptance passes. audit/evidence/step-reviews.json#R02-kb-agent-integration"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "separate_future_dependency",
+        "evidence": "Required processing/actual chat remain future dependencies, not acceptance passes. audit/evidence/step-reviews.json#R02-kb-agent-integration"
+      },
+      {
+        "statement_index": 2,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "FA/EN administration UI is implemented and checked. audit/evidence/step-reviews.json#R02-kb-agent-integration"
+      }
+    ]
   },
   {
     "pr": 209,
@@ -949,7 +968,26 @@
       "- [ ] Web UI + fa/en dictionaries + RTL/a11y slice — deferred (per T-09.11.01 precedent)",
       "- [ ] Actual chunking/embedding worker — deferred to E-05 document-processing epic (not built; queue 630+)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Implemented administration reviewed; required processing/chat dependencies remain open.",
+    "reviewed_source_revision": "0e59d835f601cfd7d5525713e33c5678c88308ed",
+    "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "separate_future_dependency",
+        "evidence": "Required processing/actual chat remain future dependencies, not acceptance passes. audit/evidence/step-reviews.json#R02-kb-agent-integration"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "FA/EN administration UI is implemented and checked. audit/evidence/step-reviews.json#R02-kb-agent-integration"
+      },
+      {
+        "statement_index": 2,
+        "disposition": "separate_future_dependency",
+        "evidence": "Required processing/actual chat remain future dependencies, not acceptance passes. audit/evidence/step-reviews.json#R02-kb-agent-integration"
+      }
+    ]
   },
   {
     "pr": 207,

@@ -4,6 +4,10 @@ Read [fix-plan.md](fix-plan.md) and the active batch in [progress.json](progress
 
 ## Current checkpoint
 
+KB/agent checkpoint **0e59d835**: uploads integrated, account-level ticket upload repaired, all17 mutation entry points bind session proof through commit.212 distinct API cases,22 web unit,10 FA/EN browser,32 DB cases pass; types/lint/format/build and42 budgets pass.2 tasks now partial; PR208/210 open for future processing/policy/chat dependencies. **166 verified/33 partial/123 pending;145 closed/23 open/133 unreviewed PRs.** 2799 logs indexed;38 older refreshes preserved. Continue **R02-ai-settings**, PR207/209/211. [Review](evidence/step-reviews.json#R02-kb-agent-integration).
+
+Previous receipt checkpoint:
+
 Branch codex/audit-fixes. Latest product/test commit **b8201978**. Receipt/expiry batch:3 task acceptances verified (1 newly verified,2 preserved);8 saved PR reviews closed (3 newly closed,5 preserved).
 
 Counts:166 verified/31 partial/125 pending claims;145 closed/21 open/135 unreviewed saved PRs.58 skips,3 verified/55 pending.2771 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage staysV02.

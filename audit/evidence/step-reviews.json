@@ -16644,6 +16644,201 @@
         "05-notifications-documents-ai.md#T-05.06.06",
         "05-notifications-documents-ai.md#T-05.06.07"
       ]
+    },
+    {
+      "id": "R02-kb-agent-integration",
+      "date": "2026-09-13",
+      "source_revision": "0e59d835f601cfd7d5525713e33c5678c88308ed",
+      "base_revision": "35840b6c3859f34f9fad972423c2e077b2b36065",
+      "product_commits": [
+        "88a6a7dad55c67ee63bb9382e2d6c0a0a518e1f3",
+        "0e59d835f601cfd7d5525713e33c5678c88308ed"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.11.02",
+        "02-auth-users-admin.md#T-09.11.04"
+      ],
+      "summary": "KB/agent administration repaired and reviewed:2 newly partial tasks; PR208/210 open for actual processing/chat dependencies.166 verified/33 partial/123 pending;145 closed/23 open/133 unreviewed PRs.",
+      "review": [
+        "Read both exact tasks, saved PR bodies and all deferrals. Added missing integrated upload with presign→PUT→verify→record→attach, strict acknowledgements, cancel/retry and FA/EN UI. PUT receives no session CSRF proof. Ticket upload omits forbidden null profileId; genuine baseline failure retained.",
+        "All17 KB/group/document/agent/link mutation entry points carry actor-bound session proof. Staff locks precede session locks. Check current session/CSRF/step-up before work and before commit, including no-op paths. Expiry or proof changes roll back business/link/audit writes. Shared authorization behavior unchanged.",
+        "Baseline23 failures retained:21 reproduce commit-after-expiry/revocation/CSRF defects;2 initial step-up fixtures incorrectly assumed11minutes expired the actual15minute window, then changed to missing proof. All23 final regressions pass. Seven obsolete agent permission-wait fixtures now match the shared session guard; these prove current permissions after the guard wait. Six controller fixtures now expect forwarded session.",
+        "167 current API cases pass. Earlier92 upload cases overlap47 KB cases and contribute45 unchanged storage HTTP cases, for212 distinct API cases.22 upload/helper unit,10 FA/EN browser and32 DB cases pass. Types/scoped lint/format/build and42 budgets pass at recorded revisions. Last repair is API-only; HTTP/browser setup built it.",
+        "Group configuration and CRUD exist; actual chat does not. Graph/source inspection found AIChat placeholder and model connection probe, no retrieval/policy engine. Future canonical tasks remain prerequisites. PR210 slot assignment belongs to T-09.11.05, reviewed next; list pagination is not a T-09.11.04 acceptance criterion.",
+        "No duplicate rebuild/deletion needed. Preserve existing migrations and stored uploads. No GitHub refresh, deployment, live provider call, push or scheduler action."
+      ],
+      "verification": {
+        "api": "212 distinct cases across focused runs; intermediate failures overlap.",
+        "web": "22 unit and10 FA/EN Chromium pass.",
+        "db": "32 schema/migrated group cases pass.",
+        "quality": "Types/scoped lint/format/build and42 budgets pass; full regression staysV02."
+      },
+      "remaining": [
+        "Actual extraction, chunking, embeddings and retrieval remain unbuilt under 05-notifications-documents-ai.md#T-05.17.02. Stored pending status is not processing completion.",
+        "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01–03 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-agents/ai-agents-http.integration.test.ts",
+          "sha256": "2dfb39d6f4a8b3ab4e728076b2a9bbbf2cb87120198636fe177dafd16f531e53"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents.controller.test.ts",
+          "sha256": "1e477c48b868bfe96c62a709f6ebaf572b4f51c22805354a8fecf6b89920a1c7"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
+          "sha256": "b9a8052ef8e7fcecd9706b5b7c211c1b5affcd22f7213f24231720a4972e7b92"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
+          "sha256": "30157762dd05433cd8e724e0283b2fb244cb3300372077e7163624e8039a67a4"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents.service.ts",
+          "sha256": "15cb37d21c70ab8e3eb903b163e6ac5e077bb43b44db920dfcd22a454335985a"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases-http.integration.test.ts",
+          "sha256": "bfe2fdbdd834134238b70c0aec79167223361d1e6326a3f160d0d49df8f27a37"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.test.ts",
+          "sha256": "e007702eb7ede338208dba0a3347ef85d1d929337798fbdd7f2b3c117e9b1c0f"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
+          "sha256": "700b52ab5dc7e8b4017c0d416d864a09272a0ada85365a475c718c818fa133e9"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.service.test.ts",
+          "sha256": "184daa2ec5ccda984b76de2c20ee46289e8e043f5860b77d026560e942b2c715"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.service.ts",
+          "sha256": "73df526714c63db9006073978ff9971a407fa84b1a718c996ca08cd1c7780443"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "f67794707388016a58804013bafd89569212001270114d56331be6d3cfcca598"
+        },
+        {
+          "path": "apps/web/e2e/ai-agents.spec.ts",
+          "sha256": "bf32d6277dd6b0550a351554ebb1b184517230f5b4d857e620c7d9f172fde52a"
+        },
+        {
+          "path": "apps/web/e2e/knowledge-bases.spec.ts",
+          "sha256": "4af632a1755ad5e38b59c156d073dfff7f557578e9e2c9d52de408547c11376b"
+        },
+        {
+          "path": "apps/web/src/components/KnowledgeBaseDocumentPicker.tsx",
+          "sha256": "b9c5492eb6f5ee8987e686b36f6974e7f49e7b48ee7d416de2a2dae9546c4c21"
+        },
+        {
+          "path": "apps/web/src/components/KnowledgeBaseUpload.tsx",
+          "sha256": "1eb0e60b04a3133584ec942e6c263f338e9ba363e5c09507608950debd6e300f"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+          "sha256": "d19f450b2cf7562799ebbefaa0b6779afa2ead29423fb79415bb83b5092fd479"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+          "sha256": "de84388fb8eaf58c1aa886a4fcd34224519c7f2104baaf4bfc0c7bce79cbc521"
+        },
+        {
+          "path": "apps/web/src/lib/knowledge-base-upload.test.ts",
+          "sha256": "341f7d620ddee93030e242fa8d6fa1e31183e60c9b127a99fe71584f02461294"
+        },
+        {
+          "path": "apps/web/src/lib/knowledge-base-upload.ts",
+          "sha256": "d0b6ee8b20e557b4186eade9625c5d225b131203c3e197b318a3a828da4d04ea"
+        },
+        {
+          "path": "apps/web/src/pages/AIChat.tsx",
+          "sha256": "1a4535b06a2436a9db3c8d638b739c4ceda1ae9413a9b6b62b9d9865cad1937b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
+          "sha256": "edd0c4ad8e7acbe8ff678d1e8bf2d1aec72c8c19de1dbd7819e2c1487f5cd947"
+        },
+        {
+          "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
+          "sha256": "40230e1ae380167166578476d708b4c3a9cbefb4d1e3fbba13eea3d72c98a66d"
+        },
+        {
+          "path": "packages/db/src/ai-agent-groups.migrated.test.ts",
+          "sha256": "2511d9b71381663e8dee008a2d11b40568f8d8821792f6bb8d1e97e28c667ad2"
+        },
+        {
+          "path": "packages/db/src/schema/ai-agents.test.ts",
+          "sha256": "a00ee26948d5b1136067904de9e0b0240095a9a86f4fcc93181d9590848ab831"
+        },
+        {
+          "path": "packages/db/src/schema/knowledge-bases.test.ts",
+          "sha256": "e80eb8a3c1bee806c438512bdfcf42cc60061e0c5326bfae3fede471bea482cd"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui.ts",
+          "sha256": "307538e6d89c598c3cf0dbca229ee9eec09622d716bbb7c02ac0c747aeffec0f"
+        },
+        {
+          "path": "packages/shared/src/ai-models/tester.ts",
+          "sha256": "c02c010f570f26d9217d3fe874cde7294fef9589538c47471c454cef8879965b"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-kb-agent-browser.log",
+        "/tmp/r02-kb-schema.log",
+        "/tmp/r02-kb-session-api-final.log",
+        "/tmp/r02-kb-session-api.log",
+        "/tmp/r02-kb-session-baseline.log",
+        "/tmp/r02-kb-session-format-check.log",
+        "/tmp/r02-kb-session-format-final.log",
+        "/tmp/r02-kb-session-format.log",
+        "/tmp/r02-kb-session-lint.log",
+        "/tmp/r02-kb-session-types-final.log",
+        "/tmp/r02-kb-session-types.log",
+        "/tmp/r02-kb-ticket-upload-baseline.log",
+        "/tmp/r02-kb-upload-api-format.log",
+        "/tmp/r02-kb-upload-api.log",
+        "/tmp/r02-kb-upload-authority-current.log",
+        "/tmp/r02-kb-upload-browser-format-confirm.log",
+        "/tmp/r02-kb-upload-browser-format.log",
+        "/tmp/r02-kb-upload-browser.log",
+        "/tmp/r02-kb-upload-final-budgets.log",
+        "/tmp/r02-kb-upload-final-format.log",
+        "/tmp/r02-kb-upload-final-lint.log",
+        "/tmp/r02-kb-upload-final-types.log",
+        "/tmp/r02-kb-upload-format-confirm.log",
+        "/tmp/r02-kb-upload-format.log",
+        "/tmp/r02-kb-upload-i18n-build.log",
+        "/tmp/r02-kb-upload-tests-format.log",
+        "/tmp/r02-kb-upload-unit.log",
+        "/tmp/r02-kb-upload-web-build.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 208,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.11.02"
+          ],
+          "reason": "Actual extraction, chunking, embeddings and retrieval remain unbuilt under 05-notifications-documents-ai.md#T-05.17.02. Stored pending status is not processing completion.",
+          "source_revision": "0e59d835f601cfd7d5525713e33c5678c88308ed",
+          "evidence": "audit/evidence/step-reviews.json#R02-kb-agent-integration"
+        },
+        {
+          "pr": 210,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.11.04"
+          ],
+          "reason": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01–03 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
+          "source_revision": "0e59d835f601cfd7d5525713e33c5678c88308ed",
+          "evidence": "audit/evidence/step-reviews.json#R02-kb-agent-integration"
+        }
+      ]
     }
   ]
 }

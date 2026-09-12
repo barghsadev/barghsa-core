@@ -6,7 +6,7 @@ A PR body checkbox is historical author evidence, not independent acceptance. Re
 301 merged PRs: 107 have unresolved mapped tasks; 4 have no current task mapping; 190 map only to verified tasks.
 170 historical deferral statements from 101 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **145 closed / 21 open / 0 blocked**; 135 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **145 closed / 23 open / 0 blocked**; 133 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -237,9 +237,9 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#205](https://github.com/barghsadev/barghsa-core/pull/205) | 02-auth-users-admin.md#T-09.10.02 (pending) | Task review remains | Not reviewed | 2 |
 | [#206](https://github.com/barghsadev/barghsa-core/pull/206) | 02-auth-users-admin.md#T-09.10.03 (pending) | Task review remains | Not reviewed | 2 |
 | [#207](https://github.com/barghsadev/barghsa-core/pull/207) | 02-auth-users-admin.md#T-09.11.01 (pending) | Task review remains | Not reviewed | 1 |
-| [#208](https://github.com/barghsadev/barghsa-core/pull/208) | 02-auth-users-admin.md#T-09.11.02 (pending) | Task review remains | Not reviewed | 3 |
+| [#208](https://github.com/barghsadev/barghsa-core/pull/208) | 02-auth-users-admin.md#T-09.11.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R02-kb-agent-integration) | 3 |
 | [#209](https://github.com/barghsadev/barghsa-core/pull/209) | 02-auth-users-admin.md#T-09.11.03 (pending) | Task review remains | Not reviewed | 2 |
-| [#210](https://github.com/barghsadev/barghsa-core/pull/210) | 02-auth-users-admin.md#T-09.11.04 (pending) | Task review remains | Not reviewed | 3 |
+| [#210](https://github.com/barghsadev/barghsa-core/pull/210) | 02-auth-users-admin.md#T-09.11.04 (partial) | Task review remains | [open](evidence/step-reviews.json#R02-kb-agent-integration) | 3 |
 | [#211](https://github.com/barghsadev/barghsa-core/pull/211) | 02-auth-users-admin.md#T-09.11.05 (pending) | Task review remains | Not reviewed | 1 |
 | [#212](https://github.com/barghsadev/barghsa-core/pull/212) | 02-auth-users-admin.md#T-09.12.01 (pending) | Task review remains | Not reviewed | 1 |
 | [#213](https://github.com/barghsadev/barghsa-core/pull/213) | 02-auth-users-admin.md#T-09.12.02 (pending) | Task review remains | Not reviewed | 1 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `36d2ecd3463500e91dc2592c3f51fe6412b5338da9992dc4c99553cfc4a2202f`
-- `pr-deferrals.json`: `cd56b2758b9cc3c766479431995205effc3a393aa6c3c4228b54bb07ada121de`
-- `evidence/step-reviews.json`: `3a5b5eb5749912a5a4730edb38ae5ec6e3238c401ffa816b7b8ccab4108fc43f`
+- `acceptance-closure.json`: `2299e09a73ae36c5e15593a3f7303909b76ee8e75b006dcd63c28b9b49ead2af`
+- `pr-deferrals.json`: `1786cc2badaabfb9039e3aefffbf536587a60ac4dc3170b8bed8b5b21e2d29c9`
+- `evidence/step-reviews.json`: `6735b81d2647dbad894d40733a19c87308af7224178599f780030e6addefc17a`
