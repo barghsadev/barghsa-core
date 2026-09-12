@@ -3,6 +3,7 @@ import {
   interpolate,
   formatRelativeTime,
   notificationTypeLabelKey,
+  notificationDisplayType,
   toNavigationTarget,
   fetchUnreadCount,
   type NotificationItem,
@@ -104,4 +105,20 @@ describe('fetchUnreadCount', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 500 }));
     await expect(fetchUnreadCount()).rejects.toThrow('HTTP 500');
   });
+});
+
+it.each([
+  ['auth.password_changed', 'security'],
+  ['security.session_revoked', 'security'],
+  ['payment.invoice_paid', 'payment'],
+  ['wallet.topup_completed', 'payment'],
+  ['invoice_paid', 'payment'],
+  ['refund.completed', 'payment'],
+  ['finance.chargeback_unresolved', 'payment'],
+  ['contract.cancelled', 'contract'],
+  ['order.submitted', 'order'],
+  ['custom.event', 'system'],
+])('renders business event %s with its notification category', (event, category) => {
+  expect(notificationDisplayType(event!)).toBe(category);
+  expect(notificationTypeLabelKey(event!)).toBe(`notifications.type.${category}`);
 });

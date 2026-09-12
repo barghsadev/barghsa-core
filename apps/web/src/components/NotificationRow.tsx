@@ -11,6 +11,7 @@ import {
   notificationContent,
   formatRelativeTime,
   notificationTypeLabelKey,
+  notificationDisplayType,
   type NotificationItem,
 } from '../lib/notifications.js';
 
@@ -43,7 +44,7 @@ export function NotificationRow({
   /** Reduce visual weight for already-read or compact surfaces. */
   muted?: boolean;
 }) {
-  const Icon = TYPE_ICONS[item.type] ?? InfoIcon;
+  const Icon = TYPE_ICONS[notificationDisplayType(item.type)] ?? InfoIcon;
   const { title, body } = notificationContent(item, locale);
   const typeLabel = t(notificationTypeLabelKey(item.type), locale);
   const timeLabel = formatRelativeTime(item.createdAt, locale);

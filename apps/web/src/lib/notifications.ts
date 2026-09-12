@@ -53,11 +53,17 @@ export const NOTIFICATION_TYPES = ['security', 'payment', 'contract', 'order', '
  * Map a backend `type` string to its i18n label key. Unknown types fall back
  * to the generic `system` label so the UI never renders a bare key.
  */
+export function notificationDisplayType(type: string): (typeof NOTIFICATION_TYPES)[number] {
+  const category = type.split(/[._]/, 1)[0];
+  if (category === 'auth' || category === 'security') return 'security';
+  if (['payment', 'wallet', 'invoice', 'refund', 'chargeback', 'finance'].includes(category ?? ''))
+    return 'payment';
+  if (category === 'contract' || category === 'order') return category;
+  return 'system';
+}
+
 export function notificationTypeLabelKey(type: string): string {
-  if ((NOTIFICATION_TYPES as readonly string[]).includes(type)) {
-    return `notifications.type.${type}`;
-  }
-  return 'notifications.type.system';
+  return `notifications.type.${notificationDisplayType(type)}`;
 }
 
 /**

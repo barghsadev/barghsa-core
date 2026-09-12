@@ -30,13 +30,17 @@ export function useUnreadCount(pollMs: number = UNREAD_POLL_MS): UseUnreadCount 
   const [unreadCount, setUnreadCountState] = useState(0);
   const mounted = useRef(true);
   const inflight = useRef(false);
+  const revision = useRef(0);
+  const optimisticPending = useRef(false);
 
   const refresh = useCallback((): void => {
-    if (inflight.current) return;
+    if (inflight.current || optimisticPending.current) return;
+    const started = revision.current;
     inflight.current = true;
     void fetchUnreadCount()
       .then((count) => {
-        if (mounted.current) setUnreadCountState(count);
+        if (mounted.current && revision.current === started && !optimisticPending.current)
+          setUnreadCountState(count);
       })
       .catch(() => {
         // Transient network/server error: keep the last known count.
@@ -62,10 +66,14 @@ export function useUnreadCount(pollMs: number = UNREAD_POLL_MS): UseUnreadCount 
   }, [refresh, pollMs]);
 
   const setUnreadCount = useCallback((count: number) => {
+    revision.current++;
+    optimisticPending.current = false;
     if (mounted.current) setUnreadCountState(count);
   }, []);
 
   const optimisticDecrement = useCallback((by = 1) => {
+    revision.current++;
+    optimisticPending.current = true;
     setUnreadCountState((prev) => Math.max(0, prev - by));
   }, []);
 

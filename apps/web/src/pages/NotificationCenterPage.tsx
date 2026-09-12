@@ -1,5 +1,5 @@
 import { notificationContent } from '../lib/notifications.js';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, type NavigateOptions } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { BellIcon, CheckCheckIcon, Loader2Icon, InboxIcon } from 'lucide-react';
@@ -37,17 +37,29 @@ export function NotificationCenterPage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [markingAll, setMarkingAll] = useState(false);
+  const writing = useRef(false);
+  const requestVersion = useRef(0);
 
   const load = useCallback(
     async (cursor?: string, currentFilter: NotificationFilter = filter) => {
+      if (writing.current) return;
+      const version = ++requestVersion.current;
+      setLoading(!cursor);
+      setLoadingMore(Boolean(cursor));
       try {
         const page = await fetchNotifications(cursor, currentFilter, PAGE_SIZE);
+        if (requestVersion.current !== version) return;
         setItems((prev) => (cursor ? [...prev, ...page.data] : [...page.data]));
         setNextCursor(page.next_cursor);
         setUnreadCount(page.unread_count);
         setError(null);
       } catch {
-        setError(t('notifications.error.load', locale));
+        if (requestVersion.current === version) setError(t('notifications.error.load', locale));
+      } finally {
+        if (requestVersion.current === version) {
+          setLoading(false);
+          setLoadingMore(false);
+        }
       }
     },
     [filter, locale]
@@ -55,51 +67,68 @@ export function NotificationCenterPage() {
 
   useEffect(() => {
     setLoading(true);
+    setMarkingAll(false);
     setItems([]);
     setNextCursor(null);
-    void load(undefined, filter).finally(() => setLoading(false));
+    void load(undefined, filter);
+    return () => {
+      requestVersion.current++;
+      writing.current = false;
+    };
   }, [filter, load]);
 
-  const handleLoadMore = async () => {
-    if (!nextCursor || loadingMore) return;
-    setLoadingMore(true);
-    try {
-      await load(nextCursor);
-    } finally {
-      setLoadingMore(false);
-    }
+  const handleLoadMore = () => {
+    if (nextCursor && !loadingMore) void load(nextCursor);
   };
 
-  const handleItemClick = async (item: NotificationItem) => {
-    const target = toNavigationTarget(item);
-    if (!item.isRead) {
-      try {
-        const count = await markOneRead(item.id);
+  const markRead = async (item?: NotificationItem) => {
+    if (writing.current) return;
+    const target = item ? toNavigationTarget(item) : null;
+    const version = ++requestVersion.current;
+    const previousItems = items,
+      previousCount = unreadCount;
+    writing.current = true;
+    setMarkingAll(true);
+    setLoading(false);
+    setLoadingMore(false);
+    setError(null);
+    setUnreadCount(item ? Math.max(0, unreadCount - Number(!item.isRead)) : 0);
+    setItems((prev) =>
+      prev.flatMap((row) =>
+        !item || row.id === item.id
+          ? filter === 'unread'
+            ? []
+            : [{ ...row, isRead: true }]
+          : [row]
+      )
+    );
+    try {
+      const count = item
+        ? item.isRead
+          ? unreadCount
+          : await markOneRead(item.id)
+        : await markAllRead();
+      if (requestVersion.current === version) {
         setUnreadCount(count);
-        setItems((prev) => prev.map((i) => (i.id === item.id ? { ...i, isRead: true } : i)));
-      } catch {
-        // Non-blocking; navigation proceeds if a route exists.
+        if (filter === 'unread' && count === 0) setNextCursor(null);
+      }
+    } catch {
+      if (requestVersion.current === version) {
+        setItems(previousItems);
+        setUnreadCount(previousCount);
+        setError(t('notifications.error.load', locale));
+      }
+    } finally {
+      if (requestVersion.current === version) {
+        writing.current = false;
+        setMarkingAll(false);
       }
     }
-    if (target) {
+    if (requestVersion.current === version && target)
       navigate({
         to: target.to,
         search: target.search as NavigateOptions['search'],
       } as NavigateOptions);
-    }
-  };
-
-  const handleMarkAll = async () => {
-    setMarkingAll(true);
-    try {
-      const count = await markAllRead();
-      setUnreadCount(count);
-      setItems((prev) => prev.map((i) => ({ ...i, isRead: true })));
-    } catch {
-      setError(t('notifications.error.load', locale));
-    } finally {
-      setMarkingAll(false);
-    }
   };
 
   const isRtl = locale === 'fa';
@@ -115,8 +144,8 @@ export function NotificationCenterPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={handleMarkAll}
-            disabled={unreadCount === 0 || markingAll}
+            onClick={() => void markRead()}
+            disabled={unreadCount === 0 || markingAll || loading}
             className="gap-2"
           >
             {markingAll ? (
@@ -142,6 +171,7 @@ export function NotificationCenterPage() {
             role="tab"
             aria-selected={filter === value}
             onClick={() => setFilter(value)}
+            disabled={markingAll}
             className={`flex-1 rounded-md px-3 py-1.5 transition-colors ${
               filter === value
                 ? 'bg-white text-gray-900 shadow-sm'
@@ -172,8 +202,11 @@ export function NotificationCenterPage() {
 
       {/* Error state */}
       {!loading && error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center" role="alert">
           <p className="text-red-700">{error}</p>
+          <Button variant="outline" onClick={() => void load()} className="mt-3">
+            {t('notifications.retry', locale)}
+          </Button>
         </div>
       )}
 
@@ -197,7 +230,8 @@ export function NotificationCenterPage() {
             <li key={item.id}>
               <button
                 type="button"
-                onClick={() => handleItemClick(item)}
+                onClick={() => void markRead(item)}
+                disabled={markingAll}
                 className="flex w-full items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
                 dir={isRtl ? 'rtl' : 'ltr'}
                 aria-label={`${t('notifications.markReadAria', locale)} — ${notificationContent(item, locale).title}`}
@@ -222,7 +256,7 @@ export function NotificationCenterPage() {
           <Button
             variant="outline"
             onClick={handleLoadMore}
-            disabled={loadingMore}
+            disabled={loadingMore || markingAll}
             className="gap-2"
           >
             {loadingMore && <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />}

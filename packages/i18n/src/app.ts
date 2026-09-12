@@ -758,6 +758,7 @@ export const fa: I18nDictionary = {
   'notifications.type.order': 'سفارش',
   'notifications.type.system': 'سیستم',
   'notifications.error.load': 'خطا در بارگذاری اعلان‌ها',
+  'notifications.retry': 'تلاش دوباره',
   'notifications.unread': 'فقط خوانده‌نشده',
   'notifications.finance.chargeback_unresolved.title': 'هشدار مالی — شارژبک حل‌نشده',
   'notifications.finance.chargeback_unresolved.body':
@@ -1525,6 +1526,7 @@ export const en: I18nDictionary = {
   'notifications.type.order': 'Order',
   'notifications.type.system': 'System',
   'notifications.error.load': 'Failed to load notifications',
+  'notifications.retry': 'Retry',
   'notifications.unread': 'Unread only',
   'notifications.finance.chargeback_unresolved.title': 'Finance alert — unresolved chargeback',
   'notifications.finance.chargeback_unresolved.body':
