@@ -2,6 +2,7 @@ import { execFileSync, spawn, type ChildProcess } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
 import { Pool } from 'pg';
+import { createServer, type ServerResponse } from 'node:http';
 import { expect, it } from 'vitest';
 
 const intervals = [
@@ -102,41 +103,51 @@ async function startWorker(overrides: Record<string, string> = {}) {
     await pool.query(
       "INSERT INTO users(user_id,username,password_hash,is_admin) VALUES ('worker-process-actor','worker@example.test','fixture-only',true)"
     );
-    child = spawn(process.execPath, [resolve(__dirname, '../dist/main.js')], {
-      env: {
-        ...env,
-        ...(process.env.BARGHSA_WORKER_COVERAGE_DIR
-          ? { NODE_V8_COVERAGE: process.env.BARGHSA_WORKER_COVERAGE_DIR }
-          : {}),
-      },
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
-    exited = new Promise((done, reject) => {
-      child!.once('exit', (code, signal) => done({ code, signal }));
-      child!.once('error', reject);
-    });
-    for (const stream of [child.stdout, child.stderr])
-      stream?.on('data', (data) => {
-        output = (output + String(data)).slice(-20000);
-      });
-    await expect
-      .poll(
-        () => {
-          if (child!.exitCode !== null || child!.signalCode !== null)
-            throw new Error(`Worker startup failed: ${output}`);
-          return /Worker health server listening on port ([1-9][0-9]*)/.exec(output)?.[1];
+    async function launch() {
+      if (child && child.exitCode === null && child.signalCode === null)
+        throw new Error('Worker is still running');
+      output = '';
+      child = spawn(process.execPath, [resolve(__dirname, '../dist/main.js')], {
+        env: {
+          ...env,
+          ...(process.env.BARGHSA_WORKER_COVERAGE_DIR
+            ? { NODE_V8_COVERAGE: process.env.BARGHSA_WORKER_COVERAGE_DIR }
+            : {}),
         },
-        { timeout: 10000 }
-      )
-      .toBeTruthy();
-    const port = /Worker health server listening on port ([1-9][0-9]*)/.exec(output)![1];
+        stdio: ['ignore', 'pipe', 'pipe'],
+      });
+      exited = new Promise((done, reject) => {
+        child!.once('exit', (code, signal) => done({ code, signal }));
+        child!.once('error', reject);
+      });
+      for (const stream of [child.stdout, child.stderr])
+        stream?.on('data', (data) => {
+          output = (output + String(data)).slice(-20000);
+        });
+      await expect
+        .poll(
+          () => {
+            if (child!.exitCode !== null || child!.signalCode !== null)
+              throw new Error(`Worker startup failed: ${output}`);
+            return /Worker health server listening on port ([1-9][0-9]*)/.exec(output)?.[1];
+          },
+          { timeout: 10000 }
+        )
+        .toBeTruthy();
+      const port = /Worker health server listening on port ([1-9][0-9]*)/.exec(output)![1];
+      return `http://127.0.0.1:${port}`;
+    }
+    const base = await launch();
     return {
-      base: `http://127.0.0.1:${port}`,
+      base,
+      restart: launch,
       pool,
       stop,
       close,
       databaseAvailable,
-      child,
+      get child() {
+        return child!;
+      },
       logs: () => output,
     };
   } catch (error) {
@@ -299,3 +310,200 @@ it('compiled worker reports a missing system actor and resolves failures after r
     await worker.close();
   }
 }, 20000);
+
+for (const mode of ['graceful', 'forced', 'bookkeeping-failure'] as const) {
+  it(`notification delivery survives ${mode} shutdown without repeating the provider request`, async () => {
+    const requests: unknown[] = [];
+    let response: ServerResponse | undefined;
+    const server = createServer(async (req, res) => {
+      const chunks: Buffer[] = [];
+      for await (const chunk of req) chunks.push(Buffer.from(chunk));
+      requests.push(JSON.parse(Buffer.concat(chunks).toString()));
+      response = res;
+    });
+    await new Promise<void>((done) => server.listen(0, '127.0.0.1', done));
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('Provider fixture unavailable');
+    const worker = await startWorker({
+      SMSIR_API_BASE: `http://127.0.0.1:${address.port}`,
+      SHUTDOWN_GRACE_PERIOD_MS: mode === 'forced' ? '200' : '3000',
+    });
+    const id = randomUUID(),
+      later = randomUUID();
+    try {
+      const client = await worker.pool.connect();
+      try {
+        await client.query('BEGIN');
+        await client.query(
+          "UPDATE users SET mobile='+989121234567',notification_preferences='IN_APP,SMS' WHERE user_id='worker-process-actor'"
+        );
+        await client.query(
+          "INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ('+989121234567','worker-process-actor','mobile',NOW())"
+        );
+        const profileId = (
+          await client.query(
+            "INSERT INTO profiles(user_id) VALUES ('worker-process-actor') RETURNING id"
+          )
+        ).rows[0].id;
+        const config = JSON.stringify({
+          api_key: 'fixture-only',
+          sender: '3000',
+          throughput_limit: 10,
+          template_mappings: [
+            {
+              event_key: 'payment.wallet_topup_completed',
+              template_id: '42',
+              variables: { amount: 'AMOUNT' },
+            },
+          ],
+        });
+        await client.query(
+          `INSERT INTO sms_provider_configs(transport,label,status,config,created_by,last_test_status,last_test_at,delivery_verified_at,delivery_config_hash)
+          VALUES ('smsir','Local shutdown test','active',$1,'worker-process-actor','passed',NOW(),NOW(),encode(sha256(convert_to(jsonb_build_array('smsir'::text,$1::jsonb)::text,'UTF8')),'hex'))`,
+          [config]
+        );
+        await client.query(`INSERT INTO notification_templates(event_key,channel,locale,body_template,variables,status,is_active,created_by)
+          VALUES ('payment.wallet_topup_completed','sms','fa','Amount {{amount}}','["amount"]','active',true,'worker-process-actor')`);
+        await client.query(
+          `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,idempotency_key,idempotency_version)
+          VALUES ($1::uuid,$2,'worker-process-actor','payment.wallet_topup_completed','{"amount":"5000"}',ARRAY['in_app','sms'],$1::text,2)`,
+          [id, profileId]
+        );
+        await client.query(
+          "INSERT INTO notification_job(outbox_id,channel) VALUES ($1,'in_app'),($1,'sms')",
+          [id]
+        );
+        if (mode === 'bookkeeping-failure')
+          await client.query(`CREATE FUNCTION reject_notification_outcome() RETURNS trigger LANGUAGE plpgsql AS $$
+          BEGIN IF NEW.outbox_id='${id}'::uuid AND NEW.status IN ('done','retrying') THEN RAISE EXCEPTION 'Bookkeeping failed'; END IF; RETURN NEW; END $$;
+          CREATE TRIGGER reject_notification_outcome BEFORE UPDATE ON notification_job FOR EACH ROW EXECUTE FUNCTION reject_notification_outcome()`);
+        await client.query('COMMIT');
+      } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+      } finally {
+        client.release();
+      }
+      try {
+        await expect.poll(() => requests.length, { timeout: 5000 }).toBe(1);
+      } catch {
+        throw new Error(
+          JSON.stringify({
+            jobs: (
+              await worker.pool.query(
+                'SELECT channel,status,last_error FROM notification_job WHERE outbox_id=$1',
+                [id]
+              )
+            ).rows,
+            logs: worker.logs(),
+          })
+        );
+      }
+      expect(
+        (
+          await worker.pool.query(
+            'SELECT status FROM notification_send_receipts WHERE outbox_id=$1',
+            [id]
+          )
+        ).rows[0].status
+      ).toBe('sending');
+      const stopping = worker.stop();
+      await expect.poll(() => worker.logs()).toContain('starting graceful shutdown');
+      // A new row after drain begins must remain queued until another worker starts.
+      await worker.pool.query(
+        `INSERT INTO notification_outbox(id,user_id,event_key,channels,idempotency_key)
+        VALUES ($1::uuid,'worker-process-actor','payment.wallet_topup_completed',ARRAY['in_app'],$1::text)`,
+        [later]
+      );
+      await worker.pool.query(
+        "INSERT INTO notification_job(outbox_id,channel) VALUES ($1,'in_app')",
+        [later]
+      );
+      if (mode === 'forced') {
+        expect(await stopping).toEqual({ code: 1, signal: null });
+        expect(worker.logs()).toContain('deadline exceeded');
+        expect(
+          (
+            await worker.pool.query(
+              'SELECT status FROM notification_send_receipts WHERE outbox_id=$1',
+              [id]
+            )
+          ).rows[0].status
+        ).toBe('sending');
+        // Advance only this expired-claim fixture rather than waiting one minute.
+        await worker.pool.query(
+          "UPDATE notification_outbox SET locked_until=NOW()-INTERVAL '1 second' WHERE id=$1",
+          [id]
+        );
+      } else {
+        expect(worker.child.exitCode).toBeNull();
+        response!.writeHead(200, { 'Content-Type': 'application/json' });
+        response!.end(JSON.stringify({ status: 1, data: { messageId: 987 } }));
+        expect(await stopping).toEqual({ code: 0, signal: null });
+        const outbox = (
+          await worker.pool.query(
+            'SELECT locked_until,lease_token,status FROM notification_outbox WHERE id=$1',
+            [id]
+          )
+        ).rows[0];
+        expect(outbox).toMatchObject({ locked_until: null, lease_token: null });
+        expect(
+          (
+            await worker.pool.query(
+              'SELECT status,provider_ref FROM notification_send_receipts WHERE outbox_id=$1',
+              [id]
+            )
+          ).rows[0]
+        ).toEqual({ status: 'accepted', provider_ref: '987' });
+        if (mode === 'graceful') expect(outbox.status).toBe('delivered');
+        else
+          await worker.pool.query(
+            'DROP TRIGGER reject_notification_outcome ON notification_job; DROP FUNCTION reject_notification_outcome()'
+          );
+      }
+      expect(
+        (await worker.pool.query('SELECT status FROM notification_outbox WHERE id=$1', [later]))
+          .rows[0].status
+      ).toBe('queued');
+      await worker.restart();
+      await expect
+        .poll(
+          async () =>
+            (
+              await worker.pool.query(
+                "SELECT status FROM notification_job WHERE outbox_id=$1 AND channel='sms'",
+                [id]
+              )
+            ).rows[0].status,
+          { timeout: 5000 }
+        )
+        .toBe(mode === 'forced' ? 'dead_letter' : 'done');
+      await expect
+        .poll(
+          async () =>
+            (await worker.pool.query('SELECT status FROM notification_outbox WHERE id=$1', [later]))
+              .rows[0].status,
+          { timeout: 5000 }
+        )
+        .toBe('delivered');
+      expect(requests).toEqual([
+        { Mobile: '09121234567', TemplateId: 42, Parameters: [{ Name: 'AMOUNT', Value: '5000' }] },
+      ]);
+      expect(
+        (
+          await worker.pool.query(
+            'SELECT count(*)::int AS count FROM in_app_notifications WHERE delivery_key=$1',
+            [`outbox:${id}`]
+          )
+        ).rows[0].count
+      ).toBe(1);
+    } finally {
+      response?.destroy();
+      await worker.close();
+      server.closeAllConnections();
+      await new Promise<void>((done, reject) =>
+        server.close((error) => (error ? reject(error) : done()))
+      );
+    }
+  }, 30000);
+}

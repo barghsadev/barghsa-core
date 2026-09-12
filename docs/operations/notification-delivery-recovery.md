@@ -24,6 +24,17 @@ job, log and aggregate outcomes. Recovery checks it before current recipient
 preferences. This records a previous acceptance even if contact details or
 consent changed; it does not authorize a new send to the previous destination.
 
+History rows count processing attempts. Recovering an accepted receipt or
+holding an uncertain receipt does not make another provider request, so those
+rows have no measured send duration. The history view explains this distinction.
+
+During graceful shutdown, the worker stops new polls and waits for active
+delivery. Once dispatch finishes, it releases any remaining lease it still
+owns, including after bookkeeping failure. It cannot release a replacement
+worker's lease. A forced process exit leaves its lease to expire; the next
+worker recovers accepted receipts or holds uncertain sends. Local tests cover
+these paths using the compiled worker, PostgreSQL and a controlled SMS endpoint.
+
 ## Rollout
 
 1. Stop dispatch and drain **all older notification workers** before migration

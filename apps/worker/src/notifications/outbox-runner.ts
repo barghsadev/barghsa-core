@@ -197,7 +197,7 @@ export async function runOutboxPoll(
                   externalOutcomes.find((outcome) => outcome.channel === job.channel) ?? {
                     channel: job.channel,
                     result: { status: 'failed', providerRef: '' },
-                    latencyMs: 0,
+                    latencyMs: null,
                     error: message,
                   }
               ),

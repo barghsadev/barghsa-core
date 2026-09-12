@@ -81,6 +81,14 @@ export async function startOutboxLease(
       stopped = true;
       clearInterval(timer);
       await pending;
+      // Dispatch has finished before its owner calls stop. Release a leftover
+      // claim after failed bookkeeping, without clearing a replacement claim.
+      // Durable send receipts still fence accepted or uncertain external sends.
+      await pool.query(
+        `UPDATE notification_outbox SET locked_until=NULL,lease_token=NULL,updated_at=NOW()
+         WHERE id=$1 AND lease_token=$2`,
+        [row.id, row.leaseToken]
+      );
     },
   };
 }
