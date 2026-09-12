@@ -70,7 +70,7 @@ it.each(['create', 'update', 'toggle'] as const)(
   }
 );
 it.each(['create', 'update', 'toggle'] as const)(
-  'rechecks gift code %s authority',
+  'rejects gift code %s when permission is withdrawn during session validation',
   async (action) => {
     const client = await http.pool.connect();
     let pending: Promise<Response> | undefined;
@@ -83,7 +83,7 @@ it.each(['create', 'update', 'toggle'] as const)(
           Number(
             (
               await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%JOIN sessions s%WHERE s.session_id=$1 FOR UPDATE OF u%'"
               )
             ).rows[0].count
           )

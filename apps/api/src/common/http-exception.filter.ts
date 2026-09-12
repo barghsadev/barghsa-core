@@ -9,7 +9,7 @@ import {
 import { Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { v7 as uuidv7 } from 'uuid';
-import { STATUS_CODES } from 'node:http';
+import { PUBLIC_DOMAIN_ERROR_CODES } from './public-domain-error-codes.js';
 import { ErrorCodes, defaultErrorCode, errorCodeForHttpStatus } from '@barghsa/shared/errors';
 import type { ErrorCodeDef } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n';
@@ -36,8 +36,7 @@ function resolveErrorCodeDef(errorCode: string, httpStatus: number): ErrorCodeDe
  * amount against the ceiling that was actually enforced.
  *
  * Never exposes stack traces, raw database errors, or internal provider details.
- * 5xx errors always use localized messages from the error code key — never
- * forward raw exception messages to clients.
+ * Messages always come from the localized catalogue, including client errors.
  */
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -49,21 +48,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
 
     // Determine HTTP status and error code
-    const { httpStatus, errorCode, rawMessage } = this.resolveError(exception);
+    const { httpStatus, errorCode } = this.resolveError(exception);
 
     // Resolve localized message
     const locale = this.resolveLocale(request);
     const errorCodeDef = resolveErrorCodeDef(errorCode, httpStatus);
-    // Match Nest's fallback message, including Express's original URL. Middleware
-    // can populate request.route even when no controller matched. Other explicit
-    // business explanations for missing resources retain their existing behavior.
-    const unmatchedRoute =
-      httpStatus === HttpStatus.NOT_FOUND &&
-      rawMessage === `Cannot ${request.method} ${request.originalUrl ?? request.url}`;
-    const message =
-      httpStatus < 500 && !unmatchedRoute
-        ? (rawMessage ?? t(errorCodeDef.messageKey, locale))
-        : t(errorCodeDef.messageKey, locale);
+    const message = t(errorCodeDef.messageKey, locale);
 
     // Get correlation ID from AsyncLocalStorage
     const correlationId = correlationIdStorage.getStore() ?? uuidv7();
@@ -133,35 +123,20 @@ export class HttpExceptionFilter implements ExceptionFilter {
   private resolveError(exception: unknown): {
     httpStatus: number;
     errorCode: string;
-    rawMessage: string | undefined;
   } {
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       const responseBody = exception.getResponse();
 
-      // Extract the raw message and error code from the exception response
-      let rawMessage: string | undefined;
-      let customErrorCode: string | undefined;
-      if (typeof responseBody === 'string') {
-        rawMessage = responseBody;
-      } else if (typeof responseBody === 'object' && responseBody !== null) {
-        const body = responseBody as Record<string, unknown>;
-        if (typeof body.message === 'string') {
-          rawMessage = body.message;
-        } else if (Array.isArray(body.message)) {
-          rawMessage = (body.message as string[]).join('; ');
-        }
-        // Extract a custom error code from the body if present
-        if (typeof body.error === 'string' && body.error !== STATUS_CODES[status]) {
-          customErrorCode = body.error;
-        }
-      }
-
-      return {
-        httpStatus: status,
-        errorCode: customErrorCode ?? defaultErrorCode(status),
-        rawMessage: rawMessage === STATUS_CODES[status] ? undefined : rawMessage,
-      };
+      const candidate =
+        typeof responseBody === 'object' && responseBody !== null
+          ? (responseBody as Record<string, unknown>).error
+          : undefined;
+      const publicCode =
+        typeof candidate === 'string' &&
+        (Object.values(ErrorCodes).some((def) => def.code === candidate) ||
+          PUBLIC_DOMAIN_ERROR_CODES.has(candidate));
+      return { httpStatus: status, errorCode: publicCode ? candidate : defaultErrorCode(status) };
     }
 
     if (
@@ -171,7 +146,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       'status' in exception &&
       exception.status === 413
     ) {
-      return { httpStatus: 413, errorCode: defaultErrorCode(413), rawMessage: undefined };
+      return { httpStatus: 413, errorCode: defaultErrorCode(413) };
     }
 
     // Zod validation errors — return 400
@@ -179,7 +154,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return {
         httpStatus: HttpStatus.BAD_REQUEST,
         errorCode: ErrorCodes.VALIDATION_PARSE_ZOD.code,
-        rawMessage: undefined,
       };
     }
 
@@ -187,7 +161,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     return {
       httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
       errorCode: ErrorCodes.INTERNAL_UNEXPECTED.code,
-      rawMessage: undefined,
     };
   }
 

@@ -159,13 +159,87 @@ describe('HttpExceptionFilter', () => {
     expect(log).not.toContain('private-path');
   });
 
-  it('retains an explicit domain not-found message after a controller route matched', () => {
+  it('localizes an explicit domain not-found error after a controller route matched', () => {
     const { json, request, host } = createMockHost(404, {});
     request.route = { path: '/profiles/:id' };
     filter.catch(new NotFoundException('This profile is no longer available'), host);
-    expect(json.mock.calls[0][0].error.message).toBe('This profile is no longer available');
+    expect(json.mock.calls[0][0].error.message).toBe('منبع درخواستی یافت نشد');
     expect(json.mock.calls[0][0].error.code).toBe('NOT_FOUND:RESOURCE');
   });
+
+  it.each(['en', 'fa'])(
+    'keeps raw application details and unregistered codes out of %s responses and logs',
+    (locale) => {
+      const privateDetail = 'postgres://private-user:private-password@db/internal-table';
+      const cases = [
+        { body: privateDetail, code: 'VALIDATION:INPUT:INVALID', status: 400 },
+        {
+          body: { message: [privateDetail, { internal: privateDetail }] },
+          code: 'VALIDATION:INPUT:INVALID',
+          status: 400,
+        },
+        {
+          body: { error: 'VALIDATION:INPUT:INVALID', message: privateDetail },
+          code: 'VALIDATION:INPUT:INVALID',
+          status: 400,
+        },
+        {
+          body: { error: privateDetail, message: privateDetail },
+          code: 'VALIDATION:INPUT:INVALID',
+          status: 400,
+        },
+        {
+          body: { error: 'UNREGISTERED_PRIVATE_VALUE', message: privateDetail },
+          code: 'VALIDATION:INPUT:INVALID',
+          status: 400,
+        },
+        {
+          body: { error: 'NOTIFICATION_TEMPLATE_NOT_FOUND', message: privateDetail },
+          code: 'NOTIFICATION_TEMPLATE_NOT_FOUND',
+          status: 404,
+        },
+      ];
+      for (const code of [
+        'VERIFICATION:PROVIDER_NOT_FOUND',
+        'GIFT_CODE_NOT_FOUND',
+        'CONTRACT_TEMPLATE_NOT_FOUND',
+        'AI_KB_GROUP_NOT_FOUND',
+      ])
+        cases.push({ body: { error: code, message: privateDetail }, code, status: 404 });
+      for (const item of cases) {
+        const { host, json, response } = createMockHost(
+          item.status,
+          {},
+          { 'accept-language': locale }
+        );
+        filter.catch(new HttpException(item.body, item.status), host);
+        const result = json.mock.calls[0][0];
+        expect.soft(result.error.code).toBe(item.code);
+        expect
+          .soft(result.error.message)
+          .toBe(
+            item.status === 404
+              ? locale === 'fa'
+                ? 'منبع درخواستی یافت نشد'
+                : 'Requested resource was not found'
+              : locale === 'fa'
+                ? 'مقدار ورودی نامعتبر است'
+                : 'Invalid input value'
+          );
+        expect.soft(JSON.stringify(result)).not.toContain(privateDetail);
+        expect.soft(JSON.stringify(result)).not.toContain('UNREGISTERED_PRIVATE_VALUE');
+        expect
+          .soft(response.setHeader)
+          .toHaveBeenCalledWith('X-Correlation-ID', result.error.correlationId);
+      }
+      expect(JSON.stringify(vi.mocked(Logger.prototype.debug).mock.calls)).not.toContain(
+        privateDetail
+      );
+      expect(JSON.stringify(vi.mocked(Logger.prototype.debug).mock.calls)).not.toContain(
+        'UNREGISTERED_PRIVATE_VALUE'
+      );
+    }
+  );
 
   it('localizes the Nest fallback when middleware has populated route metadata', () => {
     const { json, request, host } = createMockHost(404, {});
@@ -245,7 +319,7 @@ describe('HttpExceptionFilter', () => {
       error: {
         correlationId: expect.any(String),
         code: 'VALIDATION:INPUT:INVALID',
-        message: 'Bad input',
+        message: 'مقدار ورودی نامعتبر است',
       },
     });
   });
@@ -269,8 +343,7 @@ describe('HttpExceptionFilter', () => {
       error: {
         correlationId: expect.any(String),
         code: 'VALIDATION:INPUT:INVALID',
-        message:
-          'Online top-up amount 100001 IRR exceeds the configured per-transaction limit of 50000 IRR',
+        message: 'مقدار ورودی نامعتبر است',
         onlineTopUpLimit: 50_000,
         configVersion: 2,
       },
@@ -280,7 +353,7 @@ describe('HttpExceptionFilter', () => {
   it('does not forward an invalid onlineTopUpLimit on a generic 400', () => {
     const exception = new HttpException(
       {
-        message: 'Bad input',
+        message: 'مقدار ورودی نامعتبر است',
         onlineTopUpLimit: -1,
         configVersion: 2,
       },
@@ -294,7 +367,7 @@ describe('HttpExceptionFilter', () => {
       error: {
         correlationId: expect.any(String),
         code: 'VALIDATION:INPUT:INVALID',
-        message: 'Bad input',
+        message: 'مقدار ورودی نامعتبر است',
       },
     });
   });
