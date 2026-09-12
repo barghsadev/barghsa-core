@@ -19790,6 +19790,174 @@
       "sha256": "da8e1c4d1895570f520e10d187de90e3e13de6d855d7b0615f921d7677d744a4",
       "encoding": "gzip",
       "stored_sha256": "2d879f563aa6faa7e4450cfaba7dff473b7b1227582cdc1f495ec8e7762b9dd4"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-api-final.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-api-final.log.gz",
+      "sha256": "b463986c05b44c9f56cc86cc9f188f0a7309189ac4c42363473ed9f0dd48916f",
+      "encoding": "gzip",
+      "stored_sha256": "b2852be87a71adac4d34d65fcbbcea9bc4f32d4e51bb45736461c5950b65e309"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-api.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-api.log.gz",
+      "sha256": "ff1a700d56a6b9d9946b00a2f69bff80913633f15176b1fccec4bf118c306c1b",
+      "encoding": "gzip",
+      "stored_sha256": "5acc44dd6ad5ae4e5fa0d6ec2c5b1699476cfec9e1bc26178f1adb3f64f06951"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-baseline.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-baseline.log.gz",
+      "sha256": "f780f9a976e94db0b1958822fbbed47569f3c6f484e798ccadaee533debcc10b",
+      "encoding": "gzip",
+      "stored_sha256": "fea30ccb2a70cdeb269dd428a36bcf6af5f736ab23809117a5c0972c0fcf9885"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-browser-final.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-browser-final.log.gz",
+      "sha256": "3d0f91c3895eb9056649c63db341c761294b2906c650889ffa7cafa6eaa94e29",
+      "encoding": "gzip",
+      "stored_sha256": "bfa521c08f20760663f6b564ba95a5a9105b740e0f22e8d0983dbc33720e0933"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-browser.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-browser.log.gz",
+      "sha256": "e8a59d3fcbf3b1672560af59d4f4822fb09daed69c65b43d6508bc121cc92834",
+      "encoding": "gzip",
+      "stored_sha256": "0f356337295d42329a902fec0985e87611feb90edc41cbdf9c160d61874073ed"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-budgets.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-budgets.log.gz",
+      "sha256": "ed6e9078e5007ef86e47546f0729b813c1ddd48a8822bd2af97a414ed353ab24",
+      "encoding": "gzip",
+      "stored_sha256": "dac18a74febe976a34a372916b87ee64092885d7f813a91b99b9e54b5bf3a1d8"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-format-check.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-format.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-format.log.gz",
+      "sha256": "f6cfdabe299a8e8e8ceccf7d8e16e3edd68cfcd50961f2504bcf6e8794fcca88",
+      "encoding": "gzip",
+      "stored_sha256": "6983c52cb584f98c0486787e979fd9f80c843787c688f732314f2ccbc5416f78"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-i18n-build.log",
+      "path": "audit/evidence/r01/barghsa-support-contacts-i18n-build.log.gz",
+      "sha256": "e96c18cf633b90ecae7f4d8c8fadef8b222995210eddf31da455e2a436493ae6",
+      "encoding": "gzip",
+      "stored_sha256": "efa98b77f7947a1708258290f0d1f9cd008002c7e204044a1c2f8fcc4fb48bd3"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-keyboard-browser.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-keyboard-browser.log.gz",
+      "sha256": "86468e363f3aef942fd3ad942cd115ac006531e156d2872c85202d4370a7aa3b",
+      "encoding": "gzip",
+      "stored_sha256": "fec2b6384a7f312132de2b56a373edf6a7161ad47a88c2e62b91ccf9cd7f980b"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-keyboard-format.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-keyboard-format.log.gz",
+      "sha256": "fe241bc219d5183440d8ff86ce879ec815f2c2f460b7926da6a705a2e271f85d",
+      "encoding": "gzip",
+      "stored_sha256": "8c019a0958310e6bf9daf3425cda118136daaaa16134a91aa580c5f5385d6774"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-schema.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-schema.log.gz",
+      "sha256": "504bfbbbe044a5cdb55131e1220178fc7d69fd85e422473ffe7ecbfd86ea4e86",
+      "encoding": "gzip",
+      "stored_sha256": "544a268c3b677cf5c9ce9bbcddf515060ce7eaa8f161bf53a1b4679f7008a647"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-shared.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-shared.log.gz",
+      "sha256": "3273c85619ab57c0c1769af2c5d3fe8b12ae8623d6e654e5332bd1caea43e11f",
+      "encoding": "gzip",
+      "stored_sha256": "db8256e41a5fb0f8d9917711ffa4260e46fe417302aac284e25848881a70fecd"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-status-browser.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-status-browser.log.gz",
+      "sha256": "03a7f0224ddef08aaac0f2dbd13428e74ddfe39d5cb5ef15290b8055282b501c",
+      "encoding": "gzip",
+      "stored_sha256": "e36dc26eac4577b60da11ec07cc75fa0184b92722f713ab45a7033e764fd0c21"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-status-build.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-status-build.log.gz",
+      "sha256": "a01175d67f4aa84b872ee6e983a262c9e55c2915f6b6d954053e7a5088902f28",
+      "encoding": "gzip",
+      "stored_sha256": "ac6d7a89e2c702f103f253984d469a8752de36a30593d3085a864718c73e474c"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-status-format.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-status-format.log.gz",
+      "sha256": "03ecca033068a5c541cdb50c72c8ccb208b5d2c52c90bb85af267535f296a37b",
+      "encoding": "gzip",
+      "stored_sha256": "5d2e1cd2cee3b31167676c0da527a991eb776a0349215db568fe5d6355f77b95"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-test-format.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-test-format.log.gz",
+      "sha256": "39a2531d0905097f702b852ea0ba206371a8778ab8c199849f9a991d8eb8c866",
+      "encoding": "gzip",
+      "stored_sha256": "b3578ed32a6cd6d9772b51ac70f380997e8fc6b075cf75fb55e92ce09b852109"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-types.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-ui-format-final.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-ui-format-final.log.gz",
+      "sha256": "374516697dc7163a5fbfd795a607a48010c81857a24f49f8c923e53c0fd0bf76",
+      "encoding": "gzip",
+      "stored_sha256": "76661a6f4d293a4d11b1af7e03d386bb31a9822e278fb86fa9b33d9b742b9abe"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-ui-format.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-ui-format.log.gz",
+      "sha256": "d3f0a91bd746b2a5dbe93b92e59750527894192b18ac19a4c12ad2ddb931eb9b",
+      "encoding": "gzip",
+      "stored_sha256": "c89f914bef4ad1cda0bb45c7fea8f0337d0557d3b350d67377d0fab6989d44ff"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-ui-quality-final.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-ui-quality-final.log.gz",
+      "sha256": "6972a2056384bef8dfdf5ddac55a5afda83db256b8ee929d094ea7c86595d300",
+      "encoding": "gzip",
+      "stored_sha256": "afadaa849c988bb9604c8eda3ef7de7ac3949888d26b9fb57e2adb5109479a60"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-web-build-final.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-web-build-final.log.gz",
+      "sha256": "dee67c361a3365775da13a4fe753861be1806f0d8714de556fd0857163778448",
+      "encoding": "gzip",
+      "stored_sha256": "0ef25f64d93652a1b8e97a3c99d7f013ef77d923ae03953a2ae10f413783e355"
+    },
+    {
+      "original_path": "/tmp/r02-catalogue-vat-web-build.log",
+      "path": "audit/evidence/r02/r02-catalogue-vat-web-build.log.gz",
+      "sha256": "a9eccf977b3d014fbab425dedc0b1ee487ac85ba4411219dd8ec35765acf13bd",
+      "encoding": "gzip",
+      "stored_sha256": "09d10ab81bc9df7255d93c93ce8ffea4fa224cf0ff8a526bf196f7536accae8c"
     }
   ]
 }

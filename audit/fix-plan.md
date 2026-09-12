@@ -1,22 +1,22 @@
 # Remaining fix plan
 
-Current through product/test `c4098cdd` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `15c0ceb5` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 165 | 34 | 64 | 263 |
+| Tasks with merged PR evidence | 167 | 34 | 62 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 168 | 34 | 120 | 322 |
+| All claims | 170 | 34 | 118 | 322 |
 
-**154 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**152 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Continue **R02-catalogue-vat**, PR92/212/213. Review catalogue versioned prices, product archival and VAT snapshots, then repair their remaining step-up, audit and UI criteria. AI settings atc4098cdd:2 tasks verified/1 partial;PR207/209 close,PR211 remains open for future slot consumers. Current168 verified/34 partial/120 pending;147 closed/24 open/130 unreviewed PRs;2827 logs indexed. [Review](evidence/step-reviews.json#R02-ai-settings).
+Continue **R02-sensitive-actions-verification-delivery**,PR92/146. Catalogue/VAT closes PR212/213 at15c0ceb5. Current170 verified/34 partial/118 pending;149 closed/24 open/128 unreviewed saved PRs. Reuse completed provider/AI/notification evidence; retain future consumers. [Review](evidence/step-reviews.json#R02-catalogue-vat).
 
 Earlier checkpoints, retained for evidence reuse:
 

@@ -1781,7 +1781,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminVatPage.tsx",
-          "sha256": "2b563bb934b65ac16fb651288dff661994c6d3c9c5c70d97b5b80345087c99c3"
+          "sha256": "ee09df6b8a9d4ea73aff53a5af5c2bcb61e93fea913323c094be8b7728df8983"
         },
         {
           "path": "apps/web/src/pages/AdminGiftCodesPage.tsx",
@@ -2780,7 +2780,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminVatPage.tsx",
-          "sha256": "2b563bb934b65ac16fb651288dff661994c6d3c9c5c70d97b5b80345087c99c3"
+          "sha256": "ee09df6b8a9d4ea73aff53a5af5c2bcb61e93fea913323c094be8b7728df8983"
         },
         {
           "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -3441,10 +3441,11 @@
         "At455ed61, reviewed guard validation/security logs and exact step-up error flag;83 API cases and final types/lint/format pass. Complete metadata inventory is in security-route-review.md. Other criteria and older source drift remain. See evidence/step-reviews.json#R01-guard-boundaries.",
         "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
         "audit/evidence/step-reviews.json#R01-session-recovery: Shared step-up rotates session/CSRF, preserves absolute deadline, rejects invalid/future/expired verification and emits requiresStepUp only for the intended403. Current staff, role, ownership, session and trust callers check authority through writes and audit verified timestamp. Password modal/action wording, wrong-password retry and fresh-CSRF retry are already tested. Remaining storage/provider/finance/price/domain consumer criteria are assigned; refunds and contract cancellation remain separate future tasks.",
-        "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
+        "audit/evidence/step-reviews.json#R01-cross-domain-authorization",
+        "audit/evidence/step-reviews.json#R02-catalogue-vat: catalogue/VAT price and configuration callers now preserve transaction authority and exact audit proof.124 API and14 distinct browser cases pass. Broad caller acceptance remains partial pending final provider/storage reconciliation and future refund/contract prerequisites."
       ],
       "limitations": [
-        "Remaining storage/email/SMS/AI-provider/catalogue-price/VAT caller transaction, audit and action-specific UI acceptance belongs to R02. Existing guard registration alone is not an acceptance pass.",
+        "Remaining R02 provider/storage/AI caller evidence needs final cross-domain linkage; catalogue/VAT callers are verified at audit/evidence/step-reviews.json#R02-catalogue-vat. Existing completed provider/AI repairs must be reused, not rebuilt.",
         "Refund/contract-cancellation/signing/legal-document and future product consumers remain unbuilt prerequisites. No identity provider exists; retain all recorded prerequisites before enabling one."
       ],
       "merged_prs": [
@@ -18623,6 +18624,232 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-ai-settings"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.12.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "15c0ceb510b98c8ca412b5559557dcbc2f2f8f15",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 874,
+      "requirement": "**T-09.12.01 — Product catalogue management**\n\n- Description: Admin manages all product catalogues: consultation, electricity, hardware, saving plans. Each has CRUD with specific fields.\n- Technical notes: Permissions: `admin:catalogue:edit`. Individual CRUD sections per product type. Versioned price changes with effective dates. Products referenced by orders cannot be hard-deleted (archive).\n- UI/UX: Tabbed layout: Consultation, Electricity, Hardware, Saving Plans. Each with list/add/edit. Price history view. Active/inactive toggle. Deactivate warning if referenced by active rules.\n- Dependencies: admin config framework, products module\n- Complexity: L",
+      "requirement_sha256": "e9f3ff31ac6aed13180b662baad7109d5cce907d4a5c9e9914db8a20a44e30c9",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/vat-config-http.integration.test.ts",
+          "sha256": "85ea7dccf8345b02d5abca8b5466266466eb7d4b94e346da25302749c41d3af7"
+        },
+        {
+          "path": "apps/api/src/admin/vat-config.controller.test.ts",
+          "sha256": "a62ef62d3d838a3bc56f7b4956974aa9038543051ea3027cf7a143f70e193d70"
+        },
+        {
+          "path": "apps/api/src/admin/vat-config.controller.ts",
+          "sha256": "8418a4677df87a26c9ad70a49613dd285e02079b0eb1dc4606c2cb3d1f1bfbaf"
+        },
+        {
+          "path": "apps/api/src/admin/vat-config.service.test.ts",
+          "sha256": "abc776f7d6bdca80e25646873bd614ccffc37db0bdee47458427e99f0415eefd"
+        },
+        {
+          "path": "apps/api/src/admin/vat-config.service.ts",
+          "sha256": "3e3bfe82dc60cbd83ff9f82b330940a8c1cf8ff20d65457f28f5a1c6fb3bcef3"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
+          "sha256": "1c4f9275b28de4ecb4acf90f0db4e624ea297c6f02cdddaf4c87f8d18a63cd81"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.controller.test.ts",
+          "sha256": "4f126884f04eabfe3816fb2a92e9660da8bf5f6ecc81348e7e311069da359a69"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.controller.ts",
+          "sha256": "5ee10c61bbd3cacfaceb883adf49f6ecf0802da84686fc9d1b2ce827bf0b8c4e"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.service.test.ts",
+          "sha256": "b1654727dc52c301e7f1b69634cefd46a4ba1a63fc54701632528fca85da44e8"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+          "sha256": "9323173b0d2b56be0accbfd7d2ab6745a5527850f1236fed76124c4fc506c246"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "40b582fa0f0e54af68a94d13cfdd1c7ce096450420bece079aa420a8cf713cae"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+        },
+        {
+          "path": "apps/web/e2e/catalogue.spec.ts",
+          "sha256": "2c210fc7770d733224237d4dffa1482243b4e1e1e30d3a846fa5f872aba0e6c3"
+        },
+        {
+          "path": "apps/web/e2e/vat.spec.ts",
+          "sha256": "d321c37e20cf8376b8b91e4535e626e5e5ae19c010c9790903ec21a9b438c2b5"
+        },
+        {
+          "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+          "sha256": "fe3c90fb78e0230ae31cb90cdaa9b4103f0ed03a5565c714797497ca16fb493a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVatPage.tsx",
+          "sha256": "ee09df6b8a9d4ea73aff53a5af5c2bcb61e93fea913323c094be8b7728df8983"
+        },
+        {
+          "path": "packages/db/src/schema/product-price-versions.test.ts",
+          "sha256": "2a511a6f80a6fc5e8743edbbd5f3cb1672f9ca6c586bc4ac63ba27c4cde5d170"
+        },
+        {
+          "path": "packages/db/src/schema/vat-configurations.test.ts",
+          "sha256": "8a0d86d8cca763ff67f318b534edb8bc0d0f475c042677aa09ce92daaa96f7b7"
+        },
+        {
+          "path": "packages/i18n/src/vat.ts",
+          "sha256": "29cc4df81869b712d8df88e5f7d27b51efabf209d1aac685ed834b05af336c7f"
+        },
+        {
+          "path": "packages/shared/src/finance/vat-config.test.ts",
+          "sha256": "0eaae5696604fc7831348b9fe73c18b06dae2c4925e25993e1781ef2452f285f"
+        },
+        {
+          "path": "packages/shared/src/finance/vat-config.ts",
+          "sha256": "d587c5317ca4de0db5bfc9b6f9b8a2b84b48a95a69e6758533d31749ddc67f8f"
+        }
+      ],
+      "checks": [
+        "Four type tabs, current staff permission, localized product fields, type-specific categories/limits, active/inactive/archive/restore and price history verified. Electricity creation/archive restrictions preserve canonical system fixtures under S-03.01. Versioned prices preserve exact bigint amounts, current reads, future dates and previous versions. Archive retains order references. Enabled/scheduled green/VAT-reference warnings appear in deactivation confirmation.",
+        "Both services bind current session/CSRF/step-up and staff permission inside the transaction before work and commit. Atomic audits store stepUpVerified=true and exact persisted verification timestamp.124 API,14 distinct browser,17 shared VAT and17 schema cases pass; types/scoped lint/format/build and42 budgets pass."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        212
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.12.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "15c0ceb510b98c8ca412b5559557dcbc2f2f8f15",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 882,
+      "requirement": "**T-09.12.02 — VAT configuration**\n\n- Description: Admin configures VAT rates by charge category, with optional product override. Effective dates. Product override wins; category default applies otherwise; 0% as fallback.\n- Technical notes: Versioned with effective dates. Snapshotted on invoice at calculation time. Rate stored as basis points or decimal. Audit: change_recorded. Validation: 0 ≤ rate ≤ 100%.\n- UI/UX: Table: category/product, rate, effective from, status. Add new rate (future effective date). Product override toggle.\n- Dependencies: admin config framework, products module\n- Complexity: L",
+      "requirement_sha256": "dd32390faf9a1310fbcdf8a950ad2cb1c44f372d27c4e8b717686d061aad7d2f",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/vat-config-http.integration.test.ts",
+          "sha256": "85ea7dccf8345b02d5abca8b5466266466eb7d4b94e346da25302749c41d3af7"
+        },
+        {
+          "path": "apps/api/src/admin/vat-config.controller.test.ts",
+          "sha256": "a62ef62d3d838a3bc56f7b4956974aa9038543051ea3027cf7a143f70e193d70"
+        },
+        {
+          "path": "apps/api/src/admin/vat-config.controller.ts",
+          "sha256": "8418a4677df87a26c9ad70a49613dd285e02079b0eb1dc4606c2cb3d1f1bfbaf"
+        },
+        {
+          "path": "apps/api/src/admin/vat-config.service.test.ts",
+          "sha256": "abc776f7d6bdca80e25646873bd614ccffc37db0bdee47458427e99f0415eefd"
+        },
+        {
+          "path": "apps/api/src/admin/vat-config.service.ts",
+          "sha256": "3e3bfe82dc60cbd83ff9f82b330940a8c1cf8ff20d65457f28f5a1c6fb3bcef3"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
+          "sha256": "1c4f9275b28de4ecb4acf90f0db4e624ea297c6f02cdddaf4c87f8d18a63cd81"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.controller.test.ts",
+          "sha256": "4f126884f04eabfe3816fb2a92e9660da8bf5f6ecc81348e7e311069da359a69"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.controller.ts",
+          "sha256": "5ee10c61bbd3cacfaceb883adf49f6ecf0802da84686fc9d1b2ce827bf0b8c4e"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.service.test.ts",
+          "sha256": "b1654727dc52c301e7f1b69634cefd46a4ba1a63fc54701632528fca85da44e8"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+          "sha256": "9323173b0d2b56be0accbfd7d2ab6745a5527850f1236fed76124c4fc506c246"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "40b582fa0f0e54af68a94d13cfdd1c7ce096450420bece079aa420a8cf713cae"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+        },
+        {
+          "path": "apps/web/e2e/catalogue.spec.ts",
+          "sha256": "2c210fc7770d733224237d4dffa1482243b4e1e1e30d3a846fa5f872aba0e6c3"
+        },
+        {
+          "path": "apps/web/e2e/vat.spec.ts",
+          "sha256": "d321c37e20cf8376b8b91e4535e626e5e5ae19c010c9790903ec21a9b438c2b5"
+        },
+        {
+          "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+          "sha256": "fe3c90fb78e0230ae31cb90cdaa9b4103f0ed03a5565c714797497ca16fb493a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVatPage.tsx",
+          "sha256": "ee09df6b8a9d4ea73aff53a5af5c2bcb61e93fea913323c094be8b7728df8983"
+        },
+        {
+          "path": "packages/db/src/schema/product-price-versions.test.ts",
+          "sha256": "2a511a6f80a6fc5e8743edbbd5f3cb1672f9ca6c586bc4ac63ba27c4cde5d170"
+        },
+        {
+          "path": "packages/db/src/schema/vat-configurations.test.ts",
+          "sha256": "8a0d86d8cca763ff67f318b534edb8bc0d0f475c042677aa09ce92daaa96f7b7"
+        },
+        {
+          "path": "packages/i18n/src/vat.ts",
+          "sha256": "29cc4df81869b712d8df88e5f7d27b51efabf209d1aac685ed834b05af336c7f"
+        },
+        {
+          "path": "packages/shared/src/finance/vat-config.test.ts",
+          "sha256": "0eaae5696604fc7831348b9fe73c18b06dae2c4925e25993e1781ef2452f285f"
+        },
+        {
+          "path": "packages/shared/src/finance/vat-config.ts",
+          "sha256": "d587c5317ca4de0db5bfc9b6f9b8a2b84b48a95a69e6758533d31749ddc67f8f"
+        }
+      ],
+      "checks": [
+        "Category rates and product overrides use dated versions, integer basis points 0..10000, override/category/zero precedence and retained history. VAT tables expose category/product, rate, start/end and status with FA/EN, dark-theme contrast and keyboard scrolling. Override status now intersects both its own and linked rate windows, matching the invoice resolver. Future scheduling and account-timezone/DST validation pass. Current invoice resolver/source bindings match prior R01 invoice calculation/snapshot evidence, which is reused.",
+        "Both services bind current session/CSRF/step-up and staff permission inside the transaction before work and commit. Atomic audits store stepUpVerified=true and exact persisted verification timestamp.124 API,14 distinct browser,17 shared VAT and17 schema cases pass; types/scoped lint/format/build and42 budgets pass."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        213
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat"
     }
   ],
   "pending_task_keys": [
@@ -18734,8 +18961,6 @@
     "02-auth-users-admin.md#T-09.10.01",
     "02-auth-users-admin.md#T-09.10.02",
     "02-auth-users-admin.md#T-09.10.03",
-    "02-auth-users-admin.md#T-09.12.01",
-    "02-auth-users-admin.md#T-09.12.02",
     "02-auth-users-admin.md#T-09.12.03",
     "02-auth-users-admin.md#T-09.12.04",
     "02-auth-users-admin.md#T-09.12.06",

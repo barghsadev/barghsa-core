@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
+  "source_revision": "15c0ceb510b98c8ca412b5559557dcbc2f2f8f15",
   "active_step": "R02",
-  "next_action": "Review catalogue/VAT and their sensitive price-change callers, reusing completed provider/storage/AI proofs.",
+  "next_action": "Reconcile remaining sensitive-action and manual verification-delivery requirements against completed source-bound provider/AI/notification evidence; repair only confirmed uncovered defects.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -722,6 +722,10 @@
     {
       "id": "R02-ai-settings",
       "review_record": "audit/evidence/step-reviews.json#R02-ai-settings"
+    },
+    {
+      "id": "R02-catalogue-vat",
+      "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat"
     }
   ],
   "deferred_improvements": [
@@ -745,9 +749,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 168,
+    "acceptance_verified": 170,
     "partial": 34,
-    "pending": 120,
+    "pending": 118,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -1037,31 +1041,31 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R02-catalogue-vat",
-    "name": "Catalogue, VAT and sensitive price changes",
+    "id": "R02-sensitive-actions-verification-delivery",
+    "name": "Sensitive administration callers and verification notices",
     "status": "reviewing",
     "prs": [
       92,
-      212,
-      213
+      146
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-09.12.01",
-      "02-auth-users-admin.md#T-09.12.02",
-      "02-auth-users-admin.md#T-02.02.04"
+      "02-auth-users-admin.md#T-02.02.04",
+      "02-auth-users-admin.md#T-07.01.03"
     ],
     "remaining_checklist": [
-      "Read exact catalogue/VAT and step-up criteria and saved PR deferrals.",
-      "Review existing versioned prices/VAT, referenced-product archival, invoice snapshots and UI warnings.",
-      "Repair confirmed transaction/audit/UI gaps; reuse previous financial/provider/storage evidence."
+      "Read final provider/storage/AI proof bindings and link completed caller evidence.",
+      "Verify actual manual identity-notification delivery against current templates, recipients and channel preferences.",
+      "Keep real-provider and refund/contract prerequisites explicit; reconcile already completed notification domain entries."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R02-ai-settings"
+      "audit/evidence/step-reviews.json#R02-catalogue-vat",
+      "audit/evidence/step-reviews.json#R02-ai-settings",
+      "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Review catalogue/VAT and their sensitive price-change callers, reusing completed provider/storage/AI proofs."
+    "next_action": "Reconcile remaining sensitive-action and manual verification-delivery requirements against completed source-bound provider/AI/notification evidence; repair only confirmed uncovered defects."
   },
   "open_domain_reviews": [
     {

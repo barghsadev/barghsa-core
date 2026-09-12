@@ -4,17 +4,15 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test commit **c4098cdd**. **168 verified /34 partial /120 pending** of322 historical claims. Saved PRs: **147 closed /24 open /130 unreviewed**,301 total.58 historical skips:3 verified/55 pending.2827 logs indexed;38 older evidence refreshes remain. Saved GitHub inventory ends September3; no current GitHub or deployed-state claim.
+Branch `codex/audit-fixes`. Latest product/test **15c0ceb5**. **170 verified /34 partial /118 pending** of322 claims. Saved PRs: **149 closed /24 open /128 unreviewed**,301 total.58 historical skips:3 verified/55 pending.2851 logs indexed;38 older evidence refreshes remain. Saved GitHub inventory ends September3; no current GitHub or deployed-state claim.
 
-AI settings: model/policy/slot transactions now recheck current session, CSRF and step-up before work and commit. Model results recheck after the worker wait. Five AI services record verified step-up time in their atomic audit. Model dark-theme contrast and validation feedback repaired.334 API,10 distinct FA/EN browser,10 worker,48 shared,31 DB cases pass; types/scoped lint/format/build and42 budgets pass. Five audit proof cases also pass after a local variable rename. PR207/209 close;PR211 remains partial for actual runtime slot consumers. [Review](evidence/step-reviews.json#R02-ai-settings).
-
-KB upload/ticket omission fixes remain verified at88a6a7da; KB/agent session repair at0e59d835 and audit follow-up atc4098cdd. PR208/210 remain partial for unbuilt retrieval, policy evaluation and actual agent chat. A model connection probe does not fulfill chat. [Review](evidence/step-reviews.json#R02-kb-agent-integration).
+Catalogue/VAT: transaction session authority and exact step-up audits repaired. VAT history now uses accessible tables and linked-rate status matches invoice calculation.124 API,14 distinct browser,17 shared VAT and17 DB schema cases pass; applicable types/scoped lint/format/build and42 budgets pass. PR212/213 close locally;PR92 remains partial. [Review](evidence/step-reviews.json#R02-catalogue-vat). Preserve completed AI settings, KB and invoice evidence in prior step records.
 
 ## Next action
 
-Continue **R02-catalogue-vat**, PR92/212/213. Exact task keys: `02-auth-users-admin.md#T-09.12.01`, `#T-09.12.02`, `#T-02.02.04`. Requirements read; saved PR bodies/deferrals and current catalogue/VAT integration still need review. Check versioned prices, referenced-product archival, VAT invoice snapshots, current transaction authority, step-up audit and UI warnings. Reuse completed provider/storage/financial evidence. Do not mark broad sensitive-action acceptance complete while future callers remain.
+Continue **R02-sensitive-actions-verification-delivery**, PR92/146. Reconcile remaining provider/storage/AI sensitive-action proof with completed batches and verify manual identity notices reach actual email/SMS delivery consumers. Avoid rebuilding completed work. Retain exact unbuilt refund/contract and real-provider prerequisites. Reconcile obsolete open-domain entries for already verified receipt/reminder/preferences tasks.
 
-Then follow remaining R02 acceptance and R03/R04/R05/V01/R06/V02/B01 in the plan. Full regression staysV02. The plan is unfinished.
+Then R03/R04/R05/V01/R06/V02/B01. Full regression staysV02. The plan is unfinished.
 
 ## Preserve completed work and prerequisites
 

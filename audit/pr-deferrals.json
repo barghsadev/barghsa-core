@@ -889,7 +889,16 @@
     "historical_deferrals": [
       "- [ ] UI slice (table: category/product, rate, effective from, status; future-effective add; override toggle; fa/en dicts, RTL/a11y) — deferred, consistent with T-09.12.01 precedent."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Closed locally; every task criterion and historical UI deferral verified.",
+    "reviewed_source_revision": "15c0ceb510b98c8ca412b5559557dcbc2f2f8f15",
+    "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "audit/evidence/step-reviews.json#R02-catalogue-vat: Category rates and product overrides use dated versions, integer basis points 0..10000, override/category/zero precedence and retained history. VAT tables expose category/product, rate, start/end and status with FA/EN, dark-theme contrast and keyboard scrolling. Override status now intersects both its own and linked rate windows, matching the invoice resolver. Future scheduling and account-timezone/DST validation pass. Current invoice resolver/source bindings match prior R01 invoice calculation/snapshot evidence, which is reused."
+      }
+    ]
   },
   {
     "pr": 212,
@@ -900,7 +909,16 @@
     "historical_deferrals": [
       "- [ ] Tabbed admin web UI (list/add/edit per type, price history view, fa/en dicts, RTL/a11y) — deferred to the UI slice"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Closed locally; every task criterion and historical UI deferral verified.",
+    "reviewed_source_revision": "15c0ceb510b98c8ca412b5559557dcbc2f2f8f15",
+    "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "audit/evidence/step-reviews.json#R02-catalogue-vat: Four type tabs, current staff permission, localized product fields, type-specific categories/limits, active/inactive/archive/restore and price history verified. Electricity creation/archive restrictions preserve canonical system fixtures under S-03.01. Versioned prices preserve exact bigint amounts, current reads, future dates and previous versions. Archive retains order references. Enabled/scheduled green/VAT-reference warnings appear in deactivation confirmation."
+      }
+    ]
   },
   {
     "pr": 211,
@@ -1848,14 +1866,14 @@
       "- [ ] Wire step-up to specific sensitive endpoints (role changes, credentials, etc.) — Slice 2 (separate PR)",
       "- [ ] Frontend step-up modal dialog — Slice 2"
     ],
-    "status": "Completed caller evidence linked; R02 provider/storage/price and future refund/contract callers remain.",
+    "status": "Catalogue/VAT and existing domain callers verified; final provider/storage evidence reconciliation and future refund/contract prerequisites remain.",
     "reviewed_source_revision": "d59499003a4accdf87b99288480f17437ed8bc50",
     "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization",
     "dispositions": [
       {
         "statement_index": 0,
         "disposition": "pending_domain_review",
-        "evidence": "Current staff/profile/ownership/session and finance domain evidence linked in audit/evidence/step-reviews.json#R01-cross-domain-authorization. Remaining R02 provider/storage/price consumers and exact future refund/contract prerequisites retain partial acceptance."
+        "evidence": "Current staff/profile/ownership/session and finance domain evidence linked in audit/evidence/step-reviews.json#R01-cross-domain-authorization. Remaining R02 provider/storage/price consumers and exact future refund/contract prerequisites retain partial acceptance. Catalogue/VAT verified at audit/evidence/step-reviews.json#R02-catalogue-vat."
       },
       {
         "statement_index": 1,
