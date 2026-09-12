@@ -1009,7 +1009,16 @@
     "historical_deferrals": [
       "- [ ] Web \"Failed notifications\" admin UI section — deferred (matches T-09.09.02, which shipped backend-only)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Satisfied by reviewed later implementation.",
+    "reviewed_source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+    "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Separate Failed notifications staff section exposes masked payload/history and permission-gated actions. Current session/CSRF/step-up and exact acknowledgment validation, negative API paths and FA/EN browser workflows pass. Historical frontend deferral is satisfied. audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      }
+    ]
   },
   {
     "pr": 200,
@@ -1294,7 +1303,16 @@
     "historical_deferrals": [
       "\"same transaction\" is interpreted as **synchronously inline in the dispatch path** (as opposed to deferred/external like email/SMS): the adapter performs a direct local INSERT; the worker's shared transaction still wraps job/dead-letter/delivery-log bookkeeping."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Satisfied by reviewed later implementation.",
+    "reviewed_source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+    "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "In-app schema includes required fields, link_params and profile/date index. Adapter synchronously writes through the pinned worker outcome transaction; database failure tests prove rollback with job/history/outbox. This corrects PR170 inline-pool reinterpretation. Business transaction persists outbox intent; inbox materializes in worker transaction. audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      }
+    ]
   },
   {
     "pr": 168,
@@ -1305,7 +1323,16 @@
     "historical_deferrals": [
       "- [ ] Operational alerts for dead-letter accumulation — deferred to T-05.01.07 (metrics & alerting)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Operational evidence remains required.",
+    "reviewed_source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+    "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "external_evidence_required",
+        "evidence": "Dead-letter severity/cause/history and authorized Retry/Resolve/Dismiss are tested. Local accumulation alert rules pass actual promtool checks. Unknown send outcomes remain held; no deployed monitoring claim. audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      }
+    ]
   },
   {
     "pr": 164,
@@ -1316,7 +1343,16 @@
     "historical_deferrals": [
       "- [ ] Live end-to-end dispatch against a running DB — integration/e2e level (not run in this tick)."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Satisfied by reviewed later implementation.",
+    "reviewed_source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+    "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "UUIDv7 outbox schema, unique idempotency, caller-owned business transaction, job creation, claim/renew/release and real PostgreSQL dispatch are verified. Bank receipt confirmation enqueues through the same client before COMMIT; unchanged R01 service/integration hashes retain rollback and no-duplicate evidence. This does not certify all later event-specific producer policies. audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      }
+    ]
   },
   {
     "pr": 163,
@@ -1329,7 +1365,26 @@
       "- [ ] Durable-outbox write pipeline wired into business transactions — T-05.01.02 (separate task)",
       "- [ ] Graceful-shutdown lease release in worker loop — deferred; loop wiring is T-05.01.02/03"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Satisfied by reviewed later implementation.",
+    "reviewed_source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+    "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "NotificationsModule, exported transport contract and required schema are present. In-app adapter and business outbox deferrals are satisfied by later integration. Compiled-process notification tests prove graceful drain, deadline recovery and owned-lease release after failed bookkeeping. audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "NotificationsModule, exported transport contract and required schema are present. In-app adapter and business outbox deferrals are satisfied by later integration. Compiled-process notification tests prove graceful drain, deadline recovery and owned-lease release after failed bookkeeping. audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      },
+      {
+        "statement_index": 2,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "NotificationsModule, exported transport contract and required schema are present. In-app adapter and business outbox deferrals are satisfied by later integration. Compiled-process notification tests prove graceful drain, deadline recovery and owned-lease release after failed bookkeeping. audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      }
+    ]
   },
   {
     "pr": 162,

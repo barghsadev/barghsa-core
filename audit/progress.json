@@ -3,9 +3,9 @@
   "updated": "2026-09-12",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "fe7a366bd2090de6013ef035a6f33bc6bcc9b8bb",
+  "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
   "active_step": "R02",
-  "next_action": "Finish individual task/PR dispositions for R02-notification-outbox-delivery (nine tasks, PR163–170/203), reusing recorded evidence. Verify each exact requirement and historical deferral; close proven items individually. Keep SMS provider-level idempotency/authoritative reconciliation and operational alert deployment explicitly unresolved. Then select the next bounded R02 workflow; do not repeat completed delivery/search/shutdown repairs.",
+  "next_action": "Repair crash-durable per-send attempt history, preserving existing accepted/uncertain receipt fencing. Then Verify dashboard import, data-source binding and rendered queries in controlled Grafana.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -713,9 +713,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 136,
-    "partial": 31,
-    "pending": 155,
+    "acceptance_verified": 141,
+    "partial": 35,
+    "pending": 146,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -1006,7 +1006,7 @@
   "active_batch": {
     "id": "R02-notification-outbox-delivery",
     "name": "Notification outbox, delivery and dead-letter triage",
-    "status": "reviewing",
+    "status": "partially_consolidated",
     "prs": [
       163,
       164,
@@ -1030,15 +1030,12 @@
       "02-auth-users-admin.md#T-09.09.03"
     ],
     "remaining_checklist": [
-      "All nine exact requirements, saved PR bodies and historical deferrals read at this checkpoint.",
-      "Review durable business enqueue, schema/interface, claim/renew/release and graceful shutdown, bounded retries/priority and per-channel idempotency.",
-      "Verify same-transaction in-app delivery and safe per-attempt delivery/dead-letter history. Resolve PR163/164/170 historical transaction/loop deferrals with real database evidence.",
-      "Review both staff dead-letter interfaces, current permissions/session/step-up and masked payloads, retry/resolve/dismiss, metrics and accumulation alerts.",
-      "Keep remaining inbox/notification classification and event-specific reminder acceptance in later R02 batches. Operational rollout/alerts require truthful evidence.",
-      "Current same-worker-transaction inbox delivery, triage session/acknowledgment, scoped history and local alert-rule repairs pass. Preserve them. Operational alert delivery remains external. Generic process drain tests do not by themselves prove notification-specific lease release.",
-      "Durable external send ownership/accepted receipts, uncertain-send holds and staff retry conflicts pass53 worker and130 API/provider cases. Eight overlapping migration/guard cases rerun after aggregate legacy-attempt coverage. General history must distinguish receipt recovery from actual provider attempts; reconciliation action and shutdown evidence remain.",
-      "General staff delivery search now covers records without dead-letter entries, filters notification ID/channel/outcome and validates results.47 API cases,14 distinct FA/EN Chromium cases including prior12,50 i18n cases and42 unchanged budgets pass. Applicable types/lint/format/build pass; provider recovery classification and shutdown remain.",
-      "History now names processing attempts and explains receipt reuse without another send; recovered/held bookkeeping has null send duration.33 worker and4 focused FA/EN browser cases pass, with50 i18n and42 unchanged budgets. Compiled-process notification shutdown/restart is verified: graceful completion, forced deadline with unknown hold, and accepted-receipt recovery after failed bookkeeping.52 worker cases including9 actual-process cases pass; stale replacement-claim protection is retained. Proceed to individual batch dispositions."
+      "Repair crash-durable per-send attempt history, preserving existing accepted/uncertain receipt fencing.",
+      "Verify dashboard import, data-source binding and rendered queries in controlled Grafana.",
+      "Provider-level SMS idempotency is not established; Resend retry-window guarantees and authoritative provider reconciliation remain unverified. Unknown outcomes must stay held.",
+      "Current occurrence-aware v2 keys preserve distinct business events; literal legacy sha256(event+channel+profile) requirement still needs an explicit disposition.",
+      "Deployment owner must load rules, verify scrapes and record controlled Alertmanager firing and resolution. No external execution is claimed.",
+      "Preserve 38 earlier evidence refresh records and final V02 regression/coverage."
     ],
     "confirmed_defects": [
       {
@@ -1098,6 +1095,16 @@
         "defect": "A notification worker finishing after repeated bookkeeping failure stopped lease renewal but left its owned claim locked during a clean shutdown.",
         "status": "fixed_verified",
         "source_revision": "fe7a366bd2090de6013ef035a6f33bc6bcc9b8bb"
+      },
+      {
+        "defect": "Dashboard references undefined DS_PROMETHEUS and uses 10/25 for fractional percentunit thresholds.",
+        "status": "fixed_locally_runtime_pending",
+        "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22"
+      },
+      {
+        "defect": "Repair crash-durable per-send-attempt history. Mutable receipt plus later processing log can lose a rejected attempt on process death or outcome rollback. This is separate from the deferred optional processing-kind column.",
+        "status": "open",
+        "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22"
       }
     ],
     "reused_evidence": [
@@ -1109,8 +1116,105 @@
     "new_evidence": [
       "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
     ],
-    "pr_dispositions": [],
-    "next_action": "Finish individual task/PR dispositions for R02-notification-outbox-delivery (nine tasks, PR163–170/203), reusing recorded evidence. Verify each exact requirement and historical deferral; close proven items individually. Keep SMS provider-level idempotency/authoritative reconciliation and operational alert deployment explicitly unresolved. Then select the next bounded R02 workflow; do not repeat completed delivery/search/shutdown repairs."
+    "pr_dispositions": [
+      {
+        "pr": 163,
+        "status": "closed",
+        "task_keys": [
+          "05-notifications-documents-ai.md#T-05.01.01"
+        ],
+        "reason": "NotificationsModule, exported transport contract and required schema are present. In-app adapter and business outbox deferrals are satisfied by later integration. Compiled-process notification tests prove graceful drain, deadline recovery and owned-lease release after failed bookkeeping. ",
+        "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+        "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      },
+      {
+        "pr": 164,
+        "status": "closed",
+        "task_keys": [
+          "05-notifications-documents-ai.md#T-05.01.02"
+        ],
+        "reason": "UUIDv7 outbox schema, unique idempotency, caller-owned business transaction, job creation, claim/renew/release and real PostgreSQL dispatch are verified. Bank receipt confirmation enqueues through the same client before COMMIT; unchanged R01 service/integration hashes retain rollback and no-duplicate evidence. This does not certify all later event-specific producer policies. ",
+        "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+        "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      },
+      {
+        "pr": 165,
+        "status": "closed",
+        "task_keys": [
+          "05-notifications-documents-ai.md#T-05.01.03"
+        ],
+        "reason": "Retry ladder 1m/5m/30m/2h/final with bounded jitter, per-type caps and urgent ordering are implemented. Focused schedule/writer cases pass; channel budgets, claim renewals and actual worker dispatch reuse recorded integration evidence. ",
+        "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+        "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      },
+      {
+        "pr": 166,
+        "status": "open",
+        "task_keys": [
+          "05-notifications-documents-ai.md#T-05.01.04"
+        ],
+        "reason": "Application send ownership and durable accepted receipts prevent automatic uncertain resends. Concurrent claims, response loss, failed receipt writes and process restart are tested for real email/SMS adapters. This establishes application guarding, not provider deduplication. Provider-level SMS idempotency is not established; Resend retry-window guarantees and authoritative provider reconciliation remain unverified. Unknown outcomes must stay held. Current occurrence-aware v2 keys preserve distinct business events; literal legacy sha256(event+channel+profile) requirement still needs an explicit disposition.",
+        "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+        "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      },
+      {
+        "pr": 167,
+        "status": "open",
+        "task_keys": [
+          "05-notifications-documents-ai.md#T-05.01.05"
+        ],
+        "reason": "Required processing-history fields, safe errors, scoped and general staff queries and FA/EN history are implemented. Search works without a dead-letter row. Each physical attempt is not yet crash-durable: provider rejection may commit to the mutable receipt before the outcome/log transaction; a restart can retry and overwrite that receipt without retaining the prior log. Repair crash-durable per-send-attempt history. Mutable receipt plus later processing log can lose a rejected attempt on process death or outcome rollback. This is separate from the deferred optional processing-kind column.",
+        "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+        "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      },
+      {
+        "pr": 168,
+        "status": "open",
+        "task_keys": [
+          "05-notifications-documents-ai.md#T-05.01.06"
+        ],
+        "reason": "Dead-letter severity/cause/history and authorized Retry/Resolve/Dismiss are tested. Local accumulation alert rules pass actual promtool checks. Unknown send outcomes remain held; no deployed monitoring claim. Deployment owner must load rules, verify scrapes and record controlled Alertmanager firing and resolution. No external execution is claimed.",
+        "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+        "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      },
+      {
+        "pr": 169,
+        "status": "open",
+        "task_keys": [
+          "05-notifications-documents-ai.md#T-05.01.07"
+        ],
+        "reason": "Queue depth, failure ratio, p95 latency and attempt metrics are implemented and tested. Dashboard now declares its Prometheus selector and uses 0.1/0.25 ratio thresholds. JSON/config checks pass; Grafana import/query/rendering remains unverified. Import the dashboard into controlled Grafana, bind Prometheus and verify queries/panels and ratio units before closure.",
+        "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+        "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      },
+      {
+        "pr": 170,
+        "status": "closed",
+        "task_keys": [
+          "05-notifications-documents-ai.md#T-05.02.01"
+        ],
+        "reason": "In-app schema includes required fields, link_params and profile/date index. Adapter synchronously writes through the pinned worker outcome transaction; database failure tests prove rollback with job/history/outbox. This corrects PR170 inline-pool reinterpretation. Business transaction persists outbox intent; inbox materializes in worker transaction. ",
+        "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+        "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      },
+      {
+        "pr": 203,
+        "status": "closed",
+        "task_keys": [
+          "02-auth-users-admin.md#T-09.09.03"
+        ],
+        "reason": "Separate Failed notifications staff section exposes masked payload/history and permission-gated actions. Current session/CSRF/step-up and exact acknowledgment validation, negative API paths and FA/EN browser workflows pass. Historical frontend deferral is satisfied. ",
+        "source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+        "evidence": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      }
+    ],
+    "next_action": "Repair crash-durable per-send attempt history, preserving existing accepted/uncertain receipt fencing. Then Verify dashboard import, data-source binding and rendered queries in controlled Grafana.",
+    "remaining_task_keys": [
+      "05-notifications-documents-ai.md#T-05.01.04",
+      "05-notifications-documents-ai.md#T-05.01.05",
+      "05-notifications-documents-ai.md#T-05.01.06",
+      "05-notifications-documents-ai.md#T-05.01.07"
+    ]
   },
   "open_domain_reviews": [
     {

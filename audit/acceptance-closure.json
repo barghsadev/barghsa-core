@@ -14562,6 +14562,416 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.01",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 55,
+      "requirement": "| **T-05.01.01 — Notification module scaffold** | M | P0 |\n| Create NestJS Notifications module. Define transport interface (`INotificationTransport`) with `send(payload)` returning `{providerRef, status}`. Define outbox table, job table schemas Drizzle ORM entities, and base worker structure. | | |",
+      "requirement_sha256": "f6a8422322b18934ea1213e87aa51a6ffb4ca5c04d5692cad5985a85c2d0df6f",
+      "status": "acceptance_verified",
+      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/notifications/notifications.module.ts",
+          "sha256": "27b1fe9a6ecf8439e4f186a259882c2a4195353541b9726d35e41948dcafb808"
+        },
+        {
+          "path": "packages/shared/src/notifications/notification-transport.ts",
+          "sha256": "38bdd4ae008dd23dbb7706d7f7593db298423e068dc8975f5a3624e5feec24f0"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "d485a28edf1db7d2288d30b1e7e5f9923c1d612421bc44d46a634fbe2bcad560"
+        },
+        {
+          "path": "apps/worker/src/main-process.integration.test.ts",
+          "sha256": "2a84e6738c1674a01db482dbf330f2c6b8fff171a7dead78653fb61ea50ebfe8"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-lease.ts",
+          "sha256": "5bb8a2abf2e34656aa0c8e2c0c183d1ae61eb801435623a08ceeee0bfb6813e7"
+        }
+      ],
+      "checks": [
+        "NotificationsModule, exported transport contract and required schema are present. In-app adapter and business outbox deferrals are satisfied by later integration. Compiled-process notification tests prove graceful drain, deadline recovery and owned-lease release after failed bookkeeping.",
+        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        163
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.02",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 57,
+      "requirement": "| **T-05.01.02 — Durable outbox table & write pipeline** | L | P0 |\n| Design `notification_outbox` table: `id` (UUIDv7), `event_key`, `profile_id`, `payload` (JSONB), `channels` (text[]), `status`, `idempotency_key` (UNIQUE), `created_at`, `locked_until`, `attempts`, `max_attempts`, `last_error`, `provider_ref`, `scheduled_for`. Write outbox rows in same PG transaction as business event. Outbox reader worker picks unlocked rows, claims lease, dispatches. | | |",
+      "requirement_sha256": "3e1628e07bf1d64114cdbf84ccd03ba756ed2ddcb3c30b5a7a3995bde67bac28",
+      "status": "acceptance_verified",
+      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/notification-outbox.ts",
+          "sha256": "473efaef5f031a3c9c61189155c0ef1135902af2b474e5f2834e56a7c2c2b470"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-writer.ts",
+          "sha256": "629a68e05322de7d35d6377d5a08e9d0ba5d428de8e3d9ce75218e93830f32f0"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-writer.test.ts",
+          "sha256": "45f3aac74d4f319b4a64c04ad7e5074ee9ec6e81c58d4168640e3738e48f4ace"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.ts",
+          "sha256": "63777530fcf66f00a068ebbac388dc1424184a2073550416b0c94ace8227fcf9"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-lease.ts",
+          "sha256": "5bb8a2abf2e34656aa0c8e2c0c183d1ae61eb801435623a08ceeee0bfb6813e7"
+        },
+        {
+          "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
+          "sha256": "03707e33d2bccb94ebc1a5a81a5be0b23c651f333318d5e8e263a84571abf536"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "fa06908b9c86b30a6573c5a7fb77a7291d8e0cf6d0da5ed9a72af948d83a9671"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+          "sha256": "6b80643c19106ae0ffd34ab08efa268fd667ad9e81588ee35ee8dd58b419f848"
+        }
+      ],
+      "checks": [
+        "UUIDv7 outbox schema, unique idempotency, caller-owned business transaction, job creation, claim/renew/release and real PostgreSQL dispatch are verified. Bank receipt confirmation enqueues through the same client before COMMIT; unchanged R01 service/integration hashes retain rollback and no-duplicate evidence. This does not certify all later event-specific producer policies.",
+        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        164
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.03",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 59,
+      "requirement": "| **T-05.01.03 — Job queue with retry schedule** | L | P0 |\n| Implement retry schedule in worker: 1min → 5min → 30min → 2hr → final. Exponential backoff with jitter (±20%). Configurable `max_attempts` per notification type. Worker marks `Failed` after max attempts exhausted; moves to dead-letter. Add queue priority for urgent (Immediate) vs daytime. | | |",
+      "requirement_sha256": "481a13d1d241563aab3bec6a5bc724e25bd5165c8f37c8e852ab974b283ed861",
+      "status": "acceptance_verified",
+      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/notifications/retry-schedule.ts",
+          "sha256": "b0cfa6e5311e047fe403eb1a718fa9777b8e8fce61e23662493ec668b0ba3c84"
+        },
+        {
+          "path": "apps/worker/src/notifications/retry-schedule.test.ts",
+          "sha256": "6f517c64c079e7312c9109009116bb0532c1d2c847064ab28f54696533888598"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-writer.ts",
+          "sha256": "629a68e05322de7d35d6377d5a08e9d0ba5d428de8e3d9ce75218e93830f32f0"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.ts",
+          "sha256": "63777530fcf66f00a068ebbac388dc1424184a2073550416b0c94ace8227fcf9"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "df0126c8c348583c0aaaf97e58d74fa02282b82b3e6221938f233ac7bba2f5a5"
+        },
+        {
+          "path": "packages/shared/src/notifications/notification-registry.ts",
+          "sha256": "5ac9f805862f04492e11f41c5e2dca24eb84e202bf515462ebbfec706b2cbb33"
+        }
+      ],
+      "checks": [
+        "Retry ladder 1m/5m/30m/2h/final with bounded jitter, per-type caps and urgent ordering are implemented. Focused schedule/writer cases pass; channel budgets, claim renewals and actual worker dispatch reuse recorded integration evidence.",
+        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        165
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.04",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 61,
+      "requirement": "| **T-05.01.04 — Idempotency for delivery** | M | P0 |\n| Idempotency key = `sha256(event_key + channel + profile_id)`. Ensure at-most-once logical delivery even with worker retries or duplicate outbox rows. Unique constraint on `notification_outbox.idempotency_key`. ON CONFLICT DO NOTHING on inserts. Provider-level idempotency for Resend and SMS.ir. | | |",
+      "requirement_sha256": "fd378547704af7cb05cf053f8230429e033825e5d56388be2c240d3f4f037b5f",
+      "status": "partial",
+      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/notifications/send-receipt.ts",
+          "sha256": "51fbb098547d4e1c226da7136a6eeb6188a48962d28a19f6de39b383f2b64a3e"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
+          "sha256": "586f4589c4e1c6ac4cbde54f8e31e63dd083357c06fa7c62f11b0e6580e10b34"
+        },
+        {
+          "path": "apps/worker/src/notifications/email-transport.ts",
+          "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-transport.ts",
+          "sha256": "405e2ea4f2a3420a4f0ab46e2d26305def714fdfe44daaace1668dcdb443fd38"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email.ts",
+          "sha256": "48a63d41182278d8e0b77c454ab4824489bf94756f12b391dcbcfc1550fe7ca4"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.ts",
+          "sha256": "031b5579025565a7b9c559b188d80c681ea594eb60503a1285f1dcc64a102b07"
+        }
+      ],
+      "checks": [
+        "Application send ownership and durable accepted receipts prevent automatic uncertain resends. Concurrent claims, response loss, failed receipt writes and process restart are tested for real email/SMS adapters. This establishes application guarding, not provider deduplication.",
+        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      ],
+      "limitations": [
+        "Provider-level SMS idempotency is not established; Resend retry-window guarantees and authoritative provider reconciliation remain unverified. Unknown outcomes must stay held.",
+        "Current occurrence-aware v2 keys preserve distinct business events; literal legacy sha256(event+channel+profile) requirement still needs an explicit disposition."
+      ],
+      "merged_prs": [
+        166
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.05",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 63,
+      "requirement": "| **T-05.01.05 — Status tracking & delivery logs** | M | P1 |\n| `notification_delivery_log` table: `id`, `notification_id` (FK), `channel`, `status`, `attempt_number`, `provider_ref`, `latency_ms`, `error_category`, `error_detail` (safe), `created_at`. Queryable in admin panel. Each delivery attempt creates a log row. | | |",
+      "requirement_sha256": "09c52a552188ca938404e39ff4755f2904cfaa20a8750bc2012a33e5053ded58",
+      "status": "partial",
+      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/notification-delivery-log.ts",
+          "sha256": "e6ee8a679df6048e31ff2eab866feeb363b4b48433b44c95d202b8d86a8fdb29"
+        },
+        {
+          "path": "apps/worker/src/notifications/delivery-log.ts",
+          "sha256": "310e6d118946e5569a4695274d24269f13de353ff09dd29a0710a51011d7efa6"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.ts",
+          "sha256": "51fbb098547d4e1c226da7136a6eeb6188a48962d28a19f6de39b383f2b64a3e"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "df0126c8c348583c0aaaf97e58d74fa02282b82b3e6221938f233ac7bba2f5a5"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.service.ts",
+          "sha256": "5486d1649c2e5365787e9096eee8a8356b5f413520bd1cd7036c78a9596abdc1"
+        },
+        {
+          "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
+          "sha256": "8e2ac27bdf219e983f69528c52c2b4f1d25fcfc4b23af8c16547e6cbca5c14f6"
+        },
+        {
+          "path": "apps/web/e2e/notification-delivery-search.spec.ts",
+          "sha256": "2a950742236d07cd603df01d39b94e2fec876e26286a7d7ae5f50634341bcd8f"
+        }
+      ],
+      "checks": [
+        "Required processing-history fields, safe errors, scoped and general staff queries and FA/EN history are implemented. Search works without a dead-letter row. Each physical attempt is not yet crash-durable: provider rejection may commit to the mutable receipt before the outcome/log transaction; a restart can retry and overwrite that receipt without retaining the prior log.",
+        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      ],
+      "limitations": [
+        "Repair crash-durable per-send-attempt history. Mutable receipt plus later processing log can lose a rejected attempt on process death or outcome rollback. This is separate from the deferred optional processing-kind column."
+      ],
+      "merged_prs": [
+        167
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.06",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 65,
+      "requirement": "| **T-05.01.06 — Dead-letter queue & admin UI** | M | P1 |\n| Dead-letter table inherits failed delivery data. Admin panel shows dead-letter deliveries with severity (error/critical), cause, attempt history. Actions: **Retry** (re-queues with same idempotency key), **Resolve** (marks final, no retry), **Dismiss**. Operational alerts for dead-letter accumulation. | | |",
+      "requirement_sha256": "d89946fa25e765f38777b3c75e4aef70b252f6c9d50c28ed38a55472fc0b2baf",
+      "status": "partial",
+      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/notifications/dead-letter.ts",
+          "sha256": "483af94f514fe75ad0d99e91e9f58c24309a88c14b130d37837da18f9deecf54"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.service.ts",
+          "sha256": "5486d1649c2e5365787e9096eee8a8356b5f413520bd1cd7036c78a9596abdc1"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "814a3b69621397e2894149d44638bcb7e5a847d2b48fa12b197cd750df4a0d2e"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "5cdd8396507f15dd369ed00cfccd780da33818062fa3b6849beecb5b3e4e01bd"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.test.yml",
+          "sha256": "e70df5ebd4b6c6fe1a7e32e7bec57c7de1f077364e35d988c02c22ba277e2ef5"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "f06b27ca55be45b97fb9a3325bc6877ad94c99af45cca77e3b2df96716665b61"
+        }
+      ],
+      "checks": [
+        "Dead-letter severity/cause/history and authorized Retry/Resolve/Dismiss are tested. Local accumulation alert rules pass actual promtool checks. Unknown send outcomes remain held; no deployed monitoring claim.",
+        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      ],
+      "limitations": [
+        "Deployment owner must load rules, verify scrapes and record controlled Alertmanager firing and resolution. No external execution is claimed."
+      ],
+      "merged_prs": [
+        168
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.07",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 67,
+      "requirement": "| **T-05.01.07 — Metrics & observability** | S | P1 |\n| Prometheus metrics: `notifications_outbox_age_seconds`, `notifications_delivery_attempts_total{channel,status}`, `notifications_queue_depth`, `notifications_dead_letter_count`. Grafana dashboard panel. | | |\n\n---",
+      "requirement_sha256": "59458f7e78418d9a84d5b0b4d8a4f23a7133db1c7e5792b010975768d201b4fa",
+      "status": "partial",
+      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.ts",
+          "sha256": "58e379e43dd0c3043906e929370b27b999b16abc41f31c74617208b7540a4c02"
+        },
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.test.ts",
+          "sha256": "971b3718cd386b82207df42c11980329a9fd9212a0024405ef2050ac39b439d5"
+        },
+        {
+          "path": "deploy/monitoring/grafana-notifications-dashboard.json",
+          "sha256": "b63109ca9c47fd898c17a93845137ddfe0411c43f10129e70790ee52003ecc9b"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "f06b27ca55be45b97fb9a3325bc6877ad94c99af45cca77e3b2df96716665b61"
+        }
+      ],
+      "checks": [
+        "Queue depth, failure ratio, p95 latency and attempt metrics are implemented and tested. Dashboard now declares its Prometheus selector and uses 0.1/0.25 ratio thresholds. JSON/config checks pass; Grafana import/query/rendering remains unverified.",
+        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      ],
+      "limitations": [
+        "Import the dashboard into controlled Grafana, bind Prometheus and verify queries/panels and ratio units before closure."
+      ],
+      "merged_prs": [
+        169
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.02.01",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 88,
+      "requirement": "| **T-05.02.01 — Notification entity & in-app transport** | M | P0 |\n| `in_app_notifications` table: `id`, `profile_id`, `type`, `title_i18n_key`, `body_i18n_key`, `params` (JSONB — interpolation vars), `link_route`, `link_params`, `is_read`, `read_at`, `created_at`. Index on `(profile_id, created_at DESC)`. In-app transport adapter writes to this table synchronously (same transaction). | | |",
+      "requirement_sha256": "f817927255da43dbcec15915a4fb6e8091f98e6eff98de572c3ba5b8bf53186f",
+      "status": "acceptance_verified",
+      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/in-app-notifications.ts",
+          "sha256": "ea20dd08bdcdc91bfb31dc9c9cc349a31be31780ac67bcc03ca30583efde8c1b"
+        },
+        {
+          "path": "apps/worker/src/notifications/in-app-transport.ts",
+          "sha256": "da86928a19025906061a0a39d77976500ec066ebba0121d785944e65e92b7613"
+        },
+        {
+          "path": "apps/worker/src/notifications/in-app-transport.test.ts",
+          "sha256": "3ac586f3cc2d7eafc73d70e89b266b99fa0c0f0545d31fe4b98e7aa6c81d5aa7"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "df0126c8c348583c0aaaf97e58d74fa02282b82b3e6221938f233ac7bba2f5a5"
+        },
+        {
+          "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
+          "sha256": "03707e33d2bccb94ebc1a5a81a5be0b23c651f333318d5e8e263a84571abf536"
+        }
+      ],
+      "checks": [
+        "In-app schema includes required fields, link_params and profile/date index. Adapter synchronously writes through the pinned worker outcome transaction; database failure tests prove rollback with job/history/outbox. This corrects PR170 inline-pool reinterpretation. Business transaction persists outbox intent; inbox materializes in worker transaction.",
+        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        170
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.09.03",
+      "requirement_file": "kanban/epics/02-auth-users-admin.md",
+      "requirement_line": 792,
+      "requirement": "**T-09.09.03 — Dead-letter notifications**\n\n- Description: Failed notification deliveries go to dead-letter queue. Staff can view, retry, or dismiss.\n- Technical notes: Same pattern as failed jobs but filtered to notification type. Admin can view raw notification data (masked).\n- UI/UX: Separate \"Failed notifications\" section. Retry/dismiss actions.\n- Dependencies: notification service, T-09.09.02\n- Complexity: M",
+      "requirement_sha256": "76e50002555494f9afcef05eede64aa14009dd75b0e5d847d8532a8b4026f8fc",
+      "status": "acceptance_verified",
+      "reviewed_sha": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/failed-notifications.controller.ts",
+          "sha256": "96efefc09628ab6bb1f6af4cbdf4d4a8da80b457202ef0e0f5c08be7f6a6581e"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.service.ts",
+          "sha256": "5486d1649c2e5365787e9096eee8a8356b5f413520bd1cd7036c78a9596abdc1"
+        },
+        {
+          "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+          "sha256": "9803fdf3e18f4bc4c9ec0b1055fa09442121639093911e2852832e3c5c3f744a"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "814a3b69621397e2894149d44638bcb7e5a847d2b48fa12b197cd750df4a0d2e"
+        },
+        {
+          "path": "apps/web/e2e/failed-notifications.spec.ts",
+          "sha256": "119b7afd8ed12910ef91c75e094f9bd7c82e690d7bbe761a50f1a05e4e13c329"
+        },
+        {
+          "path": "apps/web/e2e/failed-notifications-recovery.spec.ts",
+          "sha256": "fb9c0896be077c3d21d6a11fdcb499713297c05b4c351c3ae6b3b07d73213649"
+        }
+      ],
+      "checks": [
+        "Separate Failed notifications staff section exposes masked payload/history and permission-gated actions. Current session/CSRF/step-up and exact acknowledgment validation, negative API paths and FA/EN browser workflows pass. Historical frontend deferral is satisfied.",
+        "Focused and unchanged reused checks: audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        203
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
     }
   ],
   "pending_task_keys": [
@@ -14665,14 +15075,6 @@
     "01-platform-infrastructure.md#T-07.05.04",
     "02-auth-users-admin.md#T-09.02.01",
     "02-auth-users-admin.md#T-09.02.02",
-    "05-notifications-documents-ai.md#T-05.01.01",
-    "05-notifications-documents-ai.md#T-05.01.02",
-    "05-notifications-documents-ai.md#T-05.01.03",
-    "05-notifications-documents-ai.md#T-05.01.04",
-    "05-notifications-documents-ai.md#T-05.01.05",
-    "05-notifications-documents-ai.md#T-05.01.06",
-    "05-notifications-documents-ai.md#T-05.01.07",
-    "05-notifications-documents-ai.md#T-05.02.01",
     "05-notifications-documents-ai.md#T-05.02.02",
     "05-notifications-documents-ai.md#T-05.02.03",
     "05-notifications-documents-ai.md#T-05.02.04",
@@ -14699,7 +15101,6 @@
     "02-auth-users-admin.md#T-09.08.03",
     "02-auth-users-admin.md#T-09.09.01",
     "02-auth-users-admin.md#T-09.09.02",
-    "02-auth-users-admin.md#T-09.09.03",
     "02-auth-users-admin.md#T-09.10.01",
     "02-auth-users-admin.md#T-09.10.02",
     "02-auth-users-admin.md#T-09.10.03",
