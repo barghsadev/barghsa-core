@@ -217,7 +217,26 @@ export class NotificationsService {
               error_category AS "errorCategory",
               error_detail AS "errorDetail",
               created_at AS "createdAt"
-       FROM notification_delivery_log
+       FROM (
+         SELECT l.id,l.notification_id,l.channel,l.attempt_number,l.provider_ref,l.latency_ms,l.created_at,
+           CASE WHEN feedback.event_type IS NOT NULL THEN 'failed' ELSE l.status END AS status,
+           CASE WHEN feedback.event_type IS NULL THEN l.error_category
+                WHEN feedback.raw->'data'->'bounce'->>'type'='Permanent' THEN 'permanent'
+                WHEN feedback.raw->'data'->'bounce'->>'type'='Temporary' THEN 'transient'
+                ELSE 'provider' END AS error_category,
+           CASE WHEN feedback.event_type IS NOT NULL THEN 'Provider reported bounce' ELSE l.error_detail END AS error_detail
+         FROM notification_delivery_log l
+         LEFT JOIN notification_send_receipts r
+           ON r.outbox_id=l.notification_id AND r.channel=l.channel AND r.attempt_token=l.send_attempt_token
+           AND r.status='accepted' AND r.transport='resend' AND r.provider_ref=l.provider_ref
+         LEFT JOIN LATERAL (
+           SELECT e.event_type,e.raw FROM email_webhook_events e
+           WHERE e.message_id=r.provider_ref AND r.provider_id=ANY(e.verified_provider_ids)
+             AND e.event_type='email.bounced'
+           ORDER BY (e.raw->'data'->'bounce'->>'type'='Permanent') DESC NULLS LAST,e.created_at DESC,e.id DESC
+           LIMIT 1
+         ) feedback ON true
+       ) history
        ${where}
        ORDER BY created_at DESC, id DESC
        LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,

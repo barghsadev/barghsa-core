@@ -1,4 +1,5 @@
 import { uuid, pgTable, text, jsonb, uniqueIndex, index } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 import { uuidv7, timestamptz } from '../types.js';
 import { notificationOutbox } from './notification-outbox.js';
 
@@ -12,15 +13,15 @@ import { notificationOutbox } from './notification-outbox.js';
  *    the same `svix-id`) until we acknowledge it, and attackers may replay a
  *    captured payload. `event_token` (the `svix-id` header) is UNIQUE, so a
  *    re-delivered or replayed event inserts nothing and is ignored — each
- *    event's side effects (outbox status update, suppression) run at most
+ *    event's side effects (attribution, suppression) run at most
  *    once.
  * 2. **Audit trail.** `raw` snapshots the verified payload so operations can
  *    reconstruct what the provider reported for a given message.
  *
- * Resolution: `outbox_id` and `profile_id` are back-filled when the event's
- * provider message id (`message_id`) matches a known `notification_outbox`
- * row, so suppression and delivery-state updates are attributable to the
- * originating notification when one is known.
+ * Resolution uses an accepted Resend email receipt and a configuration whose
+ * secret verified the event. Early events retain that identity for later admin
+ * history reads. Legacy events have no verified identity and are not guessed.
+ * Worker status and physical send outcomes remain unchanged.
  */
 export const emailWebhookEvents = pgTable(
   'email_webhook_events',
@@ -36,6 +37,12 @@ export const emailWebhookEvents = pgTable(
 
     /** Provider message id (`data.email_id`) the event refers to. */
     messageId: text('message_id'),
+
+    /** Config versions whose signing secret verified this event. Empty for legacy events. */
+    verifiedProviderIds: uuid('verified_provider_ids')
+      .array()
+      .notNull()
+      .default(sql`'{}'::uuid[]`),
 
     /** Recipient address (`data.to`) for suppression / attribution. */
     toAddress: text('to_address'),
