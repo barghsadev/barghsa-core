@@ -280,7 +280,7 @@ export default function TemplatePreviewPanel({
               </label>
               <select
                 id="tpl-preview-version"
-                value={versionId}
+                value={selected?.id ?? ''}
                 onChange={(e) => setVersionId(e.target.value)}
                 className="w-full border border-gray-300 rounded px-3 py-2"
                 disabled={versions.length === 0}
