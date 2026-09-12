@@ -41,7 +41,7 @@ export class StorageRecordsController {
       (typeof body !== 'object' || Array.isArray(body) || Object.keys(body).length)
     )
       throw new BadRequestException('Signing does not accept a supplied actor');
-    return (await this.records.mutate(key, 'sign', req.session.userId, req.ip ?? 'unknown')).record;
+    return (await this.records.mutate(key, 'sign', req.session, req.ip ?? 'unknown')).record;
   }
 
   @Delete(':key')
@@ -49,12 +49,7 @@ export class StorageRecordsController {
   @RequiresStepUp()
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteRecord(@Param('key') key: string, @Req() req: AuthenticatedRequest) {
-    const result = await this.records.mutate(
-      key,
-      'remove',
-      req.session.userId,
-      req.ip ?? 'unknown'
-    );
+    const result = await this.records.mutate(key, 'remove', req.session, req.ip ?? 'unknown');
     if (result.retained && !result.alreadyRemoved)
       throw new ConflictException(
         'The record was removed from active use; its signed file is retained.'

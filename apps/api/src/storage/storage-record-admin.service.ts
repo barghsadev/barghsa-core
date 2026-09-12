@@ -6,12 +6,15 @@ import {
   NotFoundException,
   ServiceUnavailableException,
   Optional,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { StorageObjectNotFound } from '@barghsa/shared/storage';
 import { v7 as uuidv7 } from 'uuid';
 import { STORAGE_PROVIDER } from './storage.constants.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 
 interface RecordRow {
@@ -62,12 +65,20 @@ export class StorageRecordAdminService {
     if (!row) throw new NotFoundException('Storage record not found');
     return response(row);
   }
-  async mutate(key: string, action: 'sign' | 'remove', actorId: string, ip: string) {
+  async mutate(
+    key: string,
+    action: 'sign' | 'remove',
+    session: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ) {
+    if (!session) throw new UnauthorizedException();
+    const actorId = session.userId;
     this.validateKey(key);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorId, 'admin:storage:edit');
+      const verifiedAt = await requireSessionStepUp(client, session);
       const row = (
         await client.query<RecordRow>(
           'SELECT * FROM storage_records WHERE storage_key=$1 FOR UPDATE',
@@ -79,6 +90,7 @@ export class StorageRecordAdminService {
         if (row.status === 'removed')
           throw new ConflictException('Removed records cannot be signed');
         if (row.status === 'immutable') {
+          await requireSessionStepUp(client, session);
           await client.query('COMMIT');
           return { record: response(row), retained: true, alreadyRemoved: false };
         }
@@ -98,6 +110,7 @@ export class StorageRecordAdminService {
       } else {
         const pendingUpload = row.status === 'removed' && row.metadata?.provisionalUpload === true;
         if (row.status === 'removed' && !pendingUpload) {
+          await requireSessionStepUp(client, session);
           await client.query('COMMIT');
           return { record: response(row), retained: !!row.signed_at, alreadyRemoved: true };
         }
@@ -118,6 +131,8 @@ export class StorageRecordAdminService {
           actorId,
           action === 'sign' ? 'storage_record_signed' : 'storage_record_removed',
           JSON.stringify({
+            stepUpVerified: true,
+            stepUpVerifiedAt: verifiedAt.toISOString(),
             storageKey: key,
             previousStatus: row.status,
             retained: action === 'sign' || row.status === 'immutable' || !!row.signed_at,
@@ -129,6 +144,7 @@ export class StorageRecordAdminService {
       const changed = (
         await client.query<RecordRow>('SELECT * FROM storage_records WHERE storage_key=$1', [key])
       ).rows[0]!;
+      await requireSessionStepUp(client, session);
       await client.query('COMMIT');
       return {
         record: response(changed),

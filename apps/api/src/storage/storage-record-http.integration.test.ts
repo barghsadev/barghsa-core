@@ -456,3 +456,49 @@ it('accepts account-level ticket uploads with profileId omitted and rejects null
   expect((await row(key)).metadata.purpose).toBe('ticket_attachment');
   expect((await row(key)).metadata).not.toHaveProperty('profileId');
 });
+
+for (const method of ['POST', 'DELETE']) {
+  it(`rolls back ${method} storage changes when verification expires during the write`, async () => {
+    const key = await seed();
+    await http.pool
+      .query(`CREATE OR REPLACE FUNCTION expire_record_step_up() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF NEW.event IN ('storage_record_signed','storage_record_removed') THEN UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 hour' WHERE user_id=NEW.user_id; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER expire_record_step_up AFTER INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION expire_record_step_up()`);
+    try {
+      expect((await request(key, method, method === 'POST' ? {} : undefined)).status).toBe(403);
+    } finally {
+      await http.pool.query('DROP TRIGGER expire_record_step_up ON audit_log');
+      await http.pool.query(
+        "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 minute' WHERE user_id='storage-actor'"
+      );
+    }
+    expect(await row(key)).toMatchObject({ status: 'active', signed_at: null, removed_at: null });
+    expect((await row(key)).metadata?.deletionRequested).not.toBe(true);
+    expect(
+      (
+        await http.pool.query("SELECT id FROM audit_log WHERE metadata::jsonb->>'storageKey'=$1", [
+          key,
+        ])
+      ).rows
+    ).toHaveLength(0);
+    expect(objects.has(key)).toBe(true);
+  });
+  it(`audits exact verification time for storage ${method}`, async () => {
+    const key = await seed(),
+      at = new Date(Date.now() - 60000).toISOString();
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=$1 WHERE user_id='storage-actor'",
+      [at]
+    );
+    expect((await request(key, method, method === 'POST' ? {} : undefined)).status).toBe(
+      method === 'POST' ? 200 : 204
+    );
+    const audit = (
+      await http.pool.query(
+        "SELECT metadata::jsonb AS meta FROM audit_log WHERE metadata::jsonb->>'storageKey'=$1",
+        [key]
+      )
+    ).rows[0];
+    expect(audit.meta).toMatchObject({ stepUpVerified: true, stepUpVerifiedAt: at });
+  });
+}
