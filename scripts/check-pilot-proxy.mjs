@@ -53,6 +53,15 @@ assert.equal(JSON.parse(api.body).headers['x-forwarded-proto'], 'https');
 assert.equal(api.headers['cache-control'], 'private, no-cache');
 assert.equal(api.headers['x-content-type-options'], 'nosniff');
 assert.equal(api.headers['strict-transport-security'], undefined);
+const cspPage = await request('/csp-page', { headers: { 'CSP-Nonce': 'attacker-nonce' } });
+assert.equal(
+  cspPage.headers['content-security-policy-report-only'],
+  "default-src 'self'; script-src 'strict-dynamic' 'nonce-fixture-app-nonce'; report-uri /api/csp-report"
+);
+assert.ok(cspPage.body.includes('nonce="fixture-app-nonce"'));
+assert.equal(cspPage.headers['cache-control'], 'private, no-store');
+assert.equal(cspPage.headers['content-security-policy'], undefined);
+assert.ok(!api.headers['content-security-policy-report-only'].includes('attacker-nonce'));
 const web = await request('/');
 assert.equal(JSON.parse(web.body).service, 'web');
 assert.equal(

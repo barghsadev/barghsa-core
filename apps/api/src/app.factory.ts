@@ -29,6 +29,15 @@ export async function createApplication() {
       ) &&
       /^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? ''),
   });
+  // Native CSP reports have a distinct media type and a small, uncompressed body.
+  app.useBodyParser('json', {
+    limit: 16 * 1024,
+    inflate: false,
+    type: (request) =>
+      request.method === 'POST' &&
+      /^\/api\/csp-report\/?(?:\?|$)/.test(request.url ?? '') &&
+      /^application\/csp-report(?:\s*;|$)/i.test(request.headers['content-type'] ?? ''),
+  });
   app.useBodyParser('json');
   app.use(sanitizeBodyParserErrors);
 

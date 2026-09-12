@@ -13,6 +13,7 @@
  */
 
 import { createServer } from 'node:http';
+import { randomBytes } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
 import { join, extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -111,6 +112,32 @@ export function createStaticServer(options = {}) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    res.setHeader(
+      'Content-Security-Policy-Report-Only',
+      "default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; form-action 'self'; report-uri /api/csp-report"
+    );
+
+    // Only trusted build output is annotated. Request headers never supply the nonce.
+    const sendHtml = (content) => {
+      const nonce = randomBytes(24).toString('base64');
+      const html = content.toString('utf8').replace(/<(script|link)\b[^>]*>/gi, (tag, name) => {
+        if (name.toLowerCase() === 'link' && !/\brel\s*=\s*["']modulepreload["']/i.test(tag))
+          return tag;
+        const clean = tag.replace(/\snonce\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+        return clean.replace(/^<\w+/, (start) => `${start} nonce="${nonce}"`);
+      });
+      res.setHeader(
+        'Content-Security-Policy-Report-Only',
+        `default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; script-src 'strict-dynamic' 'nonce-${nonce}'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; form-action 'self'; report-uri /api/csp-report`
+      );
+      res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Content-Length': Buffer.byteLength(html),
+        'Cache-Control': 'private, no-store',
+      });
+      res.end(req.method === 'GET' ? html : undefined);
+    };
 
     // Only handle GET and HEAD
     if (req.method !== 'GET' && req.method !== 'HEAD') {
@@ -123,6 +150,10 @@ export function createStaticServer(options = {}) {
     const file = await serveFile(distDir, url);
 
     if (file) {
+      if (file.contentType.startsWith('text/html')) {
+        sendHtml(file.content);
+        return;
+      }
       const cacheControl = IMMUTABLE_PATTERN.test(url)
         ? 'public, immutable, max-age=31536000'
         : 'no-cache, must-revalidate';
@@ -144,17 +175,7 @@ export function createStaticServer(options = {}) {
     // SPA fallback — serve index.html for client-side routing
     const index = await serveFile(distDir, '/index.html');
     if (index) {
-      res.writeHead(200, {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Content-Length': index.content.length,
-        'Cache-Control': 'no-cache, must-revalidate',
-      });
-
-      if (req.method === 'GET') {
-        res.end(index.content);
-      } else {
-        res.end();
-      }
+      sendHtml(index.content);
       return;
     }
 

@@ -6,6 +6,16 @@ for (const [port, service] of [
   [4000, 'api'],
 ]) {
   const server = createServer((req, res) => {
+    if (service === 'web' && req.url === '/csp-page') {
+      res.writeHead(200, {
+        'Content-Type': 'text/html',
+        'Content-Security-Policy-Report-Only':
+          "default-src 'self'; script-src 'strict-dynamic' 'nonce-fixture-app-nonce'; report-uri /api/csp-report",
+        'Cache-Control': 'private, no-store',
+      });
+      res.end('<script nonce="fixture-app-nonce">window.ready=true</script>');
+      return;
+    }
     if (req.url === '/api/stream') {
       res.writeHead(200, { 'Content-Type': 'text/event-stream' });
       res.write('data: first\n\n');

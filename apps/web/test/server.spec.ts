@@ -12,7 +12,8 @@ import { request } from 'node:http';
 function fetch(
   server: Server,
   path: string,
-  method = 'GET'
+  method = 'GET',
+  headers: Record<string, string> = {}
 ): Promise<{ status: number; headers: Record<string, string>; body: string }> {
   return new Promise((resolve, reject) => {
     const addr = server.address();
@@ -20,17 +21,20 @@ function fetch(
       reject(new Error('Server not listening on a port'));
       return;
     }
-    const req = request({ hostname: '127.0.0.1', port: addr.port, path, method }, (res) => {
-      const chunks: Buffer[] = [];
-      res.on('data', (chunk: Buffer) => chunks.push(chunk));
-      res.on('end', () => {
-        resolve({
-          status: res.statusCode ?? 0,
-          headers: res.headers as Record<string, string>,
-          body: Buffer.concat(chunks).toString('utf-8'),
+    const req = request(
+      { hostname: '127.0.0.1', port: addr.port, path, method, headers },
+      (res) => {
+        const chunks: Buffer[] = [];
+        res.on('data', (chunk: Buffer) => chunks.push(chunk));
+        res.on('end', () => {
+          resolve({
+            status: res.statusCode ?? 0,
+            headers: res.headers as Record<string, string>,
+            body: Buffer.concat(chunks).toString('utf-8'),
+          });
         });
-      });
-    });
+      }
+    );
     req.on('error', reject);
     req.end();
   });
@@ -43,7 +47,10 @@ describe('static server', () => {
   beforeAll(async () => {
     // Create a temporary dist directory with test fixtures
     distDir = await mkdtemp(join(tmpdir(), 'barghsa-test-dist-'));
-    await writeFile(join(distDir, 'index.html'), '<html><body>Home</body></html>');
+    await writeFile(
+      join(distDir, 'index.html'),
+      '<html><head><link rel="modulepreload" href="/assets/app-a1b2c3d4.js"></head><body>Home<script type="module" src="/assets/app-a1b2c3d4.js"></script><script nonce="old-nonce">window.ready=true</script></body></html>'
+    );
     await mkdir(join(distDir, 'assets'));
     await writeFile(join(distDir, 'assets', 'app-a1b2c3d4.js'), 'console.log("ok");');
     await writeFile(join(distDir, 'assets', 'style-XyZ78901.css'), 'body { color: red; }');
@@ -70,6 +77,28 @@ describe('static server', () => {
     expect(res.headers['referrer-policy']).toBe('strict-origin-when-cross-origin');
   });
 
+  it.each(['/', '/index.html', '/account'])(
+    'binds a fresh CSP nonce to every HTML script at %s',
+    async (path) => {
+      const first = await fetch(server, path, 'GET', { 'csp-nonce': 'attacker-nonce' });
+      const second = await fetch(server, path);
+      const policy = first.headers['content-security-policy-report-only'];
+      expect(policy).toContain("script-src 'strict-dynamic' 'nonce-");
+      const nonce = policy!.match(/'nonce-([^']+)'/)?.[1];
+      expect(nonce).toMatch(/^[A-Za-z0-9+/]{32}$/);
+      expect(
+        first.body.match(new RegExp(`nonce="${nonce!.replace(/[+]/g, '\\+')}"`, 'g'))
+      ).toHaveLength(3);
+      expect(first.body).not.toContain('old-nonce');
+      expect(policy).not.toContain('attacker-nonce');
+      expect(second.headers['content-security-policy-report-only']).not.toBe(policy);
+      expect(first.headers['cache-control']).toContain('no-store');
+      expect(first.headers['permissions-policy']).toBe('camera=(), microphone=(), geolocation=()');
+      expect(first.headers['content-security-policy']).toBeUndefined();
+      expect(Number(first.headers['content-length'])).toBe(Buffer.byteLength(first.body));
+    }
+  );
+
   it('serves static files with correct Content-Type', async () => {
     const html = await fetch(server, '/index.html');
     expect(html.status).toBe(200);
@@ -93,9 +122,9 @@ describe('static server', () => {
     expect(res.headers['cache-control']).toBe('public, immutable, max-age=31536000');
   });
 
-  it('sets no-cache for index.html and unhashed resources', async () => {
+  it('prevents caching nonce-bearing HTML', async () => {
     const res = await fetch(server, '/index.html');
-    expect(res.headers['cache-control']).toBe('no-cache, must-revalidate');
+    expect(res.headers['cache-control']).toBe('private, no-store');
   });
 
   it('provides SPA fallback for unknown routes', async () => {
