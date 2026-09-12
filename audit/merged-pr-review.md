@@ -3,10 +3,10 @@
 Generated from the saved inventory and current task acceptance. This report makes no new GitHub query.
 A PR body checkbox is historical author evidence, not independent acceptance. Review the final combined implementation once per qualified task; reuse valid evidence for every contributing PR.
 
-301 merged PRs: 119 have unresolved mapped tasks; 4 have no current task mapping; 178 map only to verified tasks.
+301 merged PRs: 116 have unresolved mapped tasks; 4 have no current task mapping; 181 map only to verified tasks.
 170 historical deferral statements from 101 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **131 closed / 25 open / 0 blocked**; 145 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **134 closed / 25 open / 0 blocked**; 142 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -18,9 +18,9 @@ Use [current requirements](current-task-requirements.json), [task acceptance](ac
 | 02-auth-users-admin.md | 36 |
 | 03-core-business.md | 4 |
 | 04-invoices-wallet-contracts.md | 7 |
-| 05-notifications-documents-ai.md | 12 |
+| 05-notifications-documents-ai.md | 9 |
 | 07-ui-ux-design.md | 3 |
-| Total | 112 |
+| Total | 109 |
 
 Also review 56 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
 
@@ -211,9 +211,9 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#179](https://github.com/barghsadev/barghsa-core/pull/179) | 05-notifications-documents-ai.md#T-05.04.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-template-lifecycle-seeding) | 2 |
 | [#180](https://github.com/barghsadev/barghsa-core/pull/180) | 05-notifications-documents-ai.md#T-05.04.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-template-lifecycle-seeding) | 1 |
 | [#181](https://github.com/barghsadev/barghsa-core/pull/181) | 05-notifications-documents-ai.md#T-05.04.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-template-lifecycle-seeding) | 1 |
-| [#182](https://github.com/barghsadev/barghsa-core/pull/182) | 05-notifications-documents-ai.md#T-05.05.01 (pending) | Task review remains | Not reviewed | 2 |
-| [#183](https://github.com/barghsadev/barghsa-core/pull/183) | 05-notifications-documents-ai.md#T-05.05.02 (pending) | Task review remains | Not reviewed | 1 |
-| [#184](https://github.com/barghsadev/barghsa-core/pull/184) | 05-notifications-documents-ai.md#T-05.05.03 (pending) | Task review remains | Not reviewed | 0 |
+| [#182](https://github.com/barghsadev/barghsa-core/pull/182) | 05-notifications-documents-ai.md#T-05.05.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-marketing-consent-channels) | 2 |
+| [#183](https://github.com/barghsadev/barghsa-core/pull/183) | 05-notifications-documents-ai.md#T-05.05.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-marketing-consent-channels) | 1 |
+| [#184](https://github.com/barghsadev/barghsa-core/pull/184) | 05-notifications-documents-ai.md#T-05.05.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-marketing-consent-channels) | 0 |
 | [#185](https://github.com/barghsadev/barghsa-core/pull/185) | 05-notifications-documents-ai.md#T-05.06.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#186](https://github.com/barghsadev/barghsa-core/pull/186) | 05-notifications-documents-ai.md#T-05.06.02 (pending) | Task review remains | Not reviewed | 2 |
 | [#187](https://github.com/barghsadev/barghsa-core/pull/187) | 05-notifications-documents-ai.md#T-05.06.03 (pending) | Task review remains | Not reviewed | 0 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `52a0e90f85ac63fe2fd7c6e934c68ae8179cae05ccdb292e14bc3078db11fd0d`
-- `pr-deferrals.json`: `7c611691bbffa2c703401c60248b9ee465d855dde458e0b2d63b950ba24544bd`
-- `evidence/step-reviews.json`: `f889c501a3d0666bd1d544948f7e2fd15205ee01b6026a0527a999a055bd1634`
+- `acceptance-closure.json`: `e1b0cd79deed3b4227f8ffa1e5614611cf721b9e4522a47e632ee305f3766450`
+- `pr-deferrals.json`: `36226180c1329ef58c919c49b62a28a02cc80ac298d58987384958395402253a`
+- `evidence/step-reviews.json`: `e20e222b9197a1f8c92f32d609168bac67febe35639180bd0f037fc90f95b715`

@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
+  "source_revision": "f61b6c2028f1cbfdd586195c8037326d101d4758",
   "active_step": "R02",
-  "next_action": "Review R02 marketing consent and current channel availability, saved PR182–184. Read exact requirements/bodies/deferrals, reuse existing recipient-channel proof, verify current profile authority and consent through dispatch plus customer UI.",
+  "next_action": "Review email provider lifecycle, SMTP/Resend configuration, admin UI, encrypted secrets, circuit behavior and callback processing, PR185–191. Read exact requirements/deferrals; reuse prior provider repairs and tests where source matches.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -698,6 +698,10 @@
     {
       "id": "R02-template-lifecycle-seeding",
       "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+    },
+    {
+      "id": "R02-marketing-consent-channels",
+      "review_record": "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
     }
   ],
   "deferred_improvements": [
@@ -721,9 +725,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 154,
+    "acceptance_verified": 157,
     "partial": 33,
-    "pending": 135,
+    "pending": 132,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 3,
@@ -1012,30 +1016,40 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R02-marketing-consent-channels",
-    "name": "Marketing consent and current channel availability",
+    "id": "R02-email-provider-callbacks",
+    "name": "Email provider lifecycle and callback acceptance",
     "status": "reviewing",
     "prs": [
-      182,
-      183,
-      184
+      185,
+      186,
+      187,
+      188,
+      189,
+      190,
+      191
     ],
     "task_keys": [
-      "05-notifications-documents-ai.md#T-05.05.01",
-      "05-notifications-documents-ai.md#T-05.05.02",
-      "05-notifications-documents-ai.md#T-05.05.03"
+      "05-notifications-documents-ai.md#T-05.06.01",
+      "05-notifications-documents-ai.md#T-05.06.02",
+      "05-notifications-documents-ai.md#T-05.06.03",
+      "05-notifications-documents-ai.md#T-05.06.04",
+      "05-notifications-documents-ai.md#T-05.06.05",
+      "05-notifications-documents-ai.md#T-05.06.06",
+      "05-notifications-documents-ai.md#T-05.06.07"
     ],
     "remaining_checklist": [
-      "Read all three exact requirements, saved PR bodies and PR182/183 deferrals; completed at template checkpoint.",
-      "Review consent mutation authority and current worker recipient/consent gates, plus FA/EN customer controls."
+      "Read seven exact requirements, saved PR bodies and historical deferrals.",
+      "Compare earlier provider lifecycle/self-test/encryption/activation/authoring evidence.",
+      "Review callback signature/replay/suppression binding and provider circuit behavior."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
+      "audit/evidence/step-reviews.json#R02-provider-template-authoring",
+      "audit/evidence/step-reviews.json#R02-provider-activation-proof"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Review R02 marketing consent and current channel availability, saved PR182–184. Read exact requirements/bodies/deferrals, reuse existing recipient-channel proof, verify current profile authority and consent through dispatch plus customer UI."
+    "next_action": "Review email provider lifecycle, SMTP/Resend configuration, admin UI, encrypted secrets, circuit behavior and callback processing, PR185–191. Read exact requirements/deferrals; reuse prior provider repairs and tests where source matches."
   },
   "open_domain_reviews": [
     {

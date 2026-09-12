@@ -1,22 +1,24 @@
 # Remaining fix plan
 
-Current through product/test `dd6c6d62`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `f61b6c20`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 151 | 33 | 79 | 263 |
+| Tasks with merged PR evidence | 154 | 33 | 76 | 263 |
 | Other historical claims | 3 | 0 | 56 | 59 |
-| All claims | 154 | 33 | 135 | 322 |
+| All claims | 157 | 33 | 132 | 322 |
 
-**168 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**165 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Template lifecycle batch PR177–181 complete locally:5 task acceptances verified/5 saved PR reviews closed. Catalog coverage, concurrent/atomic imports, preservation of customized versions and preview version identity repaired.18 DB/catalog cases,8 Chromium cases, types/lint/format/build and42 unchanged budgets pass. Current totals154 verified/33 partial/135 pending;131 closed/25 open/145 unreviewed saved PRs.2629 logs indexed. Next: marketing consent and channel availability, PR182–184. [Handoff](HANDOFF.md), [batch review](evidence/step-reviews.json#R02-template-lifecycle-seeding), [explicit data migration](../docs/operations/notification-template-seeding.md).
+Marketing consent/channel batch PR182–184 complete locally:3 task acceptances verified/3 saved PR reviews closed. Current owned-profile targeting, session/CSRF/selection checks, atomic scoped audit and stable consent dates repaired.43 API/10 schema/2 FA/EN browser cases and API quality/OpenAPI checks pass. Frontend unchanged; prior42 budgets remain valid. Current totals157 verified/33 partial/132 pending;134 closed/25 open/142 unreviewed PRs.2643 logs indexed. Next: email providers/circuit/callbacks, PR185–191. [Handoff](HANDOFF.md), [review](evidence/step-reviews.json#R02-marketing-consent-channels). Legacy opt-ins from the old all-profile endpoint need owner review before production marketing; old audits lack profile identity.
+
+Template lifecycle PR177–181 remains5 verified/5 closed. Seed safety/catalog coverage and preview identity repairs pass18 DB/catalog cases and8 browser cases. Preserve the [explicit data migration](../docs/operations/notification-template-seeding.md) and prior provider/engine evidence.
 
 Notification delivery foundation completes locally atc6588610: **5 PR reviews closed /1 open**, PR113/156/161/192/193/194. Email drafts preserve saved settings and expose timeouts, tests show the chosen verified recipient, and edits clear stale test outcomes. Template authoring accepts new event keys and native drag/keyboard insertion. T-09.04.01/T-09.06.01 and PR161/192 close; PR156 remains partial/open for R03 themes with its branding deferral satisfied.38 distinct browser cases,50 i18n cases and42 unchanged budgets pass; applicable types/lint/format/build pass. Backend behavior is unchanged this step; prior authority/verification/activation/branding evidence is reused.2373 logs indexed;3 immediate-base bindings refreshed and38 older records retained. [Foundation closure](evidence/step-reviews.json#R02-provider-template-authoring). Saved PR totals **113 closed /23 open /165 unreviewed**. Preserve migrations0123–0126 and coordinated minute-window/auth-branding worker rollout requirements; no operational execution claimed.
 
@@ -124,13 +126,13 @@ For all33 partial records, use the exact limitations in [acceptance](acceptance-
 
 | Current mapping | PRs |
 | --- | ---: |
-| At least one unresolved mapped task | 119 |
-| Only recorded verified tasks | 178 |
+| At least one unresolved mapped task | 116 |
+| Only recorded verified tasks | 181 |
 | No current task mapping | 4 |
 
 These are mapping counts, not completed PR-review counts. Even a PR mapped only to verified tasks may have an unresolved deferral or stale source evidence.
 
-Review the combined implementation once per qualified task, then associate every contributing PR. The 112 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 36, core business 4, finance 7, notifications 12 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
+Review the combined implementation once per qualified task, then associate every contributing PR. The 109 unresolved PR-backed tasks comprise infrastructure 50, auth/admin 36, core business 4, finance 7, notifications 9 and UI foundations 3. Another 56 unresolved claims have no direct PR mapping.
 
 For each of the 170 deferrals, record one disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. PR-body checkboxes are author claims. Twelve statements in PR92/106/115/129/132/218/252/254 now have explicit dispositions in [pr-deferrals.json](pr-deferrals.json): required initial roles, email delivery, staff UI, invitation withdrawal/decisions and the invitation expiry worker are implemented locally; the proposed re-enable endpoint is outside T-10.01.01. PR92's frontend modal is satisfied; its other statement retains pending domain acceptance. PR106's legal frontend is satisfied by PR108 and the current repaired form. PR130 is covered by current role-assignment acceptance. PR115 remains open: electricity integration is satisfied, while required savings/solar consumers remain with their unbuilt product prerequisites.
 
@@ -149,7 +151,7 @@ Keep obsolete keys `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users
 | Deployment, operations and CI, T-05.* | 20 |
 | Total | 55 |
 
-Task dependencies override batch order. These55 overlap the168 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
+Task dependencies override batch order. These55 overlap the165 unresolved reviews, so do not add the counts. Review incidental implementation before scheduling a build.
 
 Separately, [queue gaps](archive/queue-gaps.json) and [unstarted backlog](archive/unstarted-backlog.csv) retain 1,033 historical gaps: 737 earlier and 296 later tasks. They are historical evidence, not a dispatch queue or proof of missing implementation.
 

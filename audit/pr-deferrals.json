@@ -1224,7 +1224,16 @@
     "historical_deferrals": [
       "- [ ] \"Marketing never mixed with transactional templates\" — depends on the template rendering layer (T-05.04.x work) and outbox payload; not changed here."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals satisfied by current reviewed consent UI, mutation and delivery gates.",
+    "reviewed_source_revision": "f61b6c2028f1cbfdd586195c8037326d101d4758",
+    "review_record": "audit/evidence/step-reviews.json#R02-marketing-consent-channels",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Mandatory requested in-app delivery remains ungated. External delivery requires current verified destinations/enabled account channels; marketing additionally requires profile opt-in. Loader/gate source is unchanged since the verified56-case recipient batch. Later transport/history bindings match the completed delivery batch. Email/SMS templates are selected by exact event/channel/locale, with no transactional fallback for marketing events. audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+      }
+    ]
   },
   {
     "pr": 182,
@@ -1236,7 +1245,21 @@
       "- [ ] Channel availability / opt-in enforcement rules — deferred to T-05.05.02 (this task is the data model only).",
       "- [ ] Consent UI + audit logging — deferred to T-05.05.03."
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical deferrals satisfied by current reviewed consent UI, mutation and delivery gates.",
+    "reviewed_source_revision": "f61b6c2028f1cbfdd586195c8037326d101d4758",
+    "review_record": "audit/evidence/step-reviews.json#R02-marketing-consent-channels",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Mandatory requested in-app delivery remains ungated. External delivery requires current verified destinations/enabled account channels; marketing additionally requires profile opt-in. Loader/gate source is unchanged since the verified56-case recipient batch. Later transport/history bindings match the completed delivery batch. Email/SMS templates are selected by exact event/channel/locale, with no transactional fallback for marketing events. audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Consent read/write targets the current owned profile. Strict input validation, profile-before-account locks, current session/CSRF and selected-profile rechecks, scoped before/after audit with request correlation/IP, transaction-bound response and unchanged-date preservation are repaired.43 distinct API checks and2 FA/EN browser recovery cases pass. Foreign/archived/explicit-null selections cannot silently update another owned profile. audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+      }
+    ]
   },
   {
     "pr": 181,

@@ -15626,6 +15626,177 @@
         "01-platform-infrastructure.md#T-02.01.01",
         "04-invoices-wallet-contracts.md#T-04.2.04.03"
       ]
+    },
+    {
+      "id": "R02-marketing-consent-channels",
+      "date": "2026-09-13",
+      "source_revision": "f61b6c2028f1cbfdd586195c8037326d101d4758",
+      "base_revision": "6bdb02fe43558f723635f90d24502ca0b76e73b4",
+      "product_commits": [
+        "f61b6c2028f1cbfdd586195c8037326d101d4758"
+      ],
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.05.01",
+        "05-notifications-documents-ai.md#T-05.05.02",
+        "05-notifications-documents-ai.md#T-05.05.03"
+      ],
+      "summary": "Consent/channel batch PR182–184 closes locally:3 task acceptances verified/3 PR reviews closed.",
+      "review": [
+        "Category enum/lookup and per-profile/channel preferences have required fields, default-off state, timestamps and uniqueness. Current production migration0081 restores the original0030 schema/seed.10 schema checks and13 current real-HTTP cases support migrated persistence.",
+        "Mandatory requested in-app delivery remains ungated. External delivery requires current verified destinations/enabled account channels; marketing additionally requires profile opt-in. Loader/gate source is unchanged since the verified56-case recipient batch. Later transport/history bindings match the completed delivery batch. Email/SMS templates are selected by exact event/channel/locale, with no transactional fallback for marketing events.",
+        "Consent read/write targets the current owned profile. Strict input validation, profile-before-account locks, current session/CSRF and selected-profile rechecks, scoped before/after audit with request correlation/IP, transaction-bound response and unchanged-date preservation are repaired.43 distinct API checks and2 FA/EN browser recovery cases pass. Foreign/archived/explicit-null selections cannot silently update another owned profile.",
+        "Five HTTP baseline failures reproduce default-profile reads/overbroad writes, malformed input, unchanged dates rewritten and commit after session expiry. Replaced mocks asserting the old all-profile behavior with current response/input checks and stronger HTTP transaction tests.",
+        "Final review aligned locks with profile switching. Ownership/archive predicates re-evaluate after profile waits; session/selection are checked after account waits; current session is checked before commit.",
+        "One initial selection-race expectation targeted the wrong boundary: shared CSRF guard waits on the account before the handler resolves selection. Corrected HTTP assertion proves exactly one write to the newly selected profile; it does not claim a handler-level stale-selection reproduction. Failed logs retained.",
+        "Frontend unchanged. Current FA/EN cases verify failed reads disable editing, save failures retain choices, mismatched acknowledgements cannot show success, and confirmed replies update state/date. Existing profile-context remount behavior remains.",
+        "Historical unscoped consent audits cannot identify the intended profile. Before production marketing, owners must review legacy opt-ins created by the old all-profile endpoint. Do not infer or bulk-rewrite old consent intent; no production reconciliation was executed."
+      ],
+      "verification": {
+        "api": "43 distinct cases:13 consent HTTP plus30 settings unit/neighboring HTTP cases. Final13-case rerun overlaps earlier12 passes.",
+        "database": "10 schema cases pass; actual migrated persistence is covered by HTTP cases.",
+        "browser": "2 Chromium cases pass, FA/EN marketing read/save recovery.",
+        "quality": "API types, scoped lint/format, builds and OpenAPI generation pass. PUT documents strict optional booleans with at least one field and404/409 outcomes. Frontend unchanged; prior42 budgets remain valid.",
+        "regression": "Full regression/coverage staysV02; no live sending or legacy-data cleanup."
+      },
+      "remaining": [
+        "Owner review of legacy opt-ins before production marketing; historical audits lack profile identity.",
+        "Next: email provider lifecycle/secret/circuit/callback acceptance, PR185–191."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
+          "sha256": "6d2f9e2666762c753a48f3c1171a25dc61ccb30cc4f1442990a1d9ff0e5411b0"
+        },
+        {
+          "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
+          "sha256": "ffdca747b061dcc2ab8b1fae30efc29a6715e3c17df3708259b92473452e4331"
+        },
+        {
+          "path": "apps/api/src/user-settings/timezone-http.integration.test.ts",
+          "sha256": "a40749eb612fa60400f044b760f2d0fee5614fa6ec669a3225a5035b3df04cbe"
+        },
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.test.ts",
+          "sha256": "ae85c1c0cc408953c6370aa0ff8e6e76b8278418a7367d42239a91c3a00caa37"
+        },
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.ts",
+          "sha256": "c810aaa7b8ce78d50f63d1566a23ddcb50e95c9c893232d564ebc587af8a8481"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "5238ed5db992a5196fcc6a7cfa148d9a31a90d622de72c74a34315b76fd60d71"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "94e5f2b4ddbe05c2178a0e8f0cc1946c2753a5d77e10b71e00d51307ef48b193"
+        },
+        {
+          "path": "apps/worker/src/notifications/channel-availability-loader.test.ts",
+          "sha256": "cd54f453b6d1783a1ec657786fecd6b2e7c8f8b915e8da90030d7f6a82af8259"
+        },
+        {
+          "path": "apps/worker/src/notifications/channel-availability-loader.ts",
+          "sha256": "0668bcf3d06c6a889be84502c9202d482b6983f979a12080fb5fb4ee65d56ee2"
+        },
+        {
+          "path": "apps/worker/src/notifications/channel-availability.test.ts",
+          "sha256": "7c1ff1d89a2c876e0b3b4fff017b43fa8cc30542bd776ecc32e04087b08e4ef8"
+        },
+        {
+          "path": "apps/worker/src/notifications/channel-availability.ts",
+          "sha256": "c98745aa86e32e74513d6b8a58566b8166d1f0ac0a2189b84e06e81ca324b894"
+        },
+        {
+          "path": "apps/worker/src/notifications/email-transport.ts",
+          "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
+        },
+        {
+          "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
+          "sha256": "2a7fc87108e9b5321d088a3062e5eb776c523b42699c64679807537f5e549a79"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-transport.ts",
+          "sha256": "405e2ea4f2a3420a4f0ab46e2d26305def714fdfe44daaace1668dcdb443fd38"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/src/schema/notification-preferences.test.ts",
+          "sha256": "5144d11b869f3f578f4877b877894dcd6bdbddf9a017ee55e5d67ee7d473d69f"
+        },
+        {
+          "path": "packages/db/src/schema/notification-preferences.ts",
+          "sha256": "604b1b62fa410c8b34da5c15575549bb06d244e238c122b47115ac916f913ee2"
+        },
+        {
+          "path": "packages/shared/src/notifications/notification-registry.ts",
+          "sha256": "5ac9f805862f04492e11f41c5e2dca24eb84e202bf515462ebbfec706b2cbb33"
+        }
+      ],
+      "logs": [
+        "/tmp/r02-consent-api-final.log",
+        "/tmp/r02-consent-browser.log",
+        "/tmp/r02-consent-final-format.log",
+        "/tmp/r02-consent-format-check.log",
+        "/tmp/r02-consent-format.log",
+        "/tmp/r02-consent-guard-format.log",
+        "/tmp/r02-consent-http-after.log",
+        "/tmp/r02-consent-http-before.log",
+        "/tmp/r02-consent-http-reviewed.log",
+        "/tmp/r02-consent-lint.log",
+        "/tmp/r02-consent-openapi.log",
+        "/tmp/r02-consent-schema.log",
+        "/tmp/r02-consent-types.log",
+        "/tmp/r02-consent-worker-reuse.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 182,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.05.01"
+          ],
+          "reason": "Category enum/lookup and per-profile/channel preferences have required fields, default-off state, timestamps and uniqueness. Current production migration0081 restores the original0030 schema/seed.10 schema checks and13 current real-HTTP cases support migrated persistence.",
+          "source_revision": "f61b6c2028f1cbfdd586195c8037326d101d4758",
+          "evidence": "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+        },
+        {
+          "pr": 183,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.05.02"
+          ],
+          "reason": "Mandatory requested in-app delivery remains ungated. External delivery requires current verified destinations/enabled account channels; marketing additionally requires profile opt-in. Loader/gate source is unchanged since the verified56-case recipient batch. Later transport/history bindings match the completed delivery batch. Email/SMS templates are selected by exact event/channel/locale, with no transactional fallback for marketing events.",
+          "source_revision": "f61b6c2028f1cbfdd586195c8037326d101d4758",
+          "evidence": "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+        },
+        {
+          "pr": 184,
+          "status": "closed",
+          "task_keys": [
+            "05-notifications-documents-ai.md#T-05.05.03"
+          ],
+          "reason": "Consent read/write targets the current owned profile. Strict input validation, profile-before-account locks, current session/CSRF and selected-profile rechecks, scoped before/after audit with request correlation/IP, transaction-bound response and unchanged-date preservation are repaired.43 distinct API checks and2 FA/EN browser recovery cases pass. Foreign/archived/explicit-null selections cannot silently update another owned profile.",
+          "source_revision": "f61b6c2028f1cbfdd586195c8037326d101d4758",
+          "evidence": "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+        }
+      ],
+      "pr_counts": {
+        "closed": 3,
+        "open": 0,
+        "blocked": 0
+      },
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R02-recipient-channel-delivery",
+        "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+      ],
+      "refreshed_task_keys": [
+        "02-auth-users-admin.md#T-03.03.05",
+        "02-auth-users-admin.md#T-03.03.06"
+      ]
     }
   ]
 }

@@ -6996,7 +6996,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/user-settings/user-settings.controller.ts",
-          "sha256": "28557fa310054156f9b36ef036b0464dfd4099c5dd603ca3152589ef90f76ca7"
+          "sha256": "c810aaa7b8ce78d50f63d1566a23ddcb50e95c9c893232d564ebc587af8a8481"
         },
         {
           "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
@@ -7051,7 +7051,8 @@
         "R01 account defaults, channel availability, audited account-scoped persistence, mandatory in-app toggle and FA/EN recommendation/recovery UI remain valid; API/test/UI/i18n source hashes match unchanged files.",
         "Account choices now reach queued email/SMS dispatch and are rechecked after message preparation. Only current primary or verified secondary destinations are eligible. In-app remains enabled; per-profile marketing consent and address suppression remain additional gates. R01 API/UI/default/availability evidence matches unchanged source and is reused. PR113 has no retained historical deferrals; its former unavailable lint is superseded by applicable checked lint evidence.",
         "56 focused worker cases and final worker types/scoped lint/format pass. Failed fixture setup and corrected evidence are retained in audit/evidence/step-reviews.json#R02-recipient-channel-delivery.",
-        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification."
+        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
+        "Immediate-base source refresh: audit/evidence/step-reviews.json#R02-marketing-consent-channels; neighboring preference/timezone handlers unchanged and focused suites pass."
       ],
       "merged_prs": [
         113
@@ -7076,7 +7077,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/user-settings/user-settings.controller.ts",
-          "sha256": "28557fa310054156f9b36ef036b0464dfd4099c5dd603ca3152589ef90f76ca7"
+          "sha256": "c810aaa7b8ce78d50f63d1566a23ddcb50e95c9c893232d564ebc587af8a8481"
         },
         {
           "path": "apps/api/src/user-settings/timezone-http.integration.test.ts",
@@ -7097,7 +7098,8 @@
       ],
       "checks": [
         "Timezone defaults to Asia/Tehran; strict IANA input, account-only persistence, correlated audit and session expiry checks pass. Searchable keyboard selection, current-time/date/offset preview and locale-based calendar formatting are reviewed. Two unchanged browser cases cover load/save recovery and reload. Every timestamp consumer still requires R03 evidence.",
-        "Exact repairs, focused checks, historical dispositions and bounded reuse are recorded once in audit/evidence/step-reviews.json#R01-account-settings."
+        "Exact repairs, focused checks, historical dispositions and bounded reuse are recorded once in audit/evidence/step-reviews.json#R01-account-settings.",
+        "Immediate-base source refresh: audit/evidence/step-reviews.json#R02-marketing-consent-channels; neighboring preference/timezone handlers unchanged and focused suites pass."
       ],
       "merged_prs": [
         114
@@ -15800,6 +15802,141 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.05.01",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 162,
+      "requirement": "| **T-05.05.01 — Notification category model** | M | P0 |\n| `notification_categories` table/enum: `mandatory_transactional`, `marketing`. `user_notification_preferences` table: `profile_id`, `channel` (email/sms/in-app), `marketing_opted_in` (boolean), `consent_granted_at`, `consent_revoked_at`, `updated_at`. Default: marketing off. | | |",
+      "requirement_sha256": "ef32e9a9ba378ac2ba4b8731fb4ddfea3ac26a3e2b59f0b9307e3e0a82bb8f14",
+      "status": "acceptance_verified",
+      "reviewed_sha": "f61b6c2028f1cbfdd586195c8037326d101d4758",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/schema/notification-preferences.ts",
+          "sha256": "604b1b62fa410c8b34da5c15575549bb06d244e238c122b47115ac916f913ee2"
+        },
+        {
+          "path": "packages/db/src/schema/notification-preferences.test.ts",
+          "sha256": "5144d11b869f3f578f4877b877894dcd6bdbddf9a017ee55e5d67ee7d473d69f"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        }
+      ],
+      "checks": [
+        "Category enum/lookup and per-profile/channel preferences have required fields, default-off state, timestamps and uniqueness. Current production migration0081 restores the original0030 schema/seed.10 schema checks and13 current real-HTTP cases support migrated persistence.",
+        "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        182
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.05.02",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 164,
+      "requirement": "| **T-05.05.02 — Channel availability rules** | M | P1 |\n| Worker checks: if category=mandatory → always deliver in-app. External channel sent only if profile has verified destination (email or phone). If category=marketing → check opt-in. If no opt-in, skip external entirely (in-app optionally delivered based on event configuration). | | |",
+      "requirement_sha256": "23bed612b8be9b617eac835dc452f69c9a56b4699022494deb959fc3f78dd85d",
+      "status": "acceptance_verified",
+      "reviewed_sha": "f61b6c2028f1cbfdd586195c8037326d101d4758",
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/notifications/channel-availability.ts",
+          "sha256": "c98745aa86e32e74513d6b8a58566b8166d1f0ac0a2189b84e06e81ca324b894"
+        },
+        {
+          "path": "apps/worker/src/notifications/channel-availability-loader.ts",
+          "sha256": "0668bcf3d06c6a889be84502c9202d482b6983f979a12080fb5fb4ee65d56ee2"
+        },
+        {
+          "path": "apps/worker/src/notifications/channel-availability.test.ts",
+          "sha256": "7c1ff1d89a2c876e0b3b4fff017b43fa8cc30542bd776ecc32e04087b08e4ef8"
+        },
+        {
+          "path": "apps/worker/src/notifications/channel-availability-loader.test.ts",
+          "sha256": "cd54f453b6d1783a1ec657786fecd6b2e7c8f8b915e8da90030d7f6a82af8259"
+        },
+        {
+          "path": "apps/worker/src/notifications/email-transport.ts",
+          "sha256": "f11e89becc240afcc2e281208abf63de9500132b09141daa579627c0a7208721"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-transport.ts",
+          "sha256": "405e2ea4f2a3420a4f0ab46e2d26305def714fdfe44daaace1668dcdb443fd38"
+        },
+        {
+          "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
+          "sha256": "2a7fc87108e9b5321d088a3062e5eb776c523b42699c64679807537f5e549a79"
+        },
+        {
+          "path": "packages/shared/src/notifications/notification-registry.ts",
+          "sha256": "5ac9f805862f04492e11f41c5e2dca24eb84e202bf515462ebbfec706b2cbb33"
+        }
+      ],
+      "checks": [
+        "Mandatory requested in-app delivery remains ungated. External delivery requires current verified destinations/enabled account channels; marketing additionally requires profile opt-in. Loader/gate source is unchanged since the verified56-case recipient batch. Later transport/history bindings match the completed delivery batch. Email/SMS templates are selected by exact event/channel/locale, with no transactional fallback for marketing events.",
+        "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        183
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.05.03",
+      "requirement_file": "kanban/epics/05-notifications-documents-ai.md",
+      "requirement_line": 166,
+      "requirement": "| **T-05.05.03 — Consent UI in profile settings** | S | P1 |\n| User profile: Notification Preferences section. Toggle for \"Receive marketing notifications via email/SMS\". Show current opt-in state, last change date. Log consent changes in audit. | | |\n\n---",
+      "requirement_sha256": "b22e18a101ef9f5e43777f5b1438036a36d4ece714c657ea65ad8189a9d81f42",
+      "status": "acceptance_verified",
+      "reviewed_sha": "f61b6c2028f1cbfdd586195c8037326d101d4758",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.ts",
+          "sha256": "c810aaa7b8ce78d50f63d1566a23ddcb50e95c9c893232d564ebc587af8a8481"
+        },
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.test.ts",
+          "sha256": "ae85c1c0cc408953c6370aa0ff8e6e76b8278418a7367d42239a91c3a00caa37"
+        },
+        {
+          "path": "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
+          "sha256": "6d2f9e2666762c753a48f3c1171a25dc61ccb30cc4f1442990a1d9ff0e5411b0"
+        },
+        {
+          "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
+          "sha256": "ffdca747b061dcc2ab8b1fae30efc29a6715e3c17df3708259b92473452e4331"
+        },
+        {
+          "path": "apps/api/src/user-settings/timezone-http.integration.test.ts",
+          "sha256": "a40749eb612fa60400f044b760f2d0fee5614fa6ec669a3225a5035b3df04cbe"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "94e5f2b4ddbe05c2178a0e8f0cc1946c2753a5d77e10b71e00d51307ef48b193"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "5238ed5db992a5196fcc6a7cfa148d9a31a90d622de72c74a34315b76fd60d71"
+        }
+      ],
+      "checks": [
+        "Consent read/write targets the current owned profile. Strict input validation, profile-before-account locks, current session/CSRF and selected-profile rechecks, scoped before/after audit with request correlation/IP, transaction-bound response and unchanged-date preservation are repaired.43 distinct API checks and2 FA/EN browser recovery cases pass. Foreign/archived/explicit-null selections cannot silently update another owned profile.",
+        "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        184
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
     }
   ],
   "pending_task_keys": [
@@ -15903,9 +16040,6 @@
     "01-platform-infrastructure.md#T-07.05.04",
     "02-auth-users-admin.md#T-09.02.01",
     "02-auth-users-admin.md#T-09.02.02",
-    "05-notifications-documents-ai.md#T-05.05.01",
-    "05-notifications-documents-ai.md#T-05.05.02",
-    "05-notifications-documents-ai.md#T-05.05.03",
     "05-notifications-documents-ai.md#T-05.06.01",
     "05-notifications-documents-ai.md#T-05.06.02",
     "05-notifications-documents-ai.md#T-05.06.03",
@@ -19068,6 +19202,16 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
       "note": "Only immediate-base bindings refreshed. Added seed families, preserved custom versions and corrected preview selection; unrelated source behavior retained. Older38 refresh records remain."
+    },
+    {
+      "source_revision": "f61b6c2028f1cbfdd586195c8037326d101d4758",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-03.03.05",
+        "02-auth-users-admin.md#T-03.03.06"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R02-marketing-consent-channels",
+      "note": "Immediate-base controller binding only; neighboring handlers unchanged and focused suites pass. Older38 refresh records retained."
     }
   ]
 }

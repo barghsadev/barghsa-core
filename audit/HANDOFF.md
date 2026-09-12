@@ -4,9 +4,14 @@ Read [fix-plan.md](fix-plan.md) and the active batch in [progress.json](progress
 
 ## Current checkpoint
 
-Branch codex/audit-fixes. Latest product/test HEAD **dd6c6d62**. Template lifecycle PR177–181 closes locally:5 task acceptances verified/5 saved PR reviews closed.0c3efcca repairs catalog coverage and atomic, history-preserving imports; dd6c6d62 aligns preview selection with rendered content.
+Branch codex/audit-fixes. Latest product/test HEAD **f61b6c20**. Marketing consent/channel batch PR182–184 closes locally:3 task acceptances verified/3 saved PR reviews closed. Consent now applies only to the current owned profile, with strict inputs, current session/CSRF/selection checks and atomic scoped audit.
 
-Counts:154 verified/33 partial/135 pending claims;131 closed/25 open/145 unreviewed saved PRs.58 skips,3 verified/55 pending.2629 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage staysV02.
+Counts:157 verified/33 partial/132 pending claims;134 closed/25 open/142 unreviewed saved PRs.58 skips,3 verified/55 pending.2643 logs indexed. Saved GitHub inventory ends September3;38 older evidence refresh records remain. Full regression/coverage staysV02.
+
+Consent evidence:43 distinct API cases,10 schema cases and2 FA/EN Chromium cases pass. API types/lint/format/build and OpenAPI generation pass. Prior42 size budgets remain valid; frontend unchanged.13 consent HTTP cases cover selected-profile isolation, malformed input, foreign/null/default contexts, unchanged timestamps, archive/ownership waits, session/CSRF/disable changes, audit rollback and session expiry before commit. A corrected selection-race test waits in the shared guard before handler selection; it verifies only the newly selected profile is written.2 immediate-base bindings refreshed.
+
+Existing worker gate/loader source matches the verified recipient batch, and later transport/history source matches the completed delivery batch. Reuse those proofs. Before production marketing, review legacy opt-ins created by the old all-profile endpoint: old audits do not identify the intended profile. No bulk rewrite or production reconciliation executed.
+
 
 Template evidence:18 DB/catalog cases,8 FA/EN Chromium cases, types/lint/format/build and42 unchanged budgets pass. Four seed baseline failures and two browser baseline failures reproduce repaired defects.35 Appendix events/all required channels/locales and160 templates checked. Nine controller method bodies and latest template service/HTTP/engine/authoring bindings are unchanged; reuse their recorded evidence.3 immediate-base bindings refreshed.
 
@@ -18,13 +23,13 @@ Outbox/delivery remains7 closed/2 open. Durable send history at4614c8bf passes49
 
 Migration0128 retains legacy history and snapshots available receipts; it cannot reconstruct missing attempts. Deploy API/web readers, drain older notification workers, then migrate/start updated workers. [Recovery runbook](../docs/operations/notification-delivery-recovery.md).
 
-Active batch **R02-marketing-consent-channels**, saved PR182–184. Read exact requirements/bodies/deferrals, then check current consent authority, dispatch-time enforcement and customer UI. Reuse R02-recipient-channel-delivery where source is unchanged.
+Active batch **R02-email-provider-callbacks**, saved PR185–191. Read exact requirements/bodies/deferrals; reuse earlier provider lifecycle/self-test/secret/activation/authoring evidence. Review remaining circuit and callback signature/replay/suppression behavior.
 
 Build changed shared/i18n dependencies before consumer checks or web builds. Preserve completed work, valid evidence and all pending external/future prerequisites. Full regression staysV02.
 
 ## Next action
 
-Review R02 marketing consent/current channel availability, PR182–184. Read exact three requirements, bodies and deferrals. Reuse current recipient-channel evidence; check consent and profile authority through dispatch plus customer controls.
+Review email provider lifecycle, SMTP/Resend configuration, admin UI, encrypted secrets, circuit behavior and callbacks, PR185–191. Read exact seven requirements and deferrals; preserve prior provider repairs and valid evidence.
 
 Reuse completed producer, recipient, branding and provider evidence where source remains valid. Keep remaining inbox/classification and event-specific reminders in later R02 batches. Preserve local monitoring rules and their runbook; operational alert delivery needs external execution evidence.
 
