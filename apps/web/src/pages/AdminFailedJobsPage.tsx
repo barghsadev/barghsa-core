@@ -175,7 +175,7 @@ export default function AdminFailedJobsPage() {
                   setOffset(0);
                   setNotice(null);
                 }}
-                className="block h-9 rounded-md border bg-white px-3 text-sm"
+                className="block h-9 rounded-md border bg-card text-card-foreground px-3 text-sm"
               >
                 <option value="">{label('allTypes')}</option>
                 {BACKGROUND_JOB_TYPES.map((type) => (
@@ -200,7 +200,7 @@ export default function AdminFailedJobsPage() {
           {loading || error ? null : !jobs.length ? (
             <p>{label('empty')}</p>
           ) : (
-            <div className="overflow-x-auto rounded-lg border bg-white">
+            <div className="overflow-x-auto rounded-lg border bg-card text-card-foreground">
               <table className="w-full text-start text-sm">
                 <caption className="sr-only">{label('title')}</caption>
                 <thead>

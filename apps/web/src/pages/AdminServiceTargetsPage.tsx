@@ -65,7 +65,7 @@ export default function AdminServiceTargetsPage() {
     <section className="mx-auto max-w-3xl space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header>
         <h1 className="text-2xl font-semibold">{label('title')}</h1>
-        <p className="mt-2 text-sm text-gray-600">{label('note')}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{label('note')}</p>
       </header>
       {saved && <p role="status">{t('admin.teams.saved', locale)}</p>}
       {loading ? (
@@ -78,7 +78,10 @@ export default function AdminServiceTargetsPage() {
           </Button>
         </div>
       ) : (
-        <form onSubmit={save} className="space-y-4 rounded-lg border bg-white p-4">
+        <form
+          onSubmit={save}
+          className="space-y-4 rounded-lg border bg-card text-card-foreground p-4"
+        >
           <fieldset disabled={!!action} className="space-y-5">
             {SERVICE_RESPONSE_TARGET_TYPES.map((type) => (
               <fieldset key={type} className="space-y-2 border-b pb-4">
@@ -114,7 +117,7 @@ export default function AdminServiceTargetsPage() {
                 )}
               </fieldset>
             ))}
-            <p className="text-sm text-gray-600">{label('range')}</p>
+            <p className="text-sm text-muted-foreground">{label('range')}</p>
             <Button type="submit">{label('save')}</Button>
           </fieldset>
         </form>

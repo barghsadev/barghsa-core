@@ -127,7 +127,7 @@ function getStatusBadge(status: string, locale: Locale): { label: string; varian
         variant: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
       };
     default:
-      return { label: status, variant: 'bg-gray-100 text-gray-800' };
+      return { label: status, variant: 'bg-muted text-foreground' };
   }
 }
 

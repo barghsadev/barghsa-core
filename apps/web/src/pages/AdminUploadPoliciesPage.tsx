@@ -168,7 +168,7 @@ export default function AdminUploadPoliciesPage() {
       )}
       {!loading && !error && !canEdit && <p role="alert">{label('forbidden')}</p>}
       {!loading && !error && canEdit && (
-        <div className="overflow-x-auto rounded-lg border bg-white">
+        <div className="overflow-x-auto rounded-lg border bg-card text-card-foreground">
           <table className="w-full text-start text-sm">
             <caption className="sr-only">{label('title')}</caption>
             <thead>

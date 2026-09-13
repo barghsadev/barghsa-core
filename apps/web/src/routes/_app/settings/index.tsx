@@ -256,7 +256,9 @@ function SettingsIndexPage() {
         }`}
       >
         <div className="flex items-center gap-3">
-          <span className={state.optedIn ? 'text-primary' : 'text-muted-foreground'}>{icon}</span>
+          <span className={state.optedIn ? 'text-foreground' : 'text-muted-foreground'}>
+            {icon}
+          </span>
           <div>
             <p className="text-sm font-medium">{label}</p>
             {state.lastChangedAt ? (
@@ -285,7 +287,7 @@ function SettingsIndexPage() {
           }`}
         >
           <span
-            className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform ${
+            className={`inline-block h-5 w-5 transform rounded-full bg-card text-card-foreground shadow-sm transition-transform ${
               state.optedIn ? 'translate-x-6' : 'translate-x-0.5'
             }`}
           />
@@ -420,7 +422,7 @@ function SettingsIndexPage() {
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <span className={isEnabled ? 'text-primary' : 'text-muted-foreground'}>
+                      <span className={isEnabled ? 'text-foreground' : 'text-muted-foreground'}>
                         {channel.icon}
                       </span>
                       <div>
@@ -448,7 +450,7 @@ function SettingsIndexPage() {
                       }`}
                     >
                       <span
-                        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform ${
+                        className={`inline-block h-5 w-5 transform rounded-full bg-card text-card-foreground shadow-sm transition-transform ${
                           isEnabled ? 'translate-x-6' : 'translate-x-0.5'
                         }`}
                       />

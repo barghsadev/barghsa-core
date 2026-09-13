@@ -179,7 +179,7 @@ export default function AdminStaffTeamsPage() {
     <section className="mx-auto max-w-4xl space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header>
         <h1 className="text-2xl font-semibold">{label('title')}</h1>
-        <p className="mt-2 text-sm text-gray-600">{label('description')}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{label('description')}</p>
       </header>
       {saved && <p role="status">{label('saved')}</p>}
       {loading ? (
@@ -200,11 +200,11 @@ export default function AdminStaffTeamsPage() {
               {teams.map((team) => (
                 <li
                   key={team.id}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded border bg-white p-3"
+                  className="flex flex-wrap items-center justify-between gap-3 rounded border bg-card text-card-foreground p-3"
                 >
                   <div>
                     <h3 className="font-medium">{team.name}</h3>
-                    <p className="text-sm text-gray-600">{team.description}</p>
+                    <p className="text-sm text-muted-foreground">{team.description}</p>
                     <p className="text-sm">
                       {label('memberCount')}: {numbers.number(team.memberUserIds.length)}
                       {!team.isActive ? ` · ${label('inactive')}` : ''}
@@ -235,7 +235,10 @@ export default function AdminStaffTeamsPage() {
               ))}
             </ul>
           </div>
-          <form onSubmit={saveTeam} className="space-y-4 rounded-lg border bg-white p-4">
+          <form
+            onSubmit={saveTeam}
+            className="space-y-4 rounded-lg border bg-card text-card-foreground p-4"
+          >
             <h2 ref={formHeading} tabIndex={-1} className="text-lg font-semibold">
               {label(editing ? 'edit' : 'new')}
             </h2>
@@ -267,7 +270,7 @@ export default function AdminStaffTeamsPage() {
                   value={draft.tags}
                   onChange={(event) => setDraft({ ...draft, tags: event.target.value })}
                 />
-                <p className="text-sm text-gray-600">{label('tagsHelp')}</p>
+                <p className="text-sm text-muted-foreground">{label('tagsHelp')}</p>
               </div>
               <div>
                 <Label htmlFor="staff-team-search">{label('search')}</Label>
@@ -335,7 +338,7 @@ export default function AdminStaffTeamsPage() {
                     </option>
                   ))}
                 </select>
-                <p className="text-sm text-gray-600">{label('leadHelp')}</p>
+                <p className="text-sm text-muted-foreground">{label('leadHelp')}</p>
               </div>
               <div className="flex gap-2">
                 <Button type="submit" disabled={!draft.name.trim() || memberLoading || memberError}>
@@ -350,7 +353,7 @@ export default function AdminStaffTeamsPage() {
             </fieldset>
           </form>
           <form
-            className="space-y-4 rounded-lg border bg-white p-4"
+            className="space-y-4 rounded-lg border bg-card text-card-foreground p-4"
             onSubmit={(event) => {
               event.preventDefault();
               setSaved(false);
@@ -378,7 +381,7 @@ export default function AdminStaffTeamsPage() {
             }}
           >
             <h2 className="text-lg font-semibold">{label('rules')}</h2>
-            <p className="text-sm text-gray-600">{label('expertiseHelp')}</p>
+            <p className="text-sm text-muted-foreground">{label('expertiseHelp')}</p>
             <fieldset disabled={disabled} className="space-y-4">
               {STAFF_ASSIGNMENT_WORK_TYPES.map((type) => (
                 <fieldset key={type} className="flex flex-wrap items-end gap-3">

@@ -106,11 +106,14 @@ export default function AdminElectricityRulesPage() {
         config && (
           <>
             {saved && <p role="status">{label('saved')}</p>}
-            <p className="rounded border bg-white p-3">{label('snapshot')}</p>
+            <p className="rounded border bg-card text-card-foreground p-3">{label('snapshot')}</p>
             <form onSubmit={submit} className="space-y-5">
               <div className="grid gap-5 lg:grid-cols-2">
                 {modes.map((mode) => (
-                  <fieldset key={mode} className="space-y-4 rounded-lg border bg-white p-5">
+                  <fieldset
+                    key={mode}
+                    className="space-y-4 rounded-lg border bg-card text-card-foreground p-5"
+                  >
                     <legend className="px-2 text-lg font-semibold">{label(mode)}</legend>
                     {safety?.[mode].blocked && (
                       <p

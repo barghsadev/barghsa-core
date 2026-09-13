@@ -54,7 +54,7 @@ export function NotificationRow({
     <div className="flex w-full items-start gap-3" dir={isRtl ? 'rtl' : 'ltr'}>
       <span
         className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
-          unread ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'
+          unread ? 'bg-primary/10 text-foreground' : 'bg-muted text-muted-foreground'
         }`}
         aria-hidden="true"
       >
@@ -63,7 +63,7 @@ export function NotificationRow({
       <span className="min-w-0 flex-1">
         <span className="flex items-baseline justify-between gap-2">
           <span
-            className={`truncate text-sm font-medium ${muted ? 'text-gray-500' : 'text-gray-900'}`}
+            className={`truncate text-sm font-medium ${muted ? 'text-muted-foreground' : 'text-foreground'}`}
           >
             {title}
           </span>
@@ -77,12 +77,12 @@ export function NotificationRow({
         </span>
         <span
           className={`mt-0.5 block text-xs leading-snug ${
-            muted ? 'text-gray-400' : 'text-gray-600'
+            muted ? 'text-muted-foreground' : 'text-muted-foreground'
           }`}
         >
           {body}
         </span>
-        <span className="mt-0.5 flex items-center gap-2 text-xs text-gray-400">
+        <span className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
           <span>{timeLabel}</span>
           <span aria-hidden="true">·</span>
           <span>{typeLabel}</span>

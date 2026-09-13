@@ -219,13 +219,13 @@ export default function AdminDashboard() {
             {chargebacks.items.map((item) => (
               <li
                 key={item.eventId}
-                className="rounded-md border border-red-200 bg-white px-3 py-2 text-sm text-gray-800"
+                className="rounded-md border border-red-200 bg-card text-card-foreground px-3 py-2 text-sm text-foreground"
               >
                 <p className="font-medium">
                   {t(`dashboard.admin.chargebackWarning.status.${item.status}`, locale)}
                   {item.amountIrR ? ` · ${numbers.money(item.amountIrR)}` : ''}
                 </p>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-muted-foreground">
                   {t('dashboard.admin.chargebackWarning.eventId', locale).replace('{id}', '')}
                   <span className="font-mono" dir="ltr">
                     {item.eventId}
@@ -252,7 +252,7 @@ export default function AdminDashboard() {
             <div role="status" aria-live="polite" aria-busy={isLoading}>
               {isLoading ? (
                 <div
-                  className="h-6 w-12 bg-gray-200 animate-pulse rounded"
+                  className="h-6 w-12 bg-muted animate-pulse rounded"
                   aria-label={t('dashboard.admin.pendingVerification.loading', locale)}
                 />
               ) : isError ? (

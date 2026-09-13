@@ -173,7 +173,7 @@ function getStatusBadgeClass(status: string): string {
     case 'SUSPENDED':
       return 'bg-red-100 text-red-800';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-muted text-foreground';
   }
 }
 
@@ -490,7 +490,7 @@ function CrmProfileDetailContent() {
               ? t('crm.profile.archived', locale)
               : t(`crm.list.${profile.status}`, locale)}
           </span>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">
+          <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-foreground">
             {getProfileTypeLabel(profile.profileType, locale)}
           </span>
           <span className="flex w-full flex-wrap gap-2 lg:ms-auto lg:w-auto">
@@ -534,7 +534,7 @@ function CrmProfileDetailContent() {
                 <button
                   onClick={handleCancelEdit}
                   disabled={saving}
-                  className="text-sm px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors disabled:opacity-50"
+                  className="text-sm px-3 py-1 rounded bg-muted text-foreground hover:bg-accent transition-colors disabled:opacity-50"
                 >
                   {t('crm.profile.edit.cancel', locale)}
                 </button>
@@ -757,7 +757,7 @@ function CrmProfileDetailContent() {
               className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.id
                   ? 'border-blue-600 text-blue-700 dark:text-blue-300'
-                  : 'border-transparent text-muted-foreground hover:text-foreground hover:border-gray-300'
+                  : 'border-transparent text-muted-foreground hover:text-foreground hover:border-input'
               }`}
             >
               {tab.label}
@@ -1318,7 +1318,7 @@ function CrmProfileDetailContent() {
                       >
                         {t('crm.list.' + sp.status, locale)}
                       </span>
-                      <span className="text-xs px-1.5 py-0.5 rounded-full bg-gray-200 text-gray-700">
+                      <span className="text-xs px-1.5 py-0.5 rounded-full bg-muted text-foreground">
                         {getProfileTypeLabel(sp.profileType, locale)}
                       </span>
                       {sp.isDefault && (
@@ -1459,7 +1459,7 @@ function DetailRow({
         <a
           href={correctionHref}
           aria-label={correctionLabel + ': ' + label}
-          className="mt-1 text-sm text-primary underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="mt-1 text-sm text-foreground underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           {correctionLabel}
         </a>
@@ -1493,7 +1493,7 @@ function EditRow({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder ?? ''}
         dir="auto"
-        className="mt-1 w-full border border-gray-300 rounded px-2 py-1 text-sm text-foreground focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+        className="mt-1 w-full border border-input rounded px-2 py-1 text-sm text-foreground focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
       />
     </div>
   );

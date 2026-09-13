@@ -169,7 +169,7 @@ export function DefaultProfileModal() {
             {profiles.map((profile) => (
               <div
                 key={profile.id}
-                className="flex items-center gap-3 rounded-lg border border-gray-200 p-3 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+                className="flex items-center gap-3 rounded-lg border border-border p-3 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
               >
                 <RadioGroupItem value={profile.id} id={`profile-${profile.id}`} />
                 <Label

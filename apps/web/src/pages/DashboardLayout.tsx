@@ -47,7 +47,10 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
   ];
 
   return (
-    <div className="min-h-dvh flex flex-col bg-gray-50" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div
+      className="min-h-dvh flex flex-col bg-background text-foreground"
+      dir={isRtl ? 'rtl' : 'ltr'}
+    >
       <a href="#dashboard-content" className="sr-only focus:not-sr-only focus:p-3">
         {t('shell.skipContent', locale)}
       </a>
@@ -59,8 +62,8 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
       <OwnershipBanner />
 
       {/* App header — brand + notification center bell (T-05.02.03) */}
-      <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 md:px-6">
-        <Link to="/" className="text-lg font-bold text-primary no-underline">
+      <header className="flex items-center justify-between border-b border-border bg-card text-card-foreground px-4 py-3 md:px-6">
+        <Link to="/" className="text-lg font-bold text-foreground no-underline">
           {brandConfig.appTitle}
         </Link>
         <Button
@@ -80,16 +83,16 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
         {/* Sidebar */}
         <aside
           id="dashboard-navigation"
-          className={`${menuOpen ? 'block' : 'hidden'} w-full shrink-0 border-e border-gray-200 bg-white p-4 md:block md:w-64`}
+          className={`${menuOpen ? 'block' : 'hidden'} w-full shrink-0 border-e border-border bg-card text-card-foreground p-4 md:block md:w-64`}
         >
           <div className="space-y-4">
             {/* Profile switcher — top of sidebar */}
-            <div className="border-b border-gray-200 pb-4">
+            <div className="border-b border-border pb-4">
               <ProfileSwitcher locale={locale} />
             </div>
 
             {/* Brand */}
-            <Link to="/" className="block text-lg font-bold text-primary no-underline">
+            <Link to="/" className="block text-lg font-bold text-foreground no-underline">
               {brandConfig.appTitle}
             </Link>
 
@@ -101,8 +104,8 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
                     <Link
                       to={item.to}
                       onClick={() => setMenuOpen(false)}
-                      className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                      activeProps={{ className: 'bg-primary/10 text-primary font-medium' }}
+                      className="block rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted hover:text-foreground"
+                      activeProps={{ className: 'bg-primary/10 text-foreground font-medium' }}
                     >
                       {item.label}
                     </Link>

@@ -87,7 +87,7 @@ export default function TosRichText({
   if (sourceOnly)
     return (
       <div className="space-y-2">
-        <p className="text-sm text-gray-600">{text.preserveSource}</p>
+        <p className="text-sm text-muted-foreground">{text.preserveSource}</p>
         <textarea
           aria-label={label}
           required
@@ -101,7 +101,7 @@ export default function TosRichText({
       </div>
     );
   return (
-    <div className="rounded border border-gray-300 bg-white" aria-busy={!editor}>
+    <div className="rounded border border-input bg-card text-card-foreground" aria-busy={!editor}>
       <div
         role="group"
         aria-label={`${label}: ${text.formatting}`}

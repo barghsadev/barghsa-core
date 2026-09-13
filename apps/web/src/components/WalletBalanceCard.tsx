@@ -45,18 +45,21 @@ export function WalletBalanceCard({
         : -((-exactBalance + 4n) / 10n);
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div
+      className="bg-card text-card-foreground rounded-lg shadow-sm p-6"
+      dir={isRtl ? 'rtl' : 'ltr'}
+    >
       {/* Balance section */}
       <div className="mb-4">
-        <p className="text-sm text-gray-500 mb-1">
+        <p className="text-sm text-muted-foreground mb-1">
           {t('dashboard.overview.walletBalance', locale)}
         </p>
-        <p className="text-3xl font-bold text-gray-900 leading-tight">
+        <p className="text-3xl font-bold text-foreground leading-tight">
           {currency === 'IRR'
             ? numbers.money(balance)
             : `${numbers.irrDigits(balance)} ${currency}`}
         </p>
-        <p className="text-base text-gray-500 mt-1">
+        <p className="text-base text-muted-foreground mt-1">
           {t('dashboard.overview.balanceInToman', locale).replace(
             '{amount}',
             tomanAmount === null ? '—' : numbers.irrDigits(tomanAmount)
@@ -76,7 +79,7 @@ export function WalletBalanceCard({
       {/* Action button */}
       <Link
         to="/wallet"
-        className="block w-full text-center px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors"
+        className="block w-full text-center px-4 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors"
       >
         {t('dashboard.overview.chargeWallet', locale)}
       </Link>

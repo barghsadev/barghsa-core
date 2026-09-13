@@ -70,12 +70,12 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
   if (error) {
     return (
       <div className="text-center py-12">
-        <p role="alert" className="text-red-600">
+        <p role="alert" className="text-destructive">
           {t('dashboard.overview.loadError', locale)}
         </p>
         <button
           onClick={() => setRevision((value) => value + 1)}
-          className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+          className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary-dark"
         >
           {t('dashboard.overview.retry', locale)}
         </button>
@@ -87,13 +87,13 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
     return (
       <div className="space-y-6">
         {/* Welcome skeleton */}
-        <div className="h-8 w-64 bg-gray-200 rounded animate-pulse" />
+        <div className="h-8 w-64 bg-muted rounded animate-pulse" />
         {/* Wallet card skeleton */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 h-32 bg-gray-200 rounded-lg animate-pulse" />
+          <div className="lg:col-span-1 h-32 bg-muted rounded-lg animate-pulse" />
           <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-24 bg-gray-200 rounded-lg animate-pulse" />
+              <div key={i} className="h-24 bg-muted rounded-lg animate-pulse" />
             ))}
           </div>
         </div>
@@ -119,10 +119,10 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
       {/* Welcome message with profile name */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-foreground">
             {t('dashboard.overview.welcome', locale).replace('{name}', profileName)}
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-muted-foreground text-sm mt-1">
             {t('dashboard.overview.profileBadge', locale).replace('{name}', profileName)}
           </p>
         </div>
@@ -140,7 +140,7 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
               locale={locale}
             />
           ) : (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               {t('dashboard.overview.walletUnavailable', locale)}
             </p>
           )}
@@ -160,7 +160,7 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
 
       {/* Quick actions section */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">
+        <h2 className="text-lg font-semibold text-foreground mb-3">
           {t('dashboard.overview.quickActions', locale)}
         </h2>
         <div className="flex flex-wrap gap-3">
@@ -168,7 +168,7 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
             <Link
               key={action.href}
               to={action.href}
-              className="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-card text-card-foreground border border-border rounded-lg text-sm font-medium text-foreground hover:bg-muted hover:border-input transition-colors"
             >
               {action.label}
             </Link>

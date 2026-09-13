@@ -533,7 +533,9 @@ export default function AdminNotificationsPage() {
   }
 
   if (loading && templates.length === 0) {
-    return <div className="p-4 text-gray-500">{t('admin.notifications.loading', uiLocale)}</div>;
+    return (
+      <div className="p-4 text-muted-foreground">{t('admin.notifications.loading', uiLocale)}</div>
+    );
   }
 
   return (
@@ -599,7 +601,7 @@ export default function AdminNotificationsPage() {
           aria-label={t('admin.notifications.locale', uiLocale)}
           value={filterLocale}
           onChange={(e) => setFilterLocale(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-1.5 text-sm"
+          className="border border-input rounded px-3 py-1.5 text-sm"
         >
           <option value="">{t('admin.notifications.allLocales', uiLocale)}</option>
           <option value="fa">فارسی</option>
@@ -609,7 +611,7 @@ export default function AdminNotificationsPage() {
           aria-label={t('admin.notifications.channel', uiLocale)}
           value={filterChannel}
           onChange={(e) => setFilterChannel(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-1.5 text-sm"
+          className="border border-input rounded px-3 py-1.5 text-sm"
         >
           <option value="">{t('admin.notifications.allChannels', uiLocale)}</option>
           <option value="email">Email</option>
@@ -620,7 +622,7 @@ export default function AdminNotificationsPage() {
           aria-label={t('admin.notifications.allStatus', uiLocale)}
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-1.5 text-sm"
+          className="border border-input rounded px-3 py-1.5 text-sm"
         >
           <option value="">{t('admin.notifications.allStatus', uiLocale)}</option>
           <option value="draft">Draft</option>
@@ -633,7 +635,7 @@ export default function AdminNotificationsPage() {
       {showEditor && (
         <form
           onSubmit={handleSave}
-          className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
+          className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
         >
           <fieldset disabled={saving} className="contents">
             <h2 className="text-lg font-semibold">
@@ -648,7 +650,7 @@ export default function AdminNotificationsPage() {
             <div>
               <label
                 htmlFor="notification-template-eventKey"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.eventKey', uiLocale)}{' '}
                 <span className="text-red-500">*</span>
@@ -658,7 +660,7 @@ export default function AdminNotificationsPage() {
                   id="notification-template-eventKey"
                   readOnly
                   value={eventKey}
-                  className="text-sm text-gray-500 py-2"
+                  className="text-sm text-muted-foreground py-2"
                 />
               ) : (
                 <input
@@ -666,7 +668,7 @@ export default function AdminNotificationsPage() {
                   list="notification-event-suggestions"
                   value={eventKey}
                   onChange={(e) => setEventKey(e.target.value)}
-                  className="w-full border border-gray-300 rounded px-3 py-2"
+                  className="w-full border border-input rounded px-3 py-2"
                   required
                   maxLength={100}
                   pattern="\S+"
@@ -691,7 +693,7 @@ export default function AdminNotificationsPage() {
               <div>
                 <label
                   htmlFor="notification-template-channel"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-foreground mb-1"
                 >
                   {t('admin.notifications.channel', uiLocale)}{' '}
                   <span className="text-red-500">*</span>
@@ -701,14 +703,14 @@ export default function AdminNotificationsPage() {
                     id="notification-template-channel"
                     readOnly
                     value={CHANNEL_LABELS[channel as TemplateChannel] ?? channel}
-                    className="text-sm text-gray-500 py-2"
+                    className="text-sm text-muted-foreground py-2"
                   />
                 ) : (
                   <select
                     id="notification-template-channel"
                     value={channel}
                     onChange={(e) => setChannel(e.target.value as TemplateChannel)}
-                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    className="w-full border border-input rounded px-3 py-2"
                     required
                   >
                     {CHANNEL_OPTIONS.map((c) => (
@@ -722,7 +724,7 @@ export default function AdminNotificationsPage() {
               <div>
                 <label
                   htmlFor="notification-template-locale"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-foreground mb-1"
                 >
                   {t('admin.notifications.locale', uiLocale)}{' '}
                   <span className="text-red-500">*</span>
@@ -732,14 +734,14 @@ export default function AdminNotificationsPage() {
                     id="notification-template-locale"
                     readOnly
                     value={LOCALE_LABELS[locale as TemplateLocale] ?? locale}
-                    className="text-sm text-gray-500 py-2"
+                    className="text-sm text-muted-foreground py-2"
                   />
                 ) : (
                   <select
                     id="notification-template-locale"
                     value={locale}
                     onChange={(e) => setLocale(e.target.value as TemplateLocale)}
-                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    className="w-full border border-input rounded px-3 py-2"
                     required
                   >
                     {LOCALE_OPTIONS.map((l) => (
@@ -757,7 +759,7 @@ export default function AdminNotificationsPage() {
               <div>
                 <label
                   htmlFor="notification-template-subject"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-foreground mb-1"
                 >
                   {t('admin.notifications.subject', uiLocale)}
                 </label>
@@ -767,7 +769,7 @@ export default function AdminNotificationsPage() {
                   readOnly={viewOnly || testSending}
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full border border-gray-300 rounded px-3 py-2"
+                  className="w-full border border-input rounded px-3 py-2"
                   placeholder="e.g. Your profile has been verified"
                   maxLength={200}
                 />
@@ -778,12 +780,12 @@ export default function AdminNotificationsPage() {
             <div>
               <label
                 htmlFor="notification-template-bodyTemplate"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.bodyTemplate', uiLocale)}{' '}
                 <span className="text-red-500">*</span>
               </label>
-              <p id="notification-body-hint" className="text-xs text-gray-400 mb-1">
+              <p id="notification-body-hint" className="text-xs text-muted-foreground mb-1">
                 {t('admin.notifications.bodyHint', uiLocale)}
               </p>
               <div className="flex gap-4">
@@ -795,18 +797,18 @@ export default function AdminNotificationsPage() {
                     readOnly={viewOnly || testSending}
                     value={bodyTemplate}
                     onChange={(e) => setBodyTemplate(e.target.value)}
-                    className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
+                    className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
                     rows={8}
                     required
                     dir={locale === 'fa' ? 'rtl' : 'ltr'}
                   />
                 </div>
                 {parsedVariables.length > 0 && (
-                  <aside className="w-48 shrink-0 border border-gray-200 rounded-lg p-3 bg-gray-50">
-                    <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase">
+                  <aside className="w-48 shrink-0 border border-border rounded-lg p-3 bg-muted/40">
+                    <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
                       {t('admin.notifications.variables', uiLocale)}
                     </h4>
-                    <p className="text-[11px] text-gray-400 mb-2">
+                    <p className="text-[11px] text-muted-foreground mb-2">
                       {t('admin.notifications.insertHint', uiLocale)}
                     </p>
                     <ul className="space-y-1">
@@ -821,7 +823,7 @@ export default function AdminNotificationsPage() {
                               event.dataTransfer.effectAllowed = 'copy';
                             }}
                             onClick={() => insertVariable(v.name)}
-                            className="w-full text-left px-2 py-1 text-xs font-mono bg-white border border-gray-200 rounded hover:bg-blue-50 hover:border-blue-300"
+                            className="w-full text-left px-2 py-1 text-xs font-mono bg-card text-card-foreground border border-border rounded hover:bg-blue-50 hover:border-blue-300"
                             title={v.description ?? undefined}
                           >
                             {'{{'}
@@ -829,7 +831,7 @@ export default function AdminNotificationsPage() {
                             {'}}'}
                           </button>
                           {v.description && (
-                            <p className="px-1 pt-0.5 text-[11px] text-gray-500 leading-snug">
+                            <p className="px-1 pt-0.5 text-[11px] text-muted-foreground leading-snug">
                               {v.description}
                             </p>
                           )}
@@ -840,12 +842,12 @@ export default function AdminNotificationsPage() {
                 )}
               </div>
               {/* Live preview pane */}
-              <div className="mt-3 border border-gray-200 rounded-lg p-4 bg-gray-50">
-                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase">
+              <div className="mt-3 border border-border rounded-lg p-4 bg-muted/40">
+                <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
                   {t('admin.notifications.preview', uiLocale)}
                 </h4>
                 {channel === 'email' && subject.trim() !== '' && (
-                  <p className="text-sm text-gray-700 mb-2" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+                  <p className="text-sm text-foreground mb-2" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
                     <span className="font-semibold">
                       {t('admin.notifications.subjectLabel', uiLocale)}
                     </span>{' '}
@@ -860,7 +862,7 @@ export default function AdminNotificationsPage() {
                   />
                 ) : (
                   <pre
-                    className="text-sm whitespace-pre-wrap font-sans text-gray-800"
+                    className="text-sm whitespace-pre-wrap font-sans text-foreground"
                     dir={locale === 'fa' ? 'rtl' : 'ltr'}
                   >
                     {renderTemplatePreview(bodyTemplate, parsedVariables, undefined, false).output}
@@ -873,11 +875,11 @@ export default function AdminNotificationsPage() {
             <div>
               <label
                 htmlFor="notification-template-variablesLabel"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.variablesLabel', uiLocale)}
               </label>
-              <p className="text-xs text-gray-400 mb-1">
+              <p className="text-xs text-muted-foreground mb-1">
                 {t('admin.notifications.variablesHintNew', uiLocale)}
               </p>
               <textarea
@@ -885,7 +887,7 @@ export default function AdminNotificationsPage() {
                 readOnly={viewOnly || testSending}
                 value={variablesStr}
                 onChange={(e) => setVariablesStr(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
+                className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
                 rows={3}
                 placeholder="userName: The user's display name, profileLink: Verification link"
                 dir="ltr"
@@ -897,7 +899,7 @@ export default function AdminNotificationsPage() {
               {editId && (
                 <>
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="test-destination" className="text-xs text-gray-500">
+                    <label htmlFor="test-destination" className="text-xs text-muted-foreground">
                       {t('admin.notifications.testDestinationLabel', uiLocale)}
                     </label>
                     <input
@@ -910,10 +912,10 @@ export default function AdminNotificationsPage() {
                         setTestDestination(e.target.value);
                       }}
                       placeholder={t('admin.notifications.testDestinationPlaceholder', uiLocale)}
-                      className="border border-gray-300 rounded px-3 py-2 text-sm"
+                      className="border border-input rounded px-3 py-2 text-sm"
                       dir="ltr"
                     />
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-muted-foreground">
                       {t('admin.notifications.testDestinationHint', uiLocale)}
                     </span>
                   </div>
@@ -951,7 +953,7 @@ export default function AdminNotificationsPage() {
               <button
                 type="button"
                 onClick={closeEditor}
-                className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
+                className="px-4 py-2 border border-input rounded hover:bg-muted"
               >
                 {t('admin.notifications.cancel', uiLocale)}
               </button>
@@ -964,7 +966,9 @@ export default function AdminNotificationsPage() {
       {publishId && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 space-y-3">
           <h3 className="font-semibold">{t('admin.notifications.publishTitle', uiLocale)}</h3>
-          <p className="text-sm text-gray-600">{t('admin.notifications.publishDesc', uiLocale)}</p>
+          <p className="text-sm text-muted-foreground">
+            {t('admin.notifications.publishDesc', uiLocale)}
+          </p>
           <div className="flex gap-3">
             <button
               onClick={handlePublish}
@@ -977,7 +981,7 @@ export default function AdminNotificationsPage() {
             </button>
             <button
               onClick={() => setPublishId(null)}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
+              className="px-4 py-2 border border-input rounded hover:bg-muted"
             >
               {t('admin.notifications.cancel', uiLocale)}
             </button>
@@ -986,46 +990,46 @@ export default function AdminNotificationsPage() {
       )}
 
       {/* Template list */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-card text-card-foreground rounded-lg border border-border overflow-hidden">
+        <table className="min-w-full divide-y divide-border">
+          <thead className="bg-muted/40">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                 {t('admin.notifications.col.event', uiLocale)}
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                 {t('admin.notifications.channel', uiLocale)}
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                 {t('admin.notifications.locale', uiLocale)}
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                 {t('admin.notifications.col.status', uiLocale)}
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                 {t('admin.notifications.col.subject', uiLocale)}
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                 {t('admin.notifications.col.active', uiLocale)}
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase">
                 {t('admin.notifications.col.actions', uiLocale)}
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-border">
             {templates.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                   {t('admin.notifications.empty', uiLocale)}
                 </td>
               </tr>
             )}
             {templates.map((template) => (
-              <tr key={template.id} className="hover:bg-gray-50">
+              <tr key={template.id} className="hover:bg-muted">
                 <td className="px-4 py-3 text-sm font-mono">
                   {template.eventKey}
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-muted-foreground">
                     {t('admin.notifications.preview.version', uiLocale)}{' '}
                     {numbers.number(template.version)}
                   </div>
@@ -1037,7 +1041,7 @@ export default function AdminNotificationsPage() {
                         ? 'bg-blue-100 text-blue-800'
                         : template.channel === 'sms'
                           ? 'bg-purple-100 text-purple-800'
-                          : 'bg-gray-100 text-gray-800'
+                          : 'bg-muted text-foreground'
                     }`}
                   >
                     {CHANNEL_LABELS[template.channel]}
@@ -1061,7 +1065,7 @@ export default function AdminNotificationsPage() {
                       : template.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-600 max-w-[200px] truncate">
+                <td className="px-4 py-3 text-sm text-muted-foreground max-w-[200px] truncate">
                   {template.subject ?? '—'}
                 </td>
                 <td className="px-4 py-3">
@@ -1070,7 +1074,7 @@ export default function AdminNotificationsPage() {
                       ✓ {t('admin.notifications.active', uiLocale)}
                     </span>
                   ) : (
-                    <span className="text-gray-400 text-sm">—</span>
+                    <span className="text-muted-foreground text-sm">—</span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-right text-sm space-x-2">

@@ -392,7 +392,7 @@ export default function AdminTosPage() {
   }
 
   if (loading && versions.length === 0) {
-    return <div className="p-4 text-gray-500">{text.loading}</div>;
+    return <div className="p-4 text-muted-foreground">{text.loading}</div>;
   }
 
   return (
@@ -438,14 +438,14 @@ export default function AdminTosPage() {
       {showEditor && (
         <form
           onSubmit={handleSave}
-          className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
+          className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
         >
           <h2 className="text-lg font-semibold">{editId ? text.editDraft : text.createNewDraft}</h2>
 
           <div>
             <label
               htmlFor="admintospage-field-1"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-foreground mb-1"
             >
               {text.versionId} <span className="text-red-500">*</span>
             </label>
@@ -454,7 +454,7 @@ export default function AdminTosPage() {
               type="text"
               value={versionId}
               onChange={(e) => setVersionId(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2"
+              className="w-full border border-input rounded px-3 py-2"
               placeholder={text.versionExample}
               maxLength={50}
               required
@@ -527,7 +527,7 @@ export default function AdminTosPage() {
               type="button"
               onClick={() => setShowEditor(false)}
               disabled={saving}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
+              className="px-4 py-2 border border-input rounded hover:bg-muted"
             >
               {text.cancel}
             </button>
@@ -543,7 +543,7 @@ export default function AdminTosPage() {
           className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 space-y-3"
         >
           <h3 className="font-semibold">{text.publishTitle}</h3>
-          <p className="text-sm text-gray-600">{text.materialHelp}</p>
+          <p className="text-sm text-muted-foreground">{text.materialHelp}</p>
           <div className="flex gap-2">
             {(['fa', 'en'] as const).map((language) => (
               <button
@@ -596,7 +596,7 @@ export default function AdminTosPage() {
                 setPublishVersion(null);
                 void fetchVersions();
               }}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
+              className="px-4 py-2 border border-input rounded hover:bg-muted"
             >
               {text.cancel}
             </button>
@@ -614,23 +614,23 @@ export default function AdminTosPage() {
         >
           <DialogContent
             showCloseButton={false}
-            className="bg-white rounded-lg shadow-xl sm:max-w-3xl w-full max-h-[85vh] flex flex-col p-0 gap-0"
+            className="bg-card text-card-foreground rounded-lg shadow-xl sm:max-w-3xl w-full max-h-[85vh] flex flex-col p-0 gap-0"
           >
             {time.notice}
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
               <div>
                 <DialogTitle className="text-lg font-semibold">
                   {text.versionTitle} {viewVersion.versionId}
                 </DialogTitle>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   {text[viewVersion.status]} ·
                   {viewVersion.changeType && (
                     <span
                       className={`ms-1 inline-block px-2 py-0.5 text-xs rounded ${
                         viewVersion.changeType === 'major'
                           ? 'bg-red-100 text-red-800'
-                          : 'bg-gray-100 text-gray-800'
+                          : 'bg-muted text-foreground'
                       }`}
                     >
                       {text[viewVersion.changeType]}
@@ -644,40 +644,40 @@ export default function AdminTosPage() {
               <button
                 onClick={closeView}
                 aria-label={text.close}
-                className="text-gray-400 hover:text-gray-600 text-xl leading-none"
+                className="text-muted-foreground hover:text-muted-foreground text-xl leading-none"
               >
                 ✕
               </button>
             </div>
 
             {/* Metadata */}
-            <div className="px-6 py-3 bg-gray-50 border-b border-gray-200 grid grid-cols-2 gap-4 text-sm">
+            <div className="px-6 py-3 bg-muted/40 border-b border-border grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="text-gray-500">{text.versionId}:</span>{' '}
+                <span className="text-muted-foreground">{text.versionId}:</span>{' '}
                 <span className="font-medium">{viewVersion.versionId}</span>
               </div>
               <div>
-                <span className="text-gray-500">{text.author}:</span>{' '}
+                <span className="text-muted-foreground">{text.author}:</span>{' '}
                 <span className="font-medium">{viewVersion.createdBy ?? '—'}</span>
               </div>
               <div>
-                <span className="text-gray-500">{text.published}:</span>{' '}
+                <span className="text-muted-foreground">{text.published}:</span>{' '}
                 <span className="font-medium">{time.format(viewVersion.publishedAt)}</span>
               </div>
               <div>
-                <span className="text-gray-500">{text.created}:</span>{' '}
+                <span className="text-muted-foreground">{text.created}:</span>{' '}
                 <span className="font-medium">{time.format(viewVersion.createdAt)}</span>
               </div>
             </div>
 
             {/* Locale toggle */}
-            <div className="px-6 py-3 border-b border-gray-200 flex gap-2">
+            <div className="px-6 py-3 border-b border-border flex gap-2">
               <button
                 onClick={() => setDetailLocale('fa')}
                 className={`px-3 py-1 text-sm rounded ${
                   detailLocale === 'fa'
                     ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-muted text-foreground hover:bg-accent'
                 }`}
               >
                 فارسی
@@ -687,7 +687,7 @@ export default function AdminTosPage() {
                 className={`px-3 py-1 text-sm rounded ${
                   detailLocale === 'en'
                     ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-muted text-foreground hover:bg-accent'
                 }`}
               >
                 English
@@ -708,44 +708,44 @@ export default function AdminTosPage() {
       )}
 
       {/* Version list */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+      <div className="bg-card text-card-foreground rounded-lg border border-border overflow-x-auto">
+        <table className="min-w-full divide-y divide-border">
           <caption className="sr-only">{text.history}</caption>
-          <thead className="bg-gray-50">
+          <thead className="bg-muted/40">
             <tr>
-              <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
                 {text.version}
               </th>
-              <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
                 {text.status}
               </th>
-              <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
                 {text.change}
               </th>
-              <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
                 {text.active}
               </th>
-              <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
                 {text.published}
               </th>
-              <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-start text-xs font-medium text-muted-foreground uppercase">
                 {text.author}
               </th>
-              <th className="px-4 py-3 text-end text-xs font-medium text-gray-500 uppercase">
+              <th className="px-4 py-3 text-end text-xs font-medium text-muted-foreground uppercase">
                 {text.actions}
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-border">
             {historyReady && versions.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                   {text.empty}
                 </td>
               </tr>
             )}
             {versions.map((v) => (
-              <tr key={v.id} className="hover:bg-gray-50">
+              <tr key={v.id} className="hover:bg-muted">
                 <td className="px-4 py-3 text-sm font-medium">{v.versionId}</td>
                 <td className="px-4 py-3">
                   <span
@@ -764,30 +764,32 @@ export default function AdminTosPage() {
                       className={`inline-block px-2 py-0.5 text-xs rounded ${
                         v.changeType === 'major'
                           ? 'bg-red-100 text-red-800'
-                          : 'bg-gray-100 text-gray-800'
+                          : 'bg-muted text-foreground'
                       }`}
                     >
                       {v.changeType ? text[v.changeType] : text.notRecorded}
                     </span>
                   ) : (
-                    <span className="text-gray-400">—</span>
+                    <span className="text-muted-foreground">—</span>
                   )}
                 </td>
                 <td className="px-4 py-3">
                   {v.isActive ? (
                     <span className="text-green-600 text-sm font-medium">✓ {text.active}</span>
                   ) : (
-                    <span className="text-gray-400 text-sm">—</span>
+                    <span className="text-muted-foreground text-sm">—</span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-500">{time.format(v.publishedAt)}</td>
-                <td className="px-4 py-3 text-sm text-gray-500">
+                <td className="px-4 py-3 text-sm text-muted-foreground">
+                  {time.format(v.publishedAt)}
+                </td>
+                <td className="px-4 py-3 text-sm text-muted-foreground">
                   {v.createdBy ? (
                     <span className="font-mono text-xs" title={v.createdBy}>
                       {v.createdBy}
                     </span>
                   ) : (
-                    <span className="text-gray-400">—</span>
+                    <span className="text-muted-foreground">—</span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-end text-sm [&_button]:ms-2">

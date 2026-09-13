@@ -371,7 +371,7 @@ export default function ReminderOffsetTogglePanel() {
   if (loading && !toggles) {
     return (
       <div
-        className="bg-white rounded-lg border border-gray-200 p-6 text-gray-500"
+        className="bg-card text-card-foreground rounded-lg border border-border p-6 text-muted-foreground"
         dir={isRtl ? 'rtl' : 'ltr'}
       >
         {t('admin.invoices.reminders.loading', locale)}
@@ -381,7 +381,7 @@ export default function ReminderOffsetTogglePanel() {
 
   return (
     <section
-      className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
+      className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
       dir={isRtl ? 'rtl' : 'ltr'}
       aria-labelledby="reminder-offset-heading"
     >
@@ -389,7 +389,7 @@ export default function ReminderOffsetTogglePanel() {
         <h2 id="reminder-offset-heading" className="text-lg font-semibold">
           {t('admin.invoices.reminders.title', locale)}
         </h2>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           {t('admin.invoices.reminders.description', locale)}
         </p>
       </div>
@@ -409,14 +409,14 @@ export default function ReminderOffsetTogglePanel() {
             <caption className="sr-only">{t('admin.invoices.reminders.title', locale)}</caption>
             <thead>
               <tr>
-                <th scope="col" className="text-start font-medium text-gray-600 py-2 pe-4">
+                <th scope="col" className="text-start font-medium text-muted-foreground py-2 pe-4">
                   {t('admin.invoices.reminders.serviceCol', locale)}
                 </th>
                 {INVOICE_REMINDER_OFFSETS.map((offset) => (
                   <th
                     key={offset}
                     scope="col"
-                    className="text-center font-medium text-gray-600 py-2 px-2 whitespace-nowrap"
+                    className="text-center font-medium text-muted-foreground py-2 px-2 whitespace-nowrap"
                   >
                     {t(OFFSET_KEY[offset], locale)}
                   </th>
@@ -425,7 +425,7 @@ export default function ReminderOffsetTogglePanel() {
             </thead>
             <tbody>
               {SERVICE_DUE_PERIOD_TYPES.map((serviceType) => (
-                <tr key={serviceType} className="border-t border-gray-100">
+                <tr key={serviceType} className="border-t border-border">
                   <th scope="row" className="text-start font-medium py-3 pe-4 whitespace-nowrap">
                     {t(serviceKey(serviceType), locale)}
                   </th>
@@ -448,7 +448,7 @@ export default function ReminderOffsetTogglePanel() {
                             onChange={(e) =>
                               handleToggle(serviceType, offset, e.target.checked, e.currentTarget)
                             }
-                            className="h-4 w-4 rounded border-gray-300"
+                            className="h-4 w-4 rounded border-input"
                           />
                           <span className="sr-only">
                             {enabled
@@ -507,21 +507,21 @@ export default function ReminderOffsetTogglePanel() {
           }}
         >
           <form
-            className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full space-y-4"
+            className="bg-card text-card-foreground rounded-lg shadow-xl p-6 max-w-sm w-full space-y-4"
             onSubmit={submitStepUp}
           >
             <div>
-              <h3 id="reminder-step-up-title" className="text-lg font-semibold text-gray-900">
+              <h3 id="reminder-step-up-title" className="text-lg font-semibold text-foreground">
                 {t('admin.invoices.reminders.stepUp.title', locale)}
               </h3>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 {t('admin.invoices.reminders.stepUp.description', locale)}
               </p>
             </div>
             <div className="space-y-2">
               <label
                 htmlFor="reminder-step-up-password"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-foreground"
               >
                 {t('admin.invoices.reminders.stepUp.passwordLabel', locale)}
               </label>
@@ -538,7 +538,7 @@ export default function ReminderOffsetTogglePanel() {
                   setStepUpPassword(event.target.value);
                   setStepUpError(null);
                 }}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                className="w-full border border-input rounded px-3 py-2 text-sm text-foreground focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
               />
               {stepUpError && (
                 <p className="text-sm text-red-700" role="alert">
@@ -552,7 +552,7 @@ export default function ReminderOffsetTogglePanel() {
                 data-testid="reminder-step-up-cancel"
                 disabled={stepUpSubmitting}
                 onClick={cancelStepUp}
-                className="px-4 py-2 text-sm rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors disabled:opacity-50"
+                className="px-4 py-2 text-sm rounded bg-muted text-foreground hover:bg-accent transition-colors disabled:opacity-50"
               >
                 {t('admin.invoices.reminders.stepUp.cancel', locale)}
               </button>

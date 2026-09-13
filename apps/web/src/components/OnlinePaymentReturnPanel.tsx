@@ -57,18 +57,18 @@ export function OnlinePaymentReturnPanel({
   }
   return (
     <section
-      className="space-y-3 rounded-lg bg-white p-6 shadow-sm"
+      className="space-y-3 rounded-lg bg-card text-card-foreground p-6 shadow-sm"
       aria-labelledby="payment-return-title"
       data-testid="payment-return"
     >
-      <h2 id="payment-return-title" className="text-lg font-semibold text-gray-900">
+      <h2 id="payment-return-title" className="text-lg font-semibold text-foreground">
         {t('wallet.return.title', locale)}
       </h2>
-      <p className="text-sm text-gray-700">{t('wallet.return.description', locale)}</p>
+      <p className="text-sm text-foreground">{t('wallet.return.description', locale)}</p>
       {status !== 'idle' && (
         <p
           role={status === 'error' || status === 'auth' ? 'alert' : 'status'}
-          className="text-sm text-gray-900"
+          className="text-sm text-foreground"
           data-testid="payment-return-status"
         >
           {t(`wallet.return.${status}`, locale)}

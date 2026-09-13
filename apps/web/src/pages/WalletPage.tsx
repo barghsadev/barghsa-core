@@ -372,8 +372,8 @@ export function WalletPage({
       data-testid="wallet-page"
     >
       <header>
-        <h1 className="text-2xl font-bold text-gray-900">{t('wallet.page.title', locale)}</h1>
-        <p className="mt-2 text-gray-600">{t('wallet.page.subtitle', locale)}</p>
+        <h1 className="text-2xl font-bold text-foreground">{t('wallet.page.title', locale)}</h1>
+        <p className="mt-2 text-muted-foreground">{t('wallet.page.subtitle', locale)}</p>
       </header>
 
       {paymentReturn && (
@@ -387,16 +387,18 @@ export function WalletPage({
 
       {loading ? (
         <div
-          className="h-40 rounded-lg bg-gray-200 animate-pulse"
+          className="h-40 rounded-lg bg-muted animate-pulse"
           aria-hidden="true"
           data-testid="wallet-loading"
         />
       ) : (
         <div className="space-y-6" data-testid="wallet-loaded">
           {wallet && (
-            <section className="rounded-lg bg-white p-6 shadow-sm">
-              <p className="text-sm text-gray-500">{t('wallet.page.currentBalance', locale)}</p>
-              <p className="mt-1 text-3xl font-bold text-gray-900" data-testid="wallet-balance">
+            <section className="rounded-lg bg-card text-card-foreground p-6 shadow-sm">
+              <p className="text-sm text-muted-foreground">
+                {t('wallet.page.currentBalance', locale)}
+              </p>
+              <p className="mt-1 text-3xl font-bold text-foreground" data-testid="wallet-balance">
                 {wallet.currency === 'IRR'
                   ? numbers.money(wallet.balance)
                   : `${numbers.irrDigits(wallet.balance)} ${wallet.currency}`}
@@ -415,12 +417,18 @@ export function WalletPage({
           )}
 
           {profileId && (
-            <form onSubmit={handleSubmit} className="space-y-4 rounded-lg bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold text-gray-900">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm"
+            >
+              <h2 className="text-lg font-semibold text-foreground">
                 {t('wallet.page.onlineTitle', locale)}
               </h2>
               <div>
-                <label htmlFor="top-up-amount" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="top-up-amount"
+                  className="block text-sm font-medium text-foreground"
+                >
                   {t('wallet.page.amountLabel', locale)}
                 </label>
                 <input
@@ -439,9 +447,9 @@ export function WalletPage({
                     setAmountInput(normalizeIrrAmountDigits(event.target.value));
                     if (error === 'invalid-amount' || error === 'limit-exceeded') setError(null);
                   }}
-                  className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
-                <p id="top-up-amount-hint" className="mt-2 text-sm text-gray-500">
+                <p id="top-up-amount-hint" className="mt-2 text-sm text-muted-foreground">
                   {advertisedLimit === 0
                     ? t('wallet.page.amountHintBlocked', locale)
                     : t('wallet.page.amountHint', locale).replace(
@@ -450,7 +458,7 @@ export function WalletPage({
                       )}
                 </p>
                 {tomanPreview !== null && (
-                  <p className="mt-1 text-sm text-gray-500" data-testid="wallet-toman">
+                  <p className="mt-1 text-sm text-muted-foreground" data-testid="wallet-toman">
                     {t('wallet.page.tomanPreview', locale).replace(
                       '{amount}',
                       numbers.irrDigits(tomanPreview)
@@ -462,7 +470,7 @@ export function WalletPage({
                 type="submit"
                 data-testid="wallet-submit"
                 disabled={onlineSubmitDisabled}
-                className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-dark disabled:opacity-60"
+                className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-dark disabled:opacity-60"
               >
                 {submitting ? t('wallet.page.submitting', locale) : t('wallet.page.submit', locale)}
               </button>
@@ -472,14 +480,14 @@ export function WalletPage({
           {profileId && (
             <form
               onSubmit={handleReceiptSubmit}
-              className="space-y-4 rounded-lg bg-white p-6 shadow-sm"
+              className="space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm"
               data-testid="wallet-receipt-form"
             >
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">
+                <h2 className="text-lg font-semibold text-foreground">
                   {t('wallet.page.receiptTitle', locale)}
                 </h2>
-                <p className="mt-1 text-sm text-gray-600">
+                <p className="mt-1 text-sm text-muted-foreground">
                   {t('wallet.page.receiptSubtitle', locale)}
                 </p>
               </div>
@@ -505,7 +513,10 @@ export function WalletPage({
               )}
 
               <div>
-                <label htmlFor="receipt-amount" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="receipt-amount"
+                  className="block text-sm font-medium text-foreground"
+                >
                   {t('wallet.page.receiptAmountLabel', locale)}
                 </label>
                 <input
@@ -522,10 +533,13 @@ export function WalletPage({
                     setReceiptAmountInput(normalizeIrrAmountDigits(event.target.value));
                     if (receiptError === 'invalid-amount') setReceiptError(null);
                   }}
-                  className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
                 {receiptTomanPreview !== null && (
-                  <p className="mt-1 text-sm text-gray-500" data-testid="wallet-receipt-toman">
+                  <p
+                    className="mt-1 text-sm text-muted-foreground"
+                    data-testid="wallet-receipt-toman"
+                  >
                     {t('wallet.page.tomanPreview', locale).replace(
                       '{amount}',
                       numbers.irrDigits(receiptTomanPreview)
@@ -535,7 +549,7 @@ export function WalletPage({
               </div>
 
               <div>
-                <label htmlFor="receipt-date" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="receipt-date" className="block text-sm font-medium text-foreground">
                   {t('wallet.page.receiptDateLabel', locale)}
                 </label>
                 <input
@@ -551,14 +565,14 @@ export function WalletPage({
                     setReceiptDate(event.target.value);
                     if (receiptError === 'invalid-date') setReceiptError(null);
                   }}
-                  className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="receipt-payer-ref"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-foreground"
                 >
                   {t('wallet.page.receiptPayerRefLabel', locale)}
                 </label>
@@ -576,12 +590,12 @@ export function WalletPage({
                     setReceiptPayerRef(event.target.value);
                     if (receiptError === 'invalid-payer-ref') setReceiptError(null);
                   }}
-                  className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
 
               <div>
-                <label htmlFor="receipt-file" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="receipt-file" className="block text-sm font-medium text-foreground">
                   {t('wallet.page.receiptFileLabel', locale)}
                 </label>
                 <input
@@ -601,15 +615,15 @@ export function WalletPage({
                       setReceiptError(null);
                     }
                   }}
-                  className="mt-1 block w-full text-sm text-gray-600 file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-primary"
+                  className="mt-1 block w-full text-sm text-muted-foreground file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-foreground"
                 />
-                <p id="receipt-file-hint" className="mt-2 text-sm text-gray-500">
+                <p id="receipt-file-hint" className="mt-2 text-sm text-muted-foreground">
                   {t('wallet.page.receiptFileHint', locale)}
                 </p>
               </div>
 
               <div>
-                <label htmlFor="receipt-note" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="receipt-note" className="block text-sm font-medium text-foreground">
                   {t('wallet.page.receiptNoteLabel', locale)}
                 </label>
                 <textarea
@@ -621,7 +635,7 @@ export function WalletPage({
                   value={receiptNote}
                   disabled={receiptSubmitting}
                   onChange={(event) => setReceiptNote(event.target.value)}
-                  className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="mt-1 w-full rounded-lg border border-input px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
 
@@ -642,7 +656,7 @@ export function WalletPage({
             <button
               type="button"
               onClick={() => void load()}
-              className="text-sm font-medium text-primary hover:underline"
+              className="text-sm font-medium text-foreground hover:underline"
             >
               {t('wallet.page.retry', locale)}
             </button>

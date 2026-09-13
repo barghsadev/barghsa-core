@@ -111,8 +111,8 @@ function InvoiceIcon({ className }: { className?: string }) {
  * Active contracts: any count is a positive signal → green always.
  */
 function contractColor(count: number): string {
-  if (count === 0) return 'border-s-4 border-gray-400 bg-white';
-  return 'border-s-4 border-green-500 bg-green-50';
+  if (count === 0) return 'border-s-4 border-input bg-card text-card-foreground';
+  return 'border-s-4 border-green-500 bg-green-50 dark:bg-card';
 }
 
 /**
@@ -124,9 +124,9 @@ function contractColor(count: number): string {
  * exists; see T-08.01.03.
  */
 function orderColor(count: number): string {
-  if (count === 0) return 'border-s-4 border-green-500 bg-green-50';
-  if (count <= 2) return 'border-s-4 border-yellow-500 bg-yellow-50';
-  return 'border-s-4 border-red-500 bg-red-50';
+  if (count === 0) return 'border-s-4 border-green-500 bg-green-50 dark:bg-card';
+  if (count <= 2) return 'border-s-4 border-yellow-500 bg-yellow-50 dark:bg-card';
+  return 'border-s-4 border-red-500 bg-red-50 dark:bg-card';
 }
 
 /**
@@ -136,9 +136,9 @@ function orderColor(count: number): string {
  * attention, and a growing backlog (3+) signals the customer needs to act.
  */
 function ticketColor(count: number): string {
-  if (count === 0) return 'border-s-4 border-green-500 bg-green-50';
-  if (count <= 2) return 'border-s-4 border-yellow-500 bg-yellow-50';
-  return 'border-s-4 border-red-500 bg-red-50';
+  if (count === 0) return 'border-s-4 border-green-500 bg-green-50 dark:bg-card';
+  if (count <= 2) return 'border-s-4 border-yellow-500 bg-yellow-50 dark:bg-card';
+  return 'border-s-4 border-red-500 bg-red-50 dark:bg-card';
 }
 
 /**
@@ -149,9 +149,9 @@ function ticketColor(count: number): string {
  * placeholders pending operational data.
  */
 function invoiceColor(count: number): string {
-  if (count === 0) return 'border-s-4 border-green-500 bg-green-50';
-  if (count <= 2) return 'border-s-4 border-yellow-500 bg-yellow-50';
-  return 'border-s-4 border-red-500 bg-red-50';
+  if (count === 0) return 'border-s-4 border-green-500 bg-green-50 dark:bg-card';
+  if (count <= 2) return 'border-s-4 border-yellow-500 bg-yellow-50 dark:bg-card';
+  return 'border-s-4 border-red-500 bg-red-50 dark:bg-card';
 }
 
 /** ─── Card definitions ─────────────────────────────────────────────── */
@@ -234,12 +234,14 @@ export function QuickStatusCards({
             className={`block rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow ${colorClass}`}
           >
             <div className="flex items-start gap-3">
-              <Icon className="w-8 h-8 text-gray-600 shrink-0 mt-0.5" />
+              <Icon className="w-8 h-8 text-muted-foreground shrink-0 mt-0.5" />
               <div className="min-w-0 flex-1">
-                <p className="text-sm text-gray-500 mb-1">
+                <p className="text-sm text-muted-foreground mb-1">
                   {t(card.labelKey as keyof typeof t, locale)}
                 </p>
-                <p className="text-2xl font-semibold text-gray-900">{numbers.number(card.count)}</p>
+                <p className="text-2xl font-semibold text-foreground">
+                  {numbers.number(card.count)}
+                </p>
               </div>
             </div>
           </Link>

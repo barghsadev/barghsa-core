@@ -133,14 +133,14 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 rounded-lg bg-white p-6 shadow-sm"
+      className="space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm"
       data-testid="invoice-receipt-form"
     >
       <div>
-        <h2 className="text-lg font-semibold text-gray-900">
+        <h2 className="text-lg font-semibold text-foreground">
           {t('invoices.details.receiptTitle', locale)}
         </h2>
-        <p className="mt-1 text-sm text-gray-600">
+        <p className="mt-1 text-sm text-muted-foreground">
           {t('invoices.details.receiptSubtitle', locale)}
         </p>
       </div>
@@ -166,7 +166,10 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
       )}
 
       <div>
-        <label htmlFor="invoice-receipt-amount" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="invoice-receipt-amount"
+          className="block text-sm font-medium text-foreground"
+        >
           {t('invoices.details.receiptAmountLabel', locale)}
         </label>
         <input
@@ -184,12 +187,12 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
             setAmountInput(normalizeIrrAmountDigits(event.target.value));
             if (error === 'invalid-amount') setError(null);
           }}
-          className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
 
       <div>
-        <label htmlFor="invoice-receipt-date" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="invoice-receipt-date" className="block text-sm font-medium text-foreground">
           {t('invoices.details.receiptDateLabel', locale)}
         </label>
         <input
@@ -205,14 +208,14 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
             setPaymentDate(event.target.value);
             if (error === 'invalid-date') setError(null);
           }}
-          className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
 
       <div>
         <label
           htmlFor="invoice-receipt-payer-ref"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-foreground"
         >
           {t('invoices.details.receiptPayerRefLabel', locale)}
         </label>
@@ -230,12 +233,12 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
             setPayerReference(event.target.value);
             if (error === 'invalid-payer-ref') setError(null);
           }}
-          className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
 
       <div>
-        <label htmlFor="invoice-receipt-file" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="invoice-receipt-file" className="block text-sm font-medium text-foreground">
           {t('invoices.details.receiptFileLabel', locale)}
         </label>
         <input
@@ -253,15 +256,15 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
             setFile(next);
             if (error === 'invalid-file' || error === 'upload') setError(null);
           }}
-          className="mt-1 block w-full text-sm text-gray-600 file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-primary"
+          className="mt-1 block w-full text-sm text-muted-foreground file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-foreground"
         />
-        <p id="invoice-receipt-file-hint" className="mt-2 text-sm text-gray-500">
+        <p id="invoice-receipt-file-hint" className="mt-2 text-sm text-muted-foreground">
           {t('invoices.details.receiptFileHint', locale)}
         </p>
       </div>
 
       <div>
-        <label htmlFor="invoice-receipt-note" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="invoice-receipt-note" className="block text-sm font-medium text-foreground">
           {t('invoices.details.receiptNoteLabel', locale)}
         </label>
         <textarea
@@ -273,7 +276,7 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
           value={customerNote}
           disabled={submitting}
           onChange={(event) => setCustomerNote(event.target.value)}
-          className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="mt-1 w-full rounded-lg border border-input px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
 

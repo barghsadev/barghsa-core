@@ -554,7 +554,9 @@ export default function AdminWalletReceiptsPage() {
       {time.notice}
       <header>
         <h1 className="text-2xl font-bold">{t('admin.walletReceipts.title', locale)}</h1>
-        <p className="text-gray-600 mt-2">{t('admin.walletReceipts.description', locale)}</p>
+        <p className="text-muted-foreground mt-2">
+          {t('admin.walletReceipts.description', locale)}
+        </p>
       </header>
 
       <WalletTopUpLimitConfigPanel />
@@ -575,18 +577,18 @@ export default function AdminWalletReceiptsPage() {
       )}
 
       {loading ? (
-        <p className="text-sm text-gray-600" role="status">
+        <p className="text-sm text-muted-foreground" role="status">
           {t('admin.walletReceipts.loading', locale)}
         </p>
       ) : items.length === 0 && !selected ? (
-        <p className="text-sm text-gray-600" role="status">
+        <p className="text-sm text-muted-foreground" role="status">
           {t('admin.walletReceipts.empty', locale)}
         </p>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
           <nav
             aria-label={t('admin.walletReceipts.queueLabel', locale)}
-            className="bg-white rounded-lg border border-gray-200 p-3 space-y-1"
+            className="bg-card text-card-foreground rounded-lg border border-border p-3 space-y-1"
           >
             {items.map((row) => {
               const active = row.transactionId === selectedId;
@@ -604,14 +606,14 @@ export default function AdminWalletReceiptsPage() {
                     setEmergencyReason('');
                   }}
                   className={`w-full text-start rounded px-3 py-2 text-sm ${
-                    active ? 'bg-blue-50 text-blue-900' : 'hover:bg-gray-50'
+                    active ? 'bg-blue-50 text-blue-900' : 'hover:bg-muted'
                   }`}
                   aria-current={active ? 'true' : undefined}
                 >
                   <span className="block font-medium">
                     {numbers.irrDigits(row.amount)} {row.currency}
                   </span>
-                  <span className="block text-xs text-gray-500" dir="ltr">
+                  <span className="block text-xs text-muted-foreground" dir="ltr">
                     {row.payerReference}
                   </span>
                 </button>
@@ -621,7 +623,7 @@ export default function AdminWalletReceiptsPage() {
 
           {selected && (
             <section
-              className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
+              className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
               aria-labelledby="receipt-review-heading"
             >
               <h2 id="receipt-review-heading" className="text-lg font-semibold">
@@ -638,17 +640,21 @@ export default function AdminWalletReceiptsPage() {
               )}
               <dl className="grid grid-cols-1 gap-2 text-sm">
                 <div>
-                  <dt className="text-gray-500">{t('admin.walletReceipts.amount', locale)}</dt>
+                  <dt className="text-muted-foreground">
+                    {t('admin.walletReceipts.amount', locale)}
+                  </dt>
                   <dd className="font-medium">
                     {numbers.irrDigits(selected.amount)} {selected.currency}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-gray-500">{t('admin.walletReceipts.paymentDate', locale)}</dt>
+                  <dt className="text-muted-foreground">
+                    {t('admin.walletReceipts.paymentDate', locale)}
+                  </dt>
                   <dd>{formatPaymentDate(selected.paymentDate, locale)}</dd>
                 </div>
                 <div>
-                  <dt className="text-gray-500">
+                  <dt className="text-muted-foreground">
                     {t('admin.walletReceipts.payerReference', locale)}
                   </dt>
                   <dd className="font-mono text-sm" dir="ltr">
@@ -656,36 +662,42 @@ export default function AdminWalletReceiptsPage() {
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-gray-500">{t('admin.walletReceipts.walletId', locale)}</dt>
+                  <dt className="text-muted-foreground">
+                    {t('admin.walletReceipts.walletId', locale)}
+                  </dt>
                   <dd className="font-mono text-sm" dir="ltr">
                     {selected.walletId}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-gray-500">{t('admin.walletReceipts.submittedAt', locale)}</dt>
+                  <dt className="text-muted-foreground">
+                    {t('admin.walletReceipts.submittedAt', locale)}
+                  </dt>
                   <dd>{time.format(selected.submittedAt)}</dd>
                 </div>
                 <div>
-                  <dt className="text-gray-500">{t('admin.walletReceipts.note', locale)}</dt>
+                  <dt className="text-muted-foreground">
+                    {t('admin.walletReceipts.note', locale)}
+                  </dt>
                   <dd>{selected.customerNote ?? t('admin.walletReceipts.none', locale)}</dd>
                 </div>
               </dl>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-700 mb-2">
+                <h3 className="text-sm font-medium text-foreground mb-2">
                   {t('admin.walletReceipts.attachment', locale)}
                 </h3>
                 {selected.attachmentUrl && isImageAttachment(selected.attachmentKey) ? (
                   <img
                     src={selected.attachmentUrl}
                     alt={t('admin.walletReceipts.attachmentAlt', locale)}
-                    className="max-h-80 rounded border border-gray-200"
+                    className="max-h-80 rounded border border-border"
                   />
                 ) : selected.attachmentUrl && isPdfAttachment(selected.attachmentKey) ? (
                   <iframe
                     title={t('admin.walletReceipts.attachmentAlt', locale)}
                     src={selected.attachmentUrl}
-                    className="w-full h-80 rounded border border-gray-200"
+                    className="w-full h-80 rounded border border-border"
                   />
                 ) : selected.attachmentUrl ? (
                   <a
@@ -697,18 +709,18 @@ export default function AdminWalletReceiptsPage() {
                     {t('admin.walletReceipts.openAttachment', locale)}
                   </a>
                 ) : (
-                  <p className="text-sm text-gray-600" dir="ltr">
+                  <p className="text-sm text-muted-foreground" dir="ltr">
                     {selected.attachmentKey ?? t('admin.walletReceipts.none', locale)}
                   </p>
                 )}
               </div>
 
               {selected.canDecide ? (
-                <div className="space-y-4 border-t border-gray-100 pt-4">
+                <div className="space-y-4 border-t border-border pt-4">
                   <div>
                     <label
                       htmlFor="apply-invoice-id"
-                      className="block text-sm font-medium text-gray-700 mb-1"
+                      className="block text-sm font-medium text-foreground mb-1"
                     >
                       {t('admin.walletReceipts.invoiceId', locale)}
                     </label>
@@ -725,9 +737,9 @@ export default function AdminWalletReceiptsPage() {
                       onChange={(e) => setInvoiceId(e.target.value)}
                       placeholder={t('admin.walletReceipts.invoiceIdPlaceholder', locale)}
                       aria-describedby="apply-invoice-hint"
-                      className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
+                      className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
                     />
-                    <p id="apply-invoice-hint" className="text-xs text-gray-500 mt-1">
+                    <p id="apply-invoice-hint" className="text-xs text-muted-foreground mt-1">
                       {t('admin.walletReceipts.invoiceIdHint', locale)}
                     </p>
                   </div>
@@ -744,7 +756,7 @@ export default function AdminWalletReceiptsPage() {
                       aria-live="polite"
                     >
                       <div>
-                        <dt className="text-gray-600">
+                        <dt className="text-muted-foreground">
                           {t('admin.walletReceipts.remaining', locale)}
                         </dt>
                         <dd className="font-medium">
@@ -752,7 +764,7 @@ export default function AdminWalletReceiptsPage() {
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-gray-600">
+                        <dt className="text-muted-foreground">
                           {t('admin.walletReceipts.invoiceAllocation', locale)}
                         </dt>
                         <dd className="font-medium">
@@ -760,7 +772,7 @@ export default function AdminWalletReceiptsPage() {
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-gray-600">
+                        <dt className="text-muted-foreground">
                           {t('admin.walletReceipts.overpaymentCredit', locale)}
                         </dt>
                         <dd className="font-medium">
@@ -828,7 +840,7 @@ export default function AdminWalletReceiptsPage() {
                         value={emergencyReason}
                         onChange={(event) => setEmergencyReason(event.target.value)}
                         disabled={acting || stepUpOpen}
-                        className="w-full rounded border border-gray-300 px-3 py-2"
+                        className="w-full rounded border border-input px-3 py-2"
                       />
                       <button
                         type="button"
@@ -853,7 +865,7 @@ export default function AdminWalletReceiptsPage() {
                     <div>
                       <label
                         htmlFor="reject-reason"
-                        className="block text-sm font-medium text-gray-700 mb-1"
+                        className="block text-sm font-medium text-foreground mb-1"
                       >
                         {t('admin.walletReceipts.reason', locale)}{' '}
                         <span className="text-red-500" aria-hidden="true">
@@ -881,9 +893,9 @@ export default function AdminWalletReceiptsPage() {
                             setClientIssue(null);
                           }
                         }}
-                        className="w-full border border-gray-300 rounded px-3 py-2"
+                        className="w-full border border-input rounded px-3 py-2"
                       />
-                      <p id="reject-reason-hint" className="text-xs text-gray-500 mt-1">
+                      <p id="reject-reason-hint" className="text-xs text-muted-foreground mt-1">
                         {t('admin.walletReceipts.reasonHint', locale)}
                       </p>
                     </div>
@@ -928,18 +940,18 @@ export default function AdminWalletReceiptsPage() {
         >
           <form
             onSubmit={submitStepUp}
-            className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg space-y-4"
+            className="w-full max-w-md rounded-lg bg-card text-card-foreground p-6 shadow-lg space-y-4"
           >
-            <h3 id="wallet-receipt-step-up-title" className="text-lg font-semibold text-gray-900">
+            <h3 id="wallet-receipt-step-up-title" className="text-lg font-semibold text-foreground">
               {t('admin.walletReceipts.stepUp.title', locale)}
             </h3>
-            <p id="wallet-receipt-step-up-description" className="text-sm text-gray-600">
+            <p id="wallet-receipt-step-up-description" className="text-sm text-muted-foreground">
               {t('admin.walletReceipts.stepUp.description', locale)}
             </p>
             <div>
               <label
                 htmlFor="wallet-receipt-step-up-password"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.walletReceipts.stepUp.passwordLabel', locale)}
               </label>
@@ -959,7 +971,7 @@ export default function AdminWalletReceiptsPage() {
                   setStepUpPassword(e.target.value);
                   if (stepUpError) setStepUpError(null);
                 }}
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border border-input rounded px-3 py-2"
               />
             </div>
             {stepUpError && (
@@ -983,7 +995,7 @@ export default function AdminWalletReceiptsPage() {
                 data-testid="wallet-receipt-step-up-cancel"
                 onClick={cancelStepUp}
                 disabled={stepUpSubmitting}
-                className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                className="px-4 py-2 border border-input rounded text-foreground hover:bg-muted disabled:opacity-50"
               >
                 {t('admin.walletReceipts.stepUp.cancel', locale)}
               </button>

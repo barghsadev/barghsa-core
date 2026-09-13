@@ -170,20 +170,20 @@ export default function TemplatePreviewPanel({
   const problems = new Set([...undeclared, ...missingRequired]);
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
+    <div className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold">
             {t('admin.notifications.preview.title', uiLocale)}
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             {t('admin.notifications.preview.description', uiLocale)}
           </p>
         </div>
         {eventKey !== '' && (
           <button
             onClick={reset}
-            className="px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm border border-input rounded hover:bg-muted"
           >
             {t('admin.notifications.preview.reset', uiLocale)}
           </button>
@@ -191,7 +191,7 @@ export default function TemplatePreviewPanel({
       </div>
 
       {loading && templates.length === 0 ? (
-        <div className="text-gray-500">{t('admin.notifications.loading', uiLocale)}</div>
+        <div className="text-muted-foreground">{t('admin.notifications.loading', uiLocale)}</div>
       ) : (
         <>
           {/* Selection controls: event / language / channel / version */}
@@ -199,7 +199,7 @@ export default function TemplatePreviewPanel({
             <div>
               <label
                 htmlFor="tpl-preview-event"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.eventKey', uiLocale)}
               </label>
@@ -210,7 +210,7 @@ export default function TemplatePreviewPanel({
                   setEventKey(e.target.value);
                   setVersionId('');
                 }}
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border border-input rounded px-3 py-2"
               >
                 <option value="">—</option>
                 {eventKeys.map((k) => (
@@ -224,7 +224,7 @@ export default function TemplatePreviewPanel({
             <div>
               <label
                 htmlFor="tpl-preview-channel"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.channel', uiLocale)}
               </label>
@@ -235,7 +235,7 @@ export default function TemplatePreviewPanel({
                   setChannel(e.target.value as TemplateChannel | '');
                   setVersionId('');
                 }}
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border border-input rounded px-3 py-2"
               >
                 <option value="">—</option>
                 {channels.map((c) => (
@@ -249,7 +249,7 @@ export default function TemplatePreviewPanel({
             <div>
               <label
                 htmlFor="tpl-preview-locale"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.locale', uiLocale)}
               </label>
@@ -260,7 +260,7 @@ export default function TemplatePreviewPanel({
                   setLocale(e.target.value as TemplateLocale | '');
                   setVersionId('');
                 }}
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border border-input rounded px-3 py-2"
               >
                 <option value="">—</option>
                 {locales.map((l) => (
@@ -274,7 +274,7 @@ export default function TemplatePreviewPanel({
             <div>
               <label
                 htmlFor="tpl-preview-version"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.preview.version', uiLocale)}
               </label>
@@ -282,7 +282,7 @@ export default function TemplatePreviewPanel({
                 id="tpl-preview-version"
                 value={selected?.id ?? ''}
                 onChange={(e) => setVersionId(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border border-input rounded px-3 py-2"
                 disabled={versions.length === 0}
               >
                 {versions.length === 0 && <option value="">—</option>}
@@ -298,13 +298,13 @@ export default function TemplatePreviewPanel({
 
           {/* Preview results */}
           {!selected ? (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               {t('admin.notifications.preview.empty', uiLocale)}
             </p>
           ) : (
             <div className="space-y-4">
               {/* Emphasize version metadata + selected identity */}
-              <div className="text-xs text-gray-500 space-y-0.5">
+              <div className="text-xs text-muted-foreground space-y-0.5">
                 <p>
                   {selected.eventKey} · {CHANNEL_LABELS[selected.channel]} ·{' '}
                   {LOCALE_LABELS[selected.locale]} · v{numbers.number(selected.version)} ·{' '}
@@ -314,13 +314,13 @@ export default function TemplatePreviewPanel({
 
               {/* Rendered subject (email only) */}
               {selected.channel === 'email' && subjectPreview != null && (
-                <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                  <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase">
+                <div className="border border-border rounded-lg p-4 bg-muted/40">
+                  <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
                     {t('admin.notifications.subjectLabel', uiLocale)}
                   </h4>
                   <p
                     dir={selected.locale === 'fa' ? 'rtl' : 'ltr'}
-                    className="text-sm text-gray-800"
+                    className="text-sm text-foreground"
                   >
                     {subjectPreview.output}
                   </p>
@@ -328,8 +328,8 @@ export default function TemplatePreviewPanel({
               )}
 
               {/* Rendered body */}
-              <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase">
+              <div className="border border-border rounded-lg p-4 bg-muted/40">
+                <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
                   {t('admin.notifications.bodyTemplate', uiLocale)}
                 </h4>
                 {selected.channel === 'email' ? (
@@ -341,7 +341,7 @@ export default function TemplatePreviewPanel({
                 ) : (
                   <pre
                     dir={selected.locale === 'fa' ? 'rtl' : 'ltr'}
-                    className="text-sm whitespace-pre-wrap font-sans text-gray-800"
+                    className="text-sm whitespace-pre-wrap font-sans text-foreground"
                   >
                     {bodyPreview?.output}
                   </pre>
@@ -349,12 +349,12 @@ export default function TemplatePreviewPanel({
               </div>
 
               {/* Available variables + descriptions */}
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase">
+              <div className="border border-border rounded-lg p-4">
+                <h4 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
                   {t('admin.notifications.preview.variables', uiLocale)}
                 </h4>
                 {selected.variables.length === 0 ? (
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted-foreground">
                     {t('admin.notifications.preview.noVariables', uiLocale)}
                   </p>
                 ) : (
@@ -367,7 +367,7 @@ export default function TemplatePreviewPanel({
                           className={`text-sm px-3 py-1.5 rounded border ${
                             problem
                               ? 'bg-amber-50 border-amber-200 text-amber-800'
-                              : 'bg-gray-50 border-gray-200 text-gray-700'
+                              : 'bg-muted/40 border-border text-foreground'
                           }`}
                         >
                           <span className="font-mono">
@@ -376,7 +376,7 @@ export default function TemplatePreviewPanel({
                             {'}}'}
                           </span>
                           {v.description && (
-                            <span className="ml-2 text-gray-500">{v.description}</span>
+                            <span className="ml-2 text-muted-foreground">{v.description}</span>
                           )}
                         </li>
                       );

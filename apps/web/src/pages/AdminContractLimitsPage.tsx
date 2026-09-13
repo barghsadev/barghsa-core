@@ -86,8 +86,11 @@ export default function AdminContractLimitsPage() {
         config && (
           <>
             {saved && <p role="status">{label('saved')}</p>}
-            <p className="rounded border bg-white p-3">{label('scope')}</p>
-            <form onSubmit={submit} className="max-w-xl space-y-5 rounded-lg border bg-white p-5">
+            <p className="rounded border bg-card text-card-foreground p-3">{label('scope')}</p>
+            <form
+              onSubmit={submit}
+              className="max-w-xl space-y-5 rounded-lg border bg-card text-card-foreground p-5"
+            >
               {fields.map((field) => (
                 <div key={field.key} className="space-y-2">
                   <Label htmlFor={`contract-limit-${field.key}`}>{label(field.key)}</Label>

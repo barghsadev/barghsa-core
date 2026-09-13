@@ -143,7 +143,7 @@ export default function AdminReconciliationPage() {
       </header>
       <form
         onSubmit={filter}
-        className="flex flex-wrap items-end gap-3 rounded-lg border bg-white p-4"
+        className="flex flex-wrap items-end gap-3 rounded-lg border bg-card text-card-foreground p-4"
       >
         {[
           ['status', status, setStatus, statuses],
@@ -205,7 +205,7 @@ export default function AdminReconciliationPage() {
           {items.length === 0 ? (
             <p>{label('empty')}</p>
           ) : (
-            <div className="overflow-x-auto rounded-lg border bg-white">
+            <div className="overflow-x-auto rounded-lg border bg-card text-card-foreground">
               <table className="w-full text-start">
                 <caption className="sr-only">{label('title')}</caption>
                 <thead>

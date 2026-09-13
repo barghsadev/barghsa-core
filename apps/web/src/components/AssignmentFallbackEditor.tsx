@@ -40,7 +40,7 @@ export function AssignmentFallbackEditor({
   );
   return (
     <div className="w-full space-y-3">
-      <p className="text-sm text-gray-600">{label('fallbackHelp')}</p>
+      <p className="text-sm text-muted-foreground">{label('fallbackHelp')}</p>
       {choices.length > 1 && (
         <Button type="button" variant="outline" onClick={() => move(0, 1)}>
           {label('moveDown')} 1

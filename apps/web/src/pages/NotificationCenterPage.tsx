@@ -137,8 +137,8 @@ export function NotificationCenterPage() {
     <div className="mx-auto max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <BellIcon className="h-6 w-6 text-primary" aria-hidden="true" />
-          <h1 className="text-2xl font-bold text-gray-900">{t('notifications.title', locale)}</h1>
+          <BellIcon className="h-6 w-6 text-foreground" aria-hidden="true" />
+          <h1 className="text-2xl font-bold text-foreground">{t('notifications.title', locale)}</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -162,7 +162,7 @@ export function NotificationCenterPage() {
       <div
         role="tablist"
         aria-label={t('notifications.bellLabel', locale)}
-        className="flex gap-1 rounded-lg bg-gray-100 p-1 text-sm"
+        className="flex gap-1 rounded-lg bg-muted p-1 text-sm"
       >
         {(['all', 'unread'] as NotificationFilter[]).map((value) => (
           <button
@@ -174,8 +174,8 @@ export function NotificationCenterPage() {
             disabled={markingAll}
             className={`flex-1 rounded-md px-3 py-1.5 transition-colors ${
               filter === value
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'bg-card text-card-foreground text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             {value === 'all'
@@ -187,13 +187,16 @@ export function NotificationCenterPage() {
 
       {/* Loading skeleton */}
       {loading && (
-        <div className="space-y-3 rounded-lg border border-gray-200 bg-white p-4" aria-busy="true">
+        <div
+          className="space-y-3 rounded-lg border border-border bg-card text-card-foreground p-4"
+          aria-busy="true"
+        >
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="flex items-start gap-3 animate-pulse">
-              <div className="h-10 w-10 rounded-full bg-gray-200" />
+              <div className="h-10 w-10 rounded-full bg-muted" />
               <div className="flex-1 space-y-2 py-0.5">
-                <div className="h-3 w-3/4 rounded bg-gray-200" />
-                <div className="h-3 w-1/2 rounded bg-gray-100" />
+                <div className="h-3 w-3/4 rounded bg-muted" />
+                <div className="h-3 w-1/2 rounded bg-muted" />
               </div>
             </div>
           ))}
@@ -202,8 +205,11 @@ export function NotificationCenterPage() {
 
       {/* Error state */}
       {!loading && error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center" role="alert">
-          <p className="text-red-700">{error}</p>
+        <div
+          className="rounded-lg border border-destructive/30 bg-destructive/10 p-6 text-center"
+          role="alert"
+        >
+          <p className="text-destructive">{error}</p>
           <Button variant="outline" onClick={() => void load()} className="mt-3">
             {t('notifications.retry', locale)}
           </Button>
@@ -212,27 +218,29 @@ export function NotificationCenterPage() {
 
       {/* Empty state */}
       {!loading && !error && items.length === 0 && (
-        <div className="rounded-lg border border-gray-200 bg-white p-10 text-center">
-          <InboxIcon className="mx-auto h-10 w-10 text-gray-300" aria-hidden="true" />
-          <h2 className="mt-3 text-lg font-semibold text-gray-900">
+        <div className="rounded-lg border border-border bg-card text-card-foreground p-10 text-center">
+          <InboxIcon className="mx-auto h-10 w-10 text-muted-foreground" aria-hidden="true" />
+          <h2 className="mt-3 text-lg font-semibold text-foreground">
             {filter === 'unread'
               ? t('notifications.empty.unread', locale)
               : t('notifications.empty.title', locale)}
           </h2>
-          <p className="mt-1 text-sm text-gray-500">{t('notifications.empty.body', locale)}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t('notifications.empty.body', locale)}
+          </p>
         </div>
       )}
 
       {/* List */}
       {!loading && !error && items.length > 0 && (
-        <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white">
+        <ul className="divide-y divide-border rounded-lg border border-border bg-card text-card-foreground">
           {items.map((item) => (
             <li key={item.id}>
               <button
                 type="button"
                 onClick={() => void markRead(item)}
                 disabled={markingAll}
-                className="flex w-full items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
+                className="flex w-full items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
                 dir={isRtl ? 'rtl' : 'ltr'}
                 aria-label={`${t('notifications.markReadAria', locale)} — ${notificationContent(item, locale).title}`}
               >

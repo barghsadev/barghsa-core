@@ -114,7 +114,7 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
   if (profiles.length === 1 && activeProfile) {
     return (
       <div className="flex items-center gap-2 px-1 py-2" dir={isRtl ? 'rtl' : 'ltr'}>
-        <span className="text-xs font-medium text-gray-600 truncate">
+        <span className="text-xs font-medium text-muted-foreground truncate">
           {profileName ?? t('dashboard.profile.unnamed', locale)}
         </span>
         <TypeBadge profileType={activeProfile?.profileType} locale={locale} />
@@ -154,7 +154,7 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
     <div className="space-y-2" dir={isRtl ? 'rtl' : 'ltr'}>
       <label
         htmlFor="profile-switcher"
-        className="flex items-center gap-2 text-sm font-medium text-gray-800"
+        className="flex items-center gap-2 text-sm font-medium text-foreground"
       >
         <span className="truncate">{profileName ?? t('dashboard.profile.unnamed', locale)}</span>
         <TypeBadge profileType={activeProfile?.profileType} locale={locale} />
@@ -165,7 +165,7 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
         value={activeProfileId ?? ''}
         disabled={switching}
         onChange={(e) => handleSwitch(e.target.value)}
-        className="w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none disabled:opacity-50"
+        className="w-full rounded-md border border-input bg-card text-card-foreground px-2 py-1.5 text-sm text-foreground focus:border-blue-500 focus:outline-none disabled:opacity-50"
         aria-label={t('dashboard.profile.switchLabel', locale)}
       >
         {!activeProfile && (
@@ -181,7 +181,7 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
       </select>
 
       {switching && (
-        <p className="text-xs text-gray-500">{t('dashboard.profile.switching', locale)}</p>
+        <p className="text-xs text-muted-foreground">{t('dashboard.profile.switching', locale)}</p>
       )}
       {error && (
         <p className="text-xs text-red-600" role="alert">

@@ -136,7 +136,7 @@ export function NotificationBell() {
       <DropdownMenuTrigger
         data-testid="notification-bell"
         aria-label={bellAria}
-        className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-card-foreground text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
       >
         <BellIcon className="h-5 w-5" aria-hidden="true" />
         {unreadCount > 0 && (
@@ -155,13 +155,13 @@ export function NotificationBell() {
         data-testid="notification-panel"
       >
         <div className="flex items-center justify-between px-1.5 py-1">
-          <span className="text-sm font-medium text-gray-900">
+          <span className="text-sm font-medium text-foreground">
             {t('notifications.bellLabel', locale)}
           </span>
           <button
             type="button"
             onClick={() => void markRead()}
-            className="inline-flex items-center gap-1 rounded px-1.5 py-1 text-xs text-primary hover:bg-primary/5 disabled:opacity-50"
+            className="inline-flex items-center gap-1 rounded px-1.5 py-1 text-xs text-foreground hover:bg-primary/5 disabled:opacity-50"
             disabled={unreadCount === 0 || writing || loading}
           >
             <CheckCheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -174,10 +174,10 @@ export function NotificationBell() {
           <div className="space-y-3 p-2" aria-busy="true">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="flex items-start gap-3 animate-pulse">
-                <div className="h-9 w-9 rounded-full bg-gray-200" />
+                <div className="h-9 w-9 rounded-full bg-muted" />
                 <div className="flex-1 space-y-2 py-0.5">
-                  <div className="h-3 w-3/4 rounded bg-gray-200" />
-                  <div className="h-3 w-1/2 rounded bg-gray-100" />
+                  <div className="h-3 w-3/4 rounded bg-muted" />
+                  <div className="h-3 w-1/2 rounded bg-muted" />
                 </div>
               </div>
             ))}
@@ -190,7 +190,7 @@ export function NotificationBell() {
             </button>
           </div>
         ) : items.length === 0 ? (
-          <p className="px-3 py-6 text-center text-sm text-gray-500">
+          <p className="px-3 py-6 text-center text-sm text-muted-foreground">
             {t('notifications.empty.title', locale)}
           </p>
         ) : (
@@ -216,7 +216,7 @@ export function NotificationBell() {
           <Link
             to="/notifications"
             onClick={() => setOpen(false)}
-            className="block rounded-md px-1.5 py-1.5 text-center text-sm font-medium text-primary hover:bg-primary/5"
+            className="block rounded-md px-1.5 py-1.5 text-center text-sm font-medium text-foreground hover:bg-primary/5"
           >
             {t('notifications.viewAll', locale)}
           </Link>

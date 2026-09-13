@@ -31,12 +31,12 @@ import {
 const STATUS_COLORS: Record<Status, string> = {
   draft: 'bg-yellow-100 text-yellow-800',
   active: 'bg-green-100 text-green-800',
-  superseded: 'bg-gray-100 text-gray-600',
+  superseded: 'bg-muted text-muted-foreground',
   disabled: 'bg-red-100 text-red-800',
 };
 
 const TEST_COLORS: Record<TestStatus, string> = {
-  pending: 'bg-gray-100 text-gray-500',
+  pending: 'bg-muted text-muted-foreground',
   passed: 'bg-green-100 text-green-800',
   failed: 'bg-red-100 text-red-800',
 };
@@ -481,7 +481,7 @@ export default function AdminEmailProvidersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">{providerText('admin.providers.title', uiLocale)}</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             {providerText('admin.providers.subtitle', uiLocale)}
           </p>
           <p className="text-sm text-muted-foreground mt-1">
@@ -544,7 +544,7 @@ export default function AdminEmailProvidersPage() {
       {showEditor && (
         <form
           onSubmit={handleSave}
-          className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
+          className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
         >
           <fieldset disabled={busy} className="space-y-4">
             <h2 className="text-lg font-semibold">
@@ -556,7 +556,7 @@ export default function AdminEmailProvidersPage() {
             <div>
               <label
                 htmlFor="email-provider-label"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {providerText('admin.providers.label', uiLocale)}{' '}
                 <span className="text-red-500">*</span>
@@ -566,7 +566,7 @@ export default function AdminEmailProvidersPage() {
                 id="email-provider-label"
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border border-input rounded px-3 py-2"
                 required
               />
             </div>
@@ -574,7 +574,7 @@ export default function AdminEmailProvidersPage() {
             <div>
               <label
                 htmlFor="email-provider-transport"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {providerText('admin.providers.transport', uiLocale)}{' '}
                 <span className="text-red-500">*</span>
@@ -583,7 +583,7 @@ export default function AdminEmailProvidersPage() {
                 id="email-provider-transport"
                 value={transport}
                 onChange={(e) => handleTransportChange(e.target.value as Transport)}
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border border-input rounded px-3 py-2"
                 disabled={editId !== null}
               >
                 <option value="smtp">SMTP</option>
@@ -617,7 +617,7 @@ export default function AdminEmailProvidersPage() {
                 type="button"
                 onClick={closeEditor}
                 disabled={busy}
-                className="px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 disabled:opacity-50"
+                className="px-4 py-2 border border-input rounded text-sm hover:bg-muted disabled:opacity-50"
               >
                 {providerText('admin.providers.cancel', uiLocale)}
               </button>
@@ -635,39 +635,39 @@ export default function AdminEmailProvidersPage() {
       )}
 
       {/* Provider list */}
-      <div className="overflow-x-auto bg-white rounded-lg border border-gray-200">
+      <div className="overflow-x-auto bg-card text-card-foreground rounded-lg border border-border">
         {loading && (
-          <div className="p-4 text-gray-500">
+          <div className="p-4 text-muted-foreground">
             {providerText('admin.providers.loading', uiLocale)}
           </div>
         )}
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-border text-sm">
+          <thead className="bg-muted/40">
             <tr>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600">
+              <th className="px-4 py-3 text-left font-semibold text-muted-foreground">
                 {providerText('admin.providers.col.label', uiLocale)}
               </th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600">
+              <th className="px-4 py-3 text-left font-semibold text-muted-foreground">
                 {providerText('admin.providers.col.transport', uiLocale)}
               </th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600">
+              <th className="px-4 py-3 text-left font-semibold text-muted-foreground">
                 {providerText('admin.providers.col.status', uiLocale)}
               </th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600">
+              <th className="px-4 py-3 text-left font-semibold text-muted-foreground">
                 {providerText('admin.providers.col.test', uiLocale)}
               </th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600">
+              <th className="px-4 py-3 text-left font-semibold text-muted-foreground">
                 {providerText('admin.providers.col.activated', uiLocale)}
               </th>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600">
+              <th className="px-4 py-3 text-left font-semibold text-muted-foreground">
                 {providerText('admin.providers.col.actions', uiLocale)}
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-border">
             {providers.length === 0 && !loading && !loadFailed ? (
               <tr>
-                <td colSpan={6} className="px-4 py-6 text-center text-gray-500">
+                <td colSpan={6} className="px-4 py-6 text-center text-muted-foreground">
                   {providerText('admin.providers.empty', uiLocale)}
                 </td>
               </tr>
@@ -678,7 +678,7 @@ export default function AdminEmailProvidersPage() {
                   <tr key={p.id} className="align-top">
                     <td className="px-4 py-3 font-medium">{p.label}</td>
                     <td className="px-4 py-3">
-                      <span className="text-xs uppercase tracking-wide text-gray-500">
+                      <span className="text-xs uppercase tracking-wide text-muted-foreground">
                         {providerText(`admin.providers.transport.${p.transport}`, uiLocale)}
                       </span>
                     </td>
@@ -689,7 +689,7 @@ export default function AdminEmailProvidersPage() {
                         {providerText(`admin.providers.status.${p.status}`, uiLocale)}
                       </span>
                       {p.status === 'superseded' && (
-                        <p className="text-xs text-gray-400 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                           {providerText('admin.providers.supersededNote', uiLocale)}
                         </p>
                       )}
@@ -701,7 +701,9 @@ export default function AdminEmailProvidersPage() {
                         {lastTestLabel(p)}
                       </span>
                       {p.lastTestAt && (
-                        <p className="text-xs text-gray-400 mt-1">{time.format(p.lastTestAt)}</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {time.format(p.lastTestAt)}
+                        </p>
                       )}
                       {p.lastTestError && (
                         <p className="text-xs text-red-600 mt-1" title={p.lastTestError}>
@@ -728,7 +730,7 @@ export default function AdminEmailProvidersPage() {
                     <td className="px-4 py-3">
                       {p.activatedAt ? time.format(p.activatedAt) : '—'}
                       {p.activatedAt && p.activatedBy && (
-                        <p className="text-xs text-gray-400 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                           {providerText('admin.providers.meta.activatedBy', uiLocale)}:{' '}
                           {p.activatedBy}
                         </p>
@@ -741,7 +743,7 @@ export default function AdminEmailProvidersPage() {
                           <button
                             onClick={() => openEdit(p)}
                             disabled={busy || loading || loadFailed}
-                            className="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50 w-full text-left"
+                            className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-left"
                           >
                             {providerText('admin.providers.update', uiLocale)}
                           </button>
@@ -788,7 +790,7 @@ export default function AdminEmailProvidersPage() {
                         <button
                           onClick={() => handleRollback(p)}
                           disabled={busy || loading || loadFailed}
-                          className="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50 w-full text-left"
+                          className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-left"
                         >
                           {providerText('admin.providers.rollback', uiLocale)}
                         </button>
@@ -828,7 +830,7 @@ function SmtpFields({
           type="text"
           value={form.host}
           onChange={(e) => set('host', e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
       <Field label={sec('port')} required>
@@ -836,14 +838,14 @@ function SmtpFields({
           type="number"
           value={form.port}
           onChange={(e) => set('port', e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
       <Field label={sec('security')}>
         <select
           value={form.security}
           onChange={(e) => set('security', e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         >
           <option value="STARTTLS">STARTTLS</option>
           <option value="TLS">TLS</option>
@@ -859,7 +861,7 @@ function SmtpFields({
             required
             value={form[key]}
             onChange={(e) => set(key, e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+            className="w-full border border-input rounded px-3 py-2"
           />
         </Field>
       ))}
@@ -868,7 +870,7 @@ function SmtpFields({
           type="text"
           value={form.username}
           onChange={(e) => set('username', e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
       <Field label={sec('password')} secret>
@@ -880,7 +882,7 @@ function SmtpFields({
             editing ? providerText('admin.providers.field.secretPlaceholder', uiLocale) : undefined
           }
           autoComplete="new-password"
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
       <Field label={sec('fromName')}>
@@ -888,7 +890,7 @@ function SmtpFields({
           type="text"
           value={form.fromName}
           onChange={(e) => set('fromName', e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
       <Field label={sec('fromEmail')} required>
@@ -896,7 +898,7 @@ function SmtpFields({
           type="email"
           value={form.fromEmail}
           onChange={(e) => set('fromEmail', e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
       <Field label={sec('replyTo')}>
@@ -904,7 +906,7 @@ function SmtpFields({
           type="email"
           value={form.replyTo}
           onChange={(e) => set('replyTo', e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
     </div>
@@ -934,7 +936,7 @@ function ResendFields({
             editing ? providerText('admin.providers.field.secretPlaceholder', uiLocale) : undefined
           }
           autoComplete="new-password"
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
       <Field label={sec('fromName')}>
@@ -942,7 +944,7 @@ function ResendFields({
           type="text"
           value={form.fromName}
           onChange={(e) => set('fromName', e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
       <Field label={sec('fromEmail')} required>
@@ -950,7 +952,7 @@ function ResendFields({
           type="email"
           value={form.fromEmail}
           onChange={(e) => set('fromEmail', e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
       <Field label={sec('replyTo')}>
@@ -958,7 +960,7 @@ function ResendFields({
           type="email"
           value={form.replyTo}
           onChange={(e) => set('replyTo', e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
       <Field label={sec('sendingDomain')}>
@@ -966,7 +968,7 @@ function ResendFields({
           type="text"
           value={form.sendingDomain}
           onChange={(e) => set('sendingDomain', e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
+          className="w-full border border-input rounded px-3 py-2"
         />
       </Field>
     </div>
@@ -998,12 +1000,12 @@ function EmailTestRow({
         onChange={(e) => setRecipient(e.target.value)}
         aria-label={providerText('admin.providers.test.recipient', uiLocale)}
         placeholder={providerText('admin.providers.test.recipient', uiLocale)}
-        className="w-full border border-gray-300 rounded px-2 py-1 text-xs"
+        className="w-full border border-input rounded px-2 py-1 text-xs"
       />
       <button
         onClick={() => onTest(provider, recipient.trim())}
         disabled={busy || !recipient.trim()}
-        className="px-3 py-1 border border-gray-300 rounded text-xs hover:bg-gray-50 disabled:opacity-50 w-full text-left"
+        className="px-3 py-1 border border-input rounded text-xs hover:bg-muted disabled:opacity-50 w-full text-left"
       >
         {busy ? (
           providerText('admin.providers.test.running', uiLocale)
@@ -1040,10 +1042,10 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="block text-sm font-medium text-gray-700 mb-1">
+      <span className="block text-sm font-medium text-foreground mb-1">
         {label}
         {required && <span className="text-red-500"> *</span>}
-        {secret && <span className="ml-1 text-xs text-gray-400" />}
+        {secret && <span className="ml-1 text-xs text-muted-foreground" />}
       </span>
       {children}
     </label>

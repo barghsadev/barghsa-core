@@ -98,14 +98,14 @@ export default function AdminApprovalRequestsPage() {
     <section className="mx-auto max-w-4xl space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold">{t('admin.approvals.title', locale)}</h1>
-        <p className="text-sm text-gray-600">{t('admin.approvals.description', locale)}</p>
+        <p className="text-sm text-muted-foreground">{t('admin.approvals.description', locale)}</p>
       </header>
       <DualApprovalThresholdPanel />
       <div className="flex flex-wrap items-center gap-3">
         <Label htmlFor="approval-status">{t('admin.approvals.status', locale)}</Label>
         <select
           id="approval-status"
-          className="rounded border bg-white p-2"
+          className="rounded border bg-card text-card-foreground p-2"
           value={status}
           disabled={!!action}
           onChange={(event) => {
@@ -140,7 +140,10 @@ export default function AdminApprovalRequestsPage() {
       ) : (
         <ul className="space-y-4">
           {items.slice(0, PAGE_SIZE).map((request) => (
-            <li key={request.id} className="space-y-3 rounded-lg border bg-white p-4 break-words">
+            <li
+              key={request.id}
+              className="space-y-3 rounded-lg border bg-card text-card-foreground p-4 break-words"
+            >
               <h2 className="font-semibold">
                 {t(`admin.approvals.${request.actionType}`, locale)}
               </h2>
@@ -175,7 +178,7 @@ export default function AdminApprovalRequestsPage() {
                     : []),
                 ].map(([label, value]) => (
                   <div key={label}>
-                    <dt className="text-gray-500">{label}</dt>
+                    <dt className="text-muted-foreground">{label}</dt>
                     <dd className="whitespace-pre-wrap">{value}</dd>
                   </div>
                 ))}

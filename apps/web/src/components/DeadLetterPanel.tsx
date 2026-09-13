@@ -270,48 +270,48 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
       )}
       {!loading && !error && !access?.canView && <p role="alert">{label('accessDenied')}</p>}
       {loading ? (
-        <div role="status" className="p-4 text-gray-500">
+        <div role="status" className="p-4 text-muted-foreground">
           {t('admin.notifications.loading', uiLocale)}
         </div>
       ) : error || !access?.canView ? null : rows.length === 0 ? (
-        <div className="p-4 text-gray-500">
+        <div className="p-4 text-muted-foreground">
           {t('admin.notifications.deadLetter.empty', uiLocale)}
         </div>
       ) : (
-        <div className="overflow-x-auto bg-white rounded-lg border border-gray-200">
+        <div className="overflow-x-auto bg-card text-card-foreground rounded-lg border border-border">
           <table
-            className="min-w-full divide-y divide-gray-200 text-sm"
+            className="min-w-full divide-y divide-border text-sm"
             aria-label={t('admin.notifications.deadLetter.title', uiLocale)}
           >
             <caption className="sr-only">
               {t('admin.notifications.deadLetter.title', uiLocale)}
             </caption>
-            <thead className="bg-gray-50 text-start">
+            <thead className="bg-muted/40 text-start">
               <tr>
-                <th className="px-4 py-2 font-medium text-gray-600">
+                <th className="px-4 py-2 font-medium text-muted-foreground">
                   {t('admin.notifications.deadLetter.eventKey', uiLocale)}
                 </th>
-                <th className="px-4 py-2 font-medium text-gray-600">
+                <th className="px-4 py-2 font-medium text-muted-foreground">
                   {t('admin.notifications.deadLetter.channel', uiLocale)}
                 </th>
-                <th className="px-4 py-2 font-medium text-gray-600">
+                <th className="px-4 py-2 font-medium text-muted-foreground">
                   {t('admin.notifications.deadLetter.severity', uiLocale)}
                 </th>
-                <th className="px-4 py-2 font-medium text-gray-600">
+                <th className="px-4 py-2 font-medium text-muted-foreground">
                   {t('admin.notifications.deadLetter.cause', uiLocale)}
                 </th>
-                <th className="px-4 py-2 font-medium text-gray-600">
+                <th className="px-4 py-2 font-medium text-muted-foreground">
                   {t('admin.notifications.deadLetter.attempts', uiLocale)}
                 </th>
-                <th className="px-4 py-2 font-medium text-gray-600">
+                <th className="px-4 py-2 font-medium text-muted-foreground">
                   {t('admin.notifications.deadLetter.date', uiLocale)}
                 </th>
-                <th className="px-4 py-2 font-medium text-gray-600">
+                <th className="px-4 py-2 font-medium text-muted-foreground">
                   {t('admin.notifications.deadLetter.actions', uiLocale)}
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-border">
               {rows.map((row) => (
                 <tr key={row.id} className="align-top">
                   <td className="px-4 py-3 font-mono text-xs" dir="ltr">
@@ -331,7 +331,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                         : t('admin.notifications.deadLetter.severityError', uiLocale)}
                     </span>
                     {row.status !== 'open' && (
-                      <span className="block text-xs text-gray-400 mt-1">
+                      <span className="block text-xs text-muted-foreground mt-1">
                         {statusLabel(row.status, uiLocale)}
                       </span>
                     )}
@@ -362,7 +362,9 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                   <td className="px-4 py-3">
                     {numbers.number(row.attempts)}/{numbers.number(row.maxAttempts)}
                   </td>
-                  <td className="px-4 py-3 text-xs text-gray-500">{time.format(row.createdAt)}</td>
+                  <td className="px-4 py-3 text-xs text-muted-foreground">
+                    {time.format(row.createdAt)}
+                  </td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     {row.status === 'open' && access?.canRetry ? (
                       <div className="flex gap-2">
@@ -386,13 +388,13 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                           onClick={() => act(row, 'dismiss')}
                           disabled={action !== null}
                           aria-label={`${t('admin.notifications.deadLetter.dismiss', uiLocale)} ${row.eventKey}`}
-                          className="px-2 py-1 text-xs border border-gray-300 rounded text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+                          className="px-2 py-1 text-xs border border-input rounded text-muted-foreground hover:bg-muted disabled:opacity-50"
                         >
                           {t('admin.notifications.deadLetter.dismiss', uiLocale)}
                         </button>
                       </div>
                     ) : (
-                      <span className="text-xs text-gray-400">—</span>
+                      <span className="text-xs text-muted-foreground">—</span>
                     )}
                   </td>
                 </tr>

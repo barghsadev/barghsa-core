@@ -114,7 +114,7 @@
   --secondary: oklch(0.92 0.004 286.32);
   --secondary-foreground: oklch(0.141 0.005 285.823);
   --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
+  --muted-foreground: oklch(0.53 0.016 285.938);
   --accent: oklch(0.92 0.004 286.32);
   --accent-foreground: oklch(0.141 0.005 285.823);
   --destructive: #b91c1c;
@@ -152,12 +152,22 @@
     @apply border-border;
   }
   html {
+    color-scheme: light;
     @apply antialiased;
+  }
+  html.dark {
+    color-scheme: dark;
   }
   body {
     @apply bg-background text-foreground;
   }
-
+  /* Native controls on older pages follow the same theme as shared controls. */
+  input:not([type='checkbox']):not([type='radio']),
+  textarea,
+  select {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
   /* RTL-aware base styles */
   [dir='rtl'] {
     @apply text-right;
@@ -166,6 +176,17 @@
   [dir='ltr'] {
     @apply text-left;
   }
+}
+
+/* Native links/buttons may have shadow utilities; retain a visible keyboard ring.
+   Shared controls own their composite focus styling through data-slot. */
+:is(button, a[href], input, textarea, select, [tabindex]):not([data-slot]):focus-visible {
+  /* Transparent outlines remain visible when forced colors suppress shadows. */
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow:
+    0 0 0 2px var(--background),
+    0 0 0 4px var(--foreground);
 }
 
 @media (prefers-reduced-motion: reduce) {

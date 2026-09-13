@@ -184,7 +184,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
 
   if (loading && !config) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-6 text-gray-500">
+      <div className="bg-card text-card-foreground rounded-lg border border-border p-6 text-muted-foreground">
         {t('admin.notifications.window.loading', uiLocale)}
       </div>
     );
@@ -193,7 +193,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
   return (
     <section
       aria-labelledby="delivery-window-title"
-      className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
+      className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
     >
       {protectedAction && (
         <TeamActionDialog
@@ -206,7 +206,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
         <h2 id="delivery-window-title" className="text-lg font-semibold">
           {t('admin.notifications.window.title', uiLocale)}
         </h2>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           {t('admin.notifications.window.description', uiLocale)}
         </p>
       </div>
@@ -259,7 +259,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
           <div>
             <label
               htmlFor="delivery-window-timezone"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-foreground mb-1"
             >
               {t('admin.notifications.window.timezone', uiLocale)}{' '}
               <span className="text-red-500">*</span>
@@ -268,7 +268,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
               id="delivery-window-timezone"
               value={timezone}
               onChange={(e) => setTimezone(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2"
+              className="w-full border border-input rounded px-3 py-2"
             >
               {!TIMEZONE_OPTIONS.includes(timezone) && <option value={timezone}>{timezone}</option>}
               {TIMEZONE_OPTIONS.map((tz) => (
@@ -284,7 +284,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
             <div>
               <label
                 htmlFor="delivery-window-start"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.window.start', uiLocale)}{' '}
                 <span className="text-red-500">*</span>
@@ -302,13 +302,13 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
                       : NaN
                   )
                 }
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border border-input rounded px-3 py-2"
               />
             </div>
             <div>
               <label
                 htmlFor="delivery-window-end"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.window.end', uiLocale)}{' '}
                 <span className="text-red-500">*</span>
@@ -326,7 +326,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
                       : NaN
                   )
                 }
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border border-input rounded px-3 py-2"
               />
             </div>
           </div>
@@ -338,7 +338,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
           )}
 
           {config && (
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-muted-foreground">
               {t('admin.notifications.window.current', uiLocale)}:{' '}
               <span className="font-mono">
                 {config.timezone} {formatWindowTime(config.startHour)}–

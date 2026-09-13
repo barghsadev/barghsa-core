@@ -136,7 +136,7 @@ export default function WalletTopUpLimitConfigPanel() {
   if (loading && !config) {
     return (
       <div
-        className="bg-white rounded-lg border border-gray-200 p-6 text-gray-500"
+        className="bg-card text-card-foreground rounded-lg border border-border p-6 text-muted-foreground"
         role="status"
         dir={isRtl ? 'rtl' : 'ltr'}
       >
@@ -155,7 +155,7 @@ export default function WalletTopUpLimitConfigPanel() {
 
   return (
     <section
-      className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
+      className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
       data-testid="wallet-top-up-limit-panel"
       aria-labelledby="wallet-top-up-limit-heading"
       dir={isRtl ? 'rtl' : 'ltr'}
@@ -164,7 +164,9 @@ export default function WalletTopUpLimitConfigPanel() {
         <h2 id="wallet-top-up-limit-heading" className="text-lg font-semibold">
           {t('admin.walletLimit.title', locale)}
         </h2>
-        <p className="text-sm text-gray-500 mt-1">{t('admin.walletLimit.description', locale)}</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          {t('admin.walletLimit.description', locale)}
+        </p>
       </div>
 
       <p
@@ -189,7 +191,7 @@ export default function WalletTopUpLimitConfigPanel() {
         <div>
           <label
             htmlFor="online-top-up-limit"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-foreground mb-1"
           >
             {t('admin.walletLimit.label', locale)} <span className="text-red-500">*</span>
           </label>
@@ -208,14 +210,14 @@ export default function WalletTopUpLimitConfigPanel() {
               setSaved(false);
               setClientIssue(null);
             }}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+            className="w-full border border-input rounded px-3 py-2"
             aria-invalid={clientIssue !== null}
             aria-describedby={describedBy}
           />
           {tomanPreview !== null && (
             <p
               id="online-top-up-limit-toman"
-              className="mt-1 text-sm text-gray-500"
+              className="mt-1 text-sm text-muted-foreground"
               data-testid="wallet-top-up-limit-toman"
             >
               {t('admin.walletLimit.toman', locale).replace(
@@ -233,7 +235,7 @@ export default function WalletTopUpLimitConfigPanel() {
         )}
 
         {config && (
-          <p className="text-xs text-gray-400" data-testid="wallet-top-up-limit-current">
+          <p className="text-xs text-muted-foreground" data-testid="wallet-top-up-limit-current">
             {t('admin.walletLimit.current', locale)}:{' '}
             <span className="font-mono">{formatGroupedIrr(String(config.limitIrR))}</span>
             {typeof config.version === 'number' && (
