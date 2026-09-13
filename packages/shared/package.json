@@ -179,6 +179,16 @@
         "types": "./dist/cjs/password-hash.d.ts",
         "default": "./dist/cjs/password-hash.js"
       }
+    },
+    "./errors/domain": {
+      "import": {
+        "types": "./dist/errors/domain-error-codes.d.ts",
+        "default": "./dist/errors/domain-error-codes.js"
+      },
+      "require": {
+        "types": "./dist/cjs/errors/domain-error-codes.d.ts",
+        "default": "./dist/cjs/errors/domain-error-codes.js"
+      }
     }
   },
   "scripts": {

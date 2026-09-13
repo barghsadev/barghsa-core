@@ -17,6 +17,7 @@ import {
   correlationIdStorage,
 } from '../src/common/correlation-id.middleware.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { DomainErrorCodes } from '@barghsa/shared/errors/domain';
 import { ZodError, ZodIssue } from 'zod';
 
 // ---------------------------------------------------------------------------
@@ -167,10 +168,24 @@ describe('HttpExceptionFilter', () => {
     expect(json.mock.calls[0][0].error.code).toBe('NOT_FOUND:RESOURCE');
   });
 
+  it.each([
+    [409, ErrorCodes.CONFLICT_STATE.code, 'Current state does not allow this operation'],
+    [422, 'VALIDATION:INPUT:UNPROCESSABLE', 'Invalid input value'],
+    [503, 'PROVIDER:UNAVAILABLE', 'A required service is temporarily unavailable'],
+    [415, 'VALIDATION:INPUT:UNSUPPORTED_MEDIA_TYPE', 'Unsupported request content type'],
+  ])(
+    'uses a generic fallback for HTTP %i rather than an unrelated domain error',
+    (status, code, message) => {
+      const { host, json } = createMockHost(status as number, {}, { 'accept-language': 'en' });
+      filter.catch(new HttpException('private-detail', status as number), host);
+      expect(json.mock.calls[0][0].error).toMatchObject({ code, message });
+    }
+  );
+
   it.each(['en', 'fa'])(
     'resolves every shared public error in %s without exposing details',
     (locale) => {
-      for (const definition of Object.values(ErrorCodes)) {
+      for (const definition of [...Object.values(ErrorCodes), ...Object.values(DomainErrorCodes)]) {
         const { host, json } = createMockHost(
           definition.httpStatus,
           {},

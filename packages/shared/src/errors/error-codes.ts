@@ -27,6 +27,30 @@ export interface ErrorCodeDef {
 
 /** Error code definitions */
 export const ErrorCodes = {
+  VALIDATION_UNSUPPORTED_MEDIA_TYPE: {
+    code: 'VALIDATION:INPUT:UNSUPPORTED_MEDIA_TYPE',
+    httpStatus: 415,
+    title: 'Unsupported request content type',
+    retryable: false,
+    messageKey: 'error.validation.unsupported_media_type',
+    severity: 'debug' as ErrorSeverity,
+  },
+  VALIDATION_UNPROCESSABLE: {
+    code: 'VALIDATION:INPUT:UNPROCESSABLE',
+    httpStatus: 422,
+    title: 'Invalid input value',
+    retryable: false,
+    messageKey: 'error.validation.input.invalid',
+    severity: 'debug' as ErrorSeverity,
+  },
+  PROVIDER_UNAVAILABLE: {
+    code: 'PROVIDER:UNAVAILABLE',
+    httpStatus: 503,
+    title: 'A required service is temporarily unavailable',
+    retryable: true,
+    messageKey: 'error.provider.unavailable',
+    severity: 'error' as ErrorSeverity,
+  },
   // ── Validation ──────────────────────────────────────────
   VALIDATION_PAYLOAD_TOO_LARGE: {
     code: 'VALIDATION:INPUT:PAYLOAD_TOO_LARGE',
@@ -532,8 +556,39 @@ export type ErrorCode = (typeof ErrorCodes)[keyof typeof ErrorCodes]['code'];
 
 /** Get an error code definition by its HTTP status – useful as a fallback */
 export function errorCodeForHttpStatus(status: number): ErrorCodeDef {
-  const matched = Object.values(ErrorCodes).find((def) => def.httpStatus === status);
-  return matched ?? ErrorCodes.INTERNAL_UNEXPECTED;
+  // Explicit defaults must not depend on catalogue order or a domain-specific code.
+  switch (status) {
+    case 400:
+      return ErrorCodes.VALIDATION_INPUT_INVALID;
+    case 401:
+      return ErrorCodes.AUTH_UNAUTHENTICATED;
+    case 403:
+      return ErrorCodes.AUTHZ_FORBIDDEN;
+    case 404:
+      return ErrorCodes.NOT_FOUND_RESOURCE;
+    case 409:
+      return ErrorCodes.CONFLICT_STATE;
+    case 413:
+      return ErrorCodes.VALIDATION_PAYLOAD_TOO_LARGE;
+    case 415:
+      return ErrorCodes.VALIDATION_UNSUPPORTED_MEDIA_TYPE;
+    case 422:
+      return ErrorCodes.VALIDATION_UNPROCESSABLE;
+    case 429:
+      return ErrorCodes.RATE_LIMIT_EXCEEDED;
+    case 500:
+      return ErrorCodes.INTERNAL_SERVER;
+    case 502:
+      return ErrorCodes.PROVIDER_DOWNSTREAM;
+    case 503:
+      return ErrorCodes.PROVIDER_UNAVAILABLE;
+    case 504:
+      return ErrorCodes.PROVIDER_TIMEOUT;
+    default:
+      return status >= 400 && status < 500
+        ? ErrorCodes.VALIDATION_INPUT_INVALID
+        : ErrorCodes.INTERNAL_UNEXPECTED;
+  }
 }
 
 /** Get a default error code for a given HTTP status */

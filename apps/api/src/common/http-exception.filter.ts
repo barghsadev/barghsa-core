@@ -9,7 +9,7 @@ import {
 import { Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { v7 as uuidv7 } from 'uuid';
-import { PUBLIC_DOMAIN_ERROR_CODES } from './public-domain-error-codes.js';
+import { DomainErrorCodes } from '@barghsa/shared/errors/domain';
 import { ErrorCodes, defaultErrorCode, errorCodeForHttpStatus } from '@barghsa/shared/errors';
 import type { ErrorCodeDef } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n';
@@ -20,9 +20,14 @@ import { correlationIdStorage } from './correlation-id.middleware.js';
  * Look up the ErrorCodeDef for a given error code string, or fall back to the
  * definition for the given HTTP status.
  */
+const publicErrorDefinitions = new Map(
+  [...Object.values(ErrorCodes), ...Object.values(DomainErrorCodes)].map((definition) => [
+    definition.code,
+    definition,
+  ])
+);
 function resolveErrorCodeDef(errorCode: string, httpStatus: number): ErrorCodeDef {
-  const matched = Object.values(ErrorCodes).find((def) => def.code === errorCode);
-  return matched ?? errorCodeForHttpStatus(httpStatus);
+  return publicErrorDefinitions.get(errorCode) ?? errorCodeForHttpStatus(httpStatus);
 }
 
 /**
@@ -131,10 +136,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         typeof responseBody === 'object' && responseBody !== null
           ? (responseBody as Record<string, unknown>).error
           : undefined;
-      const publicCode =
-        typeof candidate === 'string' &&
-        (Object.values(ErrorCodes).some((def) => def.code === candidate) ||
-          PUBLIC_DOMAIN_ERROR_CODES.has(candidate));
+      const publicCode = typeof candidate === 'string' && publicErrorDefinitions.has(candidate);
       return { httpStatus: status, errorCode: publicCode ? candidate : defaultErrorCode(status) };
     }
 
