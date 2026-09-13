@@ -19107,6 +19107,516 @@
           "evidence": "audit/evidence/step-reviews.json#R05-strict-dependencies"
         }
       ]
+    },
+    {
+      "id": "V01-database-foundations",
+      "date": "2026-09-13",
+      "source_revision": "b83ef2c1fc94f372222d8dc8ecb9663b1abd4b7c",
+      "base_revision": "7f44182fb69d4222b4e311bf42616482ea322dab",
+      "product_commits": [
+        "b83ef2c1"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.02.02",
+        "01-platform-infrastructure.md#T-02.02.03",
+        "01-platform-infrastructure.md#T-02.02.04",
+        "01-platform-infrastructure.md#T-02.03.01",
+        "01-platform-infrastructure.md#T-02.03.02",
+        "01-platform-infrastructure.md#T-02.03.03",
+        "01-platform-infrastructure.md#T-02.03.04"
+      ],
+      "summary": "Database timestamp/readiness repairs verified. Five tasks verified, two partial; four PR reviews closed and two open, including PR47 replacement disposition.",
+      "review": [
+        "Initial trigger inventory was incomplete: older domain triggers already existed under different names. Final migration preserves them and adds the required shared function only to37 uncovered tables. No applied SQL edits, row backfill, destructive schema changes or production execution.",
+        "Existing specialized timestamp behavior remains unchanged. Shared trigger stamps unchanged timestamps with database clock, preserving explicit new values. Coverage test inspects actual PostgreSQL trigger functions across all public updated_at tables; raw writes/creation/explicit timestamps/rollback pass.",
+        "Readiness shares probes separately for connectivity/schema, retains no-queue and cancellation behavior, loads packaged migration metadata once, and checks current head timestamp/hash using the bounded application pool. Full checksum/history validation remains the migration runner responsibility. Safe API error filter retained.",
+        "Clean97-table snapshot comparison replaces stale0118-only comparisons; raw SQL sort directions are handled as declared. Historical0125 fixture is frozen instead of undoing future migrations. Five package failures came from four old hard-coded tag lists, now exact journal suffixes; substantive data/constraint assertions retained.",
+        "Full DB package run737/742 passed; only the four edited fixture files were rerun, all8 passed. These overlap3 earlier passes, giving742 distinct passing cases across valid evidence. API3 actual HTTP/telemetry cases, types/builds/snapshot/lint/format and11 provenance tests pass. Earlier failed expectations and incomplete edits retained as failed logs.",
+        "PR47 original unmapped provenance is preserved. Closure now requires explicit verified replacement keys plus reason/evidence and resolved deferrals; six negative/positive tests protect this. Skip tests use fixed acceptance fixtures instead of obsolete live progress counts.",
+        "Literal universal base-column requirement remains partial for38 schema tables, documented here and ADR001. Migration runner operational/down-migration requirements remain partial. No silent exception or external completion claim."
+      ],
+      "verification": {
+        "database": "742 distinct DB cases pass across package run and focused repair; includes97 schema comparisons,5 new foundations cases and4 existing timeout/pool cases.",
+        "http": "3 actual API HTTP/telemetry cases pass; compiled shared/DB/worker/API built by fixture setup.",
+        "quality": "DB/API types, scoped lint/format, Drizzle snapshot checks and11 Python provenance tests pass."
+      },
+      "remaining": [
+        "Literal universal base columns remain unmet:38 current schema tables omit id, created_at or updated_at. Named authentication keys, composite joins, append-only events and profile-keyed wallets require an explicit compatibility migration or approved requirement exceptions; do not rewrite identities/history or count the current factory as universal compliance.",
+        "External production migration-before-start, compatible rollout/rollback and backup/restore execution remain unverified. Full per-migration down/roll-forward acceptance from the parent story is not established by the current runbook.",
+        "V02 final regression and external packaging/deployment checks remain."
+      ],
+      "base_column_deviations": [
+        {
+          "table": "account_login_identifiers",
+          "missing": [
+            "id"
+          ]
+        },
+        {
+          "table": "ai_agent_kb_groups",
+          "missing": [
+            "id",
+            "updated_at"
+          ]
+        },
+        {
+          "table": "ai_agent_policy_groups",
+          "missing": [
+            "id",
+            "updated_at"
+          ]
+        },
+        {
+          "table": "ai_agent_slots",
+          "missing": [
+            "id",
+            "created_at"
+          ]
+        },
+        {
+          "table": "ai_agent_kbs",
+          "missing": [
+            "id",
+            "updated_at"
+          ]
+        },
+        {
+          "table": "ai_agent_policies",
+          "missing": [
+            "id",
+            "updated_at"
+          ]
+        },
+        {
+          "table": "ai_policy_group_members",
+          "missing": [
+            "id",
+            "updated_at"
+          ]
+        },
+        {
+          "table": "audit_log",
+          "missing": [
+            "updated_at"
+          ]
+        },
+        {
+          "table": "auth_delivery_outbox",
+          "missing": [
+            "updated_at"
+          ]
+        },
+        {
+          "table": "bank_receipt_attachment_claims",
+          "missing": [
+            "id"
+          ]
+        },
+        {
+          "table": "app_config",
+          "missing": [
+            "id",
+            "created_at"
+          ]
+        },
+        {
+          "table": "config_version",
+          "missing": [
+            "created_at"
+          ]
+        },
+        {
+          "table": "email_customer_corrections",
+          "missing": [
+            "updated_at"
+          ]
+        },
+        {
+          "table": "email_suppressions",
+          "missing": [
+            "updated_at"
+          ]
+        },
+        {
+          "table": "email_webhook_events",
+          "missing": [
+            "updated_at"
+          ]
+        },
+        {
+          "table": "in_app_notifications",
+          "missing": [
+            "updated_at"
+          ]
+        },
+        {
+          "table": "kb_group_members",
+          "missing": [
+            "id",
+            "updated_at"
+          ]
+        },
+        {
+          "table": "company_types",
+          "missing": [
+            "created_at",
+            "updated_at"
+          ]
+        },
+        {
+          "table": "notification_delivery_log",
+          "missing": [
+            "updated_at"
+          ]
+        },
+        {
+          "table": "notification_send_receipts",
+          "missing": [
+            "id"
+          ]
+        },
+        {
+          "table": "profile_onboarding_drafts",
+          "missing": [
+            "id"
+          ]
+        },
+        {
+          "table": "otp_challenges",
+          "missing": [
+            "id"
+          ]
+        },
+        {
+          "table": "password_history",
+          "missing": [
+            "updated_at"
+          ]
+        },
+        {
+          "table": "preauth_sessions",
+          "missing": [
+            "id",
+            "updated_at"
+          ]
+        },
+        {
+          "table": "rate_limit_counters",
+          "missing": [
+            "id"
+          ]
+        },
+        {
+          "table": "rate_limit_windows",
+          "missing": [
+            "id",
+            "created_at",
+            "updated_at"
+          ]
+        },
+        {
+          "table": "security_rate_limit_counters",
+          "missing": [
+            "id"
+          ]
+        },
+        {
+          "table": "refresh_tokens",
+          "missing": [
+            "updated_at"
+          ]
+        },
+        {
+          "table": "sessions",
+          "missing": [
+            "id"
+          ]
+        },
+        {
+          "table": "staff_roles",
+          "missing": [
+            "id"
+          ]
+        },
+        {
+          "table": "user_roles",
+          "missing": [
+            "id",
+            "updated_at"
+          ]
+        },
+        {
+          "table": "staff_assignment_cursors",
+          "missing": [
+            "id",
+            "created_at"
+          ]
+        },
+        {
+          "table": "tos_acceptances",
+          "missing": [
+            "created_at",
+            "updated_at"
+          ]
+        },
+        {
+          "table": "user_profile_contexts",
+          "missing": [
+            "id",
+            "created_at"
+          ]
+        },
+        {
+          "table": "users",
+          "missing": [
+            "id"
+          ]
+        },
+        {
+          "table": "wallet_chargeback_events",
+          "missing": [
+            "updated_at"
+          ]
+        },
+        {
+          "table": "wallet_topup_callback_events",
+          "missing": [
+            "updated_at"
+          ]
+        },
+        {
+          "table": "wallets",
+          "missing": [
+            "id",
+            "created_at"
+          ]
+        }
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/PULL_REQUEST_TEMPLATE.md",
+          "sha256": "9eb8ce32fe31ca4f4da77801fead93cac27c9616f1a1c0874b96705e88937abe"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "0e63f1cf774c6faa9121b665144718f046a1f14d14b8e11eeea72d5a8a806dce"
+        },
+        {
+          "path": "apps/api/src/health/health.service.ts",
+          "sha256": "de8d0a561ebe8acc5f928ba5f15f9c3d6949caffae0a2dc167e7a2ec2da81efc"
+        },
+        {
+          "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
+          "sha256": "9fc0d2776175d661a57d697e0a2a4b7f68ef3d6db4b0e71aa454a54a7ae0f627"
+        },
+        {
+          "path": "audit/current_pr_reviews.py",
+          "sha256": "02b9a70e0a98714ae50f36e91702d15d5865545a2ed9688575a071c56fb4d775"
+        },
+        {
+          "path": "audit/test_current_pr_reviews.py",
+          "sha256": "a355f2a3c53e169e5c709b9a8b7f71f99f9aecc025d8fdacc55ab733ce11f86a"
+        },
+        {
+          "path": "audit/test_current_skipped_tasks.py",
+          "sha256": "4d0634864de2952a9266f84987e2d0fc744566fe65587804eb8e88ae3c6a4937"
+        },
+        {
+          "path": "docs/adr/001-data-types-and-conventions.md",
+          "sha256": "dbf25b6a1be4f3bae3b6873d7fc53324dca2ce53701c1989f1bf5ed49d396799"
+        },
+        {
+          "path": "docs/development/database-migrations.md",
+          "sha256": "3f0518d287407a1e648e054803b3f57696691db3477aaa82252b71577e122b3a"
+        },
+        {
+          "path": "packages/db/drizzle.config.ts",
+          "sha256": "d2579b827513a2c26414737f5cfb57b97189038f897d9dedbad7ba87af5c380e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/drizzle/production/0133_database_updated_at.sql",
+          "sha256": "4531b8ece7d0294d5cd09dc943e8295473c8b6c4af93115785da6ebf3436b42d"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+        },
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f75d3fab51c9895d444aad8de7db913d4a8d05be0bb1c1a93ac995d104cb72e4"
+        },
+        {
+          "path": "packages/db/scripts/check-snapshot.mjs",
+          "sha256": "6f8b815a00cd0ac5701485a04414c48b85c6667655c0f03ed417ad80ee2755c3"
+        },
+        {
+          "path": "packages/db/src/base-table.test.ts",
+          "sha256": "c4b3521970bb3ba6e5c72f1eb8d3437f3d8347de6e04eea4c640c8c956ca650a"
+        },
+        {
+          "path": "packages/db/src/base-table.ts",
+          "sha256": "014c0d2749b83c270077ef2f6eb8edae5dd4df14824144a6ef77fca59eed9b7d"
+        },
+        {
+          "path": "packages/db/src/database-foundations.integration.test.ts",
+          "sha256": "8deaea54c03db5ea23334ad8bf032da867ba59aea11b6bbffad6d63b5d5329af"
+        },
+        {
+          "path": "packages/db/src/db-health.integration.test.ts",
+          "sha256": "8913464e739b1ea7ae9f9d0a7e9aa365d319d047067b3f11a9a591360ba16e00"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "85c6be58734467d5b4974c44a00e895ae1ba6b74eb6631e77ab42a0458e89f79"
+        },
+        {
+          "path": "packages/db/src/migrate.baseline.test.ts",
+          "sha256": "82eaf001f5218480fbdc94bf6e1c801988249e73e9301e1554c14ccbf8385c78"
+        },
+        {
+          "path": "packages/db/src/migrate.device-trust-ip.test.ts",
+          "sha256": "c97e9813feb6ef17986eb70c7eb573cebad76246eb17f3bd7649cf9a30239946"
+        },
+        {
+          "path": "packages/db/src/migrate.notification-template-lineage.test.ts",
+          "sha256": "24b7ae63a72c6ab7216a9df936d3071bfebe7b39f8d028cec56928768ff46cc6"
+        },
+        {
+          "path": "packages/db/src/migrate.preauth-sessions.test.ts",
+          "sha256": "d1ea437a12d422e6236a99189cd14c3534014c99382103336038c181ea8779ea"
+        },
+        {
+          "path": "packages/db/src/migrate.provider-delivery-proof.test.ts",
+          "sha256": "4a1fe9e74df6a513a6c03e19de6d849a2b399af41d7022f6fd9f96775a9f9793"
+        },
+        {
+          "path": "packages/db/src/migrate.runner.test.ts",
+          "sha256": "3c8b72ea1cd050fb33baf02b2f89a820cb2164f33b561ee627202eeb31420e1e"
+        },
+        {
+          "path": "packages/db/src/migrate.snapshot.test.ts",
+          "sha256": "cb0351f03bca91579f21723ad852380c33182fd5289c272326bd984af2abd432"
+        },
+        {
+          "path": "packages/db/src/migrate.ts",
+          "sha256": "7ecf8f61a314198af7b9107269f25432465dd2a59829393311999e52d90fafee"
+        },
+        {
+          "path": "packages/db/src/types.ts",
+          "sha256": "584962fd6ea6153a65bb080b7f704472ad90542fdd87225345aeffc26a051a6d"
+        },
+        {
+          "path": "packages/db/src/uuidv7-migration.test.ts",
+          "sha256": "aceebe67f6f85497a88a112a87de4f64627f95948ab6b23756ba7367a84e3eb9"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-api-readiness-reviewed.log",
+        "/tmp/v01-api-readiness.log",
+        "/tmp/v01-api-types.log",
+        "/tmp/v01-database-baseline.log",
+        "/tmp/v01-database-current-schema.log",
+        "/tmp/v01-database-final-migration.log",
+        "/tmp/v01-database-fixtures.log",
+        "/tmp/v01-database-functional.log",
+        "/tmp/v01-database-legacy-fixture.log",
+        "/tmp/v01-database-schema-review.log",
+        "/tmp/v01-database-tests-format.log",
+        "/tmp/v01-db-package.log",
+        "/tmp/v01-db-types-final.log",
+        "/tmp/v01-db-types.log",
+        "/tmp/v01-diff-check.log",
+        "/tmp/v01-doc-format.log",
+        "/tmp/v01-fixture-format.log",
+        "/tmp/v01-fixture-lint.log",
+        "/tmp/v01-format-check.log",
+        "/tmp/v01-format.log",
+        "/tmp/v01-lint.log",
+        "/tmp/v01-migration-fixtures-reviewed.log",
+        "/tmp/v01-pr-provenance-reviewed.log",
+        "/tmp/v01-pr-provenance-tests.log",
+        "/tmp/v01-schema-gate.log",
+        "/tmp/v01-skip-provenance-tests.log",
+        "/tmp/v01-checkpoint-audit.log",
+        "/tmp/v01-checkpoint-backlog.log",
+        "/tmp/v01-checkpoint-diff.log",
+        "/tmp/v01-checkpoint-prs.log",
+        "/tmp/v01-checkpoint-requirements.log",
+        "/tmp/v01-checkpoint-skips.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 23,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.02.02"
+          ],
+          "reason": "Literal universal base columns remain unmet:38 current schema tables omit id, created_at or updated_at. Named authentication keys, composite joins, append-only events and profile-keyed wallets require an explicit compatibility migration or approved requirement exceptions; do not rewrite identities/history or count the current factory as universal compliance.",
+          "source_revision": "b83ef2c1fc94f372222d8dc8ecb9663b1abd4b7c",
+          "evidence": "audit/evidence/step-reviews.json#V01-database-foundations"
+        },
+        {
+          "pr": 24,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.02.03"
+          ],
+          "reason": "Production baseline UUID function verified with1000 values across4 concurrent connections, version/variant/timestamp checks and uniqueness. Existing8 UUID migration tests pass. Millisecond ordering, not strict within-millisecond monotonicity, is accurately documented.",
+          "source_revision": "b83ef2c1fc94f372222d8dc8ecb9663b1abd4b7c",
+          "evidence": "audit/evidence/step-reviews.json#V01-database-foundations"
+        },
+        {
+          "pr": 27,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.02.04"
+          ],
+          "reason": "ADR001 covers UTC/timezone metadata, ranges, integer IRR, fixed decimals, UUID tradeoffs and float prohibition. Corrected canonical migration path and implemented timestamp behavior. Existing universal-base-column deviations are disclosed, not waived.",
+          "source_revision": "b83ef2c1fc94f372222d8dc8ecb9663b1abd4b7c",
+          "evidence": "audit/evidence/step-reviews.json#V01-database-foundations"
+        },
+        {
+          "pr": 79,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.03.01"
+          ],
+          "reason": "Config uses PostgreSQL/camel introspection and DATABASE_URL. Production-only output deliberately separates deployable journal from historical unjournaled SQL. Schema glob covers current flat definitions and excludes fixtures. Drizzle generation/snapshot gate passes without schema drift.",
+          "source_revision": "b83ef2c1fc94f372222d8dc8ecb9663b1abd4b7c",
+          "evidence": "audit/evidence/step-reviews.json#V01-database-foundations"
+        },
+        {
+          "pr": 80,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.03.02"
+          ],
+          "reason": "External production migration-before-start, compatible rollout/rollback and backup/restore execution remain unverified. Full per-migration down/roll-forward acceptance from the parent story is not established by the current runbook.",
+          "source_revision": "b83ef2c1fc94f372222d8dc8ecb9663b1abd4b7c",
+          "evidence": "audit/evidence/step-reviews.json#V01-database-foundations"
+        },
+        {
+          "pr": 47,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.02.02"
+          ],
+          "superseded_by_task_keys": [
+            "01-platform-infrastructure.md#T-01.02.02"
+          ],
+          "reason": "R05 removed every strict-library suppression and verified all11 strict typecheck tasks. Preserve unmapped historical PR identity; verified replacement discharges the workaround without rebuilding it.",
+          "source_revision": "b83ef2c1fc94f372222d8dc8ecb9663b1abd4b7c",
+          "evidence": "audit/evidence/step-reviews.json#V01-database-foundations"
+        }
+      ]
     }
   ]
 }

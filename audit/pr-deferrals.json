@@ -1902,7 +1902,15 @@
     "historical_deferrals": [
       "- [ ] Schema version health check (`verifyMigrationVersion()`) — exported for programmatic use"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source.",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "status": "satisfied",
+        "reason": "Packaged schema-head validation is wired to real API readiness, with HTTP503/200 recovery and safe public errors. External rollout remains separate.",
+        "evidence": "audit/evidence/step-reviews.json#V01-database-foundations"
+      }
+    ]
   },
   {
     "pr": 67,

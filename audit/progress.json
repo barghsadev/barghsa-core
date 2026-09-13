@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "448487c1ec7626795ec803d6d4d50bac0171826c",
+  "source_revision": "b83ef2c1fc94f372222d8dc8ecb9663b1abd4b7c",
   "active_step": "V01",
-  "next_action": "V01: review database foundations and migration criteria against current source and reusable evidence; first reconcile the proven PR47 workaround replacement.",
+  "next_action": "V01: review seed/bootstrap/system-product workflow against requirements and saved PR81–86; reuse DB742 passing cases and existing admin/bootstrap evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -761,6 +761,10 @@
     {
       "id": "R05-strict-dependencies",
       "review_record": "audit/evidence/step-reviews.json#R05-strict-dependencies"
+    },
+    {
+      "id": "V01-database-foundations",
+      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations"
     }
   ],
   "deferred_improvements": [
@@ -788,9 +792,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 180,
-    "partial": 31,
-    "pending": 111,
+    "acceptance_verified": 185,
+    "partial": 33,
+    "pending": 104,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 8,
@@ -1087,39 +1091,36 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-database-foundations",
-    "name": "Database foundations and migration acceptance",
+    "id": "V01-seed-bootstrap",
+    "name": "Seed, admin bootstrap and system products",
     "status": "reviewing",
     "prs": [
-      23,
-      24,
-      27,
-      79,
-      80,
-      47
+      81,
+      82,
+      83,
+      84,
+      85,
+      86
     ],
     "task_keys": [
-      "01-platform-infrastructure.md#T-02.02.02",
-      "01-platform-infrastructure.md#T-02.02.03",
-      "01-platform-infrastructure.md#T-02.02.04",
-      "01-platform-infrastructure.md#T-02.03.01",
-      "01-platform-infrastructure.md#T-02.03.02",
-      "01-platform-infrastructure.md#T-02.03.03",
-      "01-platform-infrastructure.md#T-02.03.04"
+      "01-platform-infrastructure.md#T-02.04.01",
+      "01-platform-infrastructure.md#T-02.04.02",
+      "01-platform-infrastructure.md#T-02.04.03",
+      "01-platform-infrastructure.md#T-02.04.04",
+      "01-platform-infrastructure.md#T-02.04.05",
+      "01-platform-infrastructure.md#T-02.04.06"
     ],
     "remaining_checklist": [
-      "Reconcile PR47 unmapped replacement evidence.",
-      "Read exact table/UUID/convention/config/runner/validation/expand-contract criteria and PR deferrals.",
-      "Reuse DB/migration evidence; fix confirmed gaps and retain operational prerequisites."
+      "Review exact seed/bootstrap/product requirements and PR deferrals.",
+      "Reuse current DB package evidence; fix only confirmed gaps."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R05-strict-dependencies",
-      "audit/preflight/production-image-checkpoint.json"
+      "audit/evidence/step-reviews.json#V01-database-foundations"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "V01: review database foundations and migration criteria against current source and reusable evidence; first reconcile the proven PR47 workaround replacement."
+    "next_action": "V01: review seed/bootstrap/system-product workflow against requirements and saved PR81–86; reuse DB742 passing cases and existing admin/bootstrap evidence."
   },
   "open_domain_reviews": [
     {

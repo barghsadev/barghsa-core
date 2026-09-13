@@ -3,10 +3,10 @@
 Generated from the saved inventory and current task acceptance. This report makes no new GitHub query.
 A PR body checkbox is historical author evidence, not independent acceptance. Review the final combined implementation once per qualified task; reuse valid evidence for every contributing PR.
 
-301 merged PRs: 98 have unresolved mapped tasks; 4 have no current task mapping; 199 map only to verified tasks.
+301 merged PRs: 95 have unresolved mapped tasks; 4 have no current task mapping; 202 map only to verified tasks.
 170 historical deferral statements from 101 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **154 closed / 24 open / 0 blocked**; 123 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **158 closed / 25 open / 0 blocked**; 118 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -14,15 +14,15 @@ Use [current requirements](current-task-requirements.json), [task acceptance](ac
 
 | Canonical epic | PR-backed tasks unresolved |
 | --- | ---: |
-| 01-platform-infrastructure.md | 47 |
+| 01-platform-infrastructure.md | 44 |
 | 02-auth-users-admin.md | 30 |
 | 03-core-business.md | 4 |
 | 04-invoices-wallet-contracts.md | 4 |
 | 05-notifications-documents-ai.md | 3 |
 | 07-ui-ux-design.md | 3 |
-| Total | 91 |
+| Total | 88 |
 
-Also review 51 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
+Also review 49 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
 
 ## Every merged PR
 
@@ -52,11 +52,11 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#20](https://github.com/barghsadev/barghsa-core/pull/20) | 01-platform-infrastructure.md#T-02.01.04 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
 | [#21](https://github.com/barghsadev/barghsa-core/pull/21) | 01-platform-infrastructure.md#T-01.04.03 (partial) | Task review remains | Not reviewed | 0 |
 | [#22](https://github.com/barghsadev/barghsa-core/pull/22) | 01-platform-infrastructure.md#T-02.02.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#23](https://github.com/barghsadev/barghsa-core/pull/23) | 01-platform-infrastructure.md#T-02.02.02 (pending) | Task review remains | Not reviewed | 0 |
-| [#24](https://github.com/barghsadev/barghsa-core/pull/24) | 01-platform-infrastructure.md#T-02.02.03 (pending) | Task review remains | Not reviewed | 0 |
+| [#23](https://github.com/barghsadev/barghsa-core/pull/23) | 01-platform-infrastructure.md#T-02.02.02 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-database-foundations) | 0 |
+| [#24](https://github.com/barghsadev/barghsa-core/pull/24) | 01-platform-infrastructure.md#T-02.02.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-database-foundations) | 0 |
 | [#25](https://github.com/barghsadev/barghsa-core/pull/25) | 01-platform-infrastructure.md#T-01.04.04 (partial) | Task review remains | Not reviewed | 0 |
 | [#26](https://github.com/barghsadev/barghsa-core/pull/26) | 01-platform-infrastructure.md#T-01.04.05 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#27](https://github.com/barghsadev/barghsa-core/pull/27) | 01-platform-infrastructure.md#T-02.02.04 (pending) | Task review remains | Not reviewed | 0 |
+| [#27](https://github.com/barghsadev/barghsa-core/pull/27) | 01-platform-infrastructure.md#T-02.02.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-database-foundations) | 0 |
 | [#28](https://github.com/barghsadev/barghsa-core/pull/28) | 01-platform-infrastructure.md#T-01.04.06 (partial) | Task review remains | Not reviewed | 0 |
 | [#29](https://github.com/barghsadev/barghsa-core/pull/29) | 01-platform-infrastructure.md#T-01.05.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R03-correlation) | 0 |
 | [#30](https://github.com/barghsadev/barghsa-core/pull/30) | 01-platform-infrastructure.md#T-03.01.01 (pending) | Task review remains | Not reviewed | 0 |
@@ -76,7 +76,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#44](https://github.com/barghsadev/barghsa-core/pull/44) | 01-platform-infrastructure.md#T-04.01.02 (pending) | Task review remains | Not reviewed | 3 |
 | [#45](https://github.com/barghsadev/barghsa-core/pull/45) | 01-platform-infrastructure.md#T-04.01.03 (pending) | Task review remains | Not reviewed | 4 |
 | [#46](https://github.com/barghsadev/barghsa-core/pull/46) | 01-platform-infrastructure.md#T-04.01.04 (partial) | Task review remains | Not reviewed | 2 |
-| [#47](https://github.com/barghsadev/barghsa-core/pull/47) | fix(ci): enable skipLibCheck for api and worker to resolve drizzle-orm type errors | Unmapped | [open](evidence/step-reviews.json#R05-strict-dependencies) | 0 |
+| [#47](https://github.com/barghsadev/barghsa-core/pull/47) | fix(ci): enable skipLibCheck for api and worker to resolve drizzle-orm type errors<br>Superseded by verified: 01-platform-infrastructure.md#T-01.02.02 | Unmapped | [closed](evidence/step-reviews.json#V01-database-foundations) | 0 |
 | [#48](https://github.com/barghsadev/barghsa-core/pull/48) | 01-platform-infrastructure.md#T-04.01.05 (pending) | Task review remains | Not reviewed | 2 |
 | [#49](https://github.com/barghsadev/barghsa-core/pull/49) | 01-platform-infrastructure.md#T-04.01.06 (pending) | Task review remains | Not reviewed | 0 |
 | [#50](https://github.com/barghsadev/barghsa-core/pull/50) | 01-platform-infrastructure.md#T-04.01.07 (pending) | Task review remains | Not reviewed | 0 |
@@ -108,8 +108,8 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#76](https://github.com/barghsadev/barghsa-core/pull/76) | 02-auth-users-admin.md#T-01.02.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-registration-otp) | 0 |
 | [#77](https://github.com/barghsadev/barghsa-core/pull/77) | 02-auth-users-admin.md#T-02.01.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
 | [#78](https://github.com/barghsadev/barghsa-core/pull/78) | 02-auth-users-admin.md#T-02.01.02 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#79](https://github.com/barghsadev/barghsa-core/pull/79) | 01-platform-infrastructure.md#T-02.03.01 (pending) | Task review remains | Not reviewed | 0 |
-| [#80](https://github.com/barghsadev/barghsa-core/pull/80) | 01-platform-infrastructure.md#T-02.03.02 (pending) | Task review remains | Not reviewed | 1 |
+| [#79](https://github.com/barghsadev/barghsa-core/pull/79) | 01-platform-infrastructure.md#T-02.03.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-database-foundations) | 0 |
+| [#80](https://github.com/barghsadev/barghsa-core/pull/80) | 01-platform-infrastructure.md#T-02.03.02 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-database-foundations) | 1 |
 | [#81](https://github.com/barghsadev/barghsa-core/pull/81) | 01-platform-infrastructure.md#T-02.04.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#82](https://github.com/barghsadev/barghsa-core/pull/82) | 01-platform-infrastructure.md#T-02.04.02 (pending) | Task review remains | Not reviewed | 0 |
 | [#83](https://github.com/barghsadev/barghsa-core/pull/83) | 01-platform-infrastructure.md#T-02.04.03 (pending) | Task review remains | Not reviewed | 0 |
@@ -362,12 +362,12 @@ Keep all 23 groups below. Multiple PRs can contain useful corrections. Remove co
 | 04-invoices-wallet-contracts.md#T-04.2.04.02 | #276, #294 |
 | 04-invoices-wallet-contracts.md#T-04.2.04.03 | #277, #295 |
 
-PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 need loop-protocol disposition under V01. PR #298 may implement incidental overpayment credit for `04-invoices-wallet-contracts.md#T-04.3.01.06`; review that path before scheduling the queue gap.
+Unmapped historical PRs retain their original inventory. A superseded workaround may close only with explicit links to verified replacement tasks and dispositioned historical deferrals. See each PR row for its current review; repeated or unmapped provenance alone does not authorize rebuilding.
 
 ## Input digests
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `c0c5f3ca59271ec254b2eec9b3053303f7a9260f5a599f87eb992be05ca1a5d7`
-- `pr-deferrals.json`: `0945c2e10784acdbb552eff6e4c955d1466b585cce14ebf693b90b1be2af9fa0`
-- `evidence/step-reviews.json`: `f0822ca4f0e794270d4a686ff412089e9f7d031c4fd4e6fd3dec12bab049b807`
+- `acceptance-closure.json`: `38fafb1ab410ffe182f021c46a0820656d97d6d74aa048acd3a5aa0e87d76245`
+- `pr-deferrals.json`: `247456a776de1e8fb58d2c53e571ac1939e90f2bd9ba6fe35e31d36169298c3f`
+- `evidence/step-reviews.json`: `568a63165ede092cf6891cf33875d5d4b4811f52f4f443224641c1613197f9b7`
