@@ -23101,6 +23101,55 @@
       "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e",
       "encoding": "gzip",
       "stored_sha256": "ec146db71c39f64ff3701059a3db9ae47e89e2743f4374bdf8659623fc8a9b35"
+    },
+    {
+      "original_path": "/tmp/v01-loop-audit-tests.log",
+      "path": "audit/evidence/v01-loop/v01-loop-audit-tests.log.gz",
+      "sha256": "934d4a09ec58cdd43b2d84bf7359dd9e59883493f84b2e0c2dcb61fbaa4e8131",
+      "encoding": "gzip",
+      "stored_sha256": "294c79f5b234dd57db7474379380b922780f65ecf84582a6efb499d5f1f779d5"
+    },
+    {
+      "original_path": "/tmp/v01-loop-backlog.log",
+      "path": "audit/evidence/v01/v01-db-reconcile-backlog.log.gz",
+      "sha256": "a6d34b78b336d819c18f1e32f44b5cad575c5cd02ed1e46bedafa6fca6185b34",
+      "encoding": "gzip",
+      "stored_sha256": "149f6f242b1562d94902a4cbf86c551599463e11a4337124f9d2f6efb1cc833e"
+    },
+    {
+      "original_path": "/tmp/v01-loop-compile.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-loop-diff.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-loop-git-objects.log",
+      "path": "audit/evidence/v01-loop/v01-loop-git-objects.log.gz",
+      "sha256": "1d89e4c51d2c4c4fa02607f81492cba4a151a202998a4af44bb996d8fb30b3a6",
+      "encoding": "gzip",
+      "stored_sha256": "0f8aefe80bf84475fd9266937956fbb62e776ecdc2cf6312345c706694cf59e9"
+    },
+    {
+      "original_path": "/tmp/v01-loop-protocol-tests.log",
+      "path": "audit/evidence/v01-loop/v01-loop-protocol-tests.log.gz",
+      "sha256": "7bc36c82d61616db8696e19b5229fbb6f62e0e07265a27fa9b39207c7e8673c3",
+      "encoding": "gzip",
+      "stored_sha256": "f523b64e1b5fd70fb4f02cbed4ea7ec4f6bc3446b243ee8045cf007d914d5cd5"
+    },
+    {
+      "original_path": "/tmp/v01-loop-schema-before.log",
+      "path": "audit/evidence/v01-loop/v01-loop-schema-before.log.gz",
+      "sha256": "ce953991d8db69a611d98e657b13fc8b0112764112cc30c27fd6d87a37fef323",
+      "encoding": "gzip",
+      "stored_sha256": "8a818af059fbc636ae865fd8c9194a772e7f64ba2cd6b6943899a2835c11e8ce"
     }
   ]
 }

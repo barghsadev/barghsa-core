@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `645dda1c` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `761ef274` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -16,7 +16,7 @@ Saved inventory: **301 merged PRs**, **172 deferrals across 102 PRs**, **23 repe
 
 ## Next step
 
-Runtime lifecycle verified at645dda1c:3 tasks newly verified/1 partial;3 PRs newly closed/1 open, PR29 closure preserved. Global197 verified/35 partial/90 pending;175 PRs closed/28 open/98 unreviewed.118 immediate-base bindings refreshed;38 older refreshes retained. PR42 keeps future AI/bill-data maintenance consumers open. Next **V01-loop-durability**, saved PR234/235/242. [Review](evidence/step-reviews.json#V01-runtime-lifecycle).
+Runtime lifecycle verified at645dda1c:3 tasks newly verified/1 partial;3 PRs newly closed/1 open, PR29 closure preserved. Global197 verified/35 partial/90 pending;178 PRs closed/28 open/95 unreviewed.118 immediate-base bindings refreshed;38 older refreshes retained. PR42 keeps future AI/bill-data maintenance consumers open. Loop batch at761ef274 closes PR234/235/242 with58 protocol and9 audit cases; task counts unchanged. Next **V01-operations-configuration**, saved PR43/44/45/46/48/49. [Loop review](evidence/step-reviews.json#V01-loop-durability). [Review](evidence/step-reviews.json#V01-runtime-lifecycle).
 
 Seed/bootstrap remains5 verified/1 partial; PR84 retains production seed execution. Database PR17–22 remains5 closed/1 open, with PR21 future refund/order concurrency outstanding. Preserve migrations0133/0134 and legacy reconciliation prerequisites.
 
@@ -154,7 +154,7 @@ Review the combined implementation once per qualified task, then associate every
 
 For each of the 172 deferrals, record one disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. PR-body checkboxes are author claims. Twelve statements in PR92/106/115/129/132/218/252/254 now have explicit dispositions in [pr-deferrals.json](pr-deferrals.json): required initial roles, email delivery, staff UI, invitation withdrawal/decisions and the invitation expiry worker are implemented locally; the proposed re-enable endpoint is outside T-10.01.01. PR92's frontend modal is satisfied; its other statement retains pending domain acceptance. PR106's legal frontend is satisfied by PR108 and the current repaired form. PR130 is covered by current role-assignment acceptance. PR115 remains open: electricity integration is satisfied, while required savings/solar consumers remain with their unbuilt product prerequisites.
 
-PR47 is closed by verified R05 replacement while preserving its unmapped inventory. Loop PR234/235/242 reconciliation remains V01. Compare #298 with `04-invoices-wallet-contracts.md#T-04.3.01.06` before treating that gap as unbuilt. Five Docker groups were rebuilt after completion loss; fifteen wallet groups include useful corrective work. The other three repeated groups concern legal-profile slices, bookkeeping and replaced invoice snapshots. Repeated PRs alone do not justify deleting code.
+PR47 is closed by verified R05 replacement while preserving its unmapped inventory. Loop PR234/235/242 are locally closed against current protocol requirements; live state bootstrap/recovery and PR304 reconciliation remain external. Compare #298 with `04-invoices-wallet-contracts.md#T-04.3.01.06` before treating that gap as unbuilt. Five Docker groups were rebuilt after completion loss; fifteen wallet groups include useful corrective work. The other three repeated groups concern legal-profile slices, bookkeeping and replaced invoice snapshots. Repeated PRs alone do not justify deleting code.
 
 Keep obsolete keys `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users-admin.md#T-05.06.01` as provenance outside the 322 current claims. Refresh GitHub read-only when access is available and reconcile additions explicitly. This checkout cannot establish the other machine's scheduler state.
 

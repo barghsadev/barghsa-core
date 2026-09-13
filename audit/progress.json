@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+  "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
   "active_step": "V01",
-  "next_action": "V01-loop-durability: review saved PR234/235/242 against current deterministic protocol; preserve scheduler/external state and exact history.",
+  "next_action": "V01-operations-configuration: review saved PR43/44/45/46/48/49 against exact requirements; preserve external backup/restore and deployment prerequisites.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -75,9 +75,9 @@
       "title": "Make task identity and completion durable",
       "priority": "P0",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Reuse local assignment/state/correction safety evidence; reconcile task dispositions. Remote restart/recovery and PR304 remain blocked."
+        "Local assignment, durable state, correction, exact-review and merge safety verified in V01-loop-durability. Remote bootstrap/restart and PR304 reconciliation remain external; scheduler remains untouched."
       ]
     },
     {
@@ -781,6 +781,10 @@
     {
       "id": "V01-runtime-lifecycle",
       "review_record": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+    },
+    {
+      "id": "V01-loop-durability",
+      "review_record": "audit/evidence/step-reviews.json#V01-loop-durability"
     }
   ],
   "deferred_improvements": [
@@ -1114,97 +1118,123 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-runtime-lifecycle",
-    "name": "Runtime errors, health and graceful shutdown",
+    "id": "V01-loop-durability",
+    "name": "Durable loop selection and exact-commit review",
     "status": "completed",
     "prs": [
-      29,
-      39,
-      40,
-      41,
-      42
+      234,
+      235,
+      242
     ],
-    "task_keys": [
-      "01-platform-infrastructure.md#T-01.05.01",
-      "01-platform-infrastructure.md#T-03.03.01",
-      "01-platform-infrastructure.md#T-03.03.02",
-      "01-platform-infrastructure.md#T-03.03.03",
-      "01-platform-infrastructure.md#T-03.03.04"
-    ],
+    "task_keys": [],
     "remaining_checklist": [
-      "Per-capability maintenance mode for future AI runtime/bill-data integrations remains V01/B01; no acceptance claimed for unbuilt consumers.",
-      "V02 whole-repository regression and current production image verification remain; local process checks do not renew historical image/deployment evidence."
+      "Live durable-state bootstrap/restart/readback, active PR304 reconciliation and scheduler recovery remain external and unauthorized. Local temporary-remote proof does not establish the other machine’s state.",
+      "Historical snapshot and remote scheduler remain untouched. All322 product-task identities and58 skipped records remain unchanged; these three PRs have protocol requirements without a canonical product-task mapping.",
+      "V02 full repository regression remains."
     ],
     "confirmed_defects": [
-      "Storage readiness returned success without a real probe; fixed at6475df05 with current private-endpoint HEAD, cancellation and bounded shared work.",
-      "API watchdog started after Nest HTTP drain, so hung requests escaped the deadline; baseline reproduced, signal watchdog/drain fixed.",
-      "Node classified res.end(buffer) as idle before flush: web shutdown truncated paused large responses and returned0. Reproduced; API/web now track pending responses until finish.",
-      "Redis/storage SDK shutdown was absent; API now closes them, worker closes storage after poller drain, and late storage configuration cannot recreate clients after destruction."
+      "Strict review readback accepted booleans for schema_version/issue line and crashed on malformed root/decision/severity values. Reproduced and fixed;57 protocol cases pass plus one real Git materialization case."
     ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#V01-local-development",
-      "audit/evidence/step-reviews.json#V01-database-foundations"
+      "Existing loop durability/lock/reconciliation tests and revision-bound audit evidence; compare sources before reuse."
     ],
     "new_evidence": [
-      "10 distinct affected API cases across the batch:3 telemetry/readiness,2 health unit,1 actual S3 HTTP,2 compiled Nest shutdown,2 resource cleanup. Overlapping reruns excluded.",
-      "28/28 current storage/runtime configuration cases.",
-      "2/2 current poller-group drain cases; unchanged transaction/lease logic reused from nine prior compiled-process cases after explicit body comparison.",
-      "26/26:3 real-child shutdown plus23 existing static-server cases.",
-      "Current API/worker/web typechecks and scoped lint/format pass; shared/DB/worker/API rebuilt by final API fixture run."
+      "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
+      "1/1 additional real Git immutable-object materialization test passes. Combined58 distinct protocol cases; no remote GitHub or live scheduler action.",
+      "9/9 audit provenance tests pass, including incomplete/stale protocol proof refusal and prevention of bypassing mapped tasks or deferrals. Python compilation, backlog validation and diff check pass."
     ],
     "pr_dispositions": [
       {
-        "pr": 29,
+        "pr": 234,
         "status": "closed",
-        "task_keys": [
-          "01-platform-infrastructure.md#T-01.05.01"
-        ],
-        "reason": "R03 error/correlation acceptance retained. All current task source bindings match after bounded immediate-base fixture/runtime refresh; no error-contract change. Existing149 distinct API/106 worker proof remains within its recorded scope.",
-        "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
-        "evidence": "audit/evidence/step-reviews.json#R03-correlation"
+        "task_keys": [],
+        "reason": "Explicit integer/string types for constant/enum fields remain in the schema. Readback now rejects boolean integer impostors, malformed root/decision/severity values, invalid task IDs and invalid HEAD format before durable approval. Original exact identity, issue shape, blocking severity and unknown-field checks remain.",
+        "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
+        "evidence": "audit/evidence/step-reviews.json#V01-loop-durability",
+        "protocol_review": {
+          "requirements": [
+            "Explicit integer/string types for constant/enum fields remain in the schema. Readback now rejects boolean integer impostors, malformed root/decision/severity values, invalid task IDs and invalid HEAD format before durable approval. Original exact identity, issue shape, blocking severity and unknown-field checks remain."
+          ],
+          "validation": [
+            "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
+            "1/1 additional real Git immutable-object materialization test passes. Combined58 distinct protocol cases; no remote GitHub or live scheduler action."
+          ],
+          "source_evidence": [
+            {
+              "path": "kanban/scripts/loop-runner.py",
+              "sha256": "f20452b376db603a9e97d910938a4089265e9d4bfa3d9edbdc18a73415951ec1"
+            },
+            {
+              "path": "kanban/scripts/test_loop_runner.py",
+              "sha256": "6cbe98db3a61d1b02428e11bf18785a252266c9b8198d7a5ad19ad79e3d24f08"
+            },
+            {
+              "path": "kanban/scripts/review-schema.json",
+              "sha256": "38bb98b83235cd6728018957bb0c2d420af3c58c64c216012a4091fabdee0bd6"
+            }
+          ]
+        }
       },
       {
-        "pr": 39,
+        "pr": 235,
         "status": "closed",
-        "task_keys": [
-          "01-platform-infrastructure.md#T-03.03.01"
-        ],
-        "reason": "Actual private-endpoint S3 HeadBucket uses current persisted configuration and credentials. Missing/denied/stalled storage is degraded with a generic safe message; one shared 1500ms bounded probe prevents public request accumulation. Current PostgreSQL/schema/pool checks remain the only readiness blockers; liveness is immediate and exempt from auth/rate/audit. Redis warning behavior is preserved.",
-        "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
-        "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+        "task_keys": [],
+        "reason": "A real temporary bare remote verifies the advertised base is a commit and fetched PR ref equals the advertised HEAD. Advancing main is accepted; wrong HEAD or non-commit base is refused. No mutable-main equality requirement is restored.",
+        "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
+        "evidence": "audit/evidence/step-reviews.json#V01-loop-durability",
+        "protocol_review": {
+          "requirements": [
+            "A real temporary bare remote verifies the advertised base is a commit and fetched PR ref equals the advertised HEAD. Advancing main is accepted; wrong HEAD or non-commit base is refused. No mutable-main equality requirement is restored."
+          ],
+          "validation": [
+            "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
+            "1/1 additional real Git immutable-object materialization test passes. Combined58 distinct protocol cases; no remote GitHub or live scheduler action."
+          ],
+          "source_evidence": [
+            {
+              "path": "kanban/scripts/loop-runner.py",
+              "sha256": "f20452b376db603a9e97d910938a4089265e9d4bfa3d9edbdc18a73415951ec1"
+            },
+            {
+              "path": "kanban/scripts/test_loop_runner.py",
+              "sha256": "6cbe98db3a61d1b02428e11bf18785a252266c9b8198d7a5ad19ad79e3d24f08"
+            }
+          ]
+        }
       },
       {
-        "pr": 40,
+        "pr": 242,
         "status": "closed",
-        "task_keys": [
-          "01-platform-infrastructure.md#T-03.03.02"
-        ],
-        "reason": "SIGTERM/SIGINT start a referenced deadline before Nest module/HTTP teardown and stop accepting connections. Accepted requests drain; buffered responses remain active until finish. API closes database, Redis and storage independently. Worker stops poller leasing, waits for running jobs, closes pools and storage; the reviewed shutdown-body delta preserves earlier compiled-process transaction/lease proof and keeps the forced-exit deadline alive.",
-        "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
-        "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
-      },
-      {
-        "pr": 41,
-        "status": "closed",
-        "task_keys": [
-          "01-platform-infrastructure.md#T-03.03.03"
-        ],
-        "reason": "Production static server retains buffered responses until finish, drains full 16MB accepted responses and cleanly exits0; paused responses force exit1 at the configured deadline. Existing23 static-server security/cache/SPA cases also pass.",
-        "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
-        "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
-      },
-      {
-        "pr": 42,
-        "status": "open",
-        "task_keys": [
-          "01-platform-infrastructure.md#T-03.03.04"
-        ],
-        "reason": "Only PostgreSQL controls readiness. Redis outages retain X-Health-Warning and storage outages add object-storage-unavailable without503. Future AI/bill-data per-capability maintenance consumers remain unbuilt; notification failure/retry behavior is already reviewed under R02 and does not block readiness.",
-        "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
-        "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+        "task_keys": [],
+        "reason": "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1–3 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract.",
+        "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
+        "evidence": "audit/evidence/step-reviews.json#V01-loop-durability",
+        "protocol_review": {
+          "requirements": [
+            "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1–3 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract."
+          ],
+          "validation": [
+            "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
+            "1/1 additional real Git immutable-object materialization test passes. Combined58 distinct protocol cases; no remote GitHub or live scheduler action."
+          ],
+          "source_evidence": [
+            {
+              "path": "kanban/scripts/loop-runner.py",
+              "sha256": "f20452b376db603a9e97d910938a4089265e9d4bfa3d9edbdc18a73415951ec1"
+            },
+            {
+              "path": "kanban/scripts/test_loop_runner.py",
+              "sha256": "6cbe98db3a61d1b02428e11bf18785a252266c9b8198d7a5ad19ad79e3d24f08"
+            },
+            {
+              "path": "kanban/STATE-PROTOCOL.md",
+              "sha256": "388a8833e24141076ffaafe62c8d924cd3f3ea51984d78e8be256e234ea7bef4"
+            }
+          ]
+        }
       }
     ],
-    "next_action": "V01-loop-durability: review saved PR234/235/242 against current deterministic protocol; preserve scheduler/external state and exact history."
+    "next_action": "V01-operations-configuration: review saved PR43/44/45/46/48/49 against exact requirements; preserve external backup/restore and deployment prerequisites."
   },
   "open_domain_reviews": [
     {

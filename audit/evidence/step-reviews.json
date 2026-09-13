@@ -20685,6 +20685,198 @@
           "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
         }
       ]
+    },
+    {
+      "id": "V01-loop-durability",
+      "date": "2026-09-13",
+      "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
+      "task_keys": [],
+      "summary": "Three protocol-only saved PR reviews closed locally; product-task acceptance counts unchanged. Strict readback repair verified; live rollout remains external.",
+      "review": [
+        "Explicit integer/string types for constant/enum fields remain in the schema. Readback now rejects boolean integer impostors, malformed root/decision/severity values, invalid task IDs and invalid HEAD format before durable approval. Original exact identity, issue shape, blocking severity and unknown-field checks remain.",
+        "A real temporary bare remote verifies the advertised base is a commit and fetched PR ref equals the advertised HEAD. Advancing main is accepted; wrong HEAD or non-commit base is refused. No mutable-main equality requirement is restored.",
+        "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1–3 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract.",
+        "Durable StateStore uses a separate bare object repository, exact remote revision lease and readback before local success. State events cannot be rewritten; ordinary saves cannot remove completions. Dedicated reviewed correction stays blocked and appends its evidence. Tests exercise actual isolated local Git remotes.",
+        "Queue identity includes epic filename; every generated field/order and current task context are validated. Assignment/task/digest are supervisor-owned; builder cannot replace history or switch review identity. Existing loop-owned/possibly merged PRs block conflicting dispatch. Review and merge remain separate ticks; exact immutable head and posted comment binding are rechecked after merge.",
+        "Audit reporting now supports unmapped protocol closure only with explicit requirements, validation and matching current source hashes. Missing/stale proof, unresolved mapped tasks and undispositioned historical statements still refuse closure. Original PR mappings are preserved.",
+        "Baseline malformed-value test reproduced two false accepts and six exceptions; final tests reject these values safely, including GitHub-comment readback. No keyword approval logic or dependency added."
+      ],
+      "verification": [
+        "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
+        "1/1 additional real Git immutable-object materialization test passes. Combined58 distinct protocol cases; no remote GitHub or live scheduler action.",
+        "9/9 audit provenance tests pass, including incomplete/stale protocol proof refusal and prevention of bypassing mapped tasks or deferrals. Python compilation, backlog validation and diff check pass."
+      ],
+      "remaining": [
+        "Live durable-state bootstrap/restart/readback, active PR304 reconciliation and scheduler recovery remain external and unauthorized. Local temporary-remote proof does not establish the other machine’s state.",
+        "Historical snapshot and remote scheduler remain untouched. All322 product-task identities and58 skipped records remain unchanged; these three PRs have protocol requirements without a canonical product-task mapping.",
+        "V02 full repository regression remains."
+      ],
+      "source_evidence": [
+        {
+          "path": "kanban/scripts/loop-runner.py",
+          "sha256": "f20452b376db603a9e97d910938a4089265e9d4bfa3d9edbdc18a73415951ec1"
+        },
+        {
+          "path": "kanban/scripts/review-schema.json",
+          "sha256": "38bb98b83235cd6728018957bb0c2d420af3c58c64c216012a4091fabdee0bd6"
+        },
+        {
+          "path": "kanban/scripts/test_loop_runner.py",
+          "sha256": "6cbe98db3a61d1b02428e11bf18785a252266c9b8198d7a5ad19ad79e3d24f08"
+        },
+        {
+          "path": "kanban/scripts/loop_state.py",
+          "sha256": "b825e2d2f4119c508d0560199b25d30a04d1713502c4c781dc6278d4d923f6dd"
+        },
+        {
+          "path": "kanban/scripts/test_loop_state.py",
+          "sha256": "e3f8c66d443b60c270346ee4082d908cb0ec78432f2f7a5fd2bbf30ff8ea3199"
+        },
+        {
+          "path": "kanban/scripts/build_backlog.py",
+          "sha256": "d1314e4e47c1baf749e0b0353384ee2de03af7059df4ee7decba9f0d69837782"
+        },
+        {
+          "path": "kanban/scripts/test_build_backlog.py",
+          "sha256": "a090f36074bcf60454938e2641c1d332b7803e0caea269c792f9fa7549b8c131"
+        },
+        {
+          "path": "kanban/scripts/correct_completion.py",
+          "sha256": "91f5a72852ac731ff91eac34644f22976edeccfa67157f4f5e34bc3c744cad27"
+        },
+        {
+          "path": "kanban/scripts/test_correct_completion.py",
+          "sha256": "12bede8a720c89194048a8c64882a61018a07d5e67a31ceaf5037bc451df6619"
+        },
+        {
+          "path": "kanban/scripts/reconcile_loop.py",
+          "sha256": "1c995ec370c6334241749eb5a52c61ba8966139903e3a59b31da057c544b3fda"
+        },
+        {
+          "path": "kanban/scripts/test_reconcile_loop.py",
+          "sha256": "afd4776e650c8bd6a47cb3c92e2c396c71bac6dadf674ff0e5d4b5ff3da693aa"
+        },
+        {
+          "path": "kanban/scripts/transition_state.py",
+          "sha256": "da282b39a1c72521382e5b699ace7428f7fdd140518e667773eee977bb441078"
+        },
+        {
+          "path": "kanban/scripts/test_transition_state.py",
+          "sha256": "04b736df12208fd22b1bc8e1ff68323f7fec22484b7ed2d5095702cb25c4c8d6"
+        },
+        {
+          "path": "kanban/STATE-PROTOCOL.md",
+          "sha256": "388a8833e24141076ffaafe62c8d924cd3f3ea51984d78e8be256e234ea7bef4"
+        },
+        {
+          "path": "audit/current_pr_reviews.py",
+          "sha256": "489e52b229cb48051f115ef4e1cf61c361a57c9e0a6ab008d1f584c0582c2206"
+        },
+        {
+          "path": "audit/test_current_pr_reviews.py",
+          "sha256": "e69e4f95fa532285ef378c4a5eca0d50b6a19b017801009f4b2ae4549358dba3"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-loop-audit-tests.log",
+        "/tmp/v01-loop-backlog.log",
+        "/tmp/v01-loop-compile.log",
+        "/tmp/v01-loop-diff.log",
+        "/tmp/v01-loop-git-objects.log",
+        "/tmp/v01-loop-protocol-tests.log",
+        "/tmp/v01-loop-schema-before.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 234,
+          "status": "closed",
+          "task_keys": [],
+          "reason": "Explicit integer/string types for constant/enum fields remain in the schema. Readback now rejects boolean integer impostors, malformed root/decision/severity values, invalid task IDs and invalid HEAD format before durable approval. Original exact identity, issue shape, blocking severity and unknown-field checks remain.",
+          "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
+          "evidence": "audit/evidence/step-reviews.json#V01-loop-durability",
+          "protocol_review": {
+            "requirements": [
+              "Explicit integer/string types for constant/enum fields remain in the schema. Readback now rejects boolean integer impostors, malformed root/decision/severity values, invalid task IDs and invalid HEAD format before durable approval. Original exact identity, issue shape, blocking severity and unknown-field checks remain."
+            ],
+            "validation": [
+              "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
+              "1/1 additional real Git immutable-object materialization test passes. Combined58 distinct protocol cases; no remote GitHub or live scheduler action."
+            ],
+            "source_evidence": [
+              {
+                "path": "kanban/scripts/loop-runner.py",
+                "sha256": "f20452b376db603a9e97d910938a4089265e9d4bfa3d9edbdc18a73415951ec1"
+              },
+              {
+                "path": "kanban/scripts/test_loop_runner.py",
+                "sha256": "6cbe98db3a61d1b02428e11bf18785a252266c9b8198d7a5ad19ad79e3d24f08"
+              },
+              {
+                "path": "kanban/scripts/review-schema.json",
+                "sha256": "38bb98b83235cd6728018957bb0c2d420af3c58c64c216012a4091fabdee0bd6"
+              }
+            ]
+          }
+        },
+        {
+          "pr": 235,
+          "status": "closed",
+          "task_keys": [],
+          "reason": "A real temporary bare remote verifies the advertised base is a commit and fetched PR ref equals the advertised HEAD. Advancing main is accepted; wrong HEAD or non-commit base is refused. No mutable-main equality requirement is restored.",
+          "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
+          "evidence": "audit/evidence/step-reviews.json#V01-loop-durability",
+          "protocol_review": {
+            "requirements": [
+              "A real temporary bare remote verifies the advertised base is a commit and fetched PR ref equals the advertised HEAD. Advancing main is accepted; wrong HEAD or non-commit base is refused. No mutable-main equality requirement is restored."
+            ],
+            "validation": [
+              "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
+              "1/1 additional real Git immutable-object materialization test passes. Combined58 distinct protocol cases; no remote GitHub or live scheduler action."
+            ],
+            "source_evidence": [
+              {
+                "path": "kanban/scripts/loop-runner.py",
+                "sha256": "f20452b376db603a9e97d910938a4089265e9d4bfa3d9edbdc18a73415951ec1"
+              },
+              {
+                "path": "kanban/scripts/test_loop_runner.py",
+                "sha256": "6cbe98db3a61d1b02428e11bf18785a252266c9b8198d7a5ad19ad79e3d24f08"
+              }
+            ]
+          }
+        },
+        {
+          "pr": 242,
+          "status": "closed",
+          "task_keys": [],
+          "reason": "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1–3 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract.",
+          "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
+          "evidence": "audit/evidence/step-reviews.json#V01-loop-durability",
+          "protocol_review": {
+            "requirements": [
+              "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1–3 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract."
+            ],
+            "validation": [
+              "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
+              "1/1 additional real Git immutable-object materialization test passes. Combined58 distinct protocol cases; no remote GitHub or live scheduler action."
+            ],
+            "source_evidence": [
+              {
+                "path": "kanban/scripts/loop-runner.py",
+                "sha256": "f20452b376db603a9e97d910938a4089265e9d4bfa3d9edbdc18a73415951ec1"
+              },
+              {
+                "path": "kanban/scripts/test_loop_runner.py",
+                "sha256": "6cbe98db3a61d1b02428e11bf18785a252266c9b8198d7a5ad19ad79e3d24f08"
+              },
+              {
+                "path": "kanban/STATE-PROTOCOL.md",
+                "sha256": "388a8833e24141076ffaafe62c8d924cd3f3ea51984d78e8be256e234ea7bef4"
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }

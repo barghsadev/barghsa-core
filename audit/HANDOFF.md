@@ -4,7 +4,7 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **645dda1c**. **197 verified /35 partial /90 pending** of322 claims. Saved PRs: **175 closed /28 open /98 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3300 logs indexed;38 older refreshes remain. Saved inventory ends September3; no current GitHub/deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **761ef274**. **197 verified /35 partial /90 pending** of322 claims. Saved PRs: **178 closed /28 open /95 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3307 logs indexed;38 older refreshes remain. Saved inventory ends September3; no current GitHub/deployment claim.
 
 Seed/bootstrap batch:5 tasks verified/1 partial;5 PRs closed/1 open. Migration0134 protects canonical electricity identities and allows zero/zero limits while rejecting new negative bounds. Seed counts/concurrency/force boundaries are repaired; legacy conflicts stop seed without replacement. Green-rule consumers recognize canonical and legacy keys, reject ambiguity. All747 DB cases,88 distinct affected API cases and14 shared cases pass; types/builds/snapshot/lint/format pass.39 immediate-base bindings refreshed. [Review](evidence/step-reviews.json#V01-seed-bootstrap). PR84 retains production initial-seed execution.
 
@@ -12,7 +12,7 @@ Database foundations retain5 verified/2 partial and PR47 closure. PR23's38 base-
 
 ## Next action
 
-Runtime batch complete at645dda1c:3 newly verified/1 partial;3 newly closed PRs/1 open; PR29 closure preserved. Real storage health, bounded API/worker shutdown and complete web response draining repaired.10 distinct API,28 shared,2 worker and26 web cases pass; current types/builds/lint/format pass.118 immediate-base bindings refreshed;38 older refreshes retained. PR42 keeps future AI/bill-data maintenance consumers open. [Review](evidence/step-reviews.json#V01-runtime-lifecycle). Next: **V01-loop-durability**, saved PR234/235/242. Review local protocol only; scheduler/external state remains untouched.
+Runtime batch complete at645dda1c:3 newly verified/1 partial;3 newly closed PRs/1 open; PR29 closure preserved. Real storage health, bounded API/worker shutdown and complete web response draining repaired.10 distinct API,28 shared,2 worker and26 web cases pass; current types/builds/lint/format pass.118 immediate-base bindings refreshed;38 older refreshes retained. PR42 keeps future AI/bill-data maintenance consumers open. [Review](evidence/step-reviews.json#V01-runtime-lifecycle). Loop batch verified at761ef274:58 distinct protocol cases and9 audit cases pass; PR234/235/242 locally closed. Malformed review values now fail safely. Current three-round policy preserved. Live state bootstrap/recovery and PR304 remain external. Next: **V01-operations-configuration**, saved PR43/44/45/46/48/49. [Loop review](evidence/step-reviews.json#V01-loop-durability).
 
 Database PR17–22 remains5 closed/1 open. PR21 retains future refund/order concurrency. README traceability is current.
 

@@ -6,7 +6,7 @@ A PR body checkbox is historical author evidence, not independent acceptance. Re
 301 merged PRs: 83 have unresolved mapped tasks; 4 have no current task mapping; 214 map only to verified tasks.
 172 historical deferral statements from 102 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **175 closed / 28 open / 0 blocked**; 98 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **178 closed / 28 open / 0 blocked**; 95 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -262,15 +262,15 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#231](https://github.com/barghsadev/barghsa-core/pull/231) | 04-invoices-wallet-contracts.md#T-04.1.02.08 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-creation-calculation) | 0 |
 | [#232](https://github.com/barghsadev/barghsa-core/pull/232) | 04-invoices-wallet-contracts.md#T-04.1.02.08 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-creation-calculation) | 1 |
 | [#233](https://github.com/barghsadev/barghsa-core/pull/233) | 04-invoices-wallet-contracts.md#T-04.1.02.09 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-creation-calculation) | 0 |
-| [#234](https://github.com/barghsadev/barghsa-core/pull/234) | fix(loop): type Codex review schema fields | Unmapped | Not reviewed | 0 |
-| [#235](https://github.com/barghsadev/barghsa-core/pull/235) | fix(loop): review PRs after main advances | Unmapped | Not reviewed | 0 |
+| [#234](https://github.com/barghsadev/barghsa-core/pull/234) | fix(loop): type Codex review schema fields<br>Protocol requirements reviewed separately; no product task mapping | Unmapped | [closed](evidence/step-reviews.json#V01-loop-durability) | 0 |
+| [#235](https://github.com/barghsadev/barghsa-core/pull/235) | fix(loop): review PRs after main advances<br>Protocol requirements reviewed separately; no product task mapping | Unmapped | [closed](evidence/step-reviews.json#V01-loop-durability) | 0 |
 | [#236](https://github.com/barghsadev/barghsa-core/pull/236) | 04-invoices-wallet-contracts.md#T-04.1.03.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-deadlines-reminders) | 3 |
 | [#237](https://github.com/barghsadev/barghsa-core/pull/237) | 04-invoices-wallet-contracts.md#T-04.1.03.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-deadlines-reminders) | 1 |
 | [#238](https://github.com/barghsadev/barghsa-core/pull/238) | 04-invoices-wallet-contracts.md#T-04.1.03.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-deadlines-reminders) | 0 |
 | [#239](https://github.com/barghsadev/barghsa-core/pull/239) | 04-invoices-wallet-contracts.md#T-04.1.03.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-deadlines-reminders) | 0 |
 | [#240](https://github.com/barghsadev/barghsa-core/pull/240) | 04-invoices-wallet-contracts.md#T-04.1.04.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-deadlines-reminders) | 1 |
 | [#241](https://github.com/barghsadev/barghsa-core/pull/241) | 04-invoices-wallet-contracts.md#T-04.1.04.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-deadlines-reminders) | 4 |
-| [#242](https://github.com/barghsadev/barghsa-core/pull/242) | fix(loop): allow ten fix attempts | Unmapped | Not reviewed | 0 |
+| [#242](https://github.com/barghsadev/barghsa-core/pull/242) | fix(loop): allow ten fix attempts<br>Protocol requirements reviewed separately; no product task mapping | Unmapped | [closed](evidence/step-reviews.json#V01-loop-durability) | 0 |
 | [#243](https://github.com/barghsadev/barghsa-core/pull/243) | 04-invoices-wallet-contracts.md#T-04.1.04.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-invoice-reminder-delivery) | 0 |
 | [#244](https://github.com/barghsadev/barghsa-core/pull/244) | 04-invoices-wallet-contracts.md#T-04.1.04.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-deadlines-reminders) | 0 |
 | [#245](https://github.com/barghsadev/barghsa-core/pull/245) | 04-invoices-wallet-contracts.md#T-04.1.04.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-invoice-reminder-delivery) | 0 |
@@ -362,7 +362,7 @@ Keep all 23 groups below. Multiple PRs can contain useful corrections. Remove co
 | 04-invoices-wallet-contracts.md#T-04.2.04.02 | #276, #294 |
 | 04-invoices-wallet-contracts.md#T-04.2.04.03 | #277, #295 |
 
-Unmapped historical PRs retain their original inventory. A superseded workaround may close only with explicit links to verified replacement tasks and dispositioned historical deferrals. See each PR row for its current review; repeated or unmapped provenance alone does not authorize rebuilding.
+Unmapped historical PRs retain their original inventory. A superseded workaround may close only with explicit links to verified replacement tasks and dispositioned historical deferrals. Protocol work may close with explicit requirements, validation and current source hashes; it cannot bypass unresolved mapped tasks or historical deferrals. See each PR row for its current review; repeated or unmapped provenance alone does not authorize rebuilding.
 
 ## Input digests
 
@@ -370,4 +370,4 @@ Unmapped historical PRs retain their original inventory. A superseded workaround
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
 - `acceptance-closure.json`: `dd827e1c88e5a0f5eb0c3e2a6af5d8b99dce29b05e3c0e4e5389145382f03042`
 - `pr-deferrals.json`: `816c1d6ed641d9a50bf26bba2143906c1a5550d8a6c79000c341ad7fbb468bd3`
-- `evidence/step-reviews.json`: `6a88cc0daff41b625d6c6ceeee9ac2352a4d2f29b347d94da8c7f6fc14385a68`
+- `evidence/step-reviews.json`: `92adacd825110c20367023efd3333f0e176a4198899c5aea567f958dedaaa60b`
