@@ -3,10 +3,10 @@
   "scope": "Historical skips reconciled with recorded acceptance; not a dispatch queue",
   "source_sha256": {
     "audit/skipped-tasks.json": "e4394d905111e9f5d319185eb47aeb26bd75927b6fc2ac99c449b10cd42e4947",
-    "audit/acceptance-closure.json": "33f3d39d2812f8cbd378c1ac024cbd08eaf7a8845f6cf27cb8edde52bace2734"
+    "audit/acceptance-closure.json": "6ec76db4cb40039a60f96587b4c7e3067bcecc8bf77b6bc7f2178fffda3e3a97"
   },
   "historically_skipped": 58,
-  "acceptance_verified": 4,
+  "acceptance_verified": 5,
   "tasks": [
     {
       "task_key": "01-platform-infrastructure.md#T-05.01.01",
@@ -362,9 +362,9 @@
       "historical_assessment": "existing_implementation_revalidate",
       "direct_merged_prs": [],
       "acceptance_status": "partial",
-      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
+      "reviewed_sha": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
       "limitations": [
-        "Remaining auxiliary shared components and implemented consumer RTL/theme acceptance continues after R03 errors. Toast, command, avatar and progress still contain physical placement classes; do not claim full library acceptance."
+        "Remaining implemented consumer theme/RTL/keyboard/loading states stay R03. DashboardLayout still uses light-only backgrounds/borders/text;44 files with literal gray/white styling are candidates for bounded review, not44 established defects."
       ],
       "next_action": "Review current implementation against requirements; build only unmet remainder"
     },
@@ -375,9 +375,9 @@
       "historical_assessment": "acceptance_gap",
       "direct_merged_prs": [],
       "acceptance_status": "partial",
-      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
+      "reviewed_sha": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
       "limitations": [
-        "Core form/select/menu/tab/switch/slider/scroll/badge focus, contrast, keyboard and orientation verified. Other auxiliary shared controls, complete consumer states and full WCAG acceptance remain R03; no whole-library certification."
+        "Remaining implemented consumer theme/RTL/keyboard/loading states stay R03. DashboardLayout still uses light-only backgrounds/borders/text;44 files with literal gray/white styling are candidates for bounded review, not44 established defects."
       ],
       "next_action": "Review current implementation against requirements; build only unmet remainder"
     },
@@ -413,12 +413,10 @@
       "historical_skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
       "historical_assessment": "partial",
       "direct_merged_prs": [],
-      "acceptance_status": "partial",
-      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
-      "limitations": [
-        "Existing shared empty/error/retry/support behavior remains verified. Exact skeleton dimensions/shimmer and all remaining consumer loading/error-state acceptance still require R03 review."
-      ],
-      "next_action": "Review current implementation against requirements; build only unmet remainder"
+      "acceptance_status": "acceptance_verified",
+      "reviewed_sha": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
+      "limitations": [],
+      "next_action": "Preserve verified implementation; do not rebuild this task"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.04.01",

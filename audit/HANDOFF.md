@@ -4,17 +4,19 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **0b962f76**. **172 verified /38 partial /112 pending** of322 claims. Saved PRs: **150 closed /25 open /126 unreviewed**,301 total.58 skips:4 verified/4 partial/50 pending.2992 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **8f2f1d39**. **173 verified /37 partial /112 pending** of322 claims. Saved PRs: **150 closed /25 open /126 unreviewed**,301 total.58 skips:5 verified/3 partial/50 pending.3022 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
 
-R03 correlation/catalogue complete locally at0b962f76. Both task acceptances and saved PR29 review close. All213 shared error definitions have metadata and safe bilingual messages. API requests retain IDs through auth/notification/AI queues and safe worker diagnostics.149 distinct API and106 worker cases across recorded runs pass. Types/lint/format/snapshot checks pass;42 catalogue build budgets reused. Migration0132 adds only three nullable trace fields and must precede updated API/workers. Historical rows retain NULL. 42 immediate-base bindings refreshed;38 older retained. [Review](evidence/step-reviews.json#R03-correlation).
+R03 auxiliary repairs reviewed at8f2f1d39. Logical placement, command focus/selection/labels, avatar contrast, instant input theme colors and reduced-motion shimmer are repaired.21 distinct browser cases and49 UI cases pass; builds/types/lint/format and42 unchanged budgets pass. T-06.03.06 reusable loading/empty/error acceptance closes. PR156 and page-consumer acceptance remain open. 6 immediate-base bindings refreshed;38 older retained. [Review](evidence/step-reviews.json#R03-auxiliary-ui).
+
+Prior error/catalogue/tracing completion at0b962f76 remains verified, including PR29. Apply migration0132 before updated API/workers; historical traces stay NULL.149 distinct API/106 worker evidence and catalogue budgets remain valid.
 
 ## Next action
 
-Continue R03 auxiliary toast/command/avatar/progress and exact skeleton/loading states. Reuse prior core-control/theme tests; then review remaining locale/timezone consumers. CSP decision remains pending; do not reask. Full regression stays V02.
+Continue R03 page themes, loading/error states and timezone-consumer acceptance, PR114/156. Start with DashboardLayout light-only styling, then review44 literal-color candidate files and the shared/direct date-format consumers once. Reuse earlier domain checks; preserve pending CSP decision and38 older evidence refreshes.
 
 CSP decision asked once September13: native reports carry same-origin session cookies but cannot add X-CSRF-Token. Signed-in collection currently returns403. Safe parsing/nonces are committed; no CSRF exception implemented. Do not reask or silently waive the requirement. PR61 remains open for this and external rollout evidence.
 
-Then return to R03 auxiliary toast/command/avatar/progress and remaining consumer/timezone/skeleton states before R04/R05/V01/R06/V02/B01. T-06.03.05 unbuilt editor/per-user controls remain B01. Full regression staysV02. The plan is unfinished.
+Continue remaining R03 consumer/timezone/state acceptance before R04/R05/V01/R06/V02/B01. T-06.03.05 unbuilt editor/per-user controls remain B01. Full regression staysV02. The plan is unfinished.
 
 ## Preserve completed work and prerequisites
 

@@ -18182,6 +18182,148 @@
           "evidence": "audit/evidence/step-reviews.json#R03-correlation"
         }
       ]
+    },
+    {
+      "id": "R03-auxiliary-ui",
+      "date": "2026-09-13",
+      "source_revision": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
+      "base_revision": "b40fa090136791f8449e2a612d10b319268cb50e",
+      "product_commits": [
+        "8f2f1d39"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.01.02",
+        "01-platform-infrastructure.md#T-06.03.02",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-06.03.06"
+      ],
+      "summary": "Repair auxiliary shared-control direction, focus, labels and loading animation.21 distinct browser cases and49 UI cases pass. Consumer acceptance remains explicit. T-06.03.06 shared loading/empty/error components is acceptance_verified; page-consumer checks remain separate.",
+      "review": [
+        "Toast viewports, command spacing/shortcuts, avatar badges, progress values, input addons, calendar range edges, sheet close placement and tooltip inline arrows now use logical direction. Explicit physical panel/popover sides and centered positioning remain deliberate. Application toast position flips with locale.",
+        "Command selected styles now require data-selected=true. Input groups and selected commands have solid2px focus rings with2px offset. Dialog titles/descriptions are inside their popup, with a caller-supplied localized close label; shared toast and sheet close labels are configurable. Existing caller defaults remain compatible.",
+        "Skeleton shapes retain caller dimensions and now shimmer through a decorative pseudo-element. Reduced-motion disables that animation; loading status remains announced once. Existing error-boundary retry, safe messages/support and empty-state behavior are unchanged. Replaced the obsolete pulse-class unit assertion with real browser animation/dimension checks.",
+        "Browser scan found avatar text contrast4.39:1 on muted background. Fallback/count text now uses the foreground token. A later dark-theme scan exposed transient inherited text color during InputGroup color transitions. Group transitions now cover only border color and focus shadow; final palette matrix passes with normal motion.",
+        "New browser fixture initially used the wrong accessible command label; cmdk labels from the enclosing panel. Base UI hides the toast close control until keyboard focus; the test now tabs from the toast to that button. Production accessibility semantics were retained. Original failures remain saved.",
+        "Existing feedback tests lacked the implemented pre-login CSRF bootstrap and expected the old post-login root destination. They now use the established CSRF fixture and current /app route. No authentication code/protection changed. Eight auth-feedback cases pass; the separate existing dashboard branding case also passes.",
+        "Final12 shared-control browser cases pass across both languages/themes, including earlier core controls and the expanded palette scan. Together with9 feedback cases this is21 distinct cases; intermediate runs overlap.49 UI unit cases are reused after later CSS-only repairs. UI distribution/build, web build, UI/web types, scoped lint/format and42 numeric budgets pass. No external execution.",
+        "Closed T-06.03.06 against its exact reusable-component scope. Earlier empty/error/retry/support and route-wrapper evidence is valid, and the remaining shimmer/dimensions criteria now pass. Do not expand this task into exhaustive acceptance of every consuming page."
+      ],
+      "verification": {
+        "browser": "21 distinct Chromium cases:12 final theme/components,8 feedback workflow cases,1 separate dashboard branding case. Failure/single-case runs overlap and are not added.",
+        "ui": "49 UI tests across5 files pass. Later changes are CSS-only; retain this evidence with final browser coverage.",
+        "quality": "UI build/distribution checks, production web build, UI/web typechecks, scoped lint/format/diff and42 unchanged route/interaction budgets pass."
+      },
+      "remaining": [
+        "Remaining implemented consumer theme/RTL/keyboard/loading states stay R03. DashboardLayout still uses light-only backgrounds/borders/text;44 files with literal gray/white styling are candidates for bounded review, not44 established defects.",
+        "Complete timestamp-consumer coverage for account timezone PR114; preserve calendar-by-language semantics and deliberate date-only UTC formatting.",
+        "Native signed-in CSP reporting awaits the pending CSRF decision. Unbuilt theme-editor/per-user controls stay B01; full regression V02."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "b4d85351ba9d507a8d982a4a0e785b7368b08c079a0139bc1acebe0f8749a54c"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/theme/main.tsx",
+          "sha256": "3730dcfac5eb9c5d46f60b3c45a3090c9e49c0f64ad24b2dc3fff93664947348"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "4f48d63df8fdf9101aedc594672d2a869b55cddd1af0d9e18f6a40c6d9f82d8e"
+        },
+        {
+          "path": "apps/web/src/components/ApplicationToaster.tsx",
+          "sha256": "b5889f63c873a6fa2c0bc7f511843c9dd71cd529bb397e63c7b7de99f0e2be32"
+        },
+        {
+          "path": "packages/ui/src/components/ui/avatar.tsx",
+          "sha256": "66ffabb69b3762a04490074b8bf599f4f53b83d8336cda62936f66d00cf8f3c9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/calendar.tsx",
+          "sha256": "6ec34d32f8be0d49d7a55f963206194802a168fb9e14adcdfca48d2742fcc69f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/command.tsx",
+          "sha256": "abde0544578867ee92391001770068ab41ca89cf00e21428083644d3a1531594"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input-group.tsx",
+          "sha256": "73815558b086616611e426954a86fc016433898d2834331b5b3c32891df5faf9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/progress.tsx",
+          "sha256": "8dbddebc0926756e9df56d45f4e518c26cf3e0e96b42621a12e7d016c1c66f15"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sheet.tsx",
+          "sha256": "e966374723f7b6d082befe0775efea214d2a515a5bf34ce7f8f5a3b4f451d1f6"
+        },
+        {
+          "path": "packages/ui/src/components/ui/skeleton.tsx",
+          "sha256": "d22459a4fed0c76bfb7e609bd9ccd30d86b35237c9fda0453d778c37509fb5ea"
+        },
+        {
+          "path": "packages/ui/src/components/ui/toast.tsx",
+          "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tooltip.tsx",
+          "sha256": "7f139d130d3a25b4ebffe6bb5a5096ce07e0f48b04bfcdf40f3a540d024698b8"
+        },
+        {
+          "path": "packages/ui/src/page-states.test.tsx",
+          "sha256": "97cd8ca78e30c5141adf3bf4e56630bbc982d17dae5593dc98b8c15483490295"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "c2933448026ae5ed57eec58047efe15d1bef0c51383fb3d565680c3b5e916c22"
+        }
+      ],
+      "logs": [
+        "/tmp/r03-aux-browser-final.log",
+        "/tmp/r03-aux-browser-keyboard.log",
+        "/tmp/r03-aux-browser-matrix.log",
+        "/tmp/r03-aux-browser-one-final.log",
+        "/tmp/r03-aux-browser-one.log",
+        "/tmp/r03-aux-browser-workflows.log",
+        "/tmp/r03-aux-browser.log",
+        "/tmp/r03-aux-budgets-final.log",
+        "/tmp/r03-aux-budgets.log",
+        "/tmp/r03-aux-dashboard-feedback.log",
+        "/tmp/r03-aux-diff-final.log",
+        "/tmp/r03-aux-diff.log",
+        "/tmp/r03-aux-feedback-format.log",
+        "/tmp/r03-aux-format-check.log",
+        "/tmp/r03-aux-format-final-check.log",
+        "/tmp/r03-aux-format.log",
+        "/tmp/r03-aux-lint-final.log",
+        "/tmp/r03-aux-lint.log",
+        "/tmp/r03-aux-more-format.log",
+        "/tmp/r03-aux-shared-final.log",
+        "/tmp/r03-aux-shared-settled.log",
+        "/tmp/r03-aux-ui-build-final.log",
+        "/tmp/r03-aux-ui-build.log",
+        "/tmp/r03-aux-ui-release-build.log",
+        "/tmp/r03-aux-ui-tests.log",
+        "/tmp/r03-aux-ui-types.log",
+        "/tmp/r03-aux-web-build-final.log",
+        "/tmp/r03-aux-web-build.log",
+        "/tmp/r03-aux-web-release-build.log",
+        "/tmp/r03-aux-web-types.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 156,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.01.02"
+          ],
+          "reason": "Prior branding deferral satisfied; auxiliary shared controls repaired. Remaining implemented page theme/RTL/state acceptance continues in R03.",
+          "source_revision": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
+          "evidence": "audit/evidence/step-reviews.json#R03-auxiliary-ui"
+        }
+      ]
     }
   ]
 }

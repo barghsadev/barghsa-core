@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "0b962f76ddbcb953c60ad963c26399b657bd2fed",
+  "source_revision": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
   "active_step": "R03",
-  "next_action": "Continue R03 auxiliary toast/command/avatar/progress and exact skeleton/loading states. Reuse prior core-control/theme tests; then review remaining locale/timezone consumers. CSP decision remains pending; do not reask. Full regression stays V02.",
+  "next_action": "Continue R03 page themes, loading/error states and timezone-consumer acceptance, PR114/156. Start with DashboardLayout light-only styling, then review44 literal-color candidate files and the shared/direct date-format consumers once. Reuse earlier domain checks; preserve pending CSP decision and38 older evidence refreshes.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -745,6 +745,10 @@
     {
       "id": "R03-correlation",
       "review_record": "audit/evidence/step-reviews.json#R03-correlation"
+    },
+    {
+      "id": "R03-auxiliary-ui",
+      "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui"
     }
   ],
   "deferred_improvements": [
@@ -768,12 +772,12 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 172,
-    "partial": 38,
+    "acceptance_verified": 173,
+    "partial": 37,
     "pending": 112,
     "merged_prs": 301,
     "historical_skips": 58,
-    "skips_verified": 4,
+    "skips_verified": 5,
     "skips_pending": 50
   },
   "user_decisions": [
@@ -1067,32 +1071,36 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R03-auxiliary-ui",
-    "name": "Auxiliary shared controls, RTL placement and loading states",
+    "id": "R03-consumer-theme-time",
+    "name": "Implemented page themes, feedback and account timezone consumers",
     "status": "reviewing",
     "prs": [
+      114,
       156
     ],
     "task_keys": [
+      "02-auth-users-admin.md#T-03.03.06",
       "02-auth-users-admin.md#T-09.01.02",
+      "01-platform-infrastructure.md#T-06.02.04",
       "01-platform-infrastructure.md#T-06.03.02",
-      "01-platform-infrastructure.md#T-06.03.03",
-      "01-platform-infrastructure.md#T-06.03.06"
+      "01-platform-infrastructure.md#T-06.03.03"
     ],
     "remaining_checklist": [
-      "Review auxiliary toast/command/avatar/progress placement, keyboard, live regions and reduced motion.",
-      "Review exact skeleton dimensions/shimmer and remaining implemented loading/empty/error states.",
-      "Keep remaining full consumer and locale/timezone acceptance explicit; retain unbuilt editor/per-user controls in B01."
+      "Remaining implemented consumer theme/RTL/keyboard/loading states stay R03. DashboardLayout still uses light-only backgrounds/borders/text;44 files with literal gray/white styling are candidates for bounded review, not44 established defects.",
+      "Complete timestamp-consumer coverage for account timezone PR114; preserve calendar-by-language semantics and deliberate date-only UTC formatting."
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      "DashboardLayout uses light-only gray/white backgrounds and text instead of theme tokens. Review actual dark contrast and repair the shell with its directly affected controls."
+    ],
     "reused_evidence": [
+      "audit/evidence/step-reviews.json#R03-auxiliary-ui",
       "audit/evidence/step-reviews.json#R03-controls",
-      "audit/evidence/step-reviews.json#R03-errors",
-      "audit/evidence/step-reviews.json#R03-correlation"
+      "audit/evidence/step-reviews.json#R03-theme-contrast",
+      "audit/evidence/step-reviews.json#R01-account-settings"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Continue R03 auxiliary toast/command/avatar/progress and exact skeleton/loading states. Reuse prior core-control/theme tests; then review remaining locale/timezone consumers. CSP decision remains pending; do not reask. Full regression stays V02."
+    "next_action": "Continue R03 page themes, loading/error states and timezone-consumer acceptance, PR114/156. Start with DashboardLayout light-only styling, then review44 literal-color candidate files and the shared/direct date-format consumers once. Reuse earlier domain checks; preserve pending CSP decision and38 older evidence refreshes."
   },
   "open_domain_reviews": [
     {
@@ -1345,10 +1353,10 @@
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.03.02",
-      "owner_batch": "R03 auxiliary UI and consumer acceptance",
+      "owner_batch": "R03 implemented consumer acceptance",
       "criteria": "Toast/command/avatar/progress logical placement; remaining shared/consumer themes and keyboard/focus; linked T-06.03.03 and .06 skeleton/state acceptance.",
-      "status": "Core control repairs complete; remaining implementation review stays R03 after safe error/correlation work.",
-      "evidence": "audit/evidence/step-reviews.json#R03-controls"
+      "status": "Auxiliary shared repairs pass21 browser/49 UI checks. Remaining page themes/RTL/loading states continue in R03.",
+      "evidence": "audit/evidence/step-reviews.json#R03-auxiliary-ui"
     }
   ]
 }

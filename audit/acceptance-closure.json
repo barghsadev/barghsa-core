@@ -870,7 +870,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-09.01.02",
       "status": "partial",
-      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
+      "reviewed_sha": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 640,
       "requirement": "**T-09.01.02 — Theme application**\n\n- Description: Branding settings applied to auth pages, public pages, email templates, and notification templates. Full light/dark theme support.\n- Technical notes: CSS custom properties injected from brand config. Email templates reference brand colors. Both themes independently configurable or derived from primary.\n- UI/UX: Instant preview on dashboard. Consistent across all touchpoints.\n- Dependencies: T-09.01.01\n- Complexity: M",
@@ -910,7 +910,7 @@
         },
         {
           "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "da55ce366fe4588c0d604c7b7162b4627d0c20d470cfd125786ac78c0715778f"
+          "sha256": "3730dcfac5eb9c5d46f60b3c45a3090c9e49c0f64ad24b2dc3fff93664947348"
         },
         {
           "path": "apps/web/e2e/public-theme.spec.ts",
@@ -926,7 +926,7 @@
         },
         {
           "path": "apps/web/e2e/theme-components.spec.ts",
-          "sha256": "4afb9a88ce572fe64f801470714421f68c473389e481d48b17b03ac4b123662e"
+          "sha256": "4f48d63df8fdf9101aedc594672d2a869b55cddd1af0d9e18f6a40c6d9f82d8e"
         },
         {
           "path": "apps/web/src/components/RouteErrorBoundary.tsx",
@@ -986,11 +986,11 @@
         },
         {
           "path": "packages/ui/src/page-states.test.tsx",
-          "sha256": "4038b40473d0450746f887a4347230d171ca48c58b295c7c4f222eb41b7a222e"
+          "sha256": "97cd8ca78e30c5141adf3bf4e56630bbc982d17dae5593dc98b8c15483490295"
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "8596efb959e3b81a33d6154535d1702afc032448b97888856150a12b2aa90135"
+          "sha256": "c2933448026ae5ed57eec58047efe15d1bef0c51383fb3d565680c3b5e916c22"
         },
         {
           "path": "packages/ui/src/components/ui/badge.tsx",
@@ -1043,6 +1043,50 @@
         {
           "path": "packages/ui/src/components/ui/textarea.tsx",
           "sha256": "b4aeba0b564e42c166f2c5d7bee517b69daa70581e09a21e2f2c3112f74915a2"
+        },
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "b4d85351ba9d507a8d982a4a0e785b7368b08c079a0139bc1acebe0f8749a54c"
+        },
+        {
+          "path": "apps/web/src/components/ApplicationToaster.tsx",
+          "sha256": "b5889f63c873a6fa2c0bc7f511843c9dd71cd529bb397e63c7b7de99f0e2be32"
+        },
+        {
+          "path": "packages/ui/src/components/ui/avatar.tsx",
+          "sha256": "66ffabb69b3762a04490074b8bf599f4f53b83d8336cda62936f66d00cf8f3c9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/calendar.tsx",
+          "sha256": "6ec34d32f8be0d49d7a55f963206194802a168fb9e14adcdfca48d2742fcc69f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/command.tsx",
+          "sha256": "abde0544578867ee92391001770068ab41ca89cf00e21428083644d3a1531594"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input-group.tsx",
+          "sha256": "73815558b086616611e426954a86fc016433898d2834331b5b3c32891df5faf9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/progress.tsx",
+          "sha256": "8dbddebc0926756e9df56d45f4e518c26cf3e0e96b42621a12e7d016c1c66f15"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sheet.tsx",
+          "sha256": "e966374723f7b6d082befe0775efea214d2a515a5bf34ce7f8f5a3b4f451d1f6"
+        },
+        {
+          "path": "packages/ui/src/components/ui/skeleton.tsx",
+          "sha256": "d22459a4fed0c76bfb7e609bd9ccd30d86b35237c9fda0453d778c37509fb5ea"
+        },
+        {
+          "path": "packages/ui/src/components/ui/toast.tsx",
+          "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tooltip.tsx",
+          "sha256": "7f139d130d3a25b4ebffe6bb5a5096ce07e0f48b04bfcdf40f3a540d024698b8"
         }
       ],
       "checks": [
@@ -1051,16 +1095,17 @@
         "Email/notification branding and actual previews are now verified through R02-email-branding-delivery, R02-branded-admin-previews and subsequent contact/delivery repairs. audit/evidence/step-reviews.json#R02-provider-template-authoring",
         "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified.",
         "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing.",
-        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass."
+        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass.",
+        "audit/evidence/step-reviews.json#R03-auxiliary-ui: auxiliary fixes reviewed;21 distinct browser/49 UI cases and42 unchanged budgets pass. Prior theme/core evidence retained."
       ],
       "limitations": [
-        "Required theme/contrast review across remaining implemented touchpoints continues in R03. Current public/auth, terms and branding editor checks do not certify every page. Historical email/notification branding deferral remains satisfied by R02."
+        "Remaining implemented consumer theme/RTL/keyboard/loading states stay R03. DashboardLayout still uses light-only backgrounds/borders/text;44 files with literal gray/white styling are candidates for bounded review, not44 established defects."
       ],
       "merged_prs": [
         156
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R03-controls"
+      "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.02.03",
@@ -3143,7 +3188,7 @@
         },
         {
           "path": "packages/ui/src/components/ui/calendar.tsx",
-          "sha256": "d7abb37d1fc2650d8a7cdeae03a9d9f2a534246b4ef310b42fe6b49a998c1b9f"
+          "sha256": "6ec34d32f8be0d49d7a55f963206194802a168fb9e14adcdfca48d2742fcc69f"
         },
         {
           "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -19434,7 +19479,8 @@
       "checks": [
         "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified.",
         "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing.",
-        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass."
+        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass.",
+        "audit/evidence/step-reviews.json#R03-auxiliary-ui: auxiliary fixes reviewed;21 distinct browser/49 UI cases and42 unchanged budgets pass. Prior theme/core evidence retained."
       ],
       "source_evidence": [
         {
@@ -19455,7 +19501,7 @@
         },
         {
           "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "da55ce366fe4588c0d604c7b7162b4627d0c20d470cfd125786ac78c0715778f"
+          "sha256": "3730dcfac5eb9c5d46f60b3c45a3090c9e49c0f64ad24b2dc3fff93664947348"
         },
         {
           "path": "apps/web/e2e/public-theme.spec.ts",
@@ -19471,7 +19517,7 @@
         },
         {
           "path": "apps/web/e2e/theme-components.spec.ts",
-          "sha256": "4afb9a88ce572fe64f801470714421f68c473389e481d48b17b03ac4b123662e"
+          "sha256": "4f48d63df8fdf9101aedc594672d2a869b55cddd1af0d9e18f6a40c6d9f82d8e"
         },
         {
           "path": "apps/web/src/components/AuthLayout.tsx",
@@ -19543,11 +19589,11 @@
         },
         {
           "path": "packages/ui/src/page-states.test.tsx",
-          "sha256": "4038b40473d0450746f887a4347230d171ca48c58b295c7c4f222eb41b7a222e"
+          "sha256": "97cd8ca78e30c5141adf3bf4e56630bbc982d17dae5593dc98b8c15483490295"
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "8596efb959e3b81a33d6154535d1702afc032448b97888856150a12b2aa90135"
+          "sha256": "c2933448026ae5ed57eec58047efe15d1bef0c51383fb3d565680c3b5e916c22"
         },
         {
           "path": "packages/ui/src/components/ui/badge.tsx",
@@ -19600,14 +19646,58 @@
         {
           "path": "packages/ui/src/components/ui/textarea.tsx",
           "sha256": "b4aeba0b564e42c166f2c5d7bee517b69daa70581e09a21e2f2c3112f74915a2"
+        },
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "b4d85351ba9d507a8d982a4a0e785b7368b08c079a0139bc1acebe0f8749a54c"
+        },
+        {
+          "path": "apps/web/src/components/ApplicationToaster.tsx",
+          "sha256": "b5889f63c873a6fa2c0bc7f511843c9dd71cd529bb397e63c7b7de99f0e2be32"
+        },
+        {
+          "path": "packages/ui/src/components/ui/avatar.tsx",
+          "sha256": "66ffabb69b3762a04490074b8bf599f4f53b83d8336cda62936f66d00cf8f3c9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/calendar.tsx",
+          "sha256": "6ec34d32f8be0d49d7a55f963206194802a168fb9e14adcdfca48d2742fcc69f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/command.tsx",
+          "sha256": "abde0544578867ee92391001770068ab41ca89cf00e21428083644d3a1531594"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input-group.tsx",
+          "sha256": "73815558b086616611e426954a86fc016433898d2834331b5b3c32891df5faf9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/progress.tsx",
+          "sha256": "8dbddebc0926756e9df56d45f4e518c26cf3e0e96b42621a12e7d016c1c66f15"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sheet.tsx",
+          "sha256": "e966374723f7b6d082befe0775efea214d2a515a5bf34ce7f8f5a3b4f451d1f6"
+        },
+        {
+          "path": "packages/ui/src/components/ui/skeleton.tsx",
+          "sha256": "d22459a4fed0c76bfb7e609bd9ccd30d86b35237c9fda0453d778c37509fb5ea"
+        },
+        {
+          "path": "packages/ui/src/components/ui/toast.tsx",
+          "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tooltip.tsx",
+          "sha256": "7f139d130d3a25b4ebffe6bb5a5096ce07e0f48b04bfcdf40f3a540d024698b8"
         }
       ],
       "merged_prs": [],
       "historically_skipped": true,
-      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
-      "review_record": "audit/evidence/step-reviews.json#R03-controls",
+      "reviewed_sha": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
+      "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui",
       "limitations": [
-        "Remaining auxiliary shared components and implemented consumer RTL/theme acceptance continues after R03 errors. Toast, command, avatar and progress still contain physical placement classes; do not claim full library acceptance."
+        "Remaining implemented consumer theme/RTL/keyboard/loading states stay R03. DashboardLayout still uses light-only backgrounds/borders/text;44 files with literal gray/white styling are candidates for bounded review, not44 established defects."
       ]
     },
     {
@@ -19620,7 +19710,8 @@
       "checks": [
         "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified.",
         "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing.",
-        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass."
+        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass.",
+        "audit/evidence/step-reviews.json#R03-auxiliary-ui: auxiliary fixes reviewed;21 distinct browser/49 UI cases and42 unchanged budgets pass. Prior theme/core evidence retained."
       ],
       "source_evidence": [
         {
@@ -19641,7 +19732,7 @@
         },
         {
           "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "da55ce366fe4588c0d604c7b7162b4627d0c20d470cfd125786ac78c0715778f"
+          "sha256": "3730dcfac5eb9c5d46f60b3c45a3090c9e49c0f64ad24b2dc3fff93664947348"
         },
         {
           "path": "apps/web/e2e/public-theme.spec.ts",
@@ -19657,7 +19748,7 @@
         },
         {
           "path": "apps/web/e2e/theme-components.spec.ts",
-          "sha256": "4afb9a88ce572fe64f801470714421f68c473389e481d48b17b03ac4b123662e"
+          "sha256": "4f48d63df8fdf9101aedc594672d2a869b55cddd1af0d9e18f6a40c6d9f82d8e"
         },
         {
           "path": "apps/web/src/components/AuthLayout.tsx",
@@ -19729,11 +19820,11 @@
         },
         {
           "path": "packages/ui/src/page-states.test.tsx",
-          "sha256": "4038b40473d0450746f887a4347230d171ca48c58b295c7c4f222eb41b7a222e"
+          "sha256": "97cd8ca78e30c5141adf3bf4e56630bbc982d17dae5593dc98b8c15483490295"
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "8596efb959e3b81a33d6154535d1702afc032448b97888856150a12b2aa90135"
+          "sha256": "c2933448026ae5ed57eec58047efe15d1bef0c51383fb3d565680c3b5e916c22"
         },
         {
           "path": "packages/ui/src/components/ui/badge.tsx",
@@ -19786,14 +19877,58 @@
         {
           "path": "packages/ui/src/components/ui/textarea.tsx",
           "sha256": "b4aeba0b564e42c166f2c5d7bee517b69daa70581e09a21e2f2c3112f74915a2"
+        },
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "b4d85351ba9d507a8d982a4a0e785b7368b08c079a0139bc1acebe0f8749a54c"
+        },
+        {
+          "path": "apps/web/src/components/ApplicationToaster.tsx",
+          "sha256": "b5889f63c873a6fa2c0bc7f511843c9dd71cd529bb397e63c7b7de99f0e2be32"
+        },
+        {
+          "path": "packages/ui/src/components/ui/avatar.tsx",
+          "sha256": "66ffabb69b3762a04490074b8bf599f4f53b83d8336cda62936f66d00cf8f3c9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/calendar.tsx",
+          "sha256": "6ec34d32f8be0d49d7a55f963206194802a168fb9e14adcdfca48d2742fcc69f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/command.tsx",
+          "sha256": "abde0544578867ee92391001770068ab41ca89cf00e21428083644d3a1531594"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input-group.tsx",
+          "sha256": "73815558b086616611e426954a86fc016433898d2834331b5b3c32891df5faf9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/progress.tsx",
+          "sha256": "8dbddebc0926756e9df56d45f4e518c26cf3e0e96b42621a12e7d016c1c66f15"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sheet.tsx",
+          "sha256": "e966374723f7b6d082befe0775efea214d2a515a5bf34ce7f8f5a3b4f451d1f6"
+        },
+        {
+          "path": "packages/ui/src/components/ui/skeleton.tsx",
+          "sha256": "d22459a4fed0c76bfb7e609bd9ccd30d86b35237c9fda0453d778c37509fb5ea"
+        },
+        {
+          "path": "packages/ui/src/components/ui/toast.tsx",
+          "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tooltip.tsx",
+          "sha256": "7f139d130d3a25b4ebffe6bb5a5096ce07e0f48b04bfcdf40f3a540d024698b8"
         }
       ],
       "merged_prs": [],
       "historically_skipped": true,
-      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
-      "review_record": "audit/evidence/step-reviews.json#R03-controls",
+      "reviewed_sha": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
+      "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui",
       "limitations": [
-        "Core form/select/menu/tab/switch/slider/scroll/badge focus, contrast, keyboard and orientation verified. Other auxiliary shared controls, complete consumer states and full WCAG acceptance remain R03; no whole-library certification."
+        "Remaining implemented consumer theme/RTL/keyboard/loading states stay R03. DashboardLayout still uses light-only backgrounds/borders/text;44 files with literal gray/white styling are candidates for bounded review, not44 established defects."
       ]
     },
     {
@@ -19826,7 +19961,7 @@
         },
         {
           "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "da55ce366fe4588c0d604c7b7162b4627d0c20d470cfd125786ac78c0715778f"
+          "sha256": "3730dcfac5eb9c5d46f60b3c45a3090c9e49c0f64ad24b2dc3fff93664947348"
         },
         {
           "path": "apps/web/e2e/public-theme.spec.ts",
@@ -19842,7 +19977,7 @@
         },
         {
           "path": "apps/web/e2e/theme-components.spec.ts",
-          "sha256": "4afb9a88ce572fe64f801470714421f68c473389e481d48b17b03ac4b123662e"
+          "sha256": "4f48d63df8fdf9101aedc594672d2a869b55cddd1af0d9e18f6a40c6d9f82d8e"
         },
         {
           "path": "apps/web/src/components/AuthLayout.tsx",
@@ -19914,11 +20049,11 @@
         },
         {
           "path": "packages/ui/src/page-states.test.tsx",
-          "sha256": "4038b40473d0450746f887a4347230d171ca48c58b295c7c4f222eb41b7a222e"
+          "sha256": "97cd8ca78e30c5141adf3bf4e56630bbc982d17dae5593dc98b8c15483490295"
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "8596efb959e3b81a33d6154535d1702afc032448b97888856150a12b2aa90135"
+          "sha256": "c2933448026ae5ed57eec58047efe15d1bef0c51383fb3d565680c3b5e916c22"
         }
       ],
       "merged_prs": [],
@@ -19931,7 +20066,7 @@
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.03.06",
-      "status": "partial",
+      "status": "acceptance_verified",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 1110,
       "requirement": "- **T-06.03.06:** Create loading/empty/error state components\n  - **Notes:** `<Skeleton>` for content placeholders (matching card/table/input shapes with shimmer animation, disabled when reduced-motion). `<EmptyState icon title description action? />` for zero-data pages. `<ErrorBoundary>` catches rendering errors, displays \"Something went wrong\" with retry button and support contact. `<PageLoading>` full-page spinner/skeleton for route transitions.\n  - **Dependencies:** T-06.03.02\n  - **Complexity:** M\n  - **UI/UX:** Skeleton components match the exact dimensions of the content they replace. Loading never shows raw text \"Loading...\" except as ARIA label. Empty states are informative, not blank.\n\n---",
@@ -19939,7 +20074,9 @@
       "checks": [
         "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified.",
         "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing.",
-        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass."
+        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass.",
+        "audit/evidence/step-reviews.json#R03-auxiliary-ui: auxiliary fixes reviewed;21 distinct browser/49 UI cases and42 unchanged budgets pass. Prior theme/core evidence retained.",
+        "Exact T-06.03.06 scope is reusable loading/empty/error components. Shimmer, dimensions, reduced motion, live loading status, safe render-error/retry/support and route wrappers are verified. Additional page-specific states remain with their page/theme requirements and do not block this shared-component task."
       ],
       "source_evidence": [
         {
@@ -19960,7 +20097,7 @@
         },
         {
           "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "da55ce366fe4588c0d604c7b7162b4627d0c20d470cfd125786ac78c0715778f"
+          "sha256": "3730dcfac5eb9c5d46f60b3c45a3090c9e49c0f64ad24b2dc3fff93664947348"
         },
         {
           "path": "apps/web/e2e/public-theme.spec.ts",
@@ -19976,7 +20113,7 @@
         },
         {
           "path": "apps/web/e2e/theme-components.spec.ts",
-          "sha256": "4afb9a88ce572fe64f801470714421f68c473389e481d48b17b03ac4b123662e"
+          "sha256": "4f48d63df8fdf9101aedc594672d2a869b55cddd1af0d9e18f6a40c6d9f82d8e"
         },
         {
           "path": "apps/web/src/components/AuthLayout.tsx",
@@ -20048,11 +20185,11 @@
         },
         {
           "path": "packages/ui/src/page-states.test.tsx",
-          "sha256": "4038b40473d0450746f887a4347230d171ca48c58b295c7c4f222eb41b7a222e"
+          "sha256": "97cd8ca78e30c5141adf3bf4e56630bbc982d17dae5593dc98b8c15483490295"
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "8596efb959e3b81a33d6154535d1702afc032448b97888856150a12b2aa90135"
+          "sha256": "c2933448026ae5ed57eec58047efe15d1bef0c51383fb3d565680c3b5e916c22"
         },
         {
           "path": "packages/ui/src/components/ui/badge.tsx",
@@ -20105,15 +20242,57 @@
         {
           "path": "packages/ui/src/components/ui/textarea.tsx",
           "sha256": "b4aeba0b564e42c166f2c5d7bee517b69daa70581e09a21e2f2c3112f74915a2"
+        },
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "b4d85351ba9d507a8d982a4a0e785b7368b08c079a0139bc1acebe0f8749a54c"
+        },
+        {
+          "path": "apps/web/src/components/ApplicationToaster.tsx",
+          "sha256": "b5889f63c873a6fa2c0bc7f511843c9dd71cd529bb397e63c7b7de99f0e2be32"
+        },
+        {
+          "path": "packages/ui/src/components/ui/avatar.tsx",
+          "sha256": "66ffabb69b3762a04490074b8bf599f4f53b83d8336cda62936f66d00cf8f3c9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/calendar.tsx",
+          "sha256": "6ec34d32f8be0d49d7a55f963206194802a168fb9e14adcdfca48d2742fcc69f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/command.tsx",
+          "sha256": "abde0544578867ee92391001770068ab41ca89cf00e21428083644d3a1531594"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input-group.tsx",
+          "sha256": "73815558b086616611e426954a86fc016433898d2834331b5b3c32891df5faf9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/progress.tsx",
+          "sha256": "8dbddebc0926756e9df56d45f4e518c26cf3e0e96b42621a12e7d016c1c66f15"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sheet.tsx",
+          "sha256": "e966374723f7b6d082befe0775efea214d2a515a5bf34ce7f8f5a3b4f451d1f6"
+        },
+        {
+          "path": "packages/ui/src/components/ui/skeleton.tsx",
+          "sha256": "d22459a4fed0c76bfb7e609bd9ccd30d86b35237c9fda0453d778c37509fb5ea"
+        },
+        {
+          "path": "packages/ui/src/components/ui/toast.tsx",
+          "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tooltip.tsx",
+          "sha256": "7f139d130d3a25b4ebffe6bb5a5096ce07e0f48b04bfcdf40f3a540d024698b8"
         }
       ],
       "merged_prs": [],
       "historically_skipped": true,
-      "reviewed_sha": "e13b596e7650404c1acc5b717dd6ffd657433178",
-      "review_record": "audit/evidence/step-reviews.json#R03-controls",
-      "limitations": [
-        "Existing shared empty/error/retry/support behavior remains verified. Exact skeleton dimensions/shimmer and all remaining consumer loading/error-state acceptance still require R03 review."
-      ]
+      "reviewed_sha": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
+      "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui",
+      "limitations": []
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.01.04",
@@ -24530,6 +24709,20 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R03-correlation",
       "note": "Refresh only exact immediate-base bindings for additive trace metadata, logging and safe catalogue changes.149 distinct API/106 worker compatibility cases, types and unchanged frontend budgets support this bounded update.38 older refreshes retained."
+    },
+    {
+      "source_revision": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.01.02",
+        "01-platform-infrastructure.md#T-06.03.04",
+        "01-platform-infrastructure.md#T-06.03.02",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-06.03.05",
+        "01-platform-infrastructure.md#T-06.03.06"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui",
+      "note": "Refresh matching immediate-base shared/UI bindings only; behavior and compatibility reviewed with21 browser/49 UI cases and final quality/budget checks.38 older refreshes retained."
     }
   ]
 }

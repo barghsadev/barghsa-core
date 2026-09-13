@@ -22,7 +22,7 @@ Use [current requirements](current-task-requirements.json), [task acceptance](ac
 | 07-ui-ux-design.md | 3 |
 | Total | 95 |
 
-Also review 55 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
+Also review 54 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
 
 ## Every merged PR
 
@@ -185,7 +185,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#153](https://github.com/barghsadev/barghsa-core/pull/153) | 02-auth-users-admin.md#T-08.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
 | [#154](https://github.com/barghsadev/barghsa-core/pull/154) | 02-auth-users-admin.md#T-08.01.03 (partial) | Task review remains | Not reviewed | 1 |
 | [#155](https://github.com/barghsadev/barghsa-core/pull/155) | 02-auth-users-admin.md#T-09.01.01 (partial) | Task review remains | Not reviewed | 0 |
-| [#156](https://github.com/barghsadev/barghsa-core/pull/156) | 02-auth-users-admin.md#T-09.01.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R03-controls) | 1 |
+| [#156](https://github.com/barghsadev/barghsa-core/pull/156) | 02-auth-users-admin.md#T-09.01.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R03-auxiliary-ui) | 1 |
 | [#157](https://github.com/barghsadev/barghsa-core/pull/157) | 02-auth-users-admin.md#T-09.02.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#158](https://github.com/barghsadev/barghsa-core/pull/158) | 02-auth-users-admin.md#T-09.02.02 (pending) | Task review remains | Not reviewed | 0 |
 | [#159](https://github.com/barghsadev/barghsa-core/pull/159) | 02-auth-users-admin.md#T-09.03.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `33f3d39d2812f8cbd378c1ac024cbd08eaf7a8845f6cf27cb8edde52bace2734`
+- `acceptance-closure.json`: `6ec76db4cb40039a60f96587b4c7e3067bcecc8bf77b6bc7f2178fffda3e3a97`
 - `pr-deferrals.json`: `1467831fd598bb02d92ce8a053e0960cb936f8b24689faae86334a5d3d0b2168`
-- `evidence/step-reviews.json`: `0b2396fda324da8e3d37386430cdfa06c9409c9e95c102b03e5ebfcdfd2dfabf`
+- `evidence/step-reviews.json`: `2ab73bf726aefce47f051b990ddb25790fa05d684b83d7f5c7519f639c4a737a`
