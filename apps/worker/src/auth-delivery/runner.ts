@@ -1,3 +1,4 @@
+import { logDelivery } from '../delivery-log.js';
 import { randomUUID, createHash } from 'node:crypto';
 import type { Pool } from 'pg';
 import { decryptAuthDelivery, encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
@@ -9,6 +10,7 @@ import {
 import { createAuthSender, type AuthMessage } from './providers.js';
 
 interface DeliveryRow {
+  correlation_id: string | null;
   id: string;
   challenge_id: string;
   code_hash: string;
@@ -43,6 +45,7 @@ export async function runAuthDelivery(
       [row.id, token, status, ref]
     );
     if (result.rowCount !== 1) throw new Error('Auth delivery lease lost');
+    logDelivery('auth.delivery', row.id, row.correlation_id, status);
   };
   const valid = await pool.query<{ purpose: string; destination: string }>(
     `
@@ -94,6 +97,7 @@ export async function runAuthDelivery(
     }
     const ref = await send({
       id: row.id,
+      ...(row.correlation_id ? { correlationId: row.correlation_id } : {}),
       code: payload.code,
       destination: challenge.destination,
       purpose: challenge.purpose,
@@ -106,12 +110,18 @@ export async function runAuthDelivery(
     return 'sent';
   } catch {
     const dead = row.attempts >= 5;
-    await pool.query(
+    const saved = await pool.query(
       `UPDATE auth_delivery_outbox SET status=$3,
       available_at=NOW()+($4 * INTERVAL '1 second'), lease_token=NULL, lease_until=NULL,
       last_error='delivery_failed', encrypted_payload=CASE WHEN $3='dead' THEN NULL ELSE encrypted_payload END
       WHERE id=$1 AND lease_token=$2`,
       [row.id, token, dead ? 'dead' : 'pending', Math.min(120, 5 * 2 ** (row.attempts - 1))]
+    );
+    logDelivery(
+      'auth.delivery',
+      row.id,
+      row.correlation_id,
+      saved.rowCount === 1 ? (dead ? 'dead' : 'retry') : 'stale'
     );
     return dead ? 'dead' : 'retry';
   }

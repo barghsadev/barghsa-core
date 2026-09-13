@@ -15,6 +15,8 @@ import {
 } from '@barghsa/shared/auth-delivery';
 
 export interface AuthMessage {
+  /** Worker diagnostics only; never part of a customer message. */
+  correlationId?: string;
   id: string;
   destination: string;
   code: string;

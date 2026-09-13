@@ -1,3 +1,4 @@
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { randomInt, randomUUID, createHash, timingSafeEqual } from 'node:crypto';
 import { getDbPool } from '@barghsa/db';
@@ -132,8 +133,8 @@ export class OtpService {
       `WITH challenge AS (
          INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at, purpose, user_id, auth_version, previous_challenge_id)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $12, $13) RETURNING challenge_id
-       ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
-         SELECT $10,challenge_id,$3,$11,$7 FROM challenge`,
+       ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id)
+         SELECT $10,challenge_id,$3,$11,$7,$14 FROM challenge`,
       [
         challengeId,
         destination,
@@ -148,6 +149,7 @@ export class OtpService {
         encrypted,
         binding?.authVersion ?? null,
         binding?.previousChallengeId ?? null,
+        correlationIdStorage.getStore() ?? null,
       ]
     );
 
@@ -234,8 +236,8 @@ export class OtpService {
       `WITH account AS (${accountSql}), challenge AS (
          INSERT INTO otp_challenges (challenge_id, destination, otp_hash, user_id, attempts_remaining, expires_at, purpose, auth_version)
          SELECT $1,$2,$3,user_id,$5,$6,$7,auth_version FROM account RETURNING challenge_id
-       ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
-         SELECT $8,challenge_id,$3,$9,$6 FROM challenge`,
+       ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id)
+         SELECT $8,challenge_id,$3,$9,$6,$11 FROM challenge`,
       [
         challengeId,
         destination,
@@ -247,6 +249,7 @@ export class OtpService {
         deliveryId,
         encrypted,
         authVersion ?? null,
+        correlationIdStorage.getStore() ?? null,
       ]
     );
 
@@ -327,9 +330,17 @@ export class OtpService {
        SET otp_hash = $1, expires_at = $2, resend_count = resend_count + 1, updated_at = NOW()
        WHERE challenge_id = $3 AND otp_hash = $4 AND consumed_at IS NULL
          AND expires_at > NOW() AND attempts_remaining > 0 RETURNING challenge_id)
-       INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
-       SELECT $5,challenge_id,$1,$6,$2 FROM challenge`,
-      [otpHash, newExpiresAt, challengeId, otp_hash, deliveryId, encrypted]
+       INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id)
+       SELECT $5,challenge_id,$1,$6,$2,$7 FROM challenge`,
+      [
+        otpHash,
+        newExpiresAt,
+        challengeId,
+        otp_hash,
+        deliveryId,
+        encrypted,
+        correlationIdStorage.getStore() ?? null,
+      ]
     );
     if (updated.rowCount === 0) {
       throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);

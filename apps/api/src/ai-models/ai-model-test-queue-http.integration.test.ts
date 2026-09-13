@@ -32,11 +32,18 @@ it('times out without a worker, cancels queued work and leaves reachability unch
   expect(
     (
       await http.pool.query(
-        'SELECT status,attempts,result FROM ai_model_test_jobs WHERE model_id=$1',
+        'SELECT status,attempts,result,correlation_id FROM ai_model_test_jobs WHERE model_id=$1',
         [id]
       )
     ).rows
-  ).toEqual([{ status: 'cancelled', attempts: 0, result: null }]);
+  ).toEqual([
+    {
+      status: 'cancelled',
+      attempts: 0,
+      result: null,
+      correlation_id: response.headers.get('x-correlation-id'),
+    },
+  ]);
   expect(
     (await http.pool.query('SELECT last_test_status FROM ai_models WHERE id=$1', [id])).rows
   ).toEqual([{ last_test_status: 'pending' }]);

@@ -465,9 +465,16 @@ export class AdminService {
         [delivery.tokenHash, delivery.expiresAt, userId]
       );
       await client.query(
-        `INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at)
-        VALUES ($1,'staff_activation',$2,$3,$4,$5)`,
-        [delivery.id, userId, delivery.tokenHash, delivery.payload, delivery.expiresAt]
+        `INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at,correlation_id)
+        VALUES ($1,'staff_activation',$2,$3,$4,$5,$6)`,
+        [
+          delivery.id,
+          userId,
+          delivery.tokenHash,
+          delivery.payload,
+          delivery.expiresAt,
+          correlationIdStorage.getStore() ?? null,
+        ]
       );
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
@@ -618,14 +625,15 @@ export class AdminService {
 
       if (activationDelivery) {
         await client.query(
-          `INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at)
-          VALUES ($1,'staff_activation',$2,$3,$4,$5)`,
+          `INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at,correlation_id)
+          VALUES ($1,'staff_activation',$2,$3,$4,$5,$6)`,
           [
             activationDelivery.id,
             userId,
             activationToken,
             activationDelivery.payload,
             activationTokenExpiresAt,
+            correlationIdStorage.getStore() ?? null,
           ]
         );
       }

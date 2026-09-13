@@ -22,6 +22,8 @@ import { maxAttemptsForType, priorityForType } from './retry-schedule.js';
  */
 
 export interface EnqueueOutboxInput {
+  /** Originating request/job trace; omit for uncorrelated work. */
+  correlationId?: string | null;
   /** Owner of the notification (recipient profile). */
   profileId: string | null;
   /** Recipient user id (in-app delivery target). Falls back to profileId. */
@@ -142,8 +144,8 @@ export async function enqueueOutbox(
   const insertResult = await client.query<{ id: string }>(
     `INSERT INTO notification_outbox
        (profile_id, user_id, event_key, payload, channels, status,
-        idempotency_key, max_attempts, scheduled_for)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        idempotency_key, max_attempts, scheduled_for, correlation_id)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
      ON CONFLICT (idempotency_key) DO NOTHING
      RETURNING id`,
     [
@@ -156,6 +158,7 @@ export async function enqueueOutbox(
       idempotencyKey,
       maxAttempts,
       input.scheduledFor ?? null,
+      input.correlationId ?? null,
     ]
   );
 

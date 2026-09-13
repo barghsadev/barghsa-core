@@ -7,9 +7,11 @@ import {
   type AiModelTestResult,
 } from '@barghsa/shared/ai-models';
 import { resolveStaffPermissions } from '@barghsa/shared/admin';
+import { logDelivery } from '../delivery-log.js';
 
 interface Claim {
   id: string;
+  correlation_id: string | null;
   model_id: string | null;
   model_revision: string;
   actor_user_id: string;
@@ -34,7 +36,7 @@ export async function runAiModelTest(
     ORDER BY created_at,id FOR UPDATE SKIP LOCKED LIMIT 1
   ) UPDATE ai_model_test_jobs j SET status='leased', attempts=attempts+1,
     lease_token=$1, lease_until=NOW()+INTERVAL '70 seconds', updated_at=NOW()
-    FROM candidate c WHERE j.id=c.id RETURNING j.id,j.model_id,j.model_revision,j.actor_user_id`,
+    FROM candidate c WHERE j.id=c.id RETURNING j.id,j.model_id,j.model_revision,j.actor_user_id,j.correlation_id`,
     [token]
   );
   const job = claimed.rows[0];
@@ -51,7 +53,9 @@ export async function runAiModelTest(
         error,
       ]
     );
-    return saved.rowCount === 1 ? (result ? 'completed' : 'failed') : 'stale';
+    const status = saved.rowCount === 1 ? (result ? 'completed' : 'failed') : 'stale';
+    logDelivery('ai.model_test', job.id, job.correlation_id, status);
+    return status;
   };
   const users = await pool.query<{
     is_admin: boolean;

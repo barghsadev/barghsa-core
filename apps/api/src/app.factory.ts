@@ -1,3 +1,4 @@
+import { CorrelationLogger } from './common/correlation-logger.js';
 import { trustedProxyIps } from './common/proxy-trust.js';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
@@ -11,7 +12,10 @@ import { sanitizeBodyParserErrors } from './common/body-parser-errors.js';
 
 export async function createApplication() {
   const proxies = trustedProxyIps();
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    rawBody: true,
+    logger: new CorrelationLogger(),
+  });
   app
     .getHttpAdapter()
     .getInstance()

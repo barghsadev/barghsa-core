@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { dispatchOutbox, type OutboxRow } from './outbox-reader.js';
 import type {
   INotificationTransport,
@@ -49,6 +49,38 @@ const row: OutboxRow = {
 };
 
 describe('dispatchOutbox', () => {
+  it('keeps parallel delivery traces separate and outside customer variables', async () => {
+    const output = vi.spyOn(console, 'info').mockImplementation(() => {});
+    const email = new FakeTransport('email');
+    const rows = [
+      '01900000-0000-7000-8000-000000000001',
+      '01900000-0000-7000-8000-000000000002',
+    ].map((id) => ({
+      ...row,
+      id,
+      correlationId: id,
+      channels: ['email'] as NotificationChannel[],
+      payload: { privateMessage: 'customer-content' },
+    }));
+    try {
+      await Promise.all(rows.map((item) => dispatchOutbox(item, { email })));
+      expect(
+        email.reads.map((message) => [message.outboxId, message.correlationId]).sort()
+      ).toEqual(rows.map((item) => [item.id, item.correlationId]).sort());
+      for (const message of email.reads)
+        expect(message.payload).toEqual({ privateMessage: 'customer-content' });
+      const logs = output.mock.calls.map(([message]) => JSON.parse(String(message)));
+      expect(logs.map((item) => [item.outboxId, item.correlationId]).sort()).toEqual(
+        rows.map((item) => [item.id, item.correlationId]).sort()
+      );
+      expect(JSON.stringify(logs)).not.toContain('customer-content');
+      await dispatchOutbox({ ...row, channels: ['email'] }, { email });
+      expect(JSON.parse(String(output.mock.lastCall![0])).correlationId).toBeNull();
+    } finally {
+      output.mockRestore();
+    }
+  });
+
   it('delivers to each registered channel with a matching payload', async () => {
     const inApp = new FakeTransport('in_app');
     const email = new FakeTransport('email');

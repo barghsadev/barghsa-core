@@ -96,6 +96,17 @@ describe('reminder sender — real PostgreSQL (T-04.1.04.03)', () => {
     );
 
     await ctx.pool.query(
+      readFileSync(
+        resolve(
+          __dirname,
+          '../../../../packages/db/drizzle/production/0132_outbox_request_correlation.sql'
+        ),
+        'utf8'
+      )
+        .split('--> statement-breakpoint')
+        .find((sql) => sql.includes('ALTER TABLE "notification_outbox"'))!
+    );
+    await ctx.pool.query(
       `INSERT INTO users (user_id, timezone, notification_preferences)
        VALUES ($1, 'Asia/Tehran', 'IN_APP,EMAIL')
        ON CONFLICT (user_id) DO NOTHING`,
@@ -371,11 +382,13 @@ describe('reminder sender — real PostgreSQL (T-04.1.04.03)', () => {
       status: string;
       idempotency_key: string;
       payload: { invoiceId: string; offset: number };
-    }>(`SELECT event_key, profile_id, user_id, channels, status, idempotency_key, payload
+      correlation_id: string | null;
+    }>(`SELECT event_key, profile_id, user_id, channels, status, idempotency_key, payload, correlation_id
          FROM notification_outbox`);
     expect(outbox.rows).toHaveLength(1);
     expect(outbox.rows[0]).toMatchObject({
       event_key: PAYMENT_INVOICE_REMINDER_EVENT_KEY,
+      correlation_id: null,
       profile_id: PROFILE_ID,
       user_id: USER_ID,
       status: 'queued',

@@ -324,6 +324,7 @@ async function rejectOneExpired(
   ]);
 
   await enqueueOutbox(client, {
+    correlationId: input.correlationId,
     profileId: row.wallet_id,
     userId: profile.user_id,
     eventKey: 'payment.wallet_topup_failed',

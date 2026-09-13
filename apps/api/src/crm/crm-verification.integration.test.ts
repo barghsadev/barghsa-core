@@ -1,3 +1,4 @@
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { buildSeedTemplates } from '../../../../packages/db/dist/seed/notification-templates.js';
 import { runOutboxPoll } from '../../../worker/dist/notifications/outbox-runner.js';
 import { EmailNotificationTransport } from '../../../worker/dist/notifications/email-transport.js';
@@ -459,16 +460,22 @@ for (const locale of ['fa', 'en'] as const) {
         );
       }
       const reason = 'Correct your registration number';
-      await service.verifyProfile(
-        id,
-        { action, ...(action === 'verify' ? {} : { reason }) },
-        'verify-staff',
-        ''
+      const correlationId = randomUUID();
+      await correlationIdStorage.run(correlationId, () =>
+        service.verifyProfile(
+          id,
+          { action, ...(action === 'verify' ? {} : { reason }) },
+          'verify-staff',
+          ''
+        )
       );
       const outbox = (
-        await db.pool.query('SELECT id FROM notification_outbox WHERE profile_id=$1', [id])
+        await db.pool.query(
+          'SELECT id,correlation_id FROM notification_outbox WHERE profile_id=$1',
+          [id]
+        )
       ).rows[0];
-      expect(outbox).toBeDefined();
+      expect(outbox).toMatchObject({ correlation_id: correlationId });
       const request = vi.fn<typeof fetch>(
         async (url) =>
           new Response(
@@ -488,9 +495,35 @@ for (const locale of ['fa', 'en'] as const) {
           sms: new SmsNotificationTransport(db.pool, request),
         },
       };
-      expect(await runOutboxPoll(options)).toEqual({ leased: 1, delivered: 1, failed: 0 });
+      const output = vi.spyOn(console, 'info').mockImplementation(() => {});
+      try {
+        expect(await runOutboxPoll(options)).toEqual({ leased: 1, delivered: 1, failed: 0 });
+        const records = output.mock.calls.map(([message]) => JSON.parse(String(message)));
+        expect(records).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              event: 'notification.attempt',
+              outboxId: outbox.id,
+              correlationId,
+              channel: 'email',
+              status: 'delivered',
+            }),
+            expect.objectContaining({
+              event: 'notification.attempt',
+              outboxId: outbox.id,
+              correlationId,
+              channel: 'sms',
+              status: 'delivered',
+            }),
+          ])
+        );
+      } finally {
+        output.mockRestore();
+      }
+
       expect(request).toHaveBeenCalledTimes(2);
       const messages = request.mock.calls.map((call) => JSON.parse(String(call[1]?.body)));
+      expect(JSON.stringify(messages)).not.toContain(correlationId);
       const mail = messages.find((m) => m.html),
         sms = messages.find((m) => m.TemplateId);
       expect(mail.to).toEqual([email]);

@@ -6,6 +6,7 @@ export const aiModelTestJobs = pgTable(
   'ai_model_test_jobs',
   {
     id: uuid('id').primaryKey(),
+    correlationId: text('correlation_id'),
     modelId: uuid('model_id').references(() => aiModels.id, { onDelete: 'set null' }),
     modelRevision: text('model_revision').notNull(),
     actorUserId: text('actor_user_id')

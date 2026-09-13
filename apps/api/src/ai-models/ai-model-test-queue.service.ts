@@ -5,6 +5,7 @@ import type { PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
 import { z } from 'zod';
 import type { AiModelTestResult } from '@barghsa/shared/ai-models';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 const resultSchema = z
   .object({
     ok: z.boolean(),
@@ -27,9 +28,9 @@ export class AiModelTestQueueService {
   ): Promise<string> {
     const id = randomUUID();
     await client.query(
-      `INSERT INTO ai_model_test_jobs(id,model_id,model_revision,actor_user_id,deadline_at)
-      VALUES ($1,$2,$3,$4,NOW()+($5 * INTERVAL '1 millisecond'))`,
-      [id, modelId, revision, actorUserId, waitMs()]
+      `INSERT INTO ai_model_test_jobs(id,model_id,model_revision,actor_user_id,deadline_at,correlation_id)
+      VALUES ($1,$2,$3,$4,NOW()+($5 * INTERVAL '1 millisecond'),$6)`,
+      [id, modelId, revision, actorUserId, waitMs(), correlationIdStorage.getStore() ?? null]
     );
     return id;
   }

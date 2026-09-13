@@ -37,6 +37,8 @@ export type NotificationSendResultStatus = 'delivered' | 'failed';
  * `payload` carries business variables for the active template.
  */
 export interface NotificationSendPayload {
+  /** Originating request/job trace. Never included in customer template variables. */
+  correlationId?: string;
   /** Stable, versioned per-occurrence provider key. */
   idempotencyKey: string;
 

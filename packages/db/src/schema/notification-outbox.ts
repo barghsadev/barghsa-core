@@ -30,6 +30,9 @@ export const notificationOutbox = pgTable(
   {
     id: uuidv7('id').primaryKey().notNull(),
 
+    /** Originating request/job trace. NULL for historical or uncorrelated writers. */
+    correlationId: text('correlation_id'),
+
     /** FK to the recipient profile (owner of the notification). */
     profileId: uuid('profile_id').references(() => profiles.id, { onDelete: 'cascade' }),
 

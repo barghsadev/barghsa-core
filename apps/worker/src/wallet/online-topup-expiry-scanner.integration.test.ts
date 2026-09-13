@@ -76,6 +76,17 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
     );
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim());
     await ctx.pool.query(
+      readFileSync(
+        resolve(
+          __dirname,
+          '../../../../packages/db/drizzle/production/0132_outbox_request_correlation.sql'
+        ),
+        'utf8'
+      )
+        .split('--> statement-breakpoint')
+        .find((sql) => sql.includes('ALTER TABLE "notification_outbox"'))!
+    );
+    await ctx.pool.query(
       `INSERT INTO profiles (id,user_id) VALUES ($1,'online-expiry-scanner-actor'), ($2,'online-expiry-scanner-actor')`,
       [WALLET_A, WALLET_B]
     );
@@ -142,7 +153,7 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
     const options = { pool: ctx.pool, actorUserId: ACTOR_USER_ID, now: () => NOW };
     expect((await expireStaleOnlineTopUps(options)).rejected).toBe(1);
     const notices = await ctx.pool.query(
-      'SELECT id,user_id,profile_id,event_key,payload,channels FROM notification_outbox'
+      'SELECT id,user_id,profile_id,event_key,payload,channels,correlation_id FROM notification_outbox'
     );
     expect(notices.rows).toHaveLength(1);
     expect(notices.rows[0]).toMatchObject({
@@ -153,6 +164,10 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       payload: { amount: '75000', pending_transaction_id: id, link_route: '/wallet' },
     });
     expect(notices.rows[0].payload.reason).toContain('confirmation');
+    expect(notices.rows[0].correlation_id).toEqual(expect.any(String));
+    expect((await ctx.pool.query('SELECT correlation_id FROM audit_log')).rows).toContainEqual({
+      correlation_id: notices.rows[0].correlation_id,
+    });
     expect(
       (
         await ctx.pool.query(

@@ -66,6 +66,44 @@ async function state(id: string) {
   return (await pool.query('SELECT * FROM auth_delivery_outbox WHERE id=$1', [id])).rows[0];
 }
 
+it('retains request correlation across retry and secret erasure without logging the message', async () => {
+  const { id } = await queued();
+  const correlationId = randomUUID();
+  await pool.query('UPDATE auth_delivery_outbox SET correlation_id=$2 WHERE id=$1', [
+    id,
+    correlationId,
+  ]);
+  const output = vi.spyOn(console, 'info').mockImplementation(() => {});
+  const send = vi
+    .fn()
+    .mockRejectedValueOnce(new Error('private-provider-failure'))
+    .mockResolvedValue('receipt');
+  try {
+    expect(await runAuthDelivery(pool, send)).toBe('retry');
+    await pool.query(
+      "UPDATE auth_delivery_outbox SET available_at=NOW()-INTERVAL '1 second' WHERE id=$1",
+      [id]
+    );
+    expect(await runAuthDelivery(pool, send)).toBe('sent');
+    expect(send).toHaveBeenCalledTimes(2);
+    for (const [message] of send.mock.calls) expect(message).toMatchObject({ id, correlationId });
+    expect(await state(id)).toMatchObject({
+      correlation_id: correlationId,
+      encrypted_payload: null,
+      status: 'sent',
+    });
+    const logs = output.mock.calls.map(([message]) => JSON.parse(String(message)));
+    expect(logs).toEqual([
+      { event: 'auth.delivery', outboxId: id, correlationId, status: 'retry' },
+      { event: 'auth.delivery', outboxId: id, correlationId, status: 'sent' },
+    ]);
+    expect(JSON.stringify(logs)).not.toContain(destination);
+    expect(JSON.stringify(logs)).not.toContain('private-provider-failure');
+  } finally {
+    output.mockRestore();
+  }
+});
+
 it('returns idle with no claim and never calls a transport', async () => {
   const send = vi.fn();
   expect(await runAuthDelivery(pool, send)).toBe('idle');
@@ -84,6 +122,7 @@ it('delivers the bound challenge data, persists receipt and erases payload', asy
   });
   expect(await state(id)).toMatchObject({
     status: 'sent',
+    correlation_id: null,
     provider_ref: 'provider-receipt',
     encrypted_payload: null,
     lease_token: null,

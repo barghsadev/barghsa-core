@@ -53,12 +53,30 @@ it('claims once across competing workers and stores only a safe result', async (
   const row = (await fixture.pool.query('SELECT * FROM ai_model_test_jobs WHERE id=$1', [id]))
     .rows[0];
   expect(row).toMatchObject({
+    correlation_id: null,
     status: 'completed',
     attempts: 1,
     lease_token: null,
     result: { ok: true, responsePreview: 'pong' },
   });
   expect(JSON.stringify(row)).not.toContain('local-queue-token');
+});
+it('logs the queued request ID without provider credentials or results', async () => {
+  const { id } = await enqueue();
+  const correlationId = randomUUID();
+  await fixture.pool.query('UPDATE ai_model_test_jobs SET correlation_id=$2 WHERE id=$1', [
+    id,
+    correlationId,
+  ]);
+  const log = vi.spyOn(console, 'info').mockImplementation(() => {});
+  try {
+    expect(await runAiModelTest(fixture.pool, tester(), secrets)).toBe('completed');
+    expect(log.mock.calls.map(([value]) => JSON.parse(value))).toEqual([
+      { event: 'ai.model_test', outboxId: id, correlationId, status: 'completed' },
+    ]);
+  } finally {
+    log.mockRestore();
+  }
 });
 it.each(['permission', 'model', 'deleted', 'expired', 'token'] as const)(
   'skips invalid work before contacting a provider: %s',

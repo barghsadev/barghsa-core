@@ -1,3 +1,4 @@
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { applyReceiptEmergencyOverride } from '../admin/receipt-emergency-override.js';
 import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock.js';
 import {
@@ -1320,8 +1321,8 @@ export class InvoiceBankReceiptConfirmationService {
     const insertResult = await client.query(
       `INSERT INTO notification_outbox
          (profile_id, user_id, event_key, payload, channels, status,
-          idempotency_key, max_attempts, scheduled_for)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          idempotency_key, max_attempts, scheduled_for, correlation_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
        ON CONFLICT (idempotency_key) DO NOTHING
        RETURNING id`,
       [
@@ -1334,6 +1335,7 @@ export class InvoiceBankReceiptConfirmationService {
         idempotencyKey,
         CUSTOMER_NOTIFICATION_MAX_ATTEMPTS,
         null,
+        correlationIdStorage.getStore() ?? null,
       ]
     );
     const insertedRow = insertResult.rows[0] as { id: string } | undefined;

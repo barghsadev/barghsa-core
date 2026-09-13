@@ -1,3 +1,4 @@
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { classifyNotificationType, notificationLink } from '@barghsa/shared/notifications';
 import { NotificationCenterService, notificationScope } from './notification-center.service.js';
 import { Injectable, Logger } from '@nestjs/common';
@@ -117,8 +118,8 @@ export class NotificationsService {
     const eventKey = 'profile.verification_status';
     // The inbox entry already exists; external workers enforce current recipients/preferences.
     await transaction.query(
-      `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts)
-       VALUES($1,$2,$3,$4,$5,ARRAY['email','sms'],'queued',$6,5)`,
+      `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
+       VALUES($1,$2,$3,$4,$5,ARRAY['email','sms'],'queued',$6,5,$7)`,
       [
         outboxId,
         params.profileId,
@@ -131,6 +132,7 @@ export class NotificationsService {
           messageEn: params.localizedContent.en.body,
         },
         `verification-notice:${notice.id}`,
+        correlationIdStorage.getStore() ?? null,
       ]
     );
     const priority = classifyNotificationType(eventKey) === 'immediate' ? 'urgent' : 'normal';

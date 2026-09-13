@@ -7,6 +7,8 @@ export const authDeliveryOutbox = pgTable(
   'auth_delivery_outbox',
   {
     id: uuid('id').primaryKey(),
+    /** Retained after the encrypted message is erased; NULL for older writers. */
+    correlationId: text('correlation_id'),
     challengeId: text('challenge_id').references(() => otpChallenges.challengeId),
     kind: text('kind').notNull().default('otp'),
     userId: text('user_id').references(() => users.userId),

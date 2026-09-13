@@ -87,6 +87,14 @@ async function register() {
   });
   const body = (await response.json()) as { challengeId: string };
   expect(response.status, JSON.stringify(body)).toBe(200);
+  expect(
+    (
+      await fixture.pool.query(
+        'SELECT correlation_id FROM auth_delivery_outbox WHERE challenge_id=$1',
+        [body.challengeId]
+      )
+    ).rows
+  ).toEqual([{ correlation_id: response.headers.get('x-correlation-id') }]);
   return body.challengeId;
 }
 function deliver() {
@@ -574,6 +582,13 @@ async function createStaff() {
   expect(response.status, JSON.stringify(body)).toBe(201);
   expect(body.deliveryStatus).toBe('queued');
   expect(body.activationToken).toBeUndefined();
+  expect(
+    (
+      await fixture.pool.query('SELECT correlation_id FROM auth_delivery_outbox WHERE user_id=$1', [
+        body.userId,
+      ])
+    ).rows
+  ).toEqual([{ correlation_id: response.headers.get('x-correlation-id') }]);
   return body.userId;
 }
 
