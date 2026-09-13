@@ -312,3 +312,139 @@ for (const locale of ['en', 'fa'])
         await page.unroute('**/api/public/branding/config');
       }
     });
+
+for (const locale of ['en', 'fa'])
+  for (const darkMode of [false, true]) {
+    test(`auxiliary controls mirror and support keyboard (${locale}, dark=${darkMode})`, async ({
+      page,
+    }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.route('**/api/public/branding/config', (route) =>
+        route.fulfill({
+          json: {
+            appTitle: 'Controls',
+            slogan: '',
+            primaryColor: '#777777',
+            secondaryColor: '#64748b',
+            accentColor: '#f59e0b',
+            logoUrl: null,
+            faviconUrl: null,
+            darkMode,
+          },
+        })
+      );
+      await page.goto(`${url}?${locale}`);
+      await expect
+        .poll(() => page.locator('html').evaluate((e) => e.style.getPropertyValue('--primary')))
+        .toBe('#777777');
+      const auxiliary = page.getByRole('region', { name: 'Auxiliary controls' });
+      const atEnd = async (outer: Locator, inner: Locator) => {
+        const box = (await outer.boundingBox())!,
+          child = (await inner.boundingBox())!;
+        expect(
+          Math.abs(locale === 'fa' ? child.x - box.x : box.x + box.width - child.x - child.width)
+        ).toBeLessThanOrEqual(12);
+      };
+      await atEnd(
+        auxiliary.locator('[data-slot=avatar]'),
+        auxiliary.locator('[data-slot=avatar-badge]')
+      );
+      await atEnd(
+        auxiliary.locator('[data-slot=progress]'),
+        auxiliary.locator('[data-slot=progress-value]')
+      );
+      const track = (await auxiliary.locator('[data-slot=progress-track]').boundingBox())!;
+      const indicator = (await auxiliary.locator('[data-slot=progress-indicator]').boundingBox())!;
+      expect(indicator.width / track.width).toBeCloseTo(0.25, 2);
+      expect(
+        Math.abs(
+          locale === 'fa'
+            ? track.x + track.width - indicator.x - indicator.width
+            : indicator.x - track.x
+        )
+      ).toBeLessThan(1);
+      const input = auxiliary.getByRole('combobox', { name: 'Actions', exact: true });
+      await page.keyboard.press('Tab');
+      await input.focus();
+      const shadow = await auxiliary
+        .locator('[data-slot=input-group]')
+        .evaluate((e) => getComputedStyle(e).boxShadow);
+      expect(shadow).toContain('0px 0px 0px 4px');
+      const alpha = auxiliary.getByRole('option', { name: /^Alpha/ });
+      await expect(alpha).toHaveAttribute('aria-selected', 'true');
+      await atEnd(alpha, alpha.locator('[data-slot=command-shortcut]'));
+      const beta = auxiliary.getByRole('option', { name: 'Beta', exact: true });
+      expect(await beta.evaluate((e) => getComputedStyle(e).backgroundColor)).toBe(
+        'rgba(0, 0, 0, 0)'
+      );
+      await input.press('ArrowDown');
+      await expect(beta).toHaveAttribute('aria-selected', 'true');
+      expect(await beta.evaluate((e) => getComputedStyle(e).boxShadow)).toContain(
+        '0px 0px 0px 4px'
+      );
+      await input.press('Enter');
+      await expect(auxiliary.getByLabel('Selected command')).toHaveText('beta');
+      await input.fill('not-present');
+      await expect(auxiliary.getByText('No matches', { exact: true })).toBeVisible();
+      await input.clear();
+      await auxiliary.getByRole('button', { name: 'Open commands' }).click();
+      const dialog = page.getByRole('dialog', { name: locale === 'fa' ? 'دستورها' : 'Commands' });
+      await expect(dialog).toBeVisible();
+      await expect(dialog).toHaveAccessibleDescription(
+        locale === 'fa' ? 'یک دستور انتخاب کنید' : 'Choose a command'
+      );
+      await expect(
+        dialog.getByRole('button', { name: locale === 'fa' ? 'بستن' : 'Close', exact: true })
+      ).toBeVisible();
+      await expect(dialog.getByRole('combobox')).toBeFocused();
+      expect(
+        (
+          await new AxeBuilder({ page })
+            .include('[data-slot=dialog-content]')
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+            .analyze()
+        ).violations
+      ).toEqual([]);
+      await page.keyboard.press('Escape');
+      await expect(dialog).not.toBeVisible();
+      await auxiliary.getByRole('button', { name: 'Show toast' }).click();
+      const toast = page.locator('[data-slot=toast]');
+      await expect(toast).toContainText(locale === 'fa' ? 'ذخیره شد' : 'Saved');
+      const toastBox = (await toast.boundingBox())!;
+      const width = page.viewportSize()!.width;
+      expect(
+        Math.abs(locale === 'fa' ? toastBox.x - 16 : width - toastBox.x - toastBox.width - 16)
+      ).toBeLessThan(2);
+      await toast.focus();
+      await page.keyboard.press('Tab');
+      await expect(
+        toast.getByRole('button', { name: locale === 'fa' ? 'بستن' : 'Close', exact: true })
+      ).toBeVisible();
+      expect(
+        (
+          await new AxeBuilder({ page })
+            .include('[data-slot=toast]')
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+            .analyze()
+        ).violations
+      ).toEqual([]);
+      await toast
+        .getByRole('button', { name: locale === 'fa' ? 'بستن' : 'Close', exact: true })
+        .click();
+      await expect(toast).toHaveCount(0);
+      await expect(
+        auxiliary.getByRole('status', { name: locale === 'fa' ? 'در حال بارگذاری' : 'Loading' })
+      ).toBeVisible();
+      const shapes = auxiliary.getByLabel('Placeholder shapes').locator('[data-slot=skeleton]');
+      for (const [index, height] of [128, 40, 32].entries()) {
+        expect((await shapes.nth(index).boundingBox())!.height).toBe(height);
+        expect(
+          await shapes.nth(index).evaluate((e) => getComputedStyle(e, '::after').animationName)
+        ).toBe('none');
+      }
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await expect
+        .poll(() => shapes.first().evaluate((e) => getComputedStyle(e, '::after').animationName))
+        .toBe('shimmer');
+    });
+  }

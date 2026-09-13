@@ -1,3 +1,4 @@
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 
@@ -13,6 +14,7 @@ for (const locale of ['en', 'fa'] as const) {
         }).observe(document, { childList: true });
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await mockPublicAuthCsrf(page);
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: {
@@ -48,7 +50,7 @@ for (const locale of ['en', 'fa'] as const) {
       const inputs = page.locator('input[inputmode="numeric"]');
       await expect(inputs).toHaveCount(6);
       for (let index = 0; index < 6; index++) await inputs.nth(index).fill(String(index + 1));
-      await expect(page).toHaveURL(/\/$/);
+      await expect(page).toHaveURL(/\/app$/);
       const messages = page.getByRole('region', {
         name: locale === 'fa' ? 'پیام‌های برنامه' : 'Application messages',
         exact: true,
@@ -61,6 +63,7 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(messages).toHaveAttribute('aria-live', 'polite');
       const list = messages.locator('[data-sonner-toaster]');
       await expect(list).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+      await expect(list).toHaveAttribute('data-x-position', locale === 'fa' ? 'left' : 'right');
       await expect(list).toHaveAttribute('data-sonner-theme', darkMode ? 'dark' : 'light');
       // Measure readable, settled content rather than the entrance fade.
       await expect(notice).toHaveCSS('opacity', '1');
@@ -85,6 +88,7 @@ for (const locale of ['en', 'fa'] as const) {
 for (const trusted of [false, true]) {
   test(`login submits keyboard-selected trusted device (${trusted})`, async ({ page }) => {
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockPublicAuthCsrf(page);
     const challengeId = '00000000-0000-4000-8000-000000000001';
     await page.route('**/api/auth/login', (route) =>
       route.fulfill({ json: { requiresOtp: true, challengeId } })
@@ -122,7 +126,7 @@ for (const trusted of [false, true]) {
     }
     const inputs = page.locator('input[inputmode="numeric"]');
     for (let index = 0; index < 6; index++) await inputs.nth(index).fill(String(index + 1));
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/app$/);
     await expect(page.locator('[data-sonner-toast]')).toHaveCount(1);
     expect(submitted).toBe(true);
   });
@@ -137,6 +141,7 @@ for (const locale of ['en', 'fa'] as const) {
       }).observe(document, { childList: true });
     }, locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockPublicAuthCsrf(page);
     await page.route('**/api/auth/register/verify', (route) =>
       route.fulfill({ status: 400, json: { error: { code: 'AUTH:OTP:EXPIRED' } } })
     );
@@ -159,6 +164,7 @@ for (const locale of ['en', 'fa'] as const) {
 
 test('dashboard header and navigation use configured brand title', async ({ page }) => {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await mockPublicAuthCsrf(page);
   await page.route('**/api/public/branding/config', (route) =>
     route.fulfill({
       json: {

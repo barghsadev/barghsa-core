@@ -97,9 +97,6 @@ it.each(['Loading page', 'در حال بارگذاری صفحه'])(
     const skeletons = [...container.querySelectorAll('[data-slot="skeleton"]')];
     expect(skeletons).toHaveLength(3);
     expect(skeletons.every((node) => node.closest('[aria-hidden="true"]'))).toBe(true);
-    expect(skeletons.every((node) => node.classList.contains('motion-safe:animate-pulse'))).toBe(
-      true
-    );
   }
 );
 

@@ -18,6 +18,7 @@ export function ApplicationToaster() {
     <Toaster
       theme={brandConfig.darkMode ? 'dark' : 'light'}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      position={locale === 'fa' ? 'bottom-left' : 'bottom-right'}
       customAriaLabel={feedbackText('region', locale)}
       closeButton
       duration={6000}

@@ -48,6 +48,96 @@ import { Slider } from '../../../../../packages/ui/src/components/ui/slider';
 import { ScrollArea } from '../../../../../packages/ui/src/components/ui/scroll-area';
 import { Separator } from '../../../../../packages/ui/src/components/ui/separator';
 import { Badge } from '../../../../../packages/ui/src/components/ui/badge';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarBadge,
+} from '../../../../../packages/ui/src/components/ui/avatar';
+import {
+  Progress,
+  ProgressLabel,
+  ProgressValue,
+} from '../../../../../packages/ui/src/components/ui/progress';
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandItem,
+  CommandShortcut,
+  CommandEmpty,
+  CommandDialog,
+} from '../../../../../packages/ui/src/components/ui/command';
+import { Toaster, toast } from '../../../../../packages/ui/src/components/ui/toast';
+import { Skeleton } from '../../../../../packages/ui/src/components/ui/skeleton';
+import { PageLoading } from '../../../../../packages/ui/src/components/ui/page-states';
+function Auxiliary() {
+  const [open, setOpen] = React.useState(false);
+  const [selected, setSelected] = React.useState('');
+  const closeLabel = locale === 'fa' ? 'بستن' : 'Close';
+  return (
+    <Toaster closeLabel={closeLabel} timeout={0}>
+      <section aria-label="Auxiliary controls" className="flex w-full max-w-md flex-col gap-6">
+        <Avatar size="lg">
+          <AvatarFallback>AB</AvatarFallback>
+          <AvatarBadge aria-label="Available" />
+        </Avatar>
+        <Progress value={25}>
+          <ProgressLabel>Upload</ProgressLabel>
+          <ProgressValue />
+        </Progress>
+        <Command label="Actions">
+          <CommandInput aria-label="Find action" />
+          <CommandList>
+            <CommandEmpty>No matches</CommandEmpty>
+            <CommandItem value="alpha" onSelect={setSelected}>
+              Alpha<CommandShortcut>A</CommandShortcut>
+            </CommandItem>
+            <CommandItem value="beta" onSelect={setSelected}>
+              Beta
+            </CommandItem>
+            <CommandItem value="disabled" disabled>
+              Unavailable action
+            </CommandItem>
+          </CommandList>
+        </Command>
+        <output aria-label="Selected command">{selected}</output>
+        <Button onClick={() => setOpen(true)}>Open commands</Button>
+        <CommandDialog
+          open={open}
+          onOpenChange={setOpen}
+          title={locale === 'fa' ? 'دستورها' : 'Commands'}
+          description={locale === 'fa' ? 'یک دستور انتخاب کنید' : 'Choose a command'}
+          closeLabel={closeLabel}
+          showCloseButton
+        >
+          <Command label="Dialog actions">
+            <CommandInput aria-label="Find dialog action" />
+            <CommandList>
+              <CommandItem onSelect={() => setOpen(false)}>Run</CommandItem>
+            </CommandList>
+          </Command>
+        </CommandDialog>
+        <Button
+          onClick={() =>
+            toast.add({
+              title: locale === 'fa' ? 'ذخیره شد' : 'Saved',
+              description: locale === 'fa' ? 'تغییرات ذخیره شدند' : 'Changes saved',
+              type: 'success',
+            })
+          }
+        >
+          Show toast
+        </Button>
+        <div aria-label="Placeholder shapes" className="flex flex-col gap-3">
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-8 w-full" />
+        </div>
+        <PageLoading label={locale === 'fa' ? 'در حال بارگذاری' : 'Loading'} />
+      </section>
+    </Toaster>
+  );
+}
 function Controls() {
   const [submissions, setSubmissions] = React.useState(0);
   return (
@@ -200,6 +290,7 @@ createRoot(document.getElementById('root')!).render(
           </AlertDescription>
         </Alert>
         <Controls />
+        <Auxiliary />
       </main>
     </BrandThemeProvider>
   </UiDirectionProvider>
