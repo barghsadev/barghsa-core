@@ -4,19 +4,15 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **8f2f1d39**. **173 verified /37 partial /112 pending** of322 claims. Saved PRs: **150 closed /25 open /126 unreviewed**,301 total.58 skips:5 verified/3 partial/50 pending.3022 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **8a83429b**. **178 verified /33 partial /111 pending** of322 claims. Saved PRs: **152 closed /23 open /126 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3062 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
 
-R03 auxiliary repairs reviewed at8f2f1d39. Logical placement, command focus/selection/labels, avatar contrast, instant input theme colors and reduced-motion shimmer are repaired.21 distinct browser cases and49 UI cases pass; builds/types/lint/format and42 unchanged budgets pass. T-06.03.06 reusable loading/empty/error acceptance closes. PR156 and page-consumer acceptance remain open. 6 immediate-base bindings refreshed;38 older retained. [Review](evidence/step-reviews.json#R03-auxiliary-ui).
-
-Prior error/catalogue/tracing completion at0b962f76 remains verified, including PR29. Apply migration0132 before updated API/workers; historical traces stay NULL.149 distinct API/106 worker evidence and catalogue budgets remain valid.
+R03 consumer themes/timezone/direction verified:5 tasks and PR114/156 close locally.45 distinct browser cases pass, plus325 incidental web cases, types/lint/format/builds and42 unchanged budgets. Prior shared, domain and date arithmetic evidence retained. 69 immediate-base bindings refreshed. [Review](evidence/step-reviews.json#R03-consumer-theme-time).
 
 ## Next action
 
-Continue R03 page themes, loading/error states and timezone-consumer acceptance, PR114/156. Start with DashboardLayout light-only styling, then review44 literal-color candidate files and the shared/direct date-format consumers once. Reuse earlier domain checks; preserve pending CSP decision and38 older evidence refreshes.
+R04: make customer electricity, savings and wallet purchase paths eager within unchanged complete-route budgets. Review PR12 and T-01.03.03 against current imports and saved failed attempts; preserve Vite SPA and valid evidence.
 
-CSP decision asked once September13: native reports carry same-origin session cookies but cannot add X-CSRF-Token. Signed-in collection currently returns403. Safe parsing/nonces are committed; no CSRF exception implemented. Do not reask or silently waive the requirement. PR61 remains open for this and external rollout evidence.
-
-Continue remaining R03 consumer/timezone/state acceptance before R04/R05/V01/R06/V02/B01. T-06.03.05 unbuilt editor/per-user controls remain B01. Full regression staysV02. The plan is unfinished.
+R03 native CSP question remains pending: signed-in reports return403 because browsers cannot add the CSRF header. Do not reask or waive the requirement. PR61 and other external prerequisites stay open. Then R05/V01/R06/V02/B01. Whole plan unfinished. Apply migration0132 before updated API/workers; historical traces stay NULL.
 
 ## Preserve completed work and prerequisites
 

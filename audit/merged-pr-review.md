@@ -3,10 +3,10 @@
 Generated from the saved inventory and current task acceptance. This report makes no new GitHub query.
 A PR body checkbox is historical author evidence, not independent acceptance. Review the final combined implementation once per qualified task; reuse valid evidence for every contributing PR.
 
-301 merged PRs: 102 have unresolved mapped tasks; 4 have no current task mapping; 195 map only to verified tasks.
+301 merged PRs: 100 have unresolved mapped tasks; 4 have no current task mapping; 197 map only to verified tasks.
 170 historical deferral statements from 101 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **150 closed / 25 open / 0 blocked**; 126 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **152 closed / 23 open / 0 blocked**; 126 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -15,14 +15,14 @@ Use [current requirements](current-task-requirements.json), [task acceptance](ac
 | Canonical epic | PR-backed tasks unresolved |
 | --- | ---: |
 | 01-platform-infrastructure.md | 49 |
-| 02-auth-users-admin.md | 32 |
+| 02-auth-users-admin.md | 30 |
 | 03-core-business.md | 4 |
 | 04-invoices-wallet-contracts.md | 4 |
 | 05-notifications-documents-ai.md | 3 |
 | 07-ui-ux-design.md | 3 |
-| Total | 95 |
+| Total | 93 |
 
-Also review 54 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
+Also review 51 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
 
 ## Every merged PR
 
@@ -143,7 +143,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#111](https://github.com/barghsadev/barghsa-core/pull/111) | 02-auth-users-admin.md#T-03.03.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-account-settings) | 0 |
 | [#112](https://github.com/barghsadev/barghsa-core/pull/112) | 02-auth-users-admin.md#T-03.03.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-account-settings) | 0 |
 | [#113](https://github.com/barghsadev/barghsa-core/pull/113) | 02-auth-users-admin.md#T-03.03.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-recipient-channel-delivery) | 0 |
-| [#114](https://github.com/barghsadev/barghsa-core/pull/114) | 02-auth-users-admin.md#T-03.03.06 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-account-settings) | 0 |
+| [#114](https://github.com/barghsadev/barghsa-core/pull/114) | 02-auth-users-admin.md#T-03.03.06 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R03-consumer-theme-time) | 0 |
 | [#115](https://github.com/barghsadev/barghsa-core/pull/115) | 02-auth-users-admin.md#T-03.04.01 (acceptance_verified) | Mapped tasks verified | [open](evidence/step-reviews.json#R01-profile-addresses) | 1 |
 | [#116](https://github.com/barghsadev/barghsa-core/pull/116) | 02-auth-users-admin.md#T-03.04.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-profile-addresses) | 0 |
 | [#117](https://github.com/barghsadev/barghsa-core/pull/117) | 02-auth-users-admin.md#T-04.01.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
@@ -185,7 +185,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#153](https://github.com/barghsadev/barghsa-core/pull/153) | 02-auth-users-admin.md#T-08.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
 | [#154](https://github.com/barghsadev/barghsa-core/pull/154) | 02-auth-users-admin.md#T-08.01.03 (partial) | Task review remains | Not reviewed | 1 |
 | [#155](https://github.com/barghsadev/barghsa-core/pull/155) | 02-auth-users-admin.md#T-09.01.01 (partial) | Task review remains | Not reviewed | 0 |
-| [#156](https://github.com/barghsadev/barghsa-core/pull/156) | 02-auth-users-admin.md#T-09.01.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R03-auxiliary-ui) | 1 |
+| [#156](https://github.com/barghsadev/barghsa-core/pull/156) | 02-auth-users-admin.md#T-09.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R03-consumer-theme-time) | 1 |
 | [#157](https://github.com/barghsadev/barghsa-core/pull/157) | 02-auth-users-admin.md#T-09.02.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#158](https://github.com/barghsadev/barghsa-core/pull/158) | 02-auth-users-admin.md#T-09.02.02 (pending) | Task review remains | Not reviewed | 0 |
 | [#159](https://github.com/barghsadev/barghsa-core/pull/159) | 02-auth-users-admin.md#T-09.03.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `6ec76db4cb40039a60f96587b4c7e3067bcecc8bf77b6bc7f2178fffda3e3a97`
-- `pr-deferrals.json`: `1467831fd598bb02d92ce8a053e0960cb936f8b24689faae86334a5d3d0b2168`
-- `evidence/step-reviews.json`: `2ab73bf726aefce47f051b990ddb25790fa05d684b83d7f5c7519f639c4a737a`
+- `acceptance-closure.json`: `f890c982768f151666a5f8a93c6208ffbdfa8073834a3b6d5409349a2b6dd34f`
+- `pr-deferrals.json`: `56bbf3ef33157438bb7073baa4ecd699c093a5d1ce8b79c028cc828bb387fb32`
+- `evidence/step-reviews.json`: `9ef4b982c331d3353b97270622941a52d917c75dffdba5073ecb3185b93fbf83`

@@ -21155,6 +21155,286 @@
       "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
       "encoding": "gzip",
       "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-budgets.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-budgets.log.gz",
+      "sha256": "05d7229c07e55d6be181276c481d48cace7fd4ff46bc638b60d6bd5fd95ec2cb",
+      "encoding": "gzip",
+      "stored_sha256": "3ff5041918a355d5b4f8d5919ec7e65099e33fc626d69d88473004d1c7611741"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-focus-build.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-focus-build.log.gz",
+      "sha256": "b4987651e4ef5062da00ff675cce37c75002a1d7e269f6a5ef1bb4e6f6118819",
+      "encoding": "gzip",
+      "stored_sha256": "db46b68b3b9882e9a1503d183a391dc5282cc3fc8c0fdd061ea27b1ed7acb223"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-focus-format.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-focus-format.log.gz",
+      "sha256": "737cec9db294bd9804d5b276bc6b64045c59b92100a18844fc5fab945cbf147e",
+      "encoding": "gzip",
+      "stored_sha256": "adc7c983d2054095f55f5b086790a5c3aa08fb5bee7ca34854a74c8acaecb511"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-focus-matrix.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-focus-matrix.log.gz",
+      "sha256": "b5cea733a3f6f499b0bcec001ebf55b82f353b0ce52d29bf43ca5849cd92cad7",
+      "encoding": "gzip",
+      "stored_sha256": "27e25fb879d264e003372f639c9777f26b85a2e624cc191e04b67d3cd33e5f9e"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-format-final.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-format-final.log.gz",
+      "sha256": "8e0b23d8944807f2d0210b662bc0f6774ee95c1bff3ee26a0de11a3502fc5ded",
+      "encoding": "gzip",
+      "stored_sha256": "e50464d70f4612529505ba0f4ecec2e95ae96695d77f1a29eb3858736871339a"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-format-product.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-format-product.log.gz",
+      "sha256": "ba94f0eff747b7a0e77d0a702b3dba6fb9ededfed211d294a8a6e1e5b0735b14",
+      "encoding": "gzip",
+      "stored_sha256": "eaac65db5ac26563b38d90ab84be1722a87191102a40c49739a26158bf106e29"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-format.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-format.log.gz",
+      "sha256": "a8ca227bfe9eb2740786677f8f35db40f3fcfe4c74e4c8c92e2d843f78a5c614",
+      "encoding": "gzip",
+      "stored_sha256": "2298416be0b357871cc6e34cb9b48fede11862f3c57e1ae5c77a1339b7732bfc"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-populated-debug-final.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-populated-debug-final.log.gz",
+      "sha256": "698cf43ba2fc3210226695ba862fbc2b6e65c891341abe37eaa4b2c2c2964bf4",
+      "encoding": "gzip",
+      "stored_sha256": "2a548cd9c4396ac6c0278c16f333202d56dd5c7dbafd1835bc1e95cef458014b"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-populated-debug-valid.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-populated-debug-valid.log.gz",
+      "sha256": "fa95fa4d073c3ba5c8b1c903afff6e59c60cf5ecc0d6edd08e53262fc41ad93f",
+      "encoding": "gzip",
+      "stored_sha256": "1b2463fcb5a8caa6c20ae4dbea3aad455a530b55d7f03b4f1bdc0eb985f1a06c"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-populated-debug.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-populated-debug.log.gz",
+      "sha256": "c9159ec150a75e249040cee24f0fdf41a55d0c9aa2df3743bd29ce830abff45a",
+      "encoding": "gzip",
+      "stored_sha256": "73738533d23afc6ac86c3b4702362e79fccb4579208ef010a59cd66f4c714bea"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-populated-final-format.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-populated-final-format.log.gz",
+      "sha256": "3b7b674f662ae5b2634a9864fe1cac0a53b05baedf4a5ad797d5854c58ace065",
+      "encoding": "gzip",
+      "stored_sha256": "dce9ad5ce2bb34057bdd1c312f37c24a5ef2317cb6c80577bb95c26068933c65"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-populated-format-final.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-populated-format-final.log.gz",
+      "sha256": "fda0987005ea5695be1d7a5b98e752215393f6c2877e2f69b1cd4df73d839757",
+      "encoding": "gzip",
+      "stored_sha256": "efc1e6114e6976bbe72cd9aa90eb732e9bef543267c9b69812e0f4e75d78c1a1"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-populated-format.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-populated-format.log.gz",
+      "sha256": "66ce711ff8bd7896ae6eceaafef45bd25b4456ec9150a9f7a63bb513e554772a",
+      "encoding": "gzip",
+      "stored_sha256": "e43af5916dabafd1429026465acc3af35a48ea2cd96b850455c2a7959cc2cc70"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-populated-matrix.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-populated-matrix.log.gz",
+      "sha256": "e3028b7f9408a73c7a105131113cb960d42b7edc90567390617127b60e903057",
+      "encoding": "gzip",
+      "stored_sha256": "f1a5d4cb1edcc9ef12376281337dca91701341d8713eefec9121b048f7c0e770"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-populated-web-build.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-populated-web-build.log.gz",
+      "sha256": "344983e0cc975d622bbd01431931f9c2ffd294cc18ef3899fb6f1ec1b0df8903",
+      "encoding": "gzip",
+      "stored_sha256": "aa67b7841035520f9bf54c62c5c74c65faf60f60f53010df524ea0d3baae0147"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-quality-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-shared-regression.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-shared-regression.log.gz",
+      "sha256": "0091469904f837f125c7a701ccc945b3bbf10c96ecf1a7d591453b67bbeffb3a",
+      "encoding": "gzip",
+      "stored_sha256": "df8dfadb9112351bcca13507b5766551052394ec5108d3cef097470111f85da6"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-theme-baseline-final.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-theme-baseline-final.log.gz",
+      "sha256": "160746c78824ee5556841b5f9b2515598c13d7c24435c507b28c473b24ba0cdd",
+      "encoding": "gzip",
+      "stored_sha256": "2582d7cfeca2c35afd94f690f142006348764fad5660ed93876bfa3a8b4ed7ad"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-theme-baseline.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-theme-baseline.log.gz",
+      "sha256": "101dba90add2facc408622750a7b7eb2e237035a59a1c488f2913563bb198adc",
+      "encoding": "gzip",
+      "stored_sha256": "df3d18ae883daaf192aff03dfca768f1cddb7599b0c24e4998ca4209e835b21e"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-theme-dark.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-theme-dark.log.gz",
+      "sha256": "8dfe1f7c1d9d9bbf6c8d8385d0ba66886eca371acbcc961c9cd0ab0fb6bab0f3",
+      "encoding": "gzip",
+      "stored_sha256": "38ac3c90f71b71496786d932dd8f86541c36b8639bda6faaa75dac74185dfc1d"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-theme-matrix.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-theme-matrix.log.gz",
+      "sha256": "d9a8f0629032e419b80780b6d967a78d7802d4b3b97a495c9085db1d91a0ef0b",
+      "encoding": "gzip",
+      "stored_sha256": "00cc251031cc74ae61c283d65398fd09f6092a742bdfaf4bbb3fdab634c73bc6"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-types.log",
+      "path": "audit/evidence/r03/r03-theme-quality.log.gz",
+      "sha256": "34264e0234a6338f96e5d0fe7c9f3a3244f040b7ebc4d73f6d0811538e630d4e",
+      "encoding": "gzip",
+      "stored_sha256": "2fbcd7126bd7cae9864c2115d97eda189e7329d10fa7416f977b76e5de5cdb7c"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-ui-build-final.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-ui-build-final.log.gz",
+      "sha256": "3e38de0efa3d02fecb7dbfb8c3a145922c106e59efc6fa47d817890224124b46",
+      "encoding": "gzip",
+      "stored_sha256": "a3a4a4b2790468e3131821aafbfe97c826a22d4ded2de2059b2a3c87c54ebc18"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-ui-build.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-ui-build.log.gz",
+      "sha256": "bbe28eea37efa1b7317227718a46d1e445fb51c5f1e90e6666a9a5ce6539818a",
+      "encoding": "gzip",
+      "stored_sha256": "fb6d3e420ce77f80a9b2860103657b79db9d0284ec4144915f6abf9828edabfd"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-units.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-units.log.gz",
+      "sha256": "4cfcf55d43ed742ba67753c44b2a6e0c04933c90246c4cf831812e34d717f22f",
+      "encoding": "gzip",
+      "stored_sha256": "2e059ba4e89e99f4980d393a893963fa5c32b6a1dd4dacca668b61bd346cac67"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-web-build-final.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-web-build-final.log.gz",
+      "sha256": "697c694196b134248bfc1cbb64fef41ff91d5a0727c01e1de0f4d5099dea5151",
+      "encoding": "gzip",
+      "stored_sha256": "12e3b0356577c212148602c913e0d6d8c68235b79e500ac35c2909236378e795"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-web-build.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-web-build.log.gz",
+      "sha256": "9b909c852161c71659b788299ee2252371265941480cd97eb0051e13a0ca1aa2",
+      "encoding": "gzip",
+      "stored_sha256": "9e13ebd7289979d562a2f5fa66b01f7a3d4c444a849568818bdf67a88a8807f5"
+    },
+    {
+      "original_path": "/tmp/r03-direction-browser.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-direction-browser.log.gz",
+      "sha256": "7c3fe6ff17219608b04f10ebbac990f385eeadc7dd7e725ab59b4c221a538340",
+      "encoding": "gzip",
+      "stored_sha256": "d0013dbdce3202c0c4c4ed2cdbdcc6eca5314347c54392debda210c415727356"
+    },
+    {
+      "original_path": "/tmp/r03-direction-budgets.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-direction-budgets.log.gz",
+      "sha256": "253585f77df0a30bd42c673509ea5a4c590fa45d532d4883cabacbda283dca19",
+      "encoding": "gzip",
+      "stored_sha256": "3457db97fdc3278a5f168e43c405f3c2d8bee89b7b7f6fdbdc73299faa45d78e"
+    },
+    {
+      "original_path": "/tmp/r03-direction-build.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-direction-build.log.gz",
+      "sha256": "97f76d30dc5a6e76cf06daecbdaf4c05d1fbeb5950106d79bd2914b82600aacd",
+      "encoding": "gzip",
+      "stored_sha256": "92e28da3e0213fbcd53a8234c7d55a660a2fcad681a61624bb42691d64fc5aa9"
+    },
+    {
+      "original_path": "/tmp/r03-direction-format.log",
+      "path": "audit/evidence/r01/barghsa-r01-public-auth-fixture-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/r03-direction-lint.log",
+      "path": "audit/evidence/612434d/barghsa-notification-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/r03-direction-types.log",
+      "path": "audit/evidence/612434d/barghsa-invoice-final-types.log.gz",
+      "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+      "encoding": "gzip",
+      "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-audit-check-final.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-audit-check-final.log.gz",
+      "sha256": "e1d679d7ad5c355e75593c97b138783c061c1d84a1c975242d454012ca3be7fd",
+      "encoding": "gzip",
+      "stored_sha256": "8f1553f03744f45c27e2d127797a0d21e3408a7780428987d216424487d22c91"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-audit-check.log",
+      "path": "audit/evidence/r03-consumer-theme-time/r03-consumer-audit-check.log.gz",
+      "sha256": "da486f8e7a0b082e4986ff8bc9ea91d623ffe85dd3fa1c366358f8bd4ccdd016",
+      "encoding": "gzip",
+      "stored_sha256": "8ce1a125d8bafe0b73d6500fe8306c9a14cf825675cb05231158db668b69fa87"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-audit-prs.log",
+      "path": "audit/evidence/r01/barghsa-audit-refresh-prs.log.gz",
+      "sha256": "18452ee2e6efa69de6ff32ef12cd5002af4073d1308a33ad20d808a41895dcf8",
+      "encoding": "gzip",
+      "stored_sha256": "be23b88c4a47a042e7ea034a41391cd1a4aa6177a509d1c1dd8960f15ce55d16"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-audit-requirements.log",
+      "path": "audit/evidence/r01/barghsa-audit-refresh-requirements.log.gz",
+      "sha256": "3440ccfe7ab22762a914410f44e797031046f8ca47ba4b8dc809bba221e82700",
+      "encoding": "gzip",
+      "stored_sha256": "dc663d6698ee7407c527b5ba81a50ab619ffc8c73f3cc131b30bdd72a4846b89"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-audit-skips.log",
+      "path": "audit/evidence/r01/barghsa-audit-refresh-skips.log.gz",
+      "sha256": "90a055f4fc9d793cad73f500b01e067fd2892e2c8c5282ace100c3cc1e322b7c",
+      "encoding": "gzip",
+      "stored_sha256": "6f21b8872a74b341d9a22401016186da672b8b55504daf6ee553ef7e19cc562e"
+    },
+    {
+      "original_path": "/tmp/r03-consumer-backlog.log",
+      "path": "audit/evidence/612434d/barghsa-repair-final-backlog.log.gz",
+      "sha256": "a6d34b78b336d819c18f1e32f44b5cad575c5cd02ed1e46bedafa6fca6185b34",
+      "encoding": "gzip",
+      "stored_sha256": "149f6f242b1562d94902a4cbf86c551599463e11a4337124f9d2f6efb1cc833e"
     }
   ]
 }

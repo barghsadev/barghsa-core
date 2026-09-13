@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
-  "active_step": "R03",
-  "next_action": "Continue R03 page themes, loading/error states and timezone-consumer acceptance, PR114/156. Start with DashboardLayout light-only styling, then review44 literal-color candidate files and the shared/direct date-format consumers once. Reuse earlier domain checks; preserve pending CSP decision and38 older evidence refreshes.",
+  "source_revision": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
+  "active_step": "R04",
+  "next_action": "R04: make customer electricity, savings and wallet purchase paths eager within unchanged complete-route budgets. Review PR12 and T-01.03.03 against current imports and saved failed attempts; preserve Vite SPA and valid evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -35,12 +35,13 @@
     {
       "id": "R03",
       "title": "Errors and UI acceptance",
-      "status": "in_progress"
+      "status": "partial",
+      "remaining": "Local error/tracing/UI/theme/timezone repairs complete. Native authenticated CSP telemetry awaits owner decision and production rollout evidence."
     },
     {
       "id": "R04",
       "title": "Purchase loading",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "R05",
@@ -267,7 +268,7 @@
       "implementation_status": "partial",
       "acceptance_status": "pending",
       "remaining": [
-        "audit/evidence/step-reviews.json#R03-controls: core controls repaired; remaining auxiliary components, implemented consumer locale/timezone/theme/focus and exact skeleton/error-state acceptance stays R03. Unbuilt theme-editor/per-user capabilities remain B01."
+        "Current shared/consumer theme, RTL, timezone and accessibility repairs locally verified in R03. Unbuilt theme-editor/per-user controls remain B01; V01/V02 finish historical dispositions and regression."
       ]
     },
     {
@@ -287,7 +288,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Review38 partial and114 pending task records; preserve170 verified assessments. Reconcile149 closed/24 open/128 unreviewed saved PRs and38 older source refreshes. Preserve58 skips and separate historical queue gaps."
+        "Review33 partial and111 pending task records; preserve178 verified assessments. Reconcile152 closed/23 open/126 unreviewed saved PRs and38 older source refreshes. Preserve58 skips and separate historical queue gaps."
       ]
     },
     {
@@ -749,6 +750,10 @@
     {
       "id": "R03-auxiliary-ui",
       "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui"
+    },
+    {
+      "id": "R03-consumer-theme-time",
+      "review_record": "audit/evidence/step-reviews.json#R03-consumer-theme-time"
     }
   ],
   "deferred_improvements": [
@@ -772,13 +777,13 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 173,
-    "partial": 37,
-    "pending": 112,
+    "acceptance_verified": 178,
+    "partial": 33,
+    "pending": 111,
     "merged_prs": 301,
     "historical_skips": 58,
-    "skips_verified": 5,
-    "skips_pending": 50
+    "skips_verified": 8,
+    "skips_pending": 49
   },
   "user_decisions": [
     "Retain Vite SPA under ADR004.",
@@ -1071,36 +1076,30 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R03-consumer-theme-time",
-    "name": "Implemented page themes, feedback and account timezone consumers",
+    "id": "R04-purchase-loading",
+    "name": "Eager customer purchase paths",
     "status": "reviewing",
     "prs": [
-      114,
-      156
+      12
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-03.03.06",
-      "02-auth-users-admin.md#T-09.01.02",
-      "01-platform-infrastructure.md#T-06.02.04",
-      "01-platform-infrastructure.md#T-06.03.02",
-      "01-platform-infrastructure.md#T-06.03.03"
+      "01-platform-infrastructure.md#T-01.03.03"
     ],
     "remaining_checklist": [
-      "Remaining implemented consumer theme/RTL/keyboard/loading states stay R03. DashboardLayout still uses light-only backgrounds/borders/text;44 files with literal gray/white styling are candidates for bounded review, not44 established defects.",
-      "Complete timestamp-consumer coverage for account timezone PR114; preserve calendar-by-language semantics and deliberate date-only UTC formatting."
+      "Read exact purchase-loading criteria and current dependency graph.",
+      "Repair eager loading while preserving unchanged route budgets and lazy heavy modules.",
+      "Verify actual initial loading and route fallback behavior."
     ],
     "confirmed_defects": [
-      "DashboardLayout uses light-only gray/white backgrounds and text instead of theme tokens. Review actual dark contrast and repair the shell with its directly affected controls."
+      "Required customer purchase paths remain lazy-loaded; earlier eager attempts exceeded budgets."
     ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R03-auxiliary-ui",
-      "audit/evidence/step-reviews.json#R03-controls",
-      "audit/evidence/step-reviews.json#R03-theme-contrast",
-      "audit/evidence/step-reviews.json#R01-account-settings"
+      "audit/evidence/step-reviews.json#R03-consumer-theme-time",
+      "audit/final-repair-checkpoint.json"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Continue R03 page themes, loading/error states and timezone-consumer acceptance, PR114/156. Start with DashboardLayout light-only styling, then review44 literal-color candidate files and the shared/direct date-format consumers once. Reuse earlier domain checks; preserve pending CSP decision and38 older evidence refreshes."
+    "next_action": "R04: make customer electricity, savings and wallet purchase paths eager within unchanged complete-route budgets. Review PR12 and T-01.03.03 against current imports and saved failed attempts; preserve Vite SPA and valid evidence."
   },
   "open_domain_reviews": [
     {

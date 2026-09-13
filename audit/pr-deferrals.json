@@ -1622,14 +1622,14 @@
     "historical_deferrals": [
       "- [ ] Email/notification template branding — follow-up (different PR / modules)"
     ],
-    "status": "Historical email/notification deferral satisfied; remaining implemented touchpoint and shared-control theme acceptance continues R03.",
-    "reviewed_source_revision": "b99c7a76ecae99ff01857740ff2cef045318ea01",
-    "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast",
+    "status": "All historical deferrals satisfied; theme application locally verified.",
+    "reviewed_source_revision": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
+    "review_record": "audit/evidence/step-reviews.json#R03-consumer-theme-time",
     "dispositions": [
       {
         "statement_index": 0,
         "disposition": "satisfied_by_later_implementation",
-        "evidence": "Email/auth notification branding and actual admin previews are implemented and verified by the linked R02 repairs. Full theme/contrast and instant dashboard consistency across public/auth/admin touchpoints remains assigned to R03; the existing partial task stays partial. audit/evidence/step-reviews.json#R02-provider-template-authoring audit/evidence/step-reviews.json#R03-theme-contrast: public/auth links, terms states and actual draft preview now pass both-theme checks; remaining full component/consumer acceptance is not waived."
+        "evidence": "Email/auth notification branding and actual admin previews are implemented and verified by the linked R02 repairs. Full theme/contrast and instant dashboard consistency across public/auth/admin touchpoints remains assigned to R03; the existing partial task stays partial. audit/evidence/step-reviews.json#R02-provider-template-authoring audit/evidence/step-reviews.json#R03-theme-contrast: public/auth links, terms states and actual draft preview now pass both-theme checks; remaining full component/consumer acceptance is not waived. audit/evidence/step-reviews.json#R03-consumer-theme-time: current consumer/shared themes now verified; prior email/notification proof retained."
       }
     ]
   },

@@ -18324,6 +18324,345 @@
           "evidence": "audit/evidence/step-reviews.json#R03-auxiliary-ui"
         }
       ]
+    },
+    {
+      "id": "R03-consumer-theme-time",
+      "date": "2026-09-13",
+      "source_revision": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
+      "base_revision": "26d935bbba235fb1bbc9911af666ecef5bceedd7",
+      "product_commits": [
+        "df129154",
+        "8a83429b"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-09.01.02",
+        "01-platform-infrastructure.md#T-06.02.04",
+        "01-platform-infrastructure.md#T-06.03.02",
+        "01-platform-infrastructure.md#T-06.03.03"
+      ],
+      "summary": "Theme page repairs, account-time consumer review and required direction hook complete locally.5 task acceptances and2 saved PR reviews close.",
+      "review": [
+        "Bounded review of44 literal neutral-color candidates found43 page/component files needing theme tokens; the explicit high-contrast AdminInvoicesPage solid button remains unchanged. Changes affect styles only, preserving domain requests, authorization and money calculations. Header/sidebar, native controls, panels, lists, empty/loading/error states now inherit theme colors. Baseline browser failures establish actual contrast defects.",
+        "Eight error-state browser cases cover64 visits across8 customer/admin pages, both languages, themes and desktop/mobile widths. Four populated cases cover12 visits across dashboard, invoice list and notification center, including profile switcher, wallet warning and dashboard statuses. Populated scans exposed four muted labels on pale status backgrounds in dark mode; dark cards now use theme background. All final cases pass.",
+        "Native focus retains a2px offset ring over shadow utilities. A transparent2px outline preserves forced-colors support; populated cases verify its width/style in that mode. Shared data-slot controls retain their own composite focus. Native color-scheme/background follows theme; light muted text was darkened for contrast.",
+        "Reviewed shared account-time callers and direct formatters once. Account times are gated on valid saved IANA preferences; load failure displays unavailable time and retry. Populated invoices verify New York spring-DST time, load failure and live refresh to Auckland in both languages. Existing midnight/DST/invalid-input/locale arithmetic evidence remains valid. Receipt payment dates intentionally preserve civil dates via UTC; relative notification age is timezone-independent. Unauthenticated public terms use documented product-default Tehran time; account terms use the saved preference.",
+        "T-06.02.04 explicitly required an exported useDirection hook. Added it over existing live useLocale subscription and consumed it in UiDirectionProvider. Five browser checks prove horizontal/vertical keyboard directions and live locale changes without resetting selection.",
+        "28 existing shared-control, branding-editor, terms, notification-preview and timezone-settings browser cases pass. With12 consumer cases and5 direction cases this is45 distinct passing cases. Later changes affect only native forced-color outline and extracting existing locale direction; relevant4 and5 cases pass without repeating unaffected matrices.",
+        "UI/web types, scoped lint/format, production builds and final42 unchanged route/interaction budgets pass. The requested unit command also ran32 web files/325 cases successfully; retain it as incidental evidence, not V02 completion. Failed fixture attempts used an incomplete branding response and a single profile that intentionally renders no switcher; corrected fixtures, preserved logs. No failed run counted as passing.",
+        "Close shared-component criteria against their exact scope and current core/auxiliary/consumer evidence. Preserve reusable loading-state closure and earlier public/auth/email branding checks. No new theme-editor/per-user features or production rollout claimed."
+      ],
+      "verification": {
+        "browser": "45 distinct passing Chromium cases; focused reruns overlap.",
+        "unit": "32 web test files/325 cases passed incidentally; prior shared and date arithmetic evidence retained.",
+        "quality": "UI/web types, scoped lint/format, production builds and42 unchanged budgets pass."
+      },
+      "remaining": [
+        "Native authenticated CSP telemetry still awaits owner CSRF decision; PR61 remains open.",
+        "Unbuilt theme-editor and per-user settings remain B01; production rollout and V02 regression not claimed."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/branding-theme.spec.ts",
+          "sha256": "1b181e5ee0188b3917130ac7765b149666765843a263ef4396682493a8f8d4d0"
+        },
+        {
+          "path": "apps/web/e2e/consumer-theme.spec.ts",
+          "sha256": "10d399975c6462196718720791a91daa87d2126a34a9f19b1b1f9fcbc776c2e5"
+        },
+        {
+          "path": "apps/web/e2e/direction-component.spec.ts",
+          "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+        },
+        {
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
+        },
+        {
+          "path": "apps/web/e2e/terms-theme.spec.ts",
+          "sha256": "e7abb4fe9281ec84597b5bf7d5d43f31d824163feb5dec18925caad071efa139"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "4f48d63df8fdf9101aedc594672d2a869b55cddd1af0d9e18f6a40c6d9f82d8e"
+        },
+        {
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "38cbbca538d8e8c46e963f30db2a26e905dc07d59c3e418426b0e86c524ad97c"
+        },
+        {
+          "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
+          "sha256": "53db2604bebacba6f0e98c3480527626c451d9d6e5085232d93f572eeb50b12f"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "241eceb68e909d7c4237077426efb2af7997eddc67906f54a21a449f5792889f"
+        },
+        {
+          "path": "apps/web/src/components/DefaultProfileModal.tsx",
+          "sha256": "77e14299473a0464513467847daadf000ca6efc24008e18787498196d72c950f"
+        },
+        {
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "7008c88de2d025a97c22cbd6d1894c8aded371cac57e8aea9db81f20cd3a64b5"
+        },
+        {
+          "path": "apps/web/src/components/NotificationBell.tsx",
+          "sha256": "ae34730ff6b681b7c77844e268c406abd03f4fc61915d90640c2aac9e4776987"
+        },
+        {
+          "path": "apps/web/src/components/NotificationRow.tsx",
+          "sha256": "4d954a8e8e951f0e614715e0c1dd0d63f48a3634d4fac8aeec4738a5f5c7fc60"
+        },
+        {
+          "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+          "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
+        },
+        {
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "f4ccc8c951dc09fe0a52dd619c4724ba311d7cb7485d6d7bd8ca0c5eebd9f04e"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "48948013a9b3dd2a7c3c87089f057bfbf704efb5845df53fca98b373af93f4f7"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "bf685ddaf2564fb18b8fb11c64e56152da718a3b4d98506fb71765c331f4d7fb"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "9cbf3e5c3e89a7bf0251fa9347ebd7a42eda1d770addceec659254cde4fec05e"
+        },
+        {
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "274822c5b8c6c33b186173b59337d0890a0b946c19e5168e379330b28800f046"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+          "sha256": "bb7cc279e25d2a8264ba0304bf095359396005f543550e6da806f4fadd36cc23"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+        },
+        {
+          "path": "apps/web/src/hooks/useDirection.ts",
+          "sha256": "be6a237736ac7820d0aaa20bab598a68ad8d82671a250c77d7115a1cbf8e035c"
+        },
+        {
+          "path": "apps/web/src/hooks/useLocale.ts",
+          "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+        },
+        {
+          "path": "apps/web/src/hooks/useTimezone.ts",
+          "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+        },
+        {
+          "path": "apps/web/src/pages/AIChat.tsx",
+          "sha256": "e2b9ada42742aedfc01c6b1b23f4f27d88bd7de3e6d9f3a472ac4f57d90b605b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "a622f4e1ae5316d9767ddd8440813683ceca94e36c553923efd4023e9fc9fc2c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "c664ce9eacbaf353a617e504e533d05be581cdb6e5755295c8e0c4d734375b72"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "4776a595aea33683e6974d14c9f13f8959c524e2357f7a90e737996a6c7ed56f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "ac1d76a635339aeb53703abaec9b3d23ae39c24a3a83034f90985d98e97557c4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "9f96ac97367406e25c07b766164b25c212d45168f19b0b90f31994f6ae690940"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
+        },
+        {
+          "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+          "sha256": "6bcfb8c95f4f0654b2f6b623da47b117292f843a1729ed32a9e7fbb860003e82"
+        },
+        {
+          "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+          "sha256": "fe433be9a82560656b0107b3204527bf8f31f89ecddd53aa512a80718b341b41"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+          "sha256": "8045c104029b4870074b72e5b240568758717934bf62dd3049828e63722b349f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "4e938c51757e289ac1a811060baae385ca963eb39912a3491117735467b7c7cd"
+        },
+        {
+          "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+          "sha256": "3c543beb38cf424dd0daf22247844a19ea4d5fb30f3fe3cceb8c0be037cf253b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "12f39d7c04949bd5f00c29f4b36ba169ff8f3c5afc3eb79e501dc688c4a59c85"
+        },
+        {
+          "path": "apps/web/src/pages/ChartsPage.tsx",
+          "sha256": "59fe536f68eb3fa48b099f2f48895a3805743ccf3c9ef451ff3de226cd439547"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "20c0e9d57e7f4df6e03390e6c3cc16417125481df7454c7c3c7a83742595cf95"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "fb8234931becfa4b3fbbaf736b6089fb003e131a395ca5d478047464033266f8"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "e94f8793f3a68bc95c3d8a379638e8e6a9506f44a52e637620a6ea2d5eb74080"
+        },
+        {
+          "path": "apps/web/src/pages/DocumentsPage.tsx",
+          "sha256": "7ab4ab3e1021c2476f465e55af6acaafded61194650350f22f869d923a31b6d0"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "43bd5ce800247e0b1beff9402fe75de0e76ef260b394db4c1d76868f7e02df3a"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "7aa742f78a0b0e50ebdaad2bc37fc05d1c46a8ee6d54c554b8038c04b1fe6431"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "9c4c1ed6f3867348044b794e96e7f4e138d4a8bcecddc70947ef03d6defc6e59"
+        },
+        {
+          "path": "apps/web/src/pages/TosPreview.tsx",
+          "sha256": "8eb4ab60490eae7fc06cefaab2888985e8c23f1f97312f0ad68daf67255df11a"
+        },
+        {
+          "path": "apps/web/src/pages/TosRichText.tsx",
+          "sha256": "5528b6f4bad4cb37b7ac4b46153ca4ac3f377e94b458326118b0245ca1193d8b"
+        },
+        {
+          "path": "apps/web/src/pages/VideosPage.tsx",
+          "sha256": "b9fe8a1f44e8e234669709808eecb51c7f5a68f88f1f744b675afa9de6c159c6"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "e58352b8a7d34f2376f06d4fa507c04988f3d3248544299fd82b9c747096de2e"
+        },
+        {
+          "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+          "sha256": "52dd4b7b25aee2b6bc485ed4de87f6910c47cbaa2a391024cf0c88fd7e370776"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/index.tsx",
+          "sha256": "9c47f5187064ebf45171f3f879f965f038c4377214007d10bc6d37dec44762d9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.tsx",
+          "sha256": "1e798f1ecb63c33b45ec2a0de45ecc10616e765fc9156800294166677f99603d"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "ceeff6ff8ca6188e9b9eb533ee199f48f30399b3ebec3d84b9ee9ef3c314bb5a"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "3601c13e59aff2616a2636fbee10956e1dd8a46b5fbdc3b4bade5c84b8ef1e49"
+        },
+        {
+          "path": "packages/i18n/src/date-time.test.ts",
+          "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+        },
+        {
+          "path": "packages/i18n/src/date-time.ts",
+          "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "222689c7a991e307b59f562d61c57e345867f4436e7c66f3204dc2ce09161a66"
+        }
+      ],
+      "logs": [
+        "/tmp/r03-consumer-budgets.log",
+        "/tmp/r03-consumer-focus-build.log",
+        "/tmp/r03-consumer-focus-format.log",
+        "/tmp/r03-consumer-focus-matrix.log",
+        "/tmp/r03-consumer-format-final.log",
+        "/tmp/r03-consumer-format-product.log",
+        "/tmp/r03-consumer-format.log",
+        "/tmp/r03-consumer-lint.log",
+        "/tmp/r03-consumer-populated-debug-final.log",
+        "/tmp/r03-consumer-populated-debug-valid.log",
+        "/tmp/r03-consumer-populated-debug.log",
+        "/tmp/r03-consumer-populated-final-format.log",
+        "/tmp/r03-consumer-populated-format-final.log",
+        "/tmp/r03-consumer-populated-format.log",
+        "/tmp/r03-consumer-populated-matrix.log",
+        "/tmp/r03-consumer-populated-web-build.log",
+        "/tmp/r03-consumer-quality-format.log",
+        "/tmp/r03-consumer-shared-regression.log",
+        "/tmp/r03-consumer-theme-baseline-final.log",
+        "/tmp/r03-consumer-theme-baseline.log",
+        "/tmp/r03-consumer-theme-dark.log",
+        "/tmp/r03-consumer-theme-matrix.log",
+        "/tmp/r03-consumer-types.log",
+        "/tmp/r03-consumer-ui-build-final.log",
+        "/tmp/r03-consumer-ui-build.log",
+        "/tmp/r03-consumer-units.log",
+        "/tmp/r03-consumer-web-build-final.log",
+        "/tmp/r03-consumer-web-build.log",
+        "/tmp/r03-direction-browser.log",
+        "/tmp/r03-direction-budgets.log",
+        "/tmp/r03-direction-build.log",
+        "/tmp/r03-direction-format.log",
+        "/tmp/r03-direction-lint.log",
+        "/tmp/r03-direction-types.log",
+        "/tmp/r03-consumer-audit-check-final.log",
+        "/tmp/r03-consumer-audit-check.log",
+        "/tmp/r03-consumer-audit-prs.log",
+        "/tmp/r03-consumer-audit-requirements.log",
+        "/tmp/r03-consumer-audit-skips.log",
+        "/tmp/r03-consumer-backlog.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 114,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-03.03.06"
+          ],
+          "reason": "Saved IANA preference, strict persistence and audit, searchable selection, preview, recovery/reload and actual timestamp consumers verified; locale controls calendar choice. All recorded historical deferrals satisfied.",
+          "source_revision": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
+          "evidence": "audit/evidence/step-reviews.json#R03-consumer-theme-time"
+        },
+        {
+          "pr": 156,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.01.02"
+          ],
+          "reason": "Configured colors and light/dark themes applied to auth/public/customer/admin and email/notification previews, with live branding preview and relevant accessibility checks. All recorded historical deferrals satisfied.",
+          "source_revision": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
+          "evidence": "audit/evidence/step-reviews.json#R03-consumer-theme-time"
+        }
+      ]
     }
   ]
 }

@@ -869,56 +869,28 @@
     },
     {
       "task_key": "02-auth-users-admin.md#T-09.01.02",
-      "status": "partial",
-      "reviewed_sha": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
+      "status": "acceptance_verified",
+      "reviewed_sha": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 640,
       "requirement": "**T-09.01.02 — Theme application**\n\n- Description: Branding settings applied to auth pages, public pages, email templates, and notification templates. Full light/dark theme support.\n- Technical notes: CSS custom properties injected from brand config. Email templates reference brand colors. Both themes independently configurable or derived from primary.\n- UI/UX: Instant preview on dashboard. Consistent across all touchpoints.\n- Dependencies: T-09.01.01\n- Complexity: M",
       "requirement_sha256": "fd368c04fb88320bbf32b5db7b103671790f38a2cf6e8df57d35b9b4d8586f81",
       "source_evidence": [
         {
-          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
-          "sha256": "468d4d2f4c9b6f250c636a595b013a041aa94cd8ef348f7b02910227338c818b"
-        },
-        {
-          "path": "apps/web/src/providers/BrandThemeProvider.test.tsx",
-          "sha256": "03a5a744c58f38a18aee5bb2e024455cdefafa50d1d4c692f814f1cdb2c8235b"
-        },
-        {
-          "path": "apps/web/src/components/AuthLayout.tsx",
-          "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
-        },
-        {
-          "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "cd2e193df082b24213dd8bf6922d2e0b8ce6af52f9b450a6cc0a47bc1bb1b5e3"
-        },
-        {
           "path": "apps/web/e2e/branding-theme.spec.ts",
           "sha256": "1b181e5ee0188b3917130ac7765b149666765843a263ef4396682493a8f8d4d0"
         },
         {
-          "path": "apps/web/e2e/branding-validation.spec.ts",
-          "sha256": "2ce984ac67bde587fac3a640f924d2a495512560d4e081bdb3b77604db6ab1f1"
+          "path": "apps/web/e2e/consumer-theme.spec.ts",
+          "sha256": "10d399975c6462196718720791a91daa87d2126a34a9f19b1b1f9fcbc776c2e5"
         },
         {
           "path": "apps/web/e2e/direction-component.spec.ts",
           "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
         },
         {
-          "path": "apps/web/e2e/fixtures/theme/index.html",
-          "sha256": "4ea94e81e1d890e6fcbd74e3f8341ebe7d00b314861081bd84b17d52b39f5160"
-        },
-        {
-          "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "3730dcfac5eb9c5d46f60b3c45a3090c9e49c0f64ad24b2dc3fff93664947348"
-        },
-        {
-          "path": "apps/web/e2e/public-theme.spec.ts",
-          "sha256": "18f841d95471ceed127bd21795b923e7da4baa8fc7cd4cb272ee7f8d0f04a4d0"
-        },
-        {
-          "path": "apps/web/e2e/registration-consent.spec.ts",
-          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
         },
         {
           "path": "apps/web/e2e/terms-theme.spec.ts",
@@ -929,183 +901,233 @@
           "sha256": "4f48d63df8fdf9101aedc594672d2a869b55cddd1af0d9e18f6a40c6d9f82d8e"
         },
         {
-          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-          "sha256": "7cc2b3d60c8e36111c4623ec8087e8b5a3b01c36750224b352c667f6d7d76a93"
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "38cbbca538d8e8c46e963f30db2a26e905dc07d59c3e418426b0e86c524ad97c"
         },
         {
-          "path": "apps/web/src/components/RouteSkeleton.tsx",
-          "sha256": "566b6447c494f11df5a730dc834e7deaaa7d4ce347cd231337570605beb36b54"
+          "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
+          "sha256": "53db2604bebacba6f0e98c3480527626c451d9d6e5085232d93f572eeb50b12f"
         },
         {
-          "path": "apps/web/src/components/TosBanner.tsx",
-          "sha256": "a54074b6645072f702262cea896690ca7ddaf2b210cc8e06e90f836b6278ce0d"
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "241eceb68e909d7c4237077426efb2af7997eddc67906f54a21a449f5792889f"
         },
         {
-          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
-          "sha256": "0994d4bc3089d49be239ca499fbc1708ecac50a0dc6742e331a49b9f2de9cfff"
+          "path": "apps/web/src/components/DefaultProfileModal.tsx",
+          "sha256": "77e14299473a0464513467847daadf000ca6efc24008e18787498196d72c950f"
         },
         {
-          "path": "apps/web/src/routes/activate.tsx",
-          "sha256": "539969c1ae9fdfab9c2960a0ed0d7d5e8c492ed78bc68a37910ce99f033bc556"
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "7008c88de2d025a97c22cbd6d1894c8aded371cac57e8aea9db81f20cd3a64b5"
         },
         {
-          "path": "apps/web/src/routes/forgot-password.tsx",
-          "sha256": "360e48c5b24fa25b64320cf299bf59bde038f2b373fb42409d856d5664c4a645"
+          "path": "apps/web/src/components/NotificationBell.tsx",
+          "sha256": "ae34730ff6b681b7c77844e268c406abd03f4fc61915d90640c2aac9e4776987"
         },
         {
-          "path": "apps/web/src/routes/register/index.tsx",
-          "sha256": "b78ed42024191c6f7881b1f5f66c33fe7c68319d081c4b707191e4deef63fa87"
+          "path": "apps/web/src/components/NotificationRow.tsx",
+          "sha256": "4d954a8e8e951f0e614715e0c1dd0d63f48a3634d4fac8aeec4738a5f5c7fc60"
         },
         {
-          "path": "apps/web/src/routes/register/verify.tsx",
-          "sha256": "065335299ba370f72ffc27b0ea77c15b5d70ca183f1a31fb66623feb1c145a09"
+          "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+          "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
         },
         {
-          "path": "apps/web/src/routes/terms.tsx",
-          "sha256": "ad3b50ca831cb442a719b4213762a7403c7f4d049e7c6921c76ad55d4c730bf8"
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "f4ccc8c951dc09fe0a52dd619c4724ba311d7cb7485d6d7bd8ca0c5eebd9f04e"
         },
         {
-          "path": "packages/i18n/src/terms.ts",
-          "sha256": "870d02e6f70fd799a530c30736e1207a6c25b2bed050c34b75873e7ab1ccbc1b"
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "48948013a9b3dd2a7c3c87089f057bfbf704efb5845df53fca98b373af93f4f7"
         },
         {
-          "path": "packages/ui/src/components/ui/alert.tsx",
-          "sha256": "d26c81532decb8b0f6b4b958af376ce2b64c21af31bd1a23c1a5c67b582fce98"
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
-          "path": "packages/ui/src/components/ui/button.tsx",
-          "sha256": "c6a393b7d3f2c1835af2801ea8e9d302be5f72cb4223bb6254f25339dcdd3019"
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "bf685ddaf2564fb18b8fb11c64e56152da718a3b4d98506fb71765c331f4d7fb"
         },
         {
-          "path": "packages/ui/src/components/ui/dialog.tsx",
-          "sha256": "b1d6360974aace083220f8961c458c53821d7fa2457c8e9fa47d039533120b90"
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "9cbf3e5c3e89a7bf0251fa9347ebd7a42eda1d770addceec659254cde4fec05e"
         },
         {
-          "path": "packages/ui/src/components/ui/page-states.tsx",
-          "sha256": "7e7aa6c9832690e0beb6c1f36e4980b92040a96d9707b6cd8d81c6e067828200"
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "274822c5b8c6c33b186173b59337d0890a0b946c19e5168e379330b28800f046"
         },
         {
-          "path": "packages/ui/src/page-states.test.tsx",
-          "sha256": "97cd8ca78e30c5141adf3bf4e56630bbc982d17dae5593dc98b8c15483490295"
+          "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+          "sha256": "bb7cc279e25d2a8264ba0304bf095359396005f543550e6da806f4fadd36cc23"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+        },
+        {
+          "path": "apps/web/src/hooks/useDirection.ts",
+          "sha256": "be6a237736ac7820d0aaa20bab598a68ad8d82671a250c77d7115a1cbf8e035c"
+        },
+        {
+          "path": "apps/web/src/hooks/useLocale.ts",
+          "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+        },
+        {
+          "path": "apps/web/src/hooks/useTimezone.ts",
+          "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+        },
+        {
+          "path": "apps/web/src/pages/AIChat.tsx",
+          "sha256": "e2b9ada42742aedfc01c6b1b23f4f27d88bd7de3e6d9f3a472ac4f57d90b605b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "a622f4e1ae5316d9767ddd8440813683ceca94e36c553923efd4023e9fc9fc2c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "c664ce9eacbaf353a617e504e533d05be581cdb6e5755295c8e0c4d734375b72"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "4776a595aea33683e6974d14c9f13f8959c524e2357f7a90e737996a6c7ed56f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "ac1d76a635339aeb53703abaec9b3d23ae39c24a3a83034f90985d98e97557c4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "9f96ac97367406e25c07b766164b25c212d45168f19b0b90f31994f6ae690940"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
+        },
+        {
+          "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+          "sha256": "6bcfb8c95f4f0654b2f6b623da47b117292f843a1729ed32a9e7fbb860003e82"
+        },
+        {
+          "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+          "sha256": "fe433be9a82560656b0107b3204527bf8f31f89ecddd53aa512a80718b341b41"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+          "sha256": "8045c104029b4870074b72e5b240568758717934bf62dd3049828e63722b349f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "4e938c51757e289ac1a811060baae385ca963eb39912a3491117735467b7c7cd"
+        },
+        {
+          "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+          "sha256": "3c543beb38cf424dd0daf22247844a19ea4d5fb30f3fe3cceb8c0be037cf253b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "12f39d7c04949bd5f00c29f4b36ba169ff8f3c5afc3eb79e501dc688c4a59c85"
+        },
+        {
+          "path": "apps/web/src/pages/ChartsPage.tsx",
+          "sha256": "59fe536f68eb3fa48b099f2f48895a3805743ccf3c9ef451ff3de226cd439547"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "20c0e9d57e7f4df6e03390e6c3cc16417125481df7454c7c3c7a83742595cf95"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "fb8234931becfa4b3fbbaf736b6089fb003e131a395ca5d478047464033266f8"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "e94f8793f3a68bc95c3d8a379638e8e6a9506f44a52e637620a6ea2d5eb74080"
+        },
+        {
+          "path": "apps/web/src/pages/DocumentsPage.tsx",
+          "sha256": "7ab4ab3e1021c2476f465e55af6acaafded61194650350f22f869d923a31b6d0"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "43bd5ce800247e0b1beff9402fe75de0e76ef260b394db4c1d76868f7e02df3a"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "7aa742f78a0b0e50ebdaad2bc37fc05d1c46a8ee6d54c554b8038c04b1fe6431"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "9c4c1ed6f3867348044b794e96e7f4e138d4a8bcecddc70947ef03d6defc6e59"
+        },
+        {
+          "path": "apps/web/src/pages/TosPreview.tsx",
+          "sha256": "8eb4ab60490eae7fc06cefaab2888985e8c23f1f97312f0ad68daf67255df11a"
+        },
+        {
+          "path": "apps/web/src/pages/TosRichText.tsx",
+          "sha256": "5528b6f4bad4cb37b7ac4b46153ca4ac3f377e94b458326118b0245ca1193d8b"
+        },
+        {
+          "path": "apps/web/src/pages/VideosPage.tsx",
+          "sha256": "b9fe8a1f44e8e234669709808eecb51c7f5a68f88f1f744b675afa9de6c159c6"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "e58352b8a7d34f2376f06d4fa507c04988f3d3248544299fd82b9c747096de2e"
+        },
+        {
+          "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+          "sha256": "52dd4b7b25aee2b6bc485ed4de87f6910c47cbaa2a391024cf0c88fd7e370776"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/index.tsx",
+          "sha256": "9c47f5187064ebf45171f3f879f965f038c4377214007d10bc6d37dec44762d9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.tsx",
+          "sha256": "1e798f1ecb63c33b45ec2a0de45ecc10616e765fc9156800294166677f99603d"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "ceeff6ff8ca6188e9b9eb533ee199f48f30399b3ebec3d84b9ee9ef3c314bb5a"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "3601c13e59aff2616a2636fbee10956e1dd8a46b5fbdc3b4bade5c84b8ef1e49"
+        },
+        {
+          "path": "packages/i18n/src/date-time.test.ts",
+          "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+        },
+        {
+          "path": "packages/i18n/src/date-time.ts",
+          "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "c2933448026ae5ed57eec58047efe15d1bef0c51383fb3d565680c3b5e916c22"
-        },
-        {
-          "path": "packages/ui/src/components/ui/badge.tsx",
-          "sha256": "7bfdab0e81ea50911fa31b3a116139282cd236583fd094b65cdd5b9983c2925e"
-        },
-        {
-          "path": "packages/ui/src/components/ui/checkbox.tsx",
-          "sha256": "4a609efca1f2a5376e1f85824c509e718e5be99051d85c0e5b70a3bc70cb5762"
-        },
-        {
-          "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
-          "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
-        },
-        {
-          "path": "packages/ui/src/components/ui/input.tsx",
-          "sha256": "7e838a66ec265498f1e10b72f20cdf9a1b9892510b53af5b41b7e120828dd917"
-        },
-        {
-          "path": "packages/ui/src/components/ui/native-select.tsx",
-          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
-        },
-        {
-          "path": "packages/ui/src/components/ui/radio-group.tsx",
-          "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
-        },
-        {
-          "path": "packages/ui/src/components/ui/scroll-area.tsx",
-          "sha256": "6336d9647008613020bd44d2f8537700e41d6752ce9d29d6e7f7a6bcc373ff8e"
-        },
-        {
-          "path": "packages/ui/src/components/ui/select.tsx",
-          "sha256": "6fc3e3e80fe8c3d2f6272d624085a62a8e092e4ec4088f6eb87c200b1e37c0e0"
-        },
-        {
-          "path": "packages/ui/src/components/ui/separator.tsx",
-          "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
-        },
-        {
-          "path": "packages/ui/src/components/ui/slider.tsx",
-          "sha256": "71135dfac1d5ac0b23311ab3e2511da9254b28a483a363c02aa8cfcf0788b364"
-        },
-        {
-          "path": "packages/ui/src/components/ui/switch.tsx",
-          "sha256": "5bb5aeaa213d549177b6d58c810353465dda0e672bdc0d02026c39b195079979"
-        },
-        {
-          "path": "packages/ui/src/components/ui/tabs.tsx",
-          "sha256": "3b272d84ca82512cae48dafbc2e6285e85ba71b5d8f7a3592894827660e2c33b"
-        },
-        {
-          "path": "packages/ui/src/components/ui/textarea.tsx",
-          "sha256": "b4aeba0b564e42c166f2c5d7bee517b69daa70581e09a21e2f2c3112f74915a2"
-        },
-        {
-          "path": "apps/web/e2e/feedback.spec.ts",
-          "sha256": "b4d85351ba9d507a8d982a4a0e785b7368b08c079a0139bc1acebe0f8749a54c"
-        },
-        {
-          "path": "apps/web/src/components/ApplicationToaster.tsx",
-          "sha256": "b5889f63c873a6fa2c0bc7f511843c9dd71cd529bb397e63c7b7de99f0e2be32"
-        },
-        {
-          "path": "packages/ui/src/components/ui/avatar.tsx",
-          "sha256": "66ffabb69b3762a04490074b8bf599f4f53b83d8336cda62936f66d00cf8f3c9"
-        },
-        {
-          "path": "packages/ui/src/components/ui/calendar.tsx",
-          "sha256": "6ec34d32f8be0d49d7a55f963206194802a168fb9e14adcdfca48d2742fcc69f"
-        },
-        {
-          "path": "packages/ui/src/components/ui/command.tsx",
-          "sha256": "abde0544578867ee92391001770068ab41ca89cf00e21428083644d3a1531594"
-        },
-        {
-          "path": "packages/ui/src/components/ui/input-group.tsx",
-          "sha256": "73815558b086616611e426954a86fc016433898d2834331b5b3c32891df5faf9"
-        },
-        {
-          "path": "packages/ui/src/components/ui/progress.tsx",
-          "sha256": "8dbddebc0926756e9df56d45f4e518c26cf3e0e96b42621a12e7d016c1c66f15"
-        },
-        {
-          "path": "packages/ui/src/components/ui/sheet.tsx",
-          "sha256": "e966374723f7b6d082befe0775efea214d2a515a5bf34ce7f8f5a3b4f451d1f6"
-        },
-        {
-          "path": "packages/ui/src/components/ui/skeleton.tsx",
-          "sha256": "d22459a4fed0c76bfb7e609bd9ccd30d86b35237c9fda0453d778c37509fb5ea"
-        },
-        {
-          "path": "packages/ui/src/components/ui/toast.tsx",
-          "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
-        },
-        {
-          "path": "packages/ui/src/components/ui/tooltip.tsx",
-          "sha256": "7f139d130d3a25b4ebffe6bb5a5096ce07e0f48b04bfcdf40f3a540d024698b8"
+          "sha256": "222689c7a991e307b59f562d61c57e345867f4436e7c66f3204dc2ce09161a66"
         }
       ],
       "checks": [
-        "Seven provider regression tests pass; all four initial cases failed before repair",
-        "Real activation refreshes title and component colors immediately in both languages",
-        "Email/notification branding and actual previews are now verified through R02-email-branding-delivery, R02-branded-admin-previews and subsequent contact/delivery repairs. audit/evidence/step-reviews.json#R02-provider-template-authoring",
-        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified.",
-        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing.",
-        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass.",
-        "audit/evidence/step-reviews.json#R03-auxiliary-ui: auxiliary fixes reviewed;21 distinct browser/49 UI cases and42 unchanged budgets pass. Prior theme/core evidence retained."
+        "Configured colors and light/dark themes applied to auth/public/customer/admin and email/notification previews, with live branding preview and relevant accessibility checks.",
+        "audit/evidence/step-reviews.json#R03-consumer-theme-time"
       ],
-      "limitations": [
-        "Remaining implemented consumer theme/RTL/keyboard/loading states stay R03. DashboardLayout still uses light-only backgrounds/borders/text;44 files with literal gray/white styling are candidates for bounded review, not44 established defects."
-      ],
+      "limitations": [],
       "merged_prs": [
         156
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui"
+      "review_record": "audit/evidence/step-reviews.json#R03-consumer-theme-time",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R03-controls",
+        "audit/evidence/step-reviews.json#R03-auxiliary-ui",
+        "audit/evidence/step-reviews.json#R01-account-settings"
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.02.03",
@@ -1341,7 +1363,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
-          "sha256": "2c5a401625d460a50731ebdb33425affbcfca05722840031f1e9d93b4f56d80a"
+          "sha256": "3c543beb38cf424dd0daf22247844a19ea4d5fb30f3fe3cceb8c0be037cf253b"
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -1542,7 +1564,7 @@
         },
         {
           "path": "apps/web/src/pages/DashboardLayout.tsx",
-          "sha256": "6c1f40a11ce19dc4bdfa59696c7d4c8b2aef3eefbc1f3fe255245708d076a214"
+          "sha256": "fb8234931becfa4b3fbbaf736b6089fb003e131a395ca5d478047464033266f8"
         },
         {
           "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -1603,15 +1625,15 @@
         },
         {
           "path": "apps/web/src/pages/AdminTosPage.tsx",
-          "sha256": "c18460a0fef0eed6051674ba830ee804ce1a334604e36ddb88cb7b562b408c35"
+          "sha256": "4e938c51757e289ac1a811060baae385ca963eb39912a3491117735467b7c7cd"
         },
         {
           "path": "apps/web/src/pages/TosRichText.tsx",
-          "sha256": "68cc5f3d2dc55a0a440b901e9da5de811fb4a96bc7eef210c80991e25d20acbd"
+          "sha256": "5528b6f4bad4cb37b7ac4b46153ca4ac3f377e94b458326118b0245ca1193d8b"
         },
         {
           "path": "apps/web/src/pages/TosPreview.tsx",
-          "sha256": "546a19686edcd37d14f1df9b66c0c50cfad52ce7c3ed01a537fd954a050fe47d"
+          "sha256": "8eb4ab60490eae7fc06cefaab2888985e8c23f1f97312f0ad68daf67255df11a"
         },
         {
           "path": "apps/web/src/pages/admin-tos-text.ts",
@@ -1774,15 +1796,15 @@
         },
         {
           "path": "apps/web/src/pages/AdminTosPage.tsx",
-          "sha256": "c18460a0fef0eed6051674ba830ee804ce1a334604e36ddb88cb7b562b408c35"
+          "sha256": "4e938c51757e289ac1a811060baae385ca963eb39912a3491117735467b7c7cd"
         },
         {
           "path": "apps/web/src/pages/TosRichText.tsx",
-          "sha256": "68cc5f3d2dc55a0a440b901e9da5de811fb4a96bc7eef210c80991e25d20acbd"
+          "sha256": "5528b6f4bad4cb37b7ac4b46153ca4ac3f377e94b458326118b0245ca1193d8b"
         },
         {
           "path": "apps/web/src/pages/TosPreview.tsx",
-          "sha256": "546a19686edcd37d14f1df9b66c0c50cfad52ce7c3ed01a537fd954a050fe47d"
+          "sha256": "8eb4ab60490eae7fc06cefaab2888985e8c23f1f97312f0ad68daf67255df11a"
         },
         {
           "path": "apps/web/src/pages/admin-tos-text.ts",
@@ -1963,7 +1985,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoicesPage.tsx",
-          "sha256": "f977f538985fc8b2680d673d97e6ddbb717b0898d2c4db321bdc5f5f32d0c2a1"
+          "sha256": "7aa742f78a0b0e50ebdaad2bc37fc05d1c46a8ee6d54c554b8038c04b1fe6431"
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -1991,11 +2013,11 @@
         },
         {
           "path": "apps/web/src/components/WalletBalanceCard.tsx",
-          "sha256": "3ed84578f7406c59455c1b7eac5b70c96fa29ef027dc6e4631af7e43b5396b60"
+          "sha256": "9cbf3e5c3e89a7bf0251fa9347ebd7a42eda1d770addceec659254cde4fec05e"
         },
         {
           "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
-          "sha256": "1c951d2e67bc689e4fdb4f4a669ffb1143952fe330cf3bd402e2c33e59652b5a"
+          "sha256": "274822c5b8c6c33b186173b59337d0890a0b946c19e5168e379330b28800f046"
         },
         {
           "path": "packages/ui/src/components/base-ui/date-picker.tsx",
@@ -4318,7 +4340,7 @@
         },
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-          "sha256": "512d12cf2d77852a695daa8a61930d8395fc0fefc38bf99fef05b974a620b588"
+          "sha256": "20c0e9d57e7f4df6e03390e6c3cc16417125481df7454c7c3c7a83742595cf95"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -4420,7 +4442,7 @@
       "source_evidence": [
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-          "sha256": "512d12cf2d77852a695daa8a61930d8395fc0fefc38bf99fef05b974a620b588"
+          "sha256": "20c0e9d57e7f4df6e03390e6c3cc16417125481df7454c7c3c7a83742595cf95"
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -4559,7 +4581,7 @@
       "source_evidence": [
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-          "sha256": "512d12cf2d77852a695daa8a61930d8395fc0fefc38bf99fef05b974a620b588"
+          "sha256": "20c0e9d57e7f4df6e03390e6c3cc16417125481df7454c7c3c7a83742595cf95"
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -4642,7 +4664,7 @@
       "source_evidence": [
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-          "sha256": "512d12cf2d77852a695daa8a61930d8395fc0fefc38bf99fef05b974a620b588"
+          "sha256": "20c0e9d57e7f4df6e03390e6c3cc16417125481df7454c7c3c7a83742595cf95"
         },
         {
           "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -4765,7 +4787,7 @@
         },
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-          "sha256": "512d12cf2d77852a695daa8a61930d8395fc0fefc38bf99fef05b974a620b588"
+          "sha256": "20c0e9d57e7f4df6e03390e6c3cc16417125481df7454c7c3c7a83742595cf95"
         },
         {
           "path": "apps/web/src/routes/admin/crm/corrections.tsx",
@@ -4851,7 +4873,7 @@
         },
         {
           "path": "apps/web/src/pages/CrmProfileDetail.tsx",
-          "sha256": "512d12cf2d77852a695daa8a61930d8395fc0fefc38bf99fef05b974a620b588"
+          "sha256": "20c0e9d57e7f4df6e03390e6c3cc16417125481df7454c7c3c7a83742595cf95"
         },
         {
           "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -5191,7 +5213,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
-          "sha256": "6f9cdd8d1e0d2e86d6f0c9b84360cc4738b57bd13b5872f09171329f02bcd471"
+          "sha256": "4776a595aea33683e6974d14c9f13f8959c524e2357f7a90e737996a6c7ed56f"
         },
         {
           "path": "apps/web/e2e/crm-dashboard.spec.ts",
@@ -5384,7 +5406,7 @@
         },
         {
           "path": "apps/web/src/pages/DashboardPage.tsx",
-          "sha256": "22f970ce5a3fc3c9f26068d938686e3a2ef4e343d5f06bf44ee7b11c37c848f6"
+          "sha256": "e94f8793f3a68bc95c3d8a379638e8e6a9506f44a52e637620a6ea2d5eb74080"
         },
         {
           "path": "apps/web/src/routes/__root.tsx",
@@ -7008,7 +7030,7 @@
         },
         {
           "path": "apps/web/src/components/DefaultProfileModal.tsx",
-          "sha256": "2de92474f5af7378a03dafdcb84e5af2f402f433adb3cce9345a2d46ebe759bb"
+          "sha256": "77e14299473a0464513467847daadf000ca6efc24008e18787498196d72c950f"
         }
       ],
       "checks": [
@@ -7327,7 +7349,7 @@
         },
         {
           "path": "apps/web/src/components/ProfileSwitcher.tsx",
-          "sha256": "599432cf0743497b45dd84e24e6e1c9ef472947e1ed60944303684cd605da5ba"
+          "sha256": "f4ccc8c951dc09fe0a52dd619c4724ba311d7cb7485d6d7bd8ca0c5eebd9f04e"
         },
         {
           "path": "apps/web/src/lib/profile-context.ts",
@@ -7384,7 +7406,7 @@
         },
         {
           "path": "apps/web/src/components/DefaultProfileModal.tsx",
-          "sha256": "2de92474f5af7378a03dafdcb84e5af2f402f433adb3cce9345a2d46ebe759bb"
+          "sha256": "77e14299473a0464513467847daadf000ca6efc24008e18787498196d72c950f"
         },
         {
           "path": "apps/web/src/routes/_app/settings/profile.tsx",
@@ -7437,7 +7459,7 @@
         },
         {
           "path": "apps/web/src/routes/_app/settings/profile.tsx",
-          "sha256": "64f8346f7691e38bc7bc671ddd5e7f2ccdf0158574707f7f2eec146d49577c1f"
+          "sha256": "3601c13e59aff2616a2636fbee10956e1dd8a46b5fbdc3b4bade5c84b8ef1e49"
         }
       ],
       "checks": [
@@ -7527,7 +7549,7 @@
         },
         {
           "path": "apps/web/src/routes/_app/settings/index.tsx",
-          "sha256": "94e5f2b4ddbe05c2178a0e8f0cc1946c2753a5d77e10b71e00d51307ef48b193"
+          "sha256": "ceeff6ff8ca6188e9b9eb533ee199f48f30399b3ebec3d84b9ee9ef3c314bb5a"
         },
         {
           "path": "packages/i18n/src/preferences.ts",
@@ -7599,44 +7621,259 @@
       "requirement_sha256": "458e8470ed627d52a80968acf9417a8713a56c6c55a14897c49a1e17c9740f17",
       "source_evidence": [
         {
-          "path": "apps/api/src/user-settings/user-settings.controller.ts",
-          "sha256": "c810aaa7b8ce78d50f63d1566a23ddcb50e95c9c893232d564ebc587af8a8481"
+          "path": "apps/web/e2e/branding-theme.spec.ts",
+          "sha256": "1b181e5ee0188b3917130ac7765b149666765843a263ef4396682493a8f8d4d0"
         },
         {
-          "path": "apps/api/src/user-settings/timezone-http.integration.test.ts",
-          "sha256": "a40749eb612fa60400f044b760f2d0fee5614fa6ec669a3225a5035b3df04cbe"
+          "path": "apps/web/e2e/consumer-theme.spec.ts",
+          "sha256": "10d399975c6462196718720791a91daa87d2126a34a9f19b1b1f9fcbc776c2e5"
         },
         {
-          "path": "apps/web/src/routes/_app/settings/timezone.tsx",
-          "sha256": "3424252822d7c2e305c62edb02a96e37b2a5a964e4b42a3e86bffe5f9f02a78d"
+          "path": "apps/web/e2e/direction-component.spec.ts",
+          "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+        },
+        {
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
+        },
+        {
+          "path": "apps/web/e2e/terms-theme.spec.ts",
+          "sha256": "e7abb4fe9281ec84597b5bf7d5d43f31d824163feb5dec18925caad071efa139"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "4f48d63df8fdf9101aedc594672d2a869b55cddd1af0d9e18f6a40c6d9f82d8e"
+        },
+        {
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "38cbbca538d8e8c46e963f30db2a26e905dc07d59c3e418426b0e86c524ad97c"
+        },
+        {
+          "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
+          "sha256": "53db2604bebacba6f0e98c3480527626c451d9d6e5085232d93f572eeb50b12f"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "241eceb68e909d7c4237077426efb2af7997eddc67906f54a21a449f5792889f"
+        },
+        {
+          "path": "apps/web/src/components/DefaultProfileModal.tsx",
+          "sha256": "77e14299473a0464513467847daadf000ca6efc24008e18787498196d72c950f"
+        },
+        {
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "7008c88de2d025a97c22cbd6d1894c8aded371cac57e8aea9db81f20cd3a64b5"
+        },
+        {
+          "path": "apps/web/src/components/NotificationBell.tsx",
+          "sha256": "ae34730ff6b681b7c77844e268c406abd03f4fc61915d90640c2aac9e4776987"
+        },
+        {
+          "path": "apps/web/src/components/NotificationRow.tsx",
+          "sha256": "4d954a8e8e951f0e614715e0c1dd0d63f48a3634d4fac8aeec4738a5f5c7fc60"
+        },
+        {
+          "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+          "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
+        },
+        {
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "f4ccc8c951dc09fe0a52dd619c4724ba311d7cb7485d6d7bd8ca0c5eebd9f04e"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "48948013a9b3dd2a7c3c87089f057bfbf704efb5845df53fca98b373af93f4f7"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "bf685ddaf2564fb18b8fb11c64e56152da718a3b4d98506fb71765c331f4d7fb"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "9cbf3e5c3e89a7bf0251fa9347ebd7a42eda1d770addceec659254cde4fec05e"
+        },
+        {
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "274822c5b8c6c33b186173b59337d0890a0b946c19e5168e379330b28800f046"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+          "sha256": "bb7cc279e25d2a8264ba0304bf095359396005f543550e6da806f4fadd36cc23"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+        },
+        {
+          "path": "apps/web/src/hooks/useDirection.ts",
+          "sha256": "be6a237736ac7820d0aaa20bab598a68ad8d82671a250c77d7115a1cbf8e035c"
+        },
+        {
+          "path": "apps/web/src/hooks/useLocale.ts",
+          "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
         },
         {
           "path": "apps/web/src/hooks/useTimezone.ts",
           "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
         },
         {
-          "path": "apps/web/e2e/timezone-settings.spec.ts",
-          "sha256": "38cbbca538d8e8c46e963f30db2a26e905dc07d59c3e418426b0e86c524ad97c"
+          "path": "apps/web/src/pages/AIChat.tsx",
+          "sha256": "e2b9ada42742aedfc01c6b1b23f4f27d88bd7de3e6d9f3a472ac4f57d90b605b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "a622f4e1ae5316d9767ddd8440813683ceca94e36c553923efd4023e9fc9fc2c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "c664ce9eacbaf353a617e504e533d05be581cdb6e5755295c8e0c4d734375b72"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "4776a595aea33683e6974d14c9f13f8959c524e2357f7a90e737996a6c7ed56f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "ac1d76a635339aeb53703abaec9b3d23ae39c24a3a83034f90985d98e97557c4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "9f96ac97367406e25c07b766164b25c212d45168f19b0b90f31994f6ae690940"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
+        },
+        {
+          "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+          "sha256": "6bcfb8c95f4f0654b2f6b623da47b117292f843a1729ed32a9e7fbb860003e82"
+        },
+        {
+          "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+          "sha256": "fe433be9a82560656b0107b3204527bf8f31f89ecddd53aa512a80718b341b41"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+          "sha256": "8045c104029b4870074b72e5b240568758717934bf62dd3049828e63722b349f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "4e938c51757e289ac1a811060baae385ca963eb39912a3491117735467b7c7cd"
+        },
+        {
+          "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+          "sha256": "3c543beb38cf424dd0daf22247844a19ea4d5fb30f3fe3cceb8c0be037cf253b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "12f39d7c04949bd5f00c29f4b36ba169ff8f3c5afc3eb79e501dc688c4a59c85"
+        },
+        {
+          "path": "apps/web/src/pages/ChartsPage.tsx",
+          "sha256": "59fe536f68eb3fa48b099f2f48895a3805743ccf3c9ef451ff3de226cd439547"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "20c0e9d57e7f4df6e03390e6c3cc16417125481df7454c7c3c7a83742595cf95"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "fb8234931becfa4b3fbbaf736b6089fb003e131a395ca5d478047464033266f8"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "e94f8793f3a68bc95c3d8a379638e8e6a9506f44a52e637620a6ea2d5eb74080"
+        },
+        {
+          "path": "apps/web/src/pages/DocumentsPage.tsx",
+          "sha256": "7ab4ab3e1021c2476f465e55af6acaafded61194650350f22f869d923a31b6d0"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "43bd5ce800247e0b1beff9402fe75de0e76ef260b394db4c1d76868f7e02df3a"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "7aa742f78a0b0e50ebdaad2bc37fc05d1c46a8ee6d54c554b8038c04b1fe6431"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "9c4c1ed6f3867348044b794e96e7f4e138d4a8bcecddc70947ef03d6defc6e59"
+        },
+        {
+          "path": "apps/web/src/pages/TosPreview.tsx",
+          "sha256": "8eb4ab60490eae7fc06cefaab2888985e8c23f1f97312f0ad68daf67255df11a"
+        },
+        {
+          "path": "apps/web/src/pages/TosRichText.tsx",
+          "sha256": "5528b6f4bad4cb37b7ac4b46153ca4ac3f377e94b458326118b0245ca1193d8b"
+        },
+        {
+          "path": "apps/web/src/pages/VideosPage.tsx",
+          "sha256": "b9fe8a1f44e8e234669709808eecb51c7f5a68f88f1f744b675afa9de6c159c6"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "e58352b8a7d34f2376f06d4fa507c04988f3d3248544299fd82b9c747096de2e"
+        },
+        {
+          "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+          "sha256": "52dd4b7b25aee2b6bc485ed4de87f6910c47cbaa2a391024cf0c88fd7e370776"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/index.tsx",
+          "sha256": "9c47f5187064ebf45171f3f879f965f038c4377214007d10bc6d37dec44762d9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.tsx",
+          "sha256": "1e798f1ecb63c33b45ec2a0de45ecc10616e765fc9156800294166677f99603d"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "ceeff6ff8ca6188e9b9eb533ee199f48f30399b3ebec3d84b9ee9ef3c314bb5a"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "3601c13e59aff2616a2636fbee10956e1dd8a46b5fbdc3b4bade5c84b8ef1e49"
+        },
+        {
+          "path": "packages/i18n/src/date-time.test.ts",
+          "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+        },
+        {
+          "path": "packages/i18n/src/date-time.ts",
+          "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "222689c7a991e307b59f562d61c57e345867f4436e7c66f3204dc2ce09161a66"
         }
       ],
       "checks": [
-        "Timezone defaults to Asia/Tehran; strict IANA input, account-only persistence, correlated audit and session expiry checks pass. Searchable keyboard selection, current-time/date/offset preview and locale-based calendar formatting are reviewed. Two unchanged browser cases cover load/save recovery and reload. Every timestamp consumer still requires R03 evidence.",
-        "Exact repairs, focused checks, historical dispositions and bounded reuse are recorded once in audit/evidence/step-reviews.json#R01-account-settings.",
-        "Immediate-base source refresh: audit/evidence/step-reviews.json#R02-marketing-consent-channels; neighboring preference/timezone handlers unchanged and focused suites pass."
+        "Saved IANA preference, strict persistence and audit, searchable selection, preview, recovery/reload and actual timestamp consumers verified; locale controls calendar choice.",
+        "audit/evidence/step-reviews.json#R03-consumer-theme-time"
       ],
       "merged_prs": [
         114
       ],
       "historically_skipped": false,
-      "status": "partial",
-      "reviewed_sha": "90f6415ec7d1f7056f928ce03ba50c9fcf58842b",
-      "limitations": [
-        "R03: link complete timestamp-consumer coverage to the account timezone while calendar selection remains locale-based."
-      ],
-      "review_record": "audit/evidence/step-reviews.json#R01-account-settings",
+      "status": "acceptance_verified",
+      "reviewed_sha": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R03-consumer-theme-time",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-account-settings",
-        "audit/final-repair-checkpoint.json"
+        "audit/final-repair-checkpoint.json",
+        "audit/evidence/step-reviews.json#R03-controls",
+        "audit/evidence/step-reviews.json#R03-auxiliary-ui"
       ]
     },
     {
@@ -8327,15 +8564,15 @@
         },
         {
           "path": "apps/web/src/pages/DashboardPage.tsx",
-          "sha256": "22f970ce5a3fc3c9f26068d938686e3a2ef4e343d5f06bf44ee7b11c37c848f6"
+          "sha256": "e94f8793f3a68bc95c3d8a379638e8e6a9506f44a52e637620a6ea2d5eb74080"
         },
         {
           "path": "apps/web/src/components/WalletBalanceCard.tsx",
-          "sha256": "3ed84578f7406c59455c1b7eac5b70c96fa29ef027dc6e4631af7e43b5396b60"
+          "sha256": "9cbf3e5c3e89a7bf0251fa9347ebd7a42eda1d770addceec659254cde4fec05e"
         },
         {
           "path": "apps/web/src/components/QuickStatusCards.tsx",
-          "sha256": "1dd94195b50ad7ab1cab11ca96d65bd5fe459dd8832af7320c28dd0da249a590"
+          "sha256": "48948013a9b3dd2a7c3c87089f057bfbf704efb5845df53fca98b373af93f4f7"
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -8439,7 +8676,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-          "sha256": "b186bd49e133d425cddae6f67b3396812ea2b88c063b495a4832be4c318b4e47"
+          "sha256": "a622f4e1ae5316d9767ddd8440813683ceca94e36c553923efd4023e9fc9fc2c"
         },
         {
           "path": "apps/web/e2e/approval-queue.spec.ts",
@@ -8523,7 +8760,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-          "sha256": "b186bd49e133d425cddae6f67b3396812ea2b88c063b495a4832be4c318b4e47"
+          "sha256": "a622f4e1ae5316d9767ddd8440813683ceca94e36c553923efd4023e9fc9fc2c"
         },
         {
           "path": "packages/db/src/schema/approval-requests.ts",
@@ -8610,7 +8847,7 @@
         },
         {
           "path": "apps/web/src/pages/WalletPage.tsx",
-          "sha256": "31ca8b641846903edf480420c895179f9f87f5e29919570cbb3f6e6c8d010fa9"
+          "sha256": "e58352b8a7d34f2376f06d4fa507c04988f3d3248544299fd82b9c747096de2e"
         },
         {
           "path": "packages/shared/src/finance/wallet-bank-receipt-topup.ts",
@@ -8707,7 +8944,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
-          "sha256": "2880b44433f5e65cbeef53e625f3d634d0201ec487d4fb6abf67ca3fdb8ce223"
+          "sha256": "12f39d7c04949bd5f00c29f4b36ba169ff8f3c5afc3eb79e501dc688c4a59c85"
         },
         {
           "path": "packages/i18n/src/wallet-receipts.ts",
@@ -8926,7 +9163,7 @@
         },
         {
           "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
-          "sha256": "55ae7eb54a2c332aef35405a68de215be2cfbaf8122cd1246d271ea36dababa7"
+          "sha256": "43bd5ce800247e0b1beff9402fe75de0e76ef260b394db4c1d76868f7e02df3a"
         },
         {
           "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -9283,11 +9520,11 @@
         },
         {
           "path": "apps/web/src/pages/WalletPage.tsx",
-          "sha256": "31ca8b641846903edf480420c895179f9f87f5e29919570cbb3f6e6c8d010fa9"
+          "sha256": "e58352b8a7d34f2376f06d4fa507c04988f3d3248544299fd82b9c747096de2e"
         },
         {
           "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-          "sha256": "6bfa65952d07da075e5a6bde09711622e9e0bfe92f51de3462fe1352971677e3"
+          "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
         },
         {
           "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -9352,7 +9589,7 @@
         },
         {
           "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
-          "sha256": "6bfa65952d07da075e5a6bde09711622e9e0bfe92f51de3462fe1352971677e3"
+          "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
         },
         {
           "path": "apps/web/src/routes/_app/wallet.tsx",
@@ -9416,11 +9653,11 @@
         },
         {
           "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
-          "sha256": "1c951d2e67bc689e4fdb4f4a669ffb1143952fe330cf3bd402e2c33e59652b5a"
+          "sha256": "274822c5b8c6c33b186173b59337d0890a0b946c19e5168e379330b28800f046"
         },
         {
           "path": "apps/web/src/pages/WalletPage.tsx",
-          "sha256": "31ca8b641846903edf480420c895179f9f87f5e29919570cbb3f6e6c8d010fa9"
+          "sha256": "e58352b8a7d34f2376f06d4fa507c04988f3d3248544299fd82b9c747096de2e"
         },
         {
           "path": "packages/shared/src/finance/wallet-topup-config.ts",
@@ -9639,7 +9876,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
-          "sha256": "6f9cdd8d1e0d2e86d6f0c9b84360cc4738b57bd13b5872f09171329f02bcd471"
+          "sha256": "4776a595aea33683e6974d14c9f13f8959c524e2357f7a90e737996a6c7ed56f"
         },
         {
           "path": "apps/web/e2e/chargeback-dashboard.spec.ts",
@@ -11978,7 +12215,7 @@
         },
         {
           "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
           "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -12142,7 +12379,7 @@
         },
         {
           "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
           "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -12306,7 +12543,7 @@
         },
         {
           "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
           "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -12470,7 +12707,7 @@
         },
         {
           "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
           "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -12634,7 +12871,7 @@
         },
         {
           "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
           "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -12798,7 +13035,7 @@
         },
         {
           "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
           "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -12962,7 +13199,7 @@
         },
         {
           "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
           "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -13199,7 +13436,7 @@
         },
         {
           "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
           "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -13363,7 +13600,7 @@
         },
         {
           "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
           "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -13600,7 +13837,7 @@
         },
         {
           "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
-          "sha256": "6d58d862e164c694be356f2e126ca7c302944ca4fd78182d6cf349c8b0cc5e14"
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
           "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
@@ -13825,7 +14062,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
-          "sha256": "b186bd49e133d425cddae6f67b3396812ea2b88c063b495a4832be4c318b4e47"
+          "sha256": "a622f4e1ae5316d9767ddd8440813683ceca94e36c553923efd4023e9fc9fc2c"
         },
         {
           "path": "apps/web/e2e/approval-queue.spec.ts",
@@ -14680,15 +14917,15 @@
         },
         {
           "path": "apps/web/src/components/NotificationBell.tsx",
-          "sha256": "a2f512a2848a92c9e513255aabaf5a18e6b396207025da60ba1f543af87f64ac"
+          "sha256": "ae34730ff6b681b7c77844e268c406abd03f4fc61915d90640c2aac9e4776987"
         },
         {
           "path": "apps/web/src/components/NotificationRow.tsx",
-          "sha256": "569c112a9046ddf5b554e77bac1729ac964e3e555ef6bd02717060aced8e2450"
+          "sha256": "4d954a8e8e951f0e614715e0c1dd0d63f48a3634d4fac8aeec4738a5f5c7fc60"
         },
         {
           "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-          "sha256": "b780bee4b33b7943db0858c3553dd528c4e0390af0f803610fd7045667d0629a"
+          "sha256": "9c4c1ed6f3867348044b794e96e7f4e138d4a8bcecddc70947ef03d6defc6e59"
         },
         {
           "path": "apps/web/src/lib/notifications.ts",
@@ -14801,7 +15038,7 @@
         },
         {
           "path": "apps/web/src/pages/DashboardLayout.tsx",
-          "sha256": "6c1f40a11ce19dc4bdfa59696c7d4c8b2aef3eefbc1f3fe255245708d076a214"
+          "sha256": "fb8234931becfa4b3fbbaf736b6089fb003e131a395ca5d478047464033266f8"
         },
         {
           "path": "apps/web/e2e/team.spec.ts",
@@ -14985,7 +15222,7 @@
         },
         {
           "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-          "sha256": "4c0d6ba652099eaaa404b498f09e2b29f90de484582d40b7c1e9416669c36aca"
+          "sha256": "7008c88de2d025a97c22cbd6d1894c8aded371cac57e8aea9db81f20cd3a64b5"
         },
         {
           "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
@@ -15221,11 +15458,11 @@
         },
         {
           "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "packages/db/src/schema/email-provider-configs.ts",
@@ -15348,11 +15585,11 @@
         },
         {
           "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "packages/db/src/schema/email-provider-configs.ts",
@@ -15689,7 +15926,7 @@
         },
         {
           "path": "apps/web/src/components/DeadLetterPanel.tsx",
-          "sha256": "814a3b69621397e2894149d44638bcb7e5a847d2b48fa12b197cd750df4a0d2e"
+          "sha256": "241eceb68e909d7c4237077426efb2af7997eddc67906f54a21a449f5792889f"
         },
         {
           "path": "deploy/monitoring/notification-alerts.yml",
@@ -15823,7 +16060,7 @@
         },
         {
           "path": "apps/web/src/components/DeadLetterPanel.tsx",
-          "sha256": "814a3b69621397e2894149d44638bcb7e5a847d2b48fa12b197cd750df4a0d2e"
+          "sha256": "241eceb68e909d7c4237077426efb2af7997eddc67906f54a21a449f5792889f"
         },
         {
           "path": "apps/web/e2e/failed-notifications.spec.ts",
@@ -15897,15 +16134,15 @@
       "source_evidence": [
         {
           "path": "apps/web/src/components/NotificationBell.tsx",
-          "sha256": "a2f512a2848a92c9e513255aabaf5a18e6b396207025da60ba1f543af87f64ac"
+          "sha256": "ae34730ff6b681b7c77844e268c406abd03f4fc61915d90640c2aac9e4776987"
         },
         {
           "path": "apps/web/src/components/NotificationRow.tsx",
-          "sha256": "569c112a9046ddf5b554e77bac1729ac964e3e555ef6bd02717060aced8e2450"
+          "sha256": "4d954a8e8e951f0e614715e0c1dd0d63f48a3634d4fac8aeec4738a5f5c7fc60"
         },
         {
           "path": "apps/web/src/pages/NotificationCenterPage.tsx",
-          "sha256": "b780bee4b33b7943db0858c3553dd528c4e0390af0f803610fd7045667d0629a"
+          "sha256": "9c4c1ed6f3867348044b794e96e7f4e138d4a8bcecddc70947ef03d6defc6e59"
         },
         {
           "path": "apps/web/src/lib/notifications.ts",
@@ -15976,7 +16213,7 @@
         },
         {
           "path": "apps/web/src/components/NotificationBell.tsx",
-          "sha256": "a2f512a2848a92c9e513255aabaf5a18e6b396207025da60ba1f543af87f64ac"
+          "sha256": "ae34730ff6b681b7c77844e268c406abd03f4fc61915d90640c2aac9e4776987"
         },
         {
           "path": "apps/web/e2e/notification-numerals.spec.ts",
@@ -16112,7 +16349,7 @@
         },
         {
           "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-          "sha256": "4c0d6ba652099eaaa404b498f09e2b29f90de484582d40b7c1e9416669c36aca"
+          "sha256": "7008c88de2d025a97c22cbd6d1894c8aded371cac57e8aea9db81f20cd3a64b5"
         },
         {
           "path": "packages/shared/src/notifications/delivery-window-config.ts",
@@ -16202,7 +16439,7 @@
         },
         {
           "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
-          "sha256": "a640fe503bda5f2d8bfe9d4e0686bcbba1aa4307fb7bf29500be1710e202d555"
+          "sha256": "bf685ddaf2564fb18b8fb11c64e56152da718a3b4d98506fb71765c331f4d7fb"
         },
         {
           "path": "apps/web/src/lib/template-preview.ts",
@@ -16214,7 +16451,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -16306,7 +16543,7 @@
         },
         {
           "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
-          "sha256": "a640fe503bda5f2d8bfe9d4e0686bcbba1aa4307fb7bf29500be1710e202d555"
+          "sha256": "bf685ddaf2564fb18b8fb11c64e56152da718a3b4d98506fb71765c331f4d7fb"
         },
         {
           "path": "apps/web/src/lib/template-preview.ts",
@@ -16318,7 +16555,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -16410,7 +16647,7 @@
         },
         {
           "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
-          "sha256": "a640fe503bda5f2d8bfe9d4e0686bcbba1aa4307fb7bf29500be1710e202d555"
+          "sha256": "bf685ddaf2564fb18b8fb11c64e56152da718a3b4d98506fb71765c331f4d7fb"
         },
         {
           "path": "apps/web/src/lib/template-preview.ts",
@@ -16422,7 +16659,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -16514,7 +16751,7 @@
         },
         {
           "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
-          "sha256": "a640fe503bda5f2d8bfe9d4e0686bcbba1aa4307fb7bf29500be1710e202d555"
+          "sha256": "bf685ddaf2564fb18b8fb11c64e56152da718a3b4d98506fb71765c331f4d7fb"
         },
         {
           "path": "apps/web/src/lib/template-preview.ts",
@@ -16526,7 +16763,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -16618,7 +16855,7 @@
         },
         {
           "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
-          "sha256": "a640fe503bda5f2d8bfe9d4e0686bcbba1aa4307fb7bf29500be1710e202d555"
+          "sha256": "bf685ddaf2564fb18b8fb11c64e56152da718a3b4d98506fb71765c331f4d7fb"
         },
         {
           "path": "apps/web/src/lib/template-preview.ts",
@@ -16630,7 +16867,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "apps/web/e2e/notification-template-versions.spec.ts",
@@ -16777,7 +17014,7 @@
         },
         {
           "path": "apps/web/src/routes/_app/settings/index.tsx",
-          "sha256": "94e5f2b4ddbe05c2178a0e8f0cc1946c2753a5d77e10b71e00d51307ef48b193"
+          "sha256": "ceeff6ff8ca6188e9b9eb533ee199f48f30399b3ebec3d84b9ee9ef3c314bb5a"
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -16910,7 +17147,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
         },
         {
           "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -16918,7 +17155,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -17150,7 +17387,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
         },
         {
           "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -17158,7 +17395,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -17390,7 +17627,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
         },
         {
           "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -17398,7 +17635,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -17630,7 +17867,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
         },
         {
           "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -17638,7 +17875,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -17870,7 +18107,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
         },
         {
           "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -17878,7 +18115,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -18110,7 +18347,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
         },
         {
           "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -18118,7 +18355,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -18352,7 +18589,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
-          "sha256": "494a876b2c6caa0aa535d74d7c5aa47321246aeac36f6e6f9283d0f49a235d28"
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
         },
         {
           "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
@@ -18360,7 +18597,7 @@
         },
         {
           "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
-          "sha256": "d4856fba4a239d443916ab7efc46d9abc3628a4bf065ea81b7ac23509e0196fe"
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
         },
         {
           "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -18564,7 +18801,7 @@
         },
         {
           "path": "apps/web/src/pages/AIChat.tsx",
-          "sha256": "1a4535b06a2436a9db3c8d638b739c4ceda1ae9413a9b6b62b9d9865cad1937b"
+          "sha256": "e2b9ada42742aedfc01c6b1b23f4f27d88bd7de3e6d9f3a472ac4f57d90b605b"
         },
         {
           "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -18697,7 +18934,7 @@
         },
         {
           "path": "apps/web/src/pages/AIChat.tsx",
-          "sha256": "1a4535b06a2436a9db3c8d638b739c4ceda1ae9413a9b6b62b9d9865cad1937b"
+          "sha256": "e2b9ada42742aedfc01c6b1b23f4f27d88bd7de3e6d9f3a472ac4f57d90b605b"
         },
         {
           "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -19471,16 +19708,14 @@
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.03.02",
-      "status": "partial",
+      "status": "acceptance_verified",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 1088,
       "requirement": "- **T-06.03.02:** Create themed component set with RTL support\n  - **Notes:** Each component uses CSS logical properties (`padding-inline-start` instead of `padding-left`, `margin-inline-end` instead of `margin-right`, `border-inline-start` instead of `border-left`). Use Tailwind `rtl:`/`ltr:` modifiers for any property that can't use logical properties. Theme tokens in CSS variables: `--color-primary`, `--color-background`, `--color-text`, `--border-radius`, `--spacing-*`. Both light and dark variants defined.\n  - **Dependencies:** T-06.03.01\n  - **Complexity:** L",
       "requirement_sha256": "0b0ec13a345afaaecbe64843f42351635dc66385c02d009ffc3cb74f04bcb55f",
       "checks": [
-        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified.",
-        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing.",
-        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass.",
-        "audit/evidence/step-reviews.json#R03-auxiliary-ui: auxiliary fixes reviewed;21 distinct browser/49 UI cases and42 unchanged budgets pass. Prior theme/core evidence retained."
+        "Theme tokens, logical layout, core and auxiliary controls verified in both directions and themes.",
+        "audit/evidence/step-reviews.json#R03-consumer-theme-time"
       ],
       "source_evidence": [
         {
@@ -19488,28 +19723,16 @@
           "sha256": "1b181e5ee0188b3917130ac7765b149666765843a263ef4396682493a8f8d4d0"
         },
         {
-          "path": "apps/web/e2e/branding-validation.spec.ts",
-          "sha256": "2ce984ac67bde587fac3a640f924d2a495512560d4e081bdb3b77604db6ab1f1"
+          "path": "apps/web/e2e/consumer-theme.spec.ts",
+          "sha256": "10d399975c6462196718720791a91daa87d2126a34a9f19b1b1f9fcbc776c2e5"
         },
         {
           "path": "apps/web/e2e/direction-component.spec.ts",
           "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
         },
         {
-          "path": "apps/web/e2e/fixtures/theme/index.html",
-          "sha256": "4ea94e81e1d890e6fcbd74e3f8341ebe7d00b314861081bd84b17d52b39f5160"
-        },
-        {
-          "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "3730dcfac5eb9c5d46f60b3c45a3090c9e49c0f64ad24b2dc3fff93664947348"
-        },
-        {
-          "path": "apps/web/e2e/public-theme.spec.ts",
-          "sha256": "18f841d95471ceed127bd21795b923e7da4baa8fc7cd4cb272ee7f8d0f04a4d0"
-        },
-        {
-          "path": "apps/web/e2e/registration-consent.spec.ts",
-          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
         },
         {
           "path": "apps/web/e2e/terms-theme.spec.ts",
@@ -19520,198 +19743,239 @@
           "sha256": "4f48d63df8fdf9101aedc594672d2a869b55cddd1af0d9e18f6a40c6d9f82d8e"
         },
         {
-          "path": "apps/web/src/components/AuthLayout.tsx",
-          "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "38cbbca538d8e8c46e963f30db2a26e905dc07d59c3e418426b0e86c524ad97c"
         },
         {
-          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-          "sha256": "7cc2b3d60c8e36111c4623ec8087e8b5a3b01c36750224b352c667f6d7d76a93"
+          "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
+          "sha256": "53db2604bebacba6f0e98c3480527626c451d9d6e5085232d93f572eeb50b12f"
         },
         {
-          "path": "apps/web/src/components/RouteSkeleton.tsx",
-          "sha256": "566b6447c494f11df5a730dc834e7deaaa7d4ce347cd231337570605beb36b54"
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "241eceb68e909d7c4237077426efb2af7997eddc67906f54a21a449f5792889f"
         },
         {
-          "path": "apps/web/src/components/TosBanner.tsx",
-          "sha256": "a54074b6645072f702262cea896690ca7ddaf2b210cc8e06e90f836b6278ce0d"
+          "path": "apps/web/src/components/DefaultProfileModal.tsx",
+          "sha256": "77e14299473a0464513467847daadf000ca6efc24008e18787498196d72c950f"
         },
         {
-          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
-          "sha256": "0994d4bc3089d49be239ca499fbc1708ecac50a0dc6742e331a49b9f2de9cfff"
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "7008c88de2d025a97c22cbd6d1894c8aded371cac57e8aea9db81f20cd3a64b5"
         },
         {
-          "path": "apps/web/src/providers/BrandThemeProvider.test.tsx",
-          "sha256": "03a5a744c58f38a18aee5bb2e024455cdefafa50d1d4c692f814f1cdb2c8235b"
+          "path": "apps/web/src/components/NotificationBell.tsx",
+          "sha256": "ae34730ff6b681b7c77844e268c406abd03f4fc61915d90640c2aac9e4776987"
         },
         {
-          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
-          "sha256": "468d4d2f4c9b6f250c636a595b013a041aa94cd8ef348f7b02910227338c818b"
+          "path": "apps/web/src/components/NotificationRow.tsx",
+          "sha256": "4d954a8e8e951f0e614715e0c1dd0d63f48a3634d4fac8aeec4738a5f5c7fc60"
         },
         {
-          "path": "apps/web/src/routes/activate.tsx",
-          "sha256": "539969c1ae9fdfab9c2960a0ed0d7d5e8c492ed78bc68a37910ce99f033bc556"
+          "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+          "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
         },
         {
-          "path": "apps/web/src/routes/forgot-password.tsx",
-          "sha256": "360e48c5b24fa25b64320cf299bf59bde038f2b373fb42409d856d5664c4a645"
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "f4ccc8c951dc09fe0a52dd619c4724ba311d7cb7485d6d7bd8ca0c5eebd9f04e"
         },
         {
-          "path": "apps/web/src/routes/register/index.tsx",
-          "sha256": "b78ed42024191c6f7881b1f5f66c33fe7c68319d081c4b707191e4deef63fa87"
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "48948013a9b3dd2a7c3c87089f057bfbf704efb5845df53fca98b373af93f4f7"
         },
         {
-          "path": "apps/web/src/routes/register/verify.tsx",
-          "sha256": "065335299ba370f72ffc27b0ea77c15b5d70ca183f1a31fb66623feb1c145a09"
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
-          "path": "apps/web/src/routes/terms.tsx",
-          "sha256": "ad3b50ca831cb442a719b4213762a7403c7f4d049e7c6921c76ad55d4c730bf8"
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "bf685ddaf2564fb18b8fb11c64e56152da718a3b4d98506fb71765c331f4d7fb"
         },
         {
-          "path": "packages/i18n/src/terms.ts",
-          "sha256": "870d02e6f70fd799a530c30736e1207a6c25b2bed050c34b75873e7ab1ccbc1b"
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "9cbf3e5c3e89a7bf0251fa9347ebd7a42eda1d770addceec659254cde4fec05e"
         },
         {
-          "path": "packages/ui/src/components/ui/alert.tsx",
-          "sha256": "d26c81532decb8b0f6b4b958af376ce2b64c21af31bd1a23c1a5c67b582fce98"
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "274822c5b8c6c33b186173b59337d0890a0b946c19e5168e379330b28800f046"
         },
         {
-          "path": "packages/ui/src/components/ui/button.tsx",
-          "sha256": "c6a393b7d3f2c1835af2801ea8e9d302be5f72cb4223bb6254f25339dcdd3019"
+          "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+          "sha256": "bb7cc279e25d2a8264ba0304bf095359396005f543550e6da806f4fadd36cc23"
         },
         {
-          "path": "packages/ui/src/components/ui/dialog.tsx",
-          "sha256": "b1d6360974aace083220f8961c458c53821d7fa2457c8e9fa47d039533120b90"
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
         },
         {
-          "path": "packages/ui/src/components/ui/page-states.tsx",
-          "sha256": "7e7aa6c9832690e0beb6c1f36e4980b92040a96d9707b6cd8d81c6e067828200"
+          "path": "apps/web/src/hooks/useDirection.ts",
+          "sha256": "be6a237736ac7820d0aaa20bab598a68ad8d82671a250c77d7115a1cbf8e035c"
         },
         {
-          "path": "packages/ui/src/page-states.test.tsx",
-          "sha256": "97cd8ca78e30c5141adf3bf4e56630bbc982d17dae5593dc98b8c15483490295"
+          "path": "apps/web/src/hooks/useLocale.ts",
+          "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+        },
+        {
+          "path": "apps/web/src/hooks/useTimezone.ts",
+          "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+        },
+        {
+          "path": "apps/web/src/pages/AIChat.tsx",
+          "sha256": "e2b9ada42742aedfc01c6b1b23f4f27d88bd7de3e6d9f3a472ac4f57d90b605b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "a622f4e1ae5316d9767ddd8440813683ceca94e36c553923efd4023e9fc9fc2c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "c664ce9eacbaf353a617e504e533d05be581cdb6e5755295c8e0c4d734375b72"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "4776a595aea33683e6974d14c9f13f8959c524e2357f7a90e737996a6c7ed56f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "ac1d76a635339aeb53703abaec9b3d23ae39c24a3a83034f90985d98e97557c4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "9f96ac97367406e25c07b766164b25c212d45168f19b0b90f31994f6ae690940"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
+        },
+        {
+          "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+          "sha256": "6bcfb8c95f4f0654b2f6b623da47b117292f843a1729ed32a9e7fbb860003e82"
+        },
+        {
+          "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+          "sha256": "fe433be9a82560656b0107b3204527bf8f31f89ecddd53aa512a80718b341b41"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+          "sha256": "8045c104029b4870074b72e5b240568758717934bf62dd3049828e63722b349f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "4e938c51757e289ac1a811060baae385ca963eb39912a3491117735467b7c7cd"
+        },
+        {
+          "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+          "sha256": "3c543beb38cf424dd0daf22247844a19ea4d5fb30f3fe3cceb8c0be037cf253b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "12f39d7c04949bd5f00c29f4b36ba169ff8f3c5afc3eb79e501dc688c4a59c85"
+        },
+        {
+          "path": "apps/web/src/pages/ChartsPage.tsx",
+          "sha256": "59fe536f68eb3fa48b099f2f48895a3805743ccf3c9ef451ff3de226cd439547"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "20c0e9d57e7f4df6e03390e6c3cc16417125481df7454c7c3c7a83742595cf95"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "fb8234931becfa4b3fbbaf736b6089fb003e131a395ca5d478047464033266f8"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "e94f8793f3a68bc95c3d8a379638e8e6a9506f44a52e637620a6ea2d5eb74080"
+        },
+        {
+          "path": "apps/web/src/pages/DocumentsPage.tsx",
+          "sha256": "7ab4ab3e1021c2476f465e55af6acaafded61194650350f22f869d923a31b6d0"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "43bd5ce800247e0b1beff9402fe75de0e76ef260b394db4c1d76868f7e02df3a"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "7aa742f78a0b0e50ebdaad2bc37fc05d1c46a8ee6d54c554b8038c04b1fe6431"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "9c4c1ed6f3867348044b794e96e7f4e138d4a8bcecddc70947ef03d6defc6e59"
+        },
+        {
+          "path": "apps/web/src/pages/TosPreview.tsx",
+          "sha256": "8eb4ab60490eae7fc06cefaab2888985e8c23f1f97312f0ad68daf67255df11a"
+        },
+        {
+          "path": "apps/web/src/pages/TosRichText.tsx",
+          "sha256": "5528b6f4bad4cb37b7ac4b46153ca4ac3f377e94b458326118b0245ca1193d8b"
+        },
+        {
+          "path": "apps/web/src/pages/VideosPage.tsx",
+          "sha256": "b9fe8a1f44e8e234669709808eecb51c7f5a68f88f1f744b675afa9de6c159c6"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "e58352b8a7d34f2376f06d4fa507c04988f3d3248544299fd82b9c747096de2e"
+        },
+        {
+          "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+          "sha256": "52dd4b7b25aee2b6bc485ed4de87f6910c47cbaa2a391024cf0c88fd7e370776"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/index.tsx",
+          "sha256": "9c47f5187064ebf45171f3f879f965f038c4377214007d10bc6d37dec44762d9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.tsx",
+          "sha256": "1e798f1ecb63c33b45ec2a0de45ecc10616e765fc9156800294166677f99603d"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "ceeff6ff8ca6188e9b9eb533ee199f48f30399b3ebec3d84b9ee9ef3c314bb5a"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "3601c13e59aff2616a2636fbee10956e1dd8a46b5fbdc3b4bade5c84b8ef1e49"
+        },
+        {
+          "path": "packages/i18n/src/date-time.test.ts",
+          "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+        },
+        {
+          "path": "packages/i18n/src/date-time.ts",
+          "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "c2933448026ae5ed57eec58047efe15d1bef0c51383fb3d565680c3b5e916c22"
-        },
-        {
-          "path": "packages/ui/src/components/ui/badge.tsx",
-          "sha256": "7bfdab0e81ea50911fa31b3a116139282cd236583fd094b65cdd5b9983c2925e"
-        },
-        {
-          "path": "packages/ui/src/components/ui/checkbox.tsx",
-          "sha256": "4a609efca1f2a5376e1f85824c509e718e5be99051d85c0e5b70a3bc70cb5762"
-        },
-        {
-          "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
-          "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
-        },
-        {
-          "path": "packages/ui/src/components/ui/input.tsx",
-          "sha256": "7e838a66ec265498f1e10b72f20cdf9a1b9892510b53af5b41b7e120828dd917"
-        },
-        {
-          "path": "packages/ui/src/components/ui/native-select.tsx",
-          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
-        },
-        {
-          "path": "packages/ui/src/components/ui/radio-group.tsx",
-          "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
-        },
-        {
-          "path": "packages/ui/src/components/ui/scroll-area.tsx",
-          "sha256": "6336d9647008613020bd44d2f8537700e41d6752ce9d29d6e7f7a6bcc373ff8e"
-        },
-        {
-          "path": "packages/ui/src/components/ui/select.tsx",
-          "sha256": "6fc3e3e80fe8c3d2f6272d624085a62a8e092e4ec4088f6eb87c200b1e37c0e0"
-        },
-        {
-          "path": "packages/ui/src/components/ui/separator.tsx",
-          "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
-        },
-        {
-          "path": "packages/ui/src/components/ui/slider.tsx",
-          "sha256": "71135dfac1d5ac0b23311ab3e2511da9254b28a483a363c02aa8cfcf0788b364"
-        },
-        {
-          "path": "packages/ui/src/components/ui/switch.tsx",
-          "sha256": "5bb5aeaa213d549177b6d58c810353465dda0e672bdc0d02026c39b195079979"
-        },
-        {
-          "path": "packages/ui/src/components/ui/tabs.tsx",
-          "sha256": "3b272d84ca82512cae48dafbc2e6285e85ba71b5d8f7a3592894827660e2c33b"
-        },
-        {
-          "path": "packages/ui/src/components/ui/textarea.tsx",
-          "sha256": "b4aeba0b564e42c166f2c5d7bee517b69daa70581e09a21e2f2c3112f74915a2"
-        },
-        {
-          "path": "apps/web/e2e/feedback.spec.ts",
-          "sha256": "b4d85351ba9d507a8d982a4a0e785b7368b08c079a0139bc1acebe0f8749a54c"
-        },
-        {
-          "path": "apps/web/src/components/ApplicationToaster.tsx",
-          "sha256": "b5889f63c873a6fa2c0bc7f511843c9dd71cd529bb397e63c7b7de99f0e2be32"
-        },
-        {
-          "path": "packages/ui/src/components/ui/avatar.tsx",
-          "sha256": "66ffabb69b3762a04490074b8bf599f4f53b83d8336cda62936f66d00cf8f3c9"
-        },
-        {
-          "path": "packages/ui/src/components/ui/calendar.tsx",
-          "sha256": "6ec34d32f8be0d49d7a55f963206194802a168fb9e14adcdfca48d2742fcc69f"
-        },
-        {
-          "path": "packages/ui/src/components/ui/command.tsx",
-          "sha256": "abde0544578867ee92391001770068ab41ca89cf00e21428083644d3a1531594"
-        },
-        {
-          "path": "packages/ui/src/components/ui/input-group.tsx",
-          "sha256": "73815558b086616611e426954a86fc016433898d2834331b5b3c32891df5faf9"
-        },
-        {
-          "path": "packages/ui/src/components/ui/progress.tsx",
-          "sha256": "8dbddebc0926756e9df56d45f4e518c26cf3e0e96b42621a12e7d016c1c66f15"
-        },
-        {
-          "path": "packages/ui/src/components/ui/sheet.tsx",
-          "sha256": "e966374723f7b6d082befe0775efea214d2a515a5bf34ce7f8f5a3b4f451d1f6"
-        },
-        {
-          "path": "packages/ui/src/components/ui/skeleton.tsx",
-          "sha256": "d22459a4fed0c76bfb7e609bd9ccd30d86b35237c9fda0453d778c37509fb5ea"
-        },
-        {
-          "path": "packages/ui/src/components/ui/toast.tsx",
-          "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
-        },
-        {
-          "path": "packages/ui/src/components/ui/tooltip.tsx",
-          "sha256": "7f139d130d3a25b4ebffe6bb5a5096ce07e0f48b04bfcdf40f3a540d024698b8"
+          "sha256": "222689c7a991e307b59f562d61c57e345867f4436e7c66f3204dc2ce09161a66"
         }
       ],
       "merged_prs": [],
       "historically_skipped": true,
-      "reviewed_sha": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
-      "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui",
-      "limitations": [
-        "Remaining implemented consumer theme/RTL/keyboard/loading states stay R03. DashboardLayout still uses light-only backgrounds/borders/text;44 files with literal gray/white styling are candidates for bounded review, not44 established defects."
+      "reviewed_sha": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
+      "review_record": "audit/evidence/step-reviews.json#R03-consumer-theme-time",
+      "limitations": [],
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R03-controls",
+        "audit/evidence/step-reviews.json#R03-auxiliary-ui",
+        "audit/evidence/step-reviews.json#R01-account-settings"
       ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.03.03",
-      "status": "partial",
+      "status": "acceptance_verified",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 1093,
       "requirement": "- **T-06.03.03:** Implement WCAG 2.2 AA accessibility in all shared components\n  - **Notes:** Every interactive element has visible focus indicator (2px solid offset ring, not just outline). Color contrast: minimum 4.5:1 for text, 3:1 for large text (18px+). ARIA: `role`, `aria-label`, `aria-describedby`, `aria-errormessage` on form fields. Keyboard: Tab order follows visual order, Escape closes dialogs/dropdowns, Enter toggles selects/checkboxes. Screen reader: live regions for dynamic content (toast, loading state). Reduced motion: `@media (prefers-reduced-motion: reduce)` disables CSS animations and transitions. Components span loading, empty, error, and disabled states.\n  - **Dependencies:** T-06.03.01\n  - **Complexity:** XL",
       "requirement_sha256": "9816a15613881ecba94df1e7e3f260b797efd982e2d2434f3edcc15287bba9bd",
       "checks": [
-        "audit/evidence/step-reviews.json#R03-theme-contrast: reviewed exact requirement and applicable current implementation. Theme tokens, shared button/alert contrast, reduced motion, RTL dialog close placement, localized terms states, public links and instant draft preview repaired.34 distinct browser cases,49 UI cases,8 provider cases,50 i18n cases and42 unchanged budgets pass. No unbuilt override controls or unreviewed component criteria are treated as verified.",
-        "audit/evidence/step-reviews.json#R03-controls: immediate-base shared-control bindings refreshed with focused browser review. Focus/contrast/direction/orientation corrected. Checkbox Enter now toggles without form submission and respects consumer cancellation/read-only/disabled state. Slider scalar/range behavior and labels verified; registration consent remains passing.",
-        "audit/evidence/step-reviews.json#R03-controls:24 distinct current browser cases cover controls, direction and real registration/terms consent. Latest13 orientation/theme cases overlap that total;2 visual cases overlap as well.49 UI cases retained after later CSS-only orientation corrections; UI/web builds/types, scoped lint/format and42 budgets pass.",
-        "audit/evidence/step-reviews.json#R03-auxiliary-ui: auxiliary fixes reviewed;21 distinct browser/49 UI cases and42 unchanged budgets pass. Prior theme/core evidence retained."
+        "Core/auxiliary controls cover focus, contrast, keyboard, labels, dialogs, live feedback, reduced motion and loading/empty/error/disabled states; retain source-bound earlier component tests.",
+        "audit/evidence/step-reviews.json#R03-consumer-theme-time"
       ],
       "source_evidence": [
         {
@@ -19719,28 +19983,16 @@
           "sha256": "1b181e5ee0188b3917130ac7765b149666765843a263ef4396682493a8f8d4d0"
         },
         {
-          "path": "apps/web/e2e/branding-validation.spec.ts",
-          "sha256": "2ce984ac67bde587fac3a640f924d2a495512560d4e081bdb3b77604db6ab1f1"
+          "path": "apps/web/e2e/consumer-theme.spec.ts",
+          "sha256": "10d399975c6462196718720791a91daa87d2126a34a9f19b1b1f9fcbc776c2e5"
         },
         {
           "path": "apps/web/e2e/direction-component.spec.ts",
           "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
         },
         {
-          "path": "apps/web/e2e/fixtures/theme/index.html",
-          "sha256": "4ea94e81e1d890e6fcbd74e3f8341ebe7d00b314861081bd84b17d52b39f5160"
-        },
-        {
-          "path": "apps/web/e2e/fixtures/theme/main.tsx",
-          "sha256": "3730dcfac5eb9c5d46f60b3c45a3090c9e49c0f64ad24b2dc3fff93664947348"
-        },
-        {
-          "path": "apps/web/e2e/public-theme.spec.ts",
-          "sha256": "18f841d95471ceed127bd21795b923e7da4baa8fc7cd4cb272ee7f8d0f04a4d0"
-        },
-        {
-          "path": "apps/web/e2e/registration-consent.spec.ts",
-          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
         },
         {
           "path": "apps/web/e2e/terms-theme.spec.ts",
@@ -19751,184 +20003,227 @@
           "sha256": "4f48d63df8fdf9101aedc594672d2a869b55cddd1af0d9e18f6a40c6d9f82d8e"
         },
         {
-          "path": "apps/web/src/components/AuthLayout.tsx",
-          "sha256": "8801f1b748172448eb7b5da4b56b891e5b610d58d64b6a2b53619e1cd5886215"
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "38cbbca538d8e8c46e963f30db2a26e905dc07d59c3e418426b0e86c524ad97c"
         },
         {
-          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
-          "sha256": "7cc2b3d60c8e36111c4623ec8087e8b5a3b01c36750224b352c667f6d7d76a93"
+          "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
+          "sha256": "53db2604bebacba6f0e98c3480527626c451d9d6e5085232d93f572eeb50b12f"
         },
         {
-          "path": "apps/web/src/components/RouteSkeleton.tsx",
-          "sha256": "566b6447c494f11df5a730dc834e7deaaa7d4ce347cd231337570605beb36b54"
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "241eceb68e909d7c4237077426efb2af7997eddc67906f54a21a449f5792889f"
         },
         {
-          "path": "apps/web/src/components/TosBanner.tsx",
-          "sha256": "a54074b6645072f702262cea896690ca7ddaf2b210cc8e06e90f836b6278ce0d"
+          "path": "apps/web/src/components/DefaultProfileModal.tsx",
+          "sha256": "77e14299473a0464513467847daadf000ca6efc24008e18787498196d72c950f"
         },
         {
-          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
-          "sha256": "0994d4bc3089d49be239ca499fbc1708ecac50a0dc6742e331a49b9f2de9cfff"
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "7008c88de2d025a97c22cbd6d1894c8aded371cac57e8aea9db81f20cd3a64b5"
         },
         {
-          "path": "apps/web/src/providers/BrandThemeProvider.test.tsx",
-          "sha256": "03a5a744c58f38a18aee5bb2e024455cdefafa50d1d4c692f814f1cdb2c8235b"
+          "path": "apps/web/src/components/NotificationBell.tsx",
+          "sha256": "ae34730ff6b681b7c77844e268c406abd03f4fc61915d90640c2aac9e4776987"
         },
         {
-          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
-          "sha256": "468d4d2f4c9b6f250c636a595b013a041aa94cd8ef348f7b02910227338c818b"
+          "path": "apps/web/src/components/NotificationRow.tsx",
+          "sha256": "4d954a8e8e951f0e614715e0c1dd0d63f48a3634d4fac8aeec4738a5f5c7fc60"
         },
         {
-          "path": "apps/web/src/routes/activate.tsx",
-          "sha256": "539969c1ae9fdfab9c2960a0ed0d7d5e8c492ed78bc68a37910ce99f033bc556"
+          "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+          "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
         },
         {
-          "path": "apps/web/src/routes/forgot-password.tsx",
-          "sha256": "360e48c5b24fa25b64320cf299bf59bde038f2b373fb42409d856d5664c4a645"
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "f4ccc8c951dc09fe0a52dd619c4724ba311d7cb7485d6d7bd8ca0c5eebd9f04e"
         },
         {
-          "path": "apps/web/src/routes/register/index.tsx",
-          "sha256": "b78ed42024191c6f7881b1f5f66c33fe7c68319d081c4b707191e4deef63fa87"
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "48948013a9b3dd2a7c3c87089f057bfbf704efb5845df53fca98b373af93f4f7"
         },
         {
-          "path": "apps/web/src/routes/register/verify.tsx",
-          "sha256": "065335299ba370f72ffc27b0ea77c15b5d70ca183f1a31fb66623feb1c145a09"
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
         },
         {
-          "path": "apps/web/src/routes/terms.tsx",
-          "sha256": "ad3b50ca831cb442a719b4213762a7403c7f4d049e7c6921c76ad55d4c730bf8"
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "bf685ddaf2564fb18b8fb11c64e56152da718a3b4d98506fb71765c331f4d7fb"
         },
         {
-          "path": "packages/i18n/src/terms.ts",
-          "sha256": "870d02e6f70fd799a530c30736e1207a6c25b2bed050c34b75873e7ab1ccbc1b"
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "9cbf3e5c3e89a7bf0251fa9347ebd7a42eda1d770addceec659254cde4fec05e"
         },
         {
-          "path": "packages/ui/src/components/ui/alert.tsx",
-          "sha256": "d26c81532decb8b0f6b4b958af376ce2b64c21af31bd1a23c1a5c67b582fce98"
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "274822c5b8c6c33b186173b59337d0890a0b946c19e5168e379330b28800f046"
         },
         {
-          "path": "packages/ui/src/components/ui/button.tsx",
-          "sha256": "c6a393b7d3f2c1835af2801ea8e9d302be5f72cb4223bb6254f25339dcdd3019"
+          "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+          "sha256": "bb7cc279e25d2a8264ba0304bf095359396005f543550e6da806f4fadd36cc23"
         },
         {
-          "path": "packages/ui/src/components/ui/dialog.tsx",
-          "sha256": "b1d6360974aace083220f8961c458c53821d7fa2457c8e9fa47d039533120b90"
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
         },
         {
-          "path": "packages/ui/src/components/ui/page-states.tsx",
-          "sha256": "7e7aa6c9832690e0beb6c1f36e4980b92040a96d9707b6cd8d81c6e067828200"
+          "path": "apps/web/src/hooks/useDirection.ts",
+          "sha256": "be6a237736ac7820d0aaa20bab598a68ad8d82671a250c77d7115a1cbf8e035c"
         },
         {
-          "path": "packages/ui/src/page-states.test.tsx",
-          "sha256": "97cd8ca78e30c5141adf3bf4e56630bbc982d17dae5593dc98b8c15483490295"
+          "path": "apps/web/src/hooks/useLocale.ts",
+          "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+        },
+        {
+          "path": "apps/web/src/hooks/useTimezone.ts",
+          "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+        },
+        {
+          "path": "apps/web/src/pages/AIChat.tsx",
+          "sha256": "e2b9ada42742aedfc01c6b1b23f4f27d88bd7de3e6d9f3a472ac4f57d90b605b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "a622f4e1ae5316d9767ddd8440813683ceca94e36c553923efd4023e9fc9fc2c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "c664ce9eacbaf353a617e504e533d05be581cdb6e5755295c8e0c4d734375b72"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "4776a595aea33683e6974d14c9f13f8959c524e2357f7a90e737996a6c7ed56f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "ac1d76a635339aeb53703abaec9b3d23ae39c24a3a83034f90985d98e97557c4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "9f96ac97367406e25c07b766164b25c212d45168f19b0b90f31994f6ae690940"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
+        },
+        {
+          "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+          "sha256": "6bcfb8c95f4f0654b2f6b623da47b117292f843a1729ed32a9e7fbb860003e82"
+        },
+        {
+          "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+          "sha256": "fe433be9a82560656b0107b3204527bf8f31f89ecddd53aa512a80718b341b41"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+          "sha256": "8045c104029b4870074b72e5b240568758717934bf62dd3049828e63722b349f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "4e938c51757e289ac1a811060baae385ca963eb39912a3491117735467b7c7cd"
+        },
+        {
+          "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+          "sha256": "3c543beb38cf424dd0daf22247844a19ea4d5fb30f3fe3cceb8c0be037cf253b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "12f39d7c04949bd5f00c29f4b36ba169ff8f3c5afc3eb79e501dc688c4a59c85"
+        },
+        {
+          "path": "apps/web/src/pages/ChartsPage.tsx",
+          "sha256": "59fe536f68eb3fa48b099f2f48895a3805743ccf3c9ef451ff3de226cd439547"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "20c0e9d57e7f4df6e03390e6c3cc16417125481df7454c7c3c7a83742595cf95"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "fb8234931becfa4b3fbbaf736b6089fb003e131a395ca5d478047464033266f8"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "e94f8793f3a68bc95c3d8a379638e8e6a9506f44a52e637620a6ea2d5eb74080"
+        },
+        {
+          "path": "apps/web/src/pages/DocumentsPage.tsx",
+          "sha256": "7ab4ab3e1021c2476f465e55af6acaafded61194650350f22f869d923a31b6d0"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "43bd5ce800247e0b1beff9402fe75de0e76ef260b394db4c1d76868f7e02df3a"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "7aa742f78a0b0e50ebdaad2bc37fc05d1c46a8ee6d54c554b8038c04b1fe6431"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "9c4c1ed6f3867348044b794e96e7f4e138d4a8bcecddc70947ef03d6defc6e59"
+        },
+        {
+          "path": "apps/web/src/pages/TosPreview.tsx",
+          "sha256": "8eb4ab60490eae7fc06cefaab2888985e8c23f1f97312f0ad68daf67255df11a"
+        },
+        {
+          "path": "apps/web/src/pages/TosRichText.tsx",
+          "sha256": "5528b6f4bad4cb37b7ac4b46153ca4ac3f377e94b458326118b0245ca1193d8b"
+        },
+        {
+          "path": "apps/web/src/pages/VideosPage.tsx",
+          "sha256": "b9fe8a1f44e8e234669709808eecb51c7f5a68f88f1f744b675afa9de6c159c6"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "e58352b8a7d34f2376f06d4fa507c04988f3d3248544299fd82b9c747096de2e"
+        },
+        {
+          "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+          "sha256": "52dd4b7b25aee2b6bc485ed4de87f6910c47cbaa2a391024cf0c88fd7e370776"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/index.tsx",
+          "sha256": "9c47f5187064ebf45171f3f879f965f038c4377214007d10bc6d37dec44762d9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.tsx",
+          "sha256": "1e798f1ecb63c33b45ec2a0de45ecc10616e765fc9156800294166677f99603d"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "ceeff6ff8ca6188e9b9eb533ee199f48f30399b3ebec3d84b9ee9ef3c314bb5a"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "3601c13e59aff2616a2636fbee10956e1dd8a46b5fbdc3b4bade5c84b8ef1e49"
+        },
+        {
+          "path": "packages/i18n/src/date-time.test.ts",
+          "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+        },
+        {
+          "path": "packages/i18n/src/date-time.ts",
+          "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "c2933448026ae5ed57eec58047efe15d1bef0c51383fb3d565680c3b5e916c22"
-        },
-        {
-          "path": "packages/ui/src/components/ui/badge.tsx",
-          "sha256": "7bfdab0e81ea50911fa31b3a116139282cd236583fd094b65cdd5b9983c2925e"
-        },
-        {
-          "path": "packages/ui/src/components/ui/checkbox.tsx",
-          "sha256": "4a609efca1f2a5376e1f85824c509e718e5be99051d85c0e5b70a3bc70cb5762"
-        },
-        {
-          "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
-          "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
-        },
-        {
-          "path": "packages/ui/src/components/ui/input.tsx",
-          "sha256": "7e838a66ec265498f1e10b72f20cdf9a1b9892510b53af5b41b7e120828dd917"
-        },
-        {
-          "path": "packages/ui/src/components/ui/native-select.tsx",
-          "sha256": "f50d0a1ab94688ff6a552e73855549329f6045c614a2b53bbeed640abd49c89c"
-        },
-        {
-          "path": "packages/ui/src/components/ui/radio-group.tsx",
-          "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
-        },
-        {
-          "path": "packages/ui/src/components/ui/scroll-area.tsx",
-          "sha256": "6336d9647008613020bd44d2f8537700e41d6752ce9d29d6e7f7a6bcc373ff8e"
-        },
-        {
-          "path": "packages/ui/src/components/ui/select.tsx",
-          "sha256": "6fc3e3e80fe8c3d2f6272d624085a62a8e092e4ec4088f6eb87c200b1e37c0e0"
-        },
-        {
-          "path": "packages/ui/src/components/ui/separator.tsx",
-          "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
-        },
-        {
-          "path": "packages/ui/src/components/ui/slider.tsx",
-          "sha256": "71135dfac1d5ac0b23311ab3e2511da9254b28a483a363c02aa8cfcf0788b364"
-        },
-        {
-          "path": "packages/ui/src/components/ui/switch.tsx",
-          "sha256": "5bb5aeaa213d549177b6d58c810353465dda0e672bdc0d02026c39b195079979"
-        },
-        {
-          "path": "packages/ui/src/components/ui/tabs.tsx",
-          "sha256": "3b272d84ca82512cae48dafbc2e6285e85ba71b5d8f7a3592894827660e2c33b"
-        },
-        {
-          "path": "packages/ui/src/components/ui/textarea.tsx",
-          "sha256": "b4aeba0b564e42c166f2c5d7bee517b69daa70581e09a21e2f2c3112f74915a2"
-        },
-        {
-          "path": "apps/web/e2e/feedback.spec.ts",
-          "sha256": "b4d85351ba9d507a8d982a4a0e785b7368b08c079a0139bc1acebe0f8749a54c"
-        },
-        {
-          "path": "apps/web/src/components/ApplicationToaster.tsx",
-          "sha256": "b5889f63c873a6fa2c0bc7f511843c9dd71cd529bb397e63c7b7de99f0e2be32"
-        },
-        {
-          "path": "packages/ui/src/components/ui/avatar.tsx",
-          "sha256": "66ffabb69b3762a04490074b8bf599f4f53b83d8336cda62936f66d00cf8f3c9"
-        },
-        {
-          "path": "packages/ui/src/components/ui/calendar.tsx",
-          "sha256": "6ec34d32f8be0d49d7a55f963206194802a168fb9e14adcdfca48d2742fcc69f"
-        },
-        {
-          "path": "packages/ui/src/components/ui/command.tsx",
-          "sha256": "abde0544578867ee92391001770068ab41ca89cf00e21428083644d3a1531594"
-        },
-        {
-          "path": "packages/ui/src/components/ui/input-group.tsx",
-          "sha256": "73815558b086616611e426954a86fc016433898d2834331b5b3c32891df5faf9"
-        },
-        {
-          "path": "packages/ui/src/components/ui/progress.tsx",
-          "sha256": "8dbddebc0926756e9df56d45f4e518c26cf3e0e96b42621a12e7d016c1c66f15"
-        },
-        {
-          "path": "packages/ui/src/components/ui/sheet.tsx",
-          "sha256": "e966374723f7b6d082befe0775efea214d2a515a5bf34ce7f8f5a3b4f451d1f6"
-        },
-        {
-          "path": "packages/ui/src/components/ui/skeleton.tsx",
-          "sha256": "d22459a4fed0c76bfb7e609bd9ccd30d86b35237c9fda0453d778c37509fb5ea"
-        },
-        {
-          "path": "packages/ui/src/components/ui/toast.tsx",
-          "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
-        },
-        {
-          "path": "packages/ui/src/components/ui/tooltip.tsx",
-          "sha256": "7f139d130d3a25b4ebffe6bb5a5096ce07e0f48b04bfcdf40f3a540d024698b8"
+          "sha256": "222689c7a991e307b59f562d61c57e345867f4436e7c66f3204dc2ce09161a66"
         }
       ],
       "merged_prs": [],
       "historically_skipped": true,
-      "reviewed_sha": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
-      "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui",
-      "limitations": [
-        "Remaining implemented consumer theme/RTL/keyboard/loading states stay R03. DashboardLayout still uses light-only backgrounds/borders/text;44 files with literal gray/white styling are candidates for bounded review, not44 established defects."
+      "reviewed_sha": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
+      "review_record": "audit/evidence/step-reviews.json#R03-consumer-theme-time",
+      "limitations": [],
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R03-controls",
+        "audit/evidence/step-reviews.json#R03-auxiliary-ui",
+        "audit/evidence/step-reviews.json#R01-account-settings"
       ]
     },
     {
@@ -20053,7 +20348,7 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "c2933448026ae5ed57eec58047efe15d1bef0c51383fb3d565680c3b5e916c22"
+          "sha256": "222689c7a991e307b59f562d61c57e345867f4436e7c66f3204dc2ce09161a66"
         }
       ],
       "merged_prs": [],
@@ -20189,7 +20484,7 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "c2933448026ae5ed57eec58047efe15d1bef0c51383fb3d565680c3b5e916c22"
+          "sha256": "222689c7a991e307b59f562d61c57e345867f4436e7c66f3204dc2ce09161a66"
         },
         {
           "path": "packages/ui/src/components/ui/badge.tsx",
@@ -20639,6 +20934,266 @@
         "Deployment and enforcement after violation resolution remain external."
       ],
       "review_record": "audit/evidence/step-reviews.json#R03-errors"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.02.04",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 1052,
+      "requirement": "- **T-06.02.04:** Create logic for RTL/LTR switching based on locale\n  - **Notes:** When locale is `fa`, set `<html dir=\"rtl\">`, when `en`, set `ltr`. CSS variables or Tailwind `rtl:`/`ltr:` modifiers handle layout flip. Export a `useDirection()` hook that returns `'rtl' | 'ltr'` based on current locale. Components use this for icon positioning, text alignment, margin/padding mirroring.\n  - **Dependencies:** T-06.02.01, S-06.03\n  - **Complexity:** M",
+      "requirement_sha256": "95f999e440726f877fc381218a2a5976e7f320d5a649fb15ffa5347ea2e7442a",
+      "merged_prs": [],
+      "historically_skipped": true,
+      "status": "acceptance_verified",
+      "reviewed_sha": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/branding-theme.spec.ts",
+          "sha256": "1b181e5ee0188b3917130ac7765b149666765843a263ef4396682493a8f8d4d0"
+        },
+        {
+          "path": "apps/web/e2e/consumer-theme.spec.ts",
+          "sha256": "10d399975c6462196718720791a91daa87d2126a34a9f19b1b1f9fcbc776c2e5"
+        },
+        {
+          "path": "apps/web/e2e/direction-component.spec.ts",
+          "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+        },
+        {
+          "path": "apps/web/e2e/notification-brand-preview.spec.ts",
+          "sha256": "5dfce0218a87c0b38d64334cb939e34e63e3d5097f2581e2765ad5cc41f81fd4"
+        },
+        {
+          "path": "apps/web/e2e/terms-theme.spec.ts",
+          "sha256": "e7abb4fe9281ec84597b5bf7d5d43f31d824163feb5dec18925caad071efa139"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "4f48d63df8fdf9101aedc594672d2a869b55cddd1af0d9e18f6a40c6d9f82d8e"
+        },
+        {
+          "path": "apps/web/e2e/timezone-settings.spec.ts",
+          "sha256": "38cbbca538d8e8c46e963f30db2a26e905dc07d59c3e418426b0e86c524ad97c"
+        },
+        {
+          "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
+          "sha256": "53db2604bebacba6f0e98c3480527626c451d9d6e5085232d93f572eeb50b12f"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "241eceb68e909d7c4237077426efb2af7997eddc67906f54a21a449f5792889f"
+        },
+        {
+          "path": "apps/web/src/components/DefaultProfileModal.tsx",
+          "sha256": "77e14299473a0464513467847daadf000ca6efc24008e18787498196d72c950f"
+        },
+        {
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "7008c88de2d025a97c22cbd6d1894c8aded371cac57e8aea9db81f20cd3a64b5"
+        },
+        {
+          "path": "apps/web/src/components/NotificationBell.tsx",
+          "sha256": "ae34730ff6b681b7c77844e268c406abd03f4fc61915d90640c2aac9e4776987"
+        },
+        {
+          "path": "apps/web/src/components/NotificationRow.tsx",
+          "sha256": "4d954a8e8e951f0e614715e0c1dd0d63f48a3634d4fac8aeec4738a5f5c7fc60"
+        },
+        {
+          "path": "apps/web/src/components/OnlinePaymentReturnPanel.tsx",
+          "sha256": "a163b2eb38d2ba528e13f737a2319211c425529573e3d74cd2f1b5781f262ef1"
+        },
+        {
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "f4ccc8c951dc09fe0a52dd619c4724ba311d7cb7485d6d7bd8ca0c5eebd9f04e"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "48948013a9b3dd2a7c3c87089f057bfbf704efb5845df53fca98b373af93f4f7"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "eb35cedfcfaa4504ba460d920015d24cad66f3938d24aa56eccd932444dd9230"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "bf685ddaf2564fb18b8fb11c64e56152da718a3b4d98506fb71765c331f4d7fb"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "9cbf3e5c3e89a7bf0251fa9347ebd7a42eda1d770addceec659254cde4fec05e"
+        },
+        {
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "274822c5b8c6c33b186173b59337d0890a0b946c19e5168e379330b28800f046"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.test.tsx",
+          "sha256": "bb7cc279e25d2a8264ba0304bf095359396005f543550e6da806f4fadd36cc23"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountTime.tsx",
+          "sha256": "e3f3524399d2f7cccafc0315d915a888cdb73e9d49eb8f43659400d910c18ed1"
+        },
+        {
+          "path": "apps/web/src/hooks/useDirection.ts",
+          "sha256": "be6a237736ac7820d0aaa20bab598a68ad8d82671a250c77d7115a1cbf8e035c"
+        },
+        {
+          "path": "apps/web/src/hooks/useLocale.ts",
+          "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+        },
+        {
+          "path": "apps/web/src/hooks/useTimezone.ts",
+          "sha256": "15a0593bbc60d7a1d138baa6713946488dcd7eb9b6749d6b3e4294840b6d658a"
+        },
+        {
+          "path": "apps/web/src/pages/AIChat.tsx",
+          "sha256": "e2b9ada42742aedfc01c6b1b23f4f27d88bd7de3e6d9f3a472ac4f57d90b605b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
+          "sha256": "a622f4e1ae5316d9767ddd8440813683ceca94e36c553923efd4023e9fc9fc2c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "c664ce9eacbaf353a617e504e533d05be581cdb6e5755295c8e0c4d734375b72"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "4776a595aea33683e6974d14c9f13f8959c524e2357f7a90e737996a6c7ed56f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "ac1d76a635339aeb53703abaec9b3d23ae39c24a3a83034f90985d98e97557c4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "bd5ca866c2e0f368757503fa475b9d24afee56905706c07ab9bcaaff0c2d9fff"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedJobsPage.tsx",
+          "sha256": "9f96ac97367406e25c07b766164b25c212d45168f19b0b90f31994f6ae690940"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "71a91f928b36fc656c9170c7924acb34f4ac21be0d200f1c94893f13d6365413"
+        },
+        {
+          "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
+          "sha256": "6bcfb8c95f4f0654b2f6b623da47b117292f843a1729ed32a9e7fbb860003e82"
+        },
+        {
+          "path": "apps/web/src/pages/AdminServiceTargetsPage.tsx",
+          "sha256": "fe433be9a82560656b0107b3204527bf8f31f89ecddd53aa512a80718b341b41"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffTeamsPage.tsx",
+          "sha256": "8045c104029b4870074b72e5b240568758717934bf62dd3049828e63722b349f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "4e938c51757e289ac1a811060baae385ca963eb39912a3491117735467b7c7cd"
+        },
+        {
+          "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+          "sha256": "3c543beb38cf424dd0daf22247844a19ea4d5fb30f3fe3cceb8c0be037cf253b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "12f39d7c04949bd5f00c29f4b36ba169ff8f3c5afc3eb79e501dc688c4a59c85"
+        },
+        {
+          "path": "apps/web/src/pages/ChartsPage.tsx",
+          "sha256": "59fe536f68eb3fa48b099f2f48895a3805743ccf3c9ef451ff3de226cd439547"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "20c0e9d57e7f4df6e03390e6c3cc16417125481df7454c7c3c7a83742595cf95"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "fb8234931becfa4b3fbbaf736b6089fb003e131a395ca5d478047464033266f8"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "e94f8793f3a68bc95c3d8a379638e8e6a9506f44a52e637620a6ea2d5eb74080"
+        },
+        {
+          "path": "apps/web/src/pages/DocumentsPage.tsx",
+          "sha256": "7ab4ab3e1021c2476f465e55af6acaafded61194650350f22f869d923a31b6d0"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "43bd5ce800247e0b1beff9402fe75de0e76ef260b394db4c1d76868f7e02df3a"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "7aa742f78a0b0e50ebdaad2bc37fc05d1c46a8ee6d54c554b8038c04b1fe6431"
+        },
+        {
+          "path": "apps/web/src/pages/NotificationCenterPage.tsx",
+          "sha256": "9c4c1ed6f3867348044b794e96e7f4e138d4a8bcecddc70947ef03d6defc6e59"
+        },
+        {
+          "path": "apps/web/src/pages/TosPreview.tsx",
+          "sha256": "8eb4ab60490eae7fc06cefaab2888985e8c23f1f97312f0ad68daf67255df11a"
+        },
+        {
+          "path": "apps/web/src/pages/TosRichText.tsx",
+          "sha256": "5528b6f4bad4cb37b7ac4b46153ca4ac3f377e94b458326118b0245ca1193d8b"
+        },
+        {
+          "path": "apps/web/src/pages/VideosPage.tsx",
+          "sha256": "b9fe8a1f44e8e234669709808eecb51c7f5a68f88f1f744b675afa9de6c159c6"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "e58352b8a7d34f2376f06d4fa507c04988f3d3248544299fd82b9c747096de2e"
+        },
+        {
+          "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+          "sha256": "52dd4b7b25aee2b6bc485ed4de87f6910c47cbaa2a391024cf0c88fd7e370776"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/index.tsx",
+          "sha256": "9c47f5187064ebf45171f3f879f965f038c4377214007d10bc6d37dec44762d9"
+        },
+        {
+          "path": "apps/web/src/routes/_app/savings.tsx",
+          "sha256": "1e798f1ecb63c33b45ec2a0de45ecc10616e765fc9156800294166677f99603d"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/index.tsx",
+          "sha256": "ceeff6ff8ca6188e9b9eb533ee199f48f30399b3ebec3d84b9ee9ef3c314bb5a"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "3601c13e59aff2616a2636fbee10956e1dd8a46b5fbdc3b4bade5c84b8ef1e49"
+        },
+        {
+          "path": "packages/i18n/src/date-time.test.ts",
+          "sha256": "a48c6388730c7113f22d873cca23797f069c7f2cf75169dcefe06777cbd66bda"
+        },
+        {
+          "path": "packages/i18n/src/date-time.ts",
+          "sha256": "4c509aa5cbc6c8c50c342914c887d3bdd44e71ace6542f5d65c10ee2542c645a"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "222689c7a991e307b59f562d61c57e345867f4436e7c66f3204dc2ce09161a66"
+        }
+      ],
+      "checks": [
+        "Exported locale-driven useDirection feeds document and portal direction; logical layout and live keyboard switching pass.",
+        "audit/evidence/step-reviews.json#R03-consumer-theme-time"
+      ],
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R03-consumer-theme-time",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#R03-controls",
+        "audit/evidence/step-reviews.json#R03-auxiliary-ui",
+        "audit/evidence/step-reviews.json#R01-account-settings"
+      ]
     }
   ],
   "pending_task_keys": [
@@ -20710,7 +21265,6 @@
     "01-platform-infrastructure.md#T-06.01.05",
     "01-platform-infrastructure.md#T-06.02.01",
     "01-platform-infrastructure.md#T-06.02.02",
-    "01-platform-infrastructure.md#T-06.02.04",
     "01-platform-infrastructure.md#T-06.03.01",
     "01-platform-infrastructure.md#T-06.04.01",
     "01-platform-infrastructure.md#T-07.01.01",
@@ -24723,6 +25277,83 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui",
       "note": "Refresh matching immediate-base shared/UI bindings only; behavior and compatibility reviewed with21 browser/49 UI cases and final quality/budget checks.38 older refreshes retained."
+    },
+    {
+      "source_revision": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-09.01.02",
+        "02-auth-users-admin.md#T-09.12.05",
+        "02-auth-users-admin.md#T-04.01.03",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.03.02",
+        "01-platform-infrastructure.md#T-06.02.05",
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.03",
+        "02-auth-users-admin.md#T-05.02.04",
+        "02-auth-users-admin.md#T-05.02.05",
+        "02-auth-users-admin.md#T-05.02.06",
+        "02-auth-users-admin.md#T-05.05.01",
+        "02-auth-users-admin.md#T-02.01.02",
+        "02-auth-users-admin.md#T-03.01.01",
+        "02-auth-users-admin.md#T-03.03.01",
+        "02-auth-users-admin.md#T-03.03.02",
+        "02-auth-users-admin.md#T-03.03.03",
+        "02-auth-users-admin.md#T-03.03.05",
+        "02-auth-users-admin.md#T-08.01.02",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.03",
+        "04-invoices-wallet-contracts.md#T-04.2.02.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-05.05.02",
+        "02-auth-users-admin.md#T-09.06.03",
+        "02-auth-users-admin.md#T-09.04.01",
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "02-auth-users-admin.md#T-09.09.03",
+        "05-notifications-documents-ai.md#T-05.02.03",
+        "05-notifications-documents-ai.md#T-05.02.04",
+        "05-notifications-documents-ai.md#T-05.03.03",
+        "05-notifications-documents-ai.md#T-05.04.01",
+        "05-notifications-documents-ai.md#T-05.04.02",
+        "05-notifications-documents-ai.md#T-05.04.03",
+        "05-notifications-documents-ai.md#T-05.04.04",
+        "05-notifications-documents-ai.md#T-05.04.05",
+        "05-notifications-documents-ai.md#T-05.05.03",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.11.02",
+        "02-auth-users-admin.md#T-09.11.04",
+        "01-platform-infrastructure.md#T-06.03.02",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-06.03.05",
+        "01-platform-infrastructure.md#T-06.03.06"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R03-consumer-theme-time",
+      "note": "Refresh matching immediate-base styling/direction bindings; current focused browser and quality evidence supports unchanged domain behavior.38 older refreshes retained."
     }
   ]
 }

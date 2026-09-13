@@ -1,6 +1,6 @@
 # Current disposition of historically skipped tasks
 
-58 historical skips remain in the record. 5 now have verified task-level acceptance.
+58 historical skips remain in the record. 8 now have verified task-level acceptance.
 The rest have the statuses shown below. Pending acceptance does not mean no code exists.
 Review current requirements and preserve working implementation before planning any remaining build.
 This list does not authorize dispatch or resume the feature loop.
@@ -37,11 +37,11 @@ Use [current canonical requirements](current-task-requirements.json) and [accept
 | 01-platform-infrastructure.md#T-06.02.01 | Initialize `packages/i18n` with message dictionary structure | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
 | 01-platform-infrastructure.md#T-06.02.02 | Create Jalali calendar date utilities | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
 | 01-platform-infrastructure.md#T-06.02.03 | Create timezone-aware date/time display utilities | acceptance_verified | Preserve verified implementation; do not rebuild this task |
-| 01-platform-infrastructure.md#T-06.02.04 | Create logic for RTL/LTR switching based on locale | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
+| 01-platform-infrastructure.md#T-06.02.04 | Create logic for RTL/LTR switching based on locale | acceptance_verified | Preserve verified implementation; do not rebuild this task |
 | 01-platform-infrastructure.md#T-06.02.05 | Localize number/currency formatting | acceptance_verified | Preserve verified implementation; do not rebuild this task |
 | 01-platform-infrastructure.md#T-06.03.01 | Initialize `packages/ui` with shadcn/ui and Base UI | acceptance_pending | Review current implementation against requirements; build only unmet remainder |
-| 01-platform-infrastructure.md#T-06.03.02 | Create themed component set with RTL support | partial | Review current implementation against requirements; build only unmet remainder |
-| 01-platform-infrastructure.md#T-06.03.03 | Implement WCAG 2.2 AA accessibility in all shared components | partial | Review current implementation against requirements; build only unmet remainder |
+| 01-platform-infrastructure.md#T-06.03.02 | Create themed component set with RTL support | acceptance_verified | Preserve verified implementation; do not rebuild this task |
+| 01-platform-infrastructure.md#T-06.03.03 | Implement WCAG 2.2 AA accessibility in all shared components | acceptance_verified | Preserve verified implementation; do not rebuild this task |
 | 01-platform-infrastructure.md#T-06.03.04 | Create localized DatePicker component | acceptance_verified | Preserve verified implementation; do not rebuild this task |
 | 01-platform-infrastructure.md#T-06.03.05 | Implement theme system with admin overrides | partial | Review current implementation against requirements; build only unmet remainder |
 | 01-platform-infrastructure.md#T-06.03.06 | Create loading/empty/error state components | acceptance_verified | Preserve verified implementation; do not rebuild this task |
