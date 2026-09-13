@@ -4,9 +4,11 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool, Client, type PoolConfig } from 'pg';
 import * as fs from 'node:fs';
 import { X509Certificate } from 'node:crypto';
+import { wrapTransactionPoolClient } from './transaction-pool.js';
 
 let pool: Pool | null = null;
 let directPool: Pool | null = null;
+let sessionPoolConfig: DbPoolConfig | undefined;
 
 export interface DbPoolConfig {
   databaseUrl?: string;
@@ -117,6 +119,7 @@ export function buildConnectionString(
 
 type PendingQuery = { handleError(error: Error, connection: unknown): void };
 type QueryClient = Client & {
+  _txStatus?: string;
   _activeQuery?: PendingQuery | null;
   _queryQueue?: PendingQuery[];
   processID: number;
@@ -169,7 +172,8 @@ function cancelRunningQuery(client: QueryClient, query: PendingQuery): () => voi
 
 export function wrapClientQuery(
   client: Client,
-  timeoutPolicy: QueryTimeoutPolicy
+  timeoutPolicy: QueryTimeoutPolicy,
+  transactionLocal = false
 ): typeof client.query {
   if (
     typeof timeoutPolicy !== 'number' &&
@@ -239,21 +243,27 @@ export function wrapClientQuery(
       }
     };
 
-    if (typeof timeoutPolicy !== 'number') {
+    if (
+      typeof timeoutPolicy !== 'number' &&
+      (!transactionLocal || (client as QueryClient)._txStatus !== 'I')
+    ) {
       // Queue SET and its query synchronously as one adjacent pair. Awaiting SET
       // here would allow another caller's SET to change this query's timeout.
       // Transaction-control commands must remain usable in an aborted transaction.
-      originalQuery(`SET statement_timeout = ${queryTimeoutMs}`, (error) => {
-        // Let ROLLBACK, including commented SQL, recover an aborted transaction.
-        // Every other statement will itself fail with 25P02 until recovery.
-        if (!error || ('code' in error && error.code === '25P02') || !capturedQuery) return;
-        const target = client as QueryClient;
-        const index = target._queryQueue?.indexOf(capturedQuery) ?? -1;
-        if (index >= 0) {
-          target._queryQueue!.splice(index, 1);
-          capturedQuery.handleError(error, client.connection);
+      originalQuery(
+        `SET ${transactionLocal ? 'LOCAL ' : ''}statement_timeout = ${queryTimeoutMs}`,
+        (error) => {
+          // Let ROLLBACK, including commented SQL, recover an aborted transaction.
+          // Every other statement will itself fail with 25P02 until recovery.
+          if (!error || ('code' in error && error.code === '25P02') || !capturedQuery) return;
+          const target = client as QueryClient;
+          const index = target._queryQueue?.indexOf(capturedQuery) ?? -1;
+          if (index >= 0) {
+            target._queryQueue!.splice(index, 1);
+            capturedQuery.handleError(error, client.connection);
+          }
         }
-      });
+      );
     }
 
     if (hasCallback) {
@@ -299,16 +309,36 @@ export function wrapClientQuery(
  * Attach the slow-query logging and query-timeout guard to a pool. Registered
  * per-client via the pool's `connect` event.
  */
-function attachClientQueryHooks(pool: Pool, timeoutPolicy: QueryTimeoutPolicy): void {
+function attachClientQueryHooks(
+  pool: Pool,
+  timeoutPolicy: QueryTimeoutPolicy,
+  transactionConfig?: DbPoolConfig
+): void {
   if (
     process.env.NODE_ENV !== 'production' &&
     typeof timeoutPolicy === 'number' &&
-    timeoutPolicy <= 0
+    timeoutPolicy <= 0 &&
+    !transactionConfig
   )
     return;
 
   pool.on('connect', (client: Client) => {
-    client.query = wrapClientQuery(client, timeoutPolicy);
+    const query = wrapClientQuery(client, timeoutPolicy, !!transactionConfig);
+    client.query = transactionConfig
+      ? wrapTransactionPoolClient(client, query, {
+          statementTimeout: transactionConfig.statementTimeout ?? DEFAULT_STATEMENT_TIMEOUT,
+          lockTimeout: transactionConfig.lockTimeout ?? DEFAULT_LOCK_TIMEOUT,
+          idleTransactionTimeout:
+            transactionConfig.idleTransactionTimeout ?? DEFAULT_IDLE_TX_TIMEOUT,
+          connectionTimeout: pool.options.connectionTimeoutMillis || 5000,
+          queueTimeout: (text) =>
+            typeof timeoutPolicy === 'number'
+              ? timeoutPolicy
+              : isReadQuery(text)
+                ? timeoutPolicy.read
+                : timeoutPolicy.write,
+        })
+      : query;
   });
 }
 
@@ -355,9 +385,17 @@ function resolveSslConfig(
   return { rejectUnauthorized };
 }
 
-function poolConnectionConfig(url: string | undefined, config: DbPoolConfig): PoolConfig {
+function poolConnectionConfig(
+  url: string | undefined,
+  config: DbPoolConfig,
+  transactionPool = false
+): PoolConfig {
   const ssl = resolveSslConfig(config.ssl);
-  let connectionString = buildConnectionString(url, config);
+  let connectionString = transactionPool ? (url ?? '') : buildConnectionString(url, config);
+  if (transactionPool && connectionString && new URL(connectionString).searchParams.has('options'))
+    throw new Error(
+      'PgBouncer startup options are unsupported; use transaction-local settings or a direct pool'
+    );
   if (ssl !== undefined && connectionString) {
     const parsed = new URL(connectionString);
     // pg parses URL TLS parameters after the object options. Remove competing
@@ -376,16 +414,15 @@ export function createDbPool(config: DbPoolConfig = {}): Pool {
   // PgBouncer is the preferred target for production deployments with
   // multiple API replicas.  When PgBouncer is not configured (local dev,
   // single-server), DATABASE_URL is used directly.
-  const connectionUrl =
+  const pgbouncerUrl =
     config.pgbouncerUrl ??
-    config.databaseUrl ??
-    process.env['PGBOUNCER_URL'] ??
-    process.env['DATABASE_URL'];
+    (config.databaseUrl === undefined ? process.env['PGBOUNCER_URL'] : undefined);
+  const connectionUrl = pgbouncerUrl ?? config.databaseUrl ?? process.env['DATABASE_URL'];
 
   const timeoutPolicy = poolTimeoutPolicy(config);
 
   pool = new Pool({
-    ...poolConnectionConfig(connectionUrl, config),
+    ...poolConnectionConfig(connectionUrl, config, pgbouncerUrl !== undefined),
     min: config.poolMin ?? (Number(process.env.DB_POOL_MIN) || 2),
     max: config.poolMax ?? (Number(process.env.DB_POOL_MAX) || 20),
     idleTimeoutMillis: config.idleTimeoutMillis ?? 30_000,
@@ -397,16 +434,51 @@ export function createDbPool(config: DbPoolConfig = {}): Pool {
     structuredLog('error', 'pool_error', { message: err.message });
   });
 
-  attachClientQueryHooks(pool, timeoutPolicy);
+  attachClientQueryHooks(pool, timeoutPolicy, pgbouncerUrl !== undefined ? config : undefined);
+  if (pgbouncerUrl !== undefined) {
+    sessionPoolConfig = {
+      ...config,
+      pgdirectUrl:
+        config.pgdirectUrl ??
+        config.databaseUrl ??
+        process.env['PGDIRECT_URL'] ??
+        process.env['DATABASE_URL'] ??
+        '',
+      poolMin: 1,
+      poolMax: 5,
+    };
+  }
 
   return pool;
 }
 
-export function getDbPool(): Pool {
+export function getDbPool(options: { session?: boolean } = {}): Pool {
   if (!pool) {
     throw new Error('Database pool not initialized. Call createDbPool() first.');
   }
+  if (options.session && sessionPoolConfig) {
+    if (!sessionPoolConfig.pgdirectUrl)
+      throw new Error(
+        'Session operations require PGDIRECT_URL or DATABASE_URL when PgBouncer is configured'
+      );
+    return createDirectDbPool(sessionPoolConfig);
+  }
   return pool;
+}
+
+/** Close both shared pools; one failure must not skip the other. */
+export async function closeDbPools(): Promise<void> {
+  const results = await Promise.allSettled(
+    [pool, directPool].filter((value): value is Pool => value !== null).map((value) => value.end())
+  );
+  const failures = results.filter(
+    (result): result is PromiseRejectedResult => result.status === 'rejected'
+  );
+  if (failures.length)
+    throw new AggregateError(
+      failures.map((result) => result.reason),
+      'Database pool close failed'
+    );
 }
 
 /**
@@ -440,6 +512,9 @@ export function createDirectDbPool(
       config.connectionTimeoutMillis ?? (Number(process.env.DB_CONNECTION_TIMEOUT) || 5_000),
   } satisfies PoolConfig);
 
+  created.on('error', (error) =>
+    structuredLog('error', 'direct_pool_error', { message: error.message })
+  );
   attachClientQueryHooks(created, timeoutPolicy);
   if (shared) directPool = created;
   return created;

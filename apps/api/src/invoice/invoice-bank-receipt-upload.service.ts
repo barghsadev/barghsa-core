@@ -146,7 +146,7 @@ export class InvoiceBankReceiptUploadService {
       throw httpError(ErrorCodes.NOT_FOUND_RESOURCE, 'No active profile', 404);
     }
 
-    const pool = getDbPool();
+    const pool = getDbPool({ session: true });
     const attachmentLockKeys = bankReceiptAttachmentAdvisoryLockKeys(parsed.receipt.attachmentKey);
     const client = await pool.connect();
     try {

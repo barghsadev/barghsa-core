@@ -188,7 +188,7 @@ export class ChargebackDetectionService {
     eventId: string,
     notification: ParsedChargebackNotification
   ): Promise<HandleChargebackResult> {
-    const pool = getDbPool();
+    const pool = getDbPool({ session: true });
     const client = await pool.connect();
     const lockKeys = chargebackEventLockKeys(eventId);
     try {

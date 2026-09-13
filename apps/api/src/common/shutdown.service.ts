@@ -6,7 +6,7 @@ import type { StorageProvider } from '@barghsa/shared/storage';
 import { REDIS_CLIENT } from '../redis/index.js';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { HttpAdapterHost } from '@nestjs/core';
-import { getDbPool } from '@barghsa/db';
+import { closeDbPools } from '@barghsa/db';
 
 /**
  * Graceful shutdown handler for the NestJS API server.
@@ -136,12 +136,11 @@ export class ShutdownService implements OnModuleInit, OnApplicationShutdown {
 
     // 2. Close the database connection pool.
     try {
-      const p = getDbPool();
-      await p.end();
-      this.logger.log('Database pool closed');
+      await closeDbPools();
+      this.logger.log('Database pools closed');
     } catch {
       cleanShutdown = false;
-      this.logger.warn('Database pool not initialised — skipping pool close');
+      this.logger.warn('Database pool close failed');
     }
 
     try {

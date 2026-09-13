@@ -118,7 +118,7 @@ export class OnlineTopUpService {
       if (!(err instanceof BadRequestException)) throw err;
     }
 
-    const pool = getDbPool();
+    const pool = getDbPool({ session: true });
     const client = await pool.connect();
     const lockKeys = onlineTopUpAdvisoryLockKeys(idempotencyKey);
     try {

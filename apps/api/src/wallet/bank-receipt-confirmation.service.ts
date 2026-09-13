@@ -295,7 +295,7 @@ export class BankReceiptConfirmationService {
       csrfToken: input.csrfToken,
     };
     const now = input.now ?? new Date();
-    const pool = getDbPool();
+    const pool = getDbPool({ session: true });
     const client = await pool.connect();
     const lockKeys = bankReceiptConfirmationLockKeys(input.transactionId);
     try {
@@ -505,7 +505,7 @@ export class BankReceiptConfirmationService {
       csrfToken: input.csrfToken,
     };
     const now = input.now ?? new Date();
-    const pool = getDbPool();
+    const pool = getDbPool({ session: true });
     const client = await pool.connect();
     const lockKeys = bankReceiptConfirmationLockKeys(input.transactionId);
     try {

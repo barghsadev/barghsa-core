@@ -255,7 +255,7 @@ export class OnlineTopUpCallbackService {
   private async processVerifiedPayload(
     input: ProcessVerifiedPayloadInput
   ): Promise<HandleProviderCallbackResult> {
-    const pool = getDbPool();
+    const pool = getDbPool({ session: true });
     const client = await pool.connect();
     const lockKeys = onlineTopUpCallbackLockKeys(input.merchantOrderId);
     try {

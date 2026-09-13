@@ -127,7 +127,7 @@ export class BankReceiptTopUpService {
       throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, parsed.message);
     }
 
-    const pool = getDbPool();
+    const pool = getDbPool({ session: true });
     const attachmentLockKeys = bankReceiptAttachmentAdvisoryLockKeys(parsed.receipt.attachmentKey);
     const idempotencyLockKeys = bankReceiptTopUpAdvisoryLockKeys(idempotencyKey);
     const client = await pool.connect();
