@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `761ef274` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `7f77b07e` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -15,6 +15,8 @@ Current through product/test `761ef274` and approved requirements `981e98d6`, 20
 Saved inventory: **301 merged PRs**, **172 deferrals across 102 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
+
+Operations batch in progress: PostgreSQL16/17 monitoring repaired at35c8201c,17 collector cases and types/lint/format pass. PgBouncer container settings/health repaired at7f77b07e; isolated service/query/transaction proof passes and owned resources are removed. **Next: transaction-safe application timeouts through PgBouncer**, then signed/encrypted backup, WAL, restore, retention and active PostgreSQL configuration. Startup timeout rejection is reproduced; do not ignore options or waive read/write deadlines. Complete detailed batch review once this workflow is repaired. Current logs and exact remaining defects are in progress.json.active_batch.
 
 Runtime lifecycle verified at645dda1c:3 tasks newly verified/1 partial;3 PRs newly closed/1 open, PR29 closure preserved. Global197 verified/35 partial/90 pending;178 PRs closed/28 open/95 unreviewed.118 immediate-base bindings refreshed;38 older refreshes retained. PR42 keeps future AI/bill-data maintenance consumers open. Loop batch at761ef274 closes PR234/235/242 with58 protocol and9 audit cases; task counts unchanged. Next **V01-operations-configuration**, saved PR43/44/45/46/48/49. [Loop review](evidence/step-reviews.json#V01-loop-durability). [Review](evidence/step-reviews.json#V01-runtime-lifecycle).
 

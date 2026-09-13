@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
+  "source_revision": "7f77b07ec7e38bbeae4e636cae059045c4f5c447",
   "active_step": "V01",
-  "next_action": "V01-operations-configuration: review saved PR43/44/45/46/48/49 against exact requirements; preserve external backup/restore and deployment prerequisites.",
+  "next_action": "Repair PgBouncer transaction-mode integration: actual image uses POSTGRESQL_HOST/PORT/USERNAME/PASSWORD and PGBOUNCER_PORT=6432. Do not ignore unsupported startup timeout options or keep per-query SET SESSION across transaction pooling. Then complete encrypted signed backup/WAL/restore and configuration activation.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -1118,123 +1118,82 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-loop-durability",
-    "name": "Durable loop selection and exact-commit review",
-    "status": "completed",
+    "id": "V01-operations-configuration",
+    "name": "PostgreSQL pooling, backups, restore and monitoring",
+    "status": "in_progress",
     "prs": [
-      234,
-      235,
-      242
+      43,
+      44,
+      45,
+      46,
+      48,
+      49
     ],
-    "task_keys": [],
+    "task_keys": [
+      "01-platform-infrastructure.md#T-04.01.01",
+      "01-platform-infrastructure.md#T-04.01.02",
+      "01-platform-infrastructure.md#T-04.01.03",
+      "01-platform-infrastructure.md#T-04.01.04",
+      "01-platform-infrastructure.md#T-04.01.05",
+      "01-platform-infrastructure.md#T-04.01.06"
+    ],
     "remaining_checklist": [
-      "Live durable-state bootstrap/restart/readback, active PR304 reconciliation and scheduler recovery remain external and unauthorized. Local temporary-remote proof does not establish the other machine’s state.",
-      "Historical snapshot and remote scheduler remain untouched. All322 product-task identities and58 skipped records remain unchanged; these three PRs have protocol requirements without a canonical product-task mapping.",
-      "V02 full repository regression remains."
+      "Exact six task requirements and PR bodies read; inspect current implementation and reuse valid earlier operational checks.",
+      "Retain explicit backup encryption/retention/integrity, restore runbook/RTO, verification scheduling/alerts and monitoring gaps until supported.",
+      "Separate local configuration/script acceptance from production TLS/firewall, workload, backup and restore evidence.",
+      "Monitoring compatibility and container startup repairs verified locally; PR/task closures wait for complete workflow review. No task counts changed at this interruption checkpoint."
     ],
     "confirmed_defects": [
-      "Strict review readback accepted booleans for schema_version/issue line and crashed on malformed root/decision/severity values. Reproduced and fixed;57 protocol cases pass plus one real Git materialization case."
+      "PostgreSQL16 Compose conflicts with monitoring SQL that requires PostgreSQL17 pg_stat_checkpointer and shared_blk_read_time/write_time names. Add both-version integration proof and select version-compatible queries.",
+      "PgBouncer Compose uses unrecognized PGBOUNCER_HOST/USER/PASSWORD, wrong listening port and absent transaction mode. Application startup options and per-query SET SESSION also require a transaction-safe pooling review; do not merely ignore startup options.",
+      "Physical backup/WAL/restore scripts use HTTP Basic auth rather than S3 signatures; full backups lack GPG, pg_verifybackup and retention. Backup cleanup deletes a caller-selected working directory and dry-run reveals the database URL. Restore latest selection is truncated/unpaginated. Record complete workflow repairs before claiming safe backup/restore.",
+      "Compose mounts PostgreSQL configuration without an explicit include/config_file; runtime preload/WAL activation must be verified, and archive dependencies currently are not installed."
     ],
     "reused_evidence": [
-      "Existing loop durability/lock/reconciliation tests and revision-bound audit evidence; compare sources before reuse."
+      "Existing monitoring task partial record at8136b190:15 DB/16 API tests, OTLP and outage behavior; four later source changes need explicit refresh, not wholesale revalidation."
     ],
     "new_evidence": [
-      "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
-      "1/1 additional real Git immutable-object materialization test passes. Combined58 distinct protocol cases; no remote GitHub or live scheduler action.",
-      "9/9 audit provenance tests pass, including incomplete/stale protocol proof refusal and prevention of bypassing mapped tasks or deferrals. Python compilation, backlog validation and diff check pass."
-    ],
-    "pr_dispositions": [
       {
-        "pr": 234,
-        "status": "closed",
-        "task_keys": [],
-        "reason": "Explicit integer/string types for constant/enum fields remain in the schema. Readback now rejects boolean integer impostors, malformed root/decision/severity values, invalid task IDs and invalid HEAD format before durable approval. Original exact identity, issue shape, blocking severity and unknown-field checks remain.",
-        "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
-        "evidence": "audit/evidence/step-reviews.json#V01-loop-durability",
-        "protocol_review": {
-          "requirements": [
-            "Explicit integer/string types for constant/enum fields remain in the schema. Readback now rejects boolean integer impostors, malformed root/decision/severity values, invalid task IDs and invalid HEAD format before durable approval. Original exact identity, issue shape, blocking severity and unknown-field checks remain."
-          ],
-          "validation": [
-            "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
-            "1/1 additional real Git immutable-object materialization test passes. Combined58 distinct protocol cases; no remote GitHub or live scheduler action."
-          ],
-          "source_evidence": [
-            {
-              "path": "kanban/scripts/loop-runner.py",
-              "sha256": "f20452b376db603a9e97d910938a4089265e9d4bfa3d9edbdc18a73415951ec1"
-            },
-            {
-              "path": "kanban/scripts/test_loop_runner.py",
-              "sha256": "6cbe98db3a61d1b02428e11bf18785a252266c9b8198d7a5ad19ad79e3d24f08"
-            },
-            {
-              "path": "kanban/scripts/review-schema.json",
-              "sha256": "38bb98b83235cd6728018957bb0c2d420af3c58c64c216012a4091fabdee0bd6"
-            }
-          ]
-        }
+        "revision": "35c8201c8265a03461e894024dc26d79356b0fe2",
+        "change": "PostgreSQL16/17 collector compatibility",
+        "checks": [
+          "17/17 collector cases, including actual16/17 pg_stat_statements and checkpoints; focused required-view test rerun after TypeScript mock correction.",
+          "DB types and scoped lint/format pass."
+        ],
+        "logs": [
+          "/tmp/v01-ops-metrics-final-tests.log",
+          "/tmp/v01-ops-metrics-format-final.log",
+          "/tmp/v01-ops-metrics-format.log",
+          "/tmp/v01-ops-metrics-lint.log",
+          "/tmp/v01-ops-metrics-required-view.log",
+          "/tmp/v01-ops-metrics-tests.log",
+          "/tmp/v01-ops-metrics-types-final.log",
+          "/tmp/v01-ops-metrics-types.log",
+          "/tmp/v01-ops-metrics16-before.log"
+        ],
+        "review": "Current server version selects native checkpoint/query-timing columns. Existing output types and failure isolation preserved; production monitoring delivery/load remain external."
       },
       {
-        "pr": 235,
-        "status": "closed",
-        "task_keys": [],
-        "reason": "A real temporary bare remote verifies the advertised base is a commit and fetched PR ref equals the advertised HEAD. Advancing main is accepted; wrong HEAD or non-commit base is refused. No mutable-main equality requirement is restored.",
-        "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
-        "evidence": "audit/evidence/step-reviews.json#V01-loop-durability",
-        "protocol_review": {
-          "requirements": [
-            "A real temporary bare remote verifies the advertised base is a commit and fetched PR ref equals the advertised HEAD. Advancing main is accepted; wrong HEAD or non-commit base is refused. No mutable-main equality requirement is restored."
-          ],
-          "validation": [
-            "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
-            "1/1 additional real Git immutable-object materialization test passes. Combined58 distinct protocol cases; no remote GitHub or live scheduler action."
-          ],
-          "source_evidence": [
-            {
-              "path": "kanban/scripts/loop-runner.py",
-              "sha256": "f20452b376db603a9e97d910938a4089265e9d4bfa3d9edbdc18a73415951ec1"
-            },
-            {
-              "path": "kanban/scripts/test_loop_runner.py",
-              "sha256": "6cbe98db3a61d1b02428e11bf18785a252266c9b8198d7a5ad19ad79e3d24f08"
-            }
-          ]
-        }
-      },
-      {
-        "pr": 242,
-        "status": "closed",
-        "task_keys": [],
-        "reason": "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1–3 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract.",
-        "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
-        "evidence": "audit/evidence/step-reviews.json#V01-loop-durability",
-        "protocol_review": {
-          "requirements": [
-            "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1–3 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract."
-          ],
-          "validation": [
-            "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
-            "1/1 additional real Git immutable-object materialization test passes. Combined58 distinct protocol cases; no remote GitHub or live scheduler action."
-          ],
-          "source_evidence": [
-            {
-              "path": "kanban/scripts/loop-runner.py",
-              "sha256": "f20452b376db603a9e97d910938a4089265e9d4bfa3d9edbdc18a73415951ec1"
-            },
-            {
-              "path": "kanban/scripts/test_loop_runner.py",
-              "sha256": "6cbe98db3a61d1b02428e11bf18785a252266c9b8198d7a5ad19ad79e3d24f08"
-            },
-            {
-              "path": "kanban/STATE-PROTOCOL.md",
-              "sha256": "388a8833e24141076ffaafe62c8d924cd3f3ea51984d78e8be256e234ea7bef4"
-            }
-          ]
-        }
+        "revision": "7f77b07ec7e38bbeae4e636cae059045c4f5c447",
+        "change": "PgBouncer container configuration and health check",
+        "checks": [
+          "Actual configured PostgreSQL16 and PgBouncer1.23.1 services healthy, authenticated queries and transaction with custom shared password pass; generated transaction mode and6432 port verified.",
+          "Actual startup statement_timeout rejection reproduced. Application integration remains a confirmed open repair. All owned isolated containers/volumes removed; existing resources untouched.",
+          "Compose format/diff checks pass."
+        ],
+        "logs": [
+          "/tmp/v01-ops-pooler-diff.log",
+          "/tmp/v01-ops-pooler-format.log",
+          "/tmp/v01-ops-pooler-smoke-final.log",
+          "/tmp/v01-ops-pooler-smoke-reviewed.log",
+          "/tmp/v01-ops-pooler-smoke-verified.log",
+          "/tmp/v01-ops-pooler-smoke.log"
+        ],
+        "review": "Corrected unsupported backend variable names, listener port, missing transaction mode, hardcoded password and unavailable pg_isready health binary. Earlier smoke diagnostic assertions were corrected to read separate psql command results and parse INI whitespace."
       }
     ],
-    "next_action": "V01-operations-configuration: review saved PR43/44/45/46/48/49 against exact requirements; preserve external backup/restore and deployment prerequisites."
+    "pr_dispositions": [],
+    "next_action": "Repair PgBouncer transaction-mode integration: actual image uses POSTGRESQL_HOST/PORT/USERNAME/PASSWORD and PGBOUNCER_PORT=6432. Do not ignore unsupported startup timeout options or keep per-query SET SESSION across transaction pooling. Then complete encrypted signed backup/WAL/restore and configuration activation."
   },
   "open_domain_reviews": [
     {
