@@ -1,7 +1,8 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/app';
-import type { JSX } from 'react';
+import { FileCheck2, Package, LifeBuoy, ReceiptText, ArrowUpRight } from 'lucide-react';
+import { cn } from '@barghsa/ui';
 
 export interface QuickStatusCardsProps {
   /** Active contracts (confirmed electricity orders). */
@@ -16,162 +17,6 @@ export interface QuickStatusCardsProps {
   locale?: Locale;
 }
 
-/** ─── Inline SVG icons ─────────────────────────────────────────────── */
-
-function ContractIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <polyline points="10 9 9 9 8 9" />
-    </svg>
-  );
-}
-
-function OrderIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-      <polyline points="3 8 12 12 21 8" />
-      <line x1="12" y1="12" x2="12" y2="22" />
-      <line x1="8" y1="6" x2="16" y2="10" />
-    </svg>
-  );
-}
-
-function TicketIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" />
-      <path d="M9 9h.01" />
-      <path d="M13 9h.01" />
-      <path d="M9 13h.01" />
-    </svg>
-  );
-}
-
-function InvoiceIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <path d="M10 9v4" />
-      <line x1="7" y1="12" x2="13" y2="12" />
-    </svg>
-  );
-}
-
-/** ─── Per-card colour helpers ────────────────────────────────────────── */
-
-/**
- * Active contracts: any count is a positive signal → green always.
- */
-function contractColor(count: number): string {
-  if (count === 0) return 'border-s-4 border-input bg-card text-card-foreground';
-  return 'border-s-4 border-green-500 bg-green-50 dark:bg-card';
-}
-
-/**
- * Pending orders: 0 = nothing to do (green), 1-2 = attention (yellow), 3+ = action (red).
- *
- * Thresholds are product-defined placeholders: 0 is a clean slate, 1-2 is a
- * manageable queue that may warrant a glance, and 3+ indicates a backlog the
- * user should act on. They can be revisited once real operations data
- * exists; see T-08.01.03.
- */
-function orderColor(count: number): string {
-  if (count === 0) return 'border-s-4 border-green-500 bg-green-50 dark:bg-card';
-  if (count <= 2) return 'border-s-4 border-yellow-500 bg-yellow-50 dark:bg-card';
-  return 'border-s-4 border-red-500 bg-red-50 dark:bg-card';
-}
-
-/**
- * Open tickets: 0 = good (green), 1-2 = attention (yellow), 3+ = action (red).
- *
- * Same product-defined thresholds as orders — any open tickets warrant
- * attention, and a growing backlog (3+) signals the customer needs to act.
- */
-function ticketColor(count: number): string {
-  if (count === 0) return 'border-s-4 border-green-500 bg-green-50 dark:bg-card';
-  if (count <= 2) return 'border-s-4 border-yellow-500 bg-yellow-50 dark:bg-card';
-  return 'border-s-4 border-red-500 bg-red-50 dark:bg-card';
-}
-
-/**
- * Unpaid invoices: 0 = good (green), 1-2 = attention (yellow), 3+ = action (red).
- *
- * Unpaid invoices directly affect service continuity, so even one is worth
- * flagging; 3+ is treated as requiring immediate action. Thresholds are
- * placeholders pending operational data.
- */
-function invoiceColor(count: number): string {
-  if (count === 0) return 'border-s-4 border-green-500 bg-green-50 dark:bg-card';
-  if (count <= 2) return 'border-s-4 border-yellow-500 bg-yellow-50 dark:bg-card';
-  return 'border-s-4 border-red-500 bg-red-50 dark:bg-card';
-}
-
-/** ─── Card definitions ─────────────────────────────────────────────── */
-
-interface CardDef {
-  key: string;
-  icon: (props: { className?: string }) => JSX.Element;
-  labelKey: string;
-  href: string;
-  search?: Record<string, string>;
-  count: number;
-  colorFn: (count: number) => string;
-}
-
-/**
- * Quick status cards (T-08.01.03).
- *
- * Shows four summary cards with icons, per-card colour coding, and links
- * to filtered list pages. Intended for the dashboard overview.
- */
 export function QuickStatusCards({
   activeContracts,
   pendingOrders,
@@ -180,73 +25,76 @@ export function QuickStatusCards({
   locale = 'fa',
 }: QuickStatusCardsProps) {
   const numbers = useNumberFormatting(locale);
-  const isRtl = locale === 'fa';
-
-  const cards: CardDef[] = [
+  const cards = [
     {
       key: 'contracts',
-      icon: ContractIcon,
-      labelKey: 'dashboard.overview.contractStatus',
+      icon: FileCheck2,
+      label: 'dashboard.overview.contractStatus',
       href: '/electricity',
       search: { status: 'CONFIRMED' },
       count: activeContracts,
-      colorFn: contractColor,
     },
     {
       key: 'orders',
-      icon: OrderIcon,
-      labelKey: 'dashboard.overview.activeOrders',
+      icon: Package,
+      label: 'dashboard.overview.activeOrders',
       href: '/electricity',
       search: { status: 'PENDING' },
       count: pendingOrders,
-      colorFn: orderColor,
     },
     {
       key: 'tickets',
-      icon: TicketIcon,
-      labelKey: 'dashboard.overview.openTickets',
+      icon: LifeBuoy,
+      label: 'dashboard.overview.openTickets',
       href: '/tickets',
-
       count: openTickets,
-      colorFn: ticketColor,
     },
     {
       key: 'invoices',
-      icon: InvoiceIcon,
-      labelKey: 'dashboard.overview.pendingInvoices',
+      icon: ReceiptText,
+      label: 'dashboard.overview.pendingInvoices',
       href: '/invoices',
       count: unpaidInvoices,
-      colorFn: invoiceColor,
     },
   ];
-
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" dir={isRtl ? 'rtl' : 'ltr'}>
-      {cards.map((card) => {
-        const Icon = card.icon;
-        const colorClass = card.colorFn(card.count);
-
-        return (
-          <Link
-            key={card.key}
-            to={card.href}
-            search={card.search}
-            className={`block rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow ${colorClass}`}
-          >
-            <div className="flex items-start gap-3">
-              <Icon className="w-8 h-8 text-muted-foreground shrink-0 mt-0.5" />
-              <div className="min-w-0 flex-1">
-                <p className="text-sm text-muted-foreground mb-1">
-                  {t(card.labelKey as keyof typeof t, locale)}
-                </p>
-                <p className="text-2xl font-semibold text-foreground">
-                  {numbers.number(card.count)}
-                </p>
-              </div>
-            </div>
-          </Link>
-        );
-      })}
+    <div
+      className="grid h-full grid-cols-1 gap-4 sm:grid-cols-2"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {cards.map(({ key, icon: Icon, label, href, search, count }) => (
+        <Link
+          key={key}
+          to={href}
+          search={search}
+          className="group flex flex-col gap-5 rounded-xl border bg-card p-5 text-card-foreground shadow-sm transition-shadow hover:border-input hover:shadow-md"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <Icon
+              className={cn(
+                'size-5',
+                key === 'contracts' && count > 0
+                  ? 'text-success'
+                  : key !== 'contracts' && count > 2
+                    ? 'text-destructive'
+                    : key !== 'contracts' && count > 0
+                      ? 'text-warning'
+                      : 'text-muted-foreground'
+              )}
+              strokeWidth={1.7}
+              aria-hidden="true"
+            />
+            <ArrowUpRight
+              className="size-4 text-muted-foreground rtl:-rotate-90"
+              aria-hidden="true"
+            />
+          </div>
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <p className="text-sm text-muted-foreground">{t(label, locale)}</p>
+            <p className="text-3xl font-semibold tabular-nums">{numbers.number(count)}</p>
+          </div>
+        </Link>
+      ))}
     </div>
   );
 }

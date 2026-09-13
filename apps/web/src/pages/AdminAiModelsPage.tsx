@@ -298,7 +298,7 @@ export default function AdminAiModelsPage() {
                           </p>
                         )}
                         {model.lastTestError && (
-                          <p className="break-words text-red-700 dark:text-red-300" dir="auto">
+                          <p className="break-words text-destructive" dir="auto">
                             {model.lastTestError}
                           </p>
                         )}

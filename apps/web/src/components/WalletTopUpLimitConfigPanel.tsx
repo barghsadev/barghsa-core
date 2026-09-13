@@ -170,7 +170,7 @@ export default function WalletTopUpLimitConfigPanel() {
       </div>
 
       <p
-        className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded px-3 py-2"
+        className="text-sm text-warning bg-warning-soft border border-warning/20 rounded px-3 py-2"
         role="note"
         id="online-top-up-limit-warning"
         data-testid="wallet-top-up-limit-warning"
@@ -180,7 +180,7 @@ export default function WalletTopUpLimitConfigPanel() {
 
       {error && (
         <div
-          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded"
+          className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded"
           role="alert"
         >
           {error}
@@ -193,7 +193,7 @@ export default function WalletTopUpLimitConfigPanel() {
             htmlFor="online-top-up-limit"
             className="block text-sm font-medium text-foreground mb-1"
           >
-            {t('admin.walletLimit.label', locale)} <span className="text-red-500">*</span>
+            {t('admin.walletLimit.label', locale)} <span className="text-destructive">*</span>
           </label>
           <input
             id="online-top-up-limit"
@@ -229,7 +229,7 @@ export default function WalletTopUpLimitConfigPanel() {
         </div>
 
         {clientIssue && (
-          <p id="online-top-up-limit-error" className="text-sm text-red-600" role="alert">
+          <p id="online-top-up-limit-error" className="text-sm text-destructive" role="alert">
             {clientIssue}
           </p>
         )}
@@ -268,7 +268,7 @@ export default function WalletTopUpLimitConfigPanel() {
             {t('admin.walletLimit.reload', locale)}
           </button>
           {saved && (
-            <span className="text-sm text-green-600" role="status">
+            <span className="text-sm text-success" role="status">
               {t('admin.walletLimit.saved', locale)}
             </span>
           )}

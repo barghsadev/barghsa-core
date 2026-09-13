@@ -20,9 +20,9 @@ export interface BrandConfig {
 const DEFAULT_BRAND_CONFIG: BrandConfig = {
   appTitle: 'Barghsa',
   slogan: '',
-  primaryColor: '#2563eb',
-  secondaryColor: '#64748b',
-  accentColor: '#f59e0b',
+  primaryColor: '#176b5b',
+  secondaryColor: '#547467',
+  accentColor: '#d6a74e',
   logoUrl: null,
   faviconUrl: null,
   darkMode: false,

@@ -2,6 +2,8 @@
 
 import { Progress as ProgressPrimitive } from '@base-ui/react/progress';
 
+import { Children, isValidElement } from 'react';
+
 import { cn } from '../../lib/utils';
 
 function Progress({ className, children, value, ...props }: ProgressPrimitive.Root.Props) {
@@ -13,9 +15,13 @@ function Progress({ className, children, value, ...props }: ProgressPrimitive.Ro
       {...props}
     >
       {children}
-      <ProgressTrack>
-        <ProgressIndicator />
-      </ProgressTrack>
+      {Children.toArray(children).some(
+        (child) => isValidElement(child) && child.type === ProgressTrack
+      ) ? null : (
+        <ProgressTrack>
+          <ProgressIndicator />
+        </ProgressTrack>
+      )}
     </ProgressPrimitive.Root>
   );
 }
@@ -37,7 +43,7 @@ function ProgressIndicator({ className, ...props }: ProgressPrimitive.Indicator.
   return (
     <ProgressPrimitive.Indicator
       data-slot="progress-indicator"
-      className={cn('h-full bg-primary transition-all', className)}
+      className={cn('h-full bg-primary transition-[width] duration-200', className)}
       {...props}
     />
   );

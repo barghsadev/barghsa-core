@@ -165,13 +165,13 @@ function registrationDate(value: string | null, locale: Locale): string {
 function getStatusBadgeClass(status: string): string {
   switch (status) {
     case 'VERIFIED':
-      return 'bg-green-100 text-green-800';
+      return 'bg-success-soft text-success';
     case 'ACTIVE':
       return 'bg-blue-100 text-blue-800';
     case 'DRAFT':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-warning-soft text-warning';
     case 'SUSPENDED':
-      return 'bg-red-100 text-red-800';
+      return 'bg-danger-soft text-destructive';
     default:
       return 'bg-muted text-foreground';
   }
@@ -443,7 +443,7 @@ function CrmProfileDetailContent() {
       <div className="flex items-center justify-center min-h-[300px]">
         <div className="text-center">
           <div role="alert">
-            <h1 className="text-xl font-semibold text-red-700 dark:text-red-300 mb-2">
+            <h1 className="text-xl font-semibold text-destructive mb-2">
               {t('crm.profile.error.title', locale)}
             </h1>
             <p className="text-muted-foreground">{error}</p>
@@ -689,7 +689,7 @@ function CrmProfileDetailContent() {
       {/* Save success / error flash messages */}
       {saveSuccess && (
         <div
-          className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm"
+          className="mb-4 p-3 bg-success-soft border border-success/20 text-success rounded-md text-sm"
           role="alert"
         >
           {t('crm.profile.edit.saved', locale)}
@@ -697,7 +697,7 @@ function CrmProfileDetailContent() {
       )}
       {saveError && (
         <div
-          className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm"
+          className="mb-4 p-3 bg-danger-soft border border-destructive/20 text-destructive rounded-md text-sm"
           role="alert"
         >
           {saveError}
@@ -707,7 +707,7 @@ function CrmProfileDetailContent() {
       {/* Action success / error flash messages */}
       {actionSuccess && (
         <div
-          className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm"
+          className="mb-4 p-3 bg-success-soft border border-success/20 text-success rounded-md text-sm"
           role="alert"
         >
           {actionSuccess}
@@ -715,7 +715,7 @@ function CrmProfileDetailContent() {
       )}
       {actionError && (
         <div
-          className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm"
+          className="mb-4 p-3 bg-danger-soft border border-destructive/20 text-destructive rounded-md text-sm"
           role="alert"
         >
           {actionError}
@@ -780,11 +780,7 @@ function CrmProfileDetailContent() {
                     : t(`crm.list.${profile.status}`, locale)
               }
               icon="✓"
-              colorClass={
-                profile.status === 'VERIFIED'
-                  ? 'text-green-700 dark:text-green-300'
-                  : 'text-yellow-700 dark:text-yellow-300'
-              }
+              colorClass={profile.status === 'VERIFIED' ? 'text-success' : 'text-warning'}
             />
             <SummaryCard
               title={t('crm.profile.summary.activeSessions', locale)}
@@ -1246,7 +1242,9 @@ function CrmProfileDetailContent() {
                       <td className="py-2">
                         <span
                           className={`text-xs px-1.5 py-0.5 rounded-full ${
-                            !s.isActive ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+                            !s.isActive
+                              ? 'bg-danger-soft text-destructive'
+                              : 'bg-success-soft text-success'
                           }`}
                         >
                           {t(
@@ -1493,7 +1491,7 @@ function EditRow({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder ?? ''}
         dir="auto"
-        className="mt-1 w-full border border-input rounded px-2 py-1 text-sm text-foreground focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+        className="mt-1 w-full border border-input rounded px-2 py-1 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring outline-none"
       />
     </div>
   );

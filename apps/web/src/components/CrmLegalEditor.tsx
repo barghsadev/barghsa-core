@@ -248,11 +248,7 @@ export function CrmLegalEditor({
                   />
                 )}
                 {invalid && (
-                  <p
-                    id={fieldId + '-error'}
-                    role="alert"
-                    className="text-sm text-red-700 dark:text-red-300"
-                  >
+                  <p id={fieldId + '-error'} role="alert" className="text-sm text-destructive">
                     {t('crm.legal.invalid', locale).replace('{field}', label(field))}
                   </p>
                 )}

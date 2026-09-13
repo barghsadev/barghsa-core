@@ -414,14 +414,14 @@ export default function AdminTosPage() {
       {error && (
         <div
           role="alert"
-          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
+          className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded relative"
         >
           {text[error.key]}
           {error.status ? ` (HTTP ${error.status})` : ''}
           <button
             aria-label={adminControlsText('dismissError', locale)}
             onClick={() => setError(null)}
-            className="absolute top-2 end-2 text-red-500 hover:text-red-700"
+            className="absolute top-2 end-2 text-destructive hover:text-red-700"
           >
             ✕
           </button>
@@ -447,7 +447,7 @@ export default function AdminTosPage() {
               htmlFor="admintospage-field-1"
               className="block text-sm font-medium text-foreground mb-1"
             >
-              {text.versionId} <span className="text-red-500">*</span>
+              {text.versionId} <span className="text-destructive">*</span>
             </label>
             <input
               id="admintospage-field-1"
@@ -540,7 +540,7 @@ export default function AdminTosPage() {
         <div
           role="region"
           aria-label={text.publishTitle}
-          className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 space-y-3"
+          className="bg-warning-soft border border-warning/20 rounded-lg p-4 space-y-3"
         >
           <h3 className="font-semibold">{text.publishTitle}</h3>
           <p className="text-sm text-muted-foreground">{text.materialHelp}</p>
@@ -629,7 +629,7 @@ export default function AdminTosPage() {
                     <span
                       className={`ms-1 inline-block px-2 py-0.5 text-xs rounded ${
                         viewVersion.changeType === 'major'
-                          ? 'bg-red-100 text-red-800'
+                          ? 'bg-danger-soft text-destructive'
                           : 'bg-muted text-foreground'
                       }`}
                     >
@@ -637,7 +637,7 @@ export default function AdminTosPage() {
                     </span>
                   )}
                   {viewVersion.isActive && (
-                    <span className="ms-2 text-green-600 text-sm font-medium">✓ {text.active}</span>
+                    <span className="ms-2 text-success text-sm font-medium">✓ {text.active}</span>
                   )}
                 </p>
               </div>
@@ -751,8 +751,8 @@ export default function AdminTosPage() {
                   <span
                     className={`inline-block px-2 py-0.5 text-xs rounded ${
                       v.status === 'draft'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-green-100 text-green-800'
+                        ? 'bg-warning-soft text-warning'
+                        : 'bg-success-soft text-success'
                     }`}
                   >
                     {text[v.status]}
@@ -763,7 +763,7 @@ export default function AdminTosPage() {
                     <span
                       className={`inline-block px-2 py-0.5 text-xs rounded ${
                         v.changeType === 'major'
-                          ? 'bg-red-100 text-red-800'
+                          ? 'bg-danger-soft text-destructive'
                           : 'bg-muted text-foreground'
                       }`}
                     >
@@ -775,7 +775,7 @@ export default function AdminTosPage() {
                 </td>
                 <td className="px-4 py-3">
                   {v.isActive ? (
-                    <span className="text-green-600 text-sm font-medium">✓ {text.active}</span>
+                    <span className="text-success text-sm font-medium">✓ {text.active}</span>
                   ) : (
                     <span className="text-muted-foreground text-sm">—</span>
                   )}
@@ -821,7 +821,7 @@ export default function AdminTosPage() {
                         disabled={
                           !historyReady || loading || showEditor || !!publishVersion || discarding
                         }
-                        className="text-green-600 hover:text-green-800 disabled:opacity-40"
+                        className="text-success hover:text-green-800 disabled:opacity-40"
                       >
                         {text.publish}
                       </button>
@@ -830,7 +830,7 @@ export default function AdminTosPage() {
                         disabled={
                           !historyReady || loading || showEditor || !!publishVersion || discarding
                         }
-                        className="text-red-600 hover:text-red-800 disabled:opacity-40"
+                        className="text-destructive hover:text-red-800 disabled:opacity-40"
                       >
                         {text.discard}
                       </button>

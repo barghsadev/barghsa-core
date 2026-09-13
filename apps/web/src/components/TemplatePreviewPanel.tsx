@@ -366,7 +366,7 @@ export default function TemplatePreviewPanel({
                           key={v.name}
                           className={`text-sm px-3 py-1.5 rounded border ${
                             problem
-                              ? 'bg-amber-50 border-amber-200 text-amber-800'
+                              ? 'bg-warning-soft border-warning/20 text-warning'
                               : 'bg-muted/40 border-border text-foreground'
                           }`}
                         >
@@ -387,11 +387,11 @@ export default function TemplatePreviewPanel({
 
               {/* Missing / undeclared variable warnings */}
               {problems.size > 0 && (
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                  <h4 className="text-sm font-semibold text-amber-900">
+                <div className="bg-warning-soft border border-warning/20 rounded-lg p-4">
+                  <h4 className="text-sm font-semibold text-warning">
                     {t('admin.notifications.preview.warnings.title', uiLocale)}
                   </h4>
-                  <ul className="mt-2 space-y-1 text-sm text-amber-800">
+                  <ul className="mt-2 space-y-1 text-sm text-warning">
                     {[...undeclared].map((name) => (
                       <li key={name}>
                         • {name} — {t('admin.notifications.preview.warnings.undeclared', uiLocale)}

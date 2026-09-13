@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import './fonts/fonts.css';
 @config "../tailwind.config.ts";
 @source "./";
 @source "../dist";
@@ -19,6 +20,25 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-sans: 'Vazirmatn', sans-serif;
+  --font-persian: 'Vazirmatn', sans-serif;
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-purple: var(--purple);
+  --color-purple-soft: var(--purple-soft);
+  --color-danger-soft: var(--danger-soft);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-active: var(--sidebar-active);
+  --color-sidebar-active-foreground: var(--sidebar-active-foreground);
+  --color-brand-panel: var(--brand-panel);
+  --color-brand-panel-foreground: var(--brand-panel-foreground);
+  --color-brand-panel-muted: var(--brand-panel-muted);
+  --color-energy: var(--energy);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -45,9 +65,9 @@
 
   /* Brand theme CSS custom properties (T-09.01.02) */
   /* Set dynamically by BrandThemeProvider; these are fallback defaults */
-  --brand-primary: #2563eb;
-  --brand-secondary: #64748b;
-  --brand-accent: #f59e0b;
+  --brand-primary: #176b5b;
+  --brand-secondary: #547467;
+  --brand-accent: #d6a74e;
   --brand-primary-foreground: #ffffff;
   --brand-secondary-foreground: #ffffff;
   --brand-accent-foreground: #000000;
@@ -103,48 +123,94 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.141 0.005 285.823);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.141 0.005 285.823);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: #2563eb;
+  /* Paper, ink and energy. Brand overrides are applied by BrandThemeProvider. */
+  --background: #f6f7f4;
+  --foreground: #203631;
+  --card: #fdfefb;
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: #176b5b;
   --primary-foreground: #ffffff;
-  --secondary: oklch(0.92 0.004 286.32);
-  --secondary-foreground: oklch(0.141 0.005 285.823);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.53 0.016 285.938);
-  --accent: oklch(0.92 0.004 286.32);
-  --accent-foreground: oklch(0.141 0.005 285.823);
-  --destructive: #b91c1c;
+  --secondary: #e5eee8;
+  --secondary-foreground: #264e42;
+  --muted: #edf0eb;
+  --muted-foreground: #5f6e65;
+  --accent: #e5eee8;
+  --accent-foreground: #264e42;
+  --destructive: #a42c35;
   --destructive-foreground: #ffffff;
-  --border: oklch(0.92 0.004 286.32);
-  --input: var(--muted-foreground);
-  --ring: oklch(0.623 0.214 269.791);
-  --radius: 0.625rem;
+  --border: #dbe2da;
+  --input: #85958a;
+  --ring: var(--primary);
+  --success: #236c45;
+  --success-soft: #e6f2e9;
+  --warning: #83500f;
+  --warning-soft: #fbefda;
+  --info: #285f91;
+  --info-soft: #e8f0f8;
+  --purple: #704995;
+  --purple-soft: #f1eaf7;
+  --danger-soft: #f9e9e9;
+  --sidebar: #edf1eb;
+  --sidebar-foreground: #29483b;
+  --sidebar-active: #d8e6db;
+  --sidebar-active-foreground: #204936;
+  --brand-panel: #173d32;
+  --brand-panel-foreground: #edf5e9;
+  --brand-panel-muted: #c2d3c6;
+  --energy: #e8bb66;
+  --radius: 0.75rem;
+  --sidebar-width: 17.5rem;
+  --topbar-height: 4.5rem;
+  --container-max-width: 80rem;
+  --auth-panel-max-width: 28rem;
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --font-heading: var(--font-sans);
+  --shadow-sm: 0 1px 2px rgb(24 55 40 / 0.04);
+  --shadow-md: 0 4px 14px rgb(24 55 40 / 0.06);
+  --shadow-lg: 0 12px 32px rgb(24 55 40 / 0.1);
 }
 
 .dark {
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.141 0.005 285.823);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.141 0.005 285.823);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.546 0.245 262.881);
-  --primary-foreground: oklch(0.97 0.014 270.602);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: #fca5a5;
-  --destructive-foreground: #18181b;
-  --border: oklch(0.274 0.006 286.033);
-  --input: var(--muted-foreground);
-  --ring: oklch(0.546 0.245 262.881);
+  --background: #15201c;
+  --foreground: #e7eee6;
+  --card: #1d2c25;
+  --card-foreground: var(--foreground);
+  --popover: #25372e;
+  --popover-foreground: var(--foreground);
+  --primary: #8acfb0;
+  --primary-foreground: #132d21;
+  --secondary: #31473a;
+  --secondary-foreground: #dceade;
+  --muted: #293a30;
+  --muted-foreground: #afc0b2;
+  --accent: #31473a;
+  --accent-foreground: #dceade;
+  --destructive: #ffafb2;
+  --destructive-foreground: #331b20;
+  --border: #374b3e;
+  --input: #819889;
+  --success: #9cdbb1;
+  --success-soft: #253e30;
+  --warning: #f2ca83;
+  --warning-soft: #403522;
+  --info: #a5c9ed;
+  --info-soft: #253b4a;
+  --purple: #d1b4ee;
+  --purple-soft: #392e45;
+  --danger-soft: #442d32;
+  --sidebar: #192820;
+  --sidebar-foreground: #c2d4c5;
+  --sidebar-active: #314e3b;
+  --sidebar-active-foreground: #d9eddd;
+  --brand-panel: #102e24;
+  --brand-panel-foreground: #edf5e9;
+  --brand-panel-muted: #c2d3c6;
 }
 
 @layer base {
@@ -159,7 +225,8 @@
     color-scheme: dark;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    line-height: 1.65;
   }
   /* Native controls on older pages follow the same theme as shared controls. */
   input:not([type='checkbox']):not([type='radio']),
@@ -167,6 +234,18 @@
   select {
     background-color: var(--background);
     color: var(--foreground);
+  }
+  :lang(fa) {
+    font-family: var(--font-persian);
+    letter-spacing: normal;
+  }
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+  ::selection {
+    background: var(--sidebar-active);
+    color: var(--sidebar-active-foreground);
   }
   /* RTL-aware base styles */
   [dir='rtl'] {
@@ -196,5 +275,90 @@
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Existing feature pages keep their structure; native controls share the same finish. */
+@layer components {
+  .app-content :where(h1) {
+    font-size: clamp(1.5rem, 2vw, 1.875rem);
+    font-weight: 650;
+    line-height: 1.5;
+  }
+  .app-content :where(table) {
+    background: var(--card);
+    border-radius: var(--radius);
+  }
+  .app-content :where(thead) {
+    background: var(--muted);
+    color: var(--muted-foreground);
+  }
+  .app-content :where(th) {
+    font-weight: 600;
+  }
+  .app-content :where(tbody tr) {
+    border-color: var(--border);
+    transition: background-color var(--duration-fast);
+  }
+  .app-content :where(tbody tr:hover) {
+    background: var(--muted);
+  }
+  .app-content
+    :where(
+      input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']):not(
+          [type='color']
+        ),
+      select
+    ) {
+    min-height: 2.75rem;
+    border-radius: var(--radius-md);
+  }
+  .app-content :where(textarea) {
+    border-radius: var(--radius-md);
+  }
+  .shell-navigation-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--radius-md);
+    color: var(--sidebar-foreground);
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: background-color var(--duration-fast);
+  }
+  .shell-navigation-link:hover,
+  .shell-navigation-link[aria-current='page'] {
+    background: var(--sidebar-active);
+    color: var(--sidebar-active-foreground);
+  }
+  .shell-navigation-link[aria-current='page'] {
+    font-weight: 650;
+  }
+  .auth-form :where(h1) {
+    font-size: clamp(1.75rem, 2.5vw, 2.125rem);
+    line-height: 1.45;
+    font-weight: 650;
+  }
+  .auth-form :where(form) {
+    margin-top: 1.75rem;
+  }
+  .auth-form :where(button[type='submit']) {
+    min-height: 3rem;
+    margin-top: 0.75rem;
+  }
+}
+
+@media (pointer: coarse) {
+  [data-slot='button'],
+  [data-slot='input'],
+  [data-slot='native-select'],
+  [data-slot='select-trigger'],
+  [data-slot='tabs-trigger'] {
+    min-height: 2.75rem;
+  }
+  [data-slot='button'][data-size^='icon'] {
+    min-width: 2.75rem;
   }
 }

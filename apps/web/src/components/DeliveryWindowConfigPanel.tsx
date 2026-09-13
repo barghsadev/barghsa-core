@@ -228,14 +228,14 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
       {error && (
         <div
           role="alert"
-          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
+          className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded relative"
         >
           {error}
           <button
             type="button"
             aria-label={t('admin.notifications.dismissError', uiLocale)}
             onClick={() => setError(null)}
-            className="absolute top-2 end-2 text-red-500 hover:text-red-700"
+            className="absolute top-2 end-2 text-destructive hover:text-red-700"
           >
             ✕
           </button>
@@ -262,7 +262,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
               className="block text-sm font-medium text-foreground mb-1"
             >
               {t('admin.notifications.window.timezone', uiLocale)}{' '}
-              <span className="text-red-500">*</span>
+              <span className="text-destructive">*</span>
             </label>
             <select
               id="delivery-window-timezone"
@@ -287,7 +287,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
                 className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.window.start', uiLocale)}{' '}
-                <span className="text-red-500">*</span>
+                <span className="text-destructive">*</span>
               </label>
               <input
                 type="time"
@@ -311,7 +311,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
                 className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.window.end', uiLocale)}{' '}
-                <span className="text-red-500">*</span>
+                <span className="text-destructive">*</span>
               </label>
               <input
                 type="time"
@@ -332,7 +332,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
           </div>
 
           {clientIssue && (
-            <p role="alert" className="text-sm text-red-600">
+            <p role="alert" className="text-sm text-destructive">
               {clientIssue}
             </p>
           )}
@@ -358,7 +358,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
                 : t('admin.notifications.window.save', uiLocale)}
             </button>
             {saved && (
-              <span role="status" className="text-sm text-green-600">
+              <span role="status" className="text-sm text-success">
                 {t('admin.notifications.window.saved', uiLocale)}
               </span>
             )}

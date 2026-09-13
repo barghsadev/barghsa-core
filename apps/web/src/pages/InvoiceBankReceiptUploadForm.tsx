@@ -149,7 +149,7 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
         <div
           role="status"
           data-testid="invoice-receipt-success"
-          className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800"
+          className="rounded-lg border border-success/20 bg-success-soft p-3 text-sm text-success"
         >
           {t('invoices.details.receiptSuccess', locale)}
         </div>
@@ -159,7 +159,7 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
         <div
           role="alert"
           data-testid="invoice-receipt-error"
-          className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800"
+          className="rounded-lg border border-destructive/20 bg-danger-soft p-3 text-sm text-destructive"
         >
           {errorMessage}
         </div>

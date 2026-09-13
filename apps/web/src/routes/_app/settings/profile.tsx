@@ -104,7 +104,7 @@ function getStatusBadge(status: string, locale: Locale): { label: string; varian
     case 'VERIFIED':
       return {
         label: locale === 'fa' ? 'تأیید شده' : 'Verified',
-        variant: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+        variant: 'bg-success-soft text-success dark:bg-green-900/30 dark:text-green-400',
       };
     case 'ACTIVE':
       return {
@@ -114,17 +114,17 @@ function getStatusBadge(status: string, locale: Locale): { label: string; varian
     case 'PENDING_VERIFICATION':
       return {
         label: t('crm.list.PENDING_VERIFICATION', locale),
-        variant: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+        variant: 'bg-warning-soft text-warning dark:bg-yellow-900/30 dark:text-yellow-400',
       };
     case 'DRAFT':
       return {
         label: locale === 'fa' ? 'پیش‌نویس' : 'Draft',
-        variant: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+        variant: 'bg-warning-soft text-warning dark:bg-yellow-900/30 dark:text-yellow-400',
       };
     case 'SUSPENDED':
       return {
         label: locale === 'fa' ? 'مسدود' : 'Suspended',
-        variant: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+        variant: 'bg-danger-soft text-destructive dark:bg-red-900/30 dark:text-red-400',
       };
     default:
       return { label: status, variant: 'bg-muted text-foreground' };

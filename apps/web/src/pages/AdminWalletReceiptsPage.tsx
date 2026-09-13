@@ -563,7 +563,7 @@ export default function AdminWalletReceiptsPage() {
 
       {error && (
         <div
-          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded"
+          className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded"
           role="alert"
         >
           {error}
@@ -571,7 +571,7 @@ export default function AdminWalletReceiptsPage() {
       )}
 
       {status && (
-        <p ref={statusRef} className="text-sm text-green-700" role="status" tabIndex={-1}>
+        <p ref={statusRef} className="text-sm text-success" role="status" tabIndex={-1}>
           {status}
         </p>
       )}
@@ -632,7 +632,7 @@ export default function AdminWalletReceiptsPage() {
 
               {selected.dualApproval && selected.state === 'Pending' && (
                 <p
-                  className="rounded border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950"
+                  className="rounded border border-warning/20 bg-warning-soft p-3 text-sm text-amber-950"
                   role="status"
                 >
                   {t('admin.walletReceipts.approvalPending', locale)}
@@ -745,14 +745,14 @@ export default function AdminWalletReceiptsPage() {
                   </div>
 
                   {allocationError && (
-                    <p className="text-sm text-red-600" role="alert">
+                    <p className="text-sm text-destructive" role="alert">
                       {allocationError}
                     </p>
                   )}
 
                   {allocation && (
                     <dl
-                      className="rounded border border-amber-200 bg-amber-50 p-3 text-sm space-y-1"
+                      className="rounded border border-warning/20 bg-warning-soft p-3 text-sm space-y-1"
                       aria-live="polite"
                     >
                       <div>
@@ -780,7 +780,7 @@ export default function AdminWalletReceiptsPage() {
                         </dd>
                       </div>
                       {allocation.isOverpayment && (
-                        <p className="text-amber-900 pt-1">
+                        <p className="text-warning pt-1">
                           {t('admin.walletReceipts.overpaymentPreview', locale)}
                         </p>
                       )}
@@ -790,7 +790,7 @@ export default function AdminWalletReceiptsPage() {
                   {clientIssue && (
                     <p
                       id={reasonInvalid ? 'reject-reason-error' : 'wallet-receipt-client-issue'}
-                      className="text-sm text-red-600"
+                      className="text-sm text-destructive"
                       role="alert"
                     >
                       {clientIssue}
@@ -868,7 +868,7 @@ export default function AdminWalletReceiptsPage() {
                         className="block text-sm font-medium text-foreground mb-1"
                       >
                         {t('admin.walletReceipts.reason', locale)}{' '}
-                        <span className="text-red-500" aria-hidden="true">
+                        <span className="text-destructive" aria-hidden="true">
                           *
                         </span>
                       </label>
@@ -914,7 +914,7 @@ export default function AdminWalletReceiptsPage() {
                   </form>
                 </div>
               ) : (
-                <p className="text-sm text-amber-700" role="status">
+                <p className="text-sm text-warning" role="status">
                   {t('admin.walletReceipts.alreadyDecided', locale)}
                 </p>
               )}
@@ -975,7 +975,11 @@ export default function AdminWalletReceiptsPage() {
               />
             </div>
             {stepUpError && (
-              <p id="wallet-receipt-step-up-error" className="text-sm text-red-600" role="alert">
+              <p
+                id="wallet-receipt-step-up-error"
+                className="text-sm text-destructive"
+                role="alert"
+              >
                 {stepUpError}
               </p>
             )}

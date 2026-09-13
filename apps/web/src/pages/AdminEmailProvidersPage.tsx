@@ -29,16 +29,16 @@ import {
 // ---------------------------------------------------------------------------
 
 const STATUS_COLORS: Record<Status, string> = {
-  draft: 'bg-yellow-100 text-yellow-800',
-  active: 'bg-green-100 text-green-800',
+  draft: 'bg-warning-soft text-warning',
+  active: 'bg-success-soft text-success',
   superseded: 'bg-muted text-muted-foreground',
-  disabled: 'bg-red-100 text-red-800',
+  disabled: 'bg-danger-soft text-destructive',
 };
 
 const TEST_COLORS: Record<TestStatus, string> = {
   pending: 'bg-muted text-muted-foreground',
-  passed: 'bg-green-100 text-green-800',
-  failed: 'bg-red-100 text-red-800',
+  passed: 'bg-success-soft text-success',
+  failed: 'bg-danger-soft text-destructive',
 };
 
 // ---------------------------------------------------------------------------
@@ -502,7 +502,7 @@ export default function AdminEmailProvidersPage() {
       {error && (
         <div
           role="alert"
-          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
+          className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded relative"
         >
           {error}
           {loadFailed && (
@@ -518,7 +518,7 @@ export default function AdminEmailProvidersPage() {
           {!loadFailed && (
             <button
               onClick={() => setError(null)}
-              className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+              className="absolute top-2 right-2 text-destructive hover:text-red-700"
               aria-label={t('admin.notifications.dismissError', uiLocale)}
             >
               ✕
@@ -528,11 +528,11 @@ export default function AdminEmailProvidersPage() {
       )}
 
       {notice && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded relative">
+        <div className="bg-success-soft border border-success/20 text-success px-4 py-3 rounded relative">
           {notice}
           <button
             onClick={() => setNotice(null)}
-            className="absolute top-2 right-2 text-green-500 hover:text-green-700"
+            className="absolute top-2 right-2 text-success hover:text-green-700"
             aria-label={providerText('admin.providers.dismissNotice', uiLocale)}
           >
             ✕
@@ -559,7 +559,7 @@ export default function AdminEmailProvidersPage() {
                 className="block text-sm font-medium text-foreground mb-1"
               >
                 {providerText('admin.providers.label', uiLocale)}{' '}
-                <span className="text-red-500">*</span>
+                <span className="text-destructive">*</span>
               </label>
               <input
                 type="text"
@@ -577,7 +577,7 @@ export default function AdminEmailProvidersPage() {
                 className="block text-sm font-medium text-foreground mb-1"
               >
                 {providerText('admin.providers.transport', uiLocale)}{' '}
-                <span className="text-red-500">*</span>
+                <span className="text-destructive">*</span>
               </label>
               <select
                 id="email-provider-transport"
@@ -706,7 +706,7 @@ export default function AdminEmailProvidersPage() {
                         </p>
                       )}
                       {p.lastTestError && (
-                        <p className="text-xs text-red-600 mt-1" title={p.lastTestError}>
+                        <p className="text-xs text-destructive mt-1" title={p.lastTestError}>
                           {p.lastTestError}
                         </p>
                       )}
@@ -715,7 +715,7 @@ export default function AdminEmailProvidersPage() {
                         if (outcome) {
                           return (
                             <p
-                              className={`text-xs mt-1 ${outcome.ok ? 'text-green-600' : 'text-red-600'}`}
+                              className={`text-xs mt-1 ${outcome.ok ? 'text-success' : 'text-destructive'}`}
                             >
                               {outcome.ok
                                 ? providerText('admin.providers.test.passed', uiLocale)
@@ -772,14 +772,14 @@ export default function AdminEmailProvidersPage() {
                       {p.status === 'active' && (
                         <>
                           {risky && (
-                            <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-2 py-1.5 rounded text-xs mb-2">
+                            <div className="bg-warning-soft border border-warning/20 text-warning px-2 py-1.5 rounded text-xs mb-2">
                               {providerText('admin.providers.disableWarn', uiLocale)}
                             </div>
                           )}
                           <button
                             onClick={() => handleDisable(p)}
                             disabled={busy || loading || loadFailed}
-                            className="px-3 py-1 border border-red-300 text-red-600 rounded text-xs hover:bg-red-50 disabled:opacity-50 w-full text-left"
+                            className="px-3 py-1 border border-destructive/20 text-destructive rounded text-xs hover:bg-red-50 disabled:opacity-50 w-full text-left"
                           >
                             {providerText('admin.providers.disable', uiLocale)}
                           </button>
@@ -1044,7 +1044,7 @@ function Field({
     <label className="block">
       <span className="block text-sm font-medium text-foreground mb-1">
         {label}
-        {required && <span className="text-red-500"> *</span>}
+        {required && <span className="text-destructive"> *</span>}
         {secret && <span className="ml-1 text-xs text-muted-foreground" />}
       </span>
       {children}

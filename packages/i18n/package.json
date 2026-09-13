@@ -156,6 +156,11 @@
       "types": "./dist/wallet-invoice-payment.d.ts",
       "import": "./dist/wallet-invoice-payment.js",
       "default": "./dist/wallet-invoice-payment.js"
+    },
+    "./shell": {
+      "types": "./dist/shell.d.ts",
+      "import": "./dist/shell.js",
+      "default": "./dist/shell.js"
     }
   },
   "scripts": {

@@ -1,117 +1,91 @@
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/auth';
-import { Card, CardContent } from '@barghsa/ui';
+import { shellText } from '@barghsa/i18n/shell';
+import { ArrowUpRight } from 'lucide-react';
 import { useBrandConfig } from '../providers/BrandThemeProvider.js';
+import { BrandMark } from './BrandMark.js';
+import { LanguageSwitcher } from './LanguageSwitcher.js';
 
 export interface AuthLayoutProps {
-  /** The locale for i18n text (fa or en) */
   locale?: Locale;
-  /** Form content rendered in the right column */
   children: React.ReactNode;
-  /** Optional bottom-of-form footer links (e.g. login link) */
   footer?: React.ReactNode;
 }
 
-/**
- * Shared two-column auth layout used by all auth pages (register, login, forgot-password).
- *
- * Left column: brand details (logo, title, slogan, value propositions).
- * Right column: form content passed as children.
- *
- * Dynamically applies brand config (T-09.01.02) — app title, slogan, colors,
- * and logo are fetched from the active brand config and injected via
- * BrandThemeProvider CSS custom properties.
- *
- * Responsive: stacks vertically on mobile (single column).
- * Full RTL/LTR support through dir attribute and logical CSS properties.
- * Does NOT render the default app sidebar or navbar.
- */
+/** Public auth frame. No account data or application navigation is loaded here. */
 export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps) {
   const { brandConfig } = useBrandConfig();
-
-  const appTitle = brandConfig.appTitle || t('auth.brand.title', locale);
-  const slogan = brandConfig.slogan || t('auth.brand.slogan', locale);
-  const logoUrl = brandConfig.logoUrl;
   return (
-    <div className="flex min-h-dvh flex-col md:flex-row" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      {/* Brand content stacks above the form on mobile. */}
-      <aside className="flex md:w-1/2 lg:w-3/5 xl:w-1/2 flex-col justify-between bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-4 md:p-8 lg:p-12 xl:p-16">
-        <div>
-          {/* Logo placeholder */}
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-2xl font-bold no-underline hover:opacity-80 transition-opacity"
-            style={{ color: 'var(--brand-primary)' }}
-            aria-label={t('auth.brand.logo.alt', locale)}
-          >
-            {logoUrl ? (
-              <img src={logoUrl} alt={appTitle} className="h-8 w-auto" />
-            ) : (
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 32 32"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-                className="shrink-0"
-                style={{ color: 'var(--brand-primary)' }}
-              >
-                <rect width="32" height="32" rx="8" fill="currentColor" />
-                <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--brand-primary-foreground)" />
-              </svg>
-            )}
-            <span>{appTitle}</span>
-          </Link>
-
-          {/* Slogan */}
-          <p className="mt-3 md:mt-6 text-lg text-foreground leading-relaxed max-w-md">{slogan}</p>
-
-          {/* Value propositions */}
-          <ul className="mt-4 space-y-2 md:mt-8 md:space-y-4">
+    <div
+      className="grid min-h-dvh grid-rows-[auto_1fr] bg-card md:grid-cols-2 md:grid-rows-1"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      <aside className="relative flex flex-col overflow-hidden bg-brand-panel p-5 text-brand-panel-foreground md:p-10 lg:p-14">
+        <Link
+          to="/"
+          className="relative z-10 w-fit no-underline"
+          aria-label={t('auth.brand.logo.alt', locale)}
+        >
+          <BrandMark inverse />
+        </Link>
+        <div className="relative z-10 my-auto hidden py-16 md:block">
+          <p className="mb-5 text-sm font-medium text-energy">{shellText('authEyebrow', locale)}</p>
+          <h2 className="max-w-lg whitespace-pre-line text-[clamp(2.5rem,4.4vw,4.5rem)] leading-[1.25] font-medium tracking-tight">
+            {shellText('authTitle', locale)}
+          </h2>
+          <p className="mt-6 max-w-sm text-base leading-relaxed text-brand-panel-muted">
+            {brandConfig.slogan || t('auth.brand.slogan', locale)}
+          </p>
+          <ul className="mt-10 flex max-w-md flex-col divide-y divide-brand-panel-muted/20 border-y border-brand-panel-muted/20">
             {(['value1', 'value2', 'value3'] as const).map((key) => (
-              <li key={key} className="flex items-start gap-3 text-sm text-foreground">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="mt-0.5 shrink-0 text-primary"
-                  aria-hidden="true"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
+              <li key={key} className="flex items-center justify-between gap-4 py-4 text-sm">
                 <span>{t(`auth.brand.${key}`, locale)}</span>
+                <ArrowUpRight
+                  className="size-4 shrink-0 text-energy rtl:-rotate-90"
+                  aria-hidden="true"
+                />
               </li>
             ))}
           </ul>
         </div>
-
-        {/* Bottom brand area */}
-        <div className="mt-6 text-xs text-foreground">
-          &copy; {new Date().getFullYear()} {appTitle}
-        </div>
+        <svg
+          className="pointer-events-none absolute -bottom-24 -end-24 hidden size-[28rem] text-brand-panel-muted/10 md:block"
+          viewBox="0 0 400 400"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle cx="200" cy="200" r="80" stroke="currentColor" />
+          <circle cx="200" cy="200" r="120" stroke="currentColor" />
+          <circle cx="200" cy="200" r="160" stroke="currentColor" />
+          <circle cx="200" cy="200" r="199" stroke="currentColor" />
+          <path d="M0 200h400M200 0v400" stroke="currentColor" />
+        </svg>
+        <p className="relative hidden text-xs text-brand-panel-muted md:block">
+          &copy; {new Date().getFullYear()} {brandConfig.appTitle}
+        </p>
       </aside>
-
-      {/* Right: Form column */}
-      <main className="flex flex-1 items-center justify-center p-4 md:p-8 lg:p-12">
-        <Card className="w-full max-w-md">
-          <CardContent className="pt-6">{children}</CardContent>
-          {footer && <div className="px-(--card-spacing) pb-(--card-spacing)">{footer}</div>}
-          <div className="px-(--card-spacing) pb-(--card-spacing) text-center">
-            <Link
-              to="/support"
-              className="text-sm text-primary dark:text-foreground underline underline-offset-4"
-            >
-              {t('auth.forgotPassword.helpLink', locale)}
-            </Link>
+      <div className="flex min-w-0 flex-col">
+        <div className="flex items-center justify-end px-5 py-4 md:px-10 md:py-6">
+          <LanguageSwitcher />
+        </div>
+        <main className="flex flex-1 items-center justify-center px-6 pb-10 pt-4 sm:px-10 md:py-12">
+          <div className="auth-form w-full max-w-(--auth-panel-max-width)">
+            {children}
+            <div className="mt-8 flex flex-col gap-5 border-t pt-6">
+              {footer}
+              <Link
+                to="/support"
+                className="text-center text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+              >
+                {t('auth.forgotPassword.helpLink', locale)}
+              </Link>
+            </div>
           </div>
-        </Card>
-      </main>
+        </main>
+        <p className="px-6 pb-6 text-center text-xs text-muted-foreground">
+          {shellText('authNote', locale)}
+        </p>
+      </div>
     </div>
   );
 }

@@ -1,3 +1,14 @@
+import {
+  PageHeader,
+  LoadingSkeleton,
+  Alert,
+  AlertDescription,
+  Button,
+  buttonVariants,
+} from '@barghsa/ui';
+import { shellText } from '@barghsa/i18n/shell';
+import { feedbackText } from '@barghsa/i18n/feedback';
+import { ArrowUpRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useLocale } from '../hooks/useLocale.js';
 import { Link } from '@tanstack/react-router';
@@ -67,39 +78,18 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
 
   const profileName = data?.profile?.name || t('dashboard.profile.unnamed', locale);
 
-  if (error) {
+  if (error)
     return (
-      <div className="text-center py-12">
-        <p role="alert" className="text-destructive">
-          {t('dashboard.overview.loadError', locale)}
-        </p>
-        <button
-          onClick={() => setRevision((value) => value + 1)}
-          className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary-dark"
-        >
-          {t('dashboard.overview.retry', locale)}
-        </button>
-      </div>
+      <Alert variant="destructive">
+        <AlertDescription>
+          <p>{t('dashboard.overview.loadError', locale)}</p>
+          <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
+            {t('dashboard.overview.retry', locale)}
+          </Button>
+        </AlertDescription>
+      </Alert>
     );
-  }
-
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        {/* Welcome skeleton */}
-        <div className="h-8 w-64 bg-muted rounded animate-pulse" />
-        {/* Wallet card skeleton */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 h-32 bg-muted rounded-lg animate-pulse" />
-          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-24 bg-muted rounded-lg animate-pulse" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSkeleton label={feedbackText('loading', locale)} variant="cards" />;
 
   const quickActions = [
     { label: t('dashboard.overview.newOrder', locale), href: '/electricity' },
@@ -115,22 +105,16 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
   };
 
   return (
-    <div className="space-y-6" dir={isRtl ? 'rtl' : 'ltr'}>
-      {/* Welcome message with profile name */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
-            {t('dashboard.overview.welcome', locale).replace('{name}', profileName)}
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            {t('dashboard.overview.profileBadge', locale).replace('{name}', profileName)}
-          </p>
-        </div>
-      </div>
+    <div className="flex flex-col gap-8" dir={isRtl ? 'rtl' : 'ltr'}>
+      <PageHeader
+        eyebrow={shellText('dashboardEyebrow', locale)}
+        title={t('dashboard.overview.welcome', locale).replace('{name}', profileName)}
+        description={shellText('dashboardDescription', locale)}
+      />
 
       {/* Wallet balance + Quick status cards side‑by‑side */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] gap-5">
+        <div className="min-w-0">
           {data?.wallet ? (
             <WalletBalanceCard
               balance={data.wallet.balance}
@@ -147,7 +131,7 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
         </div>
 
         {/* Quick status cards — replaces the previous inline cards */}
-        <div className="lg:col-span-2">
+        <div className="min-w-0">
           <QuickStatusCards
             activeContracts={qs.activeContracts}
             pendingOrders={qs.pendingOrders}
@@ -159,18 +143,22 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
       </div>
 
       {/* Quick actions section */}
-      <section>
-        <h2 className="text-lg font-semibold text-foreground mb-3">
+      <section className="border-t pt-6">
+        <h2 className="text-lg font-semibold text-foreground mb-1">
           {t('dashboard.overview.quickActions', locale)}
         </h2>
+        <p className="mb-4 text-sm text-muted-foreground">
+          {shellText('quickActionsDescription', locale)}
+        </p>
         <div className="flex flex-wrap gap-3">
           {quickActions.map((action) => (
             <Link
               key={action.href}
               to={action.href}
-              className="inline-flex items-center px-4 py-2 bg-card text-card-foreground border border-border rounded-lg text-sm font-medium text-foreground hover:bg-muted hover:border-input transition-colors"
+              className={buttonVariants({ variant: 'outline' })}
             >
               {action.label}
+              <ArrowUpRight data-icon="inline-end" aria-hidden="true" className="rtl:-rotate-90" />
             </Link>
           ))}
         </div>

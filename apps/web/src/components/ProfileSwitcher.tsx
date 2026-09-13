@@ -113,8 +113,11 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
   if (loading || !profiles || profiles.length === 0) return null;
   if (profiles.length === 1 && activeProfile) {
     return (
-      <div className="flex items-center gap-2 px-1 py-2" dir={isRtl ? 'rtl' : 'ltr'}>
-        <span className="text-xs font-medium text-muted-foreground truncate">
+      <div
+        className="flex items-center gap-2 rounded-lg border bg-card p-3"
+        dir={isRtl ? 'rtl' : 'ltr'}
+      >
+        <span className="text-sm font-medium text-foreground truncate">
           {profileName ?? t('dashboard.profile.unnamed', locale)}
         </span>
         <TypeBadge profileType={activeProfile?.profileType} locale={locale} />
@@ -165,7 +168,7 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
         value={activeProfileId ?? ''}
         disabled={switching}
         onChange={(e) => handleSwitch(e.target.value)}
-        className="w-full rounded-md border border-input bg-card text-card-foreground px-2 py-1.5 text-sm text-foreground focus:border-blue-500 focus:outline-none disabled:opacity-50"
+        className="w-full rounded-md border border-input bg-card text-card-foreground px-3 py-2.5 text-sm text-foreground focus:border-ring focus:outline-none disabled:opacity-50"
         aria-label={t('dashboard.profile.switchLabel', locale)}
       >
         {!activeProfile && (
@@ -184,7 +187,7 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
         <p className="text-xs text-muted-foreground">{t('dashboard.profile.switching', locale)}</p>
       )}
       {error && (
-        <p className="text-xs text-red-600" role="alert">
+        <p className="text-xs text-destructive" role="alert">
           {error}
         </p>
       )}

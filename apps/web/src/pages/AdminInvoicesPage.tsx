@@ -339,7 +339,7 @@ export default function AdminInvoicesPage() {
             )}
 
             {!invoice.canOverride ? (
-              <p className="text-sm text-amber-700 dark:text-amber-300" role="status">
+              <p className="text-sm text-warning" role="status">
                 {t('admin.invoices.notOverrideable', locale)}
               </p>
             ) : (
@@ -419,7 +419,7 @@ export default function AdminInvoicesPage() {
                       : t('admin.invoices.submit', locale)}
                   </button>
                   {saved && (
-                    <span className="text-sm text-emerald-700 dark:text-emerald-300" role="status">
+                    <span className="text-sm text-success" role="status">
                       {t('admin.invoices.saved', locale)}
                     </span>
                   )}

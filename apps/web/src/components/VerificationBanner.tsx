@@ -177,7 +177,7 @@ export function VerificationBanner() {
   if (verified) {
     return (
       <div
-        className="bg-green-50 border-green-200 border px-4 py-3 text-sm text-green-800"
+        className="bg-success-soft border-success/20 border px-4 py-3 text-sm text-success"
         role="alert"
         dir={isRtl ? 'rtl' : 'ltr'}
       >
@@ -190,7 +190,7 @@ export function VerificationBanner() {
 
   return (
     <div
-      className="bg-amber-50 border-amber-200 border-b px-4 py-3 text-sm text-amber-800"
+      className="bg-warning-soft border-warning/20 border-b px-4 py-3 text-sm text-warning"
       role="alert"
       dir={isRtl ? 'rtl' : 'ltr'}
     >
@@ -204,7 +204,9 @@ export function VerificationBanner() {
             {t('verification.banner.support', locale)}
           </Link>
           {hasError && (
-            <span className="text-xs text-red-600">{t('verification.banner.error', locale)}</span>
+            <span className="text-xs text-destructive">
+              {t('verification.banner.error', locale)}
+            </span>
           )}
         </div>
         <div className="flex items-center gap-3">
@@ -221,7 +223,7 @@ export function VerificationBanner() {
           )}
           <button
             onClick={() => setDismissed(bannerKey)}
-            className="text-amber-600 hover:text-amber-800"
+            className="text-warning hover:text-amber-800"
             aria-label={t('verification.banner.dismiss', locale)}
           >
             ✕

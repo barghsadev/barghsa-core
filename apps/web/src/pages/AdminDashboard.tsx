@@ -187,27 +187,27 @@ export default function AdminDashboard() {
       <p className="text-muted-foreground mb-6">{t('dashboard.admin.description', locale)}</p>
 
       {chargebacksError ? (
-        <p className="mb-6 text-sm text-red-700 dark:text-red-300" role="status">
+        <p className="mb-6 text-sm text-destructive" role="status">
           {t('dashboard.admin.chargebackWarning.error', locale)}
         </p>
       ) : null}
 
       {showChargebackWarning && chargebacks ? (
         <section
-          className="mb-6 max-w-2xl rounded-lg border border-red-300 bg-red-50 p-5"
+          className="mb-6 max-w-2xl rounded-lg border border-destructive/20 bg-danger-soft p-5"
           role="alert"
           aria-live="assertive"
           aria-label={t('dashboard.admin.chargebackWarning.aria.banner', locale)}
         >
           <div className="mb-3 flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100">
-              <AlertTriangle className="h-5 w-5 text-red-700" aria-hidden="true" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-danger-soft">
+              <AlertTriangle className="h-5 w-5 text-destructive" aria-hidden="true" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-red-900">
+              <h2 className="text-lg font-semibold text-destructive">
                 {t('dashboard.admin.chargebackWarning.title', locale)}
               </h2>
-              <p className="text-sm text-red-800">
+              <p className="text-sm text-destructive">
                 {t('dashboard.admin.chargebackWarning.summary', locale)
                   .replace('{count}', numbers.number(chargebacks.count))
                   .replace('{unmatched}', numbers.number(chargebacks.unmatchedCount))
@@ -219,7 +219,7 @@ export default function AdminDashboard() {
             {chargebacks.items.map((item) => (
               <li
                 key={item.eventId}
-                className="rounded-md border border-red-200 bg-card text-card-foreground px-3 py-2 text-sm text-foreground"
+                className="rounded-md border border-destructive/20 bg-card text-card-foreground px-3 py-2 text-sm text-foreground"
               >
                 <p className="font-medium">
                   {t(`dashboard.admin.chargebackWarning.status.${item.status}`, locale)}
@@ -246,8 +246,8 @@ export default function AdminDashboard() {
         >
           <div className="flex items-center gap-3 mb-3">
             {/* Icon */}
-            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-5 h-5 text-amber-600" aria-hidden="true" />
+            <div className="w-10 h-10 rounded-full bg-warning-soft flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-5 h-5 text-warning" aria-hidden="true" />
             </div>
             <div role="status" aria-live="polite" aria-busy={isLoading}>
               {isLoading ? (
@@ -256,7 +256,7 @@ export default function AdminDashboard() {
                   aria-label={t('dashboard.admin.pendingVerification.loading', locale)}
                 />
               ) : isError ? (
-                <p className="text-sm text-red-700 dark:text-red-300">
+                <p className="text-sm text-destructive">
                   {t('dashboard.admin.pendingVerification.error', locale)}
                 </p>
               ) : (

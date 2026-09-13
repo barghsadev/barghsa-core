@@ -212,7 +212,7 @@ export function TeamPage() {
       </h1>
       {loading && <p role="status">{word('loading')}</p>}
       {error && !invitationOpen && (
-        <div role="alert" className="space-y-2 text-red-700 dark:text-red-300">
+        <div role="alert" className="space-y-2 text-destructive">
           <p>{error}</p>
           <Button variant="outline" onClick={() => void load()}>
             {word('retry')}
@@ -220,7 +220,7 @@ export function TeamPage() {
         </div>
       )}
       {notice && (
-        <p role="status" className="text-green-800 dark:text-green-300">
+        <p role="status" className="text-success">
           {notice}
         </p>
       )}
@@ -449,7 +449,7 @@ export function TeamPage() {
                 </p>
               )}
               {error && (
-                <p role="alert" className="text-red-700 dark:text-red-300">
+                <p role="alert" className="text-destructive">
                   {error}
                 </p>
               )}

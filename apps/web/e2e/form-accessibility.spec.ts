@@ -1603,7 +1603,8 @@ for (const locale of ['en', 'fa']) {
       })
       .click();
     const form = page.locator('form').filter({ has: page.locator('#email-provider-label') });
-    await expect(form.locator('input, select')).toHaveCount(10);
+    // Includes the existing connection and command timeout fields.
+    await expect(form.locator('input, select')).toHaveCount(12);
     for (const control of await form.locator('input, select').all())
       await expect(control).toHaveAccessibleName(/.+/);
     const host = form.getByLabel(locale === 'fa' ? 'میزبان' : 'Host', { exact: false });
@@ -1737,9 +1738,24 @@ for (const locale of ['en', 'fa']) {
         )
         .toBe('#2563eb');
       const checkContrast = async () => {
+        // A scrollable sidebar intentionally clips offscreen links. Inspect visible
+        // labels at each scroll position instead of asking axe to infer occluded pixels.
+        await page.locator('#admin-navigation').evaluate((nav) => {
+          const bounds = nav.getBoundingClientRect();
+          for (const item of nav.querySelectorAll('a, p')) {
+            const rect = item.getBoundingClientRect();
+            item.toggleAttribute(
+              'data-contrast-visible',
+              rect.top >= bounds.top && rect.bottom <= bounds.bottom
+            );
+          }
+        });
+        await expect(
+          page.locator('#admin-navigation [data-contrast-visible]').first()
+        ).toBeVisible();
         const result = await new AxeBuilder({ page })
           .include('#admin-content')
-          .include('#admin-navigation')
+          .include('#admin-navigation [data-contrast-visible]')
           .withRules(['color-contrast'])
           .analyze();
         expect(result.violations).toEqual([]);

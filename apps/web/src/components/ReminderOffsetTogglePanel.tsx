@@ -396,7 +396,7 @@ export default function ReminderOffsetTogglePanel() {
 
       {error && (
         <div
-          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded"
+          className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded"
           role="alert"
         >
           {error}
@@ -538,10 +538,10 @@ export default function ReminderOffsetTogglePanel() {
                   setStepUpPassword(event.target.value);
                   setStepUpError(null);
                 }}
-                className="w-full border border-input rounded px-3 py-2 text-sm text-foreground focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                className="w-full border border-input rounded px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring outline-none"
               />
               {stepUpError && (
-                <p className="text-sm text-red-700" role="alert">
+                <p className="text-sm text-destructive" role="alert">
                   {stepUpError}
                 </p>
               )}

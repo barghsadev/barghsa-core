@@ -322,8 +322,8 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                     <span
                       className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                         row.severity === 'critical'
-                          ? 'bg-red-100 text-red-700'
-                          : 'bg-amber-100 text-amber-700'
+                          ? 'bg-danger-soft text-destructive'
+                          : 'bg-warning-soft text-warning'
                       }`}
                     >
                       {row.severity === 'critical'

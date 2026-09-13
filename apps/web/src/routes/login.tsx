@@ -547,7 +547,7 @@ function LoginPage() {
         // ── OTP verification step ─────────────────────────────
         <div className="space-y-6">
           <div className="space-y-1.5 text-center">
-            <h1 className="text-xl font-semibold tracking-tight">
+            <h1 className="text-3xl font-semibold tracking-tight">
               {t('auth.login.otpTitle', locale)}
             </h1>
             <p className="text-sm text-muted-foreground">
@@ -590,7 +590,7 @@ function LoginPage() {
             >
               {verifying ? (
                 <>
-                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                  <Loader2Icon className="me-2 h-4 w-4 animate-spin" aria-hidden="true" />
                   {t('auth.otp.verifying', locale)}
                 </>
               ) : (
@@ -610,7 +610,7 @@ function LoginPage() {
                 >
                   {resending ? (
                     <>
-                      <Loader2Icon className="mr-2 h-3 w-3 animate-spin" aria-hidden="true" />
+                      <Loader2Icon className="me-2 h-3 w-3 animate-spin" aria-hidden="true" />
                       {t('auth.otp.resending', locale)}
                     </>
                   ) : (
@@ -632,7 +632,7 @@ function LoginPage() {
         // ── Password change form (T-02.01.04) ─────────────────
         <div className="space-y-6">
           <div className="space-y-1.5">
-            <h1 className="text-xl font-semibold tracking-tight">
+            <h1 className="text-3xl font-semibold tracking-tight">
               {t('auth.login.forceChangeTitle', locale)}
             </h1>
             <p className="text-sm text-muted-foreground">
@@ -643,11 +643,7 @@ function LoginPage() {
           <form onSubmit={handleForceChange} className="space-y-4" noValidate>
             {/* Form-level alert for server errors */}
             {changeError && (
-              <Alert
-                variant="destructive"
-                role="alert"
-                className="dark:[&_[data-slot=alert-description]]:text-red-300"
-              >
+              <Alert variant="destructive" role="alert">
                 <AlertDescription>{changeError}</AlertDescription>
               </Alert>
             )}
@@ -685,11 +681,7 @@ function LoginPage() {
                 }
               />
               {confirmPassword.length > 0 && newPassword !== confirmPassword && (
-                <p
-                  id="confirm-password-error"
-                  className="text-sm text-red-700 dark:text-red-300"
-                  role="alert"
-                >
+                <p id="confirm-password-error" className="text-sm text-destructive" role="alert">
                   {t('auth.register.error.passwordsDoNotMatch', locale)}
                 </p>
               )}
@@ -707,7 +699,7 @@ function LoginPage() {
             >
               {changingPassword ? (
                 <>
-                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                  <Loader2Icon className="me-2 h-4 w-4 animate-spin" aria-hidden="true" />
                   {t('auth.login.changingPassword', locale)}
                 </>
               ) : (
@@ -720,7 +712,7 @@ function LoginPage() {
         // ── Login form ────────────────────────────────────────
         <div className="space-y-6">
           <div className="space-y-1.5">
-            <h1 className="text-xl font-semibold tracking-tight">
+            <h1 className="text-3xl font-semibold tracking-tight">
               {t('auth.login.title', locale)}
             </h1>
           </div>
@@ -728,11 +720,7 @@ function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {/* Form-level alert for server errors */}
             {formError && (
-              <Alert
-                variant="destructive"
-                role="alert"
-                className="dark:[&_[data-slot=alert-description]]:text-red-300"
-              >
+              <Alert variant="destructive" role="alert">
                 <AlertDescription>{formError}</AlertDescription>
               </Alert>
             )}
@@ -759,11 +747,7 @@ function LoginPage() {
               />
               {/* Error message */}
               {touched && usernameError && (
-                <p
-                  id="username-error"
-                  className="text-sm text-red-700 dark:text-red-300"
-                  role="alert"
-                >
+                <p id="username-error" className="text-sm text-destructive" role="alert">
                   {usernameError}
                 </p>
               )}
@@ -791,7 +775,7 @@ function LoginPage() {
             <Button type="submit" className="w-full hover:bg-primary" disabled={!isFormReady}>
               {submitting ? (
                 <>
-                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                  <Loader2Icon className="me-2 h-4 w-4 animate-spin" aria-hidden="true" />
                   {t('auth.login.submitting', locale)}
                 </>
               ) : (

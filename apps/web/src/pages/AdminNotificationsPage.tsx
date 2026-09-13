@@ -571,14 +571,14 @@ export default function AdminNotificationsPage() {
       {error && (
         <div
           role="alert"
-          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
+          className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded relative"
         >
           {error}
           <button
             type="button"
             aria-label={t('admin.notifications.dismissError', uiLocale)}
             onClick={() => setError(null)}
-            className="absolute top-2 end-2 text-red-500 hover:text-red-700"
+            className="absolute top-2 end-2 text-destructive hover:text-red-700"
           >
             ✕
           </button>
@@ -653,7 +653,7 @@ export default function AdminNotificationsPage() {
                 className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.eventKey', uiLocale)}{' '}
-                <span className="text-red-500">*</span>
+                <span className="text-destructive">*</span>
               </label>
               {editId ? (
                 <input
@@ -696,7 +696,7 @@ export default function AdminNotificationsPage() {
                   className="block text-sm font-medium text-foreground mb-1"
                 >
                   {t('admin.notifications.channel', uiLocale)}{' '}
-                  <span className="text-red-500">*</span>
+                  <span className="text-destructive">*</span>
                 </label>
                 {editId ? (
                   <input
@@ -727,7 +727,7 @@ export default function AdminNotificationsPage() {
                   className="block text-sm font-medium text-foreground mb-1"
                 >
                   {t('admin.notifications.locale', uiLocale)}{' '}
-                  <span className="text-red-500">*</span>
+                  <span className="text-destructive">*</span>
                 </label>
                 {editId ? (
                   <input
@@ -783,7 +783,7 @@ export default function AdminNotificationsPage() {
                 className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.notifications.bodyTemplate', uiLocale)}{' '}
-                <span className="text-red-500">*</span>
+                <span className="text-destructive">*</span>
               </label>
               <p id="notification-body-hint" className="text-xs text-muted-foreground mb-1">
                 {t('admin.notifications.bodyHint', uiLocale)}
@@ -930,12 +930,12 @@ export default function AdminNotificationsPage() {
                       : t('admin.notifications.testSend', uiLocale)}
                   </button>
                   {unsavedContent && (
-                    <span className="text-sm text-amber-700">
+                    <span className="text-sm text-warning">
                       {t('admin.notifications.saveBeforeTest', uiLocale)}
                     </span>
                   )}
                   {testSendMsg && !unsavedContent && (
-                    <span className="text-sm text-green-600">{testSendMsg}</span>
+                    <span className="text-sm text-success">{testSendMsg}</span>
                   )}
                 </>
               )}
@@ -964,7 +964,7 @@ export default function AdminNotificationsPage() {
 
       {/* Publish confirm dialog */}
       {publishId && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 space-y-3">
+        <div className="bg-warning-soft border border-warning/20 rounded-lg p-4 space-y-3">
           <h3 className="font-semibold">{t('admin.notifications.publishTitle', uiLocale)}</h3>
           <p className="text-sm text-muted-foreground">
             {t('admin.notifications.publishDesc', uiLocale)}
@@ -1056,8 +1056,8 @@ export default function AdminNotificationsPage() {
                   <span
                     className={`inline-block px-2 py-0.5 text-xs rounded ${
                       template.status === 'draft'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-green-100 text-green-800'
+                        ? 'bg-warning-soft text-warning'
+                        : 'bg-success-soft text-success'
                     }`}
                   >
                     {template.status === 'archived'
@@ -1070,7 +1070,7 @@ export default function AdminNotificationsPage() {
                 </td>
                 <td className="px-4 py-3">
                   {template.isActive ? (
-                    <span className="text-green-600 text-sm font-medium">
+                    <span className="text-success text-sm font-medium">
                       ✓ {t('admin.notifications.active', uiLocale)}
                     </span>
                   ) : (
@@ -1088,13 +1088,13 @@ export default function AdminNotificationsPage() {
                       </button>
                       <button
                         onClick={() => setPublishId(template.id)}
-                        className="text-green-600 hover:underline"
+                        className="text-success hover:underline"
                       >
                         {t('admin.notifications.publish', uiLocale)}
                       </button>
                       <button
                         onClick={() => handleDelete(template.id)}
-                        className="text-red-600 hover:underline"
+                        className="text-destructive hover:underline"
                       >
                         {t('admin.notifications.delete', uiLocale)}
                       </button>

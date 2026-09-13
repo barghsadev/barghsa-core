@@ -54,11 +54,11 @@ export default function TosPreview({
           {changes
             ? changes.map((change, index) =>
                 change.added ? (
-                  <ins key={index} className="bg-green-100 text-green-900">
+                  <ins key={index} className="bg-success-soft text-success">
                     {change.value}
                   </ins>
                 ) : change.removed ? (
-                  <del key={index} className="bg-red-100 text-red-900">
+                  <del key={index} className="bg-danger-soft text-destructive">
                     {change.value}
                   </del>
                 ) : (

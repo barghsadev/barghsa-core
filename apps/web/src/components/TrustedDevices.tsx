@@ -186,7 +186,7 @@ export function TrustedDevices({
         </p>
       )}
       {loadError && (
-        <p role="alert" className="text-sm text-red-700 dark:text-red-300">
+        <p role="alert" className="text-sm text-destructive">
           {loadError}
         </p>
       )}
@@ -291,7 +291,7 @@ export function TrustedDevices({
               </div>
             )}
             {error && (
-              <p role="alert" className="text-sm text-red-700 dark:text-red-300">
+              <p role="alert" className="text-sm text-destructive">
                 {error}
               </p>
             )}

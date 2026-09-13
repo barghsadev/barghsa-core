@@ -918,7 +918,7 @@ function Tickets({ staff }: { staff: boolean }) {
           {comments.map((item) => (
             <div
               key={item.id}
-              className={`rounded border p-3 ${item.visibility === 'internal' ? 'border-amber-300 bg-amber-50 dark:border-amber-700 dark:bg-amber-950' : 'bg-muted'}`}
+              className={`rounded border p-3 ${item.visibility === 'internal' ? 'border-warning/20 bg-warning-soft dark:border-amber-700 dark:bg-amber-950' : 'bg-muted'}`}
             >
               <p className="text-sm">
                 {item.authorId} · {formatDate(item.createdAt)} · {text(item.visibility)}

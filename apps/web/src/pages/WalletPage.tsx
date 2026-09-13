@@ -410,7 +410,7 @@ export function WalletPage({
             <div
               role="alert"
               data-testid="wallet-error"
-              className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800"
+              className="rounded-lg border border-destructive/20 bg-danger-soft p-3 text-sm text-destructive"
             >
               {errorMessage}
             </div>
@@ -496,7 +496,7 @@ export function WalletPage({
                 <div
                   role="status"
                   data-testid="wallet-receipt-success"
-                  className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800"
+                  className="rounded-lg border border-success/20 bg-success-soft p-3 text-sm text-success"
                 >
                   {t('wallet.page.receiptSuccess', locale)}
                 </div>
@@ -506,7 +506,7 @@ export function WalletPage({
                 <div
                   role="alert"
                   data-testid="wallet-receipt-error"
-                  className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800"
+                  className="rounded-lg border border-destructive/20 bg-danger-soft p-3 text-sm text-destructive"
                 >
                   {receiptErrorMessage}
                 </div>

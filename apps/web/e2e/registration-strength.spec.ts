@@ -1,5 +1,16 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { test, expect, type Page } from './coverage-fixture';
+
+// Match Vite source requests and the actual production split chunk.
+const dist = process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'dist-coverage' : 'dist';
+const manifestPath = resolve(dist, 'auth/.vite/manifest.json');
+const authManifest = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, 'utf8')) : {};
+const strengthChunk = authManifest['src/lib/password-strength.ts']?.file;
+const strengthUrl = (url: URL) =>
+  url.pathname.endsWith('/src/lib/password-strength.ts') ||
+  (typeof strengthChunk === 'string' && url.pathname === `/auth/${strengthChunk}`);
 
 async function openPassword(page: Page, locale: string) {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
@@ -61,7 +72,7 @@ for (const locale of ['en', 'fa']) {
     const pending = new Promise<void>((resolve) => {
       release = resolve;
     });
-    await page.route('**/assets/password-strength-*.js', async (route) => {
+    await page.route(strengthUrl, async (route) => {
       requested = true;
       await pending;
       await route.continue();
@@ -87,7 +98,7 @@ for (const locale of ['en', 'fa']) {
   test(`password strength reports a failed download and recovers after reload (${locale})`, async ({
     page,
   }) => {
-    await page.route('**/assets/password-strength-*.js', (route) => route.abort());
+    await page.route(strengthUrl, (route) => route.abort());
     await openPassword(page, locale);
     await page.locator('#password').fill(secret);
     const meter = page.getByRole('progressbar');
@@ -97,7 +108,7 @@ for (const locale of ['en', 'fa']) {
     );
     await expect(meter).toHaveAttribute('aria-busy', 'false');
     await expect(page.locator('#password')).toHaveValue(secret);
-    await page.unroute('**/assets/password-strength-*.js');
+    await page.unroute(strengthUrl);
     await page.reload();
     await page.locator('#username').fill('strength@example.test');
     await page.locator('#username').press('Tab');

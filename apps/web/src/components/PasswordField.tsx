@@ -12,10 +12,10 @@ const STRENGTH_LABEL_KEYS: Record<StrengthLevel, string> = {
 };
 
 const STRENGTH_BAR_CLASSES: Record<StrengthLevel, string> = {
-  weak: 'bg-red-500',
-  fair: 'bg-amber-500',
-  good: 'bg-lime-500',
-  strong: 'bg-green-600',
+  weak: 'bg-destructive',
+  fair: 'bg-warning',
+  good: 'bg-info',
+  strong: 'bg-success',
 };
 
 function meetsMinimumRequirements(password: string): boolean {
@@ -185,7 +185,7 @@ export function PasswordField({
           aria-describedby={
             error ? `${id}-error` : showStrengthMeter ? `${id}-strength` : undefined
           }
-          className="pe-9"
+          className="pe-12"
         />
         {value.length > 0 && (
           <button
@@ -193,7 +193,7 @@ export function PasswordField({
             onClick={handleToggle}
             disabled={disabled}
             aria-pressed={visible}
-            className="absolute inset-y-0 end-0 flex items-center pe-2.5 text-muted-foreground hover:text-foreground"
+            className="absolute inset-y-0 end-0 flex w-11 items-center justify-center text-muted-foreground hover:text-foreground"
             aria-label={t('auth.register.passwordVisibilityLabel', locale)}
           >
             {visible ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
@@ -223,7 +223,7 @@ export function PasswordField({
           >
             <ProgressTrack>
               <ProgressIndicator
-                className={`transition-all ${STRENGTH_BAR_CLASSES[strength?.level ?? 'weak']}`}
+                className={`transition-[width] ${STRENGTH_BAR_CLASSES[strength?.level ?? 'weak']}`}
               />
             </ProgressTrack>
           </Progress>

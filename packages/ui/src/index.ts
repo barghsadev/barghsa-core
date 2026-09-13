@@ -55,3 +55,8 @@ export * from './components/base-ui/multi-select';
 export * from './components/base-ui/data-table';
 
 export { cn } from './lib/utils';
+
+export * from './components/ui/workflow';
+export * from './components/ui/confirm-dialog';
+export * from './components/ui/input-group';
+export * from './components/ui/pagination';

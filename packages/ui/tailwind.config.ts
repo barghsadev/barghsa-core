@@ -68,7 +68,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Vazirmatn', 'Tahoma', 'sans-serif'],
         persian: ['Vazirmatn', 'Tahoma', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },

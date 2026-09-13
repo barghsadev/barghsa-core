@@ -136,12 +136,12 @@ export function NotificationBell() {
       <DropdownMenuTrigger
         data-testid="notification-bell"
         aria-label={bellAria}
-        className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-card-foreground text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        className="relative inline-flex size-11 items-center justify-center rounded-lg border border-border bg-card text-card-foreground text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
       >
         <BellIcon className="h-5 w-5" aria-hidden="true" />
         {unreadCount > 0 && (
           <span
-            className="absolute -top-1 -end-1 inline-flex min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-semibold leading-4 text-white"
+            className="absolute -top-1 -end-1 inline-flex min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold leading-4 text-destructive-foreground"
             role="status"
           >
             {badgeLabel}
@@ -174,7 +174,7 @@ export function NotificationBell() {
           <div className="space-y-3 p-2" aria-busy="true">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="flex items-start gap-3 animate-pulse">
-                <div className="h-9 w-9 rounded-full bg-muted" />
+                <div className="size-11 rounded-full bg-muted" />
                 <div className="flex-1 space-y-2 py-0.5">
                   <div className="h-3 w-3/4 rounded bg-muted" />
                   <div className="h-3 w-1/2 rounded bg-muted" />
@@ -183,7 +183,7 @@ export function NotificationBell() {
             ))}
           </div>
         ) : error ? (
-          <div className="p-3 text-sm text-red-600" role="alert">
+          <div className="p-3 text-sm text-destructive" role="alert">
             <p>{error}</p>
             <button type="button" onClick={() => void load()} className="mt-2 underline">
               {t('notifications.retry', locale)}

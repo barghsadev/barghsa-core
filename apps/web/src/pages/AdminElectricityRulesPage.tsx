@@ -118,7 +118,7 @@ export default function AdminElectricityRulesPage() {
                     {safety?.[mode].blocked && (
                       <p
                         role="alert"
-                        className="rounded border border-amber-300 bg-amber-50 p-3 text-amber-950"
+                        className="rounded border border-warning/20 bg-warning-soft p-3 text-amber-950"
                       >
                         {label('blocked')}{' '}
                         {safety[mode].reasons.map((reason) => label(reason)).join(' · ')}

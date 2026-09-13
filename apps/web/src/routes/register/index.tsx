@@ -319,7 +319,7 @@ function RegisterPage() {
       <>
         <div className="space-y-6">
           <div className="space-y-1.5">
-            <h1 className="text-xl font-semibold tracking-tight">
+            <h1 className="text-3xl font-semibold tracking-tight">
               {t('auth.register.title', locale)}
             </h1>
           </div>
@@ -442,7 +442,7 @@ function RegisterPage() {
             <Button type="submit" className="w-full" disabled={!isFormReady}>
               {submitting ? (
                 <>
-                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                  <Loader2Icon className="me-2 h-4 w-4 animate-spin" aria-hidden="true" />
                   {t('auth.register.submitting', locale)}
                 </>
               ) : (

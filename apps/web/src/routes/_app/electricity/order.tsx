@@ -620,7 +620,7 @@ function ElectricityOrderPage() {
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
       >
         <div className="max-w-md text-center">
-          <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-600">
+          <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-success-soft text-success">
             <CheckIcon className="h-8 w-8" />
           </div>
           <h1 className="mb-4 text-2xl font-bold">

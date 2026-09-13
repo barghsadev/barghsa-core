@@ -162,7 +162,7 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
       {time.notice}
       {error && (
         <div
-          className="bg-red-50 border border-red-200 shadow-sm rounded-lg px-4 py-2 text-sm text-red-700 mb-2"
+          className="bg-danger-soft border border-destructive/20 shadow-sm rounded-lg px-4 py-2 text-sm text-destructive mb-2"
           role="alert"
         >
           {error}
@@ -176,7 +176,7 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
           return (
             <div
               key={inv.id}
-              className="bg-green-50 border border-green-200 shadow-sm rounded-lg px-4 py-3 text-sm text-green-800"
+              className="bg-success-soft border border-success/20 shadow-sm rounded-lg px-4 py-3 text-sm text-success"
               role="alert"
             >
               {state.doneAction === 'accept'

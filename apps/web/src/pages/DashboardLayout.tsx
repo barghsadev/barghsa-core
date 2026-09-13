@@ -1,130 +1,70 @@
-import { useState } from 'react';
-import { Button } from '@barghsa/ui';
-import { Link, Outlet } from '@tanstack/react-router';
+import { Outlet } from '@tanstack/react-router';
+import {
+  LayoutDashboard,
+  Zap,
+  Sprout,
+  Wallet,
+  ReceiptText,
+  LifeBuoy,
+  Bell,
+  Users,
+  Settings,
+} from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/app';
-import { useBrandConfig } from '../providers/BrandThemeProvider.js';
+import { shellText } from '@barghsa/i18n/shell';
 import { useLocale } from '../hooks/useLocale.js';
 import { ProfileSwitcher } from '../components/ProfileSwitcher.js';
 import { TosBanner } from '../components/TosBanner.js';
 import { InvitationBanner } from '../components/InvitationBanner.js';
 import { OwnershipBanner } from '../components/OwnershipBanner.js';
 import { NotificationBell } from '../components/NotificationBell.js';
+import { AppShell, type NavigationGroup } from '../components/AppShell.js';
 
-interface DashboardLayoutProps {
-  locale?: Locale;
-}
-
-/**
- * Customer dashboard layout (T-03.03.01).
- *
- * Renders the app shell for authenticated customer pages: a sidebar that
- * hosts the profile switcher at the top plus navigation, and the page
- * content below/next to it. Supports RTL via logical CSS properties.
- *
- * Nav links are intentionally spread across the app's customer areas. When
- * mobile the sidebar collapses to a horizontal strip via flex wrapping.
- */
-export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps) {
+export function DashboardLayout({ locale: localeOverride }: { locale?: Locale }) {
   const currentLocale = useLocale();
-  const { brandConfig } = useBrandConfig();
   const locale = localeOverride ?? currentLocale;
-  const [menuOpen, setMenuOpen] = useState(false);
-  const isRtl = locale === 'fa';
-
-  const navItems: Array<{ to: string; label: string }> = [
-    { to: '/dashboard', label: t('dashboard.nav.overview', locale) },
-    { to: '/electricity', label: t('dashboard.nav.electricity', locale) },
-    { to: '/savings', label: t('dashboard.nav.savings', locale) },
-    { to: '/wallet', label: t('dashboard.nav.wallet', locale) },
-    { to: '/invoices', label: t('dashboard.nav.invoices', locale) },
-    { to: '/ai', label: t('dashboard.nav.ai', locale) },
-    { to: '/documents', label: t('dashboard.nav.documents', locale) },
-    { to: '/videos', label: t('dashboard.nav.videos', locale) },
-    { to: '/tickets', label: t('tickets.title', locale) },
-    { to: '/notifications', label: t('notifications.nav', locale) },
-    { to: '/settings/team', label: t('team.title', locale) },
-    { to: '/settings', label: t('dashboard.nav.settings', locale) },
+  const groups: NavigationGroup[] = [
+    {
+      label: shellText('overview', locale),
+      items: [
+        { to: '/dashboard', label: t('dashboard.nav.overview', locale), icon: LayoutDashboard },
+      ],
+    },
+    {
+      label: shellText('services', locale),
+      items: [
+        { to: '/electricity', label: t('dashboard.nav.electricity', locale), icon: Zap },
+        { to: '/savings', label: t('dashboard.nav.savings', locale), icon: Sprout },
+        { to: '/wallet', label: t('dashboard.nav.wallet', locale), icon: Wallet },
+        { to: '/invoices', label: t('dashboard.nav.invoices', locale), icon: ReceiptText },
+        { to: '/tickets', label: t('tickets.title', locale), icon: LifeBuoy },
+      ],
+    },
+    {
+      label: shellText('account', locale),
+      items: [
+        { to: '/notifications', label: t('notifications.nav', locale), icon: Bell },
+        { to: '/settings/team', label: t('team.title', locale), icon: Users },
+        { to: '/settings', label: t('dashboard.nav.settings', locale), icon: Settings },
+      ],
+    },
   ];
-
   return (
-    <div
-      className="min-h-dvh flex flex-col bg-background text-foreground"
-      dir={isRtl ? 'rtl' : 'ltr'}
+    <AppShell
+      area="dashboard"
+      locale={locale}
+      groups={groups}
+      profile={<ProfileSwitcher locale={locale} />}
+      actions={<NotificationBell />}
+      banners={
+        <>
+          <TosBanner locale={locale} />
+          <InvitationBanner locale={locale} />
+          <OwnershipBanner />
+        </>
+      }
     >
-      <a href="#dashboard-content" className="sr-only focus:not-sr-only focus:p-3">
-        {t('shell.skipContent', locale)}
-      </a>
-      {/* TOS re-acceptance banner — shown on top of the dashboard when needed */}
-      <TosBanner locale={locale} />
-
-      {/* Invitation banner — shows pending agent invitations */}
-      <InvitationBanner locale={locale} />
-      <OwnershipBanner />
-
-      {/* App header — brand + notification center bell (T-05.02.03) */}
-      <header className="flex items-center justify-between border-b border-border bg-card text-card-foreground px-4 py-3 md:px-6">
-        <Link to="/" className="text-lg font-bold text-foreground no-underline">
-          {brandConfig.appTitle}
-        </Link>
-        <Button
-          variant="outline"
-          className="md:hidden"
-          aria-expanded={menuOpen}
-          aria-controls="dashboard-navigation"
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          {t('shell.menu', locale)}
-        </Button>
-        <NotificationBell />
-      </header>
-
-      {/* Main layout: sidebar + content */}
-      <div className="flex flex-1 flex-col md:flex-row">
-        {/* Sidebar */}
-        <aside
-          id="dashboard-navigation"
-          className={`${menuOpen ? 'block' : 'hidden'} w-full shrink-0 border-e border-border bg-card text-card-foreground p-4 md:block md:w-64`}
-        >
-          <div className="space-y-4">
-            {/* Profile switcher — top of sidebar */}
-            <div className="border-b border-border pb-4">
-              <ProfileSwitcher locale={locale} />
-            </div>
-
-            {/* Brand */}
-            <Link to="/" className="block text-lg font-bold text-foreground no-underline">
-              {brandConfig.appTitle}
-            </Link>
-
-            {/* Navigation */}
-            <nav aria-label={t('dashboard.nav.label', locale)}>
-              <ul className="space-y-1">
-                {navItems.map((item) => (
-                  <li key={item.to}>
-                    <Link
-                      to={item.to}
-                      onClick={() => setMenuOpen(false)}
-                      className="block rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted hover:text-foreground"
-                      activeProps={{ className: 'bg-primary/10 text-foreground font-medium' }}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-        </aside>
-
-        {/* Main content */}
-        <main
-          id="dashboard-content"
-          tabIndex={-1}
-          className="min-w-0 flex-1 overflow-auto p-4 md:p-8"
-        >
-          <Outlet />
-        </main>
-      </div>
-    </div>
+      <Outlet />
+    </AppShell>
   );
 }
