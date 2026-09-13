@@ -2103,5 +2103,31 @@
         "evidence": "audit/evidence/step-reviews.json#R05-strict-dependencies"
       }
     ]
+  },
+  {
+    "pr": 42,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/42",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-03.03.04"
+    ],
+    "historical_deferrals": [
+      "- External provider outages (AI, notification, bill-data) have no health checks yet; they will surface as per-degraded-capability maintenance mode once their integrations land — no change to readiness today.",
+      "- Adjusted TODO to reference T-04.02.01 (Redis connection factory) for the future real PING wiring."
+    ],
+    "status": "Two statements recovered from the saved PR body; Redis wiring satisfied, future maintenance consumers retained.",
+    "reviewed_source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+    "review_record": "audit/evidence/step-reviews.json#V01-runtime-lifecycle",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "separate_future_dependency",
+        "evidence": "Only PostgreSQL controls readiness. Redis outages retain X-Health-Warning and storage outages add object-storage-unavailable without503. Future AI/bill-data per-capability maintenance consumers remain unbuilt; notification failure/retry behavior is already reviewed under R02 and does not block readiness. audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Current injected Redis connection and pingRedis provide real optional-dependency health checks. audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+      }
+    ]
   }
 ]

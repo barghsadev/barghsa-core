@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
+  "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
   "active_step": "V01",
-  "next_action": "V01: reconcile runtime health, errors and graceful shutdown, saved PR29/39–42, reusing verified current source evidence.",
+  "next_action": "V01-loop-durability: review saved PR234/235/242 against current deterministic protocol; preserve scheduler/external state and exact history.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -777,6 +777,10 @@
     {
       "id": "V01-local-development",
       "review_record": "audit/evidence/step-reviews.json#V01-local-development"
+    },
+    {
+      "id": "V01-runtime-lifecycle",
+      "review_record": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
     }
   ],
   "deferred_improvements": [
@@ -804,9 +808,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 194,
-    "partial": 34,
-    "pending": 94,
+    "acceptance_verified": 197,
+    "partial": 35,
+    "pending": 90,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 8,
@@ -1112,7 +1116,7 @@
   "active_batch": {
     "id": "V01-runtime-lifecycle",
     "name": "Runtime errors, health and graceful shutdown",
-    "status": "reviewing",
+    "status": "completed",
     "prs": [
       29,
       39,
@@ -1128,18 +1132,79 @@
       "01-platform-infrastructure.md#T-03.03.04"
     ],
     "remaining_checklist": [
-      "Exact requirements and saved PR bodies read.",
-      "Review current health/optional dependencies and API/worker/web drain behavior; reuse source-bound proof.",
-      "Disposition historical validation gaps and provider maintenance-mode deferrals separately."
+      "Per-capability maintenance mode for future AI runtime/bill-data integrations remains V01/B01; no acceptance claimed for unbuilt consumers.",
+      "V02 whole-repository regression and current production image verification remain; local process checks do not renew historical image/deployment evidence."
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      "Storage readiness returned success without a real probe; fixed at6475df05 with current private-endpoint HEAD, cancellation and bounded shared work.",
+      "API watchdog started after Nest HTTP drain, so hung requests escaped the deadline; baseline reproduced, signal watchdog/drain fixed.",
+      "Node classified res.end(buffer) as idle before flush: web shutdown truncated paused large responses and returned0. Reproduced; API/web now track pending responses until finish.",
+      "Redis/storage SDK shutdown was absent; API now closes them, worker closes storage after poller drain, and late storage configuration cannot recreate clients after destruction."
+    ],
     "reused_evidence": [
       "audit/evidence/step-reviews.json#V01-local-development",
       "audit/evidence/step-reviews.json#V01-database-foundations"
     ],
-    "new_evidence": [],
-    "pr_dispositions": [],
-    "next_action": "V01: reconcile runtime health, errors and graceful shutdown, saved PR29/39–42, reusing verified current source evidence."
+    "new_evidence": [
+      "10 distinct affected API cases across the batch:3 telemetry/readiness,2 health unit,1 actual S3 HTTP,2 compiled Nest shutdown,2 resource cleanup. Overlapping reruns excluded.",
+      "28/28 current storage/runtime configuration cases.",
+      "2/2 current poller-group drain cases; unchanged transaction/lease logic reused from nine prior compiled-process cases after explicit body comparison.",
+      "26/26:3 real-child shutdown plus23 existing static-server cases.",
+      "Current API/worker/web typechecks and scoped lint/format pass; shared/DB/worker/API rebuilt by final API fixture run."
+    ],
+    "pr_dispositions": [
+      {
+        "pr": 29,
+        "status": "closed",
+        "task_keys": [
+          "01-platform-infrastructure.md#T-01.05.01"
+        ],
+        "reason": "R03 error/correlation acceptance retained. All current task source bindings match after bounded immediate-base fixture/runtime refresh; no error-contract change. Existing149 distinct API/106 worker proof remains within its recorded scope.",
+        "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+        "evidence": "audit/evidence/step-reviews.json#R03-correlation"
+      },
+      {
+        "pr": 39,
+        "status": "closed",
+        "task_keys": [
+          "01-platform-infrastructure.md#T-03.03.01"
+        ],
+        "reason": "Actual private-endpoint S3 HeadBucket uses current persisted configuration and credentials. Missing/denied/stalled storage is degraded with a generic safe message; one shared 1500ms bounded probe prevents public request accumulation. Current PostgreSQL/schema/pool checks remain the only readiness blockers; liveness is immediate and exempt from auth/rate/audit. Redis warning behavior is preserved.",
+        "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+        "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+      },
+      {
+        "pr": 40,
+        "status": "closed",
+        "task_keys": [
+          "01-platform-infrastructure.md#T-03.03.02"
+        ],
+        "reason": "SIGTERM/SIGINT start a referenced deadline before Nest module/HTTP teardown and stop accepting connections. Accepted requests drain; buffered responses remain active until finish. API closes database, Redis and storage independently. Worker stops poller leasing, waits for running jobs, closes pools and storage; the reviewed shutdown-body delta preserves earlier compiled-process transaction/lease proof and keeps the forced-exit deadline alive.",
+        "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+        "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+      },
+      {
+        "pr": 41,
+        "status": "closed",
+        "task_keys": [
+          "01-platform-infrastructure.md#T-03.03.03"
+        ],
+        "reason": "Production static server retains buffered responses until finish, drains full 16MB accepted responses and cleanly exits0; paused responses force exit1 at the configured deadline. Existing23 static-server security/cache/SPA cases also pass.",
+        "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+        "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+      },
+      {
+        "pr": 42,
+        "status": "open",
+        "task_keys": [
+          "01-platform-infrastructure.md#T-03.03.04"
+        ],
+        "reason": "Only PostgreSQL controls readiness. Redis outages retain X-Health-Warning and storage outages add object-storage-unavailable without503. Future AI/bill-data per-capability maintenance consumers remain unbuilt; notification failure/retry behavior is already reviewed under R02 and does not block readiness.",
+        "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+        "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+      }
+    ],
+    "next_action": "V01-loop-durability: review saved PR234/235/242 against current deterministic protocol; preserve scheduler/external state and exact history."
   },
   "open_domain_reviews": [
     {

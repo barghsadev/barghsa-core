@@ -1,22 +1,22 @@
 # Remaining fix plan
 
-Current through product/test `3fd776a9` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `645dda1c` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 184 | 33 | 46 | 263 |
+| Tasks with merged PR evidence | 187 | 34 | 42 | 263 |
 | Other historical claims | 10 | 1 | 48 | 59 |
-| All claims | 194 | 34 | 94 | 322 |
+| All claims | 197 | 35 | 90 | 322 |
 
-**128 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**125 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
-Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
+Saved inventory: **301 merged PRs**, **172 deferrals across 102 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Development workflow verified at3fd776a9:4 newly verified tasks and4 newly closed PRs, with PR74 closure preserved. Global194 verified/34 partial/94 pending;172 PRs closed/27 open/102 unreviewed.18 immediate-base bindings refreshed;38 older refreshes retained. Next **V01-runtime-lifecycle**, saved PR29/39–42. [Review](evidence/step-reviews.json#V01-local-development).
+Runtime lifecycle verified at645dda1c:3 tasks newly verified/1 partial;3 PRs newly closed/1 open, PR29 closure preserved. Global197 verified/35 partial/90 pending;175 PRs closed/28 open/98 unreviewed.118 immediate-base bindings refreshed;38 older refreshes retained. PR42 keeps future AI/bill-data maintenance consumers open. Next **V01-loop-durability**, saved PR234/235/242. [Review](evidence/step-reviews.json#V01-runtime-lifecycle).
 
 Seed/bootstrap remains5 verified/1 partial; PR84 retains production seed execution. Database PR17–22 remains5 closed/1 open, with PR21 future refund/order concurrency outstanding. Preserve migrations0133/0134 and legacy reconciliation prerequisites.
 
@@ -136,7 +136,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
-For all34 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
+For all35 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
 
 ## Remaining merged-PR review
 
@@ -144,15 +144,15 @@ For all34 partial records, use the exact limitations in [acceptance](acceptance-
 
 | Current mapping | PRs |
 | --- | ---: |
-| At least one unresolved mapped task | 86 |
-| Only recorded verified tasks | 211 |
+| At least one unresolved mapped task | 83 |
+| Only recorded verified tasks | 214 |
 | No current task mapping | 4 |
 
 These are mapping counts, not completed PR-review counts. Even a PR mapped only to verified tasks may have an unresolved deferral or stale source evidence.
 
-Review the combined implementation once per qualified task, then associate every contributing PR. There are79 unresolved PR-backed task claims. Another 49 unresolved claims have no direct PR mapping, including4 newly partial shared-library reviews.
+Review the combined implementation once per qualified task, then associate every contributing PR. There are76 unresolved PR-backed task claims. Another 49 unresolved claims have no direct PR mapping, including4 newly partial shared-library reviews.
 
-For each of the 170 deferrals, record one disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. PR-body checkboxes are author claims. Twelve statements in PR92/106/115/129/132/218/252/254 now have explicit dispositions in [pr-deferrals.json](pr-deferrals.json): required initial roles, email delivery, staff UI, invitation withdrawal/decisions and the invitation expiry worker are implemented locally; the proposed re-enable endpoint is outside T-10.01.01. PR92's frontend modal is satisfied; its other statement retains pending domain acceptance. PR106's legal frontend is satisfied by PR108 and the current repaired form. PR130 is covered by current role-assignment acceptance. PR115 remains open: electricity integration is satisfied, while required savings/solar consumers remain with their unbuilt product prerequisites.
+For each of the 172 deferrals, record one disposition: satisfied by later implementation, confirmed repair remaining, separate future dependency, or external evidence required. PR-body checkboxes are author claims. Twelve statements in PR92/106/115/129/132/218/252/254 now have explicit dispositions in [pr-deferrals.json](pr-deferrals.json): required initial roles, email delivery, staff UI, invitation withdrawal/decisions and the invitation expiry worker are implemented locally; the proposed re-enable endpoint is outside T-10.01.01. PR92's frontend modal is satisfied; its other statement retains pending domain acceptance. PR106's legal frontend is satisfied by PR108 and the current repaired form. PR130 is covered by current role-assignment acceptance. PR115 remains open: electricity integration is satisfied, while required savings/solar consumers remain with their unbuilt product prerequisites.
 
 PR47 is closed by verified R05 replacement while preserving its unmapped inventory. Loop PR234/235/242 reconciliation remains V01. Compare #298 with `04-invoices-wallet-contracts.md#T-04.3.01.06` before treating that gap as unbuilt. Five Docker groups were rebuilt after completion loss; fifteen wallet groups include useful corrective work. The other three repeated groups concern legal-profile slices, bookkeeping and replaced invoice snapshots. Repeated PRs alone do not justify deleting code.
 
@@ -169,7 +169,7 @@ Keep obsolete keys `01-platform-infrastructure.md#T-05.04.05` and `02-auth-users
 | Development, configuration and documentation, T-07.* | 21 |
 | Total | 50 |
 
-Dependencies override batch order. These50 unresolved skips overlap128 unresolved reviews; do not add the counts. Review incidental implementation before scheduling a build.
+Dependencies override batch order. These50 unresolved skips overlap125 unresolved reviews; do not add the counts. Review incidental implementation before scheduling a build.
 
 Separately, [queue gaps](archive/queue-gaps.json) and [unstarted backlog](archive/unstarted-backlog.csv) retain 1,033 historical gaps: 737 earlier and 296 later tasks. They are historical evidence, not a dispatch queue or proof of missing implementation.
 

@@ -20194,6 +20194,497 @@
           "evidence": "audit/evidence/step-reviews.json#V01-local-development"
         }
       ]
+    },
+    {
+      "id": "V01-runtime-lifecycle",
+      "date": "2026-09-13",
+      "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+      "base_revision": "9fa83159289c1c1f333ce949bef128b49530f018",
+      "product_commits": [
+        "6475df05",
+        "645dda1c"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.05.01",
+        "01-platform-infrastructure.md#T-03.03.01",
+        "01-platform-infrastructure.md#T-03.03.02",
+        "01-platform-infrastructure.md#T-03.03.03",
+        "01-platform-infrastructure.md#T-03.03.04"
+      ],
+      "summary": "Three tasks newly verified, one partial; three PRs newly closed, one open, PR29 closure preserved.",
+      "review": [
+        "Actual private-endpoint S3 HeadBucket uses current persisted configuration and credentials. Missing/denied/stalled storage is degraded with a generic safe message; one shared 1500ms bounded probe prevents public request accumulation. Current PostgreSQL/schema/pool checks remain the only readiness blockers; liveness is immediate and exempt from auth/rate/audit. Redis warning behavior is preserved.",
+        "SIGTERM/SIGINT start a referenced deadline before Nest module/HTTP teardown and stop accepting connections. Accepted requests drain; buffered responses remain active until finish. API closes database, Redis and storage independently. Worker stops poller leasing, waits for running jobs, closes pools and storage; the reviewed shutdown-body delta preserves earlier compiled-process transaction/lease proof and keeps the forced-exit deadline alive.",
+        "Production static server retains buffered responses until finish, drains full 16MB accepted responses and cleanly exits0; paused responses force exit1 at the configured deadline. Existing23 static-server security/cache/SPA cases also pass.",
+        "Only PostgreSQL controls readiness. Redis outages retain X-Health-Warning and storage outages add object-storage-unavailable without503. Future AI/bill-data per-capability maintenance consumers remain unbuilt; notification failure/retry behavior is already reviewed under R02 and does not block readiness.",
+        "Initial API no-deadline hang and buffered web truncation reproduced; final process tests pass. Diagnostic TypeScript JSON typing, jsdom fixture startup and CSRF expected-status failures were corrected without weakening runtime assertions. All diagnostic logs retained.",
+        "Saved PR39/40/42 historical declaration/build/lint failures are covered by R05 and current rebuilt API/worker/shared/DB, current API/worker/web types and scoped lint/format. This is not the V02 full-root regression.",
+        "Development S3 settings now expand from the existing matching MinIO values; dotenv expansion checked without printing credentials. No runtime production fallback added.",
+        "Prior worker compiled-process proof is reused only after comparison of the shutdown body at05dc4f9b: current delta retains the timer and adds storage destruction after poller/pool drain. Two current poller-group cases and28 shared cleanup/storage cases pass. Earlier production-image evidence remains revision-bound."
+      ],
+      "verification": {
+        "api": "10 distinct affected API cases across the batch:3 telemetry/readiness,2 health unit,1 actual S3 HTTP,2 compiled Nest shutdown,2 resource cleanup. Overlapping reruns excluded.",
+        "shared": "28/28 current storage/runtime configuration cases.",
+        "worker": "2/2 current poller-group drain cases; unchanged transaction/lease logic reused from nine prior compiled-process cases after explicit body comparison.",
+        "web": "26/26:3 real-child shutdown plus23 existing static-server cases.",
+        "quality": "Current API/worker/web typechecks and scoped lint/format pass; shared/DB/worker/API rebuilt by final API fixture run."
+      },
+      "remaining": [
+        "Per-capability maintenance mode for future AI runtime/bill-data integrations remains V01/B01; no acceptance claimed for unbuilt consumers.",
+        "V02 whole-repository regression and current production image verification remain; local process checks do not renew historical image/deployment evidence."
+      ],
+      "source_evidence": [
+        {
+          "path": ".env.example",
+          "sha256": "da05e24f11035712e847cbe79e6eecd0dce37a6faa5aa88b04b13ac8297a88b4"
+        },
+        {
+          "path": ".impeccable.md",
+          "sha256": "576a639abcc00b51f8baf4e94ebe0e41c5ac84ac5d64c6717c2d2788092d71ff"
+        },
+        {
+          "path": "apps/api/src/common/shutdown-http.integration.test.ts",
+          "sha256": "872e63df6df29666eac2b2a9d377a0279b091d1929ea43dda63407d8c765b08e"
+        },
+        {
+          "path": "apps/api/src/common/shutdown.service.spec.ts",
+          "sha256": "5835fb80b5e748ca93a4b48ad52e758854aa528c477e55c8d45c7d7ba26381a4"
+        },
+        {
+          "path": "apps/api/src/common/shutdown.service.ts",
+          "sha256": "b8eb4e9faf3426f951da5fdfefd70739b3287c3d912ee788a882d94721125df5"
+        },
+        {
+          "path": "apps/api/src/health/health.service.spec.ts",
+          "sha256": "1adf49a384578f99b405f294c3fe23e6194bdac0a810c67b9f343d5f878134d5"
+        },
+        {
+          "path": "apps/api/src/health/health.service.ts",
+          "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+        },
+        {
+          "path": "apps/api/src/health/storage-health-http.integration.test.ts",
+          "sha256": "df72d92ba7ac46a4016af1896f7428998b265664e48013716c41e7590b1b701a"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "4303bf212d15d0257ab65148631aeb3da0703d98420e7770513d2c8ea45ec766"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/design-system/index.html",
+          "sha256": "ce3f90b0906369f1dd4548d38ff9ce0d0071a80e9d0cbfda6dd4e2820402f3b3"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/design-system/main.tsx",
+          "sha256": "91d995268505bffa6f1be47dc7138b22cddd369e04ceef87b084ecbca6fb8644"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "f053ddb0798731acad52159da86bf3ec6bf09582ac4c13bf6a2c31e62cea3730"
+        },
+        {
+          "path": "apps/web/e2e/registration-strength.spec.ts",
+          "sha256": "964b2ce9b650fd4f491cb30cb52a9e896c906accf80c18d749d2782d4320abcc"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "1fc813505b2a02edfe7374c88d0b87e0cda236e07dba2ca73b2ec0cabecaac67"
+        },
+        {
+          "path": "apps/web/src/components/AppShell.tsx",
+          "sha256": "e01796c2339e83bcbf87781f879d51aa18aec8c37c566a21b094afddf7a72eb2"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "91da9379951d4f43f647b1add4fd027b2493f4dec4e7050788fb5ae72f8c1981"
+        },
+        {
+          "path": "apps/web/src/components/BrandMark.tsx",
+          "sha256": "048a01664c30652ab0249bb24d26e3d63bc04d58a9227caa8bc5778a0cf7865d"
+        },
+        {
+          "path": "apps/web/src/components/CrmLegalEditor.tsx",
+          "sha256": "beef4e7221ce55683365d4c0533d57523bef34b8f7680cc76261b68faa3d2c0e"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "b9f291c0dcf3a13c34fe5f07b3dfa95c27a9ef132d2043accf8d6375a52c0c66"
+        },
+        {
+          "path": "apps/web/src/components/DefaultProfileModal.tsx",
+          "sha256": "8b9066c4650cfca3038eadbebbee9249732ef57d09d06496dde01f09ab6774ae"
+        },
+        {
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "a390f750cb7353df5deabd65981cdceed2edce124aab1e23ee90ed1ca2e65995"
+        },
+        {
+          "path": "apps/web/src/components/InvitationBanner.tsx",
+          "sha256": "47717e0dd8ff11465b06dba7ba7659045563a178e83457cf00fc769f9469d306"
+        },
+        {
+          "path": "apps/web/src/components/LanguageSwitcher.tsx",
+          "sha256": "a4d1319e0d85ab92f3cfebe59aaac1eaa56cda615edbcaccf554b3823334e997"
+        },
+        {
+          "path": "apps/web/src/components/NotificationBell.tsx",
+          "sha256": "ccada4833774d9054f46803911a13d52ea5e28e006ae3f6a7468353cfd11f7a2"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "ce4de5f6c11180a6157ca7309aff14ca75f2b157594f66434c99e59ba8dd4367"
+        },
+        {
+          "path": "apps/web/src/components/ProfileSwitcher.tsx",
+          "sha256": "85b2631e673afcf952db0d12138af96ca58096a8096a11264e58783b874cec15"
+        },
+        {
+          "path": "apps/web/src/components/QuickStatusCards.tsx",
+          "sha256": "7513966c5e031794caf7e03521d59f08b82fcd0261f3adbcb0f2663aa5edcb13"
+        },
+        {
+          "path": "apps/web/src/components/ReminderOffsetTogglePanel.tsx",
+          "sha256": "fdb7b7b732cfe2fdaa3795e73112d04ee6ad03c918da5f65fc85ac6129038ea1"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "e2d6616b3b2c1053b0ea8b6eceaa3893eade17a03d1544d2e8fcb52d4317ad52"
+        },
+        {
+          "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
+          "sha256": "07d376ea6433449122871f4e1d550f6eaa198e14fdbfa021cfbef5a0d8a0249e"
+        },
+        {
+          "path": "apps/web/src/components/TrustedDevices.tsx",
+          "sha256": "889a20f809790f04063c2e7b0de1e4860f8a6c87ddea93ff1dc48984ab4bf866"
+        },
+        {
+          "path": "apps/web/src/components/VerificationBanner.tsx",
+          "sha256": "6b99504500a83a1502b47c7fb050d461352259053273fa8178440b6f52034862"
+        },
+        {
+          "path": "apps/web/src/components/WalletBalanceCard.tsx",
+          "sha256": "074a03760670d51df00b27d517c021f976274323d060057e878e62d472de3d1c"
+        },
+        {
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "8027a707e2cd09715e7fede9c7f9540a306b74feea8a6633550f5e3e4ef1f71e"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+          "sha256": "158b8ef1b9701d20a83b2043a3603ae8481f7cc98a8476b210be89934689596c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "a00cbd17259187ff584ad53dfb0f4eda306dece6cd8798a378d6b6dad495dc63"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "7bbfbdc5e1fc7c643e4bee47c03a37fc2c323a8f3bbc1b4b8f8c0a7220802c95"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "173ae7f3cd328f90ce856b58ecbb0a36c5883efbdf88a0be7e96c0ac9a8a25fb"
+        },
+        {
+          "path": "apps/web/src/pages/AdminInvoicesPage.tsx",
+          "sha256": "054978655d6be3dc2e22ed593bb6c679cb26925627982f83804bd2f4a36eac06"
+        },
+        {
+          "path": "apps/web/src/pages/AdminLayout.tsx",
+          "sha256": "d46971fd97608e29a314810c810391113fbaa41c3da5feb6526ef2db425990c2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "5443afc8e0fb349eb6b3d71736c05de2fb915677dea87cddc2fc99a875ac1497"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "6c878aca319c5d2dc027fe9fdbab03f8eac991c41ead68ea821914b677a47a1a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "6908e4f1a167c277182a562934cfb79a36f024608f0c7fbabcfc4ea3f8049ea4"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "3ecfe779c5b99728282c35d6ccc4e30e4c064aabaa3da6134e9e9933b4a1af6b"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "9dc7bdeaa1aa536fff35c04d705fa2bc63c40ab23b41cc619e6ad2828e334ebb"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "0b11032ea88bd099209b76927d9b2281c0b0b4c1fe80cdf8d592a4876d6df24d"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "63a32beec3a43b115e70c6295b7c6a23711418e5fa6d3125da420aeb4d73b0a9"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "e5e17e646c9c1c20192337d69cd7503d2a4a7f43f6a232f92ec76fa380909bf8"
+        },
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "54233f16a038f11d2c354fa91daedf948841fd7130801f8d9ce47f4c26cf1a7b"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "3bc12fd7fdf1516e7bab964da6472082bdedb65ecf9d2aba38d8cd9cd4fe358e"
+        },
+        {
+          "path": "apps/web/src/pages/TosPreview.tsx",
+          "sha256": "9a75a0b00d66dabe01346a48ae46717ea9b67d38c5953d3908d810b7f61842c2"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "442af699067152b8c29554f68a3d3b055ebdc18eeb1e0b12edbb6104bbe50509"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "f24979064fead191fb32a2f6c8bdcaeab9dd82f0d990055120557a3eec8cab8b"
+        },
+        {
+          "path": "apps/web/src/routes/_app/electricity/order.tsx",
+          "sha256": "12686c284f8a872f99256b753a2085536f40e565aa58d8ba8b40d35da3ada522"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/profile.tsx",
+          "sha256": "dae051c07a8f2858afb8dd18fefb7f34c4e61bcc69e584ccf80dea2fbb20e24d"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "eb2908c3ef63d8943226d4d5c78f96896dbb10cbbe49d5d0dc2dd2a4d6cddf8a"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "5844ff1535fffcc3e296c3cf5817b09724fbb3a1864be949bd9c0f08d268a3f4"
+        },
+        {
+          "path": "apps/web/test/server-shutdown.spec.ts",
+          "sha256": "913d19a70976e4dbb18fc7020b9b058db02cdcebb627bc1ca11dc0a330e1c2c3"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "a4e572935636874857b9034721d4f5936e6c202fdbb2858ee0bf364d55d4c733"
+        },
+        {
+          "path": "docs/design/design-system.md",
+          "sha256": "40c28a946cf54a045721c622e29e9bd1a0358f10c66a3f9c487697cbbc283e94"
+        },
+        {
+          "path": "docs/design/epic-07-coverage.md",
+          "sha256": "f5cf1651aa7f382d45f986f9ef247e747478a95f545266aa4f9d42eb6c073b4c"
+        },
+        {
+          "path": "docs/design/validation.md",
+          "sha256": "8bf7343eb26f44d8f9afa0187faf9a83184488adeb283fc353add3a0be7e4b0c"
+        },
+        {
+          "path": "packages/i18n/package.json",
+          "sha256": "17a2611cf162817190246499605956f35796af9f4be79026add45476687e2eeb"
+        },
+        {
+          "path": "packages/i18n/src/shell.ts",
+          "sha256": "8e36dfda3fbac89a2e8417d38e4fb2819d3beb13e92b3365d917e7ff7140989d"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.test.ts",
+          "sha256": "5068411207f4bd7eedfe0e9d54868747e8fcd42700a27ddb54d1eae91708acec"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "beb60fd20b1744cdd148de4e3ac7424a81227ce30920cde4de8e529ca01aca0e"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "17260470836b8b7bb58213ac44bf383cb641a233065f764c2cce701eee3b6b6f"
+        },
+        {
+          "path": "packages/shared/src/storage/storage-provider.ts",
+          "sha256": "37b5642cfccecdae22911285f978b93831c6f5de2ae186ecd8f63b844c354dc3"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "sha256": "52f93c5358073e27b17dd4a5e927c66e0a8e1cb324328c40e35edcd08dbb24c2"
+        },
+        {
+          "path": "packages/ui/src/components/ui/alert.tsx",
+          "sha256": "161fcf0d959be8a3d6666ed97344f1281cbabd7d42c7e023feeaead2ff9a8327"
+        },
+        {
+          "path": "packages/ui/src/components/ui/badge.tsx",
+          "sha256": "6a80c6107b00de7fbf08882d1c6db980a30d669305f137468ebe314a4302c419"
+        },
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "sha256": "5b66ecf57ba915c6b069a9275f1994c70e559a00f6366fb842d89c1c23679d34"
+        },
+        {
+          "path": "packages/ui/src/components/ui/card.tsx",
+          "sha256": "3500cb130c985119242ea3d7732de78adacf3fbfd88d6722aafb52dfcf0218c9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/confirm-dialog.tsx",
+          "sha256": "81fa870926d497f80c27a1d30a26afa4b72dbfa7d7d382149baefae49898dd4b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input-group.tsx",
+          "sha256": "cfa2fbd99ec046b83d8c4595c0461aa7e456a7f88b7b11cb9d19bc1f547fc3c8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input.tsx",
+          "sha256": "5f4483d46179659fbe5add07dc7288e657c5b9eb7cc400c36d3938d53e98c211"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "9f77b4a8cab34acff6a9b4169d39d6ce1b98ac7ed01ea1ae62aaa95523efbfd0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/pagination.tsx",
+          "sha256": "653ea88af9b398ec59618e4adffdffbb5640201ec842a0d033bb7aed2c3a2316"
+        },
+        {
+          "path": "packages/ui/src/components/ui/progress.tsx",
+          "sha256": "6b3f71eafba7ce64a917a8620129df0768aad6db6d2bc33d2cd22d10dd1ad19d"
+        },
+        {
+          "path": "packages/ui/src/components/ui/select.tsx",
+          "sha256": "f4e5434b0e7c46c3a902545f07b9a0cb84f33378d945c3079683c584f14a129f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/textarea.tsx",
+          "sha256": "c0a9a3aee23f0ab0b76834c2eeb5ed433f2327cb057cfdb9deb61bc5beb575f0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/workflow.tsx",
+          "sha256": "99c1252710e6ada65cebdca6ec47d6ba2e237cf0cb39cbf0f9c271956b202d83"
+        },
+        {
+          "path": "packages/ui/src/fonts/fonts.css",
+          "sha256": "9d11315cf909a3a46357fefa62affdd196aecfe332afa6bf67e9eacb77cb8795"
+        },
+        {
+          "path": "packages/ui/src/fonts/vazirmatn-OFL.txt",
+          "sha256": "e6f4ce7b6c830d5a25a4f8ac777c267cd7d3c180bc2a7150ca57cbb9b280c4b7"
+        },
+        {
+          "path": "packages/ui/src/fonts/vazirmatn-arabic.woff2",
+          "sha256": "07c90f3690c05c7722300d9933824191a77f5eb8367e498a07ffc9552f2c2635"
+        },
+        {
+          "path": "packages/ui/src/fonts/vazirmatn-latin.woff2",
+          "sha256": "454d44a1112afe0a95f40216cd231d0fb725269e31c8692ff36003c56eb23d7c"
+        },
+        {
+          "path": "packages/ui/src/index.ts",
+          "sha256": "0102675116e6ebe88bb0ff5a7395b4b81d0fe69c194d284bb3fbd5990e2dcbd1"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "089a1b58d75aace33079c4b3c6099413a64b2a28b75fddd5f6a41a1c13ce3301"
+        },
+        {
+          "path": "packages/ui/src/workflow.test.tsx",
+          "sha256": "c31d1e17b41c687019b1a79fe20be7bb88c976449d832060dad25cf04f55109a"
+        },
+        {
+          "path": "packages/ui/tailwind.config.ts",
+          "sha256": "63aa649b9f8c53ae126baa2a8a3fb9d1966781083ecd3de4256124dfe3a28dea"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-runtime-api-shutdown-final.log",
+        "/tmp/v01-runtime-api-types-final.log",
+        "/tmp/v01-runtime-buffered-shutdown-format.log",
+        "/tmp/v01-runtime-env-aliases.log",
+        "/tmp/v01-runtime-final-api-types.log",
+        "/tmp/v01-runtime-final-format.log",
+        "/tmp/v01-runtime-final-lint.log",
+        "/tmp/v01-runtime-final-web-types.log",
+        "/tmp/v01-runtime-final-worker-types.log",
+        "/tmp/v01-runtime-format-final.log",
+        "/tmp/v01-runtime-lint-final.log",
+        "/tmp/v01-runtime-shutdown-baseline-format.log",
+        "/tmp/v01-runtime-shutdown-baseline.log",
+        "/tmp/v01-runtime-shutdown-final-format.log",
+        "/tmp/v01-runtime-shutdown-format.log",
+        "/tmp/v01-runtime-shutdown-resources.log",
+        "/tmp/v01-runtime-shutdown-shared.log",
+        "/tmp/v01-runtime-shutdown-tests.log",
+        "/tmp/v01-runtime-shutdown-worker.log",
+        "/tmp/v01-runtime-storage-api-types-reviewed.log",
+        "/tmp/v01-runtime-storage-api-types.log",
+        "/tmp/v01-runtime-storage-format.log",
+        "/tmp/v01-runtime-storage-lint-reviewed.log",
+        "/tmp/v01-runtime-storage-provider-tests.log",
+        "/tmp/v01-runtime-storage-shared-format.log",
+        "/tmp/v01-runtime-storage-shared-tests.log",
+        "/tmp/v01-runtime-storage-test-types-format.log",
+        "/tmp/v01-runtime-storage-tests.log",
+        "/tmp/v01-runtime-web-shutdown-final.log",
+        "/tmp/v01-runtime-web-shutdown-format.log",
+        "/tmp/v01-runtime-web-shutdown-reviewed.log",
+        "/tmp/v01-runtime-web-shutdown-tests.log",
+        "/tmp/v01-runtime-web-test-format.log",
+        "/tmp/v01-runtime-web-types-final.log",
+        "/tmp/v01-runtime-worker-reuse.log",
+        "/tmp/v01-runtime-worker-types-final.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 29,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.05.01"
+          ],
+          "reason": "R03 error/correlation acceptance retained. All current task source bindings match after bounded immediate-base fixture/runtime refresh; no error-contract change. Existing149 distinct API/106 worker proof remains within its recorded scope.",
+          "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+          "evidence": "audit/evidence/step-reviews.json#R03-correlation"
+        },
+        {
+          "pr": 39,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.03.01"
+          ],
+          "reason": "Actual private-endpoint S3 HeadBucket uses current persisted configuration and credentials. Missing/denied/stalled storage is degraded with a generic safe message; one shared 1500ms bounded probe prevents public request accumulation. Current PostgreSQL/schema/pool checks remain the only readiness blockers; liveness is immediate and exempt from auth/rate/audit. Redis warning behavior is preserved.",
+          "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+          "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+        },
+        {
+          "pr": 40,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.03.02"
+          ],
+          "reason": "SIGTERM/SIGINT start a referenced deadline before Nest module/HTTP teardown and stop accepting connections. Accepted requests drain; buffered responses remain active until finish. API closes database, Redis and storage independently. Worker stops poller leasing, waits for running jobs, closes pools and storage; the reviewed shutdown-body delta preserves earlier compiled-process transaction/lease proof and keeps the forced-exit deadline alive.",
+          "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+          "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+        },
+        {
+          "pr": 41,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.03.03"
+          ],
+          "reason": "Production static server retains buffered responses until finish, drains full 16MB accepted responses and cleanly exits0; paused responses force exit1 at the configured deadline. Existing23 static-server security/cache/SPA cases also pass.",
+          "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+          "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+        },
+        {
+          "pr": 42,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.03.04"
+          ],
+          "reason": "Only PostgreSQL controls readiness. Redis outages retain X-Health-Warning and storage outages add object-storage-unavailable without503. Future AI/bill-data per-capability maintenance consumers remain unbuilt; notification failure/retry behavior is already reviewed under R02 and does not block readiness.",
+          "source_revision": "9eac6554fe21958f2a8e867a298cfe61616235d5",
+          "evidence": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+        }
+      ]
     }
   ]
 }
