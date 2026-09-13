@@ -6,6 +6,7 @@ import { rateLimitMessage, retryAfterSeconds } from '../../lib/auth-errors.js';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { createFileRoute, Link, useRouter, useSearch } from '@tanstack/react-router';
 import { toast } from 'sonner';
+import { rememberAuthSuccess } from '../../lib/auth-entry-feedback.js';
 import { t } from '@barghsa/i18n/auth';
 import { Loader2Icon } from 'lucide-react';
 import { Button } from '@barghsa/ui';
@@ -132,7 +133,9 @@ function OtpVerifyPage() {
         if (!hasSessionAcknowledgement(body)) throw new Error('Invalid session acknowledgement');
 
         // ── Success — user created, session set ────────────────────
-        toast.success(t('auth.register.success', locale));
+        const message = t('auth.register.success', locale);
+        rememberAuthSuccess(message);
+        toast.success(message);
         // Redirect to app root (profile check middleware handles redirects)
         router.navigate({ to: '/app' });
       } catch {

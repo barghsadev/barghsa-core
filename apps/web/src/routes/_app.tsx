@@ -1,4 +1,5 @@
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
+import { DashboardLayout } from '../pages/DashboardLayout.js';
 import { RouteSkeleton } from '../components/RouteSkeleton.js';
 import { RouteErrorBoundary } from '../components/RouteErrorBoundary.js';
 
@@ -7,7 +8,7 @@ import { RouteErrorBoundary } from '../components/RouteErrorBoundary.js';
  * switcher) around all authenticated customer pages (T-03.03.01).
  */
 export const Route = createFileRoute('/_app')({
-  component: lazyRouteComponent(() => import('../pages/DashboardLayout.js'), 'DashboardLayout'),
+  component: DashboardLayout,
   pendingComponent: () => <RouteSkeleton />,
   errorComponent: RouteErrorBoundary,
 });

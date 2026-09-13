@@ -7,6 +7,39 @@ import { randomBytes } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import { checkBudgets, measureRoute, verifyWithSizeLimit } from './check-route-budgets.mjs';
 
+test('auth budgets measure the served auth build and retain its asset paths', async () => {
+  const dist = await mkdtemp(join(tmpdir(), 'barghsa-auth-budget-'));
+  try {
+    for (const build of ['', 'auth']) {
+      await mkdir(join(dist, build, '.vite'), { recursive: true });
+      await writeFile(
+        join(dist, build, '.vite/manifest.json'),
+        JSON.stringify({
+          'index.html': { file: 'entry.js' },
+          login: { file: 'login.js' },
+        })
+      );
+      await writeFile(
+        join(dist, build, 'entry.js'),
+        build ? 'export const auth=1;' : randomBytes(3000)
+      );
+      await writeFile(join(dist, build, 'login.js'), 'export const login=1;');
+    }
+    const rule = { name: 'Login', entries: ['login'], limitKB: 1, build: 'auth' };
+    const results = await checkBudgets(dist, [rule]);
+    assert.equal(results[0].pass, true);
+    assert.deepEqual(results[0].files, ['auth/entry.js', 'auth/login.js']);
+    await writeFile(join(dist, 'auth/entry.js'), randomBytes(3000));
+    assert.equal((await checkBudgets(dist, [rule]))[0].pass, false);
+    await assert.rejects(
+      checkBudgets(dist, [{ ...rule, build: '../outside' }]),
+      /Invalid budget build/
+    );
+  } finally {
+    await rm(dist, { recursive: true, force: true });
+  }
+});
+
 test('common dependencies count once, an oversized common chunk fails, and missing routes fail closed', async () => {
   const dist = await mkdtemp(join(tmpdir(), 'barghsa-budget-'));
   try {

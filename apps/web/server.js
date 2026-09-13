@@ -17,6 +17,7 @@ import { randomBytes } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
 import { join, extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isAuthEntryPath } from './entry-routes.js';
 
 const __dirname = join(fileURLToPath(import.meta.url), '..');
 const DEFAULT_DIST_DIR = resolve(__dirname, 'dist');
@@ -173,7 +174,10 @@ export function createStaticServer(options = {}) {
     }
 
     // SPA fallback — serve index.html for client-side routing
-    const index = await serveFile(distDir, '/index.html');
+    const index = await serveFile(
+      distDir,
+      isAuthEntryPath(url) ? '/auth/index.html' : '/index.html'
+    );
     if (index) {
       sendHtml(index.content);
       return;

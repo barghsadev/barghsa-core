@@ -46,6 +46,8 @@ export async function measureRoute(
 export async function checkBudgets(dist, config) {
   if (!Array.isArray(config) || !config.length) throw new Error('No route budgets configured');
   for (const rule of config) {
+    if (rule.build !== undefined && rule.build !== 'auth')
+      throw new Error(`Invalid budget build: ${rule.name}`);
     if (rule.phase !== undefined && !['initial', 'interaction'].includes(rule.phase))
       throw new Error(`Invalid budget phase: ${rule.name}`);
     if (rule.phase === 'interaction' && rule.routePrefix)
@@ -54,10 +56,17 @@ export async function checkBudgets(dist, config) {
   const interactionEntries = config
     .filter((rule) => rule.phase === 'interaction')
     .flatMap((rule) => rule.entries);
-  const manifest = JSON.parse(await readFile(resolve(dist, '.vite/manifest.json'), 'utf8'));
+  const manifests = new Map();
+  for (const build of new Set(config.map((rule) => rule.build ?? ''))) {
+    manifests.set(
+      build,
+      JSON.parse(await readFile(resolve(dist, build, '.vite/manifest.json'), 'utf8'))
+    );
+  }
   const results = [];
   const rules = config.flatMap((rule) => {
     if (!rule.routePrefix) return [rule];
+    const manifest = manifests.get(rule.build ?? '');
     const routes = Object.keys(manifest).filter(
       (key) => key.startsWith(rule.routePrefix) && key.endsWith('?tsr-split=component')
     );
@@ -78,10 +87,12 @@ export async function checkBudgets(dist, config) {
     });
   });
   for (const rule of rules) {
-    const measured = await measureRoute(dist, manifest, rule.entries, {
+    const build = rule.build ?? '';
+    const measured = await measureRoute(resolve(dist, build), manifests.get(build), rule.entries, {
       includeBootstrap: rule.phase !== 'interaction',
       deferredEntries: rule.phase === 'interaction' ? [] : interactionEntries,
     });
+    if (build) measured.files = measured.files.map((file) => `${build}/${file}`);
     const limit = rule.limitKB * 1000;
     if (!Number.isFinite(limit) || limit <= 0) throw new Error(`Invalid budget: ${rule.name}`);
     results.push({ name: rule.name, ...measured, limit, pass: measured.bytes < limit });

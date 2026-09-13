@@ -11,6 +11,7 @@ import {
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { toast } from 'sonner';
+import { rememberAuthSuccess } from '../lib/auth-entry-feedback.js';
 import { t, type Locale } from '@barghsa/i18n/auth';
 import { Loader2Icon } from 'lucide-react';
 import { Button, Input, Label, Alert, AlertDescription } from '@barghsa/ui';
@@ -257,6 +258,7 @@ function LoginPage() {
 
         // ── Success (direct login) ────────────────────────────
         const msg = t('auth.login.success', locale);
+        rememberAuthSuccess(msg);
         toast.success(msg);
 
         router.navigate({ to: '/app', replace: true });
@@ -404,7 +406,9 @@ function LoginPage() {
           otpRef.current?.reset();
           return;
         }
-        toast.success(t('auth.login.otpSuccess', locale));
+        const message = t('auth.login.otpSuccess', locale);
+        rememberAuthSuccess(message);
+        toast.success(message);
         router.navigate({ to: '/app', replace: true });
       } catch {
         setOtpError(t('auth.otp.error.generic', locale));

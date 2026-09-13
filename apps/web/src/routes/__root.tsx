@@ -1,5 +1,7 @@
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { createRootRoute, Outlet, useLocation, useRouter } from '@tanstack/react-router';
+import { createRootRoute, Outlet, useLocation, useRouter, redirect } from '@tanstack/react-router';
+import { isAuthEntryPath } from '../../entry-routes.js';
+import { rememberEntryLocale } from '../lib/entry-locale.js';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { lazy, Suspense, useEffect } from 'react';
 const VerificationBanner = lazy(() =>
@@ -17,6 +19,12 @@ import { BrandThemeProvider } from '../providers/BrandThemeProvider.js';
 import { ApplicationToaster } from '../components/ApplicationToaster.js';
 
 export const Route = createRootRoute({
+  beforeLoad: ({ location, preload }) => {
+    if (import.meta.env.PROD && isAuthEntryPath(location.pathname) !== __BARGHSA_AUTH_ENTRY__) {
+      if (!preload) rememberEntryLocale();
+      throw redirect({ href: location.href, reloadDocument: true });
+    }
+  },
   component: RootComponent,
 });
 

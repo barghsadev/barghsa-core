@@ -52,6 +52,11 @@ describe('static server', () => {
       '<html><head><link rel="modulepreload" href="/assets/app-a1b2c3d4.js"></head><body>Home<script type="module" src="/assets/app-a1b2c3d4.js"></script><script nonce="old-nonce">window.ready=true</script></body></html>'
     );
     await mkdir(join(distDir, 'assets'));
+    await mkdir(join(distDir, 'auth'));
+    await writeFile(
+      join(distDir, 'auth', 'index.html'),
+      '<html><body>Authentication<script type="module" src="/auth/assets/auth-a1b2c3d4.js"></script></body></html>'
+    );
     await writeFile(join(distDir, 'assets', 'app-a1b2c3d4.js'), 'console.log("ok");');
     await writeFile(join(distDir, 'assets', 'style-XyZ78901.css'), 'body { color: red; }');
     await writeFile(join(distDir, 'data.json'), JSON.stringify({ key: 'value' }));
@@ -69,6 +74,28 @@ describe('static server', () => {
     expect(res.status).toBe(200);
     expect(res.body).toContain('Home');
   });
+
+  it.each([
+    '/login',
+    '/register/verify?next=/wallet',
+    '/forgot-password',
+    '/activate/token',
+    '/auth/index.html',
+  ])('serves the authentication entry with a matching nonce at %s', async (path) => {
+    const res = await fetch(server, path);
+    expect(res.status).toBe(200);
+    expect(res.body).toContain('Authentication');
+    const nonce = res.headers['content-security-policy-report-only']?.match(/'nonce-([^']+)'/)?.[1];
+    expect(nonce).toBeTruthy();
+    expect(res.body).toContain(`nonce="${nonce}"`);
+    expect(res.headers['cache-control']).toContain('no-store');
+  });
+  it.each(['/wallet', '/electricity/order', '/savings', '/login-history', '/register-other'])(
+    'keeps application and unrelated paths on the application entry at %s',
+    async (path) => {
+      expect((await fetch(server, path)).body).toContain('Home');
+    }
+  );
 
   it('sets production security headers', async () => {
     const res = await fetch(server, '/');

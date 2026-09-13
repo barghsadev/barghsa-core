@@ -2,7 +2,8 @@
   {
     "name": "Login",
     "entries": ["src/routes/login.tsx?tsr-split=component"],
-    "limitKB": 150
+    "limitKB": 150,
+    "build": "auth"
   },
   {
     "name": "Register",
@@ -10,7 +11,8 @@
       "src/routes/register.tsx?tsr-split=component",
       "src/routes/register/index.tsx?tsr-split=component"
     ],
-    "limitKB": 150
+    "limitKB": 150,
+    "build": "auth"
   },
   {
     "name": "Registration verification",
@@ -18,23 +20,26 @@
       "src/routes/register.tsx?tsr-split=component",
       "src/routes/register/verify.tsx?tsr-split=component"
     ],
-    "limitKB": 150
+    "limitKB": 150,
+    "build": "auth"
   },
   {
     "name": "Password recovery",
     "entries": ["src/routes/forgot-password.tsx?tsr-split=component"],
-    "limitKB": 150
+    "limitKB": 150,
+    "build": "auth"
   },
   {
     "name": "Password strength on demand",
     "phase": "interaction",
     "entries": ["src/lib/password-strength.ts"],
-    "limitKB": 900
+    "limitKB": 900,
+    "build": "auth"
   },
   {
     "name": "Dashboard",
     "entries": [
-      "src/routes/_app.tsx?tsr-split=component",
+      "index.html",
       "src/routes/_app/dashboard.tsx?tsr-split=component",
       "src/components/VerificationBanner.tsx",
       "src/components/DefaultProfileModal.tsx"
@@ -44,8 +49,7 @@
   {
     "name": "Electricity ordering",
     "entries": [
-      "src/routes/_app.tsx?tsr-split=component",
-      "src/routes/_app/electricity/order.tsx?tsr-split=component",
+      "index.html",
       "src/components/VerificationBanner.tsx",
       "src/components/DefaultProfileModal.tsx"
     ],

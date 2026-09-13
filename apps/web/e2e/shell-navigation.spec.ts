@@ -1,4 +1,6 @@
 import { test, expect } from './coverage-fixture';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 for (const locale of ['en', 'fa'])
   for (const area of ['admin', 'customer']) {
     test(`shell navigation works on mobile and desktop (${area}, ${locale})`, async ({ page }) => {
@@ -131,7 +133,11 @@ test('terms acceptance waits for the document renderer to load', async ({ page }
   const pending = new Promise<void>((done) => {
     release = done;
   });
-  await page.route('**/assets/TosContent-*.js', async (route) => {
+  const dist = process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'dist-coverage' : 'dist';
+  const manifest = JSON.parse(readFileSync(resolve(dist, '.vite/manifest.json'), 'utf8'));
+  const renderer = manifest['src/components/TosContent.tsx'];
+  expect(renderer?.file).toBeTruthy();
+  await page.route(`**/${renderer.file}`, async (route) => {
     await pending;
     await route.continue();
   });

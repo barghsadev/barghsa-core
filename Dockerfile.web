@@ -9,7 +9,7 @@ FROM node:24-bookworm-slim AS production
 WORKDIR /app
 COPY --from=build /app/apps/web/package.json ./package.json
 COPY --from=build /app/apps/web/dist ./dist
-COPY apps/web/server.js apps/web/healthcheck.js ./
+COPY apps/web/server.js apps/web/healthcheck.js apps/web/entry-routes.js ./
 ENV NODE_ENV=production NODE_OPTIONS="--max-old-space-size=512"
 USER node
 EXPOSE 3000

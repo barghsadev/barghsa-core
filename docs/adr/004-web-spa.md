@@ -15,3 +15,11 @@ React content appears after browser JavaScript runs. Public metadata, discoverab
 Route splitting, complete route payload budgets, immutable hashed assets, private API caching, CSP, Persian/English support, RTL, accessible loading/error states and graceful shutdown remain required. Language and direction must be established before the client app renders using persisted preferences and browser language detection. The architecture decision does not waive those checks or certify outstanding task acceptance.
 
 Canonical task IDs stay unchanged. Queue and traceability text are regenerated from the updated requirements. Historical audit evidence retains its original revision and requirement hashes. No live assignment or scheduler is changed; an old assignment whose requirement digest differs must remain blocked for explicit recovery.
+
+## Authentication and customer entry bundles
+
+The web build emits the application in `dist/` and a smaller authentication entry in `dist/auth/`. Both use the same React application and TanStack route definitions. Customer layout, electricity ordering, savings and wallet code are eager in the application entry; heavy routes remain split. Login, registration, password recovery and activation use the authentication entry. This preserves the existing 150 KB authentication and 250 KB electricity budgets without loading purchase code on the login page.
+
+The production server and Vite preview select the entry by path. Crossing between entries performs a document navigation, preserving the current language and one-time success feedback through short-lived session storage. Unavailable browser storage never blocks sign-in or navigation. React rendering stays client-side; NestJS authority is unchanged.
+
+Use `pnpm --filter @barghsa/web build`, which builds both entries in order. Publish the complete output together, including `auth/`; the runtime includes `entry-routes.js`. The budget checker measures each page against the entry actually served and retains the same numeric limits. Deployment remains a separate operational action.

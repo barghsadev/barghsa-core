@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import { resolve } from 'path';
+import { isAuthEntryPath } from './entry-routes.js';
 
 /**
  * Vite plugin: apply immutable Cache-Control only to content-hashed assets.
@@ -15,6 +16,7 @@ function immutableAssetsPlugin(): ReturnType<typeof defineConfig>['plugins'][0] 
     name: 'immutable-assets',
     configurePreviewServer(server) {
       server.middlewares.use((req, res, next) => {
+        if (req.url && isAuthEntryPath(req.url)) req.url = '/auth/index.html';
         if (req.url && IMMUTABLE_PATTERN.test(req.url)) {
           res.setHeader('Cache-Control', 'public, immutable, max-age=31536000');
         } else if (req.url && !req.url.startsWith('/api')) {
@@ -27,49 +29,70 @@ function immutableAssetsPlugin(): ReturnType<typeof defineConfig>['plugins'][0] 
   };
 }
 
-export default defineConfig({
-  plugins: [
-    TanStackRouterVite({
-      routesDirectory: './src/routes',
-      generatedRouteTree: './src/routeTree.gen.ts',
-      autoCodeSplitting: true,
-    }),
-    react(),
-    tailwindcss(),
-    immutableAssetsPlugin(),
-  ],
-  // CDN base URL — set CDN_URL for production builds so assets resolve via CDN
-  base: process.env['CDN_URL'] ? process.env['CDN_URL'] : '/',
-  build: {
-    // Route-level CSS/JS splitting — each route gets its own chunk
-    // autoCodeSplitting in TanStack Router handles actual per-route lazy loading
-    inlineDynamicImports: false,
-    // Content-hash filenames for CDN immutability (CDN-ready)
-    assetsDir: 'assets',
-    cssCodeSplit: true,
-    // Generate build manifest for CDN cache invalidation
-    manifest: true,
-    rollupOptions: {
-      output: {
-        manualChunks: undefined, // let TanStack Router handle route-based splitting
-        entryFileNames: 'assets/[name]-[hash].js',
-        // Short URLs reduce the shared preload map as the route inventory grows.
-        chunkFileNames: 'assets/c-[hash].js',
-        assetFileNames: 'assets/[name]-[hash][extname]',
+export default defineConfig(({ mode }) => {
+  const authEntry = mode === 'auth';
+  const base = process.env['CDN_URL'] || '/';
+  return {
+    define: { __BARGHSA_AUTH_ENTRY__: JSON.stringify(authEntry) },
+    plugins: [
+      TanStackRouterVite({
+        routesDirectory: './src/routes',
+        generatedRouteTree: './src/routeTree.gen.ts',
+        autoCodeSplitting: true,
+        codeSplittingOptions: {
+          splitBehavior: ({ routeId }) =>
+            !authEntry &&
+            [
+              '/_app',
+              '/_app/electricity/',
+              '/_app/electricity/order',
+              '/_app/savings',
+              '/_app/wallet',
+            ].includes(routeId)
+              ? []
+              : undefined,
+        },
+      }),
+      react(),
+      tailwindcss(),
+      immutableAssetsPlugin(),
+    ],
+    // CDN base URL — set CDN_URL for production builds so assets resolve via CDN
+    base: authEntry ? base.replace(/\/?$/, '/') + 'auth/' : base,
+    build: {
+      // Route-level CSS/JS splitting — each route gets its own chunk
+      // autoCodeSplitting in TanStack Router handles actual per-route lazy loading
+      inlineDynamicImports: false,
+      // Content-hash filenames for CDN immutability (CDN-ready)
+      assetsDir: 'assets',
+      cssCodeSplit: true,
+      // Generate build manifest for CDN cache invalidation
+      manifest: true,
+      rollupOptions: {
+        output: {
+          manualChunks: undefined, // let TanStack Router handle route-based splitting
+          entryFileNames: 'assets/[name]-[hash].js',
+          // Short URLs reduce the shared preload map as the route inventory grows.
+          chunkFileNames: 'assets/c-[hash].js',
+          assetFileNames: 'assets/[name]-[hash][extname]',
+        },
+      },
+      // Output directory
+      outDir:
+        (process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'dist-coverage' : 'dist') +
+        (authEntry ? '/auth' : ''),
+      sourcemap: process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'hidden' : false,
+      minify: 'terser',
+      terserOptions: { ecma: 2020, compress: { passes: 2 } },
+    },
+    ssr: {
+      // NoExternal for monorepo workspace packages so they're bundled correctly
+      noExternal: ['@barghsa/shared', '@barghsa/i18n', '@barghsa/ui'],
+    },
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, './src'),
       },
     },
-    // Output directory
-    outDir: process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'dist-coverage' : 'dist',
-    sourcemap: process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'hidden' : false,
-    minify: 'esbuild',
-  },
-  ssr: {
-    // NoExternal for monorepo workspace packages so they're bundled correctly
-    noExternal: ['@barghsa/shared', '@barghsa/i18n', '@barghsa/ui'],
-  },
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-    },
-  },
+  };
 });

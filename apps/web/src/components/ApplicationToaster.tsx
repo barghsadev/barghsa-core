@@ -3,10 +3,15 @@ import { Toaster, toast } from 'sonner';
 import { feedbackText } from '@barghsa/i18n/feedback';
 import { useLocale } from '../hooks/useLocale.js';
 import { useBrandConfig } from '../providers/BrandThemeProvider.js';
+import { takeAuthSuccess } from '../lib/auth-entry-feedback.js';
 
 export function ApplicationToaster() {
   const locale = useLocale();
   const { brandConfig } = useBrandConfig();
+  useEffect(() => {
+    const message = takeAuthSuccess();
+    if (message) toast.success(message);
+  }, []);
   useEffect(
     () => () => {
       // A profile-context reset must not retain messages from the old profile.
