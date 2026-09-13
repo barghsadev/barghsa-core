@@ -111,11 +111,11 @@
       "source_evidence": [
         {
           "path": "package.json",
-          "sha256": "a0facb9bf2523e2008d097dda78f68c526ef499f473ccb30b4ae33dcbe792901"
+          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
         },
         {
           "path": "README.md",
-          "sha256": "30033315e88823cc15fea67b8e051a523f0e44516a873c018b02314710bbac85"
+          "sha256": "f186483d80f9018f78f3ec84b6677fb4a8322b88b6fce72ec918d4223bd4bfb0"
         },
         {
           "path": ".github/workflows/ci.yml",
@@ -143,7 +143,8 @@
         "evidence": "audit/evidence/acceptance-refresh.json"
       },
       "evidence_reuse": [
-        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -396,7 +397,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "a0facb9bf2523e2008d097dda78f68c526ef499f473ccb30b4ae33dcbe792901"
+          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
         },
         {
           "path": "packages/db/src/base-table.test.ts",
@@ -450,7 +451,8 @@
       "remaining_work_evidence": "audit/evidence/acceptance-refresh.json",
       "evidence_reuse": [
         "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ],
       "review_record": "audit/evidence/step-reviews.json#R05-strict-dependencies"
     },
@@ -548,7 +550,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "a0facb9bf2523e2008d097dda78f68c526ef499f473ccb30b4ae33dcbe792901"
+          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
         },
         {
           "path": ".github/workflows/ci.yml",
@@ -585,7 +587,8 @@
         "evidence": "audit/evidence/acceptance-refresh.json"
       },
       "evidence_reuse": [
-        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -603,7 +606,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "a0facb9bf2523e2008d097dda78f68c526ef499f473ccb30b4ae33dcbe792901"
+          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
         },
         {
           "path": ".github/workflows/ci.yml",
@@ -671,7 +674,8 @@
       },
       "evidence_reuse": [
         "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
-        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -2574,7 +2578,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "a0facb9bf2523e2008d097dda78f68c526ef499f473ccb30b4ae33dcbe792901"
+          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
         },
         {
           "path": "pnpm-lock.yaml",
@@ -2605,7 +2609,8 @@
         "evidence": "audit/evidence/acceptance-refresh.json"
       },
       "evidence_reuse": [
-        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -2867,7 +2872,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
         },
         {
           "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
@@ -2991,7 +2996,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/src/schema/ai-model-test-jobs.ts",
@@ -3170,7 +3175,8 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R03-correlation",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -8129,7 +8135,7 @@
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
-          "sha256": "82eaf001f5218480fbdc94bf6e1c801988249e73e9301e1554c14ccbf8385c78"
+          "sha256": "f1b88337f4f572298fae121a369182c4eb24f94e46ff32125c57055e48c0d426"
         },
         {
           "path": "packages/db/drizzle/production/0124_address_soft_delete.sql",
@@ -8178,7 +8184,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-profile-addresses",
         "audit/evidence/step-reviews.json#R01-profiles-onboarding",
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -8833,7 +8840,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
         },
         {
           "path": "apps/api/src/admin/approval-notifications.ts",
@@ -8914,7 +8921,8 @@
       "review_record": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
-        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+        "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -9846,7 +9854,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
@@ -9898,7 +9906,8 @@
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-wallet-ledger",
-        "audit/final-repair-checkpoint.json"
+        "audit/final-repair-checkpoint.json",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -14761,7 +14770,7 @@
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
-          "sha256": "82eaf001f5218480fbdc94bf6e1c801988249e73e9301e1554c14ccbf8385c78"
+          "sha256": "f1b88337f4f572298fae121a369182c4eb24f94e46ff32125c57055e48c0d426"
         },
         {
           "path": "packages/db/src/migrate.preauth-sessions.test.ts",
@@ -14782,7 +14791,8 @@
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R01-tickets",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -14864,7 +14874,7 @@
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
-          "sha256": "82eaf001f5218480fbdc94bf6e1c801988249e73e9301e1554c14ccbf8385c78"
+          "sha256": "f1b88337f4f572298fae121a369182c4eb24f94e46ff32125c57055e48c0d426"
         },
         {
           "path": "packages/db/src/migrate.preauth-sessions.test.ts",
@@ -14885,7 +14895,8 @@
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R01-tickets",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -14967,7 +14978,7 @@
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
-          "sha256": "82eaf001f5218480fbdc94bf6e1c801988249e73e9301e1554c14ccbf8385c78"
+          "sha256": "f1b88337f4f572298fae121a369182c4eb24f94e46ff32125c57055e48c0d426"
         },
         {
           "path": "packages/db/src/migrate.preauth-sessions.test.ts",
@@ -14988,7 +14999,8 @@
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R01-tickets",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -15014,7 +15026,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
         },
         {
           "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
@@ -15050,7 +15062,10 @@
         141
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R01-verification-policy"
+      "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-07.01.02",
@@ -15321,7 +15336,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
         },
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -15351,7 +15366,10 @@
         219
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R01-staff-permission-audit"
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-permission-audit",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-09.05.01",
@@ -15388,7 +15406,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
         },
         {
           "path": "apps/api/src/admin/admin.service.test.ts",
@@ -15418,7 +15436,10 @@
         162
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R01-staff-role-catalogue"
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-role-catalogue",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-09.06.03",
@@ -15439,7 +15460,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
         },
         {
           "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -15499,7 +15520,8 @@
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-daytime-window",
       "evidence_reuse": [
-        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -16576,7 +16598,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
         },
         {
           "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -16617,7 +16639,10 @@
         176
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R02-inbox-notification-policy"
+      "review_record": "audit/evidence/step-reviews.json#R02-inbox-notification-policy",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "05-notifications-documents-ai.md#T-05.04.01",
@@ -16634,7 +16659,7 @@
         },
         {
           "path": "packages/db/src/seed/index.ts",
-          "sha256": "a7f6f9f9232b1f8a3d2cc37023613e47df2637f1b623642fe31a2c189d77c63d"
+          "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
         },
         {
           "path": "packages/db/src/seed/notification-templates.ts",
@@ -16642,7 +16667,7 @@
         },
         {
           "path": "packages/db/src/seed/seed.test.ts",
-          "sha256": "53da0e08906ff853210b932b79e7ed7e01fb5327c7c75af4f46add3f0f099ea1"
+          "sha256": "21e4c08b3d5a1d30eb29318189b9a7876fa096c52183d5abe6662367bad665df"
         },
         {
           "path": "packages/db/src/schema/notification-templates.ts",
@@ -16721,7 +16746,10 @@
         177
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "05-notifications-documents-ai.md#T-05.04.02",
@@ -16738,7 +16766,7 @@
         },
         {
           "path": "packages/db/src/seed/index.ts",
-          "sha256": "a7f6f9f9232b1f8a3d2cc37023613e47df2637f1b623642fe31a2c189d77c63d"
+          "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
         },
         {
           "path": "packages/db/src/seed/notification-templates.ts",
@@ -16746,7 +16774,7 @@
         },
         {
           "path": "packages/db/src/seed/seed.test.ts",
-          "sha256": "53da0e08906ff853210b932b79e7ed7e01fb5327c7c75af4f46add3f0f099ea1"
+          "sha256": "21e4c08b3d5a1d30eb29318189b9a7876fa096c52183d5abe6662367bad665df"
         },
         {
           "path": "packages/db/src/schema/notification-templates.ts",
@@ -16825,7 +16853,10 @@
         178
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "05-notifications-documents-ai.md#T-05.04.03",
@@ -16842,7 +16873,7 @@
         },
         {
           "path": "packages/db/src/seed/index.ts",
-          "sha256": "a7f6f9f9232b1f8a3d2cc37023613e47df2637f1b623642fe31a2c189d77c63d"
+          "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
         },
         {
           "path": "packages/db/src/seed/notification-templates.ts",
@@ -16850,7 +16881,7 @@
         },
         {
           "path": "packages/db/src/seed/seed.test.ts",
-          "sha256": "53da0e08906ff853210b932b79e7ed7e01fb5327c7c75af4f46add3f0f099ea1"
+          "sha256": "21e4c08b3d5a1d30eb29318189b9a7876fa096c52183d5abe6662367bad665df"
         },
         {
           "path": "packages/db/src/schema/notification-templates.ts",
@@ -16929,7 +16960,10 @@
         179
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "05-notifications-documents-ai.md#T-05.04.04",
@@ -16946,7 +16980,7 @@
         },
         {
           "path": "packages/db/src/seed/index.ts",
-          "sha256": "a7f6f9f9232b1f8a3d2cc37023613e47df2637f1b623642fe31a2c189d77c63d"
+          "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
         },
         {
           "path": "packages/db/src/seed/notification-templates.ts",
@@ -16954,7 +16988,7 @@
         },
         {
           "path": "packages/db/src/seed/seed.test.ts",
-          "sha256": "53da0e08906ff853210b932b79e7ed7e01fb5327c7c75af4f46add3f0f099ea1"
+          "sha256": "21e4c08b3d5a1d30eb29318189b9a7876fa096c52183d5abe6662367bad665df"
         },
         {
           "path": "packages/db/src/schema/notification-templates.ts",
@@ -17033,7 +17067,10 @@
         180
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "05-notifications-documents-ai.md#T-05.04.05",
@@ -17050,7 +17087,7 @@
         },
         {
           "path": "packages/db/src/seed/index.ts",
-          "sha256": "a7f6f9f9232b1f8a3d2cc37023613e47df2637f1b623642fe31a2c189d77c63d"
+          "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
         },
         {
           "path": "packages/db/src/seed/notification-templates.ts",
@@ -17058,7 +17095,7 @@
         },
         {
           "path": "packages/db/src/seed/seed.test.ts",
-          "sha256": "53da0e08906ff853210b932b79e7ed7e01fb5327c7c75af4f46add3f0f099ea1"
+          "sha256": "21e4c08b3d5a1d30eb29318189b9a7876fa096c52183d5abe6662367bad665df"
         },
         {
           "path": "packages/db/src/schema/notification-templates.ts",
@@ -17137,7 +17174,10 @@
         181
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "05-notifications-documents-ai.md#T-05.05.01",
@@ -17446,7 +17486,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -17515,7 +17555,8 @@
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -17689,7 +17730,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -17758,7 +17799,8 @@
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -17932,7 +17974,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -18001,7 +18043,8 @@
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -18175,7 +18218,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -18244,7 +18287,8 @@
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -18418,7 +18462,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -18487,7 +18531,8 @@
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -18661,7 +18706,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -18732,7 +18777,8 @@
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -18906,7 +18952,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -18975,7 +19021,8 @@
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R02-email-provider-callbacks",
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -19775,7 +19822,7 @@
         },
         {
           "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
-          "sha256": "1c4f9275b28de4ecb4acf90f0db4e624ea297c6f02cdddaf4c87f8d18a63cd81"
+          "sha256": "fd80cd96fead23be87533e50f02756ba9c9f1bfd008459c3c5c04e4474bddf17"
         },
         {
           "path": "apps/api/src/catalogue/catalogue-products.controller.test.ts",
@@ -19791,7 +19838,7 @@
         },
         {
           "path": "apps/api/src/catalogue/catalogue-products.service.ts",
-          "sha256": "9323173b0d2b56be0accbfd7d2ab6745a5527850f1236fed76124c4fc506c246"
+          "sha256": "a11fff93bddd8cb6033d4f554b66b2485a3593ca2e706527ed82b589e8e30890"
         },
         {
           "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
@@ -19855,7 +19902,10 @@
         212
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat"
+      "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-09.12.02",
@@ -19888,7 +19938,7 @@
         },
         {
           "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
-          "sha256": "1c4f9275b28de4ecb4acf90f0db4e624ea297c6f02cdddaf4c87f8d18a63cd81"
+          "sha256": "fd80cd96fead23be87533e50f02756ba9c9f1bfd008459c3c5c04e4474bddf17"
         },
         {
           "path": "apps/api/src/catalogue/catalogue-products.controller.test.ts",
@@ -19904,7 +19954,7 @@
         },
         {
           "path": "apps/api/src/catalogue/catalogue-products.service.ts",
-          "sha256": "9323173b0d2b56be0accbfd7d2ab6745a5527850f1236fed76124c4fc506c246"
+          "sha256": "a11fff93bddd8cb6033d4f554b66b2485a3593ca2e706527ed82b589e8e30890"
         },
         {
           "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
@@ -19968,7 +20018,10 @@
         213
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat"
+      "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.03.02",
@@ -20872,7 +20925,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
         },
         {
           "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
@@ -20996,7 +21049,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/src/schema/ai-model-test-jobs.ts",
@@ -21121,7 +21174,8 @@
         }
       ],
       "evidence_reuse": [
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
       ]
     },
     {
@@ -21534,7 +21588,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/package.json",
@@ -21566,7 +21620,7 @@
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
-          "sha256": "82eaf001f5218480fbdc94bf6e1c801988249e73e9301e1554c14ccbf8385c78"
+          "sha256": "f1b88337f4f572298fae121a369182c4eb24f94e46ff32125c57055e48c0d426"
         },
         {
           "path": "packages/db/src/migrate.device-trust-ip.test.ts",
@@ -21616,7 +21670,10 @@
         23
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations"
+      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.02.03",
@@ -21681,7 +21738,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/package.json",
@@ -21713,7 +21770,7 @@
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
-          "sha256": "82eaf001f5218480fbdc94bf6e1c801988249e73e9301e1554c14ccbf8385c78"
+          "sha256": "f1b88337f4f572298fae121a369182c4eb24f94e46ff32125c57055e48c0d426"
         },
         {
           "path": "packages/db/src/migrate.device-trust-ip.test.ts",
@@ -21761,7 +21818,10 @@
         24
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations"
+      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.02.04",
@@ -21826,7 +21886,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/package.json",
@@ -21858,7 +21918,7 @@
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
-          "sha256": "82eaf001f5218480fbdc94bf6e1c801988249e73e9301e1554c14ccbf8385c78"
+          "sha256": "f1b88337f4f572298fae121a369182c4eb24f94e46ff32125c57055e48c0d426"
         },
         {
           "path": "packages/db/src/migrate.device-trust-ip.test.ts",
@@ -21906,7 +21966,10 @@
         27
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations"
+      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.03.01",
@@ -21971,7 +22034,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/package.json",
@@ -22003,7 +22066,7 @@
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
-          "sha256": "82eaf001f5218480fbdc94bf6e1c801988249e73e9301e1554c14ccbf8385c78"
+          "sha256": "f1b88337f4f572298fae121a369182c4eb24f94e46ff32125c57055e48c0d426"
         },
         {
           "path": "packages/db/src/migrate.device-trust-ip.test.ts",
@@ -22051,7 +22114,10 @@
         79
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations"
+      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.03.02",
@@ -22116,7 +22182,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/package.json",
@@ -22148,7 +22214,7 @@
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
-          "sha256": "82eaf001f5218480fbdc94bf6e1c801988249e73e9301e1554c14ccbf8385c78"
+          "sha256": "f1b88337f4f572298fae121a369182c4eb24f94e46ff32125c57055e48c0d426"
         },
         {
           "path": "packages/db/src/migrate.device-trust-ip.test.ts",
@@ -22198,7 +22264,10 @@
         80
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations"
+      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.03.03",
@@ -22263,7 +22332,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/package.json",
@@ -22295,7 +22364,7 @@
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
-          "sha256": "82eaf001f5218480fbdc94bf6e1c801988249e73e9301e1554c14ccbf8385c78"
+          "sha256": "f1b88337f4f572298fae121a369182c4eb24f94e46ff32125c57055e48c0d426"
         },
         {
           "path": "packages/db/src/migrate.device-trust-ip.test.ts",
@@ -22341,7 +22410,10 @@
       "limitations": [],
       "merged_prs": [],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations"
+      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.03.04",
@@ -22406,7 +22478,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "c58cc09b2af53a1f28c3e4fb7062fdfdbbbd58af530f0ddefa3f278607dc6aa3"
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
         },
         {
           "path": "packages/db/package.json",
@@ -22438,7 +22510,7 @@
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
-          "sha256": "82eaf001f5218480fbdc94bf6e1c801988249e73e9301e1554c14ccbf8385c78"
+          "sha256": "f1b88337f4f572298fae121a369182c4eb24f94e46ff32125c57055e48c0d426"
         },
         {
           "path": "packages/db/src/migrate.device-trust-ip.test.ts",
@@ -22484,16 +22556,229 @@
       "limitations": [],
       "merged_prs": [],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations"
+      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.04.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 364,
+      "requirement": "- **T-02.04.01:** Create seed script `packages/db/src/seed/index.ts`\n  - **Notes:** Import Drizzle instance and schema. Use upsert logic for default products. Log which entities were created vs skipped. Support `--force` flag to re-seed non-immutable data. Running `pnpm db:seed` calls this via a package.json script.\n  - **Dependencies:** T-02.01.02, T-02.02.02\n  - **Complexity:** M",
+      "requirement_sha256": "b87827420f9f4a339a1c580cdd27e175942fc282f30db9949557407cc7e92c73",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+        },
+        {
+          "path": "packages/db/src/seed/seed.test.ts",
+          "sha256": "21e4c08b3d5a1d30eb29318189b9a7876fa096c52183d5abe6662367bad665df"
+        },
+        {
+          "path": "package.json",
+          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
+        }
+      ],
+      "checks": [
+        "Product inserts use atomic conflict results for truthful counts; default limit rows are inserted in the same transaction. Geography seed serializes concurrent imports, uses UUIDv7 defaults and rolls back counts/data on failure. --force resets only documented mutable Persian province labels, preserving products/prices/limits/admins/templates. Actual CLI logging retains created/updated/skipped semantics.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        81
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.04.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 369,
+      "requirement": "- **T-02.04.02:** Create four default electricity products in seed\n  - **Notes:** `systemType` values: `thermal`, `green`, `free_market`, `energy_saving`. Titles stored in Persian as above. English translations in i18n dictionaries. Each has `price: null`, `isActive: false`, `minKwh: 0`, `maxKwh: 0` (zero = no limit). Use `INSERT ... ON CONFLICT (system_type) DO NOTHING` for idempotency.\n  - **Dependencies:** T-02.04.01\n  - **Complexity:** M",
+      "requirement_sha256": "fd6985d0fb9106833cb7daeb348837cc8c25a5f2b6c2996a4ba59d76517e2eb6",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+        },
+        {
+          "path": "packages/db/src/seed/seed.test.ts",
+          "sha256": "21e4c08b3d5a1d30eb29318189b9a7876fa096c52183d5abe6662367bad665df"
+        },
+        {
+          "path": "packages/db/src/schema/products.ts",
+          "sha256": "4db7bb053dfe413ec7365224397cb6eeb19737ec556f8038abf09940ecad7a95"
+        },
+        {
+          "path": "packages/db/src/schema/electricity-product-limits.ts",
+          "sha256": "6b3d9c4b440a20212a7b8347022162c0a2617bfac2f63b31275a22ea11bba1c6"
+        },
+        {
+          "path": "packages/shared/src/finance/green-electricity-safety.ts",
+          "sha256": "e32900ecfb01ff938d84b16a46f0d91cd6b8735df7954e6317045338a34ef0b3"
+        }
+      ],
+      "checks": [
+        "Four canonical thermal/green/free_market/energy_saving products have reviewed FA/EN titles, null prices, inactive status and explicit zero/zero limits. Repeat/concurrent seed preserves later edits. Green-rule callers now recognize the seeded green key and legacy read alias; ambiguity and conflicting legacy seed identities fail closed.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        82
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.04.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 374,
+      "requirement": "- **T-02.04.03:** Create admin bootstrap mechanism\n  - **Notes:** If `ADMIN_BOOTSTRAP_SECRET` is set and `ADMIN_BOOTSTRAP_KEY` exists, create an admin user with the provided email/phone, a temporary password (hashed with Argon2id). The temporary password is valid for one login; the first login forces password change and MFA enrollment. Bootstrap runs once and does not re-run if admin already exists.\n  - **Dependencies:** T-02.04.01\n  - **Complexity:** M",
+      "requirement_sha256": "a692179e7d97fe64e0cb43dd7f8d7cfb4b394d697aa793f2bb8f490bd2635a15",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+        },
+        {
+          "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
+          "sha256": "546f42596c2767a18df8ae03295330f47117f9d97f16aeb9bfdb5bfd9dfca43c"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "5b92f3c4deb6b07640f11320d47bfee935d4a35827edd312513bf2aa76417a02"
+        },
+        {
+          "path": "apps/api/src/auth/force-password-http.integration.test.ts",
+          "sha256": "4c2a11811f174a66be642f8e5c92e49ce4ad7d38a04494835a52041cf7e1faa6"
+        }
+      ],
+      "checks": [
+        "Bootstrap requires all four explicit credentials, validates identity/password, hashes with required Argon2id parameters, serializes first-admin creation, audits atomically and preserves existing/disabled admins.4 current PostgreSQL cases pass. Existing forced-password HTTP tests pass; old credentials/tokens cannot establish unrestricted sessions, and current staff login requires OTP before session creation. Live delivery configuration remains deployment evidence.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        83
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.04.04",
+      "status": "partial",
+      "reviewed_sha": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 379,
+      "requirement": "- **T-02.04.04:** Wire `pnpm db:seed` script in `packages/db/package.json`\n  - **Notes:** Script: `\"db:seed\": \"tsx src/seed/index.ts\"`. Document in root README. Seed runs automatically in local dev setup (`pnpm dev` may trigger it). In production, seed is run as part of deployment only once.\n  - **Dependencies:** T-02.04.01\n  - **Complexity:** S",
+      "requirement_sha256": "2a265f782102da5316be3bdaffcf3b43da1b3ba8b23691da89351bc76d7f137f",
+      "source_evidence": [
+        {
+          "path": "package.json",
+          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
+        },
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f75d3fab51c9895d444aad8de7db913d4a8d05be0bb1c1a93ac995d104cb72e4"
+        },
+        {
+          "path": "README.md",
+          "sha256": "f186483d80f9018f78f3ec84b6677fb4a8322b88b6fce72ec918d4223bd4bfb0"
+        }
+      ],
+      "checks": [
+        "Root and DB seed commands are wired and README documents credentials/force/release sequence. pnpm dev now runs migration then seed before development servers; && prevents startup after either failure. Production execution remains external.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+      ],
+      "limitations": [
+        "Production initial-seed execution and release sequencing are not proven by local script/documentation checks."
+      ],
+      "merged_prs": [
+        84
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.04.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 384,
+      "requirement": "- **T-02.04.05:** Add seed verification test\n  - **Notes:** Integration test that runs seed against a clean database, verifies 4 default products exist with correct systemType and null price, verifies re-running seed does not create duplicates, verifies admin user is created when bootstrap env vars are provided.\n  - **Dependencies:** T-02.04.02, T-02.04.03\n  - **Complexity:** M",
+      "requirement_sha256": "2ea530a1bb14375d506d6b50c410f0383827a5cf0a1f11c3fc20b106858e7ef3",
+      "source_evidence": [
+        {
+          "path": "packages/db/src/seed/seed.test.ts",
+          "sha256": "21e4c08b3d5a1d30eb29318189b9a7876fa096c52183d5abe6662367bad665df"
+        },
+        {
+          "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
+          "sha256": "546f42596c2767a18df8ae03295330f47117f9d97f16aeb9bfdb5bfd9dfca43c"
+        },
+        {
+          "path": "packages/db/src/test/migrated-db.ts",
+          "sha256": "b4ffc68618775ab4247a5d0b514d21fb5c4dbe5efd49b2de8793d800cd3d5afe"
+        }
+      ],
+      "checks": [
+        "Real production-journal seed tests verify four default products/zero limits, exact absence of duplicates, protected edits, bootstrap and notification template preservation.23 seed cases and4 bootstrap cases pass within DB747; seed failure/retry and concurrent execution are covered.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        85
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.04.06",
+      "status": "acceptance_verified",
+      "reviewed_sha": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 389,
+      "requirement": "- **T-02.04.06:** Configure database constraint to prevent deletion of system electricity products and creation of additional electricity-product types\n  - **Notes:** Add a check constraint or trigger on the products table: for rows where `product_type = 'electricity'` and `system_type IS NOT NULL`, prevent `DELETE` and prevent `INSERT` of additional `product_type = 'electricity'` rows beyond the four defaults. Admins can activate/deactivate and set prices but cannot change `system_type`.\n  - **Dependencies:** T-02.04.02\n  - **Complexity:** M\n  - **UI/UX:** N/A\n\n---",
+      "requirement_sha256": "caa4797ece9d501dce442c01a10fa07a0a09a38be2348ca44343fef8fac8b2f7",
+      "source_evidence": [
+        {
+          "path": "packages/db/drizzle/production/0134_system_product_identity.sql",
+          "sha256": "bd55444e60446f9a9a0210820594a329f0023b97c22de04710efcaa747275aa2"
+        },
+        {
+          "path": "packages/db/src/seed/seed.test.ts",
+          "sha256": "21e4c08b3d5a1d30eb29318189b9a7876fa096c52183d5abe6662367bad665df"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+          "sha256": "a11fff93bddd8cb6033d4f554b66b2485a3593ca2e706527ed82b589e8e30890"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
+          "sha256": "fd80cd96fead23be87533e50f02756ba9c9f1bfd008459c3c5c04e4474bddf17"
+        }
+      ],
+      "checks": [
+        "Migration0134 rejects null/unknown new electricity identities, reserves canonical keys for electricity, prevents system-type changes/deletion bypass and conversion from other product types. Unique key constraint enforces concurrency instead of unsafe count-before-insert. Zero/zero limits are allowed; negative new bounds remain blocked. Existing noncanonical identities/negative bounds are preserved for explicit reconciliation; new CHECK is NOT VALID pending that work.",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+      ],
+      "limitations": [],
+      "merged_prs": [
+        86
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
     }
   ],
   "pending_task_keys": [
-    "01-platform-infrastructure.md#T-02.04.01",
-    "01-platform-infrastructure.md#T-02.04.02",
-    "01-platform-infrastructure.md#T-02.04.03",
-    "01-platform-infrastructure.md#T-02.04.04",
-    "01-platform-infrastructure.md#T-02.04.05",
-    "01-platform-infrastructure.md#T-02.04.06",
     "01-platform-infrastructure.md#T-03.01.01",
     "01-platform-infrastructure.md#T-03.01.02",
     "01-platform-infrastructure.md#T-03.01.03",
@@ -26716,6 +27001,53 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#V01-database-foundations",
       "note": "Only immediate-base matching bindings refreshed;38 older evidence refreshes retained."
+    },
+    {
+      "source_revision": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.01.04",
+        "01-platform-infrastructure.md#T-01.02.02",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.05.01",
+        "01-platform-infrastructure.md#T-02.02.02",
+        "01-platform-infrastructure.md#T-02.02.03",
+        "01-platform-infrastructure.md#T-02.02.04",
+        "01-platform-infrastructure.md#T-02.03.01",
+        "01-platform-infrastructure.md#T-02.03.02",
+        "01-platform-infrastructure.md#T-02.03.03",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-06.01.04",
+        "02-auth-users-admin.md#T-03.04.01",
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03",
+        "02-auth-users-admin.md#T-07.01.01",
+        "02-auth-users-admin.md#T-09.05.01",
+        "02-auth-users-admin.md#T-09.06.03",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.12.01",
+        "02-auth-users-admin.md#T-09.12.02",
+        "02-auth-users-admin.md#T-10.01.02",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "05-notifications-documents-ai.md#T-05.03.03",
+        "05-notifications-documents-ai.md#T-05.04.01",
+        "05-notifications-documents-ai.md#T-05.04.02",
+        "05-notifications-documents-ai.md#T-05.04.03",
+        "05-notifications-documents-ai.md#T-05.04.04",
+        "05-notifications-documents-ai.md#T-05.04.05",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap",
+      "note": "Immediate-base matches only; final DB package and focused API/shared proof support reuse.38 older refreshes retained."
     }
   ]
 }

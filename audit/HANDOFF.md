@@ -4,17 +4,17 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **b83ef2c1**. **185 verified /33 partial /104 pending** of322 claims. Saved PRs: **158 closed /25 open /118 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3212 logs indexed;38 older refreshes remain. Saved inventory ends September3; no current GitHub/deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **c63f10cb**. **190 verified /34 partial /98 pending** of322 claims. Saved PRs: **163 closed /26 open /112 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3234 logs indexed;38 older refreshes remain. Saved inventory ends September3; no current GitHub/deployment claim.
 
-Database foundations batch:5 task reviews verified/2 partial;4 PR reviews closed/2 open. Migration0133 adds timestamp triggers to37 uncovered tables, retaining existing domain triggers. API readiness verifies packaged schema head.742 distinct DB cases pass across package/focused runs;3 API HTTP cases, types/builds/snapshot/lint/format and11 provenance tests pass.17 immediate-base bindings refreshed. [Review](evidence/step-reviews.json#V01-database-foundations). PR47 replacement closes with original unmapped provenance retained.
+Seed/bootstrap batch:5 tasks verified/1 partial;5 PRs closed/1 open. Migration0134 protects canonical electricity identities and allows zero/zero limits while rejecting new negative bounds. Seed counts/concurrency/force boundaries are repaired; legacy conflicts stop seed without replacement. Green-rule consumers recognize canonical and legacy keys, reject ambiguity. All747 DB cases,88 distinct affected API cases and14 shared cases pass; types/builds/snapshot/lint/format pass.39 immediate-base bindings refreshed. [Review](evidence/step-reviews.json#V01-seed-bootstrap). PR84 retains production initial-seed execution.
 
-PR23 remains open for38 tables missing universal base columns; preserve named/composite keys and immutable history until compatibility migrations or explicit exceptions resolve them. PR80 schema-health deferral is satisfied; external rollout/backup/down-migration proof remains open. R04/R05 evidence retained; ship both SPA entries together.
+Database foundations retain5 verified/2 partial and PR47 closure. PR23's38 base-column deviations await the owner decision already asked; do not reask. PR80 retains external rollout/backup/down-migration prerequisites. R04/R05 proof remains valid; ship both SPA entries together.
 
 ## Next action
 
-V01: review seed/bootstrap/system-product workflow, saved PR81–86. Reuse current DB evidence; fix confirmed requirements only.
+V01: reconcile saved DB-foundation PR17–22 against verified task acceptance and historical deferrals. Reuse current proof; do not rebuild verified implementation.
 
-R03 native CSP question remains pending: signed-in reports return403 because browsers cannot add the CSRF header. Do not reask or waive the requirement. PR61 and other external prerequisites stay open. Then remaining V01/R06/V02/B01. Whole plan unfinished. Apply migrations through0133 before this API accepts traffic. Historical traces stay NULL.
+R03 native CSP question remains pending: signed-in reports return403 because browsers cannot add the CSRF header. Do not reask or waive the requirement. PR61 and other external prerequisites stay open. Then remaining V01/R06/V02/B01. Whole plan unfinished. Apply migrations through0134 before this API accepts traffic. Reconcile conflicting legacy electricity identities before seeding; validate nonnegative limit CHECK only after legacy reconciliation. Historical traces stay NULL.
 
 ## Preserve completed work and prerequisites
 

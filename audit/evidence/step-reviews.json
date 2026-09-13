@@ -19617,6 +19617,220 @@
           "evidence": "audit/evidence/step-reviews.json#V01-database-foundations"
         }
       ]
+    },
+    {
+      "id": "V01-seed-bootstrap",
+      "date": "2026-09-13",
+      "source_revision": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+      "base_revision": "77ed48e615dfd76889cf54bed5da31c17db3417d",
+      "product_commits": [
+        "c63f10cb"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.01",
+        "01-platform-infrastructure.md#T-02.04.02",
+        "01-platform-infrastructure.md#T-02.04.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-02.04.05",
+        "01-platform-infrastructure.md#T-02.04.06"
+      ],
+      "summary": "Seed/system-product repairs verified:5 tasks verified/1 partial;5 saved PR reviews closed/1 open.",
+      "review": [
+        "Product inserts use atomic conflict results for truthful counts; default limit rows are inserted in the same transaction. Geography seed serializes concurrent imports, uses UUIDv7 defaults and rolls back counts/data on failure. --force resets only documented mutable Persian province labels, preserving products/prices/limits/admins/templates. Actual CLI logging retains created/updated/skipped semantics.",
+        "Four canonical thermal/green/free_market/energy_saving products have reviewed FA/EN titles, null prices, inactive status and explicit zero/zero limits. Repeat/concurrent seed preserves later edits. Green-rule callers now recognize the seeded green key and legacy read alias; ambiguity and conflicting legacy seed identities fail closed.",
+        "Bootstrap requires all four explicit credentials, validates identity/password, hashes with required Argon2id parameters, serializes first-admin creation, audits atomically and preserves existing/disabled admins.4 current PostgreSQL cases pass. Existing forced-password HTTP tests pass; old credentials/tokens cannot establish unrestricted sessions, and current staff login requires OTP before session creation. Live delivery configuration remains deployment evidence.",
+        "Root and DB seed commands are wired and README documents credentials/force/release sequence. pnpm dev now runs migration then seed before development servers; && prevents startup after either failure. Production execution remains external.",
+        "Real production-journal seed tests verify four default products/zero limits, exact absence of duplicates, protected edits, bootstrap and notification template preservation.23 seed cases and4 bootstrap cases pass within DB747; seed failure/retry and concurrent execution are covered.",
+        "Migration0134 rejects null/unknown new electricity identities, reserves canonical keys for electricity, prevents system-type changes/deletion bypass and conversion from other product types. Unique key constraint enforces concurrency instead of unsafe count-before-insert. Zero/zero limits are allowed; negative new bounds remain blocked. Existing noncanonical identities/negative bounds are preserved for explicit reconciliation; new CHECK is NOT VALID pending that work.",
+        "Green safety constant incorrectly used legacy green_electricity while the canonical seed writes green. Shared canonical constant corrected; existing legacy reads remain supported and multiple matches return503. Seed detects noncanonical/reserved-key conflicts before creating replacements; no silent data rewrite.",
+        "Actual HTTP tests prove current zero-limit updates, catalogue authority and green-rule checks. Two race tests previously searched obsolete SQL; they now observe the actual blocker PID and still prove permission/product changes prevent saving. All6 green HTTP cases pass.",
+        "Final DB package747/747 passes. API88 distinct cases pass across runs: catalogue service/HTTP and forced-password60 total, plus22 green-config and6 green HTTP cases; overlapping reruns are not added. Shared14 green-safety cases, DB/API types, rebuilt shared/DB/worker/API, snapshot/lint/format pass. Earlier failures retained. No browser changes; existing form accepts zero values and prior UI evidence is reused.",
+        "No saved PR81–86 historical deferrals exist. PR84 remains open solely for explicit production initial-seed execution. Other acceptance is local application behavior; rollout, legacy product identity reconciliation and nonnegative CHECK validation are separate prerequisites."
+      ],
+      "verification": {
+        "database": "747/747 across94 files;23 seed and4 bootstrap cases included.",
+        "api": "88 distinct cases across focused runs; reused unchanged forced-password and catalogue service evidence within this batch.",
+        "shared": "14 green-safety tests pass.",
+        "quality": "DB/API types, shared/DB/worker/API builds, snapshot check, scoped lint/format/diff pass."
+      },
+      "remaining": [
+        "Production migration0134 then seed before rollout; preserve legacy identities and reconcile them before seeding.",
+        "Validate nonnegative limit CHECK only after legacy rows are reconciled.",
+        "Real bootstrap OTP delivery and production initial-seed execution remain external; no provider/scheduler/deployment action taken.",
+        "Whole-repository V02 regression remains."
+      ],
+      "source_evidence": [
+        {
+          "path": "README.md",
+          "sha256": "f186483d80f9018f78f3ec84b6677fb4a8322b88b6fce72ec918d4223bd4bfb0"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
+        },
+        {
+          "path": "apps/api/src/admin/green-electricity-config.service.test.ts",
+          "sha256": "011728eae4c45dc313b5f98cb55df8a5b3982e374c30406f121b5ba17c31e26b"
+        },
+        {
+          "path": "apps/api/src/admin/green-electricity-http.integration.test.ts",
+          "sha256": "98c66ceb02024b2e6911b74850183b9d327a0fc703f2fae06738c17bbe48e6c3"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "5b92f3c4deb6b07640f11320d47bfee935d4a35827edd312513bf2aa76417a02"
+        },
+        {
+          "path": "apps/api/src/auth/force-password-http.integration.test.ts",
+          "sha256": "4c2a11811f174a66be642f8e5c92e49ce4ad7d38a04494835a52041cf7e1faa6"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products-http.integration.test.ts",
+          "sha256": "fd80cd96fead23be87533e50f02756ba9c9f1bfd008459c3c5c04e4474bddf17"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+          "sha256": "a11fff93bddd8cb6033d4f554b66b2485a3593ca2e706527ed82b589e8e30890"
+        },
+        {
+          "path": "package.json",
+          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
+        },
+        {
+          "path": "packages/db/drizzle/production/0134_system_product_identity.sql",
+          "sha256": "bd55444e60446f9a9a0210820594a329f0023b97c22de04710efcaa747275aa2"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6e535964b7f11a822c252e80c851d48b40faa941738294d5a5e47d81e48e2a60"
+        },
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f75d3fab51c9895d444aad8de7db913d4a8d05be0bb1c1a93ac995d104cb72e4"
+        },
+        {
+          "path": "packages/db/src/migrate.baseline.test.ts",
+          "sha256": "f1b88337f4f572298fae121a369182c4eb24f94e46ff32125c57055e48c0d426"
+        },
+        {
+          "path": "packages/db/src/schema/electricity-product-limits.ts",
+          "sha256": "6b3d9c4b440a20212a7b8347022162c0a2617bfac2f63b31275a22ea11bba1c6"
+        },
+        {
+          "path": "packages/db/src/schema/products.ts",
+          "sha256": "4db7bb053dfe413ec7365224397cb6eeb19737ec556f8038abf09940ecad7a95"
+        },
+        {
+          "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
+          "sha256": "546f42596c2767a18df8ae03295330f47117f9d97f16aeb9bfdb5bfd9dfca43c"
+        },
+        {
+          "path": "packages/db/src/seed/index.ts",
+          "sha256": "a09aafafb5a2f17bb47190e1837d832733b5f422f5e05eabadc23f59e166dc79"
+        },
+        {
+          "path": "packages/db/src/seed/seed.test.ts",
+          "sha256": "21e4c08b3d5a1d30eb29318189b9a7876fa096c52183d5abe6662367bad665df"
+        },
+        {
+          "path": "packages/db/src/test/migrated-db.ts",
+          "sha256": "b4ffc68618775ab4247a5d0b514d21fb5c4dbe5efd49b2de8793d800cd3d5afe"
+        },
+        {
+          "path": "packages/shared/src/finance/green-electricity-safety.test.ts",
+          "sha256": "fc9eb14089f0a81aff2c443643cf76b3d19ec35405079f2247d3287f8eb99d58"
+        },
+        {
+          "path": "packages/shared/src/finance/green-electricity-safety.ts",
+          "sha256": "e32900ecfb01ff938d84b16a46f0d91cd6b8735df7954e6317045338a34ef0b3"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-seed-api-reviewed.log",
+        "/tmp/v01-seed-api-types.log",
+        "/tmp/v01-seed-baseline-format.log",
+        "/tmp/v01-seed-db-package.log",
+        "/tmp/v01-seed-db-reviewed.log",
+        "/tmp/v01-seed-db-types.log",
+        "/tmp/v01-seed-diff-check.log",
+        "/tmp/v01-seed-final-db.log",
+        "/tmp/v01-seed-final-format.log",
+        "/tmp/v01-seed-format-check.log",
+        "/tmp/v01-seed-format.log",
+        "/tmp/v01-seed-functional.log",
+        "/tmp/v01-seed-green-api.log",
+        "/tmp/v01-seed-green-race-reviewed.log",
+        "/tmp/v01-seed-legacy-reviewed.log",
+        "/tmp/v01-seed-lint.log",
+        "/tmp/v01-seed-quality-format.log",
+        "/tmp/v01-seed-race-format.log",
+        "/tmp/v01-seed-shared.log",
+        "/tmp/v01-seed-snapshot-gate.log",
+        "/tmp/v01-seed-checkpoint-backlog.log",
+        "/tmp/v01-seed-checkpoint-requirements.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 81,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.04.01"
+          ],
+          "reason": "Product inserts use atomic conflict results for truthful counts; default limit rows are inserted in the same transaction. Geography seed serializes concurrent imports, uses UUIDv7 defaults and rolls back counts/data on failure. --force resets only documented mutable Persian province labels, preserving products/prices/limits/admins/templates. Actual CLI logging retains created/updated/skipped semantics.",
+          "source_revision": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+          "evidence": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+        },
+        {
+          "pr": 82,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.04.02"
+          ],
+          "reason": "Four canonical thermal/green/free_market/energy_saving products have reviewed FA/EN titles, null prices, inactive status and explicit zero/zero limits. Repeat/concurrent seed preserves later edits. Green-rule callers now recognize the seeded green key and legacy read alias; ambiguity and conflicting legacy seed identities fail closed.",
+          "source_revision": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+          "evidence": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+        },
+        {
+          "pr": 83,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.04.03"
+          ],
+          "reason": "Bootstrap requires all four explicit credentials, validates identity/password, hashes with required Argon2id parameters, serializes first-admin creation, audits atomically and preserves existing/disabled admins.4 current PostgreSQL cases pass. Existing forced-password HTTP tests pass; old credentials/tokens cannot establish unrestricted sessions, and current staff login requires OTP before session creation. Live delivery configuration remains deployment evidence.",
+          "source_revision": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+          "evidence": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+        },
+        {
+          "pr": 84,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.04.04"
+          ],
+          "reason": "Production initial-seed execution and release sequencing are not proven by local script/documentation checks.",
+          "source_revision": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+          "evidence": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+        },
+        {
+          "pr": 85,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.04.05"
+          ],
+          "reason": "Real production-journal seed tests verify four default products/zero limits, exact absence of duplicates, protected edits, bootstrap and notification template preservation.23 seed cases and4 bootstrap cases pass within DB747; seed failure/retry and concurrent execution are covered.",
+          "source_revision": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+          "evidence": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+        },
+        {
+          "pr": 86,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.04.06"
+          ],
+          "reason": "Migration0134 rejects null/unknown new electricity identities, reserves canonical keys for electricity, prevents system-type changes/deletion bypass and conversion from other product types. Unique key constraint enforces concurrency instead of unsafe count-before-insert. Zero/zero limits are allowed; negative new bounds remain blocked. Existing noncanonical identities/negative bounds are preserved for explicit reconciliation; new CHECK is NOT VALID pending that work.",
+          "source_revision": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+          "evidence": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+        }
+      ]
     }
   ]
 }
