@@ -7,7 +7,7 @@
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "build": "tsc",
-    "dev": "tsc --watch",
+    "dev": "tsc && node dist/main.js",
     "start:prod": "node dist/main.js"
   },
   "dependencies": {

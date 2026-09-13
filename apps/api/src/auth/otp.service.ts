@@ -153,8 +153,8 @@ export class OtpService {
       ]
     );
 
-    // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
-    if (process.env.NODE_ENV === 'development') {
+    // Explicit local opt-in; production never emits the code.
+    if (process.env.NODE_ENV === 'development' && process.env.OTP_CONSOLE === 'true') {
       this.logger.debug(`[DEV] OTP for ${destination}: ${otp}`);
     }
     this.logger.debug(`OTP challenge created for ${destination} (${challengeId})`);
@@ -260,8 +260,8 @@ export class OtpService {
       throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401);
     }
 
-    // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
-    if (process.env.NODE_ENV === 'development') {
+    // Explicit local opt-in; production never emits the code.
+    if (process.env.NODE_ENV === 'development' && process.env.OTP_CONSOLE === 'true') {
       this.logger.debug(`[DEV] OTP for ${destination}: ${otp}`);
     }
     this.logger.debug(`OTP login challenge created for user ${userId} (${challengeId})`);
@@ -346,8 +346,8 @@ export class OtpService {
       throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
     }
 
-    // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
-    if (process.env.NODE_ENV === 'development') {
+    // Explicit local opt-in; production never emits the code.
+    if (process.env.NODE_ENV === 'development' && process.env.OTP_CONSOLE === 'true') {
       this.logger.debug(`[DEV] OTP for ${destination}: ${otp}`);
     }
     this.logger.debug(`OTP resend for ${destination} (${challengeId})`);

@@ -34,6 +34,16 @@ export default defineConfig(({ mode }) => {
   const base = process.env['CDN_URL'] || '/';
   return {
     define: { __BARGHSA_AUTH_ENTRY__: JSON.stringify(authEntry) },
+    server: {
+      host: process.env['WEB_HOST'] || 'localhost',
+      port: Number(process.env['WEB_PORT'] || 3000),
+      proxy: {
+        '/api': {
+          target: `http://127.0.0.1:${process.env['PORT'] || 4000}`,
+          changeOrigin: false,
+        },
+      },
+    },
     plugins: [
       TanStackRouterVite({
         routesDirectory: './src/routes',

@@ -193,7 +193,7 @@
   },
   "scripts": {
     "build": "node scripts/build.mjs && node --test scripts/package-exports.check.mjs",
-    "dev": "tsc --watch --noEmit",
+    "dev": "turbo watch build --filter=@barghsa/shared",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "typecheck": "tsc --noEmit"

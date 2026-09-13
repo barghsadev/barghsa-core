@@ -9,8 +9,8 @@
     "pnpm": ">=10"
   },
   "scripts": {
-    "dev": "pnpm --filter @barghsa/db db:migrate && pnpm db:seed && turbo dev",
-    "dev:docker": "CHOKIDAR_USEPOLLING=true TURBO_DAEMON=false TSC_WATCHFILE=UseFsEventsWithPolling turbo dev",
+    "dev": "nodemon --config nodemon.json",
+    "dev:docker": "WEB_HOST=0.0.0.0 CHOKIDAR_USEPOLLING=true nodemon --legacy-watch --config nodemon.json",
     "build": "turbo build",
     "test": "turbo test",
     "test:coverage": "turbo test:coverage",
@@ -24,7 +24,8 @@
     "contract:update": "pnpm --filter @barghsa/api build && node scripts/check-openapi.mjs --write",
     "check:bundle": "node --test scripts/check-route-budgets.test.mjs && node scripts/check-route-budgets.mjs",
     "db:seed": "pnpm --filter @barghsa/db db:seed",
-    "check:db-snapshot": "node --test packages/db/scripts/check-snapshot.test.mjs && node packages/db/scripts/check-snapshot.mjs"
+    "check:db-snapshot": "node --test packages/db/scripts/check-snapshot.test.mjs && node packages/db/scripts/check-snapshot.mjs",
+    "dev:run": "pnpm exec turbo build --filter=@barghsa/db... && pnpm --filter @barghsa/db db:migrate && pnpm db:seed && turbo dev --filter='./apps/*' --env-mode=loose"
   },
   "devDependencies": {
     "@barghsa/eslint-config": "workspace:*",
@@ -35,9 +36,11 @@
     "@vitest/coverage-v8": "4.1.11",
     "acorn": "8.18.0",
     "ast-v8-to-istanbul": "1.0.5",
+    "dotenv-cli": "11.0.0",
     "eslint": "9.39.5",
     "istanbul-lib-coverage": "3.2.2",
     "jsdom": "28.1.0",
+    "nodemon": "3.1.14",
     "prettier": "3.9.6",
     "size-limit": "12.1.0",
     "turbo": "2.10.11",

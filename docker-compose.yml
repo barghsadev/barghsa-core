@@ -22,19 +22,19 @@ services:
   # PostgreSQL 16 with PostGIS
   # ─────────────────────────────────────────────────────────────
   postgres:
-    image: postgis/postgres:16
+    image: postgis/postgis:16-3.5
     container_name: barghsa-postgres
     ports:
       - '5432:5432'
     environment:
       POSTGRES_DB: barghsa
       POSTGRES_USER: barghsa
-      POSTGRES_PASSWORD: barghsa-dev-password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-barghsa-dev-password}
       # WAL archiving and backup environment
       BACKUP_S3_ENDPOINT: http://minio:9000
       BACKUP_S3_BUCKET: barghsa-backups
-      BACKUP_S3_ACCESS_KEY: minioadmin
-      BACKUP_S3_SECRET_KEY: minioadmin
+      BACKUP_S3_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      BACKUP_S3_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin-dev}
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./postgres-config/barghsa-postgres.conf:/etc/postgresql/postgresql.conf.d/99-barghsa.conf:ro
@@ -51,8 +51,9 @@ services:
   # PgBouncer — PostgreSQL connection pooler
   # ─────────────────────────────────────────────────────────────
   pgbouncer:
-    image: bitnami/pgbouncer:1.23
+    image: bitnamilegacy/pgbouncer:1.23.1
     container_name: barghsa-pgbouncer
+    profiles: [pooling]
     ports:
       - '6432:6432'
     environment:
@@ -103,8 +104,8 @@ services:
       - '9000:9000' # S3 API
       - '9001:9001' # Web console
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin-dev
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin-dev}
     volumes:
       - minio-data:/data
     command: server /data --console-address ":9001"
@@ -122,16 +123,19 @@ services:
   minio-init:
     image: minio/mc
     container_name: barghsa-minio-init
-    entrypoint: >
-      /bin/sh -c "
-        until (/usr/bin/mc config host add local http://minio:9000 minioadmin minioadmin) 2>/dev/null; do
-          echo 'Waiting for MinIO...';
-          sleep 1;
-        done;
-        /usr/bin/mc mb local/barghsa-backups 2>/dev/null || echo 'Bucket already exists';
-        /usr/bin/mc anonymous set public local/barghsa-backups 2>/dev/null || true;
-        echo 'MinIO buckets initialised.';
-      "
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin-dev}
+      MINIO_BUCKET: ${MINIO_BUCKET:-barghsa}
+      BACKUP_S3_BUCKET: ${BACKUP_S3_BUCKET:-barghsa-backups}
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        mc alias set local http://minio:9000 "$${MINIO_ACCESS_KEY}" "$${MINIO_SECRET_KEY}"
+        mc mb --ignore-existing "local/$${MINIO_BUCKET}" "local/$${BACKUP_S3_BUCKET}"
+        mc anonymous set none "local/$${MINIO_BUCKET}"
+        mc anonymous set none "local/$${BACKUP_S3_BUCKET}"
     depends_on:
       minio:
         condition: service_healthy

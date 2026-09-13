@@ -10,7 +10,7 @@
       "requirement_id": "README-001",
       "source": "README.md",
       "start_line": 1,
-      "end_line": 1290,
+      "end_line": 1283,
       "heading": "Intro",
       "owner_files": [
         "01-platform-infrastructure.md",
@@ -65282,7 +65282,7 @@
       "requirement_id": "README-095",
       "source": "README.md",
       "start_line": 1214,
-      "end_line": 1290,
+      "end_line": 1283,
       "heading": "Development (monorepo)",
       "owner_files": [
         "01-platform-infrastructure.md",
@@ -66318,7 +66318,7 @@
       "requirement_id": "README-097",
       "source": "README.md",
       "start_line": 1238,
-      "end_line": 1261,
+      "end_line": 1258,
       "heading": "Local setup",
       "owner_files": [
         "01-platform-infrastructure.md",
@@ -66835,8 +66835,8 @@
     {
       "requirement_id": "README-098",
       "source": "README.md",
-      "start_line": 1262,
-      "end_line": 1281,
+      "start_line": 1259,
+      "end_line": 1274,
       "heading": "Docker-for-Mac file-watch polling",
       "owner_files": [
         "01-platform-infrastructure.md"
@@ -66984,8 +66984,8 @@
     {
       "requirement_id": "README-099",
       "source": "README.md",
-      "start_line": 1282,
-      "end_line": 1287,
+      "start_line": 1275,
+      "end_line": 1280,
       "heading": "Build",
       "owner_files": [
         "01-platform-infrastructure.md",
@@ -67502,8 +67502,8 @@
     {
       "requirement_id": "README-100",
       "source": "README.md",
-      "start_line": 1288,
-      "end_line": 1290,
+      "start_line": 1281,
+      "end_line": 1283,
       "heading": "Architecture notes",
       "owner_files": [
         "01-platform-infrastructure.md",

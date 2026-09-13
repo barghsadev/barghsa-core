@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { HttpException } from '@nestjs/common';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { HttpException, Logger } from '@nestjs/common';
 import { OtpService } from './otp.service.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
@@ -29,6 +29,54 @@ describe('OtpService', () => {
     mockRateLimitService.checkSecurityRateLimit.mockResolvedValue({ allowed: true });
     mockPool.query.mockResolvedValue({ rows: [], rowCount: 1 });
     service = new OtpService(mockRateLimitService as any);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+  });
+
+  describe.each(['registration', 'login', 'resend'] as const)('%s console isolation', (flow) => {
+    it.each([
+      ['development', 'true', true],
+      ['development', 'false', false],
+      ['development', '', false],
+      ['production', 'true', false],
+      ['staging', 'true', false],
+      ['test', 'true', false],
+    ] as const)('%s / OTP_CONSOLE=%s', async (environment, enabled, prints) => {
+      vi.stubEnv('NODE_ENV', environment);
+      vi.stubEnv('OTP_CONSOLE', enabled);
+      vi.spyOn(service, 'generateOtp').mockReturnValue('654321');
+      const debug = vi.spyOn(Logger.prototype, 'debug').mockImplementation(() => undefined);
+      const destination = 'development@example.test';
+      let result: unknown;
+      if (flow === 'registration') {
+        result = await service.createChallenge(destination, '127.0.0.1');
+      } else if (flow === 'login') {
+        result = await service.createLoginChallenge('console-user', destination, '127.0.0.1');
+      } else {
+        mockPool.query.mockResolvedValueOnce({
+          rows: [
+            {
+              challenge_id: 'console-challenge',
+              destination,
+              consumed_at: null,
+              expires_at: new Date(Date.now() + 60_000),
+              resend_count: 0,
+            },
+          ],
+          rowCount: 1,
+        });
+        result = await service.resendChallenge('console-challenge', '127.0.0.1', 'registration');
+      }
+      expect(debug.mock.calls.some(([message]) => String(message).includes('654321'))).toBe(prints);
+      expect(JSON.stringify(result)).not.toContain('654321');
+      // Console delivery must retain the challenge and encrypted durable outbox.
+      expect(
+        mockPool.query.mock.calls.some(([sql]) => String(sql).includes('auth_delivery_outbox'))
+      ).toBe(true);
+    });
   });
 
   describe('createChallenge', () => {

@@ -13,7 +13,7 @@
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "build": "nest build && pnpm generate:openapi",
     "generate:openapi": "node dist/src/generate-openapi",
-    "dev": "nest build --watch --builder swc",
+    "dev": "nest start --builder swc --entryFile src/main",
     "start:prod": "node dist/src/main"
   },
   "dependencies": {

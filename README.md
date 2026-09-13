@@ -1239,11 +1239,8 @@ Barghsa is implemented as a TypeScript pnpm + Turborepo monorepo:
 
 ```bash
 cp .env.example .env
-docker compose up -d postgres redis minio
+docker compose up -d postgres redis minio minio-init
 pnpm install --frozen-lockfile
-pnpm build
-pnpm --filter @barghsa/db db:migrate
-pnpm db:seed
 pnpm dev
 ```
 
@@ -1253,9 +1250,9 @@ pnpm dev
 
 Local development may create a seeded admin using credentials supplied through development-only environment variables. Production deployment must never use a hard-coded default password. The first admin is created through a one-time bootstrap secret or secure operator command, must change password at first login, and must enroll MFA before accessing admin settings.
 
-`pnpm dev` runs migrations and the idempotent seed before starting development servers; either failure prevents startup. The seed logs created, updated and skipped counts. Repeated or concurrent runs preserve existing products, prices, activation, administrators and notification templates. `pnpm db:seed --force` restores only the Persian labels of the 31 default provinces, matched by their English seed names. Other customized geography fields remain unchanged.
+`pnpm dev` loads the root `.env`, builds required packages, runs migrations and the idempotent seed, then starts the API, worker and Vite servers. A failed build, migration or seed prevents startup. Source/configuration changes restart this sequence after stopping the prior processes; compiled outputs are ignored. Shared ESM/CommonJS packages are rebuilt before their consumers. Existing shell environment values take precedence over `.env`. Set `BARGHSA_ENV_FILE` to use another local environment file. Browser `/api` calls are proxied to the API `PORT` on the same host; `WEB_PORT` defaults to3000 and `WORKER_PORT` to9090. The seed logs created, updated and skipped counts. Repeated or concurrent runs preserve existing products, prices, activation, administrators and notification templates. `pnpm db:seed --force` restores only the Persian labels of the 31 default provinces, matched by their English seed names. Other customized geography fields remain unchanged.
 
-Set `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_KEY`, `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` explicitly for initial administrator creation. The identity may be an email or E.164 phone number. After creation, remove bootstrap credentials from the deployment environment. Staff login always requires a delivered OTP after the forced password change; configure a working delivery channel through the deployment procedure before handing over access. OTP values are not printed to logs.
+Set `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_KEY`, `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` explicitly for initial administrator creation. The identity may be an email or E.164 phone number. After creation, remove bootstrap credentials from the deployment environment. Staff login always requires a delivered OTP after the forced password change; configure a working delivery channel through the deployment procedure before handing over access. OTP values appear only in the local API debug console when both `NODE_ENV=development` and `OTP_CONSOLE=true`; turn the latter off to suppress them. Production never prints codes. The encrypted outbox still requires `AUTH_DELIVERY_ENCRYPTION_KEY` in local development; console output does not bypass challenge verification.
 
 In production, run migrations and the initial seed before admitting traffic; retain their successful exit results. Do not run `--force` as an automatic deployment step. Migration0134 preserves any legacy noncanonical electricity rows for explicit operator reconciliation; it does not silently delete or relabel referenced products. The seed refuses conflicting electricity identities. Green-rule reads recognize the canonical `green` key and the legacy `green_electricity` key, but reject an ambiguous pair. Reconcile legacy rows and validate the new nonnegative-limit constraint before declaring production data compliant.
 
@@ -1269,15 +1266,11 @@ Replace `pnpm dev` with `pnpm dev:docker` to enable polling-based file watching:
 pnpm dev:docker
 ```
 
-This sets the following environment variables:
+This enables Nodemon polling for application/package changes and `CHOKIDAR_USEPOLLING=true` for Vite, binding Vite to `0.0.0.0` so a published container port is reachable. It runs the same environment loading, build, migration and seed sequence as `pnpm dev`.
 
-| Variable                               | Effect                                                                                                                              |
-| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `CHOKIDAR_USEPOLLING=true`             | Enables polling for chokidar-based watchers (Vite dev server, NestJS `--watch` via SWC)                                             |
-| `TSC_WATCHFILE=UseFsEventsWithPolling` | Tries native FS events, falls back to polling for `tsc --watch` (packages/ui, shared, i18n)                                         |
-| `TURBO_DAEMON=false`                   | Disables Turborepo daemon — the daemon's file watcher is unnecessary for persistent `dev` tasks and may interfere with polling mode |
+On native macOS, `pnpm dev` uses filesystem events. Inside Docker bind mounts, use `pnpm dev:docker`. The Compose file supplies backing services; application development processes run separately. Optional PgBouncer belongs to the `pooling` profile and needs its separate pooling/operations review. Use the direct database URL for this workflow.
 
-> **Note:** On native macOS (outside Docker), `pnpm dev` runs without polling and provides faster hot reload. The `dev:docker` script is only needed when the apps are running inside Docker containers on macOS.
+MinIO initialization creates both upload and backup buckets with private access. Its credentials match `.env.example`. Existing volumes are preserved; initialization failures remain visible rather than being reported as success.
 
 ### Build
 

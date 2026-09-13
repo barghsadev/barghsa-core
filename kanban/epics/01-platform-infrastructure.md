@@ -467,7 +467,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
 **Tasks:**
 
 - **T-03.02.01:** Create `docker-compose.yml` with PostgreSQL, Redis, MinIO
-  - **Notes:** PostgreSQL: image `postgis/postgres:16`, port `5432`, volume `pgdata:/var/lib/postgresql/data`, env `POSTGRES_DB=barghsa`, `POSTGRES_USER=barghsa`, `POSTGRES_PASSWORD`. Redis: image `redis:7-alpine`, port `6379`. MinIO: image `minio/minio`, ports `9000:9000` (API), `9001:9001` (console), volume `minio-data:/data`, command `server /data --console-address ":9001"`. Add `healthcheck` to PostgreSQL (`pg_isready`) and MinIO (`curl -f http://localhost:9000/minio/health/live`).
+  - **Notes:** PostgreSQL: image `postgis/postgis:16-3.5`, port `5432`, volume `pgdata:/var/lib/postgresql/data`, env `POSTGRES_DB=barghsa`, `POSTGRES_USER=barghsa`, `POSTGRES_PASSWORD`. Redis: image `redis:7-alpine`, port `6379`. MinIO: image `minio/minio`, ports `9000:9000` (API), `9001:9001` (console), volume `minio-data:/data`, command `server /data --console-address ":9001"`. Add `healthcheck` to PostgreSQL (`pg_isready`) and MinIO (`curl -f http://localhost:9000/minio/health/live`).
   - **Dependencies:** None (infrastructure only)
   - **Complexity:** S
 
