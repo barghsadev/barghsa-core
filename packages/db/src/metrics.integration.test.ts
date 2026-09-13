@@ -48,7 +48,10 @@ it('returns failure instead of healthy zeros when all database reads fail', asyn
 });
 
 it('fails the core snapshot when one required view fails while others remain readable', async () => {
-  vi.spyOn(pool, 'query').mockRejectedValueOnce(new Error('stats view denied'));
+  const version = await pool.query('SHOW server_version_num');
+  vi.spyOn(pool, 'query')
+    .mockImplementationOnce(() => Promise.resolve(version))
+    .mockRejectedValueOnce(new Error('stats view denied'));
   const result = await collectPerformanceMetrics();
   expect(result).toMatchObject({ ok: false, metrics: null });
   expect((await pool.query('SELECT 1 AS ready')).rows[0].ready).toBe(1);
@@ -75,31 +78,41 @@ it.each([
   expect(query).not.toHaveBeenCalled();
 });
 
-it('collects query timings when pg_stat_statements is enabled on PostgreSQL 17', async () => {
-  const container = await new PostgreSqlContainer('postgres:17-alpine')
-    .withCommand(['postgres', '-c', 'shared_preload_libraries=pg_stat_statements'])
-    .start();
-  const previous = pool;
-  const monitored = new Pool({ connectionString: container.getConnectionUri(), max: 8 });
-  try {
-    pool = monitored;
-    await pool.query('CREATE EXTENSION pg_stat_statements');
-    await pool.query('SELECT generate_series(1, 25) AS metric_probe');
-    const result = await collectPerformanceMetrics(100);
-    expect(result.ok).toBe(true);
-    expect(result.metrics?.topQueries).not.toBeNull();
-    const probe = result.metrics?.topQueries?.find((query) => query.query.includes('metric_probe'));
-    expect(probe?.calls).toBeGreaterThanOrEqual(1);
-    expect(result.metrics?.queryCalls).toBeGreaterThanOrEqual(1);
-    expect(probe?.rows).toBeGreaterThanOrEqual(25);
-    expect(probe?.blkReadTimeMs).toBeGreaterThanOrEqual(0);
-    expect(probe?.blkWriteTimeMs).toBeGreaterThanOrEqual(0);
-  } finally {
-    pool = previous;
-    await monitored.end();
-    await container.stop();
-  }
-}, 60_000);
+it.each(['16', '17'])(
+  'collects checkpoints and query timings on PostgreSQL %s',
+  async (version) => {
+    const container = await new PostgreSqlContainer(`postgres:${version}-alpine`)
+      .withCommand(['postgres', '-c', 'shared_preload_libraries=pg_stat_statements'])
+      .start();
+    const previous = pool;
+    const monitored = new Pool({ connectionString: container.getConnectionUri(), max: 8 });
+    try {
+      pool = monitored;
+      await pool.query('CREATE EXTENSION pg_stat_statements');
+      await pool.query('SELECT generate_series(1, 25) AS metric_probe');
+      const result = await collectPerformanceMetrics(100);
+      expect(result.ok).toBe(true);
+      expect(result.metrics?.bgwriter).toMatchObject({
+        checkpoints_timed: expect.any(Number),
+        checkpoints_req: expect.any(Number),
+      });
+      expect(result.metrics?.topQueries).not.toBeNull();
+      const probe = result.metrics?.topQueries?.find((query) =>
+        query.query.includes('metric_probe')
+      );
+      expect(probe?.calls).toBeGreaterThanOrEqual(1);
+      expect(result.metrics?.queryCalls).toBeGreaterThanOrEqual(1);
+      expect(probe?.rows).toBeGreaterThanOrEqual(25);
+      expect(probe?.blkReadTimeMs).toBeGreaterThanOrEqual(0);
+      expect(probe?.blkWriteTimeMs).toBeGreaterThanOrEqual(0);
+    } finally {
+      pool = previous;
+      await monitored.end();
+      await container.stop();
+    }
+  },
+  60_000
+);
 
 it.each([
   {

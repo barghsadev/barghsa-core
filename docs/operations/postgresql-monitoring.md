@@ -1,6 +1,6 @@
 # PostgreSQL monitoring
 
-The API collects PostgreSQL 17 database, connection, checkpoint, WAL, query and scan statistics. `/metrics` exposes Prometheus samples. Database collection failures set `pg_metrics_collection_success` to zero and remove stale samples. Optional views have `pg_metrics_view_available` labels; unavailable replication lag is not reported as zero.
+The API collects PostgreSQL 16 and 17 database, connection, checkpoint, WAL, query and scan statistics. `/metrics` exposes Prometheus samples. Database collection failures set `pg_metrics_collection_success` to zero and remove stale samples. Optional views have `pg_metrics_view_available` labels; unavailable replication lag is not reported as zero.
 
 ## OpenTelemetry export
 
@@ -29,12 +29,12 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
 
 The database role used by the collector must have effective `pg_read_all_stats` privileges, directly or through `pg_monitor`. The application does not grant this role. Without it, PostgreSQL hides fields from other sessions; the collector reports failure instead of treating those fields as zero activity. A database administrator must configure the intended monitoring role before claiming complete statistics.
 
-The collector distinguishes an absent extension from an empty query list. PostgreSQL 17 checkpoint statistics come from `pg_stat_checkpointer`; shared query I/O timings use `shared_blk_read_time` and `shared_blk_write_time`.
+The collector distinguishes an absent extension from an empty query list. It reads the current server version on each poll. PostgreSQL 16 checkpoint statistics come from `pg_stat_bgwriter`, and query I/O timings use `blk_read_time` and `blk_write_time`. PostgreSQL 17 uses `pg_stat_checkpointer`, `shared_blk_read_time` and `shared_blk_write_time`. A failed version read reports collection failure.
 
 `postgres-config/alert-rules.json` defines collection-failure, lag, slow-query, saturation, lock and deadlock rules. Load these into your monitoring stack and exercise delivery before claiming operational readiness. Query throughput in Prometheus can use `rate(pg_query_calls_total[5m])`. Statistics resets and pg_stat_statements entry eviction affect these counters. Scan counts are available as `pg_sequential_scans_total` and `pg_index_scans_total`.
 
 ## Verification scope
 
-Local tests cover PostgreSQL 17 with and without pg_stat_statements, actual API scrape outage/recovery, OTLP payloads received by a local HTTP collector, rejected-export recovery, and omission of stale observations. Replica aggregation is tested with controlled PostgreSQL rows, not live streaming replicas. Production collector connectivity, alert delivery, host sizing and load baselines need separate execution evidence.
+Local tests cover checkpoints and query timings on PostgreSQL 16 and 17 with pg_stat_statements, plus PostgreSQL 17 without the extension. Existing API evidence covers scrape outage/recovery, OTLP payloads received by a local HTTP collector, rejected-export recovery, and omission of stale observations. Replica aggregation is tested with controlled PostgreSQL rows, not live streaming replicas. Production collector connectivity, alert delivery, host sizing and load baselines need separate execution evidence.
 
 References: [OpenTelemetry JavaScript exporters](https://opentelemetry.io/docs/languages/js/exporters/), [PostgreSQL 17 statistics](https://www.postgresql.org/docs/17/monitoring-stats.html), [pg_stat_statements](https://www.postgresql.org/docs/17/pgstatstatements.html).

@@ -168,6 +168,11 @@ export async function collectPerformanceMetrics(
       throw new RangeError('Invalid PostgreSQL metrics collection bounds');
     }
     const pool = getDbPool();
+    const versionResult = await pool.query('SHOW server_version_num');
+    const version = Number(versionResult.rows[0]?.server_version_num);
+    if (!Number.isInteger(version) || version < 160000)
+      throw new Error('PostgreSQL metrics require a readable server version of 16 or later');
+    const separateCheckpointer = version >= 170000;
     // Query pg_stat_database for the barghsa database
     const dbStats = pool.query(`
       SELECT
@@ -227,7 +232,9 @@ export async function collectPerformanceMetrics(
 
     // PostgreSQL 17 moved checkpoint counters into pg_stat_checkpointer.
     // Removed backend-buffer fields have no equivalent in this view; keep them unavailable.
-    const bgwriterStats = pool.query(`
+    const bgwriterStats = pool.query(
+      separateCheckpointer
+        ? `
       SELECT
         c.num_timed AS checkpoints_timed,
         c.num_requested AS checkpoints_req,
@@ -241,7 +248,15 @@ export async function collectPerformanceMetrics(
         b.buffers_alloc,
         b.stats_reset
       FROM pg_stat_bgwriter b CROSS JOIN pg_stat_checkpointer c
-    `);
+    `
+        : `
+      SELECT checkpoints_timed, checkpoints_req, checkpoint_write_time,
+             checkpoint_sync_time, buffers_checkpoint, buffers_clean,
+             maxwritten_clean, buffers_backend, buffers_backend_fsync,
+             buffers_alloc, stats_reset
+      FROM pg_stat_bgwriter
+    `
+    );
 
     // Query pg_stat_wal (PG 14+)
     const walStats = pool.query(`
@@ -276,8 +291,8 @@ export async function collectPerformanceMetrics(
         local_blks_read,
         temp_blks_read,
         temp_blks_written,
-        shared_blk_read_time AS blk_read_time,
-        shared_blk_write_time AS blk_write_time
+        ${separateCheckpointer ? 'shared_blk_read_time' : 'blk_read_time'} AS blk_read_time,
+        ${separateCheckpointer ? 'shared_blk_write_time' : 'blk_write_time'} AS blk_write_time
       FROM pg_stat_statements
       WHERE calls > 0
         AND dbid = (SELECT oid FROM pg_database WHERE datname = current_database())
