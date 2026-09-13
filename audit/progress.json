@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
-  "active_step": "R04",
-  "next_action": "R04: make customer electricity, savings and wallet purchase paths eager within unchanged complete-route budgets. Review PR12 and T-01.03.03 against current imports and saved failed attempts; preserve Vite SPA and valid evidence.",
+  "source_revision": "7eecc144cb01bdafd9860b867ca163683b49a727",
+  "active_step": "R05",
+  "next_action": "R05: resolve strict API/web/worker/DB dependency declarations without blanket suppression; review geoip-country maintenance and saved repeated PR47.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -41,12 +41,12 @@
     {
       "id": "R04",
       "title": "Purchase loading",
-      "status": "in_progress"
+      "status": "completed"
     },
     {
       "id": "R05",
       "title": "Strict dependencies",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "V01",
@@ -257,7 +257,7 @@
       "implementation_status": "partial",
       "acceptance_status": "pending",
       "remaining": [
-        "Close three measured coverage gaps with meaningful tests. Meet eager purchase loading within unchanged budgets. Resolve strict dependency declarations. Finish error/correlation and gate acceptance.",
+        "Close three measured coverage gaps with meaningful tests. Resolve strict dependency declarations and remaining gate acceptance. Eager purchase loading and local error/correlation repairs are verified.",
         "R05: review geoip-country parser maintenance and the data-update procedure. Current pinned data and packaging pass; upstream directs new development to a successor."
       ]
     },
@@ -754,6 +754,10 @@
     {
       "id": "R03-consumer-theme-time",
       "review_record": "audit/evidence/step-reviews.json#R03-consumer-theme-time"
+    },
+    {
+      "id": "R04-purchase-loading",
+      "review_record": "audit/evidence/step-reviews.json#R04-purchase-loading"
     }
   ],
   "deferred_improvements": [
@@ -771,14 +775,18 @@
       "task_key": "05-notifications-documents-ai.md#T-05.01.05",
       "issue": "Optional dedicated processing-kind field for historical dispatch/recovery/hold rows. Current requirement specifies per-job attempt_number; UI now says processing attempt, explains receipt reuse and leaves recovered send duration null. No extra schema/history subsystem is required for that clarification. Defer the richer marker outside confirmed repairs.",
       "source_revision": "fe7a366bd2090de6013ef035a6f33bc6bcc9b8bb"
+    },
+    {
+      "issue": "Login username blur inserts its required-field error and moves the support link during a pointer click. Keyboard activation works. Existing form layout issue, outside purchase-loading repairs.",
+      "source_revision": "7eecc144cb01bdafd9860b867ca163683b49a727"
     }
   ],
   "scope_note": "Group implementation labels summarize recorded repairs, not whole-group acceptance. Historical status counts are generated from the ledger, never inferred from these labels.",
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 178,
-    "partial": 33,
+    "acceptance_verified": 179,
+    "partial": 32,
     "pending": 111,
     "merged_prs": 301,
     "historical_skips": 58,
@@ -1076,30 +1084,32 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R04-purchase-loading",
-    "name": "Eager customer purchase paths",
+    "id": "R05-strict-dependencies",
+    "name": "Strict declarations and location dependency maintenance",
     "status": "reviewing",
     "prs": [
-      12
+      7,
+      47,
+      90
     ],
     "task_keys": [
-      "01-platform-infrastructure.md#T-01.03.03"
+      "01-platform-infrastructure.md#T-01.02.02",
+      "02-auth-users-admin.md#T-02.02.02"
     ],
     "remaining_checklist": [
-      "Read exact purchase-loading criteria and current dependency graph.",
-      "Repair eager loading while preserving unchanged route budgets and lazy heavy modules.",
-      "Verify actual initial loading and route fallback behavior."
+      "Read exact criteria and current strict compiler diagnostics.",
+      "Fix incompatible dependency declarations without broad suppression.",
+      "Review geoip maintenance/update procedure and PR47 mapping; run strict consumers and frozen install."
     ],
     "confirmed_defects": [
-      "Required customer purchase paths remain lazy-loaded; earlier eager attempts exceeded budgets."
+      "Four consumers still enable skipLibCheck; prior strict DB check reported146 upstream declaration errors."
     ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R03-consumer-theme-time",
-      "audit/final-repair-checkpoint.json"
+      "audit/evidence/step-reviews.json#R04-purchase-loading"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "R04: make customer electricity, savings and wallet purchase paths eager within unchanged complete-route budgets. Review PR12 and T-01.03.03 against current imports and saved failed attempts; preserve Vite SPA and valid evidence."
+    "next_action": "R05: resolve strict API/web/worker/DB dependency declarations without blanket suppression; review geoip-country maintenance and saved repeated PR47."
   },
   "open_domain_reviews": [
     {

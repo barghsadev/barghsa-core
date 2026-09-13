@@ -614,7 +614,7 @@
       "source_evidence": [
         {
           "path": "apps/web/vite.config.ts",
-          "sha256": "294039ea9ee4ac884808fe67bd21501f4fb40edd038928886359fc8c9fb372cd"
+          "sha256": "4bc4419d9b1b14e5bf2a951df90de2ca0a1e171a4d620eaad3e9ed424212c061"
         },
         {
           "path": "apps/web/package.json",
@@ -622,15 +622,15 @@
         },
         {
           "path": "apps/web/src/client.tsx",
-          "sha256": "17253729b0f69149dcb41e8915834b14b39ffd0e614d21a8ce8b7fba13a68590"
+          "sha256": "3e3921b4ab55c175bc5f70d415404c9cd62e4b7b83a4e2b37c8605d5586ce8b7"
         },
         {
           "path": "apps/web/server.js",
-          "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
+          "sha256": "f1c52a35555aa2902663943fc5ae310851afb6b1372d62bbed6a4ba0c25e734e"
         },
         {
           "path": "docs/adr/004-web-spa.md",
-          "sha256": "0d34ed008544b9f0d35d28d909b459127b08839e068f9c3e03ec9a4fca895b13"
+          "sha256": "2328c7d6a3a4ce549a74d70571824d9465ca2dfbc3bfdad0f37e3aa81bc8e444"
         }
       ],
       "checks": [
@@ -654,7 +654,8 @@
         "evidence": "audit/evidence/acceptance-refresh.json"
       },
       "evidence_reuse": [
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
       ],
       "source_refresh_review": "audit/evidence/step-reviews.json#R03-errors"
     },
@@ -1556,7 +1557,7 @@
         },
         {
           "path": "apps/web/e2e/shell-navigation.spec.ts",
-          "sha256": "b50827e5b835b09b20ca713bb3716350ebfd39f78b8b06753e6618226018e4fa"
+          "sha256": "f28fc4ed187286d083ddd34896153f8837a0b08e6fa8ee28e0311c6dfd79a86d"
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -1596,7 +1597,10 @@
           "apps/web/src/pages/AdminLayout.tsx"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "evidence_reuse": [
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-09.03.01",
@@ -2319,44 +2323,157 @@
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.03",
-      "status": "partial",
-      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "status": "acceptance_verified",
+      "reviewed_sha": "7eecc144cb01bdafd9860b867ca163683b49a727",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 139,
       "requirement": "- **T-01.03.03:** Implement route-level code splitting and lazy loading for heavy modules\n  - **Notes:** Lazy-load: admin dashboards, AI chat UI, document editors, chart visualizations, video upload viewers. Use dynamic `import()` with React.lazy or TanStack Router's lazy routes. Customer purchase paths (electricity ordering, saving plans, wallet top-up) must NOT be lazy-loaded. Verify that lazy boundaries don't cause layout shift.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** M\n  - **UI/UX:** Loading states for lazy routes must match the app skeleton and respect `prefers-reduced-motion`. Show a skeleton or minimal spinner, never a blank page.",
       "requirement_sha256": "5c7e1919a0cca0788bb42a0d744cda2e095c248eef553b07019fafc57e3b8d3f",
       "source_evidence": [
         {
+          "path": ".size-limit.json",
+          "sha256": "ef86dbe0d07605b1730a599fc99f781d139213642563f8bbf0e250db913fd618"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "7b7c3d8960acf338e56d592aad0560c0e6dc049d2a3a30a5eb3796b6fe4b1bd6"
+        },
+        {
+          "path": "apps/web/build.mjs",
+          "sha256": "20432f55d9d3090f592a28e79064d99f0066108a3cda87aeebf023583d55c35f"
+        },
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "b4d85351ba9d507a8d982a4a0e785b7368b08c079a0139bc1acebe0f8749a54c"
+        },
+        {
+          "path": "apps/web/e2e/purchase-loading.spec.ts",
+          "sha256": "4193e00efe25566b93bc7673ac64fa0c646ad1428ad59a893cfe1ffed01dae25"
+        },
+        {
+          "path": "apps/web/e2e/shell-navigation.spec.ts",
+          "sha256": "f28fc4ed187286d083ddd34896153f8837a0b08e6fa8ee28e0311c6dfd79a86d"
+        },
+        {
+          "path": "apps/web/entry-routes.d.ts",
+          "sha256": "b7f513939e96f8b6799d98052331bfb3ebcb95725ad5f4d9f2106ce314baa8e1"
+        },
+        {
+          "path": "apps/web/entry-routes.js",
+          "sha256": "3b46ac5dcdc4bcd8912090dc626de6432533ffdbb10af0abbdf71687595853a8"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "780ace2574370ef631ddc8ea307840f37c992c0831d8311e15b7eb53738dac45"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "f1c52a35555aa2902663943fc5ae310851afb6b1372d62bbed6a4ba0c25e734e"
+        },
+        {
+          "path": "apps/web/src/client.tsx",
+          "sha256": "3e3921b4ab55c175bc5f70d415404c9cd62e4b7b83a4e2b37c8605d5586ce8b7"
+        },
+        {
+          "path": "apps/web/src/components/ApplicationToaster.tsx",
+          "sha256": "a20d6f1d3a73e3f8d88ad4acfac191659e86690c17ef4b710e300d0a8e6ba56c"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "566b6447c494f11df5a730dc834e7deaaa7d4ce347cd231337570605beb36b54"
+        },
+        {
+          "path": "apps/web/src/lib/auth-entry-feedback.test.ts",
+          "sha256": "d137658c69e414f4ec446d00948d7ccd517dca8c0ff266d5239ed722f77ca994"
+        },
+        {
+          "path": "apps/web/src/lib/auth-entry-feedback.ts",
+          "sha256": "b629af1137edfa48b499808f9d5886c2f873ccbf1c50d32c7d5e8426b7ed9755"
+        },
+        {
+          "path": "apps/web/src/lib/entry-locale.ts",
+          "sha256": "1a0a8ae9eac87b03a626b2face8d9fcb371ab7b7d38a0f6b07147ebe70cb707c"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "9e886248839dc79f66bed308b33502b23356ba3989712faa84698ae7461afd09"
+        },
+        {
+          "path": "apps/web/src/routes/_app.tsx",
+          "sha256": "e6eeab416e1ec37bf4c8a3e28648b2b1dd918ad9b1838ff9509a4d961e0c1367"
+        },
+        {
+          "path": "apps/web/src/routes/_app/ai.tsx",
+          "sha256": "475563b597e66b9cb9bf1bdc2b5614749dcccc324982ff8ce9b265292970c665"
+        },
+        {
+          "path": "apps/web/src/routes/_app/charts.tsx",
+          "sha256": "9c8f718781f7801a7fa4ba508b2d91351bd101cbfbb99cd6cd9f0bbd2719757e"
+        },
+        {
+          "path": "apps/web/src/routes/_app/documents.tsx",
+          "sha256": "7a3877a8c7baca040095fe9af81d39a1afa8ae288a66082fb99f1aac0164d5df"
+        },
+        {
+          "path": "apps/web/src/routes/_app/videos.tsx",
+          "sha256": "6b329dfef1ea120159585eff39bba390d112b858c5243b7a16decb2b0ae43495"
+        },
+        {
+          "path": "apps/web/src/routes/admin/index.tsx",
+          "sha256": "84ca22382acae3eefd059daed9f80f457c130dae5c9f44b6fb28c8d0ddaeb540"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "8cc02ec59b094d0b78be3b89d821dfa14f387ac3b01322bc87d992e76fcc252f"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "805323e654ecbb523d59f29353400ca3681e491b2ea63231f49f9c18e01b795c"
+        },
+        {
+          "path": "apps/web/src/vite-env.d.ts",
+          "sha256": "74c6aef0d91aa33f26366bb58a090577068e6807675ef8a245fdc13985ca11ff"
+        },
+        {
+          "path": "apps/web/test/server.spec.ts",
+          "sha256": "fa18aba5bbd9964f18b47eee9fbc769d0c574acc9e06ff339dc3a847fc1920ef"
+        },
+        {
           "path": "apps/web/vite.config.ts",
-          "sha256": "294039ea9ee4ac884808fe67bd21501f4fb40edd038928886359fc8c9fb372cd"
+          "sha256": "4bc4419d9b1b14e5bf2a951df90de2ca0a1e171a4d620eaad3e9ed424212c061"
         },
         {
-          "path": "apps/web/src/routes/_app/wallet.tsx",
-          "sha256": "0fe8d0ec6fb90d3c90cda3ef22ebb3e525bc1ba04ca179dfa96b56c923806124"
+          "path": "docs/adr/004-web-spa.md",
+          "sha256": "2328c7d6a3a4ce549a74d70571824d9465ca2dfbc3bfdad0f37e3aa81bc8e444"
         },
         {
-          "path": "apps/web/src/routes/_app/electricity/order.tsx",
-          "sha256": "2274b7d14958780fae9fcf3bce6b4d192a3ecaa5ca06497148fd3fddc449eb4e"
+          "path": "pnpm-lock.yaml",
+          "sha256": "af3e90261ff4ae8938865dcbcd88c1fcfc4069f178335da423f98a447ea0d37d"
         },
         {
-          "path": "apps/web/src/routeTree.gen.ts",
-          "sha256": "53bce2b60af2a2d354b122da485256512d4c40631682836d2346e0b8ab3d21a3"
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4c13f62fe79f9cb94ff7428fd4c206e81607a42b2dc44b552c61bdbaf3e9dea0"
+        },
+        {
+          "path": "scripts/check-route-budgets.test.mjs",
+          "sha256": "7d019862b90543378ad6803607ab1c9e1652ab4c8dbb4da289a9a0d335a8f953"
         }
       ],
       "checks": [
-        "Fresh Vite production build succeeds and emits split route chunks; complete-route bundle budgets pass."
+        "Same Vite SPA builds separate auth and application entries. Customer layout, electricity, savings and wallet components are eager in the application entry; heavy AI, documents, charts, videos and admin routes remain split. Production navigation with later JavaScript held proves purchase paths need no lazy code.",
+        "Shared heavy-route skeleton remains visible, localized and motion-reduced with stable shell geometry; current browser proof and existing shared skeleton evidence cover the loading implementation. Future business functions on those routes are not claimed by this infrastructure criterion.",
+        "29 production Chromium cases pass, including language across both entry directions, auth success feedback, shell navigation and terms consent.59 web unit cases,3 budget-checker cases, types/scoped lint/format, dual production build and all42 unchanged budgets pass. Cold auth loads143.26/145.75/141.36KB gzip for login/register/recovery."
       ],
-      "limitations": [
-        "TanStack autoCodeSplitting still splits customer wallet and electricity purchase components, contrary to the explicit eager-loading requirement.",
-        "No complete layout-shift and reduced-motion acceptance evidence for every heavy lazy boundary. Future saving-plan, video and AI consumers are not certified."
-      ],
+      "limitations": [],
       "merged_prs": [
         12
       ],
       "historically_skipped": false,
       "evidence_reuse": [
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
-      ]
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R04-purchase-loading"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.04",
@@ -2427,15 +2544,15 @@
       "source_evidence": [
         {
           "path": "apps/web/vite.config.ts",
-          "sha256": "294039ea9ee4ac884808fe67bd21501f4fb40edd038928886359fc8c9fb372cd"
+          "sha256": "4bc4419d9b1b14e5bf2a951df90de2ca0a1e171a4d620eaad3e9ed424212c061"
         },
         {
           "path": "apps/web/server.js",
-          "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
+          "sha256": "f1c52a35555aa2902663943fc5ae310851afb6b1372d62bbed6a4ba0c25e734e"
         },
         {
           "path": "apps/web/test/server.spec.ts",
-          "sha256": "d90aa39b15e1653eaee6613fd1bde020344623e2e53d40f71f916c86f7af55f1"
+          "sha256": "fa18aba5bbd9964f18b47eee9fbc769d0c574acc9e06ff339dc3a847fc1920ef"
         },
         {
           "path": "apps/api/src/common/cache-control.interceptor.ts",
@@ -2532,7 +2649,8 @@
         }
       ],
       "evidence_reuse": [
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
       ],
       "source_refresh_review": "audit/evidence/step-reviews.json#R03-errors"
     },
@@ -5410,7 +5528,7 @@
         },
         {
           "path": "apps/web/src/routes/__root.tsx",
-          "sha256": "d9ac69be6c1c0ce6f1b563e84468ed119dd5e417c80ce1802790538cf4ef885c"
+          "sha256": "9e886248839dc79f66bed308b33502b23356ba3989712faa84698ae7461afd09"
         },
         {
           "path": "packages/shared/src/password-hash.ts",
@@ -5450,7 +5568,10 @@
         ],
         "review": "Reviewed selected reset/issuance/schema/contract changes and their shared callers. Unchanged behavior reuses valid evidence. Earlier unrelated source drift is not silently refreshed.",
         "record": "audit/evidence/step-reviews.json#R01-reset-otp-first"
-      }
+      },
+      "evidence_reuse": [
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.01.03",
@@ -7026,7 +7147,7 @@
         },
         {
           "path": "apps/web/src/routes/__root.tsx",
-          "sha256": "d9ac69be6c1c0ce6f1b563e84468ed119dd5e417c80ce1802790538cf4ef885c"
+          "sha256": "9e886248839dc79f66bed308b33502b23356ba3989712faa84698ae7461afd09"
         },
         {
           "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -7051,7 +7172,8 @@
         "audit/evidence/step-reviews.json#R01-profiles-onboarding",
         "audit/final-repair-checkpoint.json",
         "audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "audit/evidence/step-reviews.json#R01-crm-legal-documents"
+        "audit/evidence/step-reviews.json#R01-crm-legal-documents",
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
       ]
     },
     {
@@ -14110,7 +14232,7 @@
         },
         {
           "path": "apps/web/src/routes/__root.tsx",
-          "sha256": "d9ac69be6c1c0ce6f1b563e84468ed119dd5e417c80ce1802790538cf4ef885c"
+          "sha256": "9e886248839dc79f66bed308b33502b23356ba3989712faa84698ae7461afd09"
         },
         {
           "path": "apps/web/src/lib/customer-invoices.ts",
@@ -14128,7 +14250,8 @@
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections",
       "evidence_reuse": [
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
       ]
     },
     {
@@ -14202,7 +14325,7 @@
         },
         {
           "path": "apps/web/vite.config.ts",
-          "sha256": "294039ea9ee4ac884808fe67bd21501f4fb40edd038928886359fc8c9fb372cd"
+          "sha256": "4bc4419d9b1b14e5bf2a951df90de2ca0a1e171a4d620eaad3e9ed424212c061"
         },
         {
           "path": "packages/i18n/package.json",
@@ -14237,7 +14360,10 @@
           "apps/api/openapi.json"
         ],
         "evidence": "audit/evidence/step-reviews.json#R01-verification-policy"
-      }
+      },
+      "evidence_reuse": [
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
+      ]
     },
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.2.03.02",
@@ -16158,7 +16284,7 @@
         },
         {
           "path": "apps/web/src/routes/__root.tsx",
-          "sha256": "d9ac69be6c1c0ce6f1b563e84468ed119dd5e417c80ce1802790538cf4ef885c"
+          "sha256": "9e886248839dc79f66bed308b33502b23356ba3989712faa84698ae7461afd09"
         },
         {
           "path": "apps/web/e2e/notification-center-recovery.spec.ts",
@@ -16184,7 +16310,10 @@
         172
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R02-inbox-notification-policy"
+      "review_record": "audit/evidence/step-reviews.json#R02-inbox-notification-policy",
+      "evidence_reuse": [
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
+      ]
     },
     {
       "task_key": "05-notifications-documents-ai.md#T-05.02.04",
@@ -20316,7 +20445,7 @@
         },
         {
           "path": "apps/web/src/routes/register/verify.tsx",
-          "sha256": "065335299ba370f72ffc27b0ea77c15b5d70ca183f1a31fb66623feb1c145a09"
+          "sha256": "805323e654ecbb523d59f29353400ca3681e491b2ea63231f49f9c18e01b795c"
         },
         {
           "path": "apps/web/src/routes/terms.tsx",
@@ -20357,6 +20486,9 @@
       "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast",
       "limitations": [
         "Historical skipped task is partly implemented through brand colors, active/draft configuration and theme CSS. Required background/font/radius/spacing administration and per-user light/dark override are not implemented. Keep these new capabilities in B01 with exact T-06.03.05 prerequisites; do not count them as passed."
+      ],
+      "evidence_reuse": [
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
       ]
     },
     {
@@ -20452,7 +20584,7 @@
         },
         {
           "path": "apps/web/src/routes/register/verify.tsx",
-          "sha256": "065335299ba370f72ffc27b0ea77c15b5d70ca183f1a31fb66623feb1c145a09"
+          "sha256": "805323e654ecbb523d59f29353400ca3681e491b2ea63231f49f9c18e01b795c"
         },
         {
           "path": "apps/web/src/routes/terms.tsx",
@@ -20544,7 +20676,7 @@
         },
         {
           "path": "apps/web/src/components/ApplicationToaster.tsx",
-          "sha256": "b5889f63c873a6fa2c0bc7f511843c9dd71cd529bb397e63c7b7de99f0e2be32"
+          "sha256": "a20d6f1d3a73e3f8d88ad4acfac191659e86690c17ef4b710e300d0a8e6ba56c"
         },
         {
           "path": "packages/ui/src/components/ui/avatar.tsx",
@@ -20587,7 +20719,10 @@
       "historically_skipped": true,
       "reviewed_sha": "8f2f1d39eff4b88e6e13bb6f5eea01fa34fa8516",
       "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui",
-      "limitations": []
+      "limitations": [],
+      "evidence_reuse": [
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.01.04",
@@ -20898,11 +21033,11 @@
         },
         {
           "path": "apps/web/server.js",
-          "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
+          "sha256": "f1c52a35555aa2902663943fc5ae310851afb6b1372d62bbed6a4ba0c25e734e"
         },
         {
           "path": "apps/web/test/server.spec.ts",
-          "sha256": "d90aa39b15e1653eaee6613fd1bde020344623e2e53d40f71f916c86f7af55f1"
+          "sha256": "fa18aba5bbd9964f18b47eee9fbc769d0c574acc9e06ff339dc3a847fc1920ef"
         },
         {
           "path": "deploy/pilot/nginx.conf",
@@ -20933,7 +21068,10 @@
         "Native same-origin CSP reports carry session cookies without X-CSRF-Token. Authenticated requests currently return403. A narrow telemetry exception was asked once September13 and remains pending. No token exemption implemented.",
         "Deployment and enforcement after violation resolution remain external."
       ],
-      "review_record": "audit/evidence/step-reviews.json#R03-errors"
+      "review_record": "audit/evidence/step-reviews.json#R03-errors",
+      "evidence_reuse": [
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.02.04",
@@ -25354,6 +25492,26 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R03-consumer-theme-time",
       "note": "Refresh matching immediate-base styling/direction bindings; current focused browser and quality evidence supports unchanged domain behavior.38 older refreshes retained."
+    },
+    {
+      "source_revision": "7eecc144cb01bdafd9860b867ca163683b49a727",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.03.01",
+        "01-platform-infrastructure.md#T-01.03.03",
+        "01-platform-infrastructure.md#T-01.03.05",
+        "01-platform-infrastructure.md#T-04.04.02",
+        "01-platform-infrastructure.md#T-06.03.05",
+        "01-platform-infrastructure.md#T-06.03.06",
+        "02-auth-users-admin.md#T-02.01.02",
+        "02-auth-users-admin.md#T-03.01.01",
+        "02-auth-users-admin.md#T-04.01.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01",
+        "05-notifications-documents-ai.md#T-05.02.03"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R04-purchase-loading",
+      "note": "Refresh only immediate-base matching hashes after bounded source review and focused entry/auth/purchase/consent/server checks. Preserve older refresh queue."
     }
   ]
 }

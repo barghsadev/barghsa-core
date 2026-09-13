@@ -4,13 +4,13 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **8a83429b**. **178 verified /33 partial /111 pending** of322 claims. Saved PRs: **152 closed /23 open /126 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3062 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **7eecc144**. **179 verified /32 partial /111 pending** of322 claims. Saved PRs: **153 closed /22 open /126 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3132 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
 
-R03 consumer themes/timezone/direction verified:5 tasks and PR114/156 close locally.45 distinct browser cases pass, plus325 incidental web cases, types/lint/format/builds and42 unchanged budgets. Prior shared, domain and date arithmetic evidence retained. 69 immediate-base bindings refreshed. [Review](evidence/step-reviews.json#R03-consumer-theme-time).
+R04 purchase loading verified; PR12 closes locally.29 final browser cases,59 web cases,3 budget cases, types/lint/format/build and42 unchanged budgets pass. Cold auth loads remain below150KB. Both entry outputs must ship together. 12 immediate-base bindings refreshed; earlier domain proof retained. [Review](evidence/step-reviews.json#R04-purchase-loading).
 
 ## Next action
 
-R04: make customer electricity, savings and wallet purchase paths eager within unchanged complete-route budgets. Review PR12 and T-01.03.03 against current imports and saved failed attempts; preserve Vite SPA and valid evidence.
+R05: resolve strict API/web/worker/DB dependency declarations without blanket suppression; review geoip-country maintenance and saved repeated PR47.
 
 R03 native CSP question remains pending: signed-in reports return403 because browsers cannot add the CSRF header. Do not reask or waive the requirement. PR61 and other external prerequisites stay open. Then R05/V01/R06/V02/B01. Whole plan unfinished. Apply migration0132 before updated API/workers; historical traces stay NULL.
 
