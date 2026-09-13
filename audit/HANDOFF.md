@@ -4,13 +4,13 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **26ef84b7**. **170 verified /40 partial /112 pending** of322 claims. Saved PRs: **149 closed /26 open /126 unreviewed**,301 total.58 skips:3 verified/5 partial/50 pending.2966 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **0b962f76**. **172 verified /38 partial /112 pending** of322 claims. Saved PRs: **150 closed /25 open /126 unreviewed**,301 total.58 skips:4 verified/4 partial/50 pending.2992 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
 
-R03 error/CSP repairs are reviewed at26ef84b7: private application messages and unregistered codes suppressed,59 shared codes have metadata, six missing FA/EN messages supplied, fresh CSP nonces match HTML/proxy headers, and native reports are parsed/validated/sanitized.186 distinct error/compatibility cases across recorded runs plus9 CSP HTTP,50 i18n,13 server and2 real Chromium cases support the work. Final types/lint/format and42 budgets pass; real proxy checks pass. [Review](evidence/step-reviews.json#R03-errors). Four immediate-base bindings refreshed;38 older retained. Prior theme/core-control/consent evidence remains valid.
+R03 correlation/catalogue complete locally at0b962f76. Both task acceptances and saved PR29 review close. All213 shared error definitions have metadata and safe bilingual messages. API requests retain IDs through auth/notification/AI queues and safe worker diagnostics.149 distinct API and106 worker cases across recorded runs pass. Types/lint/format/snapshot checks pass;42 catalogue build budgets reused. Migration0132 adds only three nullable trace fields and must precede updated API/workers. Historical rows retain NULL. 42 immediate-base bindings refreshed;38 older retained. [Review](evidence/step-reviews.json#R03-correlation).
 
 ## Next action
 
-Continue **R03-correlation**, exact PR29 and two qualified task keys in progress.json. Current API notification/auth outboxes do not consistently persist the originating request ID through worker dispatch/logs. Preserve delivery, transactional and retry semantics. Complete metadata/catalogue disposition for151 preserved legacy public error identifiers before closing T-06.01.04.
+Continue R03 auxiliary toast/command/avatar/progress and exact skeleton/loading states. Reuse prior core-control/theme tests; then review remaining locale/timezone consumers. CSP decision remains pending; do not reask. Full regression stays V02.
 
 CSP decision asked once September13: native reports carry same-origin session cookies but cannot add X-CSRF-Token. Signed-in collection currently returns403. Safe parsing/nonces are committed; no CSRF exception implemented. Do not reask or silently waive the requirement. PR61 remains open for this and external rollout evidence.
 

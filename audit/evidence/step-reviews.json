@@ -17946,6 +17946,242 @@
         "https://www.w3.org/TR/CSP/#report-violation",
         "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/report-uri"
       ]
+    },
+    {
+      "id": "R03-correlation",
+      "date": "2026-09-13",
+      "source_revision": "0b962f76ddbcb953c60ad963c26399b657bd2fed",
+      "base_revision": "4d701cc46a2c156fc0c74c6f1e26b3236c7474fb",
+      "product_commits": [
+        "0fa7b4f8",
+        "0b962f76"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.05.01",
+        "01-platform-infrastructure.md#T-06.01.04"
+      ],
+      "summary": "Complete safe shared error metadata and preserve originating request IDs through current queued delivery and model tests. Both local task acceptances and saved PR29 review close.",
+      "review": [
+        "All62 root and151 preserved legacy public codes now have shared HTTP status/title/retryable metadata. The separate domain export avoids loading the legacy catalogue in frontend entry points. Generic409/422/503 status defaults no longer select an unrelated domain error. Exhaustive English/Persian filter checks cover all213 codes; unknown identifiers and private messages remain suppressed.",
+        "Nest service logging now reads the request AsyncLocalStorage context. Concurrent request contexts remain isolated. Middleware/header/filter behavior is preserved.",
+        "Production migration0132 adds only three nullable text correlation_id columns to notification_outbox, auth_delivery_outbox and ai_model_test_jobs. Generated snapshot differs from0131 only by these columns and snapshot identity. Apply migration before updated API/workers. Historical rows and old writers remain NULL; no backfill, resend or invented historical IDs.",
+        "Current API notification, registration/login/reset/resend, staff activation and model-test producers persist the request ID in their existing transaction. Worker inputs and safe diagnostics preserve it across retries. Existing expiry scanner IDs propagate into notices. Scheduled reminders without a request keep NULL.",
+        "Correlation fields remain outside customer template variables and provider request content. Worker logs contain job/outbox identifiers and outcomes, never destination, message body, credentials or provider error text. Auth lease loss logs stale rather than claiming a persisted retry.",
+        "Real HTTP/DB registration, staff and AI queue tests bind the stored ID to the response header. Verification cases continue through actual compiled worker/email/SMS transports; safe diagnostics carry the same ID. Worker checks cover retries, secret erasure, parallel jobs, legacy rows, lease fencing, idempotency and reminder/expiry transactions.",
+        "Initial worker run passed95/106. Eleven failures came from two historical-schema fixtures missing the new column. Fixtures now apply the exact notification statement from0132; all22 affected cases pass. The other84 passing cases are reused. Final types/lint/format/snapshot checks pass."
+      ],
+      "verification": {
+        "api": "115 correlation/API cases pass:114 across8 suites plus1 AI queue HTTP case. Domain catalogue/filter checkpoint54 cases passes;20 HTTP/CSP cases overlap, yielding149 distinct API cases across these runs. Prior error compatibility evidence remains valid.",
+        "worker": "106 distinct cases across7 suites:84 passing unaffected cases retained;22 fixture-dependent cases pass on final rerun.",
+        "quality": "API/worker/DB/shared types, scoped ESLint/Prettier, diff check and database snapshot check pass. Domain catalogue production web build/web types and42 unchanged budgets pass. Correlation work changes no runtime frontend bundle; reuse those budgets. Full regression remainsV02."
+      },
+      "remaining": [
+        "Native authenticated CSP reports still require the pending narrow CSRF decision. PR61 remains open; no exception implemented.",
+        "Continue R03 auxiliary UI and remaining consumer/timezone/skeleton acceptance. Unbuilt editor/per-user controls remain B01.",
+        "Deploy migration0132 before updated API/workers. No production migration, provider send, push, merge or rollout claimed."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
+          "sha256": "8ad38badace3eb15bb5878f4d876bb30196d7cc3b9b0fce70f445f95fd6398de"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-model-test-queue.service.ts",
+          "sha256": "1337d434af233e488f588e2b20d0cb45d2cca6589864466e923c960ed40c1ed7"
+        },
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "92153b01d71a46bb9716b0929844abe2c8cc9965c9d04dc0751549f799ad0787"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "c00368b3927beeaffd54088d14db72396a95fe074f33b82b573186e4bdd7b96e"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
+        },
+        {
+          "path": "apps/api/src/common/correlation-id.middleware.ts",
+          "sha256": "b127659fda54ecb4543d5dbbbfbcb873538f912ce5e0cf4d93ee4043ac36903e"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.test.ts",
+          "sha256": "30a92c68318ec0edbe94b1d685adf15e9b0c5561205dde97f75e776be85f7d91"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.ts",
+          "sha256": "d751f6cfb30907eb95ea9a281326a6ac51399e185f9957c38d70f18438e7d561"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "e4419dd63b812492a33517716212749e9023ae90331a5c7ee3118524f2be255c"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "ce9eee35ff8da4628af7715b572d127001a749567bb7797656140fb0012dd637"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "314598b50cebb963e7bef9d4d65b8b763711590620baa7c3e31ce6216aef520d"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "cc4a7d13766192635a5bd7dca711b1c2fdd41bd757f0d50a06e8ed0872861a83"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.service.ts",
+          "sha256": "519d62bc07a244392c00cdc599196a6da6e9c8a6a270fa7a29da79193820ef44"
+        },
+        {
+          "path": "apps/api/test/http-exception-filter.spec.ts",
+          "sha256": "12891154543c8e8f2b6fdc0ffd70b5f7471081c05ba39523f9aad79b5e7340be"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.test.ts",
+          "sha256": "ff34be1140e57480af95a12bc914aee7a3fd6dbe26153a917cfa3f2d3565933c"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.ts",
+          "sha256": "919105027df1b6e911fc879e8f3a32445754f73ae708802b80539cfabade3e13"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/providers.ts",
+          "sha256": "9c5b33f5e0bf4a448a7b0dbb8cb70fba1b844ba188fd88033b77c0cddf484a07"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+          "sha256": "1b7969b84ab397be9ab1d6cc5d4eee3a38743260625b6588401a81faae9b4178"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.ts",
+          "sha256": "71e9c1dd13e7fb07b2b12669599e41a3c18631e7244dd551bc32748c8f2df239"
+        },
+        {
+          "path": "apps/worker/src/delivery-log.ts",
+          "sha256": "89f80840755a7a3e24bfbd658d64039f193a74bfdb9f68ef8608c3b922641224"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
+          "sha256": "6b50f3c9d3053bbfd95dfc0aa568a29610cca52d45009a8a6b9348a9f14bff42"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.test.ts",
+          "sha256": "12052b0427d329584d7c248133f58ec228df3761a4111db7cedb412b97af775b"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.ts",
+          "sha256": "c5f4df2aa92f1da3ec5f56adbd337c5f3423ea686d6e0dab72fe210f738f0d60"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-writer.ts",
+          "sha256": "12ee525da161401e0ab04d1adbefea10a69e3522a8fccb880373fefa366c1136"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+          "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+          "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
+        },
+        {
+          "path": "packages/db/drizzle/production/0132_outbox_request_correlation.sql",
+          "sha256": "e555d702e4cc701e3b1748836a378116662cfdc403980d37610428e39357f626"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0132_snapshot.json",
+          "sha256": "19223beeadae635dffb3322c7ab9ca1921089b6b200ef752bb2b3a252ceb6ffc"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "8e502e9d740958f0afb974a5c36e92e6979c910e08c733db93106a5bae0fba8a"
+        },
+        {
+          "path": "packages/db/src/schema/ai-model-test-jobs.ts",
+          "sha256": "b9dc64fb5d29e530e29a00a59b0e51c206be3410a18ed7ce01aea0cb41112005"
+        },
+        {
+          "path": "packages/db/src/schema/auth-delivery-outbox.ts",
+          "sha256": "fb949b3ea85b96431787c7ed93453ab4d2702d58bfa45930b55b913829bd3929"
+        },
+        {
+          "path": "packages/db/src/schema/notification-outbox.ts",
+          "sha256": "625ade5a935282f9fdcbb34358bf43358dc48671484a6ada004f3d2a5ae2e4f7"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "ca0358aeffd4889e2162ac49c3983c250a2b267a87087ea1a2197e394cea5f91"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "a4ec5ba5bd63be6015204581aa02250e2b903c82f7622d94799e6edaf762a792"
+        },
+        {
+          "path": "packages/shared/src/errors/domain-error-codes.ts",
+          "sha256": "2cdff0f41f08ba3949f843b3f9ef811c21f2569afa38fc320738257cdf064390"
+        },
+        {
+          "path": "packages/shared/src/errors/error-codes.ts",
+          "sha256": "aa1a2afe4496bc01d20c1892809eb598ccb06df60d78380ff9cdc32a3d427e1d"
+        },
+        {
+          "path": "packages/shared/src/notifications/notification-transport.ts",
+          "sha256": "086621e1c492470c4d021e40e8be46b730752489aaf3f64be963ecd2d66e7aa8"
+        }
+      ],
+      "logs": [
+        "/tmp/r03-correlation-ai-http.log",
+        "/tmp/r03-correlation-api-types.log",
+        "/tmp/r03-correlation-api.log",
+        "/tmp/r03-correlation-db-types.log",
+        "/tmp/r03-correlation-diff.log",
+        "/tmp/r03-correlation-fixtures-format.log",
+        "/tmp/r03-correlation-format-check.log",
+        "/tmp/r03-correlation-format-final.log",
+        "/tmp/r03-correlation-format.log",
+        "/tmp/r03-correlation-generate.log",
+        "/tmp/r03-correlation-lint.log",
+        "/tmp/r03-correlation-shared-types.log",
+        "/tmp/r03-correlation-snapshot.log",
+        "/tmp/r03-correlation-worker-fixtures.log",
+        "/tmp/r03-correlation-worker-types.log",
+        "/tmp/r03-correlation-worker.log",
+        "/tmp/r03-domain-api-types.log",
+        "/tmp/r03-domain-budgets.log",
+        "/tmp/r03-domain-catalogue-format.log",
+        "/tmp/r03-domain-catalogue-http.log",
+        "/tmp/r03-domain-fallback-baseline.log",
+        "/tmp/r03-domain-fallback-format.log",
+        "/tmp/r03-domain-format-check.log",
+        "/tmp/r03-domain-lint.log",
+        "/tmp/r03-domain-web-build.log",
+        "/tmp/r03-domain-web-types.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 29,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.05.01"
+          ],
+          "reason": "Exact error/filter/request-correlation criteria verified locally, including queued work. No saved historical deferrals remain.",
+          "source_revision": "0b962f76ddbcb953c60ad963c26399b657bd2fed",
+          "evidence": "audit/evidence/step-reviews.json#R03-correlation"
+        }
+      ]
     }
   ]
 }

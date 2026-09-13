@@ -561,7 +561,7 @@
         },
         {
           "path": "packages/shared/package.json",
-          "sha256": "76bfa02fc11f613b29feaaf937efed9bff3a8d7b6ec9bff8fb51c1d87b5155a7"
+          "sha256": "a4ec5ba5bd63be6015204581aa02250e2b903c82f7622d94799e6edaf762a792"
         },
         {
           "path": "packages/eslint-config/package.json",
@@ -2598,81 +2598,179 @@
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.05.01",
-      "status": "partial",
-      "reviewed_sha": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+      "status": "acceptance_verified",
+      "reviewed_sha": "0b962f76ddbcb953c60ad963c26399b657bd2fed",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 217,
       "requirement": "- **T-01.05.01:** Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware`\n  - **Notes:** Filter catches `HttpException`, `ZodError` (validation), and unhandled `Error`. Maps to codes from `@barghsa/shared/errors`. Resolves localized messages via i18n service. Logs the error with correlation ID and request metadata at appropriate severity (debug for 4xx, error for 5xx). Middleware generates UUIDv7 correlation ID on every request, stores in `cls-rtracer` or `AsyncLocalStorage`, and sets `X-Correlation-ID` response header. Backend services log correlation ID for traceability.\n  - **Dependencies:** T-06.01.04 (error codes), S-06.02 (i18n)\n  - **Complexity:** M",
       "requirement_sha256": "2b33d7de5e8e1e323a8fb578b17cadefca11629138b2e7a7d609c2b28b9541b5",
       "source_evidence": [
         {
-          "path": "apps/api/src/admin/gift-code-http.integration.test.ts",
-          "sha256": "a310dbadfaca6ff7b9cdcadf49d4f99d67d8c651d5c1b5d03739a30551f4ae76"
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
+          "sha256": "8ad38badace3eb15bb5878f4d876bb30196d7cc3b9b0fce70f445f95fd6398de"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-model-test-queue.service.ts",
+          "sha256": "1337d434af233e488f588e2b20d0cb45d2cca6589864466e923c960ed40c1ed7"
         },
         {
           "path": "apps/api/src/app.factory.ts",
-          "sha256": "f81f7f7d69220c5e8bcf2a6f4e25d91ea4535f1a9f3aa2c1ddd4bc0005c4cb8f"
+          "sha256": "92153b01d71a46bb9716b0929844abe2c8cc9965c9d04dc0751549f799ad0787"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "c00368b3927beeaffd54088d14db72396a95fe074f33b82b573186e4bdd7b96e"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
+        },
+        {
+          "path": "apps/api/src/common/correlation-id.middleware.ts",
+          "sha256": "b127659fda54ecb4543d5dbbbfbcb873538f912ce5e0cf4d93ee4043ac36903e"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.test.ts",
+          "sha256": "30a92c68318ec0edbe94b1d685adf15e9b0c5561205dde97f75e776be85f7d91"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.ts",
+          "sha256": "d751f6cfb30907eb95ea9a281326a6ac51399e185f9957c38d70f18438e7d561"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "e4419dd63b812492a33517716212749e9023ae90331a5c7ee3118524f2be255c"
         },
         {
           "path": "apps/api/src/common/http-exception.filter.ts",
-          "sha256": "f7cc498fd7c57f800b8bb87056f49e3e8ce6f4162b20e6d34dd56bfa35fccb22"
+          "sha256": "ce9eee35ff8da4628af7715b572d127001a749567bb7797656140fb0012dd637"
         },
         {
-          "path": "apps/api/src/common/public-domain-error-codes.ts",
-          "sha256": "fe7ecc2dc41948a65b88f6b1cde86b9c7c3da28f90d4507a5d41fef0b1e034c0"
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
         },
         {
-          "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
-          "sha256": "aa66d8c949bb949cf38c8122ba9e011c2a05bc44d1bfcf905e229c864ee541fa"
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "314598b50cebb963e7bef9d4d65b8b763711590620baa7c3e31ce6216aef520d"
         },
         {
-          "path": "apps/api/src/csp-report/csp-report.controller.ts",
-          "sha256": "1e941552eeb2e5d323bffde93fd4622b6d704cb52dcf4e91cb8fd5059e41b79b"
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "cc4a7d13766192635a5bd7dca711b1c2fdd41bd757f0d50a06e8ed0872861a83"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.service.ts",
+          "sha256": "519d62bc07a244392c00cdc599196a6da6e9c8a6a270fa7a29da79193820ef44"
         },
         {
           "path": "apps/api/test/http-exception-filter.spec.ts",
-          "sha256": "571471a9bc2ea2f66609ac70aa290c8cd9c7a46e7a5d96a005743ee570bba987"
+          "sha256": "12891154543c8e8f2b6fdc0ffd70b5f7471081c05ba39523f9aad79b5e7340be"
         },
         {
-          "path": "apps/web/e2e/csp-reports.spec.ts",
-          "sha256": "e7d0a90fa8a79dff3cb5824290a3d698da461e58a79d09552deb6c89f194a508"
+          "path": "apps/worker/src/ai-models/test-runner.test.ts",
+          "sha256": "ff34be1140e57480af95a12bc914aee7a3fd6dbe26153a917cfa3f2d3565933c"
         },
         {
-          "path": "apps/web/server.js",
-          "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
+          "path": "apps/worker/src/ai-models/test-runner.ts",
+          "sha256": "919105027df1b6e911fc879e8f3a32445754f73ae708802b80539cfabade3e13"
         },
         {
-          "path": "apps/web/test/server.spec.ts",
-          "sha256": "d90aa39b15e1653eaee6613fd1bde020344623e2e53d40f71f916c86f7af55f1"
+          "path": "apps/worker/src/auth-delivery/providers.ts",
+          "sha256": "9c5b33f5e0bf4a448a7b0dbb8cb70fba1b844ba188fd88033b77c0cddf484a07"
         },
         {
-          "path": "deploy/pilot/nginx.conf",
-          "sha256": "76ee4ab925fddae4824f857f1b500483f6dba536210d1513af4bdef658355157"
+          "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+          "sha256": "1b7969b84ab397be9ab1d6cc5d4eee3a38743260625b6588401a81faae9b4178"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.ts",
+          "sha256": "71e9c1dd13e7fb07b2b12669599e41a3c18631e7244dd551bc32748c8f2df239"
+        },
+        {
+          "path": "apps/worker/src/delivery-log.ts",
+          "sha256": "89f80840755a7a3e24bfbd658d64039f193a74bfdb9f68ef8608c3b922641224"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
+          "sha256": "6b50f3c9d3053bbfd95dfc0aa568a29610cca52d45009a8a6b9348a9f14bff42"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.test.ts",
+          "sha256": "12052b0427d329584d7c248133f58ec228df3761a4111db7cedb412b97af775b"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.ts",
+          "sha256": "c5f4df2aa92f1da3ec5f56adbd337c5f3423ea686d6e0dab72fe210f738f0d60"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-writer.ts",
+          "sha256": "12ee525da161401e0ab04d1adbefea10a69e3522a8fccb880373fefa366c1136"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+          "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+          "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
+        },
+        {
+          "path": "packages/db/drizzle/production/0132_outbox_request_correlation.sql",
+          "sha256": "e555d702e4cc701e3b1748836a378116662cfdc403980d37610428e39357f626"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0132_snapshot.json",
+          "sha256": "19223beeadae635dffb3322c7ab9ca1921089b6b200ef752bb2b3a252ceb6ffc"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "8e502e9d740958f0afb974a5c36e92e6979c910e08c733db93106a5bae0fba8a"
+        },
+        {
+          "path": "packages/db/src/schema/ai-model-test-jobs.ts",
+          "sha256": "b9dc64fb5d29e530e29a00a59b0e51c206be3410a18ed7ce01aea0cb41112005"
+        },
+        {
+          "path": "packages/db/src/schema/auth-delivery-outbox.ts",
+          "sha256": "fb949b3ea85b96431787c7ed93453ab4d2702d58bfa45930b55b913829bd3929"
+        },
+        {
+          "path": "packages/db/src/schema/notification-outbox.ts",
+          "sha256": "625ade5a935282f9fdcbb34358bf43358dc48671484a6ada004f3d2a5ae2e4f7"
         },
         {
           "path": "packages/i18n/src/auth.ts",
-          "sha256": "9819141838be566fa1ab0eaaa39745993c53f22e7373a83a69f1f20385a97ba1"
+          "sha256": "ca0358aeffd4889e2162ac49c3983c250a2b267a87087ea1a2197e394cea5f91"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "a4ec5ba5bd63be6015204581aa02250e2b903c82f7622d94799e6edaf762a792"
+        },
+        {
+          "path": "packages/shared/src/errors/domain-error-codes.ts",
+          "sha256": "2cdff0f41f08ba3949f843b3f9ef811c21f2569afa38fc320738257cdf064390"
         },
         {
           "path": "packages/shared/src/errors/error-codes.ts",
-          "sha256": "eb3939ab2803138aa18a77c020aaa083e7bbea878bdec600c40174adbb25fdd2"
+          "sha256": "aa1a2afe4496bc01d20c1892809eb598ccb06df60d78380ff9cdc32a3d427e1d"
         },
         {
-          "path": "scripts/check-pilot-proxy.mjs",
-          "sha256": "beb268d547e59dfe5f9d557991c992809eae97dec947a7f6dd0299a6756aa22f"
-        },
-        {
-          "path": "scripts/proxy-fixture.mjs",
-          "sha256": "37431a4bb49b6674a35c29766a4c9d8192b16ce648ed6570aba4637ef3785a24"
+          "path": "packages/shared/src/notifications/notification-transport.ts",
+          "sha256": "086621e1c492470c4d021e40e8be46b730752489aaf3f64be963ecd2d66e7aa8"
         }
       ],
       "checks": [
-        "audit/evidence/step-reviews.json#R03-errors",
-        "See consolidated review for exact baseline/final populations, supersession and source-bound evidence."
+        "audit/evidence/step-reviews.json#R03-correlation",
+        "149 distinct API and106 worker cases across recorded runs; current quality gates and retained42 route budgets pass."
       ],
-      "limitations": [
-        "Queued notification and auth delivery work does not consistently persist/propagate the originating request correlation ID. Continue R03-correlation across API producers, worker dispatch and logs; preserve transactional and retry semantics."
-      ],
+      "limitations": [],
       "merged_prs": [
         29
       ],
@@ -2723,9 +2821,94 @@
           "historically_skipped": false,
           "remaining_work_reconciled_at": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
           "remaining_work_evidence": "audit/evidence/acceptance-refresh.json"
+        },
+        {
+          "task_key": "01-platform-infrastructure.md#T-01.05.01",
+          "status": "partial",
+          "reviewed_sha": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+          "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+          "requirement_line": 217,
+          "requirement": "- **T-01.05.01:** Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware`\n  - **Notes:** Filter catches `HttpException`, `ZodError` (validation), and unhandled `Error`. Maps to codes from `@barghsa/shared/errors`. Resolves localized messages via i18n service. Logs the error with correlation ID and request metadata at appropriate severity (debug for 4xx, error for 5xx). Middleware generates UUIDv7 correlation ID on every request, stores in `cls-rtracer` or `AsyncLocalStorage`, and sets `X-Correlation-ID` response header. Backend services log correlation ID for traceability.\n  - **Dependencies:** T-06.01.04 (error codes), S-06.02 (i18n)\n  - **Complexity:** M",
+          "requirement_sha256": "2b33d7de5e8e1e323a8fb578b17cadefca11629138b2e7a7d609c2b28b9541b5",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/gift-code-http.integration.test.ts",
+              "sha256": "a310dbadfaca6ff7b9cdcadf49d4f99d67d8c651d5c1b5d03739a30551f4ae76"
+            },
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "f81f7f7d69220c5e8bcf2a6f4e25d91ea4535f1a9f3aa2c1ddd4bc0005c4cb8f"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "f7cc498fd7c57f800b8bb87056f49e3e8ce6f4162b20e6d34dd56bfa35fccb22"
+            },
+            {
+              "path": "apps/api/src/common/public-domain-error-codes.ts",
+              "sha256": "fe7ecc2dc41948a65b88f6b1cde86b9c7c3da28f90d4507a5d41fef0b1e034c0"
+            },
+            {
+              "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
+              "sha256": "aa66d8c949bb949cf38c8122ba9e011c2a05bc44d1bfcf905e229c864ee541fa"
+            },
+            {
+              "path": "apps/api/src/csp-report/csp-report.controller.ts",
+              "sha256": "1e941552eeb2e5d323bffde93fd4622b6d704cb52dcf4e91cb8fd5059e41b79b"
+            },
+            {
+              "path": "apps/api/test/http-exception-filter.spec.ts",
+              "sha256": "571471a9bc2ea2f66609ac70aa290c8cd9c7a46e7a5d96a005743ee570bba987"
+            },
+            {
+              "path": "apps/web/e2e/csp-reports.spec.ts",
+              "sha256": "e7d0a90fa8a79dff3cb5824290a3d698da461e58a79d09552deb6c89f194a508"
+            },
+            {
+              "path": "apps/web/server.js",
+              "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
+            },
+            {
+              "path": "apps/web/test/server.spec.ts",
+              "sha256": "d90aa39b15e1653eaee6613fd1bde020344623e2e53d40f71f916c86f7af55f1"
+            },
+            {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "76ee4ab925fddae4824f857f1b500483f6dba536210d1513af4bdef658355157"
+            },
+            {
+              "path": "packages/i18n/src/auth.ts",
+              "sha256": "9819141838be566fa1ab0eaaa39745993c53f22e7373a83a69f1f20385a97ba1"
+            },
+            {
+              "path": "packages/shared/src/errors/error-codes.ts",
+              "sha256": "eb3939ab2803138aa18a77c020aaa083e7bbea878bdec600c40174adbb25fdd2"
+            },
+            {
+              "path": "scripts/check-pilot-proxy.mjs",
+              "sha256": "beb268d547e59dfe5f9d557991c992809eae97dec947a7f6dd0299a6756aa22f"
+            },
+            {
+              "path": "scripts/proxy-fixture.mjs",
+              "sha256": "37431a4bb49b6674a35c29766a4c9d8192b16ce648ed6570aba4637ef3785a24"
+            }
+          ],
+          "checks": [
+            "audit/evidence/step-reviews.json#R03-errors",
+            "See consolidated review for exact baseline/final populations, supersession and source-bound evidence."
+          ],
+          "limitations": [
+            "Queued notification and auth delivery work does not consistently persist/propagate the originating request correlation ID. Continue R03-correlation across API producers, worker dispatch and logs; preserve transactional and retry semantics."
+          ],
+          "merged_prs": [
+            29
+          ],
+          "historically_skipped": false,
+          "remaining_work_reconciled_at": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+          "remaining_work_evidence": "audit/evidence/acceptance-refresh.json",
+          "review_record": "audit/evidence/step-reviews.json#R03-errors"
         }
       ],
-      "review_record": "audit/evidence/step-reviews.json#R03-errors"
+      "review_record": "audit/evidence/step-reviews.json#R03-correlation"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.01.01",
@@ -3348,7 +3531,7 @@
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "bcc3045f44b52c81d47b53bc31b86a6aee0022f36a01ff8ae272891f93a4858f"
+          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
         },
         {
           "path": "apps/api/src/common/error-http.integration.test.ts",
@@ -3635,11 +3818,11 @@
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "fadf34273f6cf1b5d4fd7d1f6a039fa09facc112dcd936bfeb72c212c78d9685"
+          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
         },
         {
           "path": "apps/api/src/provider-config/email-provider-config.service.ts",
@@ -3972,7 +4155,7 @@
         },
         {
           "path": "packages/i18n/src/auth.ts",
-          "sha256": "9819141838be566fa1ab0eaaa39745993c53f22e7373a83a69f1f20385a97ba1"
+          "sha256": "ca0358aeffd4889e2162ac49c3983c250a2b267a87087ea1a2197e394cea5f91"
         }
       ],
       "checks": [
@@ -4220,7 +4403,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "fadf34273f6cf1b5d4fd7d1f6a039fa09facc112dcd936bfeb72c212c78d9685"
+          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
         },
         {
           "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
@@ -4359,7 +4542,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "fadf34273f6cf1b5d4fd7d1f6a039fa09facc112dcd936bfeb72c212c78d9685"
+          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
         },
         {
           "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
@@ -4442,7 +4625,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "fadf34273f6cf1b5d4fd7d1f6a039fa09facc112dcd936bfeb72c212c78d9685"
+          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
         },
         {
           "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
@@ -5425,7 +5608,7 @@
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "bcc3045f44b52c81d47b53bc31b86a6aee0022f36a01ff8ae272891f93a4858f"
+          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
         },
         {
           "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -6580,7 +6763,7 @@
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "bcc3045f44b52c81d47b53bc31b86a6aee0022f36a01ff8ae272891f93a4858f"
+          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
         }
       ],
       "checks": [
@@ -6700,7 +6883,7 @@
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "bcc3045f44b52c81d47b53bc31b86a6aee0022f36a01ff8ae272891f93a4858f"
+          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
         },
         {
           "path": "apps/api/src/session/csrf.guard.ts",
@@ -7248,7 +7431,7 @@
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "bcc3045f44b52c81d47b53bc31b86a6aee0022f36a01ff8ae272891f93a4858f"
+          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
         },
         {
           "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -8155,7 +8338,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "1c4558223bcbc75a352d810608990f1e492cf721491e5e6d8deac2230eba90a2"
+          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
         },
         {
           "path": "apps/api/src/admin/approval-notifications.ts",
@@ -8459,7 +8642,7 @@
         },
         {
           "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-          "sha256": "fa06908b9c86b30a6573c5a7fb77a7291d8e0cf6d0da5ed9a72af948d83a9671"
+          "sha256": "cc4a7d13766192635a5bd7dca711b1c2fdd41bd757f0d50a06e8ed0872861a83"
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
@@ -8491,7 +8674,7 @@
         },
         {
           "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
-          "sha256": "72df4135243d7ecf96d26fcd24d6171104dd809a33e9ea1f8be4f1d1d9a59148"
+          "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
         },
         {
           "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
@@ -8499,7 +8682,7 @@
         },
         {
           "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
-          "sha256": "37341347b5826dbb5dfe6548d1caf54c72a03759d9018aa5543016aac875a470"
+          "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
@@ -8578,7 +8761,7 @@
         },
         {
           "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-          "sha256": "fa06908b9c86b30a6573c5a7fb77a7291d8e0cf6d0da5ed9a72af948d83a9671"
+          "sha256": "cc4a7d13766192635a5bd7dca711b1c2fdd41bd757f0d50a06e8ed0872861a83"
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
@@ -8783,7 +8966,7 @@
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-          "sha256": "09e9540500f64a15ba640c7e84fefb04195a6a547765a8b671e19396882c720b"
+          "sha256": "314598b50cebb963e7bef9d4d65b8b763711590620baa7c3e31ce6216aef520d"
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -8870,7 +9053,7 @@
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-          "sha256": "09e9540500f64a15ba640c7e84fefb04195a6a547765a8b671e19396882c720b"
+          "sha256": "314598b50cebb963e7bef9d4d65b8b763711590620baa7c3e31ce6216aef520d"
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -8898,7 +9081,7 @@
         },
         {
           "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
-          "sha256": "72df4135243d7ecf96d26fcd24d6171104dd809a33e9ea1f8be4f1d1d9a59148"
+          "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
         },
         {
           "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
@@ -8906,7 +9089,7 @@
         },
         {
           "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
-          "sha256": "37341347b5826dbb5dfe6548d1caf54c72a03759d9018aa5543016aac875a470"
+          "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
         },
         {
           "path": "docs/operations/notification-delivery-recovery.md",
@@ -8978,7 +9161,7 @@
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-          "sha256": "09e9540500f64a15ba640c7e84fefb04195a6a547765a8b671e19396882c720b"
+          "sha256": "314598b50cebb963e7bef9d4d65b8b763711590620baa7c3e31ce6216aef520d"
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -9168,7 +9351,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "1c4558223bcbc75a352d810608990f1e492cf721491e5e6d8deac2230eba90a2"
+          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
@@ -9243,7 +9426,7 @@
       "source_evidence": [
         {
           "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
-          "sha256": "37341347b5826dbb5dfe6548d1caf54c72a03759d9018aa5543016aac875a470"
+          "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
         },
         {
           "path": "apps/worker/src/wallet/online-topup-expiry-scanner.test.ts",
@@ -9251,7 +9434,7 @@
         },
         {
           "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
-          "sha256": "72df4135243d7ecf96d26fcd24d6171104dd809a33e9ea1f8be4f1d1d9a59148"
+          "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
         },
         {
           "path": "apps/worker/src/main.ts",
@@ -9371,7 +9554,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/wallet/chargeback-alert.service.ts",
-          "sha256": "14d8d5d0c919d8e5f0fd799a68b9f2b2bdf745b86aa9c48bf4cbd3f2f2cabf3e"
+          "sha256": "519d62bc07a244392c00cdc599196a6da6e9c8a6a270fa7a29da79193820ef44"
         },
         {
           "path": "apps/api/src/admin/chargeback-alert.controller.ts",
@@ -12774,7 +12957,7 @@
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
-          "sha256": "3c0dac8623a3b4e7237a7a1b97e03d561c0f04b3375d2ff556106655f3a86a25"
+          "sha256": "6b50f3c9d3053bbfd95dfc0aa568a29610cca52d45009a8a6b9348a9f14bff42"
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.test.ts",
@@ -13175,7 +13358,7 @@
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
-          "sha256": "3c0dac8623a3b4e7237a7a1b97e03d561c0f04b3375d2ff556106655f3a86a25"
+          "sha256": "6b50f3c9d3053bbfd95dfc0aa568a29610cca52d45009a8a6b9348a9f14bff42"
         },
         {
           "path": "apps/worker/src/invoices/reminder-sender.test.ts",
@@ -14312,7 +14495,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "1c4558223bcbc75a352d810608990f1e492cf721491e5e6d8deac2230eba90a2"
+          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
         },
         {
           "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
@@ -14432,11 +14615,11 @@
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "fadf34273f6cf1b5d4fd7d1f6a039fa09facc112dcd936bfeb72c212c78d9685"
+          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
         },
         {
           "path": "apps/api/src/profiles/profiles.service.ts",
@@ -14619,7 +14802,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "1c4558223bcbc75a352d810608990f1e492cf721491e5e6d8deac2230eba90a2"
+          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
         },
         {
           "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -14686,7 +14869,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "1c4558223bcbc75a352d810608990f1e492cf721491e5e6d8deac2230eba90a2"
+          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
         },
         {
           "path": "apps/api/src/admin/admin.service.test.ts",
@@ -14737,7 +14920,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "1c4558223bcbc75a352d810608990f1e492cf721491e5e6d8deac2230eba90a2"
+          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
         },
         {
           "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -15187,7 +15370,7 @@
         },
         {
           "path": "packages/shared/src/notifications/notification-transport.ts",
-          "sha256": "38bdd4ae008dd23dbb7706d7f7593db298423e068dc8975f5a3624e5feec24f0"
+          "sha256": "086621e1c492470c4d021e40e8be46b730752489aaf3f64be963ecd2d66e7aa8"
         },
         {
           "path": "apps/worker/src/main.ts",
@@ -15224,11 +15407,11 @@
       "source_evidence": [
         {
           "path": "packages/db/src/schema/notification-outbox.ts",
-          "sha256": "473efaef5f031a3c9c61189155c0ef1135902af2b474e5f2834e56a7c2c2b470"
+          "sha256": "625ade5a935282f9fdcbb34358bf43358dc48671484a6ada004f3d2a5ae2e4f7"
         },
         {
           "path": "apps/worker/src/notifications/outbox-writer.ts",
-          "sha256": "629a68e05322de7d35d6377d5a08e9d0ba5d428de8e3d9ce75218e93830f32f0"
+          "sha256": "12ee525da161401e0ab04d1adbefea10a69e3522a8fccb880373fefa366c1136"
         },
         {
           "path": "apps/worker/src/notifications/outbox-writer.test.ts",
@@ -15236,7 +15419,7 @@
         },
         {
           "path": "apps/worker/src/notifications/outbox-reader.ts",
-          "sha256": "63777530fcf66f00a068ebbac388dc1424184a2073550416b0c94ace8227fcf9"
+          "sha256": "c5f4df2aa92f1da3ec5f56adbd337c5f3423ea686d6e0dab72fe210f738f0d60"
         },
         {
           "path": "apps/worker/src/notifications/outbox-lease.ts",
@@ -15248,7 +15431,7 @@
         },
         {
           "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-          "sha256": "fa06908b9c86b30a6573c5a7fb77a7291d8e0cf6d0da5ed9a72af948d83a9671"
+          "sha256": "cc4a7d13766192635a5bd7dca711b1c2fdd41bd757f0d50a06e8ed0872861a83"
         },
         {
           "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
@@ -15285,11 +15468,11 @@
         },
         {
           "path": "apps/worker/src/notifications/outbox-writer.ts",
-          "sha256": "629a68e05322de7d35d6377d5a08e9d0ba5d428de8e3d9ce75218e93830f32f0"
+          "sha256": "12ee525da161401e0ab04d1adbefea10a69e3522a8fccb880373fefa366c1136"
         },
         {
           "path": "apps/worker/src/notifications/outbox-reader.ts",
-          "sha256": "63777530fcf66f00a068ebbac388dc1424184a2073550416b0c94ace8227fcf9"
+          "sha256": "c5f4df2aa92f1da3ec5f56adbd337c5f3423ea686d6e0dab72fe210f738f0d60"
         },
         {
           "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -15868,7 +16051,7 @@
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "1c4558223bcbc75a352d810608990f1e492cf721491e5e6d8deac2230eba90a2"
+          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
         },
         {
           "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -16610,7 +16793,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -16738,7 +16921,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "1d4d6f1d29cde400736b697fbfc0f7204d6edb3fda0e21024e8a0a63520d2b6e"
+          "sha256": "8e502e9d740958f0afb974a5c36e92e6979c910e08c733db93106a5bae0fba8a"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -16850,7 +17033,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -16978,7 +17161,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "1d4d6f1d29cde400736b697fbfc0f7204d6edb3fda0e21024e8a0a63520d2b6e"
+          "sha256": "8e502e9d740958f0afb974a5c36e92e6979c910e08c733db93106a5bae0fba8a"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -17090,7 +17273,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -17218,7 +17401,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "1d4d6f1d29cde400736b697fbfc0f7204d6edb3fda0e21024e8a0a63520d2b6e"
+          "sha256": "8e502e9d740958f0afb974a5c36e92e6979c910e08c733db93106a5bae0fba8a"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -17330,7 +17513,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -17458,7 +17641,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "1d4d6f1d29cde400736b697fbfc0f7204d6edb3fda0e21024e8a0a63520d2b6e"
+          "sha256": "8e502e9d740958f0afb974a5c36e92e6979c910e08c733db93106a5bae0fba8a"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -17570,7 +17753,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -17698,7 +17881,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "1d4d6f1d29cde400736b697fbfc0f7204d6edb3fda0e21024e8a0a63520d2b6e"
+          "sha256": "8e502e9d740958f0afb974a5c36e92e6979c910e08c733db93106a5bae0fba8a"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -17810,7 +17993,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -17938,7 +18121,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "1d4d6f1d29cde400736b697fbfc0f7204d6edb3fda0e21024e8a0a63520d2b6e"
+          "sha256": "8e502e9d740958f0afb974a5c36e92e6979c910e08c733db93106a5bae0fba8a"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -18052,7 +18235,7 @@
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "809fc2704119b835cf3183b0a084d125a90f48758f6fa95d7bcfa168d416b11b"
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
         },
         {
           "path": "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
@@ -18180,7 +18363,7 @@
         },
         {
           "path": "packages/db/drizzle/production/meta/_journal.json",
-          "sha256": "1d4d6f1d29cde400736b697fbfc0f7204d6edb3fda0e21024e8a0a63520d2b6e"
+          "sha256": "8e502e9d740958f0afb974a5c36e92e6979c910e08c733db93106a5bae0fba8a"
         },
         {
           "path": "packages/db/src/index.ts",
@@ -18626,11 +18809,11 @@
         },
         {
           "path": "apps/worker/src/ai-models/test-runner.test.ts",
-          "sha256": "7d96bf76fd4f563e1394bc761748fca17bfc4cd68b29a5e61b69d8ce2d4f0021"
+          "sha256": "ff34be1140e57480af95a12bc914aee7a3fd6dbe26153a917cfa3f2d3565933c"
         },
         {
           "path": "apps/worker/src/ai-models/test-runner.ts",
-          "sha256": "6b3f166fc6f3df610636e9288843393758e701b35805504111b529e2f210b863"
+          "sha256": "919105027df1b6e911fc879e8f3a32445754f73ae708802b80539cfabade3e13"
         },
         {
           "path": "packages/db/src/schema/ai-agent-slots.test.ts",
@@ -18792,11 +18975,11 @@
         },
         {
           "path": "apps/worker/src/ai-models/test-runner.test.ts",
-          "sha256": "7d96bf76fd4f563e1394bc761748fca17bfc4cd68b29a5e61b69d8ce2d4f0021"
+          "sha256": "ff34be1140e57480af95a12bc914aee7a3fd6dbe26153a917cfa3f2d3565933c"
         },
         {
           "path": "apps/worker/src/ai-models/test-runner.ts",
-          "sha256": "6b3f166fc6f3df610636e9288843393758e701b35805504111b529e2f210b863"
+          "sha256": "919105027df1b6e911fc879e8f3a32445754f73ae708802b80539cfabade3e13"
         },
         {
           "path": "packages/db/src/schema/ai-agent-slots.test.ts",
@@ -18958,11 +19141,11 @@
         },
         {
           "path": "apps/worker/src/ai-models/test-runner.test.ts",
-          "sha256": "7d96bf76fd4f563e1394bc761748fca17bfc4cd68b29a5e61b69d8ce2d4f0021"
+          "sha256": "ff34be1140e57480af95a12bc914aee7a3fd6dbe26153a917cfa3f2d3565933c"
         },
         {
           "path": "apps/worker/src/ai-models/test-runner.ts",
-          "sha256": "6b3f166fc6f3df610636e9288843393758e701b35805504111b529e2f210b863"
+          "sha256": "919105027df1b6e911fc879e8f3a32445754f73ae708802b80539cfabade3e13"
         },
         {
           "path": "packages/db/src/schema/ai-agent-slots.test.ts",
@@ -19934,84 +20117,265 @@
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.01.04",
-      "status": "partial",
+      "status": "acceptance_verified",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 1004,
       "requirement": "- **T-06.01.04:** Create stable error code enum with HTTP status mapping\n  - **Notes:** Error codes as `const` object or TypeScript `enum`. Each code maps to: `httpStatus: number`, `title: string` (English), `retryable: boolean`. Backend returns `{ error: { code: string, message: string (localized), correlationId: string } }`. Never expose stack traces or raw provider/database errors.\n  - **Dependencies:** T-06.01.01\n  - **Complexity:** S",
       "requirement_sha256": "47858c3b74c1185a1d258c58594215629f1d87c6c74d172e9fccfe25ae46b38a",
       "merged_prs": [],
       "historically_skipped": true,
-      "reviewed_sha": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+      "reviewed_sha": "0b962f76ddbcb953c60ad963c26399b657bd2fed",
       "source_evidence": [
         {
-          "path": "apps/api/src/admin/gift-code-http.integration.test.ts",
-          "sha256": "a310dbadfaca6ff7b9cdcadf49d4f99d67d8c651d5c1b5d03739a30551f4ae76"
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "650d3a10ef00e3147e7b7d52abee5bb28387603c02940fdbdfdad9b3e063226c"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-model-test-queue-http.integration.test.ts",
+          "sha256": "8ad38badace3eb15bb5878f4d876bb30196d7cc3b9b0fce70f445f95fd6398de"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-model-test-queue.service.ts",
+          "sha256": "1337d434af233e488f588e2b20d0cb45d2cca6589864466e923c960ed40c1ed7"
         },
         {
           "path": "apps/api/src/app.factory.ts",
-          "sha256": "f81f7f7d69220c5e8bcf2a6f4e25d91ea4535f1a9f3aa2c1ddd4bc0005c4cb8f"
+          "sha256": "92153b01d71a46bb9716b0929844abe2c8cc9965c9d04dc0751549f799ad0787"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "c00368b3927beeaffd54088d14db72396a95fe074f33b82b573186e4bdd7b96e"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
+        },
+        {
+          "path": "apps/api/src/common/correlation-id.middleware.ts",
+          "sha256": "b127659fda54ecb4543d5dbbbfbcb873538f912ce5e0cf4d93ee4043ac36903e"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.test.ts",
+          "sha256": "30a92c68318ec0edbe94b1d685adf15e9b0c5561205dde97f75e776be85f7d91"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.ts",
+          "sha256": "d751f6cfb30907eb95ea9a281326a6ac51399e185f9957c38d70f18438e7d561"
+        },
+        {
+          "path": "apps/api/src/common/error-http.integration.test.ts",
+          "sha256": "e4419dd63b812492a33517716212749e9023ae90331a5c7ee3118524f2be255c"
         },
         {
           "path": "apps/api/src/common/http-exception.filter.ts",
-          "sha256": "f7cc498fd7c57f800b8bb87056f49e3e8ce6f4162b20e6d34dd56bfa35fccb22"
+          "sha256": "ce9eee35ff8da4628af7715b572d127001a749567bb7797656140fb0012dd637"
         },
         {
-          "path": "apps/api/src/common/public-domain-error-codes.ts",
-          "sha256": "fe7ecc2dc41948a65b88f6b1cde86b9c7c3da28f90d4507a5d41fef0b1e034c0"
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
         },
         {
-          "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
-          "sha256": "aa66d8c949bb949cf38c8122ba9e011c2a05bc44d1bfcf905e229c864ee541fa"
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "314598b50cebb963e7bef9d4d65b8b763711590620baa7c3e31ce6216aef520d"
         },
         {
-          "path": "apps/api/src/csp-report/csp-report.controller.ts",
-          "sha256": "1e941552eeb2e5d323bffde93fd4622b6d704cb52dcf4e91cb8fd5059e41b79b"
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "cc4a7d13766192635a5bd7dca711b1c2fdd41bd757f0d50a06e8ed0872861a83"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.service.ts",
+          "sha256": "519d62bc07a244392c00cdc599196a6da6e9c8a6a270fa7a29da79193820ef44"
         },
         {
           "path": "apps/api/test/http-exception-filter.spec.ts",
-          "sha256": "571471a9bc2ea2f66609ac70aa290c8cd9c7a46e7a5d96a005743ee570bba987"
+          "sha256": "12891154543c8e8f2b6fdc0ffd70b5f7471081c05ba39523f9aad79b5e7340be"
         },
         {
-          "path": "apps/web/e2e/csp-reports.spec.ts",
-          "sha256": "e7d0a90fa8a79dff3cb5824290a3d698da461e58a79d09552deb6c89f194a508"
+          "path": "apps/worker/src/ai-models/test-runner.test.ts",
+          "sha256": "ff34be1140e57480af95a12bc914aee7a3fd6dbe26153a917cfa3f2d3565933c"
         },
         {
-          "path": "apps/web/server.js",
-          "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
+          "path": "apps/worker/src/ai-models/test-runner.ts",
+          "sha256": "919105027df1b6e911fc879e8f3a32445754f73ae708802b80539cfabade3e13"
         },
         {
-          "path": "apps/web/test/server.spec.ts",
-          "sha256": "d90aa39b15e1653eaee6613fd1bde020344623e2e53d40f71f916c86f7af55f1"
+          "path": "apps/worker/src/auth-delivery/providers.ts",
+          "sha256": "9c5b33f5e0bf4a448a7b0dbb8cb70fba1b844ba188fd88033b77c0cddf484a07"
         },
         {
-          "path": "deploy/pilot/nginx.conf",
-          "sha256": "76ee4ab925fddae4824f857f1b500483f6dba536210d1513af4bdef658355157"
+          "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
+          "sha256": "1b7969b84ab397be9ab1d6cc5d4eee3a38743260625b6588401a81faae9b4178"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.ts",
+          "sha256": "71e9c1dd13e7fb07b2b12669599e41a3c18631e7244dd551bc32748c8f2df239"
+        },
+        {
+          "path": "apps/worker/src/delivery-log.ts",
+          "sha256": "89f80840755a7a3e24bfbd658d64039f193a74bfdb9f68ef8608c3b922641224"
+        },
+        {
+          "path": "apps/worker/src/invoices/reminder-sender.integration.test.ts",
+          "sha256": "6b50f3c9d3053bbfd95dfc0aa568a29610cca52d45009a8a6b9348a9f14bff42"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.test.ts",
+          "sha256": "12052b0427d329584d7c248133f58ec228df3761a4111db7cedb412b97af775b"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.ts",
+          "sha256": "c5f4df2aa92f1da3ec5f56adbd337c5f3423ea686d6e0dab72fe210f738f0d60"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-writer.ts",
+          "sha256": "12ee525da161401e0ab04d1adbefea10a69e3522a8fccb880373fefa366c1136"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.integration.test.ts",
+          "sha256": "82d814f2181f8add7a4b4d8f784f6d28007aabb198492876684c118473964517"
+        },
+        {
+          "path": "apps/worker/src/wallet/online-topup-expiry-scanner.ts",
+          "sha256": "3f4a5bf9b4b756e9bc1dd28583d5e9c682f24eccd6f56cc273fb32bb0cb6f960"
+        },
+        {
+          "path": "packages/db/drizzle/production/0132_outbox_request_correlation.sql",
+          "sha256": "e555d702e4cc701e3b1748836a378116662cfdc403980d37610428e39357f626"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0132_snapshot.json",
+          "sha256": "19223beeadae635dffb3322c7ab9ca1921089b6b200ef752bb2b3a252ceb6ffc"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "8e502e9d740958f0afb974a5c36e92e6979c910e08c733db93106a5bae0fba8a"
+        },
+        {
+          "path": "packages/db/src/schema/ai-model-test-jobs.ts",
+          "sha256": "b9dc64fb5d29e530e29a00a59b0e51c206be3410a18ed7ce01aea0cb41112005"
+        },
+        {
+          "path": "packages/db/src/schema/auth-delivery-outbox.ts",
+          "sha256": "fb949b3ea85b96431787c7ed93453ab4d2702d58bfa45930b55b913829bd3929"
+        },
+        {
+          "path": "packages/db/src/schema/notification-outbox.ts",
+          "sha256": "625ade5a935282f9fdcbb34358bf43358dc48671484a6ada004f3d2a5ae2e4f7"
         },
         {
           "path": "packages/i18n/src/auth.ts",
-          "sha256": "9819141838be566fa1ab0eaaa39745993c53f22e7373a83a69f1f20385a97ba1"
+          "sha256": "ca0358aeffd4889e2162ac49c3983c250a2b267a87087ea1a2197e394cea5f91"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "a4ec5ba5bd63be6015204581aa02250e2b903c82f7622d94799e6edaf762a792"
+        },
+        {
+          "path": "packages/shared/src/errors/domain-error-codes.ts",
+          "sha256": "2cdff0f41f08ba3949f843b3f9ef811c21f2569afa38fc320738257cdf064390"
         },
         {
           "path": "packages/shared/src/errors/error-codes.ts",
-          "sha256": "eb3939ab2803138aa18a77c020aaa083e7bbea878bdec600c40174adbb25fdd2"
+          "sha256": "aa1a2afe4496bc01d20c1892809eb598ccb06df60d78380ff9cdc32a3d427e1d"
         },
         {
-          "path": "scripts/check-pilot-proxy.mjs",
-          "sha256": "beb268d547e59dfe5f9d557991c992809eae97dec947a7f6dd0299a6756aa22f"
-        },
-        {
-          "path": "scripts/proxy-fixture.mjs",
-          "sha256": "37431a4bb49b6674a35c29766a4c9d8192b16ce648ed6570aba4637ef3785a24"
+          "path": "packages/shared/src/notifications/notification-transport.ts",
+          "sha256": "086621e1c492470c4d021e40e8be46b730752489aaf3f64be963ecd2d66e7aa8"
         }
       ],
       "checks": [
-        "audit/evidence/step-reviews.json#R03-errors",
-        "See consolidated review for exact baseline/final populations, supersession and source-bound evidence."
+        "audit/evidence/step-reviews.json#R03-correlation",
+        "149 distinct API and106 worker cases across recorded runs; current quality gates and retained42 route budgets pass."
       ],
-      "limitations": [
-        "The59 shared root definitions have title/httpStatus/retryable metadata and localized messages.151 existing legacy public domain identifiers are preserved in an API allowlist; complete their shared metadata/catalogue disposition before claiming T-06.01.04 fully verified."
-      ],
-      "review_record": "audit/evidence/step-reviews.json#R03-errors"
+      "limitations": [],
+      "review_record": "audit/evidence/step-reviews.json#R03-correlation",
+      "superseded_assessments": [
+        {
+          "task_key": "01-platform-infrastructure.md#T-06.01.04",
+          "status": "partial",
+          "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+          "requirement_line": 1004,
+          "requirement": "- **T-06.01.04:** Create stable error code enum with HTTP status mapping\n  - **Notes:** Error codes as `const` object or TypeScript `enum`. Each code maps to: `httpStatus: number`, `title: string` (English), `retryable: boolean`. Backend returns `{ error: { code: string, message: string (localized), correlationId: string } }`. Never expose stack traces or raw provider/database errors.\n  - **Dependencies:** T-06.01.01\n  - **Complexity:** S",
+          "requirement_sha256": "47858c3b74c1185a1d258c58594215629f1d87c6c74d172e9fccfe25ae46b38a",
+          "merged_prs": [],
+          "historically_skipped": true,
+          "reviewed_sha": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/gift-code-http.integration.test.ts",
+              "sha256": "a310dbadfaca6ff7b9cdcadf49d4f99d67d8c651d5c1b5d03739a30551f4ae76"
+            },
+            {
+              "path": "apps/api/src/app.factory.ts",
+              "sha256": "f81f7f7d69220c5e8bcf2a6f4e25d91ea4535f1a9f3aa2c1ddd4bc0005c4cb8f"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "f7cc498fd7c57f800b8bb87056f49e3e8ce6f4162b20e6d34dd56bfa35fccb22"
+            },
+            {
+              "path": "apps/api/src/common/public-domain-error-codes.ts",
+              "sha256": "fe7ecc2dc41948a65b88f6b1cde86b9c7c3da28f90d4507a5d41fef0b1e034c0"
+            },
+            {
+              "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
+              "sha256": "aa66d8c949bb949cf38c8122ba9e011c2a05bc44d1bfcf905e229c864ee541fa"
+            },
+            {
+              "path": "apps/api/src/csp-report/csp-report.controller.ts",
+              "sha256": "1e941552eeb2e5d323bffde93fd4622b6d704cb52dcf4e91cb8fd5059e41b79b"
+            },
+            {
+              "path": "apps/api/test/http-exception-filter.spec.ts",
+              "sha256": "571471a9bc2ea2f66609ac70aa290c8cd9c7a46e7a5d96a005743ee570bba987"
+            },
+            {
+              "path": "apps/web/e2e/csp-reports.spec.ts",
+              "sha256": "e7d0a90fa8a79dff3cb5824290a3d698da461e58a79d09552deb6c89f194a508"
+            },
+            {
+              "path": "apps/web/server.js",
+              "sha256": "7e75bce91e87c752f63cc9622a1e7920471ea460b48593fc873128639ea0f462"
+            },
+            {
+              "path": "apps/web/test/server.spec.ts",
+              "sha256": "d90aa39b15e1653eaee6613fd1bde020344623e2e53d40f71f916c86f7af55f1"
+            },
+            {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "76ee4ab925fddae4824f857f1b500483f6dba536210d1513af4bdef658355157"
+            },
+            {
+              "path": "packages/i18n/src/auth.ts",
+              "sha256": "9819141838be566fa1ab0eaaa39745993c53f22e7373a83a69f1f20385a97ba1"
+            },
+            {
+              "path": "packages/shared/src/errors/error-codes.ts",
+              "sha256": "eb3939ab2803138aa18a77c020aaa083e7bbea878bdec600c40174adbb25fdd2"
+            },
+            {
+              "path": "scripts/check-pilot-proxy.mjs",
+              "sha256": "beb268d547e59dfe5f9d557991c992809eae97dec947a7f6dd0299a6756aa22f"
+            },
+            {
+              "path": "scripts/proxy-fixture.mjs",
+              "sha256": "37431a4bb49b6674a35c29766a4c9d8192b16ce648ed6570aba4637ef3785a24"
+            }
+          ],
+          "checks": [
+            "audit/evidence/step-reviews.json#R03-errors",
+            "See consolidated review for exact baseline/final populations, supersession and source-bound evidence."
+          ],
+          "limitations": [
+            "The59 shared root definitions have title/httpStatus/retryable metadata and localized messages.151 existing legacy public domain identifiers are preserved in an API allowlist; complete their shared metadata/catalogue disposition before claiming T-06.01.04 fully verified."
+          ],
+          "review_record": "audit/evidence/step-reviews.json#R03-errors"
+        }
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-04.04.02",
@@ -20032,11 +20396,11 @@
         },
         {
           "path": "apps/api/src/app.factory.ts",
-          "sha256": "f81f7f7d69220c5e8bcf2a6f4e25d91ea4535f1a9f3aa2c1ddd4bc0005c4cb8f"
+          "sha256": "92153b01d71a46bb9716b0929844abe2c8cc9965c9d04dc0751549f799ad0787"
         },
         {
           "path": "apps/api/src/common/http-exception.filter.ts",
-          "sha256": "f7cc498fd7c57f800b8bb87056f49e3e8ce6f4162b20e6d34dd56bfa35fccb22"
+          "sha256": "ce9eee35ff8da4628af7715b572d127001a749567bb7797656140fb0012dd637"
         },
         {
           "path": "apps/api/src/common/public-domain-error-codes.ts",
@@ -20052,7 +20416,7 @@
         },
         {
           "path": "apps/api/test/http-exception-filter.spec.ts",
-          "sha256": "571471a9bc2ea2f66609ac70aa290c8cd9c7a46e7a5d96a005743ee570bba987"
+          "sha256": "12891154543c8e8f2b6fdc0ffd70b5f7471081c05ba39523f9aad79b5e7340be"
         },
         {
           "path": "apps/web/e2e/csp-reports.spec.ts",
@@ -20072,11 +20436,11 @@
         },
         {
           "path": "packages/i18n/src/auth.ts",
-          "sha256": "9819141838be566fa1ab0eaaa39745993c53f22e7373a83a69f1f20385a97ba1"
+          "sha256": "ca0358aeffd4889e2162ac49c3983c250a2b267a87087ea1a2197e394cea5f91"
         },
         {
           "path": "packages/shared/src/errors/error-codes.ts",
-          "sha256": "eb3939ab2803138aa18a77c020aaa083e7bbea878bdec600c40174adbb25fdd2"
+          "sha256": "aa1a2afe4496bc01d20c1892809eb598ccb06df60d78380ff9cdc32a3d427e1d"
         },
         {
           "path": "scripts/check-pilot-proxy.mjs",
@@ -24116,6 +24480,56 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R03-errors",
       "note": "Matching immediate-base bindings only; prior38 refreshes retained. Public identifiers, business/transaction logic and non-error UI flows unchanged. Relevant error/translation/budget/proxy checks support this bounded refresh."
+    },
+    {
+      "source_revision": "0b962f76ddbcb953c60ad963c26399b657bd2fed",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.05",
+        "02-auth-users-admin.md#T-02.02.03",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-02.03.03",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.03",
+        "02-auth-users-admin.md#T-05.02.04",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-01.02.01",
+        "02-auth-users-admin.md#T-02.03.01",
+        "02-auth-users-admin.md#T-03.03.04",
+        "02-auth-users-admin.md#T-09.07.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.04",
+        "04-invoices-wallet-contracts.md#T-04.2.02.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "04-invoices-wallet-contracts.md#T-04.2.02.07",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "02-auth-users-admin.md#T-07.01.01",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-10.01.02",
+        "02-auth-users-admin.md#T-09.05.01",
+        "02-auth-users-admin.md#T-09.06.03",
+        "05-notifications-documents-ai.md#T-05.01.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.03",
+        "05-notifications-documents-ai.md#T-05.03.03",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.11.01",
+        "02-auth-users-admin.md#T-09.11.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "01-platform-infrastructure.md#T-04.04.02"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R03-correlation",
+      "note": "Refresh only exact immediate-base bindings for additive trace metadata, logging and safe catalogue changes.149 distinct API/106 worker compatibility cases, types and unchanged frontend budgets support this bounded update.38 older refreshes retained."
     }
   ]
 }

@@ -3,10 +3,10 @@
 Generated from the saved inventory and current task acceptance. This report makes no new GitHub query.
 A PR body checkbox is historical author evidence, not independent acceptance. Review the final combined implementation once per qualified task; reuse valid evidence for every contributing PR.
 
-301 merged PRs: 103 have unresolved mapped tasks; 4 have no current task mapping; 194 map only to verified tasks.
+301 merged PRs: 102 have unresolved mapped tasks; 4 have no current task mapping; 195 map only to verified tasks.
 170 historical deferral statements from 101 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **149 closed / 26 open / 0 blocked**; 126 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **150 closed / 25 open / 0 blocked**; 126 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -14,15 +14,15 @@ Use [current requirements](current-task-requirements.json), [task acceptance](ac
 
 | Canonical epic | PR-backed tasks unresolved |
 | --- | ---: |
-| 01-platform-infrastructure.md | 50 |
+| 01-platform-infrastructure.md | 49 |
 | 02-auth-users-admin.md | 32 |
 | 03-core-business.md | 4 |
 | 04-invoices-wallet-contracts.md | 4 |
 | 05-notifications-documents-ai.md | 3 |
 | 07-ui-ux-design.md | 3 |
-| Total | 96 |
+| Total | 95 |
 
-Also review 56 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
+Also review 55 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
 
 ## Every merged PR
 
@@ -58,7 +58,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#26](https://github.com/barghsadev/barghsa-core/pull/26) | 01-platform-infrastructure.md#T-01.04.05 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
 | [#27](https://github.com/barghsadev/barghsa-core/pull/27) | 01-platform-infrastructure.md#T-02.02.04 (pending) | Task review remains | Not reviewed | 0 |
 | [#28](https://github.com/barghsadev/barghsa-core/pull/28) | 01-platform-infrastructure.md#T-01.04.06 (partial) | Task review remains | Not reviewed | 0 |
-| [#29](https://github.com/barghsadev/barghsa-core/pull/29) | 01-platform-infrastructure.md#T-01.05.01 (partial) | Task review remains | [open](evidence/step-reviews.json#R03-errors) | 0 |
+| [#29](https://github.com/barghsadev/barghsa-core/pull/29) | 01-platform-infrastructure.md#T-01.05.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R03-correlation) | 0 |
 | [#30](https://github.com/barghsadev/barghsa-core/pull/30) | 01-platform-infrastructure.md#T-03.01.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#31](https://github.com/barghsadev/barghsa-core/pull/31) | 01-platform-infrastructure.md#T-03.01.02 (pending) | Task review remains | Not reviewed | 0 |
 | [#32](https://github.com/barghsadev/barghsa-core/pull/32) | 01-platform-infrastructure.md#T-03.01.03 (pending) | Task review remains | Not reviewed | 0 |
@@ -368,6 +368,6 @@ PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 ne
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `02230f2c713db2d69e40554af7e797ea6ce420145d4d66820dfbb8beba58824e`
+- `acceptance-closure.json`: `33f3d39d2812f8cbd378c1ac024cbd08eaf7a8845f6cf27cb8edde52bace2734`
 - `pr-deferrals.json`: `1467831fd598bb02d92ce8a053e0960cb936f8b24689faae86334a5d3d0b2168`
-- `evidence/step-reviews.json`: `550cceeb95fffdbb02dd220d0e450d75514fdf42eadc23926a5e034f707b828c`
+- `evidence/step-reviews.json`: `0b2396fda324da8e3d37386430cdfa06c9409c9e95c102b03e5ebfcdfd2dfabf`

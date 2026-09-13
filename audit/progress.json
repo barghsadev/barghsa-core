@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
+  "source_revision": "0b962f76ddbcb953c60ad963c26399b657bd2fed",
   "active_step": "R03",
-  "next_action": "Continue R03-correlation: carry originating request IDs through current notification/auth outboxes and worker diagnostics without changing delivery or retries. Complete the legacy domain-code metadata disposition. CSP native-report exception is pending; do not reask. Then return to R03 auxiliary UI/consumer states.",
+  "next_action": "Continue R03 auxiliary toast/command/avatar/progress and exact skeleton/loading states. Reuse prior core-control/theme tests; then review remaining locale/timezone consumers. CSP decision remains pending; do not reask. Full regression stays V02.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -741,6 +741,10 @@
     {
       "id": "R03-errors",
       "review_record": "audit/evidence/step-reviews.json#R03-errors"
+    },
+    {
+      "id": "R03-correlation",
+      "review_record": "audit/evidence/step-reviews.json#R03-correlation"
     }
   ],
   "deferred_improvements": [
@@ -764,12 +768,12 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 170,
-    "partial": 40,
+    "acceptance_verified": 172,
+    "partial": 38,
     "pending": 112,
     "merged_prs": 301,
     "historical_skips": 58,
-    "skips_verified": 3,
+    "skips_verified": 4,
     "skips_pending": 50
   },
   "user_decisions": [
@@ -1063,30 +1067,32 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R03-correlation",
-    "name": "Request correlation through queued work and remaining domain error catalogue",
+    "id": "R03-auxiliary-ui",
+    "name": "Auxiliary shared controls, RTL placement and loading states",
     "status": "reviewing",
     "prs": [
-      29
+      156
     ],
     "task_keys": [
-      "01-platform-infrastructure.md#T-01.05.01",
-      "01-platform-infrastructure.md#T-06.01.04"
+      "02-auth-users-admin.md#T-09.01.02",
+      "01-platform-infrastructure.md#T-06.03.02",
+      "01-platform-infrastructure.md#T-06.03.03",
+      "01-platform-infrastructure.md#T-06.03.06"
     ],
     "remaining_checklist": [
-      "Queued notification and auth delivery work does not consistently persist/propagate the originating request correlation ID. Continue R03-correlation across API producers, worker dispatch and logs; preserve transactional and retry semantics.",
-      "The59 shared root definitions have title/httpStatus/retryable metadata and localized messages.151 existing legacy public domain identifiers are preserved in an API allowlist; complete their shared metadata/catalogue disposition before claiming T-06.01.04 fully verified."
+      "Review auxiliary toast/command/avatar/progress placement, keyboard, live regions and reduced motion.",
+      "Review exact skeleton dimensions/shimmer and remaining implemented loading/empty/error states.",
+      "Keep remaining full consumer and locale/timezone acceptance explicit; retain unbuilt editor/per-user controls in B01."
     ],
-    "confirmed_defects": [
-      "Queued notification and auth delivery work does not consistently persist/propagate the originating request correlation ID. Continue R03-correlation across API producers, worker dispatch and logs; preserve transactional and retry semantics."
-    ],
+    "confirmed_defects": [],
     "reused_evidence": [
+      "audit/evidence/step-reviews.json#R03-controls",
       "audit/evidence/step-reviews.json#R03-errors",
-      "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+      "audit/evidence/step-reviews.json#R03-correlation"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Continue R03-correlation: carry originating request IDs through current notification/auth outboxes and worker diagnostics without changing delivery or retries. Complete the legacy domain-code metadata disposition. CSP native-report exception is pending; do not reask. Then return to R03 auxiliary UI/consumer states."
+    "next_action": "Continue R03 auxiliary toast/command/avatar/progress and exact skeleton/loading states. Reuse prior core-control/theme tests; then review remaining locale/timezone consumers. CSP decision remains pending; do not reask. Full regression stays V02."
   },
   "open_domain_reviews": [
     {
