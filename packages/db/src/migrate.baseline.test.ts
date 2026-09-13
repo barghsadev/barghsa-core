@@ -5,9 +5,7 @@ import { resolve } from 'node:path';
 import { readFileSync, mkdtempSync, mkdirSync, copyFileSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { createHash } from 'node:crypto';
-import { drizzle } from 'drizzle-orm/node-postgres';
 import { runMigrations, verifyMigrationVersion } from './migrate';
-import { runSeed } from './seed';
 
 const databases: string[] = [];
 const folder = resolve(__dirname, '../drizzle/production');
@@ -166,8 +164,10 @@ describe('complete production schema baseline', () => {
     try {
       const tables = await pool.query("SELECT tablename FROM pg_tables WHERE schemaname='public'");
       expect(tables.rows.length).toBeGreaterThanOrEqual(85);
-      expect(await runSeed(false, drizzle(pool))).toMatchObject({ ok: true, errors: [] });
-      expect(await runSeed(false, drizzle(pool))).toMatchObject({ ok: true, errors: [] });
+      // Populate the historical schema with its historical product shape.
+      // The current seed requires the current migrations (including zero limits).
+      await pool.query(`INSERT INTO products(type,system_key,title)
+        SELECT 'electricity',key,'{}'::jsonb FROM unnest(ARRAY['thermal','green','free_market','energy_saving']) key`);
       expect((await pool.query('SELECT count(*)::int AS count FROM products')).rows[0].count).toBe(
         4
       );

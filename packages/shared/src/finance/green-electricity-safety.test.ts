@@ -35,7 +35,7 @@ const CONFIG: GreenElectricityConfig = {
 
 describe('GREEN_ELECTRICITY_SYSTEM_KEY', () => {
   it('points at the seeded green electricity product', () => {
-    expect(GREEN_ELECTRICITY_SYSTEM_KEY).toBe('green_electricity');
+    expect(GREEN_ELECTRICITY_SYSTEM_KEY).toBe('green');
   });
 });
 

@@ -43,6 +43,10 @@ describe('seed verification', () => {
 
     expect(allProducts).toHaveLength(4);
 
+    const limits = (await ctx.pool.query('SELECT min_kwh,max_kwh FROM electricity_product_limits'))
+      .rows;
+    expect(limits).toHaveLength(4);
+    expect(limits.every((row) => row.min_kwh === '0' && row.max_kwh === '0')).toBe(true);
     const expectedKeys = ['thermal', 'green', 'free_market', 'energy_saving'];
     for (const expectedKey of expectedKeys) {
       const product = allProducts.find((p) => p.systemKey === expectedKey);
@@ -200,17 +204,17 @@ describe('seed verification', () => {
           status: 'inactive',
         })
       ).rejects.toMatchObject({
-        cause: { message: expect.stringMatching(/cannot insert more than 4/i) },
+        cause: { message: expect.stringMatching(/four system keys/i) },
       });
     });
 
-    it('allows inserting admin-created products (null system_key)', async () => {
+    it('allows inserting non-electricity admin products (null system_key)', async () => {
       // Admin-created products have system_key = NULL — should succeed.
       await expect(
         ctx.db.insert(products).values({
           systemKey: null,
-          title: { fa: 'برق سفارشی', en: 'Custom Electricity' },
-          type: 'electricity',
+          title: { fa: 'تجهیزات', en: 'Hardware' },
+          type: 'hardware',
           status: 'active',
         })
       ).resolves.not.toThrow();
@@ -484,3 +488,159 @@ describe('notification template seeding', () => {
     }
   });
 });
+
+describe('seed concurrency and force boundaries', () => {
+  it('counts actual inserts under concurrent runs without duplicating products or geography', async () => {
+    const ctx = await createMigratedTestDb();
+    try {
+      const results = await Promise.all(Array.from({ length: 3 }, () => runSeed(false, ctx.db)));
+      expect(results.every((result) => result.ok)).toBe(true);
+      for (const [entity, count] of [
+        ['products', 4],
+        ['geography', 31],
+      ] as const) {
+        const rows = results.map((result) => result.results.find((row) => row.entity === entity)!);
+        expect(rows.reduce((sum, row) => sum + row.created, 0)).toBe(count);
+        expect(rows.reduce((sum, row) => sum + row.skipped, 0)).toBe(count * 2);
+      }
+      expect((await ctx.pool.query('SELECT count(*)::int AS n FROM products')).rows[0].n).toBe(4);
+      expect((await ctx.pool.query('SELECT count(*)::int AS n FROM provinces')).rows[0].n).toBe(31);
+    } finally {
+      await ctx.close();
+    }
+  }, 30000);
+
+  it('force restores only mutable seed labels and preserves product business fields', async () => {
+    const ctx = await createMigratedTestDb();
+    try {
+      expect((await runSeed(false, ctx.db)).ok).toBe(true);
+      await expect(
+        ctx.pool.query('UPDATE electricity_product_limits SET min_kwh=-1,max_kwh=0')
+      ).rejects.toMatchObject({ code: '23514' });
+      await expect(
+        ctx.pool.query('UPDATE electricity_product_limits SET max_kwh=-1')
+      ).rejects.toMatchObject({ code: '23514' });
+      await ctx.pool.query(
+        "UPDATE provinces SET name_fa='Custom',status='inactive' WHERE name_en='Tehran'"
+      );
+      await ctx.pool.query(
+        `UPDATE products SET price=9007199254740993,status='active',title='{"fa":"سفارشی","en":"Custom"}' WHERE system_key='thermal'`
+      );
+      await ctx.pool.query('UPDATE electricity_product_limits SET min_kwh=5,max_kwh=10');
+      const limitsBefore = (
+        await ctx.pool.query('SELECT * FROM electricity_product_limits ORDER BY id')
+      ).rows;
+      const productsBefore = (await ctx.pool.query('SELECT * FROM products ORDER BY id')).rows;
+      expect((await runSeed(false, ctx.db)).ok).toBe(true);
+      expect(
+        (await ctx.pool.query("SELECT name_fa FROM provinces WHERE name_en='Tehran'")).rows[0]
+          .name_fa
+      ).toBe('Custom');
+      const forced = await runSeed(true, ctx.db);
+      expect(forced.ok).toBe(true);
+      expect(forced.results.find((row) => row.entity === 'geography')).toMatchObject({
+        created: 0,
+        updated: 1,
+        skipped: 30,
+      });
+      expect(
+        (await ctx.pool.query("SELECT name_fa,status FROM provinces WHERE name_en='Tehran'"))
+          .rows[0]
+      ).toEqual({ name_fa: 'تهران', status: 'inactive' });
+      expect((await ctx.pool.query('SELECT * FROM products ORDER BY id')).rows).toEqual(
+        productsBefore
+      );
+      expect(
+        (await ctx.pool.query('SELECT * FROM electricity_product_limits ORDER BY id')).rows
+      ).toEqual(limitsBefore);
+    } finally {
+      await ctx.close();
+    }
+  }, 30000);
+
+  it('blocks null/unknown electricity identities and product-type deletion bypasses', async () => {
+    const ctx = await createMigratedTestDb();
+    try {
+      expect((await runSeed(false, ctx.db)).ok).toBe(true);
+      for (const key of [null, 'nuclear']) {
+        await expect(
+          ctx.pool.query(
+            `INSERT INTO products(type,system_key,title) VALUES ('electricity',$1,'{}')`,
+            [key]
+          )
+        ).rejects.toMatchObject({ code: 'P0001' });
+      }
+      await expect(
+        ctx.pool.query("UPDATE products SET type='hardware' WHERE system_key='thermal'")
+      ).rejects.toMatchObject({ code: 'P0001' });
+      await expect(
+        ctx.pool.query("UPDATE products SET system_key=NULL WHERE system_key='thermal'")
+      ).rejects.toMatchObject({ code: 'P0001' });
+      await expect(
+        ctx.pool.query("DELETE FROM products WHERE system_key='thermal'")
+      ).rejects.toMatchObject({ code: 'P0001' });
+      const hardware = (
+        await ctx.pool.query(
+          `INSERT INTO products(type,title) VALUES ('hardware','{}') RETURNING id`
+        )
+      ).rows[0].id;
+      await expect(
+        ctx.pool.query("UPDATE products SET type='electricity' WHERE id=$1", [hardware])
+      ).rejects.toMatchObject({ code: 'P0001' });
+      await ctx.pool.query('DELETE FROM products WHERE id=$1', [hardware]);
+      expect((await ctx.pool.query('SELECT count(*)::int AS n FROM products')).rows[0].n).toBe(4);
+    } finally {
+      await ctx.close();
+    }
+  }, 30000);
+});
+
+it('preserves legacy electricity identities and refuses to seed duplicate replacements', async () => {
+  const ctx = await createMigratedTestDb();
+  try {
+    // Reproduce a row admitted by the old trigger, without changing production data.
+    await ctx.pool.query(
+      'ALTER TABLE products DISABLE TRIGGER trg_prevent_extra_system_product_insert'
+    );
+    await ctx.pool.query(
+      `INSERT INTO products(type,system_key,title) VALUES ('electricity','green_electricity','{}')`
+    );
+    await ctx.pool.query(
+      'ALTER TABLE products ENABLE TRIGGER trg_prevent_extra_system_product_insert'
+    );
+    const before = (await ctx.pool.query('SELECT * FROM products')).rows;
+    const result = await runSeed(false, ctx.db);
+    expect(result.ok).toBe(false);
+    expect(result.results.find((row) => row.entity === 'products')).toMatchObject({
+      created: 0,
+      skipped: 0,
+      errors: [expect.stringContaining('reconciliation')],
+    });
+    expect((await ctx.pool.query('SELECT * FROM products')).rows).toEqual(before);
+  } finally {
+    await ctx.close();
+  }
+}, 30000);
+
+it('rolls back geography and truthful counts when a province insert fails', async () => {
+  const ctx = await createMigratedTestDb();
+  try {
+    await ctx.pool
+      .query(`CREATE FUNCTION reject_seed_province() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.name_en='Tehran' THEN RAISE EXCEPTION 'fixture'; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER reject_seed_province BEFORE INSERT ON provinces FOR EACH ROW EXECUTE FUNCTION reject_seed_province()`);
+    const result = await runSeed(false, ctx.db);
+    expect(result.ok).toBe(false);
+    expect(result.results.find((row) => row.entity === 'geography')).toMatchObject({
+      created: 0,
+      skipped: 0,
+      updated: 0,
+      errors: [expect.any(String)],
+    });
+    expect((await ctx.pool.query('SELECT id FROM provinces')).rows).toEqual([]);
+    await ctx.pool.query('DROP TRIGGER reject_seed_province ON provinces');
+    expect((await runSeed(false, ctx.db)).ok).toBe(true);
+    expect((await ctx.pool.query('SELECT count(*)::int AS n FROM provinces')).rows[0].n).toBe(31);
+  } finally {
+    await ctx.close();
+  }
+}, 30000);

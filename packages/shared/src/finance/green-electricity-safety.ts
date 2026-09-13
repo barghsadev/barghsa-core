@@ -2,7 +2,7 @@
  * Mandatory green-electricity activation safety (S-09.10, T-09.10.03).
  *
  * The green-electricity rule (T-09.10.02) is only enforceable while the
- * system `green_electricity` product is active and priced. This module
+ * system `green` product is active and priced. This module
  * centralizes the fail-closed evaluation consumed by:
  *
  *  - the admin config write path (block activation with a clear reason), and
@@ -29,7 +29,12 @@ import {
 } from './green-electricity-config.js';
 
 /** System `system_key` of the green electricity product (T-03.01.02 seed). */
-export const GREEN_ELECTRICITY_SYSTEM_KEY = 'green_electricity';
+export const GREEN_ELECTRICITY_SYSTEM_KEY = 'green';
+/** Read existing legacy identities without creating a second system product. */
+export const GREEN_ELECTRICITY_SYSTEM_KEYS: readonly string[] = [
+  GREEN_ELECTRICITY_SYSTEM_KEY,
+  'green_electricity',
+];
 
 /** Categorised reason a green product cannot support an activated rule. */
 export type GreenProductBlockReason = 'missing' | 'inactive' | 'archived' | 'unpriced';
@@ -39,7 +44,7 @@ export type GreenProductBlockReason = 'missing' | 'inactive' | 'archived' | 'unp
  * whether the mandatory-green rule can be activated / enforced.
  */
 export interface GreenElectricityProductState {
-  /** Whether a product row with `system_key = 'green_electricity'` exists. */
+  /** Whether one unambiguous canonical or legacy green product exists. */
   exists: boolean;
   /** `products.status` value, or `null` when no row exists. */
   status: 'active' | 'inactive' | 'archived' | null;

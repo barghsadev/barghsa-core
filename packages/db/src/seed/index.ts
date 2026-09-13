@@ -27,6 +27,7 @@ export interface SeederResult {
   entity: string;
   created: number;
   skipped: number;
+  updated?: number;
   errors: string[];
 }
 
@@ -137,25 +138,42 @@ async function seedProducts(db: DbInstance, _force: boolean): Promise<SeederResu
   };
 
   const defaultProducts = getSystemProducts();
+  const conflicts = await db.execute(sql`SELECT id FROM products WHERE
+    (type='electricity' AND (system_key IS NULL OR system_key NOT IN ('thermal','green','free_market','energy_saving')))
+    OR (type<>'electricity' AND system_key IN ('thermal','green','free_market','energy_saving')) LIMIT 1`);
+  if (conflicts.rows.length) {
+    result.errors.push(
+      'Legacy electricity identities require reconciliation before seeding; existing products were preserved'
+    );
+    return result;
+  }
 
   for (const product of defaultProducts) {
     try {
-      const existing = await db
-        .select({ id: products.id })
-        .from(products)
-        .where(eq(products.systemKey, product.systemKey))
-        .limit(1);
-
-      if (existing.length > 0) {
-        result.skipped++;
-        continue;
-      }
-
-      await db.insert(products).values(product).onConflictDoNothing({
-        target: products.systemKey,
+      const created = await db.transaction(async (tx) => {
+        const inserted = await tx
+          .insert(products)
+          .values(product)
+          .onConflictDoNothing({
+            target: products.systemKey,
+          })
+          .returning({ id: products.id });
+        const row =
+          inserted[0] ??
+          (
+            await tx
+              .select({ id: products.id })
+              .from(products)
+              .where(eq(products.systemKey, product.systemKey))
+              .limit(1)
+          )[0];
+        if (!row) throw new Error('Seed product missing after insert');
+        await tx.execute(sql`INSERT INTO electricity_product_limits(product_id,min_kwh,max_kwh)
+          VALUES (${row.id},0,0) ON CONFLICT(product_id) DO NOTHING`);
+        return inserted.length > 0;
       });
-
-      result.created++;
+      if (created) result.created++;
+      else result.skipped++;
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       result.errors.push(`product[${product.systemKey}]: ${message}`);
@@ -215,7 +233,7 @@ function getSystemProducts(): Array<{
  * duplicates. Only seeds the 31 Iranian provinces. Cities are added on
  * demand by admin geography management.
  */
-async function seedGeography(db: DbInstance, _force: boolean): Promise<SeederResult> {
+async function seedGeography(db: DbInstance, force: boolean): Promise<SeederResult> {
   const result: SeederResult = {
     entity: 'geography',
     created: 0,
@@ -257,28 +275,33 @@ async function seedGeography(db: DbInstance, _force: boolean): Promise<SeederRes
     { nameFa: 'یزد', nameEn: 'Yazd' },
   ];
 
-  // Use raw SQL through the drizzle ORM instance to insert provinces
-  // (geography tables are not registered in the Drizzle ORM schema object).
-  for (const province of iranianProvinces) {
-    try {
-      const existing = await db.execute(
-        sql`SELECT id FROM provinces WHERE name_en = ${province.nameEn} LIMIT 1`
-      );
-
-      if (existing.rows.length > 0) {
-        result.skipped++;
-        continue;
+  try {
+    await db.transaction(async (tx) => {
+      await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext('barghsa.geography_seed'))`);
+      for (const province of iranianProvinces) {
+        const existing = await tx.execute(
+          sql`SELECT id,name_fa FROM provinces WHERE name_en = ${province.nameEn} LIMIT 1 FOR UPDATE`
+        );
+        if (existing.rows.length) {
+          if (force && existing.rows[0]!.name_fa !== province.nameFa) {
+            await tx.execute(
+              sql`UPDATE provinces SET name_fa=${province.nameFa} WHERE id=${existing.rows[0]!.id}`
+            );
+            result.updated = (result.updated ?? 0) + 1;
+          } else result.skipped++;
+          continue;
+        }
+        await tx.execute(
+          sql`INSERT INTO provinces (name_fa, name_en) VALUES (${province.nameFa}, ${province.nameEn})`
+        );
+        result.created++;
       }
-
-      await db.execute(
-        sql`INSERT INTO provinces (id, name_fa, name_en) VALUES (gen_random_uuid(), ${province.nameFa}, ${province.nameEn})`
-      );
-
-      result.created++;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      result.errors.push(`province[${province.nameEn}]: ${message}`);
-    }
+    });
+  } catch {
+    result.created = 0;
+    result.skipped = 0;
+    result.updated = 0;
+    result.errors.push('Geography seed transaction failed; no provinces were changed');
   }
 
   return result;
@@ -438,6 +461,7 @@ async function main(): Promise<void> {
   for (const r of result.results) {
     const parts: string[] = [];
     if (r.created > 0) parts.push(`created ${r.created}`);
+    if (r.updated) parts.push(`updated ${r.updated}`);
     if (r.skipped > 0) parts.push(`skipped ${r.skipped}`);
     if (r.errors.length > 0) parts.push(`errors: ${r.errors.join(', ')}`);
     const summary = parts.length > 0 ? parts.join(', ') : 'no changes';

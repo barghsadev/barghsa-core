@@ -4,7 +4,7 @@ import type { ValidatedSession } from '../session/session.service.js';
 import {
   DEFAULT_GREEN_ELECTRICITY_CONFIG,
   GREEN_ELECTRICITY_CONFIG_KEY,
-  GREEN_ELECTRICITY_SYSTEM_KEY,
+  GREEN_ELECTRICITY_SYSTEM_KEYS,
   toGreenElectricityConfig,
   validateGreenElectricityConfig,
 } from '@barghsa/shared/finance';
@@ -262,7 +262,7 @@ export class CatalogueProductsService {
     const product = await this.findProduct(pool, id);
     if (!product) throw this.productNotFound(id);
     const greenModes: string[] = [];
-    if (product.system_key === GREEN_ELECTRICITY_SYSTEM_KEY) {
+    if (GREEN_ELECTRICITY_SYSTEM_KEYS.includes(product.system_key ?? '')) {
       const stored = await pool.query('SELECT value FROM app_config WHERE key = $1', [
         GREEN_ELECTRICITY_CONFIG_KEY,
       ]);
@@ -971,17 +971,6 @@ export class CatalogueProductsService {
           statusCode: 400,
           error: 'CATALOGUE_LIMITS_INVALID',
           message: 'maxKwh must be non-negative',
-        },
-        400
-      );
-    }
-    // Both zero is meaningless — the DB CHECK requires at least one bound.
-    if (min === 0n && max === 0n) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: 'CATALOGUE_LIMITS_INVALID',
-          message: 'At least one of minKwh or maxKwh must be non-zero',
         },
         400
       );

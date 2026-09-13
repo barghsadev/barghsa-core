@@ -1253,7 +1253,11 @@ pnpm dev
 
 Local development may create a seeded admin using credentials supplied through development-only environment variables. Production deployment must never use a hard-coded default password. The first admin is created through a one-time bootstrap secret or secure operator command, must change password at first login, and must enroll MFA before accessing admin settings.
 
-In development, OTP codes are printed to the API console.
+`pnpm dev` runs migrations and the idempotent seed before starting development servers; either failure prevents startup. The seed logs created, updated and skipped counts. Repeated or concurrent runs preserve existing products, prices, activation, administrators and notification templates. `pnpm db:seed --force` restores only the Persian labels of the 31 default provinces, matched by their English seed names. Other customized geography fields remain unchanged.
+
+Set `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_KEY`, `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` explicitly for initial administrator creation. The identity may be an email or E.164 phone number. After creation, remove bootstrap credentials from the deployment environment. Staff login always requires a delivered OTP after the forced password change; configure a working delivery channel through the deployment procedure before handing over access. OTP values are not printed to logs.
+
+In production, run migrations and the initial seed before admitting traffic; retain their successful exit results. Do not run `--force` as an automatic deployment step. Migration0134 preserves any legacy noncanonical electricity rows for explicit operator reconciliation; it does not silently delete or relabel referenced products. The seed refuses conflicting electricity identities. Green-rule reads recognize the canonical `green` key and the legacy `green_electricity` key, but reject an ambiguous pair. Reconcile legacy rows and validate the new nonnegative-limit constraint before declaring production data compliant.
 
 ### Docker-for-Mac file-watch polling
 

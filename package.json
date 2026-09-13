@@ -9,7 +9,7 @@
     "pnpm": ">=10"
   },
   "scripts": {
-    "dev": "turbo dev",
+    "dev": "pnpm --filter @barghsa/db db:migrate && pnpm db:seed && turbo dev",
     "dev:docker": "CHOKIDAR_USEPOLLING=true TURBO_DAEMON=false TSC_WATCHFILE=UseFsEventsWithPolling turbo dev",
     "build": "turbo build",
     "test": "turbo test",

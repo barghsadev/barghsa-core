@@ -46,7 +46,7 @@ import {
   greenElectricityConfigToStored,
   type GreenElectricityConfig,
   GREEN_ELECTRICITY_ORDER_MODES,
-  GREEN_ELECTRICITY_SYSTEM_KEY,
+  GREEN_ELECTRICITY_SYSTEM_KEYS,
   evaluateGreenRuleEnforcement,
   type GreenElectricityProductState,
 } from '@barghsa/shared/finance';
@@ -1708,9 +1708,12 @@ export class AdminService {
   ): Promise<GreenElectricityProductState> {
     const pool = getDbPool();
     const result = await (client ?? pool).query(
-      `SELECT status, effective_product_price(id) AS price FROM products WHERE system_key = $1${client ? ' FOR SHARE' : ''}`,
-      [GREEN_ELECTRICITY_SYSTEM_KEY]
+      `SELECT status, effective_product_price(id) AS price FROM products WHERE system_key = ANY($1::text[])${client ? ' FOR SHARE' : ''}`,
+      [GREEN_ELECTRICITY_SYSTEM_KEYS]
     );
+    if (result.rows.length > 1) {
+      throw new HttpException('Green electricity product identity is ambiguous', 503);
+    }
     if (result.rows.length === 0) {
       return { exists: false, status: null, priceIrR: null };
     }

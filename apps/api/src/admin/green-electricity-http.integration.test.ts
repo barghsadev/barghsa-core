@@ -52,7 +52,7 @@ beforeEach(async () => {
   await http.pool.query('DELETE FROM app_config WHERE key=$1', [configKey]);
   await http.pool.query("DELETE FROM audit_log WHERE event='config_change'");
   await http.pool.query(
-    "INSERT INTO products(system_key,title,price,status) VALUES ('green_electricity','{\"en\":\"Green test\"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active',price=1000"
+    "INSERT INTO products(system_key,title,price,status) VALUES ('green','{\"en\":\"Green test\"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active',price=1000"
   );
 });
 function save(body: unknown = input, user = 'operator') {
@@ -82,6 +82,7 @@ it.each(['permission', 'product'])(
     let pending: Promise<Response> | undefined;
     try {
       await client.query('BEGIN');
+      const blocker = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
       await client.query("SELECT user_id FROM users WHERE user_id='operator' FOR UPDATE");
       pending = save();
       await expect
@@ -89,7 +90,8 @@ it.each(['permission', 'product'])(
           Number(
             (
               await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' "
+                'SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+                [blocker]
               )
             ).rows[0].count
           )
@@ -97,10 +99,7 @@ it.each(['permission', 'product'])(
         .toBe(1);
       if (change === 'permission')
         await client.query("DELETE FROM user_roles WHERE user_id='operator'");
-      else
-        await client.query(
-          "UPDATE products SET status='inactive' WHERE system_key='green_electricity'"
-        );
+      else await client.query("UPDATE products SET status='inactive' WHERE system_key='green'");
       await client.query('COMMIT');
       expect((await pending).status).toBe(change === 'permission' ? 403 : 400);
       expect(

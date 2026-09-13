@@ -283,11 +283,10 @@ it('rejects unknown fields, blank localized titles and ambiguous price dates wit
 
 it('reports enabled green rules and intersecting current or scheduled VAT references', async () => {
   await http.pool.query(
-    "INSERT INTO products(system_key,title,price,status) VALUES ('green_electricity','{\"en\":\"Green test\"}',1000,'active') ON CONFLICT(system_key) DO NOTHING"
+    "INSERT INTO products(system_key,title,price,status) VALUES ('green','{\"en\":\"Green test\"}',1000,'active') ON CONFLICT(system_key) DO NOTHING"
   );
-  const green = (
-    await http.pool.query("SELECT id FROM products WHERE system_key='green_electricity'")
-  ).rows[0].id as string;
+  const green = (await http.pool.query("SELECT id FROM products WHERE system_key='green'")).rows[0]
+    .id as string;
   expect(await (await request(`/${green}/rule-references`)).json()).toEqual({
     greenModes: ['simpleOrder'],
     vatOverride: false,
@@ -399,4 +398,25 @@ it('records verified step-up time in the price configuration audit', async () =>
     stepUpVerified: true,
     stepUpVerifiedAt: verifiedAt.toISOString(),
   });
+});
+
+it('allows an authorized staff member to restore both electricity limits to zero', async () => {
+  const id = (
+    await http.pool.query(
+      `INSERT INTO products(type,system_key,title) VALUES ('electricity','thermal','{"fa":"برق حرارتی","en":"Thermal"}') RETURNING id`
+    )
+  ).rows[0].id;
+  expect((await request(`/${id}`, 'PUT', { minKwh: '10', maxKwh: '100' })).status).toBe(200);
+  const unlimited = await request(`/${id}`, 'PUT', { minKwh: '0', maxKwh: '0' });
+  expect(unlimited.status, await unlimited.clone().text()).toBe(200);
+  expect(await unlimited.json()).toMatchObject({ electricityLimits: { minKwh: '0', maxKwh: '0' } });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT min_kwh,max_kwh FROM electricity_product_limits WHERE product_id=$1',
+        [id]
+      )
+    ).rows
+  ).toEqual([{ min_kwh: '0', max_kwh: '0' }]);
+  expect((await request(`/${id}`, 'PUT', { minKwh: '101', maxKwh: '100' })).status).toBe(400);
 });

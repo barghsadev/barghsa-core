@@ -304,7 +304,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     expect(pool.query).toHaveBeenCalledTimes(1);
     expect(pool.query).toHaveBeenCalledWith(
       expect.stringContaining('FROM products WHERE system_key'),
-      ['green_electricity']
+      [['green', 'green_electricity']]
     );
   });
 
@@ -530,4 +530,15 @@ describe('AdminService green rule safety (T-09.10.03)', () => {
     expect(status.advancedOrder.ruleActive).toBe(false);
     expect(status.advancedOrder.blocked).toBe(false);
   });
+});
+
+it('refuses ambiguous canonical and legacy green products instead of choosing one', async () => {
+  const { mockQuery } = await loadService();
+  mockQuery.mockResolvedValueOnce({
+    rows: [
+      { status: 'active', price: '1000' },
+      { status: 'active', price: '2000' },
+    ],
+  });
+  await expect(service.getGreenElectricityProductState()).rejects.toMatchObject({ status: 503 });
 });
