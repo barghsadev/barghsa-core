@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
+  "source_revision": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
   "active_step": "V01",
-  "next_action": "V01: review local development workflow, saved PR35–38; reuse seed initialization evidence.",
+  "next_action": "V01: reconcile runtime health, errors and graceful shutdown, saved PR29/39–42, reusing verified current source evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -287,7 +287,7 @@
       "implementation_status": "not_applicable_acceptance_gate",
       "acceptance_status": "pending",
       "remaining": [
-        "Review34 partial and98 pending task records; preserve190 verified assessments. Reconcile remaining saved PRs and38 older source refreshes. Preserve58 skips and separate historical queue gaps."
+        "Review34 partial and94 pending claims; preserve194 verified assessments. Reconcile remaining saved PRs and38 older source refreshes; preserve58 skips."
       ]
     },
     {
@@ -773,6 +773,10 @@
     {
       "id": "V01-database-pr-reconciliation",
       "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
+    },
+    {
+      "id": "V01-local-development",
+      "review_record": "audit/evidence/step-reviews.json#V01-local-development"
     }
   ],
   "deferred_improvements": [
@@ -800,9 +804,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 190,
+    "acceptance_verified": 194,
     "partial": 34,
-    "pending": 98,
+    "pending": 94,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 8,
@@ -1106,32 +1110,36 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-local-development",
-    "name": "Development services, configuration, initialization and file watching",
+    "id": "V01-runtime-lifecycle",
+    "name": "Runtime errors, health and graceful shutdown",
     "status": "reviewing",
     "prs": [
-      35,
-      36,
-      37,
-      38
+      29,
+      39,
+      40,
+      41,
+      42
     ],
     "task_keys": [
-      "01-platform-infrastructure.md#T-03.02.01",
-      "01-platform-infrastructure.md#T-03.02.02",
-      "01-platform-infrastructure.md#T-03.02.03",
-      "01-platform-infrastructure.md#T-03.02.04"
+      "01-platform-infrastructure.md#T-01.05.01",
+      "01-platform-infrastructure.md#T-03.03.01",
+      "01-platform-infrastructure.md#T-03.03.02",
+      "01-platform-infrastructure.md#T-03.03.03",
+      "01-platform-infrastructure.md#T-03.03.04"
     ],
     "remaining_checklist": [
-      "Read four exact requirements and saved PR bodies/deferrals.",
-      "Review compose/env/dev/polling integration; preserve seed and existing operational proof."
+      "Exact requirements and saved PR bodies read.",
+      "Review current health/optional dependencies and API/worker/web drain behavior; reuse source-bound proof.",
+      "Disposition historical validation gaps and provider maintenance-mode deferrals separately."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+      "audit/evidence/step-reviews.json#V01-local-development",
+      "audit/evidence/step-reviews.json#V01-database-foundations"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "V01: review local development workflow, saved PR35–38; reuse seed initialization evidence."
+    "next_action": "V01: reconcile runtime health, errors and graceful shutdown, saved PR29/39–42, reusing verified current source evidence."
   },
   "open_domain_reviews": [
     {

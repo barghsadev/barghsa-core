@@ -20001,6 +20001,199 @@
         "Live proxy/network/production operations remain outside local evidence.",
         "V02 final regression remains required."
       ]
+    },
+    {
+      "id": "V01-local-development",
+      "date": "2026-09-13",
+      "source_revision": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
+      "base_revision": "30d4c5f4ea8ec83367029bfc7f8fc121cc13a58b",
+      "product_commits": [
+        "3fd776a9"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.02.01",
+        "01-platform-infrastructure.md#T-03.02.02",
+        "01-platform-infrastructure.md#T-03.02.03",
+        "01-platform-infrastructure.md#T-03.02.04",
+        "02-auth-users-admin.md#T-01.02.01"
+      ],
+      "summary": "Four development tasks newly verified/four PRs newly closed; linked OTP task/PR74 closure preserved.",
+      "review": [
+        "Corrected misspelled PostGIS image repository while retaining required PostgreSQL16/PostGIS. Isolated Compose PostgreSQL/Redis/MinIO health checks pass. Actual init creates both upload/backup buckets with matching credentials and private policy; repeat succeeds and anonymous GET returns403 for both. Existing named volumes are preserved; tests used isolated names/ports and removed only their own resources. PgBouncer remains an optional separately reviewed profile.",
+        "All required environment and bootstrap entries documented. DATABASE_URL and MinIO credentials match Compose; .env is actually loaded by dotenv-cli with explicit shell values preserved. OTP_CONSOLE now gates all three existing development debug paths; encrypted outbox remains mandatory, no code enters responses, and production/staging/test never print codes even with the flag enabled.18 new cases plus44 existing unit/HTTP cases pass.",
+        "Root development builds dependencies, migrates and seeds before launching actual API/worker/Vite processes; failures prevent startup. API no longer only compiles, worker now runs, and shared/i18n edits rebuild shipped exports. Same-origin Vite /api proxy forwards to configured API PORT. Actual direct/proxied readiness and web root return200. Initial smoke bad empty direct URL correctly prevented startup; corrected isolated environment passes.",
+        "Nodemon polling plus Vite polling supports Docker bind-mount workflow. Two controlled shared-source changes rebuild ESM and CJS, change API/worker listener PIDs, and recover all four endpoints. Probe deletion triggers the third restart; exactly three events produce three restarts with a stable observation period. Generated build artifacts, temporary distribution-test files and generated route tree are excluded, fixing reproduced restart loop. SIGINT stops all three owned listeners.",
+        "Nodemon3.1.14 and dotenv-cli11.0.0 are development-only additions; frozen offline installation passes. No production dependency version/build contract changes.",
+        "Earlier diagnostic logs retained: formatter lacks an env-file parser; first Compose --wait treated successful one-shot init exit0 as a failure, so health/start/init exit were inspected separately; original restart loop reproduced; first reload harness was interrupted while waiting for obsolete temporary output deletion after a cache restore. Final proof checks actual source events, rebuilt values, process replacement and stable endpoints; all checks pass. Only generated smoke files/artifacts and isolated containers/volumes were removed.",
+        "Saved PR37 inability to run turbo dev is resolved by real startup/restart checks. No indexed PR35–38 deferral rows exist. Historical typo postgis/postgres corrected to official postgis/postgis16-3.5; intent/version preserved."
+      ],
+      "verification": {
+        "runtime": "Isolated PostgreSQL16/PostGIS,Redis7,MinIO; migration+seed then live API/worker/Vite. Four endpoints200; two shared edits plus deletion -> three stable restarts; all listeners stop.",
+        "otp": "62/62 across two files:45 service cases including18 new isolation cases;17 real delivery HTTP cases.",
+        "quality": "API/web types, API/worker/shared/DB builds, frozen offline install, scoped lint/format, queue/requirement checks pass."
+      },
+      "remaining": [
+        "Optional PgBouncer/WAL/backup configuration remains V01 operations review.",
+        "Production delivery/deployment and cross-platform deployment evidence remain external.",
+        "V02 whole-repository regression and production image refresh remain."
+      ],
+      "source_evidence": [
+        {
+          "path": ".env.example",
+          "sha256": "49622c1162397485ec514cde497772fad798a4d36d149e3c40f28107b4dca98d"
+        },
+        {
+          "path": "README.md",
+          "sha256": "762c7f4096dbaea3894c741056491dc058305b2f10846d3f1070f328bafdaefd"
+        },
+        {
+          "path": "apps/api/nest-cli.json",
+          "sha256": "6224f84398d9211d89c87590173841d24fc4949460cc717616e82a806bfb2ba8"
+        },
+        {
+          "path": "apps/api/package.json",
+          "sha256": "1bc6b96eab0dd254f4d9b2835f3f7aac66e4d3a6b0ab6c004458908bd76a20a7"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.spec.ts",
+          "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "ec087d5b11da19b78492cae7884dc656ec5a12e13944979085286c9ad525fb3c"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "92984996e94c55ad5d1697bb19b7f0018f407dc5e9082aced74bfeed94dabeed"
+        },
+        {
+          "path": "apps/worker/package.json",
+          "sha256": "3823626ccdf0f964c72fc5491766300edd05b73917a9c3c10454ec77d810164b"
+        },
+        {
+          "path": "docker-compose.yml",
+          "sha256": "aa3f1f51c71a1e604cf4aa1a2bc99a6e5846e32eaaa9b00686249e2ab7400613"
+        },
+        {
+          "path": "kanban/epics/01-platform-infrastructure.md",
+          "sha256": "f45ed1b8915980f47c092bf68c9857f45786f0c08d0a06ecc29eb681e07c352c"
+        },
+        {
+          "path": "kanban/requirements-traceability.json",
+          "sha256": "2fa963ebac6bf4492b4b035f5b4e858c0ea74ee9cb72c26114966276851de471"
+        },
+        {
+          "path": "nodemon.json",
+          "sha256": "51f82a2278fda20f28060049944afacafacefb45a17830f8c1b2d2f36fee32b8"
+        },
+        {
+          "path": "package.json",
+          "sha256": "659fe4178ca5c35b8ceb54028d5ff73a50fedb5fff396033afa69144dbd894f1"
+        },
+        {
+          "path": "packages/i18n/package.json",
+          "sha256": "010d07a4b3f3ef00909f2ec73fb9428de11eba2abdf2a4fa7b72d6deb70c5be0"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "12b5a1fe32100daa207574dcc30e8b1c8fa4de758829b9dd26063eb0a04fda8f"
+        },
+        {
+          "path": "packages/shared/scripts/build.mjs",
+          "sha256": "0f6e8ea148ffa0dcb8244bd80b10f8ed1b7650933a6f0eb59a13fb9fa7cbcb44"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "8b71115df94fd20d55c98cc60e6ea367ed28460eee06a8eae4823ab8e005d25c"
+        },
+        {
+          "path": "turbo.json",
+          "sha256": "910ad06ace9cac7b514e5f9803b5ef748a8286cbd802a0459e035c3929a5f2b4"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-dev-api-types.log",
+        "/tmp/v01-dev-backlog-check-final.log",
+        "/tmp/v01-dev-backlog-check.log",
+        "/tmp/v01-dev-backlog-write-final.log",
+        "/tmp/v01-dev-backlog-write.log",
+        "/tmp/v01-dev-buckets-repeat.log",
+        "/tmp/v01-dev-buckets.log",
+        "/tmp/v01-dev-diff.log",
+        "/tmp/v01-dev-format-final.log",
+        "/tmp/v01-dev-format-reviewed.log",
+        "/tmp/v01-dev-format.log",
+        "/tmp/v01-dev-frozen.log",
+        "/tmp/v01-dev-install.log",
+        "/tmp/v01-dev-lint-final.log",
+        "/tmp/v01-dev-lint.log",
+        "/tmp/v01-dev-otp-format.log",
+        "/tmp/v01-dev-otp-tests.log",
+        "/tmp/v01-dev-quality-format.log",
+        "/tmp/v01-dev-reload-proof.log",
+        "/tmp/v01-dev-reload-verified.log",
+        "/tmp/v01-dev-requirements.log",
+        "/tmp/v01-dev-runtime-final.log",
+        "/tmp/v01-dev-runtime-reviewed.log",
+        "/tmp/v01-dev-runtime-verified.log",
+        "/tmp/v01-dev-runtime.log",
+        "/tmp/v01-dev-services-cleanup.log",
+        "/tmp/v01-dev-services.log",
+        "/tmp/v01-dev-shutdown.log",
+        "/tmp/v01-dev-web-types.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 35,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.02.01"
+          ],
+          "reason": "Corrected misspelled PostGIS image repository while retaining required PostgreSQL16/PostGIS. Isolated Compose PostgreSQL/Redis/MinIO health checks pass. Actual init creates both upload/backup buckets with matching credentials and private policy; repeat succeeds and anonymous GET returns403 for both. Existing named volumes are preserved; tests used isolated names/ports and removed only their own resources. PgBouncer remains an optional separately reviewed profile.",
+          "source_revision": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
+          "evidence": "audit/evidence/step-reviews.json#V01-local-development"
+        },
+        {
+          "pr": 36,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.02.02"
+          ],
+          "reason": "All required environment and bootstrap entries documented. DATABASE_URL and MinIO credentials match Compose; .env is actually loaded by dotenv-cli with explicit shell values preserved. OTP_CONSOLE now gates all three existing development debug paths; encrypted outbox remains mandatory, no code enters responses, and production/staging/test never print codes even with the flag enabled.18 new cases plus44 existing unit/HTTP cases pass.",
+          "source_revision": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
+          "evidence": "audit/evidence/step-reviews.json#V01-local-development"
+        },
+        {
+          "pr": 37,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.02.03"
+          ],
+          "reason": "Root development builds dependencies, migrates and seeds before launching actual API/worker/Vite processes; failures prevent startup. API no longer only compiles, worker now runs, and shared/i18n edits rebuild shipped exports. Same-origin Vite /api proxy forwards to configured API PORT. Actual direct/proxied readiness and web root return200. Initial smoke bad empty direct URL correctly prevented startup; corrected isolated environment passes.",
+          "source_revision": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
+          "evidence": "audit/evidence/step-reviews.json#V01-local-development"
+        },
+        {
+          "pr": 38,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.02.04"
+          ],
+          "reason": "Nodemon polling plus Vite polling supports Docker bind-mount workflow. Two controlled shared-source changes rebuild ESM and CJS, change API/worker listener PIDs, and recover all four endpoints. Probe deletion triggers the third restart; exactly three events produce three restarts with a stable observation period. Generated build artifacts, temporary distribution-test files and generated route tree are excluded, fixing reproduced restart loop. SIGINT stops all three owned listeners.",
+          "source_revision": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
+          "evidence": "audit/evidence/step-reviews.json#V01-local-development"
+        },
+        {
+          "pr": 74,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-01.02.01"
+          ],
+          "reason": "Existing registration/delivery closure preserved; development-console option is now honored with production suppression and durable delivery unchanged.",
+          "source_revision": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
+          "evidence": "audit/evidence/step-reviews.json#V01-local-development"
+        }
+      ]
     }
   ]
 }

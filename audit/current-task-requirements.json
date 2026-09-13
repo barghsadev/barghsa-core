@@ -4,7 +4,7 @@
   "baseline_register": "audit/task-review.json",
   "baseline_register_sha256": "8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060",
   "source_sha256": {
-    "kanban/epics/01-platform-infrastructure.md": "cf25ecaad4e9a6484a8a69a6e3528efabbc8af7b5f580df4ca527b2dcf9a0dda",
+    "kanban/epics/01-platform-infrastructure.md": "f45ed1b8915980f47c092bf68c9857f45786f0c08d0a06ecc29eb681e07c352c",
     "kanban/epics/02-auth-users-admin.md": "e532618b099625d9b0c8cae5fc03804183236ae80174ce47b4168180a78a8a55",
     "kanban/epics/05-notifications-documents-ai.md": "d06e35f969f2550cf824a3bd799ec77f6836fa52ff98e9fbc0ac2521d46a71ab",
     "kanban/epics/04-invoices-wallet-contracts.md": "5d72db3278123cdcf42dd5e14c87ae6cab1a089363755537a4c4083cfa313bf7",
@@ -369,8 +369,8 @@
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 469,
       "story_context": "#### S-03.02: Docker Compose for local development\n\n**Description:** As a developer, I want a `docker-compose.yml` that runs PostgreSQL, Redis, and MinIO for local development so that I can start the full stack with one command and have a production-like environment.\n\n**Acceptance Criteria:**\n- `docker-compose.yml` defines services: `postgres`, `redis`, `minio`\n- `postgres` uses `postgis/postgres:16` image with persistent volume and init script for UUIDv7 extension\n- `redis` uses `redis:7-alpine` — optional, no persistent data required\n- `minio` uses `minio/minio` with persistent volume, console on port 9001, API on port 9000\n- Environment variables default to development-safe values in `.env.example`\n- Service dependencies: app processes depend on `postgres` being healthy\n- `pnpm dev` runs Turborepo dev mode with hot reload\n- Hot reload uses `tsx watch` or SWC for NestJS and Vite dev server for web\n- `.env.example` contains all required variables with sensible development defaults; `DATABASE_URL`, `REDIS_URL`, `MINIO_*`, `SESSION_SECRET`, `CSRF_SECRET`, etc.\n- OTP codes are printed to API console in dev environment\n- SWC or webpack watch mode recompiles on save within ~500ms\n\n**Tasks:**",
-      "requirement_extract": "- **T-03.02.01:** Create `docker-compose.yml` with PostgreSQL, Redis, MinIO\n  - **Notes:** PostgreSQL: image `postgis/postgres:16`, port `5432`, volume `pgdata:/var/lib/postgresql/data`, env `POSTGRES_DB=barghsa`, `POSTGRES_USER=barghsa`, `POSTGRES_PASSWORD`. Redis: image `redis:7-alpine`, port `6379`. MinIO: image `minio/minio`, ports `9000:9000` (API), `9001:9001` (console), volume `minio-data:/data`, command `server /data --console-address \":9001\"`. Add `healthcheck` to PostgreSQL (`pg_isready`) and MinIO (`curl -f http://localhost:9000/minio/health/live`).\n  - **Dependencies:** None (infrastructure only)\n  - **Complexity:** S",
-      "context_sha256": "63a28ef31b401a48bd2a15e6b0a92405d14550204e24103b3f605cc9d0122ce2"
+      "requirement_extract": "- **T-03.02.01:** Create `docker-compose.yml` with PostgreSQL, Redis, MinIO\n  - **Notes:** PostgreSQL: image `postgis/postgis:16-3.5`, port `5432`, volume `pgdata:/var/lib/postgresql/data`, env `POSTGRES_DB=barghsa`, `POSTGRES_USER=barghsa`, `POSTGRES_PASSWORD`. Redis: image `redis:7-alpine`, port `6379`. MinIO: image `minio/minio`, ports `9000:9000` (API), `9001:9001` (console), volume `minio-data:/data`, command `server /data --console-address \":9001\"`. Add `healthcheck` to PostgreSQL (`pg_isready`) and MinIO (`curl -f http://localhost:9000/minio/health/live`).\n  - **Dependencies:** None (infrastructure only)\n  - **Complexity:** S",
+      "context_sha256": "f27e1e3426af08c904b8d58555b621d97d162fa9d48ccc4b85b3019dda265d4e"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-03.02.02",

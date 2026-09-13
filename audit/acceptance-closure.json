@@ -111,11 +111,11 @@
       "source_evidence": [
         {
           "path": "package.json",
-          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
+          "sha256": "659fe4178ca5c35b8ceb54028d5ff73a50fedb5fff396033afa69144dbd894f1"
         },
         {
           "path": "README.md",
-          "sha256": "f186483d80f9018f78f3ec84b6677fb4a8322b88b6fce72ec918d4223bd4bfb0"
+          "sha256": "762c7f4096dbaea3894c741056491dc058305b2f10846d3f1070f328bafdaefd"
         },
         {
           "path": ".github/workflows/ci.yml",
@@ -144,7 +144,8 @@
       },
       "evidence_reuse": [
         "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
-        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ]
     },
     {
@@ -397,7 +398,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
+          "sha256": "659fe4178ca5c35b8ceb54028d5ff73a50fedb5fff396033afa69144dbd894f1"
         },
         {
           "path": "packages/db/src/base-table.test.ts",
@@ -433,7 +434,7 @@
         },
         {
           "path": "pnpm-lock.yaml",
-          "sha256": "1bb597d0845a82a28cdccfa9fce00fa7a9834841fdfb4bdaace76d42e4c811c7"
+          "sha256": "8b71115df94fd20d55c98cc60e6ea367ed28460eee06a8eae4823ab8e005d25c"
         }
       ],
       "checks": [
@@ -452,7 +453,8 @@
       "evidence_reuse": [
         "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
         "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
-        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ],
       "review_record": "audit/evidence/step-reviews.json#R05-strict-dependencies"
     },
@@ -550,7 +552,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
+          "sha256": "659fe4178ca5c35b8ceb54028d5ff73a50fedb5fff396033afa69144dbd894f1"
         },
         {
           "path": ".github/workflows/ci.yml",
@@ -588,7 +590,8 @@
       },
       "evidence_reuse": [
         "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
-        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ]
     },
     {
@@ -606,7 +609,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
+          "sha256": "659fe4178ca5c35b8ceb54028d5ff73a50fedb5fff396033afa69144dbd894f1"
         },
         {
           "path": ".github/workflows/ci.yml",
@@ -622,7 +625,7 @@
         },
         {
           "path": "apps/worker/package.json",
-          "sha256": "13abf75f2158b3d423ff5fed9321621682eccc0fb5c5489f53e0daa3f2aac139"
+          "sha256": "3823626ccdf0f964c72fc5491766300edd05b73917a9c3c10454ec77d810164b"
         },
         {
           "path": "packages/ui/package.json",
@@ -634,7 +637,7 @@
         },
         {
           "path": "packages/shared/package.json",
-          "sha256": "a4ec5ba5bd63be6015204581aa02250e2b903c82f7622d94799e6edaf762a792"
+          "sha256": "12b5a1fe32100daa207574dcc30e8b1c8fa4de758829b9dd26063eb0a04fda8f"
         },
         {
           "path": "packages/eslint-config/package.json",
@@ -646,7 +649,7 @@
         },
         {
           "path": "packages/i18n/package.json",
-          "sha256": "1aaba89199af1fafc36136720b0182b443ee086d2aa869d95715a0c7ad9103ed"
+          "sha256": "010d07a4b3f3ef00909f2ec73fb9428de11eba2abdf2a4fa7b72d6deb70c5be0"
         }
       ],
       "checks": [
@@ -675,7 +678,8 @@
       "evidence_reuse": [
         "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
         "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
-        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ]
     },
     {
@@ -689,7 +693,7 @@
       "source_evidence": [
         {
           "path": "apps/web/vite.config.ts",
-          "sha256": "4bc4419d9b1b14e5bf2a951df90de2ca0a1e171a4d620eaad3e9ed424212c061"
+          "sha256": "92984996e94c55ad5d1697bb19b7f0018f407dc5e9082aced74bfeed94dabeed"
         },
         {
           "path": "apps/web/package.json",
@@ -730,7 +734,8 @@
       },
       "evidence_reuse": [
         "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
-        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ],
       "source_refresh_review": "audit/evidence/step-reviews.json#R03-errors"
     },
@@ -2515,7 +2520,7 @@
         },
         {
           "path": "apps/web/vite.config.ts",
-          "sha256": "4bc4419d9b1b14e5bf2a951df90de2ca0a1e171a4d620eaad3e9ed424212c061"
+          "sha256": "92984996e94c55ad5d1697bb19b7f0018f407dc5e9082aced74bfeed94dabeed"
         },
         {
           "path": "docs/adr/004-web-spa.md",
@@ -2523,7 +2528,7 @@
         },
         {
           "path": "pnpm-lock.yaml",
-          "sha256": "1bb597d0845a82a28cdccfa9fce00fa7a9834841fdfb4bdaace76d42e4c811c7"
+          "sha256": "8b71115df94fd20d55c98cc60e6ea367ed28460eee06a8eae4823ab8e005d25c"
         },
         {
           "path": "scripts/check-route-budgets.mjs",
@@ -2547,7 +2552,8 @@
       "evidence_reuse": [
         "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
         "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued.",
-        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ],
       "review_record": "audit/evidence/step-reviews.json#R04-purchase-loading"
     },
@@ -2578,7 +2584,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
+          "sha256": "659fe4178ca5c35b8ceb54028d5ff73a50fedb5fff396033afa69144dbd894f1"
         },
         {
           "path": "pnpm-lock.yaml",
@@ -2610,7 +2616,8 @@
       },
       "evidence_reuse": [
         "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
-        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ]
     },
     {
@@ -2624,7 +2631,7 @@
       "source_evidence": [
         {
           "path": "apps/web/vite.config.ts",
-          "sha256": "4bc4419d9b1b14e5bf2a951df90de2ca0a1e171a4d620eaad3e9ed424212c061"
+          "sha256": "92984996e94c55ad5d1697bb19b7f0018f407dc5e9082aced74bfeed94dabeed"
         },
         {
           "path": "apps/web/server.js",
@@ -2730,7 +2737,8 @@
       ],
       "evidence_reuse": [
         "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
-        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ],
       "source_refresh_review": "audit/evidence/step-reviews.json#R03-errors"
     },
@@ -2894,7 +2902,7 @@
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
+          "sha256": "ec087d5b11da19b78492cae7884dc656ec5a12e13944979085286c9ad525fb3c"
         },
         {
           "path": "apps/api/src/common/correlation-id.middleware.ts",
@@ -3018,7 +3026,7 @@
         },
         {
           "path": "packages/shared/package.json",
-          "sha256": "a4ec5ba5bd63be6015204581aa02250e2b903c82f7622d94799e6edaf762a792"
+          "sha256": "12b5a1fe32100daa207574dcc30e8b1c8fa4de758829b9dd26063eb0a04fda8f"
         },
         {
           "path": "packages/shared/src/errors/domain-error-codes.ts",
@@ -3178,7 +3186,8 @@
       "review_record": "audit/evidence/step-reviews.json#R03-correlation",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
-        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ]
     },
     {
@@ -3817,7 +3826,7 @@
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
+          "sha256": "ec087d5b11da19b78492cae7884dc656ec5a12e13944979085286c9ad525fb3c"
         },
         {
           "path": "apps/api/src/common/error-http.integration.test.ts",
@@ -3959,7 +3968,10 @@
         "note": "Original source bindings and assessment remain available in this committed ledger revision; older nested assessments are preserved."
       },
       "review_record": "audit/evidence/step-reviews.json#R01-session-recovery",
-      "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed."
+      "evidence_reuse": [
+        "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.04",
@@ -5901,7 +5913,7 @@
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
+          "sha256": "ec087d5b11da19b78492cae7884dc656ec5a12e13944979085286c9ad525fb3c"
         },
         {
           "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -6020,7 +6032,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
         "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
         "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
-        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
+        "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ]
     },
     {
@@ -7035,7 +7048,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-01.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "c706820b1dc2cac0ac00e1defb07196947d72287",
+      "reviewed_sha": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 61,
       "requirement": "**T-01.02.01 — OTP backend generation and sending**\n\n- Description: On successful registration request, server generates 6-digit secure random OTP, hashes it with SHA-256 (or stores as Argon2id hash if replay risk analysis demands it), stores with expiry (default 5 min admin-configurable), challengeId, and attempt counter. Sends OTP via the user's destination (email or SMS).\n- Technical notes: OTP is a CSPRNG-generated 6-digit numeric code. In DEV, OTP printed to API console (`[DEV] OTP for +989121234567: 483921`). Single-use: consumed after successful verify or after max attempts. Rate limit: 1 OTP per destination per 60s, 5 per hour, 10 per day. Stricter IP/device aggregate limits also apply. OTPs are never logged, never returned in API responses beyond the DEV console.\n- UI/UX: N/A (backend)\n- Dependencies: T-01.01.06\n- Complexity: M",
@@ -7059,12 +7072,13 @@
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
+          "sha256": "ec087d5b11da19b78492cae7884dc656ec5a12e13944979085286c9ad525fb3c"
         }
       ],
       "checks": [
         "OTP generation uses node crypto randomInt for6 digits and SHA-256 storage; encrypted outbox delivery, default300-second expiry with admin60–900-second configuration, attempt exhaustion and same-ID resend are implemented. Delivery worker tests use actual provider-fixture messages and verify retry, replacement, lease, payload erasure and concurrent claiming. Supplemental hashed device20/hour quota is shared across purposes; destination1/minute,5/hour,10/day and IP20/hour remain.",
-        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp"
+        "Consolidated evidence: audit/evidence/step-reviews.json#R01-registration-otp",
+        "audit/evidence/step-reviews.json#V01-local-development:18 explicit development-console isolation cases and17 actual delivery HTTP cases pass within62 affected cases. Three existing debug paths require both NODE_ENV=development and OTP_CONSOLE=true; prior authentication/delivery acceptance preserved."
       ],
       "limitations": [
         "Local acceptance uses migrated PostgreSQL and compiled HTTP/worker fixtures plus production-built browser tests with API fixtures. Live provider operation, deployment and broad V02/coverage/strict-dependency evidence remain separate."
@@ -7072,7 +7086,11 @@
       "merged_prs": [
         74
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-local-development"
     },
     {
       "task_key": "02-auth-users-admin.md#T-01.02.02",
@@ -7179,7 +7197,7 @@
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
+          "sha256": "ec087d5b11da19b78492cae7884dc656ec5a12e13944979085286c9ad525fb3c"
         },
         {
           "path": "apps/api/src/session/csrf.guard.ts",
@@ -7228,7 +7246,10 @@
         "Local migrated PostgreSQL/HTTP delivery fixtures and production-built browser fixtures verify acceptance. Live email/SMS operation remains external."
       ],
       "review_record": "audit/evidence/step-reviews.json#R01-session-recovery",
-      "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed."
+      "evidence_reuse": [
+        "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-03.01.01",
@@ -7728,7 +7749,7 @@
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
+          "sha256": "ec087d5b11da19b78492cae7884dc656ec5a12e13944979085286c9ad525fb3c"
         },
         {
           "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -7759,7 +7780,8 @@
       "review_record": "audit/evidence/step-reviews.json#R01-account-settings",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-account-settings",
-        "audit/final-repair-checkpoint.json"
+        "audit/final-repair-checkpoint.json",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ]
     },
     {
@@ -14447,11 +14469,11 @@
         },
         {
           "path": "apps/web/vite.config.ts",
-          "sha256": "4bc4419d9b1b14e5bf2a951df90de2ca0a1e171a4d620eaad3e9ed424212c061"
+          "sha256": "92984996e94c55ad5d1697bb19b7f0018f407dc5e9082aced74bfeed94dabeed"
         },
         {
           "path": "packages/i18n/package.json",
-          "sha256": "1aaba89199af1fafc36136720b0182b443ee086d2aa869d95715a0c7ad9103ed"
+          "sha256": "010d07a4b3f3ef00909f2ec73fb9428de11eba2abdf2a4fa7b72d6deb70c5be0"
         },
         {
           "path": "packages/i18n/src/wallet-invoice-payment.ts",
@@ -14485,7 +14507,8 @@
       },
       "evidence_reuse": [
         "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued.",
-        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ]
     },
     {
@@ -20957,7 +20980,7 @@
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "5fe32514e8e4fd2c65044b6970a8e6eb8e4183fa9670dfe910a197c7e1fee394"
+          "sha256": "ec087d5b11da19b78492cae7884dc656ec5a12e13944979085286c9ad525fb3c"
         },
         {
           "path": "apps/api/src/common/correlation-id.middleware.ts",
@@ -21081,7 +21104,7 @@
         },
         {
           "path": "packages/shared/package.json",
-          "sha256": "a4ec5ba5bd63be6015204581aa02250e2b903c82f7622d94799e6edaf762a792"
+          "sha256": "12b5a1fe32100daa207574dcc30e8b1c8fa4de758829b9dd26063eb0a04fda8f"
         },
         {
           "path": "packages/shared/src/errors/domain-error-codes.ts",
@@ -21187,7 +21210,8 @@
       ],
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
-        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued.",
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ]
     },
     {
@@ -22592,7 +22616,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
+          "sha256": "659fe4178ca5c35b8ceb54028d5ff73a50fedb5fff396033afa69144dbd894f1"
         }
       ],
       "checks": [
@@ -22604,7 +22628,10 @@
         81
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+      "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.04.02",
@@ -22695,7 +22722,7 @@
       "source_evidence": [
         {
           "path": "package.json",
-          "sha256": "1fcc1885d08cc979a3b78c08ce6a811322a6783f129ffdfe389865f0a6457bcf"
+          "sha256": "659fe4178ca5c35b8ceb54028d5ff73a50fedb5fff396033afa69144dbd894f1"
         },
         {
           "path": "packages/db/package.json",
@@ -22703,7 +22730,7 @@
         },
         {
           "path": "README.md",
-          "sha256": "f186483d80f9018f78f3ec84b6677fb4a8322b88b6fce72ec918d4223bd4bfb0"
+          "sha256": "762c7f4096dbaea3894c741056491dc058305b2f10846d3f1070f328bafdaefd"
         }
       ],
       "checks": [
@@ -22717,7 +22744,10 @@
         84
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+      "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap",
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.04.05",
@@ -22788,6 +22818,174 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.02.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 469,
+      "requirement": "- **T-03.02.01:** Create `docker-compose.yml` with PostgreSQL, Redis, MinIO\n  - **Notes:** PostgreSQL: image `postgis/postgis:16-3.5`, port `5432`, volume `pgdata:/var/lib/postgresql/data`, env `POSTGRES_DB=barghsa`, `POSTGRES_USER=barghsa`, `POSTGRES_PASSWORD`. Redis: image `redis:7-alpine`, port `6379`. MinIO: image `minio/minio`, ports `9000:9000` (API), `9001:9001` (console), volume `minio-data:/data`, command `server /data --console-address \":9001\"`. Add `healthcheck` to PostgreSQL (`pg_isready`) and MinIO (`curl -f http://localhost:9000/minio/health/live`).\n  - **Dependencies:** None (infrastructure only)\n  - **Complexity:** S",
+      "requirement_sha256": "e87b3daa80f558c374fa183e04a2617b7b0250b0e721453eaa89e721d5a9c610",
+      "source_evidence": [
+        {
+          "path": "docker-compose.yml",
+          "sha256": "aa3f1f51c71a1e604cf4aa1a2bc99a6e5846e32eaaa9b00686249e2ab7400613"
+        },
+        {
+          "path": ".env.example",
+          "sha256": "49622c1162397485ec514cde497772fad798a4d36d149e3c40f28107b4dca98d"
+        }
+      ],
+      "checks": [
+        "Corrected misspelled PostGIS image repository while retaining required PostgreSQL16/PostGIS. Isolated Compose PostgreSQL/Redis/MinIO health checks pass. Actual init creates both upload/backup buckets with matching credentials and private policy; repeat succeeds and anonymous GET returns403 for both. Existing named volumes are preserved; tests used isolated names/ports and removed only their own resources. PgBouncer remains an optional separately reviewed profile.",
+        "audit/evidence/step-reviews.json#V01-local-development"
+      ],
+      "limitations": [
+        "Local development evidence only. Live production storage, backup/WAL/PgBouncer operations and provider delivery remain separate requirements."
+      ],
+      "merged_prs": [
+        35
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-local-development"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.02.02",
+      "status": "acceptance_verified",
+      "reviewed_sha": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 474,
+      "requirement": "- **T-03.02.02:** Create `.env.example` with all required development variables\n  - **Notes:** Required vars: `DATABASE_URL=postgresql://barghsa:password@localhost:5432/barghsa`, `REDIS_URL=redis://localhost:6379/0`, `MINIO_ENDPOINT=localhost`, `MINIO_PORT=9000`, `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `MINIO_BUCKET`, `MINIO_USE_SSL=false` (dev), `SESSION_SECRET`, `CSRF_SECRET`, `NODE_ENV=development`. Optional: `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_EMAIL`, `ADMIN_BOOTSTRAP_PASSWORD`. Dev-only: `OTP_CONSOLE=true` to print OTPs to console. Document each variable with a comment.\n  - **Dependencies:** T-03.02.01\n  - **Complexity:** M",
+      "requirement_sha256": "0bd70f18bf5152916a319c9699c6850bb163d3f6c582608a3232dabea6cb9558",
+      "source_evidence": [
+        {
+          "path": ".env.example",
+          "sha256": "49622c1162397485ec514cde497772fad798a4d36d149e3c40f28107b4dca98d"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "ec087d5b11da19b78492cae7884dc656ec5a12e13944979085286c9ad525fb3c"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.spec.ts",
+          "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+        },
+        {
+          "path": "nodemon.json",
+          "sha256": "51f82a2278fda20f28060049944afacafacefb45a17830f8c1b2d2f36fee32b8"
+        }
+      ],
+      "checks": [
+        "All required environment and bootstrap entries documented. DATABASE_URL and MinIO credentials match Compose; .env is actually loaded by dotenv-cli with explicit shell values preserved. OTP_CONSOLE now gates all three existing development debug paths; encrypted outbox remains mandatory, no code enters responses, and production/staging/test never print codes even with the flag enabled.18 new cases plus44 existing unit/HTTP cases pass.",
+        "audit/evidence/step-reviews.json#V01-local-development"
+      ],
+      "limitations": [
+        "Local development evidence only. Live production storage, backup/WAL/PgBouncer operations and provider delivery remain separate requirements."
+      ],
+      "merged_prs": [
+        36
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-local-development"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.02.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 479,
+      "requirement": "- **T-03.02.03:** Create root `pnpm dev` script for hot-reload local development across all apps\n  - **Notes:** `turbo dev` runs `dev` in packages/db (watch mode for schema changes), apps/api (NestJS with `tsx watch src/main.ts` or SWC), apps/web (Vite dev server). For `packages/ui` and `packages/shared`, use a watch mode that recompiles on file change. Dev starts all three processes in parallel.\n  - **Dependencies:** T-03.02.02, S-01.01\n  - **Complexity:** M",
+      "requirement_sha256": "7e40943115ce149922022e90156b948718d26f163ce8e1dc18e506a88c838fd6",
+      "source_evidence": [
+        {
+          "path": "package.json",
+          "sha256": "659fe4178ca5c35b8ceb54028d5ff73a50fedb5fff396033afa69144dbd894f1"
+        },
+        {
+          "path": "turbo.json",
+          "sha256": "910ad06ace9cac7b514e5f9803b5ef748a8286cbd802a0459e035c3929a5f2b4"
+        },
+        {
+          "path": "apps/api/package.json",
+          "sha256": "1bc6b96eab0dd254f4d9b2835f3f7aac66e4d3a6b0ab6c004458908bd76a20a7"
+        },
+        {
+          "path": "apps/worker/package.json",
+          "sha256": "3823626ccdf0f964c72fc5491766300edd05b73917a9c3c10454ec77d810164b"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "12b5a1fe32100daa207574dcc30e8b1c8fa4de758829b9dd26063eb0a04fda8f"
+        },
+        {
+          "path": "packages/shared/scripts/build.mjs",
+          "sha256": "0f6e8ea148ffa0dcb8244bd80b10f8ed1b7650933a6f0eb59a13fb9fa7cbcb44"
+        },
+        {
+          "path": "packages/i18n/package.json",
+          "sha256": "010d07a4b3f3ef00909f2ec73fb9428de11eba2abdf2a4fa7b72d6deb70c5be0"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "92984996e94c55ad5d1697bb19b7f0018f407dc5e9082aced74bfeed94dabeed"
+        },
+        {
+          "path": "nodemon.json",
+          "sha256": "51f82a2278fda20f28060049944afacafacefb45a17830f8c1b2d2f36fee32b8"
+        }
+      ],
+      "checks": [
+        "Root development builds dependencies, migrates and seeds before launching actual API/worker/Vite processes; failures prevent startup. API no longer only compiles, worker now runs, and shared/i18n edits rebuild shipped exports. Same-origin Vite /api proxy forwards to configured API PORT. Actual direct/proxied readiness and web root return200. Initial smoke bad empty direct URL correctly prevented startup; corrected isolated environment passes.",
+        "audit/evidence/step-reviews.json#V01-local-development"
+      ],
+      "limitations": [
+        "Local development evidence only. Live production storage, backup/WAL/PgBouncer operations and provider delivery remain separate requirements."
+      ],
+      "merged_prs": [
+        37
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-local-development"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.02.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 484,
+      "requirement": "- **T-03.02.04:** Configure file-watch with proper polling for Docker-for-Mac compatibility\n  - **Notes:** Turborepo's `daemon` polling, or use `CHOKIDAR_USEPOLLING=true` for file watchers inside Docker bind mounts. Document that macOS users may need polling for reliable hot reload.\n  - **Dependencies:** T-03.02.03\n  - **Complexity:** S\n  - **UI/UX:** N/A\n\n---",
+      "requirement_sha256": "23a85c6222bd90d0c4fc6b37666e18caedfe3da78771a437ad754c6ae062ef41",
+      "source_evidence": [
+        {
+          "path": "package.json",
+          "sha256": "659fe4178ca5c35b8ceb54028d5ff73a50fedb5fff396033afa69144dbd894f1"
+        },
+        {
+          "path": "nodemon.json",
+          "sha256": "51f82a2278fda20f28060049944afacafacefb45a17830f8c1b2d2f36fee32b8"
+        },
+        {
+          "path": "README.md",
+          "sha256": "762c7f4096dbaea3894c741056491dc058305b2f10846d3f1070f328bafdaefd"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "92984996e94c55ad5d1697bb19b7f0018f407dc5e9082aced74bfeed94dabeed"
+        }
+      ],
+      "checks": [
+        "Nodemon polling plus Vite polling supports Docker bind-mount workflow. Two controlled shared-source changes rebuild ESM and CJS, change API/worker listener PIDs, and recover all four endpoints. Probe deletion triggers the third restart; exactly three events produce three restarts with a stable observation period. Generated build artifacts, temporary distribution-test files and generated route tree are excluded, fixing reproduced restart loop. SIGINT stops all three owned listeners.",
+        "audit/evidence/step-reviews.json#V01-local-development"
+      ],
+      "limitations": [
+        "Local development evidence only. Live production storage, backup/WAL/PgBouncer operations and provider delivery remain separate requirements."
+      ],
+      "merged_prs": [
+        38
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-local-development"
     }
   ],
   "pending_task_keys": [
@@ -22796,10 +22994,6 @@
     "01-platform-infrastructure.md#T-03.01.03",
     "01-platform-infrastructure.md#T-03.01.04",
     "01-platform-infrastructure.md#T-03.01.05",
-    "01-platform-infrastructure.md#T-03.02.01",
-    "01-platform-infrastructure.md#T-03.02.02",
-    "01-platform-infrastructure.md#T-03.02.03",
-    "01-platform-infrastructure.md#T-03.02.04",
     "01-platform-infrastructure.md#T-03.03.01",
     "01-platform-infrastructure.md#T-03.03.02",
     "01-platform-infrastructure.md#T-03.03.03",
@@ -27072,6 +27266,32 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation",
       "note": "Four older index.ts bindings explicitly reviewed against9635e767; only prior verified schema readiness and schema exports changed. Current DB747 proof reused; existing38-item refresh queue unchanged."
+    },
+    {
+      "source_revision": "3fd776a98cd6dd3129a2122afbe8e697cc2a9848",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.01.04",
+        "01-platform-infrastructure.md#T-01.02.02",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.01",
+        "01-platform-infrastructure.md#T-01.03.03",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.03.05",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.05.01",
+        "01-platform-infrastructure.md#T-02.04.01",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-06.01.04",
+        "02-auth-users-admin.md#T-01.02.01",
+        "02-auth-users-admin.md#T-02.02.03",
+        "02-auth-users-admin.md#T-02.03.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-03.03.04",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-local-development",
+      "note": "Immediate-base reviewed development/config/OTP source deltas only; older38 queue preserved."
     }
   ]
 }
