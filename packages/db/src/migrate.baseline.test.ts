@@ -11,6 +11,11 @@ import { runSeed } from './seed';
 
 const databases: string[] = [];
 const folder = resolve(__dirname, '../drizzle/production');
+const journalEntries = (
+  JSON.parse(readFileSync(resolve(folder, 'meta/_journal.json'), 'utf8')) as {
+    entries: { tag: string }[];
+  }
+).entries;
 
 afterEach(async () => {
   const pool = new Pool({ connectionString: process.env.TEST_DATABASE_URL });
@@ -82,7 +87,7 @@ describe('complete production schema baseline', () => {
       const oldTickets = (await pool.query('SELECT * FROM tickets ORDER BY id')).rows;
       expect(await runMigrations(options)).toEqual({
         ok: true,
-        applied: ['0124_address_soft_delete', '0125_ticket_category'],
+        applied: journalEntries.slice(previousIndex + 1).map((entry) => entry.tag),
       });
       expect((await pool.query('SELECT * FROM addresses ORDER BY id')).rows).toEqual(
         before.map((row) => ({ ...row, deleted_at: null }))
@@ -115,7 +120,7 @@ describe('complete production schema baseline', () => {
       rmSync(previousFolder, { recursive: true, force: true });
     }
   });
-  it('creates the declared schema in an empty database without test-only prerequisite tables', async () => {
+  it('upgrades populated legacy state from a fixed 0125 fixture and preserves its history', async () => {
     if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run');
     const name = `test_baseline_${randomUUID().replaceAll('-', '')}`;
     const management = new Pool({ connectionString: process.env.TEST_DATABASE_URL });
@@ -128,58 +133,34 @@ describe('complete production schema baseline', () => {
     const url = new URL(process.env.TEST_DATABASE_URL);
     url.pathname = `/${name}`;
     const options = { connection: { pgdirectUrl: url.toString() } };
-    expect(await runMigrations(options)).toEqual({
-      ok: true,
-      applied: [
-        '0080_complete_schema',
-        '0081_restore_domain_constraints',
-        '0082_restore_foundation_constraints',
-        '0083_staff_identity',
-        '0084_staff_capabilities',
-        '0085_otp_purpose_binding',
-        '0086_auth_delivery_outbox',
-        '0087_authentication_version',
-        '0088_staff_activation_delivery',
-        '0089_pending_profile_verification',
-        '0090_user_profile_context',
-        '0091_additive_agent_roles',
-        '0092_notification_delivery_identity',
-        '0093_notification_window_snapshot',
-        '0094_notification_claim_fencing',
-        '0095_notification_message_snapshot',
-        '0096_unified_notification_inbox',
-        '0097_notification_recipient_backfill',
-        '0098_ticket_attachments',
-        '0099_ticket_team',
-        '0100_staff_assignment',
-        '0101_account_notification_recipients',
-        '0102_service_breach_constraints',
-        '0103_staff_team_leads',
-        '0104_restore_inline_domain_constraints',
-        '0105_optional_foreign_key_defaults',
-        '0106_username_challenge_pair',
-        '0107_profile_contact_details',
-        '0108_legal_representative',
-        '0109_onboarding_drafts',
-        '0110_legal_documents',
-        '0111_account_login_identifiers',
-        '0112_wallet_callback_processing',
-        '0113_invoice_accounting_generated',
-        '0114_effective_product_price',
-        '0115_ai_model_test_jobs',
-        '0116_ai_agent_group_links',
-        '0117_notification_template_lineage',
-        '0118_reconcile_schema_snapshot',
-        '0119_brand_history',
-        '0120_rolling_rate_limits',
-        '0121_device_trust_ip',
-        '0122_password_reset_authorization',
-        '0123_preauth_sessions',
-        '0124_address_soft_delete',
-        '0125_ticket_category',
-      ],
-    });
-    expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
+    // Freeze the starting fixture: undoing later migrations by hand would leave
+    // newer columns behind and test an impossible migration history.
+    const previousFolder = mkdtempSync(resolve(tmpdir(), 'barghsa-legacy-migrations-'));
+    const journal = JSON.parse(readFileSync(resolve(folder, 'meta/_journal.json'), 'utf8'));
+    const cutoff = journal.entries.findIndex(
+      (entry: { tag: string }) => entry.tag === '0125_ticket_category'
+    );
+    expect(cutoff).toBeGreaterThan(0);
+    journal.entries = journal.entries.slice(0, cutoff + 1);
+    mkdirSync(resolve(previousFolder, 'meta'));
+    writeFileSync(resolve(previousFolder, 'meta/_journal.json'), JSON.stringify(journal));
+    for (const entry of journal.entries)
+      copyFileSync(
+        resolve(folder, entry.tag + '.sql'),
+        resolve(previousFolder, entry.tag + '.sql')
+      );
+    try {
+      expect(await runMigrations({ ...options, migrationsFolder: previousFolder })).toEqual({
+        ok: true,
+        applied: journal.entries.map((entry: { tag: string }) => entry.tag),
+      });
+      expect(await runMigrations({ ...options, migrationsFolder: previousFolder })).toEqual({
+        ok: true,
+        applied: [],
+      });
+    } finally {
+      rmSync(previousFolder, { recursive: true, force: true });
+    }
     expect(await verifyMigrationVersion('0082', options)).toBe(true);
     const pool = new Pool({ connectionString: url.toString() });
     try {
@@ -345,7 +326,8 @@ describe('complete production schema baseline', () => {
       await pool.query('DROP TABLE sms_provider_configs');
       const oldHistory = (await pool.query('SELECT * FROM drizzle.__drizzle_migrations')).rows;
       const productsBefore = (await pool.query('SELECT * FROM products ORDER BY id')).rows;
-      expect(await runMigrations(options)).toMatchObject({ ok: true });
+      const legacyUpgrade = await runMigrations(options);
+      expect(legacyUpgrade, JSON.stringify(legacyUpgrade)).toMatchObject({ ok: true });
       expect(
         (
           await pool.query('SELECT contact_email,contact_mobile FROM profiles WHERE id=$1', [

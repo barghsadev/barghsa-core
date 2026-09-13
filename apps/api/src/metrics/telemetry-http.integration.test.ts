@@ -75,3 +75,29 @@ it('serves concurrent readiness probes with real PostgreSQL pool statistics', as
     });
   }
 });
+
+it('returns 503 for incompatible schema metadata while liveness stays available', async () => {
+  const latest = (
+    await fixture.pool.query(
+      'SELECT id,hash FROM drizzle.__drizzle_migrations ORDER BY created_at DESC LIMIT 1'
+    )
+  ).rows[0];
+  try {
+    await fixture.pool.query(
+      "UPDATE drizzle.__drizzle_migrations SET hash='wrong-artifact' WHERE id=$1",
+      [latest.id]
+    );
+    const response = await fetch(`${fixture.base}/api/health/ready`);
+    expect(response.status).toBe(503);
+    expect(await response.json()).toMatchObject({
+      error: { code: 'PROVIDER:UNAVAILABLE', correlationId: expect.any(String) },
+    });
+    expect((await fetch(`${fixture.base}/api/health/live`)).status).toBe(200);
+  } finally {
+    await fixture.pool.query('UPDATE drizzle.__drizzle_migrations SET hash=$1 WHERE id=$2', [
+      latest.hash,
+      latest.id,
+    ]);
+  }
+  expect((await fetch(`${fixture.base}/api/health/ready`)).status).toBe(200);
+});

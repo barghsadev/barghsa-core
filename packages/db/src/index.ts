@@ -1,3 +1,5 @@
+import { readMigrationFiles } from 'drizzle-orm/migrator';
+import { resolve } from 'node:path';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool, Client, type PoolConfig } from 'pg';
 import * as fs from 'node:fs';
@@ -464,16 +466,21 @@ export interface HealthCheckResult {
 const HEALTH_CHECK_TIMEOUT_MS = 5_000;
 
 /**
- * Run a database health check that executes `SELECT 1` with a 5-second
+ * Run a connectivity or packaged-schema check with a 5-second
  * timeout and returns connection status, latency, and pool statistics.
  *
  * Used by the NestJS health controller for liveness/readiness probes.
  * Never throws — returns `{ ok: false }` on any error or timeout.
  */
-let healthProbe: Promise<HealthCheckResult> | null = null;
+const healthProbes = new Map<boolean, Promise<HealthCheckResult>>();
+let expectedSchema: { hash: string; folderMillis: number } | undefined;
 
-export async function dbHealth(): Promise<HealthCheckResult> {
-  if (healthProbe) return healthProbe;
+export async function dbHealth(
+  options: { verifySchema?: boolean } = {}
+): Promise<HealthCheckResult> {
+  const verifySchema = options.verifySchema === true;
+  const activeProbe = healthProbes.get(verifySchema);
+  if (activeProbe) return activeProbe;
   const startedAt = Date.now();
   let p: Pool;
   try {
@@ -508,7 +515,24 @@ export async function dbHealth(): Promise<HealthCheckResult> {
       if (expired) return;
       const remaining = Math.max(1, HEALTH_CHECK_TIMEOUT_MS - (Date.now() - startedAt));
       const query = wrapClientQuery(client, remaining);
-      await query('SELECT 1');
+      if (verifySchema) {
+        expectedSchema ??= readMigrationFiles({
+          migrationsFolder: resolve(__dirname, '../drizzle/production'),
+        }).at(-1);
+        if (!expectedSchema) throw new Error('No packaged schema version');
+        const applied = await query(
+          'SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at DESC, id DESC LIMIT 1'
+        );
+        const latest = applied.rows[0];
+        if (
+          !latest ||
+          latest.hash !== expectedSchema.hash ||
+          String(latest.created_at) !== String(expectedSchema.folderMillis)
+        )
+          throw new Error('Database schema does not match packaged migrations');
+      } else {
+        await query('SELECT 1');
+      }
     } finally {
       client.release();
     }
@@ -524,11 +548,11 @@ export async function dbHealth(): Promise<HealthCheckResult> {
       clearTimeout(timeoutId);
     }
   })();
-  healthProbe = probe;
+  healthProbes.set(verifySchema, probe);
   // Share the result until the underlying acquisition/query actually settles,
   // including after a timeout. Repeated probes cannot accumulate more work.
   const settled = () => {
-    if (healthProbe === probe) healthProbe = null;
+    if (healthProbes.get(verifySchema) === probe) healthProbes.delete(verifySchema);
   };
   void work.then(settled, settled);
   return probe;

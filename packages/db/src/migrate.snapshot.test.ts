@@ -1,7 +1,6 @@
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
-import { isDeepStrictEqual } from 'node:util';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { Pool, type PoolClient } from 'pg';
 import { runMigrations } from './migrate';
@@ -37,15 +36,15 @@ type Table = {
   compositePrimaryKeys: Record<string, { columns: string[] }>;
 };
 const folder = resolve(__dirname, '../drizzle/production/meta');
-const previous = JSON.parse(readFileSync(resolve(folder, '0117_snapshot.json'), 'utf8')) as {
+const snapshotFile = readdirSync(folder)
+  .filter((name) => /^\d+_snapshot\.json$/.test(name))
+  .sort()
+  .at(-1);
+if (!snapshotFile) throw new Error('No committed production schema snapshot');
+const snapshot = JSON.parse(readFileSync(resolve(folder, snapshotFile), 'utf8')) as {
   tables: Record<string, Table>;
 };
-const snapshot = JSON.parse(readFileSync(resolve(folder, '0118_snapshot.json'), 'utf8')) as {
-  tables: Record<string, Table>;
-};
-const changed = Object.entries(snapshot.tables).filter(
-  ([key, table]) => !isDeepStrictEqual(previous.tables[key], table)
-);
+const tables = Object.entries(snapshot.tables);
 const quote = (value: string) => '"' + value.replaceAll('"', '""') + '"';
 let management: Pool, pool: Pool, client: PoolClient;
 const database = 'test_snapshot_' + randomUUID().replaceAll('-', '');
@@ -92,8 +91,8 @@ async function indexes(table: string) {
     )
   ).rows;
 }
-for (const [key, table] of changed)
-  it(`snapshot additions match migrated ${table.name}`, async () => {
+for (const [key, table] of tables)
+  it(`current snapshot matches migrated ${table.name}`, async () => {
     const temp = 'snapshot_expected';
     const unqualify = (sql: string) => sql.replaceAll(quote(table.name) + '.', '');
     await client.query('BEGIN');
@@ -106,13 +105,12 @@ for (const [key, table] of changed)
       const actualColumns = await columns(key);
       const expectedColumns = await columns(temp);
       for (const c of expectedColumns)
-        if (!isDeepStrictEqual(previous.tables[key]?.columns[c.name], table.columns[c.name]))
-          expect
-            .soft(
-              actualColumns.find((a) => a.name === c.name),
-              key + '.' + c.name
-            )
-            .toEqual(c);
+        expect
+          .soft(
+            actualColumns.find((a) => a.name === c.name),
+            key + '.' + c.name
+          )
+          .toEqual(c);
       for (const c of Object.values(table.checkConstraints))
         await client.query(
           `ALTER TABLE ${temp} ADD CONSTRAINT ${quote(c.name)} CHECK (${unqualify(c.value)})`
@@ -143,11 +141,12 @@ for (const [key, table] of changed)
         });
       let n = 0;
       for (const index of Object.values(table.indexes)) {
-        if (isDeepStrictEqual(previous.tables[key]?.indexes[index.name], index)) continue;
-        const cols = index.columns.map(
-          (c) =>
-            `${c.isExpression ? '(' + unqualify(c.expression) + ')' : quote(c.expression)} ${c.asc ? 'ASC' : 'DESC'} NULLS ${c.nulls}`
-        );
+        const cols = index.columns.map((c) => {
+          // Older declarations include sort direction in their raw SQL expression.
+          if (c.isExpression && /\s(?:asc|desc)$/i.test(c.expression))
+            return unqualify(c.expression);
+          return `${c.isExpression ? '(' + unqualify(c.expression) + ')' : quote(c.expression)} ${c.asc ? 'ASC' : 'DESC'} NULLS ${c.nulls}`;
+        });
         await client.query(
           `CREATE ${index.isUnique ? 'UNIQUE' : ''} INDEX snapshot_index_${n++} ON ${temp} USING ${index.method} (${cols.join(',')})${index.where ? ' WHERE ' + unqualify(index.where) : ''}`
         );

@@ -98,12 +98,12 @@ export class HealthService implements OnModuleInit {
   /* ------------------------------------------------------------------ */
 
   private async checkPostgresql(): Promise<HealthIndicatorResult> {
-    const result = await dbHealth();
+    const result = await dbHealth({ verifySchema: true });
     if (!result.ok) {
       return {
         status: 'down',
         latencyMs: result.latencyMs,
-        details: { error: 'PostgreSQL unreachable' },
+        details: { error: 'PostgreSQL unavailable or schema incompatible' },
       };
     }
     return {

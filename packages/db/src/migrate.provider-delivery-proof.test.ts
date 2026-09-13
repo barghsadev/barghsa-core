@@ -65,7 +65,9 @@ for (const channel of ['email', 'sms']) {
       ).rows;
       expect(await runMigrations({ connection })).toEqual({
         ok: true,
-        applied: ['0126_provider_delivery_proof'],
+        applied: journal.entries
+          .slice(prior.entries.length)
+          .map((entry: { tag: string }) => entry.tag),
       });
       expect(
         (

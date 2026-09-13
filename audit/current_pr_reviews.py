@@ -57,7 +57,19 @@ def report(root: Path = ROOT) -> str:
     closure_counts = Counter(row['status'] for row in dispositions.values())
     for number, row in dispositions.items():
         if row['status'] == 'closed':
-            if state(number) != 'Mapped tasks verified':
+            replacements = row.get('superseded_by_task_keys', [])
+            verified_replacement = (
+                state(number) == 'Unmapped'
+                and isinstance(replacements, list)
+                and bool(replacements)
+                and all(isinstance(key, str) and key in reviewed
+                        and reviewed[key]['status'] == 'acceptance_verified'
+                        for key in replacements)
+                and len(set(replacements)) == len(replacements)
+                and bool(row.get('reason'))
+                and bool(row.get('evidence'))
+            )
+            if state(number) != 'Mapped tasks verified' and not verified_replacement:
                 raise ValueError(f'PR #{number} cannot close with unresolved mapped tasks')
             saved = next((p for p in data[names[3]] if p['pr'] == number), {})
             resolved = {item['statement_index'] for item in saved.get('dispositions', [])}
@@ -97,6 +109,8 @@ def report(root: Path = ROOT) -> str:
         if not keys:
             keys = pr['title'].replace('|', '\\|').replace('\n', ' ')
         disposition = dispositions.get(number)
+        if disposition and disposition.get('superseded_by_task_keys'):
+            keys += '<br>Superseded by verified: ' + ', '.join(disposition['superseded_by_task_keys'])
         label = (f'[{disposition["status"]}](evidence/step-reviews.json#{disposition["review_record"]})'
                  if disposition else 'Not reviewed')
         lines.append(f'| [#{number}]({pr["html_url"]}) | {keys} | {state(number)} | {label} | '
@@ -108,9 +122,8 @@ def report(root: Path = ROOT) -> str:
               '| Qualified task | Contributing PRs |', '| --- | --- |']
     lines += [f'| {task["task_key"]} | ' + ', '.join(f'#{n}' for n in sorted(task['merged_prs'])) + ' |'
               for task in repeated]
-    lines += ['', 'PR #47 needs strict-dependency disposition under R05. PRs #234, #235 and #242 need loop-protocol disposition under V01. '
-              'PR #298 may implement incidental overpayment credit for `04-invoices-wallet-contracts.md#T-04.3.01.06`; '
-              'review that path before scheduling the queue gap.', '', '## Input digests', '']
+    lines += ['', 'Unmapped historical PRs retain their original inventory. A superseded workaround may close only with explicit links to verified replacement tasks and dispositioned historical deferrals. '
+              'See each PR row for its current review; repeated or unmapped provenance alone does not authorize rebuilding.', '', '## Input digests', '']
     lines += [f'- `{name}`: `{hashlib.sha256(value).hexdigest()}`' for name, value in raw.items()]
     return '\n'.join(lines) + '\n'
 
