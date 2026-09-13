@@ -107,8 +107,24 @@ export function createStaticServer(options = {}) {
 
   /** @type {Set<import('node:net').Socket>} */
   const activeConnections = new Set();
+  /** @type {Map<import('node:net').Socket, number>} */
+  const pendingResponses = new Map();
+  let shuttingDown = false;
 
   const server = createServer(async (req, res) => {
+    const socket = req.socket;
+    pendingResponses.set(socket, (pendingResponses.get(socket) ?? 0) + 1);
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      const remaining = (pendingResponses.get(socket) ?? 1) - 1;
+      if (remaining) pendingResponses.set(socket, remaining);
+      else pendingResponses.delete(socket);
+      if (shuttingDown && !remaining) socket.end();
+    };
+    res.once('finish', finish);
+    res.once('close', finish);
     const url = req.url ?? '/';
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
@@ -196,6 +212,14 @@ export function createStaticServer(options = {}) {
     });
   });
 
+  // Node can classify res.end(buffer) as idle before the buffer has flushed.
+  // Keep those sockets until the actual response finish event.
+  server.closeIdleConnections = () => {
+    for (const socket of activeConnections) {
+      if (!pendingResponses.has(socket)) socket.destroy();
+    }
+  };
+
   /**
    * Initiate graceful shutdown.
    *
@@ -209,7 +233,6 @@ export function createStaticServer(options = {}) {
    *
    * @param {string} [signal] Signal that triggered shutdown
    */
-  let shuttingDown = false;
   server.shutdown = function shutdown(signal) {
     if (shuttingDown) return;
     shuttingDown = true;

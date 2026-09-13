@@ -92,6 +92,10 @@ export class S3StorageProvider implements StorageProvider {
     this.client = new S3Client(clientConfig);
   }
 
+  destroy(): void {
+    this.client.destroy();
+  }
+
   async checkHealth(signal: AbortSignal = AbortSignal.timeout(1500)): Promise<void> {
     await this.client.send(new HeadBucketCommand({ Bucket: this.bucket }), { abortSignal: signal });
   }

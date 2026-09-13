@@ -159,7 +159,7 @@ export async function startHttpFixture(
         });
       });
     }
-    return { base, pool, close, logs: () => output };
+    return { base, pool, close, process: child, logs: () => output };
   } catch (error) {
     await close();
     throw error;

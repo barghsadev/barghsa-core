@@ -1,5 +1,6 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { createServer } from 'node:http';
+import { S3Client } from '@aws-sdk/client-s3';
 import {
   encryptStorageSecret,
   decryptStorageSecret,
@@ -90,4 +91,35 @@ it('health checks use current stored private endpoint and credentials, without r
     server.closeAllConnections();
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }
+});
+
+it('closes both cached SDK clients and refuses operations after shutdown', async () => {
+  vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'test-storage-encryption-key');
+  const destroy = vi.spyOn(S3Client.prototype, 'destroy');
+  const load = vi.fn(async () => ({ ...fields, encryptedSecret: encryptStorageSecret('secret') }));
+  const provider = runtimeStorageProvider(load);
+  try {
+    await provider.presignedGetUrl('proof.pdf');
+    provider.destroy!();
+    expect(destroy).toHaveBeenCalledTimes(2);
+    await expect(provider.presignedGetUrl('proof.pdf')).rejects.toThrow(
+      'Storage configuration is unavailable'
+    );
+    expect(load).toHaveBeenCalledTimes(1);
+  } finally {
+    destroy.mockRestore();
+  }
+});
+it('does not recreate SDK clients if configuration resolves after shutdown', async () => {
+  let release!: (value: null) => void;
+  const provider = runtimeStorageProvider(
+    () =>
+      new Promise<null>((resolve) => {
+        release = resolve;
+      })
+  );
+  const request = provider.checkHealth!();
+  provider.destroy!();
+  release(null);
+  await expect(request).rejects.toThrow('Storage configuration is unavailable');
 });

@@ -1,4 +1,10 @@
-import { Injectable, OnApplicationShutdown, Logger } from '@nestjs/common';
+import { Inject, Injectable, OnApplicationShutdown, OnModuleInit, Logger } from '@nestjs/common';
+import type { Redis } from 'ioredis';
+import type { Server, IncomingMessage, ServerResponse } from 'node:http';
+import type { Socket } from 'node:net';
+import type { StorageProvider } from '@barghsa/shared/storage';
+import { REDIS_CLIENT } from '../redis/index.js';
+import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { HttpAdapterHost } from '@nestjs/core';
 import { getDbPool } from '@barghsa/db';
 
@@ -18,37 +24,88 @@ import { getDbPool } from '@barghsa/db';
  * NestJS resolves `OnApplicationShutdown` hooks automatically when the
  * application receives the shutdown signal.
  *
- * ## Deferred shutdown items
- *
- * - **Redis:** no connection factory exists yet. When wired (T-04.02.01),
- *   add `redis.quit()` before pool.end().
- * - **Object storage:** no client exists yet. When wired (T-04.03.xx),
- *   add `s3Client.destroy()` before pool.end().
- * - **Lease release:** lease infrastructure doesn't exist yet.
- *   When wired, add lease release before closing the pool.
+ * The signal watchdog starts before Nest destroys modules or drains HTTP.
+ * Redis and storage SDK connections close after accepted HTTP work drains.
  */
 @Injectable()
-export class ShutdownService implements OnApplicationShutdown {
+export class ShutdownService implements OnModuleInit, OnApplicationShutdown {
   private readonly logger = new Logger(ShutdownService.name);
   private readonly gracePeriodMs: number;
+  private draining = false;
+  private httpServer: Server | undefined;
+  private forceExitTimer: ReturnType<typeof setTimeout> | undefined;
+  private readonly signalHandlers = new Map<NodeJS.Signals, () => void>([
+    ['SIGTERM', () => this.stopAccepting('SIGTERM')],
+    ['SIGINT', () => this.stopAccepting('SIGINT')],
+  ]);
 
-  constructor(private readonly httpAdapterHost: HttpAdapterHost) {
+  constructor(
+    private readonly httpAdapterHost: HttpAdapterHost,
+    @Inject(REDIS_CLIENT) private readonly redis: Redis | null,
+    @Inject(STORAGE_PROVIDER) private readonly storage: Pick<StorageProvider, 'destroy'>
+  ) {
     const raw = process.env['SHUTDOWN_GRACE_PERIOD_MS'] ?? '30000';
     const parsed = Number.parseInt(raw, 10);
     this.gracePeriodMs = Number.isFinite(parsed) && parsed > 0 ? parsed : 30_000;
   }
 
-  async onApplicationShutdown(signal?: string): Promise<void> {
-    this.logger.warn(
-      `Received ${signal ?? 'unknown signal'} — starting graceful shutdown (${this.gracePeriodMs / 1_000}s deadline)`
-    );
+  onModuleInit(): void {
+    for (const [signal, handler] of this.signalHandlers) process.prependListener(signal, handler);
+    const server = this.httpAdapterHost.httpAdapter?.getHttpServer() as Server | undefined;
+    this.httpServer = server;
+    if (!server) return;
+    const sockets = new Set<Socket>();
+    const pending = new Map<Socket, number>();
+    server.on('connection', (socket) => {
+      sockets.add(socket);
+      socket.once('close', () => sockets.delete(socket));
+    });
+    server.prependListener('request', (req: IncomingMessage, res: ServerResponse) => {
+      const socket = req.socket;
+      pending.set(socket, (pending.get(socket) ?? 0) + 1);
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        const remaining = (pending.get(socket) ?? 1) - 1;
+        if (remaining) pending.set(socket, remaining);
+        else pending.delete(socket);
+        if (this.draining && !remaining) socket.end();
+      };
+      res.once('finish', finish);
+      res.once('close', finish);
+    });
+    // res.end(buffer) is not proof that its bytes have flushed to the socket.
+    server.closeIdleConnections = () => {
+      for (const socket of sockets) if (!pending.has(socket)) socket.destroy();
+    };
+    const close = server.close.bind(server);
+    server.close = (callback) => {
+      this.startDeadline();
+      return close(callback);
+    };
+  }
 
-    // Safety-net timer — if any step hangs, force exit.
-    const forceExitTimer = setTimeout(() => {
+  private stopAccepting(signal: string): void {
+    this.startDeadline(signal);
+    if (this.httpServer?.listening) this.httpServer.close();
+  }
+
+  private startDeadline(signal?: string): void {
+    this.draining = true;
+    if (this.forceExitTimer) return;
+    this.logger.warn(
+      `Received ${signal ?? 'application close'} — starting graceful shutdown (${this.gracePeriodMs / 1_000}s deadline)`
+    );
+    this.forceExitTimer = setTimeout(() => {
       this.logger.error('Graceful shutdown deadline exceeded — forcing exit with code 1');
       process.exit(1);
     }, this.gracePeriodMs);
-    forceExitTimer.unref();
+  }
+
+  async onApplicationShutdown(signal?: string): Promise<void> {
+    // Do not restart the deadline after Nest has already drained HTTP.
+    this.startDeadline(signal);
 
     // Close each resource independently so a failure in one does not skip
     // subsequent cleanup steps.
@@ -87,7 +144,24 @@ export class ShutdownService implements OnApplicationShutdown {
       this.logger.warn('Database pool not initialised — skipping pool close');
     }
 
-    clearTimeout(forceExitTimer);
+    try {
+      if (this.redis) await this.redis.quit();
+    } catch {
+      cleanShutdown = false;
+      this.logger.warn('Redis graceful close failed');
+    } finally {
+      this.redis?.disconnect();
+    }
+    try {
+      this.storage.destroy?.();
+    } catch {
+      cleanShutdown = false;
+      this.logger.warn('Storage connection close failed');
+    }
+
+    clearTimeout(this.forceExitTimer);
+    this.forceExitTimer = undefined;
+    for (const [name, handler] of this.signalHandlers) process.removeListener(name, handler);
 
     // Only force an exit when the shutdown was triggered by an OS signal
     // (SIGTERM, SIGINT).  Programmatic close from `app.close()` (e.g. the

@@ -144,7 +144,7 @@ async function main(): Promise<void> {
       logger.error('Graceful shutdown deadline exceeded — forcing exit with code 1');
       process.exit(1);
     }, GRACE_PERIOD_MS);
-    forceExitTimer.unref();
+    // Keep the deadline alive even if a stalled job has no active I/O handles.
 
     // 1. Stop accepting new jobs / health-check requests — drain connections.
     const closeServer = new Promise<void>((resolve) => {
@@ -164,6 +164,7 @@ async function main(): Promise<void> {
         return p.end();
       })
       .then(() => {
+        cleanupProvider?.destroy?.();
         clearTimeout(forceExitTimer);
         logger.info('Graceful shutdown complete — exiting with code 0');
         process.exit(0);

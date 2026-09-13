@@ -73,6 +73,8 @@ export interface Logger {
 export interface StorageProvider {
   /** Verify bucket access without reading or writing customer objects. */
   checkHealth?(signal?: AbortSignal): Promise<void>;
+  /** Close SDK connections after callers have drained. */
+  destroy?(): void;
 
   /**
    * Upload (or overwrite) an object.

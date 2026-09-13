@@ -101,10 +101,13 @@ export function runtimeStorageProvider(
   load: () => Promise<unknown | null>,
   unavailable: () => Error = () => new Error('Storage configuration is unavailable')
 ): StorageProvider {
+  let closed = false;
   let cachedKey = '';
   let cached: ReturnType<typeof configuredStorageProviders> | undefined;
   async function resolveCurrent() {
+    if (closed) throw unavailable();
     const value = await load();
+    if (closed) throw unavailable();
     const config =
       value === null
         ? environmentStorageConfig()
@@ -128,6 +131,13 @@ export function runtimeStorageProvider(
     }
   }
   return {
+    destroy: () => {
+      closed = true;
+      cached?.internal.destroy?.();
+      cached?.browser.destroy?.();
+      cached = undefined;
+      cachedKey = '';
+    },
     checkHealth: async (signal) => {
       const provider = (await current()).internal;
       if (!provider.checkHealth) throw unavailable();
