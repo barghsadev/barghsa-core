@@ -58,10 +58,20 @@
         "dependencies": {
           "chokidar": "5.0.0"
         }
+      },
+      "drizzle-orm@0.45.2": {
+        "dependencies": {
+          "gel": "2.2.0",
+          "mysql2": "3.24.4"
+        }
       }
     },
     "patchedDependencies": {
-      "@types/nodemailer@8.0.1": "patches/@types__nodemailer@8.0.1.patch"
+      "@types/nodemailer@8.0.1": "patches/@types__nodemailer@8.0.1.patch",
+      "drizzle-orm@0.45.2": "patches/drizzle-orm@0.45.2.patch",
+      "@tanstack/router-core@1.171.27": "patches/@tanstack__router-core@1.171.27.patch",
+      "vite@6.4.3": "patches/vite@6.4.3.patch",
+      "gel@2.2.0": "patches/gel@2.2.0.patch"
     }
   }
 }

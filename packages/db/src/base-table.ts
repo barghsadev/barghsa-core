@@ -1,6 +1,7 @@
 import { domainChecks } from './domain-checks';
 import { pgTable } from 'drizzle-orm/pg-core';
-import type { PgColumnBuilderBase } from 'drizzle-orm/pg-core';
+import type { PgColumnBuilderBase, PgTableWithColumns } from 'drizzle-orm/pg-core';
+import type { BuildColumns } from 'drizzle-orm';
 import { uuidv7, timestamptz } from './types';
 
 /**
@@ -45,9 +46,17 @@ export const baseColumns = {
  * @param columns  Domain-specific column definitions (without base columns).
  * @returns A `PgTableWithColumns` instance ready for use with Drizzle ORM.
  */
-export function createTable<TColumns extends Record<string, PgColumnBuilderBase>>(
-  name: string,
+export function createTable<
+  TName extends string,
+  TColumns extends Record<string, PgColumnBuilderBase>,
+>(
+  name: TName,
   columns: TColumns
-) {
+): PgTableWithColumns<{
+  name: TName;
+  schema: undefined;
+  columns: BuildColumns<TName, typeof baseColumns & TColumns, 'pg'>;
+  dialect: 'pg';
+}> {
   return pgTable(name, { ...baseColumns, ...columns }, () => domainChecks(name));
 }

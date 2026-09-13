@@ -5204,6 +5204,104 @@
         ]
       }
     },
+    "/api/admin/notifications/customer-corrections": {
+      "get": {
+        "operationId": "CustomerCorrectionsController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "completed",
+            "required": false,
+            "schema": {
+              "enum": [
+                "true",
+                "false"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Correction tasks, newest first; at most 26 rows"
+          }
+        },
+        "summary": "List email complaint correction tasks",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/notifications/customer-corrections/{id}/resolve": {
+      "post": {
+        "operationId": "CustomerCorrectionsController_resolve",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "note": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "note"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Completed correction task"
+          }
+        },
+        "summary": "Record completion of an email complaint correction; suppression remains",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/notifications/dead-letters": {
       "get": {
         "operationId": "FailedNotificationsController_list[1]",
@@ -14423,6 +14521,26 @@
       "put": {
         "operationId": "UserSettingsController_updateMarketingConsent",
         "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": {
+                  "email": {
+                    "type": "boolean"
+                  },
+                  "sms": {
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
@@ -14439,6 +14557,12 @@
           },
           "401": {
             "description": "Not authenticated"
+          },
+          "404": {
+            "description": "No current owned profile"
+          },
+          "409": {
+            "description": "Profile selection changed during the update"
           }
         },
         "summary": "Update marketing consent preferences",

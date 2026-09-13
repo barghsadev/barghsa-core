@@ -1,0 +1,11 @@
+diff --git a/dist/utils.d.ts b/dist/utils.d.ts
+index 46846bfb96fd0b46654fd08743db777c947aeb08..eed687d9e1c8a0d502e3ef22899533f9e57fdb5e 100644
+--- a/dist/utils.d.ts
++++ b/dist/utils.d.ts
+@@ -30,5 +30,5 @@ export interface CryptoUtils {
+     H: (msg: Uint8Array) => Promise<Uint8Array>;
+     HMAC: (key: Uint8Array | CryptoKey, msg: Uint8Array) => Promise<Uint8Array>;
+ }
+-export type AuthenticatedFetch = (path: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
++export type AuthenticatedFetch = (path: Parameters<typeof fetch>[0], init?: RequestInit) => Promise<Response>;
+ export declare function getAuthenticatedFetch(config: ResolvedConnectConfigReadonly, httpSCRAMAuth: HttpSCRAMAuth, basePath?: string): Promise<AuthenticatedFetch>;

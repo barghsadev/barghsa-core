@@ -2,8 +2,7 @@
   "extends": "../../packages/tsconfig/base.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist",
-    "skipLibCheck": true
+    "outDir": "dist"
   },
   "include": ["src/**/*.ts"],
   "references": [{ "path": "../../packages/shared" }, { "path": "../../packages/db" }]

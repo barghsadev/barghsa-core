@@ -57,6 +57,9 @@ describe('base table factory', () => {
       expectTypeOf<InsertColumns>().toHaveProperty('quantity');
       expectTypeOf<SelectColumns>().toHaveProperty('sku');
       expectTypeOf<SelectColumns>().toHaveProperty('quantity');
+      expectTypeOf<InsertColumns['sku']>().toEqualTypeOf<string>();
+      expectTypeOf<SelectColumns['quantity']>().toEqualTypeOf<number | null>();
+      expectTypeOf<typeof _table._.name>().toEqualTypeOf<'type_test'>();
     });
 
     it('includes base columns in inferred insert/select types', () => {
