@@ -1,22 +1,22 @@
 # Remaining fix plan
 
-Current through product/test `7eecc144` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `448487c1` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 171 | 31 | 61 | 263 |
+| Tasks with merged PR evidence | 172 | 30 | 61 | 263 |
 | Other historical claims | 8 | 1 | 50 | 59 |
-| All claims | 179 | 32 | 111 | 322 |
+| All claims | 180 | 31 | 111 | 322 |
 
-**143 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**142 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-R04 purchase loading closes PR12 locally at7eecc144.179 verified/32 partial/111 pending;153 closed/22 open/126 unreviewed saved PRs.29 final browser cases and current unit/quality/budget checks pass. Continue **R05-strict-dependencies**. Native authenticated CSP decision remains pending. [Review](evidence/step-reviews.json#R04-purchase-loading).
+R05 strict dependencies complete locally at448487c1.180 verified/31 partial/111 pending;154 closed/23 open/124 unreviewed saved PRs. PR7 closes; PR47 replacement is verified with mapping disposition remaining V01. Continue **V01-database-foundations**. [Review](evidence/step-reviews.json#R05-strict-dependencies).
 
 Earlier checkpoints, retained for evidence reuse:
 
@@ -90,7 +90,7 @@ Fix confirmed defects in feature batches. Review each meaningful change with foc
 | V02 / affected groups | One final regression checkpoint after local repairs. | Required unit/integration/browser/coverage/types/lint/OpenAPI/migrations/snapshots/budgets/loop/image checks pass at recorded revisions. |
 | B01 / F22 | Dependency-ordered handoff of unmet skipped work. | Exact keys, criteria and prerequisites; preserve verified and incidental implementation. Build new features after repair closure. |
 
-Audit cleanup and inventory reconciliation are complete. R01 is partial for explicit R02, owner-policy and future/operational dependencies; R02 local repairs are complete with explicit future/operational prerequisites; R03 local repairs are complete apart from the pending CSP decision; R04 is completed, R05 is active and four phases are queued. Their sizes differ, so phase counts are not an effort estimate. The original 23 groups and their remaining requirements remain in progress.json.
+Audit cleanup and inventory reconciliation are complete. R01 is partial for explicit R02, owner-policy and future/operational dependencies; R02 local repairs are complete with explicit future/operational prerequisites; R03 local repairs are complete apart from the pending CSP decision; R04/R05 are completed, V01 is active and three phases are queued. Their sizes differ, so phase counts are not an effort estimate. The original 23 groups and their remaining requirements remain in progress.json.
 
 Invoice corrections consolidated at `0aae9d5`: **4 tasks verified /4 PR reviews closed**, saved PRs247–250. Paid Overdue correction, missing staff API/UI, safe retries and customer read authority are repaired.54 correction service/HTTP,30 customer read/assembly,5 deadline compatibility and40 DB cases support the batch; counts overlap earlier runs.12 current production Chromium cases,3 host cases and42 unchanged budgets pass. [Consolidated review](evidence/step-reviews.json#R01-invoice-corrections) preserves failed logs and valid evidence reuse; one snapshot refresh closes,10 remain. Credit wallet payout belongs to S-04.4.01; old-writer retirement and legacy CHECK validation remain V01 operational work. No external execution claimed. Active next batch: wallet invoice payments and reversals,13 saved PRs for5 tasks.
 
@@ -134,7 +134,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
-For all32 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
+For all31 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
 
 ## Remaining merged-PR review
 

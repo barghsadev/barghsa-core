@@ -4,15 +4,15 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **7eecc144**. **179 verified /32 partial /111 pending** of322 claims. Saved PRs: **153 closed /22 open /126 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3132 logs indexed;38 older refreshes remain. Saved GitHub inventory ends September3; no current GitHub/deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **448487c1**. **180 verified /31 partial /111 pending** of322 claims. Saved PRs: **154 closed /23 open /124 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3180 logs indexed;38 older refreshes remain. Saved inventory ends September3; no current GitHub/deployment claim.
 
-R04 purchase loading verified; PR12 closes locally.29 final browser cases,59 web cases,3 budget cases, types/lint/format/build and42 unchanged budgets pass. Cold auth loads remain below150KB. Both entry outputs must ship together. 12 immediate-base bindings refreshed; earlier domain proof retained. [Review](evidence/step-reviews.json#R04-purchase-loading).
+R05 strict dependencies verified; PR7 closes and PR90 closure is retained. PR47 workaround is removed; unmapped provenance remains V01.11 uncached root typecheck tasks,5 base-table cases,36 location/session cases, builds/schema/contract/frozen-install/42 budgets and final standalone API lookup pass. 25 immediate-base bindings refreshed. [Review](evidence/step-reviews.json#R05-strict-dependencies). R04 proof remains valid; ship both SPA entries together.
 
 ## Next action
 
-R05: resolve strict API/web/worker/DB dependency declarations without blanket suppression; review geoip-country maintenance and saved repeated PR47.
+V01: review database foundations and migration criteria against current source and reusable evidence; first reconcile the proven PR47 workaround replacement.
 
-R03 native CSP question remains pending: signed-in reports return403 because browsers cannot add the CSRF header. Do not reask or waive the requirement. PR61 and other external prerequisites stay open. Then R05/V01/R06/V02/B01. Whole plan unfinished. Apply migration0132 before updated API/workers; historical traces stay NULL.
+R03 native CSP question remains pending: signed-in reports return403 because browsers cannot add the CSRF header. Do not reask or waive the requirement. PR61 and other external prerequisites stay open. Then remaining V01/R06/V02/B01. Whole plan unfinished. Apply migration0132 before updated API/workers; historical traces stay NULL.
 
 ## Preserve completed work and prerequisites
 

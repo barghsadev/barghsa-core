@@ -2076,6 +2076,14 @@
     "historical_deferrals": [
       "- `turbo typecheck` — deferred (packages need typecheck scripts)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source.",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "status": "satisfied",
+        "reason": "Runtime packages have typecheck scripts/references; all11 root tasks pass uncached with strict library checking.",
+        "evidence": "audit/evidence/step-reviews.json#R05-strict-dependencies"
+      }
+    ]
   }
 ]

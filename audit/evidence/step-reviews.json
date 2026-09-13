@@ -18906,6 +18906,207 @@
           "evidence": "audit/evidence/step-reviews.json#R04-purchase-loading"
         }
       ]
+    },
+    {
+      "id": "R05-strict-dependencies",
+      "date": "2026-09-13",
+      "source_revision": "448487c1ec7626795ec803d6d4d50bac0171826c",
+      "base_revision": "eff6b4b14397f05de3914d6db16b2bd21ddd4ced",
+      "product_commits": [
+        "448487c1"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.02.02",
+        "02-auth-users-admin.md#T-02.02.02"
+      ],
+      "summary": "Strict dependency checks restored; country-parser maintenance disposition documented. PR7 closes; PR47 product replacement verified with provenance reconciliation remaining.",
+      "review": [
+        "Reproduced146 DB,147 API/worker and1 web strict errors. Drizzle repairs restore runtime getSQL/generated-column declarations, role/config undefined contracts and public set-operation key exclusions. Exact Gel/MySQL dependencies provide imported types. Gel fetch typing, Vite plugin options/host Worker typing and TanStack stripped before-load context repaired.43 declaration files change no runtime JS. No broad suppression or fake ambient modules.",
+        "Explicit PgTableWithColumns/BuildColumns factory signature avoids out-of-scope TTableName/TDialect in emitted declarations. Runtime body unchanged; strengthened existing tests prove concrete column types and literal names; downstream strict consumers read rebuilt declarations.",
+        "Pnpm patch-commit initially left a stale patch binding. Normal resolution repaired the lockfile; final frozen offline install passes. Failed diagnostics/install runs retained. All11 root typecheck tasks pass uncached with referenced builds.",
+        "Reviewed five generated OpenAPI differences against existing source: marketing-consent body/404/409 and two customer-correction routes. Saved contract refreshed only; no handler behavior changes. Contract checker and tests pass.",
+        "Unmaintained country parser retained only for bounded, validated, local display-only lookup. Release procedure records exact data version/hashes, package diff, fixture and packaged lookup, image rebuild/rollback and disable/replace conditions. Updater/watch APIs are not exposed or called.36 session/location cases and final standalone artifact prove IPv4/IPv6/mapped/private handling. No deployed freshness or provider claim.",
+        "5 base-table cases, schema snapshot, scoped lint/format, API/worker/web builds and42 unchanged budgets pass. Two preliminary artifact copies overlapped builders and are excluded from acceptance; only the final copy after all builders and its standalone lookup/hash check count. Prior unchanged browser/authority proof reused.",
+        "PR7 deferred typecheck is fulfilled. PR47 only added skipLibCheck workarounds: all four are removed and strict checks pass. Its saved inventory mapping remains absent, so preserve an explicit V01 provenance item without inventing remaining product work. PR90 closure remains valid."
+      ],
+      "verification": {
+        "types": "All11 root tasks pass uncached; strict DB/API/worker/web checks and builds pass.",
+        "tests": "5 base-table and36 API cases; snapshot/contract checks pass.",
+        "packaging": "Frozen offline install and final standalone API lookup pass;3 bundled-data hashes retained.",
+        "budgets": "42 unchanged budgets pass."
+      },
+      "remaining": [
+        "PR47 unmapped provenance remains V01.",
+        "Production freshness/rollout and V02 regression/coverage remain separate."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
+        },
+        {
+          "path": "apps/api/src/admin/customer-corrections.controller.ts",
+          "sha256": "9612d3920b9b89118038edb2c8cb8104709ed1d4fcb926e2926dbc332251d757"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "174fe1a99c55c798864a2c32d4a9cae69a4d98367c14ff9bd140081021d3f6bc"
+        },
+        {
+          "path": "apps/api/src/session/session-location.test.ts",
+          "sha256": "05ef44e31f4c06ee1f79da3c40f23298ca4cb7b171da405383326a57a598a455"
+        },
+        {
+          "path": "apps/api/src/session/session-location.ts",
+          "sha256": "c1b59ac80a2e02433281852c09dcb934b184a981973e1e647bd935a3f3a5c371"
+        },
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.ts",
+          "sha256": "c810aaa7b8ce78d50f63d1566a23ddcb50e95c9c893232d564ebc587af8a8481"
+        },
+        {
+          "path": "apps/api/tsconfig.json",
+          "sha256": "5f5decddf5c8d73d914fb0c7ec09d2477148b989c27b6bf912d6bed9fa5681cd"
+        },
+        {
+          "path": "apps/web/tsconfig.json",
+          "sha256": "c27285180ceab373a4eb73aae0fe667ddb69d7fafabecfdf9b81a6eadd9d6433"
+        },
+        {
+          "path": "apps/worker/tsconfig.json",
+          "sha256": "ea237c351efbf679e0f6dbd3e18ad909cfa9a8bb9050bede91fa04f1b3b9d006"
+        },
+        {
+          "path": "docs/development/dependency-types.md",
+          "sha256": "d3360cfc24478f33cacb8509e94cf76315d5677afdb54b3902212529a9c6a265"
+        },
+        {
+          "path": "docs/security/session-location.md",
+          "sha256": "866cae20e1131d8ce8b064bf49ca79c6b28cbfd649c2467224e04012da09d28b"
+        },
+        {
+          "path": "package.json",
+          "sha256": "a0facb9bf2523e2008d097dda78f68c526ef499f473ccb30b4ae33dcbe792901"
+        },
+        {
+          "path": "packages/db/src/base-table.test.ts",
+          "sha256": "c4b3521970bb3ba6e5c72f1eb8d3437f3d8347de6e04eea4c640c8c956ca650a"
+        },
+        {
+          "path": "packages/db/src/base-table.ts",
+          "sha256": "3d8069a1a9970a66f9fd1d31049cf9eba81c50347617e00477aab4b263c9202a"
+        },
+        {
+          "path": "packages/db/tsconfig.json",
+          "sha256": "ea2f25b744dc0819879b01cba066f83680236227fb38737598684f25006df13e"
+        },
+        {
+          "path": "packages/tsconfig/base.json",
+          "sha256": "6097ef4fb31ac5f9c3909d607f67a76322e7cfbbf7c1e1c2f6cd5c0dd6ce3e9a"
+        },
+        {
+          "path": "patches/@tanstack__router-core@1.171.27.patch",
+          "sha256": "642f9f19d9d8bc8f6758326f0013be00f2a0c4efbb17b7daebda848e19cfeaaf"
+        },
+        {
+          "path": "patches/drizzle-orm@0.45.2.patch",
+          "sha256": "97e490645ade6f8379cee2eaa1bdaa1a22d6dc8db11a1c668d076bf10b4c8b89"
+        },
+        {
+          "path": "patches/gel@2.2.0.patch",
+          "sha256": "b14523c4aa2b3fe1e68869d1efe8a8b51c532adc5c3bd289db41cbbb9af2f7d5"
+        },
+        {
+          "path": "patches/vite@6.4.3.patch",
+          "sha256": "25dd7c8ef2797db46bbfbe8078f3e7428fa59f2e8ecc9ef57fe9acb664526739"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "1bb597d0845a82a28cdccfa9fce00fa7a9834841fdfb4bdaace76d42e4c811c7"
+        }
+      ],
+      "logs": [
+        "/tmp/r05-api-artifact-final.log",
+        "/tmp/r05-api-artifact-lookup.log",
+        "/tmp/r05-api-artifact-verified.log",
+        "/tmp/r05-api-artifact.log",
+        "/tmp/r05-api-build.log",
+        "/tmp/r05-api-strict-baseline.log",
+        "/tmp/r05-api-strict-final.log",
+        "/tmp/r05-base-table-tests.log",
+        "/tmp/r05-budgets.log",
+        "/tmp/r05-db-build-sync.log",
+        "/tmp/r05-db-strict-baseline.log",
+        "/tmp/r05-db-strict-build.log",
+        "/tmp/r05-db-strict-final.log",
+        "/tmp/r05-db-strict-force.log",
+        "/tmp/r05-docs-format.log",
+        "/tmp/r05-drizzle-patch-install.log",
+        "/tmp/r05-drizzle-patch-start.log",
+        "/tmp/r05-drizzle-peers-install.log",
+        "/tmp/r05-format.log",
+        "/tmp/r05-frozen-final.log",
+        "/tmp/r05-frozen-install.log",
+        "/tmp/r05-gel-patch-install.log",
+        "/tmp/r05-gel-patch-start.log",
+        "/tmp/r05-openapi-final.log",
+        "/tmp/r05-openapi-refresh.log",
+        "/tmp/r05-openapi.log",
+        "/tmp/r05-quality-format.log",
+        "/tmp/r05-quality-lint.log",
+        "/tmp/r05-resolve-patches.log",
+        "/tmp/r05-root-strict.log",
+        "/tmp/r05-router-patch-install.log",
+        "/tmp/r05-router-patch-start.log",
+        "/tmp/r05-session-location-tests.log",
+        "/tmp/r05-snapshot.log",
+        "/tmp/r05-tests-docs-format.log",
+        "/tmp/r05-vite-patch-install.log",
+        "/tmp/r05-vite-patch-start.log",
+        "/tmp/r05-web-build.log",
+        "/tmp/r05-web-strict-baseline.log",
+        "/tmp/r05-web-strict-final.log",
+        "/tmp/r05-worker-build.log",
+        "/tmp/r05-worker-strict-baseline.log",
+        "/tmp/r05-worker-strict-final.log",
+        "/tmp/r05-checkpoint-audit.log",
+        "/tmp/r05-checkpoint-backlog.log",
+        "/tmp/r05-checkpoint-prs.log",
+        "/tmp/r05-checkpoint-requirements.log",
+        "/tmp/r05-checkpoint-skips.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 7,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.02.02"
+          ],
+          "reason": "References/scripts and original deferred typecheck verified under unchanged strict flags.",
+          "source_revision": "448487c1ec7626795ec803d6d4d50bac0171826c",
+          "evidence": "audit/evidence/step-reviews.json#R05-strict-dependencies"
+        },
+        {
+          "pr": 47,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.02.02"
+          ],
+          "reason": "All skipLibCheck workarounds removed and strict consumers pass. Product replacement verified; unmapped saved provenance disposition remains V01.",
+          "source_revision": "448487c1ec7626795ec803d6d4d50bac0171826c",
+          "evidence": "audit/evidence/step-reviews.json#R05-strict-dependencies"
+        },
+        {
+          "pr": 90,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.02.02"
+          ],
+          "reason": "Prior session workflow acceptance retained; parser maintenance disposition and packaged lookup reverified. No deployed freshness claim.",
+          "source_revision": "448487c1ec7626795ec803d6d4d50bac0171826c",
+          "evidence": "audit/evidence/step-reviews.json#R05-strict-dependencies"
+        }
+      ]
     }
   ]
 }

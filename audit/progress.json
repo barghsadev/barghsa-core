@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "7eecc144cb01bdafd9860b867ca163683b49a727",
-  "active_step": "R05",
-  "next_action": "R05: resolve strict API/web/worker/DB dependency declarations without blanket suppression; review geoip-country maintenance and saved repeated PR47.",
+  "source_revision": "448487c1ec7626795ec803d6d4d50bac0171826c",
+  "active_step": "V01",
+  "next_action": "V01: review database foundations and migration criteria against current source and reusable evidence; first reconcile the proven PR47 workaround replacement.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -46,12 +46,12 @@
     {
       "id": "R05",
       "title": "Strict dependencies",
-      "status": "in_progress"
+      "status": "completed"
     },
     {
       "id": "V01",
       "title": "Task and PR dispositions",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "R06",
@@ -257,8 +257,7 @@
       "implementation_status": "partial",
       "acceptance_status": "pending",
       "remaining": [
-        "Close three measured coverage gaps with meaningful tests. Resolve strict dependency declarations and remaining gate acceptance. Eager purchase loading and local error/correlation repairs are verified.",
-        "R05: review geoip-country parser maintenance and the data-update procedure. Current pinned data and packaging pass; upstream directs new development to a successor."
+        "Close three measured coverage gaps and final gate acceptance. Eager purchase loading, strict dependencies, local error/correlation and parser maintenance review are verified."
       ]
     },
     {
@@ -758,6 +757,10 @@
     {
       "id": "R04-purchase-loading",
       "review_record": "audit/evidence/step-reviews.json#R04-purchase-loading"
+    },
+    {
+      "id": "R05-strict-dependencies",
+      "review_record": "audit/evidence/step-reviews.json#R05-strict-dependencies"
     }
   ],
   "deferred_improvements": [
@@ -785,8 +788,8 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 179,
-    "partial": 32,
+    "acceptance_verified": 180,
+    "partial": 31,
     "pending": 111,
     "merged_prs": 301,
     "historical_skips": 58,
@@ -1084,32 +1087,39 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "R05-strict-dependencies",
-    "name": "Strict declarations and location dependency maintenance",
+    "id": "V01-database-foundations",
+    "name": "Database foundations and migration acceptance",
     "status": "reviewing",
     "prs": [
-      7,
-      47,
-      90
+      23,
+      24,
+      27,
+      79,
+      80,
+      47
     ],
     "task_keys": [
-      "01-platform-infrastructure.md#T-01.02.02",
-      "02-auth-users-admin.md#T-02.02.02"
+      "01-platform-infrastructure.md#T-02.02.02",
+      "01-platform-infrastructure.md#T-02.02.03",
+      "01-platform-infrastructure.md#T-02.02.04",
+      "01-platform-infrastructure.md#T-02.03.01",
+      "01-platform-infrastructure.md#T-02.03.02",
+      "01-platform-infrastructure.md#T-02.03.03",
+      "01-platform-infrastructure.md#T-02.03.04"
     ],
     "remaining_checklist": [
-      "Read exact criteria and current strict compiler diagnostics.",
-      "Fix incompatible dependency declarations without broad suppression.",
-      "Review geoip maintenance/update procedure and PR47 mapping; run strict consumers and frozen install."
+      "Reconcile PR47 unmapped replacement evidence.",
+      "Read exact table/UUID/convention/config/runner/validation/expand-contract criteria and PR deferrals.",
+      "Reuse DB/migration evidence; fix confirmed gaps and retain operational prerequisites."
     ],
-    "confirmed_defects": [
-      "Four consumers still enable skipLibCheck; prior strict DB check reported146 upstream declaration errors."
-    ],
+    "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R04-purchase-loading"
+      "audit/evidence/step-reviews.json#R05-strict-dependencies",
+      "audit/preflight/production-image-checkpoint.json"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "R05: resolve strict API/web/worker/DB dependency declarations without blanket suppression; review geoip-country maintenance and saved repeated PR47."
+    "next_action": "V01: review database foundations and migration criteria against current source and reusable evidence; first reconcile the proven PR47 workaround replacement."
   },
   "open_domain_reviews": [
     {

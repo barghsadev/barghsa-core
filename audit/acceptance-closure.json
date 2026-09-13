@@ -111,7 +111,7 @@
       "source_evidence": [
         {
           "path": "package.json",
-          "sha256": "53efc6d21e787dc283a79486d74d6be9831f09f13c8d00c57dac26e8e613e631"
+          "sha256": "a0facb9bf2523e2008d097dda78f68c526ef499f473ccb30b4ae33dcbe792901"
         },
         {
           "path": "README.md",
@@ -141,7 +141,10 @@
           ".github/workflows/ci.yml"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "evidence_reuse": [
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.01.05",
@@ -337,55 +340,115 @@
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.02.02",
-      "status": "partial",
-      "reviewed_sha": "6887a78754d12e3c46040ed5988fd6e47390ec25",
+      "status": "acceptance_verified",
+      "reviewed_sha": "448487c1ec7626795ec803d6d4d50bac0171826c",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 97,
       "requirement": "- **T-01.02.02:** Configure per-package tsconfig with project references in each of: `packages/db`, `packages/shared`, `packages/i18n`, `packages/ui`, `apps/web`, `apps/api`\n  - **Notes:** Each extends `../../tsconfig/base.json` (or `../tsconfig/base.json` from packages). Set `rootDir: src`, `outDir: dist`. Add `references` to upstream dependencies. For `apps/web`, extend with JSX config. For `apps/api`, set `emitDecoratorMetadata: true`, `experimentalDecorators: true` for NestJS compatibility.\n  - **Dependencies:** T-01.02.01\n  - **Complexity:** L",
       "requirement_sha256": "791a0a49ce36fc7967514e2d0e2ca3f287cfaf8524ce3211ed2a165d55f8d2f9",
       "source_evidence": [
         {
+          "path": "apps/api/openapi.json",
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
+        },
+        {
+          "path": "apps/api/src/admin/customer-corrections.controller.ts",
+          "sha256": "9612d3920b9b89118038edb2c8cb8104709ed1d4fcb926e2926dbc332251d757"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "174fe1a99c55c798864a2c32d4a9cae69a4d98367c14ff9bd140081021d3f6bc"
+        },
+        {
+          "path": "apps/api/src/session/session-location.test.ts",
+          "sha256": "05ef44e31f4c06ee1f79da3c40f23298ca4cb7b171da405383326a57a598a455"
+        },
+        {
+          "path": "apps/api/src/session/session-location.ts",
+          "sha256": "c1b59ac80a2e02433281852c09dcb934b184a981973e1e647bd935a3f3a5c371"
+        },
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.ts",
+          "sha256": "c810aaa7b8ce78d50f63d1566a23ddcb50e95c9c893232d564ebc587af8a8481"
+        },
+        {
           "path": "apps/api/tsconfig.json",
-          "sha256": "06f38ba4b704a61447632759958bd3d3ad61661809b29861aa68a4ccbdc5e87b"
+          "sha256": "5f5decddf5c8d73d914fb0c7ec09d2477148b989c27b6bf912d6bed9fa5681cd"
         },
         {
           "path": "apps/web/tsconfig.json",
-          "sha256": "e43f9ff1ec99e3c3063251c316bc38bb38f2e1f6d130bfe9eb12449d51a1fd4f"
+          "sha256": "c27285180ceab373a4eb73aae0fe667ddb69d7fafabecfdf9b81a6eadd9d6433"
         },
         {
           "path": "apps/worker/tsconfig.json",
-          "sha256": "127302b3febf8b4925fabf951045974e714f554c5207690de97b2cd1740dfde7"
+          "sha256": "ea237c351efbf679e0f6dbd3e18ad909cfa9a8bb9050bede91fa04f1b3b9d006"
+        },
+        {
+          "path": "docs/development/dependency-types.md",
+          "sha256": "d3360cfc24478f33cacb8509e94cf76315d5677afdb54b3902212529a9c6a265"
+        },
+        {
+          "path": "docs/security/session-location.md",
+          "sha256": "866cae20e1131d8ce8b064bf49ca79c6b28cbfd649c2467224e04012da09d28b"
+        },
+        {
+          "path": "package.json",
+          "sha256": "a0facb9bf2523e2008d097dda78f68c526ef499f473ccb30b4ae33dcbe792901"
+        },
+        {
+          "path": "packages/db/src/base-table.test.ts",
+          "sha256": "c4b3521970bb3ba6e5c72f1eb8d3437f3d8347de6e04eea4c640c8c956ca650a"
+        },
+        {
+          "path": "packages/db/src/base-table.ts",
+          "sha256": "3d8069a1a9970a66f9fd1d31049cf9eba81c50347617e00477aab4b263c9202a"
         },
         {
           "path": "packages/db/tsconfig.json",
-          "sha256": "c4f86006485c06aa9cee6e74e7fa08c052b1eab58977ed9fd64c3a81a36bb1fe"
+          "sha256": "ea2f25b744dc0819879b01cba066f83680236227fb38737598684f25006df13e"
         },
         {
-          "path": "packages/shared/tsconfig.json",
-          "sha256": "5a181058c61029d3d9fd4ac7e701a2d542062ccda75dca6ec6e900e98841b3ea"
+          "path": "packages/tsconfig/base.json",
+          "sha256": "6097ef4fb31ac5f9c3909d607f67a76322e7cfbbf7c1e1c2f6cd5c0dd6ce3e9a"
         },
         {
-          "path": "packages/i18n/tsconfig.json",
-          "sha256": "5a181058c61029d3d9fd4ac7e701a2d542062ccda75dca6ec6e900e98841b3ea"
+          "path": "patches/@tanstack__router-core@1.171.27.patch",
+          "sha256": "642f9f19d9d8bc8f6758326f0013be00f2a0c4efbb17b7daebda848e19cfeaaf"
         },
         {
-          "path": "packages/ui/tsconfig.json",
-          "sha256": "4067448168bab52a2405dc11ed35a4ce2be5a85488b5a019b697f316bce62b24"
+          "path": "patches/drizzle-orm@0.45.2.patch",
+          "sha256": "97e490645ade6f8379cee2eaa1bdaa1a22d6dc8db11a1c668d076bf10b4c8b89"
+        },
+        {
+          "path": "patches/gel@2.2.0.patch",
+          "sha256": "b14523c4aa2b3fe1e68869d1efe8a8b51c532adc5c3bd289db41cbbb9af2f7d5"
+        },
+        {
+          "path": "patches/vite@6.4.3.patch",
+          "sha256": "25dd7c8ef2797db46bbfbe8078f3e7428fa59f2e8ecc9ef57fe9acb664526739"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "1bb597d0845a82a28cdccfa9fce00fa7a9834841fdfb4bdaace76d42e4c811c7"
         }
       ],
       "checks": [
         "All runtime projects extend the shared base and declare upstream references",
-        "Removed both UI strictness overrides and shared library-check override; root typecheck passes"
+        "Removed both UI strictness overrides and shared library-check override; root typecheck passes",
+        "Four remaining skipLibCheck overrides removed.43 dependency declarations repaired against actual source/runtime, with no runtime JavaScript changes or strictness relaxation. Explicit table-factory return type fixes invalid emitted type parameters while preserving literal table names and column inference.",
+        "All11 root typecheck tasks pass uncached; strict DB/API/worker/web checks and builds pass.5 base-table cases,36 country/session cases, schema snapshot,42 budgets, contract checks and frozen offline install pass. Final standalone API artifact resolves bundled country data."
       ],
-      "limitations": [
-        "API, web, worker and database still use skipLibCheck. Latest recorded strict DB run has146 errors:144 upstream Drizzle declarations and two Vite tool declarations. No strict dependency exception was approved."
-      ],
+      "limitations": [],
       "merged_prs": [
         7
       ],
       "historically_skipped": false,
       "remaining_work_reconciled_at": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
-      "remaining_work_evidence": "audit/evidence/acceptance-refresh.json"
+      "remaining_work_evidence": "audit/evidence/acceptance-refresh.json",
+      "evidence_reuse": [
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R05-strict-dependencies"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.02.03",
@@ -481,7 +544,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "53efc6d21e787dc283a79486d74d6be9831f09f13c8d00c57dac26e8e613e631"
+          "sha256": "a0facb9bf2523e2008d097dda78f68c526ef499f473ccb30b4ae33dcbe792901"
         },
         {
           "path": ".github/workflows/ci.yml",
@@ -516,7 +579,10 @@
           ".github/workflows/ci.yml"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "evidence_reuse": [
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.04.05",
@@ -533,7 +599,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "53efc6d21e787dc283a79486d74d6be9831f09f13c8d00c57dac26e8e613e631"
+          "sha256": "a0facb9bf2523e2008d097dda78f68c526ef499f473ccb30b4ae33dcbe792901"
         },
         {
           "path": ".github/workflows/ci.yml",
@@ -600,7 +666,8 @@
         "scope": "Preserved task status/limits. Additive contract/export paths, unchanged receipt handler, current manual/host/browser compatibility, customer deadline HTTP and correction/archive/snapshot checks support these changed bindings."
       },
       "evidence_reuse": [
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ]
     },
     {
@@ -2448,7 +2515,7 @@
         },
         {
           "path": "pnpm-lock.yaml",
-          "sha256": "af3e90261ff4ae8938865dcbcd88c1fcfc4069f178335da423f98a447ea0d37d"
+          "sha256": "1bb597d0845a82a28cdccfa9fce00fa7a9834841fdfb4bdaace76d42e4c811c7"
         },
         {
           "path": "scripts/check-route-budgets.mjs",
@@ -2471,7 +2538,8 @@
       "historically_skipped": false,
       "evidence_reuse": [
         "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
-        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ],
       "review_record": "audit/evidence/step-reviews.json#R04-purchase-loading"
     },
@@ -2502,7 +2570,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "53efc6d21e787dc283a79486d74d6be9831f09f13c8d00c57dac26e8e613e631"
+          "sha256": "a0facb9bf2523e2008d097dda78f68c526ef499f473ccb30b4ae33dcbe792901"
         },
         {
           "path": "pnpm-lock.yaml",
@@ -2531,7 +2599,10 @@
           "pnpm-lock.yaml"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "evidence_reuse": [
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.05",
@@ -3570,7 +3641,7 @@
         },
         {
           "path": "docs/security/session-location.md",
-          "sha256": "7fb228d81f807bdb35fc0aa7db8dba67fe916bf91ac11619e22a62d6254abcf6"
+          "sha256": "866cae20e1131d8ce8b064bf49ca79c6b28cbfd649c2467224e04012da09d28b"
         }
       ],
       "checks": [
@@ -3587,11 +3658,10 @@
         "At ee5beb2, reviewed staff disablement, both ownership-transfer parties and unchanged CRM revocation primitives; see audit/session-caller-review.md. Other authorization criteria remain separate.",
         "At 5543cc2, invitation acceptance rotates current credentials and revokes others with the membership/audit transaction. See audit/session-caller-review.md and the14-case HTTP suite.",
         "At640108c, reconciled changed-file evidence with the bounded R01-guard-boundaries review. Existing task status and unrelated limitations remain.",
-        "audit/evidence/step-reviews.json#R01-session-recovery: Owner-scoped session list, approximate IP country, device name, created/last-active timestamps, single confirmation and password-confirmed all-other revocation are verified with current actor checks through commit. Staff/CRM revocation, disablement, reset, ownership and refresh-reuse compromise invalidate applicable credentials atomically. Trusted-device removal revokes future trust and is distinguished from active-session revocation. Existing fa/en desktop/mobile dialog, retry, failure and self-sign-out evidence remains valid."
+        "audit/evidence/step-reviews.json#R01-session-recovery: Owner-scoped session list, approximate IP country, device name, created/last-active timestamps, single confirmation and password-confirmed all-other revocation are verified with current actor checks through commit. Staff/CRM revocation, disablement, reset, ownership and refresh-reuse compromise invalidate applicable credentials atomically. Trusted-device removal revokes future trust and is distinguished from active-session revocation. Existing fa/en desktop/mobile dialog, retry, failure and self-sign-out evidence remains valid.",
+        "audit/evidence/step-reviews.json#R05-strict-dependencies: Pinned parser retained for local display-only lookup. Unmaintained upstream status, exact package/data release procedure and replacement conditions documented.36 session/location cases and standalone IPv4/IPv6/mapped/private lookup pass; three data hashes recorded. Prior authorization/browser evidence retained. No production freshness claim."
       ],
-      "limitations": [
-        "Approximate IP country uses local data; geoip-country maintenance remains R05. This does not certify deployed operation."
-      ],
+      "limitations": [],
       "merged_prs": [
         90
       ],
@@ -3691,7 +3761,10 @@
         "note": "Original source bindings and assessment remain available in this committed ledger revision; older nested assessments are preserved."
       },
       "review_record": "audit/evidence/step-reviews.json#R01-session-recovery",
-      "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed."
+      "evidence_reuse": [
+        "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.03",
@@ -4450,7 +4523,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -4546,7 +4619,8 @@
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ]
     },
     {
@@ -4608,7 +4682,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -4685,7 +4759,8 @@
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ]
     },
     {
@@ -5179,7 +5254,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -5240,7 +5315,8 @@
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ]
     },
     {
@@ -5327,7 +5403,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/web/src/pages/AdminDashboard.tsx",
@@ -5382,7 +5458,8 @@
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ]
     },
     {
@@ -5780,7 +5857,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/api/src/auth/auth.controller.ts",
@@ -5913,7 +5990,8 @@
       "evidence_reuse": [
         "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed.",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ]
     },
     {
@@ -6316,7 +6394,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -6420,7 +6498,8 @@
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ]
     },
     {
@@ -12309,7 +12388,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12371,7 +12450,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12473,7 +12553,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12535,7 +12615,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12637,7 +12718,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12699,7 +12780,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12801,7 +12883,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -12863,7 +12945,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -12965,7 +13048,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -13027,7 +13110,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -13129,7 +13213,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -13191,7 +13275,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -13293,7 +13378,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -13428,7 +13513,8 @@
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
         "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
-        "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+        "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -13530,7 +13616,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -13592,7 +13678,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -13694,7 +13781,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -13829,7 +13916,8 @@
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
         "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
-        "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+        "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -13931,7 +14019,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/worker/src/invoices/reminder-scheduler.ts",
@@ -13993,7 +14081,8 @@
         "audit/evidence/step-reviews.json#R01-invoice-creation-calculation",
         "audit/evidence/step-reviews.json#R01-bank-receipts-approval",
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
-        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior."
+        "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ],
       "evidence_refresh": {
         "date": "2026-09-09",
@@ -14289,7 +14378,7 @@
         },
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/api/src/finance/financial-submission-actor.ts",
@@ -14362,7 +14451,8 @@
         "evidence": "audit/evidence/step-reviews.json#R01-verification-policy"
       },
       "evidence_reuse": [
-        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued."
+        "Entry-build bindings refreshed by audit/evidence/step-reviews.json#R04-purchase-loading. Source review preserves authority and domain behavior; current auth, purchase, shell, consent and server checks cover the changed loading boundary. Older unmatched bindings remain queued.",
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
       ]
     },
     {
@@ -15320,7 +15410,7 @@
       "source_evidence": [
         {
           "path": "apps/api/openapi.json",
-          "sha256": "df56218c721e4f6e9b8b1c80079c3b1d9937445e19d0e5f84e4f8781c4ed7aa0"
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
@@ -15386,7 +15476,10 @@
         194
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#R02-daytime-window"
+      "review_record": "audit/evidence/step-reviews.json#R02-daytime-window",
+      "evidence_reuse": [
+        "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-09.06.02",
@@ -25512,6 +25605,39 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#R04-purchase-loading",
       "note": "Refresh only immediate-base matching hashes after bounded source review and focused entry/auth/purchase/consent/server checks. Preserve older refresh queue."
+    },
+    {
+      "source_revision": "448487c1ec7626795ec803d6d4d50bac0171826c",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.01.04",
+        "01-platform-infrastructure.md#T-01.02.02",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.03",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "02-auth-users-admin.md#T-02.02.02",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-05.05.01",
+        "02-auth-users-admin.md#T-09.06.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R05-strict-dependencies",
+      "note": "Only immediate-base matching bindings refreshed. Strict consumers, runtime-body comparison, schema and packaged lookup support reuse;38 older refreshes retained."
     }
   ]
 }
