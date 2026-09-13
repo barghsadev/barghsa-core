@@ -58,10 +58,13 @@ services:
       - '6432:6432'
     environment:
       PGBOUNCER_DATABASE: barghsa
-      PGBOUNCER_HOST: postgres
-      PGBOUNCER_PORT: '5432'
-      PGBOUNCER_USER: barghsa
-      PGBOUNCER_PASSWORD: barghsa-dev-password
+      PGBOUNCER_PORT: '6432'
+      PGBOUNCER_POOL_MODE: transaction
+      POSTGRESQL_HOST: postgres
+      POSTGRESQL_PORT: '5432'
+      POSTGRESQL_DATABASE: barghsa
+      POSTGRESQL_USERNAME: barghsa
+      POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD:-barghsa-dev-password}
       PGBOUNCER_MAX_CLIENT_CONN: '200'
       PGBOUNCER_DEFAULT_POOL_SIZE: '30'
       PGBOUNCER_RESERVE_POOL_SIZE: '10'
@@ -70,7 +73,12 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -h localhost -p 6432 -U barghsa 2>/dev/null || exit 1']
+      test:
+        - CMD-SHELL
+        - >-
+          PGPASSWORD="$${POSTGRESQL_PASSWORD}" psql -h 127.0.0.1
+          -p "$${PGBOUNCER_PORT}" -U "$${POSTGRESQL_USERNAME}"
+          -d "$${PGBOUNCER_DATABASE}" -v ON_ERROR_STOP=1 -Atqc 'SELECT 1' >/dev/null
       interval: 10s
       timeout: 5s
       retries: 5

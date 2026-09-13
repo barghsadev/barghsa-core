@@ -29,13 +29,13 @@ The platform needs to decide between:
 
 ### Transaction mode vs. Session mode
 
-- **Transaction mode** (selected): A client connection is returned to the pool after each transaction completes. This is the most efficient mode for HTTP APIs, where each request typically executes one or a few transactions. SET statements and prepared statements that span transactions are NOT supported — but the application uses neither (all queries use Drizzle ORM's parameterised queries).
-- **Session mode** (rejected): A client connection is held for the entire session. This is necessary for `LISTEN/NOTIFY`, cursors, and advisory locks — none of which the platform currently uses. If such features are needed later, a dedicated session-mode pool or direct connection can be configured.
+- **Transaction mode** (selected): A client connection is returned to the pool after each transaction completes. This is the most efficient mode for HTTP APIs, where each request typically executes one or a few transactions. Session settings do not follow a client between transactions. The application currently sends startup timeout options and per-query SET statements; transaction-safe timeout integration is still required before enabling PGBOUNCER_URL. Ignoring those startup options would hide an incomplete integration.
+- **Session mode** (rejected): A client connection is held for the entire session. This is necessary for `LISTEN/NOTIFY`, cursors, and advisory locks — the platform now uses session advisory locks for bootstrap and other owned operations. Those callers must keep a direct connection.
 
 ### TLS
 
-- **App → PgBouncer:** TLS is optional in development (localhost) and required in production (internal network). Environment variable `PGBOUNCER_SSL_MODE` controls this.
-- **PgBouncer → PostgreSQL:** TLS is required in production. The PgBouncer config specifies `server_tls_sslmode=require` in production.
+- **App → PgBouncer:** TLS is optional in development (localhost) and required in production (internal network). The application uses `DATABASE_SSL_ENABLED=true` and `DATABASE_CA_PATH` with certificate validation. The pooler requires `PGBOUNCER_CLIENT_TLS_SSLMODE=require`, its certificate and key mounted through `PGBOUNCER_CLIENT_TLS_CERT_FILE` and `PGBOUNCER_CLIENT_TLS_KEY_FILE`.
+- **PgBouncer → PostgreSQL:** TLS is required in production. Set `PGBOUNCER_SERVER_TLS_SSLMODE=verify-full` and mount the server CA through `PGBOUNCER_SERVER_TLS_CA_FILE`. The backend hostname must match its certificate. The development Compose profile does not supply production certificates.
 
 ### Pool sizing
 
@@ -74,16 +74,19 @@ A fork of PgBouncer with read/write splitting. The platform does not yet need re
 
 ```yaml
 pgbouncer:
-  image: bitnami/pgbouncer:latest
+  image: bitnamilegacy/pgbouncer:1.23.1
   container_name: barghsa-pgbouncer
   ports:
     - '6432:6432'
   environment:
     PGBOUNCER_DATABASE: barghsa
-    PGBOUNCER_HOST: postgres
-    PGBOUNCER_PORT: '5432'
-    PGBOUNCER_USER: barghsa
-    PGBOUNCER_PASSWORD: barghsa-dev-password
+    PGBOUNCER_PORT: '6432'
+    PGBOUNCER_POOL_MODE: transaction
+    POSTGRESQL_HOST: postgres
+    POSTGRESQL_PORT: '5432'
+    POSTGRESQL_DATABASE: barghsa
+    POSTGRESQL_USERNAME: barghsa
+    POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD:-barghsa-dev-password}
     PGBOUNCER_MAX_CLIENT_CONN: '200'
     PGBOUNCER_DEFAULT_POOL_SIZE: '30'
     PGBOUNCER_RESERVE_POOL_SIZE: '10'
@@ -94,6 +97,8 @@ pgbouncer:
 ```
 
 ### Application connection
+
+The optional container profile now uses the image's supported backend variables, transaction mode and an authenticated SQL health check. Application timeout compatibility remains an open repair; keep `PGBOUNCER_URL` unset until that repair is verified. See [PgBouncer parameter tracking](https://www.pgbouncer.org/config#track_extra_parameters) for the startup/session restrictions.
 
 The application connects to PgBouncer via `PGBOUNCER_URL` (e.g., `postgres://barghsa:password@pgbouncer:6432/barghsa`). When `PGBOUNCER_URL` is not set, the application falls back to `DATABASE_URL` (direct PostgreSQL connection).
 
