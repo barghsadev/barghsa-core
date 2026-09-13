@@ -2040,7 +2040,17 @@
     "historical_deferrals": [
       "- [x] Query logging in development via Drizzle's `logger: true`; production logging via structured JSON only for slow queries (>200ms) — deferred to T-02.01.03"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Production slow-query deferral satisfied by current middleware and passing DB tests.",
+    "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation",
+    "reviewed_source_revision": "cde8ac94350f745c1150cbd98cf1546523009bd2",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "status": "satisfied",
+        "reason": "Current promise/callback middleware emits structured production warnings above200ms. Development Drizzle logger retained; reviewed pool/timeout implementation and current DB747 proof apply.",
+        "evidence": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
+      }
+    ]
   },
   {
     "pr": 13,

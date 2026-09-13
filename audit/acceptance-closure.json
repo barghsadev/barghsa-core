@@ -2737,7 +2737,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-01.04.03",
       "status": "partial",
-      "reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "reviewed_sha": "cde8ac94350f745c1150cbd98cf1546523009bd2",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 182,
       "requirement": "- **T-01.04.03:** Configure backend integration test setup with real PostgreSQL\n  - **Notes:** Each parallel worker receives an isolated database schema via `test.globalSetup` or a testcontainers-based PostgreSQL. Never use SQLite or in-memory substitutes — they do not reproduce PostgreSQL transactions, constraints, locking, or SQL behavior. Provider calls are replaced only at the adapter boundary with deterministic fake servers or signed webhook fixtures (nock, MSW, or custom fakes). Mandatory concurrency tests: simultaneous wallet payments, duplicate provider callbacks, duplicate bank confirmation, concurrent refund workers, repeated order submission.\n  - **Dependencies:** T-01.04.01, S-02.01\n  - **Complexity:** L",
@@ -2762,7 +2762,8 @@
       ],
       "checks": [
         "Testcontainers starts real PostgreSQL 17. Each HTTP fixture creates a unique database, runs production migrations and boots compiled AppModule, with cleanup on success/failure.",
-        "The 691 HTTP/filter checkpoint across 55 files passed; final parser/auth/template checks passed after sanitization. Prior finance concurrency evidence remains in repair-progress.md."
+        "The 691 HTTP/filter checkpoint across 55 files passed; final parser/auth/template checks passed after sanitization. Prior finance concurrency evidence remains in repair-progress.md.",
+        "audit/evidence/step-reviews.json#V01-database-pr-reconciliation: Requirements and saved PR17–22 read; source delta from9635e767 reviewed. Factory/cancellation unchanged, only reviewed schema-aware health and new schema exports added. Current full DB747/747 and prior actual HTTP readiness3/3 reused; no new product change."
       ],
       "limitations": [
         "The mandatory concurrent refund-worker and full repeated commercial-order-submission flows are future consumers and have not been built or exercised. Existing transaction tests do not substitute for those requirements."
@@ -2770,7 +2771,8 @@
       "merged_prs": [
         21
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.04.04",
@@ -3182,7 +3184,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-02.01.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "cde8ac94350f745c1150cbd98cf1546523009bd2",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 246,
       "requirement": "- **T-02.01.01:** Initialize `packages/db` with Drizzle ORM, `pg`, `pg-pool`, and drizzle-kit\n  - **Notes:** `package.json` declares `drizzle-orm`, `drizzle-kit`, `pg`, `@types/pg`. Dependencies: `drizzle-orm` (runtime), `drizzle-kit` (dev, for migrations/generate). Export `* from './src/index'` in package entry.\n  - **Dependencies:** S-01.02\n  - **Complexity:** M",
@@ -3194,14 +3196,15 @@
         },
         {
           "path": "packages/db/src/index.ts",
-          "sha256": "89abab0ef8ba9a30aa5b6d904dacba9c2776987c51d663cc984f172a0cbbd9a6"
+          "sha256": "85c6be58734467d5b4974c44a00e895ae1ba6b74eb6631e77ab42a0458e89f79"
         }
       ],
       "checks": [
         "Reviewed current pool/timeout/cancellation/health source changes against the canonical database foundation requirement.",
         "Fresh focused database run: 47 tests in six files pass, including real PostgreSQL timeout selection, cancellation, query reuse, pool health cleanup, startup options and TLS configuration.",
         "Current shared/UI package consumer checks pass 18 and five tests; existing migrated API evidence remains separate and was not rerun in this metadata step.",
-        "Immediate-base source refresh: audit/evidence/step-reviews.json#R02-template-lifecycle-seeding; preserved template content/history and unrelated seeders. Focused seed/preview checks pass."
+        "Immediate-base source refresh: audit/evidence/step-reviews.json#R02-template-lifecycle-seeding; preserved template content/history and unrelated seeders. Focused seed/preview checks pass.",
+        "audit/evidence/step-reviews.json#V01-database-pr-reconciliation: Requirements and saved PR17–22 read; source delta from9635e767 reviewed. Factory/cancellation unchanged, only reviewed schema-aware health and new schema exports added. Current full DB747/747 and prior actual HTTP readiness3/3 reused; no new product change."
       ],
       "limitations": [
         "The package exposes compiled dist entry points for production consumers rather than executing source TypeScript. pg supplies its pg-pool implementation."
@@ -3217,12 +3220,13 @@
           "packages/db/src/index.ts"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.01.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "cde8ac94350f745c1150cbd98cf1546523009bd2",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 251,
       "requirement": "- **T-02.01.02:** Create PostgreSQL pool factory with configurable pool, statement timeout, lock timeout, and idle transaction guard\n  - **Notes:** Factory function `createDbPool(config: DbPoolConfig)` returns the pool. Apply `statement_timeout` via `query` event handler or `pool.on('connect')` with `SET statement_timeout`. Apply `lock_timeout` and `idle_in_transaction_session_timeout` similarly. Use environment variables: `DATABASE_URL`, `DB_POOL_MIN`, `DB_POOL_MAX`. Export typed `drizzle(pool, { schema, logger })` instance.\n  - **Dependencies:** T-02.01.01\n  - **Complexity:** M",
@@ -3230,7 +3234,7 @@
       "source_evidence": [
         {
           "path": "packages/db/src/index.ts",
-          "sha256": "89abab0ef8ba9a30aa5b6d904dacba9c2776987c51d663cc984f172a0cbbd9a6"
+          "sha256": "85c6be58734467d5b4974c44a00e895ae1ba6b74eb6631e77ab42a0458e89f79"
         },
         {
           "path": "packages/db/src/index.test.ts",
@@ -3256,7 +3260,8 @@
       "checks": [
         "Reviewed current shared pg Pool factory and Drizzle export, configurable bounds/acquisition/idle settings, startup lock/idle-transaction guards and per-statement10s read/30s write defaults.",
         "All47 focused checks in six files pass against current source, including real PostgreSQL SET/query ordering, write CTEs, transaction-control deadlines, cancellation/reuse and startup-option preservation.",
-        "TLS configuration tests verify explicit policy wins over URL settings and missing/malformed configured CA fails startup. Invalid timeout configuration cannot poison the pool singleton."
+        "TLS configuration tests verify explicit policy wins over URL settings and missing/malformed configured CA fails startup. Invalid timeout configuration cannot poison the pool singleton.",
+        "audit/evidence/step-reviews.json#V01-database-pr-reconciliation: Requirements and saved PR17–22 read; source delta from9635e767 reviewed. Factory/cancellation unchanged, only reviewed schema-aware health and new schema exports added. Current full DB747/747 and prior actual HTTP readiness3/3 reused; no new product change."
       ],
       "limitations": [
         "Automatic per-statement SET requires session-affine routing. Live PgBouncer/TLS/network-partition operation is not certified.",
@@ -3269,12 +3274,13 @@
       "evidence_refresh": {
         "date": "2026-09-08",
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.01.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "cde8ac94350f745c1150cbd98cf1546523009bd2",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 256,
       "requirement": "- **T-02.01.03:** Implement query timeout and cancellation via Drizzle configuration\n  - **Notes:** For slow query detection, emit structured log warning for queries exceeding 200ms. Use Drizzle's `beforeQuery`/`afterQuery` hooks or a pool middleware. Cancel long-running queries server-side if they exceed statement_timeout.\n  - **Dependencies:** T-02.01.02\n  - **Complexity:** S",
@@ -3282,7 +3288,7 @@
       "source_evidence": [
         {
           "path": "packages/db/src/index.ts",
-          "sha256": "89abab0ef8ba9a30aa5b6d904dacba9c2776987c51d663cc984f172a0cbbd9a6"
+          "sha256": "85c6be58734467d5b4974c44a00e895ae1ba6b74eb6631e77ab42a0458e89f79"
         },
         {
           "path": "packages/db/src/query-cancellation.integration.test.ts",
@@ -3292,11 +3298,12 @@
       "checks": [
         "Reviewed current pool/timeout/cancellation/health source changes against the canonical database foundation requirement.",
         "Fresh focused database run: 47 tests in six files pass, including real PostgreSQL timeout selection, cancellation, query reuse, pool health cleanup, startup options and TLS configuration.",
-        "Current shared/UI package consumer checks pass 18 and five tests; existing migrated API evidence remains separate and was not rerun in this metadata step."
+        "Current shared/UI package consumer checks pass 18 and five tests; existing migrated API evidence remains separate and was not rerun in this metadata step.",
+        "audit/evidence/step-reviews.json#V01-database-pr-reconciliation: Requirements and saved PR17–22 read; source delta from9635e767 reviewed. Factory/cancellation unchanged, only reviewed schema-aware health and new schema exports added. Current full DB747/747 and prior actual HTTP readiness3/3 reused; no new product change.",
+        "Production slow-query middleware emits structured JSON after200ms for promise/callback execution. Server statement deadlines and read/write defaults are already implemented; obsolete open limitation removed."
       ],
       "limitations": [
-        "Tests use the installed pg driver in its default non-pipelined mode and local PostgreSQL 17. Network partitions and live proxy cancellation are not certified.",
-        "Separate read/write timeout defaults remain open under T-02.01.02."
+        "Tests use the installed pg driver in its default non-pipelined mode and local PostgreSQL 17. Network partitions and live proxy cancellation are not certified."
       ],
       "merged_prs": [
         19
@@ -3309,12 +3316,13 @@
           "packages/db/src/index.ts"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.01.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "cde8ac94350f745c1150cbd98cf1546523009bd2",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 261,
       "requirement": "- **T-02.01.04:** Set up database health check endpoint for readiness probes\n  - **Notes:** Export a `dbHealth()` function that runs `SELECT 1` with a 5s timeout and returns `{ ok: boolean, latencyMs: number, poolStats: { totalCount, idleCount, waitingCount } }`. This is used by NestJS health controller for liveness/readiness checks.\n  - **Dependencies:** T-02.01.02\n  - **Complexity:** S\n  - **UI/UX:** N/A",
@@ -3322,7 +3330,7 @@
       "source_evidence": [
         {
           "path": "packages/db/src/index.ts",
-          "sha256": "89abab0ef8ba9a30aa5b6d904dacba9c2776987c51d663cc984f172a0cbbd9a6"
+          "sha256": "85c6be58734467d5b4974c44a00e895ae1ba6b74eb6631e77ab42a0458e89f79"
         },
         {
           "path": "packages/db/src/db-health.integration.test.ts",
@@ -3344,7 +3352,8 @@
       "checks": [
         "Reviewed current pool/timeout/cancellation/health source changes against the canonical database foundation requirement.",
         "Fresh focused database run: 47 tests in six files pass, including real PostgreSQL timeout selection, cancellation, query reuse, pool health cleanup, startup options and TLS configuration.",
-        "Current shared/UI package consumer checks pass 18 and five tests; existing migrated API evidence remains separate and was not rerun in this metadata step."
+        "Current shared/UI package consumer checks pass 18 and five tests; existing migrated API evidence remains separate and was not rerun in this metadata step.",
+        "audit/evidence/step-reviews.json#V01-database-pr-reconciliation: Requirements and saved PR17–22 read; source delta from9635e767 reviewed. Factory/cancellation unchanged, only reviewed schema-aware health and new schema exports added. Current full DB747/747 and prior actual HTTP readiness3/3 reused; no new product change."
       ],
       "limitations": [
         "A failed cancellation transport still relies on configured server/acquisition timeouts; repeated probes share existing work until it settles.",
@@ -3364,12 +3373,13 @@
       },
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02."
-      ]
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-02.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "6c435c4518450ceaa64e2aef558061c6ccdffd90",
+      "reviewed_sha": "cde8ac94350f745c1150cbd98cf1546523009bd2",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 286,
       "requirement": "- **T-02.02.01:** Create `packages/db/src/types.ts` with custom Drizzle type definitions\n  - **Notes:** Define `uuidv7` type using `drizzle-orm/pg-core` custom types. Generate UUIDv7 via a PostgreSQL function `uuid_generate_v7()` (to be created in migration) that combines timestamp + random bits. Define `timestamptz` as `timestamp with time zone`. Define `irrAmount` as `bigint()`. Define `fixedDecimal` as `numeric(20, 6)`. Define `halfOpenRange` as `tstzrange`.\n  - **Dependencies:** T-02.01.01\n  - **Complexity:** M",
@@ -3386,7 +3396,8 @@
       ],
       "checks": [
         "All seven custom-type tests pass within the 28-test focused run.",
-        "UUID default, timestamptz, bigint IRR, numeric(20,6) and tstzrange definitions inspected."
+        "UUID default, timestamptz, bigint IRR, numeric(20,6) and tstzrange definitions inspected.",
+        "audit/evidence/step-reviews.json#V01-database-pr-reconciliation: Requirements and saved PR17–22 read; source delta from9635e767 reviewed. Factory/cancellation unchanged, only reviewed schema-aware health and new schema exports added. Current full DB747/747 and prior actual HTTP readiness3/3 reused; no new product change."
       ],
       "limitations": [
         "Per-column range constraints and universal schema conventions are separate acceptance requirements; this record certifies the custom type definitions only."
@@ -3394,7 +3405,8 @@
       "merged_prs": [
         22
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-06.03.04",
@@ -27048,6 +27060,18 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap",
       "note": "Immediate-base matches only; final DB package and focused API/shared proof support reuse.38 older refreshes retained."
+    },
+    {
+      "source_revision": "cde8ac94350f745c1150cbd98cf1546523009bd2",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.01.01",
+        "01-platform-infrastructure.md#T-02.01.02",
+        "01-platform-infrastructure.md#T-02.01.03",
+        "01-platform-infrastructure.md#T-02.01.04"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation",
+      "note": "Four older index.ts bindings explicitly reviewed against9635e767; only prior verified schema readiness and schema exports changed. Current DB747 proof reused; existing38-item refresh queue unchanged."
     }
   ]
 }

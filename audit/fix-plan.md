@@ -16,7 +16,7 @@ Saved inventory: **301 merged PRs**, **170 deferrals across 101 PRs**, **23 repe
 
 ## Next step
 
-Seed/bootstrap reviewed atc63f10cb:5 tasks verified/1 partial;5 saved PR reviews closed/1 open. Global190 verified/34 partial/98 pending;163 PRs closed/26 open/112 unreviewed. PR84 retains production seed execution. Preserve migrations0133/0134 and legacy reconciliation prerequisites. Continue **V01-database-pr-reconciliation**, saved PR17–22. [Review](evidence/step-reviews.json#V01-seed-bootstrap).
+Seed/bootstrap reviewed atc63f10cb:5 tasks verified/1 partial;5 saved PR reviews closed/1 open. Global190 verified/34 partial/98 pending;168 PRs closed/27 open/106 unreviewed. PR84 retains production seed execution. Preserve migrations0133/0134 and legacy reconciliation prerequisites. Database PR17–22 reconciliation closes5/retains1 open, preserving task counts. Continue **V01-local-development**, saved PR35–38. [Review](evidence/step-reviews.json#V01-seed-bootstrap).
 
 Earlier checkpoints, retained for evidence reuse:
 

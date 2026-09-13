@@ -19831,6 +19831,176 @@
           "evidence": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
         }
       ]
+    },
+    {
+      "id": "V01-database-pr-reconciliation",
+      "date": "2026-09-13",
+      "source_revision": "cde8ac94350f745c1150cbd98cf1546523009bd2",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.03",
+        "01-platform-infrastructure.md#T-02.01.01",
+        "01-platform-infrastructure.md#T-02.01.02",
+        "01-platform-infrastructure.md#T-02.01.03",
+        "01-platform-infrastructure.md#T-02.01.04",
+        "01-platform-infrastructure.md#T-02.02.01"
+      ],
+      "summary": "Five saved PR reviews closed, one open. Existing five verified/one partial task statuses preserved.",
+      "review": [
+        "Compiled DB exports/dependencies and development/production logging verified; historical skipLibCheck workaround replaced by R05 strict consumer proof.",
+        "Configurable pooling, lock/idle guards and ordered10s-read/30s-write deadlines verified with actual PostgreSQL; live proxy operations remain external.",
+        "Server cancellation, safe queued-query removal and structured slow-query logging verified. Old missing UI dependency/test setup addressed by R03 UI and R05 strict/frozen installation; full current root regression remains V02.",
+        "Connectivity deadlines and actual HTTP packaged-schema readiness verified, including stale/missing metadata and recovery.",
+        "Real PostgreSQL isolation/migrations and current HTTP fixtures verified. Mandatory concurrent refund-worker and full repeated commercial-order submission remain unbuilt future consumers.",
+        "Current UUIDv7/timestamptz/bigint/numeric/range custom types and seven type tests verified; universal per-table conventions remain separate PR23.",
+        "README seed documentation changed source line offsets. Previous v01-seed-checkpoint-backlog.log failed; regenerated traceability and current check passes. No queue identity/order changed.",
+        "Reviewed exact older index.ts delta and refreshed four source bindings; remaining38-item source refresh queue unchanged. No tests repeated for unchanged product source."
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/db/src/test/globalSetup.ts",
+          "sha256": "94fd995eb3081145856eb13e62ee3ea69641e8696570ddd1b4fccc957de58d05"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "ca6cb822bf01591c0c1d776cec763e12091f8d86f2072387de0e84bb01a94861"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "576f6079eac1fa00cda4173ba4b33c0572c5366a96287a727af4a47eb29b2e6d"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "f5b0c5f5508145a2a068752b696e856c6d36b11a5af08d9f3027d98bd5316e13"
+        },
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f75d3fab51c9895d444aad8de7db913d4a8d05be0bb1c1a93ac995d104cb72e4"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "85c6be58734467d5b4974c44a00e895ae1ba6b74eb6631e77ab42a0458e89f79"
+        },
+        {
+          "path": "packages/db/src/index.test.ts",
+          "sha256": "d2fbc2f853d71bb14841e297a653d34e589d532c4a4ef2f826773ca90565fb02"
+        },
+        {
+          "path": "packages/db/src/query-timeout-policy.integration.test.ts",
+          "sha256": "158e471e79a185c8e1caf433fc14383da2db50d1a2da49f32634ff73f94d15c7"
+        },
+        {
+          "path": "packages/db/src/query-cancellation.integration.test.ts",
+          "sha256": "ba3b68d844bd643a2cf3bbe339b54e9656c5f0643905663e574e7d42b9962a0b"
+        },
+        {
+          "path": "packages/db/src/connection-security.test.ts",
+          "sha256": "09e419aa690c0aaa69cf99f794d5109985ec921ab800b0c87ee566793c5d8719"
+        },
+        {
+          "path": "packages/db/src/connection-options.integration.test.ts",
+          "sha256": "f9180f6c9ccd2e37c17a1b56e209cfc538ebe120c094a16ec3369e3deb7f7cdf"
+        },
+        {
+          "path": "packages/db/src/db-health.integration.test.ts",
+          "sha256": "8913464e739b1ea7ae9f9d0a7e9aa365d319d047067b3f11a9a591360ba16e00"
+        },
+        {
+          "path": "apps/api/src/health/health.service.ts",
+          "sha256": "de8d0a561ebe8acc5f928ba5f15f9c3d6949caffae0a2dc167e7a2ec2da81efc"
+        },
+        {
+          "path": "apps/api/src/health/health.controller.ts",
+          "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+        },
+        {
+          "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
+          "sha256": "9fc0d2776175d661a57d697e0a2a4b7f68ef3d6db4b0e71aa454a54a7ae0f627"
+        },
+        {
+          "path": "packages/db/src/types.ts",
+          "sha256": "584962fd6ea6153a65bb080b7f704472ad90542fdd87225345aeffc26a051a6d"
+        },
+        {
+          "path": "packages/db/src/types.test.ts",
+          "sha256": "b4fd9fbb93970404a31eb2a4bac4263750712ba6d7625c6fc8e768619a8000c6"
+        }
+      ],
+      "evidence_reuse": [
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap:747 DB cases including pool/health/custom types; DB/API builds/types.",
+        "audit/evidence/step-reviews.json#V01-database-foundations:3 actual HTTP readiness/telemetry cases.",
+        "audit/evidence/step-reviews.json#R05-strict-dependencies:11 strict root tasks/frozen install.",
+        "audit/evidence/step-reviews.json#R03-auxiliary-ui:49 UI cases."
+      ],
+      "logs": [
+        "/tmp/v01-db-reconcile-backlog.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 17,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.01.01"
+          ],
+          "reason": "Compiled DB exports/dependencies and development/production logging verified; historical skipLibCheck workaround replaced by R05 strict consumer proof.",
+          "source_revision": "cde8ac94350f745c1150cbd98cf1546523009bd2",
+          "evidence": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
+        },
+        {
+          "pr": 18,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.01.02"
+          ],
+          "reason": "Configurable pooling, lock/idle guards and ordered10s-read/30s-write deadlines verified with actual PostgreSQL; live proxy operations remain external.",
+          "source_revision": "cde8ac94350f745c1150cbd98cf1546523009bd2",
+          "evidence": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
+        },
+        {
+          "pr": 19,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.01.03"
+          ],
+          "reason": "Server cancellation, safe queued-query removal and structured slow-query logging verified. Old missing UI dependency/test setup addressed by R03 UI and R05 strict/frozen installation; full current root regression remains V02.",
+          "source_revision": "cde8ac94350f745c1150cbd98cf1546523009bd2",
+          "evidence": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
+        },
+        {
+          "pr": 20,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.01.04"
+          ],
+          "reason": "Connectivity deadlines and actual HTTP packaged-schema readiness verified, including stale/missing metadata and recovery.",
+          "source_revision": "cde8ac94350f745c1150cbd98cf1546523009bd2",
+          "evidence": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
+        },
+        {
+          "pr": 21,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.04.03"
+          ],
+          "reason": "Real PostgreSQL isolation/migrations and current HTTP fixtures verified. Mandatory concurrent refund-worker and full repeated commercial-order submission remain unbuilt future consumers.",
+          "source_revision": "cde8ac94350f745c1150cbd98cf1546523009bd2",
+          "evidence": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
+        },
+        {
+          "pr": 22,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-02.02.01"
+          ],
+          "reason": "Current UUIDv7/timestamptz/bigint/numeric/range custom types and seven type tests verified; universal per-table conventions remain separate PR23.",
+          "source_revision": "cde8ac94350f745c1150cbd98cf1546523009bd2",
+          "evidence": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
+        }
+      ],
+      "remaining": [
+        "PR21 future refund/order concurrency requirements; local factory tests do not substitute.",
+        "Live proxy/network/production operations remain outside local evidence.",
+        "V02 final regression remains required."
+      ]
     }
   ]
 }

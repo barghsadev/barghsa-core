@@ -4,7 +4,7 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **c63f10cb**. **190 verified /34 partial /98 pending** of322 claims. Saved PRs: **163 closed /26 open /112 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3234 logs indexed;38 older refreshes remain. Saved inventory ends September3; no current GitHub/deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **c63f10cb**. **190 verified /34 partial /98 pending** of322 claims. Saved PRs: **168 closed /27 open /106 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3235 logs indexed;38 older refreshes remain. Saved inventory ends September3; no current GitHub/deployment claim.
 
 Seed/bootstrap batch:5 tasks verified/1 partial;5 PRs closed/1 open. Migration0134 protects canonical electricity identities and allows zero/zero limits while rejecting new negative bounds. Seed counts/concurrency/force boundaries are repaired; legacy conflicts stop seed without replacement. Green-rule consumers recognize canonical and legacy keys, reject ambiguity. All747 DB cases,88 distinct affected API cases and14 shared cases pass; types/builds/snapshot/lint/format pass.39 immediate-base bindings refreshed. [Review](evidence/step-reviews.json#V01-seed-bootstrap). PR84 retains production initial-seed execution.
 
@@ -12,7 +12,7 @@ Database foundations retain5 verified/2 partial and PR47 closure. PR23's38 base-
 
 ## Next action
 
-V01: reconcile saved DB-foundation PR17–22 against verified task acceptance and historical deferrals. Reuse current proof; do not rebuild verified implementation.
+V01 database PR17–22 reconciled:5 closed/1 open; existing task counts preserved. PR21 retains future refund/order concurrency. Four old source bindings refreshed after exact delta review. README traceability regeneration fixes the prior failed backlog check; current check passes. Next: local development workflow, saved PR35–38.
 
 R03 native CSP question remains pending: signed-in reports return403 because browsers cannot add the CSRF header. Do not reask or waive the requirement. PR61 and other external prerequisites stay open. Then remaining V01/R06/V02/B01. Whole plan unfinished. Apply migrations through0134 before this API accepts traffic. Reconcile conflicting legacy electricity identities before seeding; validate nonnegative limit CHECK only after legacy reconciliation. Historical traces stay NULL.
 

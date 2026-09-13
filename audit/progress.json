@@ -5,7 +5,7 @@
   "plan": "audit/fix-plan.md",
   "source_revision": "c63f10cbc3fc671db583620cb6b48658ff47ab1e",
   "active_step": "V01",
-  "next_action": "V01: reconcile saved DB-foundation PR17–22 against verified current task acceptance, historical deferrals and reusable proof.",
+  "next_action": "V01: review local development workflow, saved PR35–38; reuse seed initialization evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -769,6 +769,10 @@
     {
       "id": "V01-seed-bootstrap",
       "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+    },
+    {
+      "id": "V01-database-pr-reconciliation",
+      "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
     }
   ],
   "deferred_improvements": [
@@ -1102,37 +1106,32 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-database-pr-reconciliation",
-    "name": "Database pool, health, test harness and type provenance",
+    "id": "V01-local-development",
+    "name": "Development services, configuration, initialization and file watching",
     "status": "reviewing",
     "prs": [
-      17,
-      18,
-      19,
-      20,
-      21,
-      22
+      35,
+      36,
+      37,
+      38
     ],
     "task_keys": [
-      "01-platform-infrastructure.md#T-01.04.03",
-      "01-platform-infrastructure.md#T-02.01.01",
-      "01-platform-infrastructure.md#T-02.01.02",
-      "01-platform-infrastructure.md#T-02.01.03",
-      "01-platform-infrastructure.md#T-02.01.04",
-      "01-platform-infrastructure.md#T-02.02.01"
+      "01-platform-infrastructure.md#T-03.02.01",
+      "01-platform-infrastructure.md#T-03.02.02",
+      "01-platform-infrastructure.md#T-03.02.03",
+      "01-platform-infrastructure.md#T-03.02.04"
     ],
     "remaining_checklist": [
-      "Read saved PR17–22 claims/deferrals against current verified tasks.",
-      "Reuse current DB/HTTP/types evidence; no rebuilding verified implementation."
+      "Read four exact requirements and saved PR bodies/deferrals.",
+      "Review compose/env/dev/polling integration; preserve seed and existing operational proof."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#V01-seed-bootstrap",
-      "audit/evidence/step-reviews.json#V01-database-foundations"
+      "audit/evidence/step-reviews.json#V01-seed-bootstrap"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "V01: reconcile saved DB-foundation PR17–22 against verified current task acceptance, historical deferrals and reusable proof."
+    "next_action": "V01: review local development workflow, saved PR35–38; reuse seed initialization evidence."
   },
   "open_domain_reviews": [
     {
