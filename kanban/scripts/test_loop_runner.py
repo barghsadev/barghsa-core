@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import os
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -146,6 +147,23 @@ class LoopRunnerProtocolTests(unittest.TestCase):
     def test_fix_attempt_limit_matches_three_round_contract(self):
         self.assertEqual(loop_runner.MAX_FIX_ATTEMPTS, 3)
 
+    def test_fourth_requested_fix_is_blocked_before_builder_dispatch(self):
+        for attempt in (1, 2, 3, 4):
+            state = dict(self.state, status="fixing", fix_attempts=attempt,
+                         assignment={"id": "attempt-one"})
+            with self.subTest(attempt=attempt), tempfile.TemporaryDirectory() as directory, \
+                 mock.patch.object(loop_runner, "load_json", return_value=state), \
+                 mock.patch.object(loop_runner, "select_or_resume_task", return_value=(self.task, "fix")), \
+                 mock.patch.object(loop_runner, "verify_dispatch_available"), \
+                 mock.patch.object(loop_runner, "assignment_errors", return_value=[]), \
+                 mock.patch.object(loop_runner, "task_section", return_value="requirements"), \
+                 mock.patch.object(loop_runner, "HANDOFF_FILE", Path(directory) / "handoff.json"), \
+                 mock.patch.object(loop_runner, "run", return_value=SimpleNamespace(returncode=1, stderr="failed")) as builder, \
+                 mock.patch.object(loop_runner, "save_json") as save:
+                loop_runner.handle_cursor()
+                self.assertEqual(builder.call_count, 1 if attempt <= 3 else 0)
+                self.assertEqual(save.call_args.args[1]["status"], "fixing" if attempt <= 3 else "blocked")
+
     def test_task_section_extracts_table_row_tasks(self):
         section = loop_runner.task_section(self.task)
 
@@ -182,6 +200,38 @@ class LoopRunnerProtocolTests(unittest.TestCase):
         commands = [call.args[0] for call in run_mock.call_args_list]
         self.assertIn(["git", "cat-file", "-e", "a" * 40 + "^{commit}"], commands)
         self.assertNotIn(["git", "rev-parse", "origin/main^{commit}"], commands)
+
+    def test_materialize_review_uses_real_immutable_git_objects(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            remote, local = root / "remote.git", root / "local.git"
+            environment = {**os.environ, "GIT_AUTHOR_NAME": "Loop test",
+                           "GIT_AUTHOR_EMAIL": "loop@example.invalid",
+                           "GIT_COMMITTER_NAME": "Loop test",
+                           "GIT_COMMITTER_EMAIL": "loop@example.invalid"}
+            def git(repository, *args, data=None):
+                return subprocess.run(["git", "--git-dir", str(repository), *args],
+                                      input=data, capture_output=True, text=True,
+                                      check=True, env=environment).stdout.strip()
+            for repository in (remote, local):
+                subprocess.run(["git", "init", "--bare", str(repository)],
+                               check=True, capture_output=True)
+            tree = git(remote, "mktree", data="")
+            base = git(remote, "commit-tree", tree, "-m", "base")
+            head = git(remote, "commit-tree", tree, "-p", base, "-m", "PR")
+            advanced = git(remote, "commit-tree", tree, "-p", base, "-m", "advanced main")
+            git(remote, "update-ref", "refs/heads/main", advanced)
+            git(remote, "update-ref", "refs/pull/233/head", head)
+            git(local, "remote", "add", "origin", str(remote))
+            pr = {"number": 233, "baseRefOid": base, "headRefOid": head}
+            with mock.patch.object(loop_runner, "BASE", local):
+                loop_runner.materialize_review_commits(pr)
+                self.assertEqual(git(local, "rev-parse", "origin/main"), advanced)
+                self.assertEqual(git(local, "rev-parse", "origin/barghsa-review-233"), head)
+                with self.assertRaisesRegex(RuntimeError, "does not match"):
+                    loop_runner.materialize_review_commits({**pr, "headRefOid": advanced})
+                with self.assertRaisesRegex(RuntimeError, "command failed"):
+                    loop_runner.materialize_review_commits({**pr, "baseRefOid": tree})
 
     def test_state_dispatch_keeps_review_and_merge_on_separate_ticks(self):
         self.assertEqual(loop_runner.action_for_status("idle"), "cursor_build")
@@ -316,6 +366,30 @@ class LoopRunnerProtocolTests(unittest.TestCase):
             expected_head_sha="a" * 40,
         )
         self.assertTrue(any("blocking" in error for error in errors))
+
+    def test_malformed_review_types_are_rejected_without_crashing_readback(self):
+        artifact = {"schema_version": 1, "task_key": self.task["key"], "pr_number": 231,
+                    "reviewed_head_sha": "a" * 40, "decision": "approve",
+                    "summary": "Reviewed current implementation", "issues": []}
+        issue = {"severity": "minor", "file": "x.py", "line": 1,
+                 "description": "Minor issue", "suggestion": "Repair issue"}
+        mutations = [{"schema_version": True}, {"pr_number": True}, {"decision": []},
+                     {"issues": [{**issue, "severity": []}]},
+                     {"issues": [{**issue, "line": True}]}]
+        for mutation in mutations:
+            invalid = {**artifact, **mutation}
+            with self.subTest(mutation=mutation):
+                self.assertTrue(loop_runner.validate_review_artifact(
+                    invalid, expected_task_key=self.task["key"],
+                    expected_pr_number=231, expected_head_sha="a" * 40))
+                comment = {"author": "reviewer", "body": loop_runner.review_comment_body(invalid, "nonce")}
+                self.assertEqual(loop_runner.find_verified_review(
+                    self.state, self.pr, [comment], expected_actor="reviewer", nonce="nonce"), (None, None))
+        for invalid in (None, [], "approve", 1):
+            with self.subTest(root=invalid):
+                self.assertTrue(loop_runner.validate_review_artifact(
+                    invalid, expected_task_key=self.task["key"],
+                    expected_pr_number=231, expected_head_sha="a" * 40))
 
     def test_review_issue_objects_are_schema_checked_after_github_readback(self):
         artifact = {

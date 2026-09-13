@@ -408,8 +408,10 @@ def validate_builder_handoff(
 
 
 def validate_review_artifact(
-    artifact: dict[str, Any], *, expected_task_key: str, expected_pr_number: int, expected_head_sha: str
+    artifact: Any, *, expected_task_key: str, expected_pr_number: int, expected_head_sha: str
 ) -> list[str]:
+    if not isinstance(artifact, dict):
+        return ["review artifact must be an object"]
     errors: list[str] = []
     required = {
         "schema_version",
@@ -422,15 +424,19 @@ def validate_review_artifact(
     }
     if set(artifact) != required:
         errors.append("review artifact fields do not match schema")
-    if artifact.get("schema_version") != 1:
+    if type(artifact.get("schema_version")) is not int or artifact.get("schema_version") != 1:
         errors.append("schema_version must be 1")
-    if artifact.get("task_key") != expected_task_key:
+    if (not isinstance(artifact.get("task_key"), str)
+            or len(artifact["task_key"]) < 3 or artifact["task_key"] != expected_task_key):
         errors.append("task_key mismatch")
-    if artifact.get("pr_number") != expected_pr_number:
+    if (type(artifact.get("pr_number")) is not int
+            or artifact["pr_number"] < 1 or artifact["pr_number"] != expected_pr_number):
         errors.append("pr_number mismatch")
-    if artifact.get("reviewed_head_sha") != expected_head_sha:
+    if (not isinstance(artifact.get("reviewed_head_sha"), str)
+            or not re.fullmatch(r"[0-9a-f]{40}", artifact["reviewed_head_sha"])
+            or artifact["reviewed_head_sha"] != expected_head_sha):
         errors.append("reviewed_head_sha mismatch")
-    if artifact.get("decision") not in {"approve", "request_changes"}:
+    if not isinstance(artifact.get("decision"), str) or artifact["decision"] not in {"approve", "request_changes"}:
         errors.append("invalid decision")
     if not isinstance(artifact.get("summary"), str) or len(artifact.get("summary", "")) < 3:
         errors.append("summary missing")
@@ -446,17 +452,18 @@ def validate_review_artifact(
         required_issue_fields = {"severity", "file", "line", "description", "suggestion"}
         if set(issue) != required_issue_fields:
             errors.append("review issue fields do not match schema")
-        if issue.get("severity") not in {"critical", "major", "minor"}:
+        severity = issue.get("severity")
+        if not isinstance(severity, str) or severity not in {"critical", "major", "minor"}:
             errors.append("invalid issue severity")
         if not isinstance(issue.get("file"), str):
             errors.append("invalid issue file")
-        if not isinstance(issue.get("line"), int) or issue.get("line", -1) < 0:
+        if type(issue.get("line")) is not int or issue.get("line", -1) < 0:
             errors.append("invalid issue line")
         if not isinstance(issue.get("description"), str) or len(issue.get("description", "")) < 3:
             errors.append("invalid issue description")
         if not isinstance(issue.get("suggestion"), str) or len(issue.get("suggestion", "")) < 3:
             errors.append("invalid issue suggestion")
-        if issue.get("severity") in {"critical", "major"}:
+        if isinstance(severity, str) and severity in {"critical", "major"}:
             blocking = True
     if artifact.get("decision") == "approve" and blocking:
         errors.append("approve decision cannot contain blocking issues")

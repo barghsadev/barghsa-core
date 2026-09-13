@@ -1,4 +1,6 @@
 import json
+import copy
+import hashlib
 from pathlib import Path
 import tempfile
 import unittest
@@ -71,6 +73,50 @@ class ReplacementDispositionTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     self.render()
                 self.disposition[key] = saved
+
+    def protocol(self):
+        source = self.root / 'loop.py'
+        source.write_text('verified protocol implementation\n')
+        self.disposition.pop('superseded_by_task_keys', None)
+        self.disposition['protocol_review'] = {
+            'requirements': ['Bind review to the advertised immutable commit'],
+            'validation': ['Local Git integration passed at the recorded revision'],
+            'source_evidence': [{'path': 'loop.py', 'sha256': hashlib.sha256(source.read_bytes()).hexdigest()}],
+        }
+
+    def test_protocol_closure_preserves_unmapped_task_population(self):
+        self.protocol()
+        text = self.render()
+        self.assertIn('1 closed', text)
+        self.assertIn('1 have no current task mapping', text)
+        self.assertIn('Protocol requirements reviewed separately', text)
+        self.assertEqual(self.task['merged_prs'], [])
+
+    def test_protocol_closure_requires_current_complete_evidence(self):
+        self.protocol()
+        original = copy.deepcopy(self.disposition)
+        for field in ('requirements', 'validation', 'source_evidence'):
+            for invalid in (None, [], '', [{}]):
+                with self.subTest(field=field, invalid=invalid):
+                    self.disposition = copy.deepcopy(original)
+                    self.disposition['protocol_review'][field] = invalid
+                    with self.assertRaises(ValueError):
+                        self.render()
+        self.disposition = original
+        (self.root / 'loop.py').write_text('changed implementation\n')
+        with self.assertRaises(ValueError):
+            self.render()
+
+    def test_protocol_cannot_bypass_task_or_deferral_requirements(self):
+        self.protocol()
+        self.task['merged_prs'] = [47]
+        self.acceptance['status'] = 'partial'
+        with self.assertRaises(ValueError):
+            self.render()
+        self.task['merged_prs'] = []
+        self.deferrals = [{'pr': 47, 'historical_deferrals': ['Unverified external execution']}]
+        with self.assertRaisesRegex(ValueError, 'undispositioned historical deferrals'):
+            self.render()
 
 
 if __name__ == '__main__':

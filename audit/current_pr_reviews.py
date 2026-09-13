@@ -10,6 +10,34 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def verified_protocol_review(row: dict, root: Path) -> bool:
+    """Allow unmapped protocol work only with explicit, current review evidence."""
+    review = row.get('protocol_review')
+    if not isinstance(review, dict) or not row.get('reason') or not row.get('evidence'):
+        return False
+    for field in ('requirements', 'validation'):
+        values = review.get(field)
+        if not isinstance(values, list) or not values or any(
+                not isinstance(value, str) or not value.strip() for value in values):
+            return False
+    sources = review.get('source_evidence')
+    if not isinstance(sources, list) or not sources:
+        return False
+    seen = set()
+    for source in sources:
+        if not isinstance(source, dict) or not isinstance(source.get('path'), str):
+            return False
+        path = source['path']
+        target = (root / path).resolve()
+        if (Path(path).is_absolute() or not target.is_relative_to(root.resolve())
+                or path in seen or not target.is_file()):
+            return False
+        if hashlib.sha256(target.read_bytes()).hexdigest() != source.get('sha256'):
+            return False
+        seen.add(path)
+    return True
+
+
 def report(root: Path = ROOT) -> str:
     names = ['merged-pr-evidence.json', 'task-review.json',
              'acceptance-closure.json', 'pr-deferrals.json', 'evidence/step-reviews.json']
@@ -69,7 +97,8 @@ def report(root: Path = ROOT) -> str:
                 and bool(row.get('reason'))
                 and bool(row.get('evidence'))
             )
-            if state(number) != 'Mapped tasks verified' and not verified_replacement:
+            verified_protocol = state(number) == 'Unmapped' and verified_protocol_review(row, root)
+            if state(number) != 'Mapped tasks verified' and not verified_replacement and not verified_protocol:
                 raise ValueError(f'PR #{number} cannot close with unresolved mapped tasks')
             saved = next((p for p in data[names[3]] if p['pr'] == number), {})
             resolved = {item['statement_index'] for item in saved.get('dispositions', [])}
@@ -111,6 +140,8 @@ def report(root: Path = ROOT) -> str:
         disposition = dispositions.get(number)
         if disposition and disposition.get('superseded_by_task_keys'):
             keys += '<br>Superseded by verified: ' + ', '.join(disposition['superseded_by_task_keys'])
+        if disposition and disposition.get('protocol_review'):
+            keys += '<br>Protocol requirements reviewed separately; no product task mapping'
         label = (f'[{disposition["status"]}](evidence/step-reviews.json#{disposition["review_record"]})'
                  if disposition else 'Not reviewed')
         lines.append(f'| [#{number}]({pr["html_url"]}) | {keys} | {state(number)} | {label} | '
@@ -123,6 +154,7 @@ def report(root: Path = ROOT) -> str:
     lines += [f'| {task["task_key"]} | ' + ', '.join(f'#{n}' for n in sorted(task['merged_prs'])) + ' |'
               for task in repeated]
     lines += ['', 'Unmapped historical PRs retain their original inventory. A superseded workaround may close only with explicit links to verified replacement tasks and dispositioned historical deferrals. '
+              'Protocol work may close with explicit requirements, validation and current source hashes; it cannot bypass unresolved mapped tasks or historical deferrals. '
               'See each PR row for its current review; repeated or unmapped provenance alone does not authorize rebuilding.', '', '## Input digests', '']
     lines += [f'- `{name}`: `{hashlib.sha256(value).hexdigest()}`' for name, value in raw.items()]
     return '\n'.join(lines) + '\n'
