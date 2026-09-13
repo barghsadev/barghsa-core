@@ -3,9 +3,9 @@
   "updated": "2026-09-13",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "7f77b07ec7e38bbeae4e636cae059045c4f5c447",
+  "source_revision": "e3019cfebcfdb8b79762244b656221ee0318d7e9",
   "active_step": "V01",
-  "next_action": "Repair PgBouncer transaction-mode integration: actual image uses POSTGRESQL_HOST/PORT/USERNAME/PASSWORD and PGBOUNCER_PORT=6432. Do not ignore unsupported startup timeout options or keep per-query SET SESSION across transaction pooling. Then complete encrypted signed backup/WAL/restore and configuration activation.",
+  "next_action": "Repair physical backup/WAL/restore workflow: signed S3 requests, GPG encryption, pg_verifybackup, safe isolated working directories, complete latest listing/retention and restore verification; then activate and verify PostgreSQL configuration. Reuse reviewed pooler and metrics proof. Consolidate all six PR/task dispositions once the operations batch is complete.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -1147,7 +1147,8 @@
       "PostgreSQL16 Compose conflicts with monitoring SQL that requires PostgreSQL17 pg_stat_checkpointer and shared_blk_read_time/write_time names. Add both-version integration proof and select version-compatible queries.",
       "PgBouncer Compose uses unrecognized PGBOUNCER_HOST/USER/PASSWORD, wrong listening port and absent transaction mode. Application startup options and per-query SET SESSION also require a transaction-safe pooling review; do not merely ignore startup options.",
       "Physical backup/WAL/restore scripts use HTTP Basic auth rather than S3 signatures; full backups lack GPG, pg_verifybackup and retention. Backup cleanup deletes a caller-selected working directory and dry-run reveals the database URL. Restore latest selection is truncated/unpaginated. Record complete workflow repairs before claiming safe backup/restore.",
-      "Compose mounts PostgreSQL configuration without an explicit include/config_file; runtime preload/WAL activation must be verified, and archive dependencies currently are not installed."
+      "Compose mounts PostgreSQL configuration without an explicit include/config_file; runtime preload/WAL activation must be verified, and archive dependencies currently are not installed.",
+      "Current finance session advisory-lock callers used the main PgBouncer-capable pool. Nine caller sites in seven wallet/invoice services now request a bounded direct session pool, preserving locks across their multiple transactions; both shared pools must close during API shutdown."
     ],
     "reused_evidence": [
       "Existing monitoring task partial record at8136b190:15 DB/16 API tests, OTLP and outage behavior; four later source changes need explicit refresh, not wholesale revalidation."
@@ -1190,10 +1191,101 @@
           "/tmp/v01-ops-pooler-smoke.log"
         ],
         "review": "Corrected unsupported backend variable names, listener port, missing transaction mode, hardcoded password and unavailable pg_isready health binary. Earlier smoke diagnostic assertions were corrected to read separate psql command results and parse INI whitespace."
+      },
+      {
+        "revision": "e3019cfebcfdb8b79762244b656221ee0318d7e9",
+        "change": "Transaction-pool timeouts and direct finance session locks",
+        "checks": [
+          "37 distinct DB cases pass:12 actual PgBouncer integration cases plus25 existing direct timeout/TLS/connection cases. Read/write defaults, explicit settings/callbacks, expiry without queued side effects, rollback, chained transactions, slow commit, bounded backend acquisition and direct session-lock lifetime verified.",
+          "164 distinct affected API cases pass across10 files, including real receipt-authority/contention and compiled API shutdown. Earlier standalone mock call-count failure fixed by resetting the mock; final2 cleanup cases pass.",
+          "Current DB/API types, scoped lint/format and shared/DB/worker/API fixture builds pass. Full V02 regression and production TLS/firewall/load remain outstanding."
+        ],
+        "review": [
+          "Timeout settings are transaction-local on PgBouncer, with standalone statements wrapped and explicit transactions preserved. Mixed control batches and unsupported URL startup options reject before execution. Default direct behavior is preserved.",
+          "Nine caller sites in seven finance services now select a direct session pool when PgBouncer is active. Missing direct URL fails instead of placing cross-transaction locks on a pooled backend. Direct pool is bounded to5 connections. API closes both shared pools even if one reports failure.",
+          "Initial unsupported-startup failure reproduced. Review caught and reproduced a commit terminated by the acquisition timeout; commits now use their write budget. A container port-binding startup failure was terminal, its reaper cleaned resources, and a fresh run passed. Diagnostic type/mock failures are retained in the logs."
+        ],
+        "source_evidence": [
+          {
+            "path": "apps/api/src/common/shutdown.service.spec.ts",
+            "sha256": "80cdf1ff3e7051ffc7d59b92b7229fde8e2eb22fbd549b20bab4bb55617438b7"
+          },
+          {
+            "path": "apps/api/src/common/shutdown.service.ts",
+            "sha256": "6af804062fc2fa6b2b8533c06802488cdca37eda02cbdeb91329a306a1475492"
+          },
+          {
+            "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+            "sha256": "3cf1343ed831dda2c31f7375aecdf044751dc12e2a3f22b7215d448be746434f"
+          },
+          {
+            "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+            "sha256": "f1c30a6305edcc7fdc16e9b9732a5c769875682cdc01df64686dbc25785e2d2a"
+          },
+          {
+            "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+            "sha256": "6579e4f46a424649ff0fd6edf58c415124b0f8e5b10030b9364bc1352448015d"
+          },
+          {
+            "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
+            "sha256": "354f77b29e6baad986f708853b58dcbb242aec025795c363a4b8b2843f59b4d3"
+          },
+          {
+            "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+            "sha256": "9ad1a18ec7dcb699cc1dd87474f2e60d807e02aa2985710053563deb091fb08a"
+          },
+          {
+            "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+            "sha256": "cfdab11dad62b75f909cab6e2ad4ae7cfe17801b916f6cfeede8b628bbc026e5"
+          },
+          {
+            "path": "apps/api/src/wallet/online-topup.service.ts",
+            "sha256": "ad2bcaa2fecbb9d6be517c060e74b82514a1bdf034e579c3017f0ce0d28bcbdc"
+          },
+          {
+            "path": "docs/adr/002-connection-pooling.md",
+            "sha256": "54c70bf7262e11163565c13f0f6e6a183921e2f9252faf230aedf8d52c35a944"
+          },
+          {
+            "path": "packages/db/src/index.ts",
+            "sha256": "3b436e3f4d5e440c40d82003b7d4e2e04eb4d1ea93a7c62bf3393b08b6f965ee"
+          },
+          {
+            "path": "packages/db/src/pgbouncer.integration.test.ts",
+            "sha256": "fbd6b476e8201777186a1c608fa2aa0b6df0c03ccc862430a8af9e4d4b9c98aa"
+          },
+          {
+            "path": "packages/db/src/transaction-pool.ts",
+            "sha256": "344e0cd56420b654226823093b0e0fa871bec7dbe6a0f994bb182e36690f833a"
+          }
+        ],
+        "logs": [
+          "/tmp/v01-ops-pgbouncer-api-tests.log",
+          "/tmp/v01-ops-pgbouncer-api-types-reviewed.log",
+          "/tmp/v01-ops-pgbouncer-before.log",
+          "/tmp/v01-ops-pgbouncer-commit-before.log",
+          "/tmp/v01-ops-pgbouncer-final-format.log",
+          "/tmp/v01-ops-pgbouncer-final-reviewed.log",
+          "/tmp/v01-ops-pgbouncer-final-tests.log",
+          "/tmp/v01-ops-pgbouncer-final-types.log",
+          "/tmp/v01-ops-pgbouncer-format-reviewed.log",
+          "/tmp/v01-ops-pgbouncer-format.log",
+          "/tmp/v01-ops-pgbouncer-lint-final.log",
+          "/tmp/v01-ops-pgbouncer-lint-reviewed.log",
+          "/tmp/v01-ops-pgbouncer-lint.log",
+          "/tmp/v01-ops-pgbouncer-session-tests.log",
+          "/tmp/v01-ops-pgbouncer-shutdown-final.log",
+          "/tmp/v01-ops-pgbouncer-tests.log",
+          "/tmp/v01-ops-pgbouncer-types-final.log",
+          "/tmp/v01-ops-pgbouncer-types-reviewed.log",
+          "/tmp/v01-ops-pgbouncer-types.log",
+          "/tmp/v01-ops-pgbouncer-verified.log"
+        ]
       }
     ],
     "pr_dispositions": [],
-    "next_action": "Repair PgBouncer transaction-mode integration: actual image uses POSTGRESQL_HOST/PORT/USERNAME/PASSWORD and PGBOUNCER_PORT=6432. Do not ignore unsupported startup timeout options or keep per-query SET SESSION across transaction pooling. Then complete encrypted signed backup/WAL/restore and configuration activation."
+    "next_action": "Repair physical backup/WAL/restore workflow: signed S3 requests, GPG encryption, pg_verifybackup, safe isolated working directories, complete latest listing/retention and restore verification; then activate and verify PostgreSQL configuration. Reuse reviewed pooler and metrics proof. Consolidate all six PR/task dispositions once the operations batch is complete.",
+    "base_revision": "61fb302fc2e0efe71d54977c6968cd31cab60178"
   },
   "open_domain_reviews": [
     {
