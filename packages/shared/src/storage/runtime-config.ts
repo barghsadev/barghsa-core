@@ -128,6 +128,11 @@ export function runtimeStorageProvider(
     }
   }
   return {
+    checkHealth: async (signal) => {
+      const provider = (await current()).internal;
+      if (!provider.checkHealth) throw unavailable();
+      await provider.checkHealth(signal);
+    },
     putObject: async (...args) => (await current()).internal.putObject(...args),
     getObject: async (...args) => (await current()).internal.getObject(...args),
     deleteObject: async (...args) => (await current()).internal.deleteObject(...args),

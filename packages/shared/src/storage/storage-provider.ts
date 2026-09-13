@@ -71,6 +71,9 @@ export interface Logger {
  * - The factory selects the right implementation based on runtime config.
  */
 export interface StorageProvider {
+  /** Verify bucket access without reading or writing customer objects. */
+  checkHealth?(signal?: AbortSignal): Promise<void>;
+
   /**
    * Upload (or overwrite) an object.
    *

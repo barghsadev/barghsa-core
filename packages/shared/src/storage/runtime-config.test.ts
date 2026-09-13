@@ -1,4 +1,5 @@
 import { afterEach, expect, it, vi } from 'vitest';
+import { createServer } from 'node:http';
 import {
   encryptStorageSecret,
   decryptStorageSecret,
@@ -56,4 +57,37 @@ it('does not silently fall back to environment credentials for invalid stored co
   await expect(provider.presignedGetUrl('file')).rejects.toThrow(
     'Storage configuration is unavailable'
   );
+});
+
+it('health checks use current stored private endpoint and credentials, without reading objects', async () => {
+  vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'test-storage-encryption-key');
+  const requests: Array<{ method: string | undefined; authorization: string }> = [];
+  const server = createServer((request, response) => {
+    requests.push({ method: request.method, authorization: request.headers.authorization ?? '' });
+    response.writeHead(200).end();
+  });
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+  try {
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('Missing endpoint');
+    let value = {
+      ...fields,
+      privateEndpointUrl: `http://127.0.0.1:${address.port}`,
+      encryptedSecret: encryptStorageSecret('first-secret'),
+    };
+    const provider = runtimeStorageProvider(async () => value);
+    await provider.checkHealth!();
+    value = {
+      ...value,
+      accessKeyId: 'rotated-key',
+      encryptedSecret: encryptStorageSecret('second-secret'),
+    };
+    await provider.checkHealth!();
+    expect(requests.map((r) => r.method)).toEqual(['HEAD', 'HEAD']);
+    expect(requests[0]!.authorization).toContain('Credential=first-key/');
+    expect(requests[1]!.authorization).toContain('Credential=rotated-key/');
+  } finally {
+    server.closeAllConnections();
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
 });

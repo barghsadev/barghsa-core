@@ -1,8 +1,10 @@
-import { Inject, Injectable, type OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { dbHealth } from '@barghsa/db';
 import { pingRedis } from '@barghsa/shared/redis';
 import type { Redis } from 'ioredis';
 import { REDIS_CLIENT } from '../redis/index.js';
+import type { StorageProvider } from '@barghsa/shared/storage';
+import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 
 /**
  * Service-level health status returned by the ready endpoint.
@@ -31,20 +33,15 @@ export interface ReadinessResult {
 }
 
 @Injectable()
-export class HealthService implements OnModuleInit {
-  private objectStorageConfigured = false;
+export class HealthService {
+  private storageProbe: Promise<HealthIndicatorResult> | undefined;
 
   constructor(
     @Inject(REDIS_CLIENT)
-    private readonly redis: Redis | null
+    private readonly redis: Redis | null,
+    @Inject(STORAGE_PROVIDER)
+    private readonly storage: Pick<StorageProvider, 'checkHealth'>
   ) {}
-
-  onModuleInit(): void {
-    // Detect whether object storage is configured by checking
-    // environment variables. These services are optional — the API remains
-    // ready without them, but degraded-route indicators are emitted.
-    this.objectStorageConfigured = !!(process.env['S3_ENDPOINT'] ?? process.env['MINIO_ENDPOINT']);
-  }
 
   /**
    * Liveness probe — always returns ok immediately.
@@ -71,6 +68,7 @@ export class HealthService implements OnModuleInit {
     if (redis.details?.degraded) {
       warnings.push('redis-unavailable');
     }
+    if (obj.status !== 'ok') warnings.push('object-storage-unavailable');
 
     // PostgreSQL is the only critical dependency.
     //   - Redis down  → overall ok (warning emitted via header)
@@ -143,20 +141,39 @@ export class HealthService implements OnModuleInit {
   }
 
   private async checkObjectStorage(): Promise<HealthIndicatorResult> {
-    if (!this.objectStorageConfigured) {
-      return {
-        status: 'ok',
-        latencyMs: 0,
-        details: { info: 'Object storage not configured — skipping' },
-      };
-    }
-
-    // TODO(T-04.03.xx): wire real S3/MinIO head-bucket check
+    if (this.storageProbe) return this.storageProbe;
     const startedAt = Date.now();
-    return {
-      status: 'ok',
+    const controller = new AbortController();
+    const unavailable = (): HealthIndicatorResult => ({
+      status: 'degraded',
       latencyMs: Date.now() - startedAt,
-      details: { info: 'Object storage check not yet wired' },
+      details: { error: 'Object storage unavailable or not configured' },
+    });
+    const work = Promise.resolve().then(async (): Promise<HealthIndicatorResult> => {
+      try {
+        if (!this.storage.checkHealth) return unavailable();
+        await this.storage.checkHealth(controller.signal);
+        return { status: 'ok', latencyMs: Date.now() - startedAt };
+      } catch {
+        return unavailable();
+      }
+    });
+    let timer: ReturnType<typeof setTimeout>;
+    const timeout = new Promise<HealthIndicatorResult>((resolve) => {
+      timer = setTimeout(() => {
+        controller.abort();
+        resolve(unavailable());
+      }, 1500);
+    });
+    const probe = Promise.race([work, timeout]);
+    this.storageProbe = probe;
+    // Keep sharing the bounded result until even an uncooperative configuration
+    // loader settles, so repeated public probes cannot accumulate work.
+    const settled = () => {
+      clearTimeout(timer);
+      if (this.storageProbe === probe) this.storageProbe = undefined;
     };
+    void work.then(settled);
+    return probe;
   }
 }

@@ -7,6 +7,7 @@ import {
   PutObjectCommandInput,
   ListObjectsV2Command,
   ListObjectsV2CommandInput,
+  HeadBucketCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { NoSuchKey } from '@aws-sdk/client-s3';
@@ -89,6 +90,10 @@ export class S3StorageProvider implements StorageProvider {
     }
 
     this.client = new S3Client(clientConfig);
+  }
+
+  async checkHealth(signal: AbortSignal = AbortSignal.timeout(1500)): Promise<void> {
+    await this.client.send(new HeadBucketCommand({ Bucket: this.bucket }), { abortSignal: signal });
   }
 
   // -----------------------------------------------------------------------
