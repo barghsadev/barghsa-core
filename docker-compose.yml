@@ -22,7 +22,11 @@ services:
   # PostgreSQL 16 with PostGIS
   # ─────────────────────────────────────────────────────────────
   postgres:
-    image: postgis/postgis:16-3.5
+    image: barghsa-postgres:local
+    build:
+      context: .
+      dockerfile: packages/db/scripts/backup/Dockerfile
+    command: ['postgres', '-c', 'config_file=/etc/postgresql/barghsa.conf']
     container_name: barghsa-postgres
     ports:
       - '5432:5432'
@@ -30,15 +34,15 @@ services:
       POSTGRES_DB: barghsa
       POSTGRES_USER: barghsa
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-barghsa-dev-password}
-      # WAL archiving and backup environment
+      # Optional encrypted backup overlay supplies the cluster ID and secret.
       BACKUP_S3_ENDPOINT: http://minio:9000
       BACKUP_S3_BUCKET: barghsa-backups
       BACKUP_S3_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
       BACKUP_S3_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin-dev}
+      BACKUP_ALLOW_HTTP: 'true'
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./postgres-config/barghsa-postgres.conf:/etc/postgresql/postgresql.conf.d/99-barghsa.conf:ro
-      - ./packages/db/scripts/backup/archive-wal.sh:/usr/local/bin/archive-wal.sh:ro
+      - ./postgres-config/barghsa-postgres.conf:/etc/postgresql/barghsa.conf:ro
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U barghsa']
       interval: 5s
