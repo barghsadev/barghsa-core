@@ -11,9 +11,36 @@ from unittest.mock import patch
 import physical_backup as backup
 import test_physical_backup as fixtures
 import verify_restore as verify
+import run_backup_job as job
 
 
 class RestoreEvidenceTests(unittest.TestCase):
+    def test_backup_job_never_prunes_after_failed_backup(self):
+        with patch.object(job, 'Store'), patch.object(job, 'backup', side_effect=backup.BackupError('backup failed')), \
+                patch.object(job, 'prune') as prune, patch.object(job, 'alert', return_value='accepted') as alert:
+            result = job.run_job()
+        prune.assert_not_called()
+        alert.assert_called_once()
+        self.assertEqual(result['phase'], 'backup')
+        self.assertEqual(result['status'], 'failed')
+
+    def test_backup_job_reports_retention_failure(self):
+        with patch.object(job, 'Store'), patch.object(job, 'backup', side_effect=lambda *args: print('{"label":"test"}')), \
+                patch.object(job, 'prune', side_effect=backup.BackupError('retention failed')), \
+                patch.object(job, 'alert', return_value='accepted'):
+            result = job.run_job()
+        self.assertEqual(result['phase'], 'retention')
+        self.assertEqual(result['backup'], 'test')
+        self.assertEqual(result['status'], 'failed')
+
+    def test_backup_job_success_prunes_without_alert(self):
+        with patch.object(job, 'Store'), patch.object(job, 'backup', side_effect=lambda *args: print('{"label":"test"}')), \
+                patch.object(job, 'prune') as prune, patch.object(job, 'alert') as alert:
+            result = job.run_job()
+        prune.assert_called_once()
+        alert.assert_not_called()
+        self.assertEqual(result['status'], 'passed')
+
     def test_limits_are_inclusive_and_unknown_is_failure(self):
         reference = '2026-09-13T12:05:00Z'
         self.assertEqual(verify.check_limits('2026-09-13T12:00:00Z', reference, 3600), 300)

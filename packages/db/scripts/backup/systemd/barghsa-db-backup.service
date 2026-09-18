@@ -11,6 +11,5 @@ UMask=0077
 WorkingDirectory=/var/lib/barghsa-backup
 Environment="PATH=/opt/barghsa-backup/.venv/bin:/usr/lib/postgresql/16/bin:/usr/bin:/bin"
 EnvironmentFile=/etc/barghsa/backup.env
-ExecStart=/opt/barghsa-backup/backup-pg.sh
-ExecStartPost=/opt/barghsa-backup/.venv/bin/python3 /opt/barghsa-backup/physical_backup.py prune
+ExecStart=/opt/barghsa-backup/.venv/bin/python3 /opt/barghsa-backup/run_backup_job.py
 TimeoutStartSec=3h

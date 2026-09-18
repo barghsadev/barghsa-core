@@ -187,7 +187,9 @@ with PostgreSQL16/extension binaries, GPG, a postgres service account, the scrip
 at `/opt/barghsa-backup`, a Python virtual environment at `/opt/barghsa-backup/.venv`,
 and private workspace `/var/lib/barghsa-backup`. Install the pinned requirements
 into that environment. Supply `/etc/barghsa/backup.env` from managed secrets.
-The daily job prunes only after a successful backup. The quarterly job runs January,
+The daily job uses `run_backup_job.py`: it prunes only after a successful backup
+and sends backup or retention failures to the same configured alert receiver.
+The quarterly job runs January,
 April, July and October1 at03:00 UTC. Both timers catch up missed executions.
 
 Install/enable those timers only after checking storage access, source baseline
