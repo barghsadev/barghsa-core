@@ -3,9 +3,9 @@
   "updated": "2026-09-18",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "f47f30495898bbea965f24d25f76423ea83df7b3",
+  "source_revision": "7e58734377034599a64630f4f24c4787c10f1bba",
   "active_step": "V01",
-  "next_action": "Review PR55–59 against their current storage requirements; identify existing scoped evidence before selecting repairs or focused checks.",
+  "next_action": "Review and repair immutable signing/read behavior for original uploaded keys, with race/replay proof; preserve existing sealed business copies and R02 authority evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -1167,15 +1167,162 @@
     ],
     "base_revision": "f47f30495898bbea965f24d25f76423ea83df7b3",
     "remaining_checklist": [
-      "Read the five current canonical task blocks and all saved bodies/deferrals before edits.",
-      "Trace storage provider/presign/configuration/lifecycle/immutability flows; reuse source-bound R02 storage authority and sealed-upload evidence.",
-      "Separate implemented local enforcement from unbuilt signed-contract consumers and production bucket lifecycle/object-lock evidence."
+      "Review and repair immutable signing/read behavior for original uploaded keys, with race/replay proof; preserve existing sealed business copies and R02 authority evidence.",
+      "Complete trusted version-aware retention classification or retain explicit unresolved criteria; include prefixed physical keys and legal-held historical versions. No blanket tagging or real bucket mutation.",
+      "Review task02 Pending scan/checksum/profile association and actual direct-upload frontend; resolve PR56 frontend deferral against current code.",
+      "Consolidate five-task/five-PR review once workflow repairs pass, retaining exact production and future-consumer prerequisites."
     ],
-    "confirmed_defects": [],
-    "reused_evidence": [],
-    "new_evidence": [],
+    "confirmed_defects": [
+      "Original uploads are promoted to active at the same presigned writable key. Admin signing can mark that original key immutable while its PUT URL remains valid; freeze an immutable snapshot/version and ensure readers use it before promising signed immutability.",
+      "Full retention classifier is absent. Do not tag all uploads disposable: some active business files remain at their original keys. Positive lifecycle eligibility is safe but automation is incomplete.",
+      "Upload verify does not persist Pending scan/checksum state; reconcile exact task02 criteria and current business profile permissions/callers before closure."
+    ],
+    "reused_evidence": [
+      "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery"
+    ],
+    "new_evidence": [
+      "audit/evidence/v01-storage/v01-storage-abort-lint.log.gz",
+      "audit/evidence/v01-storage/v01-storage-cli-before.log.gz",
+      "audit/evidence/v01-storage/v01-storage-cli-minio-after.log.gz",
+      "audit/evidence/v01-storage/v01-storage-cli-minio.log.gz",
+      "audit/evidence/v01-storage/v01-storage-dependency.log.gz",
+      "audit/evidence/v01-storage/v01-storage-format.log.gz",
+      "audit/evidence/v01-storage/v01-storage-immutable-after.log.gz",
+      "audit/evidence/v01-storage/v01-storage-immutable-before.log.gz",
+      "audit/evidence/v01-storage/v01-storage-lifecycle-after.log.gz",
+      "audit/evidence/v01-storage/v01-storage-lifecycle-before.log.gz",
+      "audit/evidence/v01-storage/v01-storage-lifecycle-final.log.gz",
+      "audit/evidence/v01-storage/v01-storage-lint-final.log.gz",
+      "audit/evidence/v01-storage/v01-storage-lint.log.gz",
+      "audit/evidence/v01-storage/v01-storage-provider-abort.log.gz",
+      "audit/evidence/v01-storage/v01-storage-provider-after.log.gz",
+      "audit/evidence/v01-storage/v01-storage-provider-before.log.gz",
+      "audit/evidence/v01-storage/v01-storage-provider-build.log.gz",
+      "audit/evidence/v01-storage/v01-storage-provider-final.log.gz",
+      "audit/evidence/v01-storage/v01-storage-provider-format.log.gz",
+      "audit/evidence/v01-storage/v01-storage-provider-lint.log.gz",
+      "audit/evidence/v01-storage/v01-storage-provider-types.log.gz",
+      "audit/evidence/v01-storage/v01-storage-receipt-retention.log.gz",
+      "audit/evidence/v01-storage/v01-storage-root-cli-help.log.gz",
+      "audit/evidence/v01-storage/v01-storage-shared-all.log.gz",
+      "audit/evidence/v01-storage/v01-storage-shared-build-minio.log.gz",
+      "audit/evidence/v01-storage/v01-storage-shared-build.log.gz",
+      "audit/evidence/v01-storage/v01-storage-types-final.log.gz",
+      "audit/evidence/v01-storage/v01-storage-types.log.gz"
+    ],
     "pr_dispositions": [],
-    "next_action": "Review PR55–59 against their current storage requirements; identify existing scoped evidence before selecting repairs or focused checks."
+    "next_action": "Review and repair immutable signing/read behavior for original uploaded keys, with race/replay proof; preserve existing sealed business copies and R02 authority evidence.",
+    "product_commits": [
+      "a4794e30e2e7e4f70cface777ece5da81f7c1d7a",
+      "7e58734377034599a64630f4f24c4787c10f1bba"
+    ],
+    "checkpoint": {
+      "source_revision": "7e58734377034599a64630f4f24c4787c10f1bba",
+      "status": "repairs_verified_batch_open",
+      "review": [
+        "Legal-hold regression failed for all four expiry prefixes before repair. Expiration now requires legal-hold=false; held and unclassified versions are retained. Unsupported GLACIER preservation claim removed. Age limits and five noncurrent versions preserved. No existing objects were classified.",
+        "Broken ts-node root CLI replaced with built shared-package ESM entry using declared dependencies; explicit credentials pair/path-style parsing, bounded errors, SDK connection disposal. Actual root help succeeds.",
+        "Real MinIO rejected AbortIncompleteMultipartUpload. Explicit --backend minio installs four supported rules and reports separate server configuration; Compose declares 24h stale-upload expiry and 1h sweep. S3 retains its multipart rule. Local MinIO readback confirms policy/versioning and retained per-version tags, not elapsed-day or deployed expiry.",
+        "Unused production legacy facade deleteRecord could physically delete after an unlocked active-status read or without a record. It now only soft-deletes known records; missing records are no-ops. Signed error contract is preserved; existence-check streams are cancelled. Physical worker cleanup remains independently controlled.",
+        "Real Blob and Web ReadableStream uploads failed with flowing-stream hashing errors. Pinned AWS Upload helper fixes those bodies, uses one5MiB part at a time and aborts failed multipart uploads. Small string/byte PUTs retain the original path. Direct signed upload/download, key tampering rejection, private access, pagination, multipart roundtrip and failed-source cleanup pass."
+      ],
+      "verification": [
+        "82 distinct focused cases pass:57 shared storage,13 CLI/real-MinIO leaf cases,12 real PostgreSQL bank-receipt retention cases. Parent Node test container is not counted separately.",
+        "Shared build/export checks, typecheck, affected lint/format and diff check pass. Root pnpm setup:bucket -- --help runs successfully. No real bucket mutation, remote action or scheduler change.",
+        "Existing R02 config/admin storage authority source files remain unchanged. Preserve their recorded evidence for those aspects only. New provider dependency and Compose edits require final packaged-image refresh in V02."
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/shared/src/storage/setup-bucket.ts",
+          "sha256": "5fc76c40e1054730abdc656680a5ba35d87a7268c4accc8f7b6d0eae2149c1dd"
+        },
+        {
+          "path": "packages/shared/src/storage/setup-bucket.test.ts",
+          "sha256": "694920dda1cf361be9b202017d050681ff4bc0d2923a590afa650e051f3333c1"
+        },
+        {
+          "path": "packages/shared/scripts/setup-bucket.mjs",
+          "sha256": "a7e99e15013b134cee5339a66169140aac24aa48b2eb5bba3b50315c755610bd"
+        },
+        {
+          "path": "packages/shared/scripts/setup-bucket.test.mjs",
+          "sha256": "e490c970b8ed9c58fa4da80e30ea9a310f0fc01cff886eca9a63b1ce5f587d1a"
+        },
+        {
+          "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
+          "sha256": "9b8a2e1aa5818edf385837f6f88b8440f9e15c5a58b7e9dcc6aede2647df3491"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "dad9a8130e223f5d1e9c0abb7c79a4043bc2c6f604cafdde15f630278be3730a"
+        },
+        {
+          "path": "packages/shared/src/storage/immutable-storage.ts",
+          "sha256": "270cc5e3e30daa3124ea3f275ad695aa9b3531023f2e641d8b093e8f17fbc069"
+        },
+        {
+          "path": "packages/shared/src/storage/immutable-storage.test.ts",
+          "sha256": "cbba8a79401b5c8056d6910dd3cc9d2402ee411a5646005746b56d83b1fe95d2"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "17d5174c1fa2ad776a3289745b6d39fd1234be2ba4c7df68f84edbe910bf1f2c"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "c23434c19cdd6388ec1df84c7d25f0b9fc26557b89688b768a80be6878b8fe7f"
+        },
+        {
+          "path": "package.json",
+          "sha256": "66b10b2ef95b44b8abfa26017e0e967c37f83505097d95c78fd8cc60019502b8"
+        },
+        {
+          "path": "docker-compose.yml",
+          "sha256": "e3c7fc890b40a32ee6287a0e8117b5e7f988b13273b5c0db6857b804b3e40c27"
+        },
+        {
+          "path": "docs/operations/storage-retention.md",
+          "sha256": "b4360a5e3a4679ff320166c52a2a007c026f457a123855ca21201aa6507bede2"
+        }
+      ],
+      "logs": [
+        "audit/evidence/v01-storage/v01-storage-abort-lint.log.gz",
+        "audit/evidence/v01-storage/v01-storage-cli-before.log.gz",
+        "audit/evidence/v01-storage/v01-storage-cli-minio-after.log.gz",
+        "audit/evidence/v01-storage/v01-storage-cli-minio.log.gz",
+        "audit/evidence/v01-storage/v01-storage-dependency.log.gz",
+        "audit/evidence/v01-storage/v01-storage-format.log.gz",
+        "audit/evidence/v01-storage/v01-storage-immutable-after.log.gz",
+        "audit/evidence/v01-storage/v01-storage-immutable-before.log.gz",
+        "audit/evidence/v01-storage/v01-storage-lifecycle-after.log.gz",
+        "audit/evidence/v01-storage/v01-storage-lifecycle-before.log.gz",
+        "audit/evidence/v01-storage/v01-storage-lifecycle-final.log.gz",
+        "audit/evidence/v01-storage/v01-storage-lint-final.log.gz",
+        "audit/evidence/v01-storage/v01-storage-lint.log.gz",
+        "audit/evidence/v01-storage/v01-storage-provider-abort.log.gz",
+        "audit/evidence/v01-storage/v01-storage-provider-after.log.gz",
+        "audit/evidence/v01-storage/v01-storage-provider-before.log.gz",
+        "audit/evidence/v01-storage/v01-storage-provider-build.log.gz",
+        "audit/evidence/v01-storage/v01-storage-provider-final.log.gz",
+        "audit/evidence/v01-storage/v01-storage-provider-format.log.gz",
+        "audit/evidence/v01-storage/v01-storage-provider-lint.log.gz",
+        "audit/evidence/v01-storage/v01-storage-provider-types.log.gz",
+        "audit/evidence/v01-storage/v01-storage-receipt-retention.log.gz",
+        "audit/evidence/v01-storage/v01-storage-root-cli-help.log.gz",
+        "audit/evidence/v01-storage/v01-storage-shared-all.log.gz",
+        "audit/evidence/v01-storage/v01-storage-shared-build-minio.log.gz",
+        "audit/evidence/v01-storage/v01-storage-shared-build.log.gz",
+        "audit/evidence/v01-storage/v01-storage-types-final.log.gz",
+        "audit/evidence/v01-storage/v01-storage-types.log.gz"
+      ]
+    },
+    "resolved_defects": [
+      "Expiry overlap and inaccessible GLACIER preservation rule",
+      "Broken bucket setup CLI and ignored explicit path-style false",
+      "MinIO rejection of S3 multipart lifecycle action",
+      "Legacy unlocked/missing-record physical deletion and leaked existence-check stream",
+      "Blob and Web ReadableStream uploads fail against real object storage"
+    ]
   },
   "open_domain_reviews": [
     {
@@ -1337,7 +1484,7 @@
         141
       ],
       "owner_batch": "V01/B01 external provider prerequisite",
-      "remaining": "DISABLED/MANUAL Draft→Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
+      "remaining": "DISABLED/MANUAL Draft\u2192Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
       "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
       "prerequisite_task_keys": [
         "02-auth-users-admin.md#T-07.01.02"
@@ -1349,7 +1496,7 @@
         142
       ],
       "owner_batch": "V01/B01 external provider prerequisite",
-      "remaining": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create→outbox→worker→result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
+      "remaining": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create\u2192outbox\u2192worker\u2192result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
       "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
       "prerequisite_task_keys": []
     },
@@ -1403,7 +1550,7 @@
         210
       ],
       "owner_batch": "V01/B01 future AI processing and agent chat",
-      "remaining": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01–03 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
+      "remaining": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01\u201303 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
       "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration",
       "prerequisite_task_keys": [
         "05-notifications-documents-ai.md#T-05.17.02",

@@ -23864,6 +23864,202 @@
       "sha256": "037719c9d9474ae4020af40313a72ede675ad610fcb4dcd640479a269b2cfeb6",
       "encoding": "gzip",
       "stored_sha256": "9e7538729976b3146af9d03392629b5a01008d35313190aae25e3613adb68d3b"
+    },
+    {
+      "original_path": "/tmp/v01-storage-abort-lint.log",
+      "path": "audit/evidence/v01-storage/v01-storage-abort-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-storage-cli-before.log",
+      "path": "audit/evidence/v01-storage/v01-storage-cli-before.log.gz",
+      "sha256": "960379775d23131b72c5692a4e2f32a6cce425b5c79b0c99eb89259661024f9e",
+      "encoding": "gzip",
+      "stored_sha256": "5cf9f1ae5025569e63a1c7c83e8c86a31a0c95ca37830a3be6229d47127bb423"
+    },
+    {
+      "original_path": "/tmp/v01-storage-cli-minio-after.log",
+      "path": "audit/evidence/v01-storage/v01-storage-cli-minio-after.log.gz",
+      "sha256": "ba66fdde7f24d933f592fb52e43d7fe7b1da82b052e8e13ca4751e4d4241167e",
+      "encoding": "gzip",
+      "stored_sha256": "3a15bb49ba278472599495071976fbf564092b235a08986dc09d7256454bb239"
+    },
+    {
+      "original_path": "/tmp/v01-storage-cli-minio.log",
+      "path": "audit/evidence/v01-storage/v01-storage-cli-minio.log.gz",
+      "sha256": "2e5d35e99704a8bea4253db00e0d58c9f0b3ec5da9f1f011e6cdf42d8df5d7db",
+      "encoding": "gzip",
+      "stored_sha256": "a9bc75ea30ee446da1056ef8e8205d51f916945ac09129862b115b9090026f5d"
+    },
+    {
+      "original_path": "/tmp/v01-storage-dependency.log",
+      "path": "audit/evidence/v01-storage/v01-storage-dependency.log.gz",
+      "sha256": "b8a053a20e823e3d7b23c25caadff1b4bab90e451e0434533f163b8646fbd30b",
+      "encoding": "gzip",
+      "stored_sha256": "e8373ba7101fe44414271f487736b9de19c44fc2a637224aa23ca4c47135dcae"
+    },
+    {
+      "original_path": "/tmp/v01-storage-format.log",
+      "path": "audit/evidence/v01-storage/v01-storage-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/v01-storage-immutable-after.log",
+      "path": "audit/evidence/v01-storage/v01-storage-immutable-after.log.gz",
+      "sha256": "736bfb0d33ab12d6dfd36d9a925dc82d3e35ea0ce6e0f4d4f267fc033a4f91f6",
+      "encoding": "gzip",
+      "stored_sha256": "483f041fc33958207021531a3db95a2059b0bb7dd1e474198148bd6718bf1f58"
+    },
+    {
+      "original_path": "/tmp/v01-storage-immutable-before.log",
+      "path": "audit/evidence/v01-storage/v01-storage-immutable-before.log.gz",
+      "sha256": "c3e07bd11ab24d6589ab1b1837c800dc15fb56b07d416d373bb71a8a06499b40",
+      "encoding": "gzip",
+      "stored_sha256": "a237e4f36e1513eaa681951f97f5c750f07a174f2bb6f210b3ae78c2086df741"
+    },
+    {
+      "original_path": "/tmp/v01-storage-lifecycle-after.log",
+      "path": "audit/evidence/v01-storage/v01-storage-lifecycle-after.log.gz",
+      "sha256": "ce9769311bbf1af864004819b746b76966a06f8d6faaa3482f01d3f62b25b27a",
+      "encoding": "gzip",
+      "stored_sha256": "1369c8cbea63f09da40d3f7709e24a205282dbfc3cc60ed50791765cc38d4433"
+    },
+    {
+      "original_path": "/tmp/v01-storage-lifecycle-before.log",
+      "path": "audit/evidence/v01-storage/v01-storage-lifecycle-before.log.gz",
+      "sha256": "c2ddfd266be150545e6ea6f5078dc511a4336c16b1c99f0000879442c7711479",
+      "encoding": "gzip",
+      "stored_sha256": "da6ebb2d846f0af87bbafcc0abfdea85423bb00f1122e6f40e1d0844f233c6a1"
+    },
+    {
+      "original_path": "/tmp/v01-storage-lifecycle-final.log",
+      "path": "audit/evidence/v01-storage/v01-storage-lifecycle-final.log.gz",
+      "sha256": "746e773e63b2c62eb6d7c63ba623776bfd1aa31dee70a31399978251714470c1",
+      "encoding": "gzip",
+      "stored_sha256": "c85832cf24dd629c99765f2b7f8a754351029dd02d860529deef7554596ea1f1"
+    },
+    {
+      "original_path": "/tmp/v01-storage-lint-final.log",
+      "path": "audit/evidence/v01-storage/v01-storage-lint-final.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-storage-lint.log",
+      "path": "audit/evidence/v01-storage/v01-storage-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-storage-provider-abort.log",
+      "path": "audit/evidence/v01-storage/v01-storage-provider-abort.log.gz",
+      "sha256": "c71df43ccac908d9515f134d4f75299016e7513d2542810efd314ff36d6e0eef",
+      "encoding": "gzip",
+      "stored_sha256": "cba08fa85bc09559b910bfb9406ab8c07dc665b279bc5f2c719581cff8282f1f"
+    },
+    {
+      "original_path": "/tmp/v01-storage-provider-after.log",
+      "path": "audit/evidence/v01-storage/v01-storage-provider-after.log.gz",
+      "sha256": "5354d639559a0a816ed3116068aa67107ec71d3874fe4e5096352f8bacee3365",
+      "encoding": "gzip",
+      "stored_sha256": "aa30cce2b840a5e48ba5465ccd290d354adcfb4a6ed0b4ee426d286bace5288c"
+    },
+    {
+      "original_path": "/tmp/v01-storage-provider-before.log",
+      "path": "audit/evidence/v01-storage/v01-storage-provider-before.log.gz",
+      "sha256": "2cb040ea3dd0185077519e78fb03991170d0c22008a3e5f1bba56b81821ee185",
+      "encoding": "gzip",
+      "stored_sha256": "676012a170db7c0f89c63eacf77a1ef50063a2d8d608beff71b3468e0a0c3ffd"
+    },
+    {
+      "original_path": "/tmp/v01-storage-provider-build.log",
+      "path": "audit/evidence/v01-storage/v01-storage-provider-build.log.gz",
+      "sha256": "b772c13d9f609d70b4cd1e12ba133a211655ee5e0c8cf8b5d028a70b1b4ff009",
+      "encoding": "gzip",
+      "stored_sha256": "e8d3b060d8077f2ff5d41cfcd93f1a7451701a5f9f03513b44a6b63964e85333"
+    },
+    {
+      "original_path": "/tmp/v01-storage-provider-final.log",
+      "path": "audit/evidence/v01-storage/v01-storage-provider-final.log.gz",
+      "sha256": "0b32c959d50e8a5e38ab1b94a5a8ceb9b5681b6a1321a9f62b49a62852284730",
+      "encoding": "gzip",
+      "stored_sha256": "c3e9816d34adaa05836f2adbae0381319bfa06996fad455c59b4a90b202ef3a9"
+    },
+    {
+      "original_path": "/tmp/v01-storage-provider-format.log",
+      "path": "audit/evidence/v01-storage/v01-storage-provider-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/v01-storage-provider-lint.log",
+      "path": "audit/evidence/v01-storage/v01-storage-provider-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-storage-provider-types.log",
+      "path": "audit/evidence/v01-storage/v01-storage-provider-types.log.gz",
+      "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c",
+      "encoding": "gzip",
+      "stored_sha256": "f6d17085968f1452afb3b2dc0af4fe00acfdfe9ca0a521c556246f06c07285a8"
+    },
+    {
+      "original_path": "/tmp/v01-storage-receipt-retention.log",
+      "path": "audit/evidence/v01-storage/v01-storage-receipt-retention.log.gz",
+      "sha256": "a3b0e00189c4c55c37a4f1a0787a5e8cf2a9feb8fd064b809fcd7e6576717fbf",
+      "encoding": "gzip",
+      "stored_sha256": "8fba9536ce07079bdea1e243336432a8d27ca93ba64ba8513ad02fa5c268da38"
+    },
+    {
+      "original_path": "/tmp/v01-storage-root-cli-help.log",
+      "path": "audit/evidence/v01-storage/v01-storage-root-cli-help.log.gz",
+      "sha256": "4c977875eb8d63dc8c2616a492f3bc9ace15bdf3e1961bcb4101c57d0c449c86",
+      "encoding": "gzip",
+      "stored_sha256": "ce6081315c67c3fe39827d94a037afc8b0ae07f149a38a5a7bbe924e32961468"
+    },
+    {
+      "original_path": "/tmp/v01-storage-shared-all.log",
+      "path": "audit/evidence/v01-storage/v01-storage-shared-all.log.gz",
+      "sha256": "81554d0800ed0da7831418977e263e019d46bb5368b39c3aea8589a1196ab7d8",
+      "encoding": "gzip",
+      "stored_sha256": "93c2990c59509bda1c1536e8ce0ae9ee7ce95998837322ed37ba9a6ec949acaa"
+    },
+    {
+      "original_path": "/tmp/v01-storage-shared-build-minio.log",
+      "path": "audit/evidence/v01-storage/v01-storage-shared-build-minio.log.gz",
+      "sha256": "223a6ef49cf152181a9a5956165dcc394ac4ca0f2496211e84fb997aebed0808",
+      "encoding": "gzip",
+      "stored_sha256": "a6e20a91ca53f98965630a46dc6d05d9a55992a256b2975bbed46f93d45b769b"
+    },
+    {
+      "original_path": "/tmp/v01-storage-shared-build.log",
+      "path": "audit/evidence/v01-storage/v01-storage-shared-build.log.gz",
+      "sha256": "02e664422c1089160c79f548aaaeb4e9460f83f64b40b260c172ec9bfd139713",
+      "encoding": "gzip",
+      "stored_sha256": "50d48fe72582c9c8837b5e525e1790130f43415dfd8b970ba775e33393c911ad"
+    },
+    {
+      "original_path": "/tmp/v01-storage-types-final.log",
+      "path": "audit/evidence/v01-storage/v01-storage-types-final.log.gz",
+      "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c",
+      "encoding": "gzip",
+      "stored_sha256": "f6d17085968f1452afb3b2dc0af4fe00acfdfe9ca0a521c556246f06c07285a8"
+    },
+    {
+      "original_path": "/tmp/v01-storage-types.log",
+      "path": "audit/evidence/v01-storage/v01-storage-types.log.gz",
+      "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c",
+      "encoding": "gzip",
+      "stored_sha256": "f6d17085968f1452afb3b2dc0af4fe00acfdfe9ca0a521c556246f06c07285a8"
     }
   ]
 }
