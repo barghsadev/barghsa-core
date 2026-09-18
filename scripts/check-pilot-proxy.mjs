@@ -33,6 +33,23 @@ function request(path, options = {}) {
     req.end(options.body);
   });
 }
+for (const [path, status, policy] of [
+  ['/assets/app-a1b2c3d4.js', 200, 'public, immutable, max-age=31536000'],
+  ['/auth/assets/auth-a1b2c3d4.js', 200, 'public, immutable, max-age=31536000'],
+  ['/icon.svg', 200, 'public, max-age=86400'],
+  ['/assets/missing-a1b2c3d4.js', 404, 'private, no-store'],
+  ['/missing.svg', 404, 'private, no-store'],
+  ['/assets/private-a1b2c3d4.js', 200, 'private, no-store'],
+  ['/fallback.js', 200, 'private, no-store'],
+]) {
+  const response = await request(path);
+  assert.equal(response.status, status, path);
+  assert.equal(response.headers['cache-control'], policy, path);
+  assert.equal(response.headers.expires, undefined, path);
+  assert.ok(response.headers.vary?.includes('Accept-Encoding'), path);
+  assert.equal(response.headers['x-content-type-options'], 'nosniff', path);
+}
+console.log('PASS seven static/private/error cache policies preserved without proxy overrides');
 const redirect = await request('/api/ping', { plain: true });
 assert.equal(redirect.status, 301);
 assert.equal(redirect.headers['x-content-type-options'], 'nosniff');

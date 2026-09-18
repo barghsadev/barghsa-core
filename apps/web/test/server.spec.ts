@@ -144,6 +144,31 @@ describe('static server', () => {
     expect(json.headers['content-type']).toMatch(/^application\/json/);
   });
 
+  it('gives non-hashed static files a one-day policy and varies by encoding', async () => {
+    const response = await fetch(server, '/data.json');
+    expect(response.status).toBe(200);
+    expect(response.headers['cache-control']).toBe('public, max-age=86400');
+    expect(response.headers.vary).toBe('Accept-Encoding');
+    expect(
+      (await fetch(server, '/data.json?path=/assets/fake-abcdefgh.js')).headers['cache-control']
+    ).toBe('public, max-age=86400');
+  });
+
+  it('does not serve or cache SPA HTML for missing static assets', async () => {
+    for (const path of [
+      '/assets/missing-a1b2c3d4.js',
+      '/auth/assets/missing-a1b2c3d4.js',
+      '/missing.svg',
+      '/missing.svg?version=1',
+      '/%61ssets/missing-a1b2c3d4.js',
+    ]) {
+      const response = await fetch(server, path);
+      expect(response.status).toBe(404);
+      expect(response.headers['cache-control']).toBe('private, no-store');
+      expect(response.body).not.toContain('<html');
+    }
+  });
+
   it('sets immutable Cache-Control for content-hashed assets', async () => {
     const res = await fetch(server, '/assets/app-a1b2c3d4.js');
     expect(res.headers['cache-control']).toBe('public, immutable, max-age=31536000');
@@ -184,7 +209,7 @@ describe('static server', () => {
 
   it('handles malformed URI without crashing', async () => {
     const res = await fetch(server, '/%ZZ');
-    expect(res.status).toBe(200);
-    expect(res.body).toContain('Home');
+    expect(res.status).toBe(404);
+    expect(res.headers['cache-control']).toBe('private, no-store');
   });
 });

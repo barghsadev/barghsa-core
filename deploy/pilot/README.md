@@ -14,3 +14,11 @@ Before rollout:
 `python3 scripts/test-pilot-proxy.py` validates the actual NGINX configuration, then boots it in an isolated container network namespace with test-only certificates and echo/streaming upstreams. It opens no host ports and removes its containers and certificate files on exit. It requires local Docker, OpenSSL, `nginx:1.27-alpine` and `node:22-bookworm`; Node is only the HTTP fixture, not a production application image.
 
 The check covers TLS 1.2/1.3, redirects, routing, response headers, a 10 MiB body boundary rejection, forwarded-header overwrite, unbuffered SSE, WebSocket upgrade and fa/en 429 behavior on the specified auth/upload/AI quotas. Real API tests separately cover exact proxy trust and PostgreSQL destination quotas across client addresses. These local checks do not constitute a production TLS deployment or HA acceptance.
+
+Cache policy comes from the web server after it resolves a real file. Hashed
+assets, including the separate auth entry, receive one year and immutable;
+other static files receive one day. HTML remains private/no-store. Missing
+assets return404/no-store rather than the SPA document. NGINX preserves those
+headers and adds no extension-based expiry override. Deploy the web server and
+proxy configuration together. The proxy check includes seven successful,
+private and error cache-policy cases; the web tests verify file classification.

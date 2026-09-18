@@ -83,7 +83,11 @@ async function serveFile(distDir, urlPath) {
     const content = await readFile(filePath);
     const ext = extname(filePath).toLowerCase();
     const contentType = MIME_TYPES[ext] ?? 'application/octet-stream';
-    return { content, contentType };
+    return {
+      content,
+      contentType,
+      immutable: IMMUTABLE_PATTERN.test(filePath.slice(distDir.length)),
+    };
   } catch {
     return null;
   }
@@ -128,6 +132,8 @@ export function createStaticServer(options = {}) {
     const url = req.url ?? '/';
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.setHeader('Vary', 'Accept-Encoding');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
     res.setHeader(
@@ -171,9 +177,9 @@ export function createStaticServer(options = {}) {
         sendHtml(file.content);
         return;
       }
-      const cacheControl = IMMUTABLE_PATTERN.test(url)
+      const cacheControl = file.immutable
         ? 'public, immutable, max-age=31536000'
-        : 'no-cache, must-revalidate';
+        : 'public, max-age=86400';
 
       res.writeHead(200, {
         'Content-Type': file.contentType,
@@ -186,6 +192,18 @@ export function createStaticServer(options = {}) {
       } else {
         res.end();
       }
+      return;
+    }
+
+    // Missing static files must not become successful, cacheable SPA documents.
+    const requestedFile = resolveDistPath(distDir, url);
+    if (
+      !requestedFile ||
+      requestedFile.includes(`${sep}assets${sep}`) ||
+      Object.hasOwn(MIME_TYPES, extname(requestedFile).toLowerCase())
+    ) {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      res.end(req.method === 'GET' ? 'Not Found' : undefined);
       return;
     }
 

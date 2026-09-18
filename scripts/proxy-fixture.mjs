@@ -6,6 +6,33 @@ for (const [port, service] of [
   [4000, 'api'],
 ]) {
   const server = createServer((req, res) => {
+    const staticCases = {
+      '/assets/app-a1b2c3d4.js': [
+        200,
+        'public, immutable, max-age=31536000',
+        'application/javascript',
+      ],
+      '/auth/assets/auth-a1b2c3d4.js': [
+        200,
+        'public, immutable, max-age=31536000',
+        'application/javascript',
+      ],
+      '/icon.svg': [200, 'public, max-age=86400', 'image/svg+xml'],
+      '/assets/missing-a1b2c3d4.js': [404, 'private, no-store', 'text/plain'],
+      '/missing.svg': [404, 'private, no-store', 'text/plain'],
+      '/assets/private-a1b2c3d4.js': [200, 'private, no-store', 'text/plain'],
+      '/fallback.js': [200, 'private, no-store', 'text/html'],
+    };
+    if (service === 'web' && staticCases[req.url]) {
+      const [status, cacheControl, contentType] = staticCases[req.url];
+      res.writeHead(status, {
+        'Cache-Control': cacheControl,
+        'Content-Type': contentType,
+        Vary: 'Accept-Encoding',
+      });
+      res.end('fixture');
+      return;
+    }
     if (service === 'web' && req.url === '/csp-page') {
       res.writeHead(200, {
         'Content-Type': 'text/html',
