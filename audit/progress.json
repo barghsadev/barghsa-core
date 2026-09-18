@@ -3,9 +3,9 @@
   "updated": "2026-09-18",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
+  "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
   "active_step": "V01",
-  "next_action": "Review Redis factory/configuration-cache/ADR batch PR51/53/54 against exact criteria and existing rate-limit/runtime evidence; then remaining V01 reviews, R06, V02 and skipped handoff. Preserve storage production/future prerequisites.",
+  "next_action": "Review edge/proxy/cache metadata batch PR60/62/63/64 with exact criteria and current implementation. Reuse prior CSP/security/header and production web evidence; preserve pending CSP owner decision and production prerequisites.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -807,6 +807,10 @@
     {
       "id": "V01-storage-workflow",
       "review_record": "audit/evidence/step-reviews.json#V01-storage-workflow"
+    },
+    {
+      "id": "V01-redis-cache",
+      "review_record": "audit/evidence/step-reviews.json#V01-redis-cache"
     }
   ],
   "deferred_improvements": [
@@ -1152,175 +1156,66 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-storage-workflow",
-    "name": "Storage provider, direct transfer and immutable records",
-    "status": "locally_reviewed_with_prerequisites",
+    "id": "V01-redis-cache",
+    "name": "Optional Redis, configuration cache and architecture record",
+    "status": "locally_reviewed",
     "prs": [
-      55,
-      56,
-      57,
-      58,
-      59
+      51,
+      53,
+      54
     ],
     "task_keys": [
-      "01-platform-infrastructure.md#T-04.03.01",
-      "01-platform-infrastructure.md#T-04.03.02",
-      "01-platform-infrastructure.md#T-04.03.03",
-      "01-platform-infrastructure.md#T-04.03.04",
-      "01-platform-infrastructure.md#T-04.03.05"
+      "01-platform-infrastructure.md#T-04.02.01",
+      "01-platform-infrastructure.md#T-04.02.03",
+      "01-platform-infrastructure.md#T-04.02.04"
     ],
-    "base_revision": "f47f30495898bbea965f24d25f76423ea83df7b3",
+    "base_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
     "remaining_checklist": [
-      "PR57/task03 remains partial: apply/read back production versioning/policy, reconcile previous unsafe or overlapping rules, verify MinIO server multipart settings and provider propagation. Future preview/superseded-document producers must prove disposal eligibility. No elapsed-day expiry or deployment claim.",
-      "Manual hold edits must not race tag read/modify/write; a future application hold workflow must share record locking. Independent legal-hold authority requires provider Object Lock. Current tag classifier preserves observed holds but does not claim an atomic independent hold API.",
-      "PR59/task05 remains partial for whole contract/document integration: future signing/version/supersession/retention consumers must bind business approval to immutable records. Generic wrapper/API and current sealed consumers are verified, not unbuilt contract/order/audit flows.",
-      "Scanner/quarantine/document state history/full SHA256 remain T-05.11.01–03/T-05.12.01. Available fallback is allowed only while no scanner integration is configured.",
-      "Rollout must ship API/helpers together, allow If-None-Match in bucket CORS, drain old API writers and expire old PUT URLs for at least1hour. Final V02 must rebuild packaged images for changed dependencies/provider/Compose. No remote action or real bucket mutation occurred."
+      "Live Redis TLS topology, production load/monitoring, counter-writer drain/migration and V02 packaged-image refresh remain operational prerequisites.",
+      "Future coordination locks must use durable fallback and defined expiry; this ADR does not certify an unbuilt lock workflow."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery"
+      "audit/acceptance-closure.json entries for all three tasks",
+      "audit/evidence/step-reviews.json#V01-distributed-limits",
+      "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
     ],
-    "new_evidence": [
-      "audit/evidence/v01-storage/v01-storage-abort-lint.log.gz",
-      "audit/evidence/v01-storage/v01-storage-cli-before.log.gz",
-      "audit/evidence/v01-storage/v01-storage-cli-minio-after.log.gz",
-      "audit/evidence/v01-storage/v01-storage-cli-minio.log.gz",
-      "audit/evidence/v01-storage/v01-storage-dependency.log.gz",
-      "audit/evidence/v01-storage/v01-storage-format.log.gz",
-      "audit/evidence/v01-storage/v01-storage-immutable-after.log.gz",
-      "audit/evidence/v01-storage/v01-storage-immutable-before.log.gz",
-      "audit/evidence/v01-storage/v01-storage-lifecycle-after.log.gz",
-      "audit/evidence/v01-storage/v01-storage-lifecycle-before.log.gz",
-      "audit/evidence/v01-storage/v01-storage-lifecycle-final.log.gz",
-      "audit/evidence/v01-storage/v01-storage-lint-final.log.gz",
-      "audit/evidence/v01-storage/v01-storage-lint.log.gz",
-      "audit/evidence/v01-storage/v01-storage-provider-abort.log.gz",
-      "audit/evidence/v01-storage/v01-storage-provider-after.log.gz",
-      "audit/evidence/v01-storage/v01-storage-provider-before.log.gz",
-      "audit/evidence/v01-storage/v01-storage-provider-build.log.gz",
-      "audit/evidence/v01-storage/v01-storage-provider-final.log.gz",
-      "audit/evidence/v01-storage/v01-storage-provider-format.log.gz",
-      "audit/evidence/v01-storage/v01-storage-provider-lint.log.gz",
-      "audit/evidence/v01-storage/v01-storage-provider-types.log.gz",
-      "audit/evidence/v01-storage/v01-storage-receipt-retention.log.gz",
-      "audit/evidence/v01-storage/v01-storage-root-cli-help.log.gz",
-      "audit/evidence/v01-storage/v01-storage-shared-all.log.gz",
-      "audit/evidence/v01-storage/v01-storage-shared-build-minio.log.gz",
-      "audit/evidence/v01-storage/v01-storage-shared-build.log.gz",
-      "audit/evidence/v01-storage/v01-storage-types-final.log.gz",
-      "audit/evidence/v01-storage/v01-storage-types.log.gz",
-      "audit/evidence/v01-storage/v01-storage-upload-api-types-clean.log.gz",
-      "audit/evidence/v01-storage/v01-storage-upload-api-types-final.log.gz",
-      "audit/evidence/v01-storage/v01-storage-upload-api-types-fresh.log.gz",
-      "audit/evidence/v01-storage/v01-storage-upload-api-types.log.gz",
-      "audit/evidence/v01-storage/v01-storage-upload-http-final.log.gz",
-      "audit/evidence/v01-storage/v01-storage-upload-http.log.gz",
-      "audit/evidence/v01-storage/v01-storage-upload-web-final.log.gz",
-      "audit/evidence/v01-storage/v01-storage-upload-web-types.log.gz",
-      "audit/evidence/v01-storage/v01-storage-upload-web.log.gz",
-      "audit/evidence/v01-storage/v01-storage-write-once-after.log.gz",
-      "audit/evidence/v01-storage/v01-storage-write-once-before.log.gz",
-      "audit/evidence/v01-storage/v01-storage-write-once-build.log.gz",
-      "audit/evidence/v01-storage/v01-storage-write-once-format.log.gz",
-      "audit/evidence/v01-storage/v01-storage-write-once-knowledge.log.gz",
-      "audit/evidence/v01-storage/v01-storage-write-once-lint.log.gz",
-      "audit/evidence/v01-storage/v01-storage-write-once-minio-final.log.gz",
-      "audit/evidence/v01-storage/v01-storage-write-once-shared.log.gz",
-      "audit/evidence/v01-storage/v01-storage-classifier-format.log.gz",
-      "audit/evidence/v01-storage/v01-storage-classifier-http.log.gz",
-      "audit/evidence/v01-storage/v01-storage-classifier-lint.log.gz",
-      "audit/evidence/v01-storage/v01-storage-classifier-minio.log.gz",
-      "audit/evidence/v01-storage/v01-storage-classifier-shared.log.gz",
-      "audit/evidence/v01-storage/v01-storage-classifier-types.log.gz",
-      "audit/evidence/v01-storage/v01-storage-classifier-worker-after.log.gz",
-      "audit/evidence/v01-storage/v01-storage-classifier-worker-types.log.gz",
-      "audit/evidence/v01-storage/v01-storage-classifier-worker.log.gz",
-      "audit/evidence/v01-storage/v01-storage-context-format-check.log.gz",
-      "audit/evidence/v01-storage/v01-storage-context-format.log.gz",
-      "audit/evidence/v01-storage/v01-storage-context-http-after.log.gz",
-      "audit/evidence/v01-storage/v01-storage-context-http-final.log.gz",
-      "audit/evidence/v01-storage/v01-storage-context-http.log.gz",
-      "audit/evidence/v01-storage/v01-storage-context-lint.log.gz",
-      "audit/evidence/v01-storage/v01-storage-context-openapi.log.gz",
-      "audit/evidence/v01-storage/v01-storage-context-types.log.gz",
-      "audit/evidence/v01-storage/v01-storage-context-web-types.log.gz",
-      "audit/evidence/v01-storage/v01-storage-context-web.log.gz",
-      "audit/evidence/v01-storage/v01-storage-inspection-http.log.gz",
-      "audit/evidence/v01-storage/v01-storage-inspection-lint.log.gz",
-      "audit/evidence/v01-storage/v01-storage-inspection-types.log.gz"
-    ],
+    "historical_deferrals": [],
+    "next_action": "Review edge/proxy/cache metadata batch PR60/62/63/64 with exact criteria and current implementation. Reuse prior CSP/security/header and production web evidence; preserve pending CSP owner decision and production prerequisites.",
+    "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
+    "review_record": "audit/evidence/step-reviews.json#V01-redis-cache",
     "pr_dispositions": [
       {
-        "pr": 55,
+        "pr": 51,
         "status": "closed",
         "task_keys": [
-          "01-platform-infrastructure.md#T-04.03.01"
+          "01-platform-infrastructure.md#T-04.02.01"
         ],
-        "reason": "Provider interface/factory, private signed transfer, list pagination, Blob/stream/multipart and typed errors verified with actual MinIO and focused unit tests.",
-        "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
-        "evidence": "audit/evidence/step-reviews.json#V01-storage-workflow"
+        "reason": "Factory returns null for absent/invalid configuration or bounded initial connection failure, disables offline queuing, applies command timeout and TLS options. RedisModule is global; failed Redis health is degraded without making core readiness fail. Historical PR51 maxRetriesPerRequest:null wording does not describe the current bounded implementation.",
+        "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
+        "evidence": "audit/evidence/step-reviews.json#V01-redis-cache"
       },
       {
-        "pr": 56,
+        "pr": 53,
         "status": "closed",
         "task_keys": [
-          "01-platform-infrastructure.md#T-04.03.02"
+          "01-platform-infrastructure.md#T-04.02.03"
         ],
-        "reason": "Current authorized direct-upload helpers, durable reservation/inspection/Pending scan, context binding and downstream domain authority verified. Historical frontend deferral satisfied; scanner belongs to its separately recorded future tasks.",
-        "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
-        "evidence": "audit/evidence/step-reviews.json#V01-storage-workflow"
+        "reason": "ConfigCacheService reads authoritative PostgreSQL global version. Cache namespace v2 entries expire after300s. Cache hit requires equal positive durable version; population compares durable version before/after reading value. Redis failure/missing metadata falls back to PostgreSQL; concurrent updates cannot certify old rows with a later version. Null results are not cached.",
+        "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
+        "evidence": "audit/evidence/step-reviews.json#V01-redis-cache"
       },
       {
-        "pr": 57,
-        "status": "open",
-        "task_keys": [
-          "01-platform-infrastructure.md#T-04.03.03"
-        ],
-        "reason": "PR57/task03 remains partial: apply/read back production versioning/policy, reconcile previous unsafe or overlapping rules, verify MinIO server multipart settings and provider propagation. Future preview/superseded-document producers must prove disposal eligibility. No elapsed-day expiry or deployment claim. Manual hold edits must not race tag read/modify/write; a future application hold workflow must share record locking. Independent legal-hold authority requires provider Object Lock. Current tag classifier preserves observed holds but does not claim an atomic independent hold API.",
-        "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
-        "evidence": "audit/evidence/step-reviews.json#V01-storage-workflow"
-      },
-      {
-        "pr": 58,
+        "pr": 54,
         "status": "closed",
         "task_keys": [
-          "01-platform-infrastructure.md#T-04.03.04"
+          "01-platform-infrastructure.md#T-04.02.04"
         ],
-        "reason": "Unchanged encrypted configuration and admin UI reviewed with current source hashes and reused13 API/2 bilingual browser cases; activation requires successful real-provider probe.",
-        "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
-        "evidence": "audit/evidence/step-reviews.json#V01-storage-workflow"
-      },
-      {
-        "pr": 59,
-        "status": "open",
-        "task_keys": [
-          "01-platform-infrastructure.md#T-04.03.05"
-        ],
-        "reason": "PR59/task05 remains partial for whole contract/document integration: future signing/version/supersession/retention consumers must bind business approval to immutable records. Generic wrapper/API and current sealed consumers are verified, not unbuilt contract/order/audit flows.",
-        "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
-        "evidence": "audit/evidence/step-reviews.json#V01-storage-workflow"
+        "reason": "ADR corrected to describe current early Redis rejection, durable admission requirement, v2 namespace, authoritative PostgreSQL version and one nonexpiring legacy hint. Removed unsupported deployed-managed-service wording. No runtime behavior or required budget changed. Planned coordination locks remain future work.",
+        "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
+        "evidence": "audit/evidence/step-reviews.json#V01-redis-cache"
       }
-    ],
-    "next_action": "Review Redis factory/configuration-cache/ADR batch PR51/53/54 against exact criteria and existing rate-limit/runtime evidence; then remaining V01 reviews, R06, V02 and skipped handoff. Preserve storage production/future prerequisites.",
-    "product_commits": [
-      "a4794e30e2e7e4f70cface777ece5da81f7c1d7a",
-      "7e58734377034599a64630f4f24c4787c10f1bba",
-      "0607d3226530cf8fca937db262356cc34f15d2b5",
-      "eed71a3f50c9c668122cea71e51b7749aa713631",
-      "a6463fbc9a10d34efb3a807ce62a189b20cb9662",
-      "cf0fa042fae81334e3b063f030bf86a40e2f67da"
-    ],
-    "resolved_defects": [
-      "Expiry overlap and inaccessible GLACIER preservation rule",
-      "Broken bucket setup CLI and ignored explicit path-style false",
-      "MinIO rejection of S3 multipart lifecycle action",
-      "Legacy unlocked/missing-record physical deletion and leaked existence-check stream",
-      "Blob and Web ReadableStream uploads fail against real object storage",
-      "Presigned PUT replay can replace original upload bytes after verification/signing"
-    ],
-    "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
-    "review_record": "audit/evidence/step-reviews.json#V01-storage-workflow"
+    ]
   },
   "open_domain_reviews": [
     {

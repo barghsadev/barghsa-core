@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `cf0fa042` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `cf0fa042`, documentation `c32ff819` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -24,9 +24,13 @@ Container batch consolidated at **5045a627**: five tasks, **3 verified /2 partia
 
 Distributed-limit batch consolidated at **f47f3049**: taskT-04.02.02 verified and PR52 locally closed; both deferrals satisfied. Redis now rejects exhausted quota without DB writes while PostgreSQL authorizes every admission.95 distinct focused cases and types/lint/format pass. Security-critical counters retain their existing PostgreSQL-first behavior. [Batch review](evidence/step-reviews.json#V01-distributed-limits).
 
+Redis/cache review consolidated at **c32ff819**: three verified task acceptances preserved; **3 saved PR reviews closed**, PR51/53/54. Exact prior factory/cache/health hashes match, so valid runtime tests reused. ADR now matches PostgreSQL cache authority, v2 namespace and early Redis rejection. Formatting/diff checks pass; no runtime change. [Batch review](evidence/step-reviews.json#V01-redis-cache).
+
+**Next:** edge/proxy/static-cache/ETag review, PR60/62/63/64. Reuse prior security/header and web-host proof. Keep the existing CSP owner question pending and preserve production prerequisites.
+
 Storage workflow consolidated at **cf0fa042**: five tasks, **3 verified /2 partial**; five saved PRs, **3 closed /2 open**. Provider streaming, write-once uploads, version-aware retention, durable inspection and profile/purpose authorization repaired.180 distinct affected cases pass;13 unchanged config API and2 FA/EN browser cases reused. Builds/types/lint/format/OpenAPI pass.28 immediate-base bindings refreshed;38 older refreshes retained. PR57 keeps production retention and future classifiers open; PR59 keeps future contract/document integration open. [Batch review](evidence/step-reviews.json#V01-storage-workflow).
 
-**Next:** review Redis factory/configuration caching/ADR, PR51/53/54, reusing existing runtime/rate-limit evidence. Then remaining V01/R06/V02/B01. Storage rollout must ship API/helpers together, allow If-None-Match in bucket CORS, drain old writers and expire old PUT URLs for at least1hour. Deploy/reconcile lifecycle rules and MinIO server multipart settings separately; no elapsed-day or production proof. V02 must rebuild packaged images. Future scanner/quarantine/full SHA256 and contract/document consumers retain their exact requirements.
+Continue remaining V01/R06/V02/B01. Storage rollout must ship API/helpers together, allow If-None-Match in bucket CORS, drain old writers and expire old PUT URLs for at least1hour. Deploy/reconcile lifecycle rules and MinIO server multipart settings separately; no elapsed-day or production proof. V02 must rebuild packaged images. Future scanner/quarantine/full SHA256 and contract/document consumers retain their exact requirements.
 
 Runtime lifecycle verified at645dda1c:3 tasks newly verified/1 partial;3 PRs newly closed/1 open, PR29 closure preserved. Global197 verified/35 partial/90 pending;178 PRs closed/28 open/95 unreviewed.118 immediate-base bindings refreshed;38 older refreshes retained. PR42 keeps future AI/bill-data maintenance consumers open. Loop batch at761ef274 closes PR234/235/242 with58 protocol and9 audit cases; task counts unchanged. Operations review is now consolidated at a6f51306. [Loop review](evidence/step-reviews.json#V01-loop-durability). [Review](evidence/step-reviews.json#V01-runtime-lifecycle).
 

@@ -22009,6 +22009,133 @@
           "evidence": "audit/evidence/step-reviews.json#V01-storage-workflow"
         }
       ]
+    },
+    {
+      "id": "V01-redis-cache",
+      "date": "2026-09-18",
+      "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
+      "base_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
+      "product_commits": [
+        "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.02.01",
+        "01-platform-infrastructure.md#T-04.02.03",
+        "01-platform-infrastructure.md#T-04.02.04"
+      ],
+      "summary": "Three existing task acceptances preserved; saved PR51/53/54 now explicitly closed. ADR updated for current durable cache authority and early Redis rejection. Valid runtime evidence reused.",
+      "review": [
+        "Read exact three task blocks, story criteria and all saved PR bodies; no historical deferrals exist. Existing task acceptance is preserved after matching all factory/cache/health source hashes.",
+        "Factory returns null for absent/invalid configuration or bounded initial connection failure, disables offline queuing, applies command timeout and TLS options. RedisModule is global; failed Redis health is degraded without making core readiness fail. Historical PR51 maxRetriesPerRequest:null wording does not describe the current bounded implementation.",
+        "ConfigCacheService reads authoritative PostgreSQL global version. Cache namespace v2 entries expire after300s. Cache hit requires equal positive durable version; population compares durable version before/after reading value. Redis failure/missing metadata falls back to PostgreSQL; concurrent updates cannot certify old rows with a later version. Null results are not cached.",
+        "Current cache callers include verification-mode reads and wallet limit display/preflight. Domain writes retain their existing transaction authority. Earlier real PostgreSQL/cache/profile/wallet checks are reused, not replayed for unchanged code. Writers must still bump config_version in the same transaction as app_config; Redis invalidation is only best effort.",
+        "ADR corrected to describe current early Redis rejection, durable admission requirement, v2 namespace, authoritative PostgreSQL version and one nonexpiring legacy hint. Removed unsupported deployed-managed-service wording. No runtime behavior or required budget changed. Planned coordination locks remain future work."
+      ],
+      "verification": [
+        "Source hash comparison passes for every prior factory/cache/health binding; reviewed source matches saved acceptance. Reused13 factory unit cases plus1 real stalled-TCP case,37 shared cache cases and5 actual PostgreSQL cache-service cases. The prior636 API regression count overlaps those domain checks and is not added to a new total.",
+        "V01-distributed-limits retains95 focused current limiter cases. V01-runtime-lifecycle and V01-container-images retain their recorded Redis-optional readiness/image behavior. No stale full-image or deployment claim is promoted.",
+        "ADR compared against current cache/factory/limiter code. Formatting and diff checks pass. No new runtime tests needed for this documentation-only change."
+      ],
+      "remaining": [
+        "Live Redis TLS topology, production load/monitoring, counter-writer drain/migration and V02 packaged-image refresh remain operational prerequisites.",
+        "Future coordination locks must use durable fallback and defined expiry; this ADR does not certify an unbuilt lock workflow."
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/shared/src/redis/redis-factory.ts",
+          "sha256": "5322964b576a930e9cf7b4283a7f7ffc7a253aa71b27b261e9b0b55eefeec86a"
+        },
+        {
+          "path": "packages/shared/src/redis/redis-config.ts",
+          "sha256": "e6d49d912f64cf4add043bc3117ee5dcc56293e3c73dd2aa6d2ef8ac998aee29"
+        },
+        {
+          "path": "apps/api/src/redis/redis.module.ts",
+          "sha256": "5f84d0a4bb3af5bb342c02c67fe934f0b5782c43bc1e793b905ce7cbce37719c"
+        },
+        {
+          "path": "apps/api/src/health/health.service.ts",
+          "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+        },
+        {
+          "path": "packages/shared/src/redis/redis-factory.test.ts",
+          "sha256": "c22076609f5cac6af2e97d72bfcf42819719c93275ca57a0d1e624c78e85c4c2"
+        },
+        {
+          "path": "packages/shared/src/redis/redis-factory.integration.test.ts",
+          "sha256": "fc46bc3bdfea93179c8ff1a5d9d27b0d69ab2fe60aa2123484312fbb1502ecc6"
+        },
+        {
+          "path": "packages/shared/src/config-cache/config-cache.ts",
+          "sha256": "e58d2b6837cec2af58cb7793ee5a033267b2cfe81321b623e790b75cf2c9d7f0"
+        },
+        {
+          "path": "apps/api/src/config-cache/config-cache.service.ts",
+          "sha256": "0bb36e84ac721eafd6eb3fdfcdd57e6b93e7ad684977ed340861146dc53aed79"
+        },
+        {
+          "path": "packages/shared/src/config-cache/config-cache.test.ts",
+          "sha256": "627b63a633340301a773cb84dbe3152b4083ca7cb78ab81f48fe62b2461524aa"
+        },
+        {
+          "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
+          "sha256": "4703cec0c491dd5d5e4342d3a0388c4a07aca1ab46eb2d0f2ce5a0e3d99429fa"
+        },
+        {
+          "path": "docs/adr/002-redis-scope.md",
+          "sha256": "a098b50bb3a798ad089f53e60d44710932170ebd40ad71dbc799337c49dc668a"
+        },
+        {
+          "path": "apps/api/src/config-cache/config-cache.module.ts",
+          "sha256": "77d74f0c872ea0ed040bc7baf3c6b72f4e3ec06afae665400c00100bf1ee9904"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+          "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-redis-cache-doc-format.log",
+        "/tmp/v01-redis-cache-doc-check.log"
+      ],
+      "reused_evidence": [
+        "audit/acceptance-closure.json",
+        "audit/evidence/step-reviews.json#V01-distributed-limits",
+        "audit/evidence/step-reviews.json#V01-runtime-lifecycle",
+        "audit/evidence/step-reviews.json#V01-container-images"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 51,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.02.01"
+          ],
+          "reason": "Factory returns null for absent/invalid configuration or bounded initial connection failure, disables offline queuing, applies command timeout and TLS options. RedisModule is global; failed Redis health is degraded without making core readiness fail. Historical PR51 maxRetriesPerRequest:null wording does not describe the current bounded implementation.",
+          "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
+          "evidence": "audit/evidence/step-reviews.json#V01-redis-cache"
+        },
+        {
+          "pr": 53,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.02.03"
+          ],
+          "reason": "ConfigCacheService reads authoritative PostgreSQL global version. Cache namespace v2 entries expire after300s. Cache hit requires equal positive durable version; population compares durable version before/after reading value. Redis failure/missing metadata falls back to PostgreSQL; concurrent updates cannot certify old rows with a later version. Null results are not cached.",
+          "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
+          "evidence": "audit/evidence/step-reviews.json#V01-redis-cache"
+        },
+        {
+          "pr": 54,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.02.04"
+          ],
+          "reason": "ADR corrected to describe current early Redis rejection, durable admission requirement, v2 namespace, authoritative PostgreSQL version and one nonexpiring legacy hint. Removed unsupported deployed-managed-service wording. No runtime behavior or required budget changed. Planned coordination locks remain future work.",
+          "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
+          "evidence": "audit/evidence/step-reviews.json#V01-redis-cache"
+        }
+      ]
     }
   ]
 }

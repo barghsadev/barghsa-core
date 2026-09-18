@@ -6,7 +6,7 @@ A PR body checkbox is historical author evidence, not independent acceptance. Re
 301 merged PRs: 73 have unresolved mapped tasks; 4 have no current task mapping; 224 map only to verified tasks.
 172 historical deferral statements from 102 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **188 closed / 41 open / 0 blocked**; 72 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **191 closed / 41 open / 0 blocked**; 69 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -80,10 +80,10 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#48](https://github.com/barghsadev/barghsa-core/pull/48) | 01-platform-infrastructure.md#T-04.01.05 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-operations-configuration) | 2 |
 | [#49](https://github.com/barghsadev/barghsa-core/pull/49) | 01-platform-infrastructure.md#T-04.01.06 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-operations-configuration) | 0 |
 | [#50](https://github.com/barghsadev/barghsa-core/pull/50) | 01-platform-infrastructure.md#T-04.01.07 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-config-backup) | 0 |
-| [#51](https://github.com/barghsadev/barghsa-core/pull/51) | 01-platform-infrastructure.md#T-04.02.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
+| [#51](https://github.com/barghsadev/barghsa-core/pull/51) | 01-platform-infrastructure.md#T-04.02.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-redis-cache) | 0 |
 | [#52](https://github.com/barghsadev/barghsa-core/pull/52) | 01-platform-infrastructure.md#T-04.02.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-distributed-limits) | 2 |
-| [#53](https://github.com/barghsadev/barghsa-core/pull/53) | 01-platform-infrastructure.md#T-04.02.03 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#54](https://github.com/barghsadev/barghsa-core/pull/54) | 01-platform-infrastructure.md#T-04.02.04 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
+| [#53](https://github.com/barghsadev/barghsa-core/pull/53) | 01-platform-infrastructure.md#T-04.02.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-redis-cache) | 0 |
+| [#54](https://github.com/barghsadev/barghsa-core/pull/54) | 01-platform-infrastructure.md#T-04.02.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-redis-cache) | 0 |
 | [#55](https://github.com/barghsadev/barghsa-core/pull/55) | 01-platform-infrastructure.md#T-04.03.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-storage-workflow) | 0 |
 | [#56](https://github.com/barghsadev/barghsa-core/pull/56) | 01-platform-infrastructure.md#T-04.03.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-storage-workflow) | 1 |
 | [#57](https://github.com/barghsadev/barghsa-core/pull/57) | 01-platform-infrastructure.md#T-04.03.03 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-storage-workflow) | 0 |
@@ -368,6 +368,6 @@ Unmapped historical PRs retain their original inventory. A superseded workaround
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `42107411f8500a2054485694e83810936f0c886102b48822255bc553bfeb0603`
+- `acceptance-closure.json`: `8ca825224ebd7b757609f80a9a8aa2c62d1a7048a4ebd62cfbe8e8250e353184`
 - `pr-deferrals.json`: `3046997033af61d1f434ce83353e8f0424a5afcbbdbbe80ea31c4b294c2b7e3f`
-- `evidence/step-reviews.json`: `b97a11d379a4c3f1e74ec393a727f548312c9659b0f27ba741735763081274ce`
+- `evidence/step-reviews.json`: `d799ba1338aab71bd4502562ec7e27d4c9e69a1238a44df418939df5aa51d72c`

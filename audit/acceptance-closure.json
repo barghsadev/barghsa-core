@@ -247,6 +247,11 @@
             "apps/api/src/health/health.service.ts"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        },
+        {
+          "review_record": "audit/evidence/step-reviews.json#V01-redis-cache",
+          "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
+          "note": "Exact prior factory/cache/health hashes match; current ADR compared with runtime code. Existing tests reused; no runtime change."
         }
       ]
     },
@@ -288,12 +293,19 @@
       "merged_prs": [
         53
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "evidence_reuse": [
+        {
+          "review_record": "audit/evidence/step-reviews.json#V01-redis-cache",
+          "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
+          "note": "Exact prior factory/cache/health hashes match; current ADR compared with runtime code. Existing tests reused; no runtime change."
+        }
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-04.02.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 624,
       "requirement": "- **T-04.02.04:** Document Redis architecture decision in ADR\n  - **Notes:** Create `docs/adr/002-redis-scope.md`: Redis is optional, disposable, never a source of truth. Its role: cache for read-heavy config, distributed rate-limit acceleration, short-lived coordination locks. Financial correctness, durable jobs, sessions, and authorization must remain correct if Redis is flushed or unavailable. Each cache entry has documented TTL and invalidation strategy.\n  - **Dependencies:** T-04.02.01\n  - **Complexity:** S\n  - **UI/UX:** N/A",
@@ -301,13 +313,12 @@
       "source_evidence": [
         {
           "path": "docs/adr/002-redis-scope.md",
-          "sha256": "d98ab901fd1c5c6f2ff513247fe11b52025746ec1520ff80271fbbd909f1493d"
+          "sha256": "a098b50bb3a798ad089f53e60d44710932170ebd40ad71dbc799337c49dc668a"
         }
       ],
       "checks": [
-        "Reconciled ADR002 against current PostgresRateLimiterStore, CompositeRateLimiterStore and migration0120.",
-        "Document now describes authoritative rolling histories, serialized reset/admission, conservative legacy import, Redis failure behavior and mandatory writer drain/migration.",
-        "Prettier and diff review pass; no runtime change or deployed migration was performed."
+        "ADR reconciled with current config authority and early Redis rejection; explicit legacy hint lifetime and future coordination boundaries documented.",
+        "Prettier and diff checks pass; runtime unchanged."
       ],
       "limitations": [
         "This certifies the documentation task. Planned coordination locks and operational deployment are not certified by the ADR."
@@ -323,7 +334,15 @@
           "docs/adr/002-redis-scope.md"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "evidence_reuse": [
+        {
+          "review_record": "audit/evidence/step-reviews.json#V01-redis-cache",
+          "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
+          "note": "Exact prior factory/cache/health hashes match; current ADR compared with runtime code. Existing tests reused; no runtime change."
+        }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-redis-cache"
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.02.01",

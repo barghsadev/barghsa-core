@@ -24333,6 +24333,20 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "encoding": "gzip",
       "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-redis-cache-doc-format.log",
+      "path": "audit/evidence/v01-redis-cache/v01-redis-cache-doc-format.log.gz",
+      "sha256": "fbd2a005ec0e1e2c60a608066d7852433cb1c5beb7e1e989c71a9d2d2fb6cec1",
+      "encoding": "gzip",
+      "stored_sha256": "c434e870305d42393dbb86eaf7861b3cf1ab85f18d393d7829c3db27fa63ac01"
+    },
+    {
+      "original_path": "/tmp/v01-redis-cache-doc-check.log",
+      "path": "audit/evidence/v01-redis-cache/v01-redis-cache-doc-check.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
     }
   ]
 }
