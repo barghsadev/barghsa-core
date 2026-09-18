@@ -15,9 +15,9 @@ return {count, ttl}
 `;
 
 /**
- * PostgreSQL records every request before admission. Redis supplies an additional
- * fast counter, but losing or replacing it cannot erase the durable quota.
- * Database errors fail closed. Redis errors use the already-recorded result.
+ * PostgreSQL records every admission. Redis may reject exhausted quotas without
+ * a database write, but it can never authorize a request by itself. Losing or
+ * replacing Redis cannot erase spent durable quota; database errors fail closed.
  */
 export class CompositeRateLimiterStore {
   private pgStore: PostgresRateLimiterStore;
@@ -36,34 +36,29 @@ export class CompositeRateLimiterStore {
   /**
    * Increment a general rate-limit counter.
    *
-   * Persists first; Redis can further restrict admission, never grant extra quota.
+   * Redis accelerates rejection; every admission still requires a durable write.
    */
   async increment(key: string, limit: number, windowMs: number): Promise<RateLimitResult> {
-    const durable = await this.pgStore.increment(key, limit, windowMs);
+    let cached: RateLimitResult | undefined;
     if (this.redis) {
       try {
-        const cached = await this.incrementRedis(key, limit, windowMs);
-        return {
-          allowed: durable.allowed && cached.allowed,
-          remaining: Math.min(durable.remaining, cached.remaining),
-          limit,
-          resetMs:
-            !durable.allowed && !cached.allowed
-              ? Math.max(durable.resetMs, cached.resetMs)
-              : !durable.allowed
-                ? durable.resetMs
-                : !cached.allowed
-                  ? cached.resetMs
-                  : Math.max(durable.resetMs, cached.resetMs),
-        };
+        cached = await this.incrementRedis(key, limit, windowMs);
+        if (!cached.allowed) return cached;
       } catch (err) {
         this.logger?.warn(
-          '[CompositeRateLimiter] Redis increment failed, using persisted PostgreSQL quota',
+          '[CompositeRateLimiter] Redis increment failed, using PostgreSQL quota',
           err
         );
       }
     }
-    return durable;
+    const durable = await this.pgStore.increment(key, limit, windowMs);
+    if (!cached) return durable;
+    return {
+      allowed: durable.allowed,
+      remaining: Math.min(durable.remaining, cached.remaining),
+      limit,
+      resetMs: durable.allowed ? Math.max(durable.resetMs, cached.resetMs) : durable.resetMs,
+    };
   }
 
   /**

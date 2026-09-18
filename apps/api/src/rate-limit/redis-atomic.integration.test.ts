@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { afterAll, beforeAll, expect, it } from 'vitest';
+import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { GenericContainer, type StartedTestContainer } from 'testcontainers';
 import { Redis } from 'ioredis';
 import { CompositeRateLimiterStore, PostgresRateLimiterStore } from '@barghsa/shared/rate-limit';
@@ -45,7 +45,9 @@ it('admits exactly the quota under concurrent requests and keeps a bounded expir
     'SELECT cardinality(events) AS count FROM rate_limit_windows WHERE NOT security AND key = $1',
     [key]
   );
-  expect(rows[0].count).toBe(21);
+  // Redis rejects the other 80 requests without loading PostgreSQL. Every one
+  // of the 20 admissions still has its own durable event.
+  expect(rows[0].count).toBe(20);
 });
 
 it('preserves the existing deadline instead of extending it for later requests', async () => {
@@ -114,4 +116,19 @@ it('uses durable quota after a Redis connection fails', async () => {
   failedRedis.disconnect();
   const degraded = new CompositeRateLimiterStore(pgStore, failedRedis);
   expect((await degraded.increment(key, 1, 3_600_000)).allowed).toBe(false);
+});
+
+it('rejects spent Redis quota without another database write and stays denied after cache loss', async () => {
+  const key = randomUUID();
+  expect((await store.increment(key, 1, 60_000)).allowed).toBe(true);
+  const persisted = vi.spyOn(pgStore, 'increment');
+  try {
+    expect((await store.increment(key, 1, 60_000)).allowed).toBe(false);
+    expect(persisted).not.toHaveBeenCalled();
+    await redis.del(key);
+    expect((await store.increment(key, 1, 60_000)).allowed).toBe(false);
+    expect(persisted).toHaveBeenCalledOnce();
+  } finally {
+    persisted.mockRestore();
+  }
 });

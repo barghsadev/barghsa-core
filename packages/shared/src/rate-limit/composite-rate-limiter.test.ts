@@ -41,7 +41,7 @@ describe('CompositeRateLimiterStore', () => {
     mockQuery.mockRejectedValue(new Error('database unavailable'));
     mockRedis.eval.mockResolvedValue([1, 60_000]);
     await expect(store.increment('durable', 2, 60_000)).rejects.toThrow('database unavailable');
-    expect(mockRedis.eval).not.toHaveBeenCalled();
+    expect(mockRedis.eval).toHaveBeenCalledOnce();
   });
 
   describe('when Redis is available', () => {
@@ -136,6 +136,7 @@ describe('CompositeRateLimiterStore', () => {
       expect(result.allowed).toBe(false);
       expect(result.remaining).toBe(0);
       expect(result.resetMs).toBe(30_000);
+      expect(mockQuery).not.toHaveBeenCalled();
     });
   });
 
