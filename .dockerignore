@@ -13,3 +13,16 @@
 .vscode
 .DS_Store
 audit
+output
+**/*.test.*
+**/*.spec.*
+**/test
+**/tests
+**/e2e
+**/vitest.config.*
+**/playwright.config.*
+**/*.md
+**/.vscode
+**/.idea
+# Production SQL and its journal are required by the packaged migration runner.
+**/drizzle/**/meta/*_snapshot.json

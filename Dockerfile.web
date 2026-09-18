@@ -1,8 +1,10 @@
-FROM node:24-bookworm-slim AS build
+FROM node:24-bookworm-slim AS deps
 WORKDIR /app
 RUN corepack enable
 COPY . .
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prod=false
+
+FROM deps AS build
 RUN pnpm -r --filter @barghsa/web... build
 
 FROM node:24-bookworm-slim AS production
@@ -13,5 +15,5 @@ COPY apps/web/server.js apps/web/healthcheck.js apps/web/entry-routes.js ./
 ENV NODE_ENV=production NODE_OPTIONS="--max-old-space-size=512"
 USER node
 EXPOSE 3000
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD node healthcheck.js
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 CMD node healthcheck.js
 CMD ["node", "server.js"]

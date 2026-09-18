@@ -11,6 +11,11 @@
 name: barghsa-prod
 
 services:
+  # Production API/worker depend on this service. Keep the pooling profile
+  # optional in development, but enable the service in this production overlay.
+  pgbouncer:
+    profiles: !reset []
+
   # ─────────────────────────────────────────────────────────────
   # API Server (NestJS)
   # ─────────────────────────────────────────────────────────────
@@ -38,10 +43,10 @@ services:
       pgbouncer:
         condition: service_healthy
     healthcheck:
-      test: ['CMD', 'node', 'healthcheck.js']
+      test: ['CMD', 'node', 'healthcheck-runtime.cjs']
       interval: 30s
       timeout: 10s
-      start_period: 30s
+      start_period: 40s
       retries: 3
     restart: unless-stopped
     stop_grace_period: 40s
@@ -73,7 +78,7 @@ services:
       test: ['CMD', 'node', 'healthcheck.js']
       interval: 30s
       timeout: 10s
-      start_period: 5s
+      start_period: 40s
       retries: 3
     restart: unless-stopped
     stop_grace_period: 40s
@@ -92,7 +97,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.base
-      target: worker
+      target: production
+    command: ['node', 'worker/dist/main.js']
     environment:
       NODE_ENV: production
       DATABASE_URL: ${DATABASE_URL:?Set the application database URL}

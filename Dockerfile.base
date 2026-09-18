@@ -1,27 +1,29 @@
 # Build once with the complete workspace dependency graph.
-FROM node:24-bookworm-slim AS build
+FROM node:24-bookworm-slim AS deps
 WORKDIR /app
 RUN corepack enable
 COPY . .
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prod=false
+
+FROM deps AS build
 RUN pnpm -r --filter @barghsa/api... --filter @barghsa/worker... build
 RUN pnpm --filter @barghsa/api deploy --prod /out/api
 RUN pnpm --filter @barghsa/worker deploy --prod /out/worker
 
 FROM node:24-bookworm-slim AS runtime
 WORKDIR /app
+COPY --from=build /out/api ./
+COPY --from=build /out/worker ./worker/
+COPY scripts/healthcheck-runtime.cjs ./healthcheck-runtime.cjs
 ENV NODE_ENV=production NODE_OPTIONS="--max-old-space-size=512"
 USER node
+EXPOSE 4000 9090
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 CMD node healthcheck-runtime.cjs
 
+# Compatibility target; production supports the identical command override.
 FROM runtime AS worker
-COPY --from=build /out/worker ./
-EXPOSE 9090
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 CMD node healthcheck.js
-CMD ["node", "dist/main.js"]
+CMD ["node", "worker/dist/main.js"]
 
 # Keep the API as the default target for existing build commands.
 FROM runtime AS production
-COPY --from=build /out/api ./
-EXPOSE 4000
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 CMD node healthcheck.js
 CMD ["node", "dist/src/main.js"]
