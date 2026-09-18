@@ -23801,6 +23801,69 @@
       "sha256": "17254bd5803e919d471ac437a14f0c48b548e184873367b778c8ab04df046428",
       "encoding": "gzip",
       "stored_sha256": "9486c4165f6c1475568e70540b0c2fb16d97326e41d4a1b0eec7f617641e96c5"
+    },
+    {
+      "original_path": "/tmp/v01-limits-accelerated-integration.log",
+      "path": "audit/evidence/v01-distributed-limits/v01-limits-accelerated-integration.log.gz",
+      "sha256": "a76cb8813c6011148f16fe5aaa90323e5e07e71b9f5d33cb8618b60103798d8c",
+      "encoding": "gzip",
+      "stored_sha256": "3a193f305ee765df2b804401ffe8309cc3b6fead55b78c81d8a7e14948733226"
+    },
+    {
+      "original_path": "/tmp/v01-limits-accelerated-unit.log",
+      "path": "audit/evidence/v01-distributed-limits/v01-limits-accelerated-unit.log.gz",
+      "sha256": "a7f0718f6e0e452379b8ae402b4735e13629f77b50a727eb8140e3df6737978d",
+      "encoding": "gzip",
+      "stored_sha256": "9a7d21109758563c1592bb656284b078c83dfc4e991a8d1c52fdb3cc87fd6f17"
+    },
+    {
+      "original_path": "/tmp/v01-limits-acceleration-before.log",
+      "path": "audit/evidence/v01-distributed-limits/v01-limits-acceleration-before.log.gz",
+      "sha256": "3fe6533acb5b49090849e42786beb291656dc7e123a29d3c82ec8fca2e244033",
+      "encoding": "gzip",
+      "stored_sha256": "f84299ae6f3f2d6d75adba746921e4ffa267fc98d1320721029e008a1a3da19a"
+    },
+    {
+      "original_path": "/tmp/v01-limits-api-types.log",
+      "path": "audit/evidence/v01-distributed-limits/v01-limits-api-types.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/v01-limits-format.log",
+      "path": "audit/evidence/v01-distributed-limits/v01-limits-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/v01-limits-redis-postgres.log",
+      "path": "audit/evidence/v01-distributed-limits/v01-limits-redis-postgres.log.gz",
+      "sha256": "b6dbb6fbb9512be3481faf5040c853224ee5e2525638df23540dad613f0345a6",
+      "encoding": "gzip",
+      "stored_sha256": "0591fdd9112ecaac5a242b1f36cabe9699e59f01e8814fd5e51d241840070be6"
+    },
+    {
+      "original_path": "/tmp/v01-limits-rolling-postgres.log",
+      "path": "audit/evidence/v01-distributed-limits/v01-limits-rolling-postgres.log.gz",
+      "sha256": "aeb4434225ce0525c4c7723a06c9819c1a7e065dd8f2d0d5ef4dfab170fba17b",
+      "encoding": "gzip",
+      "stored_sha256": "83333d0ca2343dcc0600555d2925458c4a50df3c3052ee48cd063756c6c98d5f"
+    },
+    {
+      "original_path": "/tmp/v01-limits-shared-types.log",
+      "path": "audit/evidence/v01-distributed-limits/v01-limits-shared-types.log.gz",
+      "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c",
+      "encoding": "gzip",
+      "stored_sha256": "f6d17085968f1452afb3b2dc0af4fe00acfdfe9ca0a521c556246f06c07285a8"
+    },
+    {
+      "original_path": "/tmp/v01-limits-shared.log",
+      "path": "audit/evidence/v01-distributed-limits/v01-limits-shared.log.gz",
+      "sha256": "037719c9d9474ae4020af40313a72ede675ad610fcb4dcd640479a269b2cfeb6",
+      "encoding": "gzip",
+      "stored_sha256": "9e7538729976b3146af9d03392629b5a01008d35313190aae25e3613adb68d3b"
     }
   ]
 }

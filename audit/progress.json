@@ -3,9 +3,9 @@
   "updated": "2026-09-18",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+  "source_revision": "f47f30495898bbea965f24d25f76423ea83df7b3",
   "active_step": "V01",
-  "next_action": "Inspect saved PR52 and current Redis/PostgreSQL rate-limit implementation; trace callers before selecting focused tests.",
+  "next_action": "Review PR55–59 against their current storage requirements; identify existing scoped evidence before selecting repairs or focused checks.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -245,9 +245,10 @@
       "title": "Test the actual production images and drain running work",
       "priority": "P1",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Refresh affected runtime image evidence after source changes; production backing services, rollout, DNS/TLS and restore remain external."
+        "Container tasks reviewed at5045a627:3 verified/2 partial, pending Node24 requirement decision and release tag/rollout evidence. Current image runtime proof is bound to5045a627; include later shared-library changes in final V02 build.",
+        "Production backing services, rollout, DNS/TLS and restore remain external."
       ]
     },
     {
@@ -798,6 +799,10 @@
     {
       "id": "V01-container-images",
       "review_record": "audit/evidence/step-reviews.json#V01-container-images"
+    },
+    {
+      "id": "V01-distributed-limits",
+      "review_record": "audit/evidence/step-reviews.json#V01-distributed-limits"
     }
   ],
   "deferred_improvements": [
@@ -830,9 +835,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 200,
+    "acceptance_verified": 201,
     "partial": 43,
-    "pending": 79,
+    "pending": 78,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 8,
@@ -1143,27 +1148,34 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-distributed-limits",
-    "name": "Distributed limits and database fallback",
+    "id": "V01-storage-workflow",
+    "name": "Storage provider, direct transfer and immutable records",
     "status": "in_progress",
     "prs": [
-      52
+      55,
+      56,
+      57,
+      58,
+      59
     ],
     "task_keys": [
-      "01-platform-infrastructure.md#T-04.02.02"
+      "01-platform-infrastructure.md#T-04.03.01",
+      "01-platform-infrastructure.md#T-04.03.02",
+      "01-platform-infrastructure.md#T-04.03.03",
+      "01-platform-infrastructure.md#T-04.03.04",
+      "01-platform-infrastructure.md#T-04.03.05"
     ],
-    "base_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+    "base_revision": "f47f30495898bbea965f24d25f76423ea83df7b3",
     "remaining_checklist": [
-      "Read saved PR52 and current requirement, then review generic limiter/fallback callers against existing OTP/login PostgreSQL guarantees.",
-      "Reuse source-bound authentication and Redis availability evidence; repair only confirmed remaining distributed-counter gaps."
+      "Read the five current canonical task blocks and all saved bodies/deferrals before edits.",
+      "Trace storage provider/presign/configuration/lifecycle/immutability flows; reuse source-bound R02 storage authority and sealed-upload evidence.",
+      "Separate implemented local enforcement from unbuilt signed-contract consumers and production bucket lifecycle/object-lock evidence."
     ],
     "confirmed_defects": [],
-    "reused_evidence": [
-      "audit/evidence/step-reviews.json#R01-registration-otp"
-    ],
+    "reused_evidence": [],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Inspect saved PR52 and current Redis/PostgreSQL rate-limit implementation; trace callers before selecting focused tests."
+    "next_action": "Review PR55–59 against their current storage requirements; identify existing scoped evidence before selecting repairs or focused checks."
   },
   "open_domain_reviews": [
     {

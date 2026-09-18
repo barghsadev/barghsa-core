@@ -26,9 +26,9 @@
       "04-invoices-wallet-contracts.md#T-04.3.01.03"
     ],
     "historical_deferrals": [
-      "- [ ] Dual-approval for amounts \u2265 admin threshold \u2014 deferred to T-04.3.01.05.",
-      "- [ ] Staff rejection API \u2014 deferred to T-04.3.01.04.",
-      "- [ ] Staff confirmation UI \u2014 not in this API-only task."
+      "- [ ] Dual-approval for amounts ≥ admin threshold — deferred to T-04.3.01.05.",
+      "- [ ] Staff rejection API — deferred to T-04.3.01.04.",
+      "- [ ] Staff confirmation UI — not in this API-only task."
     ],
     "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
     "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
@@ -78,7 +78,7 @@
       "04-invoices-wallet-contracts.md#T-04.3.01.01"
     ],
     "historical_deferrals": [
-      "- Upload validation, staff APIs, dual-approval, wallet overpayment credit, and invoice Unpaid \u2192 Partially funded \u2192 Paid tracking are intentionally deferred to T-04.3.01.02\u201307."
+      "- Upload validation, staff APIs, dual-approval, wallet overpayment credit, and invoice Unpaid → Partially funded → Paid tracking are intentionally deferred to T-04.3.01.02–07."
     ],
     "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
     "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
@@ -98,7 +98,7 @@
       "04-invoices-wallet-contracts.md#T-04.2.04.03"
     ],
     "historical_deferrals": [
-      "- [ ] Granular `admin:finance:wallet:chargeback-alerts` capability for non-admin Finance staff \u2014 not in this task. Recipients already include `role-finance`; the warning API still requires a platform admin session until C-04.CC.03."
+      "- [ ] Granular `admin:finance:wallet:chargeback-alerts` capability for non-admin Finance staff — not in this task. Recipients already include `role-finance`; the warning API still requires a platform admin session until C-04.CC.03."
     ],
     "status": "Historical alert and Finance permission deferrals are satisfied by current implementation and actual local delivery/API/browser evidence.",
     "reviewed_source_revision": "ab17007ee8a75db496b50dc194349d79e68a98e5",
@@ -118,7 +118,7 @@
       "04-invoices-wallet-contracts.md#T-04.2.04.02"
     ],
     "historical_deferrals": [
-      "- [ ] Finance alert (push + dashboard) \u2014 not this task; owned by T-04.2.04.03 (already on main). Unmatched/unresolved events remain the input to that alert path. Duplicate unmatched retries with an identical payload still re-attempt the alert; mismatched payloads are rejected first so alert data cannot be built from a different notification."
+      "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03 (already on main). Unmatched/unresolved events remain the input to that alert path. Duplicate unmatched retries with an identical payload still re-attempt the alert; mismatched payloads are rejected first so alert data cannot be built from a different notification."
     ],
     "status": "Historical alert and Finance permission deferrals are satisfied by current implementation and actual local delivery/API/browser evidence.",
     "reviewed_source_revision": "ab17007ee8a75db496b50dc194349d79e68a98e5",
@@ -138,8 +138,8 @@
       "04-invoices-wallet-contracts.md#T-04.2.03.02"
     ],
     "historical_deferrals": [
-      "- [ ] Full concurrent-racer matrix (two payers, one winner) belongs to T-04.2.03.04 \u2014 existing concurrency file still passes but is not this task\u2019s scope.",
-      "- [ ] Idempotency cache unique index + retry contract belongs to T-04.2.03.03 \u2014 existing path is unchanged, not expanded here."
+      "- [ ] Full concurrent-racer matrix (two payers, one winner) belongs to T-04.2.03.04 — existing concurrency file still passes but is not this task’s scope.",
+      "- [ ] Idempotency cache unique index + retry contract belongs to T-04.2.03.03 — existing path is unchanged, not expanded here."
     ],
     "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
     "reviewed_source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
@@ -190,8 +190,8 @@
       "04-invoices-wallet-contracts.md#T-04.2.02.06"
     ],
     "historical_deferrals": [
-      "- [x] Admin-configurable `onlineTopUpLimit` with default 2,000,000,000 IRR \u2014 GET/PUT `/api/admin/config/wallet-top-up-limit`; missing rows serve the default at version `0`. Covered by existing admin/API tests; not re-implemented in this follow-up.",
-      "- [x] Versioned config \u2014 `app_config.version` increments on write, global `config_version` is bumped, and `ConfigCache.invalidate` runs after commit. Covered by existing admin service tests; not re-implemented in this follow-up."
+      "- [x] Admin-configurable `onlineTopUpLimit` with default 2,000,000,000 IRR — GET/PUT `/api/admin/config/wallet-top-up-limit`; missing rows serve the default at version `0`. Covered by existing admin/API tests; not re-implemented in this follow-up.",
+      "- [x] Versioned config — `app_config.version` increments on write, global `config_version` is bumped, and `ConfigCache.invalidate` runs after commit. Covered by existing admin service tests; not re-implemented in this follow-up."
     ],
     "status": "Historical statements satisfied by current online initiation/callback and versioned-limit implementation; separate webhook-policy and delivery limitations retained in the batch review.",
     "reviewed_source_revision": "a1d995953e6303d7697664de615dfb8a71cc1130",
@@ -216,7 +216,7 @@
       "04-invoices-wallet-contracts.md#T-04.2.02.04"
     ],
     "historical_deferrals": [
-      "- [ ] Dual-approval thresholds for bank-payment confirmation \u2014 owned by T-04.3.01.05 / C-04.CC.02, not this task."
+      "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
     ],
     "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
     "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
@@ -256,7 +256,7 @@
       "04-invoices-wallet-contracts.md#T-04.2.03.02"
     ],
     "historical_deferrals": [
-      "- [ ] Concurrent payment races / duplicate idempotency-key unique index \u2014 covered by already-merged T-04.2.03.03 / T-04.2.03.04; not re-scoped here."
+      "- [ ] Concurrent payment races / duplicate idempotency-key unique index — covered by already-merged T-04.2.03.03 / T-04.2.03.04; not re-scoped here."
     ],
     "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
     "reviewed_source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
@@ -276,7 +276,7 @@
       "04-invoices-wallet-contracts.md#T-04.2.02.04"
     ],
     "historical_deferrals": [
-      "- [ ] Dual-approval thresholds for bank-payment confirmation \u2014 owned by T-04.3.01.05 / C-04.CC.02, not this task."
+      "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
     ],
     "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
     "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
@@ -296,7 +296,7 @@
       "04-invoices-wallet-contracts.md#T-04.2.04.02"
     ],
     "historical_deferrals": [
-      "- [ ] Finance alert (push + dashboard) \u2014 not this task; owned by T-04.2.04.03. Unmatched/unresolved events are persisted for that follow-up.",
+      "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03. Unmatched/unresolved events are persisted for that follow-up.",
       "- Finance alerting and dashboard warnings for unresolved chargebacks are deferred to T-04.2.04.03; this task only persists `unmatched` / `unresolved` events."
     ],
     "status": "Historical alert and Finance permission deferrals are satisfied by current implementation and actual local delivery/API/browser evidence.",
@@ -322,8 +322,8 @@
       "04-invoices-wallet-contracts.md#T-04.2.04.01"
     ],
     "historical_deferrals": [
-      "- [ ] Finance alert on chargeback detection \u2014 owned by T-04.2.04.03, not this task.",
-      "- [ ] Provider chargeback inbound mapping \u2014 owned by T-04.2.04.02, not this task."
+      "- [ ] Finance alert on chargeback detection — owned by T-04.2.04.03, not this task.",
+      "- [ ] Provider chargeback inbound mapping — owned by T-04.2.04.02, not this task."
     ],
     "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
     "reviewed_source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
@@ -368,7 +368,7 @@
       "04-invoices-wallet-contracts.md#T-04.2.03.02"
     ],
     "historical_deferrals": [
-      "- [ ] Concurrent payment races / duplicate idempotency-key unique index \u2014 deferred to T-04.2.03.03 / T-04.2.03.04."
+      "- [ ] Concurrent payment races / duplicate idempotency-key unique index — deferred to T-04.2.03.03 / T-04.2.03.04."
     ],
     "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
     "reviewed_source_revision": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
@@ -388,7 +388,7 @@
       "04-invoices-wallet-contracts.md#T-04.2.03.01"
     ],
     "historical_deferrals": [
-      "- [ ] T-04.2.03.02-style explicit dual `FOR UPDATE` + audit insert details beyond the current invoice lock + debit client join + state-machine audit \u2014 left for the follow-up task that owns that wording.",
+      "- [ ] T-04.2.03.02-style explicit dual `FOR UPDATE` + audit insert details beyond the current invoice lock + debit client join + state-machine audit — left for the follow-up task that owns that wording.",
       "- [ ] Concurrent payment integration tests (T-04.2.03.04) not in this PR."
     ],
     "status": "Historical statements dispositioned against current implementation; separate future and operational dependencies retained.",
@@ -435,7 +435,7 @@
     ],
     "historical_deferrals": [
       "- Posted and reserved balances are unchanged. Credit is deferred to staff confirmation (`T-04.2.02.04`). Idempotent retries reuse the matching Pending row.",
-      "- [ ] Staff confirm/reject UI is out of scope (`T-04.2.02.04`) \u2014 this task only creates the Pending submission."
+      "- [ ] Staff confirm/reject UI is out of scope (`T-04.2.02.04`) — this task only creates the Pending submission."
     ],
     "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
     "reviewed_source_revision": "b4356e03514ce16507f87ca49fad515e8802dd96",
@@ -480,7 +480,7 @@
       "04-invoices-wallet-contracts.md#T-04.2.01.03"
     ],
     "historical_deferrals": [
-      "- [ ] HTTP/API surface for credit is unchanged \u2014 this task is the service method only (top-up/refund callers are later stories)."
+      "- [ ] HTTP/API surface for credit is unchanged — this task is the service method only (top-up/refund callers are later stories)."
     ],
     "status": "Service-method acceptance verified; HTTP top-up/refund callers are separate task requirements.",
     "reviewed_source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
@@ -500,7 +500,7 @@
       "04-invoices-wallet-contracts.md#T-04.2.01.03"
     ],
     "historical_deferrals": [
-      "- [ ] HTTP/API surface for credit is unchanged \u2014 this task is the service method only (top-up/refund callers are later stories)."
+      "- [ ] HTTP/API surface for credit is unchanged — this task is the service method only (top-up/refund callers are later stories)."
     ],
     "status": "Service-method acceptance verified; HTTP top-up/refund callers are separate task requirements.",
     "reviewed_source_revision": "48ac9d75f05ef994bd8dd2b09d89e8592ccd534b",
@@ -521,9 +521,9 @@
     ],
     "historical_deferrals": [
       "- Migration 0067 is expand/migrate: nullable `adjustment_kind` + generated `accounting_amount`, deterministic backfill of existing linked rows (`metadata.kind` when charge/credit, otherwise `charge`), and the kind/link CHECK added as `NOT VALID`. VALIDATE is deferred until old writers are retired.",
-      "- [ ] Customer-facing invoice details page showing the correction chain \u2014 out of scope (T-04.1.05.04).",
-      "- [ ] Applying a credit as a wallet refund/payout \u2014 out of scope (S-04.4.01).",
-      "- [ ] `VALIDATE CONSTRAINT ck_invoices_adjustment_kind_matches_link` \u2014 deferred contract-phase migration after old writers that omit `adjustment_kind` are retired."
+      "- [ ] Customer-facing invoice details page showing the correction chain — out of scope (T-04.1.05.04).",
+      "- [ ] Applying a credit as a wallet refund/payout — out of scope (S-04.4.01).",
+      "- [ ] `VALIDATE CONSTRAINT ck_invoices_adjustment_kind_matches_link` — deferred contract-phase migration after old writers that omit `adjustment_kind` are retired."
     ],
     "status": "Historical statements dispositioned; separate payout and operational validation remain explicitly assigned.",
     "reviewed_source_revision": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
@@ -560,7 +560,7 @@
       "04-invoices-wallet-contracts.md#T-04.1.05.02"
     ],
     "historical_deferrals": [
-      "- [ ] Staff HTTP API / UI for this command \u2014 not in this task (customer chain UI is T-04.1.05.04; adjustment invoices are T-04.1.05.03)."
+      "- [ ] Staff HTTP API / UI for this command — not in this task (customer chain UI is T-04.1.05.04; adjustment invoices are T-04.1.05.03)."
     ],
     "status": "Historical statements dispositioned; separate payout and operational validation remain explicitly assigned.",
     "reviewed_source_revision": "0aae9d580ebc8b6d388880adce77c7477ec3a06d",
@@ -580,10 +580,10 @@
       "04-invoices-wallet-contracts.md#T-04.1.04.02"
     ],
     "historical_deferrals": [
-      "- [ ] Unique index on `(invoiceId, offset, channel)` \u2014 out of scope (T-04.1.04.04).",
-      "- [ ] Admin per-offset toggle per service type \u2014 out of scope (T-04.1.04.05).",
-      "- [ ] ReminderSender dispatch via outbox \u2014 out of scope (T-04.1.04.03).",
-      "- [ ] Cancel future rows on Paid/Cancelled/Refunded \u2014 out of scope (T-04.1.04.06); this task only skips those states when inserting a new plan."
+      "- [ ] Unique index on `(invoiceId, offset, channel)` — out of scope (T-04.1.04.04).",
+      "- [ ] Admin per-offset toggle per service type — out of scope (T-04.1.04.05).",
+      "- [ ] ReminderSender dispatch via outbox — out of scope (T-04.1.04.03).",
+      "- [ ] Cancel future rows on Paid/Cancelled/Refunded — out of scope (T-04.1.04.06); this task only skips those states when inserting a new plan."
     ],
     "status": "Historical statements dispositioned; downstream unfinished delivery retains its own partial records.",
     "reviewed_source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
@@ -638,7 +638,7 @@
       "04-invoices-wallet-contracts.md#T-04.1.03.02"
     ],
     "historical_deferrals": [
-      "- [ ] Staff override permission + customer-visible reason in audit/metadata \u2014 deferred to T-04.1.03.03."
+      "- [ ] Staff override permission + customer-visible reason in audit/metadata — deferred to T-04.1.03.03."
     ],
     "status": "Historical statements dispositioned; downstream unfinished delivery retains its own partial records.",
     "reviewed_source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
@@ -658,9 +658,9 @@
       "04-invoices-wallet-contracts.md#T-04.1.03.01"
     ],
     "historical_deferrals": [
-      "- [ ] `dueAt` calculation (`issuedAt + config_days`) \u2014 out of scope; owned by T-04.1.03.02.",
-      "- [ ] Staff override UI/API \u2014 out of scope; owned by T-04.1.03.03.",
-      "- [ ] Overdue cron \u2014 out of scope; owned by T-04.1.03.04."
+      "- [ ] `dueAt` calculation (`issuedAt + config_days`) — out of scope; owned by T-04.1.03.02.",
+      "- [ ] Staff override UI/API — out of scope; owned by T-04.1.03.03.",
+      "- [ ] Overdue cron — out of scope; owned by T-04.1.03.04."
     ],
     "status": "Historical statements dispositioned; downstream unfinished delivery retains its own partial records.",
     "reviewed_source_revision": "6b9831c3a3bb98f5e5e9456a0efa984b185960e8",
@@ -690,7 +690,7 @@
       "04-invoices-wallet-contracts.md#T-04.1.02.08"
     ],
     "historical_deferrals": [
-      "- [ ] Full snapshot replay integration test \u2014 owned by T-04.1.02.09, not this task."
+      "- [ ] Full snapshot replay integration test — owned by T-04.1.02.09, not this task."
     ],
     "status": "Historical deferral satisfied by current reviewed implementation.",
     "reviewed_source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
@@ -710,8 +710,8 @@
       "04-invoices-wallet-contracts.md#T-04.1.02.05"
     ],
     "historical_deferrals": [
-      "- `contractId` \u2014 existing nullable reference column (contracts table TBD); **FK deferred** until that table exists (documented existing pattern).",
-      "- `consultationId` \u2014 **NEW** nullable reference column (consultations table TBD); FK deferred, mirroring `contractId`. Carries the origin reference from day one; the actual FK constraint is added in the epic that creates the consultations table.",
+      "- `contractId` — existing nullable reference column (contracts table TBD); **FK deferred** until that table exists (documented existing pattern).",
+      "- `consultationId` — **NEW** nullable reference column (consultations table TBD); FK deferred, mirroring `contractId`. Carries the origin reference from day one; the actual FK constraint is added in the epic that creates the consultations table.",
       "- [x] `contractId` / `consultationId` are deferred nullable refs (target tables TBD, per established pattern)"
     ],
     "status": "Required future submission/schema prerequisites remain open.",
@@ -742,8 +742,8 @@
       "04-invoices-wallet-contracts.md#T-04.1.02.03"
     ],
     "historical_deferrals": [
-      "- [ ] Wiring into concrete E-03 submission endpoints (`POST /electricity/orders/*`, saving-plan submission) \u2014 those XL tasks land later in E-03; the service is the seam they will call",
-      "- [ ] HTTP controller \u2014 pending (C-04.CC.03 follow-up, same as ManualInvoiceService)"
+      "- [ ] Wiring into concrete E-03 submission endpoints (`POST /electricity/orders/*`, saving-plan submission) — those XL tasks land later in E-03; the service is the seam they will call",
+      "- [ ] HTTP controller — pending (C-04.CC.03 follow-up, same as ManualInvoiceService)"
     ],
     "status": "Required future submission/schema prerequisites remain open.",
     "reviewed_source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
@@ -768,7 +768,7 @@
       "04-invoices-wallet-contracts.md#T-04.1.02.02"
     ],
     "historical_deferrals": [
-      "- [ ] No HTTP controller yet \u2014 staff-facing endpoint awaits the C-04.CC.03 staff permissions matrix (kept service-layer to bound the PR)"
+      "- [ ] No HTTP controller yet — staff-facing endpoint awaits the C-04.CC.03 staff permissions matrix (kept service-layer to bound the PR)"
     ],
     "status": "Historical deferral satisfied by current reviewed implementation.",
     "reviewed_source_revision": "7d4c57730bab60da30fae581f6ca68daf0a629c0",
@@ -789,7 +789,7 @@
     ],
     "historical_deferrals": [
       "- Read-only slice: no schema changes, no migrations. UI timeline view deferred (same convention as T-10.01.01's deferred admin web UI).",
-      "- [ ] Timeline UI per user (\"Assigned [role] by [admin] on [date]\") \u2014 deferred with the admin web UI slice"
+      "- [ ] Timeline UI per user (\"Assigned [role] by [admin] on [date]\") — deferred with the admin web UI slice"
     ],
     "status": "Reviewed locally: required all-user/per-user timeline is implemented and verified.",
     "dispositions": [
@@ -815,7 +815,7 @@
     ],
     "historical_deferrals": [
       "Deferred (repo convention): admin web UI slice (table view, disable button + confirmation, fa/en dicts, RTL/a11y), re-enable endpoint.",
-      "- [ ] Admin web UI table + disable button \u2014 deferred UI slice (API contract ready)"
+      "- [ ] Admin web UI table + disable button — deferred UI slice (API contract ready)"
     ],
     "status": "Reviewed locally: required staff UI is implemented; re-enable is outside the canonical task.",
     "dispositions": [
@@ -840,8 +840,8 @@
       "02-auth-users-admin.md#T-09.12.06"
     ],
     "historical_deferrals": [
-      "- [x] Changes affect new drafts only \u2014 documented in contract, endpoint description, and OpenAPI; enforcement deferred to consuming slices (T-03.06.01.02, T-04.6.01.01)",
-      "- [~] Admin web UI slice (number inputs per setting, \"changes apply to new orders only\" note, fa/en dicts, RTL/a11y) \u2014 deferred for all S-09.12 tasks per loop convention; API slice only"
+      "- [x] Changes affect new drafts only — documented in contract, endpoint description, and OpenAPI; enforcement deferred to consuming slices (T-03.06.01.02, T-04.6.01.01)",
+      "- [~] Admin web UI slice (number inputs per setting, \"changes apply to new orders only\" note, fa/en dicts, RTL/a11y) — deferred for all S-09.12 tasks per loop convention; API slice only"
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
   },
@@ -875,8 +875,8 @@
       "02-auth-users-admin.md#T-09.12.03"
     ],
     "historical_deferrals": [
-      "- [x] VAT calculated after gift discount on taxable lines \u2014 `computeGiftDiscount` is the single seam; invoice integration (not yet built) uses it; documented in shared contract.",
-      "- [ ] Admin web UI slice (list/search/filter, create/edit form, usage stats, toggle, high-value % warning, fa/en dicts, RTL/a11y) \u2014 deferred, matching the S-09 admin API-slice pattern used by T-09.12.01/02."
+      "- [x] VAT calculated after gift discount on taxable lines — `computeGiftDiscount` is the single seam; invoice integration (not yet built) uses it; documented in shared contract.",
+      "- [ ] Admin web UI slice (list/search/filter, create/edit form, usage stats, toggle, high-value % warning, fa/en dicts, RTL/a11y) — deferred, matching the S-09 admin API-slice pattern used by T-09.12.01/02."
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
   },
@@ -887,7 +887,7 @@
       "02-auth-users-admin.md#T-09.12.02"
     ],
     "historical_deferrals": [
-      "- [ ] UI slice (table: category/product, rate, effective from, status; future-effective add; override toggle; fa/en dicts, RTL/a11y) \u2014 deferred, consistent with T-09.12.01 precedent."
+      "- [ ] UI slice (table: category/product, rate, effective from, status; future-effective add; override toggle; fa/en dicts, RTL/a11y) — deferred, consistent with T-09.12.01 precedent."
     ],
     "status": "Closed locally; every task criterion and historical UI deferral verified.",
     "reviewed_source_revision": "15c0ceb510b98c8ca412b5559557dcbc2f2f8f15",
@@ -907,7 +907,7 @@
       "02-auth-users-admin.md#T-09.12.01"
     ],
     "historical_deferrals": [
-      "- [ ] Tabbed admin web UI (list/add/edit per type, price history view, fa/en dicts, RTL/a11y) \u2014 deferred to the UI slice"
+      "- [ ] Tabbed admin web UI (list/add/edit per type, price history view, fa/en dicts, RTL/a11y) — deferred to the UI slice"
     ],
     "status": "Closed locally; every task criterion and historical UI deferral verified.",
     "reviewed_source_revision": "15c0ceb510b98c8ca412b5559557dcbc2f2f8f15",
@@ -927,7 +927,7 @@
       "02-auth-users-admin.md#T-09.11.05"
     ],
     "historical_deferrals": [
-      "- [ ] \"This agent is also used in [other slots]\" warning UI, per-slot dropdown \u2014 **deferred UI slice** (consistent with T-09.11.04's deferred web UI; `alsoUsedIn` data is already served). Also deferred: fa/en dictionaries + RTL/a11y for the admin UI."
+      "- [ ] \"This agent is also used in [other slots]\" warning UI, per-slot dropdown — **deferred UI slice** (consistent with T-09.11.04's deferred web UI; `alsoUsedIn` data is already served). Also deferred: fa/en dictionaries + RTL/a11y for the admin UI."
     ],
     "status": "Saved UI deferrals satisfied by current administration; PR211 runtime consumers remain partial.",
     "reviewed_source_revision": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
@@ -1005,9 +1005,9 @@
       "02-auth-users-admin.md#T-09.11.02"
     ],
     "historical_deferrals": [
-      "- `kb_documents.processing_status` (`pending|processing|ready|failed`) fixes the chunk/embed contract for the future worker; the actual chunking/embedding pipeline is supplied by the document-processing epic (E-05, T-05.09/T-05.11+, queue position 630+) \u2014 deferred like T-09.11.01's worker-async ping.",
-      "- [ ] Web UI + fa/en dictionaries + RTL/a11y slice \u2014 deferred (per T-09.11.01 precedent)",
-      "- [ ] Actual chunking/embedding worker \u2014 deferred to E-05 document-processing epic (not built; queue 630+)"
+      "- `kb_documents.processing_status` (`pending|processing|ready|failed`) fixes the chunk/embed contract for the future worker; the actual chunking/embedding pipeline is supplied by the document-processing epic (E-05, T-05.09/T-05.11+, queue position 630+) — deferred like T-09.11.01's worker-async ping.",
+      "- [ ] Web UI + fa/en dictionaries + RTL/a11y slice — deferred (per T-09.11.01 precedent)",
+      "- [ ] Actual chunking/embedding worker — deferred to E-05 document-processing epic (not built; queue 630+)"
     ],
     "status": "Implemented administration reviewed; required processing/chat dependencies remain open.",
     "reviewed_source_revision": "0e59d835f601cfd7d5525713e33c5678c88308ed",
@@ -1037,7 +1037,7 @@
       "02-auth-users-admin.md#T-09.11.01"
     ],
     "historical_deferrals": [
-      "- [ ] Web UI table/form/test button \u2014 web app surface deferred (backend slice; consistent with prior S-09.10.x splits)"
+      "- [ ] Web UI table/form/test button — web app surface deferred (backend slice; consistent with prior S-09.10.x splits)"
     ],
     "status": "Saved UI deferrals satisfied by current administration; PR211 runtime consumers remain partial.",
     "reviewed_source_revision": "c4098cdda2e1f975bbc9bcc6d9354c9a5d9ef293",
@@ -1057,8 +1057,8 @@
       "02-auth-users-admin.md#T-09.10.03"
     ],
     "historical_deferrals": [
-      "- [ ] Per-order \"within limits\" enforcement (requiredGreenKwh vs product max) \u2014 owned by the E-03 ordering engine (`T-03.04.01.02`), not this admin-epic scope; the enforcement seam here is the hook it consumes.",
-      "- [ ] Web UI fa/en dictionary strings for the safety-status alert \u2014 web admin catalogue UI is T-09.12.x (not yet built); backend English messages follow the T-09.10.03 wording."
+      "- [ ] Per-order \"within limits\" enforcement (requiredGreenKwh vs product max) — owned by the E-03 ordering engine (`T-03.04.01.02`), not this admin-epic scope; the enforcement seam here is the hook it consumes.",
+      "- [ ] Web UI fa/en dictionary strings for the safety-status alert — web admin catalogue UI is T-09.12.x (not yet built); backend English messages follow the T-09.10.03 wording."
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
   },
@@ -1070,7 +1070,7 @@
     ],
     "historical_deferrals": [
       "This is the reviewable prerequisite slice of the **L**-sized T-09.10.02. The product-state fail-closed safety check (activation blocked if green product inactive/unpriced/incompatible; fail-closed if deactivated while rule active) depends on the products module and is deferred to **T-09.10.03**.",
-      "- [ ] Activation blocked / fail-closed on green product state \u2014 deferred to T-09.10.03 (products module not yet built)."
+      "- [ ] Activation blocked / fail-closed on green product state — deferred to T-09.10.03 (products module not yet built)."
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
   },
@@ -1081,10 +1081,10 @@
       "02-auth-users-admin.md#T-09.10.01"
     ],
     "historical_deferrals": [
-      "- [x] Validated on the online top-up path \u2014 `WalletService.validateOnlineTopUpAmount` enforcement seam, unit tested. The online top-up **endpoint** itself is `02-invoices-wallet-contracts.md#T-04.2.02.01` (S-04.2.02, not yet built); it will consume this seam + the shared guard.",
+      "- [x] Validated on the online top-up path — `WalletService.validateOnlineTopUpAmount` enforcement seam, unit tested. The online top-up **endpoint** itself is `02-invoices-wallet-contracts.md#T-04.2.02.01` (S-04.2.02, not yet built); it will consume this seam + the shared guard.",
       "## Deferred (documented)",
-      "- Web UI (number input with large-number/toman formatting + \"affects all future online top-ups\" warning) and fa/en i18n dict \u2014 admin config UI for this section not yet built.",
-      "- Step-up on the PUT mutation \u2014 deferred like the other admin config panels until the step-up challenge flow exists."
+      "- Web UI (number input with large-number/toman formatting + \"affects all future online top-ups\" warning) and fa/en i18n dict — admin config UI for this section not yet built.",
+      "- Step-up on the PUT mutation — deferred like the other admin config panels until the step-up challenge flow exists."
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
   },
@@ -1095,7 +1095,7 @@
       "02-auth-users-admin.md#T-09.09.03"
     ],
     "historical_deferrals": [
-      "- [ ] Web \"Failed notifications\" admin UI section \u2014 deferred (matches T-09.09.02, which shipped backend-only)"
+      "- [ ] Web \"Failed notifications\" admin UI section — deferred (matches T-09.09.02, which shipped backend-only)"
     ],
     "status": "Satisfied by reviewed later implementation.",
     "reviewed_source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
@@ -1115,8 +1115,8 @@
       "02-auth-users-admin.md#T-09.09.01"
     ],
     "historical_deferrals": [
-      "- [ ] UI table with filters/detail/resolve dialog \u2014 not yet built; epic scope is backend+notification and earlier S-09 slices deferred the UI. Follow-up.",
-      "- [ ] Link to related transactions / finance-producer wiring \u2014 deferred to the finance reconciliation system."
+      "- [ ] UI table with filters/detail/resolve dialog — not yet built; epic scope is backend+notification and earlier S-09 slices deferred the UI. Follow-up.",
+      "- [ ] Link to related transactions / finance-producer wiring — deferred to the finance reconciliation system."
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
   },
@@ -1127,9 +1127,9 @@
       "02-auth-users-admin.md#T-09.08.02"
     ],
     "historical_deferrals": [
-      "Implements `02-auth-users-admin.md#T-09.08.02` (slice 1 \u2014 configuration surface). L task deliberately split: this PR delivers the admin-configurable teams + assignment rules data model and API; the worker auto-assignment engine (round-robin/expertise/load consumption) is a follow-up slice.",
-      "- [ ] Auto-assignment engine (worker consumption of rules) \u2014 follow-up slice",
-      "- [ ] UI (teams list, member management, rule editor per work type, priority reorder) \u2014 follow-up"
+      "Implements `02-auth-users-admin.md#T-09.08.02` (slice 1 — configuration surface). L task deliberately split: this PR delivers the admin-configurable teams + assignment rules data model and API; the worker auto-assignment engine (round-robin/expertise/load consumption) is a follow-up slice.",
+      "- [ ] Auto-assignment engine (worker consumption of rules) — follow-up slice",
+      "- [ ] UI (teams list, member management, rule editor per work type, priority reorder) — follow-up"
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
   },
@@ -1140,7 +1140,7 @@
       "02-auth-users-admin.md#T-09.08.01"
     ],
     "historical_deferrals": [
-      "- [ ] UI table of service types with target input + note text (deferred \u2014 admin config UI not built yet, same as T-09.06/09.07)",
+      "- [ ] UI table of service types with target input + note text (deferred — admin config UI not built yet, same as T-09.06/09.07)",
       "Deferred (explicit): `consultation` service type until its module exists; step-up auth on config change (same follow-up as T-09.06/09.07); per-event i18n templates (template engine T-05.04.02); escalation choreography (T-09.08.03); admin UI."
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
@@ -1152,9 +1152,9 @@
       "02-auth-users-admin.md#T-09.07.02"
     ],
     "historical_deferrals": [
-      "- [ ] UI: \"Pending approvals\" in finance dashboard \u2014 deferred (finance module & dashboard do not exist yet; web surface will consume these endpoints when the finance module lands)",
-      "- [ ] Step-up auth on resolve \u2014 deferred (step-up flow design pending; noted in epic S-09.07)",
-      "- [ ] Role-permission eligibility (`admin:financial:edit` via staff roles) \u2014 deferred (sessions expose only `isAdmin`; documented in the service and gate)",
+      "- [ ] UI: \"Pending approvals\" in finance dashboard — deferred (finance module & dashboard do not exist yet; web surface will consume these endpoints when the finance module lands)",
+      "- [ ] Step-up auth on resolve — deferred (step-up flow design pending; noted in epic S-09.07)",
+      "- [ ] Role-permission eligibility (`admin:financial:edit` via staff roles) — deferred (sessions expose only `isAdmin`; documented in the service and gate)",
       "Deferred from this slice and tracked in PR description: UI, step-up on resolution, role-based eligibility, and the finance-module threshold consumer (its own epic tasks)."
     ],
     "status": "Historical deferrals explicitly dispositioned in the current receipt batch; delivery and future service requirements remain separately assigned where stated.",
@@ -1192,7 +1192,7 @@
       "02-auth-users-admin.md#T-09.07.01"
     ],
     "historical_deferrals": [
-      "- [x] Step-up auth on the mutation: deferred \u2014 the web app has no step-up challenge flow yet and admin config panels use raw fetch; requiring it would regress the working save path (follow-up with T-09.06.01/02/03 step-up UI)",
+      "- [x] Step-up auth on the mutation: deferred — the web app has no step-up challenge flow yet and admin config panels use raw fetch; requiring it would regress the working save path (follow-up with T-09.06.01/02/03 step-up UI)",
       "- [ ] Emergency override (reason + elevated permission + immediate alert + audit): deferred until the step-up flow and alert pipeline exist",
       "- [ ] T-09.07.02 workflow consumption: not part of this task (finance module doesn't exist yet; the config contract documents the `> threshold && threshold > 0` semantics it must use)"
     ],
@@ -1227,7 +1227,7 @@
     ],
     "historical_deferrals": [
       "- **Step-up on the PUT is deliberately deferred.** `DeliveryWindowConfigPanel.tsx` (T-05.03.03) saves via raw `fetch` and the web app has no step-up challenge flow anywhere yet; requiring step-up server-side would regress the working admin save path. It will land together with the client-side step-up flow (same follow-up as the provider-config UI).",
-      "- [ ] Step-up on PUT \u2014 deferred (web app step-up flow does not exist; forcing it would break the existing T-05.03.03 panel)."
+      "- [ ] Step-up on PUT — deferred (web app step-up flow does not exist; forcing it would break the existing T-05.03.03 panel)."
     ],
     "status": "Both historical step-up deferrals satisfied by current transactional authority and browser password-confirmation flow.",
     "reviewed_source_revision": "246abe5a1ee3a54672658de5b8e37dd95a5a309f",
@@ -1236,12 +1236,12 @@
       {
         "statement_index": 0,
         "disposition": "satisfied_by_later_implementation",
-        "evidence": "Daytime configuration now has HH:MM inputs with minute precision, default09:00\u201321:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied. audit/evidence/step-reviews.json#R02-daytime-window"
+        "evidence": "Daytime configuration now has HH:MM inputs with minute precision, default09:00–21:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied. audit/evidence/step-reviews.json#R02-daytime-window"
       },
       {
         "statement_index": 1,
         "disposition": "satisfied_by_later_implementation",
-        "evidence": "Daytime configuration now has HH:MM inputs with minute precision, default09:00\u201321:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied. audit/evidence/step-reviews.json#R02-daytime-window"
+        "evidence": "Daytime configuration now has HH:MM inputs with minute precision, default09:00–21:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied. audit/evidence/step-reviews.json#R02-daytime-window"
       }
     ]
   },
@@ -1252,8 +1252,8 @@
       "02-auth-users-admin.md#T-09.06.02"
     ],
     "historical_deferrals": [
-      "- [ ] Test send to admin's verified mobile number \u2014 live SMS.ir send endpoint is a follow-up; the connection tester checks credentials + account balance today.",
-      "- [ ] Admin UI (template mapping table, test-send preview) \u2014 follows in a separate UI PR."
+      "- [ ] Test send to admin's verified mobile number — live SMS.ir send endpoint is a follow-up; the connection tester checks credentials + account balance today.",
+      "- [ ] Admin UI (template mapping table, test-send preview) — follows in a separate UI PR."
     ],
     "status": "Both historical self-send and admin UI deferrals satisfied locally.",
     "reviewed_source_revision": "58a8df909bd1892a70bc52549cfa1ac6ec32fe27",
@@ -1298,8 +1298,8 @@
       "05-notifications-documents-ai.md#T-05.06.02"
     ],
     "historical_deferrals": [
-      "- [ ] Admin UI (T-05.06.04) \u2014 separate task; API-only here",
-      "- [ ] Secret masking in UI (T-05.06.05) \u2014 encryption handled by a later task"
+      "- [ ] Admin UI (T-05.06.04) — separate task; API-only here",
+      "- [ ] Secret masking in UI (T-05.06.05) — encryption handled by a later task"
     ],
     "status": "Both historical UI/secret deferrals satisfied by later implementation and current review.",
     "reviewed_source_revision": "981e98d64d3f443e480a6085915aa65b04f57adc",
@@ -1324,7 +1324,7 @@
       "05-notifications-documents-ai.md#T-05.05.02"
     ],
     "historical_deferrals": [
-      "- [ ] \"Marketing never mixed with transactional templates\" \u2014 depends on the template rendering layer (T-05.04.x work) and outbox payload; not changed here."
+      "- [ ] \"Marketing never mixed with transactional templates\" — depends on the template rendering layer (T-05.04.x work) and outbox payload; not changed here."
     ],
     "status": "Historical deferrals satisfied by current reviewed consent UI, mutation and delivery gates.",
     "reviewed_source_revision": "f61b6c2028f1cbfdd586195c8037326d101d4758",
@@ -1344,8 +1344,8 @@
       "05-notifications-documents-ai.md#T-05.05.01"
     ],
     "historical_deferrals": [
-      "- [ ] Channel availability / opt-in enforcement rules \u2014 deferred to T-05.05.02 (this task is the data model only).",
-      "- [ ] Consent UI + audit logging \u2014 deferred to T-05.05.03."
+      "- [ ] Channel availability / opt-in enforcement rules — deferred to T-05.05.02 (this task is the data model only).",
+      "- [ ] Consent UI + audit logging — deferred to T-05.05.03."
     ],
     "status": "Historical deferrals satisfied by current reviewed consent UI, mutation and delivery gates.",
     "reviewed_source_revision": "f61b6c2028f1cbfdd586195c8037326d101d4758",
@@ -1370,7 +1370,7 @@
       "05-notifications-documents-ai.md#T-05.04.05"
     ],
     "historical_deferrals": [
-      "Note: seeding is implemented as a seeder in the db seed runner (consistent with the existing admin/products/geography seeders) rather than a raw DDL migration, since the schema already exists; the row data is initial version-1 active content inserted in one idempotent pass. No `Closes` reference \u2014 kanban task key used."
+      "Note: seeding is implemented as a seeder in the db seed runner (consistent with the existing admin/products/geography seeders) rather than a raw DDL migration, since the schema already exists; the row data is initial version-1 active content inserted in one idempotent pass. No `Closes` reference — kanban task key used."
     ],
     "status": "All historical deferrals satisfied locally by the reviewed template lifecycle batch; operational execution remains separate.",
     "reviewed_source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
@@ -1390,7 +1390,7 @@
       "05-notifications-documents-ai.md#T-05.04.04"
     ],
     "historical_deferrals": [
-      "- [ ] Out-of-app (email/SMS) transport \u2014 pending T-05.06 provider configuration; test-send delivers via in-app today"
+      "- [ ] Out-of-app (email/SMS) transport — pending T-05.06 provider configuration; test-send delivers via in-app today"
     ],
     "status": "All historical deferrals satisfied locally by the reviewed template lifecycle batch; operational execution remains separate.",
     "reviewed_source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
@@ -1410,8 +1410,8 @@
       "05-notifications-documents-ai.md#T-05.04.03"
     ],
     "historical_deferrals": [
-      "- [ ] Templates exist for all business events \u2014 storage/seeding is T-05.04.05 (out of scope)",
-      "- [ ] Versioning immutability \u2014 covered in T-05.04.01/backend (unchanged here)"
+      "- [ ] Templates exist for all business events — storage/seeding is T-05.04.05 (out of scope)",
+      "- [ ] Versioning immutability — covered in T-05.04.01/backend (unchanged here)"
     ],
     "status": "All historical deferrals satisfied locally by the reviewed template lifecycle batch; operational execution remains separate.",
     "reviewed_source_revision": "dd6c6d6228b095da4ca946d81fc432a8e6eea7ed",
@@ -1436,7 +1436,7 @@
       "05-notifications-documents-ai.md#T-05.03.02"
     ],
     "historical_deferrals": [
-      "- [ ] Per-profile timezone from the `profiles` table \u2014 profiles currently have no timezone column; timezone is resolved from the admin window config. Adding a profile timezone attribute + per-user resolution is follow-up (ties to the admin UI in T-05.03.03)."
+      "- [ ] Per-profile timezone from the `profiles` table — profiles currently have no timezone column; timezone is resolved from the admin window config. Adding a profile timezone attribute + per-user resolution is follow-up (ties to the admin UI in T-05.03.03)."
     ],
     "status": "Satisfied by reviewed later implementation.",
     "reviewed_source_revision": "b168ee2b02f45a7287fb35ba9c197bf44c96300f",
@@ -1456,7 +1456,7 @@
       "05-notifications-documents-ai.md#T-05.03.01"
     ],
     "historical_deferrals": [
-      "- [ ] Worker delivery-window scheduling (resolve timezone, set scheduled_for when outside window) \u2014 this is T-05.03.02 (explicitly out of scope for this task)."
+      "- [ ] Worker delivery-window scheduling (resolve timezone, set scheduled_for when outside window) — this is T-05.03.02 (explicitly out of scope for this task)."
     ],
     "status": "Satisfied by reviewed later implementation.",
     "reviewed_source_revision": "b168ee2b02f45a7287fb35ba9c197bf44c96300f",
@@ -1496,7 +1496,7 @@
       "05-notifications-documents-ai.md#T-05.01.06"
     ],
     "historical_deferrals": [
-      "- [ ] Operational alerts for dead-letter accumulation \u2014 deferred to T-05.01.07 (metrics & alerting)"
+      "- [ ] Operational alerts for dead-letter accumulation — deferred to T-05.01.07 (metrics & alerting)"
     ],
     "status": "Operational evidence remains required.",
     "reviewed_source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
@@ -1516,7 +1516,7 @@
       "05-notifications-documents-ai.md#T-05.01.02"
     ],
     "historical_deferrals": [
-      "- [ ] Live end-to-end dispatch against a running DB \u2014 integration/e2e level (not run in this tick)."
+      "- [ ] Live end-to-end dispatch against a running DB — integration/e2e level (not run in this tick)."
     ],
     "status": "Satisfied by reviewed later implementation.",
     "reviewed_source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
@@ -1536,9 +1536,9 @@
       "05-notifications-documents-ai.md#T-05.01.01"
     ],
     "historical_deferrals": [
-      "- [ ] In-app transport adapter writing to the notifications table synchronously \u2014 T-05.02.01 (separate task)",
-      "- [ ] Durable-outbox write pipeline wired into business transactions \u2014 T-05.01.02 (separate task)",
-      "- [ ] Graceful-shutdown lease release in worker loop \u2014 deferred; loop wiring is T-05.01.02/03"
+      "- [ ] In-app transport adapter writing to the notifications table synchronously — T-05.02.01 (separate task)",
+      "- [ ] Durable-outbox write pipeline wired into business transactions — T-05.01.02 (separate task)",
+      "- [ ] Graceful-shutdown lease release in worker loop — deferred; loop wiring is T-05.01.02/03"
     ],
     "status": "Satisfied by reviewed later implementation.",
     "reviewed_source_revision": "a9d5f29b3f56d47ed3bfb5e550a38a5f49c58d22",
@@ -1569,7 +1569,7 @@
     ],
     "historical_deferrals": [
       "- [x] Predefined roles shown read-only (custom-role editing deferred to follow-up by design)",
-      "- [ ] Audit `role_permission_change` \u2014 not applicable this slice: predefined roles are read-only and there is no permission-mutation endpoint yet; the audit event will land with custom-role editing"
+      "- [ ] Audit `role_permission_change` — not applicable this slice: predefined roles are read-only and there is no permission-mutation endpoint yet; the audit event will land with custom-role editing"
     ],
     "status": "Reviewed: initial read-only scope verified; both editing deferrals belong to the explicit future custom-role extension.",
     "dispositions": [
@@ -1620,7 +1620,7 @@
       "02-auth-users-admin.md#T-09.01.02"
     ],
     "historical_deferrals": [
-      "- [ ] Email/notification template branding \u2014 follow-up (different PR / modules)"
+      "- [ ] Email/notification template branding — follow-up (different PR / modules)"
     ],
     "status": "All historical deferrals satisfied; theme application locally verified.",
     "reviewed_source_revision": "8a83429bdf4c8055032e47ba4b0ee4b1a800ebb0",
@@ -1640,7 +1640,7 @@
       "02-auth-users-admin.md#T-08.01.03"
     ],
     "historical_deferrals": [
-      "- Reviewed by GLM-5.2. Major finding (activeContracts not implemented) was a false positive \u2014 the code correctly derives it from the orders CONFIRMED GROUP BY. Clarified JSDoc accordingly."
+      "- Reviewed by GLM-5.2. Major finding (activeContracts not implemented) was a false positive — the code correctly derives it from the orders CONFIRMED GROUP BY. Clarified JSDoc accordingly."
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
   },
@@ -1651,7 +1651,7 @@
       "04-invoices-wallet-contracts.md#T-04.1.01.01"
     ],
     "historical_deferrals": [
-      "Note: `contractId` is intentionally a plain `text` column (no FK) because the contracts table does not yet exist in the schema \u2014 it will be linked when the contracts epic (E-04.5) is implemented."
+      "Note: `contractId` is intentionally a plain `text` column (no FK) because the contracts table does not yet exist in the schema — it will be linked when the contracts epic (E-04.5) is implemented."
     ],
     "status": "Optional contractId column verified. Future foreign key retained under the origin-link/contracts requirement.",
     "reviewed_source_revision": "7dd8ede5656bcf6ad4570a325da7dad6570cdfee",
@@ -1717,8 +1717,8 @@
       "02-auth-users-admin.md#T-06.01.01"
     ],
     "historical_deferrals": [
-      "- [ ] File attachments (document storage integration) \u2014 dependency on documents module, deferred to that integration (attachments field accepted in DTO, not yet persisted)",
-      "Task dependency is `documents module` \u2014 actual file-attachment persistence is deferred until the documents/storage link is implemented as documented."
+      "- [ ] File attachments (document storage integration) — dependency on documents module, deferred to that integration (attachments field accepted in DTO, not yet persisted)",
+      "Task dependency is `documents module` — actual file-attachment persistence is deferred until the documents/storage link is implemented as documented."
     ],
     "status": "Historical deferrals satisfied by later implementation; see current task/PR disposition for remaining independent criteria.",
     "reviewed_source_revision": "d776019d8b3c609bdb52e4c9038d9be58702d12b",
@@ -1744,7 +1744,7 @@
     ],
     "historical_deferrals": [
       "- [ ] Withdraw/withdraw fix already exists (T-05.04.01)",
-      "- [ ] Accept/decline UI (T-05.04.03 \u2014 separate task)",
+      "- [ ] Accept/decline UI (T-05.04.03 — separate task)",
       "- [ ] Invitation expiry worker (follow-up)"
     ],
     "status": "All three historical deferrals are satisfied locally; deployed worker operation remains operational evidence.",
@@ -1775,8 +1775,8 @@
       "02-auth-users-admin.md#T-05.03.01"
     ],
     "historical_deferrals": [
-      "- [ ] Role assignment at creation (roleIds accepted but not persisted \u2014 role management is T-05.03.02 depending on T-09.05.01)",
-      "- [ ] Activation link email delivery (email transport \u2014 separate epic)"
+      "- [ ] Role assignment at creation (roleIds accepted but not persisted — role management is T-05.03.02 depending on T-09.05.01)",
+      "- [ ] Activation link email delivery (email transport — separate epic)"
     ],
     "status": "Reviewed locally: both required deferrals are satisfied by current implementation; live delivery remains operational evidence.",
     "dispositions": [
@@ -1863,8 +1863,8 @@
       "02-auth-users-admin.md#T-02.02.04"
     ],
     "historical_deferrals": [
-      "- [ ] Wire step-up to specific sensitive endpoints (role changes, credentials, etc.) \u2014 Slice 2 (separate PR)",
-      "- [ ] Frontend step-up modal dialog \u2014 Slice 2"
+      "- [ ] Wire step-up to specific sensitive endpoints (role changes, credentials, etc.) — Slice 2 (separate PR)",
+      "- [ ] Frontend step-up modal dialog — Slice 2"
     ],
     "status": "Existing required sensitive consumers verified; separate future refund/contract/provider consumers remain.",
     "reviewed_source_revision": "47f15aecc2397432f9988c1b0b92b9ee5be684b4",
@@ -1900,7 +1900,7 @@
       "01-platform-infrastructure.md#T-02.03.02"
     ],
     "historical_deferrals": [
-      "- [ ] Schema version health check (`verifyMigrationVersion()`) \u2014 exported for programmatic use"
+      "- [ ] Schema version health check (`verifyMigrationVersion()`) — exported for programmatic use"
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source.",
     "dispositions": [
@@ -1931,8 +1931,8 @@
       "01-platform-infrastructure.md#T-04.04.03"
     ],
     "historical_deferrals": [
-      "- [ ] NGINX syntax validated (nginx binary not available locally \u2014 CI validates)",
-      "- [ ] Caddy syntax validated (caddy binary not available locally \u2014 CI validates)"
+      "- [ ] NGINX syntax validated (nginx binary not available locally — CI validates)",
+      "- [ ] Caddy syntax validated (caddy binary not available locally — CI validates)"
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
   },
@@ -1943,7 +1943,7 @@
       "01-platform-infrastructure.md#T-04.04.02"
     ],
     "historical_deferrals": [
-      "- [ ] Nonce generation in app \u2014 deferred; not needed in Report-Only mode"
+      "- [ ] Nonce generation in app — deferred; not needed in Report-Only mode"
     ],
     "status": "Nonce deferral satisfied; authenticated native reporting remains pending CSRF disposition.",
     "reviewed_source_revision": "26ef84b721469a9c6afc6110b2d84bc7451bade9",
@@ -1976,9 +1976,23 @@
     ],
     "historical_deferrals": [
       "- [ ] Redis acceleration fully wired (Redis module exists; composite store uses `REDIS_CLIENT` injection token)",
-      "- [ ] Integration tests with real PostgreSQL (requires Docker \u2014 covered by existing db testcontainers setup)"
+      "- [ ] Integration tests with real PostgreSQL (requires Docker — covered by existing db testcontainers setup)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Both historical deferrals satisfied by current implementation and focused real Redis/PostgreSQL proof.",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Global Redis provider injection is wired; Redis rejects exhausted quota without DB writes while PostgreSQL still authorizes every admission. audit/evidence/step-reviews.json#V01-distributed-limits",
+        "source_revision": "f47f30495898bbea965f24d25f76423ea83df7b3"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Eight current actual Redis/PostgreSQL and eight actual rolling-window tests pass, with79 shared cases. audit/evidence/step-reviews.json#V01-distributed-limits",
+        "source_revision": "f47f30495898bbea965f24d25f76423ea83df7b3"
+      }
+    ]
   },
   {
     "pr": 48,
@@ -2013,7 +2027,7 @@
       "01-platform-infrastructure.md#T-04.01.04"
     ],
     "historical_deferrals": [
-      "- [ ] Sequential scans vs index scans \u2014 acknowledged minor gap (acceptable follow-up)",
+      "- [ ] Sequential scans vs index scans — acknowledged minor gap (acceptable follow-up)",
       "- [ ] End-to-end validation requires a running PostgreSQL with `pg_stat_statements` loaded"
     ],
     "status": "Local repairs reviewed; each historical statement has an explicit disposition. Operational prerequisites remain open.",
@@ -2039,7 +2053,7 @@
       "01-platform-infrastructure.md#T-04.01.03"
     ],
     "historical_deferrals": [
-      "- [x] Data preparation time measurement and reporting (true RTO deferred to next slice \u2014 needs pg_ctl start)",
+      "- [x] Data preparation time measurement and reporting (true RTO deferred to next slice — needs pg_ctl start)",
       "- [ ] Runbook documentation (deferred to next slice)",
       "- [ ] Restore to isolated environment automation (deferred to next slice)",
       "- [ ] RTO measurement recording in monitoring (deferred to next slice)"
@@ -2109,7 +2123,7 @@
       "01-platform-infrastructure.md#T-02.01.01"
     ],
     "historical_deferrals": [
-      "- [x] Query logging in development via Drizzle's `logger: true`; production logging via structured JSON only for slow queries (>200ms) \u2014 deferred to T-02.01.03"
+      "- [x] Query logging in development via Drizzle's `logger: true`; production logging via structured JSON only for slow queries (>200ms) — deferred to T-02.01.03"
     ],
     "status": "Production slow-query deferral satisfied by current middleware and passing DB tests.",
     "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation",
@@ -2141,7 +2155,7 @@
       "01-platform-infrastructure.md#T-01.03.02"
     ],
     "historical_deferrals": [
-      "- [ ] Swagger OpenAPI spec generation at build time \u2014 verified via plugin config"
+      "- [ ] Swagger OpenAPI spec generation at build time — verified via plugin config"
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
   },
@@ -2163,7 +2177,7 @@
       "01-platform-infrastructure.md#T-01.02.02"
     ],
     "historical_deferrals": [
-      "- `turbo typecheck` \u2014 deferred (packages need typecheck scripts)"
+      "- `turbo typecheck` — deferred (packages need typecheck scripts)"
     ],
     "status": "Historical statement; may have been closed by a later PR. Compare task register and current source.",
     "dispositions": [
@@ -2182,7 +2196,7 @@
       "01-platform-infrastructure.md#T-03.03.04"
     ],
     "historical_deferrals": [
-      "- External provider outages (AI, notification, bill-data) have no health checks yet; they will surface as per-degraded-capability maintenance mode once their integrations land \u2014 no change to readiness today.",
+      "- External provider outages (AI, notification, bill-data) have no health checks yet; they will surface as per-degraded-capability maintenance mode once their integrations land — no change to readiness today.",
       "- Adjusted TODO to reference T-04.02.01 (Redis connection factory) for the future real PING wiring."
     ],
     "status": "Two statements recovered from the saved PR body; Redis wiring satisfied, future maintenance consumers retained.",

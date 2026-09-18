@@ -21559,6 +21559,108 @@
           "evidence": "audit/evidence/step-reviews.json#V01-container-images"
         }
       ]
+    },
+    {
+      "id": "V01-distributed-limits",
+      "date": "2026-09-18",
+      "source_revision": "f47f30495898bbea965f24d25f76423ea83df7b3",
+      "base_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+      "product_commits": [
+        "f47f30495898bbea965f24d25f76423ea83df7b3"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.02.02"
+      ],
+      "summary": "Distributed limiter reviewed and Redis rejection acceleration repaired. One task verified and PR52 closed locally; both historical deferrals satisfied.",
+      "review": [
+        "Read current task and PR52 with both deferrals. RedisModule exports the global client token, AppModule imports it, and RateLimitService injects that client into the composite store; guard scope derives from trusted session or request IP.",
+        "Existing durability repair correctly prevented fresh quota after Redis loss but wrote to PostgreSQL even for already-exhausted Redis quotas. Added an early rejection path only: Redis can deny, never admit independently. This meets the acceleration requirement without an unsafe Redis-only admission path.",
+        "Real concurrency/failover tests retain exactly the quota. Lua increment/expiry stays atomic and does not extend the deadline; PostgreSQL rolling state uses database time, serialized resets and bounded conservative legacy carryover.",
+        "Existing OTP/login security path is unchanged and retains PostgreSQL authority. Existing source-bound auth/Redis-factory evidence is reused. No schema, threshold, dependency, auth-policy, remote-state or provider-send change."
+      ],
+      "verification": [
+        "95 distinct focused cases pass:8 real Redis/PostgreSQL integration cases,8 real PostgreSQL rolling-window cases and79 shared limiter cases. Initial8 DB cases are reused because SQL/store code is unchanged.",
+        "New acceleration baseline fails on the unnecessary durable write. The repair admits exactly20 of100 concurrent requests with20 durable events while Redis rejects80 without DB writes. Missing/deleted/replaced/disconnected Redis and mixed connected/degraded clients retain spent quota.",
+        "Every general admission still requires a successful PostgreSQL write; healthy Redis cannot grant access when that write fails. Security-critical increments and progressive counts remain PostgreSQL-first/authoritative. Invalid Redis values fall back safely.",
+        "API/shared typechecks, focused lint/format and diff review pass. API integration setup builds current application dependencies. No full V02, production load or latest image rebuild claimed."
+      ],
+      "remaining": [
+        "Production throughput/load and deployment/trusted-proxy topology remain operational proof, not claimed by focused local cases.",
+        "Final V02 image/regression checkpoint must include this later shared-library change. Current image boot proof is still bound to5045a627; it is not a packaged-rate-limit proof at this revision."
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+          "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/composite-rate-limiter.test.ts",
+          "sha256": "07443944f164e138023b09567f66af92c9a5ae16b0a9564e9b0197e74e7769ac"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+          "sha256": "2bc415b8fc2d7d5e5f73ef9702c1ab0889da624a7754eaf781068bdfe3ad1857"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/postgres-rate-limiter.test.ts",
+          "sha256": "7ae1c8ea86b95d718a9873cc0cc268c1c687fc66e3d451819254b7901b6215d9"
+        },
+        {
+          "path": "packages/db/drizzle/production/0120_rolling_rate_limits.sql",
+          "sha256": "0715c4c8dbd6979196a02c54b18b9b5b74952bd6077abaf7c58a5b5457219416"
+        },
+        {
+          "path": "packages/db/src/rolling-rate-limits.test.ts",
+          "sha256": "3963a056188af7996455b697812a78691cce877a2d3899e5644cd588118067ee"
+        },
+        {
+          "path": "apps/api/src/rate-limit/redis-atomic.integration.test.ts",
+          "sha256": "d8fce6fa64c09ada357ffb7e2a96f0791f08a87a263638f4dd97c1f1a455a5e1"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+          "sha256": "61591ffc483f5632d4676e4ad46194153003aebd430f5785b9fdef97e547cbd6"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+          "sha256": "4101afdfe4c67dd09616fbbad234fd76d3e64c0a147fa62634ed10e5aa883093"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.module.ts",
+          "sha256": "f7f7e76e72c95c9ddfae75843c5bc0e15a7120f555636a21e23207dcdc7296fb"
+        },
+        {
+          "path": "apps/api/src/redis/redis.module.ts",
+          "sha256": "5f84d0a4bb3af5bb342c02c67fe934f0b5782c43bc1e793b905ce7cbce37719c"
+        },
+        {
+          "path": "apps/api/src/app.module.ts",
+          "sha256": "1ec676425bf41f2f8a6a49e57f0dfc3ade80d2c8ec8ab7d839812708c71bd70d"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-limits-accelerated-integration.log",
+        "/tmp/v01-limits-accelerated-unit.log",
+        "/tmp/v01-limits-acceleration-before.log",
+        "/tmp/v01-limits-api-types.log",
+        "/tmp/v01-limits-format.log",
+        "/tmp/v01-limits-redis-postgres.log",
+        "/tmp/v01-limits-rolling-postgres.log",
+        "/tmp/v01-limits-shared-types.log",
+        "/tmp/v01-limits-shared.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 52,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.02.02"
+          ],
+          "reason": "Distributed quota durability, wired Redis rejection acceleration, security-counter authority and real Redis/PostgreSQL integration verified; both historical deferrals explicitly satisfied.",
+          "source_revision": "f47f30495898bbea965f24d25f76423ea83df7b3",
+          "evidence": "audit/evidence/step-reviews.json#V01-distributed-limits"
+        }
+      ]
     }
   ]
 }

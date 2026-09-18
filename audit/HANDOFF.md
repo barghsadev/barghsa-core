@@ -4,7 +4,7 @@ Read [fix-plan.md](fix-plan.md), especially its feature-batch rules, and the act
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **5045a627**. **200 verified /43 partial /79 pending** of322 claims. Saved PRs: **184 closed /39 open /78 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3400 logs indexed;38 older refreshes remain. Saved inventory ends September3; no current GitHub/deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **f47f3049**. **201 verified /43 partial /78 pending** of322 claims. Saved PRs: **185 closed /39 open /77 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3409 logs indexed;38 older refreshes remain. Saved inventory ends September3; no current GitHub/deployment claim.
 
 Seed/bootstrap batch:5 tasks verified/1 partial;5 PRs closed/1 open. Migration0134 protects canonical electricity identities and allows zero/zero limits while rejecting new negative bounds. Seed counts/concurrency/force boundaries are repaired; legacy conflicts stop seed without replacement. Green-rule consumers recognize canonical and legacy keys, reject ambiguity. All747 DB cases,88 distinct affected API cases and14 shared cases pass; types/builds/snapshot/lint/format pass.39 immediate-base bindings refreshed. [Review](evidence/step-reviews.json#V01-seed-bootstrap). PR84 retains production initial-seed execution.
 
@@ -18,7 +18,9 @@ Config-backup batch consolidated at **6c6cf437**: PR50 reviewed, **0 closed /1 o
 
 Container batch consolidated at **5045a627**: five tasks, **3 verified /2 partial**; ten saved PRs, **6 closed /4 open**. Same-image API/worker command override, context exclusions and profile-disabled production pooler repaired. Both real image builds,18 context paths, isolated migration/boot/read-only/health-loss/recovery/shutdown and Compose checks pass. 1 immediate-base bindings refreshed;38 older refreshes retained. Node24 requirement decision and release tags/rollout remain open. [Batch review](evidence/step-reviews.json#V01-container-images).
 
-**Next: V01-distributed-limits**, PR52 and`01-platform-infrastructure.md#T-04.02.02`. Read saved body; review Redis/PostgreSQL counters and current callers, reusing authentication evidence.
+Distributed-limit batch consolidated at **f47f3049**: taskT-04.02.02 verified and PR52 locally closed; both deferrals satisfied. Redis now rejects exhausted quota without DB writes while PostgreSQL authorizes every admission.95 distinct focused cases and types/lint/format pass. Security-critical counters retain their existing PostgreSQL-first behavior. [Batch review](evidence/step-reviews.json#V01-distributed-limits).
+
+**Next: V01-storage-workflow**, PR55–59 and fiveT-04.03 tasks. Read exact current criteria/bodies/deferrals, reuse R02 storage/secret/upload evidence and retain future/operational prerequisites.
 
 Runtime batch complete at645dda1c:3 newly verified/1 partial;3 newly closed PRs/1 open; PR29 closure preserved. Real storage health, bounded API/worker shutdown and complete web response draining repaired.10 distinct API,28 shared,2 worker and26 web cases pass; current types/builds/lint/format pass.118 immediate-base bindings refreshed;38 older refreshes retained. PR42 keeps future AI/bill-data maintenance consumers open. [Review](evidence/step-reviews.json#V01-runtime-lifecycle). Loop batch verified at761ef274:58 distinct protocol cases and9 audit cases pass; PR234/235/242 locally closed. Malformed review values now fail safely. Current three-round policy preserved. Live state bootstrap/recovery and PR304 remain external. Operations review is now consolidated at a6f51306. [Loop review](evidence/step-reviews.json#V01-loop-durability).
 
