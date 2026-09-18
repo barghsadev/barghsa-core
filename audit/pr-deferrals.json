@@ -1934,7 +1934,21 @@
       "- [ ] NGINX syntax validated (nginx binary not available locally — CI validates)",
       "- [ ] Caddy syntax validated (caddy binary not available locally — CI validates)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "NGINX syntax/runtime validated. Obsolete Caddy validation explicitly not applicable to the supported NGINX-only alternative allowed by the canonical task.",
+    "reviewed_source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+    "review_record": "audit/evidence/step-reviews.json#V01-edge-caching",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Actual nginx -t plus isolated runtime probe. audit/evidence/step-reviews.json#V01-edge-caching"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "not_applicable_to_selected_implementation",
+        "evidence": "Canonical T-04.04.01 permits NGINX or Caddy; unsupported Caddy alternative was removed before this batch and deploy/pilot/README.md documents NGINX. No remaining Caddy artifact is claimed validated. audit/evidence/step-reviews.json#V01-edge-caching"
+      }
+    ]
   },
   {
     "pr": 61,

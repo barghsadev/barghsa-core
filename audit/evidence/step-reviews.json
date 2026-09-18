@@ -22136,6 +22136,171 @@
           "evidence": "audit/evidence/step-reviews.json#V01-redis-cache"
         }
       ]
+    },
+    {
+      "id": "V01-edge-caching",
+      "date": "2026-09-18",
+      "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+      "base_revision": "0a8b67acc1044257dcf9f09ea8f7338f8164fdcf",
+      "product_commits": [
+        "2273c7ae01738d9dbd36aec79fb7a8d97c5dce84",
+        "6d801999e7fe137a4144996d5d72ca6786ec47bd"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.01",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-04.04.04",
+        "01-platform-infrastructure.md#T-04.04.05"
+      ],
+      "summary": "Four tasks verified and four saved PR reviews closed. Proxy cache poisoning/missing-asset fallback and default Express ETags repaired; shared reference ETag workflow verified.",
+      "review": [
+        "Read all four current task blocks and saved PR bodies, including both PR62 syntax deferrals. Canonical task60 permits NGINX or Caddy. Earlier work removed the unusable standard-Caddy/plugin-dependent alternative; NGINX is the documented supported configuration, so Caddy syntax is explicitly not applicable to that choice.",
+        "Actual NGINX config preserves API/web routing, loopback upstreams, exact forwarded-address overwrite, TLS1.2/1.3, HTTP redirect, unbuffered SSE, WebSocket upgrade, gzip and required auth/upload/AI quotas. The scoped61MiB JSON contract-template upload exception preserves the previously reviewed10MiB decoded-file limit; ordinary paths retain10MiB.",
+        "Found extension-based cache overrides adding duplicate/public expiry to upstream private/error responses and treating auth-entry hashes as ordinary assets. Removed proxy cache overrides. Web server now supplies one-year immutable only after resolving an actual hashed asset, one-day for other static files, private/no-store for HTML and errors, and Vary:Accept-Encoding.",
+        "Missing static assets previously became successful SPA HTML. They now return404/no-store, including query/encoded paths. Hash classification uses the resolved file path, preventing a hash-like query parameter from lengthening a non-hashed file lifetime. Malformed URI now returns404/no-store; extensionless client routes retain SPA fallback.",
+        "Five real HTTP baseline failures exposed default Express weak ETags on unopted reference/profile/error responses. Express automatic ETags are disabled. The custom SHA256 interceptor now negotiates only opted-in GET200 results and recognizes weak/list/wildcard validators. GET/HEAD conditionals on unopted routes are stripped before Express freshness handling, preserving full authorized responses.",
+        "Province/city/company-type reference routes opt in without removing SessionAuthGuard. Each request executes the current query and hashes its current serialized data before304. Anonymous/revoked sessions still return401. Profile and wallet GET/HEAD responses stay untagged and never return304; product prices and other financial/scoped routes are not opted in.",
+        "Historical PR64 claim that decorator opt-in alone prevented all authenticated ETags was false because Express generated them globally. Canonical task prohibits authenticated profile-scoped/financial data, not shared geography behind a session guard; that existing access boundary remains unchanged.",
+        "8 immediate-base bindings refreshed after focused cache/ETag diff review and actual HTTP/web/proxy evidence. Underlying domain authorization, transaction and payload logic unchanged. Historical full-image/browser evidence remains scoped;38 older refreshes retained."
+      ],
+      "verification": [
+        "42 distinct focused cases pass:25 web-server cases and17 API cases (11 interceptor,6 actual PostgreSQL/compiled-API HTTP). Prior overlapping runs are not counted again.",
+        "Actual NGINX syntax validation and isolated runtime pass seven exact cache-policy cases, gzip decompression, TLS1.2/1.3, redirect/API/web routing, spoofed forwarded-header overwrite, body limits including scoped template exception, unbuffered SSE/WebSocket and180 concurrent rate-limit probes across all three required zones with FA/EN429 responses. No host ports or production certificates were used.",
+        "HTTP proves SHA256 matches exact response bytes, strong/weak/list/wildcard304 has empty body and no-store, committed reference changes invalidate previous tags, anonymous/revoked sessions fail, and scoped profile/wallet GET/HEAD remain200 without ETag.",
+        "Current API build/global setup, fresh API types, web types, scoped lint/format, OpenAPI and diff checks pass. Existing nonce/browser code and frontend bundles unchanged; their source-bound evidence is reused. V02 packaged image/full regression remains mandatory.",
+        "Archived failures include original proxy duplicate headers, missing static/nonhashed lifetime expectations, and five ETag baseline failures. Missing favicon fixture was corrected to existing data.json. Malformed URI assertion was updated to the intentional404/no-store policy. Final scoped suites pass."
+      ],
+      "remaining": [
+        "Deploy web server and NGINX cache configuration together. Production DNS/certificate renewal/trusted proxy topology/TLS/HSTS and final packaged-image regression remain external/V02 prerequisites. Local TLS fixtures are not a deployed certificate claim.",
+        "PR61 remains open for the already-pending authenticated CSP report CSRF decision and production enforcement. No new exemption, owner-policy waiver, remote action or deployment occurred."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "99c31189a924acc3252876c4ecee7323f6196039e38e6d8c884eb6c949906493"
+        },
+        {
+          "path": "apps/api/src/common/cache-control.interceptor.ts",
+          "sha256": "d04d986e3f07a4df60513a3fe0c453d724860731981f03f92b25fc0ce3fc6c0b"
+        },
+        {
+          "path": "apps/api/src/common/etag.interceptor.spec.ts",
+          "sha256": "84af0ce50ac0ddf3717d0bcaace39ebb2debc50aadd98ed4b1801e9e7839cfd4"
+        },
+        {
+          "path": "apps/api/src/common/etag.interceptor.ts",
+          "sha256": "edcfdd733ffd568303fda09245f1924eb3b7c5badcfe0468b5c2311ae985960b"
+        },
+        {
+          "path": "apps/api/src/geography/geography-etag-http.integration.test.ts",
+          "sha256": "c37c8cc8d67423b1114f8186f502ed640d341396c65d22ffbabfc5953f3b6afb"
+        },
+        {
+          "path": "apps/api/src/geography/geography.controller.ts",
+          "sha256": "77b076cb7967f5e51366daa6174835cb9396212fea15d57f1ca6014d07129ff8"
+        },
+        {
+          "path": "apps/api/src/geography/geography.service.ts",
+          "sha256": "6a66628027e9d95299781e32186c2aa4e65cd8f0f45901a009da742d99f92f9c"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "78578ea61df937b8824512a2cf3e66f95b041bf034dfc1a22b5ac584e799a4d2"
+        },
+        {
+          "path": "apps/web/test/server.spec.ts",
+          "sha256": "c8be0ef39cadbc22f7bee6473636dc04ff2e5ac9f610121581959d8dfb8cf7d3"
+        },
+        {
+          "path": "deploy/pilot/README.md",
+          "sha256": "73893e4222d64ffd5d02f153de197429bfee548d9e2375fa64fa846870c6cc24"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "02ab8c9038c53188a0b676201ea9421f72046a0882b44df36552ad8ea9c14980"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "3eadbddefc65438c19a326aafab32993418c21616b8c2c4b1c266d48f2db6b61"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "97674aeed78894c41cee2ad202b19c66818caff81932c0e5cc535f5e5a9dbcc4"
+        },
+        {
+          "path": "scripts/test-pilot-proxy.py",
+          "sha256": "3c60b3d9d43b7aa740984e7847c176762f4eb53511c2d83557f9e60819969371"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-edge-api-types.log",
+        "/tmp/v01-edge-cache-format-check.log",
+        "/tmp/v01-edge-cache-format-final.log",
+        "/tmp/v01-edge-cache-format.log",
+        "/tmp/v01-edge-cache-lint.log",
+        "/tmp/v01-edge-cache-proxy-after.log",
+        "/tmp/v01-edge-cache-proxy-before.log",
+        "/tmp/v01-edge-cache-proxy-final.log",
+        "/tmp/v01-edge-cache-types.log",
+        "/tmp/v01-edge-cache-web-after.log",
+        "/tmp/v01-edge-cache-web-before.log",
+        "/tmp/v01-edge-cache-web-final.log",
+        "/tmp/v01-edge-cache-web-pass.log",
+        "/tmp/v01-edge-etag-after.log",
+        "/tmp/v01-edge-etag-before.log",
+        "/tmp/v01-edge-etag-final.log",
+        "/tmp/v01-edge-etag-format-check.log",
+        "/tmp/v01-edge-etag-format-final.log",
+        "/tmp/v01-edge-etag-format.log",
+        "/tmp/v01-edge-etag-lint.log",
+        "/tmp/v01-edge-openapi.log"
+      ],
+      "reused_evidence": [
+        "audit/evidence/step-reviews.json#R03-errors",
+        "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 60,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.04.01"
+          ],
+          "reason": "Supported NGINX configuration validated with actual routing/TLS/stream/body-limit runtime checks; deployed topology remains separate.",
+          "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+          "evidence": "audit/evidence/step-reviews.json#V01-edge-caching"
+        },
+        {
+          "pr": 62,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.04.03"
+          ],
+          "reason": "Required per-IP quotas and bilingual429/Retry-After verified against actual NGINX; both historical syntax deferrals explicitly disposed.",
+          "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+          "evidence": "audit/evidence/step-reviews.json#V01-edge-caching"
+        },
+        {
+          "pr": 63,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.04.04"
+          ],
+          "reason": "Resolved file cache policies and proxy preservation verified for hashes, auth entry, nonhashed files, private HTML and missing/error responses.",
+          "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+          "evidence": "audit/evidence/step-reviews.json#V01-edge-caching"
+        },
+        {
+          "pr": 64,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.04.05"
+          ],
+          "reason": "Actual geography reference SHA256/304 workflow verified behind existing auth guards; profile/financial data excluded, default Express ETags disabled.",
+          "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+          "evidence": "audit/evidence/step-reviews.json#V01-edge-caching"
+        }
+      ]
     }
   ]
 }

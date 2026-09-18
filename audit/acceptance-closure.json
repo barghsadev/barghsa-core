@@ -741,7 +741,7 @@
         },
         {
           "path": "apps/web/server.js",
-          "sha256": "1fc813505b2a02edfe7374c88d0b87e0cda236e07dba2ca73b2ec0cabecaac67"
+          "sha256": "78578ea61df937b8824512a2cf3e66f95b041bf034dfc1a22b5ac584e799a4d2"
         },
         {
           "path": "docs/adr/004-web-spa.md",
@@ -2493,7 +2493,7 @@
         },
         {
           "path": "apps/web/server.js",
-          "sha256": "1fc813505b2a02edfe7374c88d0b87e0cda236e07dba2ca73b2ec0cabecaac67"
+          "sha256": "78578ea61df937b8824512a2cf3e66f95b041bf034dfc1a22b5ac584e799a4d2"
         },
         {
           "path": "apps/web/src/client.tsx",
@@ -2561,7 +2561,7 @@
         },
         {
           "path": "apps/web/test/server.spec.ts",
-          "sha256": "fa18aba5bbd9964f18b47eee9fbc769d0c574acc9e06ff339dc3a847fc1920ef"
+          "sha256": "c8be0ef39cadbc22f7bee6473636dc04ff2e5ac9f610121581959d8dfb8cf7d3"
         },
         {
           "path": "apps/web/vite.config.ts",
@@ -2689,11 +2689,11 @@
         },
         {
           "path": "apps/web/server.js",
-          "sha256": "1fc813505b2a02edfe7374c88d0b87e0cda236e07dba2ca73b2ec0cabecaac67"
+          "sha256": "78578ea61df937b8824512a2cf3e66f95b041bf034dfc1a22b5ac584e799a4d2"
         },
         {
           "path": "apps/web/test/server.spec.ts",
-          "sha256": "fa18aba5bbd9964f18b47eee9fbc769d0c574acc9e06ff339dc3a847fc1920ef"
+          "sha256": "c8be0ef39cadbc22f7bee6473636dc04ff2e5ac9f610121581959d8dfb8cf7d3"
         },
         {
           "path": "apps/api/src/common/cache-control.interceptor.ts",
@@ -2966,7 +2966,7 @@
         },
         {
           "path": "apps/api/src/app.factory.ts",
-          "sha256": "92153b01d71a46bb9716b0929844abe2c8cc9965c9d04dc0751549f799ad0787"
+          "sha256": "99c31189a924acc3252876c4ecee7323f6196039e38e6d8c884eb6c949906493"
         },
         {
           "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -4364,7 +4364,7 @@
         },
         {
           "path": "deploy/pilot/nginx.conf",
-          "sha256": "76ee4ab925fddae4824f857f1b500483f6dba536210d1513af4bdef658355157"
+          "sha256": "02ab8c9038c53188a0b676201ea9421f72046a0882b44df36552ad8ea9c14980"
         },
         {
           "path": "apps/web/src/lib/auth-errors.ts",
@@ -22006,7 +22006,7 @@
         },
         {
           "path": "apps/api/src/app.factory.ts",
-          "sha256": "92153b01d71a46bb9716b0929844abe2c8cc9965c9d04dc0751549f799ad0787"
+          "sha256": "99c31189a924acc3252876c4ecee7323f6196039e38e6d8c884eb6c949906493"
         },
         {
           "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -22267,7 +22267,7 @@
         },
         {
           "path": "apps/api/src/app.factory.ts",
-          "sha256": "92153b01d71a46bb9716b0929844abe2c8cc9965c9d04dc0751549f799ad0787"
+          "sha256": "99c31189a924acc3252876c4ecee7323f6196039e38e6d8c884eb6c949906493"
         },
         {
           "path": "apps/api/src/common/http-exception.filter.ts",
@@ -22295,15 +22295,15 @@
         },
         {
           "path": "apps/web/server.js",
-          "sha256": "1fc813505b2a02edfe7374c88d0b87e0cda236e07dba2ca73b2ec0cabecaac67"
+          "sha256": "78578ea61df937b8824512a2cf3e66f95b041bf034dfc1a22b5ac584e799a4d2"
         },
         {
           "path": "apps/web/test/server.spec.ts",
-          "sha256": "fa18aba5bbd9964f18b47eee9fbc769d0c574acc9e06ff339dc3a847fc1920ef"
+          "sha256": "c8be0ef39cadbc22f7bee6473636dc04ff2e5ac9f610121581959d8dfb8cf7d3"
         },
         {
           "path": "deploy/pilot/nginx.conf",
-          "sha256": "76ee4ab925fddae4824f857f1b500483f6dba536210d1513af4bdef658355157"
+          "sha256": "02ab8c9038c53188a0b676201ea9421f72046a0882b44df36552ad8ea9c14980"
         },
         {
           "path": "packages/i18n/src/auth.ts",
@@ -22315,11 +22315,11 @@
         },
         {
           "path": "scripts/check-pilot-proxy.mjs",
-          "sha256": "beb268d547e59dfe5f9d557991c992809eae97dec947a7f6dd0299a6756aa22f"
+          "sha256": "3eadbddefc65438c19a326aafab32993418c21616b8c2c4b1c266d48f2db6b61"
         },
         {
           "path": "scripts/proxy-fixture.mjs",
-          "sha256": "37431a4bb49b6674a35c29766a4c9d8192b16ce648ed6570aba4637ef3785a24"
+          "sha256": "97674aeed78894c41cee2ad202b19c66818caff81932c0e5cc535f5e5a9dbcc4"
         }
       ],
       "checks": [
@@ -24251,7 +24251,7 @@
       "source_evidence": [
         {
           "path": "apps/web/server.js",
-          "sha256": "1fc813505b2a02edfe7374c88d0b87e0cda236e07dba2ca73b2ec0cabecaac67"
+          "sha256": "78578ea61df937b8824512a2cf3e66f95b041bf034dfc1a22b5ac584e799a4d2"
         },
         {
           "path": "apps/web/test/server-shutdown.spec.ts",
@@ -25430,13 +25430,237 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#V01-storage-workflow"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.04.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 699,
+      "requirement": "- **T-04.04.01:** Create NGINX/Caddy configuration for pilot (single-node) topology\n  - **Notes:** Single upstream for web (127.0.0.1:3000) and API (127.0.0.1:4000). Use Caddy for automatic TLS if managed certs are desired, or NGINX with cert files. Configure: `location /api/` → API upstream, `location /` → web upstream. Set `proxy_buffering off` for AI/SSE streaming. Enable gzip/brotli for static assets. Apply `client_max_body_size 10m`.\n  - **Dependencies:** S-03.01, E-05 topology\n  - **Complexity:** M",
+      "requirement_sha256": "20e816019270e5f1d8f817d41970d2fa087318473b88831fbf720ed36e68ec9c",
+      "source_evidence": [
+        {
+          "path": "apps/web/server.js",
+          "sha256": "78578ea61df937b8824512a2cf3e66f95b041bf034dfc1a22b5ac584e799a4d2"
+        },
+        {
+          "path": "apps/web/test/server.spec.ts",
+          "sha256": "c8be0ef39cadbc22f7bee6473636dc04ff2e5ac9f610121581959d8dfb8cf7d3"
+        },
+        {
+          "path": "deploy/pilot/README.md",
+          "sha256": "73893e4222d64ffd5d02f153de197429bfee548d9e2375fa64fa846870c6cc24"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "02ab8c9038c53188a0b676201ea9421f72046a0882b44df36552ad8ea9c14980"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "3eadbddefc65438c19a326aafab32993418c21616b8c2c4b1c266d48f2db6b61"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "97674aeed78894c41cee2ad202b19c66818caff81932c0e5cc535f5e5a9dbcc4"
+        },
+        {
+          "path": "scripts/test-pilot-proxy.py",
+          "sha256": "3c60b3d9d43b7aa740984e7847c176762f4eb53511c2d83557f9e60819969371"
+        }
+      ],
+      "checks": [
+        "42 distinct focused cases pass:25 web-server cases and17 API cases (11 interceptor,6 actual PostgreSQL/compiled-API HTTP). Prior overlapping runs are not counted again.",
+        "Actual NGINX syntax validation and isolated runtime pass seven exact cache-policy cases, gzip decompression, TLS1.2/1.3, redirect/API/web routing, spoofed forwarded-header overwrite, body limits including scoped template exception, unbuffered SSE/WebSocket and180 concurrent rate-limit probes across all three required zones with FA/EN429 responses. No host ports or production certificates were used.",
+        "HTTP proves SHA256 matches exact response bytes, strong/weak/list/wildcard304 has empty body and no-store, committed reference changes invalidate previous tags, anonymous/revoked sessions fail, and scoped profile/wallet GET/HEAD remain200 without ETag.",
+        "Current API build/global setup, fresh API types, web types, scoped lint/format, OpenAPI and diff checks pass. Existing nonce/browser code and frontend bundles unchanged; their source-bound evidence is reused. V02 packaged image/full regression remains mandatory.",
+        "Archived failures include original proxy duplicate headers, missing static/nonhashed lifetime expectations, and five ETag baseline failures. Missing favicon fixture was corrected to existing data.json. Malformed URI assertion was updated to the intentional404/no-store policy. Final scoped suites pass."
+      ],
+      "limitations": [
+        "Deploy web server and NGINX cache configuration together. Production DNS/certificate renewal/trusted proxy topology/TLS/HSTS and final packaged-image regression remain external/V02 prerequisites. Local TLS fixtures are not a deployed certificate claim.",
+        "PR61 remains open for the already-pending authenticated CSP report CSRF decision and production enforcement. No new exemption, owner-policy waiver, remote action or deployment occurred."
+      ],
+      "merged_prs": [
+        60
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-edge-caching"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.04.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 709,
+      "requirement": "- **T-04.04.03:** Configure edge rate limiting for auth, upload, and AI endpoints\n  - **Notes:** NGINX `limit_req_zone` per IP for: `/api/auth/*` (burst=5, rate=10r/s), `/api/upload/*` (burst=3, rate=5r/s), `/api/ai/*` (burst=2, rate=5r/s). Return `429` with `Retry-After` header and JSON error body. These are defense-in-depth — application rate limits remain the primary control.\n  - **Dependencies:** T-04.04.01\n  - **Complexity:** M",
+      "requirement_sha256": "7556fc4fe547dc221a51c0ea22cef27f7b0722386e6e549fae840162690f127c",
+      "source_evidence": [
+        {
+          "path": "apps/web/server.js",
+          "sha256": "78578ea61df937b8824512a2cf3e66f95b041bf034dfc1a22b5ac584e799a4d2"
+        },
+        {
+          "path": "apps/web/test/server.spec.ts",
+          "sha256": "c8be0ef39cadbc22f7bee6473636dc04ff2e5ac9f610121581959d8dfb8cf7d3"
+        },
+        {
+          "path": "deploy/pilot/README.md",
+          "sha256": "73893e4222d64ffd5d02f153de197429bfee548d9e2375fa64fa846870c6cc24"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "02ab8c9038c53188a0b676201ea9421f72046a0882b44df36552ad8ea9c14980"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "3eadbddefc65438c19a326aafab32993418c21616b8c2c4b1c266d48f2db6b61"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "97674aeed78894c41cee2ad202b19c66818caff81932c0e5cc535f5e5a9dbcc4"
+        },
+        {
+          "path": "scripts/test-pilot-proxy.py",
+          "sha256": "3c60b3d9d43b7aa740984e7847c176762f4eb53511c2d83557f9e60819969371"
+        }
+      ],
+      "checks": [
+        "42 distinct focused cases pass:25 web-server cases and17 API cases (11 interceptor,6 actual PostgreSQL/compiled-API HTTP). Prior overlapping runs are not counted again.",
+        "Actual NGINX syntax validation and isolated runtime pass seven exact cache-policy cases, gzip decompression, TLS1.2/1.3, redirect/API/web routing, spoofed forwarded-header overwrite, body limits including scoped template exception, unbuffered SSE/WebSocket and180 concurrent rate-limit probes across all three required zones with FA/EN429 responses. No host ports or production certificates were used.",
+        "HTTP proves SHA256 matches exact response bytes, strong/weak/list/wildcard304 has empty body and no-store, committed reference changes invalidate previous tags, anonymous/revoked sessions fail, and scoped profile/wallet GET/HEAD remain200 without ETag.",
+        "Current API build/global setup, fresh API types, web types, scoped lint/format, OpenAPI and diff checks pass. Existing nonce/browser code and frontend bundles unchanged; their source-bound evidence is reused. V02 packaged image/full regression remains mandatory.",
+        "Archived failures include original proxy duplicate headers, missing static/nonhashed lifetime expectations, and five ETag baseline failures. Missing favicon fixture was corrected to existing data.json. Malformed URI assertion was updated to the intentional404/no-store policy. Final scoped suites pass."
+      ],
+      "limitations": [
+        "Deploy web server and NGINX cache configuration together. Production DNS/certificate renewal/trusted proxy topology/TLS/HSTS and final packaged-image regression remain external/V02 prerequisites. Local TLS fixtures are not a deployed certificate claim.",
+        "PR61 remains open for the already-pending authenticated CSP report CSRF decision and production enforcement. No new exemption, owner-policy waiver, remote action or deployment occurred."
+      ],
+      "merged_prs": [
+        62
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-edge-caching"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.04.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 714,
+      "requirement": "- **T-04.04.04:** Configure static asset caching and CDN readiness\n  - **Notes:** Assets under `/assets/` (hashed filenames) get `Cache-Control: public, immutable, max-age=31536000`. Other static files: `max-age=86400`. For CDN: add `Vary: Accept-Encoding` if not default. Authenticated API responses (`/api/*`) set `Cache-Control: private, no-cache, no-store, must-revalidate` at application level.\n  - **Dependencies:** T-04.04.01\n  - **Complexity:** S\n  - **UI/UX:** N/A",
+      "requirement_sha256": "a66124292f603a154620c54a8605b10ccfd63665e2e1c20cfb89e3f465a3f2b7",
+      "source_evidence": [
+        {
+          "path": "apps/web/server.js",
+          "sha256": "78578ea61df937b8824512a2cf3e66f95b041bf034dfc1a22b5ac584e799a4d2"
+        },
+        {
+          "path": "apps/web/test/server.spec.ts",
+          "sha256": "c8be0ef39cadbc22f7bee6473636dc04ff2e5ac9f610121581959d8dfb8cf7d3"
+        },
+        {
+          "path": "deploy/pilot/README.md",
+          "sha256": "73893e4222d64ffd5d02f153de197429bfee548d9e2375fa64fa846870c6cc24"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "02ab8c9038c53188a0b676201ea9421f72046a0882b44df36552ad8ea9c14980"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "3eadbddefc65438c19a326aafab32993418c21616b8c2c4b1c266d48f2db6b61"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "97674aeed78894c41cee2ad202b19c66818caff81932c0e5cc535f5e5a9dbcc4"
+        },
+        {
+          "path": "scripts/test-pilot-proxy.py",
+          "sha256": "3c60b3d9d43b7aa740984e7847c176762f4eb53511c2d83557f9e60819969371"
+        },
+        {
+          "path": "apps/api/src/common/cache-control.interceptor.ts",
+          "sha256": "d04d986e3f07a4df60513a3fe0c453d724860731981f03f92b25fc0ce3fc6c0b"
+        },
+        {
+          "path": "apps/api/src/geography/geography-etag-http.integration.test.ts",
+          "sha256": "c37c8cc8d67423b1114f8186f502ed640d341396c65d22ffbabfc5953f3b6afb"
+        }
+      ],
+      "checks": [
+        "42 distinct focused cases pass:25 web-server cases and17 API cases (11 interceptor,6 actual PostgreSQL/compiled-API HTTP). Prior overlapping runs are not counted again.",
+        "Actual NGINX syntax validation and isolated runtime pass seven exact cache-policy cases, gzip decompression, TLS1.2/1.3, redirect/API/web routing, spoofed forwarded-header overwrite, body limits including scoped template exception, unbuffered SSE/WebSocket and180 concurrent rate-limit probes across all three required zones with FA/EN429 responses. No host ports or production certificates were used.",
+        "HTTP proves SHA256 matches exact response bytes, strong/weak/list/wildcard304 has empty body and no-store, committed reference changes invalidate previous tags, anonymous/revoked sessions fail, and scoped profile/wallet GET/HEAD remain200 without ETag.",
+        "Current API build/global setup, fresh API types, web types, scoped lint/format, OpenAPI and diff checks pass. Existing nonce/browser code and frontend bundles unchanged; their source-bound evidence is reused. V02 packaged image/full regression remains mandatory.",
+        "Archived failures include original proxy duplicate headers, missing static/nonhashed lifetime expectations, and five ETag baseline failures. Missing favicon fixture was corrected to existing data.json. Malformed URI assertion was updated to the intentional404/no-store policy. Final scoped suites pass."
+      ],
+      "limitations": [
+        "Deploy web server and NGINX cache configuration together. Production DNS/certificate renewal/trusted proxy topology/TLS/HSTS and final packaged-image regression remain external/V02 prerequisites. Local TLS fixtures are not a deployed certificate claim.",
+        "PR61 remains open for the already-pending authenticated CSP report CSRF decision and production enforcement. No new exemption, owner-policy waiver, remote action or deployment occurred."
+      ],
+      "merged_prs": [
+        63
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-edge-caching"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.04.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 720,
+      "requirement": "- **T-04.04.05:** Implement ETag support for safe metadata endpoints\n  - **Notes:** Add NestJS interceptor or middleware that computes ETags (SHA-256 of response body) for safe read-only metadata endpoints: product lists, province/city data, static reference data. Return `304 Not Modified` when `If-None-Match` matches. Never apply ETag to authenticated profile-scoped, financial, or rapidly changing data. Document that ETags are for bandwidth reduction on safe data, not for cache correctness of stateful resources.\n  - **Dependencies:** T-04.04.04\n  - **Complexity:** S\n\n---",
+      "requirement_sha256": "acf8ab473e62e56996390433236025b2b295a681b0eddcbbaa2c1a83229b1c81",
+      "source_evidence": [
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "99c31189a924acc3252876c4ecee7323f6196039e38e6d8c884eb6c949906493"
+        },
+        {
+          "path": "apps/api/src/common/cache-control.interceptor.ts",
+          "sha256": "d04d986e3f07a4df60513a3fe0c453d724860731981f03f92b25fc0ce3fc6c0b"
+        },
+        {
+          "path": "apps/api/src/common/etag.interceptor.spec.ts",
+          "sha256": "84af0ce50ac0ddf3717d0bcaace39ebb2debc50aadd98ed4b1801e9e7839cfd4"
+        },
+        {
+          "path": "apps/api/src/common/etag.interceptor.ts",
+          "sha256": "edcfdd733ffd568303fda09245f1924eb3b7c5badcfe0468b5c2311ae985960b"
+        },
+        {
+          "path": "apps/api/src/geography/geography-etag-http.integration.test.ts",
+          "sha256": "c37c8cc8d67423b1114f8186f502ed640d341396c65d22ffbabfc5953f3b6afb"
+        },
+        {
+          "path": "apps/api/src/geography/geography.controller.ts",
+          "sha256": "77b076cb7967f5e51366daa6174835cb9396212fea15d57f1ca6014d07129ff8"
+        },
+        {
+          "path": "apps/api/src/geography/geography.service.ts",
+          "sha256": "6a66628027e9d95299781e32186c2aa4e65cd8f0f45901a009da742d99f92f9c"
+        }
+      ],
+      "checks": [
+        "42 distinct focused cases pass:25 web-server cases and17 API cases (11 interceptor,6 actual PostgreSQL/compiled-API HTTP). Prior overlapping runs are not counted again.",
+        "Actual NGINX syntax validation and isolated runtime pass seven exact cache-policy cases, gzip decompression, TLS1.2/1.3, redirect/API/web routing, spoofed forwarded-header overwrite, body limits including scoped template exception, unbuffered SSE/WebSocket and180 concurrent rate-limit probes across all three required zones with FA/EN429 responses. No host ports or production certificates were used.",
+        "HTTP proves SHA256 matches exact response bytes, strong/weak/list/wildcard304 has empty body and no-store, committed reference changes invalidate previous tags, anonymous/revoked sessions fail, and scoped profile/wallet GET/HEAD remain200 without ETag.",
+        "Current API build/global setup, fresh API types, web types, scoped lint/format, OpenAPI and diff checks pass. Existing nonce/browser code and frontend bundles unchanged; their source-bound evidence is reused. V02 packaged image/full regression remains mandatory.",
+        "Archived failures include original proxy duplicate headers, missing static/nonhashed lifetime expectations, and five ETag baseline failures. Missing favicon fixture was corrected to existing data.json. Malformed URI assertion was updated to the intentional404/no-store policy. Final scoped suites pass."
+      ],
+      "limitations": [
+        "Deploy web server and NGINX cache configuration together. Production DNS/certificate renewal/trusted proxy topology/TLS/HSTS and final packaged-image regression remain external/V02 prerequisites. Local TLS fixtures are not a deployed certificate claim.",
+        "PR61 remains open for the already-pending authenticated CSP report CSRF decision and production enforcement. No new exemption, owner-policy waiver, remote action or deployment occurred."
+      ],
+      "merged_prs": [
+        64
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-edge-caching"
     }
   ],
   "pending_task_keys": [
-    "01-platform-infrastructure.md#T-04.04.01",
-    "01-platform-infrastructure.md#T-04.04.03",
-    "01-platform-infrastructure.md#T-04.04.04",
-    "01-platform-infrastructure.md#T-04.04.05",
     "01-platform-infrastructure.md#T-05.01.01",
     "01-platform-infrastructure.md#T-05.01.02",
     "01-platform-infrastructure.md#T-05.01.03",
@@ -29944,6 +30168,22 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#V01-storage-workflow",
       "note": "28 matching immediate-base bindings refreshed after bounded diff review and affected storage checks. Other callers, config and existing business logic unchanged. Prior image proof is historical; V02 rebuild remains mandatory.38 older refreshes retained."
+    },
+    {
+      "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.03.01",
+        "01-platform-infrastructure.md#T-01.03.03",
+        "01-platform-infrastructure.md#T-01.03.05",
+        "01-platform-infrastructure.md#T-01.05.01",
+        "02-auth-users-admin.md#T-02.04.01",
+        "01-platform-infrastructure.md#T-06.01.04",
+        "01-platform-infrastructure.md#T-04.04.02",
+        "01-platform-infrastructure.md#T-03.03.03"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-edge-caching",
+      "note": "8 immediate-base bindings refreshed after focused cache/ETag diff review and actual HTTP/web/proxy evidence. Underlying domain authorization, transaction and payload logic unchanged. Historical full-image/browser evidence remains scoped;38 older refreshes retained."
     }
   ]
 }

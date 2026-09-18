@@ -3,9 +3,9 @@
   "updated": "2026-09-18",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
+  "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
   "active_step": "V01",
-  "next_action": "Review edge/proxy/cache metadata batch PR60/62/63/64 with exact criteria and current implementation. Reuse prior CSP/security/header and production web evidence; preserve pending CSP owner decision and production prerequisites.",
+  "next_action": "Review shared UI foundations PR65/66/67 against exact task/PR criteria and reuse existing R03/R04/R05 component, accessibility and packaging evidence; then remaining V01/R06/V02/B01.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -811,6 +811,10 @@
     {
       "id": "V01-redis-cache",
       "review_record": "audit/evidence/step-reviews.json#V01-redis-cache"
+    },
+    {
+      "id": "V01-edge-caching",
+      "review_record": "audit/evidence/step-reviews.json#V01-edge-caching"
     }
   ],
   "deferred_improvements": [
@@ -843,9 +847,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 204,
+    "acceptance_verified": 208,
     "partial": 45,
-    "pending": 73,
+    "pending": 69,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 8,
@@ -1156,64 +1160,82 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-redis-cache",
-    "name": "Optional Redis, configuration cache and architecture record",
+    "id": "V01-edge-caching",
+    "name": "Pilot proxy, edge limits, static caching and safe metadata ETags",
     "status": "locally_reviewed",
     "prs": [
-      51,
-      53,
-      54
+      60,
+      62,
+      63,
+      64
     ],
     "task_keys": [
-      "01-platform-infrastructure.md#T-04.02.01",
-      "01-platform-infrastructure.md#T-04.02.03",
-      "01-platform-infrastructure.md#T-04.02.04"
+      "01-platform-infrastructure.md#T-04.04.01",
+      "01-platform-infrastructure.md#T-04.04.03",
+      "01-platform-infrastructure.md#T-04.04.04",
+      "01-platform-infrastructure.md#T-04.04.05"
     ],
-    "base_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
+    "base_revision": "0a8b67acc1044257dcf9f09ea8f7338f8164fdcf",
     "remaining_checklist": [
-      "Live Redis TLS topology, production load/monitoring, counter-writer drain/migration and V02 packaged-image refresh remain operational prerequisites.",
-      "Future coordination locks must use durable fallback and defined expiry; this ADR does not certify an unbuilt lock workflow."
+      "Deploy web server and NGINX cache configuration together. Production DNS/certificate renewal/trusted proxy topology/TLS/HSTS and final packaged-image regression remain external/V02 prerequisites. Local TLS fixtures are not a deployed certificate claim.",
+      "PR61 remains open for the already-pending authenticated CSP report CSRF decision and production enforcement. No new exemption, owner-policy waiver, remote action or deployment occurred."
     ],
     "confirmed_defects": [],
+    "historical_deferrals": [
+      "PR62 NGINX syntax validation",
+      "PR62 Caddy syntax validation; Caddy alternative removed previously and canonical task permits either proxy"
+    ],
     "reused_evidence": [
-      "audit/acceptance-closure.json entries for all three tasks",
-      "audit/evidence/step-reviews.json#V01-distributed-limits",
+      "audit/evidence/step-reviews.json#R03-errors",
       "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
     ],
-    "historical_deferrals": [],
-    "next_action": "Review edge/proxy/cache metadata batch PR60/62/63/64 with exact criteria and current implementation. Reuse prior CSP/security/header and production web evidence; preserve pending CSP owner decision and production prerequisites.",
-    "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
-    "review_record": "audit/evidence/step-reviews.json#V01-redis-cache",
+    "next_action": "Review shared UI foundations PR65/66/67 against exact task/PR criteria and reuse existing R03/R04/R05 component, accessibility and packaging evidence; then remaining V01/R06/V02/B01.",
+    "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+    "review_record": "audit/evidence/step-reviews.json#V01-edge-caching",
+    "product_commits": [
+      "2273c7ae01738d9dbd36aec79fb7a8d97c5dce84",
+      "6d801999e7fe137a4144996d5d72ca6786ec47bd"
+    ],
     "pr_dispositions": [
       {
-        "pr": 51,
+        "pr": 60,
         "status": "closed",
         "task_keys": [
-          "01-platform-infrastructure.md#T-04.02.01"
+          "01-platform-infrastructure.md#T-04.04.01"
         ],
-        "reason": "Factory returns null for absent/invalid configuration or bounded initial connection failure, disables offline queuing, applies command timeout and TLS options. RedisModule is global; failed Redis health is degraded without making core readiness fail. Historical PR51 maxRetriesPerRequest:null wording does not describe the current bounded implementation.",
-        "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
-        "evidence": "audit/evidence/step-reviews.json#V01-redis-cache"
+        "reason": "Supported NGINX configuration validated with actual routing/TLS/stream/body-limit runtime checks; deployed topology remains separate.",
+        "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+        "evidence": "audit/evidence/step-reviews.json#V01-edge-caching"
       },
       {
-        "pr": 53,
+        "pr": 62,
         "status": "closed",
         "task_keys": [
-          "01-platform-infrastructure.md#T-04.02.03"
+          "01-platform-infrastructure.md#T-04.04.03"
         ],
-        "reason": "ConfigCacheService reads authoritative PostgreSQL global version. Cache namespace v2 entries expire after300s. Cache hit requires equal positive durable version; population compares durable version before/after reading value. Redis failure/missing metadata falls back to PostgreSQL; concurrent updates cannot certify old rows with a later version. Null results are not cached.",
-        "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
-        "evidence": "audit/evidence/step-reviews.json#V01-redis-cache"
+        "reason": "Required per-IP quotas and bilingual429/Retry-After verified against actual NGINX; both historical syntax deferrals explicitly disposed.",
+        "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+        "evidence": "audit/evidence/step-reviews.json#V01-edge-caching"
       },
       {
-        "pr": 54,
+        "pr": 63,
         "status": "closed",
         "task_keys": [
-          "01-platform-infrastructure.md#T-04.02.04"
+          "01-platform-infrastructure.md#T-04.04.04"
         ],
-        "reason": "ADR corrected to describe current early Redis rejection, durable admission requirement, v2 namespace, authoritative PostgreSQL version and one nonexpiring legacy hint. Removed unsupported deployed-managed-service wording. No runtime behavior or required budget changed. Planned coordination locks remain future work.",
-        "source_revision": "c32ff8195fd423a8a7b7a9ead2f45dc5f8781e99",
-        "evidence": "audit/evidence/step-reviews.json#V01-redis-cache"
+        "reason": "Resolved file cache policies and proxy preservation verified for hashes, auth entry, nonhashed files, private HTML and missing/error responses.",
+        "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+        "evidence": "audit/evidence/step-reviews.json#V01-edge-caching"
+      },
+      {
+        "pr": 64,
+        "status": "closed",
+        "task_keys": [
+          "01-platform-infrastructure.md#T-04.04.05"
+        ],
+        "reason": "Actual geography reference SHA256/304 workflow verified behind existing auth guards; profile/financial data excluded, default Express ETags disabled.",
+        "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+        "evidence": "audit/evidence/step-reviews.json#V01-edge-caching"
       }
     ]
   },

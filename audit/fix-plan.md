@@ -1,20 +1,24 @@
 # Remaining fix plan
 
-Current through product/test `cf0fa042`, documentation `c32ff819` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `6d801999` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 194 | 44 | 25 | 263 |
+| Tasks with merged PR evidence | 198 | 44 | 21 | 263 |
 | Other historical claims | 10 | 1 | 48 | 59 |
-| All claims | 204 | 45 | 73 | 322 |
+| All claims | 208 | 45 | 69 | 322 |
 
-**118 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**114 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **172 deferrals across 102 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
+
+Edge/cache review consolidated at **6d801999**: **4 tasks verified /4 saved PR reviews closed**, PR60/62/63/64. Removed unsafe proxy expiry overrides and missing-asset SPA fallback. Disabled automatic Express ETags; shared geography now negotiates SHA256 while profile/financial data remains untagged.42 focused cases and actual NGINX TLS/routing/gzip/cache/limits/SSE/WebSocket checks pass; types/lint/format/OpenAPI pass.8 immediate-base bindings refreshed;38 older refreshes retained. NGINX syntax deferral satisfied; obsolete Caddy check explicitly not applicable to the supported canonical alternative. [Batch review](evidence/step-reviews.json#V01-edge-caching).
+
+**Next:** shared UI foundations, PR65/66/67, reusing R03/R04/R05 evidence. Deploy web/proxy cache changes together; final image regression and production TLS/topology remain external/V02. PR61's pending CSP owner decision stays open.
 
 Operations review consolidated at **a6f51306**: six saved PRs reviewed, **0 closed /6 open** for explicit operational prerequisites. Pooling, monitoring, encrypted full/WAL/PITR recovery, restore-exercise data checks and job templates are repaired. Evidence:17 collector,37 pool/direct,164 affected API and30 distinct backup/exercise/job cases; actual Compose/config/network/archive checks and packaged image checks pass.40 immediate-base bindings refreshed;38 older refreshes retained. Production TLS/firewall/load, retained off-server backups, secret-manager provisioning, actual schedules, core-service RPO/RTO and delivered monitoring alerts remain unverified. [Batch review](evidence/step-reviews.json#V01-operations-configuration).
 
@@ -26,7 +30,7 @@ Distributed-limit batch consolidated at **f47f3049**: taskT-04.02.02 verified an
 
 Redis/cache review consolidated at **c32ff819**: three verified task acceptances preserved; **3 saved PR reviews closed**, PR51/53/54. Exact prior factory/cache/health hashes match, so valid runtime tests reused. ADR now matches PostgreSQL cache authority, v2 namespace and early Redis rejection. Formatting/diff checks pass; no runtime change. [Batch review](evidence/step-reviews.json#V01-redis-cache).
 
-**Next:** edge/proxy/static-cache/ETag review, PR60/62/63/64. Reuse prior security/header and web-host proof. Keep the existing CSP owner question pending and preserve production prerequisites.
+Edge/cache review is now consolidated below its current checkpoint; preserve the existing CSP owner question and production prerequisites.
 
 Storage workflow consolidated at **cf0fa042**: five tasks, **3 verified /2 partial**; five saved PRs, **3 closed /2 open**. Provider streaming, write-once uploads, version-aware retention, durable inspection and profile/purpose authorization repaired.180 distinct affected cases pass;13 unchanged config API and2 FA/EN browser cases reused. Builds/types/lint/format/OpenAPI pass.28 immediate-base bindings refreshed;38 older refreshes retained. PR57 keeps production retention and future classifiers open; PR59 keeps future contract/document integration open. [Batch review](evidence/step-reviews.json#V01-storage-workflow).
 
