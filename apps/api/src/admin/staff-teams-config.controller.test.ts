@@ -8,7 +8,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 // ─── Fixtures ──────────────────────────────────────────────────────────
 
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: { isAdmin: true, userId: 'admin-1', sessionId: 'session-1', csrfToken: 'csrf-1' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
@@ -103,7 +103,7 @@ describe('staff-teams permission gate (T-09.08.02)', () => {
     expect(result).toMatchObject({ id: 'team-1' });
     expect(adminService.createStaffTeam).toHaveBeenCalledWith(
       { name: 'Billing', memberUserIds: [] },
-      'admin-1',
+      adminReq.session,
       '127.0.0.1'
     );
   });
@@ -115,7 +115,7 @@ describe('staff-teams permission gate (T-09.08.02)', () => {
     expect(adminService.updateStaffTeam).toHaveBeenCalledWith(
       'team-1',
       { name: 'Billing Plus' },
-      'admin-1',
+      adminReq.session,
       '127.0.0.1'
     );
   });
@@ -124,7 +124,11 @@ describe('staff-teams permission gate (T-09.08.02)', () => {
     const { controller, adminService } = makeController();
     const result = await controller.deleteStaffTeam('team-1', adminReq);
     expect(result).toEqual({ deleted: true });
-    expect(adminService.deleteStaffTeam).toHaveBeenCalledWith('team-1', 'admin-1', '127.0.0.1');
+    expect(adminService.deleteStaffTeam).toHaveBeenCalledWith(
+      'team-1',
+      adminReq.session,
+      '127.0.0.1'
+    );
   });
 
   it('allows admin to read assignment rules and delegates to the service', async () => {
@@ -141,7 +145,7 @@ describe('staff-teams permission gate (T-09.08.02)', () => {
     await controller.setStaffAssignmentRules(payload, adminReq);
     expect(adminService.setStaffAssignmentRules).toHaveBeenCalledWith(
       payload,
-      'admin-1',
+      adminReq.session,
       '127.0.0.1'
     );
   });

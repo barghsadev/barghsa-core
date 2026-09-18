@@ -1817,9 +1817,10 @@ export class AdminService {
    */
   async setServiceResponseTargets(
     input: unknown,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<ServiceResponseTargets> {
+    const actorUserId = actor.userId;
     const validation = validateServiceResponseTargets(input);
     if (!validation.ok) {
       throw new HttpException(
@@ -1840,6 +1841,7 @@ export class AdminService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:service-targets:edit');
+      await requireSessionStepUp(client, actor);
       await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
         SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
       ]);
@@ -1897,6 +1899,7 @@ export class AdminService {
         ]
       );
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(
@@ -1975,9 +1978,10 @@ export class AdminService {
    */
   async setEscalationPolicy(
     input: unknown,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<EscalationPolicies> {
+    const actorUserId = actor.userId;
     const validation = validateEscalationPolicies(input);
     if (!validation.ok) {
       throw new HttpException(
@@ -1998,6 +2002,7 @@ export class AdminService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:service-escalation:edit');
+      await requireSessionStepUp(client, actor);
       await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
         ESCALATION_POLICY_CONFIG_KEY,
       ]);
@@ -2051,6 +2056,7 @@ export class AdminService {
         ]
       );
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(
@@ -2140,9 +2146,10 @@ export class AdminService {
    */
   async setStaffAssignmentRules(
     input: unknown,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<StaffAssignmentRules> {
+    const actorUserId = actor.userId;
     const validation = validateStaffAssignmentRules(input);
     if (!validation.ok) {
       throw new HttpException(
@@ -2163,6 +2170,7 @@ export class AdminService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:staff-teams:edit');
+      await requireSessionStepUp(client, actor);
       await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
         STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
       ]);
@@ -2236,6 +2244,7 @@ export class AdminService {
         ]
       );
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(`Staff assignment rules set to ${JSON.stringify(config)} by ${actorUserId}`);
@@ -2349,7 +2358,12 @@ export class AdminService {
    * @param ip - source IP (for audit)
    * @returns the created team record
    */
-  async createStaffTeam(input: unknown, actorUserId: string, ip: string): Promise<StaffTeamRecord> {
+  async createStaffTeam(
+    input: unknown,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ): Promise<StaffTeamRecord> {
+    const actorUserId = actor.userId;
     const validation = validateStaffTeamInput(input);
     if (!validation.ok) {
       throw new HttpException(
@@ -2383,6 +2397,7 @@ export class AdminService {
         'admin:staff-teams:edit',
         team.memberUserIds
       );
+      await requireSessionStepUp(client, actor);
 
       await this.assertTeamMembersExist(client, team.memberUserIds);
 
@@ -2404,6 +2419,7 @@ export class AdminService {
         skillTags: team.skillTags,
       });
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(`Staff team '${team.name}' (${teamId}) created by ${actorUserId}`);
@@ -2447,9 +2463,10 @@ export class AdminService {
   async updateStaffTeam(
     teamId: string,
     input: unknown,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<StaffTeamRecord> {
+    const actorUserId = actor.userId;
     if (!input || typeof input !== 'object' || Array.isArray(input))
       throw new HttpException('Staff team update must be an object', 400);
     const pool = getDbPool();
@@ -2478,6 +2495,7 @@ export class AdminService {
         'admin:staff-teams:edit',
         accountIds
       );
+      await requireSessionStepUp(client, actor);
 
       const existingResult = await client.query(
         `SELECT id, name, description, skill_tags, is_active, lead_user_id, created_at, updated_at
@@ -2586,6 +2604,7 @@ export class AdminService {
         skillTags: merged.skillTags,
       });
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(`Staff team '${merged.name}' (${teamId}) updated by ${actorUserId}`);
@@ -2627,9 +2646,10 @@ export class AdminService {
    */
   async deleteStaffTeam(
     teamId: string,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<{ deleted: true }> {
+    const actorUserId = actor.userId;
     const pool = getDbPool();
     const client = await pool.connect();
     const now = new Date();
@@ -2637,6 +2657,7 @@ export class AdminService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:staff-teams:edit');
+      await requireSessionStepUp(client, actor);
 
       const existingResult = await client.query(
         `SELECT id, name FROM staff_teams WHERE id = $1 FOR UPDATE`,
@@ -2657,6 +2678,7 @@ export class AdminService {
         name: existing.name,
       });
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(`Staff team '${existing.name}' (${teamId}) deleted by ${actorUserId}`);

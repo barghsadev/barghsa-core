@@ -246,7 +246,7 @@ it('persists fallback priority and validates every fallback team', async () => {
 });
 
 for (const method of ['POST', 'PUT', 'DELETE'] as const) {
-  it(`${method} team rejects permission revoked while waiting and preserves all rows`, async () => {
+  it(`${method} team rejects permission revoked during authentication and preserves all rows`, async () => {
     const created = await team();
     const path = method === 'POST' ? 'staff-teams' : `staff-teams/${created.id}`;
     const snapshot = async () => ({
@@ -274,7 +274,7 @@ for (const method of ['POST', 'PUT', 'DELETE'] as const) {
           Number(
             (
               await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE '%activation_pending%'"
+                "SELECT count(*) FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE '%FOR UPDATE OF u%'"
               )
             ).rows[0].count
           )

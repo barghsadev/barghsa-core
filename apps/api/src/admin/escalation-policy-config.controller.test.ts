@@ -8,7 +8,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 // ─── Fixtures ──────────────────────────────────────────────────────────
 
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: { isAdmin: true, userId: 'admin-1', sessionId: 'session-1', csrfToken: 'csrf-1' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
@@ -91,6 +91,10 @@ describe('escalation-policy config permission gate (T-09.08.03)', () => {
     };
     const result = await controller.setEscalationPolicy(body, adminReq);
     expect(result).toEqual(DEFAULT_ESCALATION_POLICIES);
-    expect(adminService.setEscalationPolicy).toHaveBeenCalledWith(body, 'admin-1', '127.0.0.1');
+    expect(adminService.setEscalationPolicy).toHaveBeenCalledWith(
+      body,
+      adminReq.session,
+      '127.0.0.1'
+    );
   });
 });

@@ -34,6 +34,8 @@ function mockDbModule(pool: {
   return { getDbPool: () => pool, PREDEFINED_ROLES: [] };
 }
 
+const actor = { userId: 'admin-1', sessionId: 'session-1', csrfToken: 'csrf-1' };
+
 let service: AdminServiceType;
 
 beforeEach(() => {
@@ -42,6 +44,10 @@ beforeEach(() => {
 });
 
 async function loadService() {
+  // Session authority is exercised against PostgreSQL in support-authority-http.
+  vi.doMock('../session/session-step-up.js', () => ({
+    requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+  }));
   const { pool, mockQuery, mockConnect } = mockPool();
   vi.doMock('@barghsa/db', () => mockDbModule(pool));
   const { AdminService: Svc } = await import('./admin.service.js');
@@ -132,7 +138,7 @@ describe('AdminService staff assignment rules (T-09.08.02)', () => {
       await expect(
         service.setStaffAssignmentRules(
           { consultation: { teamId: 't', strategy: 'load' } },
-          'admin-1',
+          actor,
           'ip'
         )
       ).rejects.toMatchObject({ status: 400 });
@@ -194,7 +200,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
   describe('createStaffTeam', () => {
     it('rejects invalid input with 400', async () => {
       const { mockConnect } = await loadService();
-      await expect(service.createStaffTeam({ name: '' }, 'admin-1', 'ip')).rejects.toMatchObject({
+      await expect(service.createStaffTeam({ name: '' }, actor, 'ip')).rejects.toMatchObject({
         status: 400,
       });
       expect(mockConnect).not.toHaveBeenCalled();
@@ -228,7 +234,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
           skillTags: ['billing'],
           memberUserIds: ['u-1', 'u-2'],
         },
-        'admin-1',
+        actor,
         '127.0.0.1'
       );
       expect(result).toMatchObject({
@@ -264,7 +270,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
         .mockResolvedValueOnce({ rows: [] }) // audit
         .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-      const result = await service.createStaffTeam({ name: 'Billing' }, 'admin-1', '127.0.0.1');
+      const result = await service.createStaffTeam({ name: 'Billing' }, actor, '127.0.0.1');
       expect(result).toMatchObject({
         id: 'team-1',
         name: 'Billing',
@@ -285,7 +291,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       await expect(
         service.createStaffTeam(
           { name: 'Billing', description: null, skillTags: [], memberUserIds: ['u-1', 'missing'] },
-          'admin-1',
+          actor,
           '127.0.0.1'
         )
       ).rejects.toMatchObject({ status: 400 });
@@ -309,7 +315,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       await expect(
         service.createStaffTeam(
           { name: 'Billing', description: null, skillTags: [], memberUserIds: [] },
-          'admin-1',
+          actor,
           '127.0.0.1'
         )
       ).rejects.toMatchObject({ status: 409 });
@@ -328,7 +334,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
         .mockResolvedValueOnce({ rows: [] }); // ROLLBACK
 
       await expect(
-        service.updateStaffTeam('nope', { name: 'X' }, 'admin-1', '127.0.0.1')
+        service.updateStaffTeam('nope', { name: 'X' }, actor, '127.0.0.1')
       ).rejects.toMatchObject({ status: 404 });
     });
 
@@ -361,7 +367,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       const result = await service.updateStaffTeam(
         'team-1',
         { name: 'Billing Plus', memberUserIds: ['u-1', 'u-2'] },
-        'admin-1',
+        actor,
         '127.0.0.1'
       );
       expect(result).toMatchObject({
@@ -408,7 +414,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
         .mockResolvedValueOnce({ rows: [] }); // ROLLBACK
 
       await expect(
-        service.updateStaffTeam('team-1', { name: 42 }, 'admin-1', '127.0.0.1')
+        service.updateStaffTeam('team-1', { name: 42 }, actor, '127.0.0.1')
       ).rejects.toMatchObject({ status: 400 });
     });
   });
@@ -423,7 +429,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
         .mockResolvedValueOnce({ rows: [] }) // SELECT FOR UPDATE
         .mockResolvedValueOnce({ rows: [] }); // ROLLBACK
 
-      await expect(service.deleteStaffTeam('nope', 'admin-1', '127.0.0.1')).rejects.toMatchObject({
+      await expect(service.deleteStaffTeam('nope', actor, '127.0.0.1')).rejects.toMatchObject({
         status: 404,
       });
     });
@@ -439,7 +445,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
         .mockResolvedValueOnce({ rows: [] }) // audit
         .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-      const result = await service.deleteStaffTeam('team-1', 'admin-1', '127.0.0.1');
+      const result = await service.deleteStaffTeam('team-1', actor, '127.0.0.1');
       expect(result).toEqual({ deleted: true });
 
       const auditCall = client.query.mock.calls.find(([sql]) => String(sql).includes('audit_log'));

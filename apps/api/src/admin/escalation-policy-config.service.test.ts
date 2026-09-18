@@ -21,6 +21,8 @@ function mockDbModule(pool: {
   return { getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES };
 }
 
+const actor = { userId: 'admin-1', sessionId: 'session-1', csrfToken: 'csrf-1' };
+
 let service: AdminServiceType;
 
 beforeEach(() => {
@@ -149,7 +151,7 @@ describe('AdminService.setEscalationPolicy (T-09.08.03)', () => {
           },
           consultation: 24,
         },
-        'admin-1',
+        actor,
         '127.0.0.1'
       )
     ).rejects.toMatchObject({ status: 400 });
@@ -166,7 +168,7 @@ describe('AdminService.setEscalationPolicy (T-09.08.03)', () => {
             level3: { delayHours: 48, channels: ['in_app'] },
           },
         },
-        'admin-1',
+        actor,
         '127.0.0.1'
       )
     ).rejects.toThrowError(HttpException);
@@ -183,7 +185,7 @@ describe('AdminService.setEscalationPolicy (T-09.08.03)', () => {
               level3: { delayHours: 48, channels: ['in_app'] },
             },
           },
-          'admin-1',
+          actor,
           '127.0.0.1'
         )
       ).rejects.toThrowError(HttpException);
@@ -193,7 +195,7 @@ describe('AdminService.setEscalationPolicy (T-09.08.03)', () => {
   it('rejects a non-object payload with a 400', async () => {
     await loadService();
     await expect(
-      service.setEscalationPolicy(48 as unknown, 'admin-1', '127.0.0.1')
+      service.setEscalationPolicy(48 as unknown, actor, '127.0.0.1')
     ).rejects.toMatchObject({ status: 400 });
   });
 

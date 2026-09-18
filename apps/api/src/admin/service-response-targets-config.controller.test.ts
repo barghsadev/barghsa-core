@@ -8,7 +8,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 // ─── Fixtures ──────────────────────────────────────────────────────────
 
 const adminReq = {
-  session: { isAdmin: true, userId: 'admin-1' },
+  session: { isAdmin: true, userId: 'admin-1', sessionId: 'session-1', csrfToken: 'csrf-1' },
   ip: '127.0.0.1',
 } as unknown as AuthenticatedRequest;
 
@@ -94,7 +94,7 @@ describe('service-response-targets config permission gate (T-09.08.01)', () => {
     expect(result).toEqual({ ticket: 48, verification_case: null });
     expect(adminService.setServiceResponseTargets).toHaveBeenCalledWith(
       body,
-      'admin-1',
+      adminReq.session,
       '127.0.0.1'
     );
   });

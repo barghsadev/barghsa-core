@@ -24,6 +24,8 @@ function mockDbModule(pool: {
   return { getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES };
 }
 
+const actor = { userId: 'admin-1', sessionId: 'session-1', csrfToken: 'csrf-1' };
+
 let service: AdminServiceType;
 
 beforeEach(() => {
@@ -105,7 +107,7 @@ describe('AdminService.setServiceResponseTargets (T-09.08.01)', () => {
   it('rejects an unknown service type with a 400', async () => {
     const { pool } = await loadService();
     await expect(
-      service.setServiceResponseTargets({ ticket: 48, consultation: 24 }, 'admin-1', '127.0.0.1')
+      service.setServiceResponseTargets({ ticket: 48, consultation: 24 }, actor, '127.0.0.1')
     ).rejects.toMatchObject({ status: 400 });
     expect(pool.connect).not.toHaveBeenCalled();
   });
@@ -114,7 +116,7 @@ describe('AdminService.setServiceResponseTargets (T-09.08.01)', () => {
     await loadService();
     for (const bad of [0, -1, 1.5, 8761, '48']) {
       await expect(
-        service.setServiceResponseTargets({ ticket: bad }, 'admin-1', '127.0.0.1')
+        service.setServiceResponseTargets({ ticket: bad }, actor, '127.0.0.1')
       ).rejects.toThrowError(HttpException);
     }
   });
@@ -122,7 +124,7 @@ describe('AdminService.setServiceResponseTargets (T-09.08.01)', () => {
   it('rejects a non-object payload with a 400', async () => {
     await loadService();
     await expect(
-      service.setServiceResponseTargets(48 as unknown, 'admin-1', '127.0.0.1')
+      service.setServiceResponseTargets(48 as unknown, actor, '127.0.0.1')
     ).rejects.toMatchObject({ status: 400 });
   });
 

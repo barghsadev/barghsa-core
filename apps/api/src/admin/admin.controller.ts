@@ -2394,7 +2394,7 @@ export class AdminController {
   async setServiceResponseTargets(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertServiceTargetsEditPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.adminService.setServiceResponseTargets(rawBody, req.session.userId, ip);
+    return this.adminService.setServiceResponseTargets(rawBody, req.session, ip);
   }
 
   /**
@@ -2529,7 +2529,7 @@ export class AdminController {
   async setEscalationPolicy(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertEscalationEditPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.adminService.setEscalationPolicy(rawBody, req.session.userId, ip);
+    return this.adminService.setEscalationPolicy(rawBody, req.session, ip);
   }
 
   /**
@@ -2666,7 +2666,7 @@ export class AdminController {
   async createStaffTeam(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertStaffTeamsEditPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.adminService.createStaffTeam(rawBody, req.session.userId, ip);
+    return this.adminService.createStaffTeam(rawBody, req.session, ip);
   }
 
   /**
@@ -2731,7 +2731,7 @@ export class AdminController {
   ) {
     this.assertStaffTeamsEditPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.adminService.updateStaffTeam(id, rawBody, req.session.userId, ip);
+    return this.adminService.updateStaffTeam(id, rawBody, req.session, ip);
   }
 
   /**
@@ -2760,7 +2760,7 @@ export class AdminController {
   ) {
     this.assertStaffTeamsEditPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.adminService.deleteStaffTeam(id, req.session.userId, ip);
+    return this.adminService.deleteStaffTeam(id, req.session, ip);
   }
 
   /**
@@ -2863,6 +2863,6 @@ export class AdminController {
   async setStaffAssignmentRules(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertStaffTeamsEditPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.adminService.setStaffAssignmentRules(rawBody, req.session.userId, ip);
+    return this.adminService.setStaffAssignmentRules(rawBody, req.session, ip);
   }
 }
