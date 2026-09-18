@@ -22,6 +22,9 @@ it('records a logo purpose only after upload and content verification succeed', 
   const request = setup(),
     controller = new AbortController();
   expect(await uploadBrandingLogo(file(), controller.signal)).toBe('uploads/image/example.png');
+  expect(JSON.parse(request.mock.calls[0]![1]!.body as string)).toMatchObject({
+    purpose: 'branding_logo',
+  });
   expect(JSON.parse(request.mock.calls[3]![1]!.body as string)).toMatchObject({
     purpose: 'branding_logo',
     category: 'image',

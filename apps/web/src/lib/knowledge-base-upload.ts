@@ -37,6 +37,7 @@ export async function uploadKnowledgeDocument(file: File, signal: AbortSignal): 
     {
       ...details,
       metadata: { recordType: 'document' },
+      purpose: 'knowledge_base',
     },
     signal
   );

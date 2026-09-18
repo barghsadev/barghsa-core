@@ -29,7 +29,10 @@ export async function uploadBrandingLogo(file: File, signal: AbortSignal): Promi
       headers: withCsrf({ 'Content-Type': 'application/json' }),
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
-  const response = await post('/api/upload/presigned-url', details);
+  const response = await post('/api/upload/presigned-url', {
+    ...details,
+    purpose: 'branding_logo',
+  });
   if (!response.ok) throw new Error('UPLOAD_FAILED');
   const upload: unknown = await response.json();
   if (

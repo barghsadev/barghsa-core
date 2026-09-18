@@ -1,6 +1,14 @@
 import { z } from 'zod';
 import { UPLOAD_CATEGORIES } from './upload.config.js';
 
+export const UploadContextSchema = z
+  .object({
+    purpose: z.string().trim().min(1).max(64).optional(),
+    profileId: z.string().uuid().optional(),
+  })
+  .strict();
+export type UploadContext = z.infer<typeof UploadContextSchema>;
+
 /**
  * Schema for a presigned upload URL request.
  */
@@ -26,6 +34,7 @@ export const PresignedUrlRequestSchema = z
      * Upload category — determines allowed types and max size.
      */
     category: z.enum(UPLOAD_CATEGORIES as [string, ...string[]]).optional(),
+    ...UploadContextSchema.shape,
     /**
      * Optional metadata for business-record association.
      */

@@ -29,6 +29,7 @@ it('sends only file bytes to storage and checks verification/record identity bef
   expect(JSON.parse(request.mock.calls[0]![1].body)).toMatchObject({
     contentType: 'application/pdf',
     category: 'document',
+    purpose: 'knowledge_base',
   });
   expect(request.mock.calls[1]![1].credentials).toBe('omit');
   expect(new Headers(request.mock.calls[1]![1].headers).get('If-None-Match')).toBe('*');

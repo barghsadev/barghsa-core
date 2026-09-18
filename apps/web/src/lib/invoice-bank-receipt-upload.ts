@@ -138,6 +138,8 @@ async function uploadVerifiedAttachment(
       contentType,
       fileSize: file.size,
       category,
+      purpose,
+      ...(profileId ? { profileId } : {}),
       metadata: { recordType: 'receipt' },
     }),
   });

@@ -250,11 +250,12 @@ it('authenticates every upload step and requires CSRF before storage access', as
   });
 });
 
-async function issue() {
+async function issue(context: Record<string, unknown> = {}) {
   const response = await fetch(`${http.base}/api/upload/presigned-url`, {
     method: 'POST',
     headers,
     body: JSON.stringify({
+      ...context,
       fileName: 'owned.pdf',
       contentType: 'application/pdf',
       fileSize: 13,
@@ -570,4 +571,109 @@ it('records inspection even when a client calls record without a separate verifi
   expect(metadata.scanState).toBe('Available');
   expect(metadata.scanSkippedReason).toBe('not_configured');
   expect(metadata.storageInspection.contentLength).toBe(13);
+});
+
+it('validates profile access before issuing an upload and binds the reserved purpose/profile', async () => {
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES ('upload-owner','upload-owner@example.test','test')"
+  );
+  const own = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES ('storage-actor','LEGAL','DRAFT') RETURNING id"
+    )
+  ).rows[0].id;
+  const foreign = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES ('upload-owner','LEGAL','DRAFT') RETURNING id"
+    )
+  ).rows[0].id;
+  const presign = (context: object) =>
+    fetch(`${http.base}/api/upload/presigned-url`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        fileName: 'owned.pdf',
+        contentType: 'application/pdf',
+        fileSize: 13,
+        category: 'document',
+        ...context,
+      }),
+    });
+  const before = (await http.pool.query('SELECT count(*) FROM storage_records')).rows;
+  expect((await presign({ profileId: foreign, purpose: 'ticket_attachment' })).status).toBe(404);
+  expect((await presign({ profileId: own, metadata: { recordId: randomUUID() } })).status).toBe(
+    400
+  );
+  expect((await http.pool.query('SELECT count(*) FROM storage_records')).rows).toEqual(before);
+  const key = await issue({ profileId: own, purpose: 'ticket_attachment' });
+  expect((await row(key)).metadata.uploadContext).toEqual({
+    profileId: own,
+    purpose: 'ticket_attachment',
+  });
+  expect(
+    (
+      await uploadRequest(key, 'record', headers, {
+        profileId: foreign,
+        purpose: 'ticket_attachment',
+      })
+    ).status
+  ).toBe(409);
+  expect((await uploadRequest(key, 'record', headers, { purpose: 'bank_receipt' })).status).toBe(
+    409
+  );
+  expect((await uploadRequest(key, 'record')).status).toBe(200);
+  expect((await row(key)).metadata).toMatchObject({ profileId: own, purpose: 'ticket_attachment' });
+  const unscoped = await issue();
+  expect((await uploadRequest(unscoped, 'record', headers, { profileId: foreign })).status).toBe(
+    404
+  );
+});
+it('rechecks current profile membership after storage inspection before recording', async () => {
+  const profileId = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES ('upload-owner','LEGAL','DRAFT') RETURNING id"
+    )
+  ).rows[0].id;
+  await http.pool.query(
+    "INSERT INTO profile_agents(profile_id,user_id,role) VALUES ($1,'storage-actor','Finance')",
+    [profileId]
+  );
+  const key = await issue({ profileId, purpose: 'bank_receipt' });
+  onGet = async (requested) => {
+    if (requested !== key) return;
+    await http.pool.query(
+      "DELETE FROM profile_agents WHERE profile_id=$1 AND user_id='storage-actor'",
+      [profileId]
+    );
+  };
+  try {
+    expect((await uploadRequest(key, 'record')).status).toBe(404);
+    expect((await row(key)).status).toBe('removed');
+  } finally {
+    onGet = undefined;
+  }
+});
+
+it('rejects privileged upload purposes for a customer before reserving storage', async () => {
+  await http.pool.query("UPDATE users SET is_admin=false WHERE user_id='storage-actor'");
+  const before = (await http.pool.query('SELECT count(*) FROM storage_records')).rows;
+  try {
+    for (const purpose of ['branding_logo', 'knowledge_base', 'verification_evidence']) {
+      const response = await fetch(`${http.base}/api/upload/presigned-url`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          fileName: 'owned.pdf',
+          contentType: 'application/pdf',
+          fileSize: 13,
+          category: 'document',
+          purpose,
+        }),
+      });
+      expect(response.status).toBe(403);
+    }
+    expect((await http.pool.query('SELECT count(*) FROM storage_records')).rows).toEqual(before);
+  } finally {
+    await http.pool.query("UPDATE users SET is_admin=true WHERE user_id='storage-actor'");
+  }
 });

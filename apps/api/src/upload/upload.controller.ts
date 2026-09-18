@@ -20,6 +20,8 @@ import {
   recordUploadInspection,
 } from './upload-reservations.js';
 import { randomUUID } from 'node:crypto';
+import { ProfilesService } from '../profiles/profiles.service.js';
+import { requireUploadContext } from './upload-access.js';
 import { detectDocumentContentType } from './document-content-type.js';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { StorageObjectNotFound, type ImmutableStorageRecordService } from '@barghsa/shared/storage';
@@ -28,6 +30,7 @@ import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.
 import {
   PresignedUrlRequestSchema,
   RecordUploadRequestSchema,
+  UploadContextSchema,
   type PresignedUrlRequest,
   type PresignedUrlResponse,
   type VerifyUploadResponse,
@@ -57,7 +60,8 @@ export class UploadController {
     @Inject(IMMUTABLE_STORAGE_SERVICE)
     private readonly immutableStorageService: ImmutableStorageRecordService | null,
     @Inject(UploadPolicyResolver)
-    private readonly policyResolver: UploadPolicyResolver
+    private readonly policyResolver: UploadPolicyResolver,
+    @Inject(ProfilesService) private readonly profilesService: ProfilesService
   ) {}
 
   /**
@@ -94,6 +98,11 @@ export class UploadController {
     }
 
     const req: PresignedUrlRequest = parsed.data;
+    if (req.metadata?.recordId !== undefined)
+      throw new BadRequestException(
+        'Business record association must use its authorized attachment endpoint'
+      );
+    await requireUploadContext(this.profilesService, actor, req);
     const category = req.category ?? resolveCategory(req.metadata?.recordType);
 
     const policy = await this.policyResolver.resolveEffective(category);
@@ -148,6 +157,7 @@ export class UploadController {
       fileSize: req.fileSize,
       category,
       expiresIn: DEFAULT_EXPIRES_IN,
+      context: { purpose: req.purpose, profileId: req.profileId },
     });
     try {
       const presignedUrl = await this.storage!.presignedPutUrl(uniqueKey, DEFAULT_EXPIRES_IN);
@@ -290,6 +300,17 @@ export class UploadController {
     }
 
     const issued = await requireOwnedUpload(key, req.session.userId);
+    const reserved = (issued.metadata.uploadContext ?? {}) as Record<string, unknown>;
+    const context = UploadContextSchema.safeParse({
+      purpose: body.purpose ?? reserved.purpose ?? issued.metadata.purpose,
+      profileId: body.profileId ?? reserved.profileId ?? issued.metadata.profileId,
+    });
+    if (!context.success) throw new BadRequestException('Invalid upload association');
+    for (const field of ['purpose', 'profileId'] as const) {
+      if (reserved[field] !== undefined && reserved[field] !== context.data[field])
+        throw new ConflictException('Upload was authorized for a different purpose or profile');
+    }
+    await requireUploadContext(this.profilesService, req, context.data);
     if (issued.status === 'active') {
       if (
         (body.purpose !== undefined && body.purpose !== issued.metadata.purpose) ||
@@ -361,7 +382,8 @@ export class UploadController {
       throw err;
     }
 
-    const { purpose, profileId } = body;
+    const { purpose, profileId } = context.data;
+    await requireUploadContext(this.profilesService, req, context.data);
 
     await completeUpload({
       storageKey: key,

@@ -81,3 +81,16 @@ Scanner integration, quarantine, document state history and full SHA-256
 recording remain owned by T-05.11.01–03 and T-05.12.01; those future consumers
 must replace the unconfigured fallback before enabling a scanner. An unavailable
 configured scanner must leave files pending, never take this fallback.
+
+## Upload association
+
+The browser supplies purpose and profile when requesting the upload URL. The
+API checks staff permissions or current profile access before reserving storage,
+binds that context to the reservation, and checks it again before recording the
+inspected object. A reserved purpose or profile cannot be changed. Legacy
+unscoped reservations still require current authorization when recorded.
+Branding and knowledge-base uploads require their respective staff permission;
+identity evidence requires CRM correction authority. Bank receipts and legal
+profile documents require their domain-specific profile permission. Generic
+business record IDs are rejected here. Attach through the business endpoint,
+which must independently authorize and lock its target record.

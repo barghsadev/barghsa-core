@@ -1,6 +1,7 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { CreateRecordOptions } from '@barghsa/shared/storage';
+import type { UploadContext } from './upload.types.js';
 
 /** Commit ownership and cleanup intent before handing an upload URL to the browser. */
 export async function reserveUpload(options: {
@@ -11,13 +12,14 @@ export async function reserveUpload(options: {
   fileSize: number;
   category: string;
   expiresIn: number;
+  context?: UploadContext;
 }) {
   await getDbPool().query(
     `INSERT INTO storage_records
     (storage_key,status,file_name,content_type,file_size,category,metadata,removed_at)
     VALUES ($1,'removed',$2,$3,$4,$5,jsonb_build_object(
       'uploadedBy',$6::text,'provisionalUpload',true,'deletionRequested',true,'scanState','Uploading',
-      'uploadExpiresAt',clock_timestamp()+($7::int * INTERVAL '1 second')),NOW())`,
+      'uploadExpiresAt',clock_timestamp()+($7::int * INTERVAL '1 second'),'uploadContext',$8::jsonb),NOW())`,
     [
       options.key,
       options.fileName,
@@ -26,6 +28,7 @@ export async function reserveUpload(options: {
       options.category,
       options.userId,
       options.expiresIn,
+      JSON.stringify(options.context ?? {}),
     ]
   );
 }

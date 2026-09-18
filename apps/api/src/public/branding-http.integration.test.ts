@@ -280,7 +280,17 @@ it('rolls back the draft and history changes if the audit write fails', async ()
 });
 
 async function logoUpload(purpose = 'branding_logo', bytes = png) {
+  const profileId =
+    purpose === 'legal_profile_document'
+      ? (
+          await http.pool.query<{ id: string }>(
+            "INSERT INTO profiles(user_id,profile_type,status) VALUES ('branding-review','LEGAL','DRAFT') RETURNING id"
+          )
+        ).rows[0]!.id
+      : undefined;
   const details = {
+    purpose,
+    ...(profileId ? { profileId } : {}),
     fileName: 'logo.png',
     contentType: 'image/png',
     fileSize: bytes.length,
@@ -292,7 +302,13 @@ async function logoUpload(purpose = 'branding_logo', bytes = png) {
     .object({ key: z.string(), presignedUrl: z.string() })
     .parse(await presigned.json());
   expect(
-    (await fetch(upload.presignedUrl, { method: 'PUT', body: new Uint8Array(bytes) })).status
+    (
+      await fetch(upload.presignedUrl, {
+        method: 'PUT',
+        headers: { 'If-None-Match': '*' },
+        body: new Uint8Array(bytes),
+      })
+    ).status
   ).toBe(200);
   const path = `upload/${encodeURIComponent(upload.key)}`;
   expect((await request(`${path}/verify`, 'POST')).status).toBe(200);
