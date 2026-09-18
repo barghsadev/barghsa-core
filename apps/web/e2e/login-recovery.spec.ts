@@ -137,9 +137,19 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(page.getByRole('alert').first()).toBeVisible();
       await expect(password).toHaveValue('Fresh-browser-password-123!');
       await expect(confirm).toHaveValue('Fresh-browser-password-123!');
-      await submit.evaluate(async (element) => {
-        await Promise.all(element.getAnimations().map((animation) => animation.finished));
-      });
+      // A hover/state change can cancel and replace a CSS transition. Check the
+      // current animations instead of awaiting a canceled animation's promise.
+      await expect
+        .poll(() =>
+          submit.evaluate(
+            (element) =>
+              element
+                .getAnimations()
+                .filter((animation) => animation.playState === 'running' || animation.pending)
+                .length
+          )
+        )
+        .toBe(0);
       const accessibility = await new AxeBuilder({ page })
         .include('form')
         .withTags(['wcag2a', 'wcag2aa'])

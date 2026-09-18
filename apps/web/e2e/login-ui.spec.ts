@@ -157,8 +157,20 @@ for (const locale of ['fa', 'en'])
           await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)
         ).toBeLessThanOrEqual(1);
         const aside = page.locator('aside');
-        if (testInfo.project.name === 'chromium') await expect(aside).toBeVisible();
-        else await expect(aside).toBeHidden();
+        await expect(aside).toBeVisible();
+        await expect(aside.locator('a[href="/"]')).toBeVisible();
+        const brandBounds = (await aside.boundingBox())!;
+        const formBounds = (await page.getByRole('main').boundingBox())!;
+        // The shared-layout requirement calls for a single-column mobile stack,
+        // with branding linked home, and separate columns on desktop.
+        if (testInfo.project.use.isMobile) {
+          expect(brandBounds.y + brandBounds.height).toBeLessThanOrEqual(formBounds.y + 1);
+        } else {
+          expect(
+            brandBounds.x + brandBounds.width <= formBounds.x + 1 ||
+              formBounds.x + formBounds.width <= brandBounds.x + 1
+          ).toBe(true);
+        }
         await page.screenshot({
           path:
             '/tmp/barghsa-login-ui-' +
