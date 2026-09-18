@@ -17,7 +17,7 @@
     "lint": "eslint . --max-warnings 0",
     "typecheck": "turbo typecheck",
     "check:suppressed-errors": "./scripts/check-suppressed-errors.sh",
-    "setup:bucket": "ts-node scripts/setup-bucket.ts",
+    "setup:bucket": "pnpm --filter @barghsa/shared build && node packages/shared/scripts/setup-bucket.mjs",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
     "check:contract": "node --test scripts/check-openapi.test.mjs && node scripts/check-openapi.mjs",

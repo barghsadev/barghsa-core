@@ -1,5 +1,27 @@
-import { describe, it, expect } from 'vitest';
-import { getStandardLifecycleRules } from './setup-bucket.js';
+import { describe, it, expect, vi } from 'vitest';
+import { getStandardLifecycleRules, setupBucket } from './setup-bucket.js';
+import { S3Client } from '@aws-sdk/client-s3';
+
+// Match the prefix/tag filters used by these rules. Expiration rules apply
+// independently; a separate transition rule cannot cancel an expiration.
+function expirationsFor(key: string, tags: Record<string, string>) {
+  return getStandardLifecycleRules().filter((rule) => {
+    if (!rule.Expiration && !rule.NoncurrentVersionExpiration) return false;
+    const filter = rule.Filter;
+    const prefix = filter?.Prefix ?? filter?.And?.Prefix ?? '';
+    const required = filter?.Tag ? [filter.Tag] : (filter?.And?.Tags ?? []);
+    return key.startsWith(prefix) && required.every((tag) => tags[tag.Key!] === tag.Value);
+  });
+}
+
+it.each(['tmp/', 'uploads/', 'previews/', 'superseded/'])(
+  'never expires held or unclassified objects under %s',
+  (prefix) => {
+    expect(expirationsFor(prefix + 'record', { 'legal-hold': 'true' })).toEqual([]);
+    expect(expirationsFor(prefix + 'record', {})).toEqual([]);
+    expect(expirationsFor(prefix + 'record', { 'legal-hold': 'false' })).toHaveLength(1);
+  }
+);
 
 // ---------------------------------------------------------------------------
 // getStandardLifecycleRules
@@ -8,8 +30,8 @@ import { getStandardLifecycleRules } from './setup-bucket.js';
 describe('getStandardLifecycleRules', () => {
   const rules = getStandardLifecycleRules();
 
-  it('returns 6 rules (4 prefix + 1 multipart + 1 legal-hold)', () => {
-    expect(rules).toHaveLength(6);
+  it('returns 5 rules (4 tagged prefixes + 1 multipart)', () => {
+    expect(rules).toHaveLength(5);
   });
 
   it('has all rules enabled', () => {
@@ -23,7 +45,7 @@ describe('getStandardLifecycleRules', () => {
   it('creates a tmp/ expiry rule at 1 day', () => {
     const rule = rules.find((r) => r.ID?.startsWith('expire-tmp-'));
     expect(rule).toBeDefined();
-    expect(rule!.Filter?.Prefix).toBe('tmp/');
+    expect(rule!.Filter?.And?.Prefix).toBe('tmp/');
     expect(rule!.Expiration?.Days).toBe(1);
     expect(rule!.NoncurrentVersionExpiration?.NoncurrentDays).toBe(1);
     expect(rule!.NoncurrentVersionExpiration?.NewerNoncurrentVersions).toBe(5);
@@ -32,7 +54,7 @@ describe('getStandardLifecycleRules', () => {
   it('creates an uploads/ expiry rule at 1 day', () => {
     const rule = rules.find((r) => r.ID?.startsWith('expire-uploads-'));
     expect(rule).toBeDefined();
-    expect(rule!.Filter?.Prefix).toBe('uploads/');
+    expect(rule!.Filter?.And?.Prefix).toBe('uploads/');
     expect(rule!.Expiration?.Days).toBe(1);
     expect(rule!.NoncurrentVersionExpiration?.NoncurrentDays).toBe(1);
     expect(rule!.NoncurrentVersionExpiration?.NewerNoncurrentVersions).toBe(5);
@@ -41,7 +63,7 @@ describe('getStandardLifecycleRules', () => {
   it('creates a previews/ expiry rule at 7 days', () => {
     const rule = rules.find((r) => r.ID?.startsWith('expire-previews-'));
     expect(rule).toBeDefined();
-    expect(rule!.Filter?.Prefix).toBe('previews/');
+    expect(rule!.Filter?.And?.Prefix).toBe('previews/');
     expect(rule!.Expiration?.Days).toBe(7);
     expect(rule!.NoncurrentVersionExpiration?.NoncurrentDays).toBe(7);
     expect(rule!.NoncurrentVersionExpiration?.NewerNoncurrentVersions).toBe(5);
@@ -50,7 +72,7 @@ describe('getStandardLifecycleRules', () => {
   it('creates a superseded/ expiry rule at 90 days', () => {
     const rule = rules.find((r) => r.ID?.startsWith('expire-superseded-'));
     expect(rule).toBeDefined();
-    expect(rule!.Filter?.Prefix).toBe('superseded/');
+    expect(rule!.Filter?.And?.Prefix).toBe('superseded/');
     expect(rule!.Expiration?.Days).toBe(90);
     expect(rule!.NoncurrentVersionExpiration?.NoncurrentDays).toBe(90);
     expect(rule!.NoncurrentVersionExpiration?.NewerNoncurrentVersions).toBe(5);
@@ -65,31 +87,24 @@ describe('getStandardLifecycleRules', () => {
     expect(rule!.AbortIncompleteMultipartUpload?.DaysAfterInitiation).toBe(1);
   });
 
-  // ── Legal-hold preservation rule ──────────────────────────────────────
-
-  it('creates a legal-hold preservation rule', () => {
-    const rule = rules.find((r) => r.ID === 'legal-hold-preserve');
-    expect(rule).toBeDefined();
-    expect(rule!.Filter?.And?.Prefix).toBe('');
-    expect(rule!.Filter?.And?.Tags).toHaveLength(1);
-    expect(rule!.Filter?.And?.Tags![0]!.Key).toBe('legal-hold');
-    expect(rule!.Filter?.And?.Tags![0]!.Value).toBe('true');
-    expect(rule!.Transitions).toBeDefined();
-    expect(rule!.Transitions).toHaveLength(1);
-    expect(rule!.Transitions![0]!.Days).toBe(0);
-    expect(rule!.Transitions![0]!.StorageClass).toBe('GLACIER');
-    expect(rule!.NoncurrentVersionTransitions).toBeDefined();
-    expect(rule!.NoncurrentVersionTransitions).toHaveLength(1);
-    expect(rule!.NoncurrentVersionTransitions![0]!.NoncurrentDays).toBe(0);
-    expect(rule!.NoncurrentVersionTransitions![0]!.StorageClass).toBe('GLACIER');
+  it('does not transition held files to an offline storage class', () => {
+    expect(rules.some((rule) => rule.Transitions || rule.NoncurrentVersionTransitions)).toBe(false);
   });
 
-  // ── Custom tag keys ───────────────────────────────────────────────────
-
-  it('accepts custom legal-hold tag key and value', () => {
+  it('requires an explicit non-held tag with a custom key', () => {
     const customRules = getStandardLifecycleRules('hold', 'active');
-    const rule = customRules.find((r) => r.ID === 'legal-hold-preserve')!;
-    expect(rule.Filter?.And?.Tags![0]!.Key).toBe('hold');
-    expect(rule.Filter?.And?.Tags![0]!.Value).toBe('active');
+    for (const rule of customRules.filter((r) => r.Expiration)) {
+      expect(rule.Filter?.And?.Tags).toEqual([{ Key: 'hold', Value: 'false' }]);
+    }
+  });
+
+  it('rejects an ambiguous hold value before changing the bucket', async () => {
+    const client = new S3Client({ region: 'us-east-1' });
+    const send = vi.spyOn(client, 'send');
+    await expect(
+      setupBucket({ bucket: 'test', client, legalHoldTagValue: 'false' })
+    ).rejects.toThrow('distinct from expiration');
+    expect(send).not.toHaveBeenCalled();
+    client.destroy();
   });
 });
