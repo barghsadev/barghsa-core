@@ -3,9 +3,9 @@
   "updated": "2026-09-18",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "7e58734377034599a64630f4f24c4787c10f1bba",
+  "source_revision": "0607d3226530cf8fca937db262356cc34f15d2b5",
   "active_step": "V01",
-  "next_action": "Review and repair immutable signing/read behavior for original uploaded keys, with race/replay proof; preserve existing sealed business copies and R02 authority evidence.",
+  "next_action": "Complete trusted version-aware retention classification, then reconcile Pending scan/checksum/profile association and PR56 frontend deferral; retain deployment prerequisites.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -1167,13 +1167,12 @@
     ],
     "base_revision": "f47f30495898bbea965f24d25f76423ea83df7b3",
     "remaining_checklist": [
-      "Review and repair immutable signing/read behavior for original uploaded keys, with race/replay proof; preserve existing sealed business copies and R02 authority evidence.",
       "Complete trusted version-aware retention classification or retain explicit unresolved criteria; include prefixed physical keys and legal-held historical versions. No blanket tagging or real bucket mutation.",
       "Review task02 Pending scan/checksum/profile association and actual direct-upload frontend; resolve PR56 frontend deferral against current code.",
-      "Consolidate five-task/five-PR review once workflow repairs pass, retaining exact production and future-consumer prerequisites."
+      "Consolidate five-task/five-PR review once workflow repairs pass, retaining exact production and future-consumer prerequisites.",
+      "Rollout prerequisites: deploy API/helpers together, permit If-None-Match in bucket CORS, drain old writers and expire old PUT URLs for at least1hour before relying on original-key immutability. No deployed proof claimed."
     ],
     "confirmed_defects": [
-      "Original uploads are promoted to active at the same presigned writable key. Admin signing can mark that original key immutable while its PUT URL remains valid; freeze an immutable snapshot/version and ensure readers use it before promising signed immutability.",
       "Full retention classifier is absent. Do not tag all uploads disposable: some active business files remain at their original keys. Positive lifecycle eligibility is safe but automation is incomplete.",
       "Upload verify does not persist Pending scan/checksum state; reconcile exact task02 criteria and current business profile permissions/callers before closure."
     ],
@@ -1208,37 +1207,107 @@
       "audit/evidence/v01-storage/v01-storage-shared-build-minio.log.gz",
       "audit/evidence/v01-storage/v01-storage-shared-build.log.gz",
       "audit/evidence/v01-storage/v01-storage-types-final.log.gz",
-      "audit/evidence/v01-storage/v01-storage-types.log.gz"
+      "audit/evidence/v01-storage/v01-storage-types.log.gz",
+      "audit/evidence/v01-storage/v01-storage-upload-api-types-clean.log.gz",
+      "audit/evidence/v01-storage/v01-storage-upload-api-types-final.log.gz",
+      "audit/evidence/v01-storage/v01-storage-upload-api-types-fresh.log.gz",
+      "audit/evidence/v01-storage/v01-storage-upload-api-types.log.gz",
+      "audit/evidence/v01-storage/v01-storage-upload-http-final.log.gz",
+      "audit/evidence/v01-storage/v01-storage-upload-http.log.gz",
+      "audit/evidence/v01-storage/v01-storage-upload-web-final.log.gz",
+      "audit/evidence/v01-storage/v01-storage-upload-web-types.log.gz",
+      "audit/evidence/v01-storage/v01-storage-upload-web.log.gz",
+      "audit/evidence/v01-storage/v01-storage-write-once-after.log.gz",
+      "audit/evidence/v01-storage/v01-storage-write-once-before.log.gz",
+      "audit/evidence/v01-storage/v01-storage-write-once-build.log.gz",
+      "audit/evidence/v01-storage/v01-storage-write-once-format.log.gz",
+      "audit/evidence/v01-storage/v01-storage-write-once-knowledge.log.gz",
+      "audit/evidence/v01-storage/v01-storage-write-once-lint.log.gz",
+      "audit/evidence/v01-storage/v01-storage-write-once-minio-final.log.gz",
+      "audit/evidence/v01-storage/v01-storage-write-once-shared.log.gz"
     ],
     "pr_dispositions": [],
-    "next_action": "Review and repair immutable signing/read behavior for original uploaded keys, with race/replay proof; preserve existing sealed business copies and R02 authority evidence.",
+    "next_action": "Complete trusted version-aware retention classification, then reconcile Pending scan/checksum/profile association and PR56 frontend deferral; retain deployment prerequisites.",
     "product_commits": [
       "a4794e30e2e7e4f70cface777ece5da81f7c1d7a",
-      "7e58734377034599a64630f4f24c4787c10f1bba"
+      "7e58734377034599a64630f4f24c4787c10f1bba",
+      "0607d3226530cf8fca937db262356cc34f15d2b5"
     ],
     "checkpoint": {
-      "source_revision": "7e58734377034599a64630f4f24c4787c10f1bba",
+      "source_revision": "0607d3226530cf8fca937db262356cc34f15d2b5",
       "status": "repairs_verified_batch_open",
       "review": [
         "Legal-hold regression failed for all four expiry prefixes before repair. Expiration now requires legal-hold=false; held and unclassified versions are retained. Unsupported GLACIER preservation claim removed. Age limits and five noncurrent versions preserved. No existing objects were classified.",
         "Broken ts-node root CLI replaced with built shared-package ESM entry using declared dependencies; explicit credentials pair/path-style parsing, bounded errors, SDK connection disposal. Actual root help succeeds.",
         "Real MinIO rejected AbortIncompleteMultipartUpload. Explicit --backend minio installs four supported rules and reports separate server configuration; Compose declares 24h stale-upload expiry and 1h sweep. S3 retains its multipart rule. Local MinIO readback confirms policy/versioning and retained per-version tags, not elapsed-day or deployed expiry.",
         "Unused production legacy facade deleteRecord could physically delete after an unlocked active-status read or without a record. It now only soft-deletes known records; missing records are no-ops. Signed error contract is preserved; existence-check streams are cancelled. Physical worker cleanup remains independently controlled.",
-        "Real Blob and Web ReadableStream uploads failed with flowing-stream hashing errors. Pinned AWS Upload helper fixes those bodies, uses one5MiB part at a time and aborts failed multipart uploads. Small string/byte PUTs retain the original path. Direct signed upload/download, key tampering rejection, private access, pagination, multipart roundtrip and failed-source cleanup pass."
+        "Real Blob and Web ReadableStream uploads failed with flowing-stream hashing errors. Pinned AWS Upload helper fixes those bodies, uses one5MiB part at a time and aborts failed multipart uploads. Small string/byte PUTs retain the original path. Direct signed upload/download, key tampering rejection, private access, pagination, multipart roundtrip and failed-source cleanup pass.",
+        "Original upload keys are now write-once through presigned PUT. If-None-Match:* is signed into the URL; stripping/changing it is rejected, and replay cannot overwrite the original. All three browser helpers send the condition and the API response documents it. Existing sealed business copies remain unchanged.",
+        "The upload-policy revocation test matched one particular blocked SQL statement. Earlier session checks may wait first, so it now observes the actual blocking backend PID. Revocation still must return403 and create no policy; this also eliminates the leaked test policy that contaminated the scheduling assertion."
       ],
       "verification": [
         "82 distinct focused cases pass:57 shared storage,13 CLI/real-MinIO leaf cases,12 real PostgreSQL bank-receipt retention cases. Parent Node test container is not counted separately.",
         "Shared build/export checks, typecheck, affected lint/format and diff check pass. Root pnpm setup:bucket -- --help runs successfully. No real bucket mutation, remote action or scheduler change.",
-        "Existing R02 config/admin storage authority source files remain unchanged. Preserve their recorded evidence for those aspects only. New provider dependency and Compose edits require final packaged-image refresh in V02."
+        "Existing R02 config/admin storage authority source files remain unchanged. Preserve their recorded evidence for those aspects only. New provider dependency and Compose edits require final packaged-image refresh in V02.",
+        "Write-once follow-up:11 actual MinIO leaf cases pass including replay/header tampering;32 upload-helper cases and22 real HTTP cases pass. Shared provider cases pass again. Across both checkpoints,137 distinct cases pass:57 shared storage,14 CLI/MinIO leaves,12 bank receipt,32 web and22 HTTP.",
+        "API HTTP global setup rebuilds shared/db/i18n/worker/API. An initial parallel consumer run hit missing exports while that rebuild ran; rerun only after it ended. API typecheck passes with a fresh --tsBuildInfoFile; the default incremental cache retained three stale implicit-any diagnostics. A --incremental false attempt was invalid for this composite project. Failures are archived. Shared/API builds, web/API types and scoped lint/format/diff checks pass."
       ],
       "source_evidence": [
         {
-          "path": "packages/shared/src/storage/setup-bucket.ts",
-          "sha256": "5fc76c40e1054730abdc656680a5ba35d87a7268c4accc8f7b6d0eae2149c1dd"
+          "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+          "sha256": "d9307dfbd743b010be9089ca9b2f0f9881c36c0b1d6e643180416379c54f2dd7"
         },
         {
-          "path": "packages/shared/src/storage/setup-bucket.test.ts",
-          "sha256": "694920dda1cf361be9b202017d050681ff4bc0d2923a590afa650e051f3333c1"
+          "path": "apps/api/src/upload/upload.controller.ts",
+          "sha256": "8e9c20e9e4239d15cf0a8d3cdff9b497cd8e8d6467aa3946329b8ad2fff6b50f"
+        },
+        {
+          "path": "apps/api/src/upload/upload.types.ts",
+          "sha256": "79b7dda40e78cd9d04f6e7bd243b12ce31a2e50d967cb0587f1a6e00235d50d1"
+        },
+        {
+          "path": "apps/web/src/lib/branding-logo-upload.test.ts",
+          "sha256": "a82f35827216067b63fd6ee7ae31ec95517b0c98d1816554c7e82d81308d7465"
+        },
+        {
+          "path": "apps/web/src/lib/branding-logo-upload.ts",
+          "sha256": "14b094fd8c380b0fd50055b1920603d0acc887d5ceab5fe9f4c1f54ed80f1632"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+          "sha256": "1051d238e089274b9d954403f85139f8b4c9f917f301da6fe8398d9467d84444"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+          "sha256": "60c363f95e7a51d2a0433a17d124d3c28d2fb49a5068760d898c918a967d166e"
+        },
+        {
+          "path": "apps/web/src/lib/knowledge-base-upload.test.ts",
+          "sha256": "27827949b0007da44fdbcf3634e4cb9471449156923339e959d78f6acf0449e0"
+        },
+        {
+          "path": "apps/web/src/lib/knowledge-base-upload.ts",
+          "sha256": "0763b32d8961adcf1e8b3d36d4af449f95cfde1f29ac3e3d9fc2d73597f21f74"
+        },
+        {
+          "path": "docker-compose.yml",
+          "sha256": "e3c7fc890b40a32ee6287a0e8117b5e7f988b13273b5c0db6857b804b3e40c27"
+        },
+        {
+          "path": "docs/operations/storage-retention.md",
+          "sha256": "5f78dae918e72300545fd79f352eebb2fadfe5c06fe6486c3d3725ef736a1aa8"
+        },
+        {
+          "path": "package.json",
+          "sha256": "66b10b2ef95b44b8abfa26017e0e967c37f83505097d95c78fd8cc60019502b8"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "17d5174c1fa2ad776a3289745b6d39fd1234be2ba4c7df68f84edbe910bf1f2c"
+        },
+        {
+          "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
+          "sha256": "61dc6e4530c1d267ba9727873e40ea722dc5ba33ed7552d353b701fcd32a2243"
         },
         {
           "path": "packages/shared/scripts/setup-bucket.mjs",
@@ -1249,40 +1318,32 @@
           "sha256": "e490c970b8ed9c58fa4da80e30ea9a310f0fc01cff886eca9a63b1ce5f587d1a"
         },
         {
-          "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
-          "sha256": "9b8a2e1aa5818edf385837f6f88b8440f9e15c5a58b7e9dcc6aede2647df3491"
-        },
-        {
-          "path": "packages/shared/src/storage/s3-storage-provider.ts",
-          "sha256": "dad9a8130e223f5d1e9c0abb7c79a4043bc2c6f604cafdde15f630278be3730a"
+          "path": "packages/shared/src/storage/immutable-storage.test.ts",
+          "sha256": "cbba8a79401b5c8056d6910dd3cc9d2402ee411a5646005746b56d83b1fe95d2"
         },
         {
           "path": "packages/shared/src/storage/immutable-storage.ts",
           "sha256": "270cc5e3e30daa3124ea3f275ad695aa9b3531023f2e641d8b093e8f17fbc069"
         },
         {
-          "path": "packages/shared/src/storage/immutable-storage.test.ts",
-          "sha256": "cbba8a79401b5c8056d6910dd3cc9d2402ee411a5646005746b56d83b1fe95d2"
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "2668680595ecf4f29a6629cc8a1731f878abfc1cae96ee7577e0fbe654c6774b"
         },
         {
-          "path": "packages/shared/package.json",
-          "sha256": "17d5174c1fa2ad776a3289745b6d39fd1234be2ba4c7df68f84edbe910bf1f2c"
+          "path": "packages/shared/src/storage/setup-bucket.test.ts",
+          "sha256": "694920dda1cf361be9b202017d050681ff4bc0d2923a590afa650e051f3333c1"
+        },
+        {
+          "path": "packages/shared/src/storage/setup-bucket.ts",
+          "sha256": "5fc76c40e1054730abdc656680a5ba35d87a7268c4accc8f7b6d0eae2149c1dd"
+        },
+        {
+          "path": "packages/shared/src/storage/storage-provider.ts",
+          "sha256": "ae866d08f5114e108be211d04f1a63a5822f584f8ebbb8b7ef09c6c58b6a1ac5"
         },
         {
           "path": "pnpm-lock.yaml",
           "sha256": "c23434c19cdd6388ec1df84c7d25f0b9fc26557b89688b768a80be6878b8fe7f"
-        },
-        {
-          "path": "package.json",
-          "sha256": "66b10b2ef95b44b8abfa26017e0e967c37f83505097d95c78fd8cc60019502b8"
-        },
-        {
-          "path": "docker-compose.yml",
-          "sha256": "e3c7fc890b40a32ee6287a0e8117b5e7f988b13273b5c0db6857b804b3e40c27"
-        },
-        {
-          "path": "docs/operations/storage-retention.md",
-          "sha256": "b4360a5e3a4679ff320166c52a2a007c026f457a123855ca21201aa6507bede2"
         }
       ],
       "logs": [
@@ -1313,7 +1374,24 @@
         "audit/evidence/v01-storage/v01-storage-shared-build-minio.log.gz",
         "audit/evidence/v01-storage/v01-storage-shared-build.log.gz",
         "audit/evidence/v01-storage/v01-storage-types-final.log.gz",
-        "audit/evidence/v01-storage/v01-storage-types.log.gz"
+        "audit/evidence/v01-storage/v01-storage-types.log.gz",
+        "audit/evidence/v01-storage/v01-storage-upload-api-types-clean.log.gz",
+        "audit/evidence/v01-storage/v01-storage-upload-api-types-final.log.gz",
+        "audit/evidence/v01-storage/v01-storage-upload-api-types-fresh.log.gz",
+        "audit/evidence/v01-storage/v01-storage-upload-api-types.log.gz",
+        "audit/evidence/v01-storage/v01-storage-upload-http-final.log.gz",
+        "audit/evidence/v01-storage/v01-storage-upload-http.log.gz",
+        "audit/evidence/v01-storage/v01-storage-upload-web-final.log.gz",
+        "audit/evidence/v01-storage/v01-storage-upload-web-types.log.gz",
+        "audit/evidence/v01-storage/v01-storage-upload-web.log.gz",
+        "audit/evidence/v01-storage/v01-storage-write-once-after.log.gz",
+        "audit/evidence/v01-storage/v01-storage-write-once-before.log.gz",
+        "audit/evidence/v01-storage/v01-storage-write-once-build.log.gz",
+        "audit/evidence/v01-storage/v01-storage-write-once-format.log.gz",
+        "audit/evidence/v01-storage/v01-storage-write-once-knowledge.log.gz",
+        "audit/evidence/v01-storage/v01-storage-write-once-lint.log.gz",
+        "audit/evidence/v01-storage/v01-storage-write-once-minio-final.log.gz",
+        "audit/evidence/v01-storage/v01-storage-write-once-shared.log.gz"
       ]
     },
     "resolved_defects": [
@@ -1321,7 +1399,8 @@
       "Broken bucket setup CLI and ignored explicit path-style false",
       "MinIO rejection of S3 multipart lifecycle action",
       "Legacy unlocked/missing-record physical deletion and leaked existence-check stream",
-      "Blob and Web ReadableStream uploads fail against real object storage"
+      "Blob and Web ReadableStream uploads fail against real object storage",
+      "Presigned PUT replay can replace original upload bytes after verification/signing"
     ]
   },
   "open_domain_reviews": [

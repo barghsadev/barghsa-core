@@ -24060,6 +24060,125 @@
       "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c",
       "encoding": "gzip",
       "stored_sha256": "f6d17085968f1452afb3b2dc0af4fe00acfdfe9ca0a521c556246f06c07285a8"
+    },
+    {
+      "original_path": "/tmp/v01-storage-upload-api-types-clean.log",
+      "path": "audit/evidence/v01-storage/v01-storage-upload-api-types-clean.log.gz",
+      "sha256": "ee3f7e08d46c6e7d01c76d9ae033acfbd14a4d21ba02af57468e25abeeaed4db",
+      "encoding": "gzip",
+      "stored_sha256": "feef707dcf4eb0592f664ab9bfb3c092318b9700526aec75dff1d7f393ab1126"
+    },
+    {
+      "original_path": "/tmp/v01-storage-upload-api-types-final.log",
+      "path": "audit/evidence/v01-storage/v01-storage-upload-api-types-final.log.gz",
+      "sha256": "6cc16ff669c7c8379c7d6ccd220bf81d01c8cbcc07fc1236d3fa967af044e89d",
+      "encoding": "gzip",
+      "stored_sha256": "a8f946cb157b8cb3387a7cc992f3b3177134ffdf97ef8deeac4e2d457a175555"
+    },
+    {
+      "original_path": "/tmp/v01-storage-upload-api-types-fresh.log",
+      "path": "audit/evidence/v01-storage/v01-storage-upload-api-types-fresh.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-storage-upload-api-types.log",
+      "path": "audit/evidence/v01-storage/v01-storage-upload-api-types.log.gz",
+      "sha256": "a9cf5aa5729b6fcfc7f7492522a4ea72ed09fe8c50725ff2d6a30e870ed24a66",
+      "encoding": "gzip",
+      "stored_sha256": "5b65b49aa4975cff0f7b0b5ff40b32756ba24a3325a9ddaf2bf50abf8baa2a7e"
+    },
+    {
+      "original_path": "/tmp/v01-storage-upload-http-final.log",
+      "path": "audit/evidence/v01-storage/v01-storage-upload-http-final.log.gz",
+      "sha256": "bc1314041c77cb49f6ba760b97b8d27bc30b88626823c4d5ce09259e85597165",
+      "encoding": "gzip",
+      "stored_sha256": "f59674d596a8f43d9070980db834e8894fb08a7b9908285c64df8aa30a67a2e3"
+    },
+    {
+      "original_path": "/tmp/v01-storage-upload-http.log",
+      "path": "audit/evidence/v01-storage/v01-storage-upload-http.log.gz",
+      "sha256": "e54c184d241a77914eb777e16ad1bc2eb5b5529fa2f910c25fd9e4367aa10a7c",
+      "encoding": "gzip",
+      "stored_sha256": "6f01c9cb2303832cabdeeb9fd7ea057f4737510b0a419fbc7385a19a70753737"
+    },
+    {
+      "original_path": "/tmp/v01-storage-upload-web-final.log",
+      "path": "audit/evidence/v01-storage/v01-storage-upload-web-final.log.gz",
+      "sha256": "61bac9ee44edb1fbc67f972d640a3e8c69bb1b84da7ab4b823b2d26d80a71ba3",
+      "encoding": "gzip",
+      "stored_sha256": "64babc7360b72def7a46381e8ef29da187ba9e22c6bbc5b571a95562725e7eaf"
+    },
+    {
+      "original_path": "/tmp/v01-storage-upload-web-types.log",
+      "path": "audit/evidence/v01-storage/v01-storage-upload-web-types.log.gz",
+      "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+      "encoding": "gzip",
+      "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/v01-storage-upload-web.log",
+      "path": "audit/evidence/v01-storage/v01-storage-upload-web.log.gz",
+      "sha256": "aeda3582fdb8f791a749bdf4a51dd97350f79f505c70b587a1a673547018745e",
+      "encoding": "gzip",
+      "stored_sha256": "f97cb6ee7535ac105417fe89c57ef149bf73b21e8d7bcb0591cb6e44dbe89f28"
+    },
+    {
+      "original_path": "/tmp/v01-storage-write-once-after.log",
+      "path": "audit/evidence/v01-storage/v01-storage-write-once-after.log.gz",
+      "sha256": "dd002fd9271d5ce66e9e3e660706c6383dae3575dbdcff45e9c8007d4935007f",
+      "encoding": "gzip",
+      "stored_sha256": "9ccd61921d957b179275540698af1e4d877227b8073c22bea1898c1b17e22764"
+    },
+    {
+      "original_path": "/tmp/v01-storage-write-once-before.log",
+      "path": "audit/evidence/v01-storage/v01-storage-write-once-before.log.gz",
+      "sha256": "e9d3a9b8dd166927071d99ca14167f093acccd9e140b4d9496df7e3c89155a4f",
+      "encoding": "gzip",
+      "stored_sha256": "dcecfbce8d4cb3ae376cb98827f85a79e3e746ede4c019b83486d7e641733d19"
+    },
+    {
+      "original_path": "/tmp/v01-storage-write-once-build.log",
+      "path": "audit/evidence/v01-storage/v01-storage-write-once-build.log.gz",
+      "sha256": "991c798d2dc4e61bd4db5650b0ec372bb9149a4d2fd3442950091685e0733162",
+      "encoding": "gzip",
+      "stored_sha256": "9adf39883b4fd0c61804adc0001b7ec7e0f42ce39cef7d9e2f85c80a60d0bc9a"
+    },
+    {
+      "original_path": "/tmp/v01-storage-write-once-format.log",
+      "path": "audit/evidence/v01-storage/v01-storage-write-once-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/v01-storage-write-once-knowledge.log",
+      "path": "audit/evidence/v01-storage/v01-storage-write-once-knowledge.log.gz",
+      "sha256": "0ca90071e3045734ffb572e3e91af5b8e73e76b10acb1bb46add2d5bf3219a21",
+      "encoding": "gzip",
+      "stored_sha256": "991dbdb97beed792b18d4b3770ee9aba0facf2a2e9d6cabb155728c51917fcd7"
+    },
+    {
+      "original_path": "/tmp/v01-storage-write-once-lint.log",
+      "path": "audit/evidence/v01-storage/v01-storage-write-once-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-storage-write-once-minio-final.log",
+      "path": "audit/evidence/v01-storage/v01-storage-write-once-minio-final.log.gz",
+      "sha256": "1d7afce3de55388874ce547a36893d673886dc05aee7898b37c1be9b47779a30",
+      "encoding": "gzip",
+      "stored_sha256": "41063ce7bc8e4df5a409b5153ce0e15b87788a5105629bbf1d20de584e808f6c"
+    },
+    {
+      "original_path": "/tmp/v01-storage-write-once-shared.log",
+      "path": "audit/evidence/v01-storage/v01-storage-write-once-shared.log.gz",
+      "sha256": "13d12d3e666d8a788f3069f4960f43405d915a2d2510fdb44d2ece22cdd2515f",
+      "encoding": "gzip",
+      "stored_sha256": "a9045b9c07f5b60a6424dcee990256f415514d9ba47b9ac266e0efda5474eee5"
     }
   ]
 }
