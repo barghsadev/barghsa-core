@@ -5,7 +5,7 @@
   "plan": "audit/fix-plan.md",
   "source_revision": "a6f513065c009d38d04e0a3e2469cc835ee70fe6",
   "active_step": "V01",
-  "next_action": "V01 configuration/key/file backup, saved PR50 and01-platform-infrastructure.md#T-04.01.07. Reuse the signed/encrypted physical store and restore safeguards; review active-config export, key wrapping, safe file collection/rehydration and real verification. Do not close operational prerequisites or rerun unchanged physical/pool tests.",
+  "next_action": "Replace the broken legacy config workflow with actual active-configuration export, signed encrypted storage, preserved relative paths and isolated restore/rehydration checks. Start from the saved syntax/dependency failures; do not merely repair the JSON quoting and expose the known unsafe cleanup/storage paths. Reuse Store/GPG from physical_backup.py. Inventory active domain-version stores before claiming complete config coverage.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -1138,13 +1138,32 @@
       "Reuse physical backup Store/GPG/owned-directory behavior where applicable; do not collect or expose real checkout credentials in tests.",
       "Separate local script proof from secret-manager, off-server deployment and quarterly operational results."
     ],
-    "confirmed_defects": [],
+    "confirmed_defects": [
+      "Config backup and restore still use unsigned HTTP Basic S3 calls and incomplete latest listings.",
+      "Config backup flattens original file paths, swallows collection failures and counts directories rather than restored files. Its unconditional cleanup would delete caller-selected BACKUP_DIR even on dry-run; inspection confirms this, but the current parser failure prevents the synthetic run from reaching cleanup. Restore extracts tar directly, permits an existing target, and default cleanup removes its advertised output.",
+      "The admin-config snapshot is a source-tree placeholder rather than runtime active values; its emitted JSON is malformed. Config verification treats backup age as RPO and asserts restored structure rather than configuration rehydration.",
+      "Current app_config schema holds versioned key/value rows and a separate global config_version. Need to identify active domain-version stores before claiming an all-active export; do not substitute the physical database backup for this explicit requirement.",
+      "backup-config.sh fails bash syntax parsing at line387 because the placeholder JSON echo has broken quoting. The packaged image also lacks legacy curl, so its validation fails before parsing the remaining function body. Neither synthetic attempt reached backup or cleanup; no deletion was reproduced."
+    ],
     "reused_evidence": [
       "audit/evidence/step-reviews.json#V01-operations-configuration"
     ],
-    "new_evidence": [],
+    "new_evidence": [
+      {
+        "change": "Legacy config-backup baseline inspection and isolated reproduction",
+        "checks": [
+          "bash -n backup-config.sh exits2 with a syntax error. Original synthetic dry-run exits1 for missing curl. With a no-network curl stub it exits2 for the syntax error; caller marker remains intact.",
+          "No real environment/config/secret files were collected, and no storage requests were made. Cleanup defect is code-inspection evidence only, pending a reachable behavioral regression test."
+        ],
+        "logs": [
+          "/tmp/v01-config-before.log",
+          "/tmp/v01-config-before-isolated.log",
+          "/tmp/v01-config-syntax-before.log"
+        ]
+      }
+    ],
     "pr_dispositions": [],
-    "next_action": "V01 configuration/key/file backup, saved PR50 and01-platform-infrastructure.md#T-04.01.07. Reuse the signed/encrypted physical store and restore safeguards; review active-config export, key wrapping, safe file collection/rehydration and real verification. Do not close operational prerequisites or rerun unchanged physical/pool tests."
+    "next_action": "Replace the broken legacy config workflow with actual active-configuration export, signed encrypted storage, preserved relative paths and isolated restore/rehydration checks. Start from the saved syntax/dependency failures; do not merely repair the JSON quoting and expose the known unsafe cleanup/storage paths. Reuse Store/GPG from physical_backup.py. Inventory active domain-version stores before claiming complete config coverage."
   },
   "open_domain_reviews": [
     {

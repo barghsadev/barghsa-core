@@ -23605,6 +23605,27 @@
       "sha256": "16fbdcf5f7b79c84f98fc38a8e65c524db01ccdc3d26e88dc4716ef7eb1639e2",
       "encoding": "gzip",
       "stored_sha256": "cc68be2bdddaad371def958f95c6d0d314e98454d602dc58afbbdbf0b648641c"
+    },
+    {
+      "original_path": "/tmp/v01-config-before.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-before.log.gz",
+      "sha256": "f1ba9563ab8a074cfbf66ecda1779337151c784abbd75735396876784c9b9e07",
+      "encoding": "gzip",
+      "stored_sha256": "45f3f4064afda685188737b6e6eb03a15cc93813e12598d248bc06bd79c378c7"
+    },
+    {
+      "original_path": "/tmp/v01-config-before-isolated.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-before-isolated.log.gz",
+      "sha256": "3ca09965408f22ff95907306ac6809ae262b59e30cd48f7dc385bf5121453331",
+      "encoding": "gzip",
+      "stored_sha256": "5a1b5ba1c06c7b1cde3b00a68d359db406b44eeda1d05f692f522d33220927fc"
+    },
+    {
+      "original_path": "/tmp/v01-config-syntax-before.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-syntax-before.log.gz",
+      "sha256": "08cae646db7585ea419451c1fead9154f47fc4f24727a926e456a9cecb0dccb5",
+      "encoding": "gzip",
+      "stored_sha256": "3806643c5aba95e67e1aa2a13a355bc74c111259dea4843d5c232a71be35ef50"
     }
   ]
 }
