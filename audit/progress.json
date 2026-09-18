@@ -3,9 +3,9 @@
   "updated": "2026-09-18",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "a6f513065c009d38d04e0a3e2469cc835ee70fe6",
+  "source_revision": "6c6cf4375837106507f3e899014eaa4e43d95460",
   "active_step": "V01",
-  "next_action": "Replace the broken legacy config workflow with actual active-configuration export, signed encrypted storage, preserved relative paths and isolated restore/rehydration checks. Start from the saved syntax/dependency failures; do not merely repair the JSON quoting and expose the known unsafe cleanup/storage paths. Reuse Store/GPG from physical_backup.py. Inventory active domain-version stores before claiming complete config coverage.",
+  "next_action": "Review the ten saved container PRs against the five exact current tasks; inspect Dockerfiles/context and run focused image builds/smoke checks for confirmed gaps.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -790,6 +790,10 @@
       "id": "V01-operations-configuration",
       "review_record": "audit/evidence/step-reviews.json#V01-operations-configuration",
       "scope": "Local review consolidated; six task acceptances and PRs retain operational prerequisites."
+    },
+    {
+      "id": "V01-config-backup",
+      "review_record": "audit/evidence/step-reviews.json#V01-config-backup"
     }
   ],
   "deferred_improvements": [
@@ -818,8 +822,8 @@
   "counts": {
     "historical_tasks": 322,
     "acceptance_verified": 197,
-    "partial": 40,
-    "pending": 85,
+    "partial": 41,
+    "pending": 84,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 8,
@@ -1123,47 +1127,41 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-config-backup",
-    "name": "Configuration, key and critical-file backup/restore",
+    "id": "V01-container-images",
+    "name": "Production web/API/worker images",
     "status": "in_progress",
     "prs": [
-      50
+      30,
+      31,
+      32,
+      33,
+      34,
+      94,
+      95,
+      96,
+      97,
+      98
     ],
     "task_keys": [
-      "01-platform-infrastructure.md#T-04.01.07"
+      "01-platform-infrastructure.md#T-03.01.01",
+      "01-platform-infrastructure.md#T-03.01.02",
+      "01-platform-infrastructure.md#T-03.01.03",
+      "01-platform-infrastructure.md#T-03.01.04",
+      "01-platform-infrastructure.md#T-03.01.05"
     ],
-    "base_revision": "a6f513065c009d38d04e0a3e2469cc835ee70fe6",
+    "base_revision": "6c6cf4375837106507f3e899014eaa4e43d95460",
     "remaining_checklist": [
-      "Exact task and saved PR body read; inspect current file backup/restore/verification against active-config export, wrapped keys, encrypted off-server storage and rehydration requirements.",
-      "Reuse physical backup Store/GPG/owned-directory behavior where applicable; do not collect or expose real checkout credentials in tests.",
-      "Separate local script proof from secret-manager, off-server deployment and quarterly operational results."
+      "Read current canonical requirements and all ten saved PR bodies/deferrals; review the current combined implementation once.",
+      "Verify production build, dependencies, runtime commands, health checks, context exclusions and hardening. Reuse R04/R05 and runtime-lifecycle evidence where source bindings remain valid.",
+      "Preserve accepted Vite SPA architecture and repeated-task provenance; no deployment or publication."
     ],
-    "confirmed_defects": [
-      "Config backup and restore still use unsigned HTTP Basic S3 calls and incomplete latest listings.",
-      "Config backup flattens original file paths, swallows collection failures and counts directories rather than restored files. Its unconditional cleanup would delete caller-selected BACKUP_DIR even on dry-run; inspection confirms this, but the current parser failure prevents the synthetic run from reaching cleanup. Restore extracts tar directly, permits an existing target, and default cleanup removes its advertised output.",
-      "The admin-config snapshot is a source-tree placeholder rather than runtime active values; its emitted JSON is malformed. Config verification treats backup age as RPO and asserts restored structure rather than configuration rehydration.",
-      "Current app_config schema holds versioned key/value rows and a separate global config_version. Need to identify active domain-version stores before claiming an all-active export; do not substitute the physical database backup for this explicit requirement.",
-      "backup-config.sh fails bash syntax parsing at line387 because the placeholder JSON echo has broken quoting. The packaged image also lacks legacy curl, so its validation fails before parsing the remaining function body. Neither synthetic attempt reached backup or cleanup; no deletion was reproduced."
-    ],
+    "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#V01-operations-configuration"
+      "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
     ],
-    "new_evidence": [
-      {
-        "change": "Legacy config-backup baseline inspection and isolated reproduction",
-        "checks": [
-          "bash -n backup-config.sh exits2 with a syntax error. Original synthetic dry-run exits1 for missing curl. With a no-network curl stub it exits2 for the syntax error; caller marker remains intact.",
-          "No real environment/config/secret files were collected, and no storage requests were made. Cleanup defect is code-inspection evidence only, pending a reachable behavioral regression test."
-        ],
-        "logs": [
-          "/tmp/v01-config-before.log",
-          "/tmp/v01-config-before-isolated.log",
-          "/tmp/v01-config-syntax-before.log"
-        ]
-      }
-    ],
+    "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Replace the broken legacy config workflow with actual active-configuration export, signed encrypted storage, preserved relative paths and isolated restore/rehydration checks. Start from the saved syntax/dependency failures; do not merely repair the JSON quoting and expose the known unsafe cleanup/storage paths. Reuse Store/GPG from physical_backup.py. Inventory active domain-version stores before claiming complete config coverage."
+    "next_action": "Review the ten saved container PRs against the five exact current tasks; inspect Dockerfiles/context and run focused image builds/smoke checks for confirmed gaps."
   },
   "open_domain_reviews": [
     {
@@ -1325,7 +1323,7 @@
         141
       ],
       "owner_batch": "V01/B01 external provider prerequisite",
-      "remaining": "DISABLED/MANUAL Draft\u2192Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
+      "remaining": "DISABLED/MANUAL Draft→Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
       "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
       "prerequisite_task_keys": [
         "02-auth-users-admin.md#T-07.01.02"
@@ -1337,7 +1335,7 @@
         142
       ],
       "owner_batch": "V01/B01 external provider prerequisite",
-      "remaining": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create\u2192outbox\u2192worker\u2192result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
+      "remaining": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create→outbox→worker→result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
       "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
       "prerequisite_task_keys": []
     },
@@ -1391,7 +1389,7 @@
         210
       ],
       "owner_batch": "V01/B01 future AI processing and agent chat",
-      "remaining": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01\u201303 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
+      "remaining": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01–03 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
       "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration",
       "prerequisite_task_keys": [
         "05-notifications-documents-ai.md#T-05.17.02",

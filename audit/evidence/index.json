@@ -23626,6 +23626,97 @@
       "sha256": "08cae646db7585ea419451c1fead9154f47fc4f24727a926e456a9cecb0dccb5",
       "encoding": "gzip",
       "stored_sha256": "3806643c5aba95e67e1aa2a13a355bc74c111259dea4843d5c232a71be35ef50"
+    },
+    {
+      "original_path": "/tmp/v01-config-checkpoint-audit.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-checkpoint-audit.log.gz",
+      "sha256": "ee903d70393b517f795261d74ee2f8ab0ea46451b503ae6c614f254eca1d5a9b",
+      "encoding": "gzip",
+      "stored_sha256": "a1d716878400fff2ed7ab54e7f7d708921dcb89615c6eccfb1251594e6f2dc62"
+    },
+    {
+      "original_path": "/tmp/v01-config-complete-backup-suite.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-complete-backup-suite.log.gz",
+      "sha256": "df601c1a517fc381dcd6ea7a6014e1f68caf53c683a74bd6ca76edfcd66e653d",
+      "encoding": "gzip",
+      "stored_sha256": "0bd1552b69b36ecf9f3e23169db58ccb6f0f39d0d8dc63e4584b9558ddacce1c"
+    },
+    {
+      "original_path": "/tmp/v01-config-final-static.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-final-static.log.gz",
+      "sha256": "f152af22ff63a66681af0e418453f8d0471889faa5c5e9d5d1657a7c1886c503",
+      "encoding": "gzip",
+      "stored_sha256": "3762ec1eb8115113eb99c4701d8ba43c69ed50098f2775ef1b239528eb887bb1"
+    },
+    {
+      "original_path": "/tmp/v01-config-format-final.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-format-final.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/v01-config-format-write.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-format-write.log.gz",
+      "sha256": "227875eff3368892c5040864f3f89cdbbe2821747eab583dc8bd9ed6f900a18f",
+      "encoding": "gzip",
+      "stored_sha256": "2927bb6c177a50496006ce4ea5925f19d9fa52e814d7344fec391b23fd41d2ba"
+    },
+    {
+      "original_path": "/tmp/v01-config-format.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-format.log.gz",
+      "sha256": "e6a04ff680030c6e61ddd7e82b62a2dbfceed717a19444a49d50dd0e91473741",
+      "encoding": "gzip",
+      "stored_sha256": "ee031a6b828e76896c223fe7378f2318451ee9413d3d8b109a7b1081d82c4ffd"
+    },
+    {
+      "original_path": "/tmp/v01-config-integration.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-integration.log.gz",
+      "sha256": "060a6488158095d68c968db9cbf8c9ec3f5400380b8e1706bad8568e17cb1394",
+      "encoding": "gzip",
+      "stored_sha256": "5db3c0e8c46275e23e5e0c7f183cd09bc25e52b839e8855198f4f9d7e6b1803c"
+    },
+    {
+      "original_path": "/tmp/v01-config-packaged-cli.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-packaged-cli.log.gz",
+      "sha256": "c50bee17838ef2867003b9c89909ebed2982edc6440d34e6d102448de44f6050",
+      "encoding": "gzip",
+      "stored_sha256": "ce183227fca971ebac7d3abed1d2e3f46d798fc2eaf0ca5868514377649cd67b"
+    },
+    {
+      "original_path": "/tmp/v01-config-packaged-image.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-packaged-image.log.gz",
+      "sha256": "e8b49f205e6c4ef9db8075989f15802a9198b8dff8b3c8dcb60b33f60b152243",
+      "encoding": "gzip",
+      "stored_sha256": "c25ab21cb52286c9c9e1a70d4b3612731dc32d7bf59e701138901639ae05674b"
+    },
+    {
+      "original_path": "/tmp/v01-config-real-user-key-before.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-real-user-key-before.log.gz",
+      "sha256": "737df77b60fcdab162141c5258eca575302324cb9f42a5311cfa3838897c30eb",
+      "encoding": "gzip",
+      "stored_sha256": "6c016044c85c26a443a82323f41a0a8dd3844a0409ee184cde7bae9ea15ed9bf"
+    },
+    {
+      "original_path": "/tmp/v01-config-real-user-key-fixed.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-real-user-key-fixed.log.gz",
+      "sha256": "466343a83638e22c60fe74fbe1057ecedf6334eb3d6c2c1bee08f20d2557e9b0",
+      "encoding": "gzip",
+      "stored_sha256": "2cfef8c92b4ecfca3b365f713836a4808237f62dee31516ff34aab5cb7f873f5"
+    },
+    {
+      "original_path": "/tmp/v01-config-reviewed-tests.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-reviewed-tests.log.gz",
+      "sha256": "03805fcf42ffe37bb7fe10413a01b809ee3a91010721f38718ad4efb7eb1b894",
+      "encoding": "gzip",
+      "stored_sha256": "c24bfad54ef49b2c52591f03410b13bd8b4671748703e7b6873f17d538522d82"
+    },
+    {
+      "original_path": "/tmp/v01-config-static.log",
+      "path": "audit/evidence/v01-config-backup/v01-config-static.log.gz",
+      "sha256": "f152af22ff63a66681af0e418453f8d0471889faa5c5e9d5d1657a7c1886c503",
+      "encoding": "gzip",
+      "stored_sha256": "3762ec1eb8115113eb99c4701d8ba43c69ed50098f2775ef1b239528eb887bb1"
     }
   ]
 }
