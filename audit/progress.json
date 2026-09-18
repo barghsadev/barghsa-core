@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated": "2026-09-18",
+  "updated": "2026-09-19",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
+  "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
   "active_step": "V01",
-  "next_action": "Review shared UI foundations PR65/66/67 against exact task/PR criteria and reuse existing R03/R04/R05 component, accessibility and packaging evidence; then remaining V01/R06/V02/B01.",
+  "next_action": "Continue saved login/OTP/password-enforcement/rate-limit PR reviews77,78,87,88,101 using existing authentication evidence. UI stack requirement decision remains pending.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -815,6 +815,10 @@
     {
       "id": "V01-edge-caching",
       "review_record": "audit/evidence/step-reviews.json#V01-edge-caching"
+    },
+    {
+      "id": "V01-ui-foundations",
+      "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations"
     }
   ],
   "deferred_improvements": [
@@ -847,9 +851,9 @@
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 208,
-    "partial": 45,
-    "pending": 69,
+    "acceptance_verified": 209,
+    "partial": 47,
+    "pending": 66,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 8,
@@ -899,6 +903,13 @@
       "status": "awaiting_owner",
       "asked_once": "2026-09-18 via request_user_input_async; do not repeat.",
       "independent_work": "Continue container/context/runtime checks and remaining feature batches."
+    },
+    {
+      "task_key": "07-ui-ux-design.md#T-07.01.01.02",
+      "question": "Retain tested Base UI/base-nova and update literal Radix/new-york requirement, or migrate preserving behavior?",
+      "status": "awaiting_owner",
+      "asked_once": "2026-09-18 via request_user_input_async; do not repeat.",
+      "independent_work": "UI font/build configuration and complex widget acceptance."
     }
   ],
   "inventory_freshness": {
@@ -1160,83 +1171,44 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-edge-caching",
-    "name": "Pilot proxy, edge limits, static caching and safe metadata ETags",
-    "status": "locally_reviewed",
+    "id": "V01-ui-foundations",
+    "name": "Shared UI scaffold, component inventory and complex widgets",
+    "status": "completed_with_requirement_prerequisites",
     "prs": [
-      60,
-      62,
-      63,
-      64
+      65,
+      66,
+      67
     ],
     "task_keys": [
-      "01-platform-infrastructure.md#T-04.04.01",
-      "01-platform-infrastructure.md#T-04.04.03",
-      "01-platform-infrastructure.md#T-04.04.04",
-      "01-platform-infrastructure.md#T-04.04.05"
+      "07-ui-ux-design.md#T-07.01.01.01",
+      "07-ui-ux-design.md#T-07.01.01.02",
+      "07-ui-ux-design.md#T-07.01.01.03"
     ],
-    "base_revision": "0a8b67acc1044257dcf9f09ea8f7338f8164fdcf",
+    "base_revision": "6d801999",
     "remaining_checklist": [
-      "Deploy web server and NGINX cache configuration together. Production DNS/certificate renewal/trusted proxy topology/TLS/HSTS and final packaged-image regression remain external/V02 prerequisites. Local TLS fixtures are not a deployed certificate claim.",
-      "PR61 remains open for the already-pending authenticated CSP report CSRF decision and production enforcement. No new exemption, owner-policy waiver, remote action or deployment occurred."
+      "T-07.01.01.02 remains partial: installed Base UI/base-nova differs from written Radix/new-york. The existing owner question is pending; no preset switch or requirements waiver occurred.",
+      "T-07.01.01.03 behavior and both historical PR67 deferrals are verified, but literal useTable/package wording is unresolved: current table uses local useTableSort/useTableSelection and the maintained @base-ui/react package. Preserve these tested implementations while reconciling the foundation requirement decision."
     ],
     "confirmed_defects": [],
     "historical_deferrals": [
-      "PR62 NGINX syntax validation",
-      "PR62 Caddy syntax validation; Caddy alternative removed previously and canonical task permits either proxy"
+      "PR67 ComboBox render-prop visual validation",
+      "PR67 validation/form-submission roundtrip"
     ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R03-errors",
-      "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+      "audit/evidence/step-reviews.json#R03-controls",
+      "audit/evidence/step-reviews.json#R03-auxiliary-ui",
+      "audit/evidence/step-reviews.json#R03-consumer-theme-time",
+      "audit/evidence/step-reviews.json#R04-purchase-loading",
+      "audit/evidence/step-reviews.json#R05-strict-dependencies"
     ],
-    "next_action": "Review shared UI foundations PR65/66/67 against exact task/PR criteria and reuse existing R03/R04/R05 component, accessibility and packaging evidence; then remaining V01/R06/V02/B01.",
-    "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
-    "review_record": "audit/evidence/step-reviews.json#V01-edge-caching",
-    "product_commits": [
-      "2273c7ae01738d9dbd36aec79fb7a8d97c5dce84",
-      "6d801999e7fe137a4144996d5d72ca6786ec47bd"
-    ],
-    "pr_dispositions": [
-      {
-        "pr": 60,
-        "status": "closed",
-        "task_keys": [
-          "01-platform-infrastructure.md#T-04.04.01"
-        ],
-        "reason": "Supported NGINX configuration validated with actual routing/TLS/stream/body-limit runtime checks; deployed topology remains separate.",
-        "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
-        "evidence": "audit/evidence/step-reviews.json#V01-edge-caching"
-      },
-      {
-        "pr": 62,
-        "status": "closed",
-        "task_keys": [
-          "01-platform-infrastructure.md#T-04.04.03"
-        ],
-        "reason": "Required per-IP quotas and bilingual429/Retry-After verified against actual NGINX; both historical syntax deferrals explicitly disposed.",
-        "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
-        "evidence": "audit/evidence/step-reviews.json#V01-edge-caching"
-      },
-      {
-        "pr": 63,
-        "status": "closed",
-        "task_keys": [
-          "01-platform-infrastructure.md#T-04.04.04"
-        ],
-        "reason": "Resolved file cache policies and proxy preservation verified for hashes, auth entry, nonhashed files, private HTML and missing/error responses.",
-        "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
-        "evidence": "audit/evidence/step-reviews.json#V01-edge-caching"
-      },
-      {
-        "pr": 64,
-        "status": "closed",
-        "task_keys": [
-          "01-platform-infrastructure.md#T-04.04.05"
-        ],
-        "reason": "Actual geography reference SHA256/304 workflow verified behind existing auth guards; profile/financial data excluded, default Express ETags disabled.",
-        "source_revision": "6d801999e7fe137a4144996d5d72ca6786ec47bd",
-        "evidence": "audit/evidence/step-reviews.json#V01-edge-caching"
-      }
+    "next_action": "Continue saved login/OTP/password-enforcement/rate-limit PR reviews77,78,87,88,101 using existing authentication evidence. UI stack requirement decision remains pending.",
+    "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+    "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+    "verification": [
+      "45 distinct production-built Chromium cases pass across ComboBox/MultiSelect, NumberField, DatePicker/DateRangePicker, DataTable and shared-theme controls. The later5-case ComboBox run adds open-popup accessibility/screenshots and overlaps the45; it is not counted again.",
+      "Native required validation prevents empty single/multiple submissions; keyboard-filtered selections, removal chips and submitted FormData values pass in FA/EN and light/dark. Custom render trigger preserves value/icon and keyboard dismissal. Open popup and completed form axe scans have no violations.",
+      "Self-hosted Inter is loaded from the fixture origin. English/Persian and nested language changes select the expected fonts without overriding explicit monospace. Existing Jalali/Tehran/date-bound, number formatting and sortable/selectable-table behavior passes.",
+      "56 shared UI unit cases, UI build/distribution checks, UI/web types, scoped lint/format/diff, frozen installation, actual declared PostCSS compilation, production web build and all42 unchanged route/interaction budgets pass. Earlier failed fixture/baseline runs are retained and not counted as passing."
     ]
   },
   "open_domain_reviews": [

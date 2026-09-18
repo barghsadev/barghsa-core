@@ -461,7 +461,7 @@
         },
         {
           "path": "pnpm-lock.yaml",
-          "sha256": "c23434c19cdd6388ec1df84c7d25f0b9fc26557b89688b768a80be6878b8fe7f"
+          "sha256": "2352c6f86d5c5e444ef40db29d98c3715d0c7153cb946495211ff235c85087eb"
         }
       ],
       "checks": [
@@ -483,7 +483,17 @@
         "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued.",
         "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
       ],
-      "review_record": "audit/evidence/step-reviews.json#R05-strict-dependencies"
+      "review_record": "audit/evidence/step-reviews.json#R05-strict-dependencies",
+      "source_refreshes": [
+        {
+          "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+          "paths": [
+            "pnpm-lock.yaml"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+          "note": "Focused locale CSS/component and dependency diff review;45 browser,56 UI and42 budget checks. Unchanged domain behavior evidence retained; older unmatched bindings are not refreshed."
+        }
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.02.03",
@@ -656,7 +666,7 @@
         },
         {
           "path": "packages/ui/package.json",
-          "sha256": "52f93c5358073e27b17dd4a5e927c66e0a8e1cb324328c40e35edcd08dbb24c2"
+          "sha256": "8feeb5b2b65a8b5d250c58e91fc3e13130e888aba1a67c78ee8cd8e98492b5ed"
         },
         {
           "path": "packages/tsconfig/package.json",
@@ -715,6 +725,16 @@
             "packages/i18n/package.json"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+          "paths": [
+            "packages/ui/package.json"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+          "note": "Focused locale CSS/component and dependency diff review;45 browser,56 UI and42 budget checks. Unchanged domain behavior evidence retained; older unmatched bindings are not refreshed."
         }
       ]
     },
@@ -1235,7 +1255,7 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "089a1b58d75aace33079c4b3c6099413a64b2a28b75fddd5f6a41a1c13ce3301"
+          "sha256": "a75317806b056dcb7d4ea48f3d084976ece011f4c5d41675786adaf4adedbf2a"
         }
       ],
       "checks": [
@@ -1282,6 +1302,16 @@
             "packages/ui/src/styles.css"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+          "paths": [
+            "packages/ui/src/styles.css"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+          "note": "Focused locale CSS/component and dependency diff review;45 browser,56 UI and42 budget checks. Unchanged domain behavior evidence retained; older unmatched bindings are not refreshed."
         }
       ]
     },
@@ -2573,7 +2603,7 @@
         },
         {
           "path": "pnpm-lock.yaml",
-          "sha256": "c23434c19cdd6388ec1df84c7d25f0b9fc26557b89688b768a80be6878b8fe7f"
+          "sha256": "2352c6f86d5c5e444ef40db29d98c3715d0c7153cb946495211ff235c85087eb"
         },
         {
           "path": "scripts/check-route-budgets.mjs",
@@ -2609,7 +2639,17 @@
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
       ],
-      "review_record": "audit/evidence/step-reviews.json#R04-purchase-loading"
+      "review_record": "audit/evidence/step-reviews.json#R04-purchase-loading",
+      "source_refreshes": [
+        {
+          "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+          "paths": [
+            "pnpm-lock.yaml"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+          "note": "Focused locale CSS/component and dependency diff review;45 browser,56 UI and42 budget checks. Unchanged domain behavior evidence retained; older unmatched bindings are not refreshed."
+        }
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.04",
@@ -8419,7 +8459,7 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "089a1b58d75aace33079c4b3c6099413a64b2a28b75fddd5f6a41a1c13ce3301"
+          "sha256": "a75317806b056dcb7d4ea48f3d084976ece011f4c5d41675786adaf4adedbf2a"
         }
       ],
       "checks": [
@@ -8469,6 +8509,16 @@
             "packages/ui/src/styles.css"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+          "paths": [
+            "packages/ui/src/styles.css"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+          "note": "Focused locale CSS/component and dependency diff review;45 browser,56 UI and42 budget checks. Unchanged domain behavior evidence retained; older unmatched bindings are not refreshed."
         }
       ]
     },
@@ -21243,7 +21293,7 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "089a1b58d75aace33079c4b3c6099413a64b2a28b75fddd5f6a41a1c13ce3301"
+          "sha256": "a75317806b056dcb7d4ea48f3d084976ece011f4c5d41675786adaf4adedbf2a"
         }
       ],
       "merged_prs": [],
@@ -21285,6 +21335,16 @@
             "packages/ui/src/styles.css"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+          "paths": [
+            "packages/ui/src/styles.css"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+          "note": "Focused locale CSS/component and dependency diff review;45 browser,56 UI and42 budget checks. Unchanged domain behavior evidence retained; older unmatched bindings are not refreshed."
         }
       ]
     },
@@ -21534,7 +21594,7 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "089a1b58d75aace33079c4b3c6099413a64b2a28b75fddd5f6a41a1c13ce3301"
+          "sha256": "a75317806b056dcb7d4ea48f3d084976ece011f4c5d41675786adaf4adedbf2a"
         }
       ],
       "merged_prs": [],
@@ -21576,6 +21636,16 @@
             "packages/ui/src/styles.css"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+          "paths": [
+            "packages/ui/src/styles.css"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+          "note": "Focused locale CSS/component and dependency diff review;45 browser,56 UI and42 budget checks. Unchanged domain behavior evidence retained; older unmatched bindings are not refreshed."
         }
       ]
     },
@@ -21701,7 +21771,7 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "089a1b58d75aace33079c4b3c6099413a64b2a28b75fddd5f6a41a1c13ce3301"
+          "sha256": "a75317806b056dcb7d4ea48f3d084976ece011f4c5d41675786adaf4adedbf2a"
         }
       ],
       "merged_prs": [],
@@ -21725,6 +21795,16 @@
             "packages/ui/src/styles.css"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+          "paths": [
+            "packages/ui/src/styles.css"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+          "note": "Focused locale CSS/component and dependency diff review;45 browser,56 UI and42 budget checks. Unchanged domain behavior evidence retained; older unmatched bindings are not refreshed."
         }
       ]
     },
@@ -21853,7 +21933,7 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "089a1b58d75aace33079c4b3c6099413a64b2a28b75fddd5f6a41a1c13ce3301"
+          "sha256": "a75317806b056dcb7d4ea48f3d084976ece011f4c5d41675786adaf4adedbf2a"
         },
         {
           "path": "packages/ui/src/components/ui/badge.tsx",
@@ -21978,6 +22058,16 @@
             "packages/ui/src/components/ui/progress.tsx"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+          "paths": [
+            "packages/ui/src/styles.css"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+          "note": "Focused locale CSS/component and dependency diff review;45 browser,56 UI and42 budget checks. Unchanged domain behavior evidence retained; older unmatched bindings are not refreshed."
         }
       ]
     },
@@ -22588,7 +22678,7 @@
         },
         {
           "path": "packages/ui/src/styles.css",
-          "sha256": "089a1b58d75aace33079c4b3c6099413a64b2a28b75fddd5f6a41a1c13ce3301"
+          "sha256": "a75317806b056dcb7d4ea48f3d084976ece011f4c5d41675786adaf4adedbf2a"
         }
       ],
       "checks": [
@@ -22631,6 +22721,16 @@
             "packages/ui/src/styles.css"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+          "paths": [
+            "packages/ui/src/styles.css"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+          "note": "Focused locale CSS/component and dependency diff review;45 browser,56 UI and42 budget checks. Unchanged domain behavior evidence retained; older unmatched bindings are not refreshed."
         }
       ]
     },
@@ -25140,7 +25240,7 @@
         },
         {
           "path": "pnpm-lock.yaml",
-          "sha256": "c23434c19cdd6388ec1df84c7d25f0b9fc26557b89688b768a80be6878b8fe7f"
+          "sha256": "2352c6f86d5c5e444ef40db29d98c3715d0c7153cb946495211ff235c85087eb"
         }
       ],
       "checks": [
@@ -25156,7 +25256,17 @@
         55
       ],
       "historically_skipped": false,
-      "review_record": "audit/evidence/step-reviews.json#V01-storage-workflow"
+      "review_record": "audit/evidence/step-reviews.json#V01-storage-workflow",
+      "source_refreshes": [
+        {
+          "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+          "paths": [
+            "pnpm-lock.yaml"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+          "note": "Focused locale CSS/component and dependency diff review;45 browser,56 UI and42 budget checks. Unchanged domain behavior evidence retained; older unmatched bindings are not refreshed."
+        }
+      ]
     },
     {
       "task_key": "01-platform-infrastructure.md#T-04.03.02",
@@ -25658,6 +25768,391 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#V01-edge-caching"
+    },
+    {
+      "task_key": "07-ui-ux-design.md#T-07.01.01.01",
+      "status": "acceptance_verified",
+      "reviewed_sha": "2143862584914625d357a59fc1e509293eb5b84e",
+      "requirement_file": "kanban/epics/07-ui-ux-design.md",
+      "requirement_line": 78,
+      "requirement": "| **T-07.01.01.01** | Initialize `packages/ui` with Tailwind CSS v4, PostCSS, autoprefixer. Configure `tailwind.config.ts` with extended color palette, font families (Vazirmatn for Persian, Inter for English), border-radius, spacing scale, and animation tokens. | M |",
+      "requirement_sha256": "de9ce4f5db5938c13914d0f036bf358851cbdfb17498103a152b7220ed8c90ea",
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/combo-box-component.spec.ts",
+          "sha256": "33d592fe699ff2983dc6b6cf3a5f9a1f5a0a6f5373801fe921cd7d537ec8e75d"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/combo-box/index.html",
+          "sha256": "7afd1f2fcb4b497de4e1e0091d0211154779ccc87cd979a712e5d3f44b155f8e"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/combo-box/main.tsx",
+          "sha256": "0337514faf855dcb3d51fca4da3bb56b4fcee55424100fa2049b9de0022c8381"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "sha256": "8feeb5b2b65a8b5d250c58e91fc3e13130e888aba1a67c78ee8cd8e98492b5ed"
+        },
+        {
+          "path": "packages/ui/postcss.config.ts",
+          "sha256": "fe78f76eb483fdc486e5f0ba4aabe66c85575aeec3c2d3e89f7024fc4632e67f"
+        },
+        {
+          "path": "packages/ui/src/fonts/fonts.css",
+          "sha256": "a1f68a0120c9ba7279ee54b5c7c728d983b87455bf22cbbe1e9f21f420bb76cb"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "a75317806b056dcb7d4ea48f3d084976ece011f4c5d41675786adaf4adedbf2a"
+        },
+        {
+          "path": "packages/ui/tailwind.config.ts",
+          "sha256": "4a66f93736499dfdd49d5f181ce40476f87db821ee4328f630b10e7c15d9f23f"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2352c6f86d5c5e444ef40db29d98c3715d0c7153cb946495211ff235c85087eb"
+        }
+      ],
+      "checks": [
+        "45 distinct production-built Chromium cases pass across ComboBox/MultiSelect, NumberField, DatePicker/DateRangePicker, DataTable and shared-theme controls. The later5-case ComboBox run adds open-popup accessibility/screenshots and overlaps the45; it is not counted again.",
+        "Native required validation prevents empty single/multiple submissions; keyboard-filtered selections, removal chips and submitted FormData values pass in FA/EN and light/dark. Custom render trigger preserves value/icon and keyboard dismissal. Open popup and completed form axe scans have no violations.",
+        "Self-hosted Inter is loaded from the fixture origin. English/Persian and nested language changes select the expected fonts without overriding explicit monospace. Existing Jalali/Tehran/date-bound, number formatting and sortable/selectable-table behavior passes.",
+        "56 shared UI unit cases, UI build/distribution checks, UI/web types, scoped lint/format/diff, frozen installation, actual declared PostCSS compilation, production web build and all42 unchanged route/interaction budgets pass. Earlier failed fixture/baseline runs are retained and not counted as passing."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        65
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations"
+    },
+    {
+      "task_key": "07-ui-ux-design.md#T-07.01.01.02",
+      "status": "partial",
+      "reviewed_sha": "2143862584914625d357a59fc1e509293eb5b84e",
+      "requirement_file": "kanban/epics/07-ui-ux-design.md",
+      "requirement_line": 79,
+      "requirement": "| **T-07.01.01.02** | Install and configure shadcn/ui CLI: set `style: \"new-york\"`, `baseColor: \"zinc\"`, `cssVariables: true`. Generate initial component set: Button, Input, Label, Card, Badge, Dialog, DropdownMenu, Select, Separator, Sheet, Skeleton, Toast, Tooltip, Tabs, Avatar, Popover, Command, Switch, Progress, Slider, Textarea, Alert, Breadcrumb, ScrollArea, Calendar, Checkbox, RadioGroup, Sonner (toaster). | L |",
+      "requirement_sha256": "254d98e0a9ee8f4c46380a90034936e95a0727b8f888cfe9ad5d4b5d659f4921",
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/combo-box-component.spec.ts",
+          "sha256": "33d592fe699ff2983dc6b6cf3a5f9a1f5a0a6f5373801fe921cd7d537ec8e75d"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/combo-box/index.html",
+          "sha256": "7afd1f2fcb4b497de4e1e0091d0211154779ccc87cd979a712e5d3f44b155f8e"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/combo-box/main.tsx",
+          "sha256": "0337514faf855dcb3d51fca4da3bb56b4fcee55424100fa2049b9de0022c8381"
+        },
+        {
+          "path": "packages/ui/components.json",
+          "sha256": "50e6ad58e7f42af2f0bc1c40043f40df27d44f5d1d91b3c45f3dd8c01ee97ace"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "sha256": "8feeb5b2b65a8b5d250c58e91fc3e13130e888aba1a67c78ee8cd8e98492b5ed"
+        },
+        {
+          "path": "packages/ui/postcss.config.ts",
+          "sha256": "fe78f76eb483fdc486e5f0ba4aabe66c85575aeec3c2d3e89f7024fc4632e67f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/alert.tsx",
+          "sha256": "161fcf0d959be8a3d6666ed97344f1281cbabd7d42c7e023feeaead2ff9a8327"
+        },
+        {
+          "path": "packages/ui/src/components/ui/avatar.tsx",
+          "sha256": "66ffabb69b3762a04490074b8bf599f4f53b83d8336cda62936f66d00cf8f3c9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/badge.tsx",
+          "sha256": "6a80c6107b00de7fbf08882d1c6db980a30d669305f137468ebe314a4302c419"
+        },
+        {
+          "path": "packages/ui/src/components/ui/breadcrumb.tsx",
+          "sha256": "d51c476da1466b2bcab58e07d2a1fdd7420701f2e26c44c8bbb17e6396f20e4e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "sha256": "5b66ecf57ba915c6b069a9275f1994c70e559a00f6366fb842d89c1c23679d34"
+        },
+        {
+          "path": "packages/ui/src/components/ui/calendar.tsx",
+          "sha256": "6ec34d32f8be0d49d7a55f963206194802a168fb9e14adcdfca48d2742fcc69f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/card.tsx",
+          "sha256": "3500cb130c985119242ea3d7732de78adacf3fbfd88d6722aafb52dfcf0218c9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/checkbox.tsx",
+          "sha256": "4a609efca1f2a5376e1f85824c509e718e5be99051d85c0e5b70a3bc70cb5762"
+        },
+        {
+          "path": "packages/ui/src/components/ui/command.tsx",
+          "sha256": "abde0544578867ee92391001770068ab41ca89cf00e21428083644d3a1531594"
+        },
+        {
+          "path": "packages/ui/src/components/ui/confirm-dialog.tsx",
+          "sha256": "81fa870926d497f80c27a1d30a26afa4b72dbfa7d7d382149baefae49898dd4b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dialog.tsx",
+          "sha256": "b1d6360974aace083220f8961c458c53821d7fa2457c8e9fa47d039533120b90"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+          "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+        },
+        {
+          "path": "packages/ui/src/components/ui/empty.tsx",
+          "sha256": "86c06c1460cd178c25798fb4aee67a31060220040b0d166da21212fe90ed5a7b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input-group.tsx",
+          "sha256": "cfa2fbd99ec046b83d8c4595c0461aa7e456a7f88b7b11cb9d19bc1f547fc3c8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input.tsx",
+          "sha256": "5f4483d46179659fbe5add07dc7288e657c5b9eb7cc400c36d3938d53e98c211"
+        },
+        {
+          "path": "packages/ui/src/components/ui/label.tsx",
+          "sha256": "13eca4649d7f26a862c0832760ffa5c80474a8fca317884d13d04cb963dbc7d0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "9f77b4a8cab34acff6a9b4169d39d6ce1b98ac7ed01ea1ae62aaa95523efbfd0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/page-states.tsx",
+          "sha256": "7e7aa6c9832690e0beb6c1f36e4980b92040a96d9707b6cd8d81c6e067828200"
+        },
+        {
+          "path": "packages/ui/src/components/ui/pagination.tsx",
+          "sha256": "653ea88af9b398ec59618e4adffdffbb5640201ec842a0d033bb7aed2c3a2316"
+        },
+        {
+          "path": "packages/ui/src/components/ui/popover.tsx",
+          "sha256": "086df0e5904d138560e321ddaaf875560f140c63af6e36849afda2903a8d15eb"
+        },
+        {
+          "path": "packages/ui/src/components/ui/progress.tsx",
+          "sha256": "6b3f71eafba7ce64a917a8620129df0768aad6db6d2bc33d2cd22d10dd1ad19d"
+        },
+        {
+          "path": "packages/ui/src/components/ui/radio-group.tsx",
+          "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
+        },
+        {
+          "path": "packages/ui/src/components/ui/scroll-area.tsx",
+          "sha256": "6336d9647008613020bd44d2f8537700e41d6752ce9d29d6e7f7a6bcc373ff8e"
+        },
+        {
+          "path": "packages/ui/src/components/ui/select.tsx",
+          "sha256": "f4e5434b0e7c46c3a902545f07b9a0cb84f33378d945c3079683c584f14a129f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/separator.tsx",
+          "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sheet.tsx",
+          "sha256": "e966374723f7b6d082befe0775efea214d2a515a5bf34ce7f8f5a3b4f451d1f6"
+        },
+        {
+          "path": "packages/ui/src/components/ui/skeleton.tsx",
+          "sha256": "d22459a4fed0c76bfb7e609bd9ccd30d86b35237c9fda0453d778c37509fb5ea"
+        },
+        {
+          "path": "packages/ui/src/components/ui/slider.tsx",
+          "sha256": "71135dfac1d5ac0b23311ab3e2511da9254b28a483a363c02aa8cfcf0788b364"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sonner.test.tsx",
+          "sha256": "1530cfb8c4b3798040fa631ecb0d3ddb31e5f99351f43c462ae4e79a0a1e93ba"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sonner.tsx",
+          "sha256": "a843f3152f6a1267326779a93599d7357888bf6a06ccddfcc42d9faed509efc2"
+        },
+        {
+          "path": "packages/ui/src/components/ui/switch.tsx",
+          "sha256": "5bb5aeaa213d549177b6d58c810353465dda0e672bdc0d02026c39b195079979"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tabs.tsx",
+          "sha256": "3b272d84ca82512cae48dafbc2e6285e85ba71b5d8f7a3592894827660e2c33b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/textarea.tsx",
+          "sha256": "c0a9a3aee23f0ab0b76834c2eeb5ed433f2327cb057cfdb9deb61bc5beb575f0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/toast.tsx",
+          "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tooltip.tsx",
+          "sha256": "7f139d130d3a25b4ebffe6bb5a5096ce07e0f48b04bfcdf40f3a540d024698b8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/workflow.tsx",
+          "sha256": "99c1252710e6ada65cebdca6ec47d6ba2e237cf0cb39cbf0f9c271956b202d83"
+        },
+        {
+          "path": "packages/ui/src/fonts/fonts.css",
+          "sha256": "a1f68a0120c9ba7279ee54b5c7c728d983b87455bf22cbbe1e9f21f420bb76cb"
+        },
+        {
+          "path": "packages/ui/src/index.ts",
+          "sha256": "0102675116e6ebe88bb0ff5a7395b4b81d0fe69c194d284bb3fbd5990e2dcbd1"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "a75317806b056dcb7d4ea48f3d084976ece011f4c5d41675786adaf4adedbf2a"
+        },
+        {
+          "path": "packages/ui/tailwind.config.ts",
+          "sha256": "4a66f93736499dfdd49d5f181ce40476f87db821ee4328f630b10e7c15d9f23f"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2352c6f86d5c5e444ef40db29d98c3715d0c7153cb946495211ff235c85087eb"
+        }
+      ],
+      "checks": [
+        "45 distinct production-built Chromium cases pass across ComboBox/MultiSelect, NumberField, DatePicker/DateRangePicker, DataTable and shared-theme controls. The later5-case ComboBox run adds open-popup accessibility/screenshots and overlaps the45; it is not counted again.",
+        "Native required validation prevents empty single/multiple submissions; keyboard-filtered selections, removal chips and submitted FormData values pass in FA/EN and light/dark. Custom render trigger preserves value/icon and keyboard dismissal. Open popup and completed form axe scans have no violations.",
+        "Self-hosted Inter is loaded from the fixture origin. English/Persian and nested language changes select the expected fonts without overriding explicit monospace. Existing Jalali/Tehran/date-bound, number formatting and sortable/selectable-table behavior passes.",
+        "56 shared UI unit cases, UI build/distribution checks, UI/web types, scoped lint/format/diff, frozen installation, actual declared PostCSS compilation, production web build and all42 unchanged route/interaction budgets pass. Earlier failed fixture/baseline runs are retained and not counted as passing."
+      ],
+      "limitations": [
+        "T-07.01.01.02 remains partial: installed Base UI/base-nova differs from written Radix/new-york. The existing owner question is pending; no preset switch or requirements waiver occurred."
+      ],
+      "merged_prs": [
+        66
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations"
+    },
+    {
+      "task_key": "07-ui-ux-design.md#T-07.01.01.03",
+      "status": "partial",
+      "reviewed_sha": "2143862584914625d357a59fc1e509293eb5b84e",
+      "requirement_file": "kanban/epics/07-ui-ux-design.md",
+      "requirement_line": 80,
+      "requirement": "| **T-07.01.01.03** | Install and configure Base UI (by MUI — `@mui/base` / `@mui/base-ui`) for complex patterns: NumberField (with locale-aware formatting), DatePicker/DateRangePicker (with Jalali support), ComboBox (with search + keyboard nav), Select (with multi-select + chips), Table (sortable, selectable rows via useTable). | L |",
+      "requirement_sha256": "58a0573c98d5e687212f9264c0ac927674ca8053ec0b8484a611ffd585ec0916",
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/combo-box-component.spec.ts",
+          "sha256": "33d592fe699ff2983dc6b6cf3a5f9a1f5a0a6f5373801fe921cd7d537ec8e75d"
+        },
+        {
+          "path": "apps/web/e2e/data-table-component.spec.ts",
+          "sha256": "55c03ef0f85c7ae6c7b0c6a726c660e158a55eb39cf28c20a20918cd76945e8a"
+        },
+        {
+          "path": "apps/web/e2e/date-picker-component.spec.ts",
+          "sha256": "b6ce74ba2e1909a9b58e36763461aaac9aa7b5f0d5d1b1a940fa3fac292897ea"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/combo-box/index.html",
+          "sha256": "7afd1f2fcb4b497de4e1e0091d0211154779ccc87cd979a712e5d3f44b155f8e"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/combo-box/main.tsx",
+          "sha256": "0337514faf855dcb3d51fca4da3bb56b4fcee55424100fa2049b9de0022c8381"
+        },
+        {
+          "path": "apps/web/e2e/number-field-component.spec.ts",
+          "sha256": "e6c142427f40d07aa8db0bc3579ec4661514cd85f731b98fab99546701c115f5"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "sha256": "8feeb5b2b65a8b5d250c58e91fc3e13130e888aba1a67c78ee8cd8e98492b5ed"
+        },
+        {
+          "path": "packages/ui/postcss.config.ts",
+          "sha256": "fe78f76eb483fdc486e5f0ba4aabe66c85575aeec3c2d3e89f7024fc4632e67f"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/combo-box.tsx",
+          "sha256": "338c826c4b1fb70fff63e9eadd4c5381c232197ea72a52d688fcb647a8600a28"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/data-table.labels.ts",
+          "sha256": "26c9e6aa8af31fdec0f3e520a6dda0e64fc6d85e3aba0d44ef595d702d6564ce"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/data-table.tsx",
+          "sha256": "12b8c463dc4194d3bd3f9da534a37978fb945c90ae8d01d49f305d0a5c9d051c"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-picker.test.ts",
+          "sha256": "dcf84843131b62be1636e63080f316d0edaf41687192e30b81218c474f71ebb4"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+          "sha256": "e9ac9cbca36c6997ba48741b377a1b52cd02d1f9fecf868d27e3de449c8d5302"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/multi-select.tsx",
+          "sha256": "fd7383632d7efec11dcc74796b800d1b554f13085ac75d4cbf67d32d4f55a890"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/number-field.labels.ts",
+          "sha256": "239cfa89ac000fe1113daee36b20477974377bfb43d94671969c1f57ad47af67"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/number-field.tsx",
+          "sha256": "b00f1a31b5e3ab26c3631e95788363bbdb1b1772ad6d2e3f2b70f1e1c9ac4c41"
+        },
+        {
+          "path": "packages/ui/src/data-table.test.tsx",
+          "sha256": "ce4cc8c5f8a7287a60a23a68b12f3556778c7a04e862f781fd1f6974d7fb7c24"
+        },
+        {
+          "path": "packages/ui/src/fonts/fonts.css",
+          "sha256": "a1f68a0120c9ba7279ee54b5c7c728d983b87455bf22cbbe1e9f21f420bb76cb"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "a75317806b056dcb7d4ea48f3d084976ece011f4c5d41675786adaf4adedbf2a"
+        },
+        {
+          "path": "packages/ui/tailwind.config.ts",
+          "sha256": "4a66f93736499dfdd49d5f181ce40476f87db821ee4328f630b10e7c15d9f23f"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "2352c6f86d5c5e444ef40db29d98c3715d0c7153cb946495211ff235c85087eb"
+        }
+      ],
+      "checks": [
+        "45 distinct production-built Chromium cases pass across ComboBox/MultiSelect, NumberField, DatePicker/DateRangePicker, DataTable and shared-theme controls. The later5-case ComboBox run adds open-popup accessibility/screenshots and overlaps the45; it is not counted again.",
+        "Native required validation prevents empty single/multiple submissions; keyboard-filtered selections, removal chips and submitted FormData values pass in FA/EN and light/dark. Custom render trigger preserves value/icon and keyboard dismissal. Open popup and completed form axe scans have no violations.",
+        "Self-hosted Inter is loaded from the fixture origin. English/Persian and nested language changes select the expected fonts without overriding explicit monospace. Existing Jalali/Tehran/date-bound, number formatting and sortable/selectable-table behavior passes.",
+        "56 shared UI unit cases, UI build/distribution checks, UI/web types, scoped lint/format/diff, frozen installation, actual declared PostCSS compilation, production web build and all42 unchanged route/interaction budgets pass. Earlier failed fixture/baseline runs are retained and not counted as passing."
+      ],
+      "limitations": [
+        "T-07.01.01.03 behavior and both historical PR67 deferrals are verified, but literal useTable/package wording is unresolved: current table uses local useTableSort/useTableSelection and the maintained @base-ui/react package. Preserve these tested implementations while reconciling the foundation requirement decision."
+      ],
+      "merged_prs": [
+        67
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations"
     }
   ],
   "pending_task_keys": [
@@ -25726,10 +26221,7 @@
     "03-core-business.md#T-03.01.01.01",
     "03-core-business.md#T-03.01.01.02",
     "03-core-business.md#T-03.01.01.03",
-    "03-core-business.md#T-03.01.01.04",
-    "07-ui-ux-design.md#T-07.01.01.01",
-    "07-ui-ux-design.md#T-07.01.01.02",
-    "07-ui-ux-design.md#T-07.01.01.03"
+    "03-core-business.md#T-03.01.01.04"
   ],
   "superseded_assessments": [
     {
@@ -30184,6 +30676,25 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#V01-edge-caching",
       "note": "8 immediate-base bindings refreshed after focused cache/ETag diff review and actual HTTP/web/proxy evidence. Underlying domain authorization, transaction and payload logic unchanged. Historical full-image/browser evidence remains scoped;38 older refreshes retained."
+    },
+    {
+      "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.02.02",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "02-auth-users-admin.md#T-09.01.02",
+        "01-platform-infrastructure.md#T-01.03.03",
+        "02-auth-users-admin.md#T-03.03.06",
+        "01-platform-infrastructure.md#T-06.03.02",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-06.03.05",
+        "01-platform-infrastructure.md#T-06.03.06",
+        "01-platform-infrastructure.md#T-06.02.04",
+        "01-platform-infrastructure.md#T-04.03.01"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+      "note": "11 immediate-base bindings refreshed; older38 evidence refresh records retained. Shared locale fonts and declared dependencies validated without changing domain behavior."
     }
   ]
 }

@@ -4,11 +4,13 @@ Read the feature-batch rules in [fix-plan.md](fix-plan.md) and `active_batch` in
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **6d801999**. **208 verified /45 partial /69 pending** of322 claims. Saved PRs: **195 closed /41 open /65 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3499 logs indexed;38 older evidence refreshes remain. Inventory ends September3; no current GitHub or deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **21438625**. **209 verified /47 partial /66 pending** of322 claims. Saved PRs: **196 closed /43 open /62 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3530 logs indexed;38 older evidence refreshes remain. Inventory ends September3; no current GitHub or deployment claim.
 
-Edge/cache review consolidated at **6d801999**: **4 tasks verified /4 saved PR reviews closed**, PR60/62/63/64. Removed unsafe proxy expiry overrides and missing-asset SPA fallback. Disabled automatic Express ETags; shared geography now negotiates SHA256 while profile/financial data remains untagged.42 focused cases and actual NGINX TLS/routing/gzip/cache/limits/SSE/WebSocket checks pass; types/lint/format/OpenAPI pass.8 immediate-base bindings refreshed;38 older refreshes retained. NGINX syntax deferral satisfied; obsolete Caddy check explicitly not applicable to the supported canonical alternative. [Batch review](evidence/step-reviews.json#V01-edge-caching).
+UI foundations consolidated at **21438625**: **1 task verified /2 partial**, PR65 closed; PR66/67 open for explicit foundation requirement discrepancies. English/Persian font selection, missing PostCSS dependency and invisible ComboBox keyboard highlight repaired.45 distinct browser cases,56 UI tests,42 unchanged budgets, builds/types/lint/format/frozen installation and actual PostCSS compilation pass. Both PR67 visual/form deferrals are satisfied.11 immediate-base bindings refreshed;38 older refreshes retained. [Batch review](evidence/step-reviews.json#V01-ui-foundations).
 
-**Next:** shared UI foundations, PR65/66/67, reusing R03/R04/R05 evidence. Deploy web/proxy cache changes together; final image regression and production TLS/topology remain external/V02. PR61's pending CSP owner decision stays open.
+**Next:** saved login/OTP/password-enforcement/rate-limit PRs77,78,87,88,101. Read requirements and historical deferrals, then reuse valid existing authentication evidence. UI stack question remains pending; keep tested components. Literal Table useTable wording also remains explicit; current hooks are useTableSort/useTableSelection. Full regression stays V02.
+
+Edge/cache checkpoint **6d801999** verifies4 tasks and closes PR60/62/63/64.42 focused cases and actual NGINX TLS/routing/gzip/cache/limits/SSE/WebSocket checks pass. Deploy web/proxy cache changes together; production TLS/topology and final image regression remain external/V02. PR61's pending CSP decision stays open.
 
 Previous storage checkpoint **cf0fa042** verifies3 tasks and closes3 PRs; PR57 retains deployed retention/future classifiers, PR59 future contract/document integration.180 affected cases pass. Redis checkpoint **c32ff819** closes PR51/53/54 using matching prior evidence. Preserve both consolidated reviews.
 
@@ -26,7 +28,7 @@ Reuse source-bound authentication, profiles, CRM, finance, notification, UI, dat
 
 Retain Vite SPA/ADR004. License restrictions waived. No automatic identity provider exists; manual verification remains supported. Never simulate approval or ask again for a provider. Support:info@barghsa.com,021-26658042,09002550292. Ticket categories:General,Billing,Orders. Auth150KB covers initial load; estimator900KB separately. Numeric budgets/coverage floors unchanged. Pre-login CSRF is implemented. Limited trusted server-side secret uses approved September13 and T-05.06.05 updated.
 
-Already asked, still pending: lost-contact recovery policy; signed-webhook CSRF wording; authenticated native CSP-report exception;38 base-column deviations; retain tested Node24 images versus literal Node20 requirement. Do not reask or silently waive these. Continue independent work.
+Already asked, still pending: lost-contact recovery policy; signed-webhook CSRF wording; authenticated native CSP-report exception;38 base-column deviations; retain tested Node24 images versus literal Node20 requirement; retain tested Base UI/base-nova versus Radix/new-york. Do not reask or silently waive these. Continue independent work.
 
 ## Execution
 

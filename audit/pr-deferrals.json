@@ -1922,7 +1922,21 @@
       "- [ ] ComboBox`render` prop usage validated visually (no `asChild` in Base UI Popover)",
       "- [ ] Validation round-trip tested with form submission"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Both historical behavior deferrals satisfied; PR remains open for explicit table/scaffold requirement reconciliation.",
+    "reviewed_source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+    "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Custom render trigger retains button, value/icon, popup selection and dismissal in FA/EN light/dark; inspected saved screenshots. audit/evidence/step-reviews.json#V01-ui-foundations"
+      },
+      {
+        "statement_index": 1,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Native required single/multiple validation, filtered keyboard selection, chip removal and actual FormData roundtrip pass in four locale/theme cases. audit/evidence/step-reviews.json#V01-ui-foundations"
+      }
+    ]
   },
   {
     "pr": 62,
