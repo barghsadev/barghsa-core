@@ -35,7 +35,7 @@ function ComboBoxTrigger({ className, ...props }: ComboboxPrimitive.Trigger.Prop
     <ComboboxPrimitive.Trigger
       data-slot="combobox-trigger"
       className={cn(
-        "flex w-full items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent px-3 py-1.5 text-sm whitespace-nowrap transition-colors outline-hidden select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "flex w-full items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent px-3 py-1.5 text-sm whitespace-nowrap transition-shadow outline-hidden select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -55,7 +55,7 @@ function ComboBoxInput({ className, ...props }: ComboboxPrimitive.Input.Props) {
     <ComboboxPrimitive.Input
       data-slot="combobox-input"
       className={cn(
-        'flex h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1.5 text-sm outline-hidden transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30',
+        'flex h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1.5 text-sm outline-hidden transition-shadow placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30',
         className
       )}
       {...props}
@@ -92,7 +92,7 @@ function ComboBoxItem({ className, children, ...props }: ComboboxPrimitive.Item.
     <ComboboxPrimitive.Item
       data-slot="combobox-item"
       className={cn(
-        "relative flex w-full cursor-default items-center gap-2 rounded-md py-1.5 pe-8 ps-2 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "relative flex w-full cursor-default items-center gap-2 rounded-md py-1.5 pe-8 ps-2 text-sm outline-hidden select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -176,7 +176,7 @@ function ComboBoxChip({
     <ComboboxPrimitive.Chip
       data-slot="combobox-chip"
       className={cn(
-        'inline-flex items-center gap-1 rounded-md bg-secondary px-1.5 py-0.5 text-xs font-medium text-secondary-foreground transition-colors hover:bg-secondary/80',
+        'inline-flex items-center gap-1 rounded-md bg-secondary px-1.5 py-0.5 text-xs font-medium text-secondary-foreground transition-shadow hover:bg-secondary/80',
         className
       )}
       {...props}

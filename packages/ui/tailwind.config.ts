@@ -68,8 +68,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Vazirmatn', 'Tahoma', 'sans-serif'],
+        sans: ["var(--app-font, 'Vazirmatn')", 'Tahoma', 'sans-serif'],
         persian: ['Vazirmatn', 'Tahoma', 'sans-serif'],
+        english: ['Inter Variable', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       borderRadius: {

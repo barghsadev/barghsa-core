@@ -20,8 +20,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: 'Vazirmatn', sans-serif;
+  --font-sans: var(--app-font, 'Vazirmatn'), sans-serif;
   --font-persian: 'Vazirmatn', sans-serif;
+  --font-english: 'Inter Variable', sans-serif;
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
@@ -235,9 +236,14 @@
     background-color: var(--background);
     color: var(--foreground);
   }
-  :lang(fa) {
+  :where([lang]):lang(fa) {
+    --app-font: 'Vazirmatn';
     font-family: var(--font-persian);
     letter-spacing: normal;
+  }
+  :where([lang]):lang(en) {
+    --app-font: 'Inter Variable';
+    font-family: var(--font-english);
   }
   button:not(:disabled),
   [role='button']:not([aria-disabled='true']) {
