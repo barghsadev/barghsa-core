@@ -120,7 +120,10 @@ it('uses the same detected-name MIME for presign and object PUT when browser MIM
     )
   ).toBe('uploads/image/fixture.png');
   expect(JSON.parse(request.mock.calls[0]![1].body).contentType).toBe('image/png');
-  expect(request.mock.calls[1]![1].headers).toEqual({ 'Content-Type': 'image/png' });
+  expect(request.mock.calls[1]![1].headers).toEqual({
+    'Content-Type': 'image/png',
+    'If-None-Match': '*',
+  });
   expect(JSON.parse(request.mock.calls[3]![1].body).contentType).toBe('image/png');
 });
 

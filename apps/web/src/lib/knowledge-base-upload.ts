@@ -55,7 +55,7 @@ export async function uploadKnowledgeDocument(file: File, signal: AbortSignal): 
     body: file,
     signal,
     credentials: 'omit',
-    headers: { 'Content-Type': contentType },
+    headers: { 'Content-Type': contentType, 'If-None-Match': '*' },
   });
   if (!put.ok) throw new Error('Upload failed');
   const path = `/api/upload/${encodeURIComponent(signed.key)}`;

@@ -26,7 +26,10 @@ it('records a logo purpose only after upload and content verification succeed', 
     purpose: 'branding_logo',
     category: 'image',
   });
-  expect(request.mock.calls[1]![1]!.headers).toEqual({ 'Content-Type': 'image/png' });
+  expect(request.mock.calls[1]![1]!.headers).toEqual({
+    'Content-Type': 'image/png',
+    'If-None-Match': '*',
+  });
   expect(request.mock.calls.every(([, options]) => options?.signal === controller.signal)).toBe(
     true
   );

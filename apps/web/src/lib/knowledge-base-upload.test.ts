@@ -31,6 +31,7 @@ it('sends only file bytes to storage and checks verification/record identity bef
     category: 'document',
   });
   expect(request.mock.calls[1]![1].credentials).toBe('omit');
+  expect(new Headers(request.mock.calls[1]![1].headers).get('If-None-Match')).toBe('*');
   expect(new Headers(request.mock.calls[1]![1].headers).get('X-CSRF-Token')).toBeNull();
   for (const i of [0, 2, 3])
     expect(new Headers(request.mock.calls[i]![1].headers).get('X-CSRF-Token')).toBe('fixture-csrf');

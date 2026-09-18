@@ -155,6 +155,7 @@ async function uploadVerifiedAttachment(
     body: file,
     headers: {
       'Content-Type': contentType,
+      'If-None-Match': '*',
     },
   });
   if (!putRes.ok) return null;

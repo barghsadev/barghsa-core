@@ -224,8 +224,11 @@ export class S3StorageProvider implements StorageProvider {
     try {
       return await getSignedUrl(
         this.client,
-        new PutObjectCommand({ Bucket: this.bucket, Key: resolvedKey }),
-        { expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN }
+        new PutObjectCommand({ Bucket: this.bucket, Key: resolvedKey, IfNoneMatch: '*' }),
+        {
+          expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN,
+          signableHeaders: new Set(['if-none-match']),
+        }
       );
     } catch (err) {
       this.logger?.error(

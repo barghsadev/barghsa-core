@@ -109,7 +109,8 @@ export interface StorageProvider {
    * Generate a presigned URL for a browser to _upload_ an object via PUT.
    *
    * The URL is time-limited: the client must complete the upload before
-   * `expiresIn` seconds.
+   * `expiresIn` seconds. Clients must send `If-None-Match: *`; that signed
+   * condition prevents overwriting an existing key, including after signing.
    */
   presignedPutUrl(key: string, expiresIn?: number): Promise<string>;
 

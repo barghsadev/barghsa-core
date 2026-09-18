@@ -65,6 +65,8 @@ export interface PresignedUrlResponse {
   key: string;
   /** The presigned URL the browser can PUT to. */
   presignedUrl: string;
+  /** Required signed PUT headers. Upload keys are write-once. */
+  headers: { 'If-None-Match': '*' };
   /** URL expiry in seconds. */
   expiresIn: number;
 }

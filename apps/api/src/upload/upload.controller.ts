@@ -150,6 +150,7 @@ export class UploadController {
       return {
         key: uniqueKey,
         presignedUrl,
+        headers: { 'If-None-Match': '*' },
         expiresIn: DEFAULT_EXPIRES_IN,
       };
     } catch (err) {

@@ -159,13 +159,15 @@ it('rejects authority revoked while waiting for the actor lock', async () => {
   try {
     await client.query('BEGIN');
     await client.query("SELECT user_id FROM users WHERE user_id='operator' FOR UPDATE");
+    const blocker = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
     pending = request('', 'POST', { ...policy, category: 'video', allowedExtensions: ['.mp4'] });
     await expect
       .poll(async () =>
         Number(
           (
             await http.pool.query(
-              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+              'SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+              [blocker]
             )
           ).rows[0].count
         )

@@ -216,10 +216,28 @@ test('bucket setup against real MinIO', { timeout: 90_000 }, async (t) => {
         assert.equal(result.Uploads?.length ?? 0, 0);
       });
       await t.test(
+        'upload URL cannot replace bytes by replaying or stripping its condition',
+        async () => {
+          const url = await provider.presignedPutUrl('write-once.txt', 60);
+          const write = (body, headers) => fetch(url, { method: 'PUT', body, headers });
+          assert.equal((await write('original', { 'If-None-Match': '*' })).status, 200);
+          assert.equal((await write('changed', { 'If-None-Match': '*' })).status, 412);
+          assert.match(new URL(url).searchParams.get('X-Amz-SignedHeaders'), /if-none-match/);
+          // MinIO reports a missing signed header as BadRequest.
+          assert.equal((await write('changed', {})).status, 400);
+          assert.equal((await write('changed', { 'If-None-Match': 'wrong' })).status, 403);
+          assert.equal(
+            await new Response((await provider.getObject('write-once.txt')).body).text(),
+            'original'
+          );
+        }
+      );
+      await t.test(
         'private scoped direct PUT/GET and pagination work against storage',
         async () => {
           const put = await fetch(await provider.presignedPutUrl('direct.txt', 60), {
             method: 'PUT',
+            headers: { 'If-None-Match': '*' },
             body: 'direct',
           });
           assert.equal(put.status, 200);

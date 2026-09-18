@@ -40,3 +40,21 @@ does not prove deployed cleanup or elapsed-day expiry.
 
 References: [AWS lifecycle conflicts](https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-conflicts.html),
 [MinIO S3 compatibility](https://docs.min.io/aistor/developers/s3-api-compatibility/).
+
+## Direct upload immutability rollout
+
+New presigned PUT URLs require a signed `If-None-Match: *` header. The three
+application upload helpers send it; the presign response also lists the required
+header for other clients. An existing object returns412, and stripping or
+changing the condition invalidates the signature. A retry after a completed
+upload must verify the existing result or request a fresh upload key.
+
+Ship the upload helpers and API/provider together. Allow `If-None-Match` in
+the bucket CORS configuration alongside Content-Type for approved origins.
+Drain old API writers and wait at least the previous maximum PUT URL lifetime
+of one hour before relying on this guarantee for existing original uploads.
+Old URLs remain usable until expiration. Do not delete signed originals: a
+delete marker would allow a conditional create at that key again. Existing
+sealed business copies remain the canonical objects for their own workflows.
+Privileged server credentials can still overwrite objects; this repair closes
+the browser URL replay path, not provider-level administrative mutation.

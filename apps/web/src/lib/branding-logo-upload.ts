@@ -44,7 +44,7 @@ export async function uploadBrandingLogo(file: File, signal: AbortSignal): Promi
   const put = await fetch(upload.presignedUrl, {
     method: 'PUT',
     body: file,
-    headers: { 'Content-Type': type },
+    headers: { 'Content-Type': type, 'If-None-Match': '*' },
     signal,
   });
   if (!put.ok) throw new Error('UPLOAD_FAILED');
