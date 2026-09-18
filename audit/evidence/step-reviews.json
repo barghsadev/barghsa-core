@@ -21661,6 +21661,354 @@
           "evidence": "audit/evidence/step-reviews.json#V01-distributed-limits"
         }
       ]
+    },
+    {
+      "id": "V01-storage-workflow",
+      "date": "2026-09-18",
+      "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
+      "base_revision": "f47f30495898bbea965f24d25f76423ea83df7b3",
+      "product_commits": [
+        "a4794e30e2e7e4f70cface777ece5da81f7c1d7a",
+        "7e58734377034599a64630f4f24c4787c10f1bba",
+        "0607d3226530cf8fca937db262356cc34f15d2b5",
+        "eed71a3f50c9c668122cea71e51b7749aa713631",
+        "a6463fbc9a10d34efb3a807ce62a189b20cb9662",
+        "cf0fa042fae81334e3b063f030bf86a40e2f67da"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.01",
+        "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-04.03.03",
+        "01-platform-infrastructure.md#T-04.03.04",
+        "01-platform-infrastructure.md#T-04.03.05"
+      ],
+      "summary": "Storage workflow consolidated:3 tasks verified/2 partial;3 saved PR reviews closed/2 open. Provider, retention classification, direct-upload authority and durable inspection repaired. Production retention and future document/contract consumers remain explicit.",
+      "review": [
+        "Legal-hold regression failed for all four expiry prefixes before repair. Expiration now requires legal-hold=false; held and unclassified versions are retained. Unsupported GLACIER preservation claim removed. Age limits and five noncurrent versions preserved. No existing objects were classified.",
+        "Broken ts-node root CLI replaced with built shared-package ESM entry using declared dependencies; explicit credentials pair/path-style parsing, bounded errors, SDK connection disposal. Actual root help succeeds.",
+        "Real MinIO rejected AbortIncompleteMultipartUpload. Explicit --backend minio installs four supported rules and reports separate server configuration; Compose declares 24h stale-upload expiry and 1h sweep. S3 retains its multipart rule. Local MinIO readback confirms policy/versioning and retained per-version tags, not elapsed-day or deployed expiry.",
+        "Unused production legacy facade deleteRecord could physically delete after an unlocked active-status read or without a record. It now only soft-deletes known records; missing records are no-ops. Signed error contract is preserved; existence-check streams are cancelled. Physical worker cleanup remains independently controlled.",
+        "Real Blob and Web ReadableStream uploads failed with flowing-stream hashing errors. Pinned AWS Upload helper fixes those bodies, uses one5MiB part at a time and aborts failed multipart uploads. Small string/byte PUTs retain the original path. Direct signed upload/download, key tampering rejection, private access, pagination, multipart roundtrip and failed-source cleanup pass.",
+        "Original upload keys are now write-once through presigned PUT. If-None-Match:* is signed into the URL; stripping/changing it is rejected, and replay cannot overwrite the original. All three browser helpers send the condition and the API response documents it. Existing sealed business copies remain unchanged.",
+        "The upload-policy revocation test matched one particular blocked SQL statement. Earlier session checks may wait first, so it now observes the actual blocking backend PID. Revocation still must return403 and create no policy; this also eliminates the leaked test policy that contaminated the scheduling assertion.",
+        "Version-aware expiry classification now enumerates exact-key versions with pagination, preserves other tags and existing hold values, and adds legal-hold=false only to eligible versions. Worker classifies only locked removed/unsigned/provisional reservations after URL expiry and the65-minute safety window. Active business originals stay retained; retries are idempotent. Exact configured physical prefix is supported by CLI and policy.",
+        "Inspection persists provider ETag/version/content length/type and first Pending scan timestamp, rejects size mismatch or active-policy violations, and cannot revive expired/deleted reservations. Record promotion persists Available with explicit scanner-not-configured reason permitted by T-05.11.02. No malware scan, full SHA256 or configured-scanner fallback is claimed.",
+        "Presign now authorizes supplied purpose/profile and binds them to the reservation. Staff branding/KB/identity purposes require their actual permissions; bank receipt/legal document profile access uses domain-specific permissions. Business record IDs must use the authorized domain endpoint. Record promotion rechecks current profile access after object IO and rejects context rebinding. Old unscoped reservations also require current access.",
+        "All three current browser helpers send purpose/profile at presign and the signed conditional PUT header, transfer bytes directly to object storage, verify then record. Existing legal-document/branding flows pass including wrong-purpose attachment rejection. PR56 frontend deferral is satisfied by this later implementation.",
+        "Storage configuration API/service/module and AdminStorageConfig page/route are byte-unchanged since47f15aec. Reuse13 real config and2 FA/EN browser cases for encrypted write-only credentials, private/public endpoints, connection-test-before-active and current staff/session/CSRF/step-up authority. The revised record HTTP suite refreshes its changed workflow.",
+        "Generic signing/removal holds the record lock, rechecks current authority and audits the mutation. Signed records retain signed_at after removal, excluding worker physical cleanup. Legacy wrapper never physically deletes known or absent records. Existing sealed financial/profile/branding copies remain protected. Whole future contract/document integration is not inferred from generic storage tests.",
+        "Historical PR57 GLACIER preservation and PR59 active physical deletion checkboxes are not requirements to preserve: they conflict with canonical hold/retention safety. Current positive expiry filtering and soft-delete behavior supersede those historical implementation claims.",
+        "28 matching immediate-base bindings refreshed after bounded diff review and affected storage checks. Other callers, config and existing business logic unchanged. Prior image proof is historical; V02 rebuild remains mandatory.38 older refreshes retained."
+      ],
+      "verification": [
+        "180 distinct affected cases pass:58 shared storage,15 CLI/real-MinIO leaves,8 worker cleanup,12 PostgreSQL receipt-retention,32 web helpers,49 storage/legal-document/branding HTTP and6 upload-policy HTTP. Overlapping reruns and the Node parent container are not counted twice.",
+        "Actual MinIO verifies102 versions across pages,100 eligible/2 held, sibling exclusion, preserved tags and repeated classification. Conditional presigned PUT replay/header stripping/header tampering cannot replace bytes. Blob/stream/multipart/private access and signed URL scope remain verified.",
+        "Authorization HTTP covers inaccessible profile before reservation, bound profile/purpose, customer rejection for staff purposes, old unscoped reservation restrictions and Finance-agent revocation during inspection. Existing legal/branding workflows remain valid.",
+        "Shared/API/worker builds, scoped shared/API/worker/web typechecks, lint/format, OpenAPI and diff checks pass. API types use fresh build-info. API/worker global setup ran alone before consumer checks.",
+        "Preserved initial failed logs: worker fixture timestamp freshness; broad fixture edits introduced undefined variables; legal-document wrong-purpose fixture needed an authorized LEGAL profile. Final fixtures keep their original rejection assertions. Earlier dependency/build race and stale incremental diagnostics remain archived.",
+        "Unchanged13 config API and2 FA/EN storage browser cases reused at their prior revision; they are outside the180 current affected cases. Full regression, coverage/budget and rebuilt packaged images remain V02."
+      ],
+      "remaining": [
+        "PR57/task03 remains partial: apply/read back production versioning/policy, reconcile previous unsafe or overlapping rules, verify MinIO server multipart settings and provider propagation. Future preview/superseded-document producers must prove disposal eligibility. No elapsed-day expiry or deployment claim.",
+        "Manual hold edits must not race tag read/modify/write; a future application hold workflow must share record locking. Independent legal-hold authority requires provider Object Lock. Current tag classifier preserves observed holds but does not claim an atomic independent hold API.",
+        "PR59/task05 remains partial for whole contract/document integration: future signing/version/supersession/retention consumers must bind business approval to immutable records. Generic wrapper/API and current sealed consumers are verified, not unbuilt contract/order/audit flows.",
+        "Scanner/quarantine/document state history/full SHA256 remain T-05.11.01–03/T-05.12.01. Available fallback is allowed only while no scanner integration is configured.",
+        "Rollout must ship API/helpers together, allow If-None-Match in bucket CORS, drain old API writers and expire old PUT URLs for at least1hour. Final V02 must rebuild packaged images for changed dependencies/provider/Compose. No remote action or real bucket mutation occurred."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+          "sha256": "d9307dfbd743b010be9089ca9b2f0f9881c36c0b1d6e643180416379c54f2dd7"
+        },
+        {
+          "path": "apps/api/src/public/branding-http.integration.test.ts",
+          "sha256": "21254c32f034c050380e3330cf8d3355a55a8937b9a102075b8596aa1973d75e"
+        },
+        {
+          "path": "apps/api/src/storage/storage-admin.controller.ts",
+          "sha256": "6b59591a1f8baabf5e54279b23444d75ae3712b6e5372b3ff827ac07d2ee27ad"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "bf1accb1c17723fb7cc1ebf314bc21f41c7c56e8b1546dc85f5e4e8a2d4ef8f6"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config.service.ts",
+          "sha256": "9a5ff55ada33a00ffc62e0809220ef26379921f23dba62bfc1573ddfa72d11a3"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-admin.service.ts",
+          "sha256": "364a8acfc2c76eb5d7333f3afccdb8243e570bbd0b94a1bb8f2bdbeca4370ce7"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-db-adapter.ts",
+          "sha256": "e04e1d9f772a48944089a1cf6f3e4f5499c24d0f33f4f7662e4f2e0e015d5013"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "e1091a70c1f047c9de1d42e308f8281b1772e58bc12d81e90d1ce86cf1fbf6bf"
+        },
+        {
+          "path": "apps/api/src/storage/storage-records.controller.ts",
+          "sha256": "d5b28152952ba20474c5e475cb0ff5674df23d45ee0293fe492821c30dd57e86"
+        },
+        {
+          "path": "apps/api/src/storage/storage.module.ts",
+          "sha256": "78d533db0d2e3dfb68edc7f0d02e0df168b65692e9afc1051fa83a1ed0271232"
+        },
+        {
+          "path": "apps/api/src/upload/upload-access.ts",
+          "sha256": "a6184735837c9327fe73ba7f77eae6989a1257e625313050edfe29ec3afdd4dc"
+        },
+        {
+          "path": "apps/api/src/upload/upload-reservations.ts",
+          "sha256": "d829d3243b2ffec7d16b1b4b11751e7d8c1b99716ec5973d5d5831750be5b4a8"
+        },
+        {
+          "path": "apps/api/src/upload/upload.controller.ts",
+          "sha256": "96f0c719fd9a407c0a070da2bb8c884d1857e09b25a63a9e71b23ca39c365a42"
+        },
+        {
+          "path": "apps/api/src/upload/upload.module.ts",
+          "sha256": "52243f90b50e22b6d0511de1e6468272d91e58759be8e082fc105c511dbbd486"
+        },
+        {
+          "path": "apps/api/src/upload/upload.types.ts",
+          "sha256": "e6fe14628045b063ca959bb3960fcf03b5b3e3dceac20afa11254c90cfcb68cc"
+        },
+        {
+          "path": "apps/web/src/lib/branding-logo-upload.test.ts",
+          "sha256": "255e23ba9aac3cdddffa4a780f58fc2dffb9081d3e80eb2cdc36fff3e3acf393"
+        },
+        {
+          "path": "apps/web/src/lib/branding-logo-upload.ts",
+          "sha256": "c87011a75cd2119396e6e1c9265d6e7076052952045615e27979dd8c085f5205"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+          "sha256": "ff51d788718e0c256d60f4e943bb6a7eaecb6c5d4bf7d0b547e0c52cf7f4075f"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+          "sha256": "b9b383cb8d041fc364a8aed0a25b2fdcdf228a01fbfd520ae63834c6a7f579fb"
+        },
+        {
+          "path": "apps/web/src/lib/knowledge-base-upload.test.ts",
+          "sha256": "1a5f397eccc8530017996eacbb7c6f71837fc0ab02240b386985dd2d0ca4c2a7"
+        },
+        {
+          "path": "apps/web/src/lib/knowledge-base-upload.ts",
+          "sha256": "6c31f478b77d91e22754135302366f6cab703bbea84cbf6b018f96899c36b537"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStorageConfig.tsx",
+          "sha256": "260be01b81383470540cf3d13f31be38489b1304126352eff0b82781ab79ea81"
+        },
+        {
+          "path": "apps/web/src/routes/admin/storage.tsx",
+          "sha256": "04d3761da83ed3ab81ebb802afd27b404c22fb23be008332cdabda23cbc5a3ec"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "114ed0a08f7157e86c8a90b0f0a05f144d83c8a9872d1c224b671fc118a347b7"
+        },
+        {
+          "path": "apps/worker/src/storage/cleanup.integration.test.ts",
+          "sha256": "1e014ededc9afb240f0a16c9e6f43398dcb9ff4c7a57f82de6f100b24837495c"
+        },
+        {
+          "path": "apps/worker/src/storage/cleanup.ts",
+          "sha256": "f2606cb358317f951f950d573cf81e32cdaac9ecb1ecfbee3f1e5d21d76071b1"
+        },
+        {
+          "path": "docker-compose.yml",
+          "sha256": "e3c7fc890b40a32ee6287a0e8117b5e7f988b13273b5c0db6857b804b3e40c27"
+        },
+        {
+          "path": "docs/operations/storage-retention.md",
+          "sha256": "ec6a6e6bec8523f1557e3d00cabd867d42ea16ebf2440a23a26b23bf2f3209cf"
+        },
+        {
+          "path": "package.json",
+          "sha256": "66b10b2ef95b44b8abfa26017e0e967c37f83505097d95c78fd8cc60019502b8"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "17d5174c1fa2ad776a3289745b6d39fd1234be2ba4c7df68f84edbe910bf1f2c"
+        },
+        {
+          "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
+          "sha256": "17b29abe7d34cab6fae39b455ec84e1c784cd7930e839fada7633bda4e7aa904"
+        },
+        {
+          "path": "packages/shared/scripts/setup-bucket.mjs",
+          "sha256": "a23c048c063d4ea083a06db07c7951b931425ef45d503125a5e5ba996b5e8acc"
+        },
+        {
+          "path": "packages/shared/scripts/setup-bucket.test.mjs",
+          "sha256": "099e156078a904482972100c162925171190e54eb89973244a2de740acf1f5de"
+        },
+        {
+          "path": "packages/shared/src/storage/immutable-storage.test.ts",
+          "sha256": "cbba8a79401b5c8056d6910dd3cc9d2402ee411a5646005746b56d83b1fe95d2"
+        },
+        {
+          "path": "packages/shared/src/storage/immutable-storage.ts",
+          "sha256": "270cc5e3e30daa3124ea3f275ad695aa9b3531023f2e641d8b093e8f17fbc069"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "53967aeb4c0711def6e030835e3d0e60525192d554a4e361ddef4d0827b19041"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "541cc8616c4e65a001e1d5354ed3eb101525ec27e95c917817de4d080c6a34f5"
+        },
+        {
+          "path": "packages/shared/src/storage/setup-bucket.test.ts",
+          "sha256": "05329dc1955606089ae93a910509a73c55749e844f57f2dbdeb51b5f0e1431a6"
+        },
+        {
+          "path": "packages/shared/src/storage/setup-bucket.ts",
+          "sha256": "0d1c56c5c85cb894ca443516daf224ca6b52cc4cf7619ef00df690b2507884c2"
+        },
+        {
+          "path": "packages/shared/src/storage/storage-factory.ts",
+          "sha256": "c780527fa22a636e9e8f47f64ac81fbf2accc774711bbdec41eae7e1f43caa70"
+        },
+        {
+          "path": "packages/shared/src/storage/storage-provider.ts",
+          "sha256": "d11bdf38e9e5c5e082da96597a997a1dc70f84494d1b8ddef56150dd117f15cc"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "c23434c19cdd6388ec1df84c7d25f0b9fc26557b89688b768a80be6878b8fe7f"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-storage-abort-lint.log",
+        "/tmp/v01-storage-cli-before.log",
+        "/tmp/v01-storage-cli-minio-after.log",
+        "/tmp/v01-storage-cli-minio.log",
+        "/tmp/v01-storage-dependency.log",
+        "/tmp/v01-storage-format.log",
+        "/tmp/v01-storage-immutable-after.log",
+        "/tmp/v01-storage-immutable-before.log",
+        "/tmp/v01-storage-lifecycle-after.log",
+        "/tmp/v01-storage-lifecycle-before.log",
+        "/tmp/v01-storage-lifecycle-final.log",
+        "/tmp/v01-storage-lint-final.log",
+        "/tmp/v01-storage-lint.log",
+        "/tmp/v01-storage-provider-abort.log",
+        "/tmp/v01-storage-provider-after.log",
+        "/tmp/v01-storage-provider-before.log",
+        "/tmp/v01-storage-provider-build.log",
+        "/tmp/v01-storage-provider-final.log",
+        "/tmp/v01-storage-provider-format.log",
+        "/tmp/v01-storage-provider-lint.log",
+        "/tmp/v01-storage-provider-types.log",
+        "/tmp/v01-storage-receipt-retention.log",
+        "/tmp/v01-storage-root-cli-help.log",
+        "/tmp/v01-storage-shared-all.log",
+        "/tmp/v01-storage-shared-build-minio.log",
+        "/tmp/v01-storage-shared-build.log",
+        "/tmp/v01-storage-types-final.log",
+        "/tmp/v01-storage-types.log",
+        "/tmp/v01-storage-upload-api-types-clean.log",
+        "/tmp/v01-storage-upload-api-types-final.log",
+        "/tmp/v01-storage-upload-api-types-fresh.log",
+        "/tmp/v01-storage-upload-api-types.log",
+        "/tmp/v01-storage-upload-http-final.log",
+        "/tmp/v01-storage-upload-http.log",
+        "/tmp/v01-storage-upload-web-final.log",
+        "/tmp/v01-storage-upload-web-types.log",
+        "/tmp/v01-storage-upload-web.log",
+        "/tmp/v01-storage-write-once-after.log",
+        "/tmp/v01-storage-write-once-before.log",
+        "/tmp/v01-storage-write-once-build.log",
+        "/tmp/v01-storage-write-once-format.log",
+        "/tmp/v01-storage-write-once-knowledge.log",
+        "/tmp/v01-storage-write-once-lint.log",
+        "/tmp/v01-storage-write-once-minio-final.log",
+        "/tmp/v01-storage-write-once-shared.log",
+        "/tmp/v01-storage-classifier-format.log",
+        "/tmp/v01-storage-classifier-http.log",
+        "/tmp/v01-storage-classifier-lint.log",
+        "/tmp/v01-storage-classifier-minio.log",
+        "/tmp/v01-storage-classifier-shared.log",
+        "/tmp/v01-storage-classifier-types.log",
+        "/tmp/v01-storage-classifier-worker-after.log",
+        "/tmp/v01-storage-classifier-worker-types.log",
+        "/tmp/v01-storage-classifier-worker.log",
+        "/tmp/v01-storage-context-format-check.log",
+        "/tmp/v01-storage-context-format.log",
+        "/tmp/v01-storage-context-http-after.log",
+        "/tmp/v01-storage-context-http-final.log",
+        "/tmp/v01-storage-context-http.log",
+        "/tmp/v01-storage-context-lint.log",
+        "/tmp/v01-storage-context-openapi.log",
+        "/tmp/v01-storage-context-types.log",
+        "/tmp/v01-storage-context-web-types.log",
+        "/tmp/v01-storage-context-web.log",
+        "/tmp/v01-storage-inspection-http.log",
+        "/tmp/v01-storage-inspection-lint.log",
+        "/tmp/v01-storage-inspection-types.log"
+      ],
+      "reused_evidence": [
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 55,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.03.01"
+          ],
+          "reason": "Provider interface/factory, private signed transfer, list pagination, Blob/stream/multipart and typed errors verified with actual MinIO and focused unit tests.",
+          "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
+          "evidence": "audit/evidence/step-reviews.json#V01-storage-workflow"
+        },
+        {
+          "pr": 56,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.03.02"
+          ],
+          "reason": "Current authorized direct-upload helpers, durable reservation/inspection/Pending scan, context binding and downstream domain authority verified. Historical frontend deferral satisfied; scanner belongs to its separately recorded future tasks.",
+          "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
+          "evidence": "audit/evidence/step-reviews.json#V01-storage-workflow"
+        },
+        {
+          "pr": 57,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.03.03"
+          ],
+          "reason": "PR57/task03 remains partial: apply/read back production versioning/policy, reconcile previous unsafe or overlapping rules, verify MinIO server multipart settings and provider propagation. Future preview/superseded-document producers must prove disposal eligibility. No elapsed-day expiry or deployment claim. Manual hold edits must not race tag read/modify/write; a future application hold workflow must share record locking. Independent legal-hold authority requires provider Object Lock. Current tag classifier preserves observed holds but does not claim an atomic independent hold API.",
+          "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
+          "evidence": "audit/evidence/step-reviews.json#V01-storage-workflow"
+        },
+        {
+          "pr": 58,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.03.04"
+          ],
+          "reason": "Unchanged encrypted configuration and admin UI reviewed with current source hashes and reused13 API/2 bilingual browser cases; activation requires successful real-provider probe.",
+          "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
+          "evidence": "audit/evidence/step-reviews.json#V01-storage-workflow"
+        },
+        {
+          "pr": 59,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.03.05"
+          ],
+          "reason": "PR59/task05 remains partial for whole contract/document integration: future signing/version/supersession/retention consumers must bind business approval to immutable records. Generic wrapper/API and current sealed consumers are verified, not unbuilt contract/order/audit flows.",
+          "source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
+          "evidence": "audit/evidence/step-reviews.json#V01-storage-workflow"
+        }
+      ]
     }
   ]
 }

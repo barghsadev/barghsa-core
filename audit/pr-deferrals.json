@@ -1966,7 +1966,16 @@
     "historical_deferrals": [
       "- [ ] Frontend upload flow (separate slice)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Frontend deferral satisfied by current direct upload helpers and consuming screens; backend and transfer authority reviewed.",
+    "reviewed_source_revision": "cf0fa042fae81334e3b063f030bf86a40e2f67da",
+    "review_record": "audit/evidence/step-reviews.json#V01-storage-workflow",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Three direct-upload helpers plus existing receipt/legal/profile/branding/KB consumers;32 helper,49 affected HTTP and actual MinIO transfer cases. audit/evidence/step-reviews.json#V01-storage-workflow"
+      }
+    ]
   },
   {
     "pr": 52,

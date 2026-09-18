@@ -1,16 +1,16 @@
 # Remaining fix plan
 
-Current through product/test `f47f3049` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `cf0fa042` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 191 | 42 | 30 | 263 |
+| Tasks with merged PR evidence | 194 | 44 | 25 | 263 |
 | Other historical claims | 10 | 1 | 48 | 59 |
-| All claims | 201 | 43 | 78 | 322 |
+| All claims | 204 | 45 | 73 | 322 |
 
-**121 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**118 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **172 deferrals across 102 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
@@ -24,7 +24,9 @@ Container batch consolidated at **5045a627**: five tasks, **3 verified /2 partia
 
 Distributed-limit batch consolidated at **f47f3049**: taskT-04.02.02 verified and PR52 locally closed; both deferrals satisfied. Redis now rejects exhausted quota without DB writes while PostgreSQL authorizes every admission.95 distinct focused cases and types/lint/format pass. Security-critical counters retain their existing PostgreSQL-first behavior. [Batch review](evidence/step-reviews.json#V01-distributed-limits).
 
-**Next: V01-storage-workflow**, PR55–59 and fiveT-04.03 tasks. Read exact current criteria/bodies/deferrals, reuse R02 storage/secret/upload evidence and retain future/operational prerequisites.
+Storage workflow consolidated at **cf0fa042**: five tasks, **3 verified /2 partial**; five saved PRs, **3 closed /2 open**. Provider streaming, write-once uploads, version-aware retention, durable inspection and profile/purpose authorization repaired.180 distinct affected cases pass;13 unchanged config API and2 FA/EN browser cases reused. Builds/types/lint/format/OpenAPI pass.28 immediate-base bindings refreshed;38 older refreshes retained. PR57 keeps production retention and future classifiers open; PR59 keeps future contract/document integration open. [Batch review](evidence/step-reviews.json#V01-storage-workflow).
+
+**Next:** review Redis factory/configuration caching/ADR, PR51/53/54, reusing existing runtime/rate-limit evidence. Then remaining V01/R06/V02/B01. Storage rollout must ship API/helpers together, allow If-None-Match in bucket CORS, drain old writers and expire old PUT URLs for at least1hour. Deploy/reconcile lifecycle rules and MinIO server multipart settings separately; no elapsed-day or production proof. V02 must rebuild packaged images. Future scanner/quarantine/full SHA256 and contract/document consumers retain their exact requirements.
 
 Runtime lifecycle verified at645dda1c:3 tasks newly verified/1 partial;3 PRs newly closed/1 open, PR29 closure preserved. Global197 verified/35 partial/90 pending;178 PRs closed/28 open/95 unreviewed.118 immediate-base bindings refreshed;38 older refreshes retained. PR42 keeps future AI/bill-data maintenance consumers open. Loop batch at761ef274 closes PR234/235/242 with58 protocol and9 audit cases; task counts unchanged. Operations review is now consolidated at a6f51306. [Loop review](evidence/step-reviews.json#V01-loop-durability). [Review](evidence/step-reviews.json#V01-runtime-lifecycle).
 
@@ -146,7 +148,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
-For all43 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
+For all45 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
 
 ## Remaining merged-PR review
 
