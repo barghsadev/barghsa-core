@@ -13,13 +13,13 @@
 
 The application uses Redis for three operational purposes:
 
-1. **Read-heavy config caching** — Admin settings (VAT rates, product prices, thresholds) are immutable and change infrequently. `ConfigCache` in `packages/shared/src/config-cache/` stores entries under `config:entry:*` with a 5-minute TTL and version-gated staleness detection (`config:global:version`). See `01-platform-infrastructure.md#T-04.02.03`.
+1. **Read-heavy config caching** — Admin settings (VAT rates, product prices, thresholds) are immutable and change infrequently. `ConfigCache` in `packages/shared/src/config-cache/` stores entries under `config:entry:v2:*` with a 5-minute TTL. Cache hits require an equal committed PostgreSQL `config_version`; `config:global:version` is only a legacy Redis invalidation hint. See `01-platform-infrastructure.md#T-04.02.03`.
 
-2. **Additional distributed rate counters** — The `CompositeRateLimiterStore` in `packages/shared/src/rate-limit/` records every general request in PostgreSQL before checking the additional Redis counter. Either store may deny a request; Redis failure returns the already-persisted PostgreSQL result. Security failure-history reads use PostgreSQL directly. See `01-platform-infrastructure.md#T-04.02.02`.
+2. **Additional distributed rate counters** — The `CompositeRateLimiterStore` in `packages/shared/src/rate-limit/` can reject an exhausted Redis quota before writing PostgreSQL. Every remaining admission requires a successful PostgreSQL rolling-history check. Redis cannot grant access independently; missing, malformed or unavailable Redis counters use PostgreSQL. Security failure-history reads use PostgreSQL directly. See `01-platform-infrastructure.md#T-04.02.02`.
 
 3. **Short-lived coordination locks** — Planned for future use (mutex-style locks for distributed job scheduling, cache stampede prevention, etc.) with sub-second to 30-second TTLs.
 
-Redis is deployed as a managed service alongside PostgreSQL. However, its availability cannot be assumed — network partitions, maintenance windows, and resource contention make it a best-effort infrastructure component.
+Redis may be configured alongside PostgreSQL. Its availability cannot be assumed — network partitions, maintenance windows, and resource contention make it a best-effort infrastructure component.
 
 ---
 
@@ -27,7 +27,7 @@ Redis is deployed as a managed service alongside PostgreSQL. However, its availa
 
 **Redis is optional, disposable, and never a source of truth.**
 
-Every Redis key has a defined TTL, an invalidation strategy, and a fallback path to PostgreSQL (or equivalent authoritative storage). The application must remain correct — financially, operationally, and functionally — if Redis is flushed, restarted, or entirely absent.
+Every cached value and counter window has a defined TTL, an invalidation strategy, and a fallback path to PostgreSQL (or equivalent authoritative storage). The single legacy invalidation hint has its separate lifetime documented below. The application must remain correct — financially, operationally, and functionally — if Redis is flushed, restarted, or entirely absent.
 
 ### Concrete guarantees
 
@@ -56,14 +56,14 @@ Every Redis key has a defined TTL, an invalidation strategy, and a fallback path
 
 ### Negative
 
-- **Latency tail on fallback:** Every rate-limit check incurs a PostgreSQL write, including when Redis is healthy. Config-cache hits also validate the PostgreSQL version. This is acceptable for low-traffic periods but may require capacity planning under load.
+- **Latency tail on fallback:** Every successful admission incurs a PostgreSQL write. Exhausted Redis quotas can reject requests without that write. Config-cache hits also validate the PostgreSQL version. This is acceptable for low-traffic periods but may require capacity planning under load.
 - **Monitoring gap:** Degraded Redis does not raise an alert by default — the app silently falls back. Operators should monitor Redis connection health and page when Redis becomes unavailable for extended periods.
 
 ### Migration
 
-Configuration entries now use `config:entry:v2:`. Old entries expire under their existing TTL and are never read by the repaired cache. A cache hit requires an equal, positive PostgreSQL version; population checks that version before and after reading the value. Missing version metadata forces a database value read without caching. Each hit adds a PostgreSQL metadata read.
+Configuration entries now use `config:entry:v2:`. Old entries expire under their existing TTL and are never read by the repaired cache. A cache hit requires an equal, positive PostgreSQL version; population checks that version before and after reading the value. Missing version metadata forces a database value read without caching. Each hit adds a PostgreSQL metadata read. The legacy `config:global:version` counter has no TTL; it is one disposable hint, never evidence of freshness. Eviction may fail without compromising correctness because writers increment the durable PostgreSQL version in the same transaction as the value.
 
-General and security counters use migration `0120_rolling_rate_limits.sql`, which adds bounded rolling histories and their admission/reset functions. Database time controls expiry. All windows of a qualified key share the reset lock; window lengths retain independent histories. PostgreSQL failure refuses admission even when Redis is healthy. Redis increments retain their original expiry and can further restrict general requests.
+General and security counters use migration `0120_rolling_rate_limits.sql`, which adds bounded rolling histories and their admission/reset functions. Database time controls expiry. All windows of a qualified key share the reset lock; window lengths retain independent histories. PostgreSQL failure refuses admission even when Redis is healthy. Redis increments retain their original expiry. Exhausted counters can reject general requests early; other requests still require durable admission.
 
 Drain old API and worker counter writers before applying 0120 and switching consumers. Legacy PostgreSQL buckets have no individual attempt timestamps. Their first rolling read imports them at the latest possible timestamp, including recorded clock skew, instead of resetting protection. Truncated history is retained conservatively when a quota increases. Traffic recorded only in Redis before durable enforcement cannot be reconstructed after its loss. Local migration/concurrency tests do not establish that deployed writers were drained or historical traffic reconciled.
 
@@ -75,7 +75,7 @@ The configuration-cache namespace change itself requires no database migration. 
 
 - [x] Every Redis call is guarded with `if (redis)` (or equivalent null-check) — verified in `redis-factory.ts`, `config-cache.ts`, and `composite-rate-limiter.ts`.
 - [x] No Redis key is relied upon for correctness after restart — proven for config caching and rate limiting; coordination locks (planned) designed with same property.
-- [x] Every existing Redis key has a documented TTL — config caching (300s), rate limiting (window duration). Coordination locks (planned) will follow the 1–30 s TTL convention.
+- [x] Every existing Redis key has a documented lifetime — config entries (300s), rate limiting (window duration), legacy invalidation hint (one nonexpiring, disposable counter). Coordination locks (planned) will follow the 1–30 s TTL convention.
 - [x] Every Redis key has a documented invalidation strategy.
 - [x] Financial, session, auth, and durable job logic have zero dependence on Redis availability.
 - [x] `createRedisClient()` returns `null` on connection failure for construction and initial connection errors; connection attempts remain bounded.
