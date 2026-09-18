@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import { S3Client } from '@aws-sdk/client-s3';
 import { setupBucket } from '../dist/storage/setup-bucket.js';
 
-const usage = `Usage: pnpm setup:bucket --bucket <name> [--region <region>] [--backend s3|minio]
+const usage = `Usage: pnpm setup:bucket --bucket <name> [--region <region>] [--backend s3|minio] [--prefix <physical-key-prefix>]
 Enables versioning and replaces the bucket lifecycle policy.
 Expiration requires legal-hold=false; unclassified and held versions remain.
 Environment: S3_BUCKET, S3_REGION, S3_ENDPOINT, S3_ACCESS_KEY_ID,
@@ -19,6 +19,7 @@ export function parseSetupOptions(args, env) {
       region: { type: 'string' },
       help: { type: 'boolean' },
       backend: { type: 'string' },
+      prefix: { type: 'string' },
     },
   });
   if (values.help) return null;
@@ -33,6 +34,7 @@ export function parseSetupOptions(args, env) {
   return {
     bucket,
     backend,
+    prefix: values.prefix ?? '',
     client: {
       region: values.region ?? env.S3_REGION ?? 'us-east-1',
       ...(env.S3_ENDPOINT ? { endpoint: env.S3_ENDPOINT } : {}),
@@ -57,7 +59,12 @@ export async function main(args = process.argv.slice(2), env = process.env) {
   }
   const client = new S3Client(options.client);
   try {
-    const result = await setupBucket({ bucket: options.bucket, backend: options.backend, client });
+    const result = await setupBucket({
+      bucket: options.bucket,
+      backend: options.backend,
+      prefix: options.prefix,
+      client,
+    });
     console.log('Bucket versioning enabled; tagged lifecycle policy applied.');
     if (result.multipartCleanup === 'server-config-required') {
       console.log(

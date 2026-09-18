@@ -20,6 +20,26 @@ const objects = new Map<string, Buffer>();
 let headers: Record<string, string>;
 beforeAll(async () => {
   storage = createServer(async (req, res) => {
+    const url = new URL(req.url!, 'http://localhost');
+    if (url.searchParams.has('versions')) {
+      const prefix = url.searchParams.get('prefix') ?? '';
+      res.setHeader('Content-Type', 'application/xml');
+      res.end(
+        `<ListVersionsResult><IsTruncated>false</IsTruncated>${objects.has(prefix) ? `<Version><Key>${prefix}</Key><VersionId>fixture-v1</VersionId></Version>` : ''}</ListVersionsResult>`
+      );
+      return;
+    }
+    if (url.searchParams.has('tagging')) {
+      res.setHeader('Content-Type', 'application/xml');
+      if (req.method === 'GET') res.end('<Tagging><TagSet></TagSet></Tagging>');
+      else {
+        for await (const _chunk of req) {
+          /* consume signed tag request */
+        }
+        res.end();
+      }
+      return;
+    }
     const key = decodeURIComponent(new URL(req.url!, 'http://localhost').pathname).replace(
       '/test-evidence/',
       ''
@@ -300,7 +320,7 @@ it('binds keys to their issuing user, preserves authorized metadata and rejects 
   );
   expect((await row(key)).metadata.purpose).toBe('ticket_attachment');
 });
-it('rejects different bytes or expired reservations and cleans only abandoned uploads after URL expiry', async () => {
+it('rejects different bytes or expired reservations and schedules abandoned uploads after URL expiry', async () => {
   const mismatched = await issue();
   objects.set(mismatched, Buffer.from('%PDF-1.7 longer than allowed'));
   expect((await uploadRequest(mismatched, 'record')).status).toBe(400);
@@ -320,10 +340,15 @@ it('rejects different bytes or expired reservations and cleans only abandoned up
     [expired]
   );
   expect(await cleanupStorageObjects(http.pool, cleanupProvider)).toEqual({
-    deleted: 1,
+    deleted: 0,
     failed: 0,
+    expirationScheduled: 1,
   });
-  expect(objects.has(expired)).toBe(false);
+  expect(objects.has(expired)).toBe(true);
+  expect((await row(expired)).metadata).toMatchObject({
+    expirationEligibleVersions: 1,
+    retainedHeldVersions: 0,
+  });
   expect(objects.has(mismatched)).toBe(true);
   expect((await row(expired)).metadata.deletionRequested).toBe(false);
   expect((await uploadRequest(expired, 'record')).status).toBe(404);

@@ -8,6 +8,9 @@ import {
   ListObjectsV2Command,
   ListObjectsV2CommandInput,
   HeadBucketCommand,
+  ListObjectVersionsCommand,
+  GetObjectTaggingCommand,
+  PutObjectTaggingCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Upload } from '@aws-sdk/lib-storage';
@@ -99,6 +102,55 @@ export class S3StorageProvider implements StorageProvider {
 
   async checkHealth(signal: AbortSignal = AbortSignal.timeout(1500)): Promise<void> {
     await this.client.send(new HeadBucketCommand({ Bucket: this.bucket }), { abortSignal: signal });
+  }
+
+  async scheduleExpiration(
+    key: string
+  ): Promise<{ eligibleVersions: number; heldVersions: number }> {
+    if (!/^(tmp|uploads|previews|superseded)\//.test(key))
+      throw new StorageProviderError('Object key has no configured expiration policy');
+    const resolvedKey = this.resolveKey(key);
+    const result = { eligibleVersions: 0, heldVersions: 0 };
+    let KeyMarker: string | undefined, VersionIdMarker: string | undefined;
+    const pages = new Set<string>();
+    for (;;) {
+      const page = await this.client.send(
+        new ListObjectVersionsCommand({
+          Bucket: this.bucket,
+          Prefix: resolvedKey,
+          KeyMarker,
+          VersionIdMarker,
+          MaxKeys: 100,
+        })
+      );
+      for (const version of page.Versions ?? []) {
+        if (version.Key !== resolvedKey) continue;
+        if (!version.VersionId)
+          throw new StorageProviderError('Storage returned a version without an ID');
+        const target = { Bucket: this.bucket, Key: resolvedKey, VersionId: version.VersionId };
+        const { TagSet = [] } = await this.client.send(new GetObjectTaggingCommand(target));
+        const hold = TagSet.find((tag) => tag.Key === 'legal-hold');
+        if (hold && hold.Value !== 'false') {
+          result.heldVersions++;
+          continue;
+        }
+        if (!hold)
+          await this.client.send(
+            new PutObjectTaggingCommand({
+              ...target,
+              Tagging: { TagSet: [...TagSet, { Key: 'legal-hold', Value: 'false' }] },
+            })
+          );
+        result.eligibleVersions++;
+      }
+      if (!page.IsTruncated) return result;
+      KeyMarker = page.NextKeyMarker;
+      VersionIdMarker = page.NextVersionIdMarker;
+      const marker = JSON.stringify([KeyMarker, VersionIdMarker]);
+      if (!KeyMarker || pages.has(marker))
+        throw new StorageProviderError('Storage version listing did not advance');
+      pages.add(marker);
+    }
   }
 
   // -----------------------------------------------------------------------

@@ -17,18 +17,29 @@ an existing bucket policy. Inspect deployed rules and reconcile them before
 relying on this protection. Policy changes also require provider propagation.
 
 Do not bulk-tag existing uploads as disposable. Some recorded uploads remain
-business files at their original keys. The application has not yet implemented
-a complete version-aware retention classifier. Existing untagged objects stay
-retained under the repaired policy; abandoned upload cleanup continues through
-the database-backed worker. Retention automation remains an open audit item.
+business files at their original keys. The worker classifies only unclaimed
+upload reservations after their URL expires and the 65-minute safety window
+passes. It locks the removed, unsigned record, tags eligible versions and
+records the result before clearing cleanup intent. Objects then expire by
+bucket age, rather than being deleted at classification time. A failed tagging
+or database completion keeps retryable intent. Active uploads, signed records
+and held versions are excluded. Missing tags are treated as unclassified until
+this trusted workflow explicitly opts a version into expiry.
 
-An object tag is an application retention signal, not S3 Object Lock. Direct
-delete permissions, bucket policy, version-specific holds and immutable business
-copies remain separate controls. Any future classifier must preserve every
-held version, use durable business state, and exclude signed or referenced
-files. A bucket-wide custom expiry can defeat these filters and must not coexist
-with a hold promise. For a configured storage key prefix, lifecycle paths must
-match the full physical key; the default setup uses the four root prefixes.
+The provider enumerates exact-key versions, preserves other tags, and retains
+any existing legal-hold value other than false. Preview generation and document
+supersession must call the same version-aware classification operation only
+after their owning business workflow proves the object disposable. Those
+future document consumers remain unbuilt and are not verified by this repair.
+
+An object tag is an application retention signal, not S3 Object Lock. Tagging
+is a read/modify/write operation: independent manual hold changes must not race
+the worker. A future application hold workflow must share the record lock;
+use provider Object Lock when an independent legal-hold authority needs to
+prevent physical deletion. Direct delete permissions and immutable business
+copies remain separate controls. A bucket-wide custom expiry can defeat these
+filters and must not coexist with a hold promise. For a configured key prefix,
+pass its exact value using `--prefix tenant/`; no slash is added automatically.
 
 For MinIO, pass `--backend minio`. Its lifecycle API rejects the S3 multipart
 abort action. The command applies the four expiry rules and reports that

@@ -41,6 +41,9 @@ export interface BucketSetupConfig {
   /** Bucket name to configure. */
   bucket: string;
 
+  /** Exact physical key prefix used by StorageProvider; no normalization. */
+  prefix?: string;
+
   /** MinIO configures stale multipart cleanup at server level, not lifecycle. */
   backend?: 's3' | 'minio';
 
@@ -87,7 +90,11 @@ const DEFAULT_LEGAL_HOLD_VALUE = 'true';
 // Lifecycle rules builder
 // ---------------------------------------------------------------------------
 
-function buildLifecycleRules(legalHoldKey: string, legalHoldValue: string): LifecycleRule[] {
+function buildLifecycleRules(
+  legalHoldKey: string,
+  legalHoldValue: string,
+  keyPrefix = ''
+): LifecycleRule[] {
   if (!legalHoldKey.trim() || !legalHoldValue.trim() || legalHoldValue === 'false') {
     throw new Error('Legal hold tag must be nonempty and distinct from expiration value "false"');
   }
@@ -106,7 +113,9 @@ function buildLifecycleRules(legalHoldKey: string, legalHoldValue: string): Life
     rules.push({
       ID: `expire-${safeId}-${days}d`,
       Status: 'Enabled',
-      Filter: { And: { Prefix: prefix, Tags: [{ Key: legalHoldKey, Value: 'false' }] } },
+      Filter: {
+        And: { Prefix: keyPrefix + prefix, Tags: [{ Key: legalHoldKey, Value: 'false' }] },
+      },
       Expiration: { Days: days },
       NoncurrentVersionExpiration: {
         NoncurrentDays: days,
@@ -154,6 +163,7 @@ export async function setupBucket(config: BucketSetupConfig): Promise<BucketSetu
   const {
     bucket,
     backend = 's3',
+    prefix = '',
     client,
     skipVersioning = false,
     skipLifecycle = false,
@@ -164,7 +174,7 @@ export async function setupBucket(config: BucketSetupConfig): Promise<BucketSetu
   // Validate before any external mutation, including enabling versioning.
   const rules = skipLifecycle
     ? undefined
-    : buildLifecycleRules(legalHoldTagKey, legalHoldTagValue).filter(
+    : buildLifecycleRules(legalHoldTagKey, legalHoldTagValue, prefix).filter(
         (rule) => backend !== 'minio' || !rule.AbortIncompleteMultipartUpload
       );
   const s3 = client ?? new S3Client({});
@@ -221,7 +231,8 @@ export async function setupBucket(config: BucketSetupConfig): Promise<BucketSetu
  */
 export function getStandardLifecycleRules(
   legalHoldKey: string = DEFAULT_LEGAL_HOLD_KEY,
-  legalHoldValue: string = DEFAULT_LEGAL_HOLD_VALUE
+  legalHoldValue: string = DEFAULT_LEGAL_HOLD_VALUE,
+  prefix = ''
 ): LifecycleRule[] {
-  return buildLifecycleRules(legalHoldKey, legalHoldValue);
+  return buildLifecycleRules(legalHoldKey, legalHoldValue, prefix);
 }

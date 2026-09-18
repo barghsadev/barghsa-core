@@ -18,6 +18,7 @@ test('CLI bucket and region override environment and path-style false is respect
     {
       bucket: 'synthetic',
       backend: 's3',
+      prefix: '',
       client: {
         region: 'us-east-2',
         endpoint: 'http://localhost:9000',

@@ -170,6 +170,77 @@ test('bucket setup against real MinIO', { timeout: 90_000 }, async (t) => {
       requestTimeoutMs: 5000,
     });
     try {
+      await t.test(
+        'retention classification preserves held versions and unrelated keys across pages',
+        async () => {
+          await setupBucket({ bucket: Bucket, client, backend: 'minio', prefix: 'provider/' });
+          const Key = 'provider/uploads/abandoned.txt';
+          const held = [];
+          for (const value of ['true', 'review']) {
+            held.push(
+              await client.send(
+                new PutObjectCommand({
+                  Bucket,
+                  Key,
+                  Body: value,
+                  Tagging: `legal-hold=${value}&owner=audit`,
+                })
+              )
+            );
+          }
+          for (let n = 0; n < 100; n++)
+            await client.send(
+              new PutObjectCommand({ Bucket, Key, Body: 'ordinary', Tagging: 'owner=audit' })
+            );
+          const sibling = Key + '.other';
+          await client.send(new PutObjectCommand({ Bucket, Key: sibling, Body: 'keep' }));
+          assert.deepEqual(await provider.scheduleExpiration('uploads/abandoned.txt'), {
+            eligibleVersions: 100,
+            heldVersions: 2,
+          });
+          assert.deepEqual(await provider.scheduleExpiration('uploads/abandoned.txt'), {
+            eligibleVersions: 100,
+            heldVersions: 2,
+          });
+          for (let i = 0; i < held.length; i++) {
+            const tags = (
+              await client.send(
+                new GetObjectTaggingCommand({ Bucket, Key, VersionId: held[i].VersionId })
+              )
+            ).TagSet;
+            assert.ok(
+              tags.some((tag) => tag.Key === 'legal-hold' && tag.Value === ['true', 'review'][i])
+            );
+            assert.ok(tags.some((tag) => tag.Key === 'owner' && tag.Value === 'audit'));
+          }
+          const tags = (await client.send(new GetObjectTaggingCommand({ Bucket, Key }))).TagSet;
+          assert.ok(tags.some((tag) => tag.Key === 'legal-hold' && tag.Value === 'false'));
+          assert.ok(tags.some((tag) => tag.Key === 'owner' && tag.Value === 'audit'));
+          assert.deepEqual(
+            (await client.send(new GetObjectTaggingCommand({ Bucket, Key: sibling }))).TagSet,
+            []
+          );
+          assert.equal(
+            await new Response((await provider.getObject('uploads/abandoned.txt')).body).text(),
+            'ordinary'
+          );
+          assert.equal(
+            (await client.send(new ListObjectVersionsCommand({ Bucket, Prefix: Key }))).Versions
+              .length,
+            103
+          );
+          await assert.rejects(
+            provider.scheduleExpiration('contracts/protected.pdf'),
+            /no configured expiration policy/
+          );
+          const rules = (await client.send(new GetBucketLifecycleConfigurationCommand({ Bucket })))
+            .Rules;
+          assert.deepEqual(
+            rules.map((r) => r.Filter.And.Prefix),
+            ['provider/tmp/', 'provider/uploads/', 'provider/previews/', 'provider/superseded/']
+          );
+        }
+      );
       for (const [kind, body] of [
         ['string', 'storage payload'],
         ['bytes', new TextEncoder().encode('storage payload')],

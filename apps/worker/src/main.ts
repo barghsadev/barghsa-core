@@ -218,7 +218,8 @@ async function main(): Promise<void> {
           errorCategory: 'transient',
           payload: result,
         });
-      else if (result.deleted) await recordJobSuccess('storage_cleanup');
+      else if (result.deleted || result.expirationScheduled)
+        await recordJobSuccess('storage_cleanup');
     } catch {
       await recordJobFailure({
         jobType: 'storage_cleanup',

@@ -143,6 +143,11 @@ export function runtimeStorageProvider(
       if (!provider.checkHealth) throw unavailable();
       await provider.checkHealth(signal);
     },
+    scheduleExpiration: async (key) => {
+      const provider = (await current()).internal;
+      if (!provider.scheduleExpiration) throw unavailable();
+      return provider.scheduleExpiration(key);
+    },
     putObject: async (...args) => (await current()).internal.putObject(...args),
     getObject: async (...args) => (await current()).internal.getObject(...args),
     deleteObject: async (...args) => (await current()).internal.deleteObject(...args),

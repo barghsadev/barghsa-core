@@ -71,6 +71,10 @@ export interface Logger {
  * - The factory selects the right implementation based on runtime config.
  */
 export interface StorageProvider {
+  /** Trusted cleanup only: opt disposable versions into configured lifecycle expiry.
+   * Non-false legal-hold tags are preserved. Does not delete bytes or remove holds.
+   */
+  scheduleExpiration?(key: string): Promise<{ eligibleVersions: number; heldVersions: number }>;
   /** Verify bucket access without reading or writing customer objects. */
   checkHealth?(signal?: AbortSignal): Promise<void>;
   /** Close SDK connections after callers have drained. */

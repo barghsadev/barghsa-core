@@ -108,3 +108,13 @@ describe('getStandardLifecycleRules', () => {
     client.destroy();
   });
 });
+
+it('matches the exact physical provider prefix without changing policy ages', () => {
+  const rules = getStandardLifecycleRules('legal-hold', 'true', 'tenant/');
+  expect(rules.filter((r) => r.Expiration).map((r) => r.Filter?.And?.Prefix)).toEqual([
+    'tenant/tmp/',
+    'tenant/uploads/',
+    'tenant/previews/',
+    'tenant/superseded/',
+  ]);
+});

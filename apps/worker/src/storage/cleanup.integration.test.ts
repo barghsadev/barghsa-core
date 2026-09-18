@@ -106,6 +106,64 @@ it('waits beyond the one-hour browser upload URL before deleting a removed uploa
   await seed('uploads/document/pending.pdf');
   await pool.query('UPDATE storage_records SET removed_at=NOW()');
   expect(await cleanupStorageObjects(pool, storage)).toEqual({ deleted: 0, failed: 0 });
-  await pool.query("UPDATE storage_records SET removed_at=NOW()-INTERVAL '66 minutes'");
+  await pool.query(
+    "UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes',removed_at=NOW()-INTERVAL '66 minutes'"
+  );
   expect(await cleanupStorageObjects(pool, storage)).toEqual({ deleted: 1, failed: 0 });
+});
+
+async function abandoned(key: string, expiry = "NOW()-INTERVAL '6 minutes'") {
+  await seed(key);
+  await pool.query(
+    `UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes',removed_at=NOW()-INTERVAL '66 minutes',
+    metadata=metadata||jsonb_build_object('provisionalUpload',true,'uploadExpiresAt',${expiry})
+    WHERE storage_key=$1`,
+    [key]
+  );
+}
+it('classifies only expired unclaimed uploads and leaves bytes for one-day lifecycle expiry', async () => {
+  await abandoned('uploads/document/expired.pdf');
+  await abandoned('uploads/document/live.pdf', "NOW()+INTERVAL '1 minute'");
+  await abandoned('uploads/document/promoted.pdf');
+  await pool.query(
+    "UPDATE storage_records SET status='active' WHERE storage_key LIKE '%promoted.pdf'"
+  );
+  const scheduleExpiration = vi.fn(async () => ({ eligibleVersions: 2, heldVersions: 1 }));
+  expect(await cleanupStorageObjects(pool, { ...storage, scheduleExpiration })).toEqual({
+    deleted: 0,
+    failed: 0,
+    expirationScheduled: 1,
+  });
+  expect(scheduleExpiration.mock.calls).toHaveLength(1);
+  expect(deleteObject).not.toHaveBeenCalled();
+  const { metadata } = (
+    await pool.query(
+      "SELECT metadata FROM storage_records WHERE storage_key='uploads/document/expired.pdf'"
+    )
+  ).rows[0];
+  expect(metadata).toMatchObject({
+    deletionRequested: false,
+    expirationEligibleVersions: 2,
+    retainedHeldVersions: 1,
+  });
+  expect(metadata).not.toHaveProperty('deletionCompletedAt');
+});
+it('retains classification intent on provider failure and retries without physical deletion', async () => {
+  await abandoned('uploads/document/retry.pdf');
+  const scheduleExpiration = vi
+    .fn()
+    .mockRejectedValueOnce(new Error('tagging unavailable'))
+    .mockResolvedValue({ eligibleVersions: 1, heldVersions: 0 });
+  expect(await cleanupStorageObjects(pool, { ...storage, scheduleExpiration })).toEqual({
+    deleted: 0,
+    failed: 1,
+  });
+  expect(await pending('uploads/document/retry.pdf')).toBe(true);
+  await pool.query("UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes'");
+  expect(await cleanupStorageObjects(pool, { ...storage, scheduleExpiration })).toEqual({
+    deleted: 0,
+    failed: 0,
+    expirationScheduled: 1,
+  });
+  expect(deleteObject).not.toHaveBeenCalled();
 });
