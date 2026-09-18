@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import https from 'node:https';
+import { gunzipSync } from 'node:zlib';
 
 function request(path, options = {}) {
   return new Promise((resolve, reject) => {
@@ -19,12 +20,20 @@ function request(path, options = {}) {
       (res) => {
         let body = '';
         const chunks = [];
+        const bytes = [];
         res.on('data', (chunk) => {
           body += chunk;
+          bytes.push(chunk);
           chunks.push(String(chunk));
         });
         res.on('end', () =>
-          resolve({ status: res.statusCode, headers: res.headers, body, chunks })
+          resolve({
+            status: res.statusCode,
+            headers: res.headers,
+            body,
+            chunks,
+            bytes: Buffer.concat(bytes),
+          })
         );
       }
     );
@@ -50,6 +59,12 @@ for (const [path, status, policy] of [
   assert.equal(response.headers['x-content-type-options'], 'nosniff', path);
 }
 console.log('PASS seven static/private/error cache policies preserved without proxy overrides');
+const compressed = await request('/assets/app-a1b2c3d4.js', {
+  headers: { 'Accept-Encoding': 'gzip' },
+});
+assert.equal(compressed.headers['content-encoding'], 'gzip');
+assert.equal(gunzipSync(compressed.bytes).toString(), 'x'.repeat(4096));
+console.log('PASS gzip static response roundtrip');
 const redirect = await request('/api/ping', { plain: true });
 assert.equal(redirect.status, 301);
 assert.equal(redirect.headers['x-content-type-options'], 'nosniff');

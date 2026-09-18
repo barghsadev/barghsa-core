@@ -19,6 +19,7 @@ export async function createApplication() {
   app
     .getHttpAdapter()
     .getInstance()
+    .set('etag', false)
     .set('trust proxy', proxies.length ? proxies : false);
 
   // A 10 MiB text file may expand sixfold when escaped inside JSON. Restrict

@@ -62,18 +62,24 @@ export class EtagInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const request = context.switchToHttp().getRequest();
 
-    // Only process GET requests
-    if (request.method !== 'GET') {
+    // Only GET negotiates tags; HEAD must also avoid implicit Express freshness.
+    if (request.method !== 'GET' && request.method !== 'HEAD') {
       return next.handle();
     }
 
     // Only process handlers decorated with @Etag()
-    const etagEnabled = this.reflector.getAllAndOverride<boolean>(ETAG_METADATA, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const etagEnabled =
+      request.method === 'GET' &&
+      this.reflector.getAllAndOverride<boolean>(ETAG_METADATA, [
+        context.getHandler(),
+        context.getClass(),
+      ]);
 
     if (!etagEnabled) {
+      // Express also honors wildcard freshness without generating an ETag.
+      // Non-opted-in data must always retain its full authorized response.
+      delete request.headers['if-none-match'];
+      delete request.headers['if-modified-since'];
       return next.handle();
     }
 
@@ -81,6 +87,7 @@ export class EtagInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((body) => {
+        if (response.statusCode !== 200) return body;
         let etag: string | null = null;
 
         try {
@@ -98,7 +105,7 @@ export class EtagInterceptor implements NestInterceptor {
         if (ifNoneMatch !== undefined && ifNoneMatch !== null) {
           const matches = String(ifNoneMatch)
             .split(',')
-            .map((v) => v.trim());
+            .map((v) => v.trim().replace(/^W\//, ''));
 
           if (matches.includes(etag) || matches.includes('*')) {
             response.status(304);

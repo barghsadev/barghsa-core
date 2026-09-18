@@ -36,7 +36,7 @@ function createMockContext(options: {
 
 function createMockResponse() {
   const headers: Record<string, string> = {};
-  let statusCode: number | undefined;
+  let statusCode = 200;
   return {
     setHeader: vi.fn((name: string, value: string) => {
       headers[name] = value;
@@ -160,6 +160,33 @@ describe('EtagInterceptor', () => {
       const result = await new Promise((resolve) => result$.subscribe(resolve));
 
       expect(result).toBeNull();
+    });
+
+    it('uses weak comparison for GET validators', async () => {
+      const body = { message: 'hello' };
+      const { createHash } = await import('node:crypto');
+      const hash = createHash('sha256').update(JSON.stringify(body)).digest('base64');
+      const { ctx, response } = createMockContext({ ifNoneMatch: `W/"${hash}"` });
+      const result = await new Promise((resolve) =>
+        new EtagInterceptor(createReflector(true))
+          .intercept(ctx, { handle: () => of(body) })
+          .subscribe(resolve)
+      );
+      expect(result).toBeNull();
+      expect(response.statusCode).toBe(304);
+    });
+    it('does not tag or replace an unsuccessful response', async () => {
+      const { ctx, response } = createMockContext({ ifNoneMatch: '*' });
+      response.status(404);
+      const body = { error: 'missing' };
+      const result = await new Promise((resolve) =>
+        new EtagInterceptor(createReflector(true))
+          .intercept(ctx, { handle: () => of(body) })
+          .subscribe(resolve)
+      );
+      expect(result).toBe(body);
+      expect(response.statusCode).toBe(404);
+      expect(response.headers).not.toHaveProperty('ETag');
     });
 
     it('handles wildcard * If-None-Match', async () => {

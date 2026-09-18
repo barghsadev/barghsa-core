@@ -22,3 +22,10 @@ assets return404/no-store rather than the SPA document. NGINX preserves those
 headers and adds no extension-based expiry override. Deploy the web server and
 proxy configuration together. The proxy check includes seven successful,
 private and error cache-policy cases; the web tests verify file classification.
+
+API ETags are opt-in SHA-256 validators for safe reference data. Geography
+province/city/company-type lists retain session guards and private/no-store
+headers; matching validators reduce response bytes without bypassing current
+queries or access checks. Product prices, profile and wallet payloads are not
+opted in. Express automatic validators are disabled. GET/HEAD conditionals on
+non-opted-in routes do not suppress their response; errors are never tagged.

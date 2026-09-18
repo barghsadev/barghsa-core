@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Logger, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Etag } from '../common/etag.interceptor.js';
 import { GeographyService } from './geography.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 
@@ -17,6 +18,7 @@ export class GeographyController {
    * Returns all Iranian provinces ordered by Persian name.
    */
   @Get('provinces')
+  @Etag()
   @ApiOperation({ summary: 'List all provinces' })
   @ApiResponse({
     status: 200,
@@ -43,6 +45,7 @@ export class GeographyController {
    * Returns all cities in the specified province ordered by Persian name.
    */
   @Get('provinces/:id/cities')
+  @Etag()
   @ApiOperation({ summary: 'List cities in a province' })
   @ApiResponse({
     status: 200,
@@ -72,6 +75,7 @@ export class GeographyController {
    * (T-03.02.03 — Legal profile form).
    */
   @Get('company-types')
+  @Etag()
   @ApiOperation({ summary: 'List all company types' })
   @ApiResponse({
     status: 200,

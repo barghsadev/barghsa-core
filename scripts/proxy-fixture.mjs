@@ -30,7 +30,7 @@ for (const [port, service] of [
         'Content-Type': contentType,
         Vary: 'Accept-Encoding',
       });
-      res.end('fixture');
+      res.end('x'.repeat(4096));
       return;
     }
     if (service === 'web' && req.url === '/csp-page') {
