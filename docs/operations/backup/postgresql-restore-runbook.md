@@ -137,6 +137,66 @@ Configuration, key and file rehydration is a separate prerequisite covered by
 applications at providers with live credentials until the operational review allows it.
 Physical backup success does not prove those non-database assets are recoverable.
 
+## Restore exercise and scheduling
+
+`verify-restore.sh` prepares and starts a clone with network listening disabled and
+a private socket directory. It waits for completed recovery, compares row counts
+and SHA256 fingerprints for users, orders and invoices, and checks invalid indexes.
+`VERIFY_SQL_FILE` can add assertions; every returned row must be a zero failure
+count. SQL errors and empty results fail. The template is
+`packages/db/scripts/backup/verify-restore-template.sql`.
+
+Capture the baseline independently while source writes are quiesced. Keep writes
+quiesced through the selected recovery point; otherwise legitimate later writes
+will change fingerprints. Supply the timestamp of the last independently confirmed
+source commit, rather than a full-backup timestamp or an arbitrary wall-clock time:
+
+```sh
+/opt/backup/verify-restore.sh --capture-baseline /secure/source-baseline.json \
+  --reference-time '2026-09-13T10:00:00Z'
+/opt/backup/verify-restore.sh --baseline /secure/source-baseline.json \
+  --work-dir /recovery --sql-file /secure/restore-assertions.sql
+```
+
+The capture reads the direct URL and records one consistent snapshot of all three
+tables. Baselines contain counts and hashes, not customer rows. They cannot be
+overwritten implicitly. The exercise defaults to the latest full backup plus WAL;
+`--pitr` selects a specific time. `VERIFY_PG_USER` and `VERIFY_PG_DATABASE` default
+to `barghsa`. `VERIFY_BASELINE_FILE`, `VERIFY_SQL_FILE` and `WORK_DIR` may provide
+the corresponding arguments. The working directory is an existing parent, never
+a deletion target. Only owned temporary children are removed after the clone stops.
+If shutdown fails, its files remain for inspection.
+
+The JSON result records replay-based `rpo_seconds`, `database_rto_seconds`, table
+evidence and pass/fail. Missing source/replay evidence is a failure, not zero loss.
+Limits are fixed at300 seconds and3600 seconds. Database RTO starts before download
+and ends after readiness and data checks; `core_service_rto_seconds` remains null
+until operators measure application cutover/readiness. These database checks must
+not be reported as proof of the full core-service recovery target.
+
+For failure notifications, configure `VERIFY_ALERT_EXECUTABLE` as one executable
+path. It receives the JSON result on stdin and must durably submit it to the
+operations monitor before returning0. The verifier allows15 seconds, records
+`accepted`, `failed` or `not_configured`, and exits nonzero on every failed exercise.
+An accepted local handoff is not proof of delivered alerts. Monitor missing runs and
+abnormal process termination through the scheduler as well.
+
+Daily backup and quarterly restore timer/service templates are under
+`packages/db/scripts/backup/systemd/`. They target a dedicated Linux backup host
+with PostgreSQL16/extension binaries, GPG, a postgres service account, the scripts
+at `/opt/barghsa-backup`, a Python virtual environment at `/opt/barghsa-backup/.venv`,
+and private workspace `/var/lib/barghsa-backup`. Install the pinned requirements
+into that environment. Supply `/etc/barghsa/backup.env` from managed secrets.
+The daily job prunes only after a successful backup. The quarterly job runs January,
+April, July and October1 at03:00 UTC. Both timers catch up missed executions.
+
+Install/enable those timers only after checking storage access, source baseline
+preparation, key recovery, failure-alert delivery and disk capacity. No timer is
+installed or enabled by this repository. A stale baseline does not qualify as
+current no-loss evidence; each scheduled exercise needs coordinated fresh source
+evidence or must report failure. Keep the source evidence, exercise JSON and alert
+receipt with the quarterly operations record.
+
 ## Evidence and remaining operations
 
 The isolated test suite exercises signed MinIO uploads, encryption, checksum
@@ -144,8 +204,9 @@ rejection, native verification, PostgreSQL WAL/PITR replay and external tablespa
 It also checks immutable names, credential errors and safe local cleanup. It does
 not prove production RPO/RTO, off-server storage, live TLS/firewall, quarterly
 scheduler execution or alert delivery. Those require retained operational results.
-The older `verify-restore.sh` exercise is being repaired separately; do not use its
-backup-age calculation as an RPO measurement or its two-hour threshold as acceptance.
+Run focused checks with the backup image built as `barghsa-backup-audit:local`, then
+`python3 packages/db/scripts/backup/run_physical_backup_tests.py`. The runner creates
+and removes only its own isolated MinIO, PostgreSQL and network resources.
 
 Implementation references: [PostgreSQL continuous archiving](https://www.postgresql.org/docs/16/continuous-archiving.html),
 [S3 conditional uploads](https://docs.aws.amazon.com/boto3/latest/reference/services/s3/client/put_object.html)

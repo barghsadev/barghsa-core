@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily Barghsa database backup
+
+[Timer]
+OnCalendar=*-*-* 01:00:00 UTC
+Persistent=true
+Unit=barghsa-db-backup.service
+
+[Install]
+WantedBy=timers.target

@@ -35,19 +35,23 @@ For cloud-specific services:
 - **Google Cloud SQL:** Use the server's CA certificate (downloaded from the Cloud SQL Console)
 - **DigitalOcean:** CA certificate provided in the connection details page
 
-The CA bundle path is configured via `DATABASE_CA_PATH` environment variable. When this variable is set, the application reads the CA bundle and passes it to the Pool constructor.
+Enable `DATABASE_SSL_ENABLED=true` and set `DATABASE_CA_PATH` to the mounted CA bundle. With environment-controlled TLS enabled, the application validates and loads that file; unreadable or malformed bundles fail. A CA path alone does not enable TLS. Explicit `ssl` configuration takes precedence over these environment variables and URL TLS settings.
 
 ### 2. Connection URL priority
 
-The application resolves the PostgreSQL connection target in the following order:
+For ordinary runtime connections, `PGBOUNCER_URL` takes precedence over `DATABASE_URL`.
+`PGDIRECT_URL` is used by direct/admin pools and is not an ordinary-pool fallback.
+Programmatic `config.pgbouncerUrl` takes precedence; explicit `config.databaseUrl`
+bypasses the environment's pooler URL. Direct admin pools use `config.pgdirectUrl`,
+then `PGDIRECT_URL`, then `DATABASE_URL`. Finance session locks use a separate direct
+pool when transaction pooling is enabled, as specified in [ADR002](002-connection-pooling.md).
 
-| Priority    | Variable        | Purpose                                      |
-| ----------- | --------------- | -------------------------------------------- |
-| 1 (highest) | `PGBOUNCER_URL` | PgBouncer (recommended for multi-replica HA) |
-| 2           | `DATABASE_URL`  | Direct PostgreSQL (hybrid managed DB)        |
-| 3           | `PGDIRECT_URL`  | Direct admin/migration bypass                |
-
-When `DATABASE_URL` points to a managed PostgreSQL endpoint, TLS is required. The connection string may include `?sslmode=require` query parameter, or the `ssl` configuration may be set via the code-level config or `DATABASE_CA_PATH` / `DATABASE_SSL_ENABLED` env vars.
+Use certificate-validated TLS for every production network hop. Configure
+`DATABASE_SSL_ENABLED=true`, leave `DATABASE_SSL_REJECT_UNAUTHORIZED=true`, and
+mount the appropriate CA bundle. The libpq backup clients separately require
+`sslmode=verify-full` and their CA settings in `PGDIRECT_URL`; application TLS
+environment switches do not configure those external tools. Pooler-to-PostgreSQL
+TLS is a separate pooler setting. Validate all hops against the deployed certificates.
 
 ### 3. Firewall rules limit access to app VM IPs only
 
@@ -60,12 +64,12 @@ The firewall and network configuration is managed outside this repository (Terra
 
 ### 4. TLS configuration via environment variables
 
-| Variable                           | Required | Default | Description                                                                                 |
-| ---------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`                     | Yes      | —       | PostgreSQL connection string (may include `sslmode`)                                        |
-| `DATABASE_SSL_ENABLED`             | No       | `false` | When `true`, enables TLS even if the connection string omits `sslmode`                      |
-| `DATABASE_CA_PATH`                 | No       | —       | Filesystem path to the CA certificate bundle for server certificate validation              |
-| `DATABASE_SSL_REJECT_UNAUTHORIZED` | No       | `true`  | When `false`, connects with TLS but skips certificate validation (only for troubleshooting) |
+| Variable                           | Required | Default | Description                                                                     |
+| ---------------------------------- | -------- | ------- | ------------------------------------------------------------------------------- |
+| `DATABASE_URL`                     | Yes      | —       | PostgreSQL connection string (may include `sslmode`)                            |
+| `DATABASE_SSL_ENABLED`             | No       | `false` | When `true`, enables TLS even if the connection string omits `sslmode`          |
+| `DATABASE_CA_PATH`                 | No       | —       | Filesystem path to the CA certificate bundle for server certificate validation  |
+| `DATABASE_SSL_REJECT_UNAUTHORIZED` | No       | `true`  | When `false`, skips certificate validation; forbidden for production deployment |
 
 Application code reads these variables in `createDbPool()` and passes them to the `Pool` constructor.
 
@@ -105,7 +109,7 @@ In a VPC with strict network ACLs, some teams skip TLS within the VPC boundary. 
 
 ### Always-required TLS (rejected for dev)
 
-Requiring TLS in local development would add friction for developers who need to set up CA certificates on their machine. Instead, TLS is `DATABASE_URL`-driven: the connection string can include `sslmode=disable` for local development, and TLS is only enforced in production.
+Requiring TLS in local development would add friction for developers who need to set up CA certificates on their machine. Instead, TLS is `DATABASE_URL`-driven: the connection string can include `sslmode=disable` for local development, Production deployment must explicitly enable and verify certificate-validated TLS; the factory does not infer a managed endpoint or enforce TLS from `NODE_ENV` alone.
 
 ## Migration path
 
@@ -120,3 +124,13 @@ This ADR should be reviewed when:
 - A managed PostgreSQL provider is selected and CA bundle handling is operationalised.
 - The application adds read replicas or database proxy that changes the TLS termination point.
 - A connection pooler (PgBouncer) is adopted for HA — TLS termination between app and PgBouncer, and PgBouncer to PostgreSQL, must be configured separately.
+
+## Operational proof still required
+
+The application supports validated TLS, but that capability is not evidence of a
+configured production endpoint, firewall or provider. Record the deployed endpoint,
+certificate chain/hostname verification, rejected untrusted-certificate attempt and
+firewall denial from an unauthorized network before accepting this deployment task.
+For single-server installations, use the [encrypted backup and restore runbook](../operations/backup/postgresql-restore-runbook.md)
+with storage outside the database host. Local MinIO on the same host is development
+proof only. No managed deployment or live network policy is created by this ADR.
