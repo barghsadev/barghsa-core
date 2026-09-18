@@ -1,14 +1,14 @@
 # Remaining fix plan
 
-Current through product/test `e3019cfe` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `a6f51306` and approved requirements `981e98d6`, 2026-09-13. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
 | Population | Recorded verified | Partial | Pending | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Tasks with merged PR evidence | 187 | 34 | 42 | 263 |
+| Tasks with merged PR evidence | 187 | 39 | 37 | 263 |
 | Other historical claims | 10 | 1 | 48 | 59 |
-| All claims | 197 | 35 | 90 | 322 |
+| All claims | 197 | 40 | 85 | 322 |
 
 **125 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.38 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
@@ -16,9 +16,11 @@ Saved inventory: **301 merged PRs**, **172 deferrals across 102 PRs**, **23 repe
 
 ## Next step
 
-Operations batch in progress: PostgreSQL16/17 monitoring repaired at35c8201c,17 collector cases and types/lint/format pass. PgBouncer container settings/health repaired at7f77b07e; isolated service/query/transaction proof passes and owned resources are removed. Pooler application integration repaired ate3019cfe:37 DB and164 affected API cases pass, along with types/lint/format. Transaction-local deadlines, explicit rollback/commit, queued expiry and direct finance session locks are verified. API closes both shared pools. **Next: signed/encrypted physical backup, WAL, restore, retention and active PostgreSQL configuration.** Production TLS/firewall/load remain external. Complete detailed batch review once this workflow is repaired. Current logs and exact remaining defects are in progress.json.active_batch.
+Operations review consolidated at **a6f51306**: six saved PRs reviewed, **0 closed /6 open** for explicit operational prerequisites. Pooling, monitoring, encrypted full/WAL/PITR recovery, restore-exercise data checks and job templates are repaired. Evidence:17 collector,37 pool/direct,164 affected API and30 distinct backup/exercise/job cases; actual Compose/config/network/archive checks and packaged image checks pass.40 immediate-base bindings refreshed;38 older refreshes retained. Production TLS/firewall/load, retained off-server backups, secret-manager provisioning, actual schedules, core-service RPO/RTO and delivered monitoring alerts remain unverified. [Batch review](evidence/step-reviews.json#V01-operations-configuration).
 
-Runtime lifecycle verified at645dda1c:3 tasks newly verified/1 partial;3 PRs newly closed/1 open, PR29 closure preserved. Global197 verified/35 partial/90 pending;178 PRs closed/28 open/95 unreviewed.118 immediate-base bindings refreshed;38 older refreshes retained. PR42 keeps future AI/bill-data maintenance consumers open. Loop batch at761ef274 closes PR234/235/242 with58 protocol and9 audit cases; task counts unchanged. Next **V01-operations-configuration**, saved PR43/44/45/46/48/49. [Loop review](evidence/step-reviews.json#V01-loop-durability). [Review](evidence/step-reviews.json#V01-runtime-lifecycle).
+**Next: V01-config-backup**, saved PR50 and`01-platform-infrastructure.md#T-04.01.07`. Exact requirement and PR body read. Review/fix active-config export, wrapped keys, file collection/rehydration and verification. Reuse signed storage/encryption and physical recovery evidence. Use synthetic credentials/files in tests; preserve real environment files and user-owned output/.
+
+Runtime lifecycle verified at645dda1c:3 tasks newly verified/1 partial;3 PRs newly closed/1 open, PR29 closure preserved. Global197 verified/35 partial/90 pending;178 PRs closed/28 open/95 unreviewed.118 immediate-base bindings refreshed;38 older refreshes retained. PR42 keeps future AI/bill-data maintenance consumers open. Loop batch at761ef274 closes PR234/235/242 with58 protocol and9 audit cases; task counts unchanged. Operations review is now consolidated at a6f51306. [Loop review](evidence/step-reviews.json#V01-loop-durability). [Review](evidence/step-reviews.json#V01-runtime-lifecycle).
 
 Seed/bootstrap remains5 verified/1 partial; PR84 retains production seed execution. Database PR17–22 remains5 closed/1 open, with PR21 future refund/order concurrency outstanding. Preserve migrations0133/0134 and legacy reconciliation prerequisites.
 
@@ -138,7 +140,7 @@ Then form bounded batches within the existing phase order, such as remaining acc
 - CRM: eight of nine F15 records are verified locally. T-05.02.06 retains only future contract integration and approved retention policy prerequisites. Do not rebuild the reviewed CRM workflows.
 - Lost-contact recovery: contacts and intake/escalation runbook are implemented. Owner policy for approvers/identity checks is still pending; do not ask again. A reviewed credential-change method and complete case audit remain. Continue independent work.
 
-For all35 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
+For all40 partial records, use the exact limitations in [acceptance](acceptance-closure.json) alongside [current requirements](current-task-requirements.json). Infrastructure partials map to R03–R06 or V01 operational/future prerequisites. Session/recovery partials map to R01. CRM/ticket contract and record-view dependencies map to V01/B01. Verification retains real-provider prerequisites and R02 delivery. Branding/theme partials map to R02/R03. Future dependencies never count as passed acceptance.
 
 ## Remaining merged-PR review
 

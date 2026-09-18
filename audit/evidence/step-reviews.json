@@ -2070,7 +2070,7 @@
       "source_revision": "b18fffdd1b766ce87f425a590d8e0d8157286fbd",
       "summary": "Added own trusted-device listing and audited revocation with a localized Security page and verified browser behavior.",
       "review": [
-        "GET /api/auth/trusted-devices returns only the authenticated user’s unexpired trust records, including null-address legacy records. Response contains opaque record ID, display user-agent/IP, trust time, expiry and current-device flag; no cookie proof or hash. A shared validated cookie reader recognizes the same development/production names as login and does not mint cookies during GET.",
+        "GET /api/auth/trusted-devices returns only the authenticated user\u2019s unexpired trust records, including null-address legacy records. Response contains opaque record ID, display user-agent/IP, trust time, expiry and current-device flag; no cookie proof or hash. A shared validated cookie reader recognizes the same development/production names as login and does not mint cookies during GET.",
         "DELETE /api/auth/trusted-devices/:id requires authenticated session, CSRF, recent step-up and row ownership. It locks user, actor session and target trust in the established order, then rechecks account/session/step-up validity after lock waits. Deletion and a device_trust_revoked audit entry commit together. Audit metadata contains the record ID, not possession proof. Audit failure rolls back deletion.",
         "Concurrent duplicate deletion produces one success, one not-found response and one audit entry. Expiry/revocation/disablement during the account wait and step-up expiry during a target-row wait reject the action. Removing trust requires OTP on the next password login and leaves already-issued sessions active; the UI explains that distinction.",
         "The Security page lists device/browser hint, recorded IP, trusted time and expiry using account timezone formatting, and marks the current browser. Confirmation supports recent-password step-up, clears password values, blocks duplicate submission/dismissal while pending, retains the target on failed or malformed success and restores focus on cancel or completion.",
@@ -2079,7 +2079,7 @@
         "Generated OpenAPI adds only the two new routes with response fields and failure statuses. Existing route content and order are preserved to avoid unrelated generated-file churn. No dependency installation, migration, deployment or remote change."
       ],
       "checks": [
-        "17 distinct API/cookie cases pass across focused runs: seven existing cookie-helper cases, nine management cases after correcting the test’s text-versus-JSON audit metadata expectation, plus a new delayed target-row expiry case. Concurrent duplicate revocation and next-login OTP are verified through the compiled API and real PostgreSQL.",
+        "17 distinct API/cookie cases pass across focused runs: seven existing cookie-helper cases, nine management cases after correcting the test\u2019s text-versus-JSON audit metadata expectation, plus a new delayed target-row expiry case. Concurrent duplicate revocation and next-login OTP are verified through the compiled API and real PostgreSQL.",
         "The initial late-expiry test used the one-second polling default for a two-second deadline and failed before expiry; its explicit five-second observation limit passes. Test selection skips in narrow reruns are not acceptance skips. All failed logs are retained.",
         "40 new production-browser cases pass across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari, covering fa/en and light/dark. Initial run passed eight light cases and failed eight dark cases; final Chromium/mobile run passes 16 and remaining browser run passes 24. Twenty existing session-revocation cases also pass across all five profiles. Total 60 distinct browser cases, not one 60-case invocation.",
         "Preview index and manifest hashes bind the final built app at explicit http://127.0.0.1:4179; preview was stopped after browser checks. No API typecheck overlapped an API/browser package build and no product build ran during browser fixtures.",
@@ -4765,7 +4765,7 @@
         "Terms acceptance starts unchecked, blocks submission without a publication and resets on language changes. Desktop native anchor opens the exact published UUID and locale; mobile dialog retains the exact displayed text and restores focus. Draft/malformed/mismatched reads fail. Consent ID/time and both content hashes are recorded atomically during user creation.",
         "Back-to-login and forgot-password are secondary links with actual /login and /forgot-password targets in the shared-layout footer. Browser assertions and current source confirm them. Analytics was optional.",
         "Registration submits only username/password/tosVersionId and returns an opaque challengeId. Destination serialization deduplicates identical canonical username/TOS/password requests without storing a fast password fingerprint. Independent3/IP/minute and10/destination/hour start limits persist; new sends retain destination/IP/device quotas. Safe localized errors/correlation and Retry-After use the current filter. UI freezes pending form, retains failed draft and shows toast plus alert.",
-        "OTP generation uses node crypto randomInt for6 digits and SHA-256 storage; encrypted outbox delivery, default300-second expiry with admin60–900-second configuration, attempt exhaustion and same-ID resend are implemented. Delivery worker tests use actual provider-fixture messages and verify retry, replacement, lease, payload erasure and concurrent claiming. Supplemental hashed device20/hour quota is shared across purposes; destination1/minute,5/hour,10/day and IP20/hour remain.",
+        "OTP generation uses node crypto randomInt for6 digits and SHA-256 storage; encrypted outbox delivery, default300-second expiry with admin60\u2013900-second configuration, attempt exhaustion and same-ID resend are implemented. Delivery worker tests use actual provider-fixture messages and verify retry, replacement, lease, payload erasure and concurrent claiming. Supplemental hashed device20/hour quota is shared across purposes; destination1/minute,5/hour,10/day and IP20/hour remain.",
         "OTP UI masks destination, supports six boxes, advance/backspace/arrows/paste/autosubmit, clears/shakes after error and serializes verification with resend. Cooldown uses elapsed time, resend retains challengeId, terminal/expiry paths are handled and leaving cancels delayed redirects. Current browser evidence verifies redirects through /app to onboarding and failure/retry behavior.",
         "User, exact consent, OTP consumption, session, refresh and user_created audit share one transaction. Fresh session ID and random CSRF are delivered through common cookie helpers after commit; default idle30min/absolute24h are unchanged. Actual HTTP tests prove duplicate/replay/attempt rejection and rollback on session, refresh, audit and lock-wait expiry failures. Current createSession uses the supplied connection and current cookie helper retains production Secure/HttpOnly/narrow paths. Broader no-exemption CSRF wording remains T-02.02.03, not an inferred requirements amendment.",
         "PR69 historical Vite alias build failure and unavailable tests are superseded by current production builds, typechecks and focused browser evidence.",
@@ -4895,7 +4895,7 @@
         },
         {
           "revision": "f7086b61013633eeafb3f0e6da98a8bc96b0d4ca",
-          "summary": "Admin-configurable OTP expiry uses existing app_config with a 300-second default and 60–900-second bounds. Versioned updates recheck current staff permission, session, CSRF and password confirmation inside the audit transaction. New registration/login/reset/contact sends and resends read the current setting; already-sent deadlines stay unchanged. Localized admin UI validates read/write acknowledgments, freezes pending drafts, confirms password and supports explicit conflict reload.",
+          "summary": "Admin-configurable OTP expiry uses existing app_config with a 300-second default and 60\u2013900-second bounds. Versioned updates recheck current staff permission, session, CSRF and password confirmation inside the audit transaction. New registration/login/reset/contact sends and resends read the current setting; already-sent deadlines stay unchanged. Localized admin UI validates read/write acknowledgments, freezes pending drafts, confirms password and supports explicit conflict reload.",
           "checks": "24 distinct API cases pass in final isolated runs:9 real-PostgreSQL HTTP cases and15 existing OTP cases.28 distinct production-browser cases pass across Chromium/mobile Chrome:16 OTP editor cases and12 existing verification-page cases. API/web types, focused lint/format, OpenAPI contract and all41 unchanged route budgets pass. Compiled metadata confirms33 modules/64 controllers/345 routes/204 unsafe methods/122 step-up routes.",
           "review_notes": "Review fixed account enumeration during malformed OTP configuration by validating settings before the reset-account lookup. HTTP checks cover a one-connection pool, concurrent version conflicts, audit rollback, actor revocation and session/step-up expiry during lock waits. Browser fixture corrections preserve real modal background hiding, changing submit labels and cleared passwords after attempts. An earlier combined API process exited without a summary; both selected suites passed separately afterward. Initial contract output was stale; regenerated from the built app and retained existing JSON order. No schema, provider, session-cookie policy, dependency or budget change.",
           "logs": [
@@ -6234,7 +6234,7 @@
         {
           "commit": "ab09a87771f0257f95d65cc4221add205d21f2bf",
           "summary": "Initialize only the first accepted profile as account default within membership, credential rotation and audit transaction. Preserve saved/unavailable/legacy default choices and require selection for multiple profiles.",
-          "checks": "53 distinct API cases pass including19 acceptance cases, failure rollback and five preservation scenarios. API types/lint/format/OpenAPI pass. Reviewed profile→account→session lock order; existing deadline checks still bracket writes and commit.",
+          "checks": "53 distinct API cases pass including19 acceptance cases, failure rollback and five preservation scenarios. API types/lint/format/OpenAPI pass. Reviewed profile\u2192account\u2192session lock order; existing deadline checks still bracket writes and commit.",
           "logs": [
             "audit/evidence/ab09a87/r01-first-profile-before.log.gz",
             "audit/evidence/ab09a87/r01-first-profile-api.log.gz",
@@ -6717,7 +6717,7 @@
         }
       ],
       "historical_dispositions": [
-        "PR111–114 each contribute a distinct task. No saved frozen deferrals or duplicate builds occur in this batch; useful schema/UI slices remain.",
+        "PR111\u2013114 each contribute a distinct task. No saved frozen deferrals or duplicate builds occur in this batch; useful schema/UI slices remain.",
         "Historical picker/preferences claims do not prove all delivery/timestamp consumers; PR113 and114 remain open."
       ],
       "remaining": [
@@ -7783,9 +7783,9 @@
             "04-invoices-wallet-contracts.md#T-04.3.01.03"
           ],
           "historical_deferrals": [
-            "- [ ] Dual-approval for amounts ≥ admin threshold — deferred to T-04.3.01.05.",
-            "- [ ] Staff rejection API — deferred to T-04.3.01.04.",
-            "- [ ] Staff confirmation UI — not in this API-only task."
+            "- [ ] Dual-approval for amounts \u2265 admin threshold \u2014 deferred to T-04.3.01.05.",
+            "- [ ] Staff rejection API \u2014 deferred to T-04.3.01.04.",
+            "- [ ] Staff confirmation UI \u2014 not in this API-only task."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         },
@@ -7807,7 +7807,7 @@
             "04-invoices-wallet-contracts.md#T-04.3.01.01"
           ],
           "historical_deferrals": [
-            "- Upload validation, staff APIs, dual-approval, wallet overpayment credit, and invoice Unpaid → Partially funded → Paid tracking are intentionally deferred to T-04.3.01.02–07."
+            "- Upload validation, staff APIs, dual-approval, wallet overpayment credit, and invoice Unpaid \u2192 Partially funded \u2192 Paid tracking are intentionally deferred to T-04.3.01.02\u201307."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         },
@@ -7818,7 +7818,7 @@
             "04-invoices-wallet-contracts.md#T-04.2.02.04"
           ],
           "historical_deferrals": [
-            "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
+            "- [ ] Dual-approval thresholds for bank-payment confirmation \u2014 owned by T-04.3.01.05 / C-04.CC.02, not this task."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         },
@@ -7829,7 +7829,7 @@
             "04-invoices-wallet-contracts.md#T-04.2.02.04"
           ],
           "historical_deferrals": [
-            "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
+            "- [ ] Dual-approval thresholds for bank-payment confirmation \u2014 owned by T-04.3.01.05 / C-04.CC.02, not this task."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         },
@@ -7852,7 +7852,7 @@
           ],
           "historical_deferrals": [
             "- Posted and reserved balances are unchanged. Credit is deferred to staff confirmation (`T-04.2.02.04`). Idempotent retries reuse the matching Pending row.",
-            "- [ ] Staff confirm/reject UI is out of scope (`T-04.2.02.04`) — this task only creates the Pending submission."
+            "- [ ] Staff confirm/reject UI is out of scope (`T-04.2.02.04`) \u2014 this task only creates the Pending submission."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         },
@@ -7863,9 +7863,9 @@
             "02-auth-users-admin.md#T-09.07.02"
           ],
           "historical_deferrals": [
-            "- [ ] UI: \"Pending approvals\" in finance dashboard — deferred (finance module & dashboard do not exist yet; web surface will consume these endpoints when the finance module lands)",
-            "- [ ] Step-up auth on resolve — deferred (step-up flow design pending; noted in epic S-09.07)",
-            "- [ ] Role-permission eligibility (`admin:financial:edit` via staff roles) — deferred (sessions expose only `isAdmin`; documented in the service and gate)",
+            "- [ ] UI: \"Pending approvals\" in finance dashboard \u2014 deferred (finance module & dashboard do not exist yet; web surface will consume these endpoints when the finance module lands)",
+            "- [ ] Step-up auth on resolve \u2014 deferred (step-up flow design pending; noted in epic S-09.07)",
+            "- [ ] Role-permission eligibility (`admin:financial:edit` via staff roles) \u2014 deferred (sessions expose only `isAdmin`; documented in the service and gate)",
             "Deferred from this slice and tracked in PR description: UI, step-up on resolution, role-based eligibility, and the finance-module threshold consumer (its own epic tasks)."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
@@ -7877,7 +7877,7 @@
             "02-auth-users-admin.md#T-09.07.01"
           ],
           "historical_deferrals": [
-            "- [x] Step-up auth on the mutation: deferred — the web app has no step-up challenge flow yet and admin config panels use raw fetch; requiring it would regress the working save path (follow-up with T-09.06.01/02/03 step-up UI)",
+            "- [x] Step-up auth on the mutation: deferred \u2014 the web app has no step-up challenge flow yet and admin config panels use raw fetch; requiring it would regress the working save path (follow-up with T-09.06.01/02/03 step-up UI)",
             "- [ ] Emergency override (reason + elevated permission + immediate alert + audit): deferred until the step-up flow and alert pipeline exist",
             "- [ ] T-09.07.02 workflow consumption: not part of this task (finance module doesn't exist yet; the config contract documents the `> threshold && threshold > 0` semantics it must use)"
           ],
@@ -8192,7 +8192,7 @@
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-          "sha256": "2088520e837e2377a005940b69e8c344b8a47e223b1c382f6ba20a2325b6866e"
+          "sha256": "f1c30a6305edcc7fdc16e9b9732a5c769875682cdc01df64686dbc25785e2d2a"
         },
         {
           "path": "apps/api/src/wallet/bank-receipt-approval.ts",
@@ -8212,7 +8212,7 @@
         },
         {
           "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
-          "sha256": "5abf5dafd96cdbe4fa73a2a6bc623bcb12494591d1754426bca7833e6133257d"
+          "sha256": "354f77b29e6baad986f708853b58dcbb242aec025795c363a4b8b2843f59b4d3"
         },
         {
           "path": "apps/api/src/wallet/wallet.controller.ts",
@@ -8847,7 +8847,7 @@
         },
         {
           "path": "apps/api/src/wallet/online-topup-callback.service.ts",
-          "sha256": "3dc86ff965ca1f0a3c3fe8552675073720fe2100fe2313454e121b1ca71e975e"
+          "sha256": "cfdab11dad62b75f909cab6e2ad4ae7cfe17801b916f6cfeede8b628bbc026e5"
         },
         {
           "path": "apps/api/src/wallet/online-topup-http.integration.test.ts",
@@ -8859,7 +8859,7 @@
         },
         {
           "path": "apps/api/src/wallet/online-topup.service.ts",
-          "sha256": "36f2a34085333da44c7b8071b27b61f59d6dcef76806d6c2472945fa3b5d472e"
+          "sha256": "ad2bcaa2fecbb9d6be517c060e74b82514a1bdf034e579c3017f0ce0d28bcbdc"
         },
         {
           "path": "apps/api/src/wallet/payment-callback-verifier.ts",
@@ -9611,7 +9611,7 @@
             "04-invoices-wallet-contracts.md#T-04.2.04.03"
           ],
           "historical_deferrals": [
-            "- [ ] Granular `admin:finance:wallet:chargeback-alerts` capability for non-admin Finance staff — not in this task. Recipients already include `role-finance`; the warning API still requires a platform admin session until C-04.CC.03."
+            "- [ ] Granular `admin:finance:wallet:chargeback-alerts` capability for non-admin Finance staff \u2014 not in this task. Recipients already include `role-finance`; the warning API still requires a platform admin session until C-04.CC.03."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         },
@@ -9622,7 +9622,7 @@
             "04-invoices-wallet-contracts.md#T-04.2.04.02"
           ],
           "historical_deferrals": [
-            "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03 (already on main). Unmatched/unresolved events remain the input to that alert path. Duplicate unmatched retries with an identical payload still re-attempt the alert; mismatched payloads are rejected first so alert data cannot be built from a different notification."
+            "- [ ] Finance alert (push + dashboard) \u2014 not this task; owned by T-04.2.04.03 (already on main). Unmatched/unresolved events remain the input to that alert path. Duplicate unmatched retries with an identical payload still re-attempt the alert; mismatched payloads are rejected first so alert data cannot be built from a different notification."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         },
@@ -9633,7 +9633,7 @@
             "04-invoices-wallet-contracts.md#T-04.2.04.02"
           ],
           "historical_deferrals": [
-            "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03. Unmatched/unresolved events are persisted for that follow-up.",
+            "- [ ] Finance alert (push + dashboard) \u2014 not this task; owned by T-04.2.04.03. Unmatched/unresolved events are persisted for that follow-up.",
             "- Finance alerting and dashboard warnings for unresolved chargebacks are deferred to T-04.2.04.03; this task only persists `unmatched` / `unresolved` events."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
@@ -9698,7 +9698,7 @@
       "source_evidence": [
         {
           "path": "apps/api/src/wallet/chargeback-detection.service.ts",
-          "sha256": "0e08eb3b922c54b7fd42d730ab819a95f596142c55d656c63616d15f0ade1599"
+          "sha256": "9ad1a18ec7dcb699cc1dd87474f2e60d807e02aa2985710053563deb091fb08a"
         },
         {
           "path": "apps/api/src/wallet/chargeback-detection.controller.ts",
@@ -9882,7 +9882,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.01.01"
           ],
           "historical_deferrals": [
-            "Note: `contractId` is intentionally a plain `text` column (no FK) because the contracts table does not yet exist in the schema — it will be linked when the contracts epic (E-04.5) is implemented."
+            "Note: `contractId` is intentionally a plain `text` column (no FK) because the contracts table does not yet exist in the schema \u2014 it will be linked when the contracts epic (E-04.5) is implemented."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         }
@@ -10111,7 +10111,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.08"
           ],
           "historical_deferrals": [
-            "- [ ] Full snapshot replay integration test — owned by T-04.1.02.09, not this task."
+            "- [ ] Full snapshot replay integration test \u2014 owned by T-04.1.02.09, not this task."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         },
@@ -10122,8 +10122,8 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.05"
           ],
           "historical_deferrals": [
-            "- `contractId` — existing nullable reference column (contracts table TBD); **FK deferred** until that table exists (documented existing pattern).",
-            "- `consultationId` — **NEW** nullable reference column (consultations table TBD); FK deferred, mirroring `contractId`. Carries the origin reference from day one; the actual FK constraint is added in the epic that creates the consultations table.",
+            "- `contractId` \u2014 existing nullable reference column (contracts table TBD); **FK deferred** until that table exists (documented existing pattern).",
+            "- `consultationId` \u2014 **NEW** nullable reference column (consultations table TBD); FK deferred, mirroring `contractId`. Carries the origin reference from day one; the actual FK constraint is added in the epic that creates the consultations table.",
             "- [x] `contractId` / `consultationId` are deferred nullable refs (target tables TBD, per established pattern)"
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
@@ -10135,8 +10135,8 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.03"
           ],
           "historical_deferrals": [
-            "- [ ] Wiring into concrete E-03 submission endpoints (`POST /electricity/orders/*`, saving-plan submission) — those XL tasks land later in E-03; the service is the seam they will call",
-            "- [ ] HTTP controller — pending (C-04.CC.03 follow-up, same as ManualInvoiceService)"
+            "- [ ] Wiring into concrete E-03 submission endpoints (`POST /electricity/orders/*`, saving-plan submission) \u2014 those XL tasks land later in E-03; the service is the seam they will call",
+            "- [ ] HTTP controller \u2014 pending (C-04.CC.03 follow-up, same as ManualInvoiceService)"
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         },
@@ -10147,7 +10147,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.02.02"
           ],
           "historical_deferrals": [
-            "- [ ] No HTTP controller yet — staff-facing endpoint awaits the C-04.CC.03 staff permissions matrix (kept service-layer to bound the PR)"
+            "- [ ] No HTTP controller yet \u2014 staff-facing endpoint awaits the C-04.CC.03 staff permissions matrix (kept service-layer to bound the PR)"
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         }
@@ -10525,7 +10525,7 @@
         "Due calculation uses inclusive/exclusive active windows or7 days. New protected configuration versions the current default while preserving future windows and issued deadlines. Current finance grants/session/step-up are held through commit. CAS prevents stale changes; matching current values allow safe retries. Real invoice issuance consumes the setting.",
         "Override permission/reason/audit now stay bound to current session authority through waits and commit. Form captures invoice/date/reason through step-up, validates replies and rejects stale lookups. Customer details show only the public reason matching the stored deadline, with escaped text and no staff identity/internal metadata.",
         "Override cancels unsent rows and marks reminderPlanDirty in the same transaction. Invoice-locked replanning updates cancelled rows, preserves sent history and unique keys, adds eligible offsets and clears the marker only on success. Failed/concurrent retries pass. Updated worker must precede or accompany API rollout; old overrides without markers need operational reconciliation.",
-        "Scheduler runs every60 seconds with one-hour issue catch-up grace. It computes canonical offsets, applies owner timezone/channel choices and default09–21 window, skips elapsed/terminal/fully disabled candidates and keyset-pages eligible rows. Runtime in-flight flags and invoice locks prevent overlapping work and duplicate schedules.",
+        "Scheduler runs every60 seconds with one-hour issue catch-up grace. It computes canonical offsets, applies owner timezone/channel choices and default09\u201321 window, skips elapsed/terminal/fully disabled candidates and keyset-pages eligible rows. Runtime in-flight flags and invoice locks prevent overlapping work and duplicate schedules.",
         "Hourly sender locks the invoice before due rows, checks current state, groups channels by invoice/offset and atomically enqueues with a stable key before marking sent. Stop-state trigger and catch-up cancel every unsent scheduled row, retaining sent history. Actual delivery and policy/deadline revalidation after scheduling remain R02.",
         "Reminder toggle mutations retain current permissions and session/step-up through commit, with truthful concurrent audit history. UI requires exact response confirmation and preserves existing step-up/focus/concurrency behavior. Current policy on existing plans is unfinished and keeps PR245 open.",
         "Reuse21 overdue worker cases and invoice-state/payment evidence: Overdue stays payable via wallet/bank receipt, partial settlement can become Overdue again, and no late fee is added. No deployment, live delivery, remote state or loop/scheduler operation is claimed."
@@ -10593,10 +10593,10 @@
             "04-invoices-wallet-contracts.md#T-04.1.04.02"
           ],
           "historical_deferrals": [
-            "- [ ] Unique index on `(invoiceId, offset, channel)` — out of scope (T-04.1.04.04).",
-            "- [ ] Admin per-offset toggle per service type — out of scope (T-04.1.04.05).",
-            "- [ ] ReminderSender dispatch via outbox — out of scope (T-04.1.04.03).",
-            "- [ ] Cancel future rows on Paid/Cancelled/Refunded — out of scope (T-04.1.04.06); this task only skips those states when inserting a new plan."
+            "- [ ] Unique index on `(invoiceId, offset, channel)` \u2014 out of scope (T-04.1.04.04).",
+            "- [ ] Admin per-offset toggle per service type \u2014 out of scope (T-04.1.04.05).",
+            "- [ ] ReminderSender dispatch via outbox \u2014 out of scope (T-04.1.04.03).",
+            "- [ ] Cancel future rows on Paid/Cancelled/Refunded \u2014 out of scope (T-04.1.04.06); this task only skips those states when inserting a new plan."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         },
@@ -10618,7 +10618,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.03.02"
           ],
           "historical_deferrals": [
-            "- [ ] Staff override permission + customer-visible reason in audit/metadata — deferred to T-04.1.03.03."
+            "- [ ] Staff override permission + customer-visible reason in audit/metadata \u2014 deferred to T-04.1.03.03."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         },
@@ -10629,9 +10629,9 @@
             "04-invoices-wallet-contracts.md#T-04.1.03.01"
           ],
           "historical_deferrals": [
-            "- [ ] `dueAt` calculation (`issuedAt + config_days`) — out of scope; owned by T-04.1.03.02.",
-            "- [ ] Staff override UI/API — out of scope; owned by T-04.1.03.03.",
-            "- [ ] Overdue cron — out of scope; owned by T-04.1.03.04."
+            "- [ ] `dueAt` calculation (`issuedAt + config_days`) \u2014 out of scope; owned by T-04.1.03.02.",
+            "- [ ] Staff override UI/API \u2014 out of scope; owned by T-04.1.03.03.",
+            "- [ ] Overdue cron \u2014 out of scope; owned by T-04.1.03.04."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         }
@@ -11005,7 +11005,7 @@
         "04-invoices-wallet-contracts.md#T-04.1.05.04"
       ],
       "review": [
-        "Read exact S-04.1.05 criteria and all saved PR247–250 bodies. Both services existed without production callers; retain calculations, origin copies, transaction/audit ownership and customer chain assembly.",
+        "Read exact S-04.1.05 criteria and all saved PR247\u2013250 bodies. Both services existed without production callers; retain calculations, origin copies, transaction/audit ownership and customer chain assembly.",
         "Real partial payment can become Overdue. Replacements still reject any payment; adjustments now allow paid Overdue and reject unpaid Overdue. Signed credits retain negative accounting_amount and null due_at/payable_from; no wallet payout is implied.",
         "Staff GET/POST always passes current session; writes hold current account/grants, check step-up after locks and before commit, reject forged/overflowing payloads, and reuse the original invoice lock to serialize key/fingerprint retries. Audit or authority failure rolls back original cancellation, linked invoice and lines together.",
         "Customer HTTP list/details use one transaction, lock account/session/profile/grants, recheck active profile and session at completion, reject activation-pending accounts and normalize valid uppercase UUIDs. Existing owner/Finance isolation, draft exclusion and chain explanations remain. Root profile-revision key remounts the invoice page after profile switches; no duplicate UI invalidation added.",
@@ -11056,9 +11056,9 @@
           ],
           "historical_deferrals": [
             "- Migration 0067 is expand/migrate: nullable `adjustment_kind` + generated `accounting_amount`, deterministic backfill of existing linked rows (`metadata.kind` when charge/credit, otherwise `charge`), and the kind/link CHECK added as `NOT VALID`. VALIDATE is deferred until old writers are retired.",
-            "- [ ] Customer-facing invoice details page showing the correction chain — out of scope (T-04.1.05.04).",
-            "- [ ] Applying a credit as a wallet refund/payout — out of scope (S-04.4.01).",
-            "- [ ] `VALIDATE CONSTRAINT ck_invoices_adjustment_kind_matches_link` — deferred contract-phase migration after old writers that omit `adjustment_kind` are retired."
+            "- [ ] Customer-facing invoice details page showing the correction chain \u2014 out of scope (T-04.1.05.04).",
+            "- [ ] Applying a credit as a wallet refund/payout \u2014 out of scope (S-04.4.01).",
+            "- [ ] `VALIDATE CONSTRAINT ck_invoices_adjustment_kind_matches_link` \u2014 deferred contract-phase migration after old writers that omit `adjustment_kind` are retired."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         },
@@ -11069,7 +11069,7 @@
             "04-invoices-wallet-contracts.md#T-04.1.05.02"
           ],
           "historical_deferrals": [
-            "- [ ] Staff HTTP API / UI for this command — not in this task (customer chain UI is T-04.1.05.04; adjustment invoices are T-04.1.05.03)."
+            "- [ ] Staff HTTP API / UI for this command \u2014 not in this task (customer chain UI is T-04.1.05.04; adjustment invoices are T-04.1.05.03)."
           ],
           "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
         }
@@ -12112,7 +12112,7 @@
       ],
       "summary": "Local verification-policy repair batch complete with3 partial task acceptances and3 open saved PR reviews. Available manual configuration/notification behavior and provider safety/recovery are verified. Real-provider and external-delivery dependencies remain explicit.",
       "review": [
-        "PR141 wrote live mode immediately and allowed unavailable API mode.1858caf adds Draft→Active, exact revision checks, global-impact/password confirmation, current role/session/CSRF/expiry through commit and atomic audit/global version. Draft saves never change active policy. Old direct-write clients now fail validation; retire old writers and deploy matching API/web together.",
+        "PR141 wrote live mode immediately and allowed unavailable API mode.1858caf adds Draft\u2192Active, exact revision checks, global-impact/password confirmation, current role/session/CSRF/expiry through commit and atomic audit/global version. Draft saves never change active policy. Old direct-write clients now fail validation; retire old writers and deploy matching API/web together.",
         "PR142 was explicitly an adapter slice. No production provider registers; the test/development stub needs explicit opt-in. Profile auto-verify always returns503 and never changes status. Real provider credentials currently have no encrypted production configuration path; do not register a provider until the remaining integration contract is implemented.",
         "Existing registry rejected OPEN state before the breaker could enter HALF_OPEN. Two new regressions failed at baseline.709d28b delegates admission to the breaker and returns typed circuit rejection without retrying or counting it as a provider failure. Automatic recovery and bounded simultaneous probes now pass. No real-provider operation is claimed.",
         "PR146 direct in-app creation is now atomic with CRM verification and audit. d74c8f8 snapshots title/legal name/individual name with the profile lock, includes reason and actual correction/support steps, and exposes only the latest unread state-matching notice to the current recipient/owner/selected profile. Reading the latest notice cannot revive an older unread transition. Existing notification-center rendering shows the same localized content.",
@@ -12127,8 +12127,8 @@
         "failed_evidence": "All failed logs retained: notice fixture JSON type annotations; provider recovery baseline2 failures; numeric retry fixture failed the string-valued settings type and was corrected. Previous mode failures/interrupted broad invocation remain archived."
       },
       "remaining": [
-        "DISABLED/MANUAL Draft→Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
-        "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create→outbox→worker→result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
+        "DISABLED/MANUAL Draft\u2192Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
+        "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create\u2192outbox\u2192worker\u2192result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
         "Manual in-app verification notices, profile name, reason/corrective guidance, dashboard banner and inbox entry are verified. Actual email/SMS delivery per current preferences and versioned delivery templates remainR02. Automatic result notifications depend on T-07.01.02 and a real provider."
       ],
       "pr_dispositions": [
@@ -12138,7 +12138,7 @@
           "task_keys": [
             "02-auth-users-admin.md#T-07.01.01"
           ],
-          "reason": "DISABLED/MANUAL Draft→Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
+          "reason": "DISABLED/MANUAL Draft\u2192Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
           "source_revision": "709d28bf895627d6c0becd9056a41abafded30b6",
           "evidence": [
             "audit/evidence/step-reviews.json#R01-verification-policy"
@@ -12150,7 +12150,7 @@
           "task_keys": [
             "02-auth-users-admin.md#T-07.01.02"
           ],
-          "reason": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create→outbox→worker→result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
+          "reason": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create\u2192outbox\u2192worker\u2192result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
           "source_revision": "709d28bf895627d6c0becd9056a41abafded30b6",
           "evidence": [
             "audit/evidence/step-reviews.json#R01-verification-policy"
@@ -12537,7 +12537,7 @@
         "Replaced plain permission text with disabled checked native controls for the granted set, grouped under accessible module legends. Excluded permissions remain denied; the UI does not offer writes. Translated seeded role names/descriptions, module labels and effective-role names; technical permission IDs remain exact LTR identifiers. Wildcard copy no longer incorrectly calls every wildcard recipient a platform admin.",
         "Replaced fixed light-theme colors and made lookup wrapping/identifiers fit mobile. Browser scans found4.39:1 muted text on muted table headers/badges; switched those to normal foreground. Final desktop/mobile fa/en light/dark axe checks pass without disabled rules.",
         "Malformed role responses, wrong-user lookup responses, stale pending lookups, retries and clearing changed targets remain covered. Ten such current-build browser cases passed before the final four class-only contrast corrections; four affected catalogue cases then passed on the rebuilt final source. No count inflation from reruns.",
-        "Initial broader boundary check found three old verification fixtures still sending the pre-Draft→Active body. Updated fixture to valid draft/action/version while preserving denial checks. All144 boundary cases pass. No verification runtime changes.",
+        "Initial broader boundary check found three old verification fixtures still sending the pre-Draft\u2192Active body. Updated fixture to valid draft/action/version while preserving denial checks. All144 boundary cases pass. No verification runtime changes.",
         "Both PR162 deferrals have explicit future-scope dispositions supported by its read-only canonical UI requirement. Custom role editing is not added or counted as implemented. No backend response/decorator/schema contract changed; OpenAPI regeneration is unnecessary for this permission/comment-only controller diff."
       ],
       "verification": {
@@ -13650,7 +13650,7 @@
       },
       "remaining": [
         "Finish remaining provider/template UI acceptance for active R02 foundation PR156/161/192/193. Preserve closed PR113 recipient choices/verified contacts and PR194 minute-precision daytime settings/current session-step-up saves. Check SMS self-test disclosure for all mappings and original template editor criteria; reuse completed provider activation/rollback, self-send, branding, authority and delivery evidence. Keep event-specific producers/reminders/retries in subsequent R02 batches.",
-        "Deploy minute-aware workers before allowing new minute settings. Preserve coordinated auth-branding worker rollout and earlier migrations0123–0126; no production execution claimed.",
+        "Deploy minute-aware workers before allowing new minute settings. Preserve coordinated auth-branding worker rollout and earlier migrations0123\u20130126; no production execution claimed.",
         "R03 retains broad themes/contrast/localized diagnostics; subsequent R02 batches own event-specific policy/delivery. Full regression/coverage remainsV02."
       ],
       "source_evidence": [
@@ -13742,7 +13742,7 @@
           "task_keys": [
             "02-auth-users-admin.md#T-09.06.03"
           ],
-          "reason": "Daytime configuration now has HH:MM inputs with minute precision, default09:00–21:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied.",
+          "reason": "Daytime configuration now has HH:MM inputs with minute precision, default09:00\u201321:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied.",
           "source_revision": "246abe5a1ee3a54672658de5b8e37dd95a5a309f",
           "evidence": "audit/evidence/step-reviews.json#R02-daytime-window"
         }
@@ -13790,7 +13790,7 @@
       },
       "remaining": [
         "Finish remaining email/template acceptance in R02 foundation PR156/161/192. Prefill email drafts from validated saved nonsecret settings; preserve write-only secrets. Replace the legacy-only new-event selector and implement required template variable drag-to-insert. Preserve closed PR113/193/194 and verified provider/template contact repairs. Full theme remains R03; event-specific delivery remains subsequent R02 batches.",
-        "Preserve migrations0123–0126 and coordinated minute-window/auth-branding worker rollout prerequisites. No operational execution."
+        "Preserve migrations0123\u20130126 and coordinated minute-window/auth-branding worker rollout prerequisites. No operational execution."
       ],
       "pr_dispositions": [
         {
@@ -14012,8 +14012,8 @@
         "blocked": 0
       },
       "remaining": [
-        "Review R02 notification outbox/delivery and dead-letter triage, saved PR163–170 and203. Exact nine requirements, saved bodies and deferrals are read. Check current transaction/lease/retry/idempotency paths, in-app same-transaction delivery, per-attempt safe logs, staff retry/resolve/dismiss authority and UI, metrics and accumulation alerts. Reuse current producer/recipient/branding evidence; keep event-specific reminders and remaining inbox/policy reviews in subsequent batches.",
-        "Theme application remains partial under R03. Preserve prior migrations0123–0126 and coordinated worker rollout requirements. No external operations claimed."
+        "Review R02 notification outbox/delivery and dead-letter triage, saved PR163\u2013170 and203. Exact nine requirements, saved bodies and deferrals are read. Check current transaction/lease/retry/idempotency paths, in-app same-transaction delivery, per-attempt safe logs, staff retry/resolve/dismiss authority and UI, metrics and accumulation alerts. Reuse current producer/recipient/branding evidence; keep event-specific reminders and remaining inbox/policy reviews in subsequent batches.",
+        "Theme application remains partial under R03. Preserve prior migrations0123\u20130126 and coordinated worker rollout requirements. No external operations claimed."
       ],
       "source_evidence": [
         {
@@ -14294,7 +14294,7 @@
             "task_keys": [
               "02-auth-users-admin.md#T-09.06.03"
             ],
-            "reason": "Daytime configuration now has HH:MM inputs with minute precision, default09:00–21:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied.",
+            "reason": "Daytime configuration now has HH:MM inputs with minute precision, default09:00\u201321:00, per-user timezone scheduling and immediate/in-app bypass. Current staff/session/CSRF/step-up authority is held/rechecked through atomic config/version/audit commit. FA/EN cancellation, wrong-password retry, refreshed CSRF and exact saved acknowledgement pass. Both historical PR194 step-up deferrals are satisfied.",
             "source_revision": "246abe5a1ee3a54672658de5b8e37dd95a5a309f",
             "evidence": "audit/evidence/step-reviews.json#R02-daytime-window"
           },
@@ -14339,7 +14339,7 @@
             "evidence": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
           }
         ],
-        "next_action": "Review R02 notification outbox/delivery and dead-letter triage, saved PR163–170 and203. Exact nine requirements, saved bodies and deferrals are read. Check current transaction/lease/retry/idempotency paths, in-app same-transaction delivery, per-attempt safe logs, staff retry/resolve/dismiss authority and UI, metrics and accumulation alerts. Reuse current producer/recipient/branding evidence; keep event-specific reminders and remaining inbox/policy reviews in subsequent batches."
+        "next_action": "Review R02 notification outbox/delivery and dead-letter triage, saved PR163\u2013170 and203. Exact nine requirements, saved bodies and deferrals are read. Check current transaction/lease/retry/idempotency paths, in-app same-transaction delivery, per-attempt safe logs, staff retry/resolve/dismiss authority and UI, metrics and accumulation alerts. Reuse current producer/recipient/branding evidence; keep event-specific reminders and remaining inbox/policy reviews in subsequent batches."
       },
       "batch_pr_counts": {
         "closed": 5,
@@ -14410,7 +14410,7 @@
         "Reviewed T-05.01.05 against current per-job attempt_number semantics. Each row records a processing attempt, which may recover an existing receipt. A new schema/history subsystem is not necessary to clarify that distinction and is deferred as noncritical. e2f994f4 changes the FA/EN label and help text and leaves recovered/held send latency null. Actual DB assertions verify a recovered accepted receipt has one processing log with no send duration and repeated unknown holds have no fabricated duration.33 worker cases and4 overlapping scoped/general FA/EN Chromium cases pass, including visible explanation, mobile axe/layout and existing failure/pagination behavior.50 i18n cases, applicable types/lint/format/build and42 unchanged budgets pass.",
         "Added three notification-specific cases to the actual compiled-worker process fixture, with restart against the same isolated PostgreSQL database and a controlled HTTP SMS provider. Graceful drain stops new polls while awaiting a real send; forced deadline exits1 with a durable sending record that becomes held after lease expiry; repeated bookkeeping rollback preserves acceptance for recovery without another request. A second row inserted after shutdown starts remains queued until the replacement process. All scenarios produce one provider request and one eventual in-app record for the original occurrence.",
         "The first shutdown fixture used the legacy wallet.topup_completed name, whose external delivery follows daytime scheduling. Its correctly queued SMS never reached the controlled endpoint at night. The fixture now uses registered Immediate event payment.wallet_topup_completed. This is a fixture correction; event-producer/classification reconciliation remains in later R02 scope. With that correction, graceful and forced recovery passed while bookkeeping-failure shutdown reproduced a remaining locked lease.",
-        "fe7a366b releases the finished dispatch owner’s leftover lease after stopping renewal and awaiting any in-flight renewal. The UPDATE compares the exact lease token, so a stale worker cannot clear a successor. Durable provider receipts continue to prevent resends. The failed-bookkeeping process case now exits cleanly with no owned lock and a replacement process completes the accepted receipt without another provider request. All52 focused worker cases pass, including9 real-process tests and existing slow-renewal/replaced-claim checks. Worker types, scoped lint/format and diff checks pass. Full regression and production rollout are not claimed.",
+        "fe7a366b releases the finished dispatch owner\u2019s leftover lease after stopping renewal and awaiting any in-flight renewal. The UPDATE compares the exact lease token, so a stale worker cannot clear a successor. Durable provider receipts continue to prevent resends. The failed-bookkeeping process case now exits cleanly with no owned lock and a replacement process completes the accepted receipt without another provider request. All52 focused worker cases pass, including9 real-process tests and existing slow-renewal/replaced-claim checks. Worker types, scoped lint/format and diff checks pass. Full regression and production rollout are not claimed.",
         "NotificationsModule, exported transport contract and required schema are present. In-app adapter and business outbox deferrals are satisfied by later integration. Compiled-process notification tests prove graceful drain, deadline recovery and owned-lease release after failed bookkeeping.",
         "UUIDv7 outbox schema, unique idempotency, caller-owned business transaction, job creation, claim/renew/release and real PostgreSQL dispatch are verified. Bank receipt confirmation enqueues through the same client before COMMIT; unchanged R01 service/integration hashes retain rollback and no-duplicate evidence. This does not certify all later event-specific producer policies.",
         "Retry ladder 1m/5m/30m/2h/final with bounded jitter, per-type caps and urgent ordering are implemented. Focused schedule/writer cases pass; channel budgets, claim renewals and actual worker dispatch reuse recorded integration evidence.",
@@ -15420,7 +15420,7 @@
         "05-notifications-documents-ai.md#T-05.04.04",
         "05-notifications-documents-ai.md#T-05.04.05"
       ],
-      "summary": "Template lifecycle batch PR177–181 closes locally. Five task acceptances verified; seed migration safety and preview identity repaired.",
+      "summary": "Template lifecycle batch PR177\u2013181 closes locally. Five task acceptances verified; seed migration safety and preview identity repaired.",
       "review": [
         "Current schema has unique version identity, active-family uniqueness and supersedes lineage. Admin mutations hold current staff/session/CSRF/step-up authority and family locks through audited commit. Draft creation allocates the next version; publication archives prior active content; published/archived content cannot be edited or deleted. Existing template service, real HTTP and boundary evidence is unchanged and reused.",
         "The shared engine limits interpolation to declared safe own data properties and escapes variable values. Existing prototype/accessor/secret rejection evidence remains valid. Current catalog tests render every subject/body, check missing values, descriptions and injection escaping; all35 Appendix event/channel/language combinations are present.",
@@ -15640,7 +15640,7 @@
         "05-notifications-documents-ai.md#T-05.05.02",
         "05-notifications-documents-ai.md#T-05.05.03"
       ],
-      "summary": "Consent/channel batch PR182–184 closes locally:3 task acceptances verified/3 PR reviews closed.",
+      "summary": "Consent/channel batch PR182\u2013184 closes locally:3 task acceptances verified/3 PR reviews closed.",
       "review": [
         "Category enum/lookup and per-profile/channel preferences have required fields, default-off state, timestamps and uniqueness. Current production migration0081 restores the original0030 schema/seed.10 schema checks and13 current real-HTTP cases support migrated persistence.",
         "Mandatory requested in-app delivery remains ungated. External delivery requires current verified destinations/enabled account channels; marketing additionally requires profile opt-in. Loader/gate source is unchanged since the verified56-case recipient batch. Later transport/history bindings match the completed delivery batch. Email/SMS templates are selected by exact event/channel/locale, with no transactional fallback for marketing events.",
@@ -15660,7 +15660,7 @@
       },
       "remaining": [
         "Owner review of legacy opt-ins before production marketing; historical audits lack profile identity.",
-        "Next: email provider lifecycle/secret/circuit/callback acceptance, PR185–191."
+        "Next: email provider lifecycle/secret/circuit/callback acceptance, PR185\u2013191."
       ],
       "source_evidence": [
         {
@@ -15820,7 +15820,7 @@
         "05-notifications-documents-ai.md#T-05.06.06",
         "05-notifications-documents-ai.md#T-05.06.07"
       ],
-      "summary": "Email provider/callback batch PR185–191:6 task acceptances verified/1 partial;6 saved PR reviews closed/1 open. Deployed circuit alerts remain open.",
+      "summary": "Email provider/callback batch PR185\u2013191:6 task acceptances verified/1 partial;6 saved PR reviews closed/1 open. Deployed circuit alerts remain open.",
       "review": [
         "Provider schema and Draft/Test/Active/Superseded/Disabled lifecycle, unique active provider, sole-OTP guard, current session/CSRF/step-up, atomic audit and verified-recipient activation proof remain implemented. Latest controller/mutation/recipient/self-test bindings match prior records; service changes since c6588610 only propagate transient outcomes and are covered by current circuit/lifecycle checks.",
         "SMTP preserves all configuration fields, configured handshake and verified-recipient self-send. Fixed DNS rebinding in API tests: dial the validated IP with the original TLS hostname, preserving explicit deployment allowlist exceptions. Both TLS/STARTTLS regressions failed before repair;89 API and60 shared guard cases pass. Existing production sender already pins checked IPs.",
@@ -16262,7 +16262,7 @@
         "Exact reminder story/tasks and both saved PR bodies reviewed. Reuse prior scheduler/deadline/admin authority and UI checks where source is unchanged. Historical localized-delivery and new-plans-only caveats were unfinished acceptance and are repaired here.",
         "Sender filters disabled current offsets and dirty plans before selecting its bounded batch, then rechecks policy under the invoice/admin advisory locks. Existing plans pause/resume without replacement. Four baseline policy regressions reproduced;75 scheduler/sender cases pass.",
         "One outbox occurrence receives all scheduled channels for an invoice/offset, preserving later times as job wake-ups. Duplicate occurrences are accepted only with matching recipient/deadline and all channel jobs. Missing legacy channels remain scheduled with a reconciliation error, without deleting history or inventing a second send.25 final sender cases pass; this overlaps the75-case run.",
-        "Queued reminder dispatch rechecks current invoice state/deadline/profile owner/account and offset under profile→user→invoice locks. Dirty plans and disabled offsets defer without consuming attempts. Current recipient timezone/configured window replaces stale saved window. Payment/archive/deadline changes suppress stale reminders; concurrent payments wait through provider I/O and persistence. Per-pool guard serialization retains a free receipt/heartbeat connection; pools need at least2 connections.",
+        "Queued reminder dispatch rechecks current invoice state/deadline/profile owner/account and offset under profile\u2192user\u2192invoice locks. Dirty plans and disabled offsets defer without consuming attempts. Current recipient timezone/configured window replaces stale saved window. Payment/archive/deadline changes suppress stale reminders; concurrent payments wait through provider I/O and persistence. Per-pool guard serialization retains a free receipt/heartbeat connection; pools need at least2 connections.",
         "Accepted/unknown durable receipts are recovered before current-policy checks and never resent. Tests cover payment before/while policy locks, five concurrent reminders with pool5, current window, disabled pause/resume, dirty plans and terminal/deadline/account outcomes. Latest49 worker cases include all29 recipient/reminder cases and20 delivery-identity cases; other26 unchanged runner/receipt cases from expanded run remain valid. Do not sum overlapping runs.",
         "Actual email and SMS transports select exact active FA/EN templates, snapshot version900 and payload, and make one controlled provider request. SMS remote mappings now support optional fa/en; exact locale overrides a shared legacy mapping, never the other language. Staff self-tests verify every mapping separately; a failed language blocks activation. Template test-send passes its locale. Existing immutable attempted snapshots and proof hashes remain intact.",
         "All102 affected provider/template API cases and7 shared mapping/wire cases pass.10 distinct production Chromium settings cases pass across the full run and focused correction; FA/EN save acknowledgment rejects dropped locales, preserves edits and previews all tests. Existing mobile/RTL/accessibility and lifecycle cases pass. The first Persian test matched two status messages; selector now targets saved text without weakening behavior.",
@@ -16484,7 +16484,7 @@
         "Exact three story/task requirements and all eight saved PR bodies read. Repeated UI/expiry PRs contain useful incremental accessibility, transaction, index and concurrency fixes; preserve the combined implementation. No duplicate rebuild/deletion warranted.",
         "Both receipt task source-evidence sets exactly matched current source before this batch. Reuse verified staff authority/CSRF/step-up, dual approval, sealed attachments, atomic wallet credit/invoice allocation, rejection/audit/outbox rollback, idempotency and FA/EN production browser evidence from R01-bank-receipts-approval. Producer helper payloads match the active seeded template variables; no receipt/API/UI repair needed.",
         "Expiry lacked the customer event explicitly deferred by PR281. It now locks the current profile before the ledger, preserves exclusive cutoff/online discriminator/gateway authority, and atomically writes rejection/audit/payment.wallet_topup_failed with in-app/email jobs. Stable key includes the original intent ID. Missing owner or enqueue failure rolls back. Balances never change; late verified callback reconciliation remains intact.",
-        "Two baseline PostgreSQL regressions reproduced missing notice and missing rollback.27 final expiry unit/integration cases include real cutoff/concurrency/idempotency/audit and new atomic notice/missing-owner checks.8 production-schema worker cases cover completed, failed, rejected and expiry notices in FA/EN through real seeded templates, real email transport with controlled fetch and real in-app persistence. Verify exact recipient, amount/reason, template version900, no unresolved placeholders and no repeated provider request. Receipt payload builder→queue→transport checks compose with unchanged API transaction tests; they do not claim a new HTTP end-to-end run.",
+        "Two baseline PostgreSQL regressions reproduced missing notice and missing rollback.27 final expiry unit/integration cases include real cutoff/concurrency/idempotency/audit and new atomic notice/missing-owner checks.8 production-schema worker cases cover completed, failed, rejected and expiry notices in FA/EN through real seeded templates, real email transport with controlled fetch and real in-app persistence. Verify exact recipient, amount/reason, template version900, no unresolved placeholders and no repeated provider request. Receipt payload builder\u2192queue\u2192transport checks compose with unchanged API transaction tests; they do not claim a new HTTP end-to-end run.",
         "38 shared finance helper cases and worker/shared types/scoped lint/format pass. Worker test setup built current dependencies. No API/web/schema product change; matching financial/UI and42 budget evidence remains valid. Required preferences, verified contacts, retries, send receipts and delivery identity retain the immediately preceding delivery-batch proofs; those consumers are unchanged.",
         "Failed fixture runs preserved: current email destination required, reservation trigger already created the identifier, in-app recipient column name and UUID/text parameter casts corrected. No product guard was relaxed. Rollout replaces older expiry workers and publishes templates first; old expired rows are not backfilled or resent. No live provider call, deployment, GitHub refresh or scheduler change."
       ],
@@ -16660,7 +16660,7 @@
       ],
       "summary": "KB/agent administration repaired and reviewed:2 newly partial tasks; PR208/210 open for actual processing/chat dependencies.166 verified/33 partial/123 pending;145 closed/23 open/133 unreviewed PRs.",
       "review": [
-        "Read both exact tasks, saved PR bodies and all deferrals. Added missing integrated upload with presign→PUT→verify→record→attach, strict acknowledgements, cancel/retry and FA/EN UI. PUT receives no session CSRF proof. Ticket upload omits forbidden null profileId; genuine baseline failure retained.",
+        "Read both exact tasks, saved PR bodies and all deferrals. Added missing integrated upload with presign\u2192PUT\u2192verify\u2192record\u2192attach, strict acknowledgements, cancel/retry and FA/EN UI. PUT receives no session CSRF proof. Ticket upload omits forbidden null profileId; genuine baseline failure retained.",
         "All17 KB/group/document/agent/link mutation entry points carry actor-bound session proof. Staff locks precede session locks. Check current session/CSRF/step-up before work and before commit, including no-op paths. Expiry or proof changes roll back business/link/audit writes. Shared authorization behavior unchanged.",
         "Baseline23 failures retained:21 reproduce commit-after-expiry/revocation/CSRF defects;2 initial step-up fixtures incorrectly assumed11minutes expired the actual15minute window, then changed to missing proof. All23 final regressions pass. Seven obsolete agent permission-wait fixtures now match the shared session guard; these prove current permissions after the guard wait. Six controller fixtures now expect forwarded session.",
         "167 current API cases pass. Earlier92 upload cases overlap47 KB cases and contribute45 unchanged storage HTTP cases, for212 distinct API cases.22 upload/helper unit,10 FA/EN browser and32 DB cases pass. Types/scoped lint/format/build and42 budgets pass at recorded revisions. Last repair is API-only; HTTP/browser setup built it.",
@@ -16675,7 +16675,7 @@
       },
       "remaining": [
         "Actual extraction, chunking, embeddings and retrieval remain unbuilt under 05-notifications-documents-ai.md#T-05.17.02. Stored pending status is not processing completion.",
-        "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01–03 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review."
+        "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01\u201303 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review."
       ],
       "source_evidence": [
         {
@@ -16834,7 +16834,7 @@
           "task_keys": [
             "02-auth-users-admin.md#T-09.11.04"
           ],
-          "reason": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01–03 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
+          "reason": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01\u201303 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
           "source_revision": "0e59d835f601cfd7d5525713e33c5678c88308ed",
           "evidence": "audit/evidence/step-reviews.json#R02-kb-agent-integration"
         }
@@ -18031,7 +18031,7 @@
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-          "sha256": "314598b50cebb963e7bef9d4d65b8b763711590620baa7c3e31ce6216aef520d"
+          "sha256": "3cf1343ed831dda2c31f7375aecdf044751dc12e2a3f22b7215d448be746434f"
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
@@ -18039,7 +18039,7 @@
         },
         {
           "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-          "sha256": "cc4a7d13766192635a5bd7dca711b1c2fdd41bd757f0d50a06e8ed0872861a83"
+          "sha256": "6579e4f46a424649ff0fd6edf58c415124b0f8e5b10030b9364bc1352448015d"
         },
         {
           "path": "apps/api/src/wallet/chargeback-alert.service.ts",
@@ -19475,7 +19475,7 @@
         },
         {
           "path": "packages/db/src/index.ts",
-          "sha256": "85c6be58734467d5b4974c44a00e895ae1ba6b74eb6631e77ab42a0458e89f79"
+          "sha256": "3b436e3f4d5e440c40d82003b7d4e2e04eb4d1ea93a7c62bf3393b08b6f965ee"
         },
         {
           "path": "packages/db/src/migrate.baseline.test.ts",
@@ -19645,7 +19645,7 @@
         "Green safety constant incorrectly used legacy green_electricity while the canonical seed writes green. Shared canonical constant corrected; existing legacy reads remain supported and multiple matches return503. Seed detects noncanonical/reserved-key conflicts before creating replacements; no silent data rewrite.",
         "Actual HTTP tests prove current zero-limit updates, catalogue authority and green-rule checks. Two race tests previously searched obsolete SQL; they now observe the actual blocker PID and still prove permission/product changes prevent saving. All6 green HTTP cases pass.",
         "Final DB package747/747 passes. API88 distinct cases pass across runs: catalogue service/HTTP and forced-password60 total, plus22 green-config and6 green HTTP cases; overlapping reruns are not added. Shared14 green-safety cases, DB/API types, rebuilt shared/DB/worker/API, snapshot/lint/format pass. Earlier failures retained. No browser changes; existing form accepts zero values and prior UI evidence is reused.",
-        "No saved PR81–86 historical deferrals exist. PR84 remains open solely for explicit production initial-seed execution. Other acceptance is local application behavior; rollout, legacy product identity reconciliation and nonnegative CHECK validation are separate prerequisites."
+        "No saved PR81\u201386 historical deferrals exist. PR84 remains open solely for explicit production initial-seed execution. Other acceptance is local application behavior; rollout, legacy product identity reconciliation and nonnegative CHECK validation are separate prerequisites."
       ],
       "verification": {
         "database": "747/747 across94 files;23 seed and4 bootstrap cases included.",
@@ -19878,7 +19878,7 @@
         },
         {
           "path": "packages/db/src/index.ts",
-          "sha256": "85c6be58734467d5b4974c44a00e895ae1ba6b74eb6631e77ab42a0458e89f79"
+          "sha256": "3b436e3f4d5e440c40d82003b7d4e2e04eb4d1ea93a7c62bf3393b08b6f965ee"
         },
         {
           "path": "packages/db/src/index.test.ts",
@@ -20025,7 +20025,7 @@
         "Nodemon polling plus Vite polling supports Docker bind-mount workflow. Two controlled shared-source changes rebuild ESM and CJS, change API/worker listener PIDs, and recover all four endpoints. Probe deletion triggers the third restart; exactly three events produce three restarts with a stable observation period. Generated build artifacts, temporary distribution-test files and generated route tree are excluded, fixing reproduced restart loop. SIGINT stops all three owned listeners.",
         "Nodemon3.1.14 and dotenv-cli11.0.0 are development-only additions; frozen offline installation passes. No production dependency version/build contract changes.",
         "Earlier diagnostic logs retained: formatter lacks an env-file parser; first Compose --wait treated successful one-shot init exit0 as a failure, so health/start/init exit were inspected separately; original restart loop reproduced; first reload harness was interrupted while waiting for obsolete temporary output deletion after a cache restore. Final proof checks actual source events, rebuilt values, process replacement and stable endpoints; all checks pass. Only generated smoke files/artifacts and isolated containers/volumes were removed.",
-        "Saved PR37 inability to run turbo dev is resolved by real startup/restart checks. No indexed PR35–38 deferral rows exist. Historical typo postgis/postgres corrected to official postgis/postgis16-3.5; intent/version preserved."
+        "Saved PR37 inability to run turbo dev is resolved by real startup/restart checks. No indexed PR35\u201338 deferral rows exist. Historical typo postgis/postgres corrected to official postgis/postgis16-3.5; intent/version preserved."
       ],
       "verification": {
         "runtime": "Isolated PostgreSQL16/PostGIS,Redis7,MinIO; migration+seed then live API/worker/Vite. Four endpoints200; two shared edits plus deletion -> three stable restarts; all listeners stop.",
@@ -20072,7 +20072,7 @@
         },
         {
           "path": "docker-compose.yml",
-          "sha256": "aa3f1f51c71a1e604cf4aa1a2bc99a6e5846e32eaaa9b00686249e2ab7400613"
+          "sha256": "fcd7e7971cf756d8417cdd33cde94b4e8738383df9ea706517de91ff1b9dd285"
         },
         {
           "path": "kanban/epics/01-platform-infrastructure.md",
@@ -20248,11 +20248,11 @@
         },
         {
           "path": "apps/api/src/common/shutdown.service.spec.ts",
-          "sha256": "5835fb80b5e748ca93a4b48ad52e758854aa528c477e55c8d45c7d7ba26381a4"
+          "sha256": "80cdf1ff3e7051ffc7d59b92b7229fde8e2eb22fbd549b20bab4bb55617438b7"
         },
         {
           "path": "apps/api/src/common/shutdown.service.ts",
-          "sha256": "b8eb4e9faf3426f951da5fdfefd70739b3287c3d912ee788a882d94721125df5"
+          "sha256": "6af804062fc2fa6b2b8533c06802488cdca37eda02cbdeb91329a306a1475492"
         },
         {
           "path": "apps/api/src/health/health.service.spec.ts",
@@ -20695,7 +20695,7 @@
       "review": [
         "Explicit integer/string types for constant/enum fields remain in the schema. Readback now rejects boolean integer impostors, malformed root/decision/severity values, invalid task IDs and invalid HEAD format before durable approval. Original exact identity, issue shape, blocking severity and unknown-field checks remain.",
         "A real temporary bare remote verifies the advertised base is a commit and fetched PR ref equals the advertised HEAD. Advancing main is accepted; wrong HEAD or non-commit base is refused. No mutable-main equality requirement is restored.",
-        "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1–3 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract.",
+        "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1\u20133 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract.",
         "Durable StateStore uses a separate bare object repository, exact remote revision lease and readback before local success. State events cannot be rewritten; ordinary saves cannot remove completions. Dedicated reviewed correction stays blocked and appends its evidence. Tests exercise actual isolated local Git remotes.",
         "Queue identity includes epic filename; every generated field/order and current task context are validated. Assignment/task/digest are supervisor-owned; builder cannot replace history or switch review identity. Existing loop-owned/possibly merged PRs block conflicting dispatch. Review and merge remain separate ticks; exact immutable head and posted comment binding are rechecked after merge.",
         "Audit reporting now supports unmapped protocol closure only with explicit requirements, validation and matching current source hashes. Missing/stale proof, unresolved mapped tasks and undispositioned historical statements still refuse closure. Original PR mappings are preserved.",
@@ -20707,7 +20707,7 @@
         "9/9 audit provenance tests pass, including incomplete/stale protocol proof refusal and prevention of bypassing mapped tasks or deferrals. Python compilation, backlog validation and diff check pass."
       ],
       "remaining": [
-        "Live durable-state bootstrap/restart/readback, active PR304 reconciliation and scheduler recovery remain external and unauthorized. Local temporary-remote proof does not establish the other machine’s state.",
+        "Live durable-state bootstrap/restart/readback, active PR304 reconciliation and scheduler recovery remain external and unauthorized. Local temporary-remote proof does not establish the other machine\u2019s state.",
         "Historical snapshot and remote scheduler remain untouched. All322 product-task identities and58 skipped records remain unchanged; these three PRs have protocol requirements without a canonical product-task mapping.",
         "V02 full repository regression remains."
       ],
@@ -20849,12 +20849,12 @@
           "pr": 242,
           "status": "closed",
           "task_keys": [],
-          "reason": "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1–3 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract.",
+          "reason": "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1\u20133 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract.",
           "source_revision": "761ef27446b6b3bd857aebeef99f849671e7ba10",
           "evidence": "audit/evidence/step-reviews.json#V01-loop-durability",
           "protocol_review": {
             "requirements": [
-              "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1–3 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract."
+              "The historical ten-attempt policy was superseded by3f3e8f5a and the current three-round owner contract. Current MAX_FIX_ATTEMPTS=3; behavioral tests dispatch rounds1\u20133 and block the next requested round before invoking Cursor. Historical PR intent is retained as provenance, not restored over the current contract."
             ],
             "validation": [
               "57/57 protocol tests pass, including local bare-remote commit/push/readback, stale state refusal, crash recovery, append-only completion/events, correction review binding, wrong-task rejection, assignment requirement digest, exclusive lock, merge/comment/HEAD/check gates and fix-round dispatch boundary.",
@@ -20875,6 +20875,378 @@
               }
             ]
           }
+        }
+      ]
+    },
+    {
+      "id": "V01-operations-configuration",
+      "date": "2026-09-18",
+      "source_revision": "a6f513065c009d38d04e0a3e2469cc835ee70fe6",
+      "base_revision": "61fb302fc2e0efe71d54977c6968cd31cab60178",
+      "product_commits": [
+        "35c8201c",
+        "7f77b07e",
+        "e3019cfe",
+        "96a79ab2",
+        "b8b5db96eb80fff78763de47352b3f14174c1a00",
+        "a6f513065c009d38d04e0a3e2469cc835ee70fe6"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.01",
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-04.01.03",
+        "01-platform-infrastructure.md#T-04.01.04",
+        "01-platform-infrastructure.md#T-04.01.05",
+        "01-platform-infrastructure.md#T-04.01.06"
+      ],
+      "summary": "Six operations PRs reviewed locally; all remain open for explicit operational prerequisites. Five pending claims become partial; monitoring remains partial.",
+      "review": [
+        "Current server version selects native checkpoint/query-timing columns. Existing output types and failure isolation preserved; production monitoring delivery/load remain external.",
+        "Corrected unsupported backend variable names, listener port, missing transaction mode, hardcoded password and unavailable pg_isready health binary. Earlier smoke diagnostic assertions were corrected to read separate psql command results and parse INI whitespace.",
+        "Timeout settings are transaction-local on PgBouncer, with standalone statements wrapped and explicit transactions preserved. Mixed control batches and unsupported URL startup options reject before execution. Default direct behavior is preserved.",
+        "Nine caller sites in seven finance services now select a direct session pool when PgBouncer is active. Missing direct URL fails instead of placing cross-transaction locks on a pooled backend. Direct pool is bounded to5 connections. API closes both shared pools even if one reports failure.",
+        "Initial unsupported-startup failure reproduced. Review caught and reproduced a commit terminated by the acquisition timeout; commits now use their write budget. A container port-binding startup failure was terminal, its reaper cleaned resources, and a fresh run passed. Diagnostic type/mock failures are retained in the logs.",
+        "Full backups publish manifests only after native verification and encrypted payload upload. Native tar output eliminates the concurrent tablespace mapping race. Restores preserve relative tablespaces, remove source paths/configuration and distinguish prepared from replayed.",
+        "Diagnostic failures are retained: unavailable ARM PostGIS base replaced with native PostgreSQL plus packaged extensions; URL credentials parsed for libpq; tests wait for actual recovery; PostgreSQL maps exit126 to command-not-executable fatal; Compose fixture credentials corrected. Active config explicitly enables container networking.",
+        "No production recovery/scheduler/delivery evidence. Existing verify-restore.sh still has invalid RPO/RTO measurement, readiness and assertion logic; repair next. No task/PR closure at this checkpoint.",
+        "Restore verifier compares counts and canonical row fingerprints from independently captured source evidence, waits for actual replay, enforces300s/3600s and preserves files after failed shutdown. SQL error/nonzero results fail; a missing timestamp cannot become zero RPO.",
+        "Private clone connection checks discard inherited libpq service/host-address settings. Local trusted authentication is restricted to a private socket directory; TCP and archiving stay disabled.",
+        "Daily job prunes only after successful backup and reports backup/retention failures. Templates are files only; no schedule, deployment or provider send was executed.",
+        "Hybrid ADR corrected against current code; enabled environment TLS is required to load a CA path. Neither NODE_ENV nor a CA filename alone establishes validated production TLS."
+      ],
+      "verification": [
+        "17 current DB collector cases;37 pool/direct cases;164 affected API cases retained from their scoped checkpoints.",
+        "30 distinct backup/exercise/job cases pass:18 physical recovery cases,9 exercise cases and3 job gating cases. Earlier cases rerun within the7-case helper run are not double counted.",
+        "Actual Compose networking/configuration/extension/WAL checks, backup image builds and packaged CLI failure/dry-run checks pass. Systemd syntax/calendar validated; final daily command wiring reviewed against job tests.",
+        "Python/shell syntax, scoped format, backlog and diff checks pass. Full V02 regression is not renewed."
+      ],
+      "remaining": [
+        "Production app-to-pooler and pooler-to-database certificate/hostname validation, deployed replica sizing and load proof remain external. Local plaintext fixtures are not production TLS evidence.",
+        "Production secret-manager provisioning, off-server bucket/IAM/version lifecycle, activated daily schedule and continuous14-day full/7-day PITR retention require external evidence. Local current-object pruning does not purge provider versions or prove legal-hold/lifecycle policy.",
+        "Story-level production backup-age/disk alerts and actual backup-failure delivery are operational prerequisites.",
+        "Production dataset recovery and core-service RTO including provisioning/cutover/application readiness remain unmeasured. The local verifier reports database RTO and leaves core-service RTO null.",
+        "Configuration/key/file rehydration is independently assigned to T-04.01.07/PR50; its existing scripts still need review and repair.",
+        "Production host memory sizing and a measured load/performance baseline are not verified. Development settings are not evidence of production sizing.",
+        "Alert rules are defined locally, but deployment to a monitoring stack and real alert delivery are not exercised.",
+        "Replica lag aggregation uses controlled PostgreSQL rows rather than live streaming replicas. Production monitoring-role visibility remains to be exercised.",
+        "No quarterly schedule is installed or activated. Each exercise requires a coordinated fresh source baseline/confirmed commit and archived production results; live RPO/RTO and delivered alerts remain external.",
+        "Failure receiver acceptance is a local handoff contract; external monitoring must also catch missing runs/process termination. Core-service readiness remains a separate measured cutover.",
+        "No managed/separate deployment, production TLS/hostname rejection test, firewall denial or encrypted off-server deployment is verified. ADR explicitly records these external prerequisites and single-host availability limitations.",
+        "V02 whole-repository regression and other original plan phases remain. Saved GitHub inventory ends September3."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/shutdown.service.spec.ts",
+          "sha256": "80cdf1ff3e7051ffc7d59b92b7229fde8e2eb22fbd549b20bab4bb55617438b7"
+        },
+        {
+          "path": "apps/api/src/common/shutdown.service.ts",
+          "sha256": "6af804062fc2fa6b2b8533c06802488cdca37eda02cbdeb91329a306a1475492"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "3cf1343ed831dda2c31f7375aecdf044751dc12e2a3f22b7215d448be746434f"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+          "sha256": "f1c30a6305edcc7fdc16e9b9732a5c769875682cdc01df64686dbc25785e2d2a"
+        },
+        {
+          "path": "apps/api/src/metrics/database-telemetry.test.ts",
+          "sha256": "3a571730e5bc17502744a5ee87aa9398d4b37fde91d5a0faf42ae7a66b08ca73"
+        },
+        {
+          "path": "apps/api/src/metrics/database-telemetry.ts",
+          "sha256": "82ddd0593757ccd0aea437c13d9c9aac6d6834d99eb62057ada682d8fbc12fa7"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
+          "sha256": "63cbc370baa53d00e55067c339626bc55396c4943de4e18e2d896b89bf4dca23"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.test.ts",
+          "sha256": "f326d1d418468ca81a5de447bd773ecdb0647a2c18e88824015394efe80899f6"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.ts",
+          "sha256": "3425ed54d69a6cb86d37149db851862443f8706040bd7d03dc366aab1305daf6"
+        },
+        {
+          "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
+          "sha256": "9fc0d2776175d661a57d697e0a2a4b7f68ef3d6db4b0e71aa454a54a7ae0f627"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "6579e4f46a424649ff0fd6edf58c415124b0f8e5b10030b9364bc1352448015d"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
+          "sha256": "354f77b29e6baad986f708853b58dcbb242aec025795c363a4b8b2843f59b4d3"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+          "sha256": "9ad1a18ec7dcb699cc1dd87474f2e60d807e02aa2985710053563deb091fb08a"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "cfdab11dad62b75f909cab6e2ad4ae7cfe17801b916f6cfeede8b628bbc026e5"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.service.ts",
+          "sha256": "ad2bcaa2fecbb9d6be517c060e74b82514a1bdf034e579c3017f0ce0d28bcbdc"
+        },
+        {
+          "path": "docker-compose.backup.yml",
+          "sha256": "cb5ba903845075a974e4c3c84266ce30447ef509552b6fb93200d2ff34d331fb"
+        },
+        {
+          "path": "docker-compose.yml",
+          "sha256": "fcd7e7971cf756d8417cdd33cde94b4e8738383df9ea706517de91ff1b9dd285"
+        },
+        {
+          "path": "docs/adr/002-connection-pooling.md",
+          "sha256": "54c70bf7262e11163565c13f0f6e6a183921e2f9252faf230aedf8d52c35a944"
+        },
+        {
+          "path": "docs/adr/003-hybrid-deployment.md",
+          "sha256": "4e3a01b5def860333943a76aa82ecfaed182394d2b76ea54df536c22846149f5"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "f1d931fdd835a5485ea63587f26a85c3d958d5622aabc00ebdb464177e44fc39"
+        },
+        {
+          "path": "docs/operations/postgresql-monitoring.md",
+          "sha256": "4d55961cdd0e402385a48f1358bff830466c180379707a322959beb8ac857e9c"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "d3fffd72b79e492882c907af0bf3ac397066fa349a974250ca30d6377537f4e6"
+        },
+        {
+          "path": "packages/db/scripts/backup/archive-wal.sh",
+          "sha256": "5d9a44852eb48ee03b8777059dd54e2bd05b6d3b50fcfe775aa61f6c1cc95d9a"
+        },
+        {
+          "path": "packages/db/scripts/backup/backup-pg.sh",
+          "sha256": "5b246bcd85f3e63d16f68612e71f8164dfa581a1dfa6c7d1f2897c44c67b29c0"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "6954332084bc9dbd43e2318f17b8bd237cb9e5c32658c45b485e9c8529054114"
+        },
+        {
+          "path": "packages/db/scripts/backup/requirements.txt",
+          "sha256": "cf667437d05c7d284decd563f198e94ca599f63a362b60f31fd2b5c6aaf5508b"
+        },
+        {
+          "path": "packages/db/scripts/backup/restore-pg.sh",
+          "sha256": "8a55f5036979d2bccb3173edb4c1b397acd7e7335e5598300a3434fe8a21179c"
+        },
+        {
+          "path": "packages/db/scripts/backup/run_backup_job.py",
+          "sha256": "09555e58c9d965a5fd044f185338070e3749d80219bccff6919fe89274172fd8"
+        },
+        {
+          "path": "packages/db/scripts/backup/run_physical_backup_tests.py",
+          "sha256": "69ff6daf6db33715af7f49fba72633c08263cea94a10088d001b3433945fbf7c"
+        },
+        {
+          "path": "packages/db/scripts/backup/systemd/barghsa-db-backup.service",
+          "sha256": "b65806da72f8c54d38de0bdb069ef150e3092e9cb6dc647032b16e9e0b4fc888"
+        },
+        {
+          "path": "packages/db/scripts/backup/systemd/barghsa-db-backup.timer",
+          "sha256": "aba6f396d8224b2d7b39f70b3a5036fad53b341bf1d4e5920dfe8febe7cc558a"
+        },
+        {
+          "path": "packages/db/scripts/backup/systemd/barghsa-db-restore-exercise.service",
+          "sha256": "92381d36a16dfeb4dbf8ac28770f7721ad2d96371b443d4ea21a5c67dffc28f5"
+        },
+        {
+          "path": "packages/db/scripts/backup/systemd/barghsa-db-restore-exercise.timer",
+          "sha256": "71048eba60bb6e0258c0edf3b0ab9cefa8859e077b60a055e1891bee12ae1ddf"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_physical_backup.py",
+          "sha256": "6a5a9f99e9087955e79ab2514e5cac7b11139e9c4df94613c13d4170ad0d7f52"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_verify_restore.py",
+          "sha256": "a606a489c8f24a76ec44a0c79143c405016a49e426c576d2a2d7d7802b8e4753"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify-restore-template.sql",
+          "sha256": "04e52665442f45430f065d87cfb061dbb6f45e0552b74717682a0935a0f51e15"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify-restore.sh",
+          "sha256": "615d8615db6e893b642eed3e5e6ec0676b1cd274bbd89cdbfefd36a706d12169"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify_restore.py",
+          "sha256": "bf82685dfcbcd4d6ffa5a50cee69349d2976f4fdfadced2ad4cc63abf475c6af"
+        },
+        {
+          "path": "packages/db/src/connection-security.test.ts",
+          "sha256": "09e419aa690c0aaa69cf99f794d5109985ec921ab800b0c87ee566793c5d8719"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "3b436e3f4d5e440c40d82003b7d4e2e04eb4d1ea93a7c62bf3393b08b6f965ee"
+        },
+        {
+          "path": "packages/db/src/metrics.integration.test.ts",
+          "sha256": "62e18225f5560db821c3ee42cd08889b1f9d4ec02b3b023f06875a62894db09c"
+        },
+        {
+          "path": "packages/db/src/metrics.ts",
+          "sha256": "870175f55d81aa7508a410702158561147cf730c148b6b90d3826a5331b34780"
+        },
+        {
+          "path": "packages/db/src/pgbouncer.integration.test.ts",
+          "sha256": "fbd6b476e8201777186a1c608fa2aa0b6df0c03ccc862430a8af9e4d4b9c98aa"
+        },
+        {
+          "path": "packages/db/src/transaction-pool.ts",
+          "sha256": "344e0cd56420b654226823093b0e0fa871bec7dbe6a0f994bb182e36690f833a"
+        },
+        {
+          "path": "postgres-config/alert-rules.json",
+          "sha256": "189f8ba35210f39b5c316a923c122c41e82faa73f9f3d377ab37d63c0c1d06de"
+        },
+        {
+          "path": "postgres-config/barghsa-postgres.conf",
+          "sha256": "97e45ca64dab75191478c8a32c7ba2fdba6563aa49c787b6ab6da42de21e66ed"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-ops-backup-compose-final.log",
+        "/tmp/v01-ops-backup-compose-network.log",
+        "/tmp/v01-ops-backup-compose.log",
+        "/tmp/v01-ops-backup-final.log",
+        "/tmp/v01-ops-backup-format-final.log",
+        "/tmp/v01-ops-backup-format-write.log",
+        "/tmp/v01-ops-backup-format.log",
+        "/tmp/v01-ops-backup-image-final.log",
+        "/tmp/v01-ops-backup-image-reviewed.log",
+        "/tmp/v01-ops-backup-image.log",
+        "/tmp/v01-ops-backup-integration-ready.log",
+        "/tmp/v01-ops-backup-integration-replay.log",
+        "/tmp/v01-ops-backup-integration-tar.log",
+        "/tmp/v01-ops-backup-integration-url.log",
+        "/tmp/v01-ops-backup-integration.log",
+        "/tmp/v01-ops-backup-job-format.log",
+        "/tmp/v01-ops-backup-job-image.log",
+        "/tmp/v01-ops-backup-job-packaged.log",
+        "/tmp/v01-ops-backup-job-tests.log",
+        "/tmp/v01-ops-backup-reviewed.log",
+        "/tmp/v01-ops-hybrid-format.log",
+        "/tmp/v01-ops-metrics-final-tests.log",
+        "/tmp/v01-ops-metrics-format-final.log",
+        "/tmp/v01-ops-metrics-format.log",
+        "/tmp/v01-ops-metrics-lint.log",
+        "/tmp/v01-ops-metrics-required-view.log",
+        "/tmp/v01-ops-metrics-tests.log",
+        "/tmp/v01-ops-metrics-types-final.log",
+        "/tmp/v01-ops-metrics-types.log",
+        "/tmp/v01-ops-metrics16-before.log",
+        "/tmp/v01-ops-pgbouncer-api-tests.log",
+        "/tmp/v01-ops-pgbouncer-api-types-reviewed.log",
+        "/tmp/v01-ops-pgbouncer-before.log",
+        "/tmp/v01-ops-pgbouncer-commit-before.log",
+        "/tmp/v01-ops-pgbouncer-final-format.log",
+        "/tmp/v01-ops-pgbouncer-final-reviewed.log",
+        "/tmp/v01-ops-pgbouncer-final-tests.log",
+        "/tmp/v01-ops-pgbouncer-final-types.log",
+        "/tmp/v01-ops-pgbouncer-format-reviewed.log",
+        "/tmp/v01-ops-pgbouncer-format.log",
+        "/tmp/v01-ops-pgbouncer-lint-final.log",
+        "/tmp/v01-ops-pgbouncer-lint-reviewed.log",
+        "/tmp/v01-ops-pgbouncer-lint.log",
+        "/tmp/v01-ops-pgbouncer-session-tests.log",
+        "/tmp/v01-ops-pgbouncer-shutdown-final.log",
+        "/tmp/v01-ops-pgbouncer-tests.log",
+        "/tmp/v01-ops-pgbouncer-types-final.log",
+        "/tmp/v01-ops-pgbouncer-types-reviewed.log",
+        "/tmp/v01-ops-pgbouncer-types.log",
+        "/tmp/v01-ops-pgbouncer-verified.log",
+        "/tmp/v01-ops-pooler-diff.log",
+        "/tmp/v01-ops-pooler-format.log",
+        "/tmp/v01-ops-pooler-smoke-final.log",
+        "/tmp/v01-ops-pooler-smoke-reviewed.log",
+        "/tmp/v01-ops-pooler-smoke-verified.log",
+        "/tmp/v01-ops-pooler-smoke.log",
+        "/tmp/v01-ops-restore-backlog.log",
+        "/tmp/v01-ops-restore-exercise-final.log",
+        "/tmp/v01-ops-restore-exercise-reviewed.log",
+        "/tmp/v01-ops-restore-exercise-tests.log",
+        "/tmp/v01-ops-restore-format-write.log",
+        "/tmp/v01-ops-restore-format.log",
+        "/tmp/v01-ops-restore-image.log",
+        "/tmp/v01-ops-restore-packaged-cli.log",
+        "/tmp/v01-ops-restore-timers.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 43,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.01.01"
+          ],
+          "reason": "Local implementation reviewed and repaired; Production app-to-pooler and pooler-to-database certificate/hostname validation, deployed replica sizing and load proof remain external. Local plaintext fixtures are not production TLS evidence.",
+          "source_revision": "a6f513065c009d38d04e0a3e2469cc835ee70fe6",
+          "evidence": "audit/evidence/step-reviews.json#V01-operations-configuration"
+        },
+        {
+          "pr": 44,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.01.02"
+          ],
+          "reason": "Local implementation reviewed and repaired; Production secret-manager provisioning, off-server bucket/IAM/version lifecycle, activated daily schedule and continuous14-day full/7-day PITR retention require external evidence. Local current-object pruning does not purge provider versions or prove legal-hold/lifecycle policy. Story-level production backup-age/disk alerts and actual backup-failure delivery are operational prerequisites.",
+          "source_revision": "a6f513065c009d38d04e0a3e2469cc835ee70fe6",
+          "evidence": "audit/evidence/step-reviews.json#V01-operations-configuration"
+        },
+        {
+          "pr": 45,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.01.03"
+          ],
+          "reason": "Local implementation reviewed and repaired; Production dataset recovery and core-service RTO including provisioning/cutover/application readiness remain unmeasured. The local verifier reports database RTO and leaves core-service RTO null. Configuration/key/file rehydration is independently assigned to T-04.01.07/PR50; its existing scripts still need review and repair.",
+          "source_revision": "a6f513065c009d38d04e0a3e2469cc835ee70fe6",
+          "evidence": "audit/evidence/step-reviews.json#V01-operations-configuration"
+        },
+        {
+          "pr": 46,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.01.04"
+          ],
+          "reason": "Local implementation reviewed and repaired; Production host memory sizing and a measured load/performance baseline are not verified. Development settings are not evidence of production sizing. Alert rules are defined locally, but deployment to a monitoring stack and real alert delivery are not exercised. Replica lag aggregation uses controlled PostgreSQL rows rather than live streaming replicas. Production monitoring-role visibility remains to be exercised.",
+          "source_revision": "a6f513065c009d38d04e0a3e2469cc835ee70fe6",
+          "evidence": "audit/evidence/step-reviews.json#V01-operations-configuration"
+        },
+        {
+          "pr": 48,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.01.05"
+          ],
+          "reason": "Local implementation reviewed and repaired; No quarterly schedule is installed or activated. Each exercise requires a coordinated fresh source baseline/confirmed commit and archived production results; live RPO/RTO and delivered alerts remain external. Failure receiver acceptance is a local handoff contract; external monitoring must also catch missing runs/process termination. Core-service readiness remains a separate measured cutover.",
+          "source_revision": "a6f513065c009d38d04e0a3e2469cc835ee70fe6",
+          "evidence": "audit/evidence/step-reviews.json#V01-operations-configuration"
+        },
+        {
+          "pr": 49,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-04.01.06"
+          ],
+          "reason": "Local implementation reviewed and repaired; No managed/separate deployment, production TLS/hostname rejection test, firewall denial or encrypted off-server deployment is verified. ADR explicitly records these external prerequisites and single-host availability limitations.",
+          "source_revision": "a6f513065c009d38d04e0a3e2469cc835ee70fe6",
+          "evidence": "audit/evidence/step-reviews.json#V01-operations-configuration"
         }
       ]
     }
