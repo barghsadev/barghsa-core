@@ -30,10 +30,10 @@ def psql(env, sql):
 def fingerprints(env):
     # One COPY statement means one consistent snapshot across all three tables.
     # Ordering, timezone and serialization settings are identical on both sides.
-    selects = [f"SELECT '{table}' AS entity, id::text AS key, row_to_json(t)::text AS payload "
+    selects = [f"SELECT '{table}' AS entity, row_to_json(t)::text AS payload "
                f"FROM public.{table} t" for table in TABLES]
     sql = 'COPY (SELECT entity, payload FROM (' + ' UNION ALL '.join(selects) + \
-          ') snapshots ORDER BY entity COLLATE "C", key COLLATE "C") TO STDOUT'
+          ') snapshots ORDER BY entity COLLATE "C", payload COLLATE "C") TO STDOUT'
     env = {**env, "PGOPTIONS": "-c default_transaction_read_only=on -c TimeZone=UTC "
            "-c DateStyle=ISO -c extra_float_digits=3 -c bytea_output=hex -c statement_timeout=60000"}
     hashes = {table: hashlib.sha256() for table in TABLES}

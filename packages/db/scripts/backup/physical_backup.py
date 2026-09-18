@@ -290,7 +290,8 @@ def fetch_wal(store, system_id, filename, destination):
     return True
 
 
-def extract(archive, target, prefix="", native_tablespaces=None):
+def extract(archive, target, prefix="", native_tablespaces=None,
+            allowed_roots=("data", "tablespaces", "metadata.json"), tablespace_links=True):
     # Reject tar links except the tablespace links we reconstruct ourselves.
     links = []
     seen = set()
@@ -305,12 +306,12 @@ def extract(archive, target, prefix="", native_tablespaces=None):
                     member.linkname = "../../tablespaces/" + match[1]
             path = PurePosixPath(member.name)
             if (path.is_absolute() or ".." in path.parts or not path.parts
-                    or path.parts[0] not in ("data", "tablespaces", "metadata.json")
+                    or path.parts[0] not in allowed_roots
                     or member.name in seen):
                 raise BackupError("Unsafe path in backup archive")
             seen.add(member.name)
             destination = target.joinpath(*path.parts)
-            if member.issym() and re.fullmatch(r"data/pg_tblspc/[0-9]+", member.name):
+            if tablespace_links and member.issym() and re.fullmatch(r"data/pg_tblspc/[0-9]+", member.name):
                 oid = path.name
                 if member.linkname != f"../../tablespaces/{oid}":
                     raise BackupError("Unsafe tablespace link")

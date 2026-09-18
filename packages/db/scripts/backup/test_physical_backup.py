@@ -11,6 +11,7 @@ import tarfile
 import tempfile
 import time
 import unittest
+import uuid
 from unittest.mock import patch, Mock
 from datetime import timedelta
 
@@ -106,7 +107,7 @@ class PhysicalBackupIntegrationTests(unittest.TestCase):
         cls.env = dict(os.environ)
         os.environ.update(PGDATA=str(cls.data), BACKUP_GPG_PASSPHRASE_FILE=str(cls.secret),
                           PGDIRECT_URL=f'postgresql:///barghsa?host={cls.socket}&user=postgres',
-                          BACKUP_CLUSTER_ID='integration')
+                          BACKUP_CLUSTER_ID='integration-' + uuid.uuid4().hex[:10])
         backup.run(['initdb', '-D', str(cls.data), '--auth=trust', '--data-checksums'])
         command = f"python3 {backup.__file__} archive %f %p"
         with (cls.data / 'postgresql.conf').open('a') as config:
@@ -115,7 +116,7 @@ class PhysicalBackupIntegrationTests(unittest.TestCase):
         backup.run(['pg_ctl', '-D', str(cls.data), '-l', str(cls.root / 'primary.log'), '-w', 'start'])
         cls.sql('CREATE DATABASE barghsa', database='postgres')
         cls.sql('CREATE EXTENSION vector; CREATE EXTENSION postgis; '
-                'CREATE TABLE users(id int PRIMARY KEY); INSERT INTO users VALUES (1); '
+                'CREATE TABLE users(user_id text PRIMARY KEY); INSERT INTO users VALUES (1); '
                 'CREATE TABLE orders(id int PRIMARY KEY); CREATE TABLE invoices(id int PRIMARY KEY)')
         tablespace = cls.root / 'live-tablespace'
         tablespace.mkdir()
@@ -123,7 +124,12 @@ class PhysicalBackupIntegrationTests(unittest.TestCase):
         cls.sql('CREATE TABLE external_data(id int PRIMARY KEY) TABLESPACE testspace; '
                 'INSERT INTO external_data VALUES (9)')
         cls.store = backup.Store()
-        cls.store.client.create_bucket(Bucket=cls.store.bucket)
+        try:
+            cls.store.client.head_bucket(Bucket=cls.store.bucket)
+        except backup.ClientError as error:
+            if not backup.missing(error):
+                raise
+            cls.store.client.create_bucket(Bucket=cls.store.bucket)
         with contextlib.redirect_stdout(io.StringIO()):
             backup.backup(cls.store, 'base')
         cls.base = cls.store.manifests()[0][1]

@@ -213,3 +213,15 @@ and removes only its own isolated MinIO, PostgreSQL and network resources.
 Implementation references: [PostgreSQL continuous archiving](https://www.postgresql.org/docs/16/continuous-archiving.html),
 [S3 conditional uploads](https://docs.aws.amazon.com/boto3/latest/reference/services/s3/client/put_object.html)
 and [paginated listings](https://docs.aws.amazon.com/boto3/latest/guide/paginators.html).
+
+## Configuration recovery and fingerprint upgrade
+
+Use the [configuration recovery runbook](config-restore-runbook.md) for explicit file
+inventories, active configuration exports and quarterly rehydration. Database recovery
+alone does not restore external environment files, certificates or application keys.
+
+The fingerprint verifier now orders complete row payloads and supports `users.user_id`.
+Recapture independent database fingerprint baselines after upgrading from the prior
+`id`-ordered verifier. Do not reuse an old baseline with the new ordering or generate
+the expected baseline from the restored clone. Preserve older reports as historical
+evidence only.
