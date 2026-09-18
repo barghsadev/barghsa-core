@@ -129,6 +129,28 @@ describe('HttpExceptionFilter', () => {
     return { json, status, response, request, host };
   }
 
+  it.each([
+    { blocker: 'internal.secret', count: 1 },
+    { blocker: 'invoices', count: -1 },
+    { blocker: 'invoices', count: '2' },
+    { blocker: 'invoices', count: Number.MAX_SAFE_INTEGER + 1 },
+    { blocker: 'invoices' },
+    { blocker: 'lastOwner', count: 1 },
+  ])('rejects untrusted archival detail $blocker/$count', (details) => {
+    const { json, host } = createMockHost(409, {}, { 'accept-language': 'en' });
+    filter.catch(
+      new HttpException(
+        { error: 'CRM:PROFILE:DELETION_BLOCKED', message: 'private detail', ...details },
+        409
+      ),
+      host
+    );
+    expect(json.mock.calls[0][0].error.message).toBe(
+      'This profile has linked records that prevent deletion.'
+    );
+    expect(JSON.stringify(json.mock.calls)).not.toContain('private detail');
+  });
+
   it.each([403, 500])('logs only route templates and correlation for %i failures', (statusCode) => {
     const { request, host } = createMockHost(statusCode, {});
     const credential = 'private-session-and-reset-token';

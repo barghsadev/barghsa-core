@@ -1,4 +1,4 @@
-import { t } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n/crm';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { StaffAssignmentService } from '../staff-assignment/staff-assignment.service.js';
 import { VerificationEvidenceService } from './verification-evidence.service.js';
@@ -12,6 +12,8 @@ import {
 } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+import type { ValidatedSession } from '../session/session.service.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 
 // ── Result types ─────────────────────────────────────────────────────
@@ -105,9 +107,10 @@ export class VerificationCaseService {
       evidenceUrls?: string[];
       reason: string;
     },
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<CreateVerificationCaseResult> {
+    const actorUserId = actor.userId;
     validateIdentityValue(dto.fieldName, dto.requestedValue);
     if (!dto.requestedValue?.trim() || !dto.reason?.trim())
       throw new BadRequestException('Requested value and reason are required');
@@ -133,6 +136,7 @@ export class VerificationCaseService {
         [actorUserId]
       );
       await requireStaffMutationPermission(client, actorUserId, 'crm:edit-identity');
+      await requireSessionStepUp(client, actor);
       const allowed =
         profile.profile_type === 'LEGAL' ? IDENTITY_FIELDS_LEGAL : IDENTITY_FIELDS_INDIVIDUAL;
       if (!allowed.includes(dto.fieldName))
@@ -215,6 +219,7 @@ export class VerificationCaseService {
           client
         );
       }
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
       return { success: true, id, status: 'Open', profileId, createdAt: now };
     } catch (error) {
@@ -364,9 +369,10 @@ export class VerificationCaseService {
       decision: 'Under Review' | 'Approved' | 'Rejected';
       reviewerNotes?: string;
     },
-    reviewerUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<ReviewVerificationCaseResult> {
+    const reviewerUserId = actor.userId;
     if (dto.decision === 'Rejected' && !dto.reviewerNotes?.trim())
       throw new BadRequestException('Reviewer notes are required for rejection');
     const client = await getDbPool().connect();
@@ -384,6 +390,7 @@ export class VerificationCaseService {
         return null;
       }
       await requireStaffMutationPermission(client, reviewerUserId, 'crm:verify');
+      await requireSessionStepUp(client, actor);
       const row = (
         await client.query('SELECT * FROM verification_cases WHERE id=$1 FOR UPDATE', [caseId])
       ).rows[0];
@@ -448,6 +455,7 @@ export class VerificationCaseService {
           ip,
         ]
       );
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
       return { success: true, id: caseId, status: dto.decision, profileId: profile.id };
     } catch (error) {

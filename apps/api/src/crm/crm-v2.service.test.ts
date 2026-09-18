@@ -1,6 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CrmV2Service } from './crm-v2.service.js';
 
+// Actual session authority and lock/deadline races use the migrated HTTP suite.
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {
@@ -336,7 +341,7 @@ describe('CrmV2Service.forcePasswordChange', () => {
     const result = await service.forcePasswordChange(
       TARGET_USER_ID,
       'Security incident',
-      ACTOR_USER_ID,
+      { userId: ACTOR_USER_ID, sessionId: 'unit-session', csrfToken: 'unit-csrf' },
       '10.0.0.1'
     );
 
@@ -356,7 +361,12 @@ describe('CrmV2Service.forcePasswordChange', () => {
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js');
     const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any);
 
-    const result = await service.forcePasswordChange('nonexistent-id', 'test', ACTOR_USER_ID, '');
+    const result = await service.forcePasswordChange(
+      'nonexistent-id',
+      'test',
+      { userId: ACTOR_USER_ID, sessionId: 'unit-session', csrfToken: 'unit-csrf' },
+      ''
+    );
 
     expect(result).toBeNull();
     expect(ms.revokeAllUserSessions).not.toHaveBeenCalled();
@@ -370,7 +380,12 @@ describe('CrmV2Service.forcePasswordChange', () => {
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js');
     const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any);
 
-    const result = await service.forcePasswordChange(TARGET_USER_ID, '', ACTOR_USER_ID, '');
+    const result = await service.forcePasswordChange(
+      TARGET_USER_ID,
+      '',
+      { userId: ACTOR_USER_ID, sessionId: 'unit-session', csrfToken: 'unit-csrf' },
+      ''
+    );
 
     expect(result).not.toBeNull();
     expect(result).toHaveProperty('error');
@@ -386,7 +401,12 @@ describe('CrmV2Service.forcePasswordChange', () => {
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js');
     const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any);
 
-    const result = await service.forcePasswordChange(TARGET_USER_ID, '   ', ACTOR_USER_ID, '');
+    const result = await service.forcePasswordChange(
+      TARGET_USER_ID,
+      '   ',
+      { userId: ACTOR_USER_ID, sessionId: 'unit-session', csrfToken: 'unit-csrf' },
+      ''
+    );
 
     expect(result).toHaveProperty('error');
     expect((result as { error: string }).error).toContain('Reason is required');
@@ -411,7 +431,12 @@ describe('CrmV2Service.forcePasswordChange', () => {
     const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any);
 
     await expect(
-      service.forcePasswordChange(TARGET_USER_ID, 'test', ACTOR_USER_ID, '10.0.0.1')
+      service.forcePasswordChange(
+        TARGET_USER_ID,
+        'test',
+        { userId: ACTOR_USER_ID, sessionId: 'unit-session', csrfToken: 'unit-csrf' },
+        '10.0.0.1'
+      )
     ).rejects.toThrow();
     expect(mockClientQuery).toHaveBeenCalledWith('ROLLBACK');
     expect(mockRelease).toHaveBeenCalled();
@@ -450,7 +475,7 @@ describe('CrmV2Service.expireSessions', () => {
     const result = await service.expireSessions(
       TARGET_USER_ID,
       'Device lost',
-      ACTOR_USER_ID,
+      { userId: ACTOR_USER_ID, sessionId: 'unit-session', csrfToken: 'unit-csrf' },
       '10.0.0.1'
     );
 
@@ -470,7 +495,12 @@ describe('CrmV2Service.expireSessions', () => {
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js');
     const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any);
 
-    const result = await service.expireSessions('nonexistent-id', 'test', ACTOR_USER_ID, '');
+    const result = await service.expireSessions(
+      'nonexistent-id',
+      'test',
+      { userId: ACTOR_USER_ID, sessionId: 'unit-session', csrfToken: 'unit-csrf' },
+      ''
+    );
 
     expect(result).toBeNull();
     expect(ms.revokeAllUserSessions).not.toHaveBeenCalled();
@@ -484,7 +514,12 @@ describe('CrmV2Service.expireSessions', () => {
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js');
     const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any);
 
-    const result = await service.expireSessions(TARGET_USER_ID, '', ACTOR_USER_ID, '');
+    const result = await service.expireSessions(
+      TARGET_USER_ID,
+      '',
+      { userId: ACTOR_USER_ID, sessionId: 'unit-session', csrfToken: 'unit-csrf' },
+      ''
+    );
 
     expect(result).not.toBeNull();
     expect(result).toHaveProperty('error');
@@ -510,7 +545,12 @@ describe('CrmV2Service.expireSessions', () => {
     const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any);
 
     await expect(
-      service.expireSessions(TARGET_USER_ID, 'test', ACTOR_USER_ID, '10.0.0.1')
+      service.expireSessions(
+        TARGET_USER_ID,
+        'test',
+        { userId: ACTOR_USER_ID, sessionId: 'unit-session', csrfToken: 'unit-csrf' },
+        '10.0.0.1'
+      )
     ).rejects.toThrow();
     expect(mockClientQuery).toHaveBeenCalledWith('ROLLBACK');
     expect(mockRelease).toHaveBeenCalled();

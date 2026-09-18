@@ -688,13 +688,22 @@ for (const method of ['forcePasswordChange', 'expireSessions'] as const) {
     const crm = new CrmV2Service(service, new NotificationsService());
     await db.pool.query("UPDATE users SET is_admin=true,is_staff=true WHERE user_id='cap-user'");
     const original = await service.createSession('cap-user', false);
+    const actor = {
+      userId: 'cap-user',
+      sessionId: original.sessionId,
+      csrfToken: original.csrfToken,
+    };
+    await db.pool.query(
+      "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE session_id=$1",
+      [actor.sessionId]
+    );
     const before = (
       await db.pool.query("SELECT must_change_password FROM users WHERE user_id='cap-user'")
     ).rows[0];
     await db.pool
       .query(`CREATE FUNCTION fail_session_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$;
       CREATE TRIGGER fail_session_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_session_audit()`);
-    await expect(crm[method]('cap-user', 'test reason', 'cap-user', '127.0.0.1')).rejects.toThrow(
+    await expect(crm[method]('cap-user', 'test reason', actor, '127.0.0.1')).rejects.toThrow(
       'test audit failure'
     );
     expect(
@@ -705,10 +714,13 @@ for (const method of ['forcePasswordChange', 'expireSessions'] as const) {
     expect(await service.redeemRefreshToken(original.refreshToken)).toMatchObject({
       sessionId: original.sessionId,
     });
+    actor.csrfToken = (
+      await db.pool.query('SELECT csrf_token FROM sessions WHERE session_id=$1', [actor.sessionId])
+    ).rows[0].csrf_token;
     await db.pool.query('DROP TRIGGER fail_session_audit ON audit_log');
-    await expect(
-      crm[method]('cap-user', 'test reason', 'cap-user', '127.0.0.1')
-    ).resolves.toMatchObject({ success: true });
+    await expect(crm[method]('cap-user', 'test reason', actor, '127.0.0.1')).resolves.toMatchObject(
+      { success: true }
+    );
     expect(await usable()).toHaveLength(0);
     expect((await db.pool.query('SELECT id FROM audit_log')).rows).toHaveLength(1);
   });

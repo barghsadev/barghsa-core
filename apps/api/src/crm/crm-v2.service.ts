@@ -6,7 +6,8 @@ import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import { NotificationsService } from '../notifications/notifications.service.js';
-import { SessionService } from '../session/session.service.js';
+import { SessionService, type ValidatedSession } from '../session/session.service.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import type { PoolClient } from 'pg';
 import type { UpdateProfileDto, VerifyProfileDto } from './crm-v2.controller.js';
@@ -454,9 +455,10 @@ export class CrmV2Service {
   async updateProfile(
     profileId: string,
     dto: UpdateProfileDto,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<CrmUpdateProfileResult> {
+    const actorUserId = actor.userId;
     const email = dto.email?.trim().toLowerCase() || null;
     const mobileInput = dto.mobile?.trim() || null;
     const mobile =
@@ -481,6 +483,7 @@ export class CrmV2Service {
         return null;
       }
       await requireStaffMutationPermission(client, actorUserId, 'crm:edit');
+      await requireSessionStepUp(client, actor);
       if (profile.archived)
         throw new HttpException(
           {
@@ -552,6 +555,7 @@ export class CrmV2Service {
         );
         Object.assign(profile, changes, { updated_at: updated.rows[0].updated_at });
       }
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
       return {
         updated: true,
@@ -594,9 +598,10 @@ export class CrmV2Service {
   async verifyProfile(
     profileId: string,
     dto: VerifyProfileDto,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<CrmVerifyProfileResult> {
+    const actorUserId = actor.userId;
     if (!VERIFY_ACTIONS.includes(dto.action as VerifyAction))
       return { error: `Invalid verification action. Must be one of: ${VERIFY_ACTIONS.join(', ')}` };
     const action = dto.action as VerifyAction,
@@ -618,10 +623,11 @@ export class CrmV2Service {
         )
       ).rows[0];
       if (!profile) {
-        await client.query('COMMIT');
+        await client.query('ROLLBACK');
         return null;
       }
       await requireStaffMutationPermission(client, actorUserId, 'crm:verify');
+      await requireSessionStepUp(client, actor);
       const currentStatus = profile.status as string,
         targetStatus = transition.targetStatus;
       const result = {
@@ -632,10 +638,12 @@ export class CrmV2Service {
         reason,
       };
       if (currentStatus === targetStatus) {
+        await requireSessionStepUp(client, actor);
         await client.query('COMMIT');
         return result;
       }
       if (!transition.allowedFrom.includes(currentStatus)) {
+        await requireSessionStepUp(client, actor);
         await client.query('COMMIT');
         return {
           error: `Cannot ${action} a profile with status '${currentStatus}'. Allowed source statuses: ${transition.allowedFrom.join(', ')}`,
@@ -719,6 +727,7 @@ export class CrmV2Service {
         },
         client
       );
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
       return result;
     } catch (error) {
@@ -778,9 +787,10 @@ export class CrmV2Service {
   async forcePasswordChange(
     userId: string,
     reason: string,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<CrmForcePasswordChangeResult> {
+    const actorUserId = actor.userId;
     if (!reason || reason.trim() === '') {
       return { error: 'Reason is required for force password change' };
     }
@@ -796,6 +806,7 @@ export class CrmV2Service {
       await client.query('BEGIN');
 
       await requireStaffMutationPermission(client, actorUserId, 'admin:users:edit', userId);
+      await requireSessionStepUp(client, actor);
       const target = await client.query('SELECT user_id FROM users WHERE user_id=$1', [userId]);
       if (!target.rows.length) {
         await client.query('ROLLBACK');
@@ -808,6 +819,16 @@ export class CrmV2Service {
       );
 
       await this.sessionService.revokeAllUserSessions(userId, undefined, client);
+      // Self-service staff actions intentionally revoke the locked requesting session.
+      // Bind the final check to that exact revocation while retaining expiry/CSRF/step-up checks.
+      const ownRevocation: Date | undefined =
+        userId === actorUserId
+          ? (
+              await client.query('SELECT revoked_at FROM sessions WHERE session_id=$1', [
+                actor.sessionId,
+              ])
+            ).rows[0].revoked_at
+          : undefined;
 
       const auditId = uuidv7();
       const correlationId = uuidv7();
@@ -825,6 +846,7 @@ export class CrmV2Service {
       );
 
       await this.notifyAccountAction(userId, 'password', client);
+      await requireSessionStepUp(client, actor, ownRevocation);
       await client.query('COMMIT');
 
       this.logger.debug(`Password change forced for user ${userId} by ${actorUserId}: ${reason}`);
@@ -849,9 +871,10 @@ export class CrmV2Service {
   async expireSessions(
     userId: string,
     reason: string,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<CrmExpireSessionsResult> {
+    const actorUserId = actor.userId;
     if (!reason || reason.trim() === '') {
       return { error: 'Reason is required for expire sessions' };
     }
@@ -867,6 +890,7 @@ export class CrmV2Service {
       await client.query('BEGIN');
 
       await requireStaffMutationPermission(client, actorUserId, 'admin:users:edit', userId);
+      await requireSessionStepUp(client, actor);
       const target = await client.query('SELECT user_id FROM users WHERE user_id=$1', [userId]);
       if (!target.rows.length) {
         await client.query('ROLLBACK');
@@ -874,6 +898,16 @@ export class CrmV2Service {
       }
 
       await this.sessionService.revokeAllUserSessions(userId, undefined, client);
+      // Self-service staff actions intentionally revoke the locked requesting session.
+      // Bind the final check to that exact revocation while retaining expiry/CSRF/step-up checks.
+      const ownRevocation: Date | undefined =
+        userId === actorUserId
+          ? (
+              await client.query('SELECT revoked_at FROM sessions WHERE session_id=$1', [
+                actor.sessionId,
+              ])
+            ).rows[0].revoked_at
+          : undefined;
 
       const auditId = uuidv7();
       const correlationId = uuidv7();
@@ -891,6 +925,7 @@ export class CrmV2Service {
       );
 
       await this.notifyAccountAction(userId, 'sessions', client);
+      await requireSessionStepUp(client, actor, ownRevocation);
       await client.query('COMMIT');
 
       this.logger.debug(`Sessions expired for user ${userId} by ${actorUserId}: ${reason}`);
@@ -920,9 +955,10 @@ export class CrmV2Service {
   async deleteProfile(
     profileId: string,
     reason: string,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<CrmDeleteProfileResult> {
+    const actorUserId = actor.userId;
     if (!reason || reason.trim() === '') {
       return {
         errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
@@ -945,6 +981,7 @@ export class CrmV2Service {
       }
       const profileRow = profileResult.rows[0] as Record<string, unknown>;
       await requireStaffMutationPermission(client, actorUserId, 'admin:users:edit');
+      await requireSessionStepUp(client, actor);
       if (profileRow.archived === true) {
         await client.query('ROLLBACK');
         return {
@@ -1129,6 +1166,7 @@ export class CrmV2Service {
         ]
       );
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.debug(`Profile ${profileId} archived by ${actorUserId}: ${reason}`);

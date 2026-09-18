@@ -185,69 +185,114 @@ it('creates an identity case alongside ticket assignment to its creator without 
 });
 
 for (const action of ['create', 'approve'] as const) {
-  it(`rejects identity ${action} after the actor loses permission during a profile lock wait`, async () => {
-    const target = await profile();
-    const actor = action === 'create' ? 'creator' : 'reviewer';
-    let caseId: string | undefined;
-    if (action === 'approve') {
-      const created = await create(target);
-      expect(created.status).toBe(201);
-      const result = (await created.json()) as { id: string };
-      expect(result).toMatchObject({ success: true, profileId: target, status: 'Open' });
-      caseId = result.id;
-      expect((await review(caseId, 'Under Review')).status).toBe(200);
-    }
-    const before = (
-      await http.pool.query(
-        "SELECT COUNT(*)::int AS count FROM audit_log WHERE metadata::jsonb->>'profileId'=$1",
-        [target]
-      )
-    ).rows[0].count;
-    const blocker = await http.pool.connect();
-    let request: Promise<Response> | undefined;
-    try {
-      await blocker.query('BEGIN');
-      await blocker.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [target]);
-      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
-      request = action === 'create' ? create(target) : review(caseId!, 'Approved');
-      await expect
-        .poll(
-          async () =>
-            (
-              await http.pool.query(
-                'SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1::integer=ANY(pg_blocking_pids(pid))) AS waiting',
-                [pid]
-              )
-            ).rows[0].waiting
+  for (const invalidation of [
+    'permission',
+    'session',
+    'csrf',
+    'step-up',
+    'commit-expiry',
+  ] as const) {
+    it(`rejects identity ${action} after ${invalidation} changes during a lock wait`, async () => {
+      const target = await profile();
+      const actor = action === 'create' ? 'creator' : 'reviewer';
+      let caseId: string | undefined;
+      if (action === 'approve') {
+        const created = await create(target);
+        expect(created.status).toBe(201);
+        const result = (await created.json()) as { id: string };
+        expect(result).toMatchObject({ success: true, profileId: target, status: 'Open' });
+        caseId = result.id;
+        expect((await review(caseId, 'Under Review')).status).toBe(200);
+      }
+      const before = (
+        await http.pool.query(
+          "SELECT COUNT(*)::int AS count FROM audit_log WHERE metadata::jsonb->>'profileId'=$1",
+          [target]
         )
-        .toBe(true);
-      await http.pool.query('UPDATE users SET is_admin=false WHERE user_id=$1', [actor]);
-      await blocker.query('ROLLBACK');
-      expect((await request).status).toBe(403);
-      expect(
-        (await http.pool.query('SELECT first_name FROM profiles WHERE id=$1', [target])).rows[0]
-          .first_name
-      ).toBe('Original');
-      const cases = await http.pool.query(
-        'SELECT status FROM verification_cases WHERE profile_id=$1',
-        [target]
-      );
-      expect(cases.rows).toEqual(action === 'create' ? [] : [{ status: 'Under Review' }]);
-      expect(
-        (
+      ).rows[0].count;
+      const blocker = await http.pool.connect();
+      let request: Promise<Response> | undefined;
+      try {
+        await blocker.query('BEGIN');
+        if (invalidation === 'commit-expiry') {
+          await blocker.query('LOCK TABLE audit_log IN SHARE MODE');
           await http.pool.query(
-            "SELECT COUNT(*)::int AS count FROM audit_log WHERE metadata::jsonb->>'profileId'=$1",
-            [target]
+            "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE user_id=$1",
+            [actor]
+          );
+        } else {
+          await blocker.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [target]);
+        }
+        const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+        request = action === 'create' ? create(target) : review(caseId!, 'Approved');
+        await expect
+          .poll(
+            async () =>
+              (
+                await http.pool.query(
+                  'SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1::integer=ANY(pg_blocking_pids(pid))) AS waiting',
+                  [pid]
+                )
+              ).rows[0].waiting
           )
-        ).rows[0].count
-      ).toBe(before);
-    } finally {
-      await blocker.query('ROLLBACK');
-      blocker.release();
-      await request?.catch(() => undefined);
-      await http.pool.query('UPDATE users SET is_admin=true WHERE user_id=$1', [actor]);
-    }
-  });
+          .toBe(true);
+        if (invalidation === 'permission') {
+          await http.pool.query('UPDATE users SET is_admin=false WHERE user_id=$1', [actor]);
+        } else if (invalidation === 'commit-expiry') {
+          await expect
+            .poll(
+              async () =>
+                (
+                  await http.pool.query(
+                    'SELECT expires_at<=clock_timestamp() AS expired FROM sessions WHERE user_id=$1',
+                    [actor]
+                  )
+                ).rows[0].expired,
+              { timeout: 5000 }
+            )
+            .toBe(true);
+        } else {
+          const mutation =
+            invalidation === 'session'
+              ? 'expires_at=clock_timestamp()'
+              : invalidation === 'csrf'
+                ? "csrf_token='replaced'"
+                : "step_up_verified_at=clock_timestamp()-INTERVAL '1 day'";
+          await http.pool.query(`UPDATE sessions SET ${mutation} WHERE user_id=$1`, [actor]);
+        }
+        await blocker.query('ROLLBACK');
+        expect((await request).status).toBe(
+          invalidation === 'session' || invalidation === 'commit-expiry' ? 401 : 403
+        );
+        expect(
+          (await http.pool.query('SELECT first_name FROM profiles WHERE id=$1', [target])).rows[0]
+            .first_name
+        ).toBe('Original');
+        const cases = await http.pool.query(
+          'SELECT status FROM verification_cases WHERE profile_id=$1',
+          [target]
+        );
+        expect(cases.rows).toEqual(action === 'create' ? [] : [{ status: 'Under Review' }]);
+        expect(
+          (
+            await http.pool.query(
+              "SELECT COUNT(*)::int AS count FROM audit_log WHERE metadata::jsonb->>'profileId'=$1",
+              [target]
+            )
+          ).rows[0].count
+        ).toBe(before);
+      } finally {
+        await blocker.query('ROLLBACK');
+        blocker.release();
+        await request?.catch(() => undefined);
+        await http.pool.query('UPDATE users SET is_admin=true WHERE user_id=$1', [actor]);
+        await http.pool.query(
+          "UPDATE sessions SET csrf_token=$2,revoked_at=NULL,idle_deadline=clock_timestamp()+INTERVAL '30 minutes',expires_at=clock_timestamp()+INTERVAL '1 day',step_up_verified_at=clock_timestamp()-INTERVAL '1 second' WHERE user_id=$1",
+          [actor, headers[actor]!['X-CSRF-Token']]
+        );
+      }
+    });
+  }
 }
 it('serializes creation, records the actual original value and prevents creator review', async () => {
   const target = await profile();
@@ -428,13 +473,22 @@ it('automatically assigns a correction to an eligible reviewer other than its cr
   });
   const notices = (
     await http.pool.query(
-      "SELECT recipient_user_id,link_route FROM in_app_notifications WHERE link_route LIKE '%'||$1||'%'",
+      "SELECT recipient_user_id,link_route,localized_content FROM in_app_notifications WHERE link_route LIKE '%'||$1||'%'",
       [target]
     )
   ).rows;
-  expect(notices).toEqual([
-    { recipient_user_id: 'reviewer', link_route: `/admin/crm/corrections?profileId=${target}` },
+  expect(notices).toMatchObject([
+    {
+      recipient_user_id: 'reviewer',
+      link_route: `/admin/crm/corrections?profileId=${target}`,
+      localized_content: {
+        en: { title: 'An identity correction was assigned to you' },
+        fa: { title: 'پرونده اصلاح هویت به شما تخصیص یافت' },
+      },
+    },
   ]);
+  expect(notices).toHaveLength(1);
+  expect(JSON.stringify(notices[0].localized_content)).not.toContain('crm.corrections.');
   expect((await review(id, 'Under Review', 'creator')).status).toBe(403);
   await http.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='reviewer'");
   try {

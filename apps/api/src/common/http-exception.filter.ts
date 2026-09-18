@@ -13,6 +13,7 @@ import { DomainErrorCodes } from '@barghsa/shared/errors/domain';
 import { ErrorCodes, defaultErrorCode, errorCodeForHttpStatus } from '@barghsa/shared/errors';
 import type { ErrorCodeDef } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n';
+import { t as crmMessage } from '@barghsa/i18n/crm';
 import { readOnlineTopUpLimitFromErrorBody } from '@barghsa/shared/finance';
 import { correlationIdStorage } from './correlation-id.middleware.js';
 
@@ -95,6 +96,32 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const error = body.error as Record<string, unknown>;
         error.onlineTopUpLimit = snapshot.onlineTopUpLimit;
         error.configVersion = snapshot.configVersion;
+      }
+    }
+
+    if (httpStatus === 409 && exception instanceof HttpException) {
+      const details = exception.getResponse();
+      if (typeof details === 'object' && details !== null && 'blocker' in details) {
+        const blocker = details.blocker;
+        const allowed =
+          errorCode === 'CRM:PROFILE:DELETION_BLOCKED'
+            ? ['orders', 'contracts', 'invoices', 'wallet', 'pendingPayments', 'corrections']
+            : errorCode === 'CRM:PROFILE:LAST_OWNER'
+              ? ['lastOwner']
+              : [];
+        const count = 'count' in details ? details.count : undefined;
+        const counted = ['orders', 'contracts', 'invoices'].includes(String(blocker));
+        if (
+          typeof blocker === 'string' &&
+          allowed.includes(blocker) &&
+          (!counted || (typeof count === 'number' && Number.isSafeInteger(count) && count >= 0))
+        ) {
+          const error = body.error as Record<string, unknown>;
+          error.message = crmMessage(`crm.profile.archive.blocked.${blocker}`, locale).replace(
+            '{count}',
+            new Intl.NumberFormat(locale).format(typeof count === 'number' ? count : 0)
+          );
+        }
       }
     }
 

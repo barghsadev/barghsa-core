@@ -24,7 +24,6 @@ import { CrmV2Service } from './crm-v2.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { t } from '@barghsa/i18n/crm';
 
 /**
  * DTO for updating a CRM profile's editable fields.
@@ -364,7 +363,7 @@ export class CrmV2Controller {
         ...(parsed.data.email !== undefined ? { email: parsed.data.email } : {}),
         ...(parsed.data.mobile !== undefined ? { mobile: parsed.data.mobile } : {}),
       },
-      req.session.userId,
+      req.session,
       req.ip ?? 'unknown'
     );
 
@@ -490,7 +489,7 @@ export class CrmV2Controller {
         action: parsed.data.action,
         ...(parsed.data.reason !== undefined ? { reason: parsed.data.reason } : {}),
       },
-      req.session.userId,
+      req.session,
       req.ip ?? 'unknown'
     );
 
@@ -593,7 +592,7 @@ export class CrmV2Controller {
     const result = await this.crmV2Service.forcePasswordChange(
       userId,
       parsed.data.reason,
-      req.session.userId,
+      req.session,
       req.ip ?? 'unknown'
     );
 
@@ -695,7 +694,7 @@ export class CrmV2Controller {
     const result = await this.crmV2Service.expireSessions(
       userId,
       parsed.data.reason,
-      req.session.userId,
+      req.session,
       req.ip ?? 'unknown'
     );
 
@@ -805,7 +804,7 @@ export class CrmV2Controller {
     const result = await this.crmV2Service.deleteProfile(
       profileId,
       parsed.data.reason,
-      req.session.userId,
+      req.session,
       req.ip ?? 'unknown'
     );
 
@@ -829,19 +828,12 @@ export class CrmV2Controller {
           ? 409
           : 400;
 
-      const locale = req.headers['accept-language']?.toLowerCase().startsWith('fa') ? 'fa' : 'en';
-      const message = result.blocker
-        ? t(`crm.profile.archive.blocked.${result.blocker}`, locale).replace(
-            '{count}',
-            new Intl.NumberFormat(locale).format(result.count ?? 0)
-          )
-        : result.error;
-
       throw new HttpException(
         {
           statusCode: httpStatus,
           error: result.errorCode,
-          message,
+          blocker: result.blocker,
+          count: result.count,
         },
         httpStatus
       );

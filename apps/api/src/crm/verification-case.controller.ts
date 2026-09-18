@@ -150,7 +150,7 @@ export class VerificationCaseController {
         reason: parsed.data.reason,
         ...(parsed.data.evidenceUrls ? { evidenceUrls: parsed.data.evidenceUrls } : {}),
       },
-      req.session.userId,
+      req.session,
       req.ip ?? 'unknown'
     );
 
@@ -449,7 +449,7 @@ export class VerificationCaseController {
           ? { reviewerNotes: parsed.data.reviewerNotes }
           : {}),
       },
-      req.session.userId,
+      req.session,
       req.ip ?? 'unknown'
     );
 

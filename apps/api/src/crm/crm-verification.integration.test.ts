@@ -20,6 +20,7 @@ const notifications = new NotificationsService();
 const service = new CrmV2Service({} as SessionService, notifications);
 const ownerSession = randomUUID(),
   ownerCsrf = randomUUID();
+const staffActor = { userId: 'verify-staff', sessionId: randomUUID(), csrfToken: randomUUID() };
 const ownerHeaders = { Cookie: `barghsa_session=${ownerSession}`, 'X-CSRF-Token': ownerCsrf };
 beforeAll(async () => {
   if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run');
@@ -36,6 +37,10 @@ beforeAll(async () => {
     `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
     VALUES($1,'verify-owner',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
     [ownerSession, ownerCsrf, randomUUID()]
+  );
+  await db.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,$2,$3,$1,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())",
+    [staffActor.sessionId, staffActor.userId, staffActor.csrfToken]
   );
 }, 40000);
 afterAll(async () => {
@@ -56,13 +61,11 @@ it.each(['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION'])(
   'verifies a %s profile and records bilingual notice/audit together',
   async (status) => {
     const id = await profile(status);
-    expect(await service.verifyProfile(id, { action: 'verify' }, 'verify-staff', '')).toMatchObject(
-      {
-        success: true,
-        previousStatus: status,
-        newStatus: 'VERIFIED',
-      }
-    );
+    expect(await service.verifyProfile(id, { action: 'verify' }, staffActor, '')).toMatchObject({
+      success: true,
+      previousStatus: status,
+      newStatus: 'VERIFIED',
+    });
     const notice = (
       await db.pool.query(
         'SELECT recipient_user_id,localized_content,link_route FROM in_app_notifications WHERE profile_id=$1',
@@ -100,9 +103,7 @@ it.each(['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION'])(
 it('serializes concurrent verification and writes one notice', async () => {
   const id = await profile('PENDING_VERIFICATION');
   await Promise.all(
-    Array.from({ length: 8 }, () =>
-      service.verifyProfile(id, { action: 'verify' }, 'verify-staff', '')
-    )
+    Array.from({ length: 8 }, () => service.verifyProfile(id, { action: 'verify' }, staffActor, ''))
   );
   expect(
     (
@@ -129,12 +130,7 @@ it.each([
   async (action, target) => {
     const id = await profile('VERIFIED');
     expect(
-      await service.verifyProfile(
-        id,
-        { action, reason: 'Documents need review' },
-        'verify-staff',
-        ''
-      )
+      await service.verifyProfile(id, { action, reason: 'Documents need review' }, staffActor, '')
     ).toMatchObject({ newStatus: target, reason: 'Documents need review' });
     expect(await state(id)).toBe(target);
     const notice = (
@@ -155,30 +151,30 @@ it.each([
 );
 it.each(['unverify', 'reverify'])('rejects %s without a reason', async (action) => {
   const id = await profile('VERIFIED');
-  expect(await service.verifyProfile(id, { action }, 'verify-staff', '')).toHaveProperty('error');
+  expect(await service.verifyProfile(id, { action }, staffActor, '')).toHaveProperty('error');
   expect(await state(id)).toBe('VERIFIED');
 });
 it('rejects invalid actions/transitions and absent or archived profiles', async () => {
   const id = await profile('SUSPENDED');
-  expect(await service.verifyProfile(id, { action: 'verify' }, 'verify-staff', '')).toHaveProperty(
+  expect(await service.verifyProfile(id, { action: 'verify' }, staffActor, '')).toHaveProperty(
     'error'
   );
-  expect(await service.verifyProfile(id, { action: 'invalid' }, 'verify-staff', '')).toHaveProperty(
+  expect(await service.verifyProfile(id, { action: 'invalid' }, staffActor, '')).toHaveProperty(
     'error'
   );
   expect(
     await service.verifyProfile(
       await profile('DRAFT'),
       { action: 'unverify', reason: 'Review' },
-      'verify-staff',
+      staffActor,
       ''
     )
   ).toHaveProperty('error');
   expect(
-    await service.verifyProfile(randomUUID(), { action: 'verify' }, 'verify-staff', '')
+    await service.verifyProfile(randomUUID(), { action: 'verify' }, staffActor, '')
   ).toBeNull();
   await db.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [id]);
-  expect(await service.verifyProfile(id, { action: 'verify' }, 'verify-staff', '')).toBeNull();
+  expect(await service.verifyProfile(id, { action: 'verify' }, staffActor, '')).toBeNull();
 });
 it('rolls back status and audit when the notice cannot be written', async () => {
   const id = await profile('PENDING_VERIFICATION');
@@ -186,9 +182,9 @@ it('rolls back status and audit when the notice cannot be written', async () => 
     .spyOn(notifications, 'create')
     .mockRejectedValueOnce(new Error('controlled inbox failure'));
   try {
-    await expect(
-      service.verifyProfile(id, { action: 'verify' }, 'verify-staff', '')
-    ).rejects.toThrow('inbox failure');
+    await expect(service.verifyProfile(id, { action: 'verify' }, staffActor, '')).rejects.toThrow(
+      'inbox failure'
+    );
   } finally {
     fail.mockRestore();
   }
@@ -207,7 +203,7 @@ it('resolves the owner after acquiring the profile lock', async () => {
     client = await db.pool.connect();
   await client.query('BEGIN');
   await client.query("UPDATE profiles SET user_id='verify-new-owner' WHERE id=$1", [id]);
-  const verifying = service.verifyProfile(id, { action: 'verify' }, 'verify-staff', '');
+  const verifying = service.verifyProfile(id, { action: 'verify' }, staffActor, '');
   await client.query('COMMIT');
   client.release();
   expect(await verifying).toMatchObject({ success: true });
@@ -227,7 +223,7 @@ it('uses the individual name when the profile title is blank', async () => {
     "UPDATE profiles SET title=' ',first_name='Ada',last_name='Owner' WHERE id=$1",
     [id]
   );
-  await service.verifyProfile(id, { action: 'verify' }, 'verify-staff', '');
+  await service.verifyProfile(id, { action: 'verify' }, staffActor, '');
   const content = (
     await db.pool.query('SELECT localized_content FROM in_app_notifications WHERE profile_id=$1', [
       id,
@@ -254,7 +250,7 @@ async function banner() {
 it('returns the same current notice in the selected-profile banner and inbox, then clears it on read', async () => {
   const id = await profile('PENDING_VERIFICATION');
   await active(id);
-  await service.verifyProfile(id, { action: 'verify' }, 'verify-staff', '');
+  await service.verifyProfile(id, { action: 'verify' }, staffActor, '');
   const context = await banner();
   expect(context).toMatchObject({
     activeProfileId: id,
@@ -277,7 +273,7 @@ it('returns the same current notice in the selected-profile banner and inbox, th
   await service.verifyProfile(
     id,
     { action: 'reverify', reason: 'Correct document' },
-    'verify-staff',
+    staffActor,
     ''
   );
   const newest = (await banner()).verificationNotice!;
@@ -292,7 +288,7 @@ it('returns the same current notice in the selected-profile banner and inbox, th
 it('does not expose notices from another profile, recipient, previous owner or obsolete status', async () => {
   const id = await profile('PENDING_VERIFICATION'),
     other = await profile('ACTIVE');
-  await service.verifyProfile(id, { action: 'verify' }, 'verify-staff', '');
+  await service.verifyProfile(id, { action: 'verify' }, staffActor, '');
   await active(other);
   expect((await banner()).verificationNotice).toBeNull();
   await active(id);
@@ -321,7 +317,7 @@ for (const action of ['verify', 'unverify', 'reverify'] as const) {
     await service.verifyProfile(
       id,
       { action, ...(action === 'verify' ? {} : { reason: 'Correct the registration number' }) },
-      'verify-staff',
+      staffActor,
       ''
     );
     const rows = (
@@ -357,7 +353,7 @@ for (const action of ['verify', 'unverify', 'reverify'] as const) {
     await service.verifyProfile(
       id,
       { action, ...(action === 'verify' ? {} : { reason: 'Correct the registration number' }) },
-      'verify-staff',
+      staffActor,
       ''
     );
     expect(
@@ -373,9 +369,9 @@ it('rolls back verification, audit and inbox when external notice queuing fails'
     BEGIN IF NEW.event_key='profile.verification_status' THEN RAISE EXCEPTION 'injected verification queue failure'; END IF; RETURN NEW; END $$;
     CREATE TRIGGER fail_verification_delivery BEFORE INSERT ON notification_outbox FOR EACH ROW EXECUTE FUNCTION fail_verification_delivery()`);
   try {
-    await expect(
-      service.verifyProfile(id, { action: 'verify' }, 'verify-staff', '')
-    ).rejects.toThrow('injected verification queue failure');
+    await expect(service.verifyProfile(id, { action: 'verify' }, staffActor, '')).rejects.toThrow(
+      'injected verification queue failure'
+    );
   } finally {
     await db.pool.query('DROP TRIGGER fail_verification_delivery ON notification_outbox');
   }
@@ -465,7 +461,7 @@ for (const locale of ['fa', 'en'] as const) {
         service.verifyProfile(
           id,
           { action, ...(action === 'verify' ? {} : { reason }) },
-          'verify-staff',
+          staffActor,
           ''
         )
       );
@@ -547,7 +543,7 @@ for (const locale of ['fa', 'en'] as const) {
       await service.verifyProfile(
         id,
         { action: action === 'verify' ? 'reverify' : 'verify', reason },
-        'verify-staff',
+        staffActor,
         ''
       );
       await db.pool.query("UPDATE users SET notification_preferences='IN_APP' WHERE user_id=$1", [
