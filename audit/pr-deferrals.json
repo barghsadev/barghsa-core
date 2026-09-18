@@ -1891,7 +1891,16 @@
     "historical_deferrals": [
       "- [ ] Device trust table and unique constraint created via schema migration"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical migration deferral satisfied by later production migrations and current real-DB login/trust checks.",
+    "reviewed_source_revision": "b514bd11f6f28694d5e956a77680f33b86caf46d",
+    "review_record": "audit/evidence/step-reviews.json#V01-login-authentication",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Production0082 creates device_trusts with unique(user_id,device_fingerprint);0121 adds IP binding. Actual migrated-schema OTP trust upsert/rollback checks pass. audit/evidence/step-reviews.json#V01-login-authentication"
+      }
+    ]
   },
   {
     "pr": 80,

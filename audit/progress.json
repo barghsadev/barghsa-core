@@ -3,9 +3,9 @@
   "updated": "2026-09-19",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
+  "source_revision": "b514bd11f6f28694d5e956a77680f33b86caf46d",
   "active_step": "V01",
-  "next_action": "Continue saved login/OTP/password-enforcement/rate-limit PR reviews77,78,87,88,101 using existing authentication evidence. UI stack requirement decision remains pending.",
+  "next_action": "Review saved terms lifecycle/acceptance PRs117,118,119,159,160 as one batch, reusing the completed terms and registration evidence.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -819,6 +819,10 @@
     {
       "id": "V01-ui-foundations",
       "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations"
+    },
+    {
+      "id": "V01-login-authentication",
+      "review_record": "audit/evidence/step-reviews.json#V01-login-authentication"
     }
   ],
   "deferred_improvements": [
@@ -1100,12 +1104,6 @@
       ]
     },
     {
-      "task_key": "02-auth-users-admin.md#T-02.01.04",
-      "changed_paths": [
-        "apps/api/src/crm/crm-v2.service.ts"
-      ]
-    },
-    {
       "task_key": "02-auth-users-admin.md#T-05.04.02",
       "changed_paths": [
         "apps/api/src/profiles/profiles.controller.ts"
@@ -1171,44 +1169,47 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-ui-foundations",
-    "name": "Shared UI scaffold, component inventory and complex widgets",
-    "status": "completed_with_requirement_prerequisites",
+    "id": "V01-login-authentication",
+    "name": "Login, OTP, forced-password and abuse-limit saved PR reviews",
+    "status": "completed",
     "prs": [
-      65,
-      66,
-      67
+      77,
+      78,
+      87,
+      88,
+      101
     ],
     "task_keys": [
-      "07-ui-ux-design.md#T-07.01.01.01",
-      "07-ui-ux-design.md#T-07.01.01.02",
-      "07-ui-ux-design.md#T-07.01.01.03"
+      "02-auth-users-admin.md#T-02.01.01",
+      "02-auth-users-admin.md#T-02.01.02",
+      "02-auth-users-admin.md#T-02.01.03",
+      "02-auth-users-admin.md#T-02.01.04",
+      "02-auth-users-admin.md#T-02.04.01"
     ],
-    "base_revision": "6d801999",
-    "remaining_checklist": [
-      "T-07.01.01.02 remains partial: installed Base UI/base-nova differs from written Radix/new-york. The existing owner question is pending; no preset switch or requirements waiver occurred.",
-      "T-07.01.01.03 behavior and both historical PR67 deferrals are verified, but literal useTable/package wording is unresolved: current table uses local useTableSort/useTableSelection and the maintained @base-ui/react package. Preserve these tested implementations while reconciling the foundation requirement decision."
+    "base_revision": "1df2f1ef",
+    "remaining_checklist": [],
+    "historical_deferrals": [
+      "PR87 device trust table/unique constraint migration",
+      "PR87 body states endpoint tests unavailable at original merge"
     ],
     "confirmed_defects": [],
-    "historical_deferrals": [
-      "PR67 ComboBox render-prop visual validation",
-      "PR67 validation/form-submission roundtrip"
-    ],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#R03-controls",
-      "audit/evidence/step-reviews.json#R03-auxiliary-ui",
-      "audit/evidence/step-reviews.json#R03-consumer-theme-time",
-      "audit/evidence/step-reviews.json#R04-purchase-loading",
-      "audit/evidence/step-reviews.json#R05-strict-dependencies"
+      "Existing five acceptance records",
+      "R01-cookie-policy",
+      "R01-trusted-device-deadlines",
+      "R02-notification delivery",
+      "V01-distributed-rate-limit",
+      "V01-edge-caching"
     ],
-    "next_action": "Continue saved login/OTP/password-enforcement/rate-limit PR reviews77,78,87,88,101 using existing authentication evidence. UI stack requirement decision remains pending.",
-    "source_revision": "2143862584914625d357a59fc1e509293eb5b84e",
-    "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations",
+    "next_action": "Review saved terms lifecycle/acceptance PRs117,118,119,159,160 as one batch, reusing the completed terms and registration evidence.",
+    "source_revision": "b514bd11f6f28694d5e956a77680f33b86caf46d",
+    "review_record": "audit/evidence/step-reviews.json#V01-login-authentication",
     "verification": [
-      "45 distinct production-built Chromium cases pass across ComboBox/MultiSelect, NumberField, DatePicker/DateRangePicker, DataTable and shared-theme controls. The later5-case ComboBox run adds open-popup accessibility/screenshots and overlaps the45; it is not counted again.",
-      "Native required validation prevents empty single/multiple submissions; keyboard-filtered selections, removal chips and submitted FormData values pass in FA/EN and light/dark. Custom render trigger preserves value/icon and keyboard dismissal. Open popup and completed form axe scans have no violations.",
-      "Self-hosted Inter is loaded from the fixture origin. English/Persian and nested language changes select the expected fonts without overriding explicit monospace. Existing Jalali/Tehran/date-bound, number formatting and sortable/selectable-table behavior passes.",
-      "56 shared UI unit cases, UI build/distribution checks, UI/web types, scoped lint/format/diff, frozen installation, actual declared PostCSS compilation, production web build and all42 unchanged route/interaction budgets pass. Earlier failed fixture/baseline runs are retained and not counted as passing."
+      "95 focused compiled-API/PostgreSQL cases pass across7 suites: login failure windows, OTP verification/replay/deadlines, browser-device quotas, actual mock-provider delivery, forced-password history/rollback/replay, account login aliases and pre-login CSRF.",
+      "40 distinct current browser cases pass across desktop Chromium and mobile Chrome. Initial36-case run passed35; one canceled CSS-animation promise failed. Four forced-change cases pass after the wait repair; eight current login UI cases pass across both projects. These reruns overlap and are not added to40. FA/EN, light/dark, normalization, generic errors, disabled/preserved inputs, acknowledgements, OTP resend/cooldown, policy validation, /app and onboarding paths are covered.",
+      "Inspected English desktop and Persian dark mobile screenshots. Mobile branding stacks above the form and links home, satisfying T-01.01.01; desktop columns remain separate, and both sizes have no horizontal overflow and pass their accessibility checks.",
+      "Current production auth-entry asset references match the served /login HTML; both auth and application index/manifest hashes are saved. First diagnostic incorrectly compared main-app entry to the separate auth entry and was rejected, then corrected. Production server was stopped after testing.",
+      "Two changed test files pass scoped lint/format/diff checks. Current application build, types, frozen installation and all42 unchanged budgets from V01-ui-foundations are reused because only tests changed. Earlier current-source cookie, transaction, session-CSRF, CRM notification/authority, limiter and real NGINX evidence is retained."
     ]
   },
   "open_domain_reviews": [

@@ -24711,6 +24711,104 @@
       "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
       "encoding": "gzip",
       "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/v01-login-api.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-api.log.gz",
+      "sha256": "37e527379052b3e21ce0335e4081f86d44c385359e2ea6790ccced8c069b9e8a",
+      "encoding": "gzip",
+      "stored_sha256": "f14762e94a7cb9e21118623b5a3de443e003b5bc775b3b5356b670141d79ad0b"
+    },
+    {
+      "original_path": "/tmp/v01-login-browser.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-browser.log.gz",
+      "sha256": "752afd775edb4beaf2e296ce657beb13a620ba85f0e9dae5764debe14285df81",
+      "encoding": "gzip",
+      "stored_sha256": "777d965074d5210582af58cc481f08ba5e83b460cbfa77b0b603dcb0e929a792"
+    },
+    {
+      "original_path": "/tmp/v01-login-build-binding-final.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-build-binding-final.log.gz",
+      "sha256": "6add65e77e0c664e0a2c25bed21bdafbdcf7edcb7ceaa45739eac693c16a0b4f",
+      "encoding": "gzip",
+      "stored_sha256": "8f2e5c4866770304e06c1b1af983bbee054fbfcc47ebda98e8e1a7237a759303"
+    },
+    {
+      "original_path": "/tmp/v01-login-build-binding.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-build-binding.log.gz",
+      "sha256": "3b2bb355ee08f11da2ba584aa7c3917f2ea5bce6b336d95875607099ef5138cf",
+      "encoding": "gzip",
+      "stored_sha256": "5b9a54d04cb4001543eaf76161b26f8674d7f37efd36d86d799f5d37bd28fb94"
+    },
+    {
+      "original_path": "/tmp/v01-login-commit.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-commit.log.gz",
+      "sha256": "705a264ae8d3d5745b942cd28aca4830a7b72045932d8a0c0e4ac287f7f50125",
+      "encoding": "gzip",
+      "stored_sha256": "750a949089dcf9976aeee8e321b12ad989170fd116b1daa7b06007c8dc472070"
+    },
+    {
+      "original_path": "/tmp/v01-login-forced-final.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-forced-final.log.gz",
+      "sha256": "94c1264be1ec5926baf44f4248243940b50ba681aa705241240443a3ff26e877",
+      "encoding": "gzip",
+      "stored_sha256": "0684f121c8f496fef683519b614f2a36d61dd9d6f3f5102cc669d568f6329eb8"
+    },
+    {
+      "original_path": "/tmp/v01-login-format-check.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-format-check.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/v01-login-format.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-format.log.gz",
+      "sha256": "d5c8875393cb8ceec8e7cb328aa549ff169169bb4838efeb44b355ae026ffd32",
+      "encoding": "gzip",
+      "stored_sha256": "8551afb495b3af2c9792bf69bbed8cd53ec05dbec626e02195cdacc32c491ff1"
+    },
+    {
+      "original_path": "/tmp/v01-login-lint.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-login-mobile.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-mobile.log.gz",
+      "sha256": "9168aaf9d0ab9fad87cbfd0f80bcf221e66f8bfabd7af4a2686ed6e4df891f3f",
+      "encoding": "gzip",
+      "stored_sha256": "44df54a763184c26629ac8ec1120d9ef5f7b0a839f82db77b1d129a4f4113b06"
+    },
+    {
+      "original_path": "/tmp/v01-login-preview.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-preview.log.gz",
+      "sha256": "5800154c0047407c59e9f17fb6fc5ac34efedfd2365915a20a02c561dddfd72c",
+      "encoding": "gzip",
+      "stored_sha256": "3fefd03cc595318a6ba5c917d51fd44a45fb823a64e8d7b94a5248416da78d21"
+    },
+    {
+      "original_path": "/tmp/v01-login-ui-final.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-ui-final.log.gz",
+      "sha256": "618e718f003ae5792c7422f813444c3ae66a4fd8da9a286915793b9b67dfeb09",
+      "encoding": "gzip",
+      "stored_sha256": "36a89c6ac12691a0de513b0c4744d928e94cad4f72ef48b184ceefbce10b7ca3"
+    },
+    {
+      "original_path": "/tmp/v01-login-ui-format.log",
+      "path": "audit/evidence/v01-login-authentication/v01-login-ui-format.log.gz",
+      "sha256": "e2723308d0cc74d8182294edf6fcd64c3a43902655923facb062e00e3b268289",
+      "encoding": "gzip",
+      "stored_sha256": "6eb58bd8b5d52be28c2d52f4016d574d03cad829f514bbd851a6057a9322989e"
+    },
+    {
+      "original_path": "/tmp/v01-login-auth-drift.diff",
+      "path": "audit/evidence/v01-login-authentication/v01-login-auth-drift.diff.gz",
+      "sha256": "6b77ee7fa3899e145d0dc0717b180523f48bfd1cb2321f9d13595876aa3dedd0",
+      "encoding": "gzip",
+      "stored_sha256": "f9562cdaeb0d4422f84cf06111c7d11fd725b068d702b8c5e753cb6f7f60c319"
     }
   ]
 }

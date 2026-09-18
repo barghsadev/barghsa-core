@@ -22659,6 +22659,332 @@
           "evidence": "audit/evidence/step-reviews.json#V01-ui-foundations"
         }
       ]
+    },
+    {
+      "id": "V01-login-authentication",
+      "date": "2026-09-19",
+      "source_revision": "b514bd11f6f28694d5e956a77680f33b86caf46d",
+      "base_revision": "1df2f1ef",
+      "product_commits": [
+        "b514bd11f6f28694d5e956a77680f33b86caf46d"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-02.01.01",
+        "02-auth-users-admin.md#T-02.01.02",
+        "02-auth-users-admin.md#T-02.01.03",
+        "02-auth-users-admin.md#T-02.01.04",
+        "02-auth-users-admin.md#T-02.04.01"
+      ],
+      "summary": "Five saved login/OTP/password-enforcement/rate-limit PR reviews close using current source reconciliation and focused checks. Two obsolete/flaky browser assertions repaired; authentication behavior unchanged.",
+      "review": [
+        "Read all five saved PR bodies, their exact task/story requirements and prior acceptance limitations. No duplicate implementation was removed or rebuilt. PR78 initial always-false OTP stub was superseded by PR87 and later transactional trust repairs.",
+        "Reviewed current login, completeLogin, forceChangePassword and controller methods. Generic credential failures, server-issued device proof, conservative staff/customer OTP policy, current-account/version locks, atomic sessions/trust/audit, password-history window and final wall-clock checks remain enforced. Later controller/OTP changes add preauth CSRF, shared device quotas, config TTL and correlation without weakening account/destination controls.",
+        "Read later auth/session/UI differences. Existing current-source R01/R02/R03/V01 records bind changed controller, OTP, dictionaries, layout/PasswordField, CRM mutation and limiter code. Session diff contains safe logging, the reviewed locked CSRF check and trusted-device deadline repair. Current tests and prior matching transaction/edge evidence close stale bindings for these five tasks.",
+        "PR87 device_trusts table and unique(user_id,device_fingerprint) index exist in production migration0082;0121 adds the public-IP trust hint. Current HTTP fixtures successfully exercise migration-backed trust upserts and rollback, so the original migration deferral and absence of endpoint tests are resolved locally. Deployment remains separate.",
+        "One forced-password browser case failed when a CSS transition was canceled. Polling current running/pending animations retains settled-state contrast verification without rejecting a canceled promise or suppressing scanner findings.",
+        "Four mobile UI cases exposed an obsolete expectation that the branding aside is hidden. Exact shared-layout criteria require a responsive single-column stack. The replacement asserts visible linked branding above the form on mobile and separate columns on desktop. No product UI or requirement was changed.",
+        "The duplicated Register footer wording remains the pre-existing deferred copy item. No new noncritical feature or styling scope was added."
+      ],
+      "verification": [
+        "95 focused compiled-API/PostgreSQL cases pass across7 suites: login failure windows, OTP verification/replay/deadlines, browser-device quotas, actual mock-provider delivery, forced-password history/rollback/replay, account login aliases and pre-login CSRF.",
+        "40 distinct current browser cases pass across desktop Chromium and mobile Chrome. Initial36-case run passed35; one canceled CSS-animation promise failed. Four forced-change cases pass after the wait repair; eight current login UI cases pass across both projects. These reruns overlap and are not added to40. FA/EN, light/dark, normalization, generic errors, disabled/preserved inputs, acknowledgements, OTP resend/cooldown, policy validation, /app and onboarding paths are covered.",
+        "Inspected English desktop and Persian dark mobile screenshots. Mobile branding stacks above the form and links home, satisfying T-01.01.01; desktop columns remain separate, and both sizes have no horizontal overflow and pass their accessibility checks.",
+        "Current production auth-entry asset references match the served /login HTML; both auth and application index/manifest hashes are saved. First diagnostic incorrectly compared main-app entry to the separate auth entry and was rejected, then corrected. Production server was stopped after testing.",
+        "Two changed test files pass scoped lint/format/diff checks. Current application build, types, frozen installation and all42 unchanged budgets from V01-ui-foundations are reused because only tests changed. Earlier current-source cookie, transaction, session-CSRF, CRM notification/authority, limiter and real NGINX evidence is retained."
+      ],
+      "remaining": [
+        "Prior task-specific limits remain: live provider delivery, deployed proxy/trust topology, capacity and production migrations are operational prerequisites; lost-contact policy and signed-webhook wording remain pending.",
+        "Full regression/coverage and remaining saved PR/skip dispositions stay in V01/R06/V02/B01. No publish, deployment, scheduler or live data action occurred."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "0b14ae1da4cf5a684138f59e5d651e8f918f714e9fe8f210406ea42eb5a986bd"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "5b92f3c4deb6b07640f11320d47bfee935d4a35827edd312513bf2aa76417a02"
+        },
+        {
+          "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
+          "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "c00368b3927beeaffd54088d14db72396a95fe074f33b82b573186e4bdd7b96e"
+        },
+        {
+          "path": "apps/api/src/auth/device-trust-ip.ts",
+          "sha256": "17f24d8563a3b1ed5a7a0f167bfb3ac46a9f12d820d0100e22a2b7200c58f4e9"
+        },
+        {
+          "path": "apps/api/src/auth/dto/force-change-password.dto.ts",
+          "sha256": "2410b69271330cc9572ff7ce5d75cd6b56c2e3b8425ddcb74080a872968e37ad"
+        },
+        {
+          "path": "apps/api/src/auth/dto/login.dto.ts",
+          "sha256": "e55ee47070d30d4ea5db0f17939501119379b66a7f44481710d19c849ba4ce88"
+        },
+        {
+          "path": "apps/api/src/auth/dto/register.dto.ts",
+          "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+        },
+        {
+          "path": "apps/api/src/auth/force-password-http.integration.test.ts",
+          "sha256": "4c2a11811f174a66be642f8e5c92e49ce4ad7d38a04494835a52041cf7e1faa6"
+        },
+        {
+          "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+          "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+        },
+        {
+          "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
+          "sha256": "c5cdcc69344e8ee66a2a0f8344714615054e51880cb7ef39ce4bac4431e328ad"
+        },
+        {
+          "path": "apps/api/src/auth/otp-http.integration.test.ts",
+          "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.spec.ts",
+          "sha256": "f14af96997ec69f9da6f656d509a800793d728af674b73974eef3e44fd65c485"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "ec087d5b11da19b78492cae7884dc656ec5a12e13944979085286c9ad525fb3c"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "ce9eee35ff8da4628af7715b572d127001a749567bb7797656140fb0012dd637"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "4d2efa0157bd8bf5ddebbf35d96bfbe8aa756ce65e524c41978095dddbdde446"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+          "sha256": "61591ffc483f5632d4676e4ad46194153003aebd430f5785b9fdef97e547cbd6"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+          "sha256": "4101afdfe4c67dd09616fbbad234fd76d3e64c0a147fa62634ed10e5aa883093"
+        },
+        {
+          "path": "apps/api/src/session/cookie.helper.ts",
+          "sha256": "1e1a3b2092c2200f29d531468b8c15d5920b2da42aeaaf5c1d159c9937c32192"
+        },
+        {
+          "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
+          "sha256": "e596516adfde0884eb620dd38cadcdd71a42d2e061d92e7327e51e5b6b3f9eba"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "01947f280709fa9db8925c67a5f36cd71dbf2946a6fb9af460c31ec17dc72f26"
+        },
+        {
+          "path": "apps/api/src/session/session-http.integration.test.ts",
+          "sha256": "174fe1a99c55c798864a2c32d4a9cae69a4d98367c14ff9bd140081021d3f6bc"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "d06e0b410789a0b5b355fab52fe719e2c336459004f8ffa7c3cfeb83a5a7355a"
+        },
+        {
+          "path": "apps/api/src/session/trusted-devices.controller.ts",
+          "sha256": "bcc609aecdeaa52b6d40f877692eb325fffdc8a8be810f805c90e5298759905e"
+        },
+        {
+          "path": "apps/web/e2e/auth-rate-limit.spec.ts",
+          "sha256": "1d5b91044e6cf9755a051b44c5e9c991b5c1dcbcbb676e569dadb060e7a0cda4"
+        },
+        {
+          "path": "apps/web/e2e/login-recovery.spec.ts",
+          "sha256": "fe0f70b29b60ffd0bd4687c00b7e14b332b07f24c292a56136a494cd800c49ca"
+        },
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "ef2897c81788e0b46e3f9a94c0270d3cec1d906ca9fcdcbd7f69ddd89a7f4d2e"
+        },
+        {
+          "path": "apps/web/src/components/AuthLayout.tsx",
+          "sha256": "91da9379951d4f43f647b1add4fd027b2493f4dec4e7050788fb5ae72f8c1981"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "ce4de5f6c11180a6157ca7309aff14ca75f2b157594f66434c99e59ba8dd4367"
+        },
+        {
+          "path": "apps/web/src/components/TrustedDevices.tsx",
+          "sha256": "889a20f809790f04063c2e7b0de1e4860f8a6c87ddea93ff1dc48984ab4bf866"
+        },
+        {
+          "path": "apps/web/src/lib/auth-errors.ts",
+          "sha256": "8c37a2e06fa691c1240496ff791b35fb8bd01de117c3d5582fe1447726582b5d"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "0b11032ea88bd099209b76927d9b2281c0b0b4c1fe80cdf8d592a4876d6df24d"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "9127f1b8833ff0f20a77e67631b6d4c5a8d56447926713a7b1539fa58ba4bf40"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "9e886248839dc79f66bed308b33502b23356ba3989712faa84698ae7461afd09"
+        },
+        {
+          "path": "apps/web/src/routes/_app/app.tsx",
+          "sha256": "af7f573097cecfb98c5346b6ed72afb59280f2a73905879ca20bc8b1c38501f7"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "eb2908c3ef63d8943226d4d5c78f96896dbb10cbbe49d5d0dc2dd2a4d6cddf8a"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "5844ff1535fffcc3e296c3cf5817b09724fbb3a1864be949bd9c0f08d268a3f4"
+        },
+        {
+          "path": "apps/web/src/routes/support.tsx",
+          "sha256": "872e1b510a4cf1593c42dccf78a36bd1bca27b71b1e39374bb00804e689a25c8"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "02ab8c9038c53188a0b676201ea9421f72046a0882b44df36552ad8ea9c14980"
+        },
+        {
+          "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
+          "sha256": "2bc3a50f31c5fab9548992be2d06741e8d5da86c53fab3be86ec85075a74dff8"
+        },
+        {
+          "path": "packages/db/drizzle/production/0088_staff_activation_delivery.sql",
+          "sha256": "5f10b88715c5bd338a76843c5e5f4cf4020e410eda34df385cd7a96583e2cb6c"
+        },
+        {
+          "path": "packages/db/drizzle/production/0121_device_trust_ip.sql",
+          "sha256": "fdbd70b55665f2e7215f5b791543eb1414e3d01b4141f73e232a08b9be56018d"
+        },
+        {
+          "path": "packages/db/src/rolling-rate-limits.test.ts",
+          "sha256": "3963a056188af7996455b697812a78691cce877a2d3899e5644cd588118067ee"
+        },
+        {
+          "path": "packages/i18n/src/auth.ts",
+          "sha256": "ca0358aeffd4889e2162ac49c3983c250a2b267a87087ea1a2197e394cea5f91"
+        },
+        {
+          "path": "packages/shared/src/password-hash.ts",
+          "sha256": "0ff8fc030743bad069afb3deefdc851748761c23986c4963676ba2a9c7b14e42"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+          "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+          "sha256": "2bc415b8fc2d7d5e5f73ef9702c1ab0889da624a7754eaf781068bdfe3ad1857"
+        },
+        {
+          "path": "packages/ui/src/fonts/fonts.css",
+          "sha256": "a1f68a0120c9ba7279ee54b5c7c728d983b87455bf22cbbe1e9f21f420bb76cb"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "a75317806b056dcb7d4ea48f3d084976ece011f4c5d41675786adaf4adedbf2a"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-login-api.log",
+        "/tmp/v01-login-browser.log",
+        "/tmp/v01-login-build-binding-final.log",
+        "/tmp/v01-login-build-binding.log",
+        "/tmp/v01-login-commit.log",
+        "/tmp/v01-login-forced-final.log",
+        "/tmp/v01-login-format-check.log",
+        "/tmp/v01-login-format.log",
+        "/tmp/v01-login-lint.log",
+        "/tmp/v01-login-mobile.log",
+        "/tmp/v01-login-preview.log",
+        "/tmp/v01-login-ui-final.log",
+        "/tmp/v01-login-ui-format.log",
+        "/tmp/v01-login-auth-drift.diff"
+      ],
+      "visual_evidence": [
+        {
+          "path": "audit/evidence/v01-login-authentication/barghsa-login-ui-fa-true-mobile-chrome.png",
+          "sha256": "e93107b5875407288d21feaf7142d374a3b4a077e68d8c3a7f5f0c573c28c148"
+        },
+        {
+          "path": "audit/evidence/v01-login-authentication/barghsa-login-ui-en-false-chromium.png",
+          "sha256": "61554c30d1d9b242b34d0e5d8b6503e0280a03fd930aebfac489ecb5cfd74661"
+        }
+      ],
+      "reused_evidence": [
+        "audit/evidence/step-reviews.json#R01-session-recovery",
+        "audit/evidence/step-reviews.json#R01-account-settings",
+        "audit/evidence/step-reviews.json#R01-cookie-policy",
+        "audit/evidence/step-reviews.json#R01-trusted-device-deadlines",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
+        "audit/evidence/step-reviews.json#R03-correlation",
+        "audit/evidence/step-reviews.json#V01-distributed-limits",
+        "audit/evidence/step-reviews.json#V01-edge-caching",
+        "audit/evidence/step-reviews.json#V01-local-development",
+        "audit/evidence/step-reviews.json#V01-runtime-lifecycle",
+        "audit/evidence/step-reviews.json#V01-ui-foundations"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 77,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.01.01"
+          ],
+          "reason": "Current source, prior acceptance and focused95 API/40 browser cases satisfy the mapped requirement. Existing operational limitations remain separately recorded.",
+          "source_revision": "b514bd11f6f28694d5e956a77680f33b86caf46d",
+          "evidence": "audit/evidence/step-reviews.json#V01-login-authentication"
+        },
+        {
+          "pr": 78,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.01.02"
+          ],
+          "reason": "Current source, prior acceptance and focused95 API/40 browser cases satisfy the mapped requirement. Existing operational limitations remain separately recorded.",
+          "source_revision": "b514bd11f6f28694d5e956a77680f33b86caf46d",
+          "evidence": "audit/evidence/step-reviews.json#V01-login-authentication"
+        },
+        {
+          "pr": 87,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.01.03"
+          ],
+          "reason": "Current source, prior acceptance and focused95 API/40 browser cases satisfy the mapped requirement. Historical device-trust migration and missing-endpoint-test statements are resolved by later migrations and current HTTP evidence.",
+          "source_revision": "b514bd11f6f28694d5e956a77680f33b86caf46d",
+          "evidence": "audit/evidence/step-reviews.json#V01-login-authentication"
+        },
+        {
+          "pr": 88,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.01.04"
+          ],
+          "reason": "Current source, prior acceptance and focused95 API/40 browser cases satisfy the mapped requirement. Existing operational limitations remain separately recorded.",
+          "source_revision": "b514bd11f6f28694d5e956a77680f33b86caf46d",
+          "evidence": "audit/evidence/step-reviews.json#V01-login-authentication"
+        },
+        {
+          "pr": 101,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-02.04.01"
+          ],
+          "reason": "Current source, prior acceptance and focused95 API/40 browser cases satisfy the mapped requirement. Existing operational limitations remain separately recorded.",
+          "source_revision": "b514bd11f6f28694d5e956a77680f33b86caf46d",
+          "evidence": "audit/evidence/step-reviews.json#V01-login-authentication"
+        }
+      ]
     }
   ]
 }

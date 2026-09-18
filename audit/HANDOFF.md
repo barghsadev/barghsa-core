@@ -4,11 +4,13 @@ Read the feature-batch rules in [fix-plan.md](fix-plan.md) and `active_batch` in
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **21438625**. **209 verified /47 partial /66 pending** of322 claims. Saved PRs: **196 closed /43 open /62 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3530 logs indexed;38 older evidence refreshes remain. Inventory ends September3; no current GitHub or deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **b514bd11**. **209 verified /47 partial /66 pending** of322 claims. Saved PRs: **201 closed /43 open /57 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3544 logs indexed;37 older evidence refreshes remain. Inventory ends September3; no current GitHub or deployment claim.
 
-UI foundations consolidated at **21438625**: **1 task verified /2 partial**, PR65 closed; PR66/67 open for explicit foundation requirement discrepancies. English/Persian font selection, missing PostCSS dependency and invisible ComboBox keyboard highlight repaired.45 distinct browser cases,56 UI tests,42 unchanged budgets, builds/types/lint/format/frozen installation and actual PostCSS compilation pass. Both PR67 visual/form deferrals are satisfied.11 immediate-base bindings refreshed;38 older refreshes retained. [Batch review](evidence/step-reviews.json#V01-ui-foundations).
+Login review consolidated at **b514bd11**: saved PR77/78/87/88/101 all close. Existing5 task acceptances retained; later auth/CSRF/delivery/contact/UI changes reconciled.95 API and40 distinct desktop/mobile browser cases pass. Canceled-animation waiting and obsolete hidden-mobile-brand test assertions repaired; authentication code unchanged. PR87 migration/test deferrals are satisfied. One older CRM binding refreshed;37 older refresh records remain. [Batch review](evidence/step-reviews.json#V01-login-authentication).
 
-**Next:** saved login/OTP/password-enforcement/rate-limit PRs77,78,87,88,101. Read requirements and historical deferrals, then reuse valid existing authentication evidence. UI stack question remains pending; keep tested components. Literal Table useTable wording also remains explicit; current hooks are useTableSort/useTableSelection. Full regression stays V02.
+**Next:** terms lifecycle and acceptance, saved PR117/118/119/159/160. Reuse completed terms/registration evidence and inspect later changes once. UI stack question and literal table-hook wording remain pending; keep the tested implementation. Full regression stays V02.
+
+UI foundations checkpoint **21438625** verifies1 task;2 remain partial for explicit stack/table requirement discrepancies. PR65 closed;66/67 open. Font/PostCSS/keyboard-highlight repairs pass45 browser,56 UI and42 budget checks. Both PR67 visual/form deferrals are satisfied.
 
 Edge/cache checkpoint **6d801999** verifies4 tasks and closes PR60/62/63/64.42 focused cases and actual NGINX TLS/routing/gzip/cache/limits/SSE/WebSocket checks pass. Deploy web/proxy cache changes together; production TLS/topology and final image regression remain external/V02. PR61's pending CSP decision stays open.
 
