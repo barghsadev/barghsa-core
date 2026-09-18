@@ -25215,6 +25215,34 @@
       "sha256": "92a3081a02a730522358b211024e712d203593cc9ce4c4bd96f9755418d4138c",
       "encoding": "gzip",
       "stored_sha256": "599b350d988f9e9fe9ca83d436b73cf434f57d55954be7a737f526345a7e4673"
+    },
+    {
+      "original_path": "/tmp/v01-staff-creation.log",
+      "path": "audit/evidence/v01-staff-administration/v01-staff-creation.log.gz",
+      "sha256": "b76e64ad8635d168b35d441a26920a1fbf82a62416980ff355517a4390a53e2e",
+      "encoding": "gzip",
+      "stored_sha256": "7dd7ce984f4e716a8a2bb0a36c2236b0dc2f23372328706a2590d36d31c147ae"
+    },
+    {
+      "original_path": "/tmp/v01-staff-method-diff.log",
+      "path": "audit/evidence/v01-staff-administration/v01-staff-method-diff.log.gz",
+      "sha256": "d73c0a83851c73d41001577bccff51db4086b99a6438a29a50f8988792bacb82",
+      "encoding": "gzip",
+      "stored_sha256": "e8647530cc2f33e26af53ef3c99b2f74c9cc775aa11be48bcc4bdd51161376cf"
+    },
+    {
+      "original_path": "/tmp/v01-staff-source-binding.log",
+      "path": "audit/evidence/v01-staff-administration/v01-staff-source-binding.log.gz",
+      "sha256": "b1a25d9443f0d0dc47ccb7d65acadf64143a65a6f62c45748ec412b467e277d0",
+      "encoding": "gzip",
+      "stored_sha256": "34b5fe4f0fb7a08fe469082b58729614708363fdc41b81be13ce54b617c4055c"
+    },
+    {
+      "original_path": "/tmp/v01-staff-fixture-diff.log",
+      "path": "audit/evidence/v01-staff-administration/v01-staff-fixture-diff.log.gz",
+      "sha256": "863265d0b0b3a00874d5eb91795bb37bbc102db02ef02a0d6c6af479e808cd64",
+      "encoding": "gzip",
+      "stored_sha256": "84510c58012f1d9ec215eb0db09be6f7d7caf688c23cbea161d28da6931c0bab"
     }
   ]
 }

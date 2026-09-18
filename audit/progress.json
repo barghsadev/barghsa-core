@@ -3,9 +3,9 @@
   "updated": "2026-09-19",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+  "source_revision": "0475db83d9f0182099431efe3d46788a62a93605",
   "active_step": "V01",
-  "next_action": "Review staff creation, role assignment and user management as one batch: saved PR129,130,218. Reuse current staff lifecycle/session evidence and resolve the saved deferrals.",
+  "next_action": "Review support operations settings: response targets, staff teams/assignment rules and escalation scanner, saved PR197/198/199. Reuse current ticket/team/worker evidence; retain required future consumers.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -831,6 +831,10 @@
     {
       "id": "V01-crm-management",
       "review_record": "audit/evidence/step-reviews.json#V01-crm-management"
+    },
+    {
+      "id": "V01-staff-administration",
+      "review_record": "audit/evidence/step-reviews.json#V01-staff-administration"
     }
   ],
   "deferred_improvements": [
@@ -1002,27 +1006,6 @@
       ]
     },
     {
-      "task_key": "02-auth-users-admin.md#T-05.03.01",
-      "changed_paths": [
-        "apps/api/src/admin/admin.controller.ts",
-        "apps/api/src/admin/admin.service.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-05.03.02",
-      "changed_paths": [
-        "apps/api/src/admin/admin.controller.ts",
-        "apps/api/src/admin/admin.service.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-10.01.01",
-      "changed_paths": [
-        "apps/api/src/admin/admin.controller.ts",
-        "apps/api/src/admin/admin.service.ts"
-      ]
-    },
-    {
       "task_key": "02-auth-users-admin.md#T-03.02.02",
       "changed_paths": [
         "apps/web/e2e/form-accessibility.spec.ts",
@@ -1101,72 +1084,89 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-crm-management",
-    "name": "CRM listing, profile management and verification widget",
+    "id": "V01-staff-administration",
+    "name": "Staff creation, roles and account management",
     "status": "completed",
     "prs": [
-      120,
-      122,
-      123,
-      124,
-      125,
-      126,
-      127,
-      128,
-      136
+      129,
+      130,
+      218
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-05.02.01",
-      "02-auth-users-admin.md#T-05.02.02",
-      "02-auth-users-admin.md#T-05.02.03",
-      "02-auth-users-admin.md#T-05.02.04",
-      "02-auth-users-admin.md#T-05.02.05",
-      "02-auth-users-admin.md#T-05.02.06",
-      "02-auth-users-admin.md#T-05.01.01",
-      "02-auth-users-admin.md#T-05.01.02",
-      "02-auth-users-admin.md#T-05.05.01"
+      "02-auth-users-admin.md#T-05.03.01",
+      "02-auth-users-admin.md#T-05.03.02",
+      "02-auth-users-admin.md#T-10.01.01"
     ],
-    "base_revision": "7072e5c9",
-    "remaining_checklist": [
-      "PR128 and T-05.02.06 retain future contract-state/profile-lock integration and an approved organizational retention policy. No production contract writer or policy evidence is claimed.",
-      "No automatic identity provider exists. Provider operations, production volume and final V02/coverage/image checks remain separate. No external messages, deployment, scheduler or GitHub changes occurred."
-    ],
+    "base_revision": "0475db83d9f0182099431efe3d46788a62a93605",
+    "remaining_checklist": [],
     "historical_deferrals": [
       {
-        "pr": 127,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/127",
+        "pr": 218,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/218",
         "task_keys": [
-          "02-auth-users-admin.md#T-05.02.05"
+          "02-auth-users-admin.md#T-10.01.01"
         ],
         "historical_deferrals": [
-          "- [ ] Frontend: Request correction button + case queue UI (follow-up)"
+          "Deferred (repo convention): admin web UI slice (table view, disable button + confirmation, fa/en dicts, RTL/a11y), re-enable endpoint.",
+          "- [ ] Admin web UI table + disable button — deferred UI slice (API contract ready)"
         ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        "status": "Reviewed locally: required staff UI is implemented; re-enable is outside the canonical task.",
+        "dispositions": [
+          {
+            "statement_index": 0,
+            "disposition": "required_part_satisfied_optional_part_separate",
+            "evidence": "Table, confirmation, fa/en and staff-content light/dark accessibility verified. Re-enable is an author-proposed future feature absent from canonical T-10.01.01, not a missing acceptance criterion."
+          },
+          {
+            "statement_index": 1,
+            "disposition": "satisfied_by_later_implementation",
+            "evidence": "Staff table and permission-bound disable confirmation are implemented and reviewed."
+          }
+        ],
+        "reviewed_source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
+        "review_record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
       },
       {
-        "pr": 120,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/120",
+        "pr": 129,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/129",
         "task_keys": [
-          "02-auth-users-admin.md#T-05.01.01"
+          "02-auth-users-admin.md#T-05.03.01"
         ],
         "historical_deferrals": [
-          "- [ ] Frontend CRM list page (next slice)"
+          "- [ ] Role assignment at creation (roleIds accepted but not persisted — role management is T-05.03.02 depending on T-09.05.01)",
+          "- [ ] Activation link email delivery (email transport — separate epic)"
         ],
-        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+        "status": "Reviewed locally: both required deferrals are satisfied by current implementation; live delivery remains operational evidence.",
+        "dispositions": [
+          {
+            "statement_index": 0,
+            "disposition": "satisfied_by_later_implementation",
+            "evidence": "Initial roles persist atomically; creator-only API and UI selection verified."
+          },
+          {
+            "statement_index": 1,
+            "disposition": "satisfied_by_later_implementation",
+            "evidence": "Encrypted outbox and email adapter delivery verified with a local provider receiver; production credentials/delivery remain operational."
+          }
+        ],
+        "reviewed_source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
+        "review_record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
       }
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "Prior R01 CRM feature and transaction reviews; later source-matching finance/notification/verification/login reviews."
+      "R01-staff-task-acceptance",
+      "R01-staff-sensitive-actions",
+      "R01-staff-creation-step-up",
+      "R01-staff-activation-deadlines"
     ],
-    "next_action": "Review staff creation, role assignment and user management as one batch: saved PR129,130,218. Reuse current staff lifecycle/session evidence and resolve the saved deferrals.",
-    "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
-    "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+    "next_action": "Review support operations settings: response targets, staff teams/assignment rules and escalation scanner, saved PR197/198/199. Reuse current ticket/team/worker evidence; retain required future consumers.",
+    "source_revision": "0475db83d9f0182099431efe3d46788a62a93605",
+    "review_record": "audit/evidence/step-reviews.json#V01-staff-administration",
     "verification": [
-      "297 distinct focused API cases pass across recorded runs, with overlapping reruns excluded. Saved case-accounting log shows the grouping. This is not one broad297-case invocation. Current authority HTTP suite passes33 cases; both self-revocation actions and seven pre-commit expiry cases across profile/account/correction flows leave no unauthorized writes.",
-      "Final identity and archive-wallet run passes65 cases. The subsequent assignment-notice case passes after switching to the CRM dictionary. The initial identity fixture restored absolute expiry but not the idle deadline shortened during request validation, causing20 downstream failures; cleanup now restores the complete isolated session. Baseline proves4 creation defects;5 approval baseline setup failures are not product evidence. Final creation/review cases pass all10 permission/session/CSRF/step-up/final-expiry scenarios.",
-      "Archival/exception-filter final run passes50 cases, including8 specific FA/EN blocker messages and6 invalid-detail rejections. Unknown blockers, wrong error-code associations and invalid counts retain safe catalogue messages. Initial27 source-binding drifts were reconciled against current matching reviews or the narrow fixture diffs;111 bindings were unchanged.",
-      "API typecheck, scoped lint/format, OpenAPI comparison and diff checks pass. The first typecheck identified2 old direct CRM session-cap callers; they now provide real session/CSRF/step-up proof and their full suite passes. Lint found one obsolete translation import, which was removed. No web source, dependency, migration, budget or contract changed; matching prior production-browser/build/budget evidence is reused."
+      "10 current migrated-HTTP staff creation cases pass, covering both activation methods, exact audit/step-up proof, atomic failure/expiry rollback and new email/mobile notification defaults. No product changes were needed.",
+      "51 task source bindings reconciled:37 unchanged and14 later bindings. Only staff creation defaults and activation outbox correlation changed in the selected service methods; staff controllers, role replacement, disabling, list and activation preparation match the prior acceptance exactly. Current source-bound authentication/delivery/session and seed reviews cover the other changes.",
+      "Reuse prior215/231/220-case scoped staff authority/acceptance runs and12 distinct production-browser cases at their recorded revisions; they overlap and are not summed. Later source-bound V01 login delivery and R03 correlation evidence covers encrypted activation delivery. Current API types/lint/OpenAPI and42 unchanged browser budgets remain valid; no new code, dependency, schema, browser or broad regression run is claimed."
     ]
   },
   "open_domain_reviews": [

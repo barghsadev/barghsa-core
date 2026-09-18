@@ -23722,6 +23722,165 @@
           "evidence": "audit/evidence/step-reviews.json#V01-crm-management"
         }
       ]
+    },
+    {
+      "id": "V01-staff-administration",
+      "date": "2026-09-19",
+      "source_revision": "0475db83d9f0182099431efe3d46788a62a93605",
+      "base_revision": "0475db83d9f0182099431efe3d46788a62a93605",
+      "product_commits": [],
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.03.01",
+        "02-auth-users-admin.md#T-05.03.02",
+        "02-auth-users-admin.md#T-10.01.01"
+      ],
+      "summary": "Three saved staff administration PR reviews close using exact method/source comparisons, current creation checks and valid earlier authority/UI/delivery evidence. No product edits.",
+      "review": [
+        "Read exact T-05.03.01/T-05.03.02/T-10.01.01 and saved PR129/130/218 bodies. Existing local task acceptances remain verified. Initial roles, notification delivery, required staff UI and the proposed re-enable feature each retain an explicit disposition.",
+        "Compared parsed staff methods against ab107718. Creation now initializes canonical email/mobile and applicable notification defaults; creation/resend add request correlation to encrypted delivery outbox rows. All selected controller methods, role assignment, staff listing and disablement are unchanged. Preserve current account/session/CSRF/step-up locks, final checks, exact audit proof, self-role revocation exception and self-disable refusal.",
+        "Creation keeps admin:users:create authority and creator-only role options, automatic verified individual profile with no address, atomic initial roles, shared password policy and single-display temporary secret. Activation remains24h and completes only with current token/session policy. Delivery uses current encrypted outbox/provider fixtures; live delivery remains operational evidence.",
+        "Staff table, translated forms, role descriptions/badges, confirmations, wrong-password recovery and fresh-CSRF retry retain unchanged frontend source and prior production-browser evidence. Later shared controls/themes were separately reviewed. No repeated feature implementation or new re-enable endpoint was introduced."
+      ],
+      "verification": [
+        "10 current migrated-HTTP staff creation cases pass, covering both activation methods, exact audit/step-up proof, atomic failure/expiry rollback and new email/mobile notification defaults. No product changes were needed.",
+        "51 task source bindings reconciled:37 unchanged and14 later bindings. Only staff creation defaults and activation outbox correlation changed in the selected service methods; staff controllers, role replacement, disabling, list and activation preparation match the prior acceptance exactly. Current source-bound authentication/delivery/session and seed reviews cover the other changes.",
+        "Reuse prior215/231/220-case scoped staff authority/acceptance runs and12 distinct production-browser cases at their recorded revisions; they overlap and are not summed. Later source-bound V01 login delivery and R03 correlation evidence covers encrypted activation delivery. Current API types/lint/OpenAPI and42 unchanged browser budgets remain valid; no new code, dependency, schema, browser or broad regression run is claimed."
+      ],
+      "remaining": [
+        "Actual provider delivery, deployed grants and global V02/coverage/image gates remain separate. Re-enable is outside the canonical task, not a missing acceptance criterion."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "1d335cd2f15bbfb71a5f625d1654617d566703303cc17e4a4f778e20e9517485"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
+        },
+        {
+          "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
+          "sha256": "623ff292161e09b31862de5ec130f4908a246bb602b7103cf5ba0e1fa8c3de77"
+        },
+        {
+          "path": "apps/api/src/admin/staff-http.integration.test.ts",
+          "sha256": "0e358a5925020141a7685049ae3ca57bde7502dd443ac17c639e21b2458b0e34"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        },
+        {
+          "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
+          "sha256": "32e241eeeebe5f4e44c740c8f498e778bd7f40b9ba4fb73e7c2d4cf9f003dc2b"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "5b92f3c4deb6b07640f11320d47bfee935d4a35827edd312513bf2aa76417a02"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "c00368b3927beeaffd54088d14db72396a95fe074f33b82b573186e4bdd7b96e"
+        },
+        {
+          "path": "apps/api/src/auth/dto/register.dto.ts",
+          "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
+        },
+        {
+          "path": "apps/api/src/auth/dto/reset-password.dto.ts",
+          "sha256": "49bdc9d40ad0378ab428e9c352d1b577c8182d47332ccda637f3f6ea549f93a6"
+        },
+        {
+          "path": "apps/api/src/auth/staff-activation-http.integration.test.ts",
+          "sha256": "ff26770e6ccdb918ede163a3edb3f039d434779dc55982a6180ff724c3e73138"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        },
+        {
+          "path": "apps/api/src/session/staff-permissions.ts",
+          "sha256": "8726d58a5d98796484fcce91511b22fb03ea72df0f55120a426ec5bfe2ffed47"
+        },
+        {
+          "path": "apps/web/e2e/staff-creation.spec.ts",
+          "sha256": "95c5c0cdbb8cffcbfca56f97fe1d74cb0c08fc6c9d6ec86101c4f61396570c88"
+        },
+        {
+          "path": "apps/web/e2e/staff-users.spec.ts",
+          "sha256": "c583b2b17ac3edb2b644b7ebde6222fea171ece77faeadf09c24026698aedc66"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "e2d6616b3b2c1053b0ea8b6eceaa3893eade17a03d1544d2e8fcb52d4317ad52"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "f80feddaf74ed96f396d270db2dbbcf207542c5a15456b547c05038f81b6b8c9"
+        },
+        {
+          "path": "packages/db/src/schema/staff-roles.ts",
+          "sha256": "fd47df28e106dbf8a0a6fb7c87da822eda2d8d135529589b64ca42b66567473e"
+        },
+        {
+          "path": "packages/shared/src/admin/staff-permissions.ts",
+          "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-staff-creation.log",
+        "/tmp/v01-staff-method-diff.log",
+        "/tmp/v01-staff-source-binding.log",
+        "/tmp/v01-staff-fixture-diff.log"
+      ],
+      "reused_evidence": [
+        "audit/evidence/step-reviews.json#R01-staff-task-acceptance",
+        "audit/evidence/step-reviews.json#R01-staff-sensitive-actions",
+        "audit/evidence/step-reviews.json#R01-staff-creation-step-up",
+        "audit/evidence/step-reviews.json#R01-staff-activation-deadlines",
+        "audit/evidence/step-reviews.json#R01-session-recovery",
+        "audit/evidence/step-reviews.json#R03-correlation",
+        "audit/evidence/step-reviews.json#V01-seed-bootstrap",
+        "audit/evidence/step-reviews.json#V01-login-authentication",
+        "audit/evidence/step-reviews.json#V01-ui-foundations",
+        "audit/evidence/step-reviews.json#V01-crm-management"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 129,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.03.01"
+          ],
+          "reason": "Current staff lifecycle/role/list/disable requirements and all historical required deferrals are verified. Source-matching prior UI/authority/delivery evidence retained;10 affected creation cases pass.",
+          "source_revision": "0475db83d9f0182099431efe3d46788a62a93605",
+          "evidence": "audit/evidence/step-reviews.json#V01-staff-administration"
+        },
+        {
+          "pr": 130,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.03.02"
+          ],
+          "reason": "Current staff lifecycle/role/list/disable requirements and all historical required deferrals are verified. Source-matching prior UI/authority/delivery evidence retained;10 affected creation cases pass.",
+          "source_revision": "0475db83d9f0182099431efe3d46788a62a93605",
+          "evidence": "audit/evidence/step-reviews.json#V01-staff-administration"
+        },
+        {
+          "pr": 218,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-10.01.01"
+          ],
+          "reason": "Current staff lifecycle/role/list/disable requirements and all historical required deferrals are verified. Source-matching prior UI/authority/delivery evidence retained;10 affected creation cases pass.",
+          "source_revision": "0475db83d9f0182099431efe3d46788a62a93605",
+          "evidence": "audit/evidence/step-reviews.json#V01-staff-administration"
+        }
+      ]
     }
   ]
 }

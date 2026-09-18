@@ -7010,7 +7010,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.03.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
+      "reviewed_sha": "0475db83d9f0182099431efe3d46788a62a93605",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 446,
       "requirement": "**T-05.03.01 — Create staff user**\n\n- Description: Authorized staff/admin can create a new staff user. No profile creation needed — staff get an individual profile assigned, created as verified. Address not required. Use time-limited activation link or one-time temporary password.\n- Technical notes: POST `/api/admin/users/create-staff` with `{ username, firstName, lastName, roleIds[], activationMethod: 'link' | 'tempPassword' }`. If tempPassword: generated, must change at first login, never shown again. Activation link: emailed, time-limited (24h). Permissions: `admin:users:create`. No address fields. Profile auto-created as verified, individual type. Password follows same strength policy. Audit: staff_user_created.\n- UI/UX: Form with username, name fields, role multi-select, activation method radio. On submit: if tempPassword, show it once (\"Save this password – it will never be shown again\"). If activation link: \"Activation link sent to [email].\"\n- Dependencies: T-02.02.04 (step-up), authorization framework\n- Complexity: L",
@@ -7018,11 +7018,11 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "2b2a0e930b5fd1ba313ead433eb7ea1bf9c120f206e4b1ea094efa884fb4c21e"
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "2f882619805e4b3fc4e26d6887c66cbf8f14bcbc3e8b92fd449ed1b8d95aa018"
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -7070,23 +7070,23 @@
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "91120f4f4b535412bc3c7e2f151994d6dc0ef875635f84769a8bfcdb3212c6c2"
+          "sha256": "5b92f3c4deb6b07640f11320d47bfee935d4a35827edd312513bf2aa76417a02"
         },
         {
           "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-          "sha256": "b4e190151f5ff48b3f5de445a1181b213428c147d84480e5cf67112cc8cfa214"
+          "sha256": "c00368b3927beeaffd54088d14db72396a95fe074f33b82b573186e4bdd7b96e"
         },
         {
           "path": "apps/api/src/auth/staff-activation-http.integration.test.ts",
-          "sha256": "cded34e5f70aeebe22a1c4d636abf42d8b09b9f235ef5b011e0a697f29fe52b7"
+          "sha256": "ff26770e6ccdb918ede163a3edb3f039d434779dc55982a6180ff724c3e73138"
         },
         {
           "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
-          "sha256": "65d54f2498af734050f947e6234e20e532a7b727f0201ef58f431c9b20df9b4d"
+          "sha256": "623ff292161e09b31862de5ec130f4908a246bb602b7103cf5ba0e1fa8c3de77"
         },
         {
           "path": "apps/api/src/auth/dto/register.dto.ts",
-          "sha256": "241afe476300ea3ad1dc7a88526fd5118d23215a4167577b001a02c3348f5ed9"
+          "sha256": "8aebead6a0dceb02ca085d5bc4a57c142dda3009ef5ebae744b5cd3ce8cfa6a5"
         },
         {
           "path": "apps/api/src/auth/dto/reset-password.dto.ts",
@@ -7106,7 +7106,10 @@
         "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy."
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
+        "10 current migrated-HTTP staff creation cases pass, covering both activation methods, exact audit/step-up proof, atomic failure/expiry rollback and new email/mobile notification defaults. No product changes were needed.",
+        "51 task source bindings reconciled:37 unchanged and14 later bindings. Only staff creation defaults and activation outbox correlation changed in the selected service methods; staff controllers, role replacement, disabling, list and activation preparation match the prior acceptance exactly. Current source-bound authentication/delivery/session and seed reviews cover the other changes.",
+        "Reuse prior215/231/220-case scoped staff authority/acceptance runs and12 distinct production-browser cases at their recorded revisions; they overlap and are not summed. Later source-bound V01 login delivery and R03 correlation evidence covers encrypted activation delivery. Current API types/lint/OpenAPI and42 unchanged browser budgets remain valid; no new code, dependency, schema, browser or broad regression run is claimed."
       ],
       "limitations": [
         "Scoped local task acceptance uses compiled HTTP/PostgreSQL/provider fixtures and production-built browser tests with API fixtures. Actual provider delivery and deployed administrator grants remain operational prerequisites.",
@@ -7133,12 +7136,42 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-staff-administration",
+      "source_refreshes": [
+        {
+          "source_revision": "0475db83d9f0182099431efe3d46788a62a93605",
+          "paths": [
+            "apps/api/src/admin/admin.controller.ts",
+            "apps/api/src/admin/admin.service.ts",
+            "apps/api/src/admin/staff-mutation-permission.ts",
+            "apps/api/src/admin/staff-http.integration.test.ts",
+            "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
+            "apps/api/src/admin/admin.service.test.ts",
+            "apps/api/src/session/staff-permissions.ts",
+            "packages/shared/src/admin/staff-permissions.ts",
+            "packages/db/src/schema/staff-roles.ts",
+            "apps/web/src/pages/AdminStaffUsersPage.tsx",
+            "apps/web/src/components/TeamActionDialog.tsx",
+            "apps/web/e2e/staff-creation.spec.ts",
+            "apps/web/e2e/staff-users.spec.ts",
+            "apps/api/src/auth/auth.service.ts",
+            "apps/api/src/auth/delivery-http.integration.test.ts",
+            "apps/api/src/auth/staff-activation-http.integration.test.ts",
+            "apps/api/src/admin/staff-creation-http.integration.test.ts",
+            "apps/api/src/auth/dto/register.dto.ts",
+            "apps/api/src/auth/dto/reset-password.dto.ts",
+            "apps/api/src/session/session-step-up.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-staff-administration",
+          "note": "Exact staff method comparison and current10-case creation suite reconcile later defaults/correlation; other current source-bound evidence reused."
+        }
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.03.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
+      "reviewed_sha": "0475db83d9f0182099431efe3d46788a62a93605",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 454,
       "requirement": "**T-05.03.02 — Staff role assignment**\n\n- Description: Staff users can hold multiple roles. Roles determine permissions across CRM, finance, legal, operations, etc.\n- Technical notes: Roles: Customer Support, CRM and Verification, Finance, Legal and Contracts, Operations, Admin. Permissions are deny-by-default, additive by role. PUT `/api/admin/users/:userId/roles` replaces role set (idempotent). Audit: role_change with before/after, actor, reason.\n- UI/UX: Multi-select dropdown with role descriptions. Current roles shown as badges. Change requires step-up auth.\n- Dependencies: T-05.03.01, T-09.05.01 (role management)\n- Complexity: M",
@@ -7146,11 +7179,11 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "2b2a0e930b5fd1ba313ead433eb7ea1bf9c120f206e4b1ea094efa884fb4c21e"
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "2f882619805e4b3fc4e26d6887c66cbf8f14bcbc3e8b92fd449ed1b8d95aa018"
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -7209,7 +7242,10 @@
         "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy."
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
+        "10 current migrated-HTTP staff creation cases pass, covering both activation methods, exact audit/step-up proof, atomic failure/expiry rollback and new email/mobile notification defaults. No product changes were needed.",
+        "51 task source bindings reconciled:37 unchanged and14 later bindings. Only staff creation defaults and activation outbox correlation changed in the selected service methods; staff controllers, role replacement, disabling, list and activation preparation match the prior acceptance exactly. Current source-bound authentication/delivery/session and seed reviews cover the other changes.",
+        "Reuse prior215/231/220-case scoped staff authority/acceptance runs and12 distinct production-browser cases at their recorded revisions; they overlap and are not summed. Later source-bound V01 login delivery and R03 correlation evidence covers encrypted activation delivery. Current API types/lint/OpenAPI and42 unchanged browser budgets remain valid; no new code, dependency, schema, browser or broad regression run is claimed."
       ],
       "limitations": [
         "Scoped local task acceptance uses compiled HTTP/PostgreSQL/provider fixtures and production-built browser tests with API fixtures. Actual provider delivery and deployed administrator grants remain operational prerequisites.",
@@ -7236,12 +7272,36 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-staff-administration",
+      "source_refreshes": [
+        {
+          "source_revision": "0475db83d9f0182099431efe3d46788a62a93605",
+          "paths": [
+            "apps/api/src/admin/admin.controller.ts",
+            "apps/api/src/admin/admin.service.ts",
+            "apps/api/src/admin/staff-mutation-permission.ts",
+            "apps/api/src/admin/staff-http.integration.test.ts",
+            "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
+            "apps/api/src/admin/admin.service.test.ts",
+            "apps/api/src/session/staff-permissions.ts",
+            "packages/shared/src/admin/staff-permissions.ts",
+            "packages/db/src/schema/staff-roles.ts",
+            "apps/web/src/pages/AdminStaffUsersPage.tsx",
+            "apps/web/src/components/TeamActionDialog.tsx",
+            "apps/web/e2e/staff-creation.spec.ts",
+            "apps/web/e2e/staff-users.spec.ts",
+            "apps/api/src/session/session-step-up.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-staff-administration",
+          "note": "Exact staff method comparison and current10-case creation suite reconcile later defaults/correlation; other current source-bound evidence reused."
+        }
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-10.01.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
+      "reviewed_sha": "0475db83d9f0182099431efe3d46788a62a93605",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 928,
       "requirement": "**T-10.01.01 — Staff user list (admin)**\n\n- Description: Admin can view all staff users, their roles, last login, status. Create/edit/disable staff accounts.\n- Technical notes: GET `/api/admin/staff` — separate from CRM user list. Permissions: `admin:staff:view`. Disable: POST `/api/admin/staff/:userId/disable` — revokes sessions, prevents login.\n- UI/UX: Table with name, username, roles badges, status (active/disabled). Disable button with confirmation.\n- Dependencies: authorization framework\n- Complexity: M",
@@ -7249,11 +7309,11 @@
       "source_evidence": [
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "2b2a0e930b5fd1ba313ead433eb7ea1bf9c120f206e4b1ea094efa884fb4c21e"
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
         },
         {
           "path": "apps/api/src/admin/admin.service.ts",
-          "sha256": "2f882619805e4b3fc4e26d6887c66cbf8f14bcbc3e8b92fd449ed1b8d95aa018"
+          "sha256": "968e1d863e93784534787cdcaa31e702634f6e98c61ef029469f24bc2108e6e8"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -7301,15 +7361,15 @@
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "91120f4f4b535412bc3c7e2f151994d6dc0ef875635f84769a8bfcdb3212c6c2"
+          "sha256": "5b92f3c4deb6b07640f11320d47bfee935d4a35827edd312513bf2aa76417a02"
         },
         {
           "path": "apps/api/src/auth/delivery-http.integration.test.ts",
-          "sha256": "b4e190151f5ff48b3f5de445a1181b213428c147d84480e5cf67112cc8cfa214"
+          "sha256": "c00368b3927beeaffd54088d14db72396a95fe074f33b82b573186e4bdd7b96e"
         },
         {
           "path": "apps/api/src/auth/staff-activation-http.integration.test.ts",
-          "sha256": "cded34e5f70aeebe22a1c4d636abf42d8b09b9f235ef5b011e0a697f29fe52b7"
+          "sha256": "ff26770e6ccdb918ede163a3edb3f039d434779dc55982a6180ff724c3e73138"
         },
         {
           "path": "apps/api/src/session/session-step-up.ts",
@@ -7324,7 +7384,10 @@
         "Current step evidence: audit/evidence/step-reviews.json#R01-staff-task-acceptance",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy."
+        "Scoped source reuse at1858caf: prior hashes matched3e79cca. Admin changes are confined to verification mode and its tests/schema; unrelated handlers/service methods/contract paths are unchanged. Shared browser edits only adapt verification fixtures; all8 OTP settings and2 order-boundary cases pass.71 existing admin cases pass. Details: audit/evidence/step-reviews.json#R01-verification-policy.",
+        "10 current migrated-HTTP staff creation cases pass, covering both activation methods, exact audit/step-up proof, atomic failure/expiry rollback and new email/mobile notification defaults. No product changes were needed.",
+        "51 task source bindings reconciled:37 unchanged and14 later bindings. Only staff creation defaults and activation outbox correlation changed in the selected service methods; staff controllers, role replacement, disabling, list and activation preparation match the prior acceptance exactly. Current source-bound authentication/delivery/session and seed reviews cover the other changes.",
+        "Reuse prior215/231/220-case scoped staff authority/acceptance runs and12 distinct production-browser cases at their recorded revisions; they overlap and are not summed. Later source-bound V01 login delivery and R03 correlation evidence covers encrypted activation delivery. Current API types/lint/OpenAPI and42 unchanged browser budgets remain valid; no new code, dependency, schema, browser or broad regression run is claimed."
       ],
       "limitations": [
         "Scoped local task acceptance uses compiled HTTP/PostgreSQL/provider fixtures and production-built browser tests with API fixtures. Actual provider delivery and deployed administrator grants remain operational prerequisites.",
@@ -7350,6 +7413,33 @@
             "apps/web/src/components/TeamActionDialog.tsx"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-staff-administration",
+      "source_refreshes": [
+        {
+          "source_revision": "0475db83d9f0182099431efe3d46788a62a93605",
+          "paths": [
+            "apps/api/src/admin/admin.controller.ts",
+            "apps/api/src/admin/admin.service.ts",
+            "apps/api/src/admin/staff-mutation-permission.ts",
+            "apps/api/src/admin/staff-http.integration.test.ts",
+            "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
+            "apps/api/src/admin/admin.service.test.ts",
+            "apps/api/src/session/staff-permissions.ts",
+            "packages/shared/src/admin/staff-permissions.ts",
+            "packages/db/src/schema/staff-roles.ts",
+            "apps/web/src/pages/AdminStaffUsersPage.tsx",
+            "apps/web/src/components/TeamActionDialog.tsx",
+            "apps/web/e2e/staff-creation.spec.ts",
+            "apps/web/e2e/staff-users.spec.ts",
+            "apps/api/src/auth/auth.service.ts",
+            "apps/api/src/auth/delivery-http.integration.test.ts",
+            "apps/api/src/auth/staff-activation-http.integration.test.ts",
+            "apps/api/src/session/session-step-up.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-staff-administration",
+          "note": "Exact staff method comparison and current10-case creation suite reconcile later defaults/correlation; other current source-bound evidence reused."
         }
       ]
     },
@@ -31616,6 +31706,17 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
       "note": "Nine task records reconciled:8 verified/1 partial preserved,8 PRs closed/1 open. 14 immediate-base overlapping bindings refreshed;8 older CRM records close."
+    },
+    {
+      "source_revision": "0475db83d9f0182099431efe3d46788a62a93605",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.03.01",
+        "02-auth-users-admin.md#T-05.03.02",
+        "02-auth-users-admin.md#T-10.01.01"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-staff-administration",
+      "note": "Three verified staff records preserved; PR129/130/218 closed. Three older source-refresh records resolved; no product changes."
     }
   ]
 }

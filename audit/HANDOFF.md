@@ -4,11 +4,13 @@ Read the feature-batch rules in [fix-plan.md](fix-plan.md) and `active_batch` in
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **bf2b23ec**. **209 verified /47 partial /66 pending** of322 claims. Saved PRs: **214 closed /44 open /43 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3602 logs indexed;25 older evidence refreshes remain. Inventory ends September3; no current GitHub or deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **bf2b23ec**. **209 verified /47 partial /66 pending** of322 claims. Saved PRs: **217 closed /44 open /40 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3606 logs indexed;22 older evidence refreshes remain. Inventory ends September3; no current GitHub or deployment claim.
 
-CRM management consolidated at **bf2b23ec**: saved PR120,122–127,136 close; PR128 stays open for future contracts/retention policy. Seven mutation paths now retain session/CSRF/step-up through commit; archival details and correction-assignment translations are repaired.297 distinct API cases pass across focused runs; unchanged browser evidence reused. Types/lint/format/OpenAPI pass. Eight older bindings close;25 refresh records remain. [Batch review](evidence/step-reviews.json#V01-crm-management).
+Staff administration consolidated at **0475db83**: saved PR129/130/218 close; three existing acceptances preserved. Exact method comparison and10 current creation cases verify later defaults/correlation changes. Valid role/disable/activation/UI evidence reused. No product edits. Three older bindings close;22 refresh records remain. [Batch review](evidence/step-reviews.json#V01-staff-administration).
 
-**Next:** staff creation, role assignment and user management, saved PR129/130/218. Reuse source-bound lifecycle/session reviews. Full regression stays V02.
+**Next:** support response targets, staff teams/assignment and escalation, saved PR197/198/199. Reuse completed ticket/team/worker evidence. Full regression stays V02.
+
+CRM checkpoint bf2b23ec closes8 reviews; PR128 retains contract/retention prerequisites. Seven mutation authority repairs, archival messages and assignment notices pass297 distinct API cases.
 
 Terms checkpoint d9ed9dd5 closes PR117/118/119/159/160;42 API/47 browser cases pass. Consent-expiry and shared fixture repairs remain verified.
 

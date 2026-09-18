@@ -6,7 +6,7 @@ A PR body checkbox is historical author evidence, not independent acceptance. Re
 301 merged PRs: 68 have unresolved mapped tasks; 4 have no current task mapping; 229 map only to verified tasks.
 172 historical deferral statements from 102 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **214 closed / 44 open / 0 blocked**; 43 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **217 closed / 44 open / 0 blocked**; 40 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -158,8 +158,8 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#126](https://github.com/barghsadev/barghsa-core/pull/126) | 02-auth-users-admin.md#T-05.02.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-crm-management) | 0 |
 | [#127](https://github.com/barghsadev/barghsa-core/pull/127) | 02-auth-users-admin.md#T-05.02.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-crm-management) | 1 |
 | [#128](https://github.com/barghsadev/barghsa-core/pull/128) | 02-auth-users-admin.md#T-05.02.06 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-crm-management) | 0 |
-| [#129](https://github.com/barghsadev/barghsa-core/pull/129) | 02-auth-users-admin.md#T-05.03.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 2 |
-| [#130](https://github.com/barghsadev/barghsa-core/pull/130) | 02-auth-users-admin.md#T-05.03.02 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
+| [#129](https://github.com/barghsadev/barghsa-core/pull/129) | 02-auth-users-admin.md#T-05.03.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-staff-administration) | 2 |
+| [#130](https://github.com/barghsadev/barghsa-core/pull/130) | 02-auth-users-admin.md#T-05.03.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-staff-administration) | 0 |
 | [#131](https://github.com/barghsadev/barghsa-core/pull/131) | 02-auth-users-admin.md#T-05.04.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-agents-invitations-ownership) | 0 |
 | [#132](https://github.com/barghsadev/barghsa-core/pull/132) | 02-auth-users-admin.md#T-05.04.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-agents-invitations-ownership) | 3 |
 | [#133](https://github.com/barghsadev/barghsa-core/pull/133) | 02-auth-users-admin.md#T-05.04.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-agents-invitations-ownership) | 0 |
@@ -247,7 +247,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#215](https://github.com/barghsadev/barghsa-core/pull/215) | 02-auth-users-admin.md#T-09.12.04 (pending) | Task review remains | Not reviewed | 2 |
 | [#216](https://github.com/barghsadev/barghsa-core/pull/216) | 02-auth-users-admin.md#T-09.12.05 (acceptance_verified) | Mapped tasks verified | Not reviewed | 1 |
 | [#217](https://github.com/barghsadev/barghsa-core/pull/217) | 02-auth-users-admin.md#T-09.12.06 (pending) | Task review remains | Not reviewed | 2 |
-| [#218](https://github.com/barghsadev/barghsa-core/pull/218) | 02-auth-users-admin.md#T-10.01.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 2 |
+| [#218](https://github.com/barghsadev/barghsa-core/pull/218) | 02-auth-users-admin.md#T-10.01.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-staff-administration) | 2 |
 | [#219](https://github.com/barghsadev/barghsa-core/pull/219) | 02-auth-users-admin.md#T-10.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-staff-permission-audit) | 2 |
 | [#220](https://github.com/barghsadev/barghsa-core/pull/220) | 04-invoices-wallet-contracts.md#T-04.1.01.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-state-transitions) | 0 |
 | [#221](https://github.com/barghsadev/barghsa-core/pull/221) | 04-invoices-wallet-contracts.md#T-04.1.01.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-state-transitions) | 0 |
@@ -368,6 +368,6 @@ Unmapped historical PRs retain their original inventory. A superseded workaround
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `8f75434b41fd9badedfe3f22a9ef5f11775fbea64169b307bfb71bd55be83f70`
-- `pr-deferrals.json`: `6d066f9387504a5ca18a8720ff928c60216292d84149f4df42b82e869ca983a8`
-- `evidence/step-reviews.json`: `cd7f25e112a85d9c05eae939c48232005c01a7b806093cb75673fe12eb938eff`
+- `acceptance-closure.json`: `0bc1a30915a7cfa3b7370bb1a57b06f124bb8aa8368e61ca7754e366a19eca04`
+- `pr-deferrals.json`: `c87a7cac3bb6265c65be2e2890c02b5d1851ddb0c53ddeb15f33f5796122816d`
+- `evidence/step-reviews.json`: `79f26674c87b233bd427b08df34b35056aa90fff44be068db71c5a8137e7f5b2`
