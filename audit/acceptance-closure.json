@@ -3178,11 +3178,11 @@
         },
         {
           "path": "apps/api/src/common/http-exception.filter.ts",
-          "sha256": "ce9eee35ff8da4628af7715b572d127001a749567bb7797656140fb0012dd637"
+          "sha256": "904f8a9e21197790eef71f1f7ba3efa83a1ae0bea67c6bb6cf661a429c4d1c25"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
+          "sha256": "6186813b9bfb96e7abf78be935745c4c50c2b65c601e7c7304cc8f3be96f941f"
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -3202,7 +3202,7 @@
         },
         {
           "path": "apps/api/test/http-exception-filter.spec.ts",
-          "sha256": "12891154543c8e8f2b6fdc0ffd70b5f7471081c05ba39523f9aad79b5e7340be"
+          "sha256": "01aafea4ca454db4fa78e7d32f89262778ecc34e5ce742f715fb0ecfc8f64860"
         },
         {
           "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -3444,6 +3444,18 @@
         "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
         "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued.",
         "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/common/http-exception.filter.ts",
+            "apps/api/src/crm/crm-verification.integration.test.ts",
+            "apps/api/test/http-exception-filter.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
+        }
       ]
     },
     {
@@ -3779,7 +3791,7 @@
         },
         {
           "path": "apps/api/src/session/session-cap.integration.test.ts",
-          "sha256": "01947f280709fa9db8925c67a5f36cd71dbf2946a6fb9af460c31ec17dc72f26"
+          "sha256": "3698cefd7f65514c70356d1afaf7f60924b299f52319fa5a3042e3cfd3df6fb1"
         },
         {
           "path": "apps/api/src/session/session-context.middleware.ts",
@@ -3861,7 +3873,17 @@
         "note": "Original source bindings and assessment remain available in this committed ledger revision; older nested assessments are preserved."
       },
       "review_record": "audit/evidence/step-reviews.json#R01-session-recovery",
-      "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed."
+      "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed.",
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/session/session-cap.integration.test.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
+        }
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.02",
@@ -3898,7 +3920,7 @@
         },
         {
           "path": "apps/api/src/session/session-cap.integration.test.ts",
-          "sha256": "01947f280709fa9db8925c67a5f36cd71dbf2946a6fb9af460c31ec17dc72f26"
+          "sha256": "3698cefd7f65514c70356d1afaf7f60924b299f52319fa5a3042e3cfd3df6fb1"
         },
         {
           "path": "apps/api/src/session/session-context.middleware.ts",
@@ -4065,6 +4087,16 @@
       "evidence_reuse": [
         "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed.",
         "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/session/session-cap.integration.test.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
+        }
       ]
     },
     {
@@ -4130,7 +4162,7 @@
         },
         {
           "path": "apps/api/src/session/session-cap.integration.test.ts",
-          "sha256": "01947f280709fa9db8925c67a5f36cd71dbf2946a6fb9af460c31ec17dc72f26"
+          "sha256": "3698cefd7f65514c70356d1afaf7f60924b299f52319fa5a3042e3cfd3df6fb1"
         },
         {
           "path": "apps/api/src/session/session-context.middleware.ts",
@@ -4235,6 +4267,16 @@
       "evidence_reuse": [
         "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed.",
         "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/session/session-cap.integration.test.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
+        }
       ]
     },
     {
@@ -4288,7 +4330,7 @@
         },
         {
           "path": "apps/api/src/session/session-cap.integration.test.ts",
-          "sha256": "01947f280709fa9db8925c67a5f36cd71dbf2946a6fb9af460c31ec17dc72f26"
+          "sha256": "3698cefd7f65514c70356d1afaf7f60924b299f52319fa5a3042e3cfd3df6fb1"
         },
         {
           "path": "apps/api/src/session/session-context.middleware.ts",
@@ -4376,11 +4418,11 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "4d2efa0157bd8bf5ddebbf35d96bfbe8aa756ce65e524c41978095dddbdde446"
+          "sha256": "8328258c971ceabc3f606f57ab4bf6f9c214757d4e0b62935c41b47dbd05a1c1"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
+          "sha256": "6186813b9bfb96e7abf78be935745c4c50c2b65c601e7c7304cc8f3be96f941f"
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
@@ -4508,6 +4550,16 @@
           ],
           "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
           "note": "Shared browser fixture now uses canonical green key; two direct consumers pass four FA/EN cases. All unrelated fixture and test sections are unchanged; existing workflow evidence is reused."
+        },
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/session/session-cap.integration.test.ts",
+            "apps/api/src/crm/crm-v2.service.ts",
+            "apps/api/src/crm/crm-verification.integration.test.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
         }
       ]
     },
@@ -4542,7 +4594,7 @@
         },
         {
           "path": "apps/api/src/common/http-exception.filter.ts",
-          "sha256": "ce9eee35ff8da4628af7715b572d127001a749567bb7797656140fb0012dd637"
+          "sha256": "904f8a9e21197790eef71f1f7ba3efa83a1ae0bea67c6bb6cf661a429c4d1c25"
         },
         {
           "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
@@ -4756,6 +4808,14 @@
           ],
           "review_record": "audit/evidence/step-reviews.json#V01-login-authentication",
           "note": "Reconciled current authentication handlers/UI and source-matching later batch evidence;95 API and40 distinct browser cases pass. No broad or unrelated acceptance waiver."
+        },
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/common/http-exception.filter.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
         }
       ]
     },
@@ -4878,7 +4938,7 @@
     {
       "task_key": "02-auth-users-admin.md#T-05.02.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "reviewed_sha": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 396,
       "requirement": "**T-05.02.01 — Full profile view for CRM staff**\n\n- Description: `/app/crm/profiles/:profileId` — detailed view of a single profile. Shows all profile data, verification status, last login, last password change, session list, profiles list (for the user), agent relationships.\n- Technical notes: GET `/api/crm/profiles/:profileId` returns all profile fields, user info, verification state, session metadata (count, last active), agent invites, associated addresses. Permission: roles with `crm:read`.\n- UI/UX: Tabbed layout: Overview, Profile Details, Addresses, Sessions, Agent Invites, Verification History. Overview tab shows summary cards. Addresses section with main address marked.\n- Dependencies: T-05.01.01\n- Complexity: L",
@@ -4894,15 +4954,15 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
+          "sha256": "8328258c971ceabc3f606f57ab4bf6f9c214757d4e0b62935c41b47dbd05a1c1"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
+          "sha256": "9fa19989e9f0557ea4d53cd923064e640088e8ce607d481d80195add3bfbae34"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.test.ts",
-          "sha256": "8a06c2f678f335114114fef9c602e6247c752bc48dcd4a678390a3a585a3f32b"
+          "sha256": "bc74b516214cfb425fed1e155c07cf024c482e489a2f223859dee2ee9b744315"
         },
         {
           "path": "apps/api/openapi.json",
@@ -4926,7 +4986,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
-          "sha256": "5e0b9df263486c8abac4e8c65ec6368db6e34bc7da0b9fb2bee9a1ff41f01a24"
+          "sha256": "978837f326b63f908105408f46c3f100fdfa0f9d9bd2e0d64820d2984933d4b9"
         },
         {
           "path": "apps/web/src/routes/app/crm/profiles.$profileId.tsx",
@@ -4982,11 +5042,15 @@
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
-        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification."
+        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
+        "297 distinct focused API cases pass across recorded runs, with overlapping reruns excluded. Saved case-accounting log shows the grouping. This is not one broad297-case invocation. Current authority HTTP suite passes33 cases; both self-revocation actions and seven pre-commit expiry cases across profile/account/correction flows leave no unauthorized writes.",
+        "Final identity and archive-wallet run passes65 cases. The subsequent assignment-notice case passes after switching to the CRM dictionary. The initial identity fixture restored absolute expiry but not the idle deadline shortened during request validation, causing20 downstream failures; cleanup now restores the complete isolated session. Baseline proves4 creation defects;5 approval baseline setup failures are not product evidence. Final creation/review cases pass all10 permission/session/CSRF/step-up/final-expiry scenarios.",
+        "Archival/exception-filter final run passes50 cases, including8 specific FA/EN blocker messages and6 invalid-detail rejections. Unknown blockers, wrong error-code associations and invalid counts retain safe catalogue messages. Initial27 source-binding drifts were reconciled against current matching reviews or the narrow fixture diffs;111 bindings were unchanged.",
+        "API typecheck, scoped lint/format, OpenAPI comparison and diff checks pass. The first typecheck identified2 old direct CRM session-cap callers; they now provide real session/CSRF/step-up proof and their full suite passes. Lint found one obsolete translation import, which was removed. No web source, dependency, migration, budget or contract changed; matching prior production-browser/build/budget evidence is reused."
       ],
       "limitations": [
         "Large production history-volume performance and legacy immutable-document recovery remain operational prerequisites. The detail session list contains the latest 20 records; active count is computed separately. The written task does not specify session pagination.",
-        "Legal documents retain the existing additional verification:read requirement. Global admin/terms-banner review remains in R03."
+        "Legal documents retain the existing additional verification:read requirement. Terms-banner and shared-theme review is preserved in the completed R03 and V01 terms batches."
       ],
       "merged_prs": [
         123
@@ -5012,12 +5076,41 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/crm/crm-profile-records.ts",
+            "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
+            "apps/api/src/crm/crm-v2.service.ts",
+            "apps/api/src/crm/crm-v2.controller.ts",
+            "apps/api/src/crm/crm-v2.service.test.ts",
+            "apps/api/openapi.json",
+            "apps/web/src/components/CrmProfileRecords.tsx",
+            "apps/web/src/pages/CrmProfileDetail.tsx",
+            "apps/web/e2e/crm-detail-permissions.spec.ts",
+            "packages/i18n/src/crm.ts",
+            "apps/api/src/crm/crm-list-http.integration.test.ts",
+            "apps/web/src/routes/app/crm/profiles.$profileId.tsx",
+            "apps/web/src/routeTree.gen.ts",
+            "apps/api/src/crm/crm-legal-documents.controller.ts",
+            "apps/api/src/crm/crm.module.ts",
+            "apps/api/src/profiles/legal-documents-http.integration.test.ts",
+            "apps/api/src/storage/verified-attachments.service.ts",
+            "apps/web/src/components/CrmLegalDocuments.tsx",
+            "apps/api/src/crm/crm-profile-legal.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Reconciled current CRM mutation repair and later matching source-bound reviews. Retain unchanged UI/data evidence and explicit archival prerequisites."
+        }
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "reviewed_sha": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 404,
       "requirement": "**T-05.02.02 — Staff profile editing**\n\n- Description: Authorized staff can update profile info (non-identity fields directly; identity fields through verification case). Update fields: address, phone, email, etc.\n- Technical notes: PUT `/api/crm/profiles/:profileId` — permissions: `crm:edit`. Field-level validation. Changes to verified identity fields blocked — requires verification case (T-05.02.05). Audit: profile_updated with before/after diff.\n- UI/UX: Edit button enables inline editing. Save/Cancel actions. Confirmation modal for significant changes. Field-level lock icons on identity fields with tooltip: \"Requires verification case\".\n- Dependencies: T-05.02.01\n- Complexity: L",
@@ -5041,11 +5134,11 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
+          "sha256": "9fa19989e9f0557ea4d53cd923064e640088e8ce607d481d80195add3bfbae34"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
+          "sha256": "8328258c971ceabc3f606f57ab4bf6f9c214757d4e0b62935c41b47dbd05a1c1"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -5053,23 +5146,23 @@
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
+          "sha256": "6186813b9bfb96e7abf78be935745c4c50c2b65c601e7c7304cc8f3be96f941f"
         },
         {
           "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
-          "sha256": "c4cf169f6c977312f3b4de3ebb8cbedf2e5ef5d5bf9a9d36a5b043986b9c2b0f"
+          "sha256": "308eb139107358e718684321a710735c92f851cedc9c098bcef61f9e64a9c577"
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
         },
         {
           "path": "apps/api/src/crm/crm-profile-address.ts",
-          "sha256": "5fa7eb59336c66cd3c9a7d3b5e418252d8c54a89b96068a8c2d47ad54e9f3a24"
+          "sha256": "400401f147460031e4eb57fa85631065e52e5b85ad1d064119ceedfc7ec72483"
         },
         {
           "path": "apps/api/src/crm/crm-address-edit-http.integration.test.ts",
-          "sha256": "9149aa45e5d1a75007c899be592fe7ad2d13d3439519bafd39b1c08ecc92c91d"
+          "sha256": "e5abfbef6a331f8a493bd855dfa38da13819ee91e31759d55faec76faf392bcc"
         },
         {
           "path": "apps/api/openapi.json",
@@ -5093,7 +5186,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.test.ts",
-          "sha256": "8a06c2f678f335114114fef9c602e6247c752bc48dcd4a678390a3a585a3f32b"
+          "sha256": "bc74b516214cfb425fed1e155c07cf024c482e489a2f223859dee2ee9b744315"
         },
         {
           "path": "apps/web/src/components/CrmLegalEditor.tsx",
@@ -5132,7 +5225,11 @@
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
         "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
-        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained.",
+        "297 distinct focused API cases pass across recorded runs, with overlapping reruns excluded. Saved case-accounting log shows the grouping. This is not one broad297-case invocation. Current authority HTTP suite passes33 cases; both self-revocation actions and seven pre-commit expiry cases across profile/account/correction flows leave no unauthorized writes.",
+        "Final identity and archive-wallet run passes65 cases. The subsequent assignment-notice case passes after switching to the CRM dictionary. The initial identity fixture restored absolute expiry but not the idle deadline shortened during request validation, causing20 downstream failures; cleanup now restores the complete isolated session. Baseline proves4 creation defects;5 approval baseline setup failures are not product evidence. Final creation/review cases pass all10 permission/session/CSRF/step-up/final-expiry scenarios.",
+        "Archival/exception-filter final run passes50 cases, including8 specific FA/EN blocker messages and6 invalid-detail rejections. Unknown blockers, wrong error-code associations and invalid counts retain safe catalogue messages. Initial27 source-binding drifts were reconciled against current matching reviews or the narrow fixture diffs;111 bindings were unchanged.",
+        "API typecheck, scoped lint/format, OpenAPI comparison and diff checks pass. The first typecheck identified2 old direct CRM session-cap callers; they now provide real session/CSRF/step-up proof and their full suite passes. Lint found one obsolete translation import, which was removed. No web source, dependency, migration, budget or contract changed; matching prior production-browser/build/budget evidence is reused."
       ],
       "limitations": [],
       "merged_prs": [
@@ -5162,12 +5259,44 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/web/src/pages/CrmProfileDetail.tsx",
+            "apps/web/src/components/TeamActionDialog.tsx",
+            "apps/web/e2e/crm-detail-permissions.spec.ts",
+            "packages/i18n/src/crm.ts",
+            "apps/api/src/crm/crm-v2.controller.ts",
+            "apps/api/src/crm/crm-v2.service.ts",
+            "apps/api/src/admin/staff-mutation-permission.ts",
+            "apps/api/src/crm/crm-verification.integration.test.ts",
+            "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+            "apps/api/src/notifications/notifications.service.ts",
+            "apps/api/src/crm/crm-profile-address.ts",
+            "apps/api/src/crm/crm-address-edit-http.integration.test.ts",
+            "apps/api/openapi.json",
+            "apps/web/src/components/CrmAddressEditor.tsx",
+            "apps/web/e2e/crm-address-edit.spec.ts",
+            "apps/api/src/crm/crm-profile-legal.ts",
+            "apps/api/src/crm/crm-legal-edit-http.integration.test.ts",
+            "apps/api/src/crm/crm-v2.service.test.ts",
+            "apps/web/src/components/CrmLegalEditor.tsx",
+            "apps/web/e2e/crm-legal-edit.spec.ts",
+            "kanban/epics/02-auth-users-admin.md",
+            "apps/api/src/session/session-step-up.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Reconciled current CRM mutation repair and later matching source-bound reviews. Retain unchanged UI/data evidence and explicit archival prerequisites."
+        }
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "7b15638d2e4aa9635aa72ef892372f18873f9522",
+      "reviewed_sha": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 412,
       "requirement": "**T-05.02.03 — Verification state management**\n\n- Description: Staff can change verification state of a profile. Options: Verify, Unverify, Mark for re-verification.\n- Technical notes: POST `/api/crm/profiles/:profileId/verify` with `{ action: 'verify' | 'unverify' | 'reverify', reason? }`. Permissions: `crm:verify` or admin. Audit: verification_change with before/after state, actor, reason. Notifications sent to profile owner.\n- UI/UX: Current status badge (Verified/Unverified/Pending). Dropdown with actions. Reason required for unverify/reverify. Confirmation dialog.\n- Dependencies: T-05.02.01, E-07 (admin verification settings)\n- Complexity: M",
@@ -5191,11 +5320,11 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
+          "sha256": "9fa19989e9f0557ea4d53cd923064e640088e8ce607d481d80195add3bfbae34"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
+          "sha256": "8328258c971ceabc3f606f57ab4bf6f9c214757d4e0b62935c41b47dbd05a1c1"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -5203,15 +5332,15 @@
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
+          "sha256": "6186813b9bfb96e7abf78be935745c4c50c2b65c601e7c7304cc8f3be96f941f"
         },
         {
           "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
-          "sha256": "c4cf169f6c977312f3b4de3ebb8cbedf2e5ef5d5bf9a9d36a5b043986b9c2b0f"
+          "sha256": "308eb139107358e718684321a710735c92f851cedc9c098bcef61f9e64a9c577"
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
         },
         {
           "path": "apps/api/src/session/session-step-up.ts",
@@ -5228,11 +5357,15 @@
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained.",
+        "297 distinct focused API cases pass across recorded runs, with overlapping reruns excluded. Saved case-accounting log shows the grouping. This is not one broad297-case invocation. Current authority HTTP suite passes33 cases; both self-revocation actions and seven pre-commit expiry cases across profile/account/correction flows leave no unauthorized writes.",
+        "Final identity and archive-wallet run passes65 cases. The subsequent assignment-notice case passes after switching to the CRM dictionary. The initial identity fixture restored absolute expiry but not the idle deadline shortened during request validation, causing20 downstream failures; cleanup now restores the complete isolated session. Baseline proves4 creation defects;5 approval baseline setup failures are not product evidence. Final creation/review cases pass all10 permission/session/CSRF/step-up/final-expiry scenarios.",
+        "Archival/exception-filter final run passes50 cases, including8 specific FA/EN blocker messages and6 invalid-detail rejections. Unknown blockers, wrong error-code associations and invalid counts retain safe catalogue messages. Initial27 source-binding drifts were reconciled against current matching reviews or the narrow fixture diffs;111 bindings were unchanged.",
+        "API typecheck, scoped lint/format, OpenAPI comparison and diff checks pass. The first typecheck identified2 old direct CRM session-cap callers; they now provide real session/CSRF/step-up proof and their full suite passes. Lint found one obsolete translation import, which was removed. No web source, dependency, migration, budget or contract changed; matching prior production-browser/build/budget evidence is reused."
       ],
       "limitations": [
         "Manual staff verification is covered. No automatic identity provider or external notification delivery is claimed.",
-        "The Verification History tab is implemented under T-05.02.01; that wider profile-view task remains partial."
+        "The Verification History tab is implemented under T-05.02.01; that profile-view task is verified locally."
       ],
       "merged_prs": [
         125
@@ -5256,12 +5389,33 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/web/src/pages/CrmProfileDetail.tsx",
+            "apps/web/src/components/TeamActionDialog.tsx",
+            "apps/web/e2e/crm-detail-permissions.spec.ts",
+            "packages/i18n/src/crm.ts",
+            "apps/api/src/crm/crm-v2.controller.ts",
+            "apps/api/src/crm/crm-v2.service.ts",
+            "apps/api/src/admin/staff-mutation-permission.ts",
+            "apps/api/src/crm/crm-verification.integration.test.ts",
+            "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+            "apps/api/src/notifications/notifications.service.ts",
+            "apps/api/src/session/session-step-up.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Reconciled current CRM mutation repair and later matching source-bound reviews. Retain unchanged UI/data evidence and explicit archival prerequisites."
+        }
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.04",
       "status": "acceptance_verified",
-      "reviewed_sha": "9469d35c6591e3efe26c5f61f73cce1ce2cc4cac",
+      "reviewed_sha": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 420,
       "requirement": "**T-05.02.04 — Force password change and session expiry**\n\n- Description: Staff can mark a user as \"must change password at next login\" and expire all current sessions.\n- Technical notes: POST `/api/crm/users/:userId/force-password-change` — sets `mustChangePasswordAtNextLogin` flag, triggers session invalidation for all sessions. POST `/api/crm/users/:userId/expire-sessions` — removes all sessions. Audit: both actions recorded with actor, reason. User gets notification.\n- UI/UX: Two separate action buttons with confirmation dialogs. \"Force password change on next login\" and \"Expire all active sessions\". Reason field required.\n- Dependencies: T-05.02.01, T-02.02.02\n- Complexity: M",
@@ -5285,11 +5439,11 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
+          "sha256": "9fa19989e9f0557ea4d53cd923064e640088e8ce607d481d80195add3bfbae34"
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
+          "sha256": "8328258c971ceabc3f606f57ab4bf6f9c214757d4e0b62935c41b47dbd05a1c1"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -5297,23 +5451,23 @@
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
+          "sha256": "6186813b9bfb96e7abf78be935745c4c50c2b65c601e7c7304cc8f3be96f941f"
         },
         {
           "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
-          "sha256": "c4cf169f6c977312f3b4de3ebb8cbedf2e5ef5d5bf9a9d36a5b043986b9c2b0f"
+          "sha256": "308eb139107358e718684321a710735c92f851cedc9c098bcef61f9e64a9c577"
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
-          "sha256": "b42b7dace1492db4dd13fe72d732ab9218380ef245d07c4b7b5604cd148f239b"
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "3208798f2c3c4eabb3b0899a1fef7bf2738d283202a6b09da27ad6799f0ae980"
+          "sha256": "5b92f3c4deb6b07640f11320d47bfee935d4a35827edd312513bf2aa76417a02"
         },
         {
           "path": "apps/api/src/session/session.service.ts",
-          "sha256": "08f559023580c8607509b9fbb01ad6f09fcdda456258d438e25fd4bde5a4f050"
+          "sha256": "d06e0b410789a0b5b355fab52fe719e2c336459004f8ffa7c3cfeb83a5a7355a"
         },
         {
           "path": "apps/api/src/session/session-step-up.ts",
@@ -5334,7 +5488,11 @@
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
-        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained."
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery: immediate-base bindings refreshed. Storage changes add current authority/audit only; CRM changes call transactional verification delivery; notification create/inbox reads remain unchanged; only the verification seed family changes. Relevant current focused checks pass; unrelated method evidence is retained.",
+        "297 distinct focused API cases pass across recorded runs, with overlapping reruns excluded. Saved case-accounting log shows the grouping. This is not one broad297-case invocation. Current authority HTTP suite passes33 cases; both self-revocation actions and seven pre-commit expiry cases across profile/account/correction flows leave no unauthorized writes.",
+        "Final identity and archive-wallet run passes65 cases. The subsequent assignment-notice case passes after switching to the CRM dictionary. The initial identity fixture restored absolute expiry but not the idle deadline shortened during request validation, causing20 downstream failures; cleanup now restores the complete isolated session. Baseline proves4 creation defects;5 approval baseline setup failures are not product evidence. Final creation/review cases pass all10 permission/session/CSRF/step-up/final-expiry scenarios.",
+        "Archival/exception-filter final run passes50 cases, including8 specific FA/EN blocker messages and6 invalid-detail rejections. Unknown blockers, wrong error-code associations and invalid counts retain safe catalogue messages. Initial27 source-binding drifts were reconciled against current matching reviews or the narrow fixture diffs;111 bindings were unchanged.",
+        "API typecheck, scoped lint/format, OpenAPI comparison and diff checks pass. The first typecheck identified2 old direct CRM session-cap callers; they now provide real session/CSRF/step-up proof and their full suite passes. Lint found one obsolete translation import, which was removed. No web source, dependency, migration, budget or contract changed; matching prior production-browser/build/budget evidence is reused."
       ],
       "limitations": [
         "User notices are durable private in-app notices. Email/SMS delivery is not claimed.",
@@ -5362,12 +5520,35 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/web/src/pages/CrmProfileDetail.tsx",
+            "apps/web/src/components/TeamActionDialog.tsx",
+            "apps/web/e2e/crm-detail-permissions.spec.ts",
+            "packages/i18n/src/crm.ts",
+            "apps/api/src/crm/crm-v2.controller.ts",
+            "apps/api/src/crm/crm-v2.service.ts",
+            "apps/api/src/admin/staff-mutation-permission.ts",
+            "apps/api/src/crm/crm-verification.integration.test.ts",
+            "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+            "apps/api/src/notifications/notifications.service.ts",
+            "apps/api/src/auth/auth.service.ts",
+            "apps/api/src/session/session.service.ts",
+            "apps/api/src/session/session-step-up.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Reconciled current CRM mutation repair and later matching source-bound reviews. Retain unchanged UI/data evidence and explicit archival prerequisites."
+        }
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.05",
       "status": "acceptance_verified",
-      "reviewed_sha": "c8e6a91867c1ae3c9065cc30f934fe245804a604",
+      "reviewed_sha": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 428,
       "requirement": "**T-05.02.05 — Identity correction through verification case**\n\n- Description: Staff cannot directly edit verified identity fields. Instead, they create a verification case (profile correction request) which creates an audit trail. Changes are applied after case resolution.\n- Technical notes: Verification case is a mini-workflow: Corrector creates case with new values and evidence → Reviewer approves/rejects → On approval, identity field updated with before/after audit. Permissions: `crm:edit-identity`. Cases have states: Open, Under Review, Approved, Rejected.\n- UI/UX: \"Request correction\" button on locked fields → form with new value + upload evidence → submission creates case. Staff with review permission see case queue.\n- Dependencies: T-05.02.02\n- Complexity: L",
@@ -5375,15 +5556,15 @@
       "source_evidence": [
         {
           "path": "apps/api/src/crm/verification-case.service.ts",
-          "sha256": "ebe90394baf47c5a7649782da0794b526bc037c7b7945db1c6f8bb2403dee38a"
+          "sha256": "0793326339a34bc06fefce2b2f77c233478e12577564544777bed8acc4afd6b4"
         },
         {
           "path": "apps/api/src/crm/verification-case.controller.ts",
-          "sha256": "c8ba3e2ee9323ffeca6276c6e4ff7e641675fda1442610a1be826512bac27722"
+          "sha256": "b10886d1f6c5129f3a0b048f808cf297aa85344c1889b088a92ac24ced43647b"
         },
         {
           "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-          "sha256": "dc4d2386c589d28278c0ff8b92c02fec41929e76eef393be9e73f961d33167a0"
+          "sha256": "d0c9fafd9575bf7b1f2abd898ed48c5ce9b469814c3f3492bf86122c837d300c"
         },
         {
           "path": "apps/api/src/crm/verification-evidence.service.ts",
@@ -5437,7 +5618,11 @@
         "API/web typechecks, explicit changed-file lint, formatting, production build and all41 complete-route budgets pass. Backend product sources remain unchanged; prior transaction/evidence/permission regressions remain applicable.",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "297 distinct focused API cases pass across recorded runs, with overlapping reruns excluded. Saved case-accounting log shows the grouping. This is not one broad297-case invocation. Current authority HTTP suite passes33 cases; both self-revocation actions and seven pre-commit expiry cases across profile/account/correction flows leave no unauthorized writes.",
+        "Final identity and archive-wallet run passes65 cases. The subsequent assignment-notice case passes after switching to the CRM dictionary. The initial identity fixture restored absolute expiry but not the idle deadline shortened during request validation, causing20 downstream failures; cleanup now restores the complete isolated session. Baseline proves4 creation defects;5 approval baseline setup failures are not product evidence. Final creation/review cases pass all10 permission/session/CSRF/step-up/final-expiry scenarios.",
+        "Archival/exception-filter final run passes50 cases, including8 specific FA/EN blocker messages and6 invalid-detail rejections. Unknown blockers, wrong error-code associations and invalid counts retain safe catalogue messages. Initial27 source-binding drifts were reconciled against current matching reviews or the narrow fixture diffs;111 bindings were unchanged.",
+        "API typecheck, scoped lint/format, OpenAPI comparison and diff checks pass. The first typecheck identified2 old direct CRM session-cap callers; they now provide real session/CSRF/step-up proof and their full suite passes. Lint found one obsolete translation import, which was removed. No web source, dependency, migration, budget or contract changed; matching prior production-browser/build/budget evidence is reused."
       ],
       "limitations": [
         "This verifies the local correction workflow and its five canonical protected identity fields. Legacy unsealed evidence requires resubmission; no live storage-provider recovery or production reconciliation is certified.",
@@ -5468,12 +5653,35 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/crm/verification-case.service.ts",
+            "apps/api/src/crm/verification-case.controller.ts",
+            "apps/api/src/crm/verification-case-http.integration.test.ts",
+            "apps/api/src/crm/verification-evidence.service.ts",
+            "apps/web/src/pages/CrmCorrectionsPage.tsx",
+            "apps/web/e2e/crm-corrections.spec.ts",
+            "apps/web/src/components/TeamActionDialog.tsx",
+            "apps/web/src/pages/CrmProfileDetail.tsx",
+            "apps/web/src/routes/admin/crm/corrections.tsx",
+            "apps/web/e2e/crm-detail-permissions.spec.ts",
+            "packages/i18n/src/crm.ts",
+            "apps/web/src/pages/AdminLayout.tsx",
+            "kanban/epics/02-auth-users-admin.md"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Reconciled current CRM mutation repair and later matching source-bound reviews. Retain unchanged UI/data evidence and explicit archival prerequisites."
+        }
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.02.06",
       "status": "partial",
-      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "reviewed_sha": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 436,
       "requirement": "**T-05.02.06 — Profile deletion by staff**\n\n- Description: Staff with appropriate permission can delete a customer profile. Cannot delete profiles with active orders, contracts, unpaid invoices, or non-zero wallet balance. Prefer deactivation over hard delete.\n- Technical notes: DELETE `/api/crm/profiles/:profileId` checks business record constraints. Soft delete (archived flag) for audit purposes. GDPR-style retention applies. If profile has constraints, return error with details. Cannot delete a legal profile's last owner. Audit: profile_deleted with reason, actor.\n- UI/UX: Confirmation dialog with checklist of what will happen. Reason required. Error if business constraints block deletion.\n- Dependencies: T-05.02.01\n- Complexity: M",
@@ -5481,19 +5689,19 @@
       "source_evidence": [
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
+          "sha256": "8328258c971ceabc3f606f57ab4bf6f9c214757d4e0b62935c41b47dbd05a1c1"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
+          "sha256": "9fa19989e9f0557ea4d53cd923064e640088e8ce607d481d80195add3bfbae34"
         },
         {
           "path": "apps/api/src/crm/profile-archive-finance.integration.test.ts",
-          "sha256": "0e04ae859bf9d2a865009fec42a6cdfe9a39ed83faf7131fae680a13c62f8534"
+          "sha256": "e5e7e02497c6b997c8dca5b4a61e363d1e558640d24f8bc5ac4c696a439dfc24"
         },
         {
           "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-          "sha256": "dc4d2386c589d28278c0ff8b92c02fec41929e76eef393be9e73f961d33167a0"
+          "sha256": "d0c9fafd9575bf7b1f2abd898ed48c5ce9b469814c3f3492bf86122c837d300c"
         },
         {
           "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -5545,7 +5753,7 @@
         },
         {
           "path": "apps/api/src/invoice/manual-invoice.service.ts",
-          "sha256": "7696d6cde549af4b895cea03e86ad7dd78bec62cfac46cd84f03463e03901184"
+          "sha256": "40ec7777e84b1a4da5c44e3467a0b33dff2e78f51b33e79a49110ba18e45d8a8"
         },
         {
           "path": "apps/api/src/wallet/profile-lock.ts",
@@ -5553,7 +5761,7 @@
         },
         {
           "path": "apps/api/src/wallet/wallet.service.ts",
-          "sha256": "4a5f928b17049417b77884466b1e871f96b157a66aab01b341a7edfd6e4d88b3"
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
         },
         {
           "path": "apps/api/src/wallet/wallet.service.test.ts",
@@ -5569,31 +5777,31 @@
         },
         {
           "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-          "sha256": "0d4418455db6feaa966b515f6d57d31a7d76c86548971315d7696b5ff9dcf02f"
+          "sha256": "6579e4f46a424649ff0fd6edf58c415124b0f8e5b10030b9364bc1352448015d"
         },
         {
           "path": "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
-          "sha256": "2e0571b2d79d940dbe05c6d7231e59f0fa521c3edf33a971137b35dd43c3294b"
+          "sha256": "dc72e52de6f0f4e9575608ba08cc7ec3bb7be7bf1672f68b84023f300c8ed0e4"
         },
         {
           "path": "apps/api/src/wallet/chargeback-detection.service.ts",
-          "sha256": "743cb28243c7aa159c2b144fa60ee1dc92da075784b5776b07a36284d37e1692"
+          "sha256": "9ad1a18ec7dcb699cc1dd87474f2e60d807e02aa2985710053563deb091fb08a"
         },
         {
           "path": "apps/api/src/wallet/chargeback-detection.integration.test.ts",
-          "sha256": "a49cbf0f20f3933228858678b54bafeaded5f2c16d8abbb566e833fa6803103b"
+          "sha256": "db2b4b9de37eeae18ce1c55aca185b51715ed16f7e1d5107f1e3b0dafa4572b7"
         },
         {
           "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
-          "sha256": "da240bb00c709b835946afb1980fcdab1c16822ccbd97b74a688ce73c9dcd448"
+          "sha256": "60f7b3d3403b0d0dfe58c5a1e7b2f74787f3965af702b2d69d44a624c9133d82"
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-          "sha256": "04fcc6315d3d792ebb1e2ae1a942f5da3588b1d759d4e588732a074a282a9af4"
+          "sha256": "3cf1343ed831dda2c31f7375aecdf044751dc12e2a3f22b7215d448be746434f"
         },
         {
           "path": "apps/api/src/crm/profile-archive-wallet.integration.test.ts",
-          "sha256": "a86297fc893a41ece9f8ab2a4dffb50b475cedfd75ef7ca36a9a4c563e7f028d"
+          "sha256": "6ce9120c271ad6d760dbede43f5d3c9c35376903feaa9aad31f749f0ff48a654"
         },
         {
           "path": "apps/api/src/crm/profile-archive-acceptance.integration.test.ts",
@@ -5635,7 +5843,11 @@
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
         "Scoped evidence reuse at 417ab33: exact prior binding, unchanged staff permission/session function and unchanged dialog behavior without explicit sessionRevoked=true; selected staff HTTP and team browser regressions pass. See audit/evidence/step-reviews.json#R01-agent-sensitive-actions.",
         "Scoped reuse at 1bf4680: prior source binding matched batch base. Existing shared-dialog mutation/focus behavior is preserved; current selected staff/ownership checks pass. OpenAPI changes only add invitation_expiry_scan to job filtering; existing package exports are preserved. audit/evidence/step-reviews.json#R01-agents-invitations-ownership",
-        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets."
+        "Scoped source reuse at0ad0760: prior hashes matched9a1a18b. Changes outside tickets are additive category translations/request schema and the approved ticket requirement; prior endpoints/strings/task blocks remain unchanged.19 correction HTTP cases verify the shared lock repair;3 migration cases retain prior upgrade/seed behavior. Existing stale source bindings remain pending. Details and logs: audit/evidence/step-reviews.json#R01-tickets.",
+        "297 distinct focused API cases pass across recorded runs, with overlapping reruns excluded. Saved case-accounting log shows the grouping. This is not one broad297-case invocation. Current authority HTTP suite passes33 cases; both self-revocation actions and seven pre-commit expiry cases across profile/account/correction flows leave no unauthorized writes.",
+        "Final identity and archive-wallet run passes65 cases. The subsequent assignment-notice case passes after switching to the CRM dictionary. The initial identity fixture restored absolute expiry but not the idle deadline shortened during request validation, causing20 downstream failures; cleanup now restores the complete isolated session. Baseline proves4 creation defects;5 approval baseline setup failures are not product evidence. Final creation/review cases pass all10 permission/session/CSRF/step-up/final-expiry scenarios.",
+        "Archival/exception-filter final run passes50 cases, including8 specific FA/EN blocker messages and6 invalid-detail rejections. Unknown blockers, wrong error-code associations and invalid counts retain safe catalogue messages. Initial27 source-binding drifts were reconciled against current matching reviews or the narrow fixture diffs;111 bindings were unchanged.",
+        "API typecheck, scoped lint/format, OpenAPI comparison and diff checks pass. The first typecheck identified2 old direct CRM session-cap callers; they now provide real session/CSRF/step-up proof and their full suite passes. Lint found one obsolete translation import, which was removed. No web source, dependency, migration, budget or contract changed; matching prior production-browser/build/budget evidence is reused."
       ],
       "limitations": [
         "No production contract table or creation writer is implemented. Future contract-state and profile-lock integration remains an unmet dependency.",
@@ -5665,12 +5877,56 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/crm/crm-v2.service.ts",
+            "apps/api/src/crm/crm-v2.controller.ts",
+            "apps/api/src/crm/profile-archive-finance.integration.test.ts",
+            "apps/api/src/crm/verification-case-http.integration.test.ts",
+            "apps/api/src/admin/staff-mutation-permission.ts",
+            "apps/web/src/pages/CrmProfileDetail.tsx",
+            "apps/web/e2e/crm-detail-permissions.spec.ts",
+            "apps/api/src/crm/profile-archive-invoice.integration.test.ts",
+            "apps/api/src/invoice/auto-invoice.service.test.ts",
+            "apps/api/src/invoice/auto-invoice.service.ts",
+            "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+            "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+            "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+            "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+            "apps/api/src/invoice/invoice-profile-lock.ts",
+            "apps/api/src/invoice/manual-invoice.service.test.ts",
+            "apps/api/src/invoice/manual-invoice.service.ts",
+            "apps/api/src/wallet/profile-lock.ts",
+            "apps/api/src/wallet/wallet.service.ts",
+            "apps/api/src/wallet/wallet.service.test.ts",
+            "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+            "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+            "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+            "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
+            "apps/api/src/wallet/chargeback-detection.service.ts",
+            "apps/api/src/wallet/chargeback-detection.integration.test.ts",
+            "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+            "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+            "apps/api/src/crm/profile-archive-wallet.integration.test.ts",
+            "apps/api/src/crm/profile-archive-acceptance.integration.test.ts",
+            "apps/web/src/components/TeamActionDialog.tsx",
+            "packages/i18n/src/crm.ts",
+            "docs/runbooks/profile-archival.md",
+            "apps/api/src/session/session-step-up.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Reconciled current CRM mutation repair and later matching source-bound reviews. Retain unchanged UI/data evidence and explicit archival prerequisites."
+        }
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.01.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "reviewed_sha": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 378,
       "requirement": "**T-05.01.01 — CRM users list page**\n\n- Description: `/app/crm` — list of all registered users. Columns: Username, profiles (legal/individual indicators), registration date, last login, verification status, profile count. Staff and admin only.\n- Technical notes: Backend: GET `/api/crm/users` with pagination, search, sort, filter. Server-side filtering/sorting. Cursor pagination recommended for large datasets. Permission: staff roles `crm:read` or `admin`. Profile type columns: \"Legal\" icon and \"Individual\" icon shown per user if they have that profile type. Search by username (email/mobile).\n- UI/UX: Table with sortable columns. Filter bar: profile type (all/individual/legal), verification status (verified/unverified/pending), registration date range. Search input. Pagination controls. \"Collapse all\" on row expansion.\n- Dependencies: T-03.01.01, authorization framework\n- Complexity: L",
@@ -5690,7 +5946,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
-          "sha256": "5e0b9df263486c8abac4e8c65ec6368db6e34bc7da0b9fb2bee9a1ff41f01a24"
+          "sha256": "978837f326b63f908105408f46c3f100fdfa0f9d9bd2e0d64820d2984933d4b9"
         },
         {
           "path": "apps/api/src/crm/crm.service.test.ts",
@@ -5740,7 +5996,11 @@
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
-        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification."
+        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
+        "297 distinct focused API cases pass across recorded runs, with overlapping reruns excluded. Saved case-accounting log shows the grouping. This is not one broad297-case invocation. Current authority HTTP suite passes33 cases; both self-revocation actions and seven pre-commit expiry cases across profile/account/correction flows leave no unauthorized writes.",
+        "Final identity and archive-wallet run passes65 cases. The subsequent assignment-notice case passes after switching to the CRM dictionary. The initial identity fixture restored absolute expiry but not the idle deadline shortened during request validation, causing20 downstream failures; cleanup now restores the complete isolated session. Baseline proves4 creation defects;5 approval baseline setup failures are not product evidence. Final creation/review cases pass all10 permission/session/CSRF/step-up/final-expiry scenarios.",
+        "Archival/exception-filter final run passes50 cases, including8 specific FA/EN blocker messages and6 invalid-detail rejections. Unknown blockers, wrong error-code associations and invalid counts retain safe catalogue messages. Initial27 source-binding drifts were reconciled against current matching reviews or the narrow fixture diffs;111 bindings were unchanged.",
+        "API typecheck, scoped lint/format, OpenAPI comparison and diff checks pass. The first typecheck identified2 old direct CRM session-cap callers; they now provide real session/CSRF/step-up proof and their full suite passes. Lint found one obsolete translation import, which was removed. No web source, dependency, migration, budget or contract changed; matching prior production-browser/build/budget evidence is reused."
       ],
       "limitations": [
         "Production-scale search/aggregate performance, deployment and the final global checkpoint remain separate evidence."
@@ -5761,12 +6021,33 @@
         "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval",
         "Current bindings refreshed by audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals. Earlier statuses/limitations preserved. OpenAPI only adds wallet payment operations; existing financial permissions retain their branches; invoice presentation adds the reviewed panel; asset names retain content hashes and cache behavior.",
         "Immediate-base declarations/dependency/documentation bindings refreshed by audit/evidence/step-reviews.json#R05-strict-dependencies. Dependency JavaScript and factory body unchanged; strict consumers/builds/schema/budgets/packaged lookup pass. OpenAPI adds existing consent/correction metadata. Older unmatched evidence stays queued."
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/crm/crm.service.ts",
+            "apps/api/src/crm/crm.controller.ts",
+            "apps/api/src/crm/crm-list-sort.integration.test.ts",
+            "apps/api/src/crm/crm-list-http.integration.test.ts",
+            "apps/api/src/crm/crm.service.test.ts",
+            "apps/api/openapi.json",
+            "apps/web/src/pages/CrmProfileList.tsx",
+            "apps/web/e2e/crm-list.spec.ts",
+            "apps/web/src/routes/app/crm/index.tsx",
+            "apps/web/src/routeTree.gen.ts",
+            "packages/i18n/src/crm.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Reconciled current CRM mutation repair and later matching source-bound reviews. Retain unchanged UI/data evidence and explicit archival prerequisites."
+        }
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.01.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "4b8ccf8621fc1bf99ba0fef915d274a1b92bbd5d",
+      "reviewed_sha": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 386,
       "requirement": "**T-05.01.02 — CRM filters and search**\n\n- Description: Filters: profile type (individual/legal), verification status (all/verified/unverified/pending/disabled), date range (registration date), staff-only filter. Search across username, legal name, individual name.\n- Technical notes: Backend uses PostgreSQL full-text/trigram search for name fields. Filter query params: `?type=LEGAL&verification=VERIFIED&search=...&sort=createdAt&order=desc&cursor=...`.\n- UI/UX: Horizontal filter bar with dropdowns. Date range picker (Jalali in Persian mode). Search with debounce. Active filters shown as removable tags. Clear all filters button.\n- Dependencies: T-05.01.01\n- Complexity: M",
@@ -5790,7 +6071,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
-          "sha256": "5e0b9df263486c8abac4e8c65ec6368db6e34bc7da0b9fb2bee9a1ff41f01a24"
+          "sha256": "978837f326b63f908105408f46c3f100fdfa0f9d9bd2e0d64820d2984933d4b9"
         },
         {
           "path": "apps/web/src/pages/CrmProfileList.tsx",
@@ -5814,7 +6095,11 @@
         "Production browser tests verify rapid typing sends only the final term, keyboard removal/focus, preserved filters, type/date removal, clear-all with no stale search restoration, Jalali leap/day bounds, timezone failures, sorting and theme/mobile scans. No dependency, migration, route, dictionary or API contract change.",
         "pnpm --filter @barghsa/api exec vitest run src/crm/crm.service.test.ts src/crm/crm-list-http.integration.test.ts src/crm/crm-list-sort.integration.test.ts src/crm/crm-list-search.integration.test.ts --reporter=dot: 47/47 pass across four files, exit 0.",
         "PLAYWRIGHT_BASE_URL=http://127.0.0.1:4179 pnpm --filter @barghsa/web exec playwright test e2e/crm-list.spec.ts --project=chromium --project=mobile-chrome --workers=2 --reporter=list: 20/20 pass, exit 0. Saved served-index equality and manifest hashes establish production-preview target.",
-        "API/web typechecks, focused lint, final formatting, production web build and all 41 route budgets pass. Existing i18n and OpenAPI evidence is reused because dictionaries and controller/contract did not change. No global checkpoint or production-scale search benchmark is renewed."
+        "API/web typechecks, focused lint, final formatting, production web build and all 41 route budgets pass. Existing i18n and OpenAPI evidence is reused because dictionaries and controller/contract did not change. No global checkpoint or production-scale search benchmark is renewed.",
+        "297 distinct focused API cases pass across recorded runs, with overlapping reruns excluded. Saved case-accounting log shows the grouping. This is not one broad297-case invocation. Current authority HTTP suite passes33 cases; both self-revocation actions and seven pre-commit expiry cases across profile/account/correction flows leave no unauthorized writes.",
+        "Final identity and archive-wallet run passes65 cases. The subsequent assignment-notice case passes after switching to the CRM dictionary. The initial identity fixture restored absolute expiry but not the idle deadline shortened during request validation, causing20 downstream failures; cleanup now restores the complete isolated session. Baseline proves4 creation defects;5 approval baseline setup failures are not product evidence. Final creation/review cases pass all10 permission/session/CSRF/step-up/final-expiry scenarios.",
+        "Archival/exception-filter final run passes50 cases, including8 specific FA/EN blocker messages and6 invalid-detail rejections. Unknown blockers, wrong error-code associations and invalid counts retain safe catalogue messages. Initial27 source-binding drifts were reconciled against current matching reviews or the narrow fixture diffs;111 bindings were unchanged.",
+        "API typecheck, scoped lint/format, OpenAPI comparison and diff checks pass. The first typecheck identified2 old direct CRM session-cap callers; they now provide real session/CSRF/step-up proof and their full suite passes. Lint found one obsolete translation import, which was removed. No web source, dependency, migration, budget or contract changed; matching prior production-browser/build/budget evidence is reused."
       ],
       "limitations": [
         "Production data volume/index tuning and real deployment remain operational validation; full-text correctness is established against production-migrated PostgreSQL fixtures."
@@ -5822,12 +6107,30 @@
       "merged_prs": [
         122
       ],
-      "historically_skipped": false
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/crm/crm.service.ts",
+            "apps/api/src/crm/crm.controller.ts",
+            "apps/api/src/crm/crm-list-search.integration.test.ts",
+            "apps/api/src/crm/crm-list-sort.integration.test.ts",
+            "apps/api/src/crm/crm-list-http.integration.test.ts",
+            "apps/web/src/pages/CrmProfileList.tsx",
+            "apps/web/e2e/crm-list.spec.ts",
+            "packages/i18n/src/crm.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Reconciled current CRM mutation repair and later matching source-bound reviews. Retain unchanged UI/data evidence and explicit archival prerequisites."
+        }
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.05.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "cb7ac5b9e2c2b966f38cfc4e6acf080cb385289d",
+      "reviewed_sha": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 513,
       "requirement": "**T-05.05.01 — Profiles awaiting verification widget**\n\n- Description: On staff dashboard, widget showing profiles pending verification (if verification is not disabled). Shows count and \"Show all\" link to CRM with verification filter.\n- Technical notes: GET `/api/crm/dashboard/pending-verification` returns count and last 5 entries. Permission: staff with `crm:verify`.\n- UI/UX: Card: icon + count + \"Profiles awaiting verification\" + \"Show all\" link. Click opens CRM with `?verification=PENDING` filter.\n- Dependencies: T-05.01.02, E-07 (verification settings)\n- Complexity: S",
@@ -5835,11 +6138,11 @@
       "source_evidence": [
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "aad983c02d299bd9fd6c9a6aa4f035a282df3d248512184a5fc996a4c474c4d9"
+          "sha256": "8328258c971ceabc3f606f57ab4bf6f9c214757d4e0b62935c41b47dbd05a1c1"
         },
         {
           "path": "apps/api/src/crm/crm-v2.controller.ts",
-          "sha256": "bd83c7a34f0ecb903cced69c6238d096bf3ed75301e878c782b5f4fcb44391b8"
+          "sha256": "9fa19989e9f0557ea4d53cd923064e640088e8ce607d481d80195add3bfbae34"
         },
         {
           "path": "apps/api/src/crm/crm-dashboard.integration.test.ts",
@@ -5855,7 +6158,7 @@
         },
         {
           "path": "apps/web/e2e/crm-dashboard.spec.ts",
-          "sha256": "edd7b92bda435d826540c6c11b0967ace180033908bd4971b12bbe1f8264a927"
+          "sha256": "fe57ed39f0b3efdcc34415bc08ebe9c8866ff71b9e968423f3c3a19ad0d8c3e0"
         },
         {
           "path": "apps/web/e2e/number-preferences.spec.ts",
@@ -5883,7 +6186,11 @@
         "Scoped source reuse at709d28b: prior hashes matched6990edb. CRM edits retain the verification transaction/owner lock and add profile-specific notice text. Profile status changes only add current recipient/owner/context-scoped latest-notice data; other profile/address/permission methods are unchanged.68 backend and6 new browser cases pass; provider recovery29 cases pass. audit/evidence/step-reviews.json#R01-verification-policy",
         "R02 activation-proof checkpoint83a27ac8: refreshed immediate-base bindings for apps/api/openapi.json. Provider lifecycle/proof/migration and affected delivery fixtures reviewed; focused evidence in audit/evidence/step-reviews.json#R02-provider-activation-proof. Existing unrelated behavior and acceptance limits preserved.",
         "R02 branded previews5dade2d6: immediate-base bindings refreshed for apps/api/openapi.json. Changes are restricted to notification preview context/status, shared sample construction and browser-safe rendering. Unrelated controller handlers/authority and existing acceptance limits retained. See audit/evidence/step-reviews.json#R02-branded-admin-previews.",
-        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification."
+        "Immediate-base source bindings refreshed in audit/evidence/step-reviews.json#R02-daytime-window; only daytime methods/tests and window copy changed. Other reviewed methods and their valid evidence are preserved; this is not broad recertification.",
+        "297 distinct focused API cases pass across recorded runs, with overlapping reruns excluded. Saved case-accounting log shows the grouping. This is not one broad297-case invocation. Current authority HTTP suite passes33 cases; both self-revocation actions and seven pre-commit expiry cases across profile/account/correction flows leave no unauthorized writes.",
+        "Final identity and archive-wallet run passes65 cases. The subsequent assignment-notice case passes after switching to the CRM dictionary. The initial identity fixture restored absolute expiry but not the idle deadline shortened during request validation, causing20 downstream failures; cleanup now restores the complete isolated session. Baseline proves4 creation defects;5 approval baseline setup failures are not product evidence. Final creation/review cases pass all10 permission/session/CSRF/step-up/final-expiry scenarios.",
+        "Archival/exception-filter final run passes50 cases, including8 specific FA/EN blocker messages and6 invalid-detail rejections. Unknown blockers, wrong error-code associations and invalid counts retain safe catalogue messages. Initial27 source-binding drifts were reconciled against current matching reviews or the narrow fixture diffs;111 bindings were unchanged.",
+        "API typecheck, scoped lint/format, OpenAPI comparison and diff checks pass. The first typecheck identified2 old direct CRM session-cap callers; they now provide real session/CSRF/step-up proof and their full suite passes. Lint found one obsolete translation import, which was removed. No web source, dependency, migration, budget or contract changed; matching prior production-browser/build/budget evidence is reused."
       ],
       "limitations": [
         "Visibility and local reads are verified. Provider approval, deployed settings and final global regression remain separate evidence."
@@ -5911,6 +6218,23 @@
             "apps/web/src/pages/AdminDashboard.tsx"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/crm/crm-v2.service.ts",
+            "apps/api/src/crm/crm-v2.controller.ts",
+            "apps/api/src/crm/crm-dashboard.integration.test.ts",
+            "apps/api/openapi.json",
+            "apps/web/src/pages/AdminDashboard.tsx",
+            "apps/web/e2e/crm-dashboard.spec.ts",
+            "apps/web/e2e/number-preferences.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Reconciled current CRM mutation repair and later matching source-bound reviews. Retain unchanged UI/data evidence and explicit archival prerequisites."
         }
       ]
     },
@@ -6416,11 +6740,11 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "4d2efa0157bd8bf5ddebbf35d96bfbe8aa756ce65e524c41978095dddbdde446"
+          "sha256": "8328258c971ceabc3f606f57ab4bf6f9c214757d4e0b62935c41b47dbd05a1c1"
         },
         {
           "path": "apps/api/src/session/session-cap.integration.test.ts",
-          "sha256": "01947f280709fa9db8925c67a5f36cd71dbf2946a6fb9af460c31ec17dc72f26"
+          "sha256": "3698cefd7f65514c70356d1afaf7f60924b299f52319fa5a3042e3cfd3df6fb1"
         },
         {
           "path": "packages/db/drizzle/production/0088_staff_activation_delivery.sql",
@@ -6521,6 +6845,15 @@
           ],
           "review_record": "audit/evidence/step-reviews.json#V01-login-authentication",
           "note": "Reconciled current authentication handlers/UI and source-matching later batch evidence;95 API and40 distinct browser cases pass. No broad or unrelated acceptance waiver."
+        },
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/crm/crm-v2.service.ts",
+            "apps/api/src/session/session-cap.integration.test.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
         }
       ]
     },
@@ -8981,7 +9314,7 @@
         },
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "4d2efa0157bd8bf5ddebbf35d96bfbe8aa756ce65e524c41978095dddbdde446"
+          "sha256": "8328258c971ceabc3f606f57ab4bf6f9c214757d4e0b62935c41b47dbd05a1c1"
         },
         {
           "path": "apps/api/src/crm/crm-address-edit-http.integration.test.ts",
@@ -9062,7 +9395,17 @@
           "apps/api/src/crm/crm-v2.service.ts"
         ],
         "evidence": "audit/evidence/step-reviews.json#R01-verification-policy"
-      }
+      },
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/crm/crm-v2.service.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
+        }
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-03.04.02",
@@ -15917,11 +16260,11 @@
         },
         {
           "path": "apps/api/src/crm/verification-case.service.ts",
-          "sha256": "ebe90394baf47c5a7649782da0794b526bc037c7b7945db1c6f8bb2403dee38a"
+          "sha256": "0793326339a34bc06fefce2b2f77c233478e12577564544777bed8acc4afd6b4"
         },
         {
           "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-          "sha256": "dc4d2386c589d28278c0ff8b92c02fec41929e76eef393be9e73f961d33167a0"
+          "sha256": "d0c9fafd9575bf7b1f2abd898ed48c5ce9b469814c3f3492bf86122c837d300c"
         },
         {
           "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -15976,6 +16319,17 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/crm/verification-case.service.ts",
+            "apps/api/src/crm/verification-case-http.integration.test.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
+        }
       ]
     },
     {
@@ -16029,11 +16383,11 @@
         },
         {
           "path": "apps/api/src/crm/verification-case.service.ts",
-          "sha256": "ebe90394baf47c5a7649782da0794b526bc037c7b7945db1c6f8bb2403dee38a"
+          "sha256": "0793326339a34bc06fefce2b2f77c233478e12577564544777bed8acc4afd6b4"
         },
         {
           "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-          "sha256": "dc4d2386c589d28278c0ff8b92c02fec41929e76eef393be9e73f961d33167a0"
+          "sha256": "d0c9fafd9575bf7b1f2abd898ed48c5ce9b469814c3f3492bf86122c837d300c"
         },
         {
           "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -16088,6 +16442,17 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/crm/verification-case.service.ts",
+            "apps/api/src/crm/verification-case-http.integration.test.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
+        }
       ]
     },
     {
@@ -16141,11 +16506,11 @@
         },
         {
           "path": "apps/api/src/crm/verification-case.service.ts",
-          "sha256": "ebe90394baf47c5a7649782da0794b526bc037c7b7945db1c6f8bb2403dee38a"
+          "sha256": "0793326339a34bc06fefce2b2f77c233478e12577564544777bed8acc4afd6b4"
         },
         {
           "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-          "sha256": "dc4d2386c589d28278c0ff8b92c02fec41929e76eef393be9e73f961d33167a0"
+          "sha256": "d0c9fafd9575bf7b1f2abd898ed48c5ce9b469814c3f3492bf86122c837d300c"
         },
         {
           "path": "apps/web/src/pages/TicketsPage.tsx",
@@ -16199,6 +16564,17 @@
             "apps/web/src/pages/TicketsPage.tsx"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/crm/verification-case.service.ts",
+            "apps/api/src/crm/verification-case-http.integration.test.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
         }
       ]
     },
@@ -16352,11 +16728,11 @@
       "source_evidence": [
         {
           "path": "apps/api/src/crm/crm-v2.service.ts",
-          "sha256": "4d2efa0157bd8bf5ddebbf35d96bfbe8aa756ce65e524c41978095dddbdde446"
+          "sha256": "8328258c971ceabc3f606f57ab4bf6f9c214757d4e0b62935c41b47dbd05a1c1"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
+          "sha256": "6186813b9bfb96e7abf78be935745c4c50c2b65c601e7c7304cc8f3be96f941f"
         },
         {
           "path": "apps/api/src/notifications/notifications.service.ts",
@@ -16497,6 +16873,15 @@
           ],
           "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
           "note": "Shared browser fixture now uses canonical green key; two direct consumers pass four FA/EN cases. All unrelated fixture and test sections are unchanged; existing workflow evidence is reused."
+        },
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/crm/crm-v2.service.ts",
+            "apps/api/src/crm/crm-verification.integration.test.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
         }
       ]
     },
@@ -22594,11 +22979,11 @@
         },
         {
           "path": "apps/api/src/common/http-exception.filter.ts",
-          "sha256": "ce9eee35ff8da4628af7715b572d127001a749567bb7797656140fb0012dd637"
+          "sha256": "904f8a9e21197790eef71f1f7ba3efa83a1ae0bea67c6bb6cf661a429c4d1c25"
         },
         {
           "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-          "sha256": "aa74c3e394753744682cfab799e0e0eb0928caf63ca1068713b30d0fb1c4f6b0"
+          "sha256": "6186813b9bfb96e7abf78be935745c4c50c2b65c601e7c7304cc8f3be96f941f"
         },
         {
           "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
@@ -22618,7 +23003,7 @@
         },
         {
           "path": "apps/api/test/http-exception-filter.spec.ts",
-          "sha256": "12891154543c8e8f2b6fdc0ffd70b5f7471081c05ba39523f9aad79b5e7340be"
+          "sha256": "01aafea4ca454db4fa78e7d32f89262778ecc34e5ce742f715fb0ecfc8f64860"
         },
         {
           "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -22806,6 +23191,18 @@
         "audit/evidence/step-reviews.json#V01-database-foundations: Immediate-base bindings refreshed. Existing domain triggers and all applied SQL unchanged. New fallback stamps only previously uncovered tables when writers leave timestamps unchanged. DB742 distinct cases pass across package run/focused correction; API3 HTTP cases prove schema failure/recovery. Default connectivity behavior and factory runtime unchanged; old unmatched evidence remains queued; final cross-domain regression remains V02.",
         "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued.",
         "audit/evidence/step-reviews.json#V01-local-development: Immediate-base source bindings refreshed. Development scripts/config and dev-only dependencies changed; production build settings/runtime dependencies unchanged. OTP printing now requires explicit development opt-in;62 affected unit/HTTP cases pass. API/web types, compiled API/worker/shared/DB and frozen install pass. Existing38 older refreshes retained; full V02 remains."
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/common/http-exception.filter.ts",
+            "apps/api/src/crm/crm-verification.integration.test.ts",
+            "apps/api/test/http-exception-filter.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
+        }
       ]
     },
     {
@@ -22831,7 +23228,7 @@
         },
         {
           "path": "apps/api/src/common/http-exception.filter.ts",
-          "sha256": "ce9eee35ff8da4628af7715b572d127001a749567bb7797656140fb0012dd637"
+          "sha256": "904f8a9e21197790eef71f1f7ba3efa83a1ae0bea67c6bb6cf661a429c4d1c25"
         },
         {
           "path": "apps/api/src/common/public-domain-error-codes.ts",
@@ -22847,7 +23244,7 @@
         },
         {
           "path": "apps/api/test/http-exception-filter.spec.ts",
-          "sha256": "12891154543c8e8f2b6fdc0ffd70b5f7471081c05ba39523f9aad79b5e7340be"
+          "sha256": "01aafea4ca454db4fa78e7d32f89262778ecc34e5ce742f715fb0ecfc8f64860"
         },
         {
           "path": "apps/web/e2e/csp-reports.spec.ts",
@@ -22900,6 +23297,17 @@
             "apps/web/server.js"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "paths": [
+            "apps/api/src/common/http-exception.filter.ts",
+            "apps/api/test/http-exception-filter.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+          "note": "Scoped CRM transaction/session and shared error-filter repairs reviewed with297 distinct focused cases. Other methods and error-code behavior are unchanged; preserve their valid prior checks."
         }
       ]
     },
@@ -31191,6 +31599,23 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
       "note": "Five existing terms acceptances refreshed and five saved PR reviews closed. 8 immediate-base shared-fixture bindings refreshed for the scoped key correction. Four older terms refresh records close."
+    },
+    {
+      "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.03",
+        "02-auth-users-admin.md#T-05.02.04",
+        "02-auth-users-admin.md#T-05.02.05",
+        "02-auth-users-admin.md#T-05.02.06",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.01.02",
+        "02-auth-users-admin.md#T-05.05.01"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+      "note": "Nine task records reconciled:8 verified/1 partial preserved,8 PRs closed/1 open. 14 immediate-base overlapping bindings refreshed;8 older CRM records close."
     }
   ]
 }

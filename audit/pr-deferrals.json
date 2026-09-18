@@ -1803,7 +1803,16 @@
     "historical_deferrals": [
       "- [ ] Frontend: Request correction button + case queue UI (follow-up)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical frontend deferral satisfied by the later reviewed CRM implementation.",
+    "reviewed_source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+    "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Field-specific correction controls, evidence upload, independent reviewer queue, state changes, focus and FA/EN UI are verified in R01-crm-correction-acceptance. Current identity HTTP checks retain all five protected fields. audit/evidence/step-reviews.json#V01-crm-management"
+      }
+    ]
   },
   {
     "pr": 120,
@@ -1814,7 +1823,16 @@
     "historical_deferrals": [
       "- [ ] Frontend CRM list page (next slice)"
     ],
-    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+    "status": "Historical frontend deferral satisfied by the later reviewed CRM implementation.",
+    "reviewed_source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+    "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
+    "dispositions": [
+      {
+        "statement_index": 0,
+        "disposition": "satisfied_by_later_implementation",
+        "evidence": "Required /app/crm alias, six-column list, server-side sorting/filtering, pagination and accessible FA/EN UI are verified in R01-crm-users-list and R01-crm-search-filters. audit/evidence/step-reviews.json#V01-crm-management"
+      }
+    ]
   },
   {
     "pr": 115,

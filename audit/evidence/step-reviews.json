@@ -23201,6 +23201,527 @@
           "evidence": "audit/evidence/step-reviews.json#V01-terms-lifecycle"
         }
       ]
+    },
+    {
+      "id": "V01-crm-management",
+      "date": "2026-09-19",
+      "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+      "base_revision": "7072e5c9",
+      "product_commits": [
+        "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.03",
+        "02-auth-users-admin.md#T-05.02.04",
+        "02-auth-users-admin.md#T-05.02.05",
+        "02-auth-users-admin.md#T-05.02.06",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.01.02",
+        "02-auth-users-admin.md#T-05.05.01"
+      ],
+      "summary": "CRM mutations retain current session/CSRF/step-up through commit; localized archival blockers and assignment notices restored. Eight saved PR reviews close; archival remains open for contract/retention prerequisites.",
+      "review": [
+        "Read all nine exact requirements and saved PR bodies. Eight previously verified task acceptances remain verified; archival stays partial for its explicit future-contract/retention prerequisites. The prior frontend slices fulfill PR120 and127 unchecked UI statements. PR136 historical admin-only limitation is superseded by current crm:verify authority and mode-aware widget evidence.",
+        "Current list/detail/search/widget code and all UI consumers match prior reviewed sources apart from already-tested later privacy/address/verification-notification changes. Reused named R01 CRM and subsequent R02/R03/V01 evidence instead of rebuilding those features or rerunning unchanged browser suites.",
+        "Nine baseline HTTP cases proved edit/verify/archive accepted expired sessions, changed CSRF or expired step-up after a profile lock wait. Six more proved the same for forced password changes and session expiry. Four valid correction-creation baselines proved the gap including final-write expiry. Existing staff-permission checks alone do not bind the requesting session.",
+        "All seven CRM mutation entry points now receive the authenticated session, retain existing account/profile/role lock order, require the exact current session/CSRF/recent step-up after permission locks, and check again immediately before commit. A failure rolls back business writes, audits and notifications. Correction creation/review retain independent reviewer, sealed evidence, assignment and profile-before-case locking. Assignment-concurrency and identity-field tests pass.",
+        "Forced-password/session-expiry actions may intentionally revoke their own requesting session. Both capture that revocation under the already-held session lock and bind only the final check to its exact timestamp; expiry, CSRF and step-up are still enforced. Real self-action and audit-failure/refresh rollback cases pass.",
+        "Global error localization had erased CRM archival blocker details. Controller now supplies only structured blocker/count values; the filter maps explicit CRM codes and bounded blocker/count values through the CRM catalogue. Raw exception messages remain hidden. Existing identity assignment notices imported the generic dictionary and emitted literal keys; the CRM dictionary and actual FA/EN notice assertions repair that.",
+        "Four archive/order tests used obsolete thermal_electricity fixtures. The canonical thermal key restores those migration-backed tests without weakening migration0134. Failed diagnostics, fixtures and product regressions are retained in evidence. No production or remote action occurred."
+      ],
+      "verification": [
+        "297 distinct focused API cases pass across recorded runs, with overlapping reruns excluded. Saved case-accounting log shows the grouping. This is not one broad297-case invocation. Current authority HTTP suite passes33 cases; both self-revocation actions and seven pre-commit expiry cases across profile/account/correction flows leave no unauthorized writes.",
+        "Final identity and archive-wallet run passes65 cases. The subsequent assignment-notice case passes after switching to the CRM dictionary. The initial identity fixture restored absolute expiry but not the idle deadline shortened during request validation, causing20 downstream failures; cleanup now restores the complete isolated session. Baseline proves4 creation defects;5 approval baseline setup failures are not product evidence. Final creation/review cases pass all10 permission/session/CSRF/step-up/final-expiry scenarios.",
+        "Archival/exception-filter final run passes50 cases, including8 specific FA/EN blocker messages and6 invalid-detail rejections. Unknown blockers, wrong error-code associations and invalid counts retain safe catalogue messages. Initial27 source-binding drifts were reconciled against current matching reviews or the narrow fixture diffs;111 bindings were unchanged.",
+        "API typecheck, scoped lint/format, OpenAPI comparison and diff checks pass. The first typecheck identified2 old direct CRM session-cap callers; they now provide real session/CSRF/step-up proof and their full suite passes. Lint found one obsolete translation import, which was removed. No web source, dependency, migration, budget or contract changed; matching prior production-browser/build/budget evidence is reused."
+      ],
+      "remaining": [
+        "PR128 and T-05.02.06 retain future contract-state/profile-lock integration and an approved organizational retention policy. No production contract writer or policy evidence is claimed.",
+        "No automatic identity provider exists. Provider operations, production volume and final V02/coverage/image checks remain separate. No external messages, deployment, scheduler or GitHub changes occurred."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "90c575d7ba4980e8987589dd3c0f5cc817ebca907a1b2f9ca64817fc0b122c34"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "5b92f3c4deb6b07640f11320d47bfee935d4a35827edd312513bf2aa76417a02"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "904f8a9e21197790eef71f1f7ba3efa83a1ae0bea67c6bb6cf661a429c4d1c25"
+        },
+        {
+          "path": "apps/api/src/crm/crm-address-edit-http.integration.test.ts",
+          "sha256": "e5abfbef6a331f8a493bd855dfa38da13819ee91e31759d55faec76faf392bcc"
+        },
+        {
+          "path": "apps/api/src/crm/crm-dashboard.integration.test.ts",
+          "sha256": "b59decb2ffa2b08e46ac26348f66ead6a6b3f791fd854e215b525c910af656c6"
+        },
+        {
+          "path": "apps/api/src/crm/crm-legal-documents.controller.ts",
+          "sha256": "4b749c877ef9c4375968f63f005894b51ac4111bb623059bb78b9fa9e88921de"
+        },
+        {
+          "path": "apps/api/src/crm/crm-legal-edit-http.integration.test.ts",
+          "sha256": "6f7054b6d7dacb908a36fd2761b3e8f0b316c326d8d5e2c96bcfc27680480851"
+        },
+        {
+          "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
+          "sha256": "978837f326b63f908105408f46c3f100fdfa0f9d9bd2e0d64820d2984933d4b9"
+        },
+        {
+          "path": "apps/api/src/crm/crm-list-search.integration.test.ts",
+          "sha256": "4bc86b70a04a0a63d40f58c31ecb8fbe323bc49c091edb6a61ff6a7f3163fcde"
+        },
+        {
+          "path": "apps/api/src/crm/crm-list-sort.integration.test.ts",
+          "sha256": "0b0423d2f617fe9421d11680aad379c4762a806f5190d1d3c72eb5e27574f387"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-address.ts",
+          "sha256": "400401f147460031e4eb57fa85631065e52e5b85ad1d064119ceedfc7ec72483"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-legal.ts",
+          "sha256": "3b64d91021c7aa8d4115bd710f9da2fd5b89a6aa523fd063b7463933a8827db0"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
+          "sha256": "224423828f6a11096bc195be7c27e82a8fb745d6f204e2b860936a5d7cf25c20"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-records.ts",
+          "sha256": "c19ac007d0810d776a37ab9e821e0d382f648fa30babb90fa2b79f9c437bfeae"
+        },
+        {
+          "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
+          "sha256": "308eb139107358e718684321a710735c92f851cedc9c098bcef61f9e64a9c577"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "9fa19989e9f0557ea4d53cd923064e640088e8ce607d481d80195add3bfbae34"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.test.ts",
+          "sha256": "bc74b516214cfb425fed1e155c07cf024c482e489a2f223859dee2ee9b744315"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "8328258c971ceabc3f606f57ab4bf6f9c214757d4e0b62935c41b47dbd05a1c1"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "6186813b9bfb96e7abf78be935745c4c50c2b65c601e7c7304cc8f3be96f941f"
+        },
+        {
+          "path": "apps/api/src/crm/crm.controller.ts",
+          "sha256": "8c5458ed839ec829e80ed6a12ede6e8fb7cb6e3b27267f65318c5006feaf1393"
+        },
+        {
+          "path": "apps/api/src/crm/crm.module.ts",
+          "sha256": "eb66475e1ba2e2c7f24ea6191f3c6ea5a480602334882b657cf6ecbc988fa06c"
+        },
+        {
+          "path": "apps/api/src/crm/crm.service.test.ts",
+          "sha256": "16810a4ca9afb429a2c19e2ae6f16d62ea6fb82d869c18bb72e87b543770869f"
+        },
+        {
+          "path": "apps/api/src/crm/crm.service.ts",
+          "sha256": "77218fa08ca8bdbf42138edc7ca1a20625bc94ee528167739744c4799c8c2bec"
+        },
+        {
+          "path": "apps/api/src/crm/profile-archive-acceptance.integration.test.ts",
+          "sha256": "9620d4d896f61442f504231c118601f59ebbf3f0cc4d5085c86682c7f5522555"
+        },
+        {
+          "path": "apps/api/src/crm/profile-archive-finance.integration.test.ts",
+          "sha256": "e5e7e02497c6b997c8dca5b4a61e363d1e558640d24f8bc5ac4c696a439dfc24"
+        },
+        {
+          "path": "apps/api/src/crm/profile-archive-invoice.integration.test.ts",
+          "sha256": "53d3ee61b3aa00a54c5dd247adeac12a22832d13628fd91d2c54b7ebc5b10681"
+        },
+        {
+          "path": "apps/api/src/crm/profile-archive-wallet.integration.test.ts",
+          "sha256": "6ce9120c271ad6d760dbede43f5d3c9c35376903feaa9aad31f749f0ff48a654"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "d0c9fafd9575bf7b1f2abd898ed48c5ce9b469814c3f3492bf86122c837d300c"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.controller.ts",
+          "sha256": "b10886d1f6c5129f3a0b048f808cf297aa85344c1889b088a92ac24ced43647b"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "0793326339a34bc06fefce2b2f77c233478e12577564544777bed8acc4afd6b4"
+        },
+        {
+          "path": "apps/api/src/crm/verification-evidence.service.ts",
+          "sha256": "00986bd462dcafd242daec1502f7af1aef6d0247f655f90ba16e5c61cc592719"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.test.ts",
+          "sha256": "aaa6dc2291418a77098546e18bf08e4fcf036c6e3646c64db2dce2f884bbc491"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+          "sha256": "cf3edfc3bfe14bf9bbcef6eb604a4dac7e17c2a2141e0341cbbec5810250bb44"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "sha256": "933abbe9da00c91bb2ad47d5e3394d1199da52cb903e6958e8e8e0962d93807a"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+          "sha256": "bc9469ce89d24a26db7ea108ab478f83d55c196ff9e5ede4bbf1e0abf6e9d46c"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+          "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "3cf1343ed831dda2c31f7375aecdf044751dc12e2a3f22b7215d448be746434f"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-profile-lock.ts",
+          "sha256": "663e71f7595cf8d9ae8428e89c36d3e2299a872a5e34f0b2127bdea561dd8615"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "5ef97fe57f985f3bc637e79bc2b164e54f3ead16a3e7a3f32ac69529a2ae2c96"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "40ec7777e84b1a4da5c44e3467a0b33dff2e78f51b33e79a49110ba18e45d8a8"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "13a901d7218038e4d9f73b10f26257279f75c0e78c45ddf5578783fecfb76278"
+        },
+        {
+          "path": "apps/api/src/profiles/legal-documents-http.integration.test.ts",
+          "sha256": "ca212d5cd0337d2df4c54e4cdcfa86de65a0ffde042f8a7fa5a6dac4f60fb5f3"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "3698cefd7f65514c70356d1afaf7f60924b299f52319fa5a3042e3cfd3df6fb1"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        },
+        {
+          "path": "apps/api/src/session/session.service.ts",
+          "sha256": "d06e0b410789a0b5b355fab52fe719e2c336459004f8ffa7c3cfeb83a5a7355a"
+        },
+        {
+          "path": "apps/api/src/storage/verified-attachments.service.ts",
+          "sha256": "a16a080d16bb7c48b502d26f30a670f00da80d76294e421e19ad6450745403ef"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
+          "sha256": "dc72e52de6f0f4e9575608ba08cc7ec3bb7be7bf1672f68b84023f300c8ed0e4"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "6579e4f46a424649ff0fd6edf58c415124b0f8e5b10030b9364bc1352448015d"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.integration.test.ts",
+          "sha256": "db2b4b9de37eeae18ce1c55aca185b51715ed16f7e1d5107f1e3b0dafa4572b7"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+          "sha256": "9ad1a18ec7dcb699cc1dd87474f2e60d807e02aa2985710053563deb091fb08a"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+          "sha256": "60f7b3d3403b0d0dfe58c5a1e7b2f74787f3965af702b2d69d44a624c9133d82"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+          "sha256": "7498588c1230d5d6b5f3825507225c114dacf382bbd83c0d86bfc646c26b1365"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "5085d5e6eaa442c54c449f859b047fdc301cf9764608830c46228bec9eca59e9"
+        },
+        {
+          "path": "apps/api/src/wallet/profile-lock.ts",
+          "sha256": "c7c800be46282b058f5372f750f306275a186c8a2429705800f6a73fe27b0d6f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "935a1bfbe8a9a16e74eb39221daeea9f530d0f59f188b642ba5e0a07aa8705ae"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "85a4422c71a609c4ecd3e34c1713f8827d868b7426149b61b155b436b3af619c"
+        },
+        {
+          "path": "apps/api/test/http-exception-filter.spec.ts",
+          "sha256": "01aafea4ca454db4fa78e7d32f89262778ecc34e5ce742f715fb0ecfc8f64860"
+        },
+        {
+          "path": "apps/web/e2e/crm-address-edit.spec.ts",
+          "sha256": "38330cd0a675cfb1e25028e322155ef3035c0ce86e7fad7448da204bae34b033"
+        },
+        {
+          "path": "apps/web/e2e/crm-corrections.spec.ts",
+          "sha256": "af7490a27c1d297a9099201ee339cf9b2b89f7146093b06b95274f1b1709288c"
+        },
+        {
+          "path": "apps/web/e2e/crm-dashboard.spec.ts",
+          "sha256": "fe57ed39f0b3efdcc34415bc08ebe9c8866ff71b9e968423f3c3a19ad0d8c3e0"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "5df75267ac00027960c6622dfad6d039d5966a413bbb5f503eb87fb427d318da"
+        },
+        {
+          "path": "apps/web/e2e/crm-legal-edit.spec.ts",
+          "sha256": "d4d1c2681ce963db8617ab2f29aa366c1e7e5acc75db6303f6b82c8142867e33"
+        },
+        {
+          "path": "apps/web/e2e/crm-list.spec.ts",
+          "sha256": "e867845ba7774c1cfb43b11282d0649e8535463ead52a76ef8e450b349360db9"
+        },
+        {
+          "path": "apps/web/e2e/number-preferences.spec.ts",
+          "sha256": "9fff0d2e4b3d89a1066f29692b8ca0952840439fa6c5ee19b802f3e977163f63"
+        },
+        {
+          "path": "apps/web/src/components/CrmAddressEditor.tsx",
+          "sha256": "a59135433c8a5aef91d99356d77e144a65f66f41dcca29bd3426bd5baf6a2c3a"
+        },
+        {
+          "path": "apps/web/src/components/CrmLegalDocuments.tsx",
+          "sha256": "c1e15fbac8b1f4b8caed1d19ca4723b7435af36c00d757cd5b20c2ba232955ac"
+        },
+        {
+          "path": "apps/web/src/components/CrmLegalEditor.tsx",
+          "sha256": "beef4e7221ce55683365d4c0533d57523bef34b8f7680cc76261b68faa3d2c0e"
+        },
+        {
+          "path": "apps/web/src/components/CrmProfileRecords.tsx",
+          "sha256": "e2510e997261bb5a26ce21e02f77abbfea499305fe71c38cb9e0a7867272fa5b"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "e2d6616b3b2c1053b0ea8b6eceaa3893eade17a03d1544d2e8fcb52d4317ad52"
+        },
+        {
+          "path": "apps/web/src/pages/AdminDashboard.tsx",
+          "sha256": "a00cbd17259187ff584ad53dfb0f4eda306dece6cd8798a378d6b6dad495dc63"
+        },
+        {
+          "path": "apps/web/src/pages/AdminLayout.tsx",
+          "sha256": "d46971fd97608e29a314810c810391113fbaa41c3da5feb6526ef2db425990c2"
+        },
+        {
+          "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+          "sha256": "51249114e3b4a47f89d68705c9f6159330632cf2ca41ac381020423b68e3161d"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "3ecfe779c5b99728282c35d6ccc4e30e4c064aabaa3da6134e9e9933b4a1af6b"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileList.tsx",
+          "sha256": "68b5282136ac16de5ec38cab80011ac359bf9a4713f3d415929c1dd76e4bdbd2"
+        },
+        {
+          "path": "apps/web/src/routeTree.gen.ts",
+          "sha256": "9127f1b8833ff0f20a77e67631b6d4c5a8d56447926713a7b1539fa58ba4bf40"
+        },
+        {
+          "path": "apps/web/src/routes/admin/crm/corrections.tsx",
+          "sha256": "a2e12cbaa6432662902d82e16cd7812c06e2323c34311db2d078abb27c075cf3"
+        },
+        {
+          "path": "apps/web/src/routes/app/crm/index.tsx",
+          "sha256": "5c99f835cc17a6bede03318a397456d49fb1e5ec580a04c7f46feae33f568780"
+        },
+        {
+          "path": "apps/web/src/routes/app/crm/profiles.$profileId.tsx",
+          "sha256": "8389aa97454aa02e55127c28b5d3646fb3d6a257edb4a4d28a9999fe640ef3bb"
+        },
+        {
+          "path": "docs/runbooks/profile-archival.md",
+          "sha256": "87a6a9bbf0124affbe476aca4eef95713a222be96594e5ca5b6a5cd35cd24798"
+        },
+        {
+          "path": "kanban/epics/02-auth-users-admin.md",
+          "sha256": "e532618b099625d9b0c8cae5fc03804183236ae80174ce47b4168180a78a8a55"
+        },
+        {
+          "path": "packages/i18n/src/crm.ts",
+          "sha256": "b669d1a90dbd0aa4296be3dab90c61211fb41782d7893aad35ca55b88bbc87e6"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-crm-account-authority-baseline.log",
+        "/tmp/v01-crm-account-authority-fixed.log",
+        "/tmp/v01-crm-account-format.log",
+        "/tmp/v01-crm-account-probe-format.log",
+        "/tmp/v01-crm-archive-refresh.log",
+        "/tmp/v01-crm-authority-baseline.log",
+        "/tmp/v01-crm-authority-format.log",
+        "/tmp/v01-crm-blocker-final.log",
+        "/tmp/v01-crm-blocker-format.log",
+        "/tmp/v01-crm-case-accounting.log",
+        "/tmp/v01-crm-commit.log",
+        "/tmp/v01-crm-diff-final.log",
+        "/tmp/v01-crm-final-boundary-format.log",
+        "/tmp/v01-crm-format-clean.log",
+        "/tmp/v01-crm-identity-authority-baseline.log",
+        "/tmp/v01-crm-identity-authority-fixed.log",
+        "/tmp/v01-crm-identity-cleanup-format.log",
+        "/tmp/v01-crm-identity-final.log",
+        "/tmp/v01-crm-identity-format.log",
+        "/tmp/v01-crm-identity-probe-format.log",
+        "/tmp/v01-crm-lint-clean.log",
+        "/tmp/v01-crm-lint-final.log",
+        "/tmp/v01-crm-notice-final.log",
+        "/tmp/v01-crm-notice-format.log",
+        "/tmp/v01-crm-openapi-final.log",
+        "/tmp/v01-crm-probe-format.log",
+        "/tmp/v01-crm-profile-account-types.log",
+        "/tmp/v01-crm-profile-authority-fixed.log",
+        "/tmp/v01-crm-profile-boundary-final.log",
+        "/tmp/v01-crm-source-binding.log",
+        "/tmp/v01-crm-types-diagnostic.log",
+        "/tmp/v01-crm-types-final.log",
+        "/tmp/v01-crm-unbound-test-drift.log",
+        "/tmp/v01-crm-verification-fixture-format.log"
+      ],
+      "reused_evidence": [
+        "audit/evidence/step-reviews.json#R01-crm-users-list",
+        "audit/evidence/step-reviews.json#R01-crm-search-filters",
+        "audit/evidence/step-reviews.json#R01-crm-profile-page-acceptance",
+        "audit/evidence/step-reviews.json#R01-crm-legal-edit",
+        "audit/evidence/step-reviews.json#R01-crm-correction-acceptance",
+        "audit/evidence/step-reviews.json#R01-crm-pending-widget",
+        "audit/evidence/step-reviews.json#R01-archive-invoice-writers",
+        "audit/evidence/step-reviews.json#R01-archive-wallet-writers",
+        "audit/evidence/step-reviews.json#R01-archive-confirmation-and-retention",
+        "audit/evidence/step-reviews.json#R01-device-trust-atomic",
+        "audit/evidence/step-reviews.json#R01-profile-addresses",
+        "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
+        "audit/evidence/step-reviews.json#R03-correlation",
+        "audit/evidence/step-reviews.json#R01-chargebacks-alerts",
+        "audit/evidence/step-reviews.json#V01-login-authentication",
+        "audit/evidence/step-reviews.json#V01-ui-foundations",
+        "audit/evidence/step-reviews.json#V01-terms-lifecycle"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 120,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.01.01"
+          ],
+          "reason": "Exact task and saved PR criteria are verified by current authority/transaction checks and matching prior CRM UI/data evidence. PR120/127 frontend deferrals have explicit satisfied dispositions.",
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "evidence": "audit/evidence/step-reviews.json#V01-crm-management"
+        },
+        {
+          "pr": 122,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.01.02"
+          ],
+          "reason": "Exact task and saved PR criteria are verified by current authority/transaction checks and matching prior CRM UI/data evidence. PR120/127 frontend deferrals have explicit satisfied dispositions.",
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "evidence": "audit/evidence/step-reviews.json#V01-crm-management"
+        },
+        {
+          "pr": 123,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.02.01"
+          ],
+          "reason": "Exact task and saved PR criteria are verified by current authority/transaction checks and matching prior CRM UI/data evidence. PR120/127 frontend deferrals have explicit satisfied dispositions.",
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "evidence": "audit/evidence/step-reviews.json#V01-crm-management"
+        },
+        {
+          "pr": 124,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.02.02"
+          ],
+          "reason": "Exact task and saved PR criteria are verified by current authority/transaction checks and matching prior CRM UI/data evidence. PR120/127 frontend deferrals have explicit satisfied dispositions.",
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "evidence": "audit/evidence/step-reviews.json#V01-crm-management"
+        },
+        {
+          "pr": 125,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.02.03"
+          ],
+          "reason": "Exact task and saved PR criteria are verified by current authority/transaction checks and matching prior CRM UI/data evidence. PR120/127 frontend deferrals have explicit satisfied dispositions.",
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "evidence": "audit/evidence/step-reviews.json#V01-crm-management"
+        },
+        {
+          "pr": 126,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.02.04"
+          ],
+          "reason": "Exact task and saved PR criteria are verified by current authority/transaction checks and matching prior CRM UI/data evidence. PR120/127 frontend deferrals have explicit satisfied dispositions.",
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "evidence": "audit/evidence/step-reviews.json#V01-crm-management"
+        },
+        {
+          "pr": 127,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.02.05"
+          ],
+          "reason": "Exact task and saved PR criteria are verified by current authority/transaction checks and matching prior CRM UI/data evidence. PR120/127 frontend deferrals have explicit satisfied dispositions.",
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "evidence": "audit/evidence/step-reviews.json#V01-crm-management"
+        },
+        {
+          "pr": 128,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.02.06"
+          ],
+          "reason": "Local archival authority, blockers and UI are verified; contract integration and approved retention policy remain unmet.",
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "evidence": "audit/evidence/step-reviews.json#V01-crm-management"
+        },
+        {
+          "pr": 136,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-05.05.01"
+          ],
+          "reason": "Exact task and saved PR criteria are verified by current authority/transaction checks and matching prior CRM UI/data evidence. PR120/127 frontend deferrals have explicit satisfied dispositions.",
+          "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+          "evidence": "audit/evidence/step-reviews.json#V01-crm-management"
+        }
+      ]
     }
   ]
 }

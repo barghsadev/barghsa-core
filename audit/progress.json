@@ -3,9 +3,9 @@
   "updated": "2026-09-19",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+  "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
   "active_step": "V01",
-  "next_action": "Review CRM listing, profile management and pending-verification widget as one batch: saved PR120,122–128,136. Reuse current source-bound acceptance; retain archive contract/retention prerequisites.",
+  "next_action": "Review staff creation, role assignment and user management as one batch: saved PR129,130,218. Reuse current staff lifecycle/session evidence and resolve the saved deferrals.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -827,6 +827,10 @@
     {
       "id": "V01-terms-lifecycle",
       "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle"
+    },
+    {
+      "id": "V01-crm-management",
+      "review_record": "audit/evidence/step-reviews.json#V01-crm-management"
     }
   ],
   "deferred_improvements": [
@@ -953,32 +957,6 @@
       ]
     },
     {
-      "task_key": "02-auth-users-admin.md#T-05.02.01",
-      "changed_paths": [
-        "apps/api/src/crm/crm-list-http.integration.test.ts",
-        "apps/api/src/crm/crm-v2.service.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-05.02.04",
-      "changed_paths": [
-        "apps/api/src/auth/auth.service.ts",
-        "apps/api/src/crm/crm-v2.service.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-05.01.01",
-      "changed_paths": [
-        "apps/api/src/crm/crm-list-http.integration.test.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-05.01.02",
-      "changed_paths": [
-        "apps/api/src/crm/crm-list-http.integration.test.ts"
-      ]
-    },
-    {
       "task_key": "01-platform-infrastructure.md#T-06.02.03",
       "changed_paths": [
         "apps/web/e2e/tickets.spec.ts",
@@ -1058,30 +1036,6 @@
       ]
     },
     {
-      "task_key": "02-auth-users-admin.md#T-05.02.02",
-      "changed_paths": [
-        "apps/api/src/crm/crm-v2.service.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-05.02.03",
-      "changed_paths": [
-        "apps/api/src/crm/crm-v2.service.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-05.02.06",
-      "changed_paths": [
-        "apps/api/src/crm/crm-v2.service.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-05.05.01",
-      "changed_paths": [
-        "apps/api/src/crm/crm-v2.service.ts"
-      ]
-    },
-    {
       "task_key": "02-auth-users-admin.md#T-05.04.02",
       "changed_paths": [
         "apps/api/src/profiles/profiles.controller.ts"
@@ -1147,41 +1101,72 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-terms-lifecycle",
-    "name": "Terms publication, acceptance and history",
+    "id": "V01-crm-management",
+    "name": "CRM listing, profile management and verification widget",
     "status": "completed",
     "prs": [
-      117,
-      118,
-      119,
-      159,
-      160
+      120,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      136
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-04.01.01",
-      "02-auth-users-admin.md#T-04.01.02",
-      "02-auth-users-admin.md#T-04.01.03",
-      "02-auth-users-admin.md#T-09.03.01",
-      "02-auth-users-admin.md#T-09.03.02"
+      "02-auth-users-admin.md#T-05.02.01",
+      "02-auth-users-admin.md#T-05.02.02",
+      "02-auth-users-admin.md#T-05.02.03",
+      "02-auth-users-admin.md#T-05.02.04",
+      "02-auth-users-admin.md#T-05.02.05",
+      "02-auth-users-admin.md#T-05.02.06",
+      "02-auth-users-admin.md#T-05.01.01",
+      "02-auth-users-admin.md#T-05.01.02",
+      "02-auth-users-admin.md#T-05.05.01"
     ],
-    "base_revision": "693e90e8",
-    "remaining_checklist": [],
-    "historical_deferrals": [],
+    "base_revision": "7072e5c9",
+    "remaining_checklist": [
+      "PR128 and T-05.02.06 retain future contract-state/profile-lock integration and an approved organizational retention policy. No production contract writer or policy evidence is claimed.",
+      "No automatic identity provider exists. Provider operations, production volume and final V02/coverage/image checks remain separate. No external messages, deployment, scheduler or GitHub changes occurred."
+    ],
+    "historical_deferrals": [
+      {
+        "pr": 127,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/127",
+        "task_keys": [
+          "02-auth-users-admin.md#T-05.02.05"
+        ],
+        "historical_deferrals": [
+          "- [ ] Frontend: Request correction button + case queue UI (follow-up)"
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      },
+      {
+        "pr": 120,
+        "url": "https://github.com/barghsadev/barghsa-core/pull/120",
+        "task_keys": [
+          "02-auth-users-admin.md#T-05.01.01"
+        ],
+        "historical_deferrals": [
+          "- [ ] Frontend CRM list page (next slice)"
+        ],
+        "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+      }
+    ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "Existing five task acceptances and their superseded detailed reviews",
-      "R01-registration-otp",
-      "R03-theme-contrast",
-      "R03-controls",
-      "R03-consumer-theme-time"
+      "Prior R01 CRM feature and transaction reviews; later source-matching finance/notification/verification/login reviews."
     ],
-    "next_action": "Review CRM listing, profile management and pending-verification widget as one batch: saved PR120,122–128,136. Reuse current source-bound acceptance; retain archive contract/retention prerequisites.",
-    "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
-    "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+    "next_action": "Review staff creation, role assignment and user management as one batch: saved PR129,130,218. Reuse current staff lifecycle/session evidence and resolve the saved deferrals.",
+    "source_revision": "bf2b23ecfc3375db77d4c6c8c8ffbda1b9fd17e1",
+    "review_record": "audit/evidence/step-reviews.json#V01-crm-management",
     "verification": [
-      "42 focused API cases pass across the terms service, migrated terms HTTP and registration HTTP suites, including rollback after session expiry during a version-row wait. Revocation/CSRF lock-wait cases already passed before the repair and are retained as compatibility evidence.",
-      "47 distinct browser cases pass:41 from the initial selection plus6 final live-API cases. The first live fixture failed before application testing because its obsolete green_electricity key violates migration0134; the fixture and two consumers now use green. Final6 cover FA/EN publication, green rules and catalogue. Incidental autosave/marketing matches in the first selection remain passing evidence, not new task scope.",
-      "API typecheck, scoped lint/format/diff and generated OpenAPI comparison pass. Initial typechecks reported three unchanged notification-test errors from stale incremental cache; a separate fresh compiler cache passed, then the normal check passed after removing the generated cache. No notification source or compiler setting changed. Prior production frontend build/types/42 budgets remain valid because only API and test code changed."
+      "297 distinct focused API cases pass across recorded runs, with overlapping reruns excluded. Saved case-accounting log shows the grouping. This is not one broad297-case invocation. Current authority HTTP suite passes33 cases; both self-revocation actions and seven pre-commit expiry cases across profile/account/correction flows leave no unauthorized writes.",
+      "Final identity and archive-wallet run passes65 cases. The subsequent assignment-notice case passes after switching to the CRM dictionary. The initial identity fixture restored absolute expiry but not the idle deadline shortened during request validation, causing20 downstream failures; cleanup now restores the complete isolated session. Baseline proves4 creation defects;5 approval baseline setup failures are not product evidence. Final creation/review cases pass all10 permission/session/CSRF/step-up/final-expiry scenarios.",
+      "Archival/exception-filter final run passes50 cases, including8 specific FA/EN blocker messages and6 invalid-detail rejections. Unknown blockers, wrong error-code associations and invalid counts retain safe catalogue messages. Initial27 source-binding drifts were reconciled against current matching reviews or the narrow fixture diffs;111 bindings were unchanged.",
+      "API typecheck, scoped lint/format, OpenAPI comparison and diff checks pass. The first typecheck identified2 old direct CRM session-cap callers; they now provide real session/CSRF/step-up proof and their full suite passes. Lint found one obsolete translation import, which was removed. No web source, dependency, migration, budget or contract changed; matching prior production-browser/build/budget evidence is reused."
     ]
   },
   "open_domain_reviews": [

@@ -4,11 +4,13 @@ Read the feature-batch rules in [fix-plan.md](fix-plan.md) and `active_batch` in
 
 ## Current checkpoint
 
-Branch `codex/audit-fixes`. Latest product/test **d9ed9dd5**. **209 verified /47 partial /66 pending** of322 claims. Saved PRs: **206 closed /43 open /52 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3568 logs indexed;33 older evidence refreshes remain. Inventory ends September3; no current GitHub or deployment claim.
+Branch `codex/audit-fixes`. Latest product/test **bf2b23ec**. **209 verified /47 partial /66 pending** of322 claims. Saved PRs: **214 closed /44 open /43 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3602 logs indexed;25 older evidence refreshes remain. Inventory ends September3; no current GitHub or deployment claim.
 
-Terms lifecycle consolidated at **d9ed9dd5**: five saved PR117/118/119/159/160 close; five existing acceptances preserved. Consent now rejects session expiry during a database wait and rolls back all evidence.42 API and47 distinct browser cases pass. Shared live fixture uses canonical green key; types/lint/format/OpenAPI pass. Four older bindings close;33 refresh records remain. [Batch review](evidence/step-reviews.json#V01-terms-lifecycle).
+CRM management consolidated at **bf2b23ec**: saved PR120,122–127,136 close; PR128 stays open for future contracts/retention policy. Seven mutation paths now retain session/CSRF/step-up through commit; archival details and correction-assignment translations are repaired.297 distinct API cases pass across focused runs; unchanged browser evidence reused. Types/lint/format/OpenAPI pass. Eight older bindings close;25 refresh records remain. [Batch review](evidence/step-reviews.json#V01-crm-management).
 
-**Next:** CRM listing/profile management/widget, saved PR120,122–128,136. Reuse source-bound completed reviews; preserve future archive/retention prerequisites. Full regression stays V02.
+**Next:** staff creation, role assignment and user management, saved PR129/130/218. Reuse source-bound lifecycle/session reviews. Full regression stays V02.
+
+Terms checkpoint d9ed9dd5 closes PR117/118/119/159/160;42 API/47 browser cases pass. Consent-expiry and shared fixture repairs remain verified.
 
 UI foundations checkpoint **21438625** verifies1 task;2 remain partial for explicit stack/table requirement discrepancies. PR65 closed;66/67 open. Font/PostCSS/keyboard-highlight repairs pass45 browser,56 UI and42 budget checks. Both PR67 visual/form deferrals are satisfied.
 

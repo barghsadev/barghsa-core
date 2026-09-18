@@ -24977,6 +24977,244 @@
       "sha256": "6cc16ff669c7c8379c7d6ccd220bf81d01c8cbcc07fc1236d3fa967af044e89d",
       "encoding": "gzip",
       "stored_sha256": "a8f946cb157b8cb3387a7cc992f3b3177134ffdf97ef8deeac4e2d457a175555"
+    },
+    {
+      "original_path": "/tmp/v01-crm-account-authority-baseline.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-account-authority-baseline.log.gz",
+      "sha256": "a065a3fd74631e6a6eb705663e88e05bf6e8aa904d3aaca11ccfe3680586f175",
+      "encoding": "gzip",
+      "stored_sha256": "288b76c34e225cea30e2510b94c8a604ac259f53fa1c5d2f8befc9c478b0df48"
+    },
+    {
+      "original_path": "/tmp/v01-crm-account-authority-fixed.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-account-authority-fixed.log.gz",
+      "sha256": "a3c9ebfa80a3dd8aaca1b0fdda1f138d391ddea01eb6851d71a7b53de1efcac3",
+      "encoding": "gzip",
+      "stored_sha256": "ae7dece7d6f26b0668f503b663a091a439642c802610821c88e9ba2cb4f96eba"
+    },
+    {
+      "original_path": "/tmp/v01-crm-account-format.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-account-format.log.gz",
+      "sha256": "db74e3c36dbfa10da8a50227fccf17f7cea11ce9425ffee6850ff42343dcde35",
+      "encoding": "gzip",
+      "stored_sha256": "77f78d12504edd70892309bbbbd5a9771a89e8e8a7865fd2ecd98c90921aab07"
+    },
+    {
+      "original_path": "/tmp/v01-crm-account-probe-format.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-account-probe-format.log.gz",
+      "sha256": "aeb8820abef34f433318d6deac0b511ae033dfcb550b2c1cf3a57c6067f60769",
+      "encoding": "gzip",
+      "stored_sha256": "86027ccb1269a08667fbc332b74844899acd1c0bf9ee66a171378309f116a47f"
+    },
+    {
+      "original_path": "/tmp/v01-crm-archive-refresh.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-archive-refresh.log.gz",
+      "sha256": "204ecf001181e3742f491949f55cb26cfb1f139ce38cda8c45eb8ad2c849dc90",
+      "encoding": "gzip",
+      "stored_sha256": "21c70dd421d06b0ed276c59a99be26465be546797b8d0e60d61127d69e674dc7"
+    },
+    {
+      "original_path": "/tmp/v01-crm-authority-baseline.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-authority-baseline.log.gz",
+      "sha256": "16b36d5adbd6605e27d5c097e5de8cf3b87aa0d6ae79775714a47bd30bcbd6c8",
+      "encoding": "gzip",
+      "stored_sha256": "c3d8dd205e1fde8445f9440f7a1d616ea126e30d451798dc9cc12673f102a37f"
+    },
+    {
+      "original_path": "/tmp/v01-crm-authority-format.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-authority-format.log.gz",
+      "sha256": "d1ea9a0cb6f18607d18b37fc8262ea8f8f8a35829e7f33854d01ccf6639735b2",
+      "encoding": "gzip",
+      "stored_sha256": "533b9e016d87cb4e91969e244b794b07035d6c7fe5938e6f2deb1f14ba2fdd0b"
+    },
+    {
+      "original_path": "/tmp/v01-crm-blocker-final.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-blocker-final.log.gz",
+      "sha256": "a48fb60958a6bcc9ee270da6f4d87872164251822496c3b0ee646913f9264724",
+      "encoding": "gzip",
+      "stored_sha256": "d01d986fbdbd44708d277eccd1fe78b5d4e0dd87796780643a7b6c355dd27655"
+    },
+    {
+      "original_path": "/tmp/v01-crm-blocker-format.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-blocker-format.log.gz",
+      "sha256": "3ab95bc1d0d4a35aba322c6792043cfdcb30d260903effb80e02201486ed0ed9",
+      "encoding": "gzip",
+      "stored_sha256": "66146ccf080ac48532b7354f66f101b52f90ac56f8fc43b1258e1e85a619fd68"
+    },
+    {
+      "original_path": "/tmp/v01-crm-case-accounting.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-case-accounting.log.gz",
+      "sha256": "92ba6e359a0467c58ac5f3cface438038d933f7c6fb15e2c25f45dad96d66b42",
+      "encoding": "gzip",
+      "stored_sha256": "afc6a0618ee58fb35ae6891dd3a47cd6627f8e3ed57ffacd52674d01bcfa181a"
+    },
+    {
+      "original_path": "/tmp/v01-crm-commit.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-commit.log.gz",
+      "sha256": "9b7b03f85ddfab1b56c4a4abca2c59675ed079505d1fba230a31fdec5fca1925",
+      "encoding": "gzip",
+      "stored_sha256": "72bf52b4034a52992587c6a391708ca48e37521e43c4c66ede17745367db58f5"
+    },
+    {
+      "original_path": "/tmp/v01-crm-diff-final.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-diff-final.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-crm-final-boundary-format.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-final-boundary-format.log.gz",
+      "sha256": "c1a8a8c44cbd83b61e7999cb4b347086098ddecb3712a682bcd84a09736de797",
+      "encoding": "gzip",
+      "stored_sha256": "5eb385ec08d07bb3262e3a01e6f9db8864e8c294b24f7a8169ae68fbb94226a1"
+    },
+    {
+      "original_path": "/tmp/v01-crm-format-clean.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-format-clean.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/v01-crm-identity-authority-baseline.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-identity-authority-baseline.log.gz",
+      "sha256": "63bae180db780ba015c760816b2a40d2e19de86064e0afe8752cb1a70d47e142",
+      "encoding": "gzip",
+      "stored_sha256": "65bd6c8b49ed5f9783b988f80717f1fd1ddbac718b88077cd62da9b906fe02a6"
+    },
+    {
+      "original_path": "/tmp/v01-crm-identity-authority-fixed.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-identity-authority-fixed.log.gz",
+      "sha256": "94ec596e66dbab0a27ed68883a59cccc8897523c864ea2c0b707ceb70b6c8017",
+      "encoding": "gzip",
+      "stored_sha256": "8a6f97e69383ac66892f3387102e1fb3cc90082a4daca7b42052306cf8460b96"
+    },
+    {
+      "original_path": "/tmp/v01-crm-identity-cleanup-format.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-identity-cleanup-format.log.gz",
+      "sha256": "8886e2990fe84fa8ba190509b0854cef312f88d3a55247ce3a0762f8d1bef912",
+      "encoding": "gzip",
+      "stored_sha256": "c10e14891a16c988550989755ac2e51d0640cea8401873978a3ba5dabd9d1780"
+    },
+    {
+      "original_path": "/tmp/v01-crm-identity-final.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-identity-final.log.gz",
+      "sha256": "eabcbd99649aa32330efdc818054146a39c3911ea41c6bed9ed2d0924c28b5b9",
+      "encoding": "gzip",
+      "stored_sha256": "9243ed286ac8816a8df1ed2c9ff87b6003ec3700f1b6904a22f5cebaecc1b3ac"
+    },
+    {
+      "original_path": "/tmp/v01-crm-identity-format.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-identity-format.log.gz",
+      "sha256": "e908a113020b4b31a2eed9cadafeeed9043f5f12ee3fa30736e1e3af06bcab74",
+      "encoding": "gzip",
+      "stored_sha256": "fe3b95ba64f606194c9a9d2163a4a93fab2de6c002c92330262fa81f6bb2cf39"
+    },
+    {
+      "original_path": "/tmp/v01-crm-identity-probe-format.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-identity-probe-format.log.gz",
+      "sha256": "c3641d5078abc51ab816cf43bab7b26e1f9fd69eadec010ea255bd7c0c8b2f27",
+      "encoding": "gzip",
+      "stored_sha256": "795b9adc41b56e5e3b361c1ba67f2033080f4675c5e120462d9eb3d7106f869d"
+    },
+    {
+      "original_path": "/tmp/v01-crm-lint-clean.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-lint-clean.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-crm-lint-final.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-lint-final.log.gz",
+      "sha256": "87484d17341d1b443d869bca1752f972639c9afd5b7ef23517ea82c9a9371d17",
+      "encoding": "gzip",
+      "stored_sha256": "a5544400d1d6d331817a206805f1a2ce9064520d948c088dea46687ebf0deb68"
+    },
+    {
+      "original_path": "/tmp/v01-crm-notice-final.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-notice-final.log.gz",
+      "sha256": "6b39191beb1b88e437082acaa33076268c6e448e2cbc99cf49ea7cb67042a02a",
+      "encoding": "gzip",
+      "stored_sha256": "0f57b2fff19d8485bca1b1954eb315b5f2e2332627604eb918fad110e8049683"
+    },
+    {
+      "original_path": "/tmp/v01-crm-notice-format.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-notice-format.log.gz",
+      "sha256": "b94d9a16d8e89cc8ec5552bb0ec7bc8b8d130c50dc2a7f536e55377e3fb95ecb",
+      "encoding": "gzip",
+      "stored_sha256": "868a3ab731b5b74f6e548a4cda5e513bcb703510aa34384309fdb10bb11d9a5f"
+    },
+    {
+      "original_path": "/tmp/v01-crm-openapi-final.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-openapi-final.log.gz",
+      "sha256": "fc11de2993c17e4fdfda4fdd9587e5ced26768c5888c00d37736d9bd271505a6",
+      "encoding": "gzip",
+      "stored_sha256": "6d1eca6b3663fca9518ba0650c237cb9610c8bb7ea02d5cad9d7d40462ae6809"
+    },
+    {
+      "original_path": "/tmp/v01-crm-probe-format.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-probe-format.log.gz",
+      "sha256": "cc59afe2345a19c93c4dc8889c38db135f9e2ae65ac43134f19a00779b5ffe1c",
+      "encoding": "gzip",
+      "stored_sha256": "356cfa08cc18d6b957b198eee8a0ca690a75216c364f513d78339d1389d704ff"
+    },
+    {
+      "original_path": "/tmp/v01-crm-profile-account-types.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-profile-account-types.log.gz",
+      "sha256": "a11678a389590b308efed0b922138bd8156328af49dfeb7d48f10ff3e9611ce3",
+      "encoding": "gzip",
+      "stored_sha256": "9a3ff31d71334055d9ffc06e4de564da2b17ad4be5a2c118508b8a3a7ce1f608"
+    },
+    {
+      "original_path": "/tmp/v01-crm-profile-authority-fixed.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-profile-authority-fixed.log.gz",
+      "sha256": "76fa8b51b039cb7b55238c0b6512969a842720556e4fdf5c2454ef408f961e81",
+      "encoding": "gzip",
+      "stored_sha256": "33e73a210e212e0476da4ca9301cd062b153c9ea69344afaf1b5ae4be302ad2b"
+    },
+    {
+      "original_path": "/tmp/v01-crm-profile-boundary-final.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-profile-boundary-final.log.gz",
+      "sha256": "e3d50e23d5141d8582e20defb1c839cb14394e7c5258cc07f265775daaf1e93b",
+      "encoding": "gzip",
+      "stored_sha256": "5c64f9cb6e69d40f1f970d6fe97c046770f9b4a82e3df755b20349802ee370ab"
+    },
+    {
+      "original_path": "/tmp/v01-crm-source-binding.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-source-binding.log.gz",
+      "sha256": "ee27dba8d631fc76dd0795f52e69f3d744ec51031ac2435c1c6e433735a47035",
+      "encoding": "gzip",
+      "stored_sha256": "288089e42740a4de025e58b246bf979a2e0ff04b3bf6c8763dc843526681722e"
+    },
+    {
+      "original_path": "/tmp/v01-crm-types-diagnostic.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-types-diagnostic.log.gz",
+      "sha256": "2efef3d5ed5da59a36302440cba70cc0e22e406c7fd387f34831b08d429a74e1",
+      "encoding": "gzip",
+      "stored_sha256": "0019ac509f414d3ce09d9afdbed48a29b22237fe7fcad8c29129225701b0de92"
+    },
+    {
+      "original_path": "/tmp/v01-crm-types-final.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/v01-crm-unbound-test-drift.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-unbound-test-drift.log.gz",
+      "sha256": "d59a87fd63bc6ce67ba66dded698d10916bb2a644638bb66de520676ca0684f1",
+      "encoding": "gzip",
+      "stored_sha256": "ea82fde4e4f8242f9e6536738573937f1e91e377d1e799edca8498f5993a921a"
+    },
+    {
+      "original_path": "/tmp/v01-crm-verification-fixture-format.log",
+      "path": "audit/evidence/v01-crm-management/v01-crm-verification-fixture-format.log.gz",
+      "sha256": "92a3081a02a730522358b211024e712d203593cc9ce4c4bd96f9755418d4138c",
+      "encoding": "gzip",
+      "stored_sha256": "599b350d988f9e9fe9ca83d436b73cf434f57d55954be7a737f526345a7e4673"
     }
   ]
 }
