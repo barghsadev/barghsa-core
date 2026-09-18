@@ -83,6 +83,8 @@ export interface PresignedUrlResponse {
  *   signature — fail closed);
  * - `not_found` — object does not exist.
  *
+ * Content verification persists `Pending scan` on the owned storage record.
+ * `confirmed` describes content inspection, not a successful malware scan.
  * `pending_scan` is retained for backward compatibility with legacy
  * callers; this endpoint no longer produces it (a client cannot opt out
  * of content-type detection).

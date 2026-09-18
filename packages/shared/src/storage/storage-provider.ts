@@ -32,6 +32,8 @@ export interface StorageObject {
   metadata: StorageMetadata;
   /** Object etag, if available. */
   etag: string | undefined;
+  /** Immutable provider version identifier, when versioning is enabled. */
+  versionId?: string | undefined;
 }
 
 /** Configuration accepted by all providers. */

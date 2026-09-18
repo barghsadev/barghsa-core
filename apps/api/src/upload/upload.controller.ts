@@ -13,7 +13,12 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { reserveUpload, requireOwnedUpload, completeUpload } from './upload-reservations.js';
+import {
+  reserveUpload,
+  requireOwnedUpload,
+  completeUpload,
+  recordUploadInspection,
+} from './upload-reservations.js';
 import { randomUUID } from 'node:crypto';
 import { detectDocumentContentType } from './document-content-type.js';
 import type { StorageProvider } from '@barghsa/shared/storage';
@@ -204,11 +209,26 @@ export class UploadController {
       });
     }
 
-    await requireOwnedUpload(key, actor.session.userId);
+    const issued = await requireOwnedUpload(key, actor.session.userId);
     try {
       const inspected = await this.inspectUploadedObject(key, category);
 
       if (inspected.kind === 'confirmed') {
+        const size = parseTrustedContentLength(inspected.contentLength);
+        if (
+          !size ||
+          size !== Number(issued.file_size) ||
+          inspected.detected !== issued.content_type
+        )
+          throw new BadRequestException(
+            'Uploaded bytes do not match the authorized size and content type'
+          );
+        await recordUploadInspection(key, actor.session.userId, {
+          contentType: inspected.detected,
+          contentLength: size,
+          etag: inspected.etag,
+          versionId: inspected.versionId,
+        });
         return {
           key,
           exists: true,
@@ -325,6 +345,12 @@ export class UploadController {
         });
       }
       actualFileSize = trustedSize;
+      await recordUploadInspection(key, req.session.userId, {
+        contentType: detectedContentType,
+        contentLength: actualFileSize,
+        etag: inspected.etag,
+        versionId: inspected.versionId,
+      });
     } catch (err) {
       if (err instanceof StorageObjectNotFound) {
         throw new BadRequestException({
@@ -346,6 +372,11 @@ export class UploadController {
       metadata: {
         verified: true,
         verifiedAt: new Date().toISOString(),
+        // T-05.11.02 explicitly permits availability when no scanner is configured.
+        // The future scanner integration must replace this branch, never claim a pass on failure.
+        scanState: 'Available',
+        scanSkippedReason: 'not_configured',
+        scanResolvedAt: new Date().toISOString(),
         uploadedBy: req.session.userId,
         ...(profileId ? { profileId } : {}),
         ...(purpose ? { purpose } : {}),
@@ -368,13 +399,26 @@ export class UploadController {
     key: string,
     category: string
   ): Promise<
-    | { kind: 'confirmed'; detected: string; contentLength: number | undefined }
+    | {
+        kind: 'confirmed';
+        detected: string;
+        contentLength: number | undefined;
+        etag: string | undefined;
+        versionId: string | undefined;
+      }
     | { kind: 'type_mismatch'; detected: string | null; allowed: readonly string[] }
   > {
     const policy = await this.policyResolver.resolveEffective(category);
     if (!effectiveAllowsExtension(policy, key))
       throw new BadRequestException('Upload extension is no longer permitted by the active policy');
     const object = await this.storage!.getObject(key);
+    const storedSize = parseTrustedContentLength(object.contentLength);
+    if (!storedSize || !effectiveAllowsSize(policy, storedSize)) {
+      await object.body.cancel();
+      throw new BadRequestException(
+        'Uploaded object size is unavailable or exceeds the active limit'
+      );
+    }
     const office = /\.(docx?|xlsx?)$/i.test(key);
     const csv = /\.csv$/i.test(key);
     const sample = await this.readSample(
@@ -393,7 +437,13 @@ export class UploadController {
     const allowedMimeTypes = effectiveMimeTypesForFile(policy, key);
     const detected = pickDetectedContentType(candidates, allowedMimeTypes);
     if (detected !== null) {
-      return { kind: 'confirmed', detected, contentLength: object.contentLength };
+      return {
+        kind: 'confirmed',
+        detected,
+        contentLength: object.contentLength,
+        etag: object.etag,
+        versionId: object.versionId,
+      };
     }
     return {
       kind: 'type_mismatch',

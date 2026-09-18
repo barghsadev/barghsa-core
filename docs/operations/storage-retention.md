@@ -69,3 +69,15 @@ delete marker would allow a conditional create at that key again. Existing
 sealed business copies remain the canonical objects for their own workflows.
 Privileged server credentials can still overwrite objects; this repair closes
 the browser URL replay path, not provider-level administrative mutation.
+
+## Upload inspection and scan state
+
+Reservations record `Uploading`. Successful content inspection records provider
+metadata and a durable `Pending scan` timestamp. Record promotion moves to
+`Available` with `scanSkippedReason=not_configured`, as explicitly allowed by
+T-05.11.02 while no scanner integration exists. This is not a malware scan or a
+clean-file claim. Repeated verification does not reset an available file.
+Scanner integration, quarantine, document state history and full SHA-256
+recording remain owned by T-05.11.01–03 and T-05.12.01; those future consumers
+must replace the unconfigured fallback before enabling a scanner. An unavailable
+configured scanner must leave files pending, never take this fallback.

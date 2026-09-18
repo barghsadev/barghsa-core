@@ -16,7 +16,7 @@ export async function reserveUpload(options: {
     `INSERT INTO storage_records
     (storage_key,status,file_name,content_type,file_size,category,metadata,removed_at)
     VALUES ($1,'removed',$2,$3,$4,$5,jsonb_build_object(
-      'uploadedBy',$6::text,'provisionalUpload',true,'deletionRequested',true,
+      'uploadedBy',$6::text,'provisionalUpload',true,'deletionRequested',true,'scanState','Uploading',
       'uploadExpiresAt',clock_timestamp()+($7::int * INTERVAL '1 second')),NOW())`,
     [
       options.key,
@@ -47,6 +47,36 @@ export async function requireOwnedUpload(key: string, userId: string) {
   ).rows[0];
   if (!row) throw new NotFoundException('Upload not found or expired');
   return row;
+}
+
+/** Persist the content-inspected object and Pending scan transition, without claiming a scan. */
+export async function recordUploadInspection(
+  key: string,
+  userId: string,
+  metadata: {
+    contentType: string;
+    contentLength: number;
+    etag?: string | undefined;
+    versionId?: string | undefined;
+  }
+) {
+  const result = await getDbPool().query(
+    `UPDATE storage_records SET metadata=metadata||jsonb_build_object(
+      'scanState','Pending scan','scanRequestedAt',COALESCE(metadata->'scanRequestedAt',to_jsonb(clock_timestamp())),
+      'storageInspection',$3::jsonb),updated_at=NOW()
+     WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2 AND status='removed'
+       AND signed_at IS NULL AND metadata->>'provisionalUpload'='true'
+       AND metadata->>'deletionRequested'='true'
+       AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()`,
+    [key, userId, JSON.stringify(metadata)]
+  );
+  if (result.rowCount === 1) return;
+  // Concurrent recording is idempotent; removed or expired records cannot be revived.
+  const current = await getDbPool().query(
+    "SELECT storage_key FROM storage_records WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2 AND status='active'",
+    [key, userId]
+  );
+  if (!current.rows.length) throw new ConflictException('Upload changed; request a new upload');
 }
 /** Conditional promotion cannot revive a removed/expired upload or one already cleaned by a worker. */
 export async function completeUpload(options: CreateRecordOptions) {

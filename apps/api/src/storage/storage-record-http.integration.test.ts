@@ -59,6 +59,8 @@ beforeAll(async () => {
     }
     res.setHeader('Content-Length', bytes.length);
     res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('ETag', '"fixture-etag"');
+    res.setHeader('x-amz-version-id', 'fixture-v1');
     res.end(bytes);
   });
   await new Promise<void>((resolve) => storage.listen(0, '127.0.0.1', resolve));
@@ -527,3 +529,45 @@ for (const method of ['POST', 'DELETE']) {
     expect(audit.meta).toMatchObject({ stepUpVerified: true, stepUpVerifiedAt: at });
   });
 }
+
+it('persists Pending scan inspection and records the explicit unconfigured-scanner fallback', async () => {
+  const key = await issue();
+  expect((await row(key)).metadata.scanState).toBe('Uploading');
+  expect((await uploadRequest(key, 'verify')).status).toBe(200);
+  const pending = (await row(key)).metadata;
+  expect(pending).toMatchObject({
+    scanState: 'Pending scan',
+    storageInspection: {
+      contentType: 'application/pdf',
+      contentLength: 13,
+      etag: '"fixture-etag"',
+      versionId: 'fixture-v1',
+    },
+  });
+  expect(pending.scanRequestedAt).toBeTruthy();
+  expect(pending).not.toHaveProperty('scanSkippedReason');
+  expect((await uploadRequest(key, 'record')).status).toBe(200);
+  expect((await row(key)).metadata).toMatchObject({
+    scanState: 'Available',
+    scanSkippedReason: 'not_configured',
+    scanRequestedAt: pending.scanRequestedAt,
+  });
+  expect((await uploadRequest(key, 'verify')).status).toBe(200);
+  expect((await row(key)).metadata.scanState).toBe('Available');
+});
+it('does not queue an inspection for bytes that differ from the authorized upload size', async () => {
+  const key = await issue();
+  objects.set(key, Buffer.from('%PDF-too-long-for-issued-size'));
+  expect((await uploadRequest(key, 'verify')).status).toBe(400);
+  expect((await row(key)).metadata.scanState).toBe('Uploading');
+  expect((await row(key)).metadata).not.toHaveProperty('storageInspection');
+});
+it('records inspection even when a client calls record without a separate verification request', async () => {
+  const key = await issue();
+  expect((await uploadRequest(key, 'record')).status).toBe(200);
+  const metadata = (await row(key)).metadata;
+  expect(metadata.scanRequestedAt).toBeTruthy();
+  expect(metadata.scanState).toBe('Available');
+  expect(metadata.scanSkippedReason).toBe('not_configured');
+  expect(metadata.storageInspection.contentLength).toBe(13);
+});

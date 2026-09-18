@@ -227,6 +227,7 @@ export class S3StorageProvider implements StorageProvider {
         contentLength: response.ContentLength ?? undefined,
         metadata: (response.Metadata as StorageMetadata) ?? {},
         etag: response.ETag ?? undefined,
+        versionId: response.VersionId,
       };
     } catch (err) {
       // Re-throw our own error type immediately — do not re-wrap.
