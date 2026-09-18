@@ -2430,7 +2430,7 @@
     {
       "task_key": "01-platform-infrastructure.md#T-01.03.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "7eecc144cb01bdafd9860b867ca163683b49a727",
+      "reviewed_sha": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
       "requirement_file": "kanban/epics/01-platform-infrastructure.md",
       "requirement_line": 139,
       "requirement": "- **T-01.03.03:** Implement route-level code splitting and lazy loading for heavy modules\n  - **Notes:** Lazy-load: admin dashboards, AI chat UI, document editors, chart visualizations, video upload viewers. Use dynamic `import()` with React.lazy or TanStack Router's lazy routes. Customer purchase paths (electricity ordering, saving plans, wallet top-up) must NOT be lazy-loaded. Verify that lazy boundaries don't cause layout shift.\n  - **Dependencies:** T-01.03.01\n  - **Complexity:** M\n  - **UI/UX:** Loading states for lazy routes must match the app skeleton and respect `prefers-reduced-motion`. Show a skeleton or minimal spinner, never a blank page.",
@@ -2442,7 +2442,7 @@
         },
         {
           "path": "Dockerfile.web",
-          "sha256": "7b7c3d8960acf338e56d592aad0560c0e6dc049d2a3a30a5eb3796b6fe4b1bd6"
+          "sha256": "d8b098350e3392707acbf91280d49eb15b56757f88df8f98a65301445385fc29"
         },
         {
           "path": "apps/web/build.mjs",
@@ -24727,14 +24727,280 @@
       ],
       "historically_skipped": false,
       "review_record": "audit/evidence/step-reviews.json#V01-config-backup"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.01",
+      "status": "partial",
+      "reviewed_sha": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 422,
+      "requirement": "- **T-03.01.01:** Create `Dockerfile.web` with multi-stage build\n  - **Notes:** Stage 1 (deps): `pnpm install --frozen-lockfile --prod=false`. Stage 2 (build): copy source, `pnpm build --filter @barghsa/web`. Stage 3 (production): `pnpm install --frozen-lockfile --prod`, copy `dist/` from build, set `EXPOSE 3000`, `USER node`, `CMD node apps/web/server/index.js` (or framework output). Include `.npmrc` for strict engine check.\n  - **Dependencies:** S-01.03\n  - **Complexity:** M",
+      "requirement_sha256": "70dad28b680b177858b1ab056fd8785b0c30c20a16661462d58c1882c1304e6d",
+      "source_evidence": [
+        {
+          "path": ".dockerignore",
+          "sha256": "3bd5500ebfe885097be0a0813b2a7ec040d7cbf433fe060ce1b11f67a887a941"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "f5f1cef61a3e52bc8ae23968d54f9b6cf2403e4dc4f569b0f2a18b1e1dc20585"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "d8b098350e3392707acbf91280d49eb15b56757f88df8f98a65301445385fc29"
+        },
+        {
+          "path": "docker-compose.prod.yml",
+          "sha256": "0cc89b5af401ca45361fdb73a1f72968e399a6cc0475658da876812b0e0379e9"
+        },
+        {
+          "path": "scripts/healthcheck-runtime.cjs",
+          "sha256": "024fe14b3e5888ba77b25a39a014ec3b9bba24007872d5dc306c3a3543b7042e"
+        },
+        {
+          "path": "scripts/test-container-packaging.py",
+          "sha256": "e11ac27dbf45aa9f11fdf9e43f0a572564306b9c8733fc92b398e22a7d107b12"
+        },
+        {
+          "path": "scripts/test-docker-context.py",
+          "sha256": "31ef6fc14320269f8fb636ed46f0564243df568c781c3a86ad7dd4243a2ce99e"
+        }
+      ],
+      "checks": [
+        "Both production images build from the frozen lockfile; separate deps/build stages preserve the accepted Vite SPA and self-contained deployed packages.",
+        "Actual Docker context fixture reproduces six previously included paths, then passes all11 exclusions and7 build-essential paths. Required production migration SQL/journal remain available; migration snapshots and local output are excluded.",
+        "Actual isolated PostgreSQL16 migrations and read-only non-root API/worker/web boot pass. API and worker image IDs are identical with only command override. Both readiness probes fail on database loss, liveness stays available, recovery succeeds and all three processes exit0 on SIGTERM.",
+        "Compose validation reproduced an undefined required pgbouncer service. The production overlay now clears its development-only profile. Persistent compose-only regression checks common build target, command override, capabilities, read-only root and enabled dependency.",
+        "Image metadata confirms node user,512MB Node heap and30s/10s/40s/3 health timings. JavaScript lint/format, Python/JavaScript syntax and diff checks pass. Runtime business drain tests remain source-bound in the prior lifecycle review; full V02 regression is not repeated."
+      ],
+      "limitations": [
+        "Owner decision pending: existing tested Node24 images conflict with the literal Node20 story requirement. Do not silently waive it or downgrade the working toolchain.",
+        "Published latest/immutable revision tags, registry delivery and production rollout remain assigned to R06/V01 deployment review. Local test tags are not release traceability proof."
+      ],
+      "merged_prs": [
+        94,
+        30
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-container-images"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.02",
+      "status": "partial",
+      "reviewed_sha": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 427,
+      "requirement": "- **T-03.01.02:** Create shared `Dockerfile.base` for API and worker (same build, different CMD)\n  - **Notes:** Stages identical to web for deps and build but targeting packages/db, packages/shared, apps/api. Produce shared build output. The final image is the same; orchestrator passes different CMD. Works with both `docker run` argument override and Docker Compose `command` override. Export port 4000.\n  - **Dependencies:** S-01.03, S-02.01\n  - **Complexity:** M",
+      "requirement_sha256": "7ad89163cb8c7a57a452d54c8e661575f00f2d09b85cedd5fc14837752b282d5",
+      "source_evidence": [
+        {
+          "path": ".dockerignore",
+          "sha256": "3bd5500ebfe885097be0a0813b2a7ec040d7cbf433fe060ce1b11f67a887a941"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "f5f1cef61a3e52bc8ae23968d54f9b6cf2403e4dc4f569b0f2a18b1e1dc20585"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "d8b098350e3392707acbf91280d49eb15b56757f88df8f98a65301445385fc29"
+        },
+        {
+          "path": "docker-compose.prod.yml",
+          "sha256": "0cc89b5af401ca45361fdb73a1f72968e399a6cc0475658da876812b0e0379e9"
+        },
+        {
+          "path": "scripts/healthcheck-runtime.cjs",
+          "sha256": "024fe14b3e5888ba77b25a39a014ec3b9bba24007872d5dc306c3a3543b7042e"
+        },
+        {
+          "path": "scripts/test-container-packaging.py",
+          "sha256": "e11ac27dbf45aa9f11fdf9e43f0a572564306b9c8733fc92b398e22a7d107b12"
+        },
+        {
+          "path": "scripts/test-docker-context.py",
+          "sha256": "31ef6fc14320269f8fb636ed46f0564243df568c781c3a86ad7dd4243a2ce99e"
+        }
+      ],
+      "checks": [
+        "Both production images build from the frozen lockfile; separate deps/build stages preserve the accepted Vite SPA and self-contained deployed packages.",
+        "Actual Docker context fixture reproduces six previously included paths, then passes all11 exclusions and7 build-essential paths. Required production migration SQL/journal remain available; migration snapshots and local output are excluded.",
+        "Actual isolated PostgreSQL16 migrations and read-only non-root API/worker/web boot pass. API and worker image IDs are identical with only command override. Both readiness probes fail on database loss, liveness stays available, recovery succeeds and all three processes exit0 on SIGTERM.",
+        "Compose validation reproduced an undefined required pgbouncer service. The production overlay now clears its development-only profile. Persistent compose-only regression checks common build target, command override, capabilities, read-only root and enabled dependency.",
+        "Image metadata confirms node user,512MB Node heap and30s/10s/40s/3 health timings. JavaScript lint/format, Python/JavaScript syntax and diff checks pass. Runtime business drain tests remain source-bound in the prior lifecycle review; full V02 regression is not repeated."
+      ],
+      "limitations": [
+        "Owner decision pending: existing tested Node24 images conflict with the literal Node20 story requirement. Do not silently waive it or downgrade the working toolchain.",
+        "Published latest/immutable revision tags, registry delivery and production rollout remain assigned to R06/V01 deployment review. Local test tags are not release traceability proof."
+      ],
+      "merged_prs": [
+        95,
+        31
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-container-images"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.03",
+      "status": "acceptance_verified",
+      "reviewed_sha": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 432,
+      "requirement": "- **T-03.01.03:** Create `.dockerignore`\n  - **Notes:** Exclude: `node_modules/` (any depth), `.git/`, `dist/` (build stage produces it), `coverage/`, `.turbo/`, `.env`, `*.md` (except build-essential), `test/`, `e2e/`, `drizzle/` (migration snapshots not needed in final image), `.husky/`, `.vscode/`.\n  - **Dependencies:** T-03.01.01, T-03.01.02\n  - **Complexity:** S",
+      "requirement_sha256": "c9f4992f0fd6e3eeba63ae078e81e3c04d2b9b4998c537f887cd0aa34bf5460b",
+      "source_evidence": [
+        {
+          "path": ".dockerignore",
+          "sha256": "3bd5500ebfe885097be0a0813b2a7ec040d7cbf433fe060ce1b11f67a887a941"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "f5f1cef61a3e52bc8ae23968d54f9b6cf2403e4dc4f569b0f2a18b1e1dc20585"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "d8b098350e3392707acbf91280d49eb15b56757f88df8f98a65301445385fc29"
+        },
+        {
+          "path": "docker-compose.prod.yml",
+          "sha256": "0cc89b5af401ca45361fdb73a1f72968e399a6cc0475658da876812b0e0379e9"
+        },
+        {
+          "path": "scripts/healthcheck-runtime.cjs",
+          "sha256": "024fe14b3e5888ba77b25a39a014ec3b9bba24007872d5dc306c3a3543b7042e"
+        },
+        {
+          "path": "scripts/test-container-packaging.py",
+          "sha256": "e11ac27dbf45aa9f11fdf9e43f0a572564306b9c8733fc92b398e22a7d107b12"
+        },
+        {
+          "path": "scripts/test-docker-context.py",
+          "sha256": "31ef6fc14320269f8fb636ed46f0564243df568c781c3a86ad7dd4243a2ce99e"
+        }
+      ],
+      "checks": [
+        "Both production images build from the frozen lockfile; separate deps/build stages preserve the accepted Vite SPA and self-contained deployed packages.",
+        "Actual Docker context fixture reproduces six previously included paths, then passes all11 exclusions and7 build-essential paths. Required production migration SQL/journal remain available; migration snapshots and local output are excluded.",
+        "Actual isolated PostgreSQL16 migrations and read-only non-root API/worker/web boot pass. API and worker image IDs are identical with only command override. Both readiness probes fail on database loss, liveness stays available, recovery succeeds and all three processes exit0 on SIGTERM.",
+        "Compose validation reproduced an undefined required pgbouncer service. The production overlay now clears its development-only profile. Persistent compose-only regression checks common build target, command override, capabilities, read-only root and enabled dependency.",
+        "Image metadata confirms node user,512MB Node heap and30s/10s/40s/3 health timings. JavaScript lint/format, Python/JavaScript syntax and diff checks pass. Runtime business drain tests remain source-bound in the prior lifecycle review; full V02 regression is not repeated."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        96,
+        32
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-container-images"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.04",
+      "status": "acceptance_verified",
+      "reviewed_sha": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 437,
+      "requirement": "- **T-03.01.04:** Add `HEALTHCHECK` instruction to all Dockerfiles\n  - **Notes:** Web: `HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 CMD node healthcheck.js` (curl localhost:3000/api/health). API: check `/api/health`. Worker: check via a small script or the readiness endpoint. Interval and start-period must account for NestJS module initialization.\n  - **Dependencies:** T-03.01.01, T-03.01.02\n  - **Complexity:** S",
+      "requirement_sha256": "f521acda47e692e57e6a62c82fe5df6c083ea927dca3c5d086d05ebb937d739d",
+      "source_evidence": [
+        {
+          "path": ".dockerignore",
+          "sha256": "3bd5500ebfe885097be0a0813b2a7ec040d7cbf433fe060ce1b11f67a887a941"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "f5f1cef61a3e52bc8ae23968d54f9b6cf2403e4dc4f569b0f2a18b1e1dc20585"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "d8b098350e3392707acbf91280d49eb15b56757f88df8f98a65301445385fc29"
+        },
+        {
+          "path": "docker-compose.prod.yml",
+          "sha256": "0cc89b5af401ca45361fdb73a1f72968e399a6cc0475658da876812b0e0379e9"
+        },
+        {
+          "path": "scripts/healthcheck-runtime.cjs",
+          "sha256": "024fe14b3e5888ba77b25a39a014ec3b9bba24007872d5dc306c3a3543b7042e"
+        },
+        {
+          "path": "scripts/test-container-packaging.py",
+          "sha256": "e11ac27dbf45aa9f11fdf9e43f0a572564306b9c8733fc92b398e22a7d107b12"
+        },
+        {
+          "path": "scripts/test-docker-context.py",
+          "sha256": "31ef6fc14320269f8fb636ed46f0564243df568c781c3a86ad7dd4243a2ce99e"
+        }
+      ],
+      "checks": [
+        "Both production images build from the frozen lockfile; separate deps/build stages preserve the accepted Vite SPA and self-contained deployed packages.",
+        "Actual Docker context fixture reproduces six previously included paths, then passes all11 exclusions and7 build-essential paths. Required production migration SQL/journal remain available; migration snapshots and local output are excluded.",
+        "Actual isolated PostgreSQL16 migrations and read-only non-root API/worker/web boot pass. API and worker image IDs are identical with only command override. Both readiness probes fail on database loss, liveness stays available, recovery succeeds and all three processes exit0 on SIGTERM.",
+        "Compose validation reproduced an undefined required pgbouncer service. The production overlay now clears its development-only profile. Persistent compose-only regression checks common build target, command override, capabilities, read-only root and enabled dependency.",
+        "Image metadata confirms node user,512MB Node heap and30s/10s/40s/3 health timings. JavaScript lint/format, Python/JavaScript syntax and diff checks pass. Runtime business drain tests remain source-bound in the prior lifecycle review; full V02 regression is not repeated."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        97,
+        33
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-container-images"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.05",
+      "status": "acceptance_verified",
+      "reviewed_sha": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+      "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+      "requirement_line": 442,
+      "requirement": "- **T-03.01.05:** Implement security hardening in Docker images\n  - **Notes:** Use `--no-cache` in apk add if Alpine. Set `USER node:node` (non-root). Drop `--cap-drop=ALL` and add only `--cap-add=NET_BIND_SERVICE` if binding <1024 port. Set read-only root filesystem (`--read-only`) in production compose. Set `NODE_ENV=production` and ensure `--enable-source-maps` is removed in prod. No debugger exposed. Set `NODE_OPTIONS=\"--max-old-space-size=512\"` for memory limit.\n  - **Dependencies:** T-03.01.01, T-03.01.02\n  - **Complexity:** M\n  - **UI/UX:** N/A\n\n---",
+      "requirement_sha256": "4b1c9a9a5301880cb67501ed12a2a8e542e09caf042374af8604e0d3e8a12352",
+      "source_evidence": [
+        {
+          "path": ".dockerignore",
+          "sha256": "3bd5500ebfe885097be0a0813b2a7ec040d7cbf433fe060ce1b11f67a887a941"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "f5f1cef61a3e52bc8ae23968d54f9b6cf2403e4dc4f569b0f2a18b1e1dc20585"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "d8b098350e3392707acbf91280d49eb15b56757f88df8f98a65301445385fc29"
+        },
+        {
+          "path": "docker-compose.prod.yml",
+          "sha256": "0cc89b5af401ca45361fdb73a1f72968e399a6cc0475658da876812b0e0379e9"
+        },
+        {
+          "path": "scripts/healthcheck-runtime.cjs",
+          "sha256": "024fe14b3e5888ba77b25a39a014ec3b9bba24007872d5dc306c3a3543b7042e"
+        },
+        {
+          "path": "scripts/test-container-packaging.py",
+          "sha256": "e11ac27dbf45aa9f11fdf9e43f0a572564306b9c8733fc92b398e22a7d107b12"
+        },
+        {
+          "path": "scripts/test-docker-context.py",
+          "sha256": "31ef6fc14320269f8fb636ed46f0564243df568c781c3a86ad7dd4243a2ce99e"
+        }
+      ],
+      "checks": [
+        "Both production images build from the frozen lockfile; separate deps/build stages preserve the accepted Vite SPA and self-contained deployed packages.",
+        "Actual Docker context fixture reproduces six previously included paths, then passes all11 exclusions and7 build-essential paths. Required production migration SQL/journal remain available; migration snapshots and local output are excluded.",
+        "Actual isolated PostgreSQL16 migrations and read-only non-root API/worker/web boot pass. API and worker image IDs are identical with only command override. Both readiness probes fail on database loss, liveness stays available, recovery succeeds and all three processes exit0 on SIGTERM.",
+        "Compose validation reproduced an undefined required pgbouncer service. The production overlay now clears its development-only profile. Persistent compose-only regression checks common build target, command override, capabilities, read-only root and enabled dependency.",
+        "Image metadata confirms node user,512MB Node heap and30s/10s/40s/3 health timings. JavaScript lint/format, Python/JavaScript syntax and diff checks pass. Runtime business drain tests remain source-bound in the prior lifecycle review; full V02 regression is not repeated."
+      ],
+      "limitations": [],
+      "merged_prs": [
+        98,
+        34
+      ],
+      "historically_skipped": false,
+      "review_record": "audit/evidence/step-reviews.json#V01-container-images"
     }
   ],
   "pending_task_keys": [
-    "01-platform-infrastructure.md#T-03.01.01",
-    "01-platform-infrastructure.md#T-03.01.02",
-    "01-platform-infrastructure.md#T-03.01.03",
-    "01-platform-infrastructure.md#T-03.01.04",
-    "01-platform-infrastructure.md#T-03.01.05",
     "01-platform-infrastructure.md#T-04.02.02",
     "01-platform-infrastructure.md#T-04.03.01",
     "01-platform-infrastructure.md#T-04.03.02",
@@ -29207,6 +29473,15 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#V01-config-backup",
       "note": "14 immediate-base source bindings refreshed after bounded diff review and46 distinct backup cases. Older38 refresh queue preserved; unchanged application evidence reused."
+    },
+    {
+      "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.03.03"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-container-images",
+      "note": "1 immediate-base source bindings refreshed after bounded Docker/Compose diff review, actual image/runtime/context checks. Unchanged application and lifecycle evidence reused;38 older refreshes retained."
     }
   ]
 }

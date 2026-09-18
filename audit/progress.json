@@ -3,9 +3,9 @@
   "updated": "2026-09-18",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "6c6cf4375837106507f3e899014eaa4e43d95460",
+  "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
   "active_step": "V01",
-  "next_action": "Review the ten saved container PRs against the five exact current tasks; inspect Dockerfiles/context and run focused image builds/smoke checks for confirmed gaps.",
+  "next_action": "Inspect saved PR52 and current Redis/PostgreSQL rate-limit implementation; trace callers before selecting focused tests.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -794,6 +794,10 @@
     {
       "id": "V01-config-backup",
       "review_record": "audit/evidence/step-reviews.json#V01-config-backup"
+    },
+    {
+      "id": "V01-container-images",
+      "review_record": "audit/evidence/step-reviews.json#V01-container-images"
     }
   ],
   "deferred_improvements": [
@@ -815,15 +819,20 @@
     {
       "issue": "Login username blur inserts its required-field error and moves the support link during a pointer click. Keyboard activation works. Existing form layout issue, outside purchase-loading repairs.",
       "source_revision": "7eecc144cb01bdafd9860b867ca163683b49a727"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.02",
+      "issue": "Refresh legacy scripts/test-production-images.py separate-worker image/health layout and old business fixture at V02. Current packaging-specific script provides actual same-image migration/readiness/shutdown proof; prior lifecycle tests retain their scoped evidence.",
+      "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0"
     }
   ],
   "scope_note": "Group implementation labels summarize recorded repairs, not whole-group acceptance. Historical status counts are generated from the ledger, never inferred from these labels.",
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 197,
-    "partial": 41,
-    "pending": 84,
+    "acceptance_verified": 200,
+    "partial": 43,
+    "pending": 79,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 8,
@@ -866,6 +875,13 @@
       "status": "awaiting_owner",
       "asked_once": "2026-09-13 via request_user_input_async; do not repeat.",
       "independent_work": "Remaining V01 saved PR reviews"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.01",
+      "question": "Keep the existing tested Node24 production images and update the old Node20 requirement?",
+      "status": "awaiting_owner",
+      "asked_once": "2026-09-18 via request_user_input_async; do not repeat.",
+      "independent_work": "Continue container/context/runtime checks and remaining feature batches."
     }
   ],
   "inventory_freshness": {
@@ -1127,41 +1143,27 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-container-images",
-    "name": "Production web/API/worker images",
+    "id": "V01-distributed-limits",
+    "name": "Distributed limits and database fallback",
     "status": "in_progress",
     "prs": [
-      30,
-      31,
-      32,
-      33,
-      34,
-      94,
-      95,
-      96,
-      97,
-      98
+      52
     ],
     "task_keys": [
-      "01-platform-infrastructure.md#T-03.01.01",
-      "01-platform-infrastructure.md#T-03.01.02",
-      "01-platform-infrastructure.md#T-03.01.03",
-      "01-platform-infrastructure.md#T-03.01.04",
-      "01-platform-infrastructure.md#T-03.01.05"
+      "01-platform-infrastructure.md#T-04.02.02"
     ],
-    "base_revision": "6c6cf4375837106507f3e899014eaa4e43d95460",
+    "base_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
     "remaining_checklist": [
-      "Read current canonical requirements and all ten saved PR bodies/deferrals; review the current combined implementation once.",
-      "Verify production build, dependencies, runtime commands, health checks, context exclusions and hardening. Reuse R04/R05 and runtime-lifecycle evidence where source bindings remain valid.",
-      "Preserve accepted Vite SPA architecture and repeated-task provenance; no deployment or publication."
+      "Read saved PR52 and current requirement, then review generic limiter/fallback callers against existing OTP/login PostgreSQL guarantees.",
+      "Reuse source-bound authentication and Redis availability evidence; repair only confirmed remaining distributed-counter gaps."
     ],
     "confirmed_defects": [],
     "reused_evidence": [
-      "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+      "audit/evidence/step-reviews.json#R01-registration-otp"
     ],
     "new_evidence": [],
     "pr_dispositions": [],
-    "next_action": "Review the ten saved container PRs against the five exact current tasks; inspect Dockerfiles/context and run focused image builds/smoke checks for confirmed gaps."
+    "next_action": "Inspect saved PR52 and current Redis/PostgreSQL rate-limit implementation; trace callers before selecting focused tests."
   },
   "open_domain_reviews": [
     {

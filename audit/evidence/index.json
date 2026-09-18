@@ -23717,6 +23717,90 @@
       "sha256": "f152af22ff63a66681af0e418453f8d0471889faa5c5e9d5d1657a7c1886c503",
       "encoding": "gzip",
       "stored_sha256": "3762ec1eb8115113eb99c4701d8ba43c69ed50098f2775ef1b239528eb887bb1"
+    },
+    {
+      "original_path": "/tmp/v01-images-api-build.log",
+      "path": "audit/evidence/v01-container-images/v01-images-api-build.log.gz",
+      "sha256": "235d1c94aed78a76d4940d3cbd191abe48173a2df66421866099aa692f98921d",
+      "encoding": "gzip",
+      "stored_sha256": "bba9d6847aca2269e594dd93bd8996f3a69af8f03cd43505dd6daf9127026479"
+    },
+    {
+      "original_path": "/tmp/v01-images-compose-diagnostic.log",
+      "path": "audit/evidence/v01-container-images/v01-images-compose-diagnostic.log.gz",
+      "sha256": "5555f7aea9c7c868de8b68012104715a51060ad861f088d88d74c7557ddd5e7f",
+      "encoding": "gzip",
+      "stored_sha256": "5016320b59f1cefde866207247998efbff4c60ed2843fd81e0d227a755a8309a"
+    },
+    {
+      "original_path": "/tmp/v01-images-compose-fixed.log",
+      "path": "audit/evidence/v01-container-images/v01-images-compose-fixed.log.gz",
+      "sha256": "8c7fd964732fb70d5d7ccc29f68702983b414c5385834603713a6db782c1f083",
+      "encoding": "gzip",
+      "stored_sha256": "5334429ddc5ad44a58ce2ee7ae5844e76622d25138dee5baf29a4369c1c31c44"
+    },
+    {
+      "original_path": "/tmp/v01-images-compose-regression.log",
+      "path": "audit/evidence/v01-container-images/v01-images-compose-regression.log.gz",
+      "sha256": "8cf31e648a36d0f7fbd8c09b4b13fd9fa1812e6425e4fdae6ccb6b40ac725039",
+      "encoding": "gzip",
+      "stored_sha256": "9ddf5b819140fa34f04433e513d1780faa0e2bb4f8043ac495a1f4535c567bd1"
+    },
+    {
+      "original_path": "/tmp/v01-images-compose.log",
+      "path": "audit/evidence/v01-container-images/v01-images-compose.log.gz",
+      "sha256": "ac8a0e88d922fdf750010000c2520a4ef8cf89bf76a132d5122f2c4f9045b885",
+      "encoding": "gzip",
+      "stored_sha256": "c5670bbe04aab2ebd7ded8b806cbe523de3a5b7a3298960faf50fadd38b571e6"
+    },
+    {
+      "original_path": "/tmp/v01-images-context-before.log",
+      "path": "audit/evidence/v01-container-images/v01-images-context-before.log.gz",
+      "sha256": "8c9b6c5ef25e60e9094e4e0cd28ac00cf21c286b9cc8806e510b256febc2cd3f",
+      "encoding": "gzip",
+      "stored_sha256": "ddfc867586b82b4e82d545824f218e9f71b678b4319bef796e3004f22bc53125"
+    },
+    {
+      "original_path": "/tmp/v01-images-context-fixed.log",
+      "path": "audit/evidence/v01-container-images/v01-images-context-fixed.log.gz",
+      "sha256": "6c74a4d95b20d337c31d0b499e7da2199cf7ee3898e63fe4a88b7e2c777a80e0",
+      "encoding": "gzip",
+      "stored_sha256": "5026d2406f66e0e9c6b8e3d419eaccfd7b2c61c0e3063a8c3ce4e3154759bc3c"
+    },
+    {
+      "original_path": "/tmp/v01-images-format-final.log",
+      "path": "audit/evidence/v01-container-images/v01-images-format-final.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/v01-images-format.log",
+      "path": "audit/evidence/v01-container-images/v01-images-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/v01-images-runtime.log",
+      "path": "audit/evidence/v01-container-images/v01-images-runtime.log.gz",
+      "sha256": "dcecb4a808bc6f694b2bab7afa7b6cdaea781e8b79cf274a06f525e7ce87380f",
+      "encoding": "gzip",
+      "stored_sha256": "7b5e10feaf985450fce2b9c5c598c377acfa0a23e55408c7c15c6b2d1ff52815"
+    },
+    {
+      "original_path": "/tmp/v01-images-static.log",
+      "path": "audit/evidence/v01-container-images/v01-images-static.log.gz",
+      "sha256": "08a01f18d2045b5f66d64a974434f482e034650b2c9f25ffdb4577f5b841d69b",
+      "encoding": "gzip",
+      "stored_sha256": "8484171918740b57cccba42d977a6a5042aa6213eed46143844fdfc9dc08913b"
+    },
+    {
+      "original_path": "/tmp/v01-images-web-build.log",
+      "path": "audit/evidence/v01-container-images/v01-images-web-build.log.gz",
+      "sha256": "17254bd5803e919d471ac437a14f0c48b548e184873367b778c8ab04df046428",
+      "encoding": "gzip",
+      "stored_sha256": "9486c4165f6c1475568e70540b0c2fb16d97326e41d4a1b0eec7f617641e96c5"
     }
   ]
 }

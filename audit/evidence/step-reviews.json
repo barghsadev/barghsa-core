@@ -21377,6 +21377,188 @@
           "evidence": "audit/evidence/step-reviews.json#V01-config-backup"
         }
       ]
+    },
+    {
+      "id": "V01-container-images",
+      "date": "2026-09-18",
+      "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+      "base_revision": "6c6cf4375837106507f3e899014eaa4e43d95460",
+      "product_commits": [
+        "5045a6274a03ada5ebc0396be96eadebda9df9f0"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.01.01",
+        "01-platform-infrastructure.md#T-03.01.02",
+        "01-platform-infrastructure.md#T-03.01.03",
+        "01-platform-infrastructure.md#T-03.01.04",
+        "01-platform-infrastructure.md#T-03.01.05"
+      ],
+      "summary": "Five container tasks reviewed across ten repeated PRs:3 verified/2 partial;6 PRs closed/4 open. Runtime/context/Compose defects repaired; existing Node24 requirement question and release operations remain.",
+      "review": [
+        "Read all five current task blocks and ten saved PR bodies. No registered deferrals; PR31 explicitly records historical Node20 dependency-install failure. Repeated PRs are corrective provenance, not reasons to rebuild the frontend.",
+        "One deployed backend image now includes both complete dependency trees and supports the worker through command override. The health dispatcher selects readiness from the actual PID1 command and never falls back to process liveness. Compatibility worker target remains available.",
+        "Runtime code stays unchanged; separate dependency/build stages and context exclusions remove local artifacts and test code while preserving patches, production SQL/journal and build-essential package checks. Root filesystem, capabilities, memory options and node user stay enforced.",
+        "Production Compose previously depended on a profile-disabled pooler and failed before startup. The production overlay alone clears that profile, preserving opt-in development pooling. Composed configuration and persistent regression now pass.",
+        "No image publication, production deployment or scheduler mutation. Node24 remains the existing tested toolchain pending the explicit requirement decision. Historical source/drain/browser evidence is reused only within unchanged bindings."
+      ],
+      "verification": [
+        "Both production images build from the frozen lockfile; separate deps/build stages preserve the accepted Vite SPA and self-contained deployed packages.",
+        "Actual Docker context fixture reproduces six previously included paths, then passes all11 exclusions and7 build-essential paths. Required production migration SQL/journal remain available; migration snapshots and local output are excluded.",
+        "Actual isolated PostgreSQL16 migrations and read-only non-root API/worker/web boot pass. API and worker image IDs are identical with only command override. Both readiness probes fail on database loss, liveness stays available, recovery succeeds and all three processes exit0 on SIGTERM.",
+        "Compose validation reproduced an undefined required pgbouncer service. The production overlay now clears its development-only profile. Persistent compose-only regression checks common build target, command override, capabilities, read-only root and enabled dependency.",
+        "Image metadata confirms node user,512MB Node heap and30s/10s/40s/3 health timings. JavaScript lint/format, Python/JavaScript syntax and diff checks pass. Runtime business drain tests remain source-bound in the prior lifecycle review; full V02 regression is not repeated."
+      ],
+      "remaining": [
+        "Owner decision pending: existing tested Node24 images conflict with the literal Node20 story requirement. Do not silently waive it or downgrade the working toolchain.",
+        "Published latest/immutable revision tags, registry delivery and production rollout remain assigned to R06/V01 deployment review. Local test tags are not release traceability proof.",
+        "Production infrastructure/provider/TLS readiness and full V02 regression remain unverified. The older scripts/test-production-images.py has a historical separate-worker image/health layout and old business fixture; update that broader fixture in V02 before using it as current evidence."
+      ],
+      "source_evidence": [
+        {
+          "path": ".dockerignore",
+          "sha256": "3bd5500ebfe885097be0a0813b2a7ec040d7cbf433fe060ce1b11f67a887a941"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "f5f1cef61a3e52bc8ae23968d54f9b6cf2403e4dc4f569b0f2a18b1e1dc20585"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "d8b098350e3392707acbf91280d49eb15b56757f88df8f98a65301445385fc29"
+        },
+        {
+          "path": "docker-compose.prod.yml",
+          "sha256": "0cc89b5af401ca45361fdb73a1f72968e399a6cc0475658da876812b0e0379e9"
+        },
+        {
+          "path": "scripts/healthcheck-runtime.cjs",
+          "sha256": "024fe14b3e5888ba77b25a39a014ec3b9bba24007872d5dc306c3a3543b7042e"
+        },
+        {
+          "path": "scripts/test-container-packaging.py",
+          "sha256": "e11ac27dbf45aa9f11fdf9e43f0a572564306b9c8733fc92b398e22a7d107b12"
+        },
+        {
+          "path": "scripts/test-docker-context.py",
+          "sha256": "31ef6fc14320269f8fb636ed46f0564243df568c781c3a86ad7dd4243a2ce99e"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-images-api-build.log",
+        "/tmp/v01-images-compose-diagnostic.log",
+        "/tmp/v01-images-compose-fixed.log",
+        "/tmp/v01-images-compose-regression.log",
+        "/tmp/v01-images-compose.log",
+        "/tmp/v01-images-context-before.log",
+        "/tmp/v01-images-context-fixed.log",
+        "/tmp/v01-images-format-final.log",
+        "/tmp/v01-images-format.log",
+        "/tmp/v01-images-runtime.log",
+        "/tmp/v01-images-static.log",
+        "/tmp/v01-images-web-build.log"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 94,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.01.01"
+          ],
+          "reason": "Local packaging/runtime repaired; Node-version requirement and release tag/rollout evidence remain.",
+          "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+          "evidence": "audit/evidence/step-reviews.json#V01-container-images"
+        },
+        {
+          "pr": 30,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.01.01"
+          ],
+          "reason": "Local packaging/runtime repaired; Node-version requirement and release tag/rollout evidence remain.",
+          "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+          "evidence": "audit/evidence/step-reviews.json#V01-container-images"
+        },
+        {
+          "pr": 95,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.01.02"
+          ],
+          "reason": "Local packaging/runtime repaired; Node-version requirement and release tag/rollout evidence remain.",
+          "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+          "evidence": "audit/evidence/step-reviews.json#V01-container-images"
+        },
+        {
+          "pr": 31,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.01.02"
+          ],
+          "reason": "Local packaging/runtime repaired; Node-version requirement and release tag/rollout evidence remain.",
+          "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+          "evidence": "audit/evidence/step-reviews.json#V01-container-images"
+        },
+        {
+          "pr": 96,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.01.03"
+          ],
+          "reason": "Current combined implementation satisfies the task; source-bound context, actual image/health and Compose hardening proof linked. Repeated PR provenance retained; no registered historical deferrals.",
+          "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+          "evidence": "audit/evidence/step-reviews.json#V01-container-images"
+        },
+        {
+          "pr": 32,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.01.03"
+          ],
+          "reason": "Current combined implementation satisfies the task; source-bound context, actual image/health and Compose hardening proof linked. Repeated PR provenance retained; no registered historical deferrals.",
+          "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+          "evidence": "audit/evidence/step-reviews.json#V01-container-images"
+        },
+        {
+          "pr": 97,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.01.04"
+          ],
+          "reason": "Current combined implementation satisfies the task; source-bound context, actual image/health and Compose hardening proof linked. Repeated PR provenance retained; no registered historical deferrals.",
+          "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+          "evidence": "audit/evidence/step-reviews.json#V01-container-images"
+        },
+        {
+          "pr": 33,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.01.04"
+          ],
+          "reason": "Current combined implementation satisfies the task; source-bound context, actual image/health and Compose hardening proof linked. Repeated PR provenance retained; no registered historical deferrals.",
+          "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+          "evidence": "audit/evidence/step-reviews.json#V01-container-images"
+        },
+        {
+          "pr": 98,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.01.05"
+          ],
+          "reason": "Current combined implementation satisfies the task; source-bound context, actual image/health and Compose hardening proof linked. Repeated PR provenance retained; no registered historical deferrals.",
+          "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+          "evidence": "audit/evidence/step-reviews.json#V01-container-images"
+        },
+        {
+          "pr": 34,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-03.01.05"
+          ],
+          "reason": "Current combined implementation satisfies the task; source-bound context, actual image/health and Compose hardening proof linked. Repeated PR provenance retained; no registered historical deferrals.",
+          "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0",
+          "evidence": "audit/evidence/step-reviews.json#V01-container-images"
+        }
+      ]
     }
   ]
 }
