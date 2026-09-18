@@ -12,7 +12,9 @@ import {
   PutObjectCommand,
   GetObjectTaggingCommand,
   ListObjectVersionsCommand,
+  ListMultipartUploadsCommand,
 } from '@aws-sdk/client-s3';
+import { S3StorageProvider } from '../dist/storage/s3-storage-provider.js';
 import { setupBucket } from '../dist/storage/setup-bucket.js';
 
 // Isolated synthetic bucket. No ambient AWS credentials or persistent Docker volume.
@@ -156,6 +158,92 @@ test('bucket setup against real MinIO', { timeout: 90_000 }, async (t) => {
         );
       }
     );
+    const provider = new S3StorageProvider({
+      bucket: Bucket,
+      endpoint,
+      region: 'us-east-1',
+      forcePathStyle: true,
+      accessKeyId: credentials.accessKeyId,
+      secretAccessKey: credentials.secretAccessKey,
+      prefix: 'provider/',
+      maxRetries: 1,
+      requestTimeoutMs: 5000,
+    });
+    try {
+      for (const [kind, body] of [
+        ['string', 'storage payload'],
+        ['bytes', new TextEncoder().encode('storage payload')],
+        ['blob', new Blob(['storage payload'])],
+        ['stream', new Blob(['storage payload']).stream()],
+      ]) {
+        await t.test(`provider uploads and reads ${kind} bodies`, async () => {
+          const key = `body-${kind}.txt`;
+          await provider.putObject(key, body, 'text/plain', { purpose: 'audit' });
+          const stored = await provider.getObject(key);
+          assert.equal(await new Response(stored.body).text(), 'storage payload');
+          assert.equal(stored.contentLength, 15);
+          assert.equal(stored.metadata.purpose, 'audit');
+        });
+      }
+      await t.test('unknown-length stream spans multiple parts without data loss', async () => {
+        const bytes = new Uint8Array(6 * 1024 * 1024 + 123).fill(37);
+        const body = new ReadableStream({
+          start(controller) {
+            for (let offset = 0; offset < bytes.length; offset += 65536)
+              controller.enqueue(bytes.subarray(offset, offset + 65536));
+            controller.close();
+          },
+        });
+        await provider.putObject('multipart.bin', body, 'application/octet-stream');
+        const result = await provider.getObject('multipart.bin');
+        assert.deepEqual(new Uint8Array(await new Response(result.body).arrayBuffer()), bytes);
+      });
+      await t.test('failed source streams leave no incomplete multipart upload', async () => {
+        let chunks = 0;
+        const body = new ReadableStream({
+          pull(controller) {
+            if (++chunks > 7) controller.error(new Error('synthetic source failure'));
+            else controller.enqueue(new Uint8Array(1024 * 1024));
+          },
+        });
+        await assert.rejects(
+          provider.putObject('failed.bin', body, 'application/octet-stream'),
+          /synthetic source failure/
+        );
+        const result = await client.send(
+          new ListMultipartUploadsCommand({ Bucket, Prefix: 'provider/failed.bin' })
+        );
+        assert.equal(result.Uploads?.length ?? 0, 0);
+      });
+      await t.test(
+        'private scoped direct PUT/GET and pagination work against storage',
+        async () => {
+          const put = await fetch(await provider.presignedPutUrl('direct.txt', 60), {
+            method: 'PUT',
+            body: 'direct',
+          });
+          assert.equal(put.status, 200);
+          const signed = await provider.presignedGetUrl('direct.txt', 60);
+          assert.equal(await (await fetch(signed)).text(), 'direct');
+          const anonymous = new URL(signed);
+          anonymous.search = '';
+          assert.equal((await fetch(anonymous)).status, 403);
+          const tampered = new URL(signed);
+          tampered.pathname = tampered.pathname.replace('direct.txt', 'body-string.txt');
+          assert.equal((await fetch(tampered)).status, 403);
+          const page = await provider.listObjects('', 1);
+          assert.equal(page.items.length, 1);
+          assert.equal(page.isTruncated, true);
+          const next = await provider.listObjects('', 1, page.continuationToken);
+          assert.notEqual(next.items[0].key, page.items[0].key);
+          assert.ok(!page.items[0].key.startsWith('provider/'));
+          await provider.deleteObject('direct.txt');
+          await assert.rejects(provider.getObject('direct.txt'), { name: 'StorageObjectNotFound' });
+        }
+      );
+    } finally {
+      provider.destroy();
+    }
   } finally {
     client?.destroy();
     spawnSync('docker', ['rm', '-f', name], { stdio: 'pipe' });

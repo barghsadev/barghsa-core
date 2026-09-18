@@ -10,6 +10,7 @@ import {
   HeadBucketCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { Upload } from '@aws-sdk/lib-storage';
 import { NoSuchKey } from '@aws-sdk/client-s3';
 
 import type {
@@ -121,23 +122,28 @@ export class S3StorageProvider implements StorageProvider {
   ): Promise<void> {
     const resolvedKey = this.resolveKey(key);
 
-    const sdkBody =
-      body instanceof ReadableStream
-        ? (body as never) // SDK accepts Readable (Node stream); ReadableStream from web falls through
-        : body instanceof Blob
-          ? (body as never)
-          : body;
-
     const input: PutObjectCommandInput = {
       Bucket: this.bucket,
       Key: resolvedKey,
-      Body: sdkBody,
+      Body: body,
       ContentType: contentType,
       Metadata: metadata,
     };
 
     try {
-      await this.client.send(new PutObjectCommand(input));
+      if (body instanceof ReadableStream || body instanceof Blob) {
+        // The upload helper chunks unknown-length web streams and aborts failed
+        // multipart uploads. Direct PutObject cannot hash these bodies in Node.
+        await new Upload({
+          client: this.client,
+          params: input,
+          queueSize: 1,
+          partSize: 5 * 1024 * 1024,
+          leavePartsOnError: false,
+        }).done();
+      } else {
+        await this.client.send(new PutObjectCommand(input));
+      }
     } catch (err) {
       this.logger?.error(`[s3-storage-provider] Failed to put object "${resolvedKey}":`, err);
       throw new StorageProviderError(

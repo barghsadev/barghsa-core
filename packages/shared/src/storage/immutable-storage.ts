@@ -1,10 +1,9 @@
 /**
  * @barghsa/storage — Immutable storage record service.
  *
- * Wraps the {@link StorageProvider} with an immutability check before
- * delete operations.  When a storage record is marked as `immutable`,
- * physical `deleteObject` is rejected and the record is instead
- * soft-deleted in PostgreSQL (status → `removed`).
+ * Legacy record facade. Deletion only hides database records; it never deletes
+ * object bytes. Physical cleanup belongs to the authorized durable worker flow,
+ * whose locked database checks cannot race signing.
  *
  * S3 versioning (configured in T-04.03.03) ensures that even if an
  * object is accidentally overwritten, previous versions are preserved.
@@ -98,8 +97,8 @@ export class ImmutableRecordDeleteError extends Error {
  * **Lifecycle:**
  * 1. On upload verification, call {@link createRecord} to track the object.
  * 2. When the document is signed/approved, call {@link markAsImmutable}.
- * 3. On delete requests, call {@link deleteRecord} — it checks the DB
- *    status and either performs a physical delete or a soft delete.
+ * 3. Deletion through {@link deleteRecord} only soft-deletes known records.
+ *    Production HTTP mutations use the transaction-authorized admin service.
  */
 export class ImmutableStorageRecordService {
   constructor(
@@ -157,7 +156,8 @@ export class ImmutableStorageRecordService {
   async markAsImmutable(storageKey: string, signedBy?: string): Promise<void> {
     // Verify the object actually exists in storage
     try {
-      await this.storage.getObject(storageKey);
+      const object = await this.storage.getObject(storageKey);
+      await object.body.cancel();
     } catch (err) {
       if (err instanceof StorageObjectNotFound) {
         throw new StorageObjectNotFound(
@@ -178,12 +178,9 @@ export class ImmutableStorageRecordService {
   /**
    * Delete a storage record, enforcing immutability.
    *
-   * - If the record is `active` (or no record exists), performs a physical
-   *   `deleteObject` on S3 and soft-deletes the record.
-   * - If the record is `immutable`, **rejects** the physical delete and
-   *   only soft-deletes the DB record (status → `removed`).  The S3
-   *   object is retained.
-   * - If the record is already `removed`, this is a no-op.
+   * Known records are soft-deleted while all object bytes are retained.
+   * Missing and already removed records are no-ops. A status read is not
+   * authority for physical deletion: signing can commit immediately after it.
    *
    * @throws {ImmutableRecordDeleteError} When attempting to delete an
    *   immutable record (the soft delete is still performed).
@@ -191,18 +188,7 @@ export class ImmutableStorageRecordService {
   async deleteRecord(storageKey: string): Promise<void> {
     const status = await this.db.getStorageRecordStatus(storageKey);
 
-    if (!status) {
-      // No existing record — physical delete is fine
-      await this.storage.deleteObject(storageKey);
-      await this.db.createStorageRecord({ storageKey });
-      await this.db.softDeleteStorageRecord(storageKey);
-      return;
-    }
-
-    if (status === 'removed') {
-      // Already soft-deleted — no further action needed (S3 object retained)
-      return;
-    }
+    if (!status || status === 'removed') return;
 
     if (status === 'immutable') {
       // Soft delete only — retain the underlying S3 object
@@ -210,8 +196,7 @@ export class ImmutableStorageRecordService {
       throw new ImmutableRecordDeleteError(storageKey, status);
     }
 
-    // Status is 'active' — physical delete + soft delete record
-    await this.storage.deleteObject(storageKey);
+    // Preserve bytes even if the earlier status snapshot became stale.
     await this.db.softDeleteStorageRecord(storageKey);
   }
 

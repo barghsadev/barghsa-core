@@ -120,10 +120,25 @@ describe('ImmutableStorageRecordService.getRecordStatus', () => {
 // ---------------------------------------------------------------------------
 
 describe('ImmutableStorageRecordService.markAsImmutable', () => {
+  it('releases the existence-check response before updating the database', async () => {
+    const { storage, db, service } = createMocks();
+    const cancel = vi.fn();
+    vi.mocked(storage.getObject).mockResolvedValue({
+      body: new ReadableStream({ cancel }),
+      contentType: 'text/plain',
+      contentLength: 4,
+      metadata: {},
+      etag: undefined,
+    });
+    vi.mocked(db.markStorageRecordImmutable).mockImplementation(async () => {
+      expect(cancel).toHaveBeenCalledOnce();
+    });
+    await service.markAsImmutable('contracts/record');
+  });
   it('marks an existing object as immutable', async () => {
     const { storage, db, service } = createMocks();
     (storage.getObject as ReturnType<typeof vi.fn>).mockResolvedValue({
-      body: 'data',
+      body: new ReadableStream(),
       contentType: 'text/plain',
       contentLength: 4,
       metadata: {},
@@ -139,7 +154,7 @@ describe('ImmutableStorageRecordService.markAsImmutable', () => {
   it('marks without signedBy when not provided', async () => {
     const { storage, db, service } = createMocks();
     (storage.getObject as ReturnType<typeof vi.fn>).mockResolvedValue({
-      body: 'data',
+      body: new ReadableStream(),
       contentType: 'text/plain',
       contentLength: 4,
       metadata: {},
@@ -169,13 +184,27 @@ describe('ImmutableStorageRecordService.markAsImmutable', () => {
 // ---------------------------------------------------------------------------
 
 describe('ImmutableStorageRecordService.deleteRecord', () => {
-  it('physically deletes an active record', async () => {
+  it('never deletes bytes when signing races an earlier active status read', async () => {
+    const { storage, db, service } = createMocks();
+    let signed = false;
+    vi.mocked(db.getStorageRecordStatus).mockImplementation(async () => {
+      signed = true; // sign committed after the snapshot used by this read
+      return 'active';
+    });
+    vi.mocked(db.softDeleteStorageRecord).mockImplementation(async () => {
+      expect(signed).toBe(true);
+    });
+    await service.deleteRecord('contracts/signed-during-read');
+    expect(storage.deleteObject).not.toHaveBeenCalled();
+    expect(db.softDeleteStorageRecord).toHaveBeenCalledOnce();
+  });
+  it('retains the object when soft-deleting an active record', async () => {
     const { storage, db, service } = createMocks();
     (db.getStorageRecordStatus as ReturnType<typeof vi.fn>).mockResolvedValue('active');
 
     await service.deleteRecord('uploads/test.txt');
 
-    expect(storage.deleteObject).toHaveBeenCalledWith('uploads/test.txt');
+    expect(storage.deleteObject).not.toHaveBeenCalled();
     expect(db.softDeleteStorageRecord).toHaveBeenCalledWith('uploads/test.txt');
   });
 
@@ -190,15 +219,15 @@ describe('ImmutableStorageRecordService.deleteRecord', () => {
     expect(db.softDeleteStorageRecord).toHaveBeenCalledWith('uploads/contract.pdf');
   });
 
-  it('physically deletes and creates record when no DB record exists', async () => {
+  it('does not delete or claim an object when no DB record exists', async () => {
     const { storage, db, service } = createMocks();
     (db.getStorageRecordStatus as ReturnType<typeof vi.fn>).mockResolvedValue(null);
 
     await service.deleteRecord('uploads/unknown.txt');
 
-    expect(storage.deleteObject).toHaveBeenCalledWith('uploads/unknown.txt');
-    expect(db.createStorageRecord).toHaveBeenCalledWith({ storageKey: 'uploads/unknown.txt' });
-    expect(db.softDeleteStorageRecord).toHaveBeenCalledWith('uploads/unknown.txt');
+    expect(storage.deleteObject).not.toHaveBeenCalled();
+    expect(db.createStorageRecord).not.toHaveBeenCalled();
+    expect(db.softDeleteStorageRecord).not.toHaveBeenCalled();
   });
 
   it('is a no-op on an already-removed record', async () => {
