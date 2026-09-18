@@ -6,7 +6,7 @@ A PR body checkbox is historical author evidence, not independent acceptance. Re
 301 merged PRs: 68 have unresolved mapped tasks; 4 have no current task mapping; 229 map only to verified tasks.
 172 historical deferral statements from 102 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **201 closed / 43 open / 0 blocked**; 57 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **206 closed / 43 open / 0 blocked**; 52 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -146,9 +146,9 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#114](https://github.com/barghsadev/barghsa-core/pull/114) | 02-auth-users-admin.md#T-03.03.06 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R03-consumer-theme-time) | 0 |
 | [#115](https://github.com/barghsadev/barghsa-core/pull/115) | 02-auth-users-admin.md#T-03.04.01 (acceptance_verified) | Mapped tasks verified | [open](evidence/step-reviews.json#R01-profile-addresses) | 1 |
 | [#116](https://github.com/barghsadev/barghsa-core/pull/116) | 02-auth-users-admin.md#T-03.04.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-profile-addresses) | 0 |
-| [#117](https://github.com/barghsadev/barghsa-core/pull/117) | 02-auth-users-admin.md#T-04.01.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#118](https://github.com/barghsadev/barghsa-core/pull/118) | 02-auth-users-admin.md#T-04.01.02 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#119](https://github.com/barghsadev/barghsa-core/pull/119) | 02-auth-users-admin.md#T-04.01.03 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
+| [#117](https://github.com/barghsadev/barghsa-core/pull/117) | 02-auth-users-admin.md#T-04.01.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-terms-lifecycle) | 0 |
+| [#118](https://github.com/barghsadev/barghsa-core/pull/118) | 02-auth-users-admin.md#T-04.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-terms-lifecycle) | 0 |
+| [#119](https://github.com/barghsadev/barghsa-core/pull/119) | 02-auth-users-admin.md#T-04.01.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-terms-lifecycle) | 0 |
 | [#120](https://github.com/barghsadev/barghsa-core/pull/120) | 02-auth-users-admin.md#T-05.01.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 1 |
 | [#121](https://github.com/barghsadev/barghsa-core/pull/121) | 01-platform-infrastructure.md#T-05.03.05 (pending) | Task review remains | Not reviewed | 0 |
 | [#122](https://github.com/barghsadev/barghsa-core/pull/122) | 02-auth-users-admin.md#T-05.01.02 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
@@ -188,8 +188,8 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#156](https://github.com/barghsadev/barghsa-core/pull/156) | 02-auth-users-admin.md#T-09.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R03-consumer-theme-time) | 1 |
 | [#157](https://github.com/barghsadev/barghsa-core/pull/157) | 02-auth-users-admin.md#T-09.02.01 (pending) | Task review remains | Not reviewed | 0 |
 | [#158](https://github.com/barghsadev/barghsa-core/pull/158) | 02-auth-users-admin.md#T-09.02.02 (pending) | Task review remains | Not reviewed | 0 |
-| [#159](https://github.com/barghsadev/barghsa-core/pull/159) | 02-auth-users-admin.md#T-09.03.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#160](https://github.com/barghsadev/barghsa-core/pull/160) | 02-auth-users-admin.md#T-09.03.02 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
+| [#159](https://github.com/barghsadev/barghsa-core/pull/159) | 02-auth-users-admin.md#T-09.03.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-terms-lifecycle) | 0 |
+| [#160](https://github.com/barghsadev/barghsa-core/pull/160) | 02-auth-users-admin.md#T-09.03.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-terms-lifecycle) | 0 |
 | [#161](https://github.com/barghsadev/barghsa-core/pull/161) | 02-auth-users-admin.md#T-09.04.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-provider-template-authoring) | 2 |
 | [#162](https://github.com/barghsadev/barghsa-core/pull/162) | 02-auth-users-admin.md#T-09.05.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-staff-role-catalogue) | 2 |
 | [#163](https://github.com/barghsadev/barghsa-core/pull/163) | 05-notifications-documents-ai.md#T-05.01.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-outbox-delivery-checkpoint) | 3 |
@@ -368,6 +368,6 @@ Unmapped historical PRs retain their original inventory. A superseded workaround
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `a963dcd1b42dbe2de860a6b2f6db41897399d1872062487d83b7889385a10dcd`
+- `acceptance-closure.json`: `888bdb8aa0224ce3592096dab2685206e413a3ab7c241be4c4244bc8d5f3774c`
 - `pr-deferrals.json`: `f4449e59e09dbfa6b3a0ce2eb94513fc07a20ce2874240d4c8ba3fb417c3c6d9`
-- `evidence/step-reviews.json`: `21022107e38f1ef4fdbe3326c7b25236f6bc116ef300d03f3e8e6ed035629ce5`
+- `evidence/step-reviews.json`: `d451ae69bcecd1950a59fe9b664e96b2bdecfcc7dade8eb9026de590984929b1`

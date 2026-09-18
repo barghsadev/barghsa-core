@@ -24809,6 +24809,174 @@
       "sha256": "6b77ee7fa3899e145d0dc0717b180523f48bfd1cb2321f9d13595876aa3dedd0",
       "encoding": "gzip",
       "stored_sha256": "f9562cdaeb0d4422f84cf06111c7d11fd725b068d702b8c5e753cb6f7f60c319"
+    },
+    {
+      "original_path": "/tmp/v01-terms-api-fixed.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-api-fixed.log.gz",
+      "sha256": "333e15b3c6eb12f6727cb996f622806c7f8537a2a250e2e24fbcda22abdf5f2c",
+      "encoding": "gzip",
+      "stored_sha256": "ad041249c954d0f72536142ce44b71cccb9df3c4e7cd979a4863e777660ea3c7"
+    },
+    {
+      "original_path": "/tmp/v01-terms-api.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-api.log.gz",
+      "sha256": "13e027d84400fb4172d880e16d32646b29901cc43618b7a8ea6914e151150ced",
+      "encoding": "gzip",
+      "stored_sha256": "5291b2e08b510afc926ee5962228e055f5e24c91b2a64d5532e90a0c7a405e1f"
+    },
+    {
+      "original_path": "/tmp/v01-terms-authority-baseline.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-authority-baseline.log.gz",
+      "sha256": "0462537f5a30c35e5c5f9cf4f1aca5c21fd3860db864f730a2085258ca5691e7",
+      "encoding": "gzip",
+      "stored_sha256": "1e5f1eb6d7be500fab6ac8682651de6931cccaec83c61b4f85d4008fe0996eaf"
+    },
+    {
+      "original_path": "/tmp/v01-terms-browser-live-final.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-browser-live-final.log.gz",
+      "sha256": "0e38557c08575ad1baf78e14ac1afa51a0a5e749a90b6a85cca6cf234767f81a",
+      "encoding": "gzip",
+      "stored_sha256": "e523e2e6c72010866c354b282d44dede2cd589eef0fd7daf16664d6fc4f2542d"
+    },
+    {
+      "original_path": "/tmp/v01-terms-browser.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-browser.log.gz",
+      "sha256": "3595d76dfa9eb2e0712abaff66df81f8f688dd3cf7a7f0ee7d6deefcbfe7c5cf",
+      "encoding": "gzip",
+      "stored_sha256": "5e889037658ddfee137a99bc3418e0b9c9378b238199c726d3d26928244a8d57"
+    },
+    {
+      "original_path": "/tmp/v01-terms-commit.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-commit.log.gz",
+      "sha256": "e4a3a672eb635957e3b1709d7c82c86d3857384f8225100fe8c3f5749e1d3882",
+      "encoding": "gzip",
+      "stored_sha256": "33345160a8dbb21d44ee873a80f66313d1ebdca8eb9d9615dcf1f7108f1f959d"
+    },
+    {
+      "original_path": "/tmp/v01-terms-diff-check.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-diff-check.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-terms-expiry-baseline.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-expiry-baseline.log.gz",
+      "sha256": "aa64d75b0ade2314c0fe0d739652f22f02d3da624e24f625d1e63c369c9f0008",
+      "encoding": "gzip",
+      "stored_sha256": "b7d0572640d32ba3017f197dc84b645f01aa8104e94cf321cd6bb6a374747028"
+    },
+    {
+      "original_path": "/tmp/v01-terms-expiry-baseline2.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-expiry-baseline2.log.gz",
+      "sha256": "65fd0d12333fb349f4c35a26af8d74419485670557497195927045d9a3e6c571",
+      "encoding": "gzip",
+      "stored_sha256": "261f83bae35ff343228b40b8b03fecc2808f341f9d59ae314478f828cb057092"
+    },
+    {
+      "original_path": "/tmp/v01-terms-expiry-format.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-expiry-format.log.gz",
+      "sha256": "8a79d9426f948dbb89922eae0b2c3ed0b832da85b7527039ea5cf941862e7366",
+      "encoding": "gzip",
+      "stored_sha256": "37d650a7a87724bf2b1e00a2b20e8671ca857bc5dffe4bab360e1b8571a5fb45"
+    },
+    {
+      "original_path": "/tmp/v01-terms-final-format.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-final-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/v01-terms-fixture-format.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-fixture-format.log.gz",
+      "sha256": "76327cc194e8d48d349e93f432bb6af4dabd37262a4a24750774ef7c4e178eff",
+      "encoding": "gzip",
+      "stored_sha256": "2ad5fa55f3e95ba6173a738b968eb9b7a380e9d7edc448b08ec31b6b49b7171a"
+    },
+    {
+      "original_path": "/tmp/v01-terms-fixture-lint.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-fixture-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-terms-format-baseline.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-format-baseline.log.gz",
+      "sha256": "8eeadf558490b24a62259a4cd5711fe2e257c33f6c1b8e79b1db19668116a509",
+      "encoding": "gzip",
+      "stored_sha256": "afc5b06b63c384ad22a4e4d8d9e34dc8a44996585987000c3a8b1b50acfd713e"
+    },
+    {
+      "original_path": "/tmp/v01-terms-format-check.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-format-check.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/v01-terms-format-fixed.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-format-fixed.log.gz",
+      "sha256": "a8df0562a9af1350908a3a31dccc230e8ada9664eefe0bd664df62fb51807f47",
+      "encoding": "gzip",
+      "stored_sha256": "638fb3db840755a01fde805699488db810eb053f329946fdc23b6dc95b606cce"
+    },
+    {
+      "original_path": "/tmp/v01-terms-lint.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-terms-openapi.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-openapi.log.gz",
+      "sha256": "10f9e664a234994068b1dd3c9654fc510ff9b24b24da9c09c8cbd9d66057c033",
+      "encoding": "gzip",
+      "stored_sha256": "1f652eaa9f04debf4ef74f4076f8ead5d845e18619c21a4f32a2f4d049ef0124"
+    },
+    {
+      "original_path": "/tmp/v01-terms-preview.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-preview.log.gz",
+      "sha256": "5800154c0047407c59e9f17fb6fc5ac34efedfd2365915a20a02c561dddfd72c",
+      "encoding": "gzip",
+      "stored_sha256": "3fefd03cc595318a6ba5c917d51fd44a45fb823a64e8d7b94a5248416da78d21"
+    },
+    {
+      "original_path": "/tmp/v01-terms-source-binding.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-source-binding.log.gz",
+      "sha256": "8291c83de4e8a00b82cb57cecd57227481fd3fc94ab09ab6b2bc8c029b4527b5",
+      "encoding": "gzip",
+      "stored_sha256": "0482773f04a4b8e1194564e902bac323b933eca9a2a736798f937c995b949ed7"
+    },
+    {
+      "original_path": "/tmp/v01-terms-types-final.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/v01-terms-types-fresh.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-types-fresh.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/v01-terms-types-recheck.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-types-recheck.log.gz",
+      "sha256": "f1309716274c2a11203d297ed01b7de8b4062f4da995d93d58aa733fab357612",
+      "encoding": "gzip",
+      "stored_sha256": "4a3c57b63a07467ad1449b88e38924a715083d0d772b68d68d9f356c4988a543"
+    },
+    {
+      "original_path": "/tmp/v01-terms-types.log",
+      "path": "audit/evidence/v01-terms-lifecycle/v01-terms-types.log.gz",
+      "sha256": "6cc16ff669c7c8379c7d6ccd220bf81d01c8cbcc07fc1236d3fa967af044e89d",
+      "encoding": "gzip",
+      "stored_sha256": "a8f946cb157b8cb3387a7cc992f3b3177134ffdf97ef8deeac4e2d457a175555"
     }
   ]
 }

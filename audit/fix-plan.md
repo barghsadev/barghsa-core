@@ -1,6 +1,6 @@
 # Remaining fix plan
 
-Current through product/test `b514bd11` and approved requirements `981e98d6`, 2026-09-19. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
+Current through product/test `d9ed9dd5` and approved requirements `981e98d6`, 2026-09-19. This is the only active plan. [progress.json](progress.json) tracks the next action and all 23 original F01–F23 groups. [acceptance-closure.json](acceptance-closure.json) owns historical task status. Archived plans are evidence, not instructions.
 
 ## Current position
 
@@ -10,17 +10,17 @@ Current through product/test `b514bd11` and approved requirements `981e98d6`, 20
 | Other historical claims | 10 | 1 | 48 | 59 |
 | All claims | 209 | 47 | 66 | 322 |
 
-**113 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.37 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
+**113 task reviews remain unresolved.** That is a review count, not a count of broken or unbuilt tasks and not a percentage of coding completed.33 retained/identified records need evidence refreshed for later source changes. The latest increase identifies older stale bindings, not new coding defects. Exact paths are in `progress.json.evidence_refresh_queue`.
 
 Saved inventory: **301 merged PRs**, **172 deferrals across 102 PRs**, **23 repeated-task groups** and **58 historical skips**. Latest saved merge is September 3. The September 8 refresh attempt could not run because `gh` is unavailable. Do not claim current GitHub coverage until a read-only refresh succeeds.
 
 ## Next step
 
-Login review consolidated at **b514bd11**: saved PR77/78/87/88/101 all close. Existing5 task acceptances retained; later auth/CSRF/delivery/contact/UI changes reconciled.95 API and40 distinct desktop/mobile browser cases pass. Canceled-animation waiting and obsolete hidden-mobile-brand test assertions repaired; authentication code unchanged. PR87 migration/test deferrals are satisfied. One older CRM binding refreshed;37 older refresh records remain. [Batch review](evidence/step-reviews.json#V01-login-authentication).
+Terms lifecycle consolidated at **d9ed9dd5**: five saved PR117/118/119/159/160 close; five existing acceptances preserved. Consent now rejects session expiry during a database wait and rolls back all evidence.42 API and47 distinct browser cases pass. Shared live fixture uses canonical green key; types/lint/format/OpenAPI pass. Four older bindings close;33 refresh records remain. [Batch review](evidence/step-reviews.json#V01-terms-lifecycle).
 
-**Next:** terms lifecycle and acceptance, saved PR117/118/119/159/160. Reuse completed terms/registration evidence and inspect later changes once. UI stack question and literal table-hook wording remain pending; keep the tested implementation. Full regression stays V02.
+**Next:** CRM listing/profile management/widget, saved PR120,122–128,136. Reuse source-bound completed reviews; preserve future archive/retention prerequisites. Full regression stays V02.
 
-UI foundations checkpoint **21438625** verifies1 task;2 remain partial for explicit stack/table requirement discrepancies. PR65 closed;66/67 open. Font/PostCSS/keyboard-highlight repairs pass45 browser,56 UI and42 budget checks. Both PR67 visual/form deferrals are satisfied. Saved PR totals:201 closed/43 open/57 unreviewed.
+UI foundations checkpoint **21438625** verifies1 task;2 remain partial for explicit stack/table requirement discrepancies. PR65 closed;66/67 open. Font/PostCSS/keyboard-highlight repairs pass45 browser,56 UI and42 budget checks. Both PR67 visual/form deferrals are satisfied. Saved PR totals:206 closed/43 open/52 unreviewed.
 
 Edge/cache checkpoint **6d801999** verifies4 tasks and closes PR60/62/63/64.42 focused cases and actual NGINX TLS/routing/gzip/cache/limits/SSE/WebSocket checks pass. Ship web/proxy cache changes together; production TLS/topology and image regression remain external/V02. PR61 remains open for the pending CSP decision.
 
@@ -111,7 +111,7 @@ Fix confirmed defects in feature batches. Review each meaningful change with foc
 | R03 / F19, F20 | Localized application errors; correlation through required outbox/worker consumers; remaining accessibility, RTL, themes and failure states. Check the recorded dark-theme terms error banner and shared button/link/alert contrast consumers. | Required screens and consumers pass relevant checks. Scanner warnings require a confirmed defect before becoming work. |
 | R04 / F19 | Eager customer purchase routes within unchanged complete-route budgets. Earlier over-budget attempts were reverted. | Production build, required loading and affected payload budgets pass. Retain Vite SPA. |
 | R05 / F19 | Strict dependency checks in API/web/worker/DB; geoip-country maintenance/data-update disposition. Last strict DB run found 146 declaration errors, 144 Drizzle and 2 Vite. | Compatible dependencies or narrowly reviewed declarations, strict consumers and frozen installation pass. No broad suppression or weaker requirement. |
-| V01 / F01, F02, F18, F21, F22 | Remaining historical task/PR dispositions, 37 evidence refreshes, loop durability, migrations, production packaging and repeated-task comparisons. | Every claim and deferral has an evidence-backed disposition. Reuse valid checks; record future and external dependencies separately. |
+| V01 / F01, F02, F18, F21, F22 | Remaining historical task/PR dispositions, 33 evidence refreshes, loop durability, migrations, production packaging and repeated-task comparisons. | Every claim and deferral has an evidence-backed disposition. Reuse valid checks; record future and external dependencies separately. |
 | R06 / F19 | Three measured coverage gaps. | Meaningful missing-behavior tests meet unchanged critical floors of 90% lines / 85% branches and general floors of 80% / 75%. |
 | V02 / affected groups | One final regression checkpoint after local repairs. | Required unit/integration/browser/coverage/types/lint/OpenAPI/migrations/snapshots/budgets/loop/image checks pass at recorded revisions. |
 | B01 / F22 | Dependency-ordered handoff of unmet skipped work. | Exact keys, criteria and prerequisites; preserve verified and incidental implementation. Build new features after repair closure. |

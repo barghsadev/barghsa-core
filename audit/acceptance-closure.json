@@ -1374,7 +1374,7 @@
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
         },
         {
           "path": "packages/db/drizzle/production/meta/0119_snapshot.json",
@@ -1496,6 +1496,16 @@
             "evidence": "audit/evidence/acceptance-refresh.json"
           }
         }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/web/e2e/admin-settings-live.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Shared browser fixture now uses canonical green key; two direct consumers pass four FA/EN cases. All unrelated fixture and test sections are unchanged; existing workflow evidence is reused."
+        }
       ]
     },
     {
@@ -1553,7 +1563,7 @@
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
         },
         {
           "path": "packages/db/src/schema/upload-policies.ts",
@@ -1581,12 +1591,22 @@
           "apps/web/e2e/admin-settings-live.spec.ts"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/web/e2e/admin-settings-live.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Shared browser fixture now uses canonical green key; two direct consumers pass four FA/EN cases. All unrelated fixture and test sections are unchanged; existing workflow evidence is reused."
+        }
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-04.01.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 348,
       "requirement": "**T-04.01.01 — Public TOS page**\n\n- Description: `/terms` page displaying current Terms of Service content. Shows last update date. Simple layout, readable typography.\n- Technical notes: GET `/api/tos/current` returns `{ content, versionId, updatedAt, publishedAt }`. Versioned. Supports Persian and English content.\n- UI/UX: Clean document layout. Date displayed prominently. Supports both RTL (Persian default) and LTR (English).\n- Dependencies: E-09 (admin TOS editing)\n- Complexity: S",
@@ -1594,23 +1614,23 @@
       "source_evidence": [
         {
           "path": "apps/api/src/tos/tos.service.ts",
-          "sha256": "730ec3a59f884d485e8c955c4ac484ed2ed9765e877eb7c30117e981c6d16a4c"
+          "sha256": "188f7286447a36d804350f532feac9bdf91f2c8a86324321133df52f7414baaf"
         },
         {
           "path": "apps/api/src/tos/tos.controller.ts",
-          "sha256": "9ad58574a7e030f8738075314115d9f310d60fb69b720ca0ede66122c50ad626"
+          "sha256": "25645e1f23d56f543522879a0b874461bd22282c05d4d15c09662fb9210d244d"
         },
         {
           "path": "apps/api/src/admin/tos-http.integration.test.ts",
-          "sha256": "91358ff04c35d2c5393d1cf36ddc369c95d41cebabc00baa75a29fac6e0399b7"
+          "sha256": "6abc981bbe0e5797eb4128a2d716410fc7fd2bda790b5ba7333d3364fb28c767"
         },
         {
           "path": "apps/api/src/auth/registration-http.integration.test.ts",
-          "sha256": "58c0169d96770a2a4987d2ee5edc74855893df09b93394d8421e9644de01efaa"
+          "sha256": "21a4034e25b8362f1510f05e2897dc58d53d6812c7cfbe54787b1ba20d927d3a"
         },
         {
           "path": "apps/web/src/routes/terms.tsx",
-          "sha256": "4e26f56381350a5f2eb1a7c0fcd38a083c6f248e162056d0f346c6df73a185aa"
+          "sha256": "ad3b50ca831cb442a719b4213762a7403c7f4d049e7c6921c76ad55d4c730bf8"
         },
         {
           "path": "apps/web/src/components/TosContent.tsx",
@@ -1618,17 +1638,20 @@
         },
         {
           "path": "apps/web/e2e/registration-consent.spec.ts",
-          "sha256": "e05c1bae7935bbc8d854be32a123a4d26acb6830bc7ca4cf781ca0bb8aa70f50"
+          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
         }
       ],
       "checks": [
         "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
-        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim."
+        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
+        "42 focused API cases pass across the terms service, migrated terms HTTP and registration HTTP suites, including rollback after session expiry during a version-row wait. Revocation/CSRF lock-wait cases already passed before the repair and are retained as compatibility evidence.",
+        "47 distinct browser cases pass:41 from the initial selection plus6 final live-API cases. The first live fixture failed before application testing because its obsolete green_electricity key violates migration0134; the fixture and two consumers now use green. Final6 cover FA/EN publication, green rules and catalogue. Incidental autosave/marketing matches in the first selection remain passing evidence, not new task scope.",
+        "API typecheck, scoped lint/format/diff and generated OpenAPI comparison pass. Initial typechecks reported three unchanged notification-test errors from stale incremental cache; a separate fresh compiler cache passed, then the normal check passed after removing the generated cache. No notification source or compiler setting changed. Prior production frontend build/types/42 budgets remain valid because only API and test code changed."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates."
@@ -1645,12 +1668,30 @@
           "apps/web/e2e/admin-settings-live.spec.ts"
         ],
         "evidence": "audit/evidence/acceptance-refresh.json"
-      }
+      },
+      "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/api/src/tos/tos.service.ts",
+            "apps/api/src/tos/tos.controller.ts",
+            "apps/api/src/admin/tos-http.integration.test.ts",
+            "apps/api/src/auth/registration-http.integration.test.ts",
+            "apps/web/src/routes/terms.tsx",
+            "apps/web/src/components/TosContent.tsx",
+            "apps/web/e2e/registration-consent.spec.ts",
+            "apps/web/e2e/admin-settings-live.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Reconciled later source changes with current terms/API/browser checks and matching registration/authentication/theme evidence. Existing detailed checks and limitations retained."
+        }
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-04.01.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 356,
       "requirement": "**T-04.01.02 — TOS acceptance storage**\n\n- Description: On registration and re-acceptance, store: exact version accepted, timestamp, user ID, IP address, device metadata. Acceptance is legally significant.\n- Technical notes: `tos_acceptances` table with user_id, version_id, accepted_at, ip_address, user_agent. Queries are immutable. Registration requires acceptance of the CURRENT active version.\n- UI/UX: N/A (backend + registration checkbox)\n- Dependencies: T-01.01.04, T-04.01.01\n- Complexity: S",
@@ -1658,27 +1699,27 @@
       "source_evidence": [
         {
           "path": "apps/api/src/tos/tos.service.ts",
-          "sha256": "730ec3a59f884d485e8c955c4ac484ed2ed9765e877eb7c30117e981c6d16a4c"
+          "sha256": "188f7286447a36d804350f532feac9bdf91f2c8a86324321133df52f7414baaf"
         },
         {
           "path": "apps/api/src/tos/tos.controller.ts",
-          "sha256": "9ad58574a7e030f8738075314115d9f310d60fb69b720ca0ede66122c50ad626"
+          "sha256": "25645e1f23d56f543522879a0b874461bd22282c05d4d15c09662fb9210d244d"
         },
         {
           "path": "apps/api/src/admin/tos-http.integration.test.ts",
-          "sha256": "91358ff04c35d2c5393d1cf36ddc369c95d41cebabc00baa75a29fac6e0399b7"
+          "sha256": "6abc981bbe0e5797eb4128a2d716410fc7fd2bda790b5ba7333d3364fb28c767"
         },
         {
           "path": "apps/api/src/auth/registration-http.integration.test.ts",
-          "sha256": "58c0169d96770a2a4987d2ee5edc74855893df09b93394d8421e9644de01efaa"
+          "sha256": "21a4034e25b8362f1510f05e2897dc58d53d6812c7cfbe54787b1ba20d927d3a"
         },
         {
           "path": "apps/api/src/auth/auth.service.ts",
-          "sha256": "3208798f2c3c4eabb3b0899a1fef7bf2738d283202a6b09da27ad6799f0ae980"
+          "sha256": "5b92f3c4deb6b07640f11320d47bfee935d4a35827edd312513bf2aa76417a02"
         },
         {
           "path": "apps/api/src/auth/otp.service.ts",
-          "sha256": "575fc4eaa67d7d8c34ef983dfbd7ce0cb55c13664a509a62b0d772fb7c551be4"
+          "sha256": "ec087d5b11da19b78492cae7884dc656ec5a12e13944979085286c9ad525fb3c"
         },
         {
           "path": "packages/db/src/schema/tos-acceptances.ts",
@@ -1686,13 +1727,16 @@
         },
         {
           "path": "apps/web/e2e/registration-consent.spec.ts",
-          "sha256": "e05c1bae7935bbc8d854be32a123a4d26acb6830bc7ca4cf781ca0bb8aa70f50"
+          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
         }
       ],
       "checks": [
         "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
-        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim."
+        "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
+        "42 focused API cases pass across the terms service, migrated terms HTTP and registration HTTP suites, including rollback after session expiry during a version-row wait. Revocation/CSRF lock-wait cases already passed before the repair and are retained as compatibility evidence.",
+        "47 distinct browser cases pass:41 from the initial selection plus6 final live-API cases. The first live fixture failed before application testing because its obsolete green_electricity key violates migration0134; the fixture and two consumers now use green. Final6 cover FA/EN publication, green rules and catalogue. Incidental autosave/marketing matches in the first selection remain passing evidence, not new task scope.",
+        "API typecheck, scoped lint/format/diff and generated OpenAPI comparison pass. Initial typechecks reported three unchanged notification-test errors from stale incremental cache; a separate fresh compiler cache passed, then the normal check passed after removing the generated cache. No notification source or compiler setting changed. Prior production frontend build/types/42 budgets remain valid because only API and test code changed."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates."
@@ -1709,12 +1753,30 @@
         ],
         "review": "Reviewed selected reset/issuance/schema/contract changes and their shared callers. Unchanged behavior reuses valid evidence. Earlier unrelated source drift is not silently refreshed.",
         "record": "audit/evidence/step-reviews.json#R01-reset-otp-first"
-      }
+      },
+      "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/api/src/tos/tos.service.ts",
+            "apps/api/src/tos/tos.controller.ts",
+            "apps/api/src/admin/tos-http.integration.test.ts",
+            "apps/api/src/auth/registration-http.integration.test.ts",
+            "apps/api/src/auth/auth.service.ts",
+            "apps/api/src/auth/otp.service.ts",
+            "packages/db/src/schema/tos-acceptances.ts",
+            "apps/web/e2e/registration-consent.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Reconciled later source changes with current terms/API/browser checks and matching registration/authentication/theme evidence. Existing detailed checks and limitations retained."
+        }
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-04.01.03",
       "status": "acceptance_verified",
-      "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+      "reviewed_sha": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 364,
       "requirement": "**T-04.01.03 — TOS re-acceptance flow**\n\n- Description: When a materially changed TOS version is published, users must re-accept at next safe entry point. Does not block: login, account recovery, support, or legal record access. Show banner: \"Terms of Service have been updated. [Review]\"\n- Technical notes: Backend endpoint or middleware checks `user.lastAcceptedTosVersion < activeTosVersion` for non-exempt routes. Re-acceptance: POST `/api/tos/accept/:versionId`. API returns flag `requiresTosAcceptance` in user profile.\n- UI/UX: Banner across all pages until accepted (on allowed pages). Modal on first non-exempt action. Full TOS displayed with \"I accept\" button. Non-intrusive, doesn't block critical paths.\n- Dependencies: T-04.01.01, T-04.01.02\n- Complexity: M\n\n---",
@@ -1722,19 +1784,19 @@
       "source_evidence": [
         {
           "path": "apps/api/src/tos/tos.service.ts",
-          "sha256": "730ec3a59f884d485e8c955c4ac484ed2ed9765e877eb7c30117e981c6d16a4c"
+          "sha256": "188f7286447a36d804350f532feac9bdf91f2c8a86324321133df52f7414baaf"
         },
         {
           "path": "apps/api/src/tos/tos.controller.ts",
-          "sha256": "9ad58574a7e030f8738075314115d9f310d60fb69b720ca0ede66122c50ad626"
+          "sha256": "25645e1f23d56f543522879a0b874461bd22282c05d4d15c09662fb9210d244d"
         },
         {
           "path": "apps/api/src/admin/tos-http.integration.test.ts",
-          "sha256": "91358ff04c35d2c5393d1cf36ddc369c95d41cebabc00baa75a29fac6e0399b7"
+          "sha256": "6abc981bbe0e5797eb4128a2d716410fc7fd2bda790b5ba7333d3364fb28c767"
         },
         {
           "path": "apps/api/src/auth/registration-http.integration.test.ts",
-          "sha256": "58c0169d96770a2a4987d2ee5edc74855893df09b93394d8421e9644de01efaa"
+          "sha256": "21a4034e25b8362f1510f05e2897dc58d53d6812c7cfbe54787b1ba20d927d3a"
         },
         {
           "path": "apps/web/src/components/TosBanner.tsx",
@@ -1746,7 +1808,7 @@
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
         },
         {
           "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -1754,14 +1816,17 @@
         },
         {
           "path": "apps/web/src/pages/AdminLayout.tsx",
-          "sha256": "09d7b6abd343a8298dfdc144a42d3f19f03be3805b8851b5ca21a6af3b0289f6"
+          "sha256": "d46971fd97608e29a314810c810391113fbaa41c3da5feb6526ef2db425990c2"
         }
       ],
       "checks": [
         "Reviewed the changed required source/consumer paths since prior acceptance, including dictionary boundaries, numeral formatting, permission schemas and shell changes.",
         "Reuse the passing408-case production Chromium run at9529872 and applicable package evidence. All recorded source paths match that checkpoint except the shared form test, where the only subsequent change asserts the localized notification-template save error and does not change this task flow.",
         "Original detailed acceptance evidence remains in superseded_assessments at the prior reviewed revision; this refresh adds no new browser-run claim.",
-        "audit/evidence/step-reviews.json#R03-theme-contrast: matching immediate-base bindings refreshed after scoped review. Shared controls/styles and public links change presentation only; terms consent behavior remains unchanged, dialog close label is localized. Brand preview reuses the unchanged foreground calculation; draft/save/activation logic remains unchanged. Current focused browser/type/lint/budget checks pass; prior behavior evidence retained."
+        "audit/evidence/step-reviews.json#R03-theme-contrast: matching immediate-base bindings refreshed after scoped review. Shared controls/styles and public links change presentation only; terms consent behavior remains unchanged, dialog close label is localized. Brand preview reuses the unchanged foreground calculation; draft/save/activation logic remains unchanged. Current focused browser/type/lint/budget checks pass; prior behavior evidence retained.",
+        "42 focused API cases pass across the terms service, migrated terms HTTP and registration HTTP suites, including rollback after session expiry during a version-row wait. Revocation/CSRF lock-wait cases already passed before the repair and are retained as compatibility evidence.",
+        "47 distinct browser cases pass:41 from the initial selection plus6 final live-API cases. The first live fixture failed before application testing because its obsolete green_electricity key violates migration0134; the fixture and two consumers now use green. Final6 cover FA/EN publication, green rules and catalogue. Incidental autosave/marketing matches in the first selection remain passing evidence, not new task scope.",
+        "API typecheck, scoped lint/format/diff and generated OpenAPI comparison pass. Initial typechecks reported three unchanged notification-test errors from stale incremental cache; a separate fresh compiler cache passed, then the normal check passed after removing the generated cache. No notification source or compiler setting changed. Prior production frontend build/types/42 budgets remain valid because only API and test code changed."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates.",
@@ -1793,12 +1858,31 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/api/src/tos/tos.service.ts",
+            "apps/api/src/tos/tos.controller.ts",
+            "apps/api/src/admin/tos-http.integration.test.ts",
+            "apps/api/src/auth/registration-http.integration.test.ts",
+            "apps/web/src/components/TosBanner.tsx",
+            "apps/web/e2e/shell-navigation.spec.ts",
+            "apps/web/e2e/admin-settings-live.spec.ts",
+            "apps/web/src/pages/DashboardLayout.tsx",
+            "apps/web/src/pages/AdminLayout.tsx"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Reconciled later source changes with current terms/API/browser checks and matching registration/authentication/theme evidence. Existing detailed checks and limitations retained."
+        }
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-09.03.01",
       "status": "acceptance_verified",
-      "reviewed_sha": "218a3a381f20b0a722d101ac2be5f79b3b527632",
+      "reviewed_sha": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 668,
       "requirement": "**T-09.03.01 — TOS editor**\n\n- Description: Admin can edit Terms of Service content. Rich text editor. Versioned with publish date and language (Persian/English). Publishing a materially changed version can trigger re-acceptance flag.\n- Technical notes: Permissions: `admin:tos:edit`. Versioned with `major` (material change → re-acceptance) and `minor` (typo/clarification → no re-acceptance). Preview before publish. Draft → Published. Last editor recorded. Audit: tos_updated.\n- UI/UX: Rich text editor (TipTap or similar). Side-by-side with current active version diff. \"Mark as material change\" checkbox. Publish button. Version history list.\n- Dependencies: T-04.01.01, admin config framework\n- Complexity: M",
@@ -1806,19 +1890,19 @@
       "source_evidence": [
         {
           "path": "apps/api/src/tos/tos.service.ts",
-          "sha256": "730ec3a59f884d485e8c955c4ac484ed2ed9765e877eb7c30117e981c6d16a4c"
+          "sha256": "188f7286447a36d804350f532feac9bdf91f2c8a86324321133df52f7414baaf"
         },
         {
           "path": "apps/api/src/tos/tos.controller.ts",
-          "sha256": "9ad58574a7e030f8738075314115d9f310d60fb69b720ca0ede66122c50ad626"
+          "sha256": "25645e1f23d56f543522879a0b874461bd22282c05d4d15c09662fb9210d244d"
         },
         {
           "path": "apps/api/src/admin/tos-http.integration.test.ts",
-          "sha256": "91358ff04c35d2c5393d1cf36ddc369c95d41cebabc00baa75a29fac6e0399b7"
+          "sha256": "6abc981bbe0e5797eb4128a2d716410fc7fd2bda790b5ba7333d3364fb28c767"
         },
         {
           "path": "apps/api/src/auth/registration-http.integration.test.ts",
-          "sha256": "58c0169d96770a2a4987d2ee5edc74855893df09b93394d8421e9644de01efaa"
+          "sha256": "21a4034e25b8362f1510f05e2897dc58d53d6812c7cfbe54787b1ba20d927d3a"
         },
         {
           "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -1842,15 +1926,15 @@
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "ecdbe31b9ba3079242f510d6af12a2905d7a320692956b5df9250fa763e0ea1b"
+          "sha256": "f053ddb0798731acad52159da86bf3ec6bf09582ac4c13bf6a2c31e62cea3730"
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "2b2a0e930b5fd1ba313ead433eb7ea1bf9c120f206e4b1ea094efa884fb4c21e"
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
         }
       ],
       "checks": [
@@ -1862,7 +1946,10 @@
         "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged.",
         "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
-        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed."
+        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
+        "42 focused API cases pass across the terms service, migrated terms HTTP and registration HTTP suites, including rollback after session expiry during a version-row wait. Revocation/CSRF lock-wait cases already passed before the repair and are retained as compatibility evidence.",
+        "47 distinct browser cases pass:41 from the initial selection plus6 final live-API cases. The first live fixture failed before application testing because its obsolete green_electricity key violates migration0134; the fixture and two consumers now use green. Final6 cover FA/EN publication, green rules and catalogue. Incidental autosave/marketing matches in the first selection remain passing evidence, not new task scope.",
+        "API typecheck, scoped lint/format/diff and generated OpenAPI comparison pass. Initial typechecks reported three unchanged notification-test errors from stale incremental cache; a separate fresh compiler cache passed, then the normal check passed after removing the generated cache. No notification source or compiler setting changed. Prior production frontend build/types/42 budgets remain valid because only API and test code changed."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates.",
@@ -1975,12 +2062,34 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/api/src/tos/tos.service.ts",
+            "apps/api/src/tos/tos.controller.ts",
+            "apps/api/src/admin/tos-http.integration.test.ts",
+            "apps/api/src/auth/registration-http.integration.test.ts",
+            "apps/web/src/pages/AdminTosPage.tsx",
+            "apps/web/src/pages/TosRichText.tsx",
+            "apps/web/src/pages/TosPreview.tsx",
+            "apps/web/src/pages/admin-tos-text.ts",
+            "apps/web/src/components/TosContent.tsx",
+            "apps/web/e2e/admin-settings-live.spec.ts",
+            "apps/web/e2e/form-accessibility.spec.ts",
+            "apps/api/src/admin/admin.controller.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Reconciled later source changes with current terms/API/browser checks and matching registration/authentication/theme evidence. Existing detailed checks and limitations retained."
+        }
       ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-09.03.02",
       "status": "acceptance_verified",
-      "reviewed_sha": "218a3a381f20b0a722d101ac2be5f79b3b527632",
+      "reviewed_sha": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
       "requirement_file": "kanban/epics/02-auth-users-admin.md",
       "requirement_line": 676,
       "requirement": "**T-09.03.02 — TOS version history**\n\n- Description: List of all TOS versions with publish date, material change flag, published by. Admin can view any previous version.\n- Technical notes: GET `/api/admin/tos/versions`. Versions are immutable after publish. Display-only.\n- UI/UX: Table: version #, date, material change badge, author. View link opens read-only version.\n- Dependencies: T-09.03.01\n- Complexity: S",
@@ -1988,19 +2097,19 @@
       "source_evidence": [
         {
           "path": "apps/api/src/tos/tos.service.ts",
-          "sha256": "730ec3a59f884d485e8c955c4ac484ed2ed9765e877eb7c30117e981c6d16a4c"
+          "sha256": "188f7286447a36d804350f532feac9bdf91f2c8a86324321133df52f7414baaf"
         },
         {
           "path": "apps/api/src/tos/tos.controller.ts",
-          "sha256": "9ad58574a7e030f8738075314115d9f310d60fb69b720ca0ede66122c50ad626"
+          "sha256": "25645e1f23d56f543522879a0b874461bd22282c05d4d15c09662fb9210d244d"
         },
         {
           "path": "apps/api/src/admin/tos-http.integration.test.ts",
-          "sha256": "91358ff04c35d2c5393d1cf36ddc369c95d41cebabc00baa75a29fac6e0399b7"
+          "sha256": "6abc981bbe0e5797eb4128a2d716410fc7fd2bda790b5ba7333d3364fb28c767"
         },
         {
           "path": "apps/api/src/auth/registration-http.integration.test.ts",
-          "sha256": "58c0169d96770a2a4987d2ee5edc74855893df09b93394d8421e9644de01efaa"
+          "sha256": "21a4034e25b8362f1510f05e2897dc58d53d6812c7cfbe54787b1ba20d927d3a"
         },
         {
           "path": "apps/web/src/pages/AdminTosPage.tsx",
@@ -2024,15 +2133,15 @@
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
         },
         {
           "path": "apps/web/e2e/form-accessibility.spec.ts",
-          "sha256": "ecdbe31b9ba3079242f510d6af12a2905d7a320692956b5df9250fa763e0ea1b"
+          "sha256": "f053ddb0798731acad52159da86bf3ec6bf09582ac4c13bf6a2c31e62cea3730"
         },
         {
           "path": "apps/api/src/admin/admin.controller.ts",
-          "sha256": "2b2a0e930b5fd1ba313ead433eb7ea1bf9c120f206e4b1ea094efa884fb4c21e"
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
         }
       ],
       "checks": [
@@ -2044,7 +2153,10 @@
         "At ee5beb2, reviewed isolated staff-disable200 alignment and strengthened revocation tests; see audit/evidence/step-reviews.json#R01-session-caller-review. Other methods/criteria and earlier drift unchanged.",
         "At640108c, reconciled changed-file evidence with the bounded R01-staff-creation-step-up review. Existing task status and unrelated limitations remain.",
         "At a4cd929, reconciled only the listed immediate-predecessor source bindings with the reviewed staff-action diff. Unrelated controller methods and requireStaffMutationPermission are unchanged; no whole-task rerun claimed.",
-        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed."
+        "At ab10771, reconciled the listed immediate-predecessor bindings. Only a guarded read-only role-options handler/contract and its HTTP case were added; existing handlers, contract values and test bodies are unchanged. The selected staff suite passes. No whole-task rerun or older-drift clearance is claimed.",
+        "42 focused API cases pass across the terms service, migrated terms HTTP and registration HTTP suites, including rollback after session expiry during a version-row wait. Revocation/CSRF lock-wait cases already passed before the repair and are retained as compatibility evidence.",
+        "47 distinct browser cases pass:41 from the initial selection plus6 final live-API cases. The first live fixture failed before application testing because its obsolete green_electricity key violates migration0134; the fixture and two consumers now use green. Final6 cover FA/EN publication, green rules and catalogue. Incidental autosave/marketing matches in the first selection remain passing evidence, not new task scope.",
+        "API typecheck, scoped lint/format/diff and generated OpenAPI comparison pass. Initial typechecks reported three unchanged notification-test errors from stale incremental cache; a separate fresh compiler cache passed, then the normal check passed after removing the generated cache. No notification source or compiler setting changed. Prior production frontend build/types/42 budgets remain valid because only API and test code changed."
       ],
       "limitations": [
         "Local task acceptance does not certify deployed historical data, production operations or the still-open global coverage gates."
@@ -2155,6 +2267,28 @@
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
         }
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/api/src/tos/tos.service.ts",
+            "apps/api/src/tos/tos.controller.ts",
+            "apps/api/src/admin/tos-http.integration.test.ts",
+            "apps/api/src/auth/registration-http.integration.test.ts",
+            "apps/web/src/pages/AdminTosPage.tsx",
+            "apps/web/src/pages/TosRichText.tsx",
+            "apps/web/src/pages/TosPreview.tsx",
+            "apps/web/src/pages/admin-tos-text.ts",
+            "apps/web/src/components/TosContent.tsx",
+            "apps/web/e2e/admin-settings-live.spec.ts",
+            "apps/web/e2e/form-accessibility.spec.ts",
+            "apps/api/src/admin/admin.controller.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Reconciled later source changes with current terms/API/browser checks and matching registration/authentication/theme evidence. Existing detailed checks and limitations retained."
+        }
       ]
     },
     {
@@ -2248,7 +2382,7 @@
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
         },
         {
           "path": "apps/web/e2e/notification-numerals.spec.ts",
@@ -2436,6 +2570,16 @@
             "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/web/e2e/admin-settings-live.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Shared browser fixture now uses canonical green key; two direct consumers pass four FA/EN cases. All unrelated fixture and test sections are unchanged; existing workflow evidence is reused."
         }
       ]
     },
@@ -4288,7 +4432,7 @@
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
         },
         {
           "path": "apps/web/e2e/verification-notices.spec.ts",
@@ -4355,7 +4499,17 @@
         "note": "Original source bindings and assessment remain available in this committed ledger revision; older nested assessments are preserved."
       },
       "review_record": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
-      "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed."
+      "evidence_reuse": "Prior source/test evidence remains in its existing step records. Current bindings are reviewed only for this batch: archived ten-method comparison bridges earlier caller reviews; the35-method AST comparison removes only logger statements and unused catch bindings. Login additionally forwards the device fingerprint, covered by registration/login quota tests. Current preauth HTTP/consumer checks replace affected transport evidence. UI-only recovery changes replace affected browser evidence. No broad coverage, image or deployment evidence is renewed.",
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/web/e2e/admin-settings-live.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Shared browser fixture now uses canonical green key; two direct consumers pass four FA/EN cases. All unrelated fixture and test sections are unchanged; existing workflow evidence is reused."
+        }
+      ]
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.04.01",
@@ -9525,7 +9679,7 @@
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
         },
         {
           "path": "apps/web/e2e/profile-switch.spec.ts",
@@ -9561,6 +9715,16 @@
             "apps/web/src/components/QuickStatusCards.tsx"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/web/e2e/admin-settings-live.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Shared browser fixture now uses canonical green key; two direct consumers pass four FA/EN cases. All unrelated fixture and test sections are unchanged; existing workflow evidence is reused."
         }
       ]
     },
@@ -16276,7 +16440,7 @@
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
         },
         {
           "path": "apps/worker/src/notifications/email-transport.ts",
@@ -16323,6 +16487,16 @@
             "apps/web/src/components/NotificationBell.tsx"
           ],
           "note": "Immediate-base runtime delta reviewed: health probe and terminal SDK cleanup additions, shutdown deadline/response tracking, additive fixture process handle and development S3 aliases. Existing authorization, storage operations, worker poller transactions and response security behavior preserved; affected focused checks and current builds/types pass. Older unmatched evidence is not refreshed."
+        }
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/web/e2e/admin-settings-live.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Shared browser fixture now uses canonical green key; two direct consumers pass four FA/EN cases. All unrelated fixture and test sections are unchanged; existing workflow evidence is reused."
         }
       ]
     },
@@ -21154,7 +21328,7 @@
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
         },
         {
           "path": "apps/web/e2e/catalogue.spec.ts",
@@ -21205,6 +21379,16 @@
       "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/web/e2e/admin-settings-live.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Shared browser fixture now uses canonical green key; two direct consumers pass four FA/EN cases. All unrelated fixture and test sections are unchanged; existing workflow evidence is reused."
+        }
       ]
     },
     {
@@ -21270,7 +21454,7 @@
         },
         {
           "path": "apps/web/e2e/admin-settings-live.spec.ts",
-          "sha256": "b9474b5df52da15dcd1a478c6476817da2387854ab6f970820c6d415e46e0597"
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
         },
         {
           "path": "apps/web/e2e/catalogue.spec.ts",
@@ -21321,6 +21505,16 @@
       "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat",
       "evidence_reuse": [
         "audit/evidence/step-reviews.json#V01-seed-bootstrap: Immediate-base bindings refreshed after reviewed seed/system-product/zero-limit/green-identity repairs. DB747, shared14 and88 distinct affected API cases pass across focused runs; existing authentication/configuration transaction paths remain unchanged. Earlier failed expectations retained. V02 remains required;38 unmatched older source records stay queued."
+      ],
+      "source_refreshes": [
+        {
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "paths": [
+            "apps/web/e2e/admin-settings-live.spec.ts"
+          ],
+          "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+          "note": "Shared browser fixture now uses canonical green key; two direct consumers pass four FA/EN cases. All unrelated fixture and test sections are unchanged; existing workflow evidence is reused."
+        }
       ]
     },
     {
@@ -30984,6 +31178,19 @@
       ],
       "review_record": "audit/evidence/step-reviews.json#V01-login-authentication",
       "note": "Five already-verified acceptance records reconciled with later auth/CSRF/contact/delivery/UI changes and fresh95 API/40 browser cases. One older forced-password CRM evidence refresh closes;37 unrelated refresh records remain."
+    },
+    {
+      "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+      "ledger_path": "audit/acceptance-closure.json",
+      "task_keys": [
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.03.02"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
+      "note": "Five existing terms acceptances refreshed and five saved PR reviews closed. 8 immediate-base shared-fixture bindings refreshed for the scoped key correction. Four older terms refresh records close."
     }
   ]
 }

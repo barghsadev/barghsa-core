@@ -3,9 +3,9 @@
   "updated": "2026-09-19",
   "status": "in_progress",
   "plan": "audit/fix-plan.md",
-  "source_revision": "b514bd11f6f28694d5e956a77680f33b86caf46d",
+  "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
   "active_step": "V01",
-  "next_action": "Review saved terms lifecycle/acceptance PRs117,118,119,159,160 as one batch, reusing the completed terms and registration evidence.",
+  "next_action": "Review CRM listing, profile management and pending-verification widget as one batch: saved PR120,122–128,136. Reuse current source-bound acceptance; retain archive contract/retention prerequisites.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -823,6 +823,10 @@
     {
       "id": "V01-login-authentication",
       "review_record": "audit/evidence/step-reviews.json#V01-login-authentication"
+    },
+    {
+      "id": "V01-terms-lifecycle",
+      "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle"
     }
   ],
   "deferred_improvements": [
@@ -937,18 +941,6 @@
       ]
     },
     {
-      "task_key": "02-auth-users-admin.md#T-04.01.02",
-      "changed_paths": [
-        "apps/api/src/auth/auth.service.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-04.01.03",
-      "changed_paths": [
-        "apps/web/src/pages/AdminLayout.tsx"
-      ]
-    },
-    {
       "task_key": "01-platform-infrastructure.md#T-01.03.02",
       "changed_paths": [
         "apps/api/package.json"
@@ -998,20 +990,6 @@
       "changed_paths": [
         "packages/db/drizzle/production/meta/_journal.json",
         "packages/db/src/migrate.baseline.test.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-09.03.01",
-      "changed_paths": [
-        "apps/web/e2e/form-accessibility.spec.ts",
-        "apps/api/src/admin/admin.controller.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-09.03.02",
-      "changed_paths": [
-        "apps/web/e2e/form-accessibility.spec.ts",
-        "apps/api/src/admin/admin.controller.ts"
       ]
     },
     {
@@ -1169,47 +1147,41 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-login-authentication",
-    "name": "Login, OTP, forced-password and abuse-limit saved PR reviews",
+    "id": "V01-terms-lifecycle",
+    "name": "Terms publication, acceptance and history",
     "status": "completed",
     "prs": [
-      77,
-      78,
-      87,
-      88,
-      101
+      117,
+      118,
+      119,
+      159,
+      160
     ],
     "task_keys": [
-      "02-auth-users-admin.md#T-02.01.01",
-      "02-auth-users-admin.md#T-02.01.02",
-      "02-auth-users-admin.md#T-02.01.03",
-      "02-auth-users-admin.md#T-02.01.04",
-      "02-auth-users-admin.md#T-02.04.01"
+      "02-auth-users-admin.md#T-04.01.01",
+      "02-auth-users-admin.md#T-04.01.02",
+      "02-auth-users-admin.md#T-04.01.03",
+      "02-auth-users-admin.md#T-09.03.01",
+      "02-auth-users-admin.md#T-09.03.02"
     ],
-    "base_revision": "1df2f1ef",
+    "base_revision": "693e90e8",
     "remaining_checklist": [],
-    "historical_deferrals": [
-      "PR87 device trust table/unique constraint migration",
-      "PR87 body states endpoint tests unavailable at original merge"
-    ],
+    "historical_deferrals": [],
     "confirmed_defects": [],
     "reused_evidence": [
-      "Existing five acceptance records",
-      "R01-cookie-policy",
-      "R01-trusted-device-deadlines",
-      "R02-notification delivery",
-      "V01-distributed-rate-limit",
-      "V01-edge-caching"
+      "Existing five task acceptances and their superseded detailed reviews",
+      "R01-registration-otp",
+      "R03-theme-contrast",
+      "R03-controls",
+      "R03-consumer-theme-time"
     ],
-    "next_action": "Review saved terms lifecycle/acceptance PRs117,118,119,159,160 as one batch, reusing the completed terms and registration evidence.",
-    "source_revision": "b514bd11f6f28694d5e956a77680f33b86caf46d",
-    "review_record": "audit/evidence/step-reviews.json#V01-login-authentication",
+    "next_action": "Review CRM listing, profile management and pending-verification widget as one batch: saved PR120,122–128,136. Reuse current source-bound acceptance; retain archive contract/retention prerequisites.",
+    "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+    "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle",
     "verification": [
-      "95 focused compiled-API/PostgreSQL cases pass across7 suites: login failure windows, OTP verification/replay/deadlines, browser-device quotas, actual mock-provider delivery, forced-password history/rollback/replay, account login aliases and pre-login CSRF.",
-      "40 distinct current browser cases pass across desktop Chromium and mobile Chrome. Initial36-case run passed35; one canceled CSS-animation promise failed. Four forced-change cases pass after the wait repair; eight current login UI cases pass across both projects. These reruns overlap and are not added to40. FA/EN, light/dark, normalization, generic errors, disabled/preserved inputs, acknowledgements, OTP resend/cooldown, policy validation, /app and onboarding paths are covered.",
-      "Inspected English desktop and Persian dark mobile screenshots. Mobile branding stacks above the form and links home, satisfying T-01.01.01; desktop columns remain separate, and both sizes have no horizontal overflow and pass their accessibility checks.",
-      "Current production auth-entry asset references match the served /login HTML; both auth and application index/manifest hashes are saved. First diagnostic incorrectly compared main-app entry to the separate auth entry and was rejected, then corrected. Production server was stopped after testing.",
-      "Two changed test files pass scoped lint/format/diff checks. Current application build, types, frozen installation and all42 unchanged budgets from V01-ui-foundations are reused because only tests changed. Earlier current-source cookie, transaction, session-CSRF, CRM notification/authority, limiter and real NGINX evidence is retained."
+      "42 focused API cases pass across the terms service, migrated terms HTTP and registration HTTP suites, including rollback after session expiry during a version-row wait. Revocation/CSRF lock-wait cases already passed before the repair and are retained as compatibility evidence.",
+      "47 distinct browser cases pass:41 from the initial selection plus6 final live-API cases. The first live fixture failed before application testing because its obsolete green_electricity key violates migration0134; the fixture and two consumers now use green. Final6 cover FA/EN publication, green rules and catalogue. Incidental autosave/marketing matches in the first selection remain passing evidence, not new task scope.",
+      "API typecheck, scoped lint/format/diff and generated OpenAPI comparison pass. Initial typechecks reported three unchanged notification-test errors from stale incremental cache; a separate fresh compiler cache passed, then the normal check passed after removing the generated cache. No notification source or compiler setting changed. Prior production frontend build/types/42 budgets remain valid because only API and test code changed."
     ]
   },
   "open_domain_reviews": [

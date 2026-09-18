@@ -22985,6 +22985,222 @@
           "evidence": "audit/evidence/step-reviews.json#V01-login-authentication"
         }
       ]
+    },
+    {
+      "id": "V01-terms-lifecycle",
+      "date": "2026-09-19",
+      "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+      "base_revision": "693e90e8",
+      "product_commits": [
+        "d9ed9dd5d8e23aa080d073c5453d82dec19729d5"
+      ],
+      "task_keys": [
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.03.02"
+      ],
+      "summary": "Terms consent now retains session authority through commit. Five existing task acceptances preserved; five saved PR reviews close. Shared browser fixture corrected to the canonical green product key.",
+      "review": [
+        "Read all five saved PR bodies and exact task/story criteria. Their current mapped acceptances remain verified; none has a historical unchecked deferral in the frozen register.",
+        "Reviewed published version lookup, major/minor activation and material-consent boundary, revision-bound preview/publish, immutable history and atomic acceptance. Published UUID lookup is parameterized and excludes drafts; public locale changes retain the exact version. Minor publication updates current terms without invalidating existing material consent.",
+        "Confirmed the API accepted and persisted consent after a session expired during a terms-row lock wait. recordAcceptance now receives the authenticated session and CSRF proof, checks them after acquiring the account lock, and checks the database clock again before commit. Failure rolls back both acceptance and the user pointer. Registration retains its own atomic account/consent transaction; no fresh step-up is required for consent.",
+        "Reviewed both URL/body acceptance routes, exact response/version identity, safe rich content, accessible editor/preview/history, safe-entry banner/modal exemptions and registration current-version coupling. Reuse later registration/authentication, theme/control and layout reviews where source hashes match;49 prior task source bindings are reconciled in the saved binding log.",
+        "Read the complete fixture correction diff. Only the obsolete green system key and two direct test lookups changed; the conflict path also preserves the intended Green UI title. All six directly affected live flows pass. Other fixture/test behavior is unchanged. This does not certify a new full browser regression."
+      ],
+      "verification": [
+        "42 focused API cases pass across the terms service, migrated terms HTTP and registration HTTP suites, including rollback after session expiry during a version-row wait. Revocation/CSRF lock-wait cases already passed before the repair and are retained as compatibility evidence.",
+        "47 distinct browser cases pass:41 from the initial selection plus6 final live-API cases. The first live fixture failed before application testing because its obsolete green_electricity key violates migration0134; the fixture and two consumers now use green. Final6 cover FA/EN publication, green rules and catalogue. Incidental autosave/marketing matches in the first selection remain passing evidence, not new task scope.",
+        "API typecheck, scoped lint/format/diff and generated OpenAPI comparison pass. Initial typechecks reported three unchanged notification-test errors from stale incremental cache; a separate fresh compiler cache passed, then the normal check passed after removing the generated cache. No notification source or compiler setting changed. Prior production frontend build/types/42 budgets remain valid because only API and test code changed."
+      ],
+      "remaining": [
+        "Production migrations, historical-data compliance and operational deployment remain separate. Full regression/coverage stays V02/R06; no live or remote action occurred."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/scripts/admin-ui-fixture.ts",
+          "sha256": "8de6a3afbad825c43ea93ea5461cb12f4984ef8f7666b4e6437ab7c73b833ecb"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "39d6b090a0daaafc4562c6cc41c08a5ec2f9c37b0f9f475dbf726b135a44689e"
+        },
+        {
+          "path": "apps/api/src/admin/tos-http.integration.test.ts",
+          "sha256": "6abc981bbe0e5797eb4128a2d716410fc7fd2bda790b5ba7333d3364fb28c767"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "5b92f3c4deb6b07640f11320d47bfee935d4a35827edd312513bf2aa76417a02"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "ec087d5b11da19b78492cae7884dc656ec5a12e13944979085286c9ad525fb3c"
+        },
+        {
+          "path": "apps/api/src/auth/registration-http.integration.test.ts",
+          "sha256": "21a4034e25b8362f1510f05e2897dc58d53d6812c7cfbe54787b1ba20d927d3a"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "04f59fbc4f8de85d2efedebc1038c0749878fcb2e7a3263f6e803cc54a0fb239"
+        },
+        {
+          "path": "apps/api/src/tos/tos.controller.ts",
+          "sha256": "25645e1f23d56f543522879a0b874461bd22282c05d4d15c09662fb9210d244d"
+        },
+        {
+          "path": "apps/api/src/tos/tos.service.test.ts",
+          "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+        },
+        {
+          "path": "apps/api/src/tos/tos.service.ts",
+          "sha256": "188f7286447a36d804350f532feac9bdf91f2c8a86324321133df52f7414baaf"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "1ad91c7ecde5f0c9145fb16f369f62a6211a6ae3dd9745b1b627962f422eed3a"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "f053ddb0798731acad52159da86bf3ec6bf09582ac4c13bf6a2c31e62cea3730"
+        },
+        {
+          "path": "apps/web/e2e/registration-consent.spec.ts",
+          "sha256": "623b94ad7fae4639e356d00ff6f2a54ebc0078b08fa30dbcec7768f93bb953b9"
+        },
+        {
+          "path": "apps/web/e2e/shell-navigation.spec.ts",
+          "sha256": "f28fc4ed187286d083ddd34896153f8837a0b08e6fa8ee28e0311c6dfd79a86d"
+        },
+        {
+          "path": "apps/web/src/components/TosBanner.tsx",
+          "sha256": "a54074b6645072f702262cea896690ca7ddaf2b210cc8e06e90f836b6278ce0d"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.tsx",
+          "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+        },
+        {
+          "path": "apps/web/src/pages/AdminLayout.tsx",
+          "sha256": "d46971fd97608e29a314810c810391113fbaa41c3da5feb6526ef2db425990c2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "6c878aca319c5d2dc027fe9fdbab03f8eac991c41ead68ea821914b677a47a1a"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "9dc7bdeaa1aa536fff35c04d705fa2bc63c40ab23b41cc619e6ad2828e334ebb"
+        },
+        {
+          "path": "apps/web/src/pages/TosPreview.tsx",
+          "sha256": "9a75a0b00d66dabe01346a48ae46717ea9b67d38c5953d3908d810b7f61842c2"
+        },
+        {
+          "path": "apps/web/src/pages/TosRichText.tsx",
+          "sha256": "5528b6f4bad4cb37b7ac4b46153ca4ac3f377e94b458326118b0245ca1193d8b"
+        },
+        {
+          "path": "apps/web/src/pages/admin-tos-text.ts",
+          "sha256": "108dde981ec56b56818b59bc117e1ac2c02468edc443971e3c0d75ff727a257d"
+        },
+        {
+          "path": "apps/web/src/routes/terms.tsx",
+          "sha256": "ad3b50ca831cb442a719b4213762a7403c7f4d049e7c6921c76ad55d4c730bf8"
+        },
+        {
+          "path": "packages/db/src/schema/tos-acceptances.ts",
+          "sha256": "91b8f545716ff6bb01d7cbc3714b7602ca246e2959b5e877cd8b10a439500e1c"
+        }
+      ],
+      "logs": [
+        "/tmp/v01-terms-api-fixed.log",
+        "/tmp/v01-terms-api.log",
+        "/tmp/v01-terms-authority-baseline.log",
+        "/tmp/v01-terms-browser-live-final.log",
+        "/tmp/v01-terms-browser.log",
+        "/tmp/v01-terms-commit.log",
+        "/tmp/v01-terms-diff-check.log",
+        "/tmp/v01-terms-expiry-baseline.log",
+        "/tmp/v01-terms-expiry-baseline2.log",
+        "/tmp/v01-terms-expiry-format.log",
+        "/tmp/v01-terms-final-format.log",
+        "/tmp/v01-terms-fixture-format.log",
+        "/tmp/v01-terms-fixture-lint.log",
+        "/tmp/v01-terms-format-baseline.log",
+        "/tmp/v01-terms-format-check.log",
+        "/tmp/v01-terms-format-fixed.log",
+        "/tmp/v01-terms-lint.log",
+        "/tmp/v01-terms-openapi.log",
+        "/tmp/v01-terms-preview.log",
+        "/tmp/v01-terms-source-binding.log",
+        "/tmp/v01-terms-types-final.log",
+        "/tmp/v01-terms-types-fresh.log",
+        "/tmp/v01-terms-types-recheck.log",
+        "/tmp/v01-terms-types.log"
+      ],
+      "reused_evidence": [
+        "audit/evidence/step-reviews.json#R01-registration-otp",
+        "audit/evidence/step-reviews.json#V01-login-authentication",
+        "audit/evidence/step-reviews.json#R03-theme-contrast",
+        "audit/evidence/step-reviews.json#R03-consumer-theme-time",
+        "audit/evidence/step-reviews.json#V01-runtime-lifecycle",
+        "audit/evidence/step-reviews.json#V01-ui-foundations"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 117,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-04.01.01"
+          ],
+          "reason": "Current publication/acceptance/history behavior and required UI are verified by focused42 API and47 browser cases plus source-bound prior evidence. No historical deferral remains.",
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "evidence": "audit/evidence/step-reviews.json#V01-terms-lifecycle"
+        },
+        {
+          "pr": 118,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-04.01.02"
+          ],
+          "reason": "Current publication/acceptance/history behavior and required UI are verified by focused42 API and47 browser cases plus source-bound prior evidence. No historical deferral remains.",
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "evidence": "audit/evidence/step-reviews.json#V01-terms-lifecycle"
+        },
+        {
+          "pr": 119,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-04.01.03"
+          ],
+          "reason": "Current publication/acceptance/history behavior and required UI are verified by focused42 API and47 browser cases plus source-bound prior evidence. No historical deferral remains.",
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "evidence": "audit/evidence/step-reviews.json#V01-terms-lifecycle"
+        },
+        {
+          "pr": 159,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.03.01"
+          ],
+          "reason": "Current publication/acceptance/history behavior and required UI are verified by focused42 API and47 browser cases plus source-bound prior evidence. No historical deferral remains.",
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "evidence": "audit/evidence/step-reviews.json#V01-terms-lifecycle"
+        },
+        {
+          "pr": 160,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.03.02"
+          ],
+          "reason": "Current publication/acceptance/history behavior and required UI are verified by focused42 API and47 browser cases plus source-bound prior evidence. No historical deferral remains.",
+          "source_revision": "d9ed9dd5d8e23aa080d073c5453d82dec19729d5",
+          "evidence": "audit/evidence/step-reviews.json#V01-terms-lifecycle"
+        }
+      ]
     }
   ]
 }
