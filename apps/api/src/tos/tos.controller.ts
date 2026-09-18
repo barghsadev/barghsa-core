@@ -152,12 +152,7 @@ export class TosController {
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     const userAgent = req.headers['user-agent'];
 
-    await this.tosService.recordAcceptance(
-      req.session.userId,
-      parsed.data.versionId,
-      ip,
-      userAgent
-    );
+    await this.tosService.recordAcceptance(req.session, parsed.data.versionId, ip, userAgent);
 
     this.logger.log(`TOS accepted by user ${req.session.userId}`);
 

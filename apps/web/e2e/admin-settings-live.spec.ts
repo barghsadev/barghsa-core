@@ -848,7 +848,7 @@ for (const locale of ['en', 'fa'])
     const products = (await (
       await page.request.get(`${http.base}/api/admin/catalogue/products`, { headers })
     ).json()) as Array<{ id: string; systemKey: string }>;
-    const product = products.find((p) => p.systemKey === 'green_electricity')!;
+    const product = products.find((p) => p.systemKey === 'green')!;
     expect(
       (
         await page.request.put(`${http.base}/api/admin/catalogue/products/${product.id}`, {
@@ -2071,7 +2071,7 @@ for (const locale of ['en', 'fa'])
     const productsResponse = await page.request.get(apiBase, { headers });
     expect(productsResponse.status()).toBe(200);
     const products = (await productsResponse.json()) as Array<{ id: string; systemKey: string }>;
-    const greenProduct = products.find((product) => product.systemKey === 'green_electricity');
+    const greenProduct = products.find((product) => product.systemKey === 'green');
     expect(greenProduct).toBeDefined();
     expect(
       (

@@ -406,3 +406,105 @@ it('validates history IDs and enforces read permissions', async () => {
     contentEn: draft.contentEn,
   });
 });
+
+for (const change of ['revoked', 'csrf'] as const) {
+  it(`rejects consent when session ${change} changes while waiting for the account`, async () => {
+    const version = await publish(`authority-${change}`, 'major');
+    const client = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await client.query('BEGIN');
+      await client.query("SELECT user_id FROM users WHERE user_id='other' FOR UPDATE");
+      const blocker = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      pending = acceptVersion(version);
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                'SELECT count(*) FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid))',
+                [blocker]
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      await client.query(
+        change === 'revoked'
+          ? "UPDATE sessions SET revoked_at=clock_timestamp() WHERE user_id='other'"
+          : "UPDATE sessions SET csrf_token='changed-proof' WHERE user_id='other'"
+      );
+      await client.query('COMMIT');
+      expect((await pending).status).toBe(change === 'revoked' ? 401 : 403);
+      expect(
+        (await http.pool.query("SELECT * FROM tos_acceptances WHERE user_id='other'")).rows
+      ).toHaveLength(0);
+      expect(
+        (await http.pool.query("SELECT last_accepted_tos_version FROM users WHERE user_id='other'"))
+          .rows[0].last_accepted_tos_version
+      ).toBeNull();
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await pending;
+      await http.pool.query(
+        "UPDATE sessions SET revoked_at=NULL,csrf_token=$1 WHERE user_id='other'",
+        [headers.other!['x-csrf-token']]
+      );
+    }
+  });
+}
+
+it('does not record consent after the session expires while waiting for the terms version', async () => {
+  const version = await publish('expiry-during-consent', 'major');
+  const client = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query('SELECT id FROM tos_versions WHERE id=$1 FOR UPDATE', [version]);
+    const blocker = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE user_id='other'"
+    );
+    pending = acceptVersion(version);
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              'SELECT count(*) FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid))',
+              [blocker]
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await expect
+      .poll(
+        async () =>
+          (
+            await http.pool.query(
+              "SELECT expires_at<=clock_timestamp() AS expired FROM sessions WHERE user_id='other'"
+            )
+          ).rows[0].expired,
+        { timeout: 5000 }
+      )
+      .toBe(true);
+    await client.query('COMMIT');
+    expect((await pending).status).toBe(401);
+    expect(
+      (await http.pool.query("SELECT * FROM tos_acceptances WHERE user_id='other'")).rows
+    ).toHaveLength(0);
+    expect(
+      (await http.pool.query("SELECT last_accepted_tos_version FROM users WHERE user_id='other'"))
+        .rows[0].last_accepted_tos_version
+    ).toBeNull();
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await pending;
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '1 day',idle_deadline=clock_timestamp()+INTERVAL '1 hour' WHERE user_id='other'"
+    );
+  }
+});

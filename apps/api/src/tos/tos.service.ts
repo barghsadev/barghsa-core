@@ -5,6 +5,8 @@ import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 
 const ADMIN_VERSION_COLUMNS = `id, version_id AS "versionId", content_fa AS "contentFa",
  content_en AS "contentEn", change_type AS "changeType", status, is_active AS "isActive",
@@ -170,19 +172,21 @@ export class TosService {
    * 2. Inserts an immutable acceptance record into `tos_acceptances`.
    * 3. Updates the user's `last_accepted_tos_version`.
    *
-   * This is called during registration (T-01.01.04) and re-acceptance (T-04.01.03).
+   * Used for authenticated re-acceptance (T-04.01.03). Registration records
+   * consent in its own account-creation transaction.
    *
-   * @param userId - The UUID of the accepting user.
+   * @param actor - The authenticated user, session and CSRF proof.
    * @param versionId - The UUID of the TOS version being accepted.
    * @param ip - The source IP address at acceptance time.
    * @param userAgent - The User-Agent header at acceptance time (optional).
    */
   async recordAcceptance(
-    userId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     versionId: string,
     ip: string,
     userAgent?: string
   ): Promise<void> {
+    const { userId } = actor;
     const pool = getDbPool();
     const client = await pool.connect();
 
@@ -191,6 +195,7 @@ export class TosService {
 
       // Match administrator mutations: lock the account before any version row.
       await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [userId]);
+      await requireCurrentSession(client, actor);
 
       // 1. Verify the TOS version exists and is the current active version
       const versionResult = await client.query(
@@ -223,6 +228,9 @@ export class TosService {
         [versionId, now, userId]
       );
 
+      // Terms and acceptance writes can wait beyond the session deadline.
+      // Keep the evidence provisional until the final database-clock check.
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(`TOS acceptance recorded: user ${userId} accepted version ${versionId}`);

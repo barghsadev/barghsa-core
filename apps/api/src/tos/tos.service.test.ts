@@ -22,6 +22,11 @@ vi.mock('uuid', () => ({
   v7: () => '00000000-0000-0000-0000-000000000099',
 }));
 
+// Real session authorization and lock/deadline races are covered by the HTTP suite.
+vi.mock('../session/session-step-up.js', () => ({
+  requireCurrentSession: vi.fn().mockResolvedValue({ stepUpFresh: false, stepUpVerifiedAt: null }),
+}));
+
 vi.mock('@barghsa/shared/errors', () => ({
   ErrorCodes: {
     AUTH_REGISTER_TOS_NOT_ACCEPTED: { code: 'AUTH:REGISTER:TOS_NOT_ACCEPTED' },
@@ -125,6 +130,7 @@ describe('TosService', () => {
 
   describe('recordAcceptance', () => {
     const userId = 'user-0001';
+    const actor = { userId, sessionId: 'test-session', csrfToken: 'test-csrf' };
     const versionId = 'tos-ver-uuid';
     const ip = '192.168.1.1';
     const userAgent = 'TestAgent/1.0';
@@ -142,7 +148,7 @@ describe('TosService', () => {
         .mockResolvedValueOnce({ rows: [] }) // UPDATE users
         .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-      await service.recordAcceptance(userId, versionId, ip, userAgent);
+      await service.recordAcceptance(actor, versionId, ip, userAgent);
 
       // Verify the INSERT into tos_acceptances
       expect(mockClient.query).toHaveBeenCalledWith(
@@ -172,7 +178,7 @@ describe('TosService', () => {
         .mockResolvedValueOnce({ rows: [{ user_id: userId }] }) // Lock user
         .mockResolvedValueOnce({ rows: [] }); // SELECT tos_versions returns empty (version not found or not active)
 
-      const err = await service.recordAcceptance(userId, versionId, ip).catch((e) => e);
+      const err = await service.recordAcceptance(actor, versionId, ip).catch((e) => e);
 
       expect(err).toBeInstanceOf(HttpException);
       expect(err.getStatus()).toBe(400);
@@ -188,7 +194,7 @@ describe('TosService', () => {
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockRejectedValueOnce(new Error('DB connection lost'));
 
-      const err = await service.recordAcceptance(userId, versionId, ip).catch((e) => e);
+      const err = await service.recordAcceptance(actor, versionId, ip).catch((e) => e);
 
       expect(err).toBeInstanceOf(HttpException);
       expect(err.getStatus()).toBe(500);
@@ -205,7 +211,7 @@ describe('TosService', () => {
         .mockResolvedValueOnce({ rows: [] }) // UPDATE users
         .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-      await service.recordAcceptance(userId, versionId, ip);
+      await service.recordAcceptance(actor, versionId, ip);
 
       expect(mockClient.query).toHaveBeenCalledWith(
         expect.stringContaining('INSERT INTO tos_acceptances'),
