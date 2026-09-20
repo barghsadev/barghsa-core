@@ -17,9 +17,9 @@ This repairs `07-ui-ux-design.md#T-07.30.02.03` and the province/city management
 ## Validation
 
 - Production web build and dependency builds pass.
-- Two deterministic component regressions pass; both fail against original main code.
+- Ten component tests pass, including pagination recovery, network retry, empty results and stale responses. The two debounce regressions both fail against original main code.
 - All 12 related production-browser cases pass five repetitions: 60 passes in 1.7 minutes, zero retries.
-- Web typecheck, changed-file lint and formatting pass. Changed-source coverage and independent review are required before merge.
+- Web typecheck, changed-file lint and formatting pass. Combined component and production-browser coverage passes the existing critical-file floor: 129/133 lines (96.99%) and 97/106 branches (91.51%). Independent review and CI remain required before merge.
 
 ## Next
 

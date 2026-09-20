@@ -88,3 +88,77 @@ for (const kind of ['provinces', 'cities']) {
     expect(button('Previous').disabled).toBe(true);
   });
 }
+
+function pageFor(kind: string) {
+  return kind === 'provinces' ? (
+    <AdminGeographyPage />
+  ) : (
+    <CitiesPanel province={{ id: 'p1', nameFa: 'تهران', nameEn: 'Tehran', status: 'active' }} />
+  );
+}
+function response(kind: string, total: number, name = 'Recovered') {
+  return {
+    ok: true,
+    json: async () => ({
+      [kind]: total
+        ? [{ id: 'item', provinceId: 'p1', nameFa: 'تهران', nameEn: name, status: 'active' }]
+        : [],
+      total,
+    }),
+  } as Response;
+}
+for (const kind of ['provinces', 'cities']) {
+  it(`${kind}: returns to an available page when the last page disappears`, async () => {
+    const fetchMock = vi.mocked(fetch);
+    await act(async () => root.render(pageFor(kind)));
+    fetchMock.mockResolvedValue(response(kind, 1));
+    await act(async () => button('Next').click());
+    expect(container.textContent).toContain('Recovered');
+    const pages = fetchMock.mock.calls
+      .slice(-2)
+      .map(([url]) => new URL(String(url), 'http://localhost').searchParams.get('page'));
+    expect(pages).toEqual(['2', '1']);
+    expect(container.querySelector('nav')).toBeNull();
+  });
+  it(`${kind}: retries a network failure and displays the empty result`, async () => {
+    vi.mocked(fetch)
+      .mockRejectedValueOnce(new TypeError('offline'))
+      .mockResolvedValue(response(kind, 0));
+    await act(async () => root.render(pageFor(kind)));
+    expect(container.querySelector('[role="alert"]')).not.toBeNull();
+    await act(async () => button('Retry').click());
+    expect(container.querySelector('[role="alert"]')).toBeNull();
+    expect(container.querySelector('tbody td')?.getAttribute('colspan')).toBe('4');
+    expect(container.querySelector('[aria-busy="true"]')).toBeNull();
+  });
+  for (const outcome of ['resolve', 'reject']) {
+    it(`${kind}: ignores a stale request that later ${outcome}s`, async () => {
+      let resolve!: (value: Response) => void;
+      let reject!: (reason: Error) => void;
+      vi.mocked(fetch).mockImplementationOnce(
+        () =>
+          new Promise<Response>((yes, no) => {
+            resolve = yes;
+            reject = no;
+          })
+      );
+      await act(async () => root.render(pageFor(kind)));
+      const firstSignal = vi.mocked(fetch).mock.calls[0]![1]!.signal!;
+      await act(async () => {
+        const select = container.querySelector('select')!;
+        select.value = 'active';
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+      expect(firstSignal.aborted).toBe(true);
+      expect(container.textContent).toContain('First page');
+      await act(async () => {
+        if (outcome === 'resolve') resolve(response(kind, 1, 'Stale row'));
+        else reject(new Error('late failure'));
+      });
+      expect(container.textContent).toContain('First page');
+      expect(container.textContent).not.toContain('Stale row');
+      expect(container.querySelector('[role="alert"]')).toBeNull();
+      expect(container.querySelector('[aria-busy="true"]')).toBeNull();
+    });
+  }
+}
