@@ -2932,6 +2932,252 @@
         ]
       }
     },
+    "/api/admin/contracts": {
+      "post": {
+        "operationId": "ContractController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "changeDescription": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "content": {
+                    "additionalProperties": true,
+                    "description": "Full material snapshot, nonempty and at most 64 KiB. Monetary values should be decimal strings.",
+                    "type": "object"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "orderId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "serviceType": {
+                    "enum": [
+                      "electricity",
+                      "savings",
+                      "solar"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "serviceType",
+                  "content",
+                  "changeDescription",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Draft contract and full current version. Matching retries return the original result."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a staff draft contract with its initial immutable version",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}": {
+      "get": {
+        "operationId": "ContractController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read a staff contract with its current full version",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      },
+      "patch": {
+        "operationId": "ContractController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "changeDescription": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "content": {
+                    "additionalProperties": true,
+                    "description": "Full material snapshot, nonempty and at most 64 KiB. Monetary values should be decimal strings.",
+                    "type": "object"
+                  },
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedVersionId",
+                  "content",
+                  "changeDescription",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Updated draft. Unchanged content does not create a new version."
+          },
+          "409": {
+            "description": "Stale version, non-draft state, archived profile or conflicting idempotency key."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Replace draft content by creating a new immutable version",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}/versions": {
+      "get": {
+        "operationId": "ContractController_versions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Exclusive version-number cursor; at most 100 metadata records.",
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read immutable contract version metadata newest first",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}/versions/{versionId}": {
+      "get": {
+        "operationId": "ContractController_version",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "versionId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read a specific immutable contract snapshot",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
     "/api/admin/email-providers": {
       "get": {
         "operationId": "EmailProviderConfigController_list",
