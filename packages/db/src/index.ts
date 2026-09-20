@@ -735,3 +735,8 @@ export * from './schema/refunds.js';
 export * from './schema/refund-retry-jobs';
 
 export * from './schema/refund-transactions';
+
+export * from './schema/contracts';
+
+/** Bind Drizzle to an existing pool or transaction client without opening another pool. */
+export { drizzle as createDbClient } from 'drizzle-orm/node-postgres';

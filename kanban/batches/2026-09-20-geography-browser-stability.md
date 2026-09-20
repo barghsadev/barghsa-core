@@ -2,7 +2,7 @@
 
 Branch: `codex/browser-ci-stability`, based on merged PR #314 at `5fa83cc490ad299f0bce68e48e193f9877157d33`.
 
-Status: implementation and local validation complete; independent review and CI pending.
+Status: merged as PR #315 at `7f4cb2c1383c7ef5b46c5c39862f716cddff0616`.
 
 ## Evidence and changes
 
@@ -19,8 +19,10 @@ This repairs `07-ui-ux-design.md#T-07.30.02.03` and the province/city management
 - Production web build and dependency builds pass.
 - Ten component tests pass, including pagination recovery, network retry, empty results and stale responses. The two debounce regressions both fail against original main code.
 - All 12 related production-browser cases pass five repetitions: 60 passes in 1.7 minutes, zero retries.
-- Web typecheck, changed-file lint and formatting pass. Combined component and production-browser coverage passes the existing critical-file floor: 129/133 lines (96.99%) and 97/106 branches (91.51%). Independent review and CI remain required before merge.
+- Web typecheck, changed-file lint and formatting pass. Combined component and production-browser coverage passes the existing critical-file floor: 129/133 lines (96.99%) and 97/106 branches (91.51%). Independent review approved exact HEAD `fc0bb4882e2ffe94598eff56f2bfd3e6f0b40381` with no findings; all five active checks passed in run 35530234599.
 
 ## Next
 
 Resume contract draft creation and immutable version history after this repair merges. Keep supervisor history and the scheduler unchanged.
+
+Review: https://github.com/barghsadev/barghsa-core/pull/315#issuecomment-5751879309. Merge and durable comment binding were read back and verified. Full main CI remains separately monitored.

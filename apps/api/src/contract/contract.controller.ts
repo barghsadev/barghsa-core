@@ -1,0 +1,154 @@
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
+import { hasStaffPermission } from '../session/staff-permissions.js';
+import { ContractService } from './contract.service.js';
+import { contractUuid, createContractSchema, updateContractSchema } from './contract-validation.js';
+const editProperties = {
+  content: {
+    type: 'object' as const,
+    additionalProperties: true,
+    description:
+      'Full material snapshot, nonempty and at most 64 KiB. Monetary values should be decimal strings.',
+  },
+  changeDescription: { type: 'string' as const, minLength: 1, maxLength: 1000 },
+  idempotencyKey: { type: 'string' as const, format: 'uuid' },
+};
+function parse<T>(schema: z.ZodType<T>, value: unknown): T {
+  const result = schema.safeParse(value);
+  if (!result.success)
+    throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+  return result.data;
+}
+@ApiTags('Admin · Contracts')
+@ApiBearerAuth()
+@UseGuards(SessionAuthGuard, StepUpGuard)
+@Controller('api/admin/contracts')
+export class ContractController {
+  constructor(private readonly service: ContractService) {}
+  private authorize(req: AuthenticatedRequest, write = false) {
+    if (!hasStaffPermission(req, write ? 'contracts:write' : 'contracts:read'))
+      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+  }
+  @Post()
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Create a staff draft contract with its initial immutable version' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['profileId', 'serviceType', 'content', 'changeDescription', 'idempotencyKey'],
+      properties: {
+        ...editProperties,
+        profileId: { type: 'string', format: 'uuid' },
+        orderId: { type: 'string', format: 'uuid' },
+        serviceType: { type: 'string', enum: ['electricity', 'savings', 'solar'] },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description:
+      'Draft contract and full current version. Matching retries return the original result.',
+  })
+  create(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    this.authorize(req, true);
+    return this.service.create(
+      parse(createContractSchema, body),
+      req.session,
+      req.ip ?? '127.0.0.1'
+    );
+  }
+  @Patch(':id')
+  @RequiresStepUp()
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiOperation({ summary: 'Replace draft content by creating a new immutable version' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['expectedVersionId', 'content', 'changeDescription', 'idempotencyKey'],
+      properties: { ...editProperties, expectedVersionId: { type: 'string', format: 'uuid' } },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Updated draft. Unchanged content does not create a new version.',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Stale version, non-draft state, archived profile or conflicting idempotency key.',
+  })
+  update(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
+    this.authorize(req, true);
+    return this.service.updateContract(
+      parse(contractUuid, id),
+      parse(updateContractSchema, body),
+      req.session,
+      req.ip ?? '127.0.0.1'
+    );
+  }
+  @Get(':id')
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiOperation({ summary: 'Read a staff contract with its current full version' })
+  get(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    this.authorize(req);
+    return this.service.get(parse(contractUuid, id));
+  }
+  @Get(':id/versions')
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiQuery({
+    name: 'before',
+    required: false,
+    type: Number,
+    description: 'Exclusive version-number cursor; at most 100 metadata records.',
+  })
+  @ApiOperation({ summary: 'Read immutable contract version metadata newest first' })
+  versions(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Query('before') before?: string
+  ) {
+    this.authorize(req);
+    return this.service.versions(
+      parse(contractUuid, id),
+      before === undefined
+        ? undefined
+        : parse(z.coerce.number().int().min(1).max(2147483647), before)
+    );
+  }
+  @Get(':id/versions/:versionId')
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiParam({ name: 'versionId', format: 'uuid' })
+  @ApiOperation({ summary: 'Read a specific immutable contract snapshot' })
+  version(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Param('versionId') versionId: string
+  ) {
+    this.authorize(req);
+    return this.service.version(parse(contractUuid, id), parse(contractUuid, versionId));
+  }
+}
