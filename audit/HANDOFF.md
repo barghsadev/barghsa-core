@@ -28,7 +28,7 @@ Retain Vite SPA/ADR004, supported manual identity verification, approved pre-log
 
 ## Continuing efficiently
 
-See [kanban continuation status](../kanban/CONTINUATION.md) for queue validation, candidate next tasks and the separate automation restart blockers. The repairs are now published in PR #305, but its original CI run failed. The first CI repair push clears security checks and frontend imports; the next run exposed database-test timing failures. Concurrency and fixture-budget follow-ups pass locally and await GitHub verification before the next feature batch. Local validation above does not certify CI success.
+See [kanban continuation status](../kanban/CONTINUATION.md) for queue validation, candidate next tasks and the separate automation restart blockers. The repairs are now published in PR #305, but its original CI run failed. CI repair commit `861780bf` passes the full CI test stage and both security checks; coverage and browser checks remain pending. Database fixtures now close connections without forced termination. The completed prior browser run passed 768 of 769 scenarios; its remaining ambiguous SMS status selector is repaired and all 50 repeated SMS scenarios pass locally. The selector follow-up still needs a complete GitHub run before the next feature batch. Local validation above does not certify CI success.
 
 Start only from a concrete remaining criterion. Use focused tests for edits, reuse matching source-bound evidence, and consolidate review/validation. Keep full API/worker setup builds separate from consumers in the same checkout, and never edit source/tests while their checks run. Preserve complete logs with concise summaries. Use RTK and the codebase graph when available.
 

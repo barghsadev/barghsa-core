@@ -177,7 +177,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#sms-timeout')).toHaveValue('25');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
     await expect(page.locator('#sms-key')).toHaveCount(0);
-    await expect(panel.getByRole('status')).toContainText(text('saved'));
+    await expect(panel.getByRole('status').filter({ hasText: text('saved') })).toHaveText(
+      text('saved')
+    );
     await expect(panel).toContainText('test-amount');
     await expect(panel).not.toContainText('********live');
     expect(writes).toBe(2);
@@ -219,7 +221,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#sms-key')).toHaveValue('new-test-secret');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
     await expect(page.locator('#sms-key')).toHaveCount(0);
-    await expect(panel.getByRole('status')).toContainText(text('saved'));
+    await expect(panel.getByRole('status').filter({ hasText: text('saved') })).toHaveText(
+      text('saved')
+    );
     await expect(panel).not.toContainText('new-test-secret');
     expect(writes).toBe(2);
   });
@@ -310,7 +314,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(panel.getByRole('alert')).toContainText(text('failed'));
     await expect(panel.getByRole('button', { name: text('activate'), exact: true })).toBeDisabled();
     await preview.getByRole('button', { name: text('test'), exact: true }).click();
-    await expect(panel.getByRole('status')).toContainText(text('passed'));
+    await expect(panel.getByRole('status').filter({ hasText: text('passed') })).toHaveText(
+      text('passed')
+    );
     await panel.getByRole('button', { name: text('activate'), exact: true }).click();
     await dialog.locator('button[type=submit]').click();
     await expect(dialog.getByRole('alert')).toBeVisible();
@@ -331,7 +337,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog.getByRole('alert')).toBeVisible();
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
-    await expect(panel.getByRole('status')).toContainText(text('changed'));
+    await expect(panel.getByRole('status').filter({ hasText: text('changed') })).toHaveText(
+      text('changed')
+    );
     expect(tests).toBe(2);
     expect(activations).toBe(2);
     expect(rollbacks).toBe(2);

@@ -1364,8 +1364,8 @@
       "state": "open",
       "draft": false,
       "merged": false,
-      "head_sha": "4dbd2cb38591067aff700188967f074508012b12",
-      "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35493118231",
+      "head_sha": "861780bfe341ee207c799a531542920c71c66a7d",
+      "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35494012146",
       "previous_failed_checks": [
         "Run tests",
         "Verify monorepo integrity",
@@ -1375,21 +1375,23 @@
       "previous_passed_checks": [
         "Static security checks"
       ],
-      "ci_status": "failed_database_test_timeouts; follow-up validated locally"
+      "ci_status": "full_test_stage_and_security_passed; coverage_and_browser_pending; SMS_selector_followup_validated_locally"
     },
     "remote_check_scope": "Read-only checks of PRs 304 and 305, main, and kanban-state refs; not a full PR inventory refresh.",
     "ci_repair": {
-      "status": "database_concurrency_followup_validated_locally",
+      "status": "sms_browser_selector_followup_validated_locally",
       "scope": "PR #305 only; next feature batch remains on hold",
       "changes": [
         "Reuse the completed CI build during parallel tests",
         "Update vulnerable dependencies and preserve GeoIP updater compatibility",
         "Ignore only 101 verified historical metadata fingerprints",
-        "Bound API/worker/database test concurrency and give full migration/PgBouncer fixtures explicit 30-second budgets"
+        "Bound API/worker/database test concurrency and give full migration/PgBouncer fixtures explicit 30-second budgets",
+        "Drop temporary test databases after closing pools without forced connection termination",
+        "Target the expected SMS status message when multiple accessible status elements exist"
       ],
       "dependency_scan": "passed; zero vulnerabilities",
       "secret_scan": "passed; synthetic detection and complete history",
-      "checks": "Build, typecheck, changed-file lint, frozen install, zero-vulnerability dependency scan and committed-history secret scan passed. API 5162, frontend 777 and shared 976 passed together; worker 458 and database 760 passed with two workers. GitHub security checks pass; newest CI verification still required."
+      "checks": "Build, typecheck, changed-file lint, frozen install, zero-vulnerability dependency scan and committed-history secret scan passed. API 5162, frontend 777 and shared 976 passed together; worker 458 and database 760 passed with two workers. GitHub security checks pass; newest CI verification still required. Revision 861780bf passes the full GitHub test stage and both security checks. Database cleanup follow-up passes 760 tests locally. Prior complete GitHub browser run: 768 passed, one ambiguous SMS selector failed; selector repair passes all 50 repeated English/Persian SMS cases locally."
     }
   }
 }

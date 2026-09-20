@@ -4,7 +4,7 @@ Checked September 20, 2026 after local repair completion at `13bed9d0`. Product/
 
 ## Local development
 
-The next development batch can use this branch after PR #305 passes CI. The original CI run failed tests, monorepo integrity, Git history secret scanning and combined source coverage. CI repair commit `4dbd2cb3` clears security checks and frontend imports; its run exposed two database-test timeouts. The concurrency and fixture-budget follow-up passes locally and awaits a new CI run. Resolve these baseline failures before adding feature changes. The backlog validator passes for 1,355 tasks and 116 traceability entries. The audit validator passes for all 322 historical claims, 301 saved PRs and 58 historical skips.
+The next development batch can use this branch after PR #305 passes CI. The original CI run failed tests, monorepo integrity, Git history secret scanning and combined source coverage. CI repair commit `861780bf` passes the full CI test stage and both security checks. Coverage remains pending. The prior browser run passed 768 of 769 scenarios; a selector fix for its remaining SMS failure passes 50 repeated local scenarios and awaits a complete GitHub run. Resolve these baseline failures before adding feature changes. The backlog validator passes for 1,355 tasks and 116 traceability entries. The audit validator passes for all 322 historical claims, 301 saved PRs and 58 historical skips.
 
 Historical claim acceptance is 219 verified, 54 partial and 49 deferred. The other 1,033 canonical tasks are outside that historical audit population. They are not automatically proven unimplemented or ready. Reuse existing code and acceptance evidence before choosing a new build.
 
