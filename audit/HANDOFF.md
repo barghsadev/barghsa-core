@@ -33,3 +33,7 @@ See [kanban continuation status](../kanban/CONTINUATION.md) for queue validation
 Start only from a concrete remaining criterion. Use focused tests for edits, reuse matching source-bound evidence, and consolidate review/validation. Keep full API/worker setup builds separate from consumers in the same checkout, and never edit source/tests while their checks run. Preserve complete logs with concise summaries. Use RTK and the codebase graph when available.
 
 The original repair sprint permitted local edits and explicit commits only. The subsequent CI repair request authorizes updating existing PR #305. Merge, deployment, scheduler/runtime state changes and PR304 changes remain outside this follow-up. Preserve untracked user-owned `output/`. Latest account meter: 22% weekly used, below the 50% ceiling.
+
+## Latest CI follow-up
+
+The complete test and coverage job passes on `861780bf`. The next run (`9ccaea81`) exposed a timing-dependent assertion in mutual administrator role removal: revoking the losing session before authentication correctly produces 401 rather than 403. The follow-up checks both timings, exactly one success, final roles, session revocation and a single audit event; all 18 focused tests pass locally. CI now runs each suite once with coverage, preserving all tests and thresholds while removing duplicate execution. The latest follow-up still requires a complete GitHub run.

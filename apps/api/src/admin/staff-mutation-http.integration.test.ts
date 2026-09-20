@@ -160,27 +160,64 @@ for (const operation of operations)
       }
     }, 20000);
   }
-it('serializes two administrators removing each other without deadlocking or using revoked grants', async () => {
-  const first = await actor(),
-    second = await actor();
-  const responses = await Promise.all(
-    [
-      [first, second],
-      [second, first],
-    ].map(([source, target]) =>
-      fetch(`${http.base}/api/admin/users/${target!.userId}/roles`, {
+it.each(['concurrent', 'after-revocation'] as const)(
+  'allows exactly one administrator to remove the other administrator (%s)',
+  async (timing) => {
+    const first = await actor(),
+      second = await actor();
+    const update = (source: Awaited<ReturnType<typeof actor>>, target: typeof source) =>
+      fetch(`${http.base}/api/admin/users/${target.userId}/roles`, {
         method: 'PUT',
-        headers: source!.headers,
+        headers: source.headers,
         body: JSON.stringify({ roleIds: ['role-finance'], reason: 'Concurrent role review' }),
-      })
-    )
-  );
-  expect(responses.map((response) => response.status).sort(), http.logs()).toEqual([200, 403]);
-  const roles = (
-    await http.pool.query(
-      'SELECT role_id FROM user_roles WHERE user_id=ANY($1::text[]) ORDER BY role_id',
-      [[first.userId, second.userId]]
-    )
-  ).rows;
-  expect(roles).toEqual([{ role_id: 'role-admin' }, { role_id: 'role-finance' }]);
-});
+      });
+    const firstRequest = update(first, second);
+    const responses = await Promise.all([
+      timing === 'after-revocation' ? await firstRequest : firstRequest,
+      update(second, first),
+    ]);
+    const outcomes = await Promise.all(
+      responses.map(async (response) => ({
+        status: response.status,
+        body: await response.text(),
+      }))
+    );
+    const diagnostic = JSON.stringify(outcomes) + '\n' + http.logs();
+    const statuses = outcomes.map((response) => response.status).sort();
+    expect(statuses[0], diagnostic).toBe(200);
+    // Revocation before authentication returns 401; a request already past the
+    // guard loses its mutation permission and returns 403. Neither may succeed.
+    expect(timing === 'after-revocation' ? [401] : [401, 403], diagnostic).toContain(statuses[1]);
+    const winner = [first, second][outcomes.findIndex((response) => response.status === 200)]!;
+    const loser = winner === first ? second : first;
+    const roles = (
+      await http.pool.query(
+        'SELECT user_id,role_id FROM user_roles WHERE user_id=ANY($1::text[]) ORDER BY role_id',
+        [[first.userId, second.userId]]
+      )
+    ).rows;
+    expect(roles).toEqual([
+      { user_id: winner.userId, role_id: 'role-admin' },
+      { user_id: loser.userId, role_id: 'role-finance' },
+    ]);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT user_id,revoked_at IS NOT NULL AS revoked FROM sessions WHERE user_id=ANY($1::text[]) ORDER BY revoked',
+          [[first.userId, second.userId]]
+        )
+      ).rows
+    ).toEqual([
+      { user_id: winner.userId, revoked: false },
+      { user_id: loser.userId, revoked: true },
+    ]);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT user_id,metadata::jsonb->>'targetUserId' AS target FROM audit_log WHERE event='role_change' AND user_id=ANY($1::text[])",
+          [[first.userId, second.userId]]
+        )
+      ).rows
+    ).toEqual([{ user_id: winner.userId, target: loser.userId }]);
+  }
+);

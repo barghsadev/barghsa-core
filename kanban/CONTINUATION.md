@@ -30,3 +30,7 @@ Automatic restart is not ready:
 Before enabling automation, fix CI and review/integrate the published repair baseline, reconcile current PR and state history against the acceptance ledger, and explicitly recover/bootstrap durable state under [STATE-PROTOCOL.md](STATE-PROTOCOL.md). Keep the configured scheduler paused throughout reconciliation. Do not directly edit completion arrays to skip partial or deferred work.
 
 Only local documentation was updated by this readiness check. No scheduler, PR, remote branch or runtime state was changed.
+
+## Latest CI follow-up
+
+The complete test and coverage job passes on `861780bf`. The next run (`9ccaea81`) exposed a timing-dependent assertion in mutual administrator role removal: revoking the losing session before authentication correctly produces 401 rather than 403. The follow-up checks both timings, exactly one success, final roles, session revocation and a single audit event; all 18 focused tests pass locally. CI now runs each suite once with coverage, preserving all tests and thresholds while removing duplicate execution. The latest follow-up still requires a complete GitHub run.
