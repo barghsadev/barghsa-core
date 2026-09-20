@@ -1,4 +1,9 @@
 import {
+  ContractSignatureController,
+  CustomerContractSignatureController,
+} from './contract-signature.controller.js';
+import { ContractSignatureService } from './contract-signature.service.js';
+import {
   ContractReviewController,
   CustomerContractController,
 } from './contract-review.controller.js';
@@ -9,8 +14,14 @@ import { ContractController } from './contract.controller.js';
 import { ContractService } from './contract.service.js';
 @Module({
   imports: [SessionModule],
-  controllers: [ContractController, ContractReviewController, CustomerContractController],
-  providers: [ContractService, ContractReviewService],
+  controllers: [
+    ContractSignatureController,
+    CustomerContractSignatureController,
+    ContractController,
+    ContractReviewController,
+    CustomerContractController,
+  ],
+  providers: [ContractService, ContractReviewService, ContractSignatureService],
   exports: [ContractService],
 })
 export class ContractModule {}

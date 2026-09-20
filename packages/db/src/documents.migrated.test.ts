@@ -319,9 +319,61 @@ it('retains the signed-version lock even after a later contract version becomes 
   const f = await ready(true);
   await move(f.doc.id, 'SubmittedForReview');
   await move(f.doc.id, 'Approved');
-  await fixture.pool.query("UPDATE contracts SET state='Signed',signed_at=NOW() WHERE id=$1", [
-    f.contractId,
-  ]);
+  const original = await transaction(async (client) => {
+    const key = `uploads/document/${randomUUID()}.pdf`;
+    await client.query(
+      `INSERT INTO storage_records(storage_key,status,file_name,content_type,file_size,category,metadata)
+      SELECT $1,'removed',file_name,content_type,file_size,category,metadata FROM storage_records WHERE storage_key=$2`,
+      [key, f.doc.uploadKey]
+    );
+    const row = (
+      await createDbClient(client)
+        .insert(documents)
+        .values({
+          profileId: f.profile,
+          businessRecordType: 'contract',
+          businessRecordId: f.contractId,
+          category: 'document',
+          uploadKey: key,
+          originalName: 'proof.pdf',
+          sizeBytes: 20,
+          uploadedBy: f.owner,
+          uploadedByType: 'staff',
+        })
+        .returning()
+    )[0]!;
+    await client.query(
+      "INSERT INTO contract_documents(contract_id,contract_version_id,document_id,role) VALUES($1,$2,$3,'original')",
+      [f.contractId, f.version, row.id]
+    );
+    await event(client, row, null);
+    return row;
+  });
+  for (const state of ['PendingScan', 'Available', 'SubmittedForReview', 'Approved'] as const)
+    await move(original.id, state);
+  await transaction(async (client) => {
+    await client.query("UPDATE contracts SET state='AwaitingStaffReview' WHERE id=$1", [
+      f.contractId,
+    ]);
+    await client.query(
+      'INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,$3)',
+      [f.contractId, f.version, f.owner]
+    );
+    await client.query(
+      'INSERT INTO contract_acceptances(contract_id,version_id,accepted_by) VALUES($1,$2,$3)',
+      [f.contractId, f.version, f.owner]
+    );
+    const request = (
+      await client.query(
+        'INSERT INTO contract_signature_requests(contract_id,version_id,request_number,original_document_id,requested_by) VALUES($1,$2,1,$3,$4) RETURNING id',
+        [f.contractId, f.version, original.id, f.owner]
+      )
+    ).rows[0];
+    await client.query(
+      "INSERT INTO contract_signatures(contract_id,version_id,request_id,signed_document_id,recorded_by,recorded_by_type) VALUES($1,$2,$3,$4,$5,'staff')",
+      [f.contractId, f.version, request.id, f.doc.id, f.owner]
+    );
+  });
   expect(
     (
       await fixture.pool.query(
@@ -337,10 +389,10 @@ it('retains the signed-version lock even after a later contract version becomes 
       'INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by) VALUES($1,$2,2,\'{"text":"Amendment"}\',\'Amendment\',$3)',
       [next, f.contractId, f.owner]
     );
-    await client.query("UPDATE contracts SET current_version_id=$2,state='Draft' WHERE id=$1", [
-      f.contractId,
-      next,
-    ]);
+    await client.query(
+      "UPDATE contracts SET current_version_id=$2,state='Draft',signed_at=NULL WHERE id=$1",
+      [f.contractId, next]
+    );
   });
   await expect(move(f.doc.id, 'Superseded')).rejects.toMatchObject({ code: '23514' });
   await move(f.doc.id, 'Quarantined', { scanState: 'Quarantined' });
@@ -381,7 +433,7 @@ it('upgrades the actual 139 schema and reruns without fabricating documents or c
     ).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0140_document_lifecycle'],
+      applied: ['0140_document_lifecycle', '0141_contract_signature_evidence'],
     });
     expect(
       (await pool.query("SELECT * FROM storage_records WHERE storage_key='legacy-evidence'")).rows

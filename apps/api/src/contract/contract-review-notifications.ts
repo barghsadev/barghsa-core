@@ -2,6 +2,14 @@ import type { PoolClient } from 'pg';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 const messages = {
+  signature_requested: {
+    fa: 'نسخه پذیرفته‌شده قرارداد برای ثبت نسخه امضاشده آماده است.',
+    en: 'The accepted contract version is ready for its signed copy.',
+  },
+  signed_copy_recorded: {
+    fa: 'نسخه امضاشده تأییدشده برای قرارداد ثبت شد.',
+    en: 'An approved signed copy has been recorded for the contract.',
+  },
   submitted: { fa: 'قرارداد برای بررسی آماده است.', en: 'A contract is ready for staff review.' },
   resubmitted: {
     fa: 'نسخه جدید قرارداد برای بررسی ارسال شد.',
@@ -34,7 +42,15 @@ export async function notifyContractReview(
   ).rows[0]!;
   const recipients = new Set<string>();
   if (event !== 'submitted') recipients.add(profile.user_id);
-  if (['submitted', 'resubmitted', 'accepted'].includes(event)) {
+  if (
+    [
+      'submitted',
+      'resubmitted',
+      'accepted',
+      'signature_requested',
+      'signed_copy_recorded',
+    ].includes(event)
+  ) {
     const staff = await client.query<{ user_id: string; is_admin: boolean; permissions: unknown }>(
       'SELECT u.user_id,u.is_admin,array_agg(r.permissions) FILTER (WHERE r.role_id IS NOT NULL) AS permissions FROM users u LEFT JOIN user_roles ur ON ur.user_id=u.user_id LEFT JOIN staff_roles r ON r.role_id=ur.role_id WHERE (u.is_staff OR u.is_admin) AND u.disabled_at IS NULL AND u.activation_token IS NULL GROUP BY u.user_id,u.is_admin'
     );
