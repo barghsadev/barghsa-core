@@ -1,8 +1,8 @@
-import { sql } from 'drizzle-orm'
-import { bigint, index, pgTable, text, unique, uuid } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { users } from './users.js'
-import { storageRecords } from './storage-record.js'
+import { sql } from 'drizzle-orm';
+import { bigint, index, pgTable, text, unique, uuid } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { users } from './users.js';
+import { storageRecords } from './storage-record.js';
 
 /**
  * Knowledge base record (S-09.11, T-09.11.02).
@@ -48,8 +48,8 @@ export const knowledgeBases = pgTable(
   (table) => [
     /** List by recency for the admin UI (migration 0043). */
     index('idx_kb_created_at').on(table.createdAt),
-  ],
-)
+  ]
+);
 
 /**
  * Documents attached to a knowledge base (S-09.11, T-09.11.02).
@@ -124,5 +124,5 @@ export const kbDocuments = pgTable(
     index('idx_kbd_processing_status')
       .on(table.processingStatus)
       .where(sql`processing_status IN ('pending', 'processing', 'failed')`),
-  ],
-)
+  ]
+);

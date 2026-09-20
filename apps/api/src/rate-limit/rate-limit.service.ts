@@ -1,6 +1,14 @@
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { PostgresRateLimiterStore } from '@barghsa/shared/rate-limit';
 import { CompositeRateLimiterStore } from '@barghsa/shared/rate-limit';
-import { Inject, Injectable, Logger, Optional, type OnModuleDestroy } from '@nestjs/common';
+import {
+  HttpException,
+  Inject,
+  Injectable,
+  Logger,
+  Optional,
+  type OnModuleDestroy,
+} from '@nestjs/common';
 import type { Redis } from 'ioredis';
 import { getDbPool } from '@barghsa/db';
 import { REDIS_CLIENT } from '../redis/index.js';
@@ -25,30 +33,23 @@ export class RateLimitService implements OnModuleDestroy {
   constructor(
     @Inject(REDIS_CLIENT)
     @Optional()
-    private readonly redis: Redis | null,
+    private readonly redis: Redis | null
   ) {}
 
   private ensureStores(): void {
     if (!this.pgStore) {
       const pool = getDbPool();
-      this.pgStore = new PostgresRateLimiterStore(
-        (text, params) => pool.query(text, params),
-        {
-          warn: (msg, ...meta) => this.logger.warn(msg, ...meta),
-          error: (msg, ...meta) => this.logger.error(msg, ...meta),
-        },
-      );
+      this.pgStore = new PostgresRateLimiterStore((text, params) => pool.query(text, params), {
+        warn: (msg, ...meta) => this.logger.warn(msg, ...meta),
+        error: (msg, ...meta) => this.logger.error(msg, ...meta),
+      });
       this.pgStore.startCleanup();
     }
     if (!this.compositeStore) {
-      this.compositeStore = new CompositeRateLimiterStore(
-        this.pgStore,
-        this.redis,
-        {
-          warn: (msg, ...meta) => this.logger.warn(msg, ...meta),
-          error: (msg, ...meta) => this.logger.error(msg, ...meta),
-        },
-      );
+      this.compositeStore = new CompositeRateLimiterStore(this.pgStore, this.redis, {
+        warn: (msg, ...meta) => this.logger.warn(msg, ...meta),
+        error: (msg, ...meta) => this.logger.error(msg, ...meta),
+      });
     }
   }
 
@@ -58,7 +59,7 @@ export class RateLimitService implements OnModuleDestroy {
   async checkRateLimit(
     key: string,
     limit: number,
-    windowMs: number,
+    windowMs: number
   ): ReturnType<CompositeRateLimiterStore['increment']> {
     this.ensureStores();
     return this.compositeStore!.increment(key, limit, windowMs);
@@ -71,10 +72,25 @@ export class RateLimitService implements OnModuleDestroy {
   async checkSecurityRateLimit(
     key: string,
     limit: number,
-    windowMs: number,
+    windowMs: number
   ): ReturnType<CompositeRateLimiterStore['incrementSecurity']> {
     this.ensureStores();
     return this.compositeStore!.incrementSecurity(key, limit, windowMs);
+  }
+
+  /** Enforce a domain quota independently of transport guards or Redis. */
+  async enforceSecurityRateLimit(key: string, limit: number, windowMs: number): Promise<void> {
+    const result = await this.checkSecurityRateLimit(key, limit, windowMs);
+    if (!result.allowed) {
+      throw new HttpException(
+        {
+          statusCode: 429,
+          error: ErrorCodes.RATE_LIMIT_EXCEEDED.code,
+          retryAfterMs: result.resetMs,
+        },
+        429
+      );
+    }
   }
 
   /**

@@ -1,3 +1,10 @@
+import type { Pool, PoolClient } from 'pg';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
+type InvoiceReadActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
+type InvoiceReadClient = Pool | PoolClient;
+import type { AgentPermission } from '@barghsa/shared/agent-permissions';
+import { activeProfileSql } from '../profiles/profile-context.js';
 /**
  * Customer-facing invoice details (T-04.1.05.04 / S-04.1.05).
  *
@@ -16,73 +23,76 @@
  * Number cannot carry amounts past `Number.MAX_SAFE_INTEGER`.
  */
 
-import { HttpException, Injectable } from '@nestjs/common'
-import { getDbPool } from '@barghsa/db'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { isAdjustmentKind, type AdjustmentKind } from '@barghsa/shared/finance'
-import { isInvoiceState, type InvoiceState } from './invoice-state.model.js'
+import { HttpException, Injectable } from '@nestjs/common';
+import { getDbPool } from '@barghsa/db';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import {
+  isAdjustmentKind,
+  readDueAtOverrideSnapshot,
+  type AdjustmentKind,
+} from '@barghsa/shared/finance';
+import { isInvoiceState, type InvoiceState } from './invoice-state.model.js';
 
 /** How this invoice participates in a correction chain. */
 export type InvoiceCorrectionRole =
-  | 'original'
-  | 'replacement'
-  | 'adjustment_charge'
-  | 'adjustment_credit'
+  'original' | 'replacement' | 'adjustment_charge' | 'adjustment_credit';
 
 export interface CustomerInvoiceLineDto {
-  description: string
-  quantity: number
-  unitPrice: string
-  lineTotal: string
-  vatRate: number
-  vatAmount: string
-  isTaxable: boolean
+  description: string;
+  quantity: number;
+  unitPrice: string;
+  lineTotal: string;
+  vatRate: number;
+  vatAmount: string;
+  isTaxable: boolean;
 }
 
 export interface CustomerInvoiceNodeDto {
-  invoiceId: string
-  role: InvoiceCorrectionRole
-  state: InvoiceState
-  totalAmount: string
-  paidAmount: string
-  refundedAmount: string
-  accountingAmount: string | null
-  adjustmentKind: AdjustmentKind | null
-  issuedAt: string | null
-  payableFrom: string | null
-  dueAt: string | null
-  cancelledAt: string | null
-  createdAt: string
-  replacesInvoiceId: string | null
-  adjustmentForInvoiceId: string | null
+  invoiceId: string;
+  role: InvoiceCorrectionRole;
+  state: InvoiceState;
+  totalAmount: string;
+  paidAmount: string;
+  refundedAmount: string;
+  accountingAmount: string | null;
+  adjustmentKind: AdjustmentKind | null;
+  issuedAt: string | null;
+  payableFrom: string | null;
+  dueAt: string | null;
+  /** Latest public reason for the current deadline; staff identity stays private. */
+  dueAtOverrideReason: string | null;
+  cancelledAt: string | null;
+  createdAt: string;
+  replacesInvoiceId: string | null;
+  adjustmentForInvoiceId: string | null;
   /** Customer-visible explanation of this correction. Null on the original. */
-  explanation: string | null
-  lines: CustomerInvoiceLineDto[]
+  explanation: string | null;
+  lines: CustomerInvoiceLineDto[];
 }
 
 export interface CustomerInvoiceDetailsDto {
-  viewedInvoiceId: string
-  originalInvoiceId: string
-  invoice: CustomerInvoiceNodeDto
+  viewedInvoiceId: string;
+  originalInvoiceId: string;
+  invoice: CustomerInvoiceNodeDto;
   /** Original first, then linked replacements/adjustments chronologically. */
-  chain: CustomerInvoiceNodeDto[]
+  chain: CustomerInvoiceNodeDto[];
 }
 
 export interface CustomerInvoiceListItemDto {
-  invoiceId: string
-  role: InvoiceCorrectionRole
-  state: InvoiceState
-  totalAmount: string
-  accountingAmount: string | null
-  adjustmentKind: AdjustmentKind | null
-  issuedAt: string | null
-  dueAt: string | null
-  createdAt: string
-  explanation: string | null
+  invoiceId: string;
+  role: InvoiceCorrectionRole;
+  state: InvoiceState;
+  totalAmount: string;
+  accountingAmount: string | null;
+  adjustmentKind: AdjustmentKind | null;
+  issuedAt: string | null;
+  dueAt: string | null;
+  createdAt: string;
+  explanation: string | null;
 }
 
 export interface CustomerInvoiceListDto {
-  invoices: CustomerInvoiceListItemDto[]
+  invoices: CustomerInvoiceListItemDto[];
 }
 
 /**
@@ -90,74 +100,72 @@ export interface CustomerInvoiceListDto {
  * this bound is an explicit error — never a partial family or a
  * mis-identified original. Typical chains are a handful of invoices.
  */
-export const CUSTOMER_INVOICE_MAX_CHAIN = 256
+export const CUSTOMER_INVOICE_MAX_CHAIN = 256;
 
 /** Matches `listForUser`: drafts are staff-only and never customer-visible. */
-export const CUSTOMER_VISIBLE_STATE_SQL = `state <> 'Draft'`
+export const CUSTOMER_VISIBLE_STATE_SQL = `state <> 'Draft'`;
 
-export const CUSTOMER_INVOICE_FAMILY_CTE_MARKER = 'customer_invoice_family_cte'
+export const CUSTOMER_INVOICE_FAMILY_CTE_MARKER = 'customer_invoice_family_cte';
 
-const FAMILY_TRUNCATED_MESSAGE =
-  'Invoice correction chain exceeds the maximum supported length'
-const FAMILY_ROOT_MESSAGE =
-  'Invoice correction chain is cyclic or missing an original invoice'
+const FAMILY_TRUNCATED_MESSAGE = 'Invoice correction chain exceeds the maximum supported length';
+const FAMILY_ROOT_MESSAGE = 'Invoice correction chain is cyclic or missing an original invoice';
 
 export interface InvoiceFamilyRow {
-  id: string
-  profile_id: string
-  state: string
-  total_amount: unknown
-  paid_amount: unknown
-  refunded_amount: unknown
-  accounting_amount: unknown
-  adjustment_kind: string | null
-  issued_at: Date | string | null
-  payable_from: Date | string | null
-  due_at: Date | string | null
-  cancelled_at: Date | string | null
-  created_at: Date | string
-  replaces_invoice_id: string | null
-  adjustment_for_invoice_id: string | null
-  metadata: unknown
+  id: string;
+  profile_id: string;
+  state: string;
+  total_amount: unknown;
+  paid_amount: unknown;
+  refunded_amount: unknown;
+  accounting_amount: unknown;
+  adjustment_kind: string | null;
+  issued_at: Date | string | null;
+  payable_from: Date | string | null;
+  due_at: Date | string | null;
+  cancelled_at: Date | string | null;
+  created_at: Date | string;
+  replaces_invoice_id: string | null;
+  adjustment_for_invoice_id: string | null;
+  metadata: unknown;
 }
 
 export interface InvoiceLineRow {
-  invoice_id: string
-  description: string
-  quantity: number
-  unit_price: unknown
-  line_total: unknown
-  vat_rate: number
-  vat_amount: unknown
-  is_taxable: boolean
-  position: number
+  invoice_id: string;
+  description: string;
+  quantity: number;
+  unit_price: unknown;
+  line_total: unknown;
+  vat_rate: number;
+  vat_amount: unknown;
+  is_taxable: boolean;
+  position: number;
 }
 
 function httpError(code: string, message: string, statusCode: number): never {
-  throw new HttpException({ statusCode, error: code, message }, statusCode)
+  throw new HttpException({ statusCode, error: code, message }, statusCode);
 }
 
 export function asMetadataObject(value: unknown): Record<string, unknown> {
   if (value && typeof value === 'object' && !Array.isArray(value)) {
-    return { ...(value as Record<string, unknown>) }
+    return { ...(value as Record<string, unknown>) };
   }
   if (typeof value === 'string') {
     try {
-      const parsed: unknown = JSON.parse(value)
+      const parsed: unknown = JSON.parse(value);
       if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-        return { ...(parsed as Record<string, unknown>) }
+        return { ...(parsed as Record<string, unknown>) };
       }
     } catch {
       /* ignore malformed JSON */
     }
   }
-  return {}
+  return {};
 }
 
 function trimString(value: unknown): string | null {
-  if (typeof value !== 'string') return null
-  const trimmed = value.trim()
-  return trimmed === '' ? null : trimmed
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed === '' ? null : trimmed;
 }
 
 /**
@@ -168,75 +176,72 @@ function trimString(value: unknown): string | null {
  * descriptions copy the same reason as a fallback.
  */
 export function explanationForCorrection(input: {
-  replacesInvoiceId: string | null
-  adjustmentForInvoiceId: string | null
-  metadata: Record<string, unknown>
-  firstLineDescription?: string | null
+  replacesInvoiceId: string | null;
+  adjustmentForInvoiceId: string | null;
+  metadata: Record<string, unknown>;
+  firstLineDescription?: string | null;
 }): string | null {
-  const isLinked =
-    input.replacesInvoiceId !== null || input.adjustmentForInvoiceId !== null
-  if (!isLinked) return null
+  const isLinked = input.replacesInvoiceId !== null || input.adjustmentForInvoiceId !== null;
+  if (!isLinked) return null;
   return (
     trimString(input.metadata.reason) ??
     trimString(input.metadata.replacementReason) ??
     trimString(input.firstLineDescription)
-  )
+  );
 }
 
 export function roleForInvoice(input: {
-  replacesInvoiceId: string | null
-  adjustmentForInvoiceId: string | null
-  adjustmentKind: string | null
+  replacesInvoiceId: string | null;
+  adjustmentForInvoiceId: string | null;
+  adjustmentKind: string | null;
 }): InvoiceCorrectionRole {
   if (input.adjustmentForInvoiceId !== null || input.adjustmentKind !== null) {
-    return input.adjustmentKind === 'credit'
-      ? 'adjustment_credit'
-      : 'adjustment_charge'
+    return input.adjustmentKind === 'credit' ? 'adjustment_credit' : 'adjustment_charge';
   }
-  if (input.replacesInvoiceId !== null) return 'replacement'
-  return 'original'
+  if (input.replacesInvoiceId !== null) return 'replacement';
+  return 'original';
 }
 
 function iso(value: Date | string | null | undefined): string | null {
-  if (value == null) return null
+  if (value == null) return null;
   if (value instanceof Date) {
-    return Number.isNaN(value.getTime()) ? null : value.toISOString()
+    return Number.isNaN(value.getTime()) ? null : value.toISOString();
   }
-  const parsed = new Date(value)
-  return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString()
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString();
 }
 
 function isoRequired(value: Date | string | null | undefined): string {
-  return iso(value) ?? new Date(0).toISOString()
+  return iso(value) ?? new Date(0).toISOString();
 }
 
 function irrString(value: unknown): string {
-  if (typeof value === 'bigint') return value.toString()
+  if (typeof value === 'bigint') return value.toString();
   if (typeof value === 'number' && Number.isFinite(value)) {
-    return BigInt(Math.trunc(value)).toString()
+    return BigInt(Math.trunc(value)).toString();
   }
   if (typeof value === 'string' && /^-?\d+$/.test(value.trim())) {
-    return BigInt(value.trim()).toString()
+    return BigInt(value.trim()).toString();
   }
-  return '0'
+  return '0';
 }
 
 function irrStringOrNull(value: unknown): string | null {
-  if (value == null || value === '') return null
-  return irrString(value)
+  if (value == null || value === '') return null;
+  return irrString(value);
 }
 
 function createdAtMs(row: InvoiceFamilyRow): number {
-  const stamp = iso(row.created_at)
-  return stamp ? Date.parse(stamp) : 0
+  const stamp = iso(row.created_at);
+  return stamp ? Date.parse(stamp) : 0;
 }
 
 export function predecessorId(row: InvoiceFamilyRow): string | null {
-  return row.replaces_invoice_id ?? row.adjustment_for_invoice_id ?? null
+  return row.replaces_invoice_id ?? row.adjustment_for_invoice_id ?? null;
 }
 
 export function isFamilyTruncatedFlag(value: unknown): boolean {
-  return value === true || value === 't' || value === 'true'
+  return value === true || value === 't' || value === 'true';
 }
 
 /**
@@ -246,59 +251,51 @@ export function isFamilyTruncatedFlag(value: unknown): boolean {
  */
 export function assertCompleteInvoiceFamily(
   family: InvoiceFamilyRow[],
-  truncated: boolean,
+  truncated: boolean
 ): InvoiceFamilyRow {
   if (truncated) {
-    httpError(
-      ErrorCodes.INTERNAL_SERVER.code,
-      FAMILY_TRUNCATED_MESSAGE,
-      500,
-    )
+    httpError(ErrorCodes.INTERNAL_SERVER.code, FAMILY_TRUNCATED_MESSAGE, 500);
   }
-  const ids = new Set(family.map((row) => row.id))
+  const ids = new Set(family.map((row) => row.id));
   for (const row of family) {
-    const pred = predecessorId(row)
+    const pred = predecessorId(row);
     if (pred !== null && !ids.has(pred)) {
-      httpError(
-        ErrorCodes.INTERNAL_SERVER.code,
-        FAMILY_TRUNCATED_MESSAGE,
-        500,
-      )
+      httpError(ErrorCodes.INTERNAL_SERVER.code, FAMILY_TRUNCATED_MESSAGE, 500);
     }
   }
-  const roots = family.filter((row) => predecessorId(row) === null)
+  const roots = family.filter((row) => predecessorId(row) === null);
   if (roots.length !== 1) {
-    httpError(ErrorCodes.INTERNAL_SERVER.code, FAMILY_ROOT_MESSAGE, 500)
+    httpError(ErrorCodes.INTERNAL_SERVER.code, FAMILY_ROOT_MESSAGE, 500);
   }
-  return roots[0]!
+  return roots[0]!;
 }
 
 export function assembleCustomerInvoiceDetails(input: {
-  viewedInvoiceId: string
-  originalInvoiceId: string
-  rows: InvoiceFamilyRow[]
-  linesByInvoiceId: Map<string, InvoiceLineRow[]>
+  viewedInvoiceId: string;
+  originalInvoiceId: string;
+  rows: InvoiceFamilyRow[];
+  linesByInvoiceId: Map<string, InvoiceLineRow[]>;
 }): CustomerInvoiceDetailsDto {
   const nodes = input.rows
     .slice()
     .sort((a, b) => {
       if (a.id === input.originalInvoiceId && b.id !== input.originalInvoiceId) {
-        return -1
+        return -1;
       }
       if (b.id === input.originalInvoiceId && a.id !== input.originalInvoiceId) {
-        return 1
+        return 1;
       }
-      return createdAtMs(a) - createdAtMs(b)
+      return createdAtMs(a) - createdAtMs(b);
     })
-    .map((row) => toNode(row, input.linesByInvoiceId.get(row.id) ?? []))
+    .map((row) => toNode(row, input.linesByInvoiceId.get(row.id) ?? []));
 
-  const invoice = nodes.find((node) => node.invoiceId === input.viewedInvoiceId)
+  const invoice = nodes.find((node) => node.invoiceId === input.viewedInvoiceId);
   if (!invoice) {
     httpError(
       ErrorCodes.NOT_FOUND_RESOURCE.code,
       `Invoice not found: ${input.viewedInvoiceId}`,
-      404,
-    )
+      404
+    );
   }
 
   return {
@@ -306,19 +303,18 @@ export function assembleCustomerInvoiceDetails(input: {
     originalInvoiceId: input.originalInvoiceId,
     invoice,
     chain: nodes,
-  }
+  };
 }
 
-function toNode(
-  row: InvoiceFamilyRow,
-  lines: InvoiceLineRow[],
-): CustomerInvoiceNodeDto {
-  const metadata = asMetadataObject(row.metadata)
+function toNode(row: InvoiceFamilyRow, lines: InvoiceLineRow[]): CustomerInvoiceNodeDto {
+  const metadata = asMetadataObject(row.metadata);
+  const override = readDueAtOverrideSnapshot(metadata);
+  const dueAt = iso(row.due_at);
   const orderedLines = lines
     .slice()
     .sort((a, b) => a.position - b.position)
-    .map(toLine)
-  const firstLine = orderedLines[0]?.description ?? null
+    .map(toLine);
+  const firstLine = orderedLines[0]?.description ?? null;
   return {
     invoiceId: row.id,
     role: roleForInvoice({
@@ -331,12 +327,14 @@ function toNode(
     paidAmount: irrString(row.paid_amount),
     refundedAmount: irrString(row.refunded_amount),
     accountingAmount: irrStringOrNull(row.accounting_amount),
-    adjustmentKind: isAdjustmentKind(row.adjustment_kind)
-      ? row.adjustment_kind
-      : null,
+    adjustmentKind: isAdjustmentKind(row.adjustment_kind) ? row.adjustment_kind : null,
     issuedAt: iso(row.issued_at),
     payableFrom: iso(row.payable_from),
-    dueAt: iso(row.due_at),
+    dueAt,
+    dueAtOverrideReason:
+      override && dueAt && new Date(override.dueAt).getTime() === new Date(dueAt).getTime()
+        ? override.reason
+        : null,
     cancelledAt: iso(row.cancelled_at),
     createdAt: isoRequired(row.created_at),
     replacesInvoiceId: row.replaces_invoice_id,
@@ -348,7 +346,7 @@ function toNode(
       firstLineDescription: firstLine,
     }),
     lines: orderedLines,
-  }
+  };
 }
 
 function toLine(row: InvoiceLineRow): CustomerInvoiceLineDto {
@@ -360,11 +358,11 @@ function toLine(row: InvoiceLineRow): CustomerInvoiceLineDto {
     vatRate: row.vat_rate,
     vatAmount: irrString(row.vat_amount),
     isTaxable: row.is_taxable,
-  }
+  };
 }
 
 function toListItem(row: InvoiceFamilyRow): CustomerInvoiceListItemDto {
-  const metadata = asMetadataObject(row.metadata)
+  const metadata = asMetadataObject(row.metadata);
   return {
     invoiceId: row.id,
     role: roleForInvoice({
@@ -375,9 +373,7 @@ function toListItem(row: InvoiceFamilyRow): CustomerInvoiceListItemDto {
     state: isInvoiceState(row.state) ? row.state : 'Unpaid',
     totalAmount: irrString(row.total_amount),
     accountingAmount: irrStringOrNull(row.accounting_amount),
-    adjustmentKind: isAdjustmentKind(row.adjustment_kind)
-      ? row.adjustment_kind
-      : null,
+    adjustmentKind: isAdjustmentKind(row.adjustment_kind) ? row.adjustment_kind : null,
     issuedAt: iso(row.issued_at),
     dueAt: iso(row.due_at),
     createdAt: isoRequired(row.created_at),
@@ -386,101 +382,136 @@ function toListItem(row: InvoiceFamilyRow): CustomerInvoiceListItemDto {
       adjustmentForInvoiceId: row.adjustment_for_invoice_id,
       metadata,
     }),
-  }
+  };
 }
 
 const INVOICE_SELECT = `id, profile_id, state, total_amount, paid_amount, refunded_amount,
        accounting_amount, adjustment_kind, issued_at, payable_from, due_at,
        cancelled_at, created_at, replaces_invoice_id, adjustment_for_invoice_id,
-       metadata`
+       metadata`;
 
 @Injectable()
 export class CustomerInvoiceDetailsService {
   /**
-   * Active profile is the caller's non-archived default, falling back to
-   * their earliest non-archived profile. Archived profiles are inactive
-   * and must not isolate invoice list/details.
+   * Resolve the current authorized selection for the required capability.
+   * Removed or archived selections never fall through to a different profile.
    */
-  async resolveActiveProfileId(userId: string): Promise<string | null> {
-    const pool = getDbPool()
-    const result = await pool.query<{ id: string }>(
-      `SELECT id FROM profiles
-       WHERE user_id = $1 AND archived = false
-       ORDER BY is_default DESC, created_at ASC
-       LIMIT 1`,
-      [userId],
-    )
-    return result.rows[0]?.id ?? null
+  async resolveActiveProfileId(
+    userId: string,
+    permission: AgentPermission = 'invoices:view'
+  ): Promise<string | null> {
+    const pool = getDbPool();
+    const result = await pool.query<{ id: string }>(activeProfileSql(permission), [userId]);
+    return result.rows[0]?.id ?? null;
   }
 
-  async listForUser(userId: string): Promise<CustomerInvoiceListDto> {
-    const profileId = await this.requireActiveProfile(userId)
-    const pool = getDbPool()
-    const result = await pool.query<InvoiceFamilyRow>(
-      `SELECT ${INVOICE_SELECT}
-         FROM invoices
-        WHERE profile_id = $1
-          AND ${CUSTOMER_VISIBLE_STATE_SQL}
-        ORDER BY created_at DESC`,
-      [profileId],
-    )
-    return { invoices: result.rows.map(toListItem) }
+  async listForUser(userId: string, actor?: InvoiceReadActor): Promise<CustomerInvoiceListDto> {
+    return this.authorizedRead(userId, actor, async (profileId, client) => {
+      const result = await client.query<InvoiceFamilyRow>(
+        `SELECT ${INVOICE_SELECT} FROM invoices WHERE profile_id = $1
+         AND ${CUSTOMER_VISIBLE_STATE_SQL} ORDER BY created_at DESC`,
+        [profileId]
+      );
+      return { invoices: result.rows.map(toListItem) };
+    });
   }
 
   async getForUser(
     userId: string,
     invoiceId: string,
+    actor?: InvoiceReadActor
   ): Promise<CustomerInvoiceDetailsDto> {
-    const profileId = await this.requireActiveProfile(userId)
-    const viewed = await this.loadInvoice(invoiceId, profileId)
-    if (!viewed) {
-      httpError(
-        ErrorCodes.NOT_FOUND_RESOURCE.code,
-        `Invoice not found: ${invoiceId}`,
-        404,
-      )
+    invoiceId = invoiceId.toLowerCase();
+    return this.authorizedRead(userId, actor, async (profileId, client) => {
+      const viewed = await this.loadInvoice(invoiceId, profileId, client);
+      if (!viewed)
+        httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, `Invoice not found: ${invoiceId}`, 404);
+      const { rows: family, truncated } = await this.loadFamily(viewed.id, profileId, client);
+      const original = assertCompleteInvoiceFamily(family, truncated);
+      const linesByInvoiceId = await this.loadLines(
+        family.map((row) => row.id),
+        client
+      );
+      return assembleCustomerInvoiceDetails({
+        viewedInvoiceId: invoiceId,
+        originalInvoiceId: original.id,
+        rows: family,
+        linesByInvoiceId,
+      });
+    });
+  }
+
+  private async authorizedRead<T>(
+    userId: string,
+    actor: InvoiceReadActor | undefined,
+    read: (profileId: string, client: InvoiceReadClient) => Promise<T>
+  ): Promise<T> {
+    // Internal callers retain the profile-scoped read; HTTP always supplies its session.
+    if (!actor) return read(await this.requireActiveProfile(userId), getDbPool());
+    if (actor.userId !== userId)
+      httpError(ErrorCodes.AUTH_UNAUTHENTICATED.code, 'Session actor mismatch', 401);
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const account = (
+        await client.query(
+          'SELECT disabled_at,activation_token FROM users WHERE user_id=$1 FOR UPDATE',
+          [userId]
+        )
+      ).rows[0];
+      if (!account || account.disabled_at || account.activation_token)
+        httpError(ErrorCodes.AUTH_UNAUTHENTICATED.code, 'Account unavailable', 401);
+      await requireCurrentSession(client, actor);
+      const profileId = (
+        await client.query<{ id: string }>(activeProfileSql('invoices:view') + ' FOR SHARE OF p', [
+          userId,
+        ])
+      ).rows[0]?.id;
+      if (!profileId) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'No active profile', 404);
+      await client.query(
+        'SELECT role FROM profile_agents WHERE profile_id=$1 AND user_id=$2 FOR SHARE',
+        [profileId, userId]
+      );
+      const currentProfile = async () =>
+        (await client.query<{ id: string }>(activeProfileSql('invoices:view'), [userId])).rows[0]
+          ?.id;
+      if ((await currentProfile()) !== profileId)
+        httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'No active profile', 404);
+      const result = await read(profileId, client);
+      if ((await currentProfile()) !== profileId)
+        httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Profile access changed', 404);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
     }
-
-    const { rows: family, truncated } = await this.loadFamily(
-      viewed.id,
-      profileId,
-    )
-    const original = assertCompleteInvoiceFamily(family, truncated)
-    const linesByInvoiceId = await this.loadLines(family.map((row) => row.id))
-
-    return assembleCustomerInvoiceDetails({
-      viewedInvoiceId: invoiceId,
-      originalInvoiceId: original.id,
-      rows: family,
-      linesByInvoiceId,
-    })
   }
 
   private async requireActiveProfile(userId: string): Promise<string> {
-    const profileId = await this.resolveActiveProfileId(userId)
+    const profileId = await this.resolveActiveProfileId(userId);
     if (!profileId) {
-      httpError(
-        ErrorCodes.NOT_FOUND_RESOURCE.code,
-        'No active profile',
-        404,
-      )
+      httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'No active profile', 404);
     }
-    return profileId
+    return profileId;
   }
 
   private async loadInvoice(
     invoiceId: string,
     profileId: string,
+    client: InvoiceReadClient = getDbPool()
   ): Promise<InvoiceFamilyRow | null> {
-    const pool = getDbPool()
-    const result = await pool.query<InvoiceFamilyRow>(
+    const result = await client.query<InvoiceFamilyRow>(
       `SELECT ${INVOICE_SELECT}
          FROM invoices
         WHERE id = $1 AND profile_id = $2
           AND ${CUSTOMER_VISIBLE_STATE_SQL}`,
-      [invoiceId, profileId],
-    )
-    return result.rows[0] ?? null
+      [invoiceId, profileId]
+    );
+    return result.rows[0] ?? null;
   }
 
   /**
@@ -492,11 +523,9 @@ export class CustomerInvoiceDetailsService {
   private async loadFamily(
     seedId: string,
     profileId: string,
+    client: InvoiceReadClient = getDbPool()
   ): Promise<{ rows: InvoiceFamilyRow[]; truncated: boolean }> {
-    const pool = getDbPool()
-    const result = await pool.query<
-      InvoiceFamilyRow & { family_truncated: unknown }
-    >(
+    const result = await client.query<InvoiceFamilyRow & { family_truncated: unknown }>(
       `-- ${CUSTOMER_INVOICE_FAMILY_CTE_MARKER}
        WITH RECURSIVE family AS (
          SELECT ${INVOICE_SELECT},
@@ -555,36 +584,32 @@ export class CustomerInvoiceDetailsService {
        SELECT l.*, t.family_truncated
          FROM loaded l
          CROSS JOIN truncated t`,
-      [seedId, profileId, CUSTOMER_INVOICE_MAX_CHAIN],
-    )
-    const truncated = result.rows.some((row) =>
-      isFamilyTruncatedFlag(row.family_truncated),
-    )
-    const rows = result.rows.map(
-      ({ family_truncated: _truncated, ...invoice }) => invoice,
-    )
-    return { rows, truncated }
+      [seedId, profileId, CUSTOMER_INVOICE_MAX_CHAIN]
+    );
+    const truncated = result.rows.some((row) => isFamilyTruncatedFlag(row.family_truncated));
+    const rows = result.rows.map(({ family_truncated: _truncated, ...invoice }) => invoice);
+    return { rows, truncated };
   }
 
   private async loadLines(
     invoiceIds: string[],
+    client: InvoiceReadClient = getDbPool()
   ): Promise<Map<string, InvoiceLineRow[]>> {
-    const map = new Map<string, InvoiceLineRow[]>()
-    if (invoiceIds.length === 0) return map
-    const pool = getDbPool()
-    const result = await pool.query<InvoiceLineRow>(
+    const map = new Map<string, InvoiceLineRow[]>();
+    if (invoiceIds.length === 0) return map;
+    const result = await client.query<InvoiceLineRow>(
       `SELECT invoice_id, description, quantity, unit_price, line_total,
               vat_rate, vat_amount, is_taxable, position
          FROM invoice_lines
         WHERE invoice_id = ANY($1::uuid[])
         ORDER BY invoice_id, position`,
-      [invoiceIds],
-    )
+      [invoiceIds]
+    );
     for (const row of result.rows) {
-      const list = map.get(row.invoice_id) ?? []
-      list.push(row)
-      map.set(row.invoice_id, list)
+      const list = map.get(row.invoice_id) ?? [];
+      list.push(row);
+      map.set(row.invoice_id, list);
     }
-    return map
+    return map;
   }
 }

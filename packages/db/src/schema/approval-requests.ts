@@ -1,7 +1,7 @@
-import { jsonb, text, timestamp } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table.js'
-import { users } from './users.js'
-import { irrAmount } from '../types.js'
+import { jsonb, text, timestamp } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table.js';
+import { users } from './users.js';
+import { irrAmount } from '../types.js';
 
 /**
  * Dual-approval request table (S-09.07, T-09.07.02).
@@ -71,4 +71,4 @@ export const approvalRequests = createTable('approval_requests', {
 
   /** When the request left the pending state. */
   reviewedAt: timestamp('reviewed_at', { withTimezone: true, mode: 'date' }),
-})
+});

@@ -7,8 +7,7 @@ import { S3StorageProvider, type S3StorageProviderConfig } from './s3-storage-pr
  * Currently only `type: 's3'` is supported.  Add new backends by
  * extending this union with additional provider config types.
  */
-export type StorageProviderFactoryConfig =
-  | (S3StorageProviderConfig & { type?: 's3' });
+export type StorageProviderFactoryConfig = S3StorageProviderConfig & { type?: 's3' };
 
 /**
  * Create a storage provider based on runtime configuration.
@@ -30,12 +29,10 @@ export type StorageProviderFactoryConfig =
  */
 export function createStorageProvider(
   config: StorageProviderFactoryConfig,
-  logger?: Logger,
+  logger?: Logger
 ): StorageProvider {
   if (config.type !== undefined && config.type !== 's3') {
-    throw new Error(
-      `Unknown storage provider type: "${config.type}". Supported: "s3".`,
-    );
+    throw new Error(`Unknown storage provider type: "${config.type}". Supported: "s3".`);
   }
   return new S3StorageProvider(config, logger);
 }

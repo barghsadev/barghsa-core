@@ -23,12 +23,13 @@
  * `roundHalfUpDiv` (manual-invoice.calculation.ts) so there is exactly one
  * rounding implementation in the codebase.
  *
- * @throws RangeError when `value` is negative, not a bigint, or
+ * @throws TypeError when `value` is not a bigint.
+ * @throws RangeError when `value` is negative or
  *   `precision` is not an integer in `[0, MAX_ROUNDING_PRECISION]`.
  */
 
-import { Injectable } from '@nestjs/common'
-import { roundHalfUpDiv } from './manual-invoice.calculation.js'
+import { Injectable } from '@nestjs/common';
+import { roundHalfUpDiv } from './manual-invoice.calculation.js';
 
 /**
  * Largest supported `precision` exponent.
@@ -37,7 +38,7 @@ import { roundHalfUpDiv } from './manual-invoice.calculation.js'
  * (9,223,372,036,854,775,807): any realistic amount scaled by 10^18 stays
  * representable, and a bounded exponent keeps input validation cheap.
  */
-export const MAX_ROUNDING_PRECISION = 18
+export const MAX_ROUNDING_PRECISION = 18;
 
 /** Error messages for the rounding surface. */
 export const ROUNDING_ERRORS = {
@@ -45,7 +46,7 @@ export const ROUNDING_ERRORS = {
   NEGATIVE_VALUE: () => 'roundHalfUp: value must be non-negative (money is never negative)',
   BAD_PRECISION: () =>
     `roundHalfUp: precision must be an integer between 0 and ${MAX_ROUNDING_PRECISION}`,
-} as const
+} as const;
 
 @Injectable()
 export class RoundingService {
@@ -59,19 +60,15 @@ export class RoundingService {
    */
   roundHalfUp(value: bigint, precision: number): bigint {
     if (typeof value !== 'bigint') {
-      throw new TypeError(ROUNDING_ERRORS.NOT_BIGINT())
+      throw new TypeError(ROUNDING_ERRORS.NOT_BIGINT());
     }
     if (value < 0n) {
-      throw new RangeError(ROUNDING_ERRORS.NEGATIVE_VALUE())
+      throw new RangeError(ROUNDING_ERRORS.NEGATIVE_VALUE());
     }
-    if (
-      !Number.isInteger(precision) ||
-      precision < 0 ||
-      precision > MAX_ROUNDING_PRECISION
-    ) {
-      throw new RangeError(ROUNDING_ERRORS.BAD_PRECISION())
+    if (!Number.isInteger(precision) || precision < 0 || precision > MAX_ROUNDING_PRECISION) {
+      throw new RangeError(ROUNDING_ERRORS.BAD_PRECISION());
     }
-    if (precision === 0) return value
-    return roundHalfUpDiv(value, 10n ** BigInt(precision))
+    if (precision === 0) return value;
+    return roundHalfUpDiv(value, 10n ** BigInt(precision));
   }
 }

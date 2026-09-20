@@ -32,6 +32,8 @@ export interface StorageObject {
   metadata: StorageMetadata;
   /** Object etag, if available. */
   etag: string | undefined;
+  /** Immutable provider version identifier, when versioning is enabled. */
+  versionId?: string | undefined;
 }
 
 /** Configuration accepted by all providers. */
@@ -71,6 +73,15 @@ export interface Logger {
  * - The factory selects the right implementation based on runtime config.
  */
 export interface StorageProvider {
+  /** Trusted cleanup only: opt disposable versions into configured lifecycle expiry.
+   * Non-false legal-hold tags are preserved. Does not delete bytes or remove holds.
+   */
+  scheduleExpiration?(key: string): Promise<{ eligibleVersions: number; heldVersions: number }>;
+  /** Verify bucket access without reading or writing customer objects. */
+  checkHealth?(signal?: AbortSignal): Promise<void>;
+  /** Close SDK connections after callers have drained. */
+  destroy?(): void;
+
   /**
    * Upload (or overwrite) an object.
    *
@@ -83,7 +94,7 @@ export interface StorageProvider {
     key: string,
     body: ReadableStream | Blob | Uint8Array | string,
     contentType: string,
-    metadata?: StorageMetadata,
+    metadata?: StorageMetadata
   ): Promise<void>;
 
   /**
@@ -104,7 +115,8 @@ export interface StorageProvider {
    * Generate a presigned URL for a browser to _upload_ an object via PUT.
    *
    * The URL is time-limited: the client must complete the upload before
-   * `expiresIn` seconds.
+   * `expiresIn` seconds. Clients must send `If-None-Match: *`; that signed
+   * condition prevents overwriting an existing key, including after signing.
    */
   presignedPutUrl(key: string, expiresIn?: number): Promise<string>;
 
@@ -125,7 +137,7 @@ export interface StorageProvider {
   listObjects(
     prefix: string,
     maxKeys?: number,
-    continuationToken?: string,
+    continuationToken?: string
   ): Promise<{
     items: StorageObjectSummary[];
     isTruncated: boolean;
@@ -141,7 +153,7 @@ export interface StorageProvider {
 export class StorageObjectNotFound extends Error {
   constructor(
     public readonly key: string,
-    message?: string,
+    message?: string
   ) {
     super(message ?? `Object not found: ${key}`);
     this.name = 'StorageObjectNotFound';
@@ -152,7 +164,7 @@ export class StorageObjectNotFound extends Error {
 export class StorageProviderError extends Error {
   constructor(
     message: string,
-    public readonly cause?: unknown,
+    public readonly cause?: unknown
   ) {
     super(message);
     this.name = 'StorageProviderError';

@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common'
-import { SessionModule } from '../session/index.js'
-import { AgentsController } from './ai-agents.controller.js'
-import { AiAgentsService } from './ai-agents.service.js'
-import { AgentSlotsController } from './ai-agent-slots.controller.js'
-import { AgentSlotsService } from './ai-agent-slots.service.js'
+import { Module } from '@nestjs/common';
+import { SessionModule } from '../session/index.js';
+import { AgentsController } from './ai-agents.controller.js';
+import { AiAgentsService } from './ai-agents.service.js';
+import { AgentSlotsController } from './ai-agent-slots.controller.js';
+import { AgentSlotsService } from './ai-agent-slots.service.js';
 
 /**
  * AI agent administration module (S-09.11, T-09.11.04 + T-09.11.05).

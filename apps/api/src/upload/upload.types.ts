@@ -1,6 +1,14 @@
 import { z } from 'zod';
 import { UPLOAD_CATEGORIES } from './upload.config.js';
 
+export const UploadContextSchema = z
+  .object({
+    purpose: z.string().trim().min(1).max(64).optional(),
+    profileId: z.string().uuid().optional(),
+  })
+  .strict();
+export type UploadContext = z.infer<typeof UploadContextSchema>;
+
 /**
  * Schema for a presigned upload URL request.
  */
@@ -17,11 +25,16 @@ export const PresignedUrlRequestSchema = z
     /**
      * File size in bytes.
      */
-    fileSize: z.number().int().positive().max(50 * 1024 * 1024),
+    fileSize: z
+      .number()
+      .int()
+      .positive()
+      .max(50 * 1024 * 1024),
     /**
      * Upload category — determines allowed types and max size.
      */
     category: z.enum(UPLOAD_CATEGORIES as [string, ...string[]]).optional(),
+    ...UploadContextSchema.shape,
     /**
      * Optional metadata for business-record association.
      */
@@ -35,6 +48,22 @@ export const PresignedUrlRequestSchema = z
   })
   .strict();
 
+export const RecordUploadRequestSchema = z
+  .object({
+    fileName: z.string().min(1).max(255).optional(),
+    contentType: z.string().min(1).max(128).optional(),
+    fileSize: z
+      .number()
+      .int()
+      .positive()
+      .max(50 * 1024 * 1024)
+      .optional(),
+    category: z.enum(UPLOAD_CATEGORIES as [string, ...string[]]).optional(),
+    purpose: z.string().trim().min(1).max(64).optional(),
+    profileId: z.string().uuid().optional(),
+  })
+  .strict();
+
 export type PresignedUrlRequest = z.infer<typeof PresignedUrlRequestSchema>;
 
 /**
@@ -45,6 +74,8 @@ export interface PresignedUrlResponse {
   key: string;
   /** The presigned URL the browser can PUT to. */
   presignedUrl: string;
+  /** Required signed PUT headers. Upload keys are write-once. */
+  headers: { 'If-None-Match': '*' };
   /** URL expiry in seconds. */
   expiresIn: number;
 }
@@ -61,6 +92,8 @@ export interface PresignedUrlResponse {
  *   signature — fail closed);
  * - `not_found` — object does not exist.
  *
+ * Content verification persists `Pending scan` on the owned storage record.
+ * `confirmed` describes content inspection, not a successful malware scan.
  * `pending_scan` is retained for backward compatibility with legacy
  * callers; this endpoint no longer produces it (a client cannot opt out
  * of content-type detection).

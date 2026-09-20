@@ -31,4 +31,4 @@ import { RateLimitGuard } from './rate-limit.guard.js';
   ],
   exports: [RateLimitService, RateLimitGuard],
 })
-export class RateLimitModule {};
+export class RateLimitModule {}

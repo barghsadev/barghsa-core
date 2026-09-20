@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -9,63 +10,60 @@ import {
   Put,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import {
   AgentSlotsService,
   AGENT_SLOT_KEYS,
   type AgentSlotDto,
   type AgentSlotKey,
-} from './ai-agent-slots.service.js'
+} from './ai-agent-slots.service.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
 /** The slot set is fixed system configuration; reject anything else. */
-const slotKeySchema = z.enum(AGENT_SLOT_KEYS)
+const slotKeySchema = z.enum(AGENT_SLOT_KEYS);
 // Agent ids are UUID columns; reject anything else before it reaches
 // Postgres (where 22P02 would otherwise surface as a raw 500).
-const uuidSchema = z.string().uuid('Expected a UUID')
+const uuidSchema = z.string().uuid('Expected a UUID');
 
 /** PUT body: the agent to serve the slot, or null to clear the assignment. */
-export const AssignAgentSchema = z.object({
-  agentId: uuidSchema.nullable(),
-})
+export const AssignAgentSchema = z
+  .object({
+    agentId: uuidSchema.nullable(),
+  })
+  .strict();
 
-function httpError(
-  code: string,
-  message: string,
-  statusCode = 400,
-  details?: unknown,
-): never {
+function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
     { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode,
-  )
+    statusCode
+  );
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 /** Validate a route @Param slot key, surfacing 400 instead of a DB 500. */
 function assertSlotKey(slotKey: string): AgentSlotKey {
-  const parsed = slotKeySchema.safeParse(slotKey)
+  const parsed = slotKeySchema.safeParse(slotKey);
   if (!parsed.success) {
     httpError(
       ErrorCodes.VALIDATION_PARSE_ZOD.code,
       `Invalid slot key: expected one of ${AGENT_SLOT_KEYS.join(', ')}`,
-      400,
-    )
+      400
+    );
   }
-  return parsed.data
+  return parsed.data;
 }
 
 function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
-  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }))
+  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
 }
 
 /**
@@ -73,9 +71,7 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
  *
  * Security posture (mirrors the AI agents controller T-09.11.04):
  * - Every route requires an authenticated session with the
- *   `admin:ai:agents` capability. Today the session model exposes only
- *   `req.session.isAdmin` (platform admin); granular staff-role
- *   permissions arrive with the role system. Centralized in one
+ *   `admin:ai:agents` capability. Capabilities are read from current database roles. Centralized in one
  *   enforcement point per controller.
  * - The assignment mutation additionally requires recent step-up
  *   verification via `@RequiresStepUp()` (StepUpGuard) — changing which
@@ -95,12 +91,12 @@ export class AgentSlotsController {
 
   /** Single enforcement point for the `admin:ai:agents` capability. */
   private assertAgentPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:ai:agents')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage AI agents',
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -112,8 +108,8 @@ export class AgentSlotsController {
       'All predefined slots with their current agent and the "also used in" warning set.',
   })
   async list(@Req() req: AuthenticatedRequest): Promise<AgentSlotDto[]> {
-    this.assertAgentPermission(req)
-    return this.service.list()
+    this.assertAgentPermission(req);
+    return this.service.list();
   }
 
   @Put(':slotKey/agent')
@@ -131,24 +127,25 @@ export class AgentSlotsController {
   async assign(
     @Req() req: AuthenticatedRequest,
     @Param('slotKey') slotKey: string,
-    @Body() body: z.infer<typeof AssignAgentSchema>,
+    @Body() body: z.infer<typeof AssignAgentSchema>
   ): Promise<AgentSlotDto> {
-    this.assertAgentPermission(req)
-    const key = assertSlotKey(slotKey)
-    const parsed = AssignAgentSchema.safeParse(body)
+    this.assertAgentPermission(req);
+    const key = assertSlotKey(slotKey);
+    const parsed = AssignAgentSchema.safeParse(body);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid slot assignment payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.assign({
       slotKey: key,
       agentId: parsed.data.agentId,
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
-    })
+    });
   }
 }

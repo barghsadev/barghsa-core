@@ -7,8 +7,13 @@ import {
   PutObjectCommandInput,
   ListObjectsV2Command,
   ListObjectsV2CommandInput,
+  HeadBucketCommand,
+  ListObjectVersionsCommand,
+  GetObjectTaggingCommand,
+  PutObjectTaggingCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { Upload } from '@aws-sdk/lib-storage';
 import { NoSuchKey } from '@aws-sdk/client-s3';
 
 import type {
@@ -91,6 +96,63 @@ export class S3StorageProvider implements StorageProvider {
     this.client = new S3Client(clientConfig);
   }
 
+  destroy(): void {
+    this.client.destroy();
+  }
+
+  async checkHealth(signal: AbortSignal = AbortSignal.timeout(1500)): Promise<void> {
+    await this.client.send(new HeadBucketCommand({ Bucket: this.bucket }), { abortSignal: signal });
+  }
+
+  async scheduleExpiration(
+    key: string
+  ): Promise<{ eligibleVersions: number; heldVersions: number }> {
+    if (!/^(tmp|uploads|previews|superseded)\//.test(key))
+      throw new StorageProviderError('Object key has no configured expiration policy');
+    const resolvedKey = this.resolveKey(key);
+    const result = { eligibleVersions: 0, heldVersions: 0 };
+    let KeyMarker: string | undefined, VersionIdMarker: string | undefined;
+    const pages = new Set<string>();
+    for (;;) {
+      const page = await this.client.send(
+        new ListObjectVersionsCommand({
+          Bucket: this.bucket,
+          Prefix: resolvedKey,
+          KeyMarker,
+          VersionIdMarker,
+          MaxKeys: 100,
+        })
+      );
+      for (const version of page.Versions ?? []) {
+        if (version.Key !== resolvedKey) continue;
+        if (!version.VersionId)
+          throw new StorageProviderError('Storage returned a version without an ID');
+        const target = { Bucket: this.bucket, Key: resolvedKey, VersionId: version.VersionId };
+        const { TagSet = [] } = await this.client.send(new GetObjectTaggingCommand(target));
+        const hold = TagSet.find((tag) => tag.Key === 'legal-hold');
+        if (hold && hold.Value !== 'false') {
+          result.heldVersions++;
+          continue;
+        }
+        if (!hold)
+          await this.client.send(
+            new PutObjectTaggingCommand({
+              ...target,
+              Tagging: { TagSet: [...TagSet, { Key: 'legal-hold', Value: 'false' }] },
+            })
+          );
+        result.eligibleVersions++;
+      }
+      if (!page.IsTruncated) return result;
+      KeyMarker = page.NextKeyMarker;
+      VersionIdMarker = page.NextVersionIdMarker;
+      const marker = JSON.stringify([KeyMarker, VersionIdMarker]);
+      if (!KeyMarker || pages.has(marker))
+        throw new StorageProviderError('Storage version listing did not advance');
+      pages.add(marker);
+    }
+  }
+
   // -----------------------------------------------------------------------
   // Helpers
   // -----------------------------------------------------------------------
@@ -108,35 +170,37 @@ export class S3StorageProvider implements StorageProvider {
     key: string,
     body: ReadableStream | Blob | Uint8Array | string,
     contentType: string,
-    metadata?: StorageMetadata,
+    metadata?: StorageMetadata
   ): Promise<void> {
     const resolvedKey = this.resolveKey(key);
-
-    const sdkBody =
-      body instanceof ReadableStream
-        ? (body as never) // SDK accepts Readable (Node stream); ReadableStream from web falls through
-        : body instanceof Blob
-          ? (body as never)
-          : body;
 
     const input: PutObjectCommandInput = {
       Bucket: this.bucket,
       Key: resolvedKey,
-      Body: sdkBody,
+      Body: body,
       ContentType: contentType,
       Metadata: metadata,
     };
 
     try {
-      await this.client.send(new PutObjectCommand(input));
+      if (body instanceof ReadableStream || body instanceof Blob) {
+        // The upload helper chunks unknown-length web streams and aborts failed
+        // multipart uploads. Direct PutObject cannot hash these bodies in Node.
+        await new Upload({
+          client: this.client,
+          params: input,
+          queueSize: 1,
+          partSize: 5 * 1024 * 1024,
+          leavePartsOnError: false,
+        }).done();
+      } else {
+        await this.client.send(new PutObjectCommand(input));
+      }
     } catch (err) {
-      this.logger?.error(
-        `[s3-storage-provider] Failed to put object "${resolvedKey}":`,
-        err,
-      );
+      this.logger?.error(`[s3-storage-provider] Failed to put object "${resolvedKey}":`, err);
       throw new StorageProviderError(
         `Failed to put object "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
-        err,
+        err
       );
     }
   }
@@ -150,7 +214,7 @@ export class S3StorageProvider implements StorageProvider {
 
     try {
       const response = await this.client.send(
-        new GetObjectCommand({ Bucket: this.bucket, Key: resolvedKey }),
+        new GetObjectCommand({ Bucket: this.bucket, Key: resolvedKey })
       );
 
       if (!response.Body) {
@@ -158,27 +222,29 @@ export class S3StorageProvider implements StorageProvider {
       }
 
       return {
-        body: response.Body as unknown as ReadableStream,
+        body: response.Body.transformToWebStream(),
         contentType: response.ContentType ?? 'application/octet-stream',
         contentLength: response.ContentLength ?? undefined,
         metadata: (response.Metadata as StorageMetadata) ?? {},
         etag: response.ETag ?? undefined,
+        versionId: response.VersionId,
       };
     } catch (err) {
       // Re-throw our own error type immediately — do not re-wrap.
       if (err instanceof StorageObjectNotFound) {
         throw err;
       }
-      if (err instanceof NoSuchKey || (err as { name?: string }).name === 'NoSuchKey') {
+      if (
+        err instanceof NoSuchKey ||
+        (err as { name?: string }).name === 'NoSuchKey' ||
+        (err as { $metadata?: { httpStatusCode?: number } }).$metadata?.httpStatusCode === 404
+      ) {
         throw new StorageObjectNotFound(key);
       }
-      this.logger?.error(
-        `[s3-storage-provider] Failed to get object "${resolvedKey}":`,
-        err,
-      );
+      this.logger?.error(`[s3-storage-provider] Failed to get object "${resolvedKey}":`, err);
       throw new StorageProviderError(
         `Failed to get object "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
-        err,
+        err
       );
     }
   }
@@ -191,17 +257,12 @@ export class S3StorageProvider implements StorageProvider {
     const resolvedKey = this.resolveKey(key);
 
     try {
-      await this.client.send(
-        new DeleteObjectCommand({ Bucket: this.bucket, Key: resolvedKey }),
-      );
+      await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: resolvedKey }));
     } catch (err) {
-      this.logger?.error(
-        `[s3-storage-provider] Failed to delete object "${resolvedKey}":`,
-        err,
-      );
+      this.logger?.error(`[s3-storage-provider] Failed to delete object "${resolvedKey}":`, err);
       throw new StorageProviderError(
         `Failed to delete object "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
-        err,
+        err
       );
     }
   }
@@ -216,17 +277,20 @@ export class S3StorageProvider implements StorageProvider {
     try {
       return await getSignedUrl(
         this.client,
-        new PutObjectCommand({ Bucket: this.bucket, Key: resolvedKey }),
-        { expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN },
+        new PutObjectCommand({ Bucket: this.bucket, Key: resolvedKey, IfNoneMatch: '*' }),
+        {
+          expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN,
+          signableHeaders: new Set(['if-none-match']),
+        }
       );
     } catch (err) {
       this.logger?.error(
         `[s3-storage-provider] Failed to generate presigned PUT URL for "${resolvedKey}":`,
-        err,
+        err
       );
       throw new StorageProviderError(
         `Failed to generate presigned PUT URL for "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
-        err,
+        err
       );
     }
   }
@@ -242,16 +306,16 @@ export class S3StorageProvider implements StorageProvider {
       return await getSignedUrl(
         this.client,
         new GetObjectCommand({ Bucket: this.bucket, Key: resolvedKey }),
-        { expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN },
+        { expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN }
       );
     } catch (err) {
       this.logger?.error(
         `[s3-storage-provider] Failed to generate presigned GET URL for "${resolvedKey}":`,
-        err,
+        err
       );
       throw new StorageProviderError(
         `Failed to generate presigned GET URL for "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
-        err,
+        err
       );
     }
   }
@@ -263,7 +327,7 @@ export class S3StorageProvider implements StorageProvider {
   async listObjects(
     prefix: string,
     maxKeys?: number,
-    continuationToken?: string,
+    continuationToken?: string
   ): Promise<{
     items: StorageObjectSummary[];
     isTruncated: boolean;
@@ -285,9 +349,7 @@ export class S3StorageProvider implements StorageProvider {
       const response = await this.client.send(new ListObjectsV2Command(input));
 
       const items: StorageObjectSummary[] = (response.Contents ?? []).map((obj) => ({
-        key: obj.Key?.startsWith(this.prefix)
-          ? obj.Key.slice(this.prefix.length)
-          : (obj.Key ?? ''),
+        key: obj.Key?.startsWith(this.prefix) ? obj.Key.slice(this.prefix.length) : (obj.Key ?? ''),
         size: obj.Size ?? 0,
         etag: obj.ETag ?? undefined,
         lastModified: obj.LastModified ?? undefined,
@@ -301,11 +363,11 @@ export class S3StorageProvider implements StorageProvider {
     } catch (err) {
       this.logger?.error(
         `[s3-storage-provider] Failed to list objects with prefix "${resolvedPrefix}":`,
-        err,
+        err
       );
       throw new StorageProviderError(
         `Failed to list objects with prefix "${resolvedPrefix}": ${err instanceof Error ? err.message : String(err)}`,
-        err,
+        err
       );
     }
   }

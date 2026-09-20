@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -11,76 +12,82 @@ import {
   Post,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { CONTRACT_TEMPLATE_STATUSES, type ContractTemplateDto, type ContractTemplateVersionDto } from '@barghsa/shared/admin'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import { ContractTemplateService } from './contract-template.service.js'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import {
+  CONTRACT_TEMPLATE_STATUSES,
+  type ContractTemplateDto,
+  type ContractTemplateDetailDto,
+  type ContractTemplateVersionDto,
+} from '@barghsa/shared/admin';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { ContractTemplateService } from './contract-template.service.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
-const statusSchema = z.enum(CONTRACT_TEMPLATE_STATUSES)
+const statusSchema = z.enum(CONTRACT_TEMPLATE_STATUSES);
 const nameSchema = z
   .string()
+  .trim()
   .min(1, 'name is required')
-  .max(200, 'name must be 200 characters or fewer')
-  .transform((s) => s.trim())
+  .max(200, 'name must be 200 characters or fewer');
 
-const CreateContractTemplateSchema = z.object({
-  name: nameSchema,
-  description: z.string().max(2000, 'description must be 2000 characters or fewer').optional(),
-})
+const CreateContractTemplateSchema = z
+  .object({
+    name: nameSchema,
+    description: z.string().max(2000, 'description must be 2000 characters or fewer').optional(),
+  })
+  .strict();
 
-const UpdateContractTemplateSchema = z.object({
-  name: nameSchema.optional(),
-  description: z
-    .union([z.string().max(2000, 'description must be 2000 characters or fewer'), z.null()])
-    .optional(),
-  status: statusSchema.optional(),
-})
+const UpdateContractTemplateSchema = z
+  .object({
+    name: nameSchema.optional(),
+    description: z
+      .union([z.string().max(2000, 'description must be 2000 characters or fewer'), z.null()])
+      .optional(),
+    status: statusSchema.optional(),
+  })
+  .strict();
 
-const UploadVersionSchema = z.object({
-  fileName: z.string().min(1, 'fileName is required').max(255, 'fileName is too long'),
-  contentType: z
-    .string()
-    .max(100, 'contentType is too long')
-    .refine(
-      (t) => /^text\/[a-z0-9.+-]+$/i.test(t),
-      'Only text/* content types are accepted for placeholder extraction',
-    )
-    .optional()
-    .default('text/plain'),
-  content: z.string(),
-})
+const UploadVersionSchema = z
+  .object({
+    fileName: z.string().min(1, 'fileName is required').max(255, 'fileName is too long'),
+    contentType: z
+      .string()
+      .max(100, 'contentType is too long')
+      .refine(
+        (t) => /^text\/[a-z0-9.+-]+$/i.test(t),
+        'Only text/* content types are accepted for placeholder extraction'
+      )
+      .optional()
+      .default('text/plain'),
+    content: z.string(),
+  })
+  .strict();
 
-function httpError(
-  code: string,
-  message: string,
-  statusCode = 400,
-  details?: unknown,
-): never {
+function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
     { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode,
-  )
+    statusCode
+  );
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 function assertUuid(id: string, label = 'id'): void {
-  const parsed = z.string().uuid('Expected a UUID').safeParse(id)
+  const parsed = z.string().uuid('Expected a UUID').safeParse(id);
   if (!parsed.success) {
-    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400)
+    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400);
   }
 }
 
 function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
-  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }))
+  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
 }
 
 /**
@@ -89,9 +96,7 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
  *
  * Security posture (mirrors the S-09 admin controllers):
  * - Every route requires an authenticated session with the
- *   `admin:documents:edit` capability. Today the session model exposes
- *   only `req.session.isAdmin` (platform admin); granular staff-role
- *   permissions arrive with the role system (E-10).
+ *   `admin:documents:edit` capability. Capabilities are read from current database roles.
  * - All mutation endpoints require recent step-up verification via
  *   `@RequiresStepUp()` — template uploads can inject markup that may
  *   be rendered in generated contracts, so writes are guarded.
@@ -109,12 +114,12 @@ export class ContractTemplateController {
 
   /** Single enforcement point for the `admin:documents:edit` capability. */
   private assertDocumentsPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:documents:edit')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage contract templates',
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -125,8 +130,8 @@ export class ContractTemplateController {
   })
   @ApiResponse({ status: 200, description: 'Contract templates.' })
   async list(@Req() req: AuthenticatedRequest): Promise<ContractTemplateDto[]> {
-    this.assertDocumentsPermission(req)
-    return this.service.list()
+    this.assertDocumentsPermission(req);
+    return this.service.list();
   }
 
   @Get(':id')
@@ -137,11 +142,11 @@ export class ContractTemplateController {
   @ApiResponse({ status: 200, description: 'The contract template with versions.' })
   async get(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-  ): Promise<ContractTemplateDto> {
-    this.assertDocumentsPermission(req)
-    assertUuid(id)
-    return this.service.get(id)
+    @Param('id') id: string
+  ): Promise<ContractTemplateDetailDto> {
+    this.assertDocumentsPermission(req);
+    assertUuid(id);
+    return this.service.get(id);
   }
 
   @Post()
@@ -158,24 +163,24 @@ export class ContractTemplateController {
   @ApiResponse({ status: 201, description: 'Contract template created.' })
   async create(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateContractTemplateSchema>,
+    @Body() body: z.infer<typeof CreateContractTemplateSchema>
   ): Promise<ContractTemplateDto> {
-    this.assertDocumentsPermission(req)
-    const parsed = CreateContractTemplateSchema.safeParse(body)
+    this.assertDocumentsPermission(req);
+    const parsed = CreateContractTemplateSchema.safeParse(body);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid contract template payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.create({
       name: parsed.data.name,
       ...(parsed.data.description !== undefined ? { description: parsed.data.description } : {}),
-      actorUserId: req.session.userId,
+      actor: req.session,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Patch(':id')
@@ -193,27 +198,27 @@ export class ContractTemplateController {
   async update(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof UpdateContractTemplateSchema>,
+    @Body() body: z.infer<typeof UpdateContractTemplateSchema>
   ): Promise<ContractTemplateDto> {
-    this.assertDocumentsPermission(req)
-    assertUuid(id)
-    const parsed = UpdateContractTemplateSchema.safeParse(body ?? {})
+    this.assertDocumentsPermission(req);
+    assertUuid(id);
+    const parsed = UpdateContractTemplateSchema.safeParse(body ?? {});
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid contract template payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
-    const data = parsed.data
+    const data = parsed.data;
     return this.service.update(id, {
       ...(data.name !== undefined ? { name: data.name } : {}),
       ...(data.description !== undefined ? { description: data.description } : {}),
       ...(data.status !== undefined ? { status: data.status } : {}),
-      actorUserId: req.session.userId,
+      actor: req.session,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Post(':id/versions')
@@ -227,30 +232,33 @@ export class ContractTemplateController {
       'and appends an append-only version. Prior versions and their files are preserved as the ' +
       'archive of previous versions. Requires object storage to be configured.',
   })
-  @ApiResponse({ status: 201, description: 'New template version uploaded with extracted placeholders.' })
+  @ApiResponse({
+    status: 201,
+    description: 'New template version uploaded with extracted placeholders.',
+  })
   async uploadVersion(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof UploadVersionSchema>,
+    @Body() body: z.infer<typeof UploadVersionSchema>
   ): Promise<ContractTemplateVersionDto> {
-    this.assertDocumentsPermission(req)
-    assertUuid(id)
-    const parsed = UploadVersionSchema.safeParse(body)
+    this.assertDocumentsPermission(req);
+    assertUuid(id);
+    const parsed = UploadVersionSchema.safeParse(body);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid contract template version payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.uploadVersion(id, {
       fileName: parsed.data.fileName,
       ...(parsed.data.contentType !== undefined ? { contentType: parsed.data.contentType } : {}),
       content: parsed.data.content,
-      actorUserId: req.session.userId,
+      actor: req.session,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Delete(':id')
@@ -267,10 +275,10 @@ export class ContractTemplateController {
   @ApiResponse({ status: 200, description: 'Contract template deleted.' })
   async delete(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id') id: string
   ): Promise<{ deleted: boolean }> {
-    this.assertDocumentsPermission(req)
-    assertUuid(id)
-    return this.service.delete(id, req.session.userId, requestIp(req))
+    this.assertDocumentsPermission(req);
+    assertUuid(id);
+    return this.service.delete(id, req.session, requestIp(req));
   }
 }

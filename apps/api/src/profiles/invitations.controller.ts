@@ -1,25 +1,30 @@
 import {
-  Body,
   Controller,
   Get,
   HttpCode,
+  HttpException,
   Logger,
   Param,
   Post,
   Req,
+  Res,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { AgentsService } from './agents.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
+} from '@nestjs/common';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import type { Response } from 'express';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AgentsService } from './agents.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { setSessionCookie, setRefreshCookie, setCsrfCookie } from '../session/cookie.helper.js';
 
 @ApiTags('Invitations')
 @Controller('api/invitations')
 @UseGuards(SessionAuthGuard)
 export class InvitationsController {
-  private readonly logger = new Logger(InvitationsController.name)
+  private readonly logger = new Logger(InvitationsController.name);
 
   constructor(private readonly agentsService: AgentsService) {}
 
@@ -35,10 +40,10 @@ export class InvitationsController {
   @ApiOperation({ summary: 'List pending invitations for the current user' })
   @ApiResponse({ status: 200, description: 'Pending invitations list.' })
   async listPendingInvitations(@Req() req: AuthenticatedRequest) {
-    const userId = req.session.userId
-    const result = await this.agentsService.listPendingInvitations(userId)
-    this.logger.debug(`User ${userId} has ${result.invitations.length} pending invitations`)
-    return result
+    const userId = req.session.userId;
+    const result = await this.agentsService.listPendingInvitations(userId);
+    this.logger.debug(`User ${userId} has ${result.invitations.length} pending invitations`);
+    return result;
   }
 
   /**
@@ -60,11 +65,15 @@ export class InvitationsController {
   async acceptInvitation(
     @Param('inviteId') inviteId: string,
     @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response
   ) {
-    const userId = req.session.userId
-    await this.agentsService.acceptInvitation(inviteId, userId)
-    this.logger.log(`Invitation ${inviteId} accepted by user ${userId}`)
-    return { message: 'Invitation accepted successfully.' }
+    const userId = req.session.userId;
+    const rotated = await this.agentsService.acceptInvitation(inviteId, req.session);
+    setSessionCookie(res, rotated.sessionId, rotated.expiresAt);
+    setRefreshCookie(res, rotated.refreshToken, rotated.expiresAt);
+    setCsrfCookie(res, rotated.csrfToken);
+    this.logger.log(`Invitation ${inviteId} accepted by user ${userId}`);
+    return { message: 'Invitation accepted successfully.' };
   }
 
   /**
@@ -78,15 +87,15 @@ export class InvitationsController {
   @RateLimit({ namespace: 'invitations:decline', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Decline a pending invitation' })
   @ApiResponse({ status: 200, description: 'Invitation declined.' })
-  @ApiResponse({ status: 400, description: 'Invitation not in Pending status.' })
+  @ApiResponse({ status: 400, description: 'Invalid invitation ID.' })
+  @ApiResponse({ status: 409, description: 'Invitation changed or expired.' })
   @ApiResponse({ status: 404, description: 'Invitation not found.' })
-  async declineInvitation(
-    @Param('inviteId') inviteId: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const userId = req.session.userId
-    await this.agentsService.declineInvitation(inviteId, userId)
-    this.logger.log(`Invitation ${inviteId} declined by user ${userId}`)
-    return { message: 'Invitation declined successfully.' }
+  async declineInvitation(@Param('inviteId') inviteId: string, @Req() req: AuthenticatedRequest) {
+    const userId = req.session.userId;
+    if (!z.uuid().safeParse(inviteId).success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    await this.agentsService.declineInvitation(inviteId, req.session);
+    this.logger.log(`Invitation ${inviteId} declined by user ${userId}`);
+    return { message: 'Invitation declined successfully.' };
   }
 }

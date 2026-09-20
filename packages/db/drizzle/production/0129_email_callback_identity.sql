@@ -1,0 +1,1 @@
+ALTER TABLE "email_webhook_events" ADD COLUMN "verified_provider_ids" uuid[] DEFAULT '{}'::uuid[] NOT NULL;

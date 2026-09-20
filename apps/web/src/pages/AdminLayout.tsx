@@ -1,45 +1,148 @@
-import { Outlet } from '@tanstack/react-router'
-import { t } from '@barghsa/i18n'
-import { TosBanner } from '../components/TosBanner.js'
-import { useLocale } from '../hooks/useLocale.js'
+import { Outlet } from '@tanstack/react-router';
+import {
+  Activity,
+  BadgeCheck,
+  Bell,
+  BellOff,
+  Bot,
+  ContactRound,
+  Cpu,
+  FileCheck,
+  FilePenLine,
+  FileText,
+  GitCompareArrows,
+  HardDrive,
+  KeyRound,
+  Layers,
+  LayoutDashboard,
+  Library,
+  LifeBuoy,
+  MapPin,
+  Package,
+  Palette,
+  Percent,
+  Plug,
+  ReceiptText,
+  ShieldCheck,
+  SlidersHorizontal,
+  TicketPercent,
+  Timer,
+  Upload,
+  Users,
+  UsersRound,
+  Wallet,
+  Zap,
+} from 'lucide-react';
+import { t } from '@barghsa/i18n/admin-ui';
+import { shellText } from '@barghsa/i18n/shell';
+import { TosBanner } from '../components/TosBanner.js';
+import { useLocale } from '../hooks/useLocale.js';
+import { AppShell, type NavigationGroup } from '../components/AppShell.js';
 
-/**
- * Admin layout with sidebar — renders lazy child routes via Outlet.
- */
 export default function AdminLayout() {
-  const locale = useLocale()
+  const locale = useLocale();
+  const groups: NavigationGroup[] = [
+    {
+      label: shellText('overview', locale),
+      items: [{ to: '/admin', label: t('admin.nav.dashboard', locale), icon: LayoutDashboard }],
+    },
+    {
+      label: shellText('operations', locale),
+      items: [
+        { to: '/admin/tickets', label: t('tickets.staffTitle', locale), icon: LifeBuoy },
+        {
+          to: '/admin/reconciliation',
+          label: t('admin.reconciliation.title', locale),
+          icon: GitCompareArrows,
+        },
+        { to: '/admin/service-targets', label: t('admin.targets.title', locale), icon: Timer },
+        { to: '/admin/staff-teams', label: t('admin.teams.title', locale), icon: Users },
+        {
+          to: '/admin/failed-notifications',
+          label: t('admin.notifications.deadLetter.title', locale),
+          icon: BellOff,
+        },
+        { to: '/admin/failed-jobs', label: t('admin.jobs.title', locale), icon: Activity },
+      ],
+    },
+    {
+      label: shellText('finance', locale),
+      items: [
+        { to: '/admin/catalogue', label: t('admin.catalogue.title', locale), icon: Package },
+        { to: '/admin/invoices', label: t('admin.nav.invoices', locale), icon: ReceiptText },
+        {
+          to: '/admin/wallet-receipts',
+          label: t('admin.walletReceipts.nav', locale),
+          icon: Wallet,
+        },
+        {
+          to: '/admin/approval-requests',
+          label: t('admin.approvals.title', locale),
+          icon: BadgeCheck,
+        },
+        { to: '/admin/gift-codes', label: t('admin.gifts.title', locale), icon: TicketPercent },
+        { to: '/admin/vat', label: t('admin.vat.title', locale), icon: Percent },
+        {
+          to: '/admin/contract-templates',
+          label: t('admin.templates.title', locale),
+          icon: FileText,
+        },
+        {
+          to: '/admin/contract-limits',
+          label: t('admin.contractLimits.title', locale),
+          icon: SlidersHorizontal,
+        },
+        { to: '/admin/electricity-rules', label: t('admin.green.title', locale), icon: Zap },
+      ],
+    },
+    {
+      label: shellText('intelligence', locale),
+      items: [
+        { to: '/admin/agents', label: t('admin.agents.title', locale), icon: Bot },
+        { to: '/admin/ai-models', label: t('admin.aiModels.title', locale), icon: Cpu },
+        { to: '/admin/knowledge-bases', label: t('admin.kb.title', locale), icon: Library },
+        { to: '/admin/policies', label: t('admin.policies.title', locale), icon: ShieldCheck },
+        { to: '/admin/agent-slots', label: t('admin.slots.title', locale), icon: Layers },
+      ],
+    },
+    {
+      label: shellText('customers', locale),
+      items: [
+        { to: '/admin/crm', label: t('admin.nav.crmProfiles', locale), icon: ContactRound },
+        {
+          to: '/admin/crm/corrections',
+          label: t('crm.corrections.title', locale),
+          icon: FilePenLine,
+        },
+        { to: '/admin/users', label: t('admin.staff.title', locale), icon: UsersRound },
+        { to: '/admin/roles', label: t('admin.nav.roles', locale), icon: KeyRound },
+      ],
+    },
+    {
+      label: shellText('configuration', locale),
+      items: [
+        { to: '/admin/branding', label: t('admin.nav.branding', locale), icon: Palette },
+        { to: '/admin/geography', label: t('admin.nav.geography', locale), icon: MapPin },
+        { to: '/admin/tos', label: t('admin.nav.tos', locale), icon: FileCheck },
+        {
+          to: '/admin/verification',
+          label: t('admin.nav.verification', locale),
+          icon: ShieldCheck,
+        },
+        { to: '/admin/notifications', label: t('admin.nav.notifications', locale), icon: Bell },
+        { to: '/admin/providers', label: t('admin.nav.providers', locale), icon: Plug },
+        {
+          to: '/admin/upload-policies',
+          label: t('admin.uploadPolicies.title', locale),
+          icon: Upload,
+        },
+        { to: '/admin/storage', label: t('admin.nav.storage', locale), icon: HardDrive },
+      ],
+    },
+  ];
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      <TosBanner />
-      <div className="flex flex-1 overflow-hidden">
-        <aside className="w-64 bg-white border-inset-end border-gray-200 p-4 shrink-0">
-          <nav>
-            <h2 className="text-lg font-semibold mb-4">Admin</h2>
-            <ul className="space-y-2">
-              <li><a href="/admin" className="text-blue-600 hover:underline">Dashboard</a></li>
-              <li><a href="/admin/users" className="text-blue-600 hover:underline">Users</a></li>
-              <li><a href="/admin/storage" className="text-blue-600 hover:underline">Storage</a></li>
-              <li><a href="/admin/verification" className="text-blue-600 hover:underline">Verification</a></li>
-              <li><a href="/admin/branding" className="text-blue-600 hover:underline">Branding</a></li>
-              <li><a href="/admin/geography" className="text-blue-600 hover:underline">Geography</a></li>
-              <li><a href="/admin/tos" className="text-blue-600 hover:underline">Terms of Service</a></li>
-              <li><a href="/admin/notifications" className="text-blue-600 hover:underline">Notifications</a></li>
-              <li><a href="/admin/invoices" className="text-blue-600 hover:underline">Invoices</a></li>
-              <li><a href="/admin/wallet-receipts" className="text-blue-600 hover:underline">{t('admin.walletReceipts.nav', locale)}</a></li>
-              <li><a href="/admin/providers" className="text-blue-600 hover:underline">Email Providers</a></li>
-              <li><a href="/admin/roles" className="text-blue-600 hover:underline">Roles &amp; Permissions</a></li>
-              <li className="pt-2 mt-2 border-t border-gray-100">
-                <span className="text-xs text-gray-400 uppercase tracking-wide">CRM</span>
-              </li>
-              <li><a href="/admin/crm" className="text-blue-600 hover:underline">CRM Profiles</a></li>
-            </ul>
-          </nav>
-        </aside>
-        {/* Main content */}
-        <main className="flex-1 p-8 overflow-auto">
-          <Outlet />
-        </main>
-      </div>
-    </div>
-  )
+    <AppShell area="admin" locale={locale} groups={groups} banners={<TosBanner locale={locale} />}>
+      <Outlet />
+    </AppShell>
+  );
 }

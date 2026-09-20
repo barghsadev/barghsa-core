@@ -1,6 +1,6 @@
-import { randomUUID } from 'node:crypto'
-import type { Pool, PoolClient } from 'pg'
-import { getDbPool } from '@barghsa/db'
+import { randomUUID } from 'node:crypto';
+import type { Pool, PoolClient } from 'pg';
+import { getDbPool } from '@barghsa/db';
 import {
   ONLINE_TOPUP_CHANNEL,
   ONLINE_TOPUP_EXPIRED_STATE,
@@ -11,7 +11,10 @@ import {
   onlineTopUpExpiryCutoff,
   parseOnlineTopUpPendingTtlMs,
   readOnlineTopUpChannel,
-} from '@barghsa/shared/finance'
+  buildBankReceiptTopUpFailedNotificationPayload,
+  onlineTopUpExpiryNoticeReason,
+} from '@barghsa/shared/finance';
+import { enqueueOutbox } from '../notifications/outbox-writer.js';
 
 /**
  * Online top-up Pending TTL expiry scanner (S-04.2.02, T-04.2.02.07).
@@ -47,59 +50,57 @@ import {
  */
 
 /** Default number of expired online top-ups claimed per tick. */
-export const DEFAULT_ONLINE_TOPUP_EXPIRY_BATCH_SIZE = 200
+export const DEFAULT_ONLINE_TOPUP_EXPIRY_BATCH_SIZE = 200;
 
 /** Default one-minute cadence. */
-export const DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS = 60 * 1000
+export const DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS = 60 * 1000;
 
 /** Stable worker task key recorded in `background_jobs`. */
-export const ONLINE_TOPUP_EXPIRY_JOB_TYPE = 'online_topup_expiry_scan' as const
+export const ONLINE_TOPUP_EXPIRY_JOB_TYPE = 'online_topup_expiry_scan' as const;
 
 /** Outcome of one expiry scan. */
 export interface OnlineTopUpExpiryResult {
   /** Candidate rows fetched this tick (before per-row lock/re-check). */
-  scanned: number
+  scanned: number;
   /** Online top-ups successfully moved to Rejected. */
-  rejected: number
+  rejected: number;
   /**
    * Candidates skipped because a concurrent worker held the row, the
    * intent was no longer eligible after lock, or the lock returned nothing.
    */
-  skipped: number
+  skipped: number;
   /** True when the candidate query hit the batch cap. */
-  truncated: boolean
+  truncated: boolean;
   /** Per-row (or actor-resolution) failure messages. */
-  errors: string[]
+  errors: string[];
 }
 
 /** Behavioural override hooks for tests. */
 export interface OnlineTopUpExpiryOptions {
-  pool?: Pool
-  now?: () => Date
-  logger?: { warn: (msg: string) => void; info: (msg: string) => void }
-  batchSize?: number
-  ttlMs?: number
+  pool?: Pool;
+  now?: () => Date;
+  logger?: { warn: (msg: string) => void; info: (msg: string) => void };
+  batchSize?: number;
+  ttlMs?: number;
   /**
    * Audit actor. When set, the users lookup is skipped (unit tests).
    * Production leaves this unset so the worker resolves a real user.
    */
-  actorUserId?: string
+  actorUserId?: string;
   /** Correlation id shared by every expiry in this tick. */
-  correlationId?: string
+  correlationId?: string;
   /** Audit row id factory (uuid v4 by default). */
-  newId?: () => string
+  newId?: () => string;
 }
 
 const defaultLogger = {
   warn: (msg: string): void => {
-    // eslint-disable-next-line no-console
-    console.warn(`[worker] ${msg}`)
+    console.warn(`[worker] ${msg}`);
   },
   info: (msg: string): void => {
-    // eslint-disable-next-line no-console
-    console.log(`[worker] ${msg}`)
+    console.log(`[worker] ${msg}`);
   },
-}
+};
 
 /**
  * Candidate selector. `wallet_transactions.state`/`type` are TEXT with
@@ -113,12 +114,12 @@ export const FIND_EXPIRED_ONLINE_TOPUP_CANDIDATES_SQL = `SELECT id, wallet_id, t
           AND metadata->>'channel' = $1
           AND created_at < $2
         ORDER BY created_at ASC, id ASC
-        LIMIT $3`
+        LIMIT $3`;
 
-const LOCK_TOPUP_SQL = `SELECT id, wallet_id, type, state, created_at, metadata
+const LOCK_TOPUP_SQL = `SELECT id, wallet_id, type, state, amount::text, created_at, metadata
         FROM wallet_transactions
         WHERE id = $1
-        FOR UPDATE SKIP LOCKED`
+        FOR UPDATE SKIP LOCKED`;
 
 /**
  * Compare-and-set reject. Channel is bound again so a locked row that
@@ -130,25 +131,26 @@ export const REJECT_EXPIRED_ONLINE_TOPUP_SQL = `UPDATE wallet_transactions
         WHERE id = $1
           AND type = 'topup'
           AND state = 'Pending'
-          AND metadata->>'channel' = $3`
+          AND metadata->>'channel' = $3`;
 
 const INSERT_AUDIT_SQL = `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`;
 
-const LOOKUP_USER_SQL = `SELECT user_id FROM users WHERE user_id = $1 LIMIT 1`
+const LOOKUP_USER_SQL = `SELECT user_id FROM users WHERE user_id = $1 LIMIT 1`;
 
 const LOOKUP_ADMIN_SQL = `SELECT user_id FROM users
         WHERE is_admin = TRUE
         ORDER BY created_at ASC
-        LIMIT 1`
+        LIMIT 1`;
 
 interface CandidateRow {
-  id: string
-  wallet_id: string
-  type: string
-  state: string
-  created_at: Date | string
-  metadata: unknown
+  id: string;
+  wallet_id: string;
+  type: string;
+  state: string;
+  created_at: Date | string;
+  metadata: unknown;
+  amount?: string;
 }
 
 /**
@@ -159,34 +161,35 @@ interface CandidateRow {
  */
 export async function resolveOnlineTopUpExpiryActor(
   pool: Pool,
-  explicit?: string,
+  explicit?: string
 ): Promise<string | null> {
   if (typeof explicit === 'string' && explicit.trim() !== '') {
-    return explicit
+    return explicit;
   }
-  const envId = process.env['WORKER_SYSTEM_ACTOR_USER_ID']
+  const envId = process.env['WORKER_SYSTEM_ACTOR_USER_ID'];
   if (typeof envId === 'string' && envId.trim() !== '') {
-    const found = await pool.query<{ user_id: string }>(LOOKUP_USER_SQL, [envId.trim()])
-    if (found.rows[0]) return found.rows[0].user_id
+    const found = await pool.query<{ user_id: string }>(LOOKUP_USER_SQL, [envId.trim()]);
+    if (found.rows[0]) return found.rows[0].user_id;
   }
-  const admin = await pool.query<{ user_id: string }>(LOOKUP_ADMIN_SQL)
-  return admin.rows[0]?.user_id ?? null
+  const admin = await pool.query<{ user_id: string }>(LOOKUP_ADMIN_SQL);
+  return admin.rows[0]?.user_id ?? null;
 }
 
 /**
  * Run one online top-up TTL expiry pass.
  */
 export async function expireStaleOnlineTopUps(
-  options: OnlineTopUpExpiryOptions = {},
+  options: OnlineTopUpExpiryOptions = {}
 ): Promise<OnlineTopUpExpiryResult> {
-  const pool = options.pool ?? getDbPool()
-  const now = options.now?.() ?? new Date()
-  const logger = options.logger ?? defaultLogger
-  const batchSize = options.batchSize ?? DEFAULT_ONLINE_TOPUP_EXPIRY_BATCH_SIZE
-  const ttlMs = options.ttlMs ?? parseOnlineTopUpPendingTtlMs(process.env['ONLINE_TOPUP_PENDING_TTL_MS'])
-  const cutoff = onlineTopUpExpiryCutoff(now, ttlMs)
-  const newId = options.newId ?? randomUUID
-  const correlationId = options.correlationId ?? newId()
+  const pool = options.pool ?? getDbPool();
+  const now = options.now?.() ?? new Date();
+  const logger = options.logger ?? defaultLogger;
+  const batchSize = options.batchSize ?? DEFAULT_ONLINE_TOPUP_EXPIRY_BATCH_SIZE;
+  const ttlMs =
+    options.ttlMs ?? parseOnlineTopUpPendingTtlMs(process.env['ONLINE_TOPUP_PENDING_TTL_MS']);
+  const cutoff = onlineTopUpExpiryCutoff(now, ttlMs);
+  const newId = options.newId ?? randomUUID;
+  const correlationId = options.correlationId ?? newId();
 
   const result: OnlineTopUpExpiryResult = {
     scanned: 0,
@@ -194,73 +197,79 @@ export async function expireStaleOnlineTopUps(
     skipped: 0,
     truncated: false,
     errors: [],
-  }
+  };
 
-  const actorUserId = await resolveOnlineTopUpExpiryActor(pool, options.actorUserId)
+  const actorUserId = await resolveOnlineTopUpExpiryActor(pool, options.actorUserId);
   if (actorUserId === null) {
     const message =
-      'online top-up expiry aborted: no system actor (set WORKER_SYSTEM_ACTOR_USER_ID or create a platform admin)'
-    result.errors.push(message)
-    logger.warn(message)
-    return result
+      'online top-up expiry aborted: no system actor (set WORKER_SYSTEM_ACTOR_USER_ID or create a platform admin)';
+    result.errors.push(message);
+    logger.warn(message);
+    return result;
   }
 
   const candidates = await pool.query<CandidateRow>(FIND_EXPIRED_ONLINE_TOPUP_CANDIDATES_SQL, [
     ONLINE_TOPUP_CHANNEL,
     cutoff,
     batchSize,
-  ])
-  result.scanned = candidates.rows.length
+  ]);
+  result.scanned = candidates.rows.length;
   if (candidates.rows.length >= batchSize) {
-    result.truncated = true
+    result.truncated = true;
   }
 
   for (const candidate of candidates.rows) {
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
       const rejected = await rejectOneExpired(client, {
         transactionId: candidate.id,
+        walletId: candidate.wallet_id,
         actorUserId,
         now,
         ttlMs,
         correlationId,
         newId,
-      })
+      });
       if (rejected) {
-        await client.query('COMMIT')
-        result.rejected += 1
+        await client.query('COMMIT');
+        result.rejected += 1;
       } else {
-        await client.query('ROLLBACK')
-        result.skipped += 1
+        await client.query('ROLLBACK');
+        result.skipped += 1;
       }
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      const message = `${candidate.id}: ${(error as Error)?.message ?? String(error)}`
-      result.errors.push(message)
-      logger.warn(`Online top-up expiry failed: ${message}`)
+      await client.query('ROLLBACK').catch(() => {});
+      const message = `${candidate.id}: ${(error as Error)?.message ?? String(error)}`;
+      result.errors.push(message);
+      logger.warn(`Online top-up expiry failed: ${message}`);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
-  return result
+  return result;
 }
 
 async function rejectOneExpired(
   client: PoolClient,
   input: {
-    transactionId: string
-    actorUserId: string
-    now: Date
-    ttlMs: number
-    correlationId: string
-    newId: () => string
-  },
+    transactionId: string;
+    walletId: string;
+    actorUserId: string;
+    now: Date;
+    ttlMs: number;
+    correlationId: string;
+    newId: () => string;
+  }
 ): Promise<boolean> {
-  const locked = await client.query<CandidateRow>(LOCK_TOPUP_SQL, [input.transactionId])
-  const row = locked.rows[0]
-  if (!row) return false
+  // Match the profile-first finance lock order and bind the notice to its owner.
+  const profile = (
+    await client.query('SELECT user_id FROM profiles WHERE id=$1 FOR SHARE', [input.walletId])
+  ).rows[0];
+  const locked = await client.query<CandidateRow>(LOCK_TOPUP_SQL, [input.transactionId]);
+  const row = locked.rows[0];
+  if (!row) return false;
   if (
     !isEligibleForOnlineTopUpExpiry(
       {
@@ -270,11 +279,16 @@ async function rejectOneExpired(
         createdAt: row.created_at,
       },
       input.now,
-      input.ttlMs,
+      input.ttlMs
     )
   ) {
-    return false
+    return false;
   }
+  if (row.wallet_id !== input.walletId || !profile?.user_id)
+    throw new Error('Expired top-up customer unavailable');
+  const user = (await client.query('SELECT locale FROM users WHERE user_id=$1', [profile.user_id]))
+    .rows[0];
+  if (!user || !row.amount) throw new Error('Expired top-up notice data unavailable');
 
   const updated = await client.query(REJECT_EXPIRED_ONLINE_TOPUP_SQL, [
     row.id,
@@ -286,8 +300,8 @@ async function rejectOneExpired(
       },
     }),
     ONLINE_TOPUP_CHANNEL,
-  ])
-  if ((updated.rowCount ?? 0) !== 1) return false
+  ]);
+  if ((updated.rowCount ?? 0) !== 1) return false;
 
   const metadata = JSON.stringify({
     transactionId: row.id,
@@ -297,7 +311,7 @@ async function rejectOneExpired(
     transition: ONLINE_TOPUP_EXPIRY_TRANSITION,
     reason: ONLINE_TOPUP_EXPIRY_REASON,
     ttlMs: input.ttlMs,
-  })
+  });
 
   await client.query(INSERT_AUDIT_SQL, [
     input.newId(),
@@ -307,7 +321,24 @@ async function rejectOneExpired(
     input.correlationId,
     null,
     input.now,
-  ])
+  ]);
 
-  return true
+  await enqueueOutbox(client, {
+    correlationId: input.correlationId,
+    profileId: row.wallet_id,
+    userId: profile.user_id,
+    eventKey: 'payment.wallet_topup_failed',
+    idempotencyKey: `payment.wallet_topup_failed:expiry:${row.id}`,
+    channels: ['in_app', 'email'],
+    payload: {
+      ...buildBankReceiptTopUpFailedNotificationPayload({
+        amount: row.amount,
+        pendingTransactionId: row.id,
+        reason: onlineTopUpExpiryNoticeReason(user.locale),
+      }),
+      expired_at: input.now.toISOString(),
+    },
+  });
+
+  return true;
 }

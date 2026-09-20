@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
-import { useRouter } from '@tanstack/react-router'
-import { t } from '@barghsa/i18n'
-import { useLocale } from '../hooks/useLocale.js'
+import { refreshProfileContext } from '../lib/profile-context.js';
+import { withCsrf } from '../lib/csrf.js';
+import { useEffect, useState } from 'react';
+import { t } from '@barghsa/i18n/app';
+import { useLocale } from '../hooks/useLocale.js';
 import {
   Dialog,
   DialogContent,
@@ -9,24 +10,24 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@barghsa/ui'
-import { Button } from '@barghsa/ui'
-import { RadioGroup, RadioGroupItem } from '@barghsa/ui'
-import { Label } from '@barghsa/ui'
+} from '@barghsa/ui';
+import { Button } from '@barghsa/ui';
+import { RadioGroup, RadioGroupItem } from '@barghsa/ui';
+import { Label } from '@barghsa/ui';
 
 /** Profile shape returned by GET /api/profiles (T-03.01.01). */
 interface ProfileBrief {
-  id: string
-  profileType: 'INDIVIDUAL' | 'LEGAL'
-  title: string | null
-  firstName: string | null
-  lastName: string | null
+  id: string;
+  profileType: 'INDIVIDUAL' | 'LEGAL';
+  title: string | null;
+  firstName: string | null;
+  lastName: string | null;
 }
 
 interface ProfilesResponse {
-  profiles: ProfileBrief[]
-  hasDefault: boolean
-  activeProfileId: string | null
+  profiles: ProfileBrief[];
+  hasDefault: boolean;
+  activeProfileId: string | null;
 }
 
 /**
@@ -41,24 +42,22 @@ interface ProfilesResponse {
  * - Fetches the profile list from `GET /api/profiles`.
  * - If `hasDefault === false && profiles.length > 1`, renders the modal.
  * - Radio-group list of profiles; user selects one and clicks "Set as default".
- * - Calls `POST /api/profiles/:id/set-default`, then invalidates the router so
- *   the app-level profile check (T-03.01.01) re-evaluates and proceeds.
+ * - Calls `POST /api/profiles/switch/:id`, then remounts profile-scoped state without reloading the document.
  * - Renders nothing when the user has a default, only one profile, or none.
  */
 export function DefaultProfileModal() {
-  const router = useRouter()
-  const [profiles, setProfiles] = useState<ProfileBrief[] | null>(null)
-  const [hasDefault, setHasDefault] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [setting, setSetting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [profiles, setProfiles] = useState<ProfileBrief[] | null>(null);
+  const [hasDefault, setHasDefault] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [setting, setSetting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const locale = useLocale()
-  const isRtl = locale === 'fa'
+  const locale = useLocale();
+  const isRtl = locale === 'fa';
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
 
     async function fetchProfiles() {
       try {
@@ -66,98 +65,96 @@ export function DefaultProfileModal() {
           method: 'GET',
           credentials: 'include',
           headers: { Accept: 'application/json' },
-        })
+        });
 
         // Not authenticated — no modal
         if (response.status === 401) {
-          if (!cancelled) setLoading(false)
-          return
+          if (!cancelled) setLoading(false);
+          return;
         }
 
         if (!response.ok) {
-          if (!cancelled) setLoading(false)
-          return
+          if (!cancelled) setLoading(false);
+          return;
         }
 
-        const data: ProfilesResponse = await response.json()
+        const data: ProfilesResponse = await response.json();
         if (!cancelled) {
-          setProfiles(data.profiles)
-          setHasDefault(data.hasDefault)
-          setLoading(false)
+          setProfiles(data.profiles);
+          setHasDefault(data.hasDefault);
+          setLoading(false);
         }
       } catch {
-        if (!cancelled) setLoading(false)
+        if (!cancelled) setLoading(false);
       }
     }
 
-    fetchProfiles()
+    fetchProfiles();
 
     return () => {
-      cancelled = true
-    }
-  }, [])
+      cancelled = true;
+    };
+  }, []);
 
   // Don't render anything while loading or if we have no data.
-  if (loading || !profiles) return null
+  if (loading || !profiles) return null;
 
   // Only show the modal when the user has multiple profiles and no default.
-  if (hasDefault || profiles.length <= 1) return null
+  if (hasDefault || profiles.length <= 1) return null;
 
   async function handleSetDefault() {
-    if (!selectedId || setting) return
-    setSetting(true)
-    setError(null)
+    if (!resolvedSelected || setting) return;
+    setSetting(true);
+    setError(null);
 
     try {
-      const response = await fetch(`/api/profiles/${selectedId}/set-default`, {
+      const response = await fetch(`/api/profiles/switch/${resolvedSelected}`, {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-      })
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+      });
 
       if (response.ok) {
-        // Update local state so the modal hides immediately, then
-        // invalidate the router so the app-level profile check
-        // (T-03.01.01) re-evaluates and proceeds to the dashboard.
-        setHasDefault(true)
-        setSetting(false)
-        router.invalidate()
+        const result: { activeProfileId: string | null } = await response.json();
+        if (result.activeProfileId !== resolvedSelected) {
+          setSetting(false);
+          setError(t('dashboard.profile.switchError', locale));
+          return;
+        }
+        refreshProfileContext();
       } else {
-        setSetting(false)
-        setError(t('dashboard.profile.switchError', locale))
+        setSetting(false);
+        setError(t('dashboard.profile.switchError', locale));
       }
     } catch {
-      setSetting(false)
-      setError(t('dashboard.profile.switchError', locale))
+      setSetting(false);
+      setError(t('dashboard.profile.switchError', locale));
     }
   }
 
   function formatProfileName(profile: ProfileBrief): string {
-    const parts = [profile.title, profile.firstName, profile.lastName].filter(Boolean)
-    const name = parts.length > 0 ? parts.join(' ') : t('dashboard.profile.unnamed', locale)
+    const parts = [profile.title, profile.firstName, profile.lastName].filter(Boolean);
+    const name = parts.length > 0 ? parts.join(' ') : t('dashboard.profile.unnamed', locale);
     const type =
       profile.profileType === 'LEGAL'
         ? t('dashboard.profile.typeLegal', locale)
-        : t('dashboard.profile.typeIndividual', locale)
-    return `${name} (${type})`
+        : t('dashboard.profile.typeIndividual', locale);
+    return `${name} (${type})`;
   }
 
   // Auto-select the first profile so there's always a valid selection.
-  const resolvedSelected = selectedId ?? profiles[0]?.id ?? null
+  const resolvedSelected = selectedId ?? profiles[0]?.id ?? null;
 
   return (
-    <Dialog open={true} onOpenChange={() => {
-      // Intentionally no-op: the modal is forced and non-dismissible.
-    }}>
-      <DialogContent
-        className="sm:max-w-md"
-        showCloseButton={false}
-        dir={isRtl ? 'rtl' : 'ltr'}
-      >
+    <Dialog
+      open={true}
+      onOpenChange={() => {
+        // Intentionally no-op: the modal is forced and non-dismissible.
+      }}
+    >
+      <DialogContent className="sm:max-w-md" showCloseButton={false} dir={isRtl ? 'rtl' : 'ltr'}>
         <DialogHeader>
-          <DialogTitle>
-            {t('dashboard.profile.default.title', locale)}
-          </DialogTitle>
+          <DialogTitle>{t('dashboard.profile.default.title', locale)}</DialogTitle>
           <DialogDescription>
             {t('dashboard.profile.default.description', locale)}
           </DialogDescription>
@@ -172,7 +169,7 @@ export function DefaultProfileModal() {
             {profiles.map((profile) => (
               <div
                 key={profile.id}
-                className="flex items-center gap-3 rounded-lg border border-gray-200 p-3 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+                className="flex items-center gap-3 rounded-lg border border-border p-3 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
               >
                 <RadioGroupItem value={profile.id} id={`profile-${profile.id}`} />
                 <Label
@@ -187,16 +184,13 @@ export function DefaultProfileModal() {
         </div>
 
         {error && (
-          <p className="text-xs text-red-600" role="alert">
+          <p className="text-xs text-destructive" role="alert">
             {error}
           </p>
         )}
 
         <DialogFooter>
-          <Button
-            onClick={handleSetDefault}
-            disabled={!resolvedSelected || setting}
-          >
+          <Button onClick={handleSetDefault} disabled={!resolvedSelected || setting}>
             {setting
               ? t('dashboard.profile.default.setting', locale)
               : t('dashboard.profile.default.setAsDefault', locale)}
@@ -204,5 +198,5 @@ export function DefaultProfileModal() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

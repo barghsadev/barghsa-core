@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -11,44 +14,42 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { VerificationCaseService } from './verification-case.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { VerificationCaseService } from './verification-case.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 // ── DTOs ──────────────────────────────────────────────────────────────
 
 export interface CreateVerificationCaseDto {
   /** The identity field being corrected (e.g. 'first_name', 'last_name', 'national_id', 'legal_name'). */
-  fieldName: string
+  fieldName: string;
   /** The current value of the field (may be null if not set). */
-  currentValue: string | null
+  currentValue: string | null;
   /** The requested new value. */
-  requestedValue: string
+  requestedValue: string;
   /** Optional array of S3 keys / URLs for uploaded evidence documents. */
-  evidenceUrls?: string[]
+  evidenceUrls?: string[];
   /** Reason/description for the correction request. */
-  reason: string
+  reason: string;
 }
 
 export interface ReviewVerificationCaseDto {
   /** Decision: 'Under Review' | 'Approved' | 'Rejected'. */
-  decision: 'Under Review' | 'Approved' | 'Rejected'
+  decision: 'Under Review' | 'Approved' | 'Rejected';
   /** Reviewer notes (required for Rejected). */
-  reviewerNotes?: string
+  reviewerNotes?: string;
 }
 
 @ApiTags('CRM Verification Cases')
 @Controller('api/crm')
-@UseGuards(SessionAuthGuard)
+@UseGuards(SessionAuthGuard, StepUpGuard)
 export class VerificationCaseController {
-  private readonly logger = new Logger(VerificationCaseController.name)
+  private readonly logger = new Logger(VerificationCaseController.name);
 
-  constructor(
-    private readonly verificationCaseService: VerificationCaseService,
-  ) {}
+  constructor(private readonly verificationCaseService: VerificationCaseService) {}
 
   /**
    * POST /api/crm/profiles/:profileId/verification-cases
@@ -62,6 +63,7 @@ export class VerificationCaseController {
    * Audit: verification_case_created with case details.
    */
   @Post('profiles/:profileId/verification-cases')
+  @RequiresStepUp()
   @HttpCode(201)
   @ApiOperation({ summary: 'Create a verification case for identity field correction' })
   @ApiParam({
@@ -75,10 +77,18 @@ export class VerificationCaseController {
       type: 'object',
       required: ['fieldName', 'requestedValue', 'reason'],
       properties: {
-        fieldName: { type: 'string', description: 'Identity field to correct (e.g. first_name, last_name, national_id, legal_name)' },
+        fieldName: {
+          type: 'string',
+          description:
+            'Identity field to correct (e.g. first_name, last_name, national_id, legal_name)',
+        },
         currentValue: { type: 'string', nullable: true, description: 'Current value of the field' },
         requestedValue: { type: 'string', description: 'New requested value' },
-        evidenceUrls: { type: 'array', items: { type: 'string' }, description: 'Evidence document URLs' },
+        evidenceUrls: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Evidence document URLs',
+        },
         reason: { type: 'string', description: 'Reason for the correction' },
       },
     },
@@ -91,39 +101,81 @@ export class VerificationCaseController {
   async createCase(
     @Param('profileId') profileId: string,
     @Body() dto: CreateVerificationCaseDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'crm:edit-identity');
     if (!isAdmin) {
       throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Staff or admin role required' },
-        403,
-      )
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Staff or admin role required',
+        },
+        403
+      );
     }
+
+    const parsed = z
+      .object({
+        fieldName: z.enum([
+          'first_name',
+          'last_name',
+          'national_id',
+          'legal_name',
+          'national_identifier',
+        ]),
+        currentValue: z.string().nullable().optional(),
+        requestedValue: z.string().trim().min(1).max(512),
+        evidenceUrls: z.array(z.string().max(2048)).min(1).max(5),
+        reason: z.string().trim().min(1).max(1000),
+      })
+      .strict()
+      .safeParse(dto);
+    if (!parsed.success)
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Invalid correction request',
+        },
+        400
+      );
 
     const result = await this.verificationCaseService.createCase(
       profileId,
-      dto,
-      req.session.userId,
-      req.ip ?? 'unknown',
-    )
+      {
+        fieldName: parsed.data.fieldName,
+        currentValue: parsed.data.currentValue ?? null,
+        requestedValue: parsed.data.requestedValue,
+        reason: parsed.data.reason,
+        ...(parsed.data.evidenceUrls ? { evidenceUrls: parsed.data.evidenceUrls } : {}),
+      },
+      req.session,
+      req.ip ?? 'unknown'
+    );
 
     if (!result) {
       throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
-        404,
-      )
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Profile not found',
+        },
+        404
+      );
     }
 
     if ('error' in result) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: result.error },
-        400,
-      )
+        400
+      );
     }
 
-    this.logger.debug(`Verification case created: id=${result.id}, profileId=${profileId}, actor=${req.session.userId}`)
-    return result
+    this.logger.debug(
+      `Verification case created: id=${result.id}, profileId=${profileId}, actor=${req.session.userId}`
+    );
+    return result;
   }
 
   /**
@@ -140,8 +192,18 @@ export class VerificationCaseController {
   @ApiQuery({ name: 'status', required: false, description: 'Filter by case status', type: String })
   @ApiQuery({ name: 'profileId', required: false, description: 'Filter by profile', type: String })
   @ApiQuery({ name: 'createdBy', required: false, description: 'Filter by creator', type: String })
-  @ApiQuery({ name: 'limit', required: false, description: 'Max results (default 20)', type: Number })
-  @ApiQuery({ name: 'offset', required: false, description: 'Pagination offset (default 0)', type: Number })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Max results (default 20)',
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'offset',
+    required: false,
+    description: 'Pagination offset (default 0)',
+    type: Number,
+  })
   @ApiResponse({ status: 200, description: 'List of verification cases' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Staff or admin role required' })
@@ -151,14 +213,18 @@ export class VerificationCaseController {
     @Query('profileId') profileId?: string,
     @Query('createdBy') createdBy?: string,
     @Query('limit') limit?: string,
-    @Query('offset') offset?: string,
+    @Query('offset') offset?: string
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'verification:read');
     if (!isAdmin) {
       throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Staff or admin role required' },
-        403,
-      )
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Staff or admin role required',
+        },
+        403
+      );
     }
 
     const result = await this.verificationCaseService.listCases({
@@ -167,9 +233,16 @@ export class VerificationCaseController {
       createdBy: createdBy && createdBy.length > 0 ? createdBy : undefined,
       limit: Math.min(Math.max(parseInt(limit ?? '20', 10) || 20, 1), 100),
       offset: Math.max(parseInt(offset ?? '0', 10) || 0, 0),
-    })
+    });
 
-    return result
+    return {
+      ...result,
+      viewer: {
+        userId: req.session.userId,
+        canCreate: hasStaffPermission(req, 'crm:edit-identity'),
+        canReview: hasStaffPermission(req, 'crm:verify'),
+      },
+    };
   }
 
   /**
@@ -184,8 +257,18 @@ export class VerificationCaseController {
   @ApiOperation({ summary: 'List verification cases for a profile' })
   @ApiParam({ name: 'profileId', required: true, description: 'UUID of the profile', type: String })
   @ApiQuery({ name: 'status', required: false, description: 'Filter by case status', type: String })
-  @ApiQuery({ name: 'limit', required: false, description: 'Max results (default 20)', type: Number })
-  @ApiQuery({ name: 'offset', required: false, description: 'Pagination offset (default 0)', type: Number })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Max results (default 20)',
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'offset',
+    required: false,
+    description: 'Pagination offset (default 0)',
+    type: Number,
+  })
   @ApiResponse({ status: 200, description: 'List of verification cases for the profile' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Staff or admin role required' })
@@ -194,14 +277,18 @@ export class VerificationCaseController {
     @Req() req: AuthenticatedRequest,
     @Query('status') status?: string,
     @Query('limit') limit?: string,
-    @Query('offset') offset?: string,
+    @Query('offset') offset?: string
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'verification:read');
     if (!isAdmin) {
       throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Staff or admin role required' },
-        403,
-      )
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Staff or admin role required',
+        },
+        403
+      );
     }
 
     const result = await this.verificationCaseService.listCases({
@@ -209,9 +296,16 @@ export class VerificationCaseController {
       status: status && status.length > 0 ? status : undefined,
       limit: Math.min(Math.max(parseInt(limit ?? '20', 10) || 20, 1), 100),
       offset: Math.max(parseInt(offset ?? '0', 10) || 0, 0),
-    })
+    });
 
-    return result
+    return {
+      ...result,
+      viewer: {
+        userId: req.session.userId,
+        canCreate: hasStaffPermission(req, 'crm:edit-identity'),
+        canReview: hasStaffPermission(req, 'crm:verify'),
+      },
+    };
   }
 
   /**
@@ -224,40 +318,50 @@ export class VerificationCaseController {
   @Get('verification-cases/:caseId')
   @HttpCode(200)
   @ApiOperation({ summary: 'Get verification case detail' })
-  @ApiParam({ name: 'caseId', required: true, description: 'UUID of the verification case', type: String })
+  @ApiParam({
+    name: 'caseId',
+    required: true,
+    description: 'UUID of the verification case',
+    type: String,
+  })
   @ApiResponse({ status: 200, description: 'Verification case detail' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Staff or admin role required' })
   @ApiResponse({ status: 404, description: 'Case not found' })
-  async getCase(
-    @Param('caseId') caseId: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const isAdmin = req.session.isAdmin ?? false
+  async getCase(@Param('caseId') caseId: string, @Req() req: AuthenticatedRequest) {
+    const isAdmin = hasStaffPermission(req, 'verification:read');
     if (!isAdmin) {
       throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Staff or admin role required' },
-        403,
-      )
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Staff or admin role required',
+        },
+        403
+      );
     }
 
-    const result = await this.verificationCaseService.getCase(caseId)
+    const result = await this.verificationCaseService.getCase(caseId);
 
     if (!result) {
       throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Verification case not found' },
-        404,
-      )
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Verification case not found',
+        },
+        404
+      );
     }
 
     if ('error' in result) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: result.error },
-        400,
-      )
+        400
+      );
     }
 
-    return result
+    return result;
   }
 
   /**
@@ -271,9 +375,15 @@ export class VerificationCaseController {
    * Audit: verification_case_reviewed with decision, notes, before/after values.
    */
   @Put('verification-cases/:caseId/status')
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Review a verification case (approve/reject/under-review)' })
-  @ApiParam({ name: 'caseId', required: true, description: 'UUID of the verification case', type: String })
+  @ApiParam({
+    name: 'caseId',
+    required: true,
+    description: 'UUID of the verification case',
+    type: String,
+  })
   @ApiBody({
     schema: {
       type: 'object',
@@ -300,47 +410,80 @@ export class VerificationCaseController {
   async reviewCase(
     @Param('caseId') caseId: string,
     @Body() dto: ReviewVerificationCaseDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'crm:verify');
     if (!isAdmin) {
       throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Staff or admin role required' },
-        403,
-      )
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Staff or admin role required',
+        },
+        403
+      );
     }
+
+    const parsed = z
+      .object({
+        decision: z.enum(['Under Review', 'Approved', 'Rejected']),
+        reviewerNotes: z.string().trim().max(1000).optional(),
+      })
+      .strict()
+      .safeParse(dto);
+    if (!parsed.success)
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Invalid correction decision',
+        },
+        400
+      );
 
     const result = await this.verificationCaseService.reviewCase(
       caseId,
-      dto,
-      req.session.userId,
-      req.ip ?? 'unknown',
-    )
+      {
+        decision: parsed.data.decision,
+        ...(parsed.data.reviewerNotes !== undefined
+          ? { reviewerNotes: parsed.data.reviewerNotes }
+          : {}),
+      },
+      req.session,
+      req.ip ?? 'unknown'
+    );
 
     if (!result) {
       throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Verification case not found' },
-        404,
-      )
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Verification case not found',
+        },
+        404
+      );
     }
 
     if ('error' in result) {
       // Use 409 for invalid state transitions, 400 for validation
-      const httpStatus = result.error.toLowerCase().includes('transition') ? 409 : 400
+      const httpStatus = result.error.toLowerCase().includes('transition') ? 409 : 400;
       throw new HttpException(
         {
           statusCode: httpStatus,
-          error: httpStatus === 409 ? ErrorCodes.CONFLICT_STATE.code : ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          error:
+            httpStatus === 409
+              ? ErrorCodes.CONFLICT_STATE.code
+              : ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: result.error,
         },
-        httpStatus,
-      )
+        httpStatus
+      );
     }
 
     this.logger.debug(
-      `Verification case ${caseId} reviewed: → ${dto.decision}, reviewer=${req.session.userId}`,
-    )
+      `Verification case ${caseId} reviewed: → ${dto.decision}, reviewer=${req.session.userId}`
+    );
 
-    return result
+    return result;
   }
 }

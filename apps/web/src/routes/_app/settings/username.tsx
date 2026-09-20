@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
-import { toast } from 'sonner'
-import { t, type Locale } from '@barghsa/i18n'
+import { useState, useEffect, useCallback } from 'react';
+import { createFileRoute } from '@tanstack/react-router';
+import { toast } from 'sonner';
+import { t } from '@barghsa/i18n/app';
 import {
   UserIcon,
   MailIcon,
@@ -13,22 +13,24 @@ import {
   SendIcon,
   CheckIcon,
   XIcon,
-} from 'lucide-react'
-import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui'
-import { withCsrf } from '../../../lib/csrf.js'
-import { useLocale } from '../../../hooks/useLocale.js'
+} from 'lucide-react';
+import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
+import { withCsrf } from '../../../lib/csrf.js';
+import { useLocale } from '../../../hooks/useLocale.js';
 
 export const Route = createFileRoute('/_app/settings/username')({
   component: SettingsUsernamePage,
-})
+});
 
 // ─── Types ────────────────────────────────────────────────────────────
 
 interface UserInfo {
-  userId: string
-  username: string
-  email: string | null
-  mobile: string | null
+  userId: string;
+  username: string;
+  email: string | null;
+  mobile: string | null;
+  emailVerified: boolean;
+  mobileVerified: boolean;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────
@@ -38,118 +40,115 @@ interface UserInfo {
  */
 function maskUsername(username: string): string {
   if (username.length <= 8) {
-    return username.slice(0, 3) + '***' + username.slice(-3)
+    return username.slice(0, 3) + '***' + username.slice(-3);
   }
-  return username.slice(0, 3) + '...' + username.slice(-3)
-}
-
-/**
- * Determine if a username is an email.
- */
-function isEmail(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+  return username.slice(0, 3) + '...' + username.slice(-3);
 }
 
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsUsernamePage() {
-  const locale = useLocale()
+  const locale = useLocale();
 
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Change username state
-  const [showChangeUsername, setShowChangeUsername] = useState(false)
-  const [newUsername, setNewUsername] = useState('')
-  const [changeOtpSent, setChangeOtpSent] = useState(false)
-  const [changeChallengeId, setChangeChallengeId] = useState('')
-  const [changeOtp, setChangeOtp] = useState('')
-  const [sendingChangeOtp, setSendingChangeOtp] = useState(false)
-  const [verifyingChange, setVerifyingChange] = useState(false)
+  const [showChangeUsername, setShowChangeUsername] = useState(false);
+  const [newUsername, setNewUsername] = useState('');
+  const [changeOtpSent, setChangeOtpSent] = useState(false);
+  const [changeChallengeId, setChangeChallengeId] = useState('');
+  const [changeOtp, setChangeOtp] = useState('');
+  const [previousOtp, setPreviousOtp] = useState('');
+  const [previousDestination, setPreviousDestination] = useState('');
+  const [sendingChangeOtp, setSendingChangeOtp] = useState(false);
+  const [verifyingChange, setVerifyingChange] = useState(false);
 
   // Add contact state
-  const [showAddContact, setShowAddContact] = useState<'email' | 'mobile' | null>(null)
-  const [newContactValue, setNewContactValue] = useState('')
-  const [contactOtpSent, setContactOtpSent] = useState(false)
-  const [contactChallengeId, setContactChallengeId] = useState('')
-  const [contactOtp, setContactOtp] = useState('')
-  const [sendingContactOtp, setSendingContactOtp] = useState(false)
-  const [verifyingContact, setVerifyingContact] = useState(false)
+  const [showAddContact, setShowAddContact] = useState<'email' | 'mobile' | null>(null);
+  const [newContactValue, setNewContactValue] = useState('');
+  const [contactOtpSent, setContactOtpSent] = useState(false);
+  const [contactChallengeId, setContactChallengeId] = useState('');
+  const [contactOtp, setContactOtp] = useState('');
+  const [sendingContactOtp, setSendingContactOtp] = useState(false);
+  const [verifyingContact, setVerifyingContact] = useState(false);
 
   // ── Fetch user info ──────────────────────────────────────────────────
 
   const fetchUserInfo = useCallback(async () => {
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
 
     try {
-      const response = await fetch('/api/auth/user')
+      const response = await fetch('/api/auth/user');
       if (!response.ok) {
-        setError(t('settings.profile.error.load', locale))
-        return
+        setError(t('settings.profile.error.load', locale));
+        return;
       }
 
-      const data: UserInfo = await response.json()
-      setUserInfo(data)
+      const data: UserInfo = await response.json();
+      setUserInfo(data);
     } catch {
-      setError(t('settings.profile.error.loadRetry', locale))
+      setError(t('settings.profile.error.loadRetry', locale));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [locale])
+  }, [locale]);
 
   useEffect(() => {
-    fetchUserInfo()
-  }, [fetchUserInfo])
+    fetchUserInfo();
+  }, [fetchUserInfo]);
 
   // ── Change username OTP send ─────────────────────────────────────────
 
   const handleSendChangeOtp = useCallback(async () => {
-    if (!newUsername.trim()) return
+    if (!newUsername.trim()) return;
 
-    setSendingChangeOtp(true)
+    setSendingChangeOtp(true);
 
     try {
       const response = await fetch('/api/auth/change-username/send-otp', {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ newUsername: newUsername.trim() }),
-      })
+      });
 
       if (!response.ok) {
-        const body = await response.json().catch(() => ({}))
-        const code = (body as { error?: string }).error
+        const body = await response.json().catch(() => ({}));
+        const code = (body as { error?: string }).error;
 
         if (code === 'AUTH:CHANGE_USERNAME:SAME') {
-          toast.error(t('settings.username.error.same', locale))
+          toast.error(t('settings.username.error.same', locale));
         } else if (code === 'AUTH:CHANGE_USERNAME:TAKEN') {
-          toast.error(t('settings.username.error.taken', locale))
+          toast.error(t('settings.username.error.taken', locale));
         } else if (code === 'AUTH:CHANGE_USERNAME:INVALID') {
-          toast.error(t('settings.username.error.invalid', locale))
+          toast.error(t('settings.username.error.invalid', locale));
         } else {
-          toast.error(t('settings.username.error.generic', locale))
+          toast.error(t('settings.username.error.generic', locale));
         }
-        return
+        return;
       }
 
-      const data = await response.json()
-      setChangeChallengeId(data.challengeId)
-      setChangeOtpSent(true)
-      toast.success(t('settings.username.otpSent', locale).replace('{destination}', newUsername.trim()))
+      const data = await response.json();
+      setChangeChallengeId(data.challengeId);
+      setNewUsername(data.destination);
+      setPreviousDestination(data.previousDestination);
+      setChangeOtpSent(true);
+      toast.success(t('settings.username.pairSent', locale));
     } catch {
-      toast.error(t('settings.username.error.generic', locale))
+      toast.error(t('settings.username.error.generic', locale));
     } finally {
-      setSendingChangeOtp(false)
+      setSendingChangeOtp(false);
     }
-  }, [newUsername, locale])
+  }, [newUsername, locale]);
 
   // ── Change username OTP verify ───────────────────────────────────────
 
   const handleVerifyChange = useCallback(async () => {
-    if (!changeOtp.trim() || changeOtp.length !== 6) return
+    if (!/^\d{6}$/.test(changeOtp) || !/^\d{6}$/.test(previousOtp)) return;
 
-    setVerifyingChange(true)
+    setVerifyingChange(true);
 
     try {
       const response = await fetch('/api/auth/change-username', {
@@ -159,45 +158,48 @@ function SettingsUsernamePage() {
           newUsername: newUsername.trim(),
           otpChallengeId: changeChallengeId,
           otp: changeOtp.trim(),
+          previousOtp,
         }),
-      })
+      });
 
       if (!response.ok) {
-        const body = await response.json().catch(() => ({}))
-        const code = (body as { error?: string }).error
+        const body = await response.json().catch(() => ({}));
+        const code = (body as { error?: string }).error;
 
         if (code === 'AUTH:CHANGE_USERNAME:TAKEN') {
-          toast.error(t('settings.username.error.taken', locale))
+          toast.error(t('settings.username.error.taken', locale));
         } else {
-          toast.error(t('settings.username.error.generic', locale))
+          toast.error(t('settings.username.error.generic', locale));
         }
-        return
+        return;
       }
 
-      toast.success(t('settings.username.success', locale))
+      toast.success(t('settings.username.success', locale));
 
       // Reset form
-      setShowChangeUsername(false)
-      setNewUsername('')
-      setChangeOtpSent(false)
-      setChangeChallengeId('')
-      setChangeOtp('')
+      setShowChangeUsername(false);
+      setNewUsername('');
+      setChangeOtpSent(false);
+      setChangeChallengeId('');
+      setChangeOtp('');
+      setPreviousOtp('');
+      setPreviousDestination('');
 
       // Refresh user info
-      fetchUserInfo()
+      fetchUserInfo();
     } catch {
-      toast.error(t('settings.username.error.generic', locale))
+      toast.error(t('settings.username.error.generic', locale));
     } finally {
-      setVerifyingChange(false)
+      setVerifyingChange(false);
     }
-  }, [newUsername, changeChallengeId, changeOtp, locale, fetchUserInfo])
+  }, [newUsername, changeChallengeId, changeOtp, previousOtp, locale, fetchUserInfo]);
 
   // ── Add contact OTP send ─────────────────────────────────────────────
 
   const handleSendContactOtp = useCallback(async () => {
-    if (!showAddContact || !newContactValue.trim()) return
+    if (!showAddContact || !newContactValue.trim()) return;
 
-    setSendingContactOtp(true)
+    setSendingContactOtp(true);
 
     try {
       const response = await fetch('/api/auth/add-contact/send-otp', {
@@ -207,39 +209,41 @@ function SettingsUsernamePage() {
           contactType: showAddContact,
           contactValue: newContactValue.trim(),
         }),
-      })
+      });
 
       if (!response.ok) {
-        const body = await response.json().catch(() => ({}))
-        const code = (body as { error?: string }).error
+        const body = await response.json().catch(() => ({}));
+        const code = (body as { error?: string }).error;
 
         if (code === 'AUTH:CHANGE_USERNAME:ALREADY_HAS_EMAIL') {
-          toast.error(t('settings.contact.error.alreadyHasEmail', locale))
+          toast.error(t('settings.contact.error.alreadyHasEmail', locale));
         } else if (code === 'AUTH:CHANGE_USERNAME:ALREADY_HAS_MOBILE') {
-          toast.error(t('settings.contact.error.alreadyHasMobile', locale))
+          toast.error(t('settings.contact.error.alreadyHasMobile', locale));
         } else {
-          toast.error(t('settings.contact.error.generic', locale))
+          toast.error(t('settings.contact.error.generic', locale));
         }
-        return
+        return;
       }
 
-      const data = await response.json()
-      setContactChallengeId(data.challengeId)
-      setContactOtpSent(true)
-      toast.success(t('settings.contact.otpSent', locale).replace('{destination}', newContactValue.trim()))
+      const data = await response.json();
+      setContactChallengeId(data.challengeId);
+      setContactOtpSent(true);
+      toast.success(
+        t('settings.contact.otpSent', locale).replace('{destination}', newContactValue.trim())
+      );
     } catch {
-      toast.error(t('settings.contact.error.generic', locale))
+      toast.error(t('settings.contact.error.generic', locale));
     } finally {
-      setSendingContactOtp(false)
+      setSendingContactOtp(false);
     }
-  }, [showAddContact, newContactValue, locale])
+  }, [showAddContact, newContactValue, locale]);
 
   // ── Add contact OTP verify ───────────────────────────────────────────
 
   const handleVerifyContact = useCallback(async () => {
-    if (!showAddContact || !contactOtp.trim() || contactOtp.length !== 6) return
+    if (!showAddContact || !contactOtp.trim() || contactOtp.length !== 6) return;
 
-    setVerifyingContact(true)
+    setVerifyingContact(true);
 
     try {
       const response = await fetch('/api/auth/add-contact', {
@@ -251,58 +255,57 @@ function SettingsUsernamePage() {
           otpChallengeId: contactChallengeId,
           otp: contactOtp.trim(),
         }),
-      })
+      });
 
       if (!response.ok) {
-        toast.error(t('settings.contact.error.generic', locale))
-        return
+        toast.error(t('settings.contact.error.generic', locale));
+        return;
       }
 
-      toast.success(t('settings.contact.success', locale))
+      toast.success(t('settings.contact.success', locale));
 
       // Reset form
-      setShowAddContact(null)
-      setNewContactValue('')
-      setContactOtpSent(false)
-      setContactChallengeId('')
-      setContactOtp('')
+      setShowAddContact(null);
+      setNewContactValue('');
+      setContactOtpSent(false);
+      setContactChallengeId('');
+      setContactOtp('');
 
       // Refresh user info
-      fetchUserInfo()
+      fetchUserInfo();
     } catch {
-      toast.error(t('settings.contact.error.generic', locale))
+      toast.error(t('settings.contact.error.generic', locale));
     } finally {
-      setVerifyingContact(false)
+      setVerifyingContact(false);
     }
-  }, [showAddContact, newContactValue, contactChallengeId, contactOtp, locale, fetchUserInfo])
+  }, [showAddContact, newContactValue, contactChallengeId, contactOtp, locale, fetchUserInfo]);
 
   // ── Cancel change username ───────────────────────────────────────────
 
   const handleCancelChange = useCallback(() => {
-    setShowChangeUsername(false)
-    setNewUsername('')
-    setChangeOtpSent(false)
-    setChangeChallengeId('')
-    setChangeOtp('')
-  }, [])
+    setShowChangeUsername(false);
+    setNewUsername('');
+    setChangeOtpSent(false);
+    setChangeChallengeId('');
+    setChangeOtp('');
+    setPreviousOtp('');
+    setPreviousDestination('');
+  }, []);
 
   // ── Cancel add contact ───────────────────────────────────────────────
 
   const handleCancelContact = useCallback(() => {
-    setShowAddContact(null)
-    setNewContactValue('')
-    setContactOtpSent(false)
-    setContactChallengeId('')
-    setContactOtp('')
-  }, [])
+    setShowAddContact(null);
+    setNewContactValue('');
+    setContactOtpSent(false);
+    setContactChallengeId('');
+    setContactOtp('');
+  }, []);
 
   // ── Render ──────────────────────────────────────────────────────────
 
-  const usernameType = userInfo ? (isEmail(userInfo.username) ? 'email' : 'mobile') : null
-
   return (
     <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-
       {/* Title */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">{t('settings.username.title', locale)}</h1>
@@ -328,13 +331,14 @@ function SettingsUsernamePage() {
       {/* Content */}
       {!loading && !error && userInfo && (
         <div className="space-y-8">
-
           {/* ── Current Username Section ──────────────────────────────── */}
           <div className="rounded-lg border p-4 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <KeyIcon className="h-4 w-4 text-muted-foreground" />
-                <h2 className="text-base font-semibold">{t('settings.username.current', locale)}</h2>
+                <h2 className="text-base font-semibold">
+                  {t('settings.username.current', locale)}
+                </h2>
               </div>
               {!showChangeUsername && (
                 <Button
@@ -399,17 +403,40 @@ function SettingsUsernamePage() {
                 ) : (
                   <>
                     <p className="text-xs text-muted-foreground">
-                      {t('settings.username.otpSent', locale).replace('{destination}', newUsername)}
+                      {t('settings.username.pairSent', locale)}
                     </p>
                     <div className="space-y-1.5">
+                      <Label htmlFor="previous-otp" className="text-xs">
+                        {t('settings.username.previousOtp', locale).replace(
+                          '{destination}',
+                          maskUsername(previousDestination)
+                        )}
+                      </Label>
+                      <Input
+                        id="previous-otp"
+                        value={previousOtp}
+                        onChange={(e) => setPreviousOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
+                        maxLength={6}
+                        className="text-sm font-mono w-40"
+                        dir="ltr"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
                       <Label htmlFor="change-otp" className="text-xs">
-                        {t('settings.username.otpLabel', locale)}
+                        {t('settings.username.newOtp', locale).replace(
+                          '{destination}',
+                          maskUsername(newUsername)
+                        )}
                       </Label>
                       <Input
                         id="change-otp"
                         placeholder={t('settings.username.otpPlaceholder', locale)}
                         value={changeOtp}
-                        onChange={(e) => setChangeOtp(e.target.value)}
+                        onChange={(e) => setChangeOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
                         maxLength={6}
                         className="text-sm font-mono w-40"
                         dir="ltr"
@@ -428,7 +455,9 @@ function SettingsUsernamePage() {
                       <Button
                         size="sm"
                         onClick={handleVerifyChange}
-                        disabled={verifyingChange || changeOtp.length !== 6}
+                        disabled={
+                          verifyingChange || changeOtp.length !== 6 || previousOtp.length !== 6
+                        }
                         className="gap-1"
                       >
                         {verifyingChange ? (
@@ -451,6 +480,9 @@ function SettingsUsernamePage() {
               <MailIcon className="h-4 w-4 text-muted-foreground" />
               <h2 className="text-base font-semibold">{t('settings.contact.title', locale)}</h2>
             </div>
+            <p className="text-sm text-muted-foreground">
+              {t('settings.contact.loginHelp', locale)}
+            </p>
 
             {/* Email */}
             <div className="flex items-center justify-between">
@@ -462,15 +494,32 @@ function SettingsUsernamePage() {
                 <span className="text-sm font-mono text-muted-foreground">
                   {userInfo.email ?? (locale === 'fa' ? 'ثبت نشده' : 'Not set')}
                 </span>
-                {!userInfo.email && usernameType !== 'email' && (
+                {userInfo.email && (
+                  <span className="text-xs text-muted-foreground">
+                    {t(
+                      userInfo.emailVerified
+                        ? 'settings.contact.verified'
+                        : 'settings.contact.unverified',
+                      locale
+                    )}
+                  </span>
+                )}
+                {!userInfo.emailVerified && (
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowAddContact('email')}
+                    disabled={showAddContact !== null}
+                    onClick={() => {
+                      setShowAddContact('email');
+                      setNewContactValue(userInfo.email ?? '');
+                    }}
                     className="gap-1 text-xs"
                   >
                     <PlusIcon className="h-3 w-3" />
-                    {t('settings.contact.addEmail', locale)}
+                    {t(
+                      userInfo.email ? 'settings.contact.verifyEmail' : 'settings.contact.addEmail',
+                      locale
+                    )}
                   </Button>
                 )}
               </div>
@@ -486,15 +535,34 @@ function SettingsUsernamePage() {
                 <span className="text-sm font-mono text-muted-foreground">
                   {userInfo.mobile ?? (locale === 'fa' ? 'ثبت نشده' : 'Not set')}
                 </span>
-                {!userInfo.mobile && usernameType !== 'mobile' && (
+                {userInfo.mobile && (
+                  <span className="text-xs text-muted-foreground">
+                    {t(
+                      userInfo.mobileVerified
+                        ? 'settings.contact.verified'
+                        : 'settings.contact.unverified',
+                      locale
+                    )}
+                  </span>
+                )}
+                {!userInfo.mobileVerified && (
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowAddContact('mobile')}
+                    disabled={showAddContact !== null}
+                    onClick={() => {
+                      setShowAddContact('mobile');
+                      setNewContactValue(userInfo.mobile ?? '');
+                    }}
                     className="gap-1 text-xs"
                   >
                     <PlusIcon className="h-3 w-3" />
-                    {t('settings.contact.addMobile', locale)}
+                    {t(
+                      userInfo.mobile
+                        ? 'settings.contact.verifyMobile'
+                        : 'settings.contact.addMobile',
+                      locale
+                    )}
                   </Button>
                 )}
               </div>
@@ -509,11 +577,12 @@ function SettingsUsernamePage() {
                       <Label htmlFor="new-contact" className="text-xs">
                         {showAddContact === 'email'
                           ? t('settings.contact.email', locale)
-                          : t('settings.contact.mobile', locale)
-                        }
+                          : t('settings.contact.mobile', locale)}
                       </Label>
                       <Input
                         id="new-contact"
+                        type={showAddContact === 'email' ? 'email' : 'tel'}
+                        disabled={sendingContactOtp}
                         placeholder={
                           showAddContact === 'email'
                             ? t('settings.contact.newEmailPlaceholder', locale)
@@ -530,6 +599,7 @@ function SettingsUsernamePage() {
                         variant="outline"
                         size="sm"
                         onClick={handleCancelContact}
+                        disabled={sendingContactOtp || verifyingContact}
                         className="gap-1"
                       >
                         <XIcon className="h-3.5 w-3.5" />
@@ -553,7 +623,10 @@ function SettingsUsernamePage() {
                 ) : (
                   <>
                     <p className="text-xs text-muted-foreground">
-                      {t('settings.contact.otpSent', locale).replace('{destination}', newContactValue)}
+                      {t('settings.contact.otpSent', locale).replace(
+                        '{destination}',
+                        newContactValue
+                      )}
                     </p>
                     <div className="space-y-1.5">
                       <Label htmlFor="contact-otp" className="text-xs">
@@ -574,6 +647,7 @@ function SettingsUsernamePage() {
                         variant="outline"
                         size="sm"
                         onClick={handleCancelContact}
+                        disabled={sendingContactOtp || verifyingContact}
                         className="gap-1"
                       >
                         <XIcon className="h-3.5 w-3.5" />
@@ -601,5 +675,5 @@ function SettingsUsernamePage() {
         </div>
       )}
     </div>
-  )
+  );
 }

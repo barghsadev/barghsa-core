@@ -1,7 +1,7 @@
-import { index, pgTable, primaryKey, text, uuid } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { users } from './users.js'
-import { aiPolicies } from './ai-policies.js'
+import { index, pgTable, primaryKey, text, uuid } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { users } from './users.js';
+import { aiPolicies } from './ai-policies.js';
 
 /**
  * AI policy group (S-09.11, T-09.11.03).
@@ -44,8 +44,8 @@ export const aiPolicyGroups = pgTable(
   (table) => [
     /** List by recency for the admin UI (migration 0044). */
     index('idx_aipg_created_at').on(table.createdAt),
-  ],
-)
+  ]
+);
 
 /**
  * AI policy group membership (S-09.11, T-09.11.03).
@@ -79,5 +79,5 @@ export const aiPolicyGroupMembers = pgTable(
     primaryKey({ columns: [table.groupId, table.policyId] }),
     /** Reverse lookup: which groups contain a given policy. */
     index('idx_aipgm_policy_id').on(table.policyId),
-  ],
-)
+  ]
+);

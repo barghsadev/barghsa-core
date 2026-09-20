@@ -1,22 +1,20 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
-import { Card, CardContent } from '@barghsa/ui'
-import { MailIcon, PhoneIcon, ClockIcon, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { t } from '@barghsa/i18n/auth';
+import { useLocale } from '../hooks/useLocale.js';
+import { Card, CardContent } from '@barghsa/ui';
+import { MailIcon, PhoneIcon, ClockIcon, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 
 export const Route = createFileRoute('/support')({
   component: SupportPage,
-})
+});
 
 function SupportPage() {
-  const locale: Locale = 'fa' // TODO: read from user preference / locale context
-  const isRtl = locale === 'fa'
-  const BackIcon = isRtl ? ArrowRightIcon : ArrowLeftIcon
+  const locale = useLocale();
+  const isRtl = locale === 'fa';
+  const BackIcon = isRtl ? ArrowRightIcon : ArrowLeftIcon;
 
   return (
-    <div
-      className="flex min-h-dvh flex-col"
-      dir={isRtl ? 'rtl' : 'ltr'}
-    >
+    <div className="flex min-h-dvh flex-col" dir={isRtl ? 'rtl' : 'ltr'}>
       {/* Mobile header with brand */}
       <div className="flex md:hidden flex-col items-center py-8 px-4 border-b border-border bg-gradient-to-b from-primary/5 to-background">
         <Link
@@ -34,10 +32,7 @@ function SupportPage() {
             className="shrink-0"
           >
             <rect width="32" height="32" rx="8" fill="currentColor" />
-            <path
-              d="M18 6L9 18h5l-1 8 9-12h-5l1-8z"
-              fill="var(--primary-foreground)"
-            />
+            <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--primary-foreground)" />
           </svg>
           <span>{t('auth.brand.title', locale)}</span>
         </Link>
@@ -60,10 +55,7 @@ function SupportPage() {
             className="shrink-0"
           >
             <rect width="32" height="32" rx="8" fill="currentColor" />
-            <path
-              d="M18 6L9 18h5l-1 8 9-12h-5l1-8z"
-              fill="var(--primary-foreground)"
-            />
+            <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--primary-foreground)" />
           </svg>
           <span>{t('auth.brand.title', locale)}</span>
         </Link>
@@ -85,9 +77,7 @@ function SupportPage() {
 
               {/* Recovery process */}
               <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
-                <p className="text-sm leading-relaxed">
-                  {t('auth.support.steps', locale)}
-                </p>
+                <p className="text-sm leading-relaxed">{t('auth.support.steps', locale)}</p>
               </div>
 
               {/* Contact methods */}
@@ -95,11 +85,9 @@ function SupportPage() {
                 <div className="flex items-start gap-3">
                   <MailIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                   <div className="space-y-0.5">
-                    <p className="text-sm font-medium">
-                      {t('auth.support.contactEmail', locale)}
-                    </p>
+                    <p className="text-sm font-medium">{t('auth.support.contactEmail', locale)}</p>
                     <a
-                      href="mailto:support@barghsa.com"
+                      href={`mailto:${t('auth.support.emailAddress', locale)}`}
                       className="text-sm text-primary underline-offset-4 hover:underline"
                     >
                       {t('auth.support.emailAddress', locale)}
@@ -110,14 +98,27 @@ function SupportPage() {
                 <div className="flex items-start gap-3">
                   <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                   <div className="space-y-0.5">
-                    <p className="text-sm font-medium">
-                      {t('auth.support.contactPhone', locale)}
-                    </p>
+                    <p className="text-sm font-medium">{t('auth.support.contactPhone', locale)}</p>
                     <a
-                      href="tel:+982112345678"
+                      href="tel:+982126658042"
+                      dir="ltr"
                       className="text-sm text-primary underline-offset-4 hover:underline"
                     >
                       {t('auth.support.phoneNumber', locale)}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium">{t('auth.support.contactMobile', locale)}</p>
+                    <a
+                      href="tel:+989002550292"
+                      dir="ltr"
+                      className="text-sm text-primary underline-offset-4 hover:underline"
+                    >
+                      {t('auth.support.mobileNumber', locale)}
                     </a>
                   </div>
                 </div>
@@ -148,5 +149,5 @@ function SupportPage() {
         </Card>
       </main>
     </div>
-  )
+  );
 }

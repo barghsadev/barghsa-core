@@ -1,12 +1,17 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
-import { createFileRoute, Link, useRouter, useSearch } from '@tanstack/react-router'
-import { toast } from 'sonner'
-import { t, type Locale } from '@barghsa/i18n'
-import { Loader2Icon } from 'lucide-react'
-import { Button } from '@barghsa/ui'
-import { AuthLayout } from '../../components/AuthLayout.js'
-import { OtpInput } from '../../components/OtpInput.js'
-import { setCsrfToken } from '../../lib/csrf.js'
+import { publicAuthFetch } from '../../lib/public-auth-fetch.js';
+import { hasSessionAcknowledgement, hasResendAcknowledgement } from '../../lib/auth-responses.js';
+import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
+import { useLocale } from '../../hooks/useLocale.js';
+import { rateLimitMessage, retryAfterSeconds } from '../../lib/auth-errors.js';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { createFileRoute, Link, useRouter, useSearch } from '@tanstack/react-router';
+import { toast } from 'sonner';
+import { rememberAuthSuccess } from '../../lib/auth-entry-feedback.js';
+import { t } from '@barghsa/i18n/auth';
+import { Loader2Icon } from 'lucide-react';
+import { Button } from '@barghsa/ui';
+import { AuthLayout } from '../../components/AuthLayout.js';
+import { OtpInput } from '../../components/OtpInput.js';
 
 export const Route = createFileRoute('/register/verify')({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -14,158 +19,204 @@ export const Route = createFileRoute('/register/verify')({
     destination: String(search?.destination ?? ''),
   }),
   component: OtpVerifyPage,
-})
+});
 
 /** Resend countdown in seconds */
-const RESEND_COOLDOWN = 60
+const RESEND_COOLDOWN = 60;
 
 function OtpVerifyPage() {
-  const router = useRouter()
-  const { challengeId, destination } = useSearch({ from: '/register/verify' })
-  const locale: Locale = 'fa' // TODO: read from user preference / locale context
+  const router = useRouter();
+  const { challengeId, destination } = useSearch({ from: '/register/verify' });
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
 
-  const [otp, setOtp] = useState('')
-  const [otpError, setOtpError] = useState<string | null>(null)
-  const [verifying, setVerifying] = useState(false)
-  const [resending, setResending] = useState(false)
-  const [resendTimer, setResendTimer] = useState(RESEND_COOLDOWN)
-  const [canResend, setCanResend] = useState(false)
-  const otpRef = useRef<{ reset: () => void } | null>(null)
+  const [otp, setOtp] = useState('');
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [verifying, setVerifying] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resendDeadline, setResendDeadline] = useState(() => Date.now() + RESEND_COOLDOWN * 1000);
+  const [resendTimer, setResendTimer] = useState(RESEND_COOLDOWN);
+  const canResend = resendTimer === 0;
+  const otpRef = useRef<{ reset: () => void } | null>(null);
+  const requestRef = useRef<AbortController | null>(null);
+  const expiryRedirect = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const busy = verifying || resending;
 
   // Countdown timer for resend
   useEffect(() => {
-    if (canResend) return
+    const update = () =>
+      setResendTimer(Math.max(0, Math.ceil((resendDeadline - Date.now()) / 1000)));
+    update();
+    const interval = setInterval(update, 1000);
 
-    const interval = setInterval(() => {
-      setResendTimer((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval)
-          setCanResend(true)
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
+    return () => clearInterval(interval);
+  }, [resendDeadline]);
 
-    return () => clearInterval(interval)
-  }, [canResend])
+  useEffect(() => {
+    setVerifying(false);
+    setResending(false);
+    setOtp('');
+    setOtpError(null);
+    setResendDeadline(Date.now() + RESEND_COOLDOWN * 1000);
+    otpRef.current?.reset();
+    return () => {
+      requestRef.current?.abort();
+      requestRef.current = null;
+      if (expiryRedirect.current !== null) clearTimeout(expiryRedirect.current);
+      expiryRedirect.current = null;
+    };
+  }, [challengeId]);
 
   // Redirect if no challengeId (user navigated directly)
   useEffect(() => {
     if (!challengeId) {
-      router.navigate({ to: '/register' })
+      router.navigate({ to: '/register' });
     }
-  }, [challengeId, router])
+  }, [challengeId, router]);
 
   const handleOtpComplete = useCallback(
     async (code: string) => {
-      setOtp(code)
-      setOtpError(null)
-      setVerifying(true)
+      if (requestRef.current || expiryRedirect.current !== null) return;
+      const controller = new AbortController();
+      requestRef.current = controller;
+      setOtp(code);
+      setOtpError(null);
+      setVerifying(true);
 
       try {
-        const response = await fetch('/api/auth/register/verify', {
+        const response = await publicAuthFetch('/api/auth/register/verify', {
+          signal: controller.signal,
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
           body: JSON.stringify({ challengeId, otp: code }),
-        })
+        });
 
-        const body: Record<string, unknown> =
-          await response.json().catch(() => ({}))
+        const body: Record<string, unknown> = await response.json().catch(() => ({}));
+        if (controller.signal.aborted) return;
 
         if (!response.ok) {
-          const errorCode = typeof body?.error === 'string'
-            ? body.error
-            : (body?.error as Record<string, unknown>)?.code as string | undefined
+          const errorCode =
+            typeof body?.error === 'string'
+              ? body.error
+              : ((body?.error as Record<string, unknown>)?.code as string | undefined);
 
-          let msg: string
+          let msg: string;
           switch (errorCode) {
             case 'AUTH:OTP:INVALID':
-              msg = t('auth.otp.error.invalid', locale)
-              break
+              msg = t('auth.otp.error.invalid', locale);
+              break;
             case 'AUTH:OTP:EXPIRED':
-              msg = t('auth.otp.error.expired', locale)
+              msg = t('auth.otp.error.expired', locale);
               // On expiry, redirect back to registration
-              setTimeout(() => {
-                toast.error(t('auth.otp.expired', locale))
-                router.navigate({ to: '/register' })
-              }, 500)
-              break
+              expiryRedirect.current = setTimeout(() => {
+                if (router.state.location.pathname !== '/register/verify') return;
+                toast.error(t('auth.otp.expired', locale));
+                router.navigate({ to: '/register' });
+              }, 500);
+              break;
             case 'AUTH:OTP:MAX_ATTEMPTS':
-              msg = t('auth.otp.error.maxAttempts', locale)
-              break
+              msg = t('auth.otp.error.maxAttempts', locale);
+              break;
             default:
-              msg = t('auth.otp.error.generic', locale)
+              msg = t('auth.otp.error.generic', locale);
           }
 
-          setOtpError(msg)
-          setOtp('')
+          setOtpError(rateLimitMessage(response, locale, numbers.numberStyle) ?? msg);
+          setOtp('');
           // Clear OTP input on error and shake
           if (otpRef.current?.reset) {
-            otpRef.current.reset()
+            otpRef.current.reset();
           }
-          return
+          return;
         }
+
+        if (!hasSessionAcknowledgement(body)) throw new Error('Invalid session acknowledgement');
 
         // ── Success — user created, session set ────────────────────
-        // Store CSRF token for subsequent API calls
-        const csrfToken = body?.csrfToken as string | undefined
-        if (csrfToken) {
-          setCsrfToken(csrfToken)
-        }
-
-        toast.success(t('auth.register.success', locale))
+        const message = t('auth.register.success', locale);
+        rememberAuthSuccess(message);
+        toast.success(message);
         // Redirect to app root (profile check middleware handles redirects)
-        router.navigate({ to: '/' })
+        router.navigate({ to: '/app' });
       } catch {
-        setOtpError(t('auth.otp.error.generic', locale))
-        setOtp('')
+        if (controller.signal.aborted) return;
+        setOtpError(t('auth.otp.error.generic', locale));
+        setOtp('');
         if (otpRef.current?.reset) {
-          otpRef.current.reset()
+          otpRef.current.reset();
         }
       } finally {
-        setVerifying(false)
+        if (requestRef.current === controller) {
+          requestRef.current = null;
+          setVerifying(false);
+        }
       }
     },
-    [challengeId, locale, router],
-  )
+    [challengeId, locale, numbers.numberStyle, router]
+  );
 
   const handleResend = useCallback(async () => {
-    if (!canResend || resending) return
+    if (
+      !canResend ||
+      Date.now() < resendDeadline ||
+      requestRef.current ||
+      expiryRedirect.current !== null
+    )
+      return;
+    const controller = new AbortController();
+    requestRef.current = controller;
 
-    setResending(true)
-    setOtpError(null)
+    setResending(true);
+    setOtpError(null);
 
     try {
-      const response = await fetch('/api/auth/register/resend', {
+      const response = await publicAuthFetch('/api/auth/register/resend', {
+        signal: controller.signal,
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
         body: JSON.stringify({ challengeId }),
-      })
+      });
+      const body: unknown = await response.json().catch(() => null);
+      if (controller.signal.aborted) return;
 
       if (!response.ok) {
-        toast.error(t('auth.otp.error.resend', locale))
-        return
+        const retry = rateLimitMessage(response, locale, numbers.numberStyle);
+        const message = retry ?? t('auth.otp.error.resend', locale);
+        setOtpError(message);
+        if (retry) {
+          setResendDeadline(Date.now() + (retryAfterSeconds(response) ?? RESEND_COOLDOWN) * 1000);
+        }
+        return;
+      }
+
+      if (!hasResendAcknowledgement(body, challengeId)) {
+        setOtpError(t('auth.otp.error.resend', locale));
+        return;
       }
 
       // Reset timer
-      setResendTimer(RESEND_COOLDOWN)
-      setCanResend(false)
-      setOtp('')
+      setResendDeadline(Date.now() + RESEND_COOLDOWN * 1000);
+      setOtp('');
       if (otpRef.current?.reset) {
-        otpRef.current.reset()
+        otpRef.current.reset();
       }
-      toast.success(t('auth.otp.sentTo', locale).replace('{destination}', destination))
+      toast.success(t('auth.otp.sentTo', locale).replace('{destination}', destination));
     } catch {
-      toast.error(t('auth.otp.error.resend', locale))
+      if (controller.signal.aborted) return;
+      const message = t('auth.otp.error.resend', locale);
+      setOtpError(message);
+      toast.error(message);
     } finally {
-      setResending(false)
+      if (requestRef.current === controller) {
+        requestRef.current = null;
+        setResending(false);
+      }
     }
-  }, [challengeId, canResend, resending, locale, destination])
+  }, [challengeId, canResend, resendDeadline, locale, destination, numbers.numberStyle]);
 
   const handleClearError = useCallback(() => {
-    setOtpError(null)
-  }, [])
+    setOtpError(null);
+  }, []);
 
   return (
     <AuthLayout
@@ -175,7 +226,7 @@ function OtpVerifyPage() {
           <p className="text-center text-sm">
             <Link
               to="/register"
-              className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+              className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
               aria-label={t('auth.otp.backToRegister', locale)}
             >
               {t('auth.otp.backToRegister', locale)}
@@ -186,9 +237,7 @@ function OtpVerifyPage() {
     >
       <div className="space-y-6">
         <div className="space-y-1.5 text-center">
-          <h1 className="text-xl font-semibold tracking-tight">
-            {t('auth.otp.title', locale)}
-          </h1>
+          <h1 className="text-xl font-semibold tracking-tight">{t('auth.otp.title', locale)}</h1>
           <p className="text-sm text-muted-foreground">
             {t('auth.otp.sentTo', locale).replace('{destination}', destination)}
           </p>
@@ -199,7 +248,7 @@ function OtpVerifyPage() {
           <OtpInput
             ref={otpRef}
             locale={locale}
-            disabled={verifying}
+            disabled={busy}
             error={otpError}
             onComplete={handleOtpComplete}
             onClearError={handleClearError}
@@ -209,7 +258,7 @@ function OtpVerifyPage() {
           <Button
             type="button"
             className="w-full"
-            disabled={!otp || verifying}
+            disabled={!otp || busy}
             onClick={() => otp && handleOtpComplete(otp)}
           >
             {verifying ? (
@@ -229,7 +278,7 @@ function OtpVerifyPage() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                disabled={resending}
+                disabled={busy}
                 onClick={handleResend}
               >
                 {resending ? (
@@ -243,12 +292,15 @@ function OtpVerifyPage() {
               </Button>
             ) : (
               <p className="text-sm text-muted-foreground">
-                {t('auth.otp.resendTimer', locale).replace('{seconds}', String(resendTimer))}
+                {t('auth.otp.resendTimer', locale).replace(
+                  '{seconds}',
+                  numbers.number(resendTimer, { useGrouping: false })
+                )}
               </p>
             )}
           </div>
         </div>
       </div>
     </AuthLayout>
-  )
+  );
 }

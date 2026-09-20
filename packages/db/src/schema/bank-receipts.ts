@@ -1,18 +1,10 @@
-import { sql } from 'drizzle-orm'
-import {
-  check,
-  date,
-  foreignKey,
-  index,
-  pgTable,
-  text,
-  uniqueIndex,
-} from 'drizzle-orm/pg-core'
-import { baseColumns } from '../base-table'
-import { irrAmount, timestamptz, uuidv7 } from '../types'
-import { invoices } from './invoices'
-import { profiles } from './profiles'
-import { users } from './users'
+import { sql } from 'drizzle-orm';
+import { check, date, foreignKey, index, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { baseColumns } from '../base-table';
+import { irrAmount, timestamptz, uuidv7 } from '../types';
+import { invoices } from './invoices';
+import { profiles } from './profiles';
+import { users } from './users';
 
 /**
  * Bank-receipt lifecycle (S-04.3.01 / T-04.3.01.01).
@@ -22,13 +14,8 @@ import { users } from './users'
  * Submitted → UnderReview → Confirmed | Rejected
  * Confirm and reject are also allowed directly from Submitted.
  */
-export const BANK_RECEIPT_STATES = [
-  'Submitted',
-  'UnderReview',
-  'Confirmed',
-  'Rejected',
-] as const
-export type BankReceiptState = (typeof BANK_RECEIPT_STATES)[number]
+export const BANK_RECEIPT_STATES = ['Submitted', 'UnderReview', 'Confirmed', 'Rejected'] as const;
+export type BankReceiptState = (typeof BANK_RECEIPT_STATES)[number];
 
 /**
  * Invoice bank-receipt evidence (T-04.3.01.01 / S-04.3.01).
@@ -112,15 +99,15 @@ export const bankReceipts = pgTable(
     amountPositive: check('chk_bank_receipts_amount_positive', sql`${table.amount} > 0`),
     stateCheck: check(
       'chk_bank_receipts_state',
-      sql`${table.state} IN ('Submitted', 'UnderReview', 'Confirmed', 'Rejected')`,
+      sql`${table.state} IN ('Submitted', 'UnderReview', 'Confirmed', 'Rejected')`
     ),
     payerReferenceNonblank: check(
       'chk_bank_receipts_payer_reference_nonblank',
-      sql`length(trim(${table.payerReference})) > 0`,
+      sql`length(trim(${table.payerReference})) > 0`
     ),
     attachmentKeyNonblank: check(
       'chk_bank_receipts_attachment_key_nonblank',
-      sql`length(trim(${table.attachmentKey})) > 0`,
+      sql`length(trim(${table.attachmentKey})) > 0`
     ),
     /**
      * Confirmation columns are set together only on Confirmed;
@@ -149,7 +136,7 @@ export const bankReceipts = pgTable(
           AND ${table.confirmedAt} IS NULL
           AND ${table.rejectionReason} IS NULL
         )
-      )`,
+      )`
     ),
     invoiceIdIdx: index('idx_bank_receipts_invoice_id').on(table.invoiceId),
     profileIdIdx: index('idx_bank_receipts_profile_id').on(table.profileId),
@@ -165,8 +152,8 @@ export const bankReceipts = pgTable(
       columns: [table.invoiceId, table.profileId],
       foreignColumns: [invoices.id, invoices.profileId],
     }).onDelete('restrict'),
-  }),
-)
+  })
+);
 
 /**
  * SQL to create the bank_receipts table (migration 0078 source).
@@ -261,4 +248,4 @@ export const createBankReceiptsTable = sql`
     BEFORE UPDATE ON bank_receipts
     FOR EACH ROW
     EXECUTE FUNCTION update_bank_receipts_updated_at();
-`
+`;

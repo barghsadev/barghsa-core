@@ -22,7 +22,9 @@ The live loop is implemented by `kanban/scripts/loop-runner.py` and runs as a `n
 - Merge only on a separate `approved` tick after re-fetching the PR, durable review binding, exact HEAD, mergeability, and at least one GitHub check with every entry explicitly `COMPLETED`/`SUCCESS`.
 - Any new commit invalidates prior approval: clear all approval-binding fields and return to `in_review`.
 - Merge with `--match-head-commit <reviewed-sha>`, then re-fetch both the merged PR and durable comment and revalidate the full binding before finalizing state.
-- Keep `kanban/loop-state.json` local runtime state; it must not enter a product PR.
+- Treat `kanban/loop-state.json` as a historical snapshot, never live dispatch state. Runtime state stays outside the checkout and is recovered from the dedicated remote `kanban-state` branch under `STATE-PROTOCOL.md`.
 - Keep `/tmp/barghsa-loop-runner.lock` outside the repository.
+
+Check `kanban/CONTINUATION.md` for current readiness. Local repair completion does not resume the scheduler or reconcile remote PR/state history.
 
 See repository `AGENTS.md` for the full protocol and state contracts.

@@ -1,0 +1,35 @@
+import { execFileSync } from 'node:child_process';
+import { createRequire } from 'node:module';
+import { resolve } from 'node:path';
+
+/** HTTP integration tests must never silently exercise stale compiled code. */
+export function setup(): void {
+  // CI builds this exact checkout before parallel tests; rebuilding here removes
+  // shared outputs while other suites import them. Standalone runs still build.
+  if (process.env['BARGHSA_TEST_PREBUILT'] === '1') return;
+  const require = createRequire(__filename);
+  execFileSync(
+    'pnpm',
+    [
+      '--filter',
+      '@barghsa/shared',
+      '--filter',
+      '@barghsa/i18n',
+      '--filter',
+      '@barghsa/db',
+      'build',
+    ],
+    {
+      cwd: resolve(__dirname, '../../../..'),
+      stdio: 'pipe',
+    }
+  );
+  execFileSync('pnpm', ['--filter', '@barghsa/worker', 'build'], {
+    cwd: resolve(__dirname, '../../../..'),
+    stdio: 'pipe',
+  });
+  execFileSync(process.execPath, [require.resolve('@nestjs/cli/bin/nest.js'), 'build'], {
+    cwd: resolve(__dirname, '../..'),
+    stdio: 'pipe',
+  });
+}

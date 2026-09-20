@@ -1,14 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useNavigate, type NavigateOptions } from '@tanstack/react-router'
-import { t } from '@barghsa/i18n'
-import {
-  BellIcon,
-  CheckCheckIcon,
-  Loader2Icon,
-  InboxIcon,
-} from 'lucide-react'
-import { Button } from '@barghsa/ui'
-import { useLocale } from '../hooks/useLocale.js'
+import { notificationContent } from '../lib/notifications.js';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate, type NavigateOptions } from '@tanstack/react-router';
+import { t } from '@barghsa/i18n/app';
+import { BellIcon, CheckCheckIcon, Loader2Icon, InboxIcon } from 'lucide-react';
+import { Button } from '@barghsa/ui';
+import { useLocale } from '../hooks/useLocale.js';
 import {
   fetchNotifications,
   markOneRead,
@@ -16,10 +12,10 @@ import {
   toNavigationTarget,
   type NotificationFilter,
   type NotificationItem,
-} from '../lib/notifications.js'
-import { NotificationRow } from '../components/NotificationRow.js'
+} from '../lib/notifications.js';
+import { NotificationRow } from '../components/NotificationRow.js';
 
-const PAGE_SIZE = 20
+const PAGE_SIZE = 20;
 
 /**
  * Notification center page (E-05, T-05.02.03).
@@ -30,101 +26,126 @@ const PAGE_SIZE = 20
  * loading skeleton, an empty state, and a load-more footer. RTL-aware.
  */
 export function NotificationCenterPage() {
-  const locale = useLocale()
-  const navigate = useNavigate()
+  const locale = useLocale();
+  const navigate = useNavigate();
 
-  const [items, setItems] = useState<NotificationItem[]>([])
-  const [nextCursor, setNextCursor] = useState<string | null>(null)
-  const [unreadCount, setUnreadCount] = useState(0)
-  const [filter, setFilter] = useState<NotificationFilter>('all')
-  const [loading, setLoading] = useState(true)
-  const [loadingMore, setLoadingMore] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [markingAll, setMarkingAll] = useState(false)
+  const [items, setItems] = useState<NotificationItem[]>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [filter, setFilter] = useState<NotificationFilter>('all');
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [markingAll, setMarkingAll] = useState(false);
+  const writing = useRef(false);
+  const requestVersion = useRef(0);
 
   const load = useCallback(
     async (cursor?: string, currentFilter: NotificationFilter = filter) => {
+      if (writing.current) return;
+      const version = ++requestVersion.current;
+      setLoading(!cursor);
+      setLoadingMore(Boolean(cursor));
       try {
-        const page = await fetchNotifications(cursor, currentFilter, PAGE_SIZE)
-        setItems((prev) => (cursor ? [...prev, ...page.data] : [...page.data]))
-        setNextCursor(page.next_cursor)
-        setUnreadCount(page.unread_count)
-        setError(null)
+        const page = await fetchNotifications(cursor, currentFilter, PAGE_SIZE);
+        if (requestVersion.current !== version) return;
+        setItems((prev) => (cursor ? [...prev, ...page.data] : [...page.data]));
+        setNextCursor(page.next_cursor);
+        setUnreadCount(page.unread_count);
+        setError(null);
       } catch {
-        setError(t('notifications.error.load', locale))
+        if (requestVersion.current === version) setError(t('notifications.error.load', locale));
+      } finally {
+        if (requestVersion.current === version) {
+          setLoading(false);
+          setLoadingMore(false);
+        }
       }
     },
-    [filter, locale],
-  )
+    [filter, locale]
+  );
 
   useEffect(() => {
-    setLoading(true)
-    setItems([])
-    setNextCursor(null)
-    void load(undefined, filter).finally(() => setLoading(false))
-  }, [filter, load])
+    setLoading(true);
+    setMarkingAll(false);
+    setItems([]);
+    setNextCursor(null);
+    void load(undefined, filter);
+    return () => {
+      requestVersion.current++;
+      writing.current = false;
+    };
+  }, [filter, load]);
 
-  const handleLoadMore = async () => {
-    if (!nextCursor || loadingMore) return
-    setLoadingMore(true)
+  const handleLoadMore = () => {
+    if (nextCursor && !loadingMore) void load(nextCursor);
+  };
+
+  const markRead = async (item?: NotificationItem) => {
+    if (writing.current) return;
+    const target = item ? toNavigationTarget(item) : null;
+    const version = ++requestVersion.current;
+    const previousItems = items,
+      previousCount = unreadCount;
+    writing.current = true;
+    setMarkingAll(true);
+    setLoading(false);
+    setLoadingMore(false);
+    setError(null);
+    setUnreadCount(item ? Math.max(0, unreadCount - Number(!item.isRead)) : 0);
+    setItems((prev) =>
+      prev.flatMap((row) =>
+        !item || row.id === item.id
+          ? filter === 'unread'
+            ? []
+            : [{ ...row, isRead: true }]
+          : [row]
+      )
+    );
     try {
-      await load(nextCursor)
+      const count = item
+        ? item.isRead
+          ? unreadCount
+          : await markOneRead(item.id)
+        : await markAllRead();
+      if (requestVersion.current === version) {
+        setUnreadCount(count);
+        if (filter === 'unread' && count === 0) setNextCursor(null);
+      }
+    } catch {
+      if (requestVersion.current === version) {
+        setItems(previousItems);
+        setUnreadCount(previousCount);
+        setError(t('notifications.error.load', locale));
+      }
     } finally {
-      setLoadingMore(false)
-    }
-  }
-
-  const handleItemClick = async (item: NotificationItem) => {
-    const target = toNavigationTarget(item)
-    if (!item.isRead) {
-      try {
-        const count = await markOneRead(item.id)
-        setUnreadCount(count)
-        setItems((prev) =>
-          prev.map((i) => (i.id === item.id ? { ...i, isRead: true } : i)),
-        )
-      } catch {
-        // Non-blocking; navigation proceeds if a route exists.
+      if (requestVersion.current === version) {
+        writing.current = false;
+        setMarkingAll(false);
       }
     }
-    if (target) {
+    if (requestVersion.current === version && target)
       navigate({
         to: target.to,
         search: target.search as NavigateOptions['search'],
-      } as NavigateOptions)
-    }
-  }
+      } as NavigateOptions);
+  };
 
-  const handleMarkAll = async () => {
-    setMarkingAll(true)
-    try {
-      const count = await markAllRead()
-      setUnreadCount(count)
-      setItems((prev) => prev.map((i) => ({ ...i, isRead: true })))
-    } catch {
-      setError(t('notifications.error.load', locale))
-    } finally {
-      setMarkingAll(false)
-    }
-  }
-
-  const isRtl = locale === 'fa'
+  const isRtl = locale === 'fa';
 
   return (
     <div className="mx-auto max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <BellIcon className="h-6 w-6 text-primary" aria-hidden="true" />
-          <h1 className="text-2xl font-bold text-gray-900">
-            {t('notifications.title', locale)}
-          </h1>
+          <BellIcon className="h-6 w-6 text-foreground" aria-hidden="true" />
+          <h1 className="text-2xl font-bold text-foreground">{t('notifications.title', locale)}</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={handleMarkAll}
-            disabled={unreadCount === 0 || markingAll}
+            onClick={() => void markRead()}
+            disabled={unreadCount === 0 || markingAll || loading}
             className="gap-2"
           >
             {markingAll ? (
@@ -138,7 +159,11 @@ export function NotificationCenterPage() {
       </header>
 
       {/* Filter toggle */}
-      <div role="tablist" aria-label={t('notifications.bellLabel', locale)} className="flex gap-1 rounded-lg bg-gray-100 p-1 text-sm">
+      <div
+        role="tablist"
+        aria-label={t('notifications.bellLabel', locale)}
+        className="flex gap-1 rounded-lg bg-muted p-1 text-sm"
+      >
         {(['all', 'unread'] as NotificationFilter[]).map((value) => (
           <button
             key={value}
@@ -146,10 +171,11 @@ export function NotificationCenterPage() {
             role="tab"
             aria-selected={filter === value}
             onClick={() => setFilter(value)}
+            disabled={markingAll}
             className={`flex-1 rounded-md px-3 py-1.5 transition-colors ${
               filter === value
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'bg-card text-card-foreground text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             {value === 'all'
@@ -161,13 +187,16 @@ export function NotificationCenterPage() {
 
       {/* Loading skeleton */}
       {loading && (
-        <div className="space-y-3 rounded-lg border border-gray-200 bg-white p-4" aria-busy="true">
+        <div
+          className="space-y-3 rounded-lg border border-border bg-card text-card-foreground p-4"
+          aria-busy="true"
+        >
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="flex items-start gap-3 animate-pulse">
-              <div className="h-10 w-10 rounded-full bg-gray-200" />
+              <div className="h-10 w-10 rounded-full bg-muted" />
               <div className="flex-1 space-y-2 py-0.5">
-                <div className="h-3 w-3/4 rounded bg-gray-200" />
-                <div className="h-3 w-1/2 rounded bg-gray-100" />
+                <div className="h-3 w-3/4 rounded bg-muted" />
+                <div className="h-3 w-1/2 rounded bg-muted" />
               </div>
             </div>
           ))}
@@ -176,21 +205,27 @@ export function NotificationCenterPage() {
 
       {/* Error state */}
       {!loading && error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
-          <p className="text-red-700">{error}</p>
+        <div
+          className="rounded-lg border border-destructive/30 bg-destructive/10 p-6 text-center"
+          role="alert"
+        >
+          <p className="text-destructive">{error}</p>
+          <Button variant="outline" onClick={() => void load()} className="mt-3">
+            {t('notifications.retry', locale)}
+          </Button>
         </div>
       )}
 
       {/* Empty state */}
       {!loading && !error && items.length === 0 && (
-        <div className="rounded-lg border border-gray-200 bg-white p-10 text-center">
-          <InboxIcon className="mx-auto h-10 w-10 text-gray-300" aria-hidden="true" />
-          <h2 className="mt-3 text-lg font-semibold text-gray-900">
+        <div className="rounded-lg border border-border bg-card text-card-foreground p-10 text-center">
+          <InboxIcon className="mx-auto h-10 w-10 text-muted-foreground" aria-hidden="true" />
+          <h2 className="mt-3 text-lg font-semibold text-foreground">
             {filter === 'unread'
               ? t('notifications.empty.unread', locale)
               : t('notifications.empty.title', locale)}
           </h2>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-muted-foreground">
             {t('notifications.empty.body', locale)}
           </p>
         </div>
@@ -198,18 +233,16 @@ export function NotificationCenterPage() {
 
       {/* List */}
       {!loading && !error && items.length > 0 && (
-        <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white">
+        <ul className="divide-y divide-border rounded-lg border border-border bg-card text-card-foreground">
           {items.map((item) => (
             <li key={item.id}>
               <button
                 type="button"
-                onClick={() => handleItemClick(item)}
-                className="flex w-full items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
+                onClick={() => void markRead(item)}
+                disabled={markingAll}
+                className="flex w-full items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
                 dir={isRtl ? 'rtl' : 'ltr'}
-                aria-label={`${t('notifications.markReadAria', locale)} — ${t(
-                  item.titleI18nKey,
-                  locale,
-                )}`}
+                aria-label={`${t('notifications.markReadAria', locale)} — ${notificationContent(item, locale).title}`}
               >
                 <span className={item.isRead ? 'opacity-70' : ''}>
                   <NotificationRow
@@ -231,16 +264,14 @@ export function NotificationCenterPage() {
           <Button
             variant="outline"
             onClick={handleLoadMore}
-            disabled={loadingMore}
+            disabled={loadingMore || markingAll}
             className="gap-2"
           >
-            {loadingMore && (
-              <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
-            )}
+            {loadingMore && <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />}
             {t('notifications.loadMore', locale)}
           </Button>
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -1,14 +1,18 @@
-import { createHash } from 'node:crypto'
-import type { Pool, PoolClient } from 'pg'
-import { getDbPool } from '@barghsa/db'
+import { createHash } from 'node:crypto';
+import type { Pool, PoolClient } from 'pg';
+import { getDbPool } from '@barghsa/db';
 import {
   INVOICE_REMINDER_CHANNELS,
   REMINDER_STOP_STATES,
   isEligibleForReminderSend,
-} from '@barghsa/shared/finance'
-import type { NotificationChannel } from '@barghsa/shared/notifications'
-import { enqueueOutbox, type EnqueueOutboxInput, type EnqueueOutboxResult } from '../notifications/outbox-writer.js'
-import { cancelRemindersIfStopState } from './reminder-canceller.js'
+} from '@barghsa/shared/finance';
+import type { NotificationChannel } from '@barghsa/shared/notifications';
+import {
+  enqueueOutbox,
+  type EnqueueOutboxInput,
+  type EnqueueOutboxResult,
+} from '../notifications/outbox-writer.js';
+import { cancelRemindersIfStopState } from './reminder-canceller.js';
 
 /**
  * ReminderSender (S-04.1.04, T-04.1.04.03).
@@ -16,8 +20,9 @@ import { cancelRemindersIfStopState } from './reminder-canceller.js'
  * Hourly worker pass that claims `invoice_reminder_schedule` rows whose
  * `scheduled_at` is due, re-checks the invoice is still allowed to be
  * reminded, and writes one notification-outbox event per
- * (invoice, offset) so in-app + enabled external channels share a single
- * durable delivery intent.
+ * (invoice, offset) so all planned channels share a single durable delivery
+ * intent. Later channel times become outbox job wake-ups rather than a second
+ * enqueue with the same key. Current disabled offsets and dirty plans pause.
  *
  * Guarantees:
  * - **Eligibility re-check under lock.** Candidates exclude Paid /
@@ -29,7 +34,8 @@ import { cancelRemindersIfStopState } from './reminder-canceller.js'
  *   row, or enqueue a reminder that stays `scheduled`.
  * - **Idempotent.** Outbox `idempotency_key` is
  *   sha256(`payment.invoice_reminder:{invoiceId}:{offset}`). A replay
- *   that finds a duplicate still stamps the schedule rows `sent`.
+ *   that finds a matching duplicate with every channel still stamps rows `sent`.
+ *   Incomplete legacy occurrences require reconciliation without a new send.
  *   Unique (invoiceId, offset, channel) is enforced by migration 0061
  *   (T-04.1.04.04).
  * - **Failure isolation.** One group’s failure is recorded and skipped;
@@ -44,57 +50,55 @@ import { cancelRemindersIfStopState } from './reminder-canceller.js'
  */
 
 /** Default number of (invoice, offset) groups claimed per tick. */
-export const DEFAULT_REMINDER_SEND_BATCH_SIZE = 200
+export const DEFAULT_REMINDER_SEND_BATCH_SIZE = 200;
 
 /** Default hourly cadence (T-04.1.04.03: cron every hour). */
-export const DEFAULT_REMINDER_SEND_INTERVAL_MS = 60 * 60 * 1000
+export const DEFAULT_REMINDER_SEND_INTERVAL_MS = 60 * 60 * 1000;
 
 /** Stable worker task key recorded in `background_jobs`. */
-export const INVOICE_REMINDER_SEND_JOB_TYPE = 'invoice_reminder_sender' as const
+export const INVOICE_REMINDER_SEND_JOB_TYPE = 'invoice_reminder_sender' as const;
 
 /** Outbox event key for a payment reminder (E-05 registry). */
-export const PAYMENT_INVOICE_REMINDER_EVENT_KEY = 'payment.invoice_reminder' as const
+export const PAYMENT_INVOICE_REMINDER_EVENT_KEY = 'payment.invoice_reminder' as const;
 
 /** Outcome of one reminder-sender pass. */
 export interface ReminderSendResult {
   /** Candidate (invoice, offset) groups fetched this tick. */
-  scanned: number
+  scanned: number;
   /** Groups that received an outbox write and were marked `sent`. */
-  sent: number
+  sent: number;
   /**
    * Groups skipped because a concurrent worker held the rows, the
    * invoice was no longer eligible after lock, or no due rows remained.
    */
-  skipped: number
+  skipped: number;
   /** True when the candidate query hit the batch cap. */
-  truncated: boolean
+  truncated: boolean;
   /** Per-group failure messages. */
-  errors: string[]
+  errors: string[];
 }
 
-type EnqueueFn = (client: PoolClient, input: EnqueueOutboxInput) => Promise<EnqueueOutboxResult>
+type EnqueueFn = (client: PoolClient, input: EnqueueOutboxInput) => Promise<EnqueueOutboxResult>;
 
 /** Behavioural override hooks for tests. */
 export interface ReminderSendOptions {
-  pool?: Pool
-  logger?: { warn: (msg: string) => void; info: (msg: string) => void }
-  batchSize?: number
+  pool?: Pool;
+  logger?: { warn: (msg: string) => void; info: (msg: string) => void };
+  batchSize?: number;
   /** Stable send-pass timestamp. Production leaves this unset. */
-  now?: Date
+  now?: Date;
   /** Outbox-enqueue override for tests; defaults to {@link enqueueOutbox}. */
-  enqueue?: EnqueueFn
+  enqueue?: EnqueueFn;
 }
 
 const defaultLogger = {
   warn: (msg: string): void => {
-    // eslint-disable-next-line no-console
-    console.warn(`[worker] ${msg}`)
+    console.warn(`[worker] ${msg}`);
   },
   info: (msg: string): void => {
-    // eslint-disable-next-line no-console
-    console.log(`[worker] ${msg}`)
+    console.log(`[worker] ${msg}`);
   },
-}
+};
 
 /**
  * Candidate selector: one row per due (invoice, offset) whose invoice
@@ -110,56 +114,67 @@ export const FIND_DUE_REMINDER_GROUPS_SQL = `SELECT s.invoice_id, s."offset",
         WHERE s.status = 'scheduled'
           AND s.scheduled_at <= $1
           AND NOT (i.state = ANY($2::invoice_state[]))
+          AND NOT COALESCE(i.metadata @> '{"reminderPlanDirty":true}'::jsonb, false)
+          AND NOT EXISTS (
+            SELECT 1 FROM invoice_reminder_offset_toggles t
+            WHERE t.service_type=i.metadata #>> '{due,serviceType}'
+              AND t."offset"=s."offset" AND t.enabled=false
+          )
         GROUP BY s.invoice_id, s."offset"
         ORDER BY MIN(s.scheduled_at) ASC, s.invoice_id ASC, s."offset" ASC
-        LIMIT $3`
+        LIMIT $3`;
 
 const LOCK_DUE_ROWS_SQL = `SELECT id, invoice_id, "offset", channel, scheduled_at, status
         FROM invoice_reminder_schedule
         WHERE invoice_id = $1
           AND "offset" = $2
           AND status = 'scheduled'
-          AND scheduled_at <= $3
-        FOR UPDATE SKIP LOCKED`
+        FOR UPDATE SKIP LOCKED`;
 
-const LOCK_INVOICE_SQL = `SELECT i.id, i.state, i.profile_id, i.due_at, p.user_id
+const LOCK_INVOICE_SQL = `SELECT i.id, i.state, i.profile_id, i.due_at, p.user_id,
+        i.metadata #>> '{due,serviceType}' AS service_type,
+        COALESCE(i.metadata @> '{"reminderPlanDirty":true}'::jsonb, false) AS reminder_plan_dirty
         FROM invoices i
         LEFT JOIN profiles p ON p.id = i.profile_id
         WHERE i.id = $1
-        FOR UPDATE OF i SKIP LOCKED`
+        FOR UPDATE OF i SKIP LOCKED`;
 
 const MARK_SENT_SQL = `UPDATE invoice_reminder_schedule
         SET status = 'sent',
             sent_at = $2
         WHERE id = ANY($1::uuid[])
-          AND status = 'scheduled'`
+          AND status = 'scheduled'`;
 
 interface GroupRow {
-  invoice_id: string
-  offset: number
-  scheduled_at: Date | string
+  invoice_id: string;
+  offset: number;
+  scheduled_at: Date | string;
 }
 
 interface ScheduleRow {
-  id: string
-  invoice_id: string
-  offset: number
-  channel: string
-  scheduled_at: Date | string
-  status: string
+  id: string;
+  invoice_id: string;
+  offset: number;
+  channel: string;
+  scheduled_at: Date | string;
+  status: string;
 }
 
 interface InvoiceRow {
-  id: string
-  state: string
-  profile_id: string | null
-  due_at: Date | string | null
-  user_id: string | null
+  id: string;
+  state: string;
+  profile_id: string | null;
+  due_at: Date | string | null;
+  user_id: string | null;
+  service_type?: string | null;
+  reminder_plan_dirty?: boolean;
 }
 
 /** Stable outbox idempotency key for one (invoice, offset) reminder. */
 export function reminderOutboxIdempotencyKey(invoiceId: string, offset: number): string {
-  return createHash('sha256').update(`${PAYMENT_INVOICE_REMINDER_EVENT_KEY}:${invoiceId}:${offset}`).digest('hex')
+  return createHash('sha256')
+    .update(`${PAYMENT_INVOICE_REMINDER_EVENT_KEY}:${invoiceId}:${offset}`)
+    .digest('hex');
 }
 
 /**
@@ -168,22 +183,22 @@ export function reminderOutboxIdempotencyKey(invoiceId: string, offset: number):
  * channels, in-app is prepended so the write pipeline can accept it.
  */
 export function channelsForOutbox(raw: readonly string[]): NotificationChannel[] {
-  const set = new Set(raw)
-  const ordered = INVOICE_REMINDER_CHANNELS.filter((channel) => set.has(channel))
-  if (ordered.length === 0) return ['in_app']
-  if (!ordered.includes('in_app')) return ['in_app', ...ordered]
-  return [...ordered]
+  const set = new Set(raw);
+  const ordered = INVOICE_REMINDER_CHANNELS.filter((channel) => set.has(channel));
+  if (ordered.length === 0) return ['in_app'];
+  if (!ordered.includes('in_app')) return ['in_app', ...ordered];
+  return [...ordered];
 }
 
 function parseInstant(value: Date | string | null | undefined): Date | null {
   if (value instanceof Date) {
-    return Number.isNaN(value.getTime()) ? null : value
+    return Number.isNaN(value.getTime()) ? null : value;
   }
   if (typeof value === 'string' && value.trim() !== '') {
-    const parsed = new Date(value)
-    return Number.isNaN(parsed.getTime()) ? null : parsed
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
   }
-  return null
+  return null;
 }
 
 /**
@@ -191,13 +206,13 @@ function parseInstant(value: Date | string | null | undefined): Date | null {
  * are still eligible.
  */
 export async function sendDueInvoiceReminders(
-  options: ReminderSendOptions = {},
+  options: ReminderSendOptions = {}
 ): Promise<ReminderSendResult> {
-  const pool = options.pool ?? getDbPool()
-  const logger = options.logger ?? defaultLogger
-  const batchSize = options.batchSize ?? DEFAULT_REMINDER_SEND_BATCH_SIZE
-  const now = parseInstant(options.now ?? new Date()) ?? new Date()
-  const enqueue = options.enqueue ?? enqueueOutbox
+  const pool = options.pool ?? getDbPool();
+  const logger = options.logger ?? defaultLogger;
+  const batchSize = options.batchSize ?? DEFAULT_REMINDER_SEND_BATCH_SIZE;
+  const now = parseInstant(options.now ?? new Date()) ?? new Date();
+  const enqueue = options.enqueue ?? enqueueOutbox;
 
   const result: ReminderSendResult = {
     scanned: 0,
@@ -205,80 +220,98 @@ export async function sendDueInvoiceReminders(
     skipped: 0,
     truncated: false,
     errors: [],
-  }
+  };
 
   const candidates = await pool.query<GroupRow>(FIND_DUE_REMINDER_GROUPS_SQL, [
     now,
     [...REMINDER_STOP_STATES],
     batchSize,
-  ])
-  result.scanned = candidates.rows.length
+  ]);
+  result.scanned = candidates.rows.length;
   if (candidates.rows.length >= batchSize) {
-    result.truncated = true
+    result.truncated = true;
   }
 
   for (const group of candidates.rows) {
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
-      const outcome = await sendOneGroup(client, group, now, enqueue)
+      await client.query('BEGIN');
+      const outcome = await sendOneGroup(client, group, now, enqueue);
       if (outcome === 'sent') {
-        await client.query('COMMIT')
-        result.sent += 1
+        await client.query('COMMIT');
+        result.sent += 1;
       } else if (outcome === 'stopped') {
-        await client.query('COMMIT')
-        result.skipped += 1
+        await client.query('COMMIT');
+        result.skipped += 1;
       } else {
-        await client.query('ROLLBACK')
-        result.skipped += 1
+        await client.query('ROLLBACK');
+        result.skipped += 1;
       }
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      const message = `${group.invoice_id}@${group.offset}: ${(error as Error)?.message ?? String(error)}`
-      result.errors.push(message)
-      logger.warn(`Reminder send failed: ${message}`)
+      await client.query('ROLLBACK').catch(() => {});
+      const message = `${group.invoice_id}@${group.offset}: ${(error as Error)?.message ?? String(error)}`;
+      result.errors.push(message);
+      logger.warn(`Reminder send failed: ${message}`);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
-  return result
+  return result;
 }
 
-type SendGroupOutcome = 'sent' | 'skipped' | 'stopped'
+type SendGroupOutcome = 'sent' | 'skipped' | 'stopped';
 
 async function sendOneGroup(
   client: PoolClient,
   group: GroupRow,
   now: Date,
-  enqueue: EnqueueFn,
+  enqueue: EnqueueFn
 ): Promise<SendGroupOutcome> {
-  const lockedInvoice = await client.query<InvoiceRow>(LOCK_INVOICE_SQL, [group.invoice_id])
-  const invoice = lockedInvoice.rows[0]
-  if (!invoice) return 'skipped'
+  const lockedInvoice = await client.query<InvoiceRow>(LOCK_INVOICE_SQL, [group.invoice_id]);
+  const invoice = lockedInvoice.rows[0];
+  if (!invoice) return 'skipped';
   if (!isEligibleForReminderSend(invoice.state)) {
-    const stopped = await cancelRemindersIfStopState(client, invoice.id, invoice.state)
-    return stopped ? 'stopped' : 'skipped'
+    const stopped = await cancelRemindersIfStopState(client, invoice.id, invoice.state);
+    return stopped ? 'stopped' : 'skipped';
   }
-  if (invoice.profile_id === null || invoice.profile_id === '') return 'skipped'
+  if (invoice.profile_id === null || invoice.profile_id === '') return 'skipped';
+  if (invoice.reminder_plan_dirty) return 'skipped';
+  if (invoice.service_type) {
+    // Share the admin writer's lock, including when the pair has no row yet.
+    await client.query(
+      `SELECT pg_advisory_xact_lock(hashtext($1),hashtext($2 || ':' || $3::text))`,
+      ['barghsa.invoice_reminder_offset_toggles', invoice.service_type, group.offset]
+    );
+    const toggle = await client.query<{ enabled: boolean }>(
+      `SELECT enabled FROM invoice_reminder_offset_toggles WHERE service_type=$1 AND "offset"=$2`,
+      [invoice.service_type, group.offset]
+    );
+    if (toggle.rows[0]?.enabled === false) return 'skipped';
+  }
 
   const lockedRows = await client.query<ScheduleRow>(LOCK_DUE_ROWS_SQL, [
     group.invoice_id,
     group.offset,
-    now,
-  ])
-  if (lockedRows.rows.length === 0) return 'skipped'
+  ]);
+  if (
+    !lockedRows.rows.some((row) => {
+      const at = parseInstant(row.scheduled_at);
+      return at !== null && at <= now;
+    })
+  )
+    return 'skipped';
 
-  const channels = channelsForOutbox(lockedRows.rows.map((row) => row.channel))
+  const channels = channelsForOutbox(lockedRows.rows.map((row) => row.channel));
   const earliest = lockedRows.rows.reduce<Date | null>((acc, row) => {
-    const at = parseInstant(row.scheduled_at)
-    if (at === null) return acc
-    if (acc === null || at.getTime() < acc.getTime()) return at
-    return acc
-  }, parseInstant(group.scheduled_at))
+    const at = parseInstant(row.scheduled_at);
+    if (at === null) return acc;
+    if (acc === null || at.getTime() < acc.getTime()) return at;
+    return acc;
+  }, parseInstant(group.scheduled_at));
 
-  const dueAt = parseInstant(invoice.due_at)
-  await enqueue(client, {
+  const dueAt = parseInstant(invoice.due_at);
+  const queued = await enqueue(client, {
     profileId: invoice.profile_id,
     userId: invoice.user_id,
     eventKey: PAYMENT_INVOICE_REMINDER_EVENT_KEY,
@@ -291,11 +324,43 @@ async function sendOneGroup(
     channels,
     idempotencyKey: reminderOutboxIdempotencyKey(invoice.id, group.offset),
     status: 'queued',
-  })
+  });
 
-  const ids = lockedRows.rows.map((row) => row.id)
-  const updated = await client.query(MARK_SENT_SQL, [ids, now])
-  if ((updated.rowCount ?? 0) !== ids.length) return 'skipped'
+  if (queued.inserted && queued.outboxId) {
+    // Transfer the whole occurrence once. The outbox owns later channel wake-ups.
+    for (const row of lockedRows.rows) {
+      const at = parseInstant(row.scheduled_at);
+      if (at && at > now)
+        await client.query(
+          `UPDATE notification_job SET run_after=$3 WHERE outbox_id=$1 AND channel=$2`,
+          [queued.outboxId, row.channel, at]
+        );
+    }
+  } else {
+    // Older senders could omit a later channel. Do not falsely stamp it sent or
+    // replace an existing occurrence/recipient; keep it available for reconciliation.
+    const previous = await client.query(
+      `SELECT o.profile_id,o.user_id,o.payload,
+        ARRAY(SELECT channel FROM notification_job WHERE outbox_id=o.id) AS channels
+       FROM notification_outbox o WHERE idempotency_key=$1`,
+      [reminderOutboxIdempotencyKey(invoice.id, group.offset)]
+    );
+    const saved = previous.rows[0];
+    if (
+      !saved ||
+      saved.profile_id !== invoice.profile_id ||
+      saved.user_id !== invoice.user_id ||
+      saved.payload?.invoiceId !== invoice.id ||
+      saved.payload?.offset !== group.offset ||
+      saved.payload?.dueAt !== (dueAt?.toISOString() ?? null) ||
+      !channels.every((channel) => saved.channels?.includes(channel))
+    )
+      throw new Error('Existing reminder occurrence requires reconciliation');
+  }
 
-  return 'sent'
+  const ids = lockedRows.rows.map((row) => row.id);
+  const updated = await client.query(MARK_SENT_SQL, [ids, now]);
+  if ((updated.rowCount ?? 0) !== ids.length) return 'skipped';
+
+  return 'sent';
 }

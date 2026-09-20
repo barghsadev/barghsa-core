@@ -1,22 +1,19 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { HttpException } from '@nestjs/common'
-import { SessionController } from './session.controller.js'
-import { SessionService } from './session.service.js'
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { HttpException } from '@nestjs/common';
+import { SessionController } from './session.controller.js';
+import { SessionService } from './session.service.js';
 
 describe('SessionController', () => {
-  let controller: SessionController
-  let mockSessionService: { [K in keyof SessionService]: ReturnType<typeof vi.fn> }
+  let controller: SessionController;
+  let mockSessionService: { [K in keyof SessionService]: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
     mockSessionService = {
       getUserSessions: vi.fn(),
-      getSessionById: vi.fn(),
-      revokeSession: vi.fn(),
-      revokeAllUserSessions: vi.fn(),
-      verifyUserPassword: vi.fn(),
-    } as any
-    controller = new SessionController(mockSessionService as unknown as SessionService)
-  })
+      revokeOwnSessions: vi.fn(),
+    } as any;
+    controller = new SessionController(mockSessionService as unknown as SessionService);
+  });
 
   // ────────────────────────────────────────────────────────────
   // listSessions
@@ -43,191 +40,99 @@ describe('SessionController', () => {
           expires_at: '2026-08-25T08:00:00Z',
           idle_deadline: '2026-08-24T09:00:00Z',
         },
-      ]
-      mockSessionService.getUserSessions.mockResolvedValue(mockSessions)
+      ];
+      mockSessionService.getUserSessions.mockResolvedValue(mockSessions);
 
       const req = {
         session: { userId: 'user-001', sessionId: 'session-001' },
-      } as any
+      } as any;
 
-      const result = await controller.listSessions(req)
+      const result = await controller.listSessions(req);
 
-      expect(mockSessionService.getUserSessions).toHaveBeenCalledWith('user-001')
-      expect(result).toHaveLength(2)
+      expect(mockSessionService.getUserSessions).toHaveBeenCalledWith('user-001');
+      expect(result).toHaveLength(2);
       expect(result[0]).toMatchObject({
         sessionId: 'session-001',
         deviceInfo: { ip: '1.2.3.4', userAgent: 'Mozilla/5.0' },
         isCurrentSession: true,
-      })
+      });
       expect(result[1]).toMatchObject({
         sessionId: 'session-002',
         deviceInfo: null,
         isCurrentSession: false,
-      })
-    })
+      });
+    });
 
     it('returns empty array when user has no sessions', async () => {
-      mockSessionService.getUserSessions.mockResolvedValue([])
+      mockSessionService.getUserSessions.mockResolvedValue([]);
 
       const req = {
         session: { userId: 'user-001', sessionId: 'session-001' },
-      } as any
+      } as any;
 
-      const result = await controller.listSessions(req)
-      expect(result).toEqual([])
-    })
-  })
-
-  // ────────────────────────────────────────────────────────────
-  // revokeSession
-  // ────────────────────────────────────────────────────────────
+      const result = await controller.listSessions(req);
+      expect(result).toEqual([]);
+    });
+  });
 
   describe('revokeSession', () => {
-    it('revokes a session owned by the authenticated user', async () => {
-      mockSessionService.getSessionById.mockResolvedValue({
-        session_id: 'session-002',
-        user_id: 'user-001',
-      })
-
+    it('passes the acting session and selected target into the protected mutation', async () => {
+      mockSessionService.revokeOwnSessions.mockResolvedValue(1);
       const req = {
-        session: { userId: 'user-001', sessionId: 'session-001' },
-      } as any
-
-      const result = await controller.revokeSession('session-002', req)
-
-      expect(mockSessionService.revokeSession).toHaveBeenCalledWith('session-002')
-      expect(result).toEqual({ message: 'Session revoked.' })
-    })
-
-    it('throws 404 when session does not exist', async () => {
-      mockSessionService.getSessionById.mockResolvedValue(null)
-
-      const req = {
-        session: { userId: 'user-001', sessionId: 'session-001' },
-      } as any
-
-      await expect(
-        controller.revokeSession('nonexistent', req),
-      ).rejects.toThrow(HttpException)
-
-      try {
-        await controller.revokeSession('nonexistent', req)
-      } catch (e: any) {
-        expect(e.getStatus()).toBe(404)
-      }
-    })
-
-    it('throws 404 when session belongs to another user (info-safe)', async () => {
-      mockSessionService.getSessionById.mockResolvedValue({
-        session_id: 'session-003',
-        user_id: 'user-002',
-      })
-
-      const req = {
-        session: { userId: 'user-001', sessionId: 'session-001' },
-      } as any
-
-      let thrown = false
-      try {
-        await controller.revokeSession('session-003', req)
-      } catch (e: any) {
-        thrown = true
-        expect(e.getStatus()).toBe(404)
-        // Should NOT reveal it's a different user's session
-        expect(e.message).not.toContain('forbidden')
-        expect(e.message).not.toContain('belongs')
-      }
-      expect(thrown).toBe(true)
-      expect(mockSessionService.revokeSession).not.toHaveBeenCalled()
-    })
-  })
-
-  // ────────────────────────────────────────────────────────────
-  // revokeAllSessions
-  // ────────────────────────────────────────────────────────────
-
+        ip: '127.0.0.1',
+        session: { userId: 'user-001', sessionId: 'actor', csrfToken: 'csrf' },
+      } as any;
+      await expect(controller.revokeSession('target', req)).resolves.toEqual({
+        message: 'Session revoked.',
+      });
+      expect(mockSessionService.revokeOwnSessions).toHaveBeenCalledWith(
+        req.session,
+        { targetSessionId: 'target' },
+        '127.0.0.1'
+      );
+    });
+    it.each(['missing', 'foreign'])('preserves the safe %s-target rejection', async (target) => {
+      mockSessionService.revokeOwnSessions.mockRejectedValue(
+        new HttpException({ error: 'NOT_FOUND:RESOURCE' }, 404)
+      );
+      const req = { session: { userId: 'user-001', sessionId: 'actor', csrfToken: 'csrf' } } as any;
+      await expect(controller.revokeSession(target, req)).rejects.toMatchObject({ status: 404 });
+    });
+  });
   describe('revokeAllSessions', () => {
-    it('revokes all other sessions when password is correct', async () => {
-      mockSessionService.verifyUserPassword.mockResolvedValue(true)
-      mockSessionService.getUserSessions.mockResolvedValue([
-        { session_id: 'session-001' }, // current
-        { session_id: 'session-002' },
-        { session_id: 'session-003' },
-      ])
-      mockSessionService.revokeAllUserSessions.mockResolvedValue(undefined)
-
-      const req = {
-        session: { userId: 'user-001', sessionId: 'session-001' },
-      } as any
-
-      const result = await controller.revokeAllSessions(
-        { password: 'correct-password' },
-        req,
-      )
-
-      expect(mockSessionService.verifyUserPassword).toHaveBeenCalledWith(
-        'user-001',
-        'correct-password',
-      )
-      expect(mockSessionService.revokeAllUserSessions).toHaveBeenCalledWith(
-        'user-001',
-        'session-001',
-      )
-      expect(result).toEqual({
-        message: 'All 2 other session(s) revoked.',
-        revokedCount: 2,
-      })
-    })
-
-    it('returns 0 count when there are no other sessions', async () => {
-      mockSessionService.verifyUserPassword.mockResolvedValue(true)
-      mockSessionService.getUserSessions.mockResolvedValue([
-        { session_id: 'session-001' },
-      ])
-
-      const req = {
-        session: { userId: 'user-001', sessionId: 'session-001' },
-      } as any
-
-      const result = await controller.revokeAllSessions(
-        { password: 'correct-password' },
-        req,
-      )
-
-      expect(result).toEqual({
-        message: 'No other sessions to revoke.',
-        revokedCount: 0,
-      })
-      expect(mockSessionService.revokeAllUserSessions).not.toHaveBeenCalled()
-    })
-
-    it('throws 422 when password is incorrect', async () => {
-      mockSessionService.verifyUserPassword.mockResolvedValue(false)
-
-      const req = {
-        session: { userId: 'user-001', sessionId: 'session-001' },
-      } as any
-
-      try {
-        await controller.revokeAllSessions(
-          { password: 'wrong-password' },
-          req,
-        )
-      } catch (e: any) {
-        expect(e.getStatus()).toBe(422)
+    it.each([0, 2])(
+      'uses the mutation count of %s and confirms in the protected operation',
+      async (count) => {
+        mockSessionService.revokeOwnSessions.mockResolvedValue(count);
+        const req = {
+          session: { userId: 'user-001', sessionId: 'actor', csrfToken: 'csrf' },
+        } as any;
+        await expect(
+          controller.revokeAllSessions({ password: 'correct-password' }, req)
+        ).resolves.toEqual({
+          message: count ? 'All 2 other session(s) revoked.' : 'No other sessions to revoke.',
+          revokedCount: count,
+        });
+        expect(mockSessionService.revokeOwnSessions).toHaveBeenCalledWith(
+          req.session,
+          { password: 'correct-password' },
+          null
+        );
       }
-    })
-
-    it('throws 400 for invalid body', async () => {
-      const req = {
-        session: { userId: 'user-001', sessionId: 'session-001' },
-      } as any
-
-      try {
-        await controller.revokeAllSessions({}, req)
-      } catch (e: any) {
-        expect(e.getStatus()).toBe(400)
-      }
-    })
-  })
-})
+    );
+    it('preserves rejected password confirmation', async () => {
+      mockSessionService.revokeOwnSessions.mockRejectedValue(
+        new HttpException({ error: 'AUTH:LOGIN:INVALID_CREDENTIALS' }, 422)
+      );
+      const req = { session: { userId: 'user-001', sessionId: 'actor', csrfToken: 'csrf' } } as any;
+      await expect(
+        controller.revokeAllSessions({ password: 'wrong-password' }, req)
+      ).rejects.toMatchObject({ status: 422 });
+    });
+    it('rejects invalid bodies before starting a mutation', async () => {
+      const req = { session: { userId: 'user-001', sessionId: 'actor', csrfToken: 'csrf' } } as any;
+      await expect(controller.revokeAllSessions({}, req)).rejects.toMatchObject({ status: 400 });
+      expect(mockSessionService.revokeOwnSessions).not.toHaveBeenCalled();
+    });
+  });
+});

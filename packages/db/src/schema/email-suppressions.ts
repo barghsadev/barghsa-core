@@ -1,7 +1,7 @@
-import { pgTable, text, uniqueIndex, index } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { profiles } from './profiles.js'
-import { emailWebhookEvents } from './email-webhook-events.js'
+import { uuid, pgTable, text, uniqueIndex, index } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { profiles } from './profiles.js';
+import { emailWebhookEvents } from './email-webhook-events.js';
 
 /**
  * Suppressed email addresses (E-05, T-05.06.07).
@@ -33,12 +33,12 @@ export const emailSuppressions = pgTable(
     reason: text('reason', { enum: ['hard_bounce', 'complaint'] }).notNull(),
 
     /** The receiving profile when the originating outbox row was resolvable. */
-    profileId: uuidv7('profile_id').references(() => profiles.id, {
-      onDelete: 'cascade',
+    profileId: uuid('profile_id').references(() => profiles.id, {
+      onDelete: 'set null',
     }),
 
     /** The verified webhook event that created this suppression. */
-    sourceEventId: uuidv7('source_event_id').references(() => emailWebhookEvents.id, {
+    sourceEventId: uuid('source_event_id').references(() => emailWebhookEvents.id, {
       onDelete: 'set null',
     }),
 
@@ -48,5 +48,5 @@ export const emailSuppressions = pgTable(
     // At most one suppression per (address, reason) — replay-safe.
     uniqueIndex('uq_email_suppression').on(table.address, table.reason),
     index('idx_email_suppression_address').on(table.address),
-  ],
-)
+  ]
+);

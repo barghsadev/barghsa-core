@@ -11,7 +11,9 @@ function createMockContext(options: {
 }): { ctx: ExecutionContext; response: ReturnType<typeof createMockResponse> } {
   const { method = 'GET', url = '/api/products', ifNoneMatch = undefined } = options;
 
-  const mockHeaders: Record<string, string | string[] | undefined> = { 'if-none-match': ifNoneMatch };
+  const mockHeaders: Record<string, string | string[] | undefined> = {
+    'if-none-match': ifNoneMatch,
+  };
   const response = createMockResponse();
 
   return {
@@ -25,8 +27,8 @@ function createMockContext(options: {
       getArgByIndex: () => undefined,
       getArgs: () => [],
       getType: () => 'http',
-      switchToRpc: () => ({} as ReturnType<ExecutionContext['switchToRpc']>),
-      switchToWs: () => ({} as ReturnType<ExecutionContext['switchToWs']>),
+      switchToRpc: () => ({}) as ReturnType<ExecutionContext['switchToRpc']>,
+      switchToWs: () => ({}) as ReturnType<ExecutionContext['switchToWs']>,
     } as unknown as ExecutionContext,
     response,
   };
@@ -34,18 +36,26 @@ function createMockContext(options: {
 
 function createMockResponse() {
   const headers: Record<string, string> = {};
-  let statusCode: number | undefined;
+  let statusCode = 200;
   return {
-    setHeader: vi.fn((name: string, value: string) => { headers[name] = value; }),
-    status: vi.fn((code: number) => { statusCode = code; }),
-    get statusCode() { return statusCode; },
-    get headers() { return headers; },
+    setHeader: vi.fn((name: string, value: string) => {
+      headers[name] = value;
+    }),
+    status: vi.fn((code: number) => {
+      statusCode = code;
+    }),
+    get statusCode() {
+      return statusCode;
+    },
+    get headers() {
+      return headers;
+    },
   };
 }
 
 function createReflector(etagDecorated: boolean): Reflector {
   return {
-    getAllAndOverride: vi.fn((key: string, targets: Array<object>): boolean => {
+    getAllAndOverride: vi.fn((key: string, _targets: Array<object>): boolean => {
       return key === ETAG_METADATA ? etagDecorated : false;
     }),
     getAllAndMerge: vi.fn(),
@@ -91,7 +101,10 @@ describe('EtagInterceptor', () => {
       const result$ = interceptor.intercept(ctx, next);
       await new Promise((resolve) => result$.subscribe(resolve));
 
-      expect(response.setHeader).toHaveBeenCalledWith('ETag', expect.stringMatching(/^"[A-Za-z0-9+/=]+"$/));
+      expect(response.setHeader).toHaveBeenCalledWith(
+        'ETag',
+        expect.stringMatching(/^"[A-Za-z0-9+/=]+"$/)
+      );
     });
   });
 
@@ -147,6 +160,33 @@ describe('EtagInterceptor', () => {
       const result = await new Promise((resolve) => result$.subscribe(resolve));
 
       expect(result).toBeNull();
+    });
+
+    it('uses weak comparison for GET validators', async () => {
+      const body = { message: 'hello' };
+      const { createHash } = await import('node:crypto');
+      const hash = createHash('sha256').update(JSON.stringify(body)).digest('base64');
+      const { ctx, response } = createMockContext({ ifNoneMatch: `W/"${hash}"` });
+      const result = await new Promise((resolve) =>
+        new EtagInterceptor(createReflector(true))
+          .intercept(ctx, { handle: () => of(body) })
+          .subscribe(resolve)
+      );
+      expect(result).toBeNull();
+      expect(response.statusCode).toBe(304);
+    });
+    it('does not tag or replace an unsuccessful response', async () => {
+      const { ctx, response } = createMockContext({ ifNoneMatch: '*' });
+      response.status(404);
+      const body = { error: 'missing' };
+      const result = await new Promise((resolve) =>
+        new EtagInterceptor(createReflector(true))
+          .intercept(ctx, { handle: () => of(body) })
+          .subscribe(resolve)
+      );
+      expect(result).toBe(body);
+      expect(response.statusCode).toBe(404);
+      expect(response.headers).not.toHaveProperty('ETag');
     });
 
     it('handles wildcard * If-None-Match', async () => {

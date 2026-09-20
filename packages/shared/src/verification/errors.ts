@@ -19,4 +19,4 @@ export const VerificationErrorCodes = {
   PROVIDER_RESPONSE_ERROR: 'VERIFICATION:PROVIDER_RESPONSE_ERROR',
   /** The provider configuration is missing or malformed. */
   CONFIG_ERROR: 'VERIFICATION:CONFIG_ERROR',
-} as const
+} as const;

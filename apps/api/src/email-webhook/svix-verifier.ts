@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual, } from 'node:crypto'
+import { createHmac, timingSafeEqual } from 'node:crypto';
 
 /**
  * Svix webhook signature verifier (E-05, T-05.06.07).
@@ -8,7 +8,7 @@ import { createHmac, timingSafeEqual, } from 'node:crypto'
  *
  *   svix-id          unique message id (stable across provider retries)
  *   svix-timestamp   Unix seconds when the event was signed
- *   svix-signature   `v1,<base64hmac>` (multiple may be comma-separated)
+ *   svix-signature   `v1,<base64hmac>` (multiple are space-separated)
  *
  * The signature is computed over the exact raw request body:
  *
@@ -25,36 +25,36 @@ import { createHmac, timingSafeEqual, } from 'node:crypto'
  */
 
 export interface SvixWebhookHeaders {
-  id: string | undefined
-  timestamp: string | undefined
-  signature: string | undefined
+  id: string | undefined;
+  timestamp: string | undefined;
+  signature: string | undefined;
 }
 
 /** Default maximum age, in seconds, of an acceptable signature timestamp. */
-export const DEFAULT_TOLERANCE_SEC = 300
+export const DEFAULT_TOLERANCE_SEC = 300;
 
 export type VerifySvixResult =
   | { ok: true }
-  | { ok: false; reason: 'missing_secret' | 'missing_headers' | 'tampered' | 'replayed' }
+  | { ok: false; reason: 'missing_secret' | 'missing_headers' | 'tampered' | 'replayed' };
 
 /** Treat the secret string as the Svix secret encoding. */
 function signingKey(secret: string): Buffer {
-  const body = secret.startsWith('whsec_') ? secret.slice('whsec_'.length) : secret
+  const body = secret.startsWith('whsec_') ? secret.slice('whsec_'.length) : secret;
   // Resend/Bravenkeys encode the key as base64 after the `whsec_` prefix; when
   // base64 decoding the secret part fails we fall back to the raw bytes.
   try {
-    const decoded = Buffer.from(body, 'base64')
-    if (decoded.length > 0) return decoded
+    const decoded = Buffer.from(body, 'base64');
+    if (decoded.length > 0) return decoded;
   } catch {
     /* not valid base64 — use raw bytes */
   }
-  return Buffer.from(secret, 'utf8')
+  return Buffer.from(secret, 'utf8');
 }
 
 /** Timing-safe equality of two Buffers. */
 function safeEqual(a: Buffer, b: Buffer): boolean {
-  if (a.length !== b.length) return false
-  return timingSafeEqual(a, b)
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
 }
 
 /**
@@ -67,39 +67,35 @@ export function verifySvixSignature(
   headers: SvixWebhookHeaders,
   secret: string | undefined,
   nowSeconds = Math.floor(Date.now() / 1000),
-  toleranceSec = DEFAULT_TOLERANCE_SEC,
+  toleranceSec = DEFAULT_TOLERANCE_SEC
 ): VerifySvixResult {
-  if (!secret) return { ok: false, reason: 'missing_secret' }
-  if (!headers.id || !headers.timestamp || !headers.signature) {
-    return { ok: false, reason: 'tampered' }
+  if (!secret) return { ok: false, reason: 'missing_secret' };
+  if (
+    [headers.id, headers.timestamp, headers.signature].some(
+      (value) => typeof value !== 'string' || !value
+    )
+  ) {
+    return { ok: false, reason: 'tampered' };
   }
 
   // Replay window: the timestamp reflects when the provider signed it; demand
   // it be within `toleranceSec` of now (allow a small margin for clock skew).
-  const ts = Number(headers.timestamp)
-  if (!Number.isFinite(ts)) return { ok: false, reason: 'tampered' }
-  if (Math.abs(nowSeconds - ts) > toleranceSec) return { ok: false, reason: 'replayed' }
+  const ts = Number(headers.timestamp);
+  if (!/^\d+$/.test(headers.timestamp!) || !Number.isSafeInteger(ts))
+    return { ok: false, reason: 'tampered' };
+  if (Math.abs(nowSeconds - ts) > toleranceSec) return { ok: false, reason: 'replayed' };
 
-  const signedContent = `${headers.id}.${headers.timestamp}.${rawPayload}`
+  const signedContent = `${headers.id}.${headers.timestamp}.${rawPayload}`;
   const expectedHmac = createHmac('sha256', signingKey(secret))
     .update(signedContent, 'utf8')
-    .digest()
+    .digest();
 
-  // A signature may carry several candidates on rotation (`v1,<sig1>,v1,<sig2>`);
-  // accept any `v1,<sig>` pair.
-  const parts = headers.signature.split(',')
-  const candidates: string[] = []
-  for (let i = 0; i + 1 < parts.length; i++) {
-    if (parts[i] === 'v1') candidates.push(parts[i + 1]!)
+  // Svix rotation sends independent, space-separated version/signature pairs.
+  for (const candidate of headers.signature!.split(/\s+/)) {
+    const match = /^v1,([A-Za-z0-9+/]{43}=)$/.exec(candidate);
+    if (!match) continue;
+    const received = Buffer.from(match[1]!, 'base64');
+    if (safeEqual(received, expectedHmac)) return { ok: true };
   }
-
-  if (candidates.length === 0) return { ok: false, reason: 'tampered' }
-
-  // Accept any candidate that matches (rotation-friendly).
-  for (const candidate of candidates) {
-    const received = Buffer.from(candidate, 'base64')
-    if (received.length === 0) continue
-    if (safeEqual(received, expectedHmac)) return { ok: true }
-  }
-  return { ok: false, reason: 'tampered' }
+  return { ok: false, reason: 'tampered' };
 }

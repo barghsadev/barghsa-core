@@ -10,13 +10,13 @@
 | # | Domain | Epic File | Lines | Status |
 |---|--------|-----------|-------|--------|
 | 01 | Platform & Infrastructure | `epics/01-platform-infrastructure.md` | 1,412 | ✅ Audited |
-| 02 | Auth, Users, CRM & Admin | `epics/02-auth-users-admin.md` | 1,016 | ✅ Audited |
+| 02 | Auth, Users, CRM & Admin | `epics/02-auth-users-admin.md` | 1,015 | ✅ Audited |
 | 03 | Core Business (Products, Electricity, Saving, Solar, Consultation) | `epics/03-core-business.md` | 899 | ✅ Audited |
-| 04 | Invoices, Wallet, Payments & Contracts | `epics/04-invoices-wallet-contracts.md` | 798 | ✅ Audited |
+| 04 | Invoices, Wallet, Payments & Contracts | `epics/04-invoices-wallet-contracts.md` | 797 | ✅ Audited |
 | 05 | Notifications, Documents & AI Orchestration | `epics/05-notifications-documents-ai.md` | 789 | ✅ Audited |
 | 06 | Security, Testing, Observability & Operations | `epics/06-security-testing-observability.md` | 1,237 | ✅ Audited |
 | 07 | UI/UX Foundation & Design System | `epics/07-ui-ux-design.md` | 1,239 | ✅ Audited |
-| | **Total** | **7 epic files** | **7,390** | **7/7 validated** |
+| | **Total** | **7 epic files** | **7,388** | **7/7 validated** |
 
 ---
 
@@ -72,6 +72,8 @@ Ordered by logical dependency — later phases depend on earlier ones being subs
 
 ---
 
+Implementation status is recorded in `audit/acceptance-closure.json`. “Audited” above describes the task breakdown, not completed implementation.
+
 ## Legend
 
 - **Epics (E-NN):** Large feature areas spanning multiple sprints
@@ -82,39 +84,26 @@ Ordered by logical dependency — later phases depend on earlier ones being subs
 
 ---
 
-## Loop Automation Preparation
+## Continuing development
 
-The kanban is ready for the autonomous build loop with these artifacts:
+Read [continuation status](CONTINUATION.md) before selecting the next task. The generated queue includes every canonical task; it is not a list of unfinished work. Combine it with the [current acceptance ledger](../audit/acceptance-closure.json) to avoid repeating completed repairs.
+
+The local repair sprint is complete. The automatic loop remains blocked pending remote reconciliation and recovery. Do not resume a scheduler from this document.
 
 | File | Purpose |
-|------|---------|
-| `kanban/task-queue.json` | Deterministically generated ordered queue of every concrete epic task |
-| `kanban/loop-state.json` | Persistent state tracker — orchestrator reads/writes here |
-| `AGENTS.md` | Protocol playbook for Builder and Reviewer agents |
-| `kanban/index.md` | Overall execution order and phase breakdown |
-| `kanban/requirements-traceability.json` | Source-section → executable task-key coverage ledger |
-| `kanban/scripts/build_backlog.py` | Queue/ledger generator and consistency validator |
+| --- | --- |
+| `kanban/task-queue.json` | Generated order and canonical task metadata |
+| `audit/acceptance-closure.json` | Current acceptance of the 322 historically reviewed claims |
+| `audit/progress.json` | Repair completion, decisions and continuation readiness |
+| `kanban/loop-state.json` | Historical snapshot only; never dispatch from it |
+| `kanban/STATE-PROTOCOL.md` | Authoritative remote state, reconciliation and recovery rules |
+| `kanban/requirements-traceability.json` | Source-section coverage ledger |
+| `kanban/scripts/build_backlog.py` | Queue and traceability validator |
 
-### Model Assignment
+### Configured automation protocol
 
-| Role | Model | How |
-|------|-------|-----|
-| **Builder** | DeepSeek V4 Flash (Max) | via `delegate_task` subagent |
-| **Reviewer** | GPT-5.6 Sol | invoked by orchestrator via OpenRouter API |
-| **Orchestrator** | DeepSeek V4 Flash | Cron job — state mgmt + gh CLI operations |
+Cursor CLI builds, validates and authors the PR. Codex CLI reviews the exact committed PR revision. The deterministic supervisor may merge only on a separate later tick after checking the durable review and all required checks. Model assignments and the paused scheduler identifier are defined in [AGENTS.md](../AGENTS.md); they do not authorize starting the loop.
 
-### Loop flow
+Runtime state belongs outside the product checkout, with its authoritative snapshot on the dedicated remote `kanban-state` branch. [STATE-PROTOCOL.md](STATE-PROTOCOL.md) explains bootstrap and recovery. The historical checkout snapshot must not be promoted into live state.
 
-1. Orchestrator picks next task from queue → dispatches **Builder**
-2. Builder codes, tests, pushes, creates PR
-3. Orchestrator dispatches **Reviewer**
-4. Reviewer checks code → either approves+merges or requests changes
-5. Loop back to step 2 if changes needed, else step 1 for next task
-
-### Next Step
-
-Start the loop by resuming cron job `d09ad66fea0b` when you want autonomous development to begin.
-
-> **Task identity:** Bare task IDs repeat across epic files. The loop uses `<fname>#<id>` as the stable key (for example, `01-platform-infrastructure.md#T-01.01.01`).
->
-> Regenerate and validate before starting: `python3 kanban/scripts/build_backlog.py --write && python3 kanban/scripts/build_backlog.py --check`.
+Use qualified task identities, for example `04-invoices-wallet-contracts.md#T-04.3.01.06`. Validate before any dispatch with `python3 kanban/scripts/build_backlog.py --check`. Regenerate only after changing canonical requirements or explicit priority promotions.

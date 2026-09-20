@@ -1,0 +1,19 @@
+# Opt-in local backup configuration. Never use a checked-in/default encryption key.
+# See docs/operations/backup/postgresql-restore-runbook.md before enabling.
+services:
+  postgres:
+    command:
+      - postgres
+      - -c
+      - config_file=/etc/postgresql/barghsa.conf
+      - -c
+      - archive_mode=on
+    environment:
+      BACKUP_CLUSTER_ID: ${BACKUP_CLUSTER_ID:?Set a stable backup namespace}
+      BACKUP_GPG_PASSPHRASE_FILE: /run/secrets/postgres_backup_key
+    secrets:
+      - postgres_backup_key
+
+secrets:
+  postgres_backup_key:
+    file: ${BACKUP_GPG_PASSPHRASE_FILE:?Provide a secret-manager passphrase file outside the checkout}

@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 /**
  * Staff roles table (T-05.03.02 / T-09.05.01).
@@ -19,13 +19,9 @@ export const staffRoles = pgTable('staff_roles', {
   name: text('name').notNull().unique(),
   description: text('description').notNull(),
   permissions: text('permissions').notNull().default('[]'),
-  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-    .defaultNow()
-    .notNull(),
-})
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * User-role assignments (T-05.03.02).
@@ -36,10 +32,8 @@ export const staffRoles = pgTable('staff_roles', {
 export const userRoles = pgTable('user_roles', {
   userId: text('user_id').notNull(),
   roleId: text('role_id').notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-    .defaultNow()
-    .notNull(),
-})
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * Predefined staff roles with their permission sets.
@@ -50,12 +44,7 @@ export const PREDEFINED_ROLES = [
     id: 'role-customer-support',
     name: 'Customer Support',
     description: 'Handle customer inquiries, complaints, and support tickets.',
-    permissions: [
-      'tickets:read',
-      'tickets:write',
-      'users:read',
-      'profiles:read',
-    ],
+    permissions: ['tickets:read', 'tickets:write', 'users:read', 'profiles:read'],
   },
   {
     id: 'role-crm-verification',
@@ -64,6 +53,9 @@ export const PREDEFINED_ROLES = [
     permissions: [
       'crm:read',
       'crm:write',
+      'crm:edit',
+      'crm:verify',
+      'crm:edit-identity',
       'verification:read',
       'verification:write',
       'profiles:read',
@@ -82,6 +74,15 @@ export const PREDEFINED_ROLES = [
       'payments:read',
       'payments:write',
       'reports:read',
+      'admin:financial:edit',
+      'admin:finance:edit',
+      'admin:finance:wallet:bank-receipt-confirm',
+      'admin:finance:wallet:chargeback-alerts',
+      'admin:finance:invoices:bank-receipt-confirm',
+      'admin:finance:invoices:override-due-at',
+      'admin:finance:invoices:reminder-offsets',
+      'admin:reconciliation:view',
+      'admin:reconciliation:resolve',
     ],
   },
   {
@@ -94,6 +95,8 @@ export const PREDEFINED_ROLES = [
       'contracts:read',
       'contracts:write',
       'compliance:read',
+      'admin:documents:edit',
+      'admin:tos:edit',
     ],
   },
   {
@@ -122,7 +125,7 @@ export const PREDEFINED_ROLES = [
       '*',
     ],
   },
-] as const
+] as const;
 
 /**
  * SQL to create the staff_roles and user_roles tables with
@@ -136,8 +139,8 @@ export const createStaffRolesTable = (): string => {
         `'${r.name.replace(/'/g, "''")}'`,
         `'${r.description.replace(/'/g, "''")}'`,
         `'${JSON.stringify(r.permissions)}'`,
-      ].join(', ')})`,
-  ).join(',\n    ')
+      ].join(', ')})`
+  ).join(',\n    ');
 
   return `
     CREATE TABLE IF NOT EXISTS staff_roles (
@@ -167,5 +170,5 @@ export const createStaffRolesTable = (): string => {
       name = EXCLUDED.name,
       description = EXCLUDED.description,
       permissions = EXCLUDED.permissions;
-  `
-}
+  `;
+};

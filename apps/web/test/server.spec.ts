@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { createStaticServer } from '../server/index.js';
+import { createStaticServer } from '../server.js';
 import type { Server } from 'node:http';
 import { mkdtemp, writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -9,7 +9,12 @@ import { request } from 'node:http';
 /**
  * Helper: make an HTTP request and return the status, headers, and body.
  */
-function fetch(server: Server, path: string, method = 'GET'): Promise<{ status: number; headers: Record<string, string>; body: string }> {
+function fetch(
+  server: Server,
+  path: string,
+  method = 'GET',
+  headers: Record<string, string> = {}
+): Promise<{ status: number; headers: Record<string, string>; body: string }> {
   return new Promise((resolve, reject) => {
     const addr = server.address();
     if (!addr || typeof addr === 'string') {
@@ -17,7 +22,7 @@ function fetch(server: Server, path: string, method = 'GET'): Promise<{ status: 
       return;
     }
     const req = request(
-      { hostname: '127.0.0.1', port: addr.port, path, method },
+      { hostname: '127.0.0.1', port: addr.port, path, method, headers },
       (res) => {
         const chunks: Buffer[] = [];
         res.on('data', (chunk: Buffer) => chunks.push(chunk));
@@ -28,7 +33,7 @@ function fetch(server: Server, path: string, method = 'GET'): Promise<{ status: 
             body: Buffer.concat(chunks).toString('utf-8'),
           });
         });
-      },
+      }
     );
     req.on('error', reject);
     req.end();
@@ -42,8 +47,16 @@ describe('static server', () => {
   beforeAll(async () => {
     // Create a temporary dist directory with test fixtures
     distDir = await mkdtemp(join(tmpdir(), 'barghsa-test-dist-'));
-    await writeFile(join(distDir, 'index.html'), '<html><body>Home</body></html>');
+    await writeFile(
+      join(distDir, 'index.html'),
+      '<html><head><link rel="modulepreload" href="/assets/app-a1b2c3d4.js"></head><body>Home<script type="module" src="/assets/app-a1b2c3d4.js"></script><script nonce="old-nonce">window.ready=true</script></body></html>'
+    );
     await mkdir(join(distDir, 'assets'));
+    await mkdir(join(distDir, 'auth'));
+    await writeFile(
+      join(distDir, 'auth', 'index.html'),
+      '<html><body>Authentication<script type="module" src="/auth/assets/auth-a1b2c3d4.js"></script></body></html>'
+    );
     await writeFile(join(distDir, 'assets', 'app-a1b2c3d4.js'), 'console.log("ok");');
     await writeFile(join(distDir, 'assets', 'style-XyZ78901.css'), 'body { color: red; }');
     await writeFile(join(distDir, 'data.json'), JSON.stringify({ key: 'value' }));
@@ -61,6 +74,57 @@ describe('static server', () => {
     expect(res.status).toBe(200);
     expect(res.body).toContain('Home');
   });
+
+  it.each([
+    '/login',
+    '/register/verify?next=/wallet',
+    '/forgot-password',
+    '/activate/token',
+    '/auth/index.html',
+  ])('serves the authentication entry with a matching nonce at %s', async (path) => {
+    const res = await fetch(server, path);
+    expect(res.status).toBe(200);
+    expect(res.body).toContain('Authentication');
+    const nonce = res.headers['content-security-policy-report-only']?.match(/'nonce-([^']+)'/)?.[1];
+    expect(nonce).toBeTruthy();
+    expect(res.body).toContain(`nonce="${nonce}"`);
+    expect(res.headers['cache-control']).toContain('no-store');
+  });
+  it.each(['/wallet', '/electricity/order', '/savings', '/login-history', '/register-other'])(
+    'keeps application and unrelated paths on the application entry at %s',
+    async (path) => {
+      expect((await fetch(server, path)).body).toContain('Home');
+    }
+  );
+
+  it('sets production security headers', async () => {
+    const res = await fetch(server, '/');
+    expect(res.headers['x-content-type-options']).toBe('nosniff');
+    expect(res.headers['x-frame-options']).toBe('DENY');
+    expect(res.headers['referrer-policy']).toBe('strict-origin-when-cross-origin');
+  });
+
+  it.each(['/', '/index.html', '/account'])(
+    'binds a fresh CSP nonce to every HTML script at %s',
+    async (path) => {
+      const first = await fetch(server, path, 'GET', { 'csp-nonce': 'attacker-nonce' });
+      const second = await fetch(server, path);
+      const policy = first.headers['content-security-policy-report-only'];
+      expect(policy).toContain("script-src 'strict-dynamic' 'nonce-");
+      const nonce = policy!.match(/'nonce-([^']+)'/)?.[1];
+      expect(nonce).toMatch(/^[A-Za-z0-9+/]{32}$/);
+      expect(
+        first.body.match(new RegExp(`nonce="${nonce!.replace(/[+]/g, '\\+')}"`, 'g'))
+      ).toHaveLength(3);
+      expect(first.body).not.toContain('old-nonce');
+      expect(policy).not.toContain('attacker-nonce');
+      expect(second.headers['content-security-policy-report-only']).not.toBe(policy);
+      expect(first.headers['cache-control']).toContain('no-store');
+      expect(first.headers['permissions-policy']).toBe('camera=(), microphone=(), geolocation=()');
+      expect(first.headers['content-security-policy']).toBeUndefined();
+      expect(Number(first.headers['content-length'])).toBe(Buffer.byteLength(first.body));
+    }
+  );
 
   it('serves static files with correct Content-Type', async () => {
     const html = await fetch(server, '/index.html');
@@ -80,14 +144,39 @@ describe('static server', () => {
     expect(json.headers['content-type']).toMatch(/^application\/json/);
   });
 
+  it('gives non-hashed static files a one-day policy and varies by encoding', async () => {
+    const response = await fetch(server, '/data.json');
+    expect(response.status).toBe(200);
+    expect(response.headers['cache-control']).toBe('public, max-age=86400');
+    expect(response.headers.vary).toBe('Accept-Encoding');
+    expect(
+      (await fetch(server, '/data.json?path=/assets/fake-abcdefgh.js')).headers['cache-control']
+    ).toBe('public, max-age=86400');
+  });
+
+  it('does not serve or cache SPA HTML for missing static assets', async () => {
+    for (const path of [
+      '/assets/missing-a1b2c3d4.js',
+      '/auth/assets/missing-a1b2c3d4.js',
+      '/missing.svg',
+      '/missing.svg?version=1',
+      '/%61ssets/missing-a1b2c3d4.js',
+    ]) {
+      const response = await fetch(server, path);
+      expect(response.status).toBe(404);
+      expect(response.headers['cache-control']).toBe('private, no-store');
+      expect(response.body).not.toContain('<html');
+    }
+  });
+
   it('sets immutable Cache-Control for content-hashed assets', async () => {
     const res = await fetch(server, '/assets/app-a1b2c3d4.js');
     expect(res.headers['cache-control']).toBe('public, immutable, max-age=31536000');
   });
 
-  it('sets no-cache for index.html and unhashed resources', async () => {
+  it('prevents caching nonce-bearing HTML', async () => {
     const res = await fetch(server, '/index.html');
-    expect(res.headers['cache-control']).toBe('no-cache, must-revalidate');
+    expect(res.headers['cache-control']).toBe('private, no-store');
   });
 
   it('provides SPA fallback for unknown routes', async () => {
@@ -120,7 +209,7 @@ describe('static server', () => {
 
   it('handles malformed URI without crashing', async () => {
     const res = await fetch(server, '/%ZZ');
-    expect(res.status).toBe(200);
-    expect(res.body).toContain('Home');
+    expect(res.status).toBe(404);
+    expect(res.headers['cache-control']).toBe('private, no-store');
   });
 });

@@ -1,0 +1,13 @@
+diff --git a/lib/smtp-connection/index.d.ts b/lib/smtp-connection/index.d.ts
+index bf692fee476d422c807b01f19d0f20339dbea274..b4dd427aeef5bee70e1ffb69328fcfec90b68e0b 100644
+--- a/lib/smtp-connection/index.d.ts
++++ b/lib/smtp-connection/index.d.ts
+@@ -102,7 +102,7 @@ declare namespace SMTPConnection {
+ 
+     interface SMTPError extends NodeJS.ErrnoException {
+         /** string code identifying the error, for example ‘EAUTH’ is returned when authentication */
+-        code?: string | undefined;
++        code?: string;
+         /** the last response received from the server (if the error is caused by an error response from the server) */
+         response?: string | undefined;
+         /** the numeric response code of the response string (if available) */

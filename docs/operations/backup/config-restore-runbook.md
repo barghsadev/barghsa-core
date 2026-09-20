@@ -1,301 +1,150 @@
-# Config & Critical File Restore Runbook
+# Configuration and critical-file recovery
 
-**Part of:** Barghsa Restore Procedure (extends T-04.01.03)
+T-04.01.07 extends the [PostgreSQL recovery procedure](postgresql-restore-runbook.md).
+Use the packaged PostgreSQL 16 backup runtime and its Python dependencies. The scripts
+require signed S3 access, GPG and psql. They do not prompt for credentials.
 
-**Responsible:** Platform Engineering Team
+## Capture scope
 
-**Frequency:** On-demand (incident or scheduled restore)
+`config_backup.py` exports all stored versions from its explicit `CONFIG_TABLES`
+inventory, including active versions and the drafts/history needed to interpret
+activation and effective dates. This includes application configuration, provider
+configuration, notification templates, product/price/tax settings, upload policies,
+reminders, AI settings, terms, contract templates, staff teams and KB relationships.
+Stored encrypted provider values remain encrypted. Referenced users, uploads and KB
+content require the full database and object-storage recovery procedures.
 
-**RTO target (non-DB assets):** < 30 minutes
+Files come from an explicit operator-owned JSON inventory. Nothing scans the checkout
+for secrets. Paths are relative to `BACKUP_SOURCE_DIR`; missing files, symlinks,
+nonregular files, duplicate destinations and changes during a file copy fail capture.
+Include every deployed environment file, Compose file, deployment script, certificate
+and application encryption key. Classification is explicit. Private keys belong under
+`encryption_key`, certificates under `tls`. All four kinds are required.
 
-**RPO target (non-DB assets):** < 7 days (config changes are infrequent; sensitive secrets should use vault/secret manager, not file backup)
+Example inventory, with paths adapted to the deployed installation:
 
----
-
-## What this covers
-
-This runbook covers the restoration of application configuration and critical non-DB files from encrypted off-server backups (`restore-config.sh`). The following asset types are included:
-
-| Asset | Backup path (S3 prefix) | Priority |
-|---|---|---|
-| Application `.env` files | `config/<label>/` → `env-*` | Critical |
-| Admin config schema snapshot | `config/<label>/` → `admin-config-snapshot.json` | High |
-| Encryption keys (wrapped) | `config/<label>/` → `key-*` | Critical |
-| Docker Compose / deploy scripts | `config/<label>/` → `deploy-*` | High |
-| TLS certificates (public only) | `config/<label>/` → `cert-*` | High |
-| Deployment/infra scripts | `config/<label>/` → `script-*` | Medium |
-
-**Important:** Database restoration is covered by the separate PostgreSQL restore runbook (`restore-pg.sh`). Always restore the database *first*, then config files, so admin config snapshots can be re-applied to a running API.
-
----
-
-## Prerequisites
-
-1. **Access to S3/MinIO** — The `BACKUP_S3_*` environment variables must be set to the same endpoint/bucket/credentials used during backup.
-2. **GPG key or passphrase** — The encryption key used during backup must be available:
-   - For symmetric encryption: the `GPG_PASSPHRASE` environment variable.
-   - For recipient (asymmetric) encryption: the private key must be imported into the local GPG keyring, or `--decrypt-with <key-id>` must be specified.
-3. **Bash, curl, tar, gpg** — All required tools.
-4. **Write access** to the target directory where files will be restored.
-
----
-
-## Restore procedure
-
-### Step 1: Verify backup availability
-
-```bash
-# Set environment (adjust for your endpoint and credentials)
-export BACKUP_S3_ENDPOINT=http://minio:9000
-export BACKUP_S3_BUCKET=barghsa-backups
-export BACKUP_S3_ACCESS_KEY=minioadmin
-export BACKUP_S3_SECRET_KEY=minioadmin
-
-# List available config backups
-python3 -c "
-import json, urllib.request, base64
-creds = base64.b64encode(b'minioadmin:minioadmin').decode()
-req = urllib.request.Request('http://minio:9000/barghsa-backups/?prefix=config/&delimiter=/')
-req.add_header('Authorization', f'Basic {creds}')
-resp = urllib.request.urlopen(req).read().decode()
-print(resp)
-"
-```
-
-**Expected output:** A list of backup labels under the `config/` prefix, e.g. `config/2026-08-24T12:00:00Z/`.
-
-### Step 2: Select the backup label
-
-- **Latest backup:** Run `--label latest` (default).
-- **Specific backup:** Use the ISO-8601 timestamp from the backup label, e.g. `--label 2026-08-24T12:00:00Z`.
-- **Recovery point:** Choose the backup taken *before* the config change, data loss, or corruption event.
-
-### Step 3: Restore to an isolated directory (recommended first)
-
-```bash
-./packages/db/scripts/backup/restore-config.sh \
-  --label 2026-08-24T12:00:00Z \
-  --target-dir /tmp/config-restore-test
-```
-
-This restores files to `/tmp/config-restore-test/` without affecting production files. Inspect the restored files before copying them in place.
-
-**Output:** Decrypted files in `/tmp/config-restore-test/` with:
-- `MANIFEST.txt` — list of backed-up files and their categories
-- `backup-meta.json` — backup metadata (source, hostname, encryption method)
-- Individual files with prefixed names (e.g. `env-.env`, `deploy-docker-compose.yml`)
-
-### Step 4: Verify the restored files
-
-```bash
-# Check the manifest
-cat /tmp/config-restore-test/MANIFEST.txt
-
-# Verify file contents
-ls -la /tmp/config-restore-test/
-
-# For admin config snapshot, check JSON validity
-python3 -m json.tool /tmp/config-restore-test/admin-config-snapshot.json
-```
-
-### Step 5: Apply the restored files
-
-**For `.env` files:**
-```bash
-# Compare first, then copy
-diff /tmp/config-restore-test/env-.env .env || true
-cp /tmp/config-restore-test/env-.env .env
-# Restart the application to pick up new env vars
-pnpm dev       # or docker compose restart
-```
-
-**For Docker Compose / deploy scripts:**
-```bash
-cp /tmp/config-restore-test/deploy-docker-compose.yml docker-compose.yml
-cp /tmp/config-restore-test/deploy-Dockerfile.web Dockerfile.web
-cp /tmp/config-restore-test/deploy-Dockerfile.base Dockerfile.base
-```
-
-**For TLS certificates:**
-```bash
-mkdir -p certs
-cp /tmp/config-restore-test/cert-* certs/
-```
-
-**For encryption keys:**
-```bash
-# Keys are already encrypted at rest in the backup (wrapped copies).
-# Copy them to the key directory and verify integrity.
-mkdir -p keys
-cp /tmp/config-restore-test/key-* keys/
-# Verify each key file
-gpg --verify keys/key-*.gpg || true
-```
-
-**For deployment scripts:**
-```bash
-chmod +x /tmp/config-restore-test/script-*.sh
-cp /tmp/config-restore-test/script-*.sh scripts/
-```
-
-### Step 6: Verify the restored application
-
-1. Start the application (if not already running):
-   ```bash
-   docker compose up -d
-   # or
-   pnpm dev
-   ```
-
-2. Check health endpoint:
-   ```bash
-   curl -s http://localhost:4000/health | python3 -m json.tool
-   ```
-
-3. Verify database connectivity:
-   ```bash
-   curl -s http://localhost:4000/health/readiness | python3 -m json.tool
-   ```
-
-4. Test critical flows (login, config load, etc.)
-
----
-
-## Automated verification
-
-For quarterly (or ad-hoc) verification, use the automated verification script:
-
-```bash
-export BACKUP_S3_ENDPOINT=http://minio:9000
-export BACKUP_S3_BUCKET=barghsa-backups
-export BACKUP_S3_ACCESS_KEY=minioadmin
-export BACKUP_S3_SECRET_KEY=minioadmin
-export GPG_PASSPHRASE=correct-horse-battery-staple
-
-./packages/db/scripts/backup/verify-restore-config.sh
-```
-
-The script:
-1. Restores the latest config backup to an isolated directory
-2. Verifies the file structure (MANIFEST, metadata, file count)
-3. Checks that all files are decryptable and readable
-4. Measures and records RTO
-5. Produces a structured JSON result
-
-**Exit codes:**
-- `0` — All checks passed
-- `1` — One or more checks failed (logged to stderr)
-
-**Example output:**
 ```json
 {
-  "step_restore": "ok",
-  "step_verify_files": "ok",
-  "rto_seconds": 42,
-  "rto_warning_threshold": 1800,
-  "rto_critical_threshold": 3600,
-  "rto_status": "ok",
-  "step_measure_rto": "ok",
-  "backup_label": "2026-08-24T12:00:00Z",
-  "backup_timestamp": "2026-08-24T12:00:00Z",
-  "verification_time": "2026-08-24T13:00:00+03:00",
-  "verification_type": "quarterly-config-restore",
-  "step_document": "ok",
-  "overall_result": "success"
+  "version": 1,
+  "files": [
+    { "path": ".env", "kind": "env" },
+    { "path": "docker-compose.yml", "kind": "deploy" },
+    { "path": "deploy/start.sh", "kind": "deploy" },
+    { "path": "tls/server.crt", "kind": "tls" },
+    { "path": "tls/server.key", "kind": "encryption_key" },
+    { "path": "keys/application.key", "kind": "encryption_key" }
+  ]
 }
 ```
 
----
+Provision `BACKUP_GPG_PASSPHRASE_FILE` from the secret manager separately from the
+application keys being backed up. Keep recovery access outside this archive. Each
+application key is individually GPG-wrapped, then the complete archive is encrypted.
+Recovering only the outer archive does not leave plaintext application keys on disk.
 
-## RPO and RTO documentation
+## Capture and storage
 
-### Recovery Point Objective (non-DB assets)
+Set `PGDIRECT_URL` to the direct database connection, `BACKUP_SOURCE_DIR` to an explicit
+real directory, and `CONFIG_BACKUP_FILE_MANIFEST` to the inventory. Use the signed
+`BACKUP_S3_*`, `BACKUP_CLUSTER_ID` and passphrase-file settings documented in the
+PostgreSQL runbook. Production storage must be off-server and use HTTPS.
+`BACKUP_DIR`, if set, is an existing private work parent. Only unique child directories
+created by these scripts are removed; the caller's directory is never deleted.
 
-**Target:** < 7 days (10080 minutes)
+```bash
+/opt/barghsa-backup/backup-config.sh --label incident-checkpoint
+# Scheduled operation: backup first, then retention only after backup succeeds.
+/opt/barghsa-backup/.venv/bin/python3 /opt/barghsa-backup/config_backup.py job
+```
 
-**Actual:** Recorded in each quarterly verification run's RPO field.
+Objects live below `postgres/<BACKUP_CLUSTER_ID>/config/`. An encrypted unique blob is
+uploaded first. The immutable `full/<label>/manifest.json` completion record is written
+last. Failed collection/export/upload cannot create a completed backup. Public metadata
+contains no configuration values or file names. Selection paginates storage listings.
+Labels cannot be overwritten. `--dry-run` performs no reads, writes or network requests;
+it is a preview of no changes, not a validation of credentials or inventory.
 
-**Notes:**
-- Configuration files change infrequently. Weekly backups provide adequate coverage.
-- Highly sensitive secrets (API keys, database passwords) should use a secrets vault or external secret manager — file backup is a last-resort fallback.
-- The backup script runs on every full backup cycle. Retention is 90 days by default.
+Retention defaults to a minimum 90-day age window and always retains the newest
+completed configuration backup. It touches neither database backups nor WAL. Unreferenced
+blobs from interrupted uploads remain for operator inspection; automatic pruning cannot
+distinguish these from in-flight uploads. External bucket lifecycle, version retention,
+object lock and replication policies must be checked separately before enabling cleanup.
 
-### Recovery Time Objective (non-DB assets)
+## Isolated recovery
 
-**Target:** < 30 minutes
+```bash
+/opt/barghsa-backup/restore-config.sh --label latest \
+  --target-dir /var/lib/barghsa-backup/config-recovery-incident
+```
 
-**Actual:** Measured during each quarterly verification.
+The target must not exist and its parent must exist. Recovery verifies ciphertext size
+and hash, decrypts, rejects tar traversal/links, and checks the exact file inventory and
+snapshot. Files preserve relative paths below `files/`, with owner-only permissions and
+executable status. `active-config.json` contains the actual settings; `metadata.json`
+contains encrypted-at-rest hashes and original path/mode information. Keys remain at
+`files/<original-path>.gpg`. Do not print these files or diffs into shared incident logs.
 
-**Breakdown:**
-| Step | Estimated time |
-|---|---|
-| Download encrypted backup from S3 | < 1 min (small archive) |
-| Decrypt (GPG symmetric AES-256) | < 30 sec |
-| Extract and verify | < 30 sec |
-| Manual copy to production locations | < 5 min |
-| Restart application / reload config | < 2 min |
-| Verification and testing | < 10 min |
-| **Total** | **< 20 min** |
+To unwrap one key in a private recovery workspace, use an explicit new output path:
 
-### Measured values (updated per quarterly verification)
+```bash
+umask 077
+gpg --batch --yes --pinentry-mode loopback \
+  --passphrase-file "$BACKUP_GPG_PASSPHRASE_FILE" \
+  --output /var/lib/barghsa-backup/recovered-application.key \
+  --decrypt /var/lib/barghsa-backup/config-recovery-incident/files/keys/application.key.gpg
+```
 
-| Date | RTO | RPO | Verified by | Notes |
-|---|---|---|---|---|
-| *(first verification)* | | | | |
+Validate its SHA-256 against the corresponding `metadata.json` record through a private
+operator session before installation. Never overwrite deployed keys automatically.
+Restore the full database and referenced objects first. The JSON snapshot is a recovery
+and comparison artifact, not a safe standalone import into an empty application: it
+contains references to users/uploads, and schema versions must agree. Reconcile it with
+the restored database through the application's validated configuration workflows.
+Install reviewed files at their original paths, preserving owner access and execute bits.
+Check certificate validity, secret-provider access, health and critical application flows
+before routing traffic. Record this additional service recovery time separately.
 
----
+## Quarterly verification
 
-## Recovery scenarios
+Capture an independent baseline during an agreed configuration change freeze. Pause
+writers that can change the covered configuration tables and files. Then capture the
+backup being exercised. The baseline contains hashes, not secret values; keep it private
+and retain it with the backup label. A stale or different baseline cannot prove current
+configuration recovery. Resume writers after both captures finish.
 
-### Scenario A: Corrupted .env file
+```bash
+/opt/barghsa-backup/.venv/bin/python3 /opt/barghsa-backup/config_backup.py baseline \
+  --output /var/lib/barghsa-backup/config-baseline.json
+/opt/barghsa-backup/backup-config.sh --label quarterly-checkpoint
+/opt/barghsa-backup/verify-restore-config.sh --label quarterly-checkpoint \
+  --baseline /var/lib/barghsa-backup/config-baseline.json
+```
 
-1. Restore the latest config backup to `/tmp/config-restore-test`
-2. Copy `env-.env` to `.env`
-3. Restart the application
-4. Verify health endpoint
+For the exercise, point `PGDIRECT_URL` at an isolated database with the matching production
+schema. The verifier restores files, unwraps keys into its private workspace, compares
+all hashes against the independent baseline, and rehydrates the JSON into temporary
+mirrors of the real tables. It checks types, NOT NULL, CHECK and unique constraints and
+exact JSON round trips, then rolls back. It writes no permanent application records.
+Foreign-key relationships and application startup are checked by the full recovery
+exercise, not certified by these temporary tables.
 
-### Scenario B: Lost deployment scripts
+The JSON report records measured `rto_seconds` with the existing 3600-second ceiling.
+`rpo_seconds=0` means exact covered-asset equality at `reference_time`, the independent
+baseline timestamp. A mismatch or failure leaves RPO unknown and fails the exercise;
+backup age is never substituted for data loss. `core_service_rto_seconds` remains null
+until the operator measures service recovery. Exit zero means this local exercise passed.
+Failure exits one and sends the report to `VERIFY_ALERT_EXECUTABLE`, when configured.
+Receiver acceptance alone does not prove the on-call recipient received an alert.
 
-1. Restore the latest config backup to `/tmp/config-restore-test`
-2. Copy all `deploy-*` and `script-*` files to their original locations
-3. Verify permissions (`chmod +x`)
-4. Test deployment flow with `docker compose up -d`
+Systemd templates under `packages/db/scripts/backup/systemd/` provide a daily config
+backup and quarterly exercise. They are not installed or enabled by this change.
+Provision a dedicated `/etc/barghsa/config-backup.env`, least-privilege credentials,
+readable explicitly inventoried files, current baseline and private work directory.
+Replace the baseline intentionally after each approved configuration change; the capture
+command refuses an existing output. Keep the original baseline for historical backups.
+Validate unit paths and permissions on the actual host before separately enabling timers.
 
-### Scenario C: Lost TLS certificates (public certs only)
-
-1. Restore the latest config backup
-2. Copy `cert-*` files to the certificate directory
-3. Verify certificate expiry dates
-4. Restart services that use the certificates
-
-**Note:** Private keys are not included in file backup. If private keys are lost and not stored in a secrets vault, re-issue certificates from the CA.
-
-### Scenario D: Full config and file loss (disaster recovery)
-
-1. Provision a new VM / container
-2. Restore the PostgreSQL database first (see `restore-pg.sh` runbook)
-3. Restore config files using this runbook
-4. Verify application health
-5. Measure and record actual RTO
-
----
-
-## Troubleshooting
-
-| Problem | Likely cause | Solution |
-|---|---|---|
-| `gpg: decryption failed: No secret key` | Wrong GPG key or passphrase | Verify `GPG_PASSPHRASE` is set correctly, or import the correct private key |
-| S3 download fails with 403 | Wrong credentials | Verify `BACKUP_S3_ACCESS_KEY` and `BACKUP_S3_SECRET_KEY` |
-| S3 download fails with 404 | Backup label is wrong or backup was pruned | List available backups and choose a valid label |
-| No `config/` prefix in S3 bucket | Config backup has never been run | Run `backup-config.sh` first |
-| tar extraction fails with CRC error | Backup file is corrupted | Download again; if still corrupt, the backup on S3 is damaged — use an earlier backup label |
-| `.env` file restored contains old values | The backup was taken before a config change | Choose a backup label from after the change, or manually update the values |
-
----
-
-## Maintenance
-
-- **Quarterly verification:** Run `verify-restore-config.sh` every quarter and document the results.
-- **Secret rotation:** When encryption keys or passphrases are rotated, run a fresh backup immediately.
-- **Backup retention:** Config backups are retained for 90 days by default. Adjust `BACKUP_RETENTION_DAYS` in the backup job configuration.
-- **Runbook review:** Review this runbook annually, or after any change to the backup/restore tooling.
+Retain the label, source revision, schema revision, inventory, baseline timestamp,
+measured RPO/RTO, report, alert-delivery evidence and operator review from each quarterly
+run. Local synthetic tests do not establish off-server deployment, 90 days of retained
+history, secret-manager provisioning, production schedules or application recovery.

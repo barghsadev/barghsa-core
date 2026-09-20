@@ -1,14 +1,18 @@
+import { PreauthCsrfService } from './preauth-csrf.service.js';
 import {
+  Inject,
   Injectable,
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  UnauthorizedException,
   Logger,
-} from '@nestjs/common'
-import type { Request } from 'express'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { correlationIdStorage } from '../common/correlation-id.middleware.js'
-import type { AuthenticatedRequest } from './session.guard.js'
+} from '@nestjs/common';
+import type { Request } from 'express';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import type { AuthenticatedRequest } from './session.guard.js';
+import { SESSION_COOKIE_NAME } from './cookie.helper.js';
 
 /**
  * CSRF protection guard (T-02.02.03).
@@ -24,10 +28,10 @@ import type { AuthenticatedRequest } from './session.guard.js'
  *
  * Design notes:
  * - GET, HEAD, OPTIONS are exempt (safe methods per HTTP spec).
- * - Unauthenticated requests (no session) are exempt — CSRF requires a
- *   session to be meaningful. Auth endpoints that create sessions (login,
- *   register) are naturally exempt because they run before a session exists.
- * - This guard runs AFTER the SessionAuthGuard so `req.session` is populated.
+ * - Public auth requires JSON and a browser-bound anonymous or authenticated token.
+ *   Signed provider callbacks and refresh use independent validation.
+ *   Session-free requests must still satisfy their route's authentication.
+ * - SessionContextMiddleware loads the session before this global guard runs.
  * - Failures return 403 with correlation ID and are logged as security events.
  *
  * Usage in a controller (applied globally via APP_GUARD):
@@ -36,98 +40,100 @@ import type { AuthenticatedRequest } from './session.guard.js'
  * async updateProfile(@Req() req: AuthenticatedRequest) { ... }
  * ```
  *
- * To skip CSRF on a specific controller method (rare — auth endpoints only):
+ * Public auth requires a token even before a user session exists:
  * ```ts
- * @SkipCsrf()
+ * @RequirePreauthCsrf()
  * @Post('login')
  * ```
  */
 @Injectable()
 export class CsrfGuard implements CanActivate {
-  private readonly logger = new Logger(CsrfGuard.name)
+  private readonly logger = new Logger(CsrfGuard.name);
 
   /** HTTP methods that are exempt from CSRF checks (safe methods). */
-  private readonly SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS'])
+  private readonly SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 
   /** Name of the custom header carrying the CSRF token. */
-  private readonly CSRF_HEADER = 'x-csrf-token'
+  private readonly CSRF_HEADER = 'x-csrf-token';
 
-  canActivate(context: ExecutionContext): boolean {
-    const request: Request = context.switchToHttp().getRequest()
-    const method = request.method.toUpperCase()
+  constructor(@Inject(PreauthCsrfService) private readonly preauth: PreauthCsrfService) {}
+
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> {
+    const request: Request = context.switchToHttp().getRequest();
+    const method = request.method.toUpperCase();
 
     // ── Safe methods are always allowed ─────────────────────────
     if (this.SAFE_METHODS.has(method)) {
-      return true
+      return true;
     }
 
-    // ── Check if a skip decorator is present ────────────────────
-    const handler = context.getHandler()
-    const skipCsrf = Reflect.getMetadata('skipCsrf', handler)
-    if (skipCsrf) {
-      return true
+    const handler = context.getHandler();
+    const publicAuth = Reflect.getMetadata('preauthCsrf', handler);
+    if (publicAuth) {
+      if (!/^application\/json(?:\s*;|$)/i.test(request.headers['content-type'] ?? '')) {
+        this.reject(method, 'public auth requires JSON');
+      }
+      if (!(request as AuthenticatedRequest).session) {
+        const token = request.headers[this.CSRF_HEADER];
+        if (typeof token !== 'string' || !token) this.reject(method, 'missing X-CSRF-Token header');
+        return this.preauth
+          .consume(request, context.switchToHttp().getResponse(), token)
+          .then((valid) => {
+            if (!valid) this.reject(method, 'anonymous token invalid or expired');
+            return true;
+          });
+      }
+    } else if (Reflect.getMetadata('skipCsrf', handler)) {
+      // Refresh and signed callbacks enforce their independent request proofs.
+      return true;
     }
 
     // ── No session → nothing to validate ────────────────────────
-    const authRequest = request as AuthenticatedRequest
+    const authRequest = request as AuthenticatedRequest;
     if (!authRequest.session) {
-      return true
+      if (request.cookies?.[SESSION_COOKIE_NAME]) {
+        throw new UnauthorizedException({
+          statusCode: 401,
+          error: ErrorCodes.AUTH_UNAUTHENTICATED.code,
+        });
+      }
+      return true;
     }
 
     // ── Validate the CSRF token header ──────────────────────────
-    const headerToken = request.headers[this.CSRF_HEADER]
-    const sessionToken = authRequest.session.csrfToken
+    const headerToken = request.headers[this.CSRF_HEADER];
+    const sessionToken = authRequest.session.csrfToken;
 
     if (!headerToken || typeof headerToken !== 'string') {
-      const correlationId = correlationIdStorage.getStore()
-      this.logger.warn(
-        `CSRF check failed: missing X-CSRF-Token header | ` +
-        `session=${authRequest.session.sessionId} | ` +
-        `method=${method} | correlationId=${correlationId ?? 'none'}`,
-      )
-      throw new ForbiddenException({
-        statusCode: 403,
-        error: ErrorCodes.AUTHZ_CSRF_INVALID.code,
-      })
+      this.reject(method, 'missing X-CSRF-Token header');
     }
 
     if (headerToken !== sessionToken) {
-      const correlationId = correlationIdStorage.getStore()
-      this.logger.warn(
-        `CSRF check failed: token mismatch | ` +
-        `session=${authRequest.session.sessionId} | ` +
-        `method=${method} | correlationId=${correlationId ?? 'none'}`,
-      )
-      throw new ForbiddenException({
-        statusCode: 403,
-        error: ErrorCodes.AUTHZ_CSRF_INVALID.code,
-      })
+      this.reject(method, 'token mismatch');
     }
 
-    return true
+    return true;
+  }
+
+  private reject(method: string, reason: string): never {
+    this.logger.warn(
+      `CSRF check failed: ${reason} | method=${method} | ` +
+        `correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+    );
+    throw new ForbiddenException({ statusCode: 403, error: ErrorCodes.AUTHZ_CSRF_INVALID.code });
   }
 }
 
-/**
- * Decorator to skip CSRF validation on a specific route handler.
- *
- * Use ONLY on auth endpoints that establish or destroy a session
- * (login, register, logout) where a CSRF token cannot exist yet.
- *
- * ```ts
- * @SkipCsrf()
- * @Post('login')
- * async login(@Body() body: LoginDto) { ... }
- * ```
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+/** Only independently authenticated refresh and signed provider callbacks may skip this guard. */
 export function SkipCsrf(): MethodDecorator {
-  return (
-    _target: object,
-    _propertyKey: string | symbol,
-    descriptor: TypedPropertyDescriptor<any>,
-  ) => {
-    Reflect.defineMetadata('skipCsrf', true, descriptor.value!)
-    return descriptor
-  }
+  return (_target, _propertyKey, descriptor) => {
+    Reflect.defineMetadata('skipCsrf', true, descriptor!.value!);
+  };
+}
+
+/** Public JSON authentication still requires a browser-bound token. */
+export function RequirePreauthCsrf(): MethodDecorator {
+  return (_target, _propertyKey, descriptor) => {
+    Reflect.defineMetadata('preauthCsrf', true, descriptor!.value!);
+  };
 }

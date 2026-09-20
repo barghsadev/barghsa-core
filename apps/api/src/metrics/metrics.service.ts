@@ -1,6 +1,11 @@
-import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
-import { collectPerformanceMetrics, collectReplicationLag, type DatabaseMetrics } from '@barghsa/db'
-import promClient from 'prom-client'
+import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  collectPerformanceMetrics,
+  collectReplicationLag,
+  type DatabaseMetrics,
+} from '@barghsa/db';
+import promClient from 'prom-client';
+import { createDatabaseTelemetry } from './database-telemetry.js';
 
 /**
  * NestJS service that registers and updates Prometheus gauges for PostgreSQL
@@ -37,133 +42,205 @@ import promClient from 'prom-client'
  */
 @Injectable()
 export class MetricsService implements OnModuleInit, OnModuleDestroy {
-  private readonly logger = new Logger(MetricsService.name)
-  private pollTimer: ReturnType<typeof setInterval> | null = null
-  private lastMetrics: DatabaseMetrics | null = null
+  private readonly logger = new Logger(MetricsService.name);
+  private pollTimer: ReturnType<typeof setInterval> | null = null;
+  private lastMetrics: DatabaseMetrics | null = null;
+  private pollInFlight: Promise<void> | null = null;
+  private lastReplicationLag: number | null = null;
+  private readonly telemetry: ReturnType<typeof createDatabaseTelemetry>;
 
   // Polling interval (ms).  In production, metrics are updated on each scrape
   // by the controller; the poll interval controls how fresh the cached values
   // are.  Default: 15 seconds.
-  private readonly POLL_INTERVAL_MS = 15_000
+  private readonly POLL_INTERVAL_MS = 15_000;
 
   // ── Prometheus metric registrations ──────────────────────────────
 
   private readonly cacheHitRatio = new promClient.Gauge({
     name: 'pg_cache_hit_ratio',
     help: 'PostgreSQL cache hit ratio (0–1)',
-  })
+  });
   private readonly connectionSaturation = new promClient.Gauge({
     name: 'pg_connection_saturation',
     help: 'PostgreSQL connection pool saturation (0–1)',
-  })
+  });
   private readonly activeConnections = new promClient.Gauge({
     name: 'pg_active_connections',
     help: 'Number of active PostgreSQL connections',
-  })
+  });
   private readonly idleInTransaction = new promClient.Gauge({
     name: 'pg_idle_in_transaction_connections',
     help: 'Number of idle-in-transaction connections',
-  })
+  });
   private readonly waitingConnections = new promClient.Gauge({
     name: 'pg_waiting_connections',
     help: 'Number of connections waiting on a lock',
-  })
+  });
   private readonly longRunningQueries = new promClient.Gauge({
     name: 'pg_long_running_queries',
     help: 'Number of queries running longer than 30 seconds',
-  })
+  });
   private readonly deadlocksTotal = new promClient.Gauge({
     name: 'pg_deadlocks_total',
     help: 'Total number of detected deadlocks',
-  })
+  });
   private readonly tempFilesTotal = new promClient.Gauge({
     name: 'pg_temp_files_total',
     help: 'Total number of temporary files created',
-  })
+  });
   private readonly xactCommitTotal = new promClient.Gauge({
     name: 'pg_xact_commit_total',
     help: 'Total number of transactions committed',
-  })
+  });
   private readonly xactRollbackTotal = new promClient.Gauge({
     name: 'pg_xact_rollback_total',
     help: 'Total number of transactions rolled back',
-  })
+  });
   private readonly cacheHitTotal = new promClient.Gauge({
     name: 'pg_cache_hit_total',
     help: 'Total number of shared block cache hits',
-  })
+  });
   private readonly cacheReadTotal = new promClient.Gauge({
     name: 'pg_cache_read_total',
     help: 'Total number of shared block reads from disk',
-  })
+  });
   private readonly checkpointsTimedTotal = new promClient.Gauge({
     name: 'pg_checkpoints_timed_total',
     help: 'Total number of scheduled checkpoints',
-  })
+  });
   private readonly checkpointsReqTotal = new promClient.Gauge({
     name: 'pg_checkpoints_req_total',
     help: 'Total number of requested checkpoints',
-  })
+  });
   private readonly walBytesTotal = new promClient.Gauge({
     name: 'pg_wal_bytes_total',
     help: 'Total WAL data written in bytes',
-  })
+  });
   private readonly walRecordsTotal = new promClient.Gauge({
     name: 'pg_wal_records_total',
     help: 'Total number of WAL records generated',
-  })
+  });
   private readonly tupleReturnedTotal = new promClient.Gauge({
     name: 'pg_tuple_returned_total',
     help: 'Total number of tuples returned by queries',
-  })
+  });
   private readonly tupleFetchedTotal = new promClient.Gauge({
     name: 'pg_tuple_fetched_total',
     help: 'Total number of tuples fetched by queries',
-  })
+  });
   private readonly tupleInsertedTotal = new promClient.Gauge({
     name: 'pg_tuple_inserted_total',
     help: 'Total number of tuples inserted',
-  })
+  });
   private readonly tupleUpdatedTotal = new promClient.Gauge({
     name: 'pg_tuple_updated_total',
     help: 'Total number of tuples updated',
-  })
+  });
   private readonly tupleDeletedTotal = new promClient.Gauge({
     name: 'pg_tuple_deleted_total',
     help: 'Total number of tuples deleted',
-  })
+  });
   private readonly replicationLag = new promClient.Gauge({
     name: 'pg_replication_lag_seconds',
-    help: 'Replication lag in seconds (0 if no replica or not streaming)',
-  })
+    help: 'Replication lag in seconds when available',
+  });
   private readonly topQueryDuration = new promClient.Gauge({
     name: 'pg_top_query_duration_seconds',
     help: 'Mean execution time in seconds for top queries (labeled by queryid)',
     labelNames: ['queryid'] as const,
-  })
+  });
+
+  private readonly queryCalls = new promClient.Gauge({
+    name: 'pg_query_calls_total',
+    help: 'Top-level query calls retained by pg_stat_statements',
+  });
+  private readonly sequentialScans = new promClient.Gauge({
+    name: 'pg_sequential_scans_total',
+    help: 'User-table sequential scans',
+  });
+  private readonly indexScans = new promClient.Gauge({
+    name: 'pg_index_scans_total',
+    help: 'User-table index scans',
+  });
+  private readonly collectionSuccess = new promClient.Gauge({
+    name: 'pg_metrics_collection_success',
+    help: 'Whether the latest core PostgreSQL metrics collection succeeded (1 or 0)',
+  });
+  private readonly viewAvailable = new promClient.Gauge({
+    name: 'pg_metrics_view_available',
+    help: 'Whether an optional PostgreSQL metrics view is available (1 or 0)',
+    labelNames: ['view'] as const,
+  });
+  private readonly databaseGauges = [
+    this.cacheHitRatio,
+    this.connectionSaturation,
+    this.activeConnections,
+    this.idleInTransaction,
+    this.waitingConnections,
+    this.longRunningQueries,
+    this.deadlocksTotal,
+    this.tempFilesTotal,
+    this.xactCommitTotal,
+    this.xactRollbackTotal,
+    this.cacheHitTotal,
+    this.cacheReadTotal,
+    this.checkpointsTimedTotal,
+    this.checkpointsReqTotal,
+    this.walBytesTotal,
+    this.walRecordsTotal,
+    this.tupleReturnedTotal,
+    this.tupleFetchedTotal,
+    this.tupleInsertedTotal,
+    this.tupleUpdatedTotal,
+    this.tupleDeletedTotal,
+    this.replicationLag,
+    this.queryCalls,
+    this.sequentialScans,
+    this.indexScans,
+  ];
+
+  private clearDatabaseMetrics(): void {
+    this.lastMetrics = null;
+    this.lastReplicationLag = null;
+    // Gauge.reset() creates a zero sample for unlabelled gauges; remove it instead.
+    for (const gauge of this.databaseGauges) gauge.remove();
+    this.topQueryDuration.reset();
+    this.viewAvailable.reset();
+    this.collectionSuccess.set(0);
+  }
 
   constructor() {
+    this.telemetry = createDatabaseTelemetry(() => ({
+      metrics: this.lastMetrics,
+      replicationLag: this.lastReplicationLag,
+    }));
     // Register default Node.js / runtime metrics
-    promClient.collectDefaultMetrics({ prefix: 'node_' })
+    promClient.collectDefaultMetrics({ prefix: 'node_' });
   }
 
   onModuleInit(): void {
-    this.logger.log('Initialising PostgreSQL performance metrics')
+    this.logger.log('Initialising PostgreSQL performance metrics');
 
     // Start a background poll loop so metrics converge quickly even
     // without a scrape.  The controller's collect() call also triggers
     // a fresh poll synchronously before serving.
-    void this.poll()
+    void this.poll();
 
     this.pollTimer = setInterval(() => {
-      void this.poll()
-    }, this.POLL_INTERVAL_MS)
+      void this.poll();
+    }, this.POLL_INTERVAL_MS);
   }
 
-  onModuleDestroy(): void {
+  async onModuleDestroy(): Promise<void> {
     if (this.pollTimer) {
-      clearInterval(this.pollTimer)
-      this.pollTimer = null
+      clearInterval(this.pollTimer);
+      this.pollTimer = null;
+    }
+    await this.pollInFlight;
+    try {
+      await this.telemetry?.shutdown({ timeoutMillis: 5000 });
+    } catch {
+      this.logger.warn('OpenTelemetry metrics shutdown did not complete');
     }
   }
 
@@ -172,69 +249,94 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
    * text content.  Called by the /metrics controller on each HTTP scrape.
    */
   async collect(): Promise<string> {
-    await this.poll()
-    return promClient.register.metrics()
+    await this.poll();
+    return promClient.register.metrics();
   }
 
   /** Return the last known metrics snapshot (for health / debug). */
   getLastMetrics(): DatabaseMetrics | null {
-    return this.lastMetrics
+    return this.lastMetrics;
   }
 
   // ── Internal: poll PG and push to Prometheus gauges ─────────────
 
-  private async poll(): Promise<void> {
+  private poll(): Promise<void> {
+    // Timer and HTTP scrapes share one snapshot; late polls cannot restore old samples.
+    return (this.pollInFlight ??= this.refreshMetrics().finally(() => {
+      this.pollInFlight = null;
+    }));
+  }
+
+  private async refreshMetrics(): Promise<void> {
     try {
-      const result = await collectPerformanceMetrics(10, 30)
+      const result = await collectPerformanceMetrics(10, 30);
       if (!result.ok || !result.metrics) {
-        this.logger.warn(`Metrics collection failed: ${result.error ?? 'unknown'}`)
-        return
+        this.clearDatabaseMetrics();
+        this.logger.warn(`Metrics collection failed: ${result.error ?? 'unknown'}`);
+        return;
       }
 
-      const m = result.metrics
-      this.lastMetrics = m
+      const m = result.metrics;
+      this.queryCalls.remove();
+      if (m.queryCalls !== null) this.queryCalls.set(m.queryCalls);
+      this.sequentialScans.remove();
+      this.indexScans.remove();
+      this.viewAvailable.set({ view: 'table_scans' }, m.tableScans ? 1 : 0);
+      if (m.tableScans) {
+        this.sequentialScans.set(m.tableScans.sequential);
+        this.indexScans.set(m.tableScans.index);
+      }
+      this.cacheHitRatio.set(m.cacheHitRatio);
+      this.connectionSaturation.set(m.connectionSaturation);
+      this.activeConnections.set(m.activeConnections);
+      this.idleInTransaction.set(m.idleInTransaction);
+      this.waitingConnections.set(m.waitingConnections);
+      this.longRunningQueries.set(m.longRunningQueries.length);
+      this.deadlocksTotal.set(m.database.deadlocks);
+      this.tempFilesTotal.set(m.database.temp_files);
+      this.xactCommitTotal.set(m.database.xact_commit);
+      this.xactRollbackTotal.set(m.database.xact_rollback);
+      this.cacheHitTotal.set(m.database.blks_hit);
+      this.cacheReadTotal.set(m.database.blks_read);
+      this.walBytesTotal.remove();
+      this.walRecordsTotal.remove();
+      if (m.wal) {
+        this.walBytesTotal.set(m.wal.wal_bytes);
+        this.walRecordsTotal.set(m.wal.wal_records);
+      }
+      this.viewAvailable.set({ view: 'wal' }, m.wal ? 1 : 0);
+      this.tupleReturnedTotal.set(m.database.tup_returned);
+      this.tupleFetchedTotal.set(m.database.tup_fetched);
+      this.tupleInsertedTotal.set(m.database.tup_inserted);
+      this.tupleUpdatedTotal.set(m.database.tup_updated);
+      this.tupleDeletedTotal.set(m.database.tup_deleted);
 
-      this.cacheHitRatio.set(m.cacheHitRatio)
-      this.connectionSaturation.set(m.connectionSaturation)
-      this.activeConnections.set(m.activeConnections)
-      this.idleInTransaction.set(m.idleInTransaction)
-      this.waitingConnections.set(m.waitingConnections)
-      this.longRunningQueries.set(m.longRunningQueries.length)
-      this.deadlocksTotal.set(m.database.deadlocks)
-      this.tempFilesTotal.set(m.database.temp_files)
-      this.xactCommitTotal.set(m.database.xact_commit)
-      this.xactRollbackTotal.set(m.database.xact_rollback)
-      this.cacheHitTotal.set(m.database.blks_hit)
-      this.cacheReadTotal.set(m.database.blks_read)
-      this.walBytesTotal.set(m.wal?.wal_bytes ?? 0)
-      this.walRecordsTotal.set(m.wal?.wal_records ?? 0)
-      this.tupleReturnedTotal.set(m.database.tup_returned)
-      this.tupleFetchedTotal.set(m.database.tup_fetched)
-      this.tupleInsertedTotal.set(m.database.tup_inserted)
-      this.tupleUpdatedTotal.set(m.database.tup_updated)
-      this.tupleDeletedTotal.set(m.database.tup_deleted)
+      const lag = await collectReplicationLag();
+      const validLag = lag !== null && Number.isFinite(lag) && lag >= 0;
+      this.lastReplicationLag = validLag ? lag : null;
+      this.replicationLag.remove();
+      if (validLag) this.replicationLag.set(lag);
+      this.viewAvailable.set({ view: 'replication' }, validLag ? 1 : 0);
 
-      // Replication lag — query separately, defaults to 0 if no replica
-      const lag = await collectReplicationLag()
-      this.replicationLag.set(lag ?? 0)
-
+      this.checkpointsTimedTotal.remove();
+      this.checkpointsReqTotal.remove();
+      this.viewAvailable.set({ view: 'checkpoints' }, m.bgwriter ? 1 : 0);
       if (m.bgwriter) {
-        this.checkpointsTimedTotal.set(m.bgwriter.checkpoints_timed)
-        this.checkpointsReqTotal.set(m.bgwriter.checkpoints_req)
+        this.checkpointsTimedTotal.set(m.bgwriter.checkpoints_timed);
+        this.checkpointsReqTotal.set(m.bgwriter.checkpoints_req);
       }
 
       // Top queries — reset before re-labelling
-      this.topQueryDuration.reset()
+      this.viewAvailable.set({ view: 'statements' }, m.topQueries === null ? 0 : 1);
+      this.topQueryDuration.reset();
       for (const q of m.topQueries ?? []) {
-        this.topQueryDuration.set(
-          { queryid: q.queryId },
-          q.meanTimeMs / 1000,
-        )
+        this.topQueryDuration.set({ queryid: q.queryId }, q.meanTimeMs / 1000);
       }
+      this.lastMetrics = m;
+      this.collectionSuccess.set(1);
     } catch (err) {
-      this.logger.error(
-        `Metrics poll error: ${err instanceof Error ? err.message : String(err)}`,
-      )
+      this.clearDatabaseMetrics();
+      this.logger.error(`Metrics poll error: ${err instanceof Error ? err.message : String(err)}`);
     }
   }
 }

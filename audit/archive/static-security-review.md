@@ -1,0 +1,13 @@
+# Static security gate review
+
+Added five local Semgrep rules for request data reaching SQL text, outbound HTTP URLs or redirects, untrusted HTML output, and literal credential assignments. Semgrep is pinned to 1.176.1. The job uses local rules with telemetry and version checks disabled; it does not upload source to a scanning service.
+
+Each rule has positive and negative fixtures. The checks distinguish bound SQL parameters from query text, fixed outbound URLs from user-selected destinations, ordinary Map lookups from HTTP requests, fixed redirects from request-selected targets, escaped/sanitized HTML from raw HTML output, and configured credentials from literals. The deliberately unsafe fixture is excluded from ordinary ESLint checks and validated by Semgrep's rule-test runner instead.
+
+The first source scan produced seven false positives because the draft source pattern treated database `.query` methods as request data, and a draft outbound sink matched Map.get. The reviewed rules restrict request-property sources to req/request and outbound sinks to known HTTP calls. A separate JSX parser warning was resolved by writing the chart heading's literal ampersand as `&amp;`, preserving rendered text. No SQL or HTTP production behavior was changed to silence a finding.
+
+Validation: all five rule fixtures pass. Four wrapper tests verify that source/credential snippets are omitted from saved reports, empty scans and parser warnings fail, findings cannot pass through a zero process exit, and nonzero scanner exits remain failures. The final scan covers 654 files, reports zero findings and zero parser errors. Production build, lint and formatting pass. The normalized report is `static-security-scan.json`.
+
+CI runs the rule fixtures before the source scan and saves only rule IDs, locations, severity and error locations. Temporary raw reports are removed. A parser error, finding, empty scan, missing report or unexpected tool version fails the gate.
+
+These custom Community Edition rules do not trace request data across arbitrary controller/service boundaries or through persisted records. They do not infer every Nest decorated DTO as a source or recognize every HTTP-client alias. They are a regression gate for the tested patterns, not proof that the application has no SQL injection, SSRF, XSS or redirect vulnerability. Existing real HTTP authorization and financial tests remain necessary. Remote GitHub execution and required branch protection have not been tested. [Semgrep taint analysis](https://semgrep.dev/docs/writing-rules/data-flow/taint-mode), [rule testing](https://semgrep.dev/docs/writing-rules/testing-rules).

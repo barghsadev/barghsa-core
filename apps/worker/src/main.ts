@@ -1,5 +1,11 @@
+import { runAiModelTest } from './ai-models/test-runner.js';
+import { cleanupStorageObjects, cleanupStorageProvider } from './storage/cleanup.js';
+import { SmsNotificationTransport } from './notifications/sms-transport.js';
+import { EmailNotificationTransport } from './notifications/email-transport.js';
+import { runAuthDelivery } from './auth-delivery/runner.js';
+import { PollerGroup } from './jobs/poller-group.js';
 import { getDbPool, createDbPool } from '@barghsa/db';
-import { type Server as HttpServer, createServer } from 'node:http';
+import { createServer } from 'node:http';
 import { runOutboxPoll } from './notifications/outbox-runner.js';
 import { collectNotificationGauges, exportWorkerMetrics } from './notifications/worker-metrics.js';
 import { InAppNotificationTransport } from './notifications/in-app-transport.js';
@@ -26,6 +32,11 @@ import {
   expireStaleOnlineTopUps,
 } from './wallet/online-topup-expiry-scanner.js';
 import { recordJobFailure, recordJobSuccess } from './jobs/job-recorder.js';
+import {
+  expireInvitations,
+  INVITATION_EXPIRY_INTERVAL_MS,
+  INVITATION_EXPIRY_JOB_TYPE,
+} from './profiles/invitation-expiry.js';
 
 /**
  * Grace period in milliseconds. Configurable via `SHUTDOWN_GRACE_PERIOD_MS`
@@ -55,12 +66,8 @@ const logger = {
  * 3. Close the database connection pool.
  * 4. Exit cleanly with code 0, or code 1 if the grace period expires.
  *
- * ## Deferred shutdown items
- *
- * - **Redis:** no connection factory exists yet. When wired (T-04.02.01),
- *   add `redis.quit()` before pool.end().
- * - **Lease release:** lease infrastructure doesn't exist yet.
- *   When wired, add lease release before closing the pool.
+ * All pollers are tracked; durable outbox leases expire for retry if the
+ * shutdown deadline interrupts a delivery.
  */
 async function main(): Promise<void> {
   logger.info('Worker starting');
@@ -68,6 +75,8 @@ async function main(): Promise<void> {
   // Initialise the database connection pool.
   createDbPool();
   logger.info('Database pool initialised');
+
+  let draining = false;
 
   // Expose a health-check endpoint (`/health` and `/`) for container
   // orchestration plus a Prometheus `/metrics` endpoint carrying the
@@ -87,18 +96,37 @@ async function main(): Promise<void> {
       }
       return;
     }
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok', service: 'worker' }));
+    if (pathname === '/health/live') {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: 'ok', service: 'worker' }));
+      return;
+    }
+    if (pathname === '/health/ready' || pathname === '/health' || pathname === '/') {
+      try {
+        if (draining) throw new Error('draining');
+        await getDbPool().query('SELECT 1');
+        if (draining) throw new Error('draining');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'ok', service: 'worker' }));
+      } catch {
+        res.writeHead(503, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'unavailable', service: 'worker' }));
+      }
+      return;
+    }
+    res.writeHead(404);
+    res.end();
   });
 
   const port = parseInt(process.env['WORKER_PORT'] ?? '9090', 10);
   server.listen(port, () => {
-    logger.info(`Worker health server listening on port ${port}`);
+    const address = server.address();
+    logger.info(
+      `Worker health server listening on port ${typeof address === 'object' && address ? address.port : port}`
+    );
   });
 
-  // Track whether a job is in-flight.
-  let draining = false;
-  let currentJob: Promise<void> | null = null;
+  const pollers = new PollerGroup(() => logger.error('Worker job or failure recording failed'));
 
   /* ------------------------------------------------------------------ */
   /*  Graceful shutdown handler                                          */
@@ -109,14 +137,14 @@ async function main(): Promise<void> {
     draining = true;
 
     logger.warn(
-      `Received ${signal} — starting graceful shutdown (${GRACE_PERIOD_MS / 1_000}s deadline)`,
+      `Received ${signal} — starting graceful shutdown (${GRACE_PERIOD_MS / 1_000}s deadline)`
     );
 
     const forceExitTimer = setTimeout(() => {
       logger.error('Graceful shutdown deadline exceeded — forcing exit with code 1');
       process.exit(1);
     }, GRACE_PERIOD_MS);
-    forceExitTimer.unref();
+    // Keep the deadline alive even if a stalled job has no active I/O handles.
 
     // 1. Stop accepting new jobs / health-check requests — drain connections.
     const closeServer = new Promise<void>((resolve) => {
@@ -127,7 +155,7 @@ async function main(): Promise<void> {
     });
 
     // 2. Wait for the in-flight job to finish.
-    const waitForJob = currentJob ?? Promise.resolve();
+    const waitForJob = pollers.drain();
 
     // 3. Drain server, close pool, then exit.
     void Promise.all([closeServer, waitForJob])
@@ -136,6 +164,7 @@ async function main(): Promise<void> {
         return p.end();
       })
       .then(() => {
+        cleanupProvider?.destroy?.();
         clearTimeout(forceExitTimer);
         logger.info('Graceful shutdown complete — exiting with code 0');
         process.exit(0);
@@ -160,20 +189,88 @@ async function main(): Promise<void> {
     logger.error(`Unhandled rejection: ${String(reason)}`);
   });
 
+  pollers.every(async () => {
+    try {
+      await runAiModelTest(getDbPool());
+      await recordJobSuccess('ai_model_test');
+    } catch {
+      await recordJobFailure({
+        jobType: 'ai_model_test',
+        error: 'ai_model_test_queue_unavailable',
+        errorCategory: 'transient',
+      });
+    }
+  }, 1000);
+
+  let cleanupProvider: ReturnType<typeof cleanupStorageProvider> | null = null;
+  try {
+    cleanupProvider = cleanupStorageProvider();
+  } catch {
+    logger.error('Storage cleanup provider configuration is invalid');
+  }
+  pollers.every(async () => {
+    try {
+      const result = await cleanupStorageObjects(getDbPool(), cleanupProvider);
+      if (result.failed)
+        await recordJobFailure({
+          jobType: 'storage_cleanup',
+          error: 'storage_cleanup_failed',
+          errorCategory: 'transient',
+          payload: result,
+        });
+      else if (result.deleted || result.expirationScheduled)
+        await recordJobSuccess('storage_cleanup');
+    } catch {
+      await recordJobFailure({
+        jobType: 'storage_cleanup',
+        error: 'storage_cleanup_unavailable',
+        errorCategory: 'transient',
+      });
+    }
+  }, 60000);
+
+  pollers.every(async () => {
+    const outcome = await runAuthDelivery(getDbPool());
+    if (outcome === 'retry' || outcome === 'dead') {
+      await recordJobFailure({
+        jobType: 'auth_delivery',
+        error: 'delivery_failed',
+        errorCategory: 'transient',
+      });
+    } else if (outcome === 'sent') {
+      await recordJobSuccess('auth_delivery');
+    }
+  }, 1000);
+
   // ── Notification outbox poll loop (E-05, T-05.01.02 / T-05.02.01) ──────
   // Poll for due outbox rows, dispatch channels, and record outcomes.
   // The in-app transport is mandatory and always registered so every row that
   // requests `in_app` delivery lands a durable `in_app_notifications` row.
-  const transports = { in_app: new InAppNotificationTransport() };
-  const OUTBOX_POLL_MS = Number(process.env['OUTBOX_POLL_MS'] ?? '2000');
-  const outboxPoller = setInterval(async () => {
+  const transports = {
+    in_app: new InAppNotificationTransport(),
+    email: new EmailNotificationTransport(),
+    sms: new SmsNotificationTransport(),
+  };
+  const outboxInterval = Number(process.env['OUTBOX_POLL_MS'] ?? '2000');
+  const OUTBOX_POLL_MS =
+    Number.isFinite(outboxInterval) && outboxInterval >= 1000 ? outboxInterval : 2000;
+  const outboxPoller = pollers.every(async () => {
     if (draining) return;
     try {
       const r = await runOutboxPoll({ transports });
       if (r.leased > 0) {
         logger.info(`Outbox poll: leased=${r.leased} delivered=${r.delivered} failed=${r.failed}`);
       }
-      await recordJobSuccess('notification_outbox_poll');
+      if (r.failed > 0) {
+        await recordJobFailure({
+          jobType: 'notification_outbox_poll',
+          error: 'notification_delivery_failed',
+          errorCategory: 'transient',
+          payload: { failed: r.failed, delivered: r.delivered },
+        });
+      } else if (r.delivered > 0) {
+        await recordJobSuccess('notification_outbox_poll');
+      }
     } catch (err) {
       logger.error(`Outbox poll failed: ${(err as Error)?.message ?? String(err)}`);
       await recordJobFailure({
@@ -196,25 +293,27 @@ async function main(): Promise<void> {
   // pipeline). No-op when no config row exists, so a fresh installation is
   // silent until an admin configures targets.
   const BREACH_SCAN_DEFAULT_MS = 300000;
-  const breachScanRaw = Number(process.env['SERVICE_BREACH_SCAN_MS'] ?? String(BREACH_SCAN_DEFAULT_MS));
+  const breachScanRaw = Number(
+    process.env['SERVICE_BREACH_SCAN_MS'] ?? String(BREACH_SCAN_DEFAULT_MS)
+  );
   const SERVICE_BREACH_SCAN_MS =
     Number.isFinite(breachScanRaw) && breachScanRaw >= 1000
       ? breachScanRaw
       : BREACH_SCAN_DEFAULT_MS;
   if (SERVICE_BREACH_SCAN_MS !== breachScanRaw) {
     logger.warn(
-      `Invalid SERVICE_BREACH_SCAN_MS '${process.env['SERVICE_BREACH_SCAN_MS'] ?? ''}' — falling back to ${BREACH_SCAN_DEFAULT_MS}ms`,
+      `Invalid SERVICE_BREACH_SCAN_MS '${process.env['SERVICE_BREACH_SCAN_MS'] ?? ''}' — falling back to ${BREACH_SCAN_DEFAULT_MS}ms`
     );
   }
   let breachScanInFlight = false;
-  const breachScanner = setInterval(async () => {
+  const breachScanner = pollers.every(async () => {
     if (draining || breachScanInFlight) return;
     breachScanInFlight = true;
     try {
       const result = await scanServiceBreaches();
       if (result.alerted > 0 || result.errors.length > 0) {
         logger.info(
-          `Breach scan: alerted=${result.alerted} skipped=${result.skippedDuplicates} pruned=${result.pruned} errors=${result.errors.length}`,
+          `Breach scan: alerted=${result.alerted} skipped=${result.skippedDuplicates} pruned=${result.pruned} errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -250,27 +349,34 @@ async function main(): Promise<void> {
   // so a fresh installation escalates nothing until an admin configures a
   // policy.
   const ESCALATION_SCAN_DEFAULT_MS = 300000;
-  const escalationScanRaw = Number(process.env['SERVICE_ESCALATION_SCAN_MS'] ?? String(ESCALATION_SCAN_DEFAULT_MS));
+  const escalationScanRaw = Number(
+    process.env['SERVICE_ESCALATION_SCAN_MS'] ?? String(ESCALATION_SCAN_DEFAULT_MS)
+  );
   const SERVICE_ESCALATION_SCAN_MS =
     Number.isFinite(escalationScanRaw) && escalationScanRaw >= 1000
       ? escalationScanRaw
       : ESCALATION_SCAN_DEFAULT_MS;
   if (SERVICE_ESCALATION_SCAN_MS !== escalationScanRaw) {
     logger.warn(
-      `Invalid SERVICE_ESCALATION_SCAN_MS '${process.env['SERVICE_ESCALATION_SCAN_MS'] ?? ''}' — falling back to ${ESCALATION_SCAN_DEFAULT_MS}ms`,
+      `Invalid SERVICE_ESCALATION_SCAN_MS '${process.env['SERVICE_ESCALATION_SCAN_MS'] ?? ''}' — falling back to ${ESCALATION_SCAN_DEFAULT_MS}ms`
     );
   }
   let escalationScanInFlight = false;
-  const escalationScanner = setInterval(async () => {
+  const escalationScanner = pollers.every(async () => {
     if (draining || escalationScanInFlight) return;
     escalationScanInFlight = true;
     try {
       const result = await scanServiceEscalations();
-      if (result.escalated.ticket.level2 + result.escalated.ticket.level3 +
-          result.escalated.verification_case.level2 + result.escalated.verification_case.level3 > 0 ||
-          result.errors.length > 0) {
+      if (
+        result.escalated.ticket.level2 +
+          result.escalated.ticket.level3 +
+          result.escalated.verification_case.level2 +
+          result.escalated.verification_case.level3 >
+          0 ||
+        result.errors.length > 0
+      ) {
         logger.info(
-          `Escalation scan: ticket(l2=${result.escalated.ticket.level2},l3=${result.escalated.ticket.level3}) case(l2=${result.escalated.verification_case.level2},l3=${result.escalated.verification_case.level3}) errors=${result.errors.length}`,
+          `Escalation scan: ticket(l2=${result.escalated.ticket.level2},l3=${result.escalated.ticket.level3}) case(l2=${result.escalated.verification_case.level2},l3=${result.escalated.verification_case.level3}) errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -303,25 +409,27 @@ async function main(): Promise<void> {
   // Periodically marks Unpaid / Partially funded invoices whose dueAt is
   // strictly in the past as Overdue. No late fees; reminders continue.
   const OVERDUE_SCAN_DEFAULT_MS = 300000;
-  const overdueScanRaw = Number(process.env['INVOICE_OVERDUE_SCAN_MS'] ?? String(OVERDUE_SCAN_DEFAULT_MS));
+  const overdueScanRaw = Number(
+    process.env['INVOICE_OVERDUE_SCAN_MS'] ?? String(OVERDUE_SCAN_DEFAULT_MS)
+  );
   const INVOICE_OVERDUE_SCAN_MS =
     Number.isFinite(overdueScanRaw) && overdueScanRaw >= 1000
       ? overdueScanRaw
       : OVERDUE_SCAN_DEFAULT_MS;
   if (INVOICE_OVERDUE_SCAN_MS !== overdueScanRaw) {
     logger.warn(
-      `Invalid INVOICE_OVERDUE_SCAN_MS '${process.env['INVOICE_OVERDUE_SCAN_MS'] ?? ''}' — falling back to ${OVERDUE_SCAN_DEFAULT_MS}ms`,
+      `Invalid INVOICE_OVERDUE_SCAN_MS '${process.env['INVOICE_OVERDUE_SCAN_MS'] ?? ''}' — falling back to ${OVERDUE_SCAN_DEFAULT_MS}ms`
     );
   }
   let overdueScanInFlight = false;
-  const overdueScanner = setInterval(async () => {
+  const overdueScanner = pollers.every(async () => {
     if (draining || overdueScanInFlight) return;
     overdueScanInFlight = true;
     try {
       const result = await scanOverdueInvoices();
       if (result.marked > 0 || result.errors.length > 0) {
         logger.info(
-          `Overdue scan: marked=${result.marked} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+          `Overdue scan: marked=${result.marked} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -355,7 +463,7 @@ async function main(): Promise<void> {
   // datetimes computed from dueAt + canonical offsets and inserted.
   const REMINDER_SCHEDULE_DEFAULT_MS = 60_000;
   const reminderScheduleRaw = Number(
-    process.env['INVOICE_REMINDER_SCHEDULE_MS'] ?? String(REMINDER_SCHEDULE_DEFAULT_MS),
+    process.env['INVOICE_REMINDER_SCHEDULE_MS'] ?? String(REMINDER_SCHEDULE_DEFAULT_MS)
   );
   const INVOICE_REMINDER_SCHEDULE_MS =
     Number.isFinite(reminderScheduleRaw) && reminderScheduleRaw >= 1000
@@ -363,18 +471,18 @@ async function main(): Promise<void> {
       : REMINDER_SCHEDULE_DEFAULT_MS;
   if (INVOICE_REMINDER_SCHEDULE_MS !== reminderScheduleRaw) {
     logger.warn(
-      `Invalid INVOICE_REMINDER_SCHEDULE_MS '${process.env['INVOICE_REMINDER_SCHEDULE_MS'] ?? ''}' — falling back to ${REMINDER_SCHEDULE_DEFAULT_MS}ms`,
+      `Invalid INVOICE_REMINDER_SCHEDULE_MS '${process.env['INVOICE_REMINDER_SCHEDULE_MS'] ?? ''}' — falling back to ${REMINDER_SCHEDULE_DEFAULT_MS}ms`
     );
   }
   let reminderScheduleInFlight = false;
-  const reminderScheduler = setInterval(async () => {
+  const reminderScheduler = pollers.every(async () => {
     if (draining || reminderScheduleInFlight) return;
     reminderScheduleInFlight = true;
     try {
       const result = await scheduleIssuedInvoiceReminders();
       if (result.scheduled > 0 || result.errors.length > 0) {
         logger.info(
-          `Reminder schedule: scheduled=${result.scheduled} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+          `Reminder schedule: scheduled=${result.scheduled} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -407,7 +515,7 @@ async function main(): Promise<void> {
   // Hourly cron: due `scheduled` reminder rows are claimed, invoice state
   // is re-checked, and delivery is written through the notification outbox.
   const reminderSendRaw = Number(
-    process.env['INVOICE_REMINDER_SEND_MS'] ?? String(DEFAULT_REMINDER_SEND_INTERVAL_MS),
+    process.env['INVOICE_REMINDER_SEND_MS'] ?? String(DEFAULT_REMINDER_SEND_INTERVAL_MS)
   );
   const INVOICE_REMINDER_SEND_MS =
     Number.isFinite(reminderSendRaw) && reminderSendRaw >= 1000
@@ -415,18 +523,18 @@ async function main(): Promise<void> {
       : DEFAULT_REMINDER_SEND_INTERVAL_MS;
   if (INVOICE_REMINDER_SEND_MS !== reminderSendRaw) {
     logger.warn(
-      `Invalid INVOICE_REMINDER_SEND_MS '${process.env['INVOICE_REMINDER_SEND_MS'] ?? ''}' — falling back to ${DEFAULT_REMINDER_SEND_INTERVAL_MS}ms`,
+      `Invalid INVOICE_REMINDER_SEND_MS '${process.env['INVOICE_REMINDER_SEND_MS'] ?? ''}' — falling back to ${DEFAULT_REMINDER_SEND_INTERVAL_MS}ms`
     );
   }
   let reminderSendInFlight = false;
-  const reminderSender = setInterval(async () => {
+  const reminderSender = pollers.every(async () => {
     if (draining || reminderSendInFlight) return;
     reminderSendInFlight = true;
     try {
       const result = await sendDueInvoiceReminders();
       if (result.sent > 0 || result.errors.length > 0) {
         logger.info(
-          `Reminder send: sent=${result.sent} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+          `Reminder send: sent=${result.sent} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -459,7 +567,8 @@ async function main(): Promise<void> {
   // Hourly cron: compare each wallet's cached posted/reserved balances
   // against the ledger sums and open a finance-queue exception on drift.
   const walletReconcileRaw = Number(
-    process.env['WALLET_RECONCILIATION_SCAN_MS'] ?? String(DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS),
+    process.env['WALLET_RECONCILIATION_SCAN_MS'] ??
+      String(DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS)
   );
   const WALLET_RECONCILIATION_SCAN_MS =
     Number.isFinite(walletReconcileRaw) && walletReconcileRaw >= 1000
@@ -467,18 +576,18 @@ async function main(): Promise<void> {
       : DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS;
   if (WALLET_RECONCILIATION_SCAN_MS !== walletReconcileRaw) {
     logger.warn(
-      `Invalid WALLET_RECONCILIATION_SCAN_MS '${process.env['WALLET_RECONCILIATION_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS}ms`,
+      `Invalid WALLET_RECONCILIATION_SCAN_MS '${process.env['WALLET_RECONCILIATION_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS}ms`
     );
   }
   let walletReconcileInFlight = false;
-  const walletReconciler = setInterval(async () => {
+  const walletReconciler = pollers.every(async () => {
     if (draining || walletReconcileInFlight) return;
     walletReconcileInFlight = true;
     try {
       const result = await reconcileWalletBalances();
       if (result.reported > 0 || result.errors.length > 0) {
         logger.info(
-          `Wallet reconciliation: reported=${result.reported} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+          `Wallet reconciliation: reported=${result.reported} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -512,7 +621,7 @@ async function main(): Promise<void> {
   // auto-rejected. Provider authority stays on metadata so a later
   // authenticated callback can still credit.
   const onlineTopUpExpiryRaw = Number(
-    process.env['ONLINE_TOPUP_EXPIRY_SCAN_MS'] ?? String(DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS),
+    process.env['ONLINE_TOPUP_EXPIRY_SCAN_MS'] ?? String(DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS)
   );
   const ONLINE_TOPUP_EXPIRY_SCAN_MS =
     Number.isFinite(onlineTopUpExpiryRaw) && onlineTopUpExpiryRaw >= 1000
@@ -520,18 +629,18 @@ async function main(): Promise<void> {
       : DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS;
   if (ONLINE_TOPUP_EXPIRY_SCAN_MS !== onlineTopUpExpiryRaw) {
     logger.warn(
-      `Invalid ONLINE_TOPUP_EXPIRY_SCAN_MS '${process.env['ONLINE_TOPUP_EXPIRY_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS}ms`,
+      `Invalid ONLINE_TOPUP_EXPIRY_SCAN_MS '${process.env['ONLINE_TOPUP_EXPIRY_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS}ms`
     );
   }
   let onlineTopUpExpiryInFlight = false;
-  const onlineTopUpExpiryScanner = setInterval(async () => {
+  const onlineTopUpExpiryScanner = pollers.every(async () => {
     if (draining || onlineTopUpExpiryInFlight) return;
     onlineTopUpExpiryInFlight = true;
     try {
       const result = await expireStaleOnlineTopUps();
       if (result.rejected > 0 || result.errors.length > 0) {
         logger.info(
-          `Online top-up expiry: rejected=${result.rejected} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+          `Online top-up expiry: rejected=${result.rejected} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -560,8 +669,32 @@ async function main(): Promise<void> {
   process.on('SIGTERM', () => clearInterval(onlineTopUpExpiryScanner));
   process.on('SIGINT', () => clearInterval(onlineTopUpExpiryScanner));
 
+  const invitationExpiryRaw = Number(
+    process.env['INVITATION_EXPIRY_SCAN_MS'] ?? INVITATION_EXPIRY_INTERVAL_MS
+  );
+  const invitationExpiryInterval =
+    Number.isFinite(invitationExpiryRaw) && invitationExpiryRaw >= 1000
+      ? invitationExpiryRaw
+      : INVITATION_EXPIRY_INTERVAL_MS;
+  if (invitationExpiryInterval !== invitationExpiryRaw)
+    logger.warn(`Invalid INVITATION_EXPIRY_SCAN_MS; using ${INVITATION_EXPIRY_INTERVAL_MS}ms`);
+  pollers.every(async () => {
+    if (draining) return;
+    try {
+      await expireInvitations();
+      await recordJobSuccess(INVITATION_EXPIRY_JOB_TYPE);
+    } catch (error) {
+      logger.error('Invitation expiry failed');
+      await recordJobFailure({
+        jobType: INVITATION_EXPIRY_JOB_TYPE,
+        error: (error as Error)?.message ?? String(error),
+        errorCategory: 'transient',
+      });
+    }
+  }, invitationExpiryInterval);
+
   logger.info(
-    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler + invoice reminder sender + wallet reconciliation + online top-up expiry active',
+    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler + invoice reminder sender + wallet reconciliation + online top-up expiry + invitation expiry active'
   );
 }
 

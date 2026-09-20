@@ -14,22 +14,22 @@
  * the row's `variables` allow-list.
  */
 
-export type SeedTemplateChannel = 'email' | 'sms' | 'in_app'
-export type SeedTemplateLocale = 'fa' | 'en'
+export type SeedTemplateChannel = 'email' | 'sms' | 'in_app';
+export type SeedTemplateLocale = 'fa' | 'en';
 
 export interface SeedTemplateVariable {
-  name: string
-  description: string
+  name: string;
+  description: string;
 }
 
 export interface SeedTemplate {
-  eventKey: string
-  channel: SeedTemplateChannel
-  locale: SeedTemplateLocale
+  eventKey: string;
+  channel: SeedTemplateChannel;
+  locale: SeedTemplateLocale;
   /** Present only for email channel (subject line). */
-  subject: string | null
-  bodyTemplate: string
-  variables: SeedTemplateVariable[]
+  subject: string | null;
+  bodyTemplate: string;
+  variables: SeedTemplateVariable[];
 }
 
 /**
@@ -39,16 +39,16 @@ export interface SeedTemplate {
  * expands exactly those into per-locale rows.
  */
 export interface SeedEventDefinition {
-  eventKey: string
+  eventKey: string;
   /** Subject for fa emails; only used when the event delivers on email. */
-  faSubject?: string | null
-  enSubject?: string | null
-  faBody: string
-  enBody: string
+  faSubject?: string | null;
+  enSubject?: string | null;
+  faBody: string;
+  enBody: string;
   /** The subset of {email, sms, in_app} channels to seed. */
-  channels: SeedTemplateChannel[]
+  channels: SeedTemplateChannel[];
   /** Shared allow-list for the event's templates. */
-  variables: SeedTemplateVariable[]
+  variables: SeedTemplateVariable[];
 }
 
 /** The complete seed catalog, one entry per registered event key. */
@@ -57,8 +57,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'auth.otp_sent',
     faSubject: 'کد ورود بارق‌سا',
     enSubject: 'Barghsa sign-in code',
-    faBody: 'کد تأیید شما: {{verificationCode}}\n\nاین کد تا {{expiryMinutes}} دقیقه معتبر است. اگر این درخواست را شما انجام نداده‌اید، لطفاً بلافاصله بارق‌سا را ترک کرده و با پشتیبانی تماس بگیرید.',
-    enBody: 'Your verification code is {{verificationCode}}.\n\nThis code expires in {{expiryMinutes}} minutes. If you did not make this request, please leave Barghsa and contact support immediately.',
+    faBody:
+      'کد تأیید شما: {{verificationCode}}\n\nاین کد تا {{expiryMinutes}} دقیقه معتبر است. اگر این درخواست را شما انجام نداده‌اید، لطفاً بلافاصله بارق‌سا را ترک کرده و با پشتیبانی تماس بگیرید.',
+    enBody:
+      'Your verification code is {{verificationCode}}.\n\nThis code expires in {{expiryMinutes}} minutes. If you did not make this request, please leave Barghsa and contact support immediately.',
     channels: ['email', 'sms', 'in_app'],
     variables: [
       { name: 'verificationCode', description: 'کد یکبارمصرف ورود / One-time sign-in code' },
@@ -69,8 +71,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'auth.password_changed',
     faSubject: 'تغییر رمز عبور',
     enSubject: 'Password changed',
-    faBody: 'رمز عبور حساب شما با موفقیت تغییر کرد.\n\nاگر شما این کار را انجام نداده‌اید، لطفاً بلافاصله با پشتیبانی تماس بگیرید.',
-    enBody: 'Your account password was changed successfully.\n\nIf you did not do this, please contact support immediately.',
+    faBody:
+      'رمز عبور حساب شما با موفقیت تغییر کرد.\n\nاگر شما این کار را انجام نداده‌اید، لطفاً بلافاصله با پشتیبانی تماس بگیرید.',
+    enBody:
+      'Your account password was changed successfully.\n\nIf you did not do this, please contact support immediately.',
     channels: ['email', 'in_app'],
     variables: [],
   },
@@ -78,8 +82,21 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'auth.session_revoked',
     faSubject: 'باطل شدن نشست',
     enSubject: 'Session revoked',
-    faBody: 'نشست شما در بارق‌سا باطل شد.\n\nاگر این کار شما را برده‌اید، لطفاً بلافاصله با پشتیبانی تماس بگیرید.',
-    enBody: 'Your Barghsa session was revoked.\n\nIf you did not do this, please contact support immediately.',
+    faBody:
+      'نشست شما در بارق‌سا باطل شد.\n\nاگر این کار شما را برده‌اید، لطفاً بلافاصله با پشتیبانی تماس بگیرید.',
+    enBody:
+      'Your Barghsa session was revoked.\n\nIf you did not do this, please contact support immediately.',
+    channels: ['email', 'in_app'],
+    variables: [],
+  },
+  {
+    eventKey: 'auth.refresh_token_reused',
+    faSubject: 'هشدار امنیتی نشست',
+    enSubject: 'Session security alert',
+    faBody:
+      'استفادهٔ دوباره از توکن نشست شما شناسایی شد. نشست‌های مرتبط برای محافظت از حساب باطل شدند. اگر این فعالیت را نمی‌شناسید، رمز عبور خود را تغییر دهید و با پشتیبانی تماس بگیرید.',
+    enBody:
+      'Reuse of a session token was detected. Related sessions were revoked to protect your account. If you do not recognize this activity, change your password and contact support.',
     channels: ['email', 'in_app'],
     variables: [],
   },
@@ -87,8 +104,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'auth.new_device_login',
     faSubject: 'ورود از دستگاه جدید',
     enSubject: 'New device sign-in',
-    faBody: 'ورود جدیدی در حساب شما ثبت شد.\n\nدستگاه: {{device}}\nزمان: {{loginTime}}\n\nاگر این شما نیستید، لطفاً بلافاصله با پشتیبانی تماس بگیرید.',
-    enBody: 'A new sign-in was detected on your account.\n\nDevice: {{device}}\nTime: {{loginTime}}\n\nIf this was not you, contact support immediately.',
+    faBody:
+      'ورود جدیدی در حساب شما ثبت شد.\n\nدستگاه: {{device}}\nزمان: {{loginTime}}\n\nاگر این شما نیستید، لطفاً بلافاصله با پشتیبانی تماس بگیرید.',
+    enBody:
+      'A new sign-in was detected on your account.\n\nDevice: {{device}}\nTime: {{loginTime}}\n\nIf this was not you, contact support immediately.',
     channels: ['email', 'in_app'],
     variables: [
       { name: 'device', description: 'دستگاه / Device name' },
@@ -99,8 +118,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'payment.wallet_topup_completed',
     faSubject: 'شارژ موفق کیف پول',
     enSubject: 'Wallet top-up successful',
-    faBody: 'کیف پول شما به مبلغ {{amount}} موفقیت‌آمیز شارژ شد.\n\nشماره تراکنش: {{transactionId}}',
-    enBody: 'Your wallet was topped up with {{amount}} successfully.\n\nTransaction ID: {{transactionId}}',
+    faBody:
+      'کیف پول شما به مبلغ {{amount}} موفقیت‌آمیز شارژ شد.\n\nشماره تراکنش: {{transactionId}}',
+    enBody:
+      'Your wallet was topped up with {{amount}} successfully.\n\nTransaction ID: {{transactionId}}',
     channels: ['email', 'in_app'],
     variables: [
       { name: 'amount', description: 'مبلغ شارژ / Top-up amount' },
@@ -111,8 +132,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'payment.wallet_topup_failed',
     faSubject: 'خطا در شارژ کیف پول',
     enSubject: 'Wallet top-up failed',
-    faBody: 'شارژ کیف پول شما به مبلغ {{amount}} ناموفق بود.\n\nدلیل: {{reason}}\n\nلطفاً دوباره تلاش کنید یا با پشتیبانی تماس بگیرید.',
-    enBody: 'Your wallet top-up of {{amount}} failed.\n\nReason: {{reason}}\n\nPlease try again or contact support.',
+    faBody:
+      'شارژ کیف پول شما به مبلغ {{amount}} ناموفق بود.\n\nدلیل: {{reason}}\n\nلطفاً دوباره تلاش کنید یا با پشتیبانی تماس بگیرید.',
+    enBody:
+      'Your wallet top-up of {{amount}} failed.\n\nReason: {{reason}}\n\nPlease try again or contact support.',
     channels: ['email', 'in_app'],
     variables: [
       { name: 'amount', description: 'مبلغ شارژ / Top-up amount' },
@@ -141,8 +164,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'payment.invoice_paid',
     faSubject: 'پرداخت قبض',
     enSubject: 'Invoice paid',
-    faBody: 'پرداخت شما برای قبض با موفقیت انجام شد.\n\nشماره قبض: {{invoiceNumber}}\nمبلغ: {{amount}}\nزمان پرداخت: {{paidAt}}',
-    enBody: 'Your payment was completed successfully.\n\nInvoice number: {{invoiceNumber}}\nAmount: {{amount}}\nPaid at: {{paidAt}}',
+    faBody:
+      'پرداخت شما برای قبض با موفقیت انجام شد.\n\nشماره قبض: {{invoiceNumber}}\nمبلغ: {{amount}}\nزمان پرداخت: {{paidAt}}',
+    enBody:
+      'Your payment was completed successfully.\n\nInvoice number: {{invoiceNumber}}\nAmount: {{amount}}\nPaid at: {{paidAt}}',
     channels: ['email', 'in_app'],
     variables: [
       { name: 'invoiceNumber', description: 'شماره قبض / Invoice number' },
@@ -154,8 +179,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'payment.invoice_overdue',
     faSubject: 'قبض سررسید گذشته',
     enSubject: 'Invoice overdue',
-    faBody: 'قبض زیر هنوز پرداخت نشده است و سررسید آن گذشته است.\n\nشماره قبض: {{invoiceNumber}}\nمبلغ: {{amount}}\nسررسید: {{dueDate}}\n\nلطفاً هرچه زودتر پرداخت کنید.',
-    enBody: 'The following invoice is overdue and unpaid.\n\nInvoice number: {{invoiceNumber}}\nAmount: {{amount}}\nDue date: {{dueDate}}\n\nPlease pay as soon as possible.',
+    faBody:
+      'قبض زیر هنوز پرداخت نشده است و سررسید آن گذشته است.\n\nشماره قبض: {{invoiceNumber}}\nمبلغ: {{amount}}\nسررسید: {{dueDate}}\n\nلطفاً هرچه زودتر پرداخت کنید.',
+    enBody:
+      'The following invoice is overdue and unpaid.\n\nInvoice number: {{invoiceNumber}}\nAmount: {{amount}}\nDue date: {{dueDate}}\n\nPlease pay as soon as possible.',
     channels: ['email', 'in_app'],
     variables: [
       { name: 'invoiceNumber', description: 'شماره قبض / Invoice number' },
@@ -167,8 +194,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'payment.invoice_reminder',
     faSubject: 'یادآوری پرداخت قبض',
     enSubject: 'Invoice payment reminder',
-    faBody: 'این یک یادآوری برای پرداخت قبض شماست.\n\nشناسه قبض: {{invoiceId}}\nسررسید: {{dueAt}}\nزمان یادآوری: {{scheduledAt}}\nفاصله تا سررسید (روز): {{offset}}\n\nلطفاً در اسرع وقت پرداخت کنید.',
-    enBody: 'This is a reminder to pay your invoice.\n\nInvoice ID: {{invoiceId}}\nDue date: {{dueAt}}\nReminder time: {{scheduledAt}}\nDays relative to due date: {{offset}}\n\nPlease pay as soon as possible.',
+    faBody:
+      'این یک یادآوری برای پرداخت قبض شماست.\n\nشناسه قبض: {{invoiceId}}\nسررسید: {{dueAt}}\nزمان یادآوری: {{scheduledAt}}\nفاصله تا سررسید (روز): {{offset}}\n\nلطفاً در اسرع وقت پرداخت کنید.',
+    enBody:
+      'This is a reminder to pay your invoice.\n\nInvoice ID: {{invoiceId}}\nDue date: {{dueAt}}\nReminder time: {{scheduledAt}}\nDays relative to due date: {{offset}}\n\nPlease pay as soon as possible.',
     channels: ['email', 'sms', 'in_app'],
     variables: [
       { name: 'invoiceId', description: 'شناسه قبض / Invoice id' },
@@ -202,8 +231,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'contract.created',
     faSubject: 'قرارداد جدید ایجاد شد',
     enSubject: 'New contract created',
-    faBody: 'قرارداد جدیدی برای شما ایجاد شد.\n\nشماره قرارداد: {{contractNumber}}\nنوع: {{contractType}}',
-    enBody: 'A new contract was created for you.\n\nContract number: {{contractNumber}}\nType: {{contractType}}',
+    faBody:
+      'قرارداد جدیدی برای شما ایجاد شد.\n\nشماره قرارداد: {{contractNumber}}\nنوع: {{contractType}}',
+    enBody:
+      'A new contract was created for you.\n\nContract number: {{contractNumber}}\nType: {{contractType}}',
     channels: ['email', 'in_app'],
     variables: [
       { name: 'contractNumber', description: 'شماره قرارداد / Contract number' },
@@ -214,8 +245,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'contract.awaiting_acceptance',
     faSubject: 'قرارداد در انتظار پذیرش',
     enSubject: 'Contract awaiting acceptance',
-    faBody: 'قرارداد زیر در انتظار پذیرش شماست.\n\nشماره: {{contractNumber}}\nلطفاً برای مشاهده و تصمیم اقدام کنید.',
-    enBody: 'The following contract awaits your acceptance.\n\nNumber: {{contractNumber}}\nPlease review and take action.',
+    faBody:
+      'قرارداد زیر در انتظار پذیرش شماست.\n\nشماره: {{contractNumber}}\nلطفاً برای مشاهده و تصمیم اقدام کنید.',
+    enBody:
+      'The following contract awaits your acceptance.\n\nNumber: {{contractNumber}}\nPlease review and take action.',
     channels: ['email', 'in_app'],
     variables: [{ name: 'contractNumber', description: 'شماره قرارداد / Contract number' }],
   },
@@ -265,8 +298,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'contract.changes_requested',
     faSubject: 'تغییرات قرارداد درخواست شد',
     enSubject: 'Contract changes requested',
-    faBody: 'تغییرات زیر برای قرارداد شماره {{contractNumber}} درخواست شده است:\n\n{{changesDescription}}',
-    enBody: 'The following changes were requested for contract {{contractNumber}}:\n\n{{changesDescription}}',
+    faBody:
+      'تغییرات زیر برای قرارداد شماره {{contractNumber}} درخواست شده است:\n\n{{changesDescription}}',
+    enBody:
+      'The following changes were requested for contract {{contractNumber}}:\n\n{{changesDescription}}',
     channels: ['email', 'in_app'],
     variables: [
       { name: 'contractNumber', description: 'شماره قرارداد / Contract number' },
@@ -277,8 +312,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'order.submitted',
     faSubject: 'سفارش شما ثبت شد',
     enSubject: 'Order submitted',
-    faBody: 'سفارش شما با موفقیت ثبت شد.\n\nشماره سفارش: {{orderNumber}}\nزمان ثبت: {{submittedAt}}',
-    enBody: 'Your order was submitted successfully.\n\nOrder number: {{orderNumber}}\nSubmitted at: {{submittedAt}}',
+    faBody:
+      'سفارش شما با موفقیت ثبت شد.\n\nشماره سفارش: {{orderNumber}}\nزمان ثبت: {{submittedAt}}',
+    enBody:
+      'Your order was submitted successfully.\n\nOrder number: {{orderNumber}}\nSubmitted at: {{submittedAt}}',
     channels: ['email', 'in_app'],
     variables: [
       { name: 'orderNumber', description: 'شماره سفارش / Order number' },
@@ -311,7 +348,8 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     faSubject: 'درخواست لغو سفارش',
     enSubject: 'Order cancellation requested',
     faBody: 'درخواست لغو سفارش {{orderNumber}} ثبت شد.\n\nاین درخواست در حال بررسی است.',
-    enBody: 'A cancellation request was submitted for order {{orderNumber}}.\n\nIt is currently under review.',
+    enBody:
+      'A cancellation request was submitted for order {{orderNumber}}.\n\nIt is currently under review.',
     channels: ['email', 'in_app'],
     variables: [{ name: 'orderNumber', description: 'شماره سفارش / Order number' }],
   },
@@ -382,17 +420,30 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'profile.verification_status',
     faSubject: 'وضعیت احراز هویت',
     enSubject: 'Verification status change',
-    faBody: 'وضعیت احراز هویت شما به «{{status}}» تغییر کرد.',
-    enBody: 'Your verification status changed to "{{status}}".',
-    channels: ['email', 'in_app'],
-    variables: [{ name: 'status', description: 'وضعیت جدید / New status' }],
+    faBody: '{{messageFa}}',
+    enBody: '{{messageEn}}',
+    channels: ['email', 'sms', 'in_app'],
+    variables: [
+      { name: 'profileName', description: 'نام پروفایل / Profile name' },
+      { name: 'status', description: 'وضعیت جدید / New status' },
+      {
+        name: 'messageFa',
+        description: 'نتیجه و راهنمای اصلاح فارسی / Persian result and correction guidance',
+      },
+      {
+        name: 'messageEn',
+        description: 'نتیجه و راهنمای اصلاح انگلیسی / English result and correction guidance',
+      },
+    ],
   },
   {
     eventKey: 'profile.invitation_received',
     faSubject: 'دعوت به عضویت',
     enSubject: 'Invitation received',
-    faBody: 'شما به عضویت «{{entityName}}» دعوت شده‌اید.\n\nبرای پذیرش از این لینک استفاده کنید: {{inviteLink}}',
-    enBody: 'You have been invited to join "{{entityName}}".\n\nAccept via this link: {{inviteLink}}',
+    faBody:
+      'شما به عضویت «{{entityName}}» دعوت شده‌اید.\n\nبرای پذیرش از این لینک استفاده کنید: {{inviteLink}}',
+    enBody:
+      'You have been invited to join "{{entityName}}".\n\nAccept via this link: {{inviteLink}}',
     channels: ['email', 'in_app'],
     variables: [
       { name: 'entityName', description: 'نام نهاد / Entity name' },
@@ -415,7 +466,8 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'wallet.low_balance',
     faSubject: 'موجودی کیف پول پایین',
     enSubject: 'Low wallet balance',
-    faBody: 'موجودی کیف پول شما به {{balance}} رسیده و پایین است.\n\nلطفاً برای ادامه سرویس، شارژ کنید.',
+    faBody:
+      'موجودی کیف پول شما به {{balance}} رسیده و پایین است.\n\nلطفاً برای ادامه سرویس، شارژ کنید.',
     enBody: 'Your wallet balance is low at {{balance}}.\n\nPlease top up to continue services.',
     channels: ['email', 'in_app'],
     variables: [{ name: 'balance', description: 'موجودی / Balance' }],
@@ -436,8 +488,10 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'system.service_outage',
     faSubject: 'وقفه در سرویس',
     enSubject: 'Service outage',
-    faBody: 'ما در حال رسیدگی به یک وقفه در سرویس هستیم.\n\nجزئیات: {{details}}\nزمان تقریبی بازیابی: {{eta}}',
-    enBody: 'We are addressing an ongoing service outage.\n\nDetails: {{details}}\nEstimated recovery: {{eta}}',
+    faBody:
+      'ما در حال رسیدگی به یک وقفه در سرویس هستیم.\n\nجزئیات: {{details}}\nزمان تقریبی بازیابی: {{eta}}',
+    enBody:
+      'We are addressing an ongoing service outage.\n\nDetails: {{details}}\nEstimated recovery: {{eta}}',
     channels: ['email', 'in_app'],
     variables: [
       { name: 'details', description: 'جزئیات وقفه / Outage details' },
@@ -457,20 +511,27 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     eventKey: 'system.notification_test',
     faSubject: 'تست اعلان',
     enSubject: 'Test notification',
-    faBody: 'این یک اعلان تستی از بارق‌سا است. اگر این پیام را دریافت می‌کنید، قالب به درستی کار می‌کند.',
-    enBody: 'This is a test notification from Barghsa. If you received it, the template works correctly.',
-    channels: ['email', 'in_app'],
+    faBody:
+      'این یک اعلان تستی از بارق‌سا است. اگر این پیام را دریافت می‌کنید، قالب به درستی کار می‌کند.',
+    enBody:
+      'This is a test notification from Barghsa. If you received it, the template works correctly.',
+    channels: ['email', 'sms', 'in_app'],
     variables: [],
   },
   {
     eventKey: 'admin.service_target_breached',
     faSubject: null,
     enSubject: null,
-    faBody: 'آیتم «{{item_id}}» ({{service_type_name_fa}}) بیش از {{target_hours}} ساعت بدون پاسخ مانده است. لطفاً بررسی کنید.',
-    enBody: 'Item {{item_id}} ({{service_type_name_en}}) has been awaiting response for over {{target_hours}} hours. Please review.',
+    faBody:
+      'آیتم «{{item_id}}» ({{service_type_name_fa}}) بیش از {{target_hours}} ساعت بدون پاسخ مانده است. لطفاً بررسی کنید.',
+    enBody:
+      'Item {{item_id}} ({{service_type_name_en}}) has been awaiting response for over {{target_hours}} hours. Please review.',
     channels: ['in_app'],
     variables: [
-      { name: 'service_type_name_fa', description: 'نام فارسی نوع خدمت / Persian service type label' },
+      {
+        name: 'service_type_name_fa',
+        description: 'نام فارسی نوع خدمت / Persian service type label',
+      },
       { name: 'service_type_name_en', description: 'English service type label' },
       { name: 'item_id', description: 'شناسه آیتم / Item id' },
       { name: 'target_hours', description: 'سقف زمانی ساعت / Target in hours' },
@@ -492,26 +553,54 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
       { name: 'status_label_en', description: 'English status label' },
       { name: 'amount_irr', description: 'مبلغ به ریال / Amount in IRR' },
       { name: 'wallet_id', description: 'شناسه کیف پول / Wallet id' },
-      { name: 'original_transaction_id', description: 'شناسه تراکنش اصلی / Original transaction id' },
+      {
+        name: 'original_transaction_id',
+        description: 'شناسه تراکنش اصلی / Original transaction id',
+      },
       { name: 'reason', description: 'دلیل شارژبک / Chargeback reason' },
       { name: 'link_route', description: 'مسیر داشبورد ادمین / Admin dashboard route' },
+    ],
+  },
+  {
+    eventKey: 'finance.chargeback_reversed',
+    faSubject: 'برگشت شارژبک ثبت شد',
+    enSubject: 'Chargeback reversed',
+    faBody:
+      'برگشت شارژبک با تراکنش جبرانی ثبت شد.\nشناسه رویداد: {{event_id}}\nمبلغ (ریال): {{amount_irr}}\nتراکنش اصلی: {{original_transaction_id}}\nدلیل: {{reason}}',
+    enBody:
+      'The chargeback was recorded with a compensating reversal.\nEvent id: {{event_id}}\nAmount (IRR): {{amount_irr}}\nOriginal transaction: {{original_transaction_id}}\nReason: {{reason}}',
+    channels: ['in_app', 'email'],
+    variables: [
+      { name: 'event_id', description: 'Provider event id' },
+      { name: 'amount_irr', description: 'Amount in IRR' },
+      { name: 'original_transaction_id', description: 'Original transaction id' },
+      { name: 'reason', description: 'Chargeback reason' },
     ],
   },
   {
     eventKey: 'admin.service_escalated',
     faSubject: 'ارتقای فوریت — {{service_type_name_fa}}',
     enSubject: 'Escalation — {{service_type_name_en}}',
-    faBody: 'آیتم «{{item_id}}» ({{service_type_name_fa}}) به دلیل عدم پاسخ در بازه زمانی، به سطح {{escalation_level}} ارتقا یافت. لطفاً بررسی کنید.',
-    enBody: 'Item {{item_id}} ({{service_type_name_en}}) has been escalated to level {{escalation_level}} because no response arrived in time. Please review.',
+    faBody:
+      'آیتم «{{item_id}}» ({{service_type_name_fa}}) به دلیل عدم پاسخ در بازه زمانی، به سطح {{escalation_level}} ارتقا یافت. لطفاً بررسی کنید.',
+    enBody:
+      'Item {{item_id}} ({{service_type_name_en}}) has been escalated to level {{escalation_level}} because no response arrived in time. Please review.',
     channels: ['in_app', 'email'],
     variables: [
-      { name: 'service_type_name_fa', description: 'نام فارسی نوع خدمت / Persian service type label' },
+      {
+        name: 'service_type_name_fa',
+        description: 'نام فارسی نوع خدمت / Persian service type label',
+      },
       { name: 'service_type_name_en', description: 'English service type label' },
       { name: 'item_id', description: 'شناسه آیتم / Item id' },
-      { name: 'escalation_level', description: 'سطح ارتقا (۲ = سرپرست تیم، ۳ = مدیر) / Escalation level (2 = team lead, 3 = admin)' },
+      {
+        name: 'escalation_level',
+        description:
+          'سطح ارتقا (۲ = سرپرست تیم، ۳ = مدیر) / Escalation level (2 = team lead, 3 = admin)',
+      },
     ],
   },
-]
+];
 
 /**
  * Expand the catalog into concrete rows (one per event × channel × locale).
@@ -521,27 +610,27 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
  * the shared template engine validates back-references at runtime.
  */
 export function buildSeedTemplates(): SeedTemplate[] {
-  const rows: SeedTemplate[] = []
+  const rows: SeedTemplate[] = [];
   for (const def of NOTIFICATION_TEMPLATE_SEED) {
     for (const channel of def.channels) {
-      const isEmail = channel === 'email'
+      const isEmail = channel === 'email';
       rows.push({
         eventKey: def.eventKey,
         channel,
         locale: 'fa',
-        subject: isEmail ? def.faSubject ?? null : null,
+        subject: isEmail ? (def.faSubject ?? null) : null,
         bodyTemplate: def.faBody,
         variables: def.variables,
-      })
+      });
       rows.push({
         eventKey: def.eventKey,
         channel,
         locale: 'en',
-        subject: isEmail ? def.enSubject ?? null : null,
+        subject: isEmail ? (def.enSubject ?? null) : null,
         bodyTemplate: def.enBody,
         variables: def.variables,
-      })
+      });
     }
   }
-  return rows
+  return rows;
 }

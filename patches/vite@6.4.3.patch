@@ -1,0 +1,43 @@
+diff --git a/dist/node/index.d.ts b/dist/node/index.d.ts
+index d89eba20f94dfb31f58046c596b7e38e7d3d1c9a..f5e54e7c035d4a497870cb9f990d1a19d2174921 100644
+--- a/dist/node/index.d.ts
++++ b/dist/node/index.d.ts
+@@ -3282,7 +3282,7 @@ interface Plugin<A = any> extends rollup.Plugin<A> {
+     resolveId?: ObjectHook<(this: PluginContext, source: string, importer: string | undefined, options: {
+         attributes: Record<string, string>;
+         custom?: CustomPluginOptions;
+-        ssr?: boolean;
++        ssr?: boolean | undefined;
+         isEntry: boolean;
+     }) => Promise<ResolveIdResult> | ResolveIdResult, {
+         filter?: {
+@@ -3290,14 +3290,14 @@ interface Plugin<A = any> extends rollup.Plugin<A> {
+         };
+     }>;
+     load?: ObjectHook<(this: PluginContext, id: string, options?: {
+-        ssr?: boolean;
++        ssr?: boolean | undefined;
+     }) => Promise<LoadResult> | LoadResult, {
+         filter?: {
+             id?: StringFilter;
+         };
+     }>;
+     transform?: ObjectHook<(this: TransformPluginContext, code: string, id: string, options?: {
+-        ssr?: boolean;
++        ssr?: boolean | undefined;
+     }) => Promise<rollup.TransformResult> | rollup.TransformResult, {
+         filter?: {
+             id?: StringFilter;
+diff --git a/types/importGlob.d.ts b/types/importGlob.d.ts
+index e0167531d6d9ad9e7a822e5b6f5acfa06a96ee72..50f8817f3951b6ec8a1a16dc7ccfea3563655935 100644
+--- a/types/importGlob.d.ts
++++ b/types/importGlob.d.ts
+@@ -35,7 +35,7 @@ export type GeneralImportGlobOptions = ImportGlobOptions<boolean, string>
+ export interface KnownAsTypeMap {
+   raw: string
+   url: string
+-  worker: Worker
++  worker: typeof globalThis extends { Worker: { prototype: infer T } } ? T : never
+ }
+ 
+ export interface ImportGlobFunction {

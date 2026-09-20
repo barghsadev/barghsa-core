@@ -1,7 +1,7 @@
-import { index, pgTable, primaryKey, text, uuid } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { users } from './users.js'
-import { knowledgeBases } from './knowledge-bases.js'
+import { index, pgTable, primaryKey, text, uuid } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { users } from './users.js';
+import { knowledgeBases } from './knowledge-bases.js';
 
 /**
  * Knowledge base group (S-09.11, T-09.11.02).
@@ -43,8 +43,8 @@ export const kbGroups = pgTable(
   (table) => [
     /** List by recency for the admin UI (migration 0043). */
     index('idx_kbg_created_at').on(table.createdAt),
-  ],
-)
+  ]
+);
 
 /**
  * KB group membership (S-09.11, T-09.11.02).
@@ -78,5 +78,5 @@ export const kbGroupMembers = pgTable(
     primaryKey({ columns: [table.groupId, table.kbId] }),
     /** Reverse lookup: which groups contain a given KB. */
     index('idx_kbgm_kb_id').on(table.kbId),
-  ],
-)
+  ]
+);

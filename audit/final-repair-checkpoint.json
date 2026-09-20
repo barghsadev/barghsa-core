@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-20",
+  "runtime_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+  "branch": "codex/audit-fixes",
+  "scope": "Completed actionable local audit repairs and review dispositions under the approved consolidated sprint. Future features, owner decisions and external operational proof remain explicitly open.",
+  "remote_actions_performed": false,
+  "repairs": [
+    "Commit-time session/permission/step-up checks for administration mutations.",
+    "Audited/versioned geography mutations, protected city deactivation, bilingual city management and atomic bulk import.",
+    "Stable keyset paging and transactional escalation/breach scans beyond the first500 records.",
+    "Keyboard-scrollable SMS tables; current regression fixtures, deterministic expiry and live-navigation synchronization."
+  ],
+  "regression": {
+    "api": {
+      "full_revision": "d7eccb05c25213577d527d4f5644dd1c6f2b273b",
+      "full_passed": 5017,
+      "full_failed": 2,
+      "full_total": 5019,
+      "resolution": "Both failures were same-millisecond/expiry fixture timing. Deterministic audit-trigger expiry and the103-case approval rerun pass. API production source bytes are unchanged. New boundary suite288 passes; final extended two-file suite114 passes. Counts overlap and are not added as distinct tests.",
+      "logs": [
+        "final-api2.log",
+        "api-expiry-final.log",
+        "coverage-new-api3.log",
+        "coverage-new-api5.log"
+      ]
+    },
+    "worker": {
+      "passed": 458,
+      "files": 37,
+      "log": "worker-final-coverage.log"
+    },
+    "other_packages": {
+      "db": 760,
+      "shared": 976,
+      "web": 777,
+      "ui": 58,
+      "i18n": 50,
+      "tsconfig": 3
+    },
+    "reuse": "Unchanged package source retains its full-suite evidence. API full+focused reports are merged by original branch identity; relocated paths require identical source bytes. Raw reports and provenance are archived.",
+    "other_packages_logs": {
+      "web": "web-full-final.log",
+      "ui": "ui-closure-coverage.log",
+      "shared": "shared-coverage-final.log"
+    }
+  },
+  "browser": {
+    "status": "passed",
+    "tests": 769,
+    "project": "chromium",
+    "build": "production mode with minification disabled only for source coverage",
+    "working_tree_dirty": false,
+    "source_revision": "de4e3c4513c226f38ae3e6bc2f97366693e9c7ef",
+    "log": "browser-closure.log",
+    "optimized_production": {
+      "tests": 769,
+      "status": "passed",
+      "source_revision": "17a50381b29866f6ff83c1b26d748dd53172ffaa",
+      "log": "browser-optimized.log"
+    },
+    "measurement_review": "The collector now includes /auth/assets with identical source/range checks. Coverage-only minify:false preserves statement boundaries; a fresh full browser execution supplies all counts. Optimized ranges are not reused against unminified code."
+  },
+  "checks": {
+    "frozen_install": "passed",
+    "production_build": "passed",
+    "workspace_typecheck": "passed (11 tasks)",
+    "lint": "passed",
+    "format": "passed",
+    "suppressed_errors": "passed after preserving three old ignored September13 distribution-test temporary folders outside production scan roots",
+    "openapi_contract": "passed",
+    "route_budgets": "passed, numeric limits unchanged",
+    "migration_snapshot": "passed",
+    "script_python_loop_tests": "passed",
+    "source_binding_refresh": "Current source bindings refreshed with prior hashes retained; measurement and coverage bindings separately reviewed",
+    "closing_logs": [
+      "final-types5.log",
+      "final-lint6.log",
+      "final-format4.log",
+      "coverage-measurement-closure.log"
+    ]
+  },
+  "coverage": {
+    "status": "passed",
+    "passed_groups": 13,
+    "total_groups": 13,
+    "thresholds_changed": false,
+    "exception_granted": false,
+    "errors": [],
+    "base_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
+    "report": "audit/combined-coverage-checkpoint.json",
+    "provenance": "audit/evidence/completion-sprint/final-unit-coverage-provenance.json.gz",
+    "measurement_note": "Impossible negative converted worker and browser branches retain all their arms uncovered; raw values are preserved. No branch denominator is reduced."
+  },
+  "historical_acceptance": {
+    "verified": 219,
+    "partial": 54,
+    "deferred": 49,
+    "pending": 0,
+    "total": 322
+  },
+  "production_images": {
+    "status": "local_build_and_runtime_checks_passed",
+    "api_worker_source_revision": "d4cc0193",
+    "web_source_revision": "17a50381b29866f6ff83c1b26d748dd53172ffaa",
+    "reuse": "No API/worker/shared/DB production source changed after the recorded API/worker image build; only tests and coverage tooling changed. Web image includes final UI repairs; the subsequent measurement-only minify condition leaves normal production minification unchanged.",
+    "images": [
+      {
+        "tags": [
+          "barghsa-audit-api:f18"
+        ],
+        "id": "sha256:4252251763cb8f34af05bbfeda834a3b093787bbf474a68031b540ccca0f1ce5",
+        "created": "2026-09-20T04:06:17.197651835Z",
+        "user": "node"
+      },
+      {
+        "tags": [
+          "barghsa-audit-worker:f18"
+        ],
+        "id": "sha256:19ada212fd02279467ac39dbe4c308d9e55db9968ff3db3cec136bcf778ddb95",
+        "created": "2026-09-20T04:06:17.197651835Z",
+        "user": "node"
+      },
+      {
+        "tags": [
+          "barghsa-audit-web:f18"
+        ],
+        "id": "sha256:25fd97d558868b0a9f462135398e377828ff9347f977bc2028f8fe303b06b7f3",
+        "created": "2026-09-20T04:51:38.367804094Z",
+        "user": "node"
+      }
+    ],
+    "log": "image-runtime-final.log",
+    "checks": [
+      "Non-root/read-only boot, packaged migrations, optional Redis fallback",
+      "Database outage/recovery changes readiness, preserves liveness",
+      "SIGTERM drains notification and finance commits",
+      "Forced deadline preserves retryable work; restart commits once; web/API shutdown"
+    ],
+    "pushed": false
+  },
+  "evidence_directory": "audit/evidence/completion-sprint",
+  "previous_checkpoint": "audit/evidence/completion-sprint/previous-final-repair-checkpoint.json.gz",
+  "external_and_deferred_details": [
+    "audit/HANDOFF.md",
+    "audit/skipped-work-handoff.md",
+    "audit/acceptance-closure.json"
+  ],
+  "budget": {
+    "weekly_used_baseline": 0,
+    "latest_account_used_percent": 19,
+    "stop_target": 45,
+    "ceiling": 50,
+    "note": "Account-wide meter, not a per-task token count."
+  },
+  "revision_reuse": "audit/evidence/completion-sprint/final-revision-reuse.json.gz",
+  "evidence_encoding": "Raw browser sources and function objects are losslessly interned; each raw archive describes reconstruction. All769 final raw records are checked against original browser output."
+}

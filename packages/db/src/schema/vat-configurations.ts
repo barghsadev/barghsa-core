@@ -1,9 +1,9 @@
-import { sql } from 'drizzle-orm'
-import { integer, text, uuid } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table'
-import { timestamptz } from '../types'
-import { products } from './products'
-import { users } from './users'
+import { sql } from 'drizzle-orm';
+import { integer, text, uuid } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table';
+import { timestamptz } from '../types';
+import { products } from './products';
+import { users } from './users';
 
 /**
  * VAT configurations — versioned rates by charge category (T-09.12.02).
@@ -45,7 +45,7 @@ export const vatConfigurations = createTable('vat_configurations', {
   createdBy: text('created_by')
     .notNull()
     .references(() => users.userId, { onDelete: 'restrict' }),
-})
+});
 
 /**
  * Product VAT overrides (T-09.12.02 / T-03.02.05.02).
@@ -83,7 +83,7 @@ export const productVatOverrides = createTable('product_vat_overrides', {
   createdBy: text('created_by')
     .notNull()
     .references(() => users.userId, { onDelete: 'restrict' }),
-})
+});
 
 /** SQL to create the vat_configurations table (migration 0047 source). */
 export const createVatConfigurationsTable = sql`
@@ -116,7 +116,7 @@ export const createVatConfigurationsTable = sql`
     ON vat_configurations (effective_from);
   CREATE INDEX IF NOT EXISTS idx_vat_configurations_effective_until
     ON vat_configurations (effective_until);
-`
+`;
 
 /** SQL to create the product_vat_overrides table (migration 0047 source). */
 export const createProductVatOverridesTable = sql`
@@ -144,4 +144,4 @@ export const createProductVatOverridesTable = sql`
     ON product_vat_overrides (product_id);
   CREATE INDEX IF NOT EXISTS idx_product_vat_overrides_vat_config_id
     ON product_vat_overrides (vat_config_id);
-`
+`;

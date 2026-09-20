@@ -5,10 +5,7 @@ export type {
   StorageMetadata,
   StorageProviderConfig,
 } from './storage-provider.js';
-export {
-  StorageObjectNotFound,
-  StorageProviderError,
-} from './storage-provider.js';
+export { StorageObjectNotFound, StorageProviderError } from './storage-provider.js';
 
 export type { S3StorageProviderConfig } from './s3-storage-provider.js';
 export { S3StorageProvider } from './s3-storage-provider.js';
@@ -26,3 +23,4 @@ export type {
   StorageRecordInfo,
 } from './immutable-storage.js';
 export { ImmutableStorageRecordService, ImmutableRecordDeleteError } from './immutable-storage.js';
+export * from './runtime-config.js';

@@ -1,5 +1,13 @@
-import { sql } from 'drizzle-orm'
-import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm';
+import {
+  check,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  type AnyPgColumn,
+} from 'drizzle-orm/pg-core';
 
 /**
  * OTP challenge table.
@@ -37,6 +45,9 @@ export const otpChallenges = pgTable(
     /** The destination (email or E.164 phone) the OTP was sent to. */
     destination: text('destination').notNull(),
 
+    /** Old unscoped challenges are never valid authorization for a new flow. */
+    purpose: text('purpose').notNull().default('legacy_invalid'),
+
     /** SHA-256 hash of the 6-digit OTP. Never store plaintext. */
     otpHash: text('otp_hash').notNull(),
 
@@ -48,6 +59,10 @@ export const otpChallenges = pgTable(
 
     /** FK to users.user_id, set for login OTP challenges (T-02.01.03). */
     userId: text('user_id'),
+    authVersion: integer('auth_version'),
+    previousChallengeId: text('previous_challenge_id').references(
+      (): AnyPgColumn => otpChallenges.challengeId
+    ),
 
     /** Argon2id password hash, stored during register, consumed on OTP verify. */
     passwordHash: text('password_hash'),
@@ -61,15 +76,44 @@ export const otpChallenges = pgTable(
     /** Null until the OTP is successfully verified (single-use enforcement). */
     consumedAt: timestamp('consumed_at', { withTimezone: true, mode: 'date' }),
 
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    /** Password-reset authorization issued after consuming the OTP. Hash only. */
+    resetTokenHash: text('reset_token_hash'),
+    /** The authorization shares expiresAt and can complete only one reset. */
+    resetConsumedAt: timestamp('reset_consumed_at', { withTimezone: true, mode: 'date' }),
 
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
-)
+  (table) => [
+    uniqueIndex('uq_otp_reset_token_hash')
+      .on(table.resetTokenHash)
+      .where(sql`${table.resetTokenHash} IS NOT NULL`),
+    check(
+      'otp_reset_authorization_state',
+      sql`(${table.resetTokenHash} IS NULL AND ${table.resetConsumedAt} IS NULL)
+        OR (${table.resetTokenHash} IS NOT NULL AND ${table.purpose}='password_reset' AND ${table.userId} IS NOT NULL
+            AND ${table.consumedAt} IS NOT NULL AND ${table.resetTokenHash} ~ '^[a-f0-9]{64}$')`
+    ),
+    check(
+      'otp_username_pair',
+      sql`${table.previousChallengeId} IS NULL OR (${table.purpose}='change_username' AND ${table.previousChallengeId}<>${table.challengeId})`
+    ),
+    uniqueIndex('uq_otp_previous_challenge')
+      .on(table.previousChallengeId)
+      .where(sql`${table.previousChallengeId} IS NOT NULL`),
+    check(
+      'otp_challenge_purpose_binding',
+      sql`
+    ${table.purpose} = 'legacy_invalid'
+    OR (${table.purpose} = 'registration' AND ${table.userId} IS NULL
+        AND ${table.passwordHash} IS NOT NULL AND ${table.tosVersionId} IS NOT NULL)
+    OR (${table.purpose} IN ('login','password_reset','change_username','add_email','add_mobile')
+        AND ${table.userId} IS NOT NULL)
+  `
+    ),
+  ]
+);
 
 /**
  * SQL to create the otp_challenges table.
@@ -79,6 +123,7 @@ export const createOtpChallengesTable = sql`
   CREATE TABLE IF NOT EXISTS otp_challenges (
     challenge_id TEXT PRIMARY KEY,
     destination TEXT NOT NULL,
+    purpose TEXT NOT NULL DEFAULT 'legacy_invalid',
     otp_hash TEXT NOT NULL,
     attempts_remaining INTEGER NOT NULL DEFAULT 5,
     resend_count INTEGER NOT NULL DEFAULT 0,
@@ -109,6 +154,8 @@ export const createOtpChallengesTable = sql`
     END IF;
   END $$;
 
+  ALTER TABLE otp_challenges ADD COLUMN IF NOT EXISTS purpose TEXT NOT NULL DEFAULT 'legacy_invalid';
+
   -- Migration: add user_id column for login OTP challenges (T-02.01.03)
   DO $$ BEGIN
     IF NOT EXISTS (
@@ -118,4 +165,4 @@ export const createOtpChallengesTable = sql`
       ALTER TABLE otp_challenges ADD COLUMN user_id TEXT REFERENCES users(user_id);
     END IF;
   END $$;
-`
+`;

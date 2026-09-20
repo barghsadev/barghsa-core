@@ -1,11 +1,22 @@
-import { getDbPool } from '@barghsa/db'
+import { logDelivery } from '../delivery-log.js';
+import type { QueryResultRow } from 'pg';
+import { getDbPool } from '@barghsa/db';
 import type {
   INotificationTransport,
   NotificationChannel,
   NotificationSendPayload,
   NotificationSendResult,
-} from '@barghsa/shared/notifications'
-import { deriveChannelIdempotencyKey } from './outbox-writer.js'
+} from '@barghsa/shared/notifications';
+import { sanitizeError } from './error-redact.js';
+import { deriveChannelIdempotencyKey } from './outbox-writer.js';
+import type { QueryPool } from './channel-scheduling.js';
+import { recordDeliveryAttempt } from './worker-metrics.js';
+import { DeliveryOutcomeUnknown } from './send-receipt.js';
+
+/** Local delivery can share the worker's pinned persistence transaction. */
+export interface WorkerNotificationTransport extends INotificationTransport {
+  send(payload: NotificationSendPayload, transaction?: QueryPool): Promise<NotificationSendResult>;
+}
 
 /**
  * Base outbox reader (E-05, T-05.01.01).
@@ -22,35 +33,51 @@ import { deriveChannelIdempotencyKey } from './outbox-writer.js'
  *     registered transports (in-app is mandatory).
  *
  * Retry scheduling with backoff+jitter and idempotency enforcement land in
- * T-05.01.03/T-05.01.04. A channel with no registered transport is skipped
- * (except `in_app`, which must always be present).
+ * T-05.01.03/T-05.01.04. A missing transport produces a failed channel
+ * outcome; it cannot make an undelivered external leg count as success.
  */
 
-const DEFAULT_LEASE_SIZE = 20
-const DEFAULT_LEASE_MS = 60_000
+const DEFAULT_LEASE_SIZE = 5;
+const DEFAULT_LEASE_MS = 60_000;
+export function normalizeLeaseDurationMs(value?: number): number {
+  return value !== undefined && Number.isFinite(value) && value >= 100 && value <= 300_000
+    ? Math.floor(value)
+    : DEFAULT_LEASE_MS;
+}
 
 export interface OutboxRow {
-  id: string
-  profileId: string
-  userId: string | null
-  eventKey: string
-  payload: Record<string, unknown>
-  channels: NotificationChannel[]
-  idempotencyKey: string
-  attempts: number
-  maxAttempts: number
-  scheduledAt: Date | null
+  correlationId?: string | null;
+  id: string;
+  profileId: string | null;
+  userId: string | null;
+  eventKey: string;
+  payload: Record<string, unknown>;
+  channels: NotificationChannel[];
+  idempotencyKey: string;
+  /** Absent only in legacy callers; persisted new rows use version 2. */
+  idempotencyVersion?: number;
+  leaseToken?: string;
+  attempts: number;
+  maxAttempts: number;
+  scheduledAt: Date | null;
   /** Sanitized error from the last failed attempt (for dead-letter triage). */
-  lastError: string | null
+  lastError: string | null;
 }
 
 export interface OutboxReaderOptions {
   /** Transport registry keyed by channel. In-app is mandatory. */
-  transports: Partial<Record<NotificationChannel, INotificationTransport>>
-  /** Maximum rows to claim per poll (default 20). */
-  leaseSize?: number
+  transports: Partial<Record<NotificationChannel, WorkerNotificationTransport>>;
+  /** Pool override for isolated database checks. */
+  pool?: {
+    query: (
+      sql: string,
+      params?: unknown[]
+    ) => Promise<{ rows: QueryResultRow[]; rowCount?: number | null }>;
+  };
+  /** Maximum rows to claim per poll (default 5). */
+  leaseSize?: number;
   /** Lease duration in ms (default 60s). */
-  leaseDurationMs?: number
+  leaseDurationMs?: number;
 }
 
 /**
@@ -62,21 +89,23 @@ export interface OutboxReaderOptions {
  * safe across concurrent workers.
  */
 export async function leaseOutbox(options?: OutboxReaderOptions): Promise<OutboxRow[]> {
-  const limit = Math.max(1, options?.leaseSize ?? DEFAULT_LEASE_SIZE)
-  const leaseMs = options?.leaseDurationMs ?? DEFAULT_LEASE_MS
-  const pool = getDbPool()
-  const now = new Date()
-  const leaseUntil = new Date(Date.now() + leaseMs)
+  const requestedLimit = options?.leaseSize ?? DEFAULT_LEASE_SIZE;
+  const limit = Number.isFinite(requestedLimit)
+    ? Math.max(1, Math.min(100, Math.floor(requestedLimit)))
+    : DEFAULT_LEASE_SIZE;
+  const leaseMs = normalizeLeaseDurationMs(options?.leaseDurationMs);
+  const pool = options?.pool ?? getDbPool();
+  const now = new Date();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const result = await pool.query<any>(
+  const result = await pool.query(
     `UPDATE notification_outbox ob
-        SET locked_until = $1,
+        SET locked_until = clock_timestamp()+$1*INTERVAL '1 millisecond',
+            lease_token=gen_random_uuid()::text,
             updated_at = NOW()
         WHERE ob.id IN (
           SELECT id FROM notification_outbox
           WHERE status IN ('queued', 'scheduled', 'sending')
-            AND (locked_until IS NULL OR locked_until < $2)
+            AND (locked_until IS NULL OR locked_until < clock_timestamp())
             AND (scheduled_for IS NULL OR scheduled_for <= $2)
           ORDER BY
             /* Urgent jobs (Immediate) dispatch before normal (daytime). */
@@ -88,73 +117,109 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
           LIMIT $3
           FOR UPDATE SKIP LOCKED
         )
-        RETURNING id, profile_id, user_id, event_key, payload, channels,
-                  idempotency_key, attempts, max_attempts, scheduled_for, last_error`,
-    [leaseUntil, now, limit],
-  )
+        RETURNING id, correlation_id, profile_id, user_id, event_key, payload, channels,
+                  idempotency_key, idempotency_version, lease_token, attempts, max_attempts, scheduled_for, last_error`,
+    [leaseMs, now, limit]
+  );
   return result.rows.map((row: Record<string, unknown>): OutboxRow => ({
     id: row.id as string,
-    profileId: row.profile_id as string,
+    correlationId: (row.correlation_id as string | null) ?? null,
+    profileId: (row.profile_id as string | null) ?? null,
     userId: (row.user_id as string) ?? null,
     eventKey: row.event_key as string,
     payload: (row.payload as Record<string, unknown>) ?? {},
     channels: (row.channels as NotificationChannel[]) ?? [],
     idempotencyKey: row.idempotency_key as string,
+    idempotencyVersion: Number(row.idempotency_version ?? 1),
+    ...(typeof row.lease_token === 'string' ? { leaseToken: row.lease_token } : {}),
     attempts: (row.attempts as number) ?? 0,
     maxAttempts: (row.max_attempts as number) ?? 5,
     scheduledAt: (row.scheduled_for as Date | null) ?? null,
     lastError: (row.last_error as string | null) ?? null,
-  }))
+  }));
 }
 
 export interface DispatchOutcome {
-  channel: NotificationChannel
-  result: NotificationSendResult
+  channel: NotificationChannel;
+  result: NotificationSendResult;
   /** Provider round-trip latency in milliseconds for this attempt. */
-  latencyMs: number
+  latencyMs: number;
+  /** Sanitized failure detail for this channel only. */
+  error?: string;
+  /** An uncertain external send must be reconciled before any retry. */
+  requiresReconciliation?: boolean;
 }
 
 /**
  * Dispatch a claimed outbox row out to each of its channels through the
- * registered transports. In-app is mandatory: if a row requests in_app but no
- * in_app transport is registered, this throws. Unregistered external channels
- * are skipped so a missing adapter never blocks in-app delivery.
+ * registered transports. Missing adapters and thrown provider errors become
+ * individual failed outcomes, preserving successful legs and allowing later
+ * channels to run. Required but undelivered channels never count as success.
  *
- * Idempotency (T-05.01.04): each channel receives its OWN per-channel key
- * rather than the row-level key, so delivery to a given transport is
- * at-most-once even across retries. Pre-existing events keep the legacy
- * digest `sha256(eventKey:channel:profileId)`. Invoice reminders fold the
- * outbox row key in so two reminders for the same profile stay distinct.
+ * New occurrences derive provider keys from the durable outbox ID and channel.
+ * Version 1 rows retain their previous formula across deployment. In-app
+ * storage separately deduplicates by outbox ID, including proven legacy rows.
  */
 export async function dispatchOutbox(
   row: OutboxRow,
-  transports: Partial<Record<NotificationChannel, INotificationTransport>>,
+  transports: Partial<Record<NotificationChannel, WorkerNotificationTransport>>,
+  control?: { signal: AbortSignal; beforeSend: () => Promise<void> },
+  transaction?: QueryPool
 ): Promise<DispatchOutcome[]> {
-  const outcomes: DispatchOutcome[] = []
-  for (const channel of row.channels) {
-    const transport = transports[channel]
+  const outcomes: DispatchOutcome[] = [];
+  for (const channel of new Set(row.channels)) {
+    await control?.beforeSend();
+    const transport = transports[channel];
     const payload: NotificationSendPayload = {
       idempotencyKey: deriveChannelIdempotencyKey(
         row.eventKey,
         channel,
-        row.profileId,
+        row.profileId ?? row.userId ?? '',
         row.idempotencyKey,
+        row.idempotencyVersion ?? 1,
+        row.id
       ),
+      outboxId: row.id,
+      ...(row.correlationId ? { correlationId: row.correlationId } : {}),
+      ...(control ? { signal: control.signal } : {}),
       channel,
-      recipientId: row.userId ?? row.profileId,
+      recipientId: row.userId ?? row.profileId ?? '',
       profileId: row.profileId,
       eventKey: row.eventKey,
       payload: row.payload,
-    }
-    if (!transport) {
-      if (channel === 'in_app') {
-        throw new Error('in_app transport is mandatory but not registered')
+    };
+    const startedAt = performance.now();
+    try {
+      if (!transport || transport.channel !== channel)
+        throw new Error(`${channel} transport unavailable`);
+      const result = await transport.send(payload, transaction);
+      if (
+        !result ||
+        !['delivered', 'failed'].includes(result.status) ||
+        (result.status === 'delivered' && !result.providerRef)
+      ) {
+        throw new Error(`${channel} transport returned an invalid delivery result`);
       }
-      continue
+      outcomes.push({ channel, result, latencyMs: Math.round(performance.now() - startedAt) });
+    } catch (error) {
+      outcomes.push({
+        channel,
+        result: { providerRef: '', status: 'failed' },
+        latencyMs: Math.round(performance.now() - startedAt),
+        error: sanitizeError(error instanceof Error ? error.message : String(error)),
+        ...(error instanceof DeliveryOutcomeUnknown ? { requiresReconciliation: true } : {}),
+      });
     }
-    const startedAt = performance.now()
-    const result = await transport.send(payload)
-    outcomes.push({ channel, result, latencyMs: Math.round(performance.now() - startedAt) })
+    logDelivery(
+      'notification.attempt',
+      row.id,
+      row.correlationId,
+      outcomes[outcomes.length - 1]!.result.status,
+      channel
+    );
+    // Transactional inbox delivery is counted by its commit/rollback owner.
+    // External attempts must not be counted again when persistence retries.
+    if (!transaction) recordDeliveryAttempt(channel, outcomes[outcomes.length - 1]!.result.status);
   }
-  return outcomes
+  return outcomes;
 }

@@ -1,15 +1,15 @@
-import { Module } from '@nestjs/common'
-import { EmailProviderConfigService } from './email-provider-config.service'
-import { EmailProviderConfigController } from './email-provider-config.controller'
-import { SmtpConnectionTesterService } from './smtp-connection-tester.service'
-import { SmtpNetworkGuard } from './smtp-network-guard'
-import { ResendConnectionTesterService } from './resend-connection-tester.service'
-import { ProviderSecretsService } from './provider-secrets.service'
-import { EmailCircuitBreakerService } from './email-circuit-breaker.service'
-import { SmsProviderConfigService } from './sms-provider-config.service'
-import { SmsProviderConfigController } from './sms-provider-config.controller'
-import { SmsirConnectionTesterService } from './smsir-connection-tester.service'
-import { SessionModule } from '../session/index.js'
+import { Module } from '@nestjs/common';
+import { EmailProviderConfigService } from './email-provider-config.service';
+import { EmailProviderConfigController } from './email-provider-config.controller';
+import { SmtpConnectionTesterService } from './smtp-connection-tester.service';
+import { SmtpNetworkGuard } from './smtp-network-guard';
+import { ResendConnectionTesterService } from './resend-connection-tester.service';
+import { ProviderSecretsService } from './provider-secrets.service';
+import { EmailCircuitBreakerService } from './email-circuit-breaker.service';
+import { SmsProviderConfigService } from './sms-provider-config.service';
+import { SmsProviderConfigController } from './sms-provider-config.controller';
+import { SmsirConnectionTesterService } from './smsir-connection-tester.service';
+import { SessionModule } from '../session/index.js';
 
 /**
  * Email provider administration module (E-05, T-05.06.01–06).

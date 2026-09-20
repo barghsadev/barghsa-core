@@ -1,33 +1,36 @@
-import { HttpException } from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
-import { ErrorCodes } from '@barghsa/shared/errors'
+import { notifyApprovalResolved } from './approval-notifications.js';
+import type { NotificationsService } from '../notifications/notifications.service.js';
+import { HttpException } from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 /** Canonical audit event written when a pending dual-approval request is approved. */
-export const APPROVAL_REQUEST_APPROVED_EVENT = 'approval_request_approved'
+export const APPROVAL_REQUEST_APPROVED_EVENT = 'approval_request_approved';
 
 /** Canonical audit event written when a pending dual-approval request is rejected. */
-export const APPROVAL_REQUEST_REJECTED_EVENT = 'approval_request_rejected'
+export const APPROVAL_REQUEST_REJECTED_EVENT = 'approval_request_rejected';
 
 /** Minimal query surface so callers can resolve inside an existing transaction. */
 export interface DualApprovalQueryClient {
   query: (
     text: string,
-    params?: unknown[],
-  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>
+    params?: unknown[]
+  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>;
 }
 
 export interface ApplyApprovalRequestResolutionInput {
-  requestId: string
-  reviewerUserId: string
-  ip: string
-  decision: 'approve' | 'reject'
-  reviewReason: string | null
-  now: Date
-  initiatorId: string
-  status: string
-  actionType: unknown
-  amountIrR: unknown
-  correlationId?: string
+  requestId: string;
+  reviewerUserId: string;
+  ip: string;
+  decision: 'approve' | 'reject';
+  reviewReason: string | null;
+  now: Date;
+  initiatorId: string;
+  status: string;
+  actionType: unknown;
+  amountIrR: unknown;
+  correlationId?: string;
+  sessionId?: string;
 }
 
 /**
@@ -42,6 +45,7 @@ export interface ApplyApprovalRequestResolutionInput {
 export async function applyApprovalRequestResolutionOnClient(
   client: DualApprovalQueryClient,
   input: ApplyApprovalRequestResolutionInput,
+  notifications?: Pick<NotificationsService, 'create'>
 ): Promise<void> {
   if (input.status !== 'pending') {
     throw new HttpException(
@@ -50,8 +54,8 @@ export async function applyApprovalRequestResolutionOnClient(
         error: ErrorCodes.CONFLICT_STATE.code,
         message: `Approval request is already ${input.status}`,
       },
-      409,
-    )
+      409
+    );
   }
 
   if (input.initiatorId === input.reviewerUserId) {
@@ -61,17 +65,17 @@ export async function applyApprovalRequestResolutionOnClient(
         error: ErrorCodes.AUTHZ_FORBIDDEN.code,
         message: 'A user cannot approve or reject their own approval request',
       },
-      403,
-    )
+      403
+    );
   }
 
-  const newStatus = input.decision === 'approve' ? 'approved' : 'rejected'
+  const newStatus = input.decision === 'approve' ? 'approved' : 'rejected';
   await client.query(
     `UPDATE approval_requests
      SET status = $1, reviewer_id = $2, review_reason = $3, reviewed_at = $4, updated_at = $4
      WHERE id = $5`,
-    [newStatus, input.reviewerUserId, input.reviewReason, input.now, input.requestId],
-  )
+    [newStatus, input.reviewerUserId, input.reviewReason, input.now, input.requestId]
+  );
 
   await client.query(
     `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
@@ -85,17 +89,17 @@ export async function applyApprovalRequestResolutionOnClient(
       JSON.stringify({
         requestId: input.requestId,
         actionType: input.actionType,
-        // BIGINT arrives as a string from pg; normalize to a number so
-        // both approval_request_created and the *_approved/_rejected
-        // events emit type-consistent audit metadata.
-        amountIrR: Number(input.amountIrR),
+        // Preserve int8 IRR amounts without rounding through JavaScript numbers.
+        amountIrR: String(input.amountIrR),
         initiatorUserId: input.initiatorId,
         reviewerUserId: input.reviewerUserId,
+        ...(input.sessionId ? { sessionId: input.sessionId } : {}),
         ...(input.reviewReason !== null ? { reviewReason: input.reviewReason } : {}),
       }),
       input.correlationId ?? uuidv7(),
       input.ip,
       input.now,
-    ],
-  )
+    ]
+  );
+  await notifyApprovalResolved(client, input, notifications);
 }

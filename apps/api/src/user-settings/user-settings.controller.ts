@@ -8,26 +8,42 @@ import {
   Logger,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { getDbPool } from '@barghsa/db'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
+} from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { getDbPool } from '@barghsa/db';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { z } from 'zod';
+import type { PoolClient } from 'pg';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { ACTIVE_PROFILE_SQL } from '../profiles/profile-context.js';
 
 /**
  * Allowed notification channel values.
  */
-const VALID_CHANNELS = ['SMS', 'EMAIL', 'IN_APP'] as const
-type NotificationChannel = (typeof VALID_CHANNELS)[number]
+const VALID_CHANNELS = ['SMS', 'EMAIL', 'IN_APP'] as const;
+type NotificationChannel = (typeof VALID_CHANNELS)[number];
+const notificationPreferencesInput = z
+  .object({
+    channels: z.array(z.enum(VALID_CHANNELS)).min(1).max(3),
+  })
+  .strict();
+
+const marketingConsentInput = z
+  .object({ email: z.boolean().optional(), sms: z.boolean().optional() })
+  .strict()
+  .refine((value) => value.email !== undefined || value.sms !== undefined);
+const OWNED_CONSENT_PROFILE_SQL = `SELECT id FROM (${ACTIVE_PROFILE_SQL}) selected WHERE is_owner`;
 
 @ApiTags('User Settings')
 @Controller('api/user/settings')
 @UseGuards(SessionAuthGuard)
 export class UserSettingsController {
-  private readonly logger = new Logger(UserSettingsController.name)
+  private readonly logger = new Logger(UserSettingsController.name);
 
   /**
    * GET /api/user/settings/notifications
@@ -45,31 +61,42 @@ export class UserSettingsController {
       type: 'object',
       properties: {
         channels: { type: 'array', items: { type: 'string', enum: ['SMS', 'EMAIL', 'IN_APP'] } },
+        availableChannels: {
+          type: 'array',
+          items: { type: 'string', enum: ['SMS', 'EMAIL', 'IN_APP'] },
+        },
       },
     },
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getNotificationPreferences(@Req() req: AuthenticatedRequest) {
-    const userId = req.session.userId
-    const pool = getDbPool()
+    return this.readNotificationPreferences(getDbPool(), req.session.userId);
+  }
 
-    const result = await pool.query(
-      `SELECT notification_preferences FROM users WHERE user_id = $1`,
-      [userId],
-    )
-
-    if (result.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
-    }
-
-    const raw = result.rows[0].notification_preferences as string
-    const channels = raw.split(',').filter((c) => VALID_CHANNELS.includes(c as NotificationChannel))
-
-    this.logger.debug(`User ${userId}: notification preferences = ${channels.join(',')}`)
-    return { channels }
+  private async readNotificationPreferences(client: Pick<PoolClient, 'query'>, userId: string) {
+    const result = await client.query(
+      `SELECT u.notification_preferences,u.disabled_at,
+       EXISTS(SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id AND (
+         (i.kind='primary' AND i.destination=lower(u.username) AND i.destination LIKE '%@%') OR
+         (i.kind='email' AND i.destination=lower(u.email) AND i.verified_at IS NOT NULL))) AS has_email,
+       EXISTS(SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id AND (
+         (i.kind='primary' AND i.destination=u.username AND i.destination LIKE '+%') OR
+         (i.kind='mobile' AND i.destination=u.mobile AND i.verified_at IS NOT NULL))) AS has_mobile
+       FROM users u WHERE u.user_id=$1`,
+      [userId]
+    );
+    const user = result.rows[0];
+    if (!user) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+    if (user.disabled_at)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+    const availableChannels: NotificationChannel[] = ['IN_APP'];
+    if (user.has_email) availableChannels.push('EMAIL');
+    if (user.has_mobile) availableChannels.push('SMS');
+    const saved = (user.notification_preferences as string).split(',');
+    const channels = availableChannels.filter(
+      (channel) => channel === 'IN_APP' || saved.includes(channel)
+    );
+    return { channels, availableChannels };
   }
 
   /**
@@ -92,83 +119,57 @@ export class UserSettingsController {
       type: 'object',
       properties: {
         channels: { type: 'array', items: { type: 'string', enum: ['SMS', 'EMAIL', 'IN_APP'] } },
+        availableChannels: {
+          type: 'array',
+          items: { type: 'string', enum: ['SMS', 'EMAIL', 'IN_APP'] },
+        },
       },
     },
   })
   @ApiResponse({ status: 400, description: 'Invalid channels' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
-  async updateNotificationPreferences(
-    @Body() body: { channels: string[] },
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const userId = req.session.userId
-
-    if (!Array.isArray(body.channels) || body.channels.length === 0) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Channels must be a non-empty array' },
-        400,
-      )
+  async updateNotificationPreferences(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    const parsed = notificationPreferencesInput.safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      // Contact changes use the same account lock. Read availability after any wait.
+      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [
+        req.session.userId,
+      ]);
+      await requireCurrentSession(client, req.session);
+      const current = await this.readNotificationPreferences(client, req.session.userId);
+      if (parsed.data.channels.some((channel) => !current.availableChannels.includes(channel)))
+        throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+      const channels = current.availableChannels.filter(
+        (channel) => channel === 'IN_APP' || parsed.data.channels.includes(channel)
+      );
+      await client.query(
+        'UPDATE users SET notification_preferences=$1,updated_at=NOW() WHERE user_id=$2',
+        [channels.join(','), req.session.userId]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES ($1,$2,'notification_preferences_changed',$3::jsonb,$4,$5,NOW())`,
+        [
+          uuidv7(),
+          req.session.userId,
+          JSON.stringify({ before: current.channels, after: channels }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+          req.ip ?? null,
+        ]
+      );
+      await requireCurrentSession(client, req.session);
+      await client.query('COMMIT');
+      return { channels, availableChannels: current.availableChannels };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
     }
-
-    // Validate each channel
-    const invalid = body.channels.filter((c) => !VALID_CHANNELS.includes(c as NotificationChannel))
-    if (invalid.length > 0) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: `Invalid channels: ${invalid.join(', ')}. Allowed: ${VALID_CHANNELS.join(', ')}`,
-        },
-        400,
-      )
-    }
-
-    // IN_APP is always included
-    const channels = [...new Set([...body.channels, 'IN_APP'])]
-
-    // Check availability based on what the user has
-    const pool = getDbPool()
-    const userResult = await pool.query(
-      `SELECT email, mobile FROM users WHERE user_id = $1`,
-      [userId],
-    )
-
-    if (userResult.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
-    }
-
-    const user = userResult.rows[0]
-    const hasEmail = !!user.email
-    const hasMobile = !!user.mobile
-
-    if (channels.includes('EMAIL') && !hasEmail) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'No email address registered. Add an email first.' },
-        400,
-      )
-    }
-
-    if (channels.includes('SMS') && !hasMobile) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'No mobile number registered. Add a mobile first.' },
-        400,
-      )
-    }
-
-    // Store as comma-separated string
-    const channelStr = channels.join(',')
-
-    await pool.query(
-      `UPDATE users SET notification_preferences = $1, updated_at = NOW() WHERE user_id = $2`,
-      [channelStr, userId],
-    )
-
-    this.logger.log(`User ${userId}: notification preferences updated to ${channelStr}`)
-
-    return { channels }
   }
 
   // ── Timezone Settings (T-03.03.06) ─────────────────────────────────────
@@ -179,10 +180,10 @@ export class UserSettingsController {
    */
   private isValidTimezone(tz: string): boolean {
     try {
-      Intl.DateTimeFormat(undefined, { timeZone: tz })
-      return true
+      Intl.DateTimeFormat(undefined, { timeZone: tz });
+      return true;
     } catch {
-      return false
+      return false;
     }
   }
 
@@ -207,24 +208,18 @@ export class UserSettingsController {
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getTimezone(@Req() req: AuthenticatedRequest) {
-    const userId = req.session.userId
-    const pool = getDbPool()
+    const userId = req.session.userId;
+    const pool = getDbPool();
 
-    const result = await pool.query(
-      `SELECT timezone FROM users WHERE user_id = $1`,
-      [userId],
-    )
+    const result = await pool.query(`SELECT timezone FROM users WHERE user_id = $1`, [userId]);
 
     if (result.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
 
-    const timezone = result.rows[0].timezone as string
-    this.logger.debug(`User ${userId}: timezone = ${timezone}`)
-    return { timezone }
+    const timezone = result.rows[0].timezone as string;
+    this.logger.debug(`User ${userId}: timezone = ${timezone}`);
+    return { timezone };
   }
 
   /**
@@ -249,48 +244,49 @@ export class UserSettingsController {
   })
   @ApiResponse({ status: 400, description: 'Invalid timezone' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
-  async updateTimezone(
-    @Body() body: { timezone: string },
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const userId = req.session.userId
-
-    if (!body.timezone || typeof body.timezone !== 'string') {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Timezone must be a non-empty string' },
-        400,
-      )
+  async updateTimezone(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    const parsed = z
+      .object({ timezone: z.string().min(1) })
+      .strict()
+      .safeParse(body);
+    if (!parsed.success || !this.isValidTimezone(parsed.data.timezone))
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    const { timezone } = parsed.data;
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const account = (
+        await client.query('SELECT timezone,disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
+          req.session.userId,
+        ])
+      ).rows[0];
+      if (!account || account.disabled_at)
+        throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+      await requireCurrentSession(client, req.session);
+      await client.query('UPDATE users SET timezone=$1,updated_at=NOW() WHERE user_id=$2', [
+        timezone,
+        req.session.userId,
+      ]);
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES ($1,$2,'timezone_changed',$3::jsonb,$4,$5,NOW())`,
+        [
+          uuidv7(),
+          req.session.userId,
+          JSON.stringify({ before: account.timezone, after: timezone }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+          req.ip ?? null,
+        ]
+      );
+      await requireCurrentSession(client, req.session);
+      await client.query('COMMIT');
+      return { timezone };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
     }
-
-    // Validate against IANA timezone database
-    if (!this.isValidTimezone(body.timezone)) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: `Invalid timezone: "${body.timezone}". Must be a valid IANA timezone string (e.g. "Asia/Tehran", "UTC").`,
-        },
-        400,
-      )
-    }
-
-    const pool = getDbPool()
-    const result = await pool.query(
-      `UPDATE users SET timezone = $1, updated_at = NOW() WHERE user_id = $2 RETURNING timezone`,
-      [body.timezone, userId],
-    )
-
-    if (result.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
-    }
-
-    const timezone = result.rows[0].timezone as string
-    this.logger.log(`User ${userId}: timezone updated to ${timezone}`)
-
-    return { timezone }
   }
 
   // ── Marketing Consent (T-05.05.03) ──────────────────────────────
@@ -299,38 +295,9 @@ export class UserSettingsController {
    * Channels eligible for marketing consent (email/SMS). In-app is never
    * consent-gated and is therefore excluded from this surface.
    */
-  private static readonly MARKETING_CHANNELS: ReadonlyArray<'email' | 'sms'> = [
-    'email',
-    'sms',
-  ]
+  private static readonly MARKETING_CHANNELS: ReadonlyArray<'email' | 'sms'> = ['email', 'sms'];
 
-  /**
-   * Resolve the profile ids the marketing consent applies to.
-   *
-   * Consent is stored per (profile, channel). A user may own several active
-   * profiles; we apply consent to every non-archived profile so the delivery
-   * gate (T-05.05.02) honors the choice regardless of which profile an
-   * outbox row references.
-   */
-  private async resolveConsentProfileIds(
-    pool: { query: (sql: string, params?: unknown[]) => Promise<{ rows: Array<Record<string, unknown>> }> },
-    userId: string,
-  ): Promise<string[]> {
-    const res = await pool.query(
-      `SELECT id FROM profiles WHERE user_id = $1 AND archived = false ORDER BY is_default DESC, created_at ASC`,
-      [userId],
-    )
-    return res.rows.map((r) => r.id as string)
-  }
-
-  /**
-   * GET /api/user/settings/marketing-consent
-   *
-   * Returns the authenticated user's marketing consent state for the
-   * email and SMS channels, along with the last time it changed. Consent is
-   * stored per (profile, channel); we report from the user's default (first
-   * active) profile.
-   */
+  /** Read consent for the current owned profile; no selection means opted out. */
   @Get('marketing-consent')
   @HttpCode(200)
   @RateLimit({ namespace: 'settings:marketing:get', limit: 60, windowMs: 60_000 })
@@ -365,47 +332,16 @@ export class UserSettingsController {
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getMarketingConsent(@Req() req: AuthenticatedRequest) {
-    const userId = req.session.userId
-    const pool = getDbPool()
-
-    const profiles = await this.resolveConsentProfileIds(pool, userId)
-    // Default profile for display purposes. Empty consent by default.
-    const empty: Record<string, { optedIn: boolean; lastChangedAt: string | null }> = {
-      email: { optedIn: false, lastChangedAt: null },
-      sms: { optedIn: false, lastChangedAt: null },
-    }
-    if (profiles.length === 0) {
-      return { channels: empty }
-    }
-
-    const res = await pool.query(
-      `SELECT channel, marketing_opted_in, updated_at
-         FROM user_notification_preferences
-        WHERE profile_id = $1 AND channel IN ('email','sms')`,
-      [profiles[0]],
-    )
-
-    const channels: Record<string, { optedIn: boolean; lastChangedAt: string | null }> = {
-      email: { optedIn: false, lastChangedAt: null },
-      sms: { optedIn: false, lastChangedAt: null },
-    }
-    for (const row of res.rows) {
-      const ch = row.channel as 'email' | 'sms'
-      if (ch !== 'email' && ch !== 'sms') continue
-      channels[ch] = {
-        optedIn: Boolean(row.marketing_opted_in),
-        lastChangedAt: (row.updated_at as string) ?? null,
-      }
-    }
-
-    return { channels }
+    return {
+      channels: await this.getMarketingConsentInternal(getDbPool(), req.session.userId, true),
+    };
   }
 
   /**
    * PUT /api/user/settings/marketing-consent
    *
    * Sets the user's marketing consent for the email and/or SMS channels.
-   * Consent is applied to every active profile and recorded in the audit
+   * Consent is applied only to the current owned profile and recorded in the audit
    * trail. When opting in, `consent_granted_at` is stamped; when opting out,
    * `consent_revoked_at` is stamped. The consent writes and the audit insert
    * run inside a single transaction so a failure can never leave per-profile
@@ -415,6 +351,14 @@ export class UserSettingsController {
   @HttpCode(200)
   @RateLimit({ namespace: 'settings:marketing:put', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Update marketing consent preferences' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      minProperties: 1,
+      additionalProperties: false,
+      properties: { email: { type: 'boolean' }, sms: { type: 'boolean' } },
+    },
+  })
   @ApiResponse({
     status: 200,
     description: 'Marketing consent updated.',
@@ -422,121 +366,113 @@ export class UserSettingsController {
   })
   @ApiResponse({ status: 400, description: 'Invalid request' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
-  async updateMarketingConsent(
-    @Body()
-    body: {
-      email?: boolean
-      sms?: boolean
-    },
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const userId = req.session.userId
-
-    if (typeof body.email !== 'boolean' && typeof body.sms !== 'boolean') {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Provide at least one of email or sms as a boolean.',
-        },
-        400,
-      )
-    }
-
-    // Normalize: only provided channels are touched.
-    const desired = new Map<string, boolean>()
-    if (typeof body.email === 'boolean') desired.set('email', body.email)
-    if (typeof body.sms === 'boolean') desired.set('sms', body.sms)
-
-    const pool = getDbPool()
-    const profiles = await this.resolveConsentProfileIds(pool, userId)
-    if (profiles.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
-    }
-
-    const client = await pool.connect()
+  @ApiResponse({ status: 404, description: 'No current owned profile' })
+  @ApiResponse({ status: 409, description: 'Profile selection changed during the update' })
+  async updateMarketingConsent(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    const parsed = marketingConsentInput.safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    const userId = req.session.userId;
+    const client = await getDbPool().connect();
     try {
-      await client.query('BEGIN')
-
-      for (const profileId of profiles) {
-        for (const channel of UserSettingsController.MARKETING_CHANNELS) {
-          if (!desired.has(channel)) continue
-          const optedIn = desired.get(channel) as boolean
-          await client.query(
-            `INSERT INTO user_notification_preferences
-               (id, profile_id, channel, marketing_opted_in,
-                consent_granted_at, consent_revoked_at, created_at, updated_at)
-             VALUES ($1, $2, $3, $4,
-                     CASE WHEN $4 THEN NOW() ELSE NULL END,
-                     CASE WHEN $4 THEN NULL ELSE NOW() END,
-                     NOW(), NOW())
-             ON CONFLICT (profile_id, channel) DO UPDATE SET
-               marketing_opted_in = EXCLUDED.marketing_opted_in,
-               consent_granted_at = CASE WHEN EXCLUDED.marketing_opted_in
-                                   THEN NOW() ELSE user_notification_preferences.consent_granted_at END,
-               consent_revoked_at = CASE WHEN EXCLUDED.marketing_opted_in
-                                   THEN NULL ELSE NOW() END,
-               updated_at = NOW()`,
-            [uuidv7(), profileId, channel, optedIn],
-          )
-        }
+      await client.query('BEGIN');
+      const selected = await client.query<{ id: string }>(OWNED_CONSENT_PROFILE_SQL, [userId]);
+      const profileId = selected.rows[0]?.id;
+      if (!profileId) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+      // Re-evaluate ownership/archive state after any concurrent profile write.
+      const profile = await client.query(
+        'SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND NOT archived FOR SHARE',
+        [profileId, userId]
+      );
+      if (!profile.rows.length)
+        throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+      // Match profile switching's profile-before-account lock order.
+      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [userId]);
+      await requireCurrentSession(client, req.session);
+      const current = await client.query<{ id: string }>(OWNED_CONSENT_PROFILE_SQL, [userId]);
+      if (current.rows[0]?.id !== profileId)
+        throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
+      const before = await this.getMarketingConsentInternal(client, profileId);
+      const changes = UserSettingsController.MARKETING_CHANNELS.filter(
+        (channel) =>
+          parsed.data[channel] !== undefined && parsed.data[channel] !== before[channel]!.optedIn
+      );
+      for (const channel of changes) {
+        const optedIn = parsed.data[channel]!;
+        await client.query(
+          `INSERT INTO user_notification_preferences
+             (id,profile_id,channel,marketing_opted_in,consent_granted_at,consent_revoked_at)
+           VALUES ($1,$2,$3,$4,CASE WHEN $4 THEN NOW() ELSE NULL END,CASE WHEN $4 THEN NULL ELSE NOW() END)
+           ON CONFLICT (profile_id,channel) DO UPDATE SET
+             marketing_opted_in=EXCLUDED.marketing_opted_in,
+             consent_granted_at=CASE WHEN EXCLUDED.marketing_opted_in THEN NOW() ELSE user_notification_preferences.consent_granted_at END,
+             consent_revoked_at=CASE WHEN EXCLUDED.marketing_opted_in THEN NULL ELSE NOW() END,
+             updated_at=NOW()`,
+          [uuidv7(), profileId, channel, optedIn]
+        );
       }
-
-      // Audit trail — committed with the consent writes.
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, $6, NOW())`,
-        [
-          uuidv7(),
-          userId,
-          'marketing_consent_changed',
-          JSON.stringify(Object.fromEntries(desired)),
-          uuidv7(),
-          req.ip ?? null,
-        ],
-      )
-
-      await client.query('COMMIT')
+      const channels = await this.getMarketingConsentInternal(client, profileId);
+      if (changes.length) {
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+           VALUES ($1,$2,'marketing_consent_changed',$3::jsonb,$4,$5,NOW())`,
+          [
+            uuidv7(),
+            userId,
+            JSON.stringify({
+              profileId,
+              before: Object.fromEntries(
+                UserSettingsController.MARKETING_CHANNELS.map((channel) => [
+                  channel,
+                  before[channel]!.optedIn,
+                ])
+              ),
+              after: Object.fromEntries(
+                UserSettingsController.MARKETING_CHANNELS.map((channel) => [
+                  channel,
+                  channels[channel]!.optedIn,
+                ])
+              ),
+            }),
+            correlationIdStorage.getStore() ?? uuidv7(),
+            req.ip ?? null,
+          ]
+        );
+      }
+      await requireCurrentSession(client, req.session);
+      await client.query('COMMIT');
+      return { channels };
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => undefined)
-      throw err
+      await client.query('ROLLBACK').catch(() => undefined);
+      throw err;
     } finally {
-      client.release()
+      client.release();
     }
-
-    const updated = await this.getMarketingConsentInternal(pool, profiles[0] as string)
-    this.logger.log(
-      `User ${userId}: marketing consent updated -> ${JSON.stringify(Object.fromEntries(desired))}`,
-    )
-    return { channels: updated }
   }
 
-  /** Shared read used by both GET and PUT response. */
   private async getMarketingConsentInternal(
-    pool: ReturnType<typeof getDbPool>,
-    profileId: string,
+    pool: Pick<PoolClient, 'query'>,
+    identity: string,
+    currentOwner = false
   ): Promise<Record<string, { optedIn: boolean; lastChangedAt: string | null }>> {
     const channels: Record<string, { optedIn: boolean; lastChangedAt: string | null }> = {
       email: { optedIn: false, lastChangedAt: null },
       sms: { optedIn: false, lastChangedAt: null },
-    }
+    };
     const res = await pool.query(
       `SELECT channel, marketing_opted_in, updated_at
          FROM user_notification_preferences
-        WHERE profile_id = $1 AND channel IN ('email','sms')`,
-      [profileId],
-    )
+        WHERE profile_id = ${currentOwner ? `(${OWNED_CONSENT_PROFILE_SQL})` : '$1'} AND channel IN ('email','sms')`,
+      [identity]
+    );
     for (const row of res.rows) {
-      const ch = row.channel as 'email' | 'sms'
-      if (ch !== 'email' && ch !== 'sms') continue
+      const ch = row.channel as 'email' | 'sms';
+      if (ch !== 'email' && ch !== 'sms') continue;
       channels[ch] = {
         optedIn: Boolean(row.marketing_opted_in),
         lastChangedAt: (row.updated_at as string) ?? null,
-      }
+      };
     }
-    return channels
+    return channels;
   }
 }

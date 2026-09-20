@@ -1,7 +1,8 @@
-import { sql } from 'drizzle-orm'
-import { text, boolean, pgTable, timestamp } from 'drizzle-orm/pg-core'
-import { uuidv7 } from '../types'
-import { profiles } from './profiles'
+import { sql } from 'drizzle-orm';
+import { uuid, text, boolean, pgTable, timestamp, check } from 'drizzle-orm/pg-core';
+import { uuidv7 } from '../types';
+import { profiles } from './profiles';
+import { provinces, cities } from './geography';
 
 /**
  * Profile addresses table (T-03.02.02).
@@ -25,15 +26,19 @@ export const addresses = pgTable(
     id: uuidv7('id').primaryKey().notNull(),
 
     /** Foreign key to the owning profile. */
-    profileId: text('profile_id')
+    profileId: uuid('profile_id')
       .notNull()
       .references(() => profiles.id, { onDelete: 'cascade' }),
 
     /** Iranian province id. */
-    provinceId: text('province_id').notNull(),
+    provinceId: uuid('province_id')
+      .notNull()
+      .references(() => provinces.id, { onDelete: 'restrict' }),
 
     /** Iranian city id. */
-    cityId: text('city_id').notNull(),
+    cityId: uuid('city_id')
+      .notNull()
+      .references(() => cities.id, { onDelete: 'restrict' }),
 
     /** Full free-text address. */
     fullAddress: text('full_address').notNull(),
@@ -44,17 +49,22 @@ export const addresses = pgTable(
     /** Whether this is the profile's main address. */
     mainAddress: boolean('main_address').notNull().default(false),
 
+    /** Removed from saved addresses; retained for history. */
+    deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'date' }),
+
     /** When the address was created. */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
     /** Last update timestamp. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
-)
+  (table) => [
+    check(
+      'addresses_deleted_not_main',
+      sql`${table.deletedAt} IS NULL OR NOT ${table.mainAddress}`
+    ),
+  ]
+);
 
 /**
  * SQL to create the addresses table.
@@ -63,15 +73,17 @@ export const createAddressesTable = sql`
   CREATE TABLE IF NOT EXISTS addresses (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
-    province_id TEXT NOT NULL REFERENCES provinces(id) ON DELETE RESTRICT,
-    city_id TEXT NOT NULL REFERENCES cities(id) ON DELETE RESTRICT,
+    province_id UUID NOT NULL REFERENCES provinces(id) ON DELETE RESTRICT,
+    city_id UUID NOT NULL REFERENCES cities(id) ON DELETE RESTRICT,
     full_address TEXT NOT NULL,
     postal_code TEXT NOT NULL,
     main_address BOOLEAN NOT NULL DEFAULT false,
+    deleted_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT addresses_deleted_not_main CHECK (deleted_at IS NULL OR NOT main_address)
   );
 
   CREATE INDEX IF NOT EXISTS idx_addresses_profile_id ON addresses (profile_id);
   CREATE UNIQUE INDEX IF NOT EXISTS idx_addresses_main_per_profile ON addresses (profile_id) WHERE main_address = true;
-`
+`;

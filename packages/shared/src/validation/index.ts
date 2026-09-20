@@ -22,29 +22,29 @@
  */
 export function validateNationalId(value: string): boolean {
   // Must be exactly 10 digits
-  if (!/^\d{10}$/.test(value)) return false
+  if (!/^\d{10}$/.test(value)) return false;
 
   // Leading zeros are valid, but the algorithm only works on the digit
   // positions 0-9 of the 10-digit string.
-  const digits = value.split('').map(Number)
+  const digits = value.split('').map(Number);
 
   // All same digit is invalid (e.g., 1111111111, 2222222222)
-  const first = digits[0]
-  if (first !== undefined && digits.every((d) => d === first)) return false
+  const first = digits[0];
+  if (first !== undefined && digits.every((d) => d === first)) return false;
 
   // Weighted sum: positions 0-9 have weights 10, 9, 8, ..., 2
-  let sum = 0
+  let sum = 0;
   for (let i = 0; i < 9; i++) {
-    const digit = digits[i]
-    if (digit === undefined) return false
-    sum += digit * (10 - i)
+    const digit = digits[i];
+    if (digit === undefined) return false;
+    sum += digit * (10 - i);
   }
 
-  const remainder = sum % 11
-  const checksum = remainder < 2 ? remainder : 11 - remainder
+  const remainder = sum % 11;
+  const checksum = remainder < 2 ? remainder : 11 - remainder;
 
-  const last = digits[9]
-  return last !== undefined && checksum === last
+  const last = digits[9];
+  return last !== undefined && checksum === last;
 }
 
 /**
@@ -57,7 +57,7 @@ export function validateNationalId(value: string): boolean {
  * @returns `true` if the postal code passes basic format validation.
  */
 export function validatePostalCode(value: string): boolean {
-  return /^[1-9]\d{9}$/.test(value)
+  return /^[1-9]\d{9}$/.test(value);
 }
 
 /**
@@ -71,16 +71,16 @@ export function validatePostalCode(value: string): boolean {
  */
 export function validateLegalNationalIdentifier(value: string): boolean {
   // Must be exactly 11 digits
-  if (!/^\d{11}$/.test(value)) return false
+  if (!/^\d{11}$/.test(value)) return false;
 
   // Must not be all zeros
-  if (/^0{11}$/.test(value)) return false
+  if (/^0{11}$/.test(value)) return false;
 
   // All same digit is invalid
-  const first = value[0]
-  if (first !== undefined && [...value].every((d) => d === first)) return false
+  const first = value[0];
+  if (first !== undefined && [...value].every((d) => d === first)) return false;
 
-  return true
+  return true;
 }
 
-export { normalizeUsername } from './normalize-username.js'
+export { normalizeUsername } from './normalize-username.js';

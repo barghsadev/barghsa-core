@@ -1,0 +1,4628 @@
+{
+  "scope": "All 301 merged GitHub PRs as retrieved 2026-09-05; PR scope evidence is not an independent full acceptance-criteria certification. No repository files or live runtime state changed.",
+  "counts": {
+    "merged_prs": 301,
+    "pr_backed_task_keys": 263,
+    "state_entries": 330,
+    "state_unique_keys": 308,
+    "missing_merged_keys": 16,
+    "duplicate_state_entries": 22,
+    "legacy_unverified_current_keys": 59,
+    "obsolete_keys": 2
+  },
+  "tasks": [
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.01",
+      "title": "Create `pnpm-workspace.yaml` with `packages: ['apps/*', 'packages/*']` and verify `pnpm install` resolves correctly",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 1,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/1",
+          "merged_at": "2026-08-24T00:00:27Z",
+          "title": "feat: create pnpm workspace with apps/* and packages/* roots",
+          "merge_sha": "561a0f240c97d51dcfc3a39e0ebc28543b3798e3"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.02",
+      "title": "Create root `turbo.json` pipeline definition",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 2,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/2",
+          "merged_at": "2026-08-24T00:39:16Z",
+          "title": "feat: create root turbo.json pipeline definition",
+          "merge_sha": "16026af2fbd6692bf631d44efb7993d941775813"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.03",
+      "title": "Create root `.npmrc` with strict peer dependencies and no shameful hoisting",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 3,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/3",
+          "merged_at": "2026-08-24T00:48:43Z",
+          "title": "feat: create root .npmrc with strict peer deps (T-01.01.03)",
+          "merge_sha": "867176519e8c31b594f97c8177c7bca53c20b3be"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.04",
+      "title": "Create root `package.json` with `packageManager`, scripts, and engines constraint",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 4,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/4",
+          "merged_at": "2026-08-24T00:58:24Z",
+          "title": "feat: add root package.json scripts and engines constraint",
+          "merge_sha": "a14deabea034bbd80849393d78eb7f53ccae21f9"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.05",
+      "title": "Verify monorepo integrity: install deps, run `turbo build` across all packages, confirm no cross-package resolution errors",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 5,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/5",
+          "merged_at": "2026-08-24T01:15:16Z",
+          "title": "feat: verify monorepo integrity and add CI workflow",
+          "merge_sha": "7690fee65b545760368afc4a41346ac58b1d387b"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.02.01",
+      "title": "Create `packages/tsconfig/base.json` with strict shared settings",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 6,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/6",
+          "merged_at": "2026-08-24T01:27:52Z",
+          "title": "feat(tsconfig): create shared tsconfig/base.json with strict settings",
+          "merge_sha": "3899a3e952ef006080caf08d1da055858d4d09e8"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.02.02",
+      "title": "Configure per-package tsconfig with project references in each of: `packages/db`, `packages/shared`, `packages/i18n`, `packages/ui`, `apps/web`, `apps/api`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 7,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/7",
+          "merged_at": "2026-08-24T01:39:10Z",
+          "title": "feat: configure per-package tsconfig with project references",
+          "merge_sha": "ec4e74fdaedd7b7fdd49d9e5e0330fb4ddc29424"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.02.03",
+      "title": "Create root-level `tsconfig.json` that references all sub-projects with `files: []` so IDE picks up project references",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 8,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/8",
+          "merged_at": "2026-08-24T01:55:03Z",
+          "title": "feat: create root tsconfig.json with project references (T-01.02.03)",
+          "merge_sha": "53896acd35e45c8207f3f97ab60ff7a48a386c64"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.02.04",
+      "title": "Wire `turbo.json` `typecheck` task and CI step to run `turbo typecheck`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 9,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/9",
+          "merged_at": "2026-08-24T02:18:17Z",
+          "title": "feat: add typecheck step to CI workflow (T-01.02.04)",
+          "merge_sha": "db094799ab44244e16bb264bd682fc95553f664d"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.01",
+      "title": "Configure TanStack Start build pipeline in `apps/web`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 10,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/10",
+          "merged_at": "2026-08-24T02:43:33Z",
+          "title": "feat: configure TanStack Start build pipeline in apps/web",
+          "merge_sha": "b64a433c083443d7c06495d974d1d8b11cd23ea1"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.02",
+      "title": "Configure NestJS build pipeline in `apps/api`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 11,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/11",
+          "merged_at": "2026-08-24T03:02:06Z",
+          "title": "feat: configure NestJS build pipeline in apps/api (T-01.03.02)",
+          "merge_sha": "d5e13c74d288de59b13c5fd0fe60ebc159eea231"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.03",
+      "title": "Implement route-level code splitting and lazy loading for heavy modules",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 12,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/12",
+          "merged_at": "2026-08-24T03:20:23Z",
+          "title": "feat(web): route-level code splitting and lazy loading for heavy modules",
+          "merge_sha": "e37a75c8fd5fb4715165bcd359085762878c99b5"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.04",
+      "title": "Implement bundle budget checking in CI",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 13,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/13",
+          "merged_at": "2026-08-24T03:35:51Z",
+          "title": "feat: implement bundle budget checking in CI (T-01.03.04)",
+          "merge_sha": "63eaf3ba2fab6cfd2ced4a6e975ddd7dd7a42431"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.05",
+      "title": "Configure hashed filenames and CDN-ready public asset output",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 14,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/14",
+          "merged_at": "2026-08-24T03:51:20Z",
+          "title": "feat: configure hashed filenames and CDN-ready public asset output (T-01.03.05)",
+          "merge_sha": "b16bfa2589f2a060ff1d6ba9058ce5a86b5ad48d"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.01",
+      "title": "Create root `vitest.workspace.ts` that includes all packages and apps",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 15,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/15",
+          "merged_at": "2026-08-24T04:06:15Z",
+          "title": "feat: vitest workspace (T-01.04.01)",
+          "merge_sha": "1d481d6898037d1f30898b5ad353b2570be9deb2"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.02",
+      "title": "Configure per-package Vitest with coverage thresholds",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 16,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/16",
+          "merged_at": "2026-08-24T04:23:11Z",
+          "title": "feat: per-package vitest configs with coverage thresholds (T-01.04.02)",
+          "merge_sha": "fc0995b22590e8ae71491d2c37aa8212ef986496"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.03",
+      "title": "Configure backend integration test setup with real PostgreSQL",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 21,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/21",
+          "merged_at": "2026-08-24T06:01:29Z",
+          "title": "feat(db): testcontainers-based PostgreSQL integration test harness",
+          "merge_sha": "f2162682becfe99b50194784745eb41bd925957b"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.04",
+      "title": "Configure Playwright for E2E testing",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 25,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/25",
+          "merged_at": "2026-08-24T07:07:00Z",
+          "title": "feat(web): configure Playwright E2E testing scaffold",
+          "merge_sha": "b91c9082b6ab2cdb1a9b985ebdbaf74ce0de2004"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.05",
+      "title": "Wire `test` and `test:coverage` tasks in `turbo.json`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 26,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/26",
+          "merged_at": "2026-08-24T07:21:14Z",
+          "title": "feat: wire test and test:coverage tasks in turbo.json",
+          "merge_sha": "2c39bcd20bc2c9c358b468ee0ce8701fbea7d30d"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.06",
+      "title": "Configure flaky-test quarantine process",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 28,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/28",
+          "merged_at": "2026-08-24T08:22:38Z",
+          "title": "feat: configure flaky-test quarantine process (T-01.04.06)",
+          "merge_sha": "6916e2448a6f7729b413106edaf4feed6574e2fc"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.05.01",
+      "title": "Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 29,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/29",
+          "merged_at": "2026-08-24T09:13:21Z",
+          "title": "feat: global HttpExceptionFilter and CorrelationIdMiddleware (T-01.05.01)",
+          "merge_sha": "c11ba5c2e4312f55bdfdad0f734cf8f83afae0a2"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.01.01",
+      "title": "Initialize `packages/db` with Drizzle ORM, `pg`, `pg-pool`, and drizzle-kit",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 17,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/17",
+          "merged_at": "2026-08-24T04:49:56Z",
+          "title": "feat(packages/db): initialize Drizzle ORM with pg pool and drizzle-kit (T-02.01.01)",
+          "merge_sha": "1a51b32b2c0a8cfeba436b79ec834f97747a6bdd"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.01.02",
+      "title": "Create PostgreSQL pool factory with configurable pool, statement timeout, lock timeout, and idle transaction guard",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 18,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/18",
+          "merged_at": "2026-08-24T05:08:02Z",
+          "title": "feat(packages/db): PostgreSQL pool factory with env var defaults and GUC timeout guards (T-02.01.02)",
+          "merge_sha": "7bd291cc0a1f9ce4ab4af18e1b95aeed2ed82e98"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.01.03",
+      "title": "Implement query timeout and cancellation via Drizzle configuration",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 19,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/19",
+          "merged_at": "2026-08-24T05:33:18Z",
+          "title": "feat(packages/db): implement query timeout and cancellation (T-02.01.03)",
+          "merge_sha": "0b9b974d4e2eeab3141d460099d77e61511436fb"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.01.04",
+      "title": "Set up database health check endpoint for readiness probes",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 20,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/20",
+          "merged_at": "2026-08-24T05:48:50Z",
+          "title": "feat(db): add dbHealth() health check for readiness probes",
+          "merge_sha": "1e2065db6b6dd450312b879f98f718eb52d37e39"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.02.01",
+      "title": "Create `packages/db/src/types.ts` with custom Drizzle type definitions",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 22,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/22",
+          "merged_at": "2026-08-24T06:19:45Z",
+          "title": "feat(db): add custom Drizzle type definitions for PostgreSQL column conventions",
+          "merge_sha": "f727c868c47d99d07cec949ce5c750021da72425"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.02.02",
+      "title": "Create base table factory with `id`, `createdAt`, `updatedAt` columns",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 23,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/23",
+          "merged_at": "2026-08-24T06:32:23Z",
+          "title": "feat(db): base table factory with id, createdAt, updatedAt columns",
+          "merge_sha": "9e2a8c9c3405ab911421d052b6dd45098f512aab"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.02.03",
+      "title": "Create UUIDv7 generation function migration",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 24,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/24",
+          "merged_at": "2026-08-24T06:47:05Z",
+          "title": "feat(db): add uuid_generate_v7() migration and tests",
+          "merge_sha": "0f829c7db5c3fd4157ccc8c46d0fcaa053362046"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.02.04",
+      "title": "Document and enforce column conventions in ADR",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 27,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/27",
+          "merged_at": "2026-08-24T07:38:45Z",
+          "title": "docs: ADR-001 data types and column conventions (T-02.02.04)",
+          "merge_sha": "eb6351741dce8aa3e07d257f9455f1c4e068341d"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.03.01",
+      "title": "Configure `drizzle.config.ts` in `packages/db`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 79,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/79",
+          "merged_at": "2026-08-25T02:02:55Z",
+          "title": "feat(db): configure drizzle.config.ts (T-02.03.01)",
+          "merge_sha": "bea3e0525122146e858cf624a62ccbd36a85ec3b"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.03.02",
+      "title": "Create migration runner script for production deployments",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 80,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/80",
+          "merged_at": "2026-08-25T02:17:20Z",
+          "title": "feat(db): create migration runner script for production deployments (T-02.03.02)",
+          "merge_sha": "27d18b2e629beb878deab77e471d0d11daafdcc8"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.03.03",
+      "title": "Create migration validation test (clean + upgrade path)",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.03.04",
+      "title": "Implement expand/migrate/contract documentation and PR checklist",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.04.01",
+      "title": "Create seed script `packages/db/src/seed/index.ts`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 81,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/81",
+          "merged_at": "2026-08-25T02:33:36Z",
+          "title": "feat(db): create seed script with extensible upsert framework",
+          "merge_sha": "5b40f762d5307ed0a0b1a6f450c5c59c14b8c056"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.04.02",
+      "title": "Create four default electricity products in seed",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 82,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/82",
+          "merged_at": "2026-08-25T02:44:49Z",
+          "title": "feat(db): add four default electricity products to seed",
+          "merge_sha": "793ed7823b063adf5deec65ffbb6c1ecc2dca5ff"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.04.03",
+      "title": "Create admin bootstrap mechanism",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 83,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/83",
+          "merged_at": "2026-08-25T03:02:32Z",
+          "title": "feat(db): admin bootstrap mechanism (T-02.04.03)",
+          "merge_sha": "2e0277aa832099be2cd01ce59874850a3e0b0d24"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.04.04",
+      "title": "Wire `pnpm db:seed` script in `packages/db/package.json`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 84,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/84",
+          "merged_at": "2026-08-25T03:13:31Z",
+          "title": "feat(db): wire pnpm db:seed script (T-02.04.04)",
+          "merge_sha": "be05c4565f0c1e6a62ba305b696bc9e9e517472c"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.04.05",
+      "title": "Add seed verification test",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 85,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/85",
+          "merged_at": "2026-08-25T03:28:23Z",
+          "title": "feat(db): add seed verification test (T-02.04.05)",
+          "merge_sha": "6499807a2cc00522a345f55905345f392c6cd087"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.04.06",
+      "title": "Configure database constraint to prevent deletion of system electricity products and creation of additional electricity-product types",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 86,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/86",
+          "merged_at": "2026-08-25T03:38:58Z",
+          "title": "feat(db): add database constraints protecting system electricity products",
+          "merge_sha": "8332457a2d621c4785559fa70800dabea93c84ba"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.01",
+      "title": "Create `Dockerfile.web` with multi-stage build",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 30,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/30",
+          "merged_at": "2026-08-24T09:28:56Z",
+          "title": "feat: create Dockerfile.web with multi-stage build (T-03.01.01)",
+          "merge_sha": "1ef558b31359ce2ce983e2aa0c90627ca665991a"
+        },
+        {
+          "number": 94,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/94",
+          "merged_at": "2026-08-25T07:51:28Z",
+          "title": "feat: create Dockerfile.web with multi-stage build",
+          "merge_sha": "4852aa3522f3fb8b299332b726fb1f8254403a3e"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.02",
+      "title": "Create shared `Dockerfile.base` for API and worker (same build, different CMD)",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 31,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/31",
+          "merged_at": "2026-08-24T09:56:14Z",
+          "title": "feat: create shared Dockerfile.base for API and worker (T-03.01.02)",
+          "merge_sha": "4ae9be572fb7a8914a541a00ff097ff3c638a48e"
+        },
+        {
+          "number": 95,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/95",
+          "merged_at": "2026-08-25T08:14:33Z",
+          "title": "feat: create shared Dockerfile.base for API and worker",
+          "merge_sha": "438c01b29a3d0cb053d66190a081ce5400561880"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.03",
+      "title": "Create `.dockerignore`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 32,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/32",
+          "merged_at": "2026-08-24T10:03:59Z",
+          "title": "feat(infra): create .dockerignore",
+          "merge_sha": "69f1937703f75159c2b511a8267c1624bde274e5"
+        },
+        {
+          "number": 96,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/96",
+          "merged_at": "2026-08-25T08:20:23Z",
+          "title": "feat: create .dockerignore",
+          "merge_sha": "c4760701ac3468ee02e98ca8541cbd5b4c7e6f30"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.04",
+      "title": "Add `HEALTHCHECK` instruction to all Dockerfiles",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 33,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/33",
+          "merged_at": "2026-08-24T10:17:43Z",
+          "title": "feat(e01): add HEALTHCHECK instruction to all Dockerfiles",
+          "merge_sha": "016f8c5b3ec7109201e665b566058073b1b266e4"
+        },
+        {
+          "number": 97,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/97",
+          "merged_at": "2026-08-25T08:24:43Z",
+          "title": "feat: add HEALTHCHECK instruction to all Dockerfiles",
+          "merge_sha": "af19e5b8a38e7223237e31476343ace100f9fede"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.05",
+      "title": "Implement security hardening in Docker images",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 34,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/34",
+          "merged_at": "2026-08-24T10:21:06Z",
+          "title": "feat(e01): implement security hardening in Docker images",
+          "merge_sha": "02d15a6b61478e589e631f005044a25300051d4c"
+        },
+        {
+          "number": 98,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/98",
+          "merged_at": "2026-08-25T08:38:15Z",
+          "title": "feat: implement security hardening in Docker images (T-03.01.05)",
+          "merge_sha": "fc5ab5b8fa00cb2dd175d3aae626a579e8b3c009"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.02.01",
+      "title": "Create `docker-compose.yml` with PostgreSQL, Redis, MinIO",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 35,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/35",
+          "merged_at": "2026-08-24T10:28:42Z",
+          "title": "feat: create docker-compose.yml with PostgreSQL, Redis, MinIO",
+          "merge_sha": "69dc41d8e894102282c8757f7ed77a73019db847"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.02.02",
+      "title": "Create `.env.example` with all required development variables",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 36,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/36",
+          "merged_at": "2026-08-24T10:36:20Z",
+          "title": "feat: create .env.example with all required development variables",
+          "merge_sha": "52a47ba5f82d3f4c597c6fb7634ccdadc9ae464b"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.02.03",
+      "title": "Create root `pnpm dev` script for hot-reload local development across all apps",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 37,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/37",
+          "merged_at": "2026-08-24T10:46:15Z",
+          "title": "feat: root pnpm dev script with hot-reload across all apps (T-03.02.03)",
+          "merge_sha": "6db462c1ee3bfa893f42fe5ca758ceb7926738f2"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.02.04",
+      "title": "Configure file-watch with proper polling for Docker-for-Mac compatibility",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 38,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/38",
+          "merged_at": "2026-08-24T10:55:40Z",
+          "title": "feat(e01): configure file-watch polling for Docker-for-Mac (T-03.02.04)",
+          "merge_sha": "70f67dc9f00a5ce1b261ff89c4e21c6f88ba2f64"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.03.01",
+      "title": "Implement liveness and readiness controllers in NestJS API",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 39,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/39",
+          "merged_at": "2026-08-24T11:14:37Z",
+          "title": "feat: add liveness/readiness health controllers to NestJS API",
+          "merge_sha": "04147867b3883a39bb445a1f80936057fca7cef4"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.03.02",
+      "title": "Implement graceful `SIGTERM` handler for NestJS API and worker",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 40,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/40",
+          "merged_at": "2026-08-24T11:37:50Z",
+          "title": "feat(e01-t-03-03-02): graceful SIGTERM handler for NestJS API and worker",
+          "merge_sha": "61753110228f781b14710bb5a3f7511187417dbc"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.03.03",
+      "title": "Implement graceful shutdown for web frontend server",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 41,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/41",
+          "merged_at": "2026-08-24T11:51:03Z",
+          "title": "feat(e01-t-03-03-03): graceful web frontend shutdown",
+          "merge_sha": "0a6baf423c9aa811e46243b37cd3ded484b02908"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.03.04",
+      "title": "Add readiness check that excludes non-critical dependencies",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 42,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/42",
+          "merged_at": "2026-08-24T12:23:33Z",
+          "title": "feat(api): non-critical readiness check with X-Health-Warning header (T-03.03.04)",
+          "merge_sha": "50ecd6c240233d581c80cdeda06080261d8b1d56"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.01.01",
+      "title": "Configure PostgreSQL connection pooling strategy",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 43,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/43",
+          "merged_at": "2026-08-24T12:41:36Z",
+          "title": "feat(e04): configure PgBouncer connection pooling strategy (T-04.01.01)",
+          "merge_sha": "c63f880735d6d3f7f14c414a99bc03e5a915f1e0"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.01.02",
+      "title": "Configure automated backups with WAL archiving and PITR",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 44,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/44",
+          "merged_at": "2026-08-24T12:57:49Z",
+          "title": "feat(db): configure automated backups with WAL archiving (T-04.01.02 — slice 1)",
+          "merge_sha": "ea81cdc98a16cd32a56d694242b2d89c531ab404"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.01.03",
+      "title": "Document and automate restore procedure",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 45,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/45",
+          "merged_at": "2026-08-24T13:34:30Z",
+          "title": "feat(db): add restore-pg.sh script for PostgreSQL backup restoration (T-04.01.03 — slice 1)",
+          "merge_sha": "f3ca013061c24e8faa27f481b118e80d93257a5a"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.01.04",
+      "title": "Implement PostgreSQL performance baseline and monitoring",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 46,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/46",
+          "merged_at": "2026-08-24T14:23:22Z",
+          "title": "feat(db): implement PostgreSQL performance baseline and monitoring",
+          "merge_sha": "893a752a0b9dc23662c4f5719d8407e6ee120256"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.01.05",
+      "title": "Quarterly restore exercise",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 48,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/48",
+          "merged_at": "2026-08-24T15:11:19Z",
+          "title": "feat(db): add restore verification script (T-04.01.05, slice 1)",
+          "merge_sha": "b1e76f01fa73ad07f0114153479174bdf6206b66"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.01.06",
+      "title": "Hybrid deployment: separate managed PostgreSQL from app VM",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 49,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/49",
+          "merged_at": "2026-08-24T15:18:37Z",
+          "title": "feat(db): hybrid deployment ADR and TLS config (T-04.01.06 slice 1)",
+          "merge_sha": "78f99cfac2cbe39869625d06fe58d28c2747e8c2"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.01.07",
+      "title": "Encrypted off-server backup of config, secrets, and critical application files",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 50,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/50",
+          "merged_at": "2026-08-24T15:27:49Z",
+          "title": "feat: encrypted off-server config & critical files backup (T-04.01.07)",
+          "merge_sha": "dbb612cb2bc50d2a64448df8de36ba7f7bfa0405"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.02.01",
+      "title": "Create Redis connection factory with graceful fallback",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 51,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/51",
+          "merged_at": "2026-08-24T15:54:43Z",
+          "title": "feat(shared): create Redis connection factory with graceful fallback",
+          "merge_sha": "2e78577345d663a0ba8e8c5ed28de46b0a5852b6"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.02.02",
+      "title": "Implement distributed rate-limiting with Redis acceleration + PostgreSQL fallback",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 52,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/52",
+          "merged_at": "2026-08-24T16:17:52Z",
+          "title": "feat: distributed rate-limiting with Redis + PostgreSQL fallback (T-04.02.02)",
+          "merge_sha": "9be3e0ae65175a64ad3a676ad4b5a38c5000e341"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.02.03",
+      "title": "Implement configuration caching with clear invalidation",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 53,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/53",
+          "merged_at": "2026-08-24T16:54:20Z",
+          "title": "feat(api): implement configuration caching with version-gated invalidation",
+          "merge_sha": "b338fbdcb230181c5e99cf904741308aacf985f1"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.02.04",
+      "title": "Document Redis architecture decision in ADR",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 54,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/54",
+          "merged_at": "2026-08-24T17:01:57Z",
+          "title": "feat(docs): ADR-002 Redis scope & architectural guarantees",
+          "merge_sha": "9786a2021690a404b444fd2292ad2e138549ca3d"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.03.01",
+      "title": "Create S3 storage provider abstraction",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 55,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/55",
+          "merged_at": "2026-08-24T17:21:37Z",
+          "title": "feat(shared): add S3 storage provider abstraction (T-04.03.01)",
+          "merge_sha": "1d25d03fa84b4695d3f2c0f564513c038e02fc44"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.03.02",
+      "title": "Implement presigned URL workflow for direct browser upload/download",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 56,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/56",
+          "merged_at": "2026-08-24T17:47:18Z",
+          "title": "feat(api): presigned URL backend — StorageModule + UploadModule (T-04.03.02 slice 1)",
+          "merge_sha": "0c1f40431c6c9bcd9859e41cd5c1f9bdd2980f53"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.03.03",
+      "title": "Configure bucket versioning and lifecycle policies",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 57,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/57",
+          "merged_at": "2026-08-24T17:58:44Z",
+          "title": "feat(storage): configure bucket versioning and lifecycle policies",
+          "merge_sha": "ce7d629776a6af62303fbd1cae88089cf7070fa0"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.03.04",
+      "title": "Create admin configuration UI for storage",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 58,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/58",
+          "merged_at": "2026-08-24T18:11:54Z",
+          "title": "feat: admin storage configuration UI (T-04.03.04)",
+          "merge_sha": "603213599ee04e7e74436bfb4ba1c2b1bcda95f4"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.03.05",
+      "title": "Enforce immutability for signed contracts and critical records",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 59,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/59",
+          "merged_at": "2026-08-24T18:34:18Z",
+          "title": "T-04.03.05: Enforce immutability for signed contracts and critical records",
+          "merge_sha": "9ae5c62c696566a058f98d5a2c76d02f313f431c"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.04.01",
+      "title": "Create NGINX/Caddy configuration for pilot (single-node) topology",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 60,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/60",
+          "merged_at": "2026-08-24T18:45:47Z",
+          "title": "T-04.04.01: Create NGINX/Caddy configuration for pilot (single-node) topology",
+          "merge_sha": "38708146d91cafc48e50bcdaab05e142723c75e2"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.04.02",
+      "title": "Configure security headers in reverse proxy",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 61,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/61",
+          "merged_at": "2026-08-24T18:56:32Z",
+          "title": "feat: configure CSP Report-Only headers and reporting endpoint",
+          "merge_sha": "3aa7882556a2d2d51d4d4d4bb909a64885163eeb"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.04.03",
+      "title": "Configure edge rate limiting for auth, upload, and AI endpoints",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 62,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/62",
+          "merged_at": "2026-08-24T19:06:01Z",
+          "title": "feat(T-04.04.03): configure edge rate limiting for auth, upload, and AI endpoints",
+          "merge_sha": "1d3b6e423e344a0ddc9337bd5eda420c30796435"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.04.04",
+      "title": "Configure static asset caching and CDN readiness",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 63,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/63",
+          "merged_at": "2026-08-24T19:22:08Z",
+          "title": "feat(e04): configure static asset caching and CDN readiness",
+          "merge_sha": "6b5b1e27e8083459f24e58c259042d28a0a2f6e2"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.04.05",
+      "title": "Implement ETag support for safe metadata endpoints",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 64,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/64",
+          "merged_at": "2026-08-24T19:37:16Z",
+          "title": "feat(e04): implement ETag support for safe metadata endpoints",
+          "merge_sha": "3a39f38ef19d76fa74dc22fd62287ee58e414d78"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.01.01",
+      "title": "Create Ansible playbook or deploy script for pilot topology",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.01.02",
+      "title": "Create `docker-compose.prod.yml` for pilot single-VM deployment",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.01.03",
+      "title": "Document explicitly that single-server deployment has lower availability",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.02.01",
+      "title": "Design and document commercial HA topology",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.02.02",
+      "title": "Configure rolling/blue-green deployment automation for HA",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.02.03",
+      "title": "Implement circuit breaker for external providers",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.02.04",
+      "title": "Configure maintenance mode per capability, not whole-application",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.03.01",
+      "title": "Create CI workflow definition (GitHub Actions, GitLab CI, or equivalent)",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.03.02",
+      "title": "Implement migration validation step (two environments)",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.03.03",
+      "title": "Implement OpenAPI generation and drift check",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.03.04",
+      "title": "Configure security scans in PR gate",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.03.05",
+      "title": "Implement coverage threshold enforcement",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 121,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/121",
+          "merged_at": "2026-08-25T18:53:09Z",
+          "title": "feat(e01): implement coverage threshold enforcement in CI (T-05.03.05)",
+          "merge_sha": "6a67529aeb9efdf1d8061691ffac0f89e0f09864"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.04.01",
+      "title": "Create staging gate CI workflow",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.04.02",
+      "title": "Create production promotion workflow with canary/gradual rollout",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.04.03",
+      "title": "Implement post-deploy smoke tests and SLO comparison",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.04.04",
+      "title": "Create runbooks for rollback scenarios",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.05.01",
+      "title": "Create nightly CI schedule",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.05.02",
+      "title": "Create weekly load/performance regression test",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.05.03",
+      "title": "Create quarterly disaster-recovery and restore exercise",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.05.04",
+      "title": "Create quarterly access review and threat-model update",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.01.01",
+      "title": "Initialize `packages/shared` with tsconfig and dependencies",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.01.02",
+      "title": "Create username validation and normalization helpers",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.01.03",
+      "title": "Create password validation with strength meter logic",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.01.04",
+      "title": "Create stable error code enum with HTTP status mapping",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.01.05",
+      "title": "Create pagination helper schemas",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.02.01",
+      "title": "Initialize `packages/i18n` with message dictionary structure",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.02.02",
+      "title": "Create Jalali calendar date utilities",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.02.03",
+      "title": "Create timezone-aware date/time display utilities",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.02.04",
+      "title": "Create logic for RTL/LTR switching based on locale",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.02.05",
+      "title": "Localize number/currency formatting",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.01",
+      "title": "Initialize `packages/ui` with shadcn/ui and Base UI",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.02",
+      "title": "Create themed component set with RTL support",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.03",
+      "title": "Implement WCAG 2.2 AA accessibility in all shared components",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.04",
+      "title": "Create localized DatePicker component",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.05",
+      "title": "Implement theme system with admin overrides",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.06",
+      "title": "Create loading/empty/error state components",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.04.01",
+      "title": "Create privacy-safe analytics abstraction with consent gate and redaction",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.01.01",
+      "title": "Create `pnpm setup:dev` convenience script",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.01.02",
+      "title": "Configure dev-mode OTP bypass and console printing",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.01.03",
+      "title": "Create `pnpm db:push` script for dev schema synchronization",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.01.04",
+      "title": "Add environment indicator middleware",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.02.01",
+      "title": "Create versioned configuration store in PostgreSQL",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.02.02",
+      "title": "Create configuration validation framework",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.02.03",
+      "title": "Implement configuration rollback",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.02.04",
+      "title": "Create secrets encryption and masking service",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.02.05",
+      "title": "Implement provider configuration lifecycle with test-send",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.03.01",
+      "title": "Create shared ESLint configuration",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.03.02",
+      "title": "Configure Prettier with consistent formatting",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.03.03",
+      "title": "Set up Husky, lint-staged, and commitlint",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.03.04",
+      "title": "Create `.editorconfig` and `.vscode` workspace settings",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.04.01",
+      "title": "Create incident runbooks directory (`docs/runbooks/`)",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.04.02",
+      "title": "Create initial ADRs",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.04.03",
+      "title": "Create deployment guide",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.04.04",
+      "title": "Create incident response plan",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.05.01",
+      "title": "Enforce “no external call inside a database transaction”",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.05.02",
+      "title": "Generate and verify TypeScript API client contracts from OpenAPI",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.05.03",
+      "title": "Verify health-endpoint middleware exclusions",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-07.05.04",
+      "title": "Document and gate module extraction criteria",
+      "status": "legacy_completion_unverified",
+      "missing_from_current_state": false,
+      "prs": []
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.01.01",
+      "title": "Register route and shared auth layout",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 68,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/68",
+          "merged_at": "2026-08-24T21:12:40Z",
+          "title": "feat(e02): add register route with shared auth layout",
+          "merge_sha": "d84031479894f5195ab17c2f4514a0c697cfa7f3"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.01.02",
+      "title": "Unified username field (email or mobile)",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 69,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/69",
+          "merged_at": "2026-08-24T21:21:16Z",
+          "title": "feat(auth): unified username field with type detection and E.164 normalization",
+          "merge_sha": "7a3e29bc31a44e0af0ede2bdb1d5b558d0a0b85f"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.01.03",
+      "title": "Password field with visibility toggle and strength meter",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 70,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/70",
+          "merged_at": "2026-08-24T21:52:39Z",
+          "title": "feat(e02): password field with visibility toggle and strength meter",
+          "merge_sha": "5e30c864f23cca50967176c2384f8f84fa328e42"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.01.04",
+      "title": "TOS acceptance checkbox",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 71,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/71",
+          "merged_at": "2026-08-24T22:02:48Z",
+          "title": "feat(auth): add TOS acceptance checkbox to register form (#T-01.01.04)",
+          "merge_sha": "3d2e8b180543258b4240cc70e7020788a8f4055c"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.01.05",
+      "title": "\"Back to login\" and \"Forgot password?\" links",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 72,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/72",
+          "merged_at": "2026-08-24T22:09:22Z",
+          "title": "feat(register): Add \"Back to login\" and \"Forgot password?\" links (T-01.01.05)",
+          "merge_sha": "eba7f1d917269b17b83a495a2a0694ff2e2d65ba"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.01.06",
+      "title": "Registration form submission and error handling",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 73,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/73",
+          "merged_at": "2026-08-24T22:37:46Z",
+          "title": "feat(auth): registration form submission and error handling (T-01.01.06)",
+          "merge_sha": "8ee976409ef73a5ebe1f99122489f0033633cf69"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.02.01",
+      "title": "OTP backend generation and sending",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 74,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/74",
+          "merged_at": "2026-08-24T23:27:25Z",
+          "title": "feat(auth): OTP backend generation, storage, and verification (T-01.02.01)",
+          "merge_sha": "ab4ae68654e90a98e3ce84fc7dfd371d813c17a5"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.02.02",
+      "title": "OTP input UI with resend",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 75,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/75",
+          "merged_at": "2026-08-25T00:10:15Z",
+          "title": "feat: OTP input UI with resend (T-01.02.02)",
+          "merge_sha": "977dbbd9bc5a582a0815d76155d0bb4a84749b5e"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-01.02.03",
+      "title": "OTP verification and user creation",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 76,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/76",
+          "merged_at": "2026-08-25T01:10:59Z",
+          "title": "feat: OTP verification and user creation (T-01.02.03)",
+          "merge_sha": "02d71df5284629f826ca299c3f3deb1caca318c3"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.01.01",
+      "title": "Login page UI",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 77,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/77",
+          "merged_at": "2026-08-25T01:21:28Z",
+          "title": "feat: Login page UI (T-02.01.01)",
+          "merge_sha": "2079a42a153fce437f84c98e98af546e1f314751"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.01.02",
+      "title": "Login authentication flow",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 78,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/78",
+          "merged_at": "2026-08-25T01:51:25Z",
+          "title": "feat(auth): login authentication endpoint (T-02.01.02 Slice 1)",
+          "merge_sha": "e2429d42d2ee78f64028f2e35cc51529907e8ad8"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.01.03",
+      "title": "Login OTP verification",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 87,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/87",
+          "merged_at": "2026-08-25T04:06:12Z",
+          "title": "feat(e02): login OTP verification (T-02.01.03)",
+          "merge_sha": "7c3e64d8c6205e1740fdf7dfd9f33ec5183d1e27"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.01.04",
+      "title": "Password change enforcement on login",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 88,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/88",
+          "merged_at": "2026-08-25T04:22:41Z",
+          "title": "feat: password change enforcement on login (T-02.01.04)",
+          "merge_sha": "54b0439d1c4db0abb97ca5c649d83104136eba77"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.01",
+      "title": "Session creation and cookie management",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 89,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/89",
+          "merged_at": "2026-08-25T05:34:32Z",
+          "title": "feat(e02): session creation and cookie management (T-02.02.01)",
+          "merge_sha": "df8e02d2dd9c96be4c4177480d4e4c4dba7a2115"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.02",
+      "title": "Session revocation",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 90,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/90",
+          "merged_at": "2026-08-25T06:07:08Z",
+          "title": "feat: session revocation endpoints and security settings page",
+          "merge_sha": "660ec2a3f58a613015c278c6b9904dbd777b99cf"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.03",
+      "title": "CSRF protection",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 91,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/91",
+          "merged_at": "2026-08-25T06:32:27Z",
+          "title": "feat: CSRF protection (T-02.02.03)",
+          "merge_sha": "76adb7017b237421a38b1adda27489979b886313"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.04",
+      "title": "Step-up authentication for sensitive actions",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 92,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/92",
+          "merged_at": "2026-08-25T06:46:27Z",
+          "title": "feat(e02): add step-up authentication infrastructure (T-02.02.04)",
+          "merge_sha": "6c202b8a6ffd46d6e70acef10943ab66c7c043fa"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.03.01",
+      "title": "Forgot password request UI",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 93,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/93",
+          "merged_at": "2026-08-25T07:28:24Z",
+          "title": "feat: forgot-password request UI with backend endpoint and inline OTP (T-02.03.01)",
+          "merge_sha": "26735e13bfa6aa85c0056838b66483bbb4fa5651"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.03.02",
+      "title": "OTP verification and password reset",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 99,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/99",
+          "merged_at": "2026-08-25T08:57:13Z",
+          "title": "feat: implement OTP verification and password reset (T-02.03.02)",
+          "merge_sha": "3cacc80170bdedfdba6a8e6d0624bbf70f623036"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.03.03",
+      "title": "Account recovery support path",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 100,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/100",
+          "merged_at": "2026-08-25T09:14:57Z",
+          "title": "feat(auth): account recovery support path (T-02.03.03)",
+          "merge_sha": "5b76744f74032413088b4956cedda9b50b7dbe31"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.04.01",
+      "title": "Auth rate limit enforcement",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 101,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/101",
+          "merged_at": "2026-08-25T09:36:11Z",
+          "title": "feat(e02): auth rate limit enforcement (T-02.04.01)",
+          "merge_sha": "bba9ae78cea961106bf946a93746f50e15710963"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.01.01",
+      "title": "App-level profile check middleware",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 102,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/102",
+          "merged_at": "2026-08-25T10:22:33Z",
+          "title": "feat: app-level profile check middleware (T-03.01.01)",
+          "merge_sha": "c13c9768f7c9ec6a207da77aca3af08371690de8"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.01.02",
+      "title": "Profile verification check after login",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 103,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/103",
+          "merged_at": "2026-08-25T10:46:07Z",
+          "title": "feat: profile verification check after login (T-03.01.02)",
+          "merge_sha": "1adfc12b697b96ca8a90be30b167a3d664a1b639"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.02.01",
+      "title": "Profile type selection (Individual vs Legal)",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 104,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/104",
+          "merged_at": "2026-08-25T11:03:42Z",
+          "title": "feat(e03): profile type selection on onboarding (T-03.02.01)",
+          "merge_sha": "544508e23730088cd10ac9f002227c4959a3ab9c"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.02.02",
+      "title": "Individual profile form",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 105,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/105",
+          "merged_at": "2026-08-25T11:40:46Z",
+          "title": "feat: individual profile form (T-03.02.02)",
+          "merge_sha": "b166966bf85e712bbb3c43aed7639dede66117ee"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.02.03",
+      "title": "Legal profile form",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 106,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/106",
+          "merged_at": "2026-08-25T11:56:29Z",
+          "title": "feat(e02): legal profiles backend — DB schema, service, onboarding endpoint (T-03.02.03, slice 1)",
+          "merge_sha": "28a53c50487259c9fb8c7283f36da48737bda448"
+        },
+        {
+          "number": 108,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/108",
+          "merged_at": "2026-08-25T13:08:46Z",
+          "title": "feat: legal profile form page (T-03.02.03)",
+          "merge_sha": "db70d7182506a0a77e6cdd899b3f9ee4c3ccce4b"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.02.04",
+      "title": "Onboarding completion and redirect",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 107,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/107",
+          "merged_at": "2026-08-25T12:36:16Z",
+          "title": "feat(e02): onboarding completion page and redirect (T-03.02.04)",
+          "merge_sha": "f8d29c6495d4800396f36f56364804aee8891d2c"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.01",
+      "title": "Profile switcher in sidebar",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 109,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/109",
+          "merged_at": "2026-08-25T13:46:20Z",
+          "title": "T-03.03.01: Profile switcher in sidebar",
+          "merge_sha": "9af5aefb4734d058149cb2cad9fdc1ea2a7b8945"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.02",
+      "title": "Default profile selection",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 110,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/110",
+          "merged_at": "2026-08-25T14:10:32Z",
+          "title": "feat: default profile selection modal (T-03.03.02)",
+          "merge_sha": "f5f10840d809e58ad553d78e3e6976cd51601584"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.03",
+      "title": "Profile settings page",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 111,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/111",
+          "merged_at": "2026-08-25T14:37:48Z",
+          "title": "feat: profile settings page (T-03.03.03)",
+          "merge_sha": "cf3cea1f882e4f0759ecede3a68532919627a9cb"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.04",
+      "title": "Username/contact changes",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 112,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/112",
+          "merged_at": "2026-08-25T14:55:10Z",
+          "title": "feat: username/contact changes with OTP verification (T-03.03.04)",
+          "merge_sha": "4b07dcf8fb2f8d0bba527c7b689330b5e4389ea6"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.05",
+      "title": "Notification channel preferences",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 113,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/113",
+          "merged_at": "2026-08-25T15:07:24Z",
+          "title": "feat: notification channel preferences (T-03.03.05)",
+          "merge_sha": "7e9fe25749c6fa5dbec637141dc1a4be5b44fb27"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.06",
+      "title": "Timezone settings",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 114,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/114",
+          "merged_at": "2026-08-25T15:27:25Z",
+          "title": "feat: timezone settings (T-03.03.06)",
+          "merge_sha": "df4cee6089d8c6969fd32ee0a55c56b5c6f5c8e2"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.04.01",
+      "title": "Address CRUD for current profile",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 115,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/115",
+          "merged_at": "2026-08-25T15:52:36Z",
+          "title": "feat: Address CRUD for current profile (T-03.04.01)",
+          "merge_sha": "dbd367c270b1446b2ef900e5a6076294f4c6dc10"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.04.02",
+      "title": "Address in order flow",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 116,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/116",
+          "merged_at": "2026-08-25T16:19:07Z",
+          "title": "feat: address in order flow (T-03.04.02)",
+          "merge_sha": "bd6299e48c43c503d89d8cc257c051eb6d7d788c"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-04.01.01",
+      "title": "Public TOS page",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 117,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/117",
+          "merged_at": "2026-08-25T16:53:44Z",
+          "title": "feat: public TOS page (T-04.01.01)",
+          "merge_sha": "bc7df78e8ed4b846369f5b4f2210b348580b3784"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-04.01.02",
+      "title": "TOS acceptance storage",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 118,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/118",
+          "merged_at": "2026-08-25T17:40:36Z",
+          "title": "feat(e04): TOS acceptance storage (T-04.01.02)",
+          "merge_sha": "dddc0d224751da92bd080268f63ebc5be44bab38"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-04.01.03",
+      "title": "TOS re-acceptance flow",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 119,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/119",
+          "merged_at": "2026-08-25T18:09:28Z",
+          "title": "feat(e04): TOS re-acceptance flow with banner and modal (T-04.01.03)",
+          "merge_sha": "103a46cca50cb667c8b8e7e94c4a29281275efec"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.01.01",
+      "title": "CRM users list page",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 120,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/120",
+          "merged_at": "2026-08-25T18:47:05Z",
+          "title": "feat(e05): CRM users list backend endpoint with cursor pagination (T-05.01.01 slice 1)",
+          "merge_sha": "d76ae3ce1627d2309374ccbffb615d86aba2e48d"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.01.02",
+      "title": "CRM filters and search",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 122,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/122",
+          "merged_at": "2026-08-25T19:12:08Z",
+          "title": "feat(e05): add CRM filters and search backend (T-05.01.02)",
+          "merge_sha": "a0808e97c7106a0db1ae7951d60faecc160454d9"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.01",
+      "title": "Full profile view for CRM staff",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 123,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/123",
+          "merged_at": "2026-08-25T19:50:31Z",
+          "title": "feat(e05): full CRM profile detail view with backend API and frontend page (T-05.02.01)",
+          "merge_sha": "9d8a033b924397e227637c56ab1e345a25cd1bf4"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.02",
+      "title": "Staff profile editing",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 124,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/124",
+          "merged_at": "2026-08-25T20:28:47Z",
+          "title": "feat(e05): staff profile editing with backend PATCH and frontend edit mode (T-05.02.02)",
+          "merge_sha": "a0bf56548325c05280f69d7633e5ec03fb50fb86"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.03",
+      "title": "Verification state management",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 125,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/125",
+          "merged_at": "2026-08-25T20:44:18Z",
+          "title": "feat: verification state management (T-05.02.03)",
+          "merge_sha": "739f19485749a6a9c22c8a99a1b11f29442515da"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.04",
+      "title": "Force password change and session expiry",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 126,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/126",
+          "merged_at": "2026-08-25T21:45:27Z",
+          "title": "feat(e05): force password change and session expiry (T-05.02.04)",
+          "merge_sha": "cc92bb3f0d7ff3eb57ab833c45f16cad5b178de9"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.05",
+      "title": "Identity correction through verification case",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 127,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/127",
+          "merged_at": "2026-08-25T22:07:17Z",
+          "title": "T-05.02.05 — Identity correction through verification case",
+          "merge_sha": "34ee5bd9cba057d27afb01d9932f72cf0d6e3df7"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.06",
+      "title": "Profile deletion by staff",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 128,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/128",
+          "merged_at": "2026-08-25T22:17:52Z",
+          "title": "T-05.02.06: Profile deletion by staff (soft-delete)",
+          "merge_sha": "bd9acd410ff1ad922bdacd03df5674411dbf7e97"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.03.01",
+      "title": "Create staff user",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 129,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/129",
+          "merged_at": "2026-08-25T22:40:30Z",
+          "title": "feat: create staff user endpoint (T-05.03.01)",
+          "merge_sha": "0d3dbef4487cd1b537b4e438198b554f495b04e4"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.03.02",
+      "title": "Staff role assignment",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 130,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/130",
+          "merged_at": "2026-08-25T22:53:18Z",
+          "title": "feat: staff role assignment (T-05.03.02)",
+          "merge_sha": "5a26b0e1a6620e40d9c44a6cb5e1f22f04e45fee"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.01",
+      "title": "Agent list for legal entity",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 131,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/131",
+          "merged_at": "2026-08-25T23:14:12Z",
+          "title": "feat(e02): agent list for legal profile (T-05.04.01)",
+          "merge_sha": "64a8f11e10063706467dd8e2f65f11fb6b81b7dd"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.02",
+      "title": "Agent invitation flow",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 132,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/132",
+          "merged_at": "2026-08-25T23:43:54Z",
+          "title": "feat(agents): implement agent invitation flow (T-05.04.02)",
+          "merge_sha": "18bdf8ab4158c0a6ec9f5e0a8c4022ae1b03b4a6"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.03",
+      "title": "Accept/decline invitation",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 133,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/133",
+          "merged_at": "2026-08-26T00:09:27Z",
+          "title": "feat: accept/decline invitation flow (T-05.04.03)",
+          "merge_sha": "a1e51ceb080d66236e690fb9075c53923f02fdf4"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "title": "Agent role permissions enforcement",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 134,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/134",
+          "merged_at": "2026-08-26T00:21:07Z",
+          "title": "feat: agent permission matrix and AgentRoleGuard (T-05.04.04, first slice)",
+          "merge_sha": "627e4628c5e6c92d06c7de55ac5728965421d2f7"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.05",
+      "title": "Ownership transfer",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 135,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/135",
+          "merged_at": "2026-08-26T00:47:55Z",
+          "title": "feat: ownership transfer initiation endpoint (T-05.04.05 first slice)",
+          "merge_sha": "7d84579e5eb8f74942714f8703f4e6b808ff3cb2"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.05.01",
+      "title": "Profiles awaiting verification widget",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 136,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/136",
+          "merged_at": "2026-08-26T01:15:08Z",
+          "title": "feat: profiles awaiting verification dashboard widget (T-05.05.01)",
+          "merge_sha": "7ecf3773d3f24769ad141701bb09900a788af591"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.05.02",
+      "title": "Agent invitation dashboard widget",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 137,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/137",
+          "merged_at": "2026-08-26T01:23:22Z",
+          "title": "feat: agent invitation dashboard widget (T-05.05.02)",
+          "merge_sha": "25c15538ad2c8d9b0ead6c0a142328980caa7349"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-06.01.01",
+      "title": "Ticket creation",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 138,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/138",
+          "merged_at": "2026-08-26T01:38:41Z",
+          "title": "feat: ticket creation endpoint (T-06.01.01)",
+          "merge_sha": "53ea3fe8da0c0ba0f9dcce73da132f0d40f0da75"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-06.01.02",
+      "title": "Ticket list and detail view",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 139,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/139",
+          "merged_at": "2026-08-26T02:08:42Z",
+          "title": "feat: ticket list, detail, and comments API endpoints (T-06.01.02 slice 1)",
+          "merge_sha": "2d5dbc9846df086afbf54b9c0ede586b5e147242"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-06.01.03",
+      "title": "Staff ticket management",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 140,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/140",
+          "merged_at": "2026-08-26T02:41:33Z",
+          "title": "feat: staff ticket management slice (T-06.01.03)",
+          "merge_sha": "64d5bcd836f78a4164f6b1d2913abc2585241022"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-07.01.01",
+      "title": "Verification mode setting",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 141,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/141",
+          "merged_at": "2026-08-26T03:11:13Z",
+          "title": "feat: profile verification mode setting (T-07.01.01)",
+          "merge_sha": "31f1e53d86a35b8cb44efcfcd2596809222b26ed"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-07.01.02",
+      "title": "API-based auto-verification integration",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 142,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/142",
+          "merged_at": "2026-08-26T03:34:31Z",
+          "title": "feat: verification provider adapter framework (T-07.01.02)",
+          "merge_sha": "c84bc5cdd4965de3e52821a5f20a10d67071bba1"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-07.01.03",
+      "title": "Verification notification to user",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 146,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/146",
+          "merged_at": "2026-08-26T06:16:43Z",
+          "title": "feat(e02): implement in-app notification stub and verification notifications (T-07.01.03)",
+          "merge_sha": "97bf60bfcaa48fcd2590d9521492253be1e95f12"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-08.01.01",
+      "title": "Dashboard page layout",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 143,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/143",
+          "merged_at": "2026-08-26T04:55:06Z",
+          "title": "feat(e08): dashboard page layout with overview cards and API endpoint",
+          "merge_sha": "2151f1a06cb9984b6119a4e08c7a8d321ec23b1f"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-08.01.02",
+      "title": "Wallet balance card",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 153,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/153",
+          "merged_at": "2026-08-26T10:15:16Z",
+          "title": "feat(e02): WalletBalanceCard — IRR+Toman display, low-balance warning",
+          "merge_sha": "71cc4a4d416e264df9fe77ebf8638fb13e0d452a"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-08.01.03",
+      "title": "Quick status cards",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 154,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/154",
+          "merged_at": "2026-08-26T10:42:44Z",
+          "title": "feat(dashboard): quick status cards with icon+count+color-coding (T-08.01.03)",
+          "merge_sha": "847b7ddfb0d1343489b93f4c062af6bdb5043430"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.01.01",
+      "title": "Branding settings page",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 155,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/155",
+          "merged_at": "2026-08-26T11:08:10Z",
+          "title": "feat(admin): branding settings page with Draft/Active lifecycle (T-09.01.01)",
+          "merge_sha": "3f74e38aa3d1aa5b6f995e8732434dd17e2878c9"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.01.02",
+      "title": "Theme application",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 156,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/156",
+          "merged_at": "2026-08-26T11:32:00Z",
+          "title": "feat(e02): apply brand theme to auth pages and public UI (T-09.01.02)",
+          "merge_sha": "b9e1c36fc5e0ef929e18e7cb44b394c9bf57d123"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.02.01",
+      "title": "Province CRUD",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 157,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/157",
+          "merged_at": "2026-08-26T12:15:57Z",
+          "title": "feat: admin province CRUD (T-09.02.01)",
+          "merge_sha": "1aa5d74a9c6b6dd65ba6ebc9261dcf551cbade9d"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.02.02",
+      "title": "City CRUD per province",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 158,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/158",
+          "merged_at": "2026-08-26T12:45:00Z",
+          "title": "feat: admin city CRUD (T-09.02.02)",
+          "merge_sha": "80df1e7b4603c714efc8aee7b05146baf7d2f9dc"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.03.01",
+      "title": "TOS editor",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 159,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/159",
+          "merged_at": "2026-08-26T13:09:15Z",
+          "title": "feat(tos): admin TOS editor with draft/publish lifecycle (T-09.03.01)",
+          "merge_sha": "0cac4b89a557fa652978372cd063cf9cd72c7800"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.03.02",
+      "title": "TOS version history",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 160,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/160",
+          "merged_at": "2026-08-26T13:21:26Z",
+          "title": "feat(tos): TOS version history with read-only detail view (T-09.03.02)",
+          "merge_sha": "dc92eb2fc1701c23c833f07048efbdce322af047"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.04.01",
+      "title": "Notification template editor",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 161,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/161",
+          "merged_at": "2026-08-26T15:49:09Z",
+          "title": "feat: notification template editor (T-09.04.01)",
+          "merge_sha": "9546538b894d30cff966e2c6ec31ea26cf126067"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.05.01",
+      "title": "Staff role management",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 162,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/162",
+          "merged_at": "2026-08-26T16:21:44Z",
+          "title": "feat(admin): staff role management with effective permissions (T-09.05.01)",
+          "merge_sha": "aa58970f441ba5de8b00df33c286ad64b39b6ed1"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.01",
+      "title": "Notification module scaffold",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 163,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/163",
+          "merged_at": "2026-08-26T22:58:27Z",
+          "title": "feat(e05): notification module scaffold — transport interface, outbox/job tables, worker reader",
+          "merge_sha": "ebf9bce15df4bc1e0479adbd23e26ffe39fd4d85"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.02",
+      "title": "Durable outbox table & write pipeline",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 164,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/164",
+          "merged_at": "2026-08-26T23:26:13Z",
+          "title": "feat(e05): durable outbox write pipeline — transactional enqueue + dispatch runner (T-05.01.02)",
+          "merge_sha": "4d9dc3fa0c924613882b2e8c88668024f9d42a37"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.03",
+      "title": "Job queue with retry schedule",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 165,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/165",
+          "merged_at": "2026-08-27T00:06:22Z",
+          "title": "feat(worker): job queue retry schedule with jitter and dead-letter (T-05.01.03)",
+          "merge_sha": "09ca6b72d891c0c1f4ed99a06b8e65b818538f74"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.04",
+      "title": "Idempotency for delivery",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 166,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/166",
+          "merged_at": "2026-08-27T00:26:25Z",
+          "title": "feat(e05): per-channel idempotency for notification delivery (T-05.01.04)",
+          "merge_sha": "a0239bd732814eefbb2509ac070bf1662bd7a0ad"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.05",
+      "title": "Status tracking & delivery logs",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 167,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/167",
+          "merged_at": "2026-08-27T01:11:36Z",
+          "title": "feat(e05): status tracking & delivery logs for notification outbox (T-05.01.05)",
+          "merge_sha": "26baa118e6de8a6cacadb963d955648a6709ee72"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.06",
+      "title": "Dead-letter queue & admin UI",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 168,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/168",
+          "merged_at": "2026-08-27T02:58:52Z",
+          "title": "feat(e05): dead-letter queue & admin UI (T-05.01.06)",
+          "merge_sha": "2917e5864c9134a906090ee9710ba1a68caec222"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.07",
+      "title": "Metrics & observability",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 169,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/169",
+          "merged_at": "2026-08-27T03:19:30Z",
+          "title": "feat(e05): worker notification metrics & observability (T-05.01.07)",
+          "merge_sha": "ee92e8f6c1455c1fb165dfe30de5cc526f17ac93"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.02.01",
+      "title": "Notification entity & in-app transport",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 170,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/170",
+          "merged_at": "2026-08-27T03:46:37Z",
+          "title": "feat(notifications): in-app notification entity & transport (T-05.02.01)",
+          "merge_sha": "f3e934aeebc9feeaa69e2b92132a75e0737ff8fa"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.02.02",
+      "title": "Notification center API",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 171,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/171",
+          "merged_at": "2026-08-27T04:32:52Z",
+          "title": "feat(notifications): notification center API (T-05.02.02)",
+          "merge_sha": "ef8f5d2fc72d95cdf7d5112c7cd149d6d5a0096e"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.02.03",
+      "title": "Notification center UI",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 172,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/172",
+          "merged_at": "2026-08-27T04:54:04Z",
+          "title": "feat(web): notification center UI (T-05.02.03)",
+          "merge_sha": "4a2668d6e604578ea2281b6a02094da1eabcba81"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.02.04",
+      "title": "New-notification polling / SSE",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 173,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/173",
+          "merged_at": "2026-08-27T05:11:11Z",
+          "title": "feat(web): real-time notification badge polling & title (T-05.02.04)",
+          "merge_sha": "a42507244310cc1516124ad9a4f2d86427ce1a47"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.03.01",
+      "title": "Notification type registry & classification",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 174,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/174",
+          "merged_at": "2026-08-27T05:30:43Z",
+          "title": "feat(notifications): notification type registry & classification (T-05.03.01)",
+          "merge_sha": "658b3a078aca161f2a067e83fcabef7d4cdaf894"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.03.02",
+      "title": "Delivery window logic",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 175,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/175",
+          "merged_at": "2026-08-27T06:03:19Z",
+          "title": "feat(notifications): delivery window logic (T-05.03.02)",
+          "merge_sha": "c9fb0ad5a611dacc7850c6162e3dc4e6c371f87d"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.03.03",
+      "title": "Admin delivery-window configuration UI",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 176,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/176",
+          "merged_at": "2026-08-27T08:29:45Z",
+          "title": "feat(notifications): admin delivery-window configuration UI (T-05.03.03)",
+          "merge_sha": "4e358170a96e4d98a39a536d347f3c9bc978c9fa"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.04.01",
+      "title": "Template entity & CRUD API",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 177,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/177",
+          "merged_at": "2026-08-27T08:58:36Z",
+          "title": "feat(notifications): template variables carry descriptions (T-05.04.01)",
+          "merge_sha": "053e2d3cc5f8bade34ebe2930c38e4fe86a7ad61"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.04.02",
+      "title": "Variable interpolation & escaping",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 178,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/178",
+          "merged_at": "2026-08-27T11:34:53Z",
+          "title": "feat(api): hardened notification template engine (T-05.04.02)",
+          "merge_sha": "1f165f6f5d0c6f9610d89242475f1aea0ad2b1de"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.04.03",
+      "title": "Template preview",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 179,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/179",
+          "merged_at": "2026-08-27T12:13:51Z",
+          "title": "feat(web): notification template preview panel (T-05.04.03)",
+          "merge_sha": "5b4ca23ae3bd4058f6d8f8a3ffa4dd34dc4518a7"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.04.04",
+      "title": "Test-send",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 180,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/180",
+          "merged_at": "2026-08-27T12:40:00Z",
+          "title": "T-05.04.04: Template test-send destination validation & tracking",
+          "merge_sha": "95dd4053ff7e3e2e58e7803beb021f9df439d527"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.04.05",
+      "title": "Template seeding",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 181,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/181",
+          "merged_at": "2026-08-27T13:30:15Z",
+          "title": "T-05.04.05: Seed initial notification templates (T-05.04.05)",
+          "merge_sha": "632eb9b3d8c1ae880bb5161e3a3ae3f3a1557a5e"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.05.01",
+      "title": "Notification category model",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 182,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/182",
+          "merged_at": "2026-08-27T13:45:06Z",
+          "title": "feat(db): notification category model & marketing consent preferences (T-05.05.01)",
+          "merge_sha": "974a1dec18805f3e0bf571970be5d19da3b1fdb0"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.05.02",
+      "title": "Channel availability rules",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 183,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/183",
+          "merged_at": "2026-08-27T14:09:34Z",
+          "title": "feat(worker): channel availability rules (T-05.05.02)",
+          "merge_sha": "5c2780e649a9c11f1f9ddef0f743a3b3a7f66dfe"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.05.03",
+      "title": "Consent UI in profile settings",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 184,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/184",
+          "merged_at": "2026-08-27T14:34:09Z",
+          "title": "feat(notifications): marketing consent UI in profile settings (T-05.05.03)",
+          "merge_sha": "5bb0cd7effd2bfdd59b53925553aae4b8a3e5ebf"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.06.01",
+      "title": "Provider config entity & lifecycle",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 185,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/185",
+          "merged_at": "2026-08-27T15:06:11Z",
+          "title": "feat(notifications): email provider config entity & lifecycle (T-05.06.01)",
+          "merge_sha": "f26d001df07a70384e6a2bcd64e529dc2bd5538b"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.06.02",
+      "title": "SMTP configuration",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 186,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/186",
+          "merged_at": "2026-08-27T15:45:18Z",
+          "title": "feat(e05): SMTP provider configuration & connection testing (T-05.06.02)",
+          "merge_sha": "8c082f7f27a43bb43c62a8a3e584392b85fd4623"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.06.03",
+      "title": "Resend configuration",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 187,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/187",
+          "merged_at": "2026-08-27T16:04:49Z",
+          "title": "Resend email provider configuration & test-send (T-05.06.03)",
+          "merge_sha": "8aad54c1650bc5e6b421dbe1a834dfc674c6f2f3"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.06.04",
+      "title": "Provider admin UI",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 188,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/188",
+          "merged_at": "2026-08-27T17:55:41Z",
+          "title": "feat(web): email provider admin UI (T-05.06.04)",
+          "merge_sha": "5b46f75726984ef3b9db60baf98a83e0cff84715"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.06.05",
+      "title": "Secrets encryption & masking",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 189,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/189",
+          "merged_at": "2026-08-27T19:00:36Z",
+          "title": "feat(api): provider secrets encryption & masking (T-05.06.05)",
+          "merge_sha": "af7be0cdae3403052e1e327610c93248348e86d7"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.06.06",
+      "title": "Circuit breaker for email",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 190,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/190",
+          "merged_at": "2026-08-27T19:28:28Z",
+          "title": "feat(notifications): email provider circuit breaker (T-05.06.06)",
+          "merge_sha": "3d366b27268293062f453d23586ac86970a21e85"
+        }
+      ]
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
+      "title": "Email delivery callback handling",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 191,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/191",
+          "merged_at": "2026-08-27T20:02:46Z",
+          "title": "feat(notifications): Resend delivery callback webhooks (T-05.06.07)",
+          "merge_sha": "fb56a84b4edb100d966a44a86296f1ee79d271f9"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.06.01",
+      "title": "Email transport configuration",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 192,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/192",
+          "merged_at": "2026-08-27T20:16:44Z",
+          "title": "feat(api): enforce admin:notification-providers:edit + step-up auth on email provider config (T-09.06.01)",
+          "merge_sha": "5743138d5e24fc8299b605cc9aa674601841e287"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.06.02",
+      "title": "SMS.ir configuration",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 193,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/193",
+          "merged_at": "2026-08-27T21:23:19Z",
+          "title": "feat(provider-config): SMS.ir provider configuration lifecycle (T-09.06.02)",
+          "merge_sha": "0bde7d1f3da46ae1668c96e131ad59b08889df79"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.06.03",
+      "title": "Notification daytime window configuration",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 194,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/194",
+          "merged_at": "2026-08-27T21:49:33Z",
+          "title": "feat(admin): delivery-window config step-up + permission gate (T-09.06.03)",
+          "merge_sha": "48836dc1e0bd6837eee4002c591bda67b7f230be"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.07.01",
+      "title": "Dual-approval threshold configuration",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 195,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/195",
+          "merged_at": "2026-08-27T22:05:49Z",
+          "title": "feat(admin): dual-approval threshold configuration (T-09.07.01)",
+          "merge_sha": "ef6f850891639215e6b1ec73c439f15ab23b60fd"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.07.02",
+      "title": "Dual-approval workflow",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 196,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/196",
+          "merged_at": "2026-08-27T22:24:55Z",
+          "title": "feat(admin): dual-approval approval request lifecycle (T-09.07.02 slice)",
+          "merge_sha": "bb7e122501ca882ac40e72b4f2e130fdd09b4197"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.08.01",
+      "title": "Service response targets",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 197,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/197",
+          "merged_at": "2026-08-27T23:07:41Z",
+          "title": "feat(admin): service response targets config + breach scan (T-09.08.01)",
+          "merge_sha": "5998819b2e8d06c7d16941e6d25553f50c794575"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "title": "Staff teams and assignment rules",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 198,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/198",
+          "merged_at": "2026-08-28T07:06:55Z",
+          "title": "feat(admin,db): staff teams + assignment rules config (T-09.08.02 slice 1)",
+          "merge_sha": "d5d48e6e231f60d3e6a3ae8f4dbcec63e47d3f26"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.08.03",
+      "title": "Escalation alerts",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 199,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/199",
+          "merged_at": "2026-08-28T08:00:19Z",
+          "title": "feat(admin,db,worker,shared): service escalation policy and scanner (T-09.08.03)",
+          "merge_sha": "88369d329bb98a518c6143bcfb15cb10bd219ff1"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.09.01",
+      "title": "Reconciliation exceptions view",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 200,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/200",
+          "merged_at": "2026-08-28T08:25:37Z",
+          "title": "feat(admin): reconciliation exceptions review surface (T-09.09.01)",
+          "merge_sha": "3d9a5940c1b1f51d2af0b78336cbd8d51368e391"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.09.02",
+      "title": "Failed jobs dashboard",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 201,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/201",
+          "merged_at": "2026-08-28T08:56:15Z",
+          "title": "feat(admin): failed-jobs dashboard for background-job triage (T-09.09.02)",
+          "merge_sha": "975923295f265deec57a640115c19334824fdac4"
+        },
+        {
+          "number": 202,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/202",
+          "merged_at": "2026-08-28T08:58:09Z",
+          "title": "chore(loop): T-09.09.02 merged (PR #201) — return to idle",
+          "merge_sha": "264d0fb542b15eae66c7425e4dc1837f3e32dc97"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.09.03",
+      "title": "Dead-letter notifications",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 203,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/203",
+          "merged_at": "2026-08-28T09:53:37Z",
+          "title": "feat(admin): dead-letter notifications triage surface (T-09.09.03)",
+          "merge_sha": "7e464e0c51e589a0791772a7f75aaa01aaa6c81d"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.10.01",
+      "title": "Online wallet top-up limit",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 204,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/204",
+          "merged_at": "2026-08-28T10:18:46Z",
+          "title": "feat(admin): configurable online wallet top-up limit (T-09.10.01)",
+          "merge_sha": "a67b732afcd67dc1d13417605ada63bdec571857"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.10.02",
+      "title": "Mandatory green-electricity rules",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 205,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/205",
+          "merged_at": "2026-08-28T10:42:35Z",
+          "title": "feat(admin): mandatory green-electricity rules config (T-09.10.02)",
+          "merge_sha": "d3dc419656932535a7b1e5c7a5f3b7cc6df5fe27"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.10.03",
+      "title": "Green rule activation safety check",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 206,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/206",
+          "merged_at": "2026-08-28T11:06:27Z",
+          "title": "feat(admin): green rule activation safety check (T-09.10.03)",
+          "merge_sha": "061faa9d432380f4465922300a924ffdc4694c9c"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.01",
+      "title": "AI model management",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 207,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/207",
+          "merged_at": "2026-08-28T11:33:35Z",
+          "title": "feat(admin): AI model management API — CRUD, encrypted tokens, test ping (T-09.11.01, API slice)",
+          "merge_sha": "afb7528a496237c268ddc1b592ddadfd452f47a9"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.02",
+      "title": "Knowledge base management",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 208,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/208",
+          "merged_at": "2026-08-28T12:27:25Z",
+          "title": "feat(admin): knowledge base & KB group management API (T-09.11.02)",
+          "merge_sha": "ef1efff1e3f8924e4954aa204d3f6a47030a0e2a"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.03",
+      "title": "Policy management",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 209,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/209",
+          "merged_at": "2026-08-28T13:14:47Z",
+          "title": "feat(admin): AI policy & policy group management API (T-09.11.03)",
+          "merge_sha": "e65d8ba145a3f972af6efa49f2e0ad811e038b38"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.04",
+      "title": "AI agent management",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 210,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/210",
+          "merged_at": "2026-08-28T14:04:36Z",
+          "title": "feat(admin): AI agent management CRUD + model/KB/policy links (T-09.11.04, slice 1)",
+          "merge_sha": "db3ccd2fe43e73b5715e4dc41918f32dda27c1fa"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.05",
+      "title": "Agent slot assignment",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 211,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/211",
+          "merged_at": "2026-08-28T14:37:49Z",
+          "title": "feat(admin): AI agent slot assignment API (T-09.11.05)",
+          "merge_sha": "984c8ba2fd94919affa9befc7762d60a1aec3ba7"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.12.01",
+      "title": "Product catalogue management",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 212,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/212",
+          "merged_at": "2026-08-28T15:23:35Z",
+          "title": "feat(admin): product catalogue management API (T-09.12.01)",
+          "merge_sha": "0fc102661d3a4ac0ee7b656d9a355c2fabb9e857"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.12.02",
+      "title": "VAT configuration",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 213,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/213",
+          "merged_at": "2026-08-28T16:11:49Z",
+          "title": "feat(admin): VAT configuration — versioned rates, product overrides, resolution seam (T-09.12.02)",
+          "merge_sha": "7dfe46044ea508de3d49f44bd936b38184d0b981"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.12.03",
+      "title": "Gift code management",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 214,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/214",
+          "merged_at": "2026-08-28T17:02:26Z",
+          "title": "feat(admin): gift code management with atomic order-creation redemption (T-09.12.03)",
+          "merge_sha": "f4ae86d24ab67fbef97530a6802d021a7fa9150d"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.12.04",
+      "title": "Contract template management",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 215,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/215",
+          "merged_at": "2026-08-28T18:22:47Z",
+          "title": "feat(admin): contract template management with placeholders and versioning (T-09.12.04)",
+          "merge_sha": "8c125d37a070bbefd450c90d0b70b8867221b19b"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "title": "Upload policies configuration",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 216,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/216",
+          "merged_at": "2026-08-29T16:27:01Z",
+          "title": "feat(admin): upload policy configuration — versioned per-category policies enforced against deployment limits (T-09.12.05)",
+          "merge_sha": "caf6cefc98243996f5701dc368f1ea8ff8970ac5"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.12.06",
+      "title": "Contract electricity increase limits",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 217,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/217",
+          "merged_at": "2026-08-29T16:50:01Z",
+          "title": "feat(admin): contract electricity limits configuration (T-09.12.06)",
+          "merge_sha": "24e2286063b42fc173aa1dca6aa02c07f2ddecb3"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-10.01.01",
+      "title": "Staff user list (admin)",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 218,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/218",
+          "merged_at": "2026-08-29T17:08:52Z",
+          "title": "feat(admin): staff user list and disable endpoints (T-10.01.01)",
+          "merge_sha": "db28baa989cb6dbfec7d3f38a9c1426205611cd6"
+        }
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-10.01.02",
+      "title": "Staff permission audit view",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 219,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/219",
+          "merged_at": "2026-08-29T17:20:33Z",
+          "title": "feat(admin): staff permission audit view (T-10.01.02)",
+          "merge_sha": "dc74226397a7b44dd6d34b513c74fd053b59a4d7"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.01",
+      "title": "Define invoice DB table with columns: `id` (UUIDv7), `profileId`, `orderId?`, `contractId?`, `state`, `totalAmount` (int8), `paidAmount` (int8, default 0), `refundedAmount` (int8, default 0), `issuedAt`, `payableFrom`, `dueAt`, `cancelledAt?`, `metadata` (JSONB for snapshots), timestamps",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 150,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/150",
+          "merged_at": "2026-08-26T09:15:14Z",
+          "title": "feat(db): create invoices table schema (T-04.1.01.01)",
+          "merge_sha": "324109c68d65b35121c41aecc3df3736d2a94309"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.02",
+      "title": "Create `invoice_state` enum in DB matching all 9 states",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 151,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/151",
+          "merged_at": "2026-08-26T09:27:10Z",
+          "title": "feat(db): create invoice_state enum with all 9 states",
+          "merge_sha": "15c8a2f5fbd80eb7ef016c2c18748b8093d56cc2"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.03",
+      "title": "Implement `InvoiceStateMachine` service with guard methods, transition validation, audit event emission",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 152,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/152",
+          "merged_at": "2026-08-26T09:59:08Z",
+          "title": "feat(e04): InvoiceStateMachine service — guards, transition validation, audit emission",
+          "merge_sha": "0128a68830243162adbc31a4f7d13a166f5fb3c4"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.04",
+      "title": "Add DB constraints: `CHECK (paidAmount <= totalAmount)`, `CHECK (refundedAmount <= paidAmount)`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 220,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/220",
+          "merged_at": "2026-08-29T17:40:27Z",
+          "title": "feat(db): enforce invoice amount CHECK constraints (T-04.1.01.04)",
+          "merge_sha": "07bd39f7e78de6686a3296df90a1e695f0af7e1c"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.05",
+      "title": "Write audit repository entry for every invoice state transition",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 221,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/221",
+          "merged_at": "2026-08-29T17:52:54Z",
+          "title": "feat(invoice): audit repository for invoice state transitions (T-04.1.01.05)",
+          "merge_sha": "165f375fa9b58afdf02be4d888cef317dbc7e0aa"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.06",
+      "title": "Integration tests: all happy-path transitions, every forbidden transition, concurrent state change rejection",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 222,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/222",
+          "merged_at": "2026-08-29T18:14:17Z",
+          "title": "feat(invoice): real-DB integration tests for the invoice state machine (T-04.1.01.06)",
+          "merge_sha": "f55372cb381ae185b34cad773e1d460eafa2b78c"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.01",
+      "title": "Create `invoice_lines` and `invoice_items` tables with proper foreign keys and constraints",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 223,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/223",
+          "merged_at": "2026-08-29T18:26:08Z",
+          "title": "feat(db): invoice_lines and invoice_items tables with FKs and constraints (T-04.1.02.01)",
+          "merge_sha": "ea076fc6b1ca153f177911bed6dcbc78eb3f2490"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.02",
+      "title": "Build `ManualInvoiceService` — staff selects profile, adds lines, system calculates totals, issues invoice",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 224,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/224",
+          "merged_at": "2026-08-29T19:04:08Z",
+          "title": "feat(invoice): ManualInvoiceService with atomic create+issue (T-04.1.02.02)",
+          "merge_sha": "3ed44326e90a656f04eb8b80b3116f9ad27e3eb7"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
+      "title": "Build `AutoInvoiceService` — called by order/contract creation within same transaction; snapshot prices and terms",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 225,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/225",
+          "merged_at": "2026-08-29T19:46:13Z",
+          "title": "feat(invoice): AutoInvoiceService with atomic order-linked creation (T-04.1.02.03)",
+          "merge_sha": "b2fa392ef35a607931024a527bd64481b6b1ac9b"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
+      "title": "Implement VAT calculation module with category default / product override resolution",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 226,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/226",
+          "merged_at": "2026-08-29T20:08:23Z",
+          "title": "feat(invoice): VAT calculation module with category default / product override resolution (T-04.1.02.04)",
+          "merge_sha": "3ddaf7a81334ebb26a6ad82df9500dd99a0827e8"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
+      "title": "Link invoice to origin: nullable `orderId`, `contractId`, `consultationId` foreign keys",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 227,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/227",
+          "merged_at": "2026-08-29T20:22:51Z",
+          "title": "feat(invoice): link invoice to origin with nullable order/contract/consultation FKs (T-04.1.02.05)",
+          "merge_sha": "228c6f4bc288ac49571ed83f88c1fb52f8786383"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.06",
+      "title": "Ensure idempotency: same order cannot produce duplicate invoices (unique `orderId` + `type` index)",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 228,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/228",
+          "merged_at": "2026-08-29T20:37:25Z",
+          "title": "feat(invoice): enforce idempotency with unique order_id+type index (T-04.1.02.06)",
+          "merge_sha": "5bb38f8850349dca5fced849d4c7ce7e49eafdc3"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
+      "title": "Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 229,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/229",
+          "merged_at": "2026-08-29T20:53:21Z",
+          "title": "feat(invoice): RoundingService.roundHalfUp with table-driven tests (T-04.1.02.07)",
+          "merge_sha": "bdb42abe81881e4e5c5b5ac9b4273cf9d754eb89"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.08",
+      "title": "Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 231,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/231",
+          "merged_at": "2026-08-30T00:37:45Z",
+          "title": "feat: 04-invoices-wallet-contracts.md#T-04.1.02.08",
+          "merge_sha": "e343f73ae735791e461006820f758dc8b5aeb780"
+        },
+        {
+          "number": 232,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/232",
+          "merged_at": "2026-08-30T02:29:15Z",
+          "title": "feat(invoice): add invoice_calculation_snapshot JSONB for reproducibility (T-04.1.02.08)",
+          "merge_sha": "a04ba5d14c66a60a0fba3978f7e46bbfdde7959d"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.09",
+      "title": "Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 233,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/233",
+          "merged_at": "2026-08-30T10:48:28Z",
+          "title": "test(invoice): replay calculation snapshots to prove identical totals (T-04.1.02.09)",
+          "merge_sha": "eeab198b92ea8339b7d56a95ef59ff7af6dcd640"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.01",
+      "title": "Add `service_due_periods` admin config table (service type, default days, active period)",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 236,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/236",
+          "merged_at": "2026-08-30T11:05:28Z",
+          "title": "feat(invoice): add service_due_periods admin config table (T-04.1.03.01)",
+          "merge_sha": "34365c691f10fad98e1414d3362aca77919afb27"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.02",
+      "title": "Add `dueAt` calculation logic: `issuedAt + config_days` (or staff override)",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 237,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/237",
+          "merged_at": "2026-08-30T11:23:29Z",
+          "title": "feat(invoice): calculate dueAt from issuedAt + config days (T-04.1.03.02)",
+          "merge_sha": "fe88655c23453db5f608794fc3b7ebd6bc8e276a"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.03",
+      "title": "Build staff override UI/API: override input + reason field, stored in audit + invoice metadata",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 238,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/238",
+          "merged_at": "2026-08-30T11:54:30Z",
+          "title": "feat(invoice): staff dueAt override UI/API with audited reason (T-04.1.03.03)",
+          "merge_sha": "13dca8c033a504ea70db6d31deb86f272996eab9"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.03.04",
+      "title": "Cron job: mark invoices past `dueAt` as Overdue if still Unpaid or Partially funded",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 239,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/239",
+          "merged_at": "2026-08-30T12:27:31Z",
+          "title": "feat(invoice): mark past-due invoices Overdue via worker cron (T-04.1.03.04)",
+          "merge_sha": "31dd7eb1bc7d881643e822aacaab1395e37c3fbc"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.01",
+      "title": "Design `invoice_reminder_schedule` table: `invoiceId`, `offset`, `channel`, `scheduledAt`, `sentAt?`, `status`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 240,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/240",
+          "merged_at": "2026-08-30T12:43:31Z",
+          "title": "feat(invoice): add invoice_reminder_schedule table (T-04.1.04.01)",
+          "merge_sha": "07f866448bf0a9afc628623ab29e24a51a87ddf6"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "title": "Build `ReminderScheduler` worker: on invoice issue, compute reminder datetimes and insert schedule rows",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 241,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/241",
+          "merged_at": "2026-08-30T20:42:44Z",
+          "title": "feat(invoice): ReminderScheduler worker on invoice issue (T-04.1.04.02)",
+          "merge_sha": "0d9c72ffeced56e2f00b4b85af0147a638908ef8"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
+      "title": "Build `ReminderSender` worker: cron every hour picks due reminders, checks invoice state, sends via outbox",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 243,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/243",
+          "merged_at": "2026-08-31T00:09:23Z",
+          "title": "feat(invoice): ReminderSender hourly worker via outbox (T-04.1.04.03)",
+          "merge_sha": "bd1a1840fac4158c5a00f8577cab140b462036b6"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.04",
+      "title": "Enforce idempotency: unique index on (invoiceId, offset, channel)",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 244,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/244",
+          "merged_at": "2026-08-31T00:23:23Z",
+          "title": "feat(invoice): unique reminder schedule index for idempotency (T-04.1.04.04)",
+          "merge_sha": "beead4a98f8ba4c267fe6d1fc9fe3347c6e1c2b8"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
+      "title": "Admin toggle UI: enable/disable each offset per service type",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 245,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/245",
+          "merged_at": "2026-08-31T02:13:40Z",
+          "title": "feat(invoice): admin toggle UI for reminder offsets per service type (T-04.1.04.05)",
+          "merge_sha": "b5f670720525280cbe799dfac2be83d6f8e6c564"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.06",
+      "title": "Stop reminders: when invoice enters Paid/Cancelled/Refunded, mark all future schedule rows as Cancelled",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 246,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/246",
+          "merged_at": "2026-08-31T02:33:40Z",
+          "title": "feat(invoice): stop reminders when invoice enters Paid/Cancelled/Refunded (T-04.1.04.06)",
+          "merge_sha": "e6dab5a8e503fe3beae832cef015a38d6acb098b"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.01",
+      "title": "Add `replacesInvoiceId` and `adjustmentForInvoiceId` nullable self-references on invoice table",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 247,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/247",
+          "merged_at": "2026-08-31T02:49:27Z",
+          "title": "feat(invoice): add replacesInvoiceId and adjustmentForInvoiceId self-FKs (T-04.1.05.01)",
+          "merge_sha": "04f1c5a262ef98a7e2662b55f5004c426888626c"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.02",
+      "title": "Build `cancelAndReplaceInvoice(invoiceId, reason, newLines)` — validates no payment, cancels, creates linked replacement",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 248,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/248",
+          "merged_at": "2026-08-31T03:24:28Z",
+          "title": "feat(invoice): cancel and replace unpaid invoices with a linked replacement (T-04.1.05.02)",
+          "merge_sha": "31eed64cb099d18573f0c71c7ecbbf7183a4bdd7"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
+      "title": "Build `createAdjustmentInvoice(originalInvoiceId, amount, reason)` — positive = additional charge, negative = credit",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 249,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/249",
+          "merged_at": "2026-08-31T04:19:43Z",
+          "title": "feat(invoice): create linked post-payment adjustment invoices (T-04.1.05.03)",
+          "merge_sha": "d2b607349ad0f1d651aa45450b634a3fe30f6f5d"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
+      "title": "Customer-facing invoice details page shows original + linked corrections/replacements with explanations",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 250,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/250",
+          "merged_at": "2026-08-31T05:15:45Z",
+          "title": "feat(invoice): customer invoice details show original + correction chain (T-04.1.05.04)",
+          "merge_sha": "16e059bedca309e85e026ebd3f6cf83729550994"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.01",
+      "title": "Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt`. `availableBalance` is NOT stored — it is derived at query time as `postedBalance - reservedBalance`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 149,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/149",
+          "merged_at": "2026-08-26T08:47:45Z",
+          "title": "feat(e04): create wallet foundation — wallets table, WalletService, API module",
+          "merge_sha": "fb134a9918b9c1c70c075668d3cfa6b06d605aa0"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.02",
+      "title": "Create `wallet_transactions` table: `id` (UUIDv7), `walletId`, `type` (enum: topup, payment, refund, reservation, release, reversal, compensating), `amount` (int8, positive for credit, negative for debit), `state` (Pending, Reserved, Completed, Failed, Rejected, Released, Reversed), `idempotencyKey` (unique), `refId?`, `description?`, `metadata` (JSONB), timestamps",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 149,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/149",
+          "merged_at": "2026-08-26T08:47:45Z",
+          "title": "feat(e04): create wallet foundation — wallets table, WalletService, API module",
+          "merge_sha": "fb134a9918b9c1c70c075668d3cfa6b06d605aa0"
+        },
+        {
+          "number": 251,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/251",
+          "merged_at": "2026-08-31T05:30:32Z",
+          "title": "feat(wallet): add wallet_transactions ledger table (T-04.2.01.02)",
+          "merge_sha": "e4813b221f46129781f352fbe7d0d1b96f154c42"
+        },
+        {
+          "number": 260,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/260",
+          "merged_at": "2026-09-01T13:55:56Z",
+          "title": "feat(wallet): lock wallet_transactions UUID walletId and ledger contract (T-04.2.01.02)",
+          "merge_sha": "c199dd5bd9b876a73d6dc64f2336faa5fea4a3c7"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.03",
+      "title": "Implement `WalletService.credit(walletId, amount, ref, idempotencyKey)` — inserts ledger row, updates postedBalance with `WHERE version = X AND postedBalance >= 0`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 252,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/252",
+          "merged_at": "2026-08-31T05:57:47Z",
+          "title": "feat(wallet): implement WalletService.credit with versioned postedBalance",
+          "merge_sha": "5c1e694f96de0f5505c3dc91eab413c62c66e8fa"
+        },
+        {
+          "number": 254,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/254",
+          "merged_at": "2026-09-01T11:52:53Z",
+          "title": "feat(wallet): implement WalletService.credit with collision-safe idempotency",
+          "merge_sha": "37cf95b6170ac0ae83798e0f07d766057640d1d0"
+        },
+        {
+          "number": 261,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/261",
+          "merged_at": "2026-09-01T14:11:56Z",
+          "title": "feat(wallet): restore credit postedBalance >= 0 optimistic update (T-04.2.01.03)",
+          "merge_sha": "8a5f5810f43c5f3a8f15a5becf613a40a39b8df0"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.04",
+      "title": "Implement `WalletService.debit(walletId, amount, ref, idempotencyKey)` — checks availableBalance >= amount, atomically reserves then completes",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 253,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/253",
+          "merged_at": "2026-08-31T06:26:34Z",
+          "title": "feat(wallet): implement WalletService.debit reserve-then-complete (T-04.2.01.04)",
+          "merge_sha": "200ddc7ccb16ed944bd17b76a0b021daef44eb60"
+        },
+        {
+          "number": 262,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/262",
+          "merged_at": "2026-09-01T14:25:56Z",
+          "title": "feat(wallet): implement WalletService.debit reserve-then-complete (T-04.2.01.04)",
+          "merge_sha": "ecc778d7bf56bb1c92815fc65f7dcafb0c8dd9e5"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.05",
+      "title": "Implement `WalletService.reserve(walletId, amount)` and `release(reservationId)` for payment flow",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 255,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/255",
+          "merged_at": "2026-09-01T12:10:52Z",
+          "title": "feat(wallet): implement WalletService.reserve and release for payment holds (T-04.2.01.05)",
+          "merge_sha": "599cbb4760b2aeedbf780e02f3d446b4265eef84"
+        },
+        {
+          "number": 263,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/263",
+          "merged_at": "2026-09-01T14:42:58Z",
+          "title": "feat(wallet): implement WalletService.reserve and release for payment holds (T-04.2.01.05)",
+          "merge_sha": "3d48834c35df6b02090367ce1e15ec92258a41cb"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.06",
+      "title": "Implement optimistic locking: `UPDATE wallets SET postedBalance = postedBalance + delta, version = version + 1 WHERE id = X AND version = expectedVersion`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 256,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/256",
+          "merged_at": "2026-09-01T12:28:54Z",
+          "title": "feat(wallet): optimistic postedBalance update with version lock (T-04.2.01.06)",
+          "merge_sha": "3aa96b49efb6bb50f00a9387071931013d1bbe72"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.07",
+      "title": "Add DB constraint: `CHECK ((postedBalance - reservedBalance) >= 0)` via generated column or trigger — enforces nonnegative available balance on the derived value, NOT a stored column",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 257,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/257",
+          "merged_at": "2026-09-01T12:46:53Z",
+          "title": "feat(wallet): CHECK nonnegative derived available balance (T-04.2.01.07)",
+          "merge_sha": "9c16f2ec959098fc94f6e9efdc6067032c24cd81"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.08",
+      "title": "Scheduled reconciliation worker: compare ledger sum vs wallet balance, report mismatch to finance queue",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 258,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/258",
+          "merged_at": "2026-09-01T13:05:54Z",
+          "title": "feat(wallet): scheduled ledger vs balance reconciliation worker (T-04.2.01.08)",
+          "merge_sha": "9fd8cc3ab3c30b9f7ce8e4d858092f9de9062156"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "title": "Build online top-up initiation: validate limit, create Pending transaction, redirect to gateway",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 259,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/259",
+          "merged_at": "2026-09-01T19:29:06Z",
+          "title": "feat(wallet): initiate online top-up with limit check and gateway redirect (T-04.2.02.01)",
+          "merge_sha": "16b677c50dbbee483ae96084f3e2494da9e0c260"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.02",
+      "title": "Build provider callback handler: verify signature, replay window, event id, merchant context; apply credit via `WalletService.credit()` with idempotency key",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 265,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/265",
+          "merged_at": "2026-09-01T20:37:08Z",
+          "title": "feat(wallet): credit online top-ups from authenticated provider callbacks (T-04.2.02.02)",
+          "merge_sha": "96b4042de3ceda066cc708a06269a88aa2ee0614"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.03",
+      "title": "Build bank receipt top-up flow: customer uploads receipt → wallet transaction in Pending state",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 266,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/266",
+          "merged_at": "2026-09-01T21:38:09Z",
+          "title": "feat(wallet): bank receipt top-up stays Pending until finance confirms (T-04.2.02.03)",
+          "merge_sha": "8c9ac6f88c618ca9f7cf1919f94d4ce93b8bcc71"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.04",
+      "title": "Staff confirmation UI: review receipt, confirm or reject with reason; on confirm → `WalletService.credit()`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 267,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/267",
+          "merged_at": "2026-09-01T22:18:10Z",
+          "title": "feat(wallet): staff confirmation UI for bank-receipt top-ups (T-04.2.02.04)",
+          "merge_sha": "42388d60b69cb094ef5236b4bf2b6907a97038a0"
+        },
+        {
+          "number": 278,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/278",
+          "merged_at": "2026-09-02T04:49:21Z",
+          "title": "fix(web): staff bank-receipt confirmation UI step-up and reject a11y (T-04.2.02.04)",
+          "merge_sha": "d79c499449eee4f0ce2f40780fabfe9b53bf88b4"
+        },
+        {
+          "number": 286,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/286",
+          "merged_at": "2026-09-02T10:00:59Z",
+          "title": "fix(web): staff receipt confirmation UI RTL and reject step-up (T-04.2.02.04)",
+          "merge_sha": "490c3600a93aecb817532068167c4633a04b0634"
+        },
+        {
+          "number": 301,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/301",
+          "merged_at": "2026-09-03T13:28:13Z",
+          "title": "feat(wallet): staff bank-receipt confirmation notifies customer (T-04.2.02.04)",
+          "merge_sha": "43753d86f2cfd2a48789fdd83d2fc21e049d6292"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.05",
+      "title": "Overpayment handling: if receipt amount > invoice remaining, credit excess to wallet",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 268,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/268",
+          "merged_at": "2026-09-01T23:10:12Z",
+          "title": "feat(wallet): credit bank-receipt overpayment excess to the wallet (T-04.2.02.05)",
+          "merge_sha": "c4341a1ec487824f4fa4239df894a1f6b203a9a4"
+        },
+        {
+          "number": 279,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/279",
+          "merged_at": "2026-09-02T05:09:22Z",
+          "title": "fix(wallet): lock wallet before invoice on bank-receipt overpayment (T-04.2.02.05)",
+          "merge_sha": "2de5d0222400165d76ed0c49275c8cc82a0f8ea7"
+        },
+        {
+          "number": 287,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/287",
+          "merged_at": "2026-09-02T10:20:30Z",
+          "title": "fix(wallet): credit bank-receipt excess only on payable or paid invoices (T-04.2.02.05)",
+          "merge_sha": "62e0ee2c15883ac125694579acf9300d8cf37e98"
+        },
+        {
+          "number": 302,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/302",
+          "merged_at": "2026-09-03T15:22:41Z",
+          "title": "feat(wallet): include overpayment split on bank-receipt completed notice (T-04.2.02.05)",
+          "merge_sha": "8009dc22b3b84e8a21e1abd1085f5e35d40a98f3"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.06",
+      "title": "Admin-configurable `onlineTopUpLimit` with versioned config, enforced at submission",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 269,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/269",
+          "merged_at": "2026-09-01T23:52:12Z",
+          "title": "feat(wallet): admin-configurable versioned onlineTopUpLimit (T-04.2.02.06)",
+          "merge_sha": "7522652504a0b6bcbd78717040f03fe6bae07dc9"
+        },
+        {
+          "number": 280,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/280",
+          "merged_at": "2026-09-02T05:29:22Z",
+          "title": "fix(web): fail-closed onlineTopUpLimit submit when the cap is missing (T-04.2.02.06)",
+          "merge_sha": "dd67e4a202862b7ea2706057f24283ddc9673797"
+        },
+        {
+          "number": 288,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/288",
+          "merged_at": "2026-09-02T10:40:00Z",
+          "title": "feat(wallet): return enforced onlineTopUpLimit on over-limit submit (T-04.2.02.06)",
+          "merge_sha": "4cb9b87aa0d69a9ed376db2cc17178bd662bc324"
+        },
+        {
+          "number": 303,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/303",
+          "merged_at": "2026-09-03T15:47:41Z",
+          "title": "feat(wallet): fail-closed onlineTopUpLimit submit and versioned admin CAS (T-04.2.02.06)",
+          "merge_sha": "2f80d92df51556d47f778b5230e5eea577e2a8d4"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.07",
+      "title": "Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 270,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/270",
+          "merged_at": "2026-09-02T00:11:13Z",
+          "title": "feat(wallet): expire stale Pending online top-ups via worker cron (T-04.2.02.07)",
+          "merge_sha": "a78be514b6f4071d23647b06d92ee75fc2e70727"
+        },
+        {
+          "number": 281,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/281",
+          "merged_at": "2026-09-02T05:51:23Z",
+          "title": "feat(wallet): complete online top-up expiry cron with audit and candidate index (T-04.2.02.07)",
+          "merge_sha": "4c92552a893db6f10dafc9d4a5230c4c5b22dfd0"
+        },
+        {
+          "number": 289,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/289",
+          "merged_at": "2026-09-02T10:58:31Z",
+          "title": "fix(wallet): keep online top-up TTL expiry single-writer under concurrency (T-04.2.02.07)",
+          "merge_sha": "61c698074499dfcf8e3d7eb9e1da7450237d4385"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.03.01",
+      "title": "Implement `payInvoiceWithWallet(invoiceId, profileId, idempotencyKey)` service method",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 271,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/271",
+          "merged_at": "2026-09-02T00:34:14Z",
+          "title": "feat(wallet): implement payInvoiceWithWallet remaining debit (T-04.2.03.01)",
+          "merge_sha": "ec5fbe0e27c74a03041ec8b48ecf97ceb0ec48b7"
+        },
+        {
+          "number": 290,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/290",
+          "merged_at": "2026-09-02T11:20:32Z",
+          "title": "feat(wallet): settle invoices only after an exact remaining debit (T-04.2.03.01)",
+          "merge_sha": "0d31e9974fd0545761ff5e0a2d076c2e89d23334"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.03.02",
+      "title": "Use DB transaction: `SELECT ... FOR UPDATE` on wallet and invoice, validate available balance, debit wallet, update invoice → Paid, insert wallet_transaction + audit",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 272,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/272",
+          "merged_at": "2026-09-02T00:56:14Z",
+          "title": "feat(wallet): lock wallet and invoice FOR UPDATE on pay-from-wallet (T-04.2.03.02)",
+          "merge_sha": "3c09933e6fdf770358b10965b0d8a141d8e1e60a"
+        },
+        {
+          "number": 282,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/282",
+          "merged_at": "2026-09-02T08:37:28Z",
+          "title": "feat(wallet): FOR UPDATE pay-from-wallet transaction with wallet audit (T-04.2.03.02)",
+          "merge_sha": "6861c7c5d23bb00a58f1aa480be8a38a368dfc2c"
+        },
+        {
+          "number": 291,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/291",
+          "merged_at": "2026-09-02T11:38:02Z",
+          "title": "feat(wallet): FOR UPDATE transaction for pay-from-wallet settlement (T-04.2.03.02)",
+          "merge_sha": "98e3263c47ceaa936f9a46283cf46ae377853643"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.03.03",
+      "title": "Implement idempotency: unique index on `(idempotencyKey, entityType)`, return cached result on retry",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 273,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/273",
+          "merged_at": "2026-09-02T01:46:45Z",
+          "title": "feat(wallet): unique (idempotencyKey, entityType) cache for payInvoiceWithWallet (T-04.2.03.03)",
+          "merge_sha": "52d0639aac77e20c6f0f19aad4ad1cdca139acd1"
+        },
+        {
+          "number": 283,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/283",
+          "merged_at": "2026-09-02T08:57:27Z",
+          "title": "feat(wallet): unique (idempotencyKey, entityType) cache for payInvoiceWithWallet (T-04.2.03.03)",
+          "merge_sha": "67f29411c3e9361469da09b9c9d985bf010bd9c9"
+        },
+        {
+          "number": 292,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/292",
+          "merged_at": "2026-09-02T11:57:03Z",
+          "title": "feat(wallet): unique (idempotencyKey, entityType) cache for payInvoiceWithWallet (T-04.2.03.03)",
+          "merge_sha": "eb09741b5e2db46ce57d816ab09fd67e21864a52"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.03.04",
+      "title": "Integration tests: concurrent payment attempts (one succeeds, others fail), duplicate idempotency key, insufficient balance, race conditions",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 274,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/274",
+          "merged_at": "2026-09-02T02:58:18Z",
+          "title": "test(wallet): concurrent payInvoiceWithWallet races (T-04.2.03.04)",
+          "merge_sha": "8d4d2b73a126135999771f505435feff95a13572"
+        },
+        {
+          "number": 284,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/284",
+          "merged_at": "2026-09-02T09:12:58Z",
+          "title": "test(wallet): concurrent payInvoiceWithWallet races (T-04.2.03.04)",
+          "merge_sha": "e2e1e868d57bc7fa8d73bc8fa30066630cac6c4e"
+        },
+        {
+          "number": 293,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/293",
+          "merged_at": "2026-09-02T12:14:33Z",
+          "title": "test(wallet): concurrent payInvoiceWithWallet in-flight and reserve races (T-04.2.03.04)",
+          "merge_sha": "2e282be347dc9fddd96ba68412d479e68f6533cc"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.04.01",
+      "title": "Implement `reverseTransaction(originalTransactionId, reason, idempotencyKey)` — creates reversal transaction, adjusts balance",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 275,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/275",
+          "merged_at": "2026-09-02T03:22:18Z",
+          "title": "feat(wallet): implement reverseTransaction compensating ledger reversal (T-04.2.04.01)",
+          "merge_sha": "421401a1b13bb7df20f34f80593f8d2bfcddd73c"
+        },
+        {
+          "number": 285,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/285",
+          "merged_at": "2026-09-02T09:45:29Z",
+          "title": "feat(wallet): keep reverseTransaction the only compensating reversal writer (T-04.2.04.01)",
+          "merge_sha": "4e64f03da5f8d54d3800665c166db450e4305512"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.04.02",
+      "title": "Build provider chargeback detection: parse inbound notification, validate signature, map to original top-up",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 276,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/276",
+          "merged_at": "2026-09-02T03:55:20Z",
+          "title": "feat(wallet): detect provider chargebacks and map them to the original top-up (T-04.2.04.02)",
+          "merge_sha": "c79f7539c5814145b646bd2e5c3d8723f66c881b"
+        },
+        {
+          "number": 294,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/294",
+          "merged_at": "2026-09-02T13:08:35Z",
+          "title": "feat(wallet): bind chargeback event ids to the claimed notification payload (T-04.2.04.02)",
+          "merge_sha": "399653a6122c930e55e7bf64960c20b367ad57ac"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.04.03",
+      "title": "Finance alert: push notification + dashboard warning for unresolved chargeback",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 277,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/277",
+          "merged_at": "2026-09-02T04:29:21Z",
+          "title": "feat(wallet): finance alert for unresolved chargebacks (T-04.2.04.03)",
+          "merge_sha": "2b81aaad6415ab4d50d2c7b71d447474b182d88f"
+        },
+        {
+          "number": 295,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/295",
+          "merged_at": "2026-09-02T13:42:37Z",
+          "title": "feat(wallet): finance alert push + dashboard warning for unresolved chargebacks (T-04.2.04.03)",
+          "merge_sha": "b5cefd8ea84808d3ed97056b2c0371a6889a63eb"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.01",
+      "title": "Create `bank_receipts` table: `id`, `invoiceId`, `profileId`, `amount`, `paymentDate`, `payerReference`, `attachmentKey`, `customerNote`, `state`, `confirmedBy?`, `confirmedAt?`, `rejectionReason?`, timestamps",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 296,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/296",
+          "merged_at": "2026-09-02T14:39:37Z",
+          "title": "feat(invoice): add bank_receipts table for staff confirmation (T-04.3.01.01)",
+          "merge_sha": "ae474a214f3f5b13bbb5a4254f61166247a25bd4"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.02",
+      "title": "Customer upload flow: validation (amount positive, file type/size), create receipt in Submitted state",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 297,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/297",
+          "merged_at": "2026-09-03T11:17:33Z",
+          "title": "feat(invoice): customer bank-receipt upload with amount and file validation (T-04.3.01.02)",
+          "merge_sha": "9e81f900513376187b840458c0d51527206b35d4"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.03",
+      "title": "Staff confirmation API: validate amount ≤ invoice remaining; if excess → auto-credit wallet; update invoice state; mark receipt Confirmed",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 298,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/298",
+          "merged_at": "2026-09-03T11:39:10Z",
+          "title": "feat(invoice): staff confirmation API with remaining-cap and wallet excess (T-04.3.01.03)",
+          "merge_sha": "ad22758aacb4ad8467ca8f11624b5197bf522b16"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.04",
+      "title": "Staff rejection API: mark receipt Rejected, store reason, notify customer",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 299,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/299",
+          "merged_at": "2026-09-03T12:01:36Z",
+          "title": "feat(invoice): staff rejection API stores reason and notifies customer (T-04.3.01.04)",
+          "merge_sha": "cafd9a05066f5f4df6db91a5264d9deb632744ec"
+        }
+      ]
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.05",
+      "title": "Dual-approval check: if receipt amount ≥ admin-configured threshold, require second finance staff confirmation",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": true,
+      "prs": [
+        {
+          "number": 300,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/300",
+          "merged_at": "2026-09-03T13:06:37Z",
+          "title": "feat(invoice): dual-approval check for high-value bank receipt confirmation (T-04.3.01.05)",
+          "merge_sha": "491542b97c72f9113b379ec2f628a51306e8e9eb"
+        }
+      ]
+    },
+    {
+      "task_key": "03-core-business.md#T-03.01.01.01",
+      "title": "Create `products` table with columns: `id` (UUIDv7 PK), `type` (enum: `consultation`, `electricity`, `hardware`, `saving_plan`), `system_key` (nullable unique — used for immutable system products like electricity types), `title` (localized JSONB), `description` (localized JSONB, nullable), `price` (bigint nullable, in IRR), `status` (enum: `active`, `inactive`, `archived`), `created_at`, `updated_at`",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 144,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/144",
+          "merged_at": "2026-08-26T05:26:39Z",
+          "title": "feat(core-business): create products table with full product catalog schema",
+          "merge_sha": "2b0edb5c5226716264bb487040b2eee52c99725a"
+        }
+      ]
+    },
+    {
+      "task_key": "03-core-business.md#T-03.01.01.02",
+      "title": "Create `product_price_versions` table for versioned pricing: `id`, `product_id` (FK), `price` (bigint), `vat_category_override` (FK nullable), `effective_from` (timestamptz), `effective_until` (timestamptz nullable), `created_by` (FK to users)",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 145,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/145",
+          "merged_at": "2026-08-26T05:40:05Z",
+          "title": "feat(db): create product_price_versions table for versioned pricing",
+          "merge_sha": "a884dba33dbccb47b6c698bbf8d74b80aaf74fcb"
+        }
+      ]
+    },
+    {
+      "task_key": "03-core-business.md#T-03.01.01.03",
+      "title": "Create `product_categories` table: `id`, `product_id` (FK), `category` (enum: `electricity_generation_station_consultation`, `electricity_saving_certificate_consultation`, `thermal_electricity`, `green_electricity`, `free_market_electricity`, `energy_saving_electricity`). Only for electricity and consultation types.",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 147,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/147",
+          "merged_at": "2026-08-26T06:27:59Z",
+          "title": "feat(db): create product_categories table (T-03.01.01.03)",
+          "merge_sha": "23c97ddfa9dc92098f8b8637faae4ba99f0e0943"
+        }
+      ]
+    },
+    {
+      "task_key": "03-core-business.md#T-03.01.01.04",
+      "title": "Create `electricity_product_limits` table: `id`, `product_id` (FK to electricity products only), `min_kwh` (bigint, default 0 = no limit), `max_kwh` (bigint, default 0 = no limit)",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 148,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/148",
+          "merged_at": "2026-08-26T06:41:41Z",
+          "title": "feat(db): create electricity_product_limits table (T-03.01.01.04)",
+          "merge_sha": "0c27a9f25282957cd72f3d931c390530a80f515c"
+        }
+      ]
+    },
+    {
+      "task_key": "07-ui-ux-design.md#T-07.01.01.01",
+      "title": "Initialize `packages/ui` with Tailwind CSS v4, PostCSS, autoprefixer. Configure `tailwind.config.ts` with extended color palette, font families (Vazirmatn for Persian, Inter for English), border-radius, spacing scale, and animation tokens.",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 65,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/65",
+          "merged_at": "2026-08-24T20:19:14Z",
+          "title": "feat(e07): initialize packages/ui with Tailwind CSS v4, PostCSS, autoprefixer",
+          "merge_sha": "464c5aaf153fbb59fcac4288ff28df5ea23250ed"
+        }
+      ]
+    },
+    {
+      "task_key": "07-ui-ux-design.md#T-07.01.01.02",
+      "title": "Install and configure shadcn/ui CLI: set `style: \"new-york\"`, `baseColor: \"zinc\"`, `cssVariables: true`. Generate initial component set: Button, Input, Label, Card, Badge, Dialog, DropdownMenu, Select, Separator, Sheet, Skeleton, Toast, Tooltip, Tabs, Avatar, Popover, Command, Switch, Progress, Slider, Textarea, Alert, Breadcrumb, ScrollArea, Calendar, Checkbox, RadioGroup, Sonner (toaster).",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 66,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/66",
+          "merged_at": "2026-08-24T20:39:53Z",
+          "title": "feat(ui): install and configure shadcn/ui CLI with 27 components",
+          "merge_sha": "e6519df7f3323294d1f43e96332b23463ebcc109"
+        }
+      ]
+    },
+    {
+      "task_key": "07-ui-ux-design.md#T-07.01.01.03",
+      "title": "Install and configure Base UI (by MUI — `@mui/base` / `@mui/base-ui`) for complex patterns: NumberField (with locale-aware formatting), DatePicker/DateRangePicker (with Jalali support), ComboBox (with search + keyboard nav), Select (with multi-select + chips), Table (sortable, selectable rows via useTable).",
+      "status": "merged_pr_recorded",
+      "missing_from_current_state": false,
+      "prs": [
+        {
+          "number": 67,
+          "url": "https://github.com/barghsadev/barghsa-core/pull/67",
+          "merged_at": "2026-08-24T20:59:34Z",
+          "title": "feat(ui): implement Base UI widgets — NumberField, DatePicker, ComboBox, MultiSelect, DataTable",
+          "merge_sha": "14f6df252553e3a368c6976bf9edbbf6957f0e7e"
+        }
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-05.04.05",
+      "status": "obsolete_key",
+      "prs": []
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.06.01",
+      "status": "obsolete_key",
+      "prs": []
+    }
+  ]
+}

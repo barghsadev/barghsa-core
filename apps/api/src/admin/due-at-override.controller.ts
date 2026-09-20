@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -9,42 +10,41 @@ import {
   Post,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   DUE_AT_OVERRIDE_PERMISSION,
   DUE_AT_OVERRIDE_REASON_MAX_LENGTH,
-} from '@barghsa/shared/finance'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
-import {
-  DueAtOverrideService,
-  type InvoiceDueAtDto,
-} from '../invoice/due-at-override.service.js'
+} from '@barghsa/shared/finance';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
+import { DueAtOverrideService, type InvoiceDueAtDto } from '../invoice/due-at-override.service.js';
 
-function httpError(
-  code: string,
-  message: string,
-  statusCode = 400,
-  details?: unknown,
-): never {
+function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
     { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode,
-  )
+    statusCode
+  );
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 function assertUuid(id: string, label = 'invoiceId'): void {
-  const parsed = z.string().uuid('Expected a UUID').safeParse(id)
+  const parsed = z.string().uuid('Expected a UUID').safeParse(id);
   if (!parsed.success) {
-    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400)
+    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400);
   }
 }
 
@@ -57,9 +57,7 @@ function assertUuid(id: string, label = 'invoiceId'): void {
  *
  * Security:
  * - Every route requires an authenticated session with the
- *   `admin:finance:invoices:override-due-at` capability. Today the
- *   session model exposes only `req.session.isAdmin` (platform admin);
- *   granular staff-role permissions arrive with C-04.CC.03.
+ *   `admin:finance:invoices:override-due-at` capability. Capabilities are read from current database roles.
  * - The mutation additionally requires recent step-up verification
  *   (`@RequiresStepUp()`) — due-date changes are financial.
  */
@@ -70,17 +68,17 @@ function assertUuid(id: string, label = 'invoiceId'): void {
 export class DueAtOverrideController {
   constructor(
     private readonly service: DueAtOverrideService,
-    private readonly correlationId: CorrelationIdProvider,
+    private readonly correlationId: CorrelationIdProvider
   ) {}
 
   /** Single enforcement point for the override permission. */
   private assertOverridePermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:finance:invoices:override-due-at')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         `Admin role required (${DUE_AT_OVERRIDE_PERMISSION})`,
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -97,11 +95,11 @@ export class DueAtOverrideController {
   @ApiResponse({ status: 404, description: 'Invoice not found' })
   async get(
     @Req() req: AuthenticatedRequest,
-    @Param('invoiceId') invoiceId: string,
+    @Param('invoiceId') invoiceId: string
   ): Promise<InvoiceDueAtDto> {
-    this.assertOverridePermission(req)
-    assertUuid(invoiceId)
-    return this.service.get(invoiceId)
+    this.assertOverridePermission(req);
+    assertUuid(invoiceId);
+    return this.service.get(invoiceId, req.session);
   }
 
   @Post(':invoiceId/due-at')
@@ -139,17 +137,18 @@ export class DueAtOverrideController {
   async override(
     @Req() req: AuthenticatedRequest,
     @Param('invoiceId') invoiceId: string,
-    @Body() body: Record<string, unknown>,
+    @Body() body: Record<string, unknown>
   ): Promise<InvoiceDueAtDto> {
-    this.assertOverridePermission(req)
-    assertUuid(invoiceId)
-    const correlationId = this.correlationId.getCorrelationId()
+    this.assertOverridePermission(req);
+    assertUuid(invoiceId);
+    const correlationId = this.correlationId.getCorrelationId();
     return this.service.override({
       invoiceId,
       raw: body,
       actorUserId: req.session.userId,
+      actorSession: req.session,
       ip: requestIp(req),
       ...(correlationId ? { correlationId } : {}),
-    })
+    });
   }
 }

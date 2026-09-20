@@ -1,0 +1,1 @@
+ALTER TABLE "notification_job" ADD COLUMN "delivery_window" jsonb;

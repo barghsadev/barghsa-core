@@ -22,7 +22,9 @@ function createMocks(): {
     deleteObject: vi.fn(),
     presignedPutUrl: vi.fn(),
     presignedGetUrl: vi.fn(),
-    listObjects: vi.fn().mockResolvedValue({ items: [], isTruncated: false, continuationToken: undefined }),
+    listObjects: vi
+      .fn()
+      .mockResolvedValue({ items: [], isTruncated: false, continuationToken: undefined }),
   };
 
   const db: DbAdapter = {
@@ -86,7 +88,7 @@ describe('ImmutableStorageRecordService.createRecord', () => {
     await service.createRecord({ storageKey: 'uploads/test.txt' });
 
     expect(db.createStorageRecord).toHaveBeenCalledWith(
-      expect.objectContaining({ metadata: null }),
+      expect.objectContaining({ metadata: null })
     );
   });
 });
@@ -118,9 +120,30 @@ describe('ImmutableStorageRecordService.getRecordStatus', () => {
 // ---------------------------------------------------------------------------
 
 describe('ImmutableStorageRecordService.markAsImmutable', () => {
+  it('releases the existence-check response before updating the database', async () => {
+    const { storage, db, service } = createMocks();
+    const cancel = vi.fn();
+    vi.mocked(storage.getObject).mockResolvedValue({
+      body: new ReadableStream({ cancel }),
+      contentType: 'text/plain',
+      contentLength: 4,
+      metadata: {},
+      etag: undefined,
+    });
+    vi.mocked(db.markStorageRecordImmutable).mockImplementation(async () => {
+      expect(cancel).toHaveBeenCalledOnce();
+    });
+    await service.markAsImmutable('contracts/record');
+  });
   it('marks an existing object as immutable', async () => {
     const { storage, db, service } = createMocks();
-    (storage.getObject as ReturnType<typeof vi.fn>).mockResolvedValue({ body: 'data', contentType: 'text/plain', contentLength: 4, metadata: {}, etag: undefined });
+    (storage.getObject as ReturnType<typeof vi.fn>).mockResolvedValue({
+      body: new ReadableStream(),
+      contentType: 'text/plain',
+      contentLength: 4,
+      metadata: {},
+      etag: undefined,
+    });
 
     await service.markAsImmutable('uploads/contract.pdf', 'admin1');
 
@@ -130,7 +153,13 @@ describe('ImmutableStorageRecordService.markAsImmutable', () => {
 
   it('marks without signedBy when not provided', async () => {
     const { storage, db, service } = createMocks();
-    (storage.getObject as ReturnType<typeof vi.fn>).mockResolvedValue({ body: 'data', contentType: 'text/plain', contentLength: 4, metadata: {}, etag: undefined });
+    (storage.getObject as ReturnType<typeof vi.fn>).mockResolvedValue({
+      body: new ReadableStream(),
+      contentType: 'text/plain',
+      contentLength: 4,
+      metadata: {},
+      etag: undefined,
+    });
 
     await service.markAsImmutable('uploads/doc.pdf');
 
@@ -139,9 +168,13 @@ describe('ImmutableStorageRecordService.markAsImmutable', () => {
 
   it('throws StorageObjectNotFound when object does not exist in storage', async () => {
     const { storage, db, service } = createMocks();
-    (storage.getObject as ReturnType<typeof vi.fn>).mockRejectedValue(new StorageObjectNotFound('uploads/ghost.pdf'));
+    (storage.getObject as ReturnType<typeof vi.fn>).mockRejectedValue(
+      new StorageObjectNotFound('uploads/ghost.pdf')
+    );
 
-    await expect(service.markAsImmutable('uploads/ghost.pdf')).rejects.toThrow(StorageObjectNotFound);
+    await expect(service.markAsImmutable('uploads/ghost.pdf')).rejects.toThrow(
+      StorageObjectNotFound
+    );
     expect(db.markStorageRecordImmutable).not.toHaveBeenCalled();
   });
 });
@@ -151,13 +184,27 @@ describe('ImmutableStorageRecordService.markAsImmutable', () => {
 // ---------------------------------------------------------------------------
 
 describe('ImmutableStorageRecordService.deleteRecord', () => {
-  it('physically deletes an active record', async () => {
+  it('never deletes bytes when signing races an earlier active status read', async () => {
+    const { storage, db, service } = createMocks();
+    let signed = false;
+    vi.mocked(db.getStorageRecordStatus).mockImplementation(async () => {
+      signed = true; // sign committed after the snapshot used by this read
+      return 'active';
+    });
+    vi.mocked(db.softDeleteStorageRecord).mockImplementation(async () => {
+      expect(signed).toBe(true);
+    });
+    await service.deleteRecord('contracts/signed-during-read');
+    expect(storage.deleteObject).not.toHaveBeenCalled();
+    expect(db.softDeleteStorageRecord).toHaveBeenCalledOnce();
+  });
+  it('retains the object when soft-deleting an active record', async () => {
     const { storage, db, service } = createMocks();
     (db.getStorageRecordStatus as ReturnType<typeof vi.fn>).mockResolvedValue('active');
 
     await service.deleteRecord('uploads/test.txt');
 
-    expect(storage.deleteObject).toHaveBeenCalledWith('uploads/test.txt');
+    expect(storage.deleteObject).not.toHaveBeenCalled();
     expect(db.softDeleteStorageRecord).toHaveBeenCalledWith('uploads/test.txt');
   });
 
@@ -165,20 +212,22 @@ describe('ImmutableStorageRecordService.deleteRecord', () => {
     const { storage, db, service } = createMocks();
     (db.getStorageRecordStatus as ReturnType<typeof vi.fn>).mockResolvedValue('immutable');
 
-    await expect(service.deleteRecord('uploads/contract.pdf')).rejects.toThrow(ImmutableRecordDeleteError);
+    await expect(service.deleteRecord('uploads/contract.pdf')).rejects.toThrow(
+      ImmutableRecordDeleteError
+    );
     expect(storage.deleteObject).not.toHaveBeenCalled();
     expect(db.softDeleteStorageRecord).toHaveBeenCalledWith('uploads/contract.pdf');
   });
 
-  it('physically deletes and creates record when no DB record exists', async () => {
+  it('does not delete or claim an object when no DB record exists', async () => {
     const { storage, db, service } = createMocks();
     (db.getStorageRecordStatus as ReturnType<typeof vi.fn>).mockResolvedValue(null);
 
     await service.deleteRecord('uploads/unknown.txt');
 
-    expect(storage.deleteObject).toHaveBeenCalledWith('uploads/unknown.txt');
-    expect(db.createStorageRecord).toHaveBeenCalledWith({ storageKey: 'uploads/unknown.txt' });
-    expect(db.softDeleteStorageRecord).toHaveBeenCalledWith('uploads/unknown.txt');
+    expect(storage.deleteObject).not.toHaveBeenCalled();
+    expect(db.createStorageRecord).not.toHaveBeenCalled();
+    expect(db.softDeleteStorageRecord).not.toHaveBeenCalled();
   });
 
   it('is a no-op on an already-removed record', async () => {
@@ -203,6 +252,9 @@ describe('ImmutableStorageRecordService.updateMetadata', () => {
 
     await service.updateMetadata('uploads/doc.pdf', { reviewer: 'admin2', approved: true });
 
-    expect(db.updateStorageRecordMetadata).toHaveBeenCalledWith('uploads/doc.pdf', { reviewer: 'admin2', approved: true });
+    expect(db.updateStorageRecordMetadata).toHaveBeenCalledWith('uploads/doc.pdf', {
+      reviewer: 'admin2',
+      approved: true,
+    });
   });
 });

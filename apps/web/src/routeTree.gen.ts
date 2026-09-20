@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as ActivateRouteImport } from './routes/activate'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
@@ -19,43 +20,69 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AppAiRouteImport } from './routes/_app/ai'
+import { Route as AppAppRouteImport } from './routes/_app/app'
 import { Route as AppChartsRouteImport } from './routes/_app/charts'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
 import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
 import { Route as AppSavingsRouteImport } from './routes/_app/savings'
+import { Route as AppTicketsRouteImport } from './routes/_app/tickets'
 import { Route as AppVideosRouteImport } from './routes/_app/videos'
 import { Route as AppWalletRouteImport } from './routes/_app/wallet'
-import { Route as AppInvoicesIndexRouteImport } from './routes/_app/invoices/index'
-import { Route as AppInvoicesInvoiceIdRouteImport } from './routes/_app/invoices/$invoiceId'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminAgentSlotsRouteImport } from './routes/admin/agent-slots'
+import { Route as AdminAgentsRouteImport } from './routes/admin/agents'
+import { Route as AdminAiModelsRouteImport } from './routes/admin/ai-models'
+import { Route as AdminApprovalRequestsRouteImport } from './routes/admin/approval-requests'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
+import { Route as AdminCatalogueRouteImport } from './routes/admin/catalogue'
+import { Route as AdminContractLimitsRouteImport } from './routes/admin/contract-limits'
+import { Route as AdminContractTemplatesRouteImport } from './routes/admin/contract-templates'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
+import { Route as AdminElectricityRulesRouteImport } from './routes/admin/electricity-rules'
+import { Route as AdminFailedJobsRouteImport } from './routes/admin/failed-jobs'
+import { Route as AdminFailedNotificationsRouteImport } from './routes/admin/failed-notifications'
 import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
+import { Route as AdminGiftCodesRouteImport } from './routes/admin/gift-codes'
 import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
-import { Route as AdminWalletReceiptsRouteImport } from './routes/admin/wallet-receipts'
+import { Route as AdminKnowledgeBasesRouteImport } from './routes/admin/knowledge-bases'
 import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
+import { Route as AdminPoliciesRouteImport } from './routes/admin/policies'
 import { Route as AdminProvidersRouteImport } from './routes/admin/providers'
+import { Route as AdminReconciliationRouteImport } from './routes/admin/reconciliation'
 import { Route as AdminRolesRouteImport } from './routes/admin/roles'
+import { Route as AdminServiceTargetsRouteImport } from './routes/admin/service-targets'
+import { Route as AdminStaffTeamsRouteImport } from './routes/admin/staff-teams'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
+import { Route as AdminTicketsRouteImport } from './routes/admin/tickets'
 import { Route as AdminTosRouteImport } from './routes/admin/tos'
+import { Route as AdminUploadPoliciesRouteImport } from './routes/admin/upload-policies'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminVatRouteImport } from './routes/admin/vat'
 import { Route as AdminVerificationRouteImport } from './routes/admin/verification'
+import { Route as AdminWalletReceiptsRouteImport } from './routes/admin/wallet-receipts'
+import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding/complete'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
 import { Route as AppElectricityIndexRouteImport } from './routes/_app/electricity/index'
 import { Route as AppElectricityOrderRouteImport } from './routes/_app/electricity/order'
+import { Route as AppInvoicesIndexRouteImport } from './routes/_app/invoices/index'
+import { Route as AppInvoicesInvoiceIdRouteImport } from './routes/_app/invoices/$invoiceId'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppSettingsAddressesRouteImport } from './routes/_app/settings/addresses'
 import { Route as AppSettingsProfileRouteImport } from './routes/_app/settings/profile'
 import { Route as AppSettingsSecurityRouteImport } from './routes/_app/settings/security'
+import { Route as AppSettingsTeamRouteImport } from './routes/_app/settings/team'
 import { Route as AppSettingsTimezoneRouteImport } from './routes/_app/settings/timezone'
 import { Route as AppSettingsUsernameRouteImport } from './routes/_app/settings/username'
 import { Route as AdminCrmIndexRouteImport } from './routes/admin/crm/index'
+import { Route as AdminCrmCorrectionsRouteImport } from './routes/admin/crm/corrections'
+import { Route as AppCrmIndexRouteImport } from './routes/app/crm/index'
 import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
 import { Route as OnboardingLegalProfileIdRouteImport } from './routes/onboarding/legal/$profileId'
 import { Route as AdminCrmProfilesProfileIdRouteImport } from './routes/admin/crm/profiles.$profileId'
+import { Route as AppCrmProfilesProfileIdRouteImport } from './routes/app/crm/profiles.$profileId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,6 +91,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ActivateRoute = ActivateRouteImport.update({
+  id: '/activate',
+  path: '/activate',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -106,6 +138,11 @@ const AppAiRoute = AppAiRouteImport.update({
   path: '/ai',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAppRoute = AppAppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppChartsRoute = AppChartsRouteImport.update({
   id: '/charts',
   path: '/charts',
@@ -131,6 +168,11 @@ const AppSavingsRoute = AppSavingsRouteImport.update({
   path: '/savings',
   getParentRoute: () => AppRoute,
 } as any)
+const AppTicketsRoute = AppTicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppVideosRoute = AppVideosRouteImport.update({
   id: '/videos',
   path: '/videos',
@@ -141,19 +183,29 @@ const AppWalletRoute = AppWalletRouteImport.update({
   path: '/wallet',
   getParentRoute: () => AppRoute,
 } as any)
-const AppInvoicesIndexRoute = AppInvoicesIndexRouteImport.update({
-  id: '/invoices/',
-  path: '/invoices/',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppInvoicesInvoiceIdRoute = AppInvoicesInvoiceIdRouteImport.update({
-  id: '/invoices/$invoiceId',
-  path: '/invoices/$invoiceId',
-  getParentRoute: () => AppRoute,
-} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAgentSlotsRoute = AdminAgentSlotsRouteImport.update({
+  id: '/agent-slots',
+  path: '/agent-slots',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAgentsRoute = AdminAgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAiModelsRoute = AdminAiModelsRouteImport.update({
+  id: '/ai-models',
+  path: '/ai-models',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminApprovalRequestsRoute = AdminApprovalRequestsRouteImport.update({
+  id: '/approval-requests',
+  path: '/approval-requests',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminBrandingRoute = AdminBrandingRouteImport.update({
@@ -161,14 +213,50 @@ const AdminBrandingRoute = AdminBrandingRouteImport.update({
   path: '/branding',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCatalogueRoute = AdminCatalogueRouteImport.update({
+  id: '/catalogue',
+  path: '/catalogue',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContractLimitsRoute = AdminContractLimitsRouteImport.update({
+  id: '/contract-limits',
+  path: '/contract-limits',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContractTemplatesRoute = AdminContractTemplatesRouteImport.update({
+  id: '/contract-templates',
+  path: '/contract-templates',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCrmRoute = AdminCrmRouteImport.update({
   id: '/crm',
   path: '/crm',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminElectricityRulesRoute = AdminElectricityRulesRouteImport.update({
+  id: '/electricity-rules',
+  path: '/electricity-rules',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFailedJobsRoute = AdminFailedJobsRouteImport.update({
+  id: '/failed-jobs',
+  path: '/failed-jobs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFailedNotificationsRoute =
+  AdminFailedNotificationsRouteImport.update({
+    id: '/failed-notifications',
+    path: '/failed-notifications',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminGeographyRoute = AdminGeographyRouteImport.update({
   id: '/geography',
   path: '/geography',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminGiftCodesRoute = AdminGiftCodesRouteImport.update({
+  id: '/gift-codes',
+  path: '/gift-codes',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminInvoicesRoute = AdminInvoicesRouteImport.update({
@@ -176,9 +264,9 @@ const AdminInvoicesRoute = AdminInvoicesRouteImport.update({
   path: '/invoices',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminWalletReceiptsRoute = AdminWalletReceiptsRouteImport.update({
-  id: '/wallet-receipts',
-  path: '/wallet-receipts',
+const AdminKnowledgeBasesRoute = AdminKnowledgeBasesRouteImport.update({
+  id: '/knowledge-bases',
+  path: '/knowledge-bases',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
@@ -186,9 +274,19 @@ const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
   path: '/notifications',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPoliciesRoute = AdminPoliciesRouteImport.update({
+  id: '/policies',
+  path: '/policies',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProvidersRoute = AdminProvidersRouteImport.update({
   id: '/providers',
   path: '/providers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReconciliationRoute = AdminReconciliationRouteImport.update({
+  id: '/reconciliation',
+  path: '/reconciliation',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminRolesRoute = AdminRolesRouteImport.update({
@@ -196,9 +294,24 @@ const AdminRolesRoute = AdminRolesRouteImport.update({
   path: '/roles',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminServiceTargetsRoute = AdminServiceTargetsRouteImport.update({
+  id: '/service-targets',
+  path: '/service-targets',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStaffTeamsRoute = AdminStaffTeamsRouteImport.update({
+  id: '/staff-teams',
+  path: '/staff-teams',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminStorageRoute = AdminStorageRouteImport.update({
   id: '/storage',
   path: '/storage',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTicketsRoute = AdminTicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminTosRoute = AdminTosRouteImport.update({
@@ -206,15 +319,35 @@ const AdminTosRoute = AdminTosRouteImport.update({
   path: '/tos',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminUploadPoliciesRoute = AdminUploadPoliciesRouteImport.update({
+  id: '/upload-policies',
+  path: '/upload-policies',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminVatRoute = AdminVatRouteImport.update({
+  id: '/vat',
+  path: '/vat',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminVerificationRoute = AdminVerificationRouteImport.update({
   id: '/verification',
   path: '/verification',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminWalletReceiptsRoute = AdminWalletReceiptsRouteImport.update({
+  id: '/wallet-receipts',
+  path: '/wallet-receipts',
+  getParentRoute: () => AdminRoute,
+} as any)
+const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OnboardingRoute,
 } as any)
 const OnboardingCompleteRoute = OnboardingCompleteRouteImport.update({
   id: '/complete',
@@ -241,6 +374,16 @@ const AppElectricityOrderRoute = AppElectricityOrderRouteImport.update({
   path: '/electricity/order',
   getParentRoute: () => AppRoute,
 } as any)
+const AppInvoicesIndexRoute = AppInvoicesIndexRouteImport.update({
+  id: '/invoices/',
+  path: '/invoices/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInvoicesInvoiceIdRoute = AppInvoicesInvoiceIdRouteImport.update({
+  id: '/invoices/$invoiceId',
+  path: '/invoices/$invoiceId',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
   id: '/settings/',
   path: '/settings/',
@@ -261,6 +404,11 @@ const AppSettingsSecurityRoute = AppSettingsSecurityRouteImport.update({
   path: '/settings/security',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsTeamRoute = AppSettingsTeamRouteImport.update({
+  id: '/settings/team',
+  path: '/settings/team',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsTimezoneRoute = AppSettingsTimezoneRouteImport.update({
   id: '/settings/timezone',
   path: '/settings/timezone',
@@ -275,6 +423,16 @@ const AdminCrmIndexRoute = AdminCrmIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminCrmRoute,
+} as any)
+const AdminCrmCorrectionsRoute = AdminCrmCorrectionsRouteImport.update({
+  id: '/corrections',
+  path: '/corrections',
+  getParentRoute: () => AdminCrmRoute,
+} as any)
+const AppCrmIndexRoute = AppCrmIndexRouteImport.update({
+  id: '/app/crm/',
+  path: '/app/crm/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingIndividualProfileIdRoute =
   OnboardingIndividualProfileIdRouteImport.update({
@@ -294,9 +452,15 @@ const AdminCrmProfilesProfileIdRoute =
     path: '/profiles/$profileId',
     getParentRoute: () => AdminCrmRoute,
   } as any)
+const AppCrmProfilesProfileIdRoute = AppCrmProfilesProfileIdRouteImport.update({
+  id: '/app/crm/profiles/$profileId',
+  path: '/app/crm/profiles/$profileId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/activate': typeof ActivateRoute
   '/admin': typeof AdminRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -305,93 +469,146 @@ export interface FileRoutesByFullPath {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/ai': typeof AppAiRoute
+  '/app': typeof AppAppRoute
   '/charts': typeof AppChartsRoute
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
   '/notifications': typeof AppNotificationsRoute
   '/savings': typeof AppSavingsRoute
+  '/tickets': typeof AppTicketsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
-  '/invoices/': typeof AppInvoicesIndexRoute
-  '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
+  '/admin/agent-slots': typeof AdminAgentSlotsRoute
+  '/admin/agents': typeof AdminAgentsRoute
+  '/admin/ai-models': typeof AdminAiModelsRoute
+  '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
+  '/admin/catalogue': typeof AdminCatalogueRoute
+  '/admin/contract-limits': typeof AdminContractLimitsRoute
+  '/admin/contract-templates': typeof AdminContractTemplatesRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
+  '/admin/electricity-rules': typeof AdminElectricityRulesRoute
+  '/admin/failed-jobs': typeof AdminFailedJobsRoute
+  '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
+  '/admin/gift-codes': typeof AdminGiftCodesRoute
   '/admin/invoices': typeof AdminInvoicesRoute
-  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
+  '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/policies': typeof AdminPoliciesRoute
   '/admin/providers': typeof AdminProvidersRoute
+  '/admin/reconciliation': typeof AdminReconciliationRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/service-targets': typeof AdminServiceTargetsRoute
+  '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
+  '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
+  '/admin/upload-policies': typeof AdminUploadPoliciesRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/vat': typeof AdminVatRoute
   '/admin/verification': typeof AdminVerificationRoute
+  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin/': typeof AdminIndexRoute
+  '/onboarding/': typeof OnboardingIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/electricity/order': typeof AppElectricityOrderRoute
+  '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/settings/addresses': typeof AppSettingsAddressesRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
+  '/settings/team': typeof AppSettingsTeamRoute
   '/settings/timezone': typeof AppSettingsTimezoneRoute
   '/settings/username': typeof AppSettingsUsernameRoute
+  '/admin/crm/corrections': typeof AdminCrmCorrectionsRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/electricity/': typeof AppElectricityIndexRoute
+  '/invoices/': typeof AppInvoicesIndexRoute
   '/settings/': typeof AppSettingsIndexRoute
   '/admin/crm/': typeof AdminCrmIndexRoute
+  '/app/crm/': typeof AppCrmIndexRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
+  '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/activate': typeof ActivateRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
-  '/onboarding': typeof OnboardingRouteWithChildren
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/ai': typeof AppAiRoute
+  '/app': typeof AppAppRoute
   '/charts': typeof AppChartsRoute
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
   '/notifications': typeof AppNotificationsRoute
   '/savings': typeof AppSavingsRoute
+  '/tickets': typeof AppTicketsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
-  '/invoices': typeof AppInvoicesIndexRoute
-  '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
+  '/admin/agent-slots': typeof AdminAgentSlotsRoute
+  '/admin/agents': typeof AdminAgentsRoute
+  '/admin/ai-models': typeof AdminAiModelsRoute
+  '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
+  '/admin/catalogue': typeof AdminCatalogueRoute
+  '/admin/contract-limits': typeof AdminContractLimitsRoute
+  '/admin/contract-templates': typeof AdminContractTemplatesRoute
+  '/admin/electricity-rules': typeof AdminElectricityRulesRoute
+  '/admin/failed-jobs': typeof AdminFailedJobsRoute
+  '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
+  '/admin/gift-codes': typeof AdminGiftCodesRoute
   '/admin/invoices': typeof AdminInvoicesRoute
-  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
+  '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/policies': typeof AdminPoliciesRoute
   '/admin/providers': typeof AdminProvidersRoute
+  '/admin/reconciliation': typeof AdminReconciliationRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/service-targets': typeof AdminServiceTargetsRoute
+  '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
+  '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
+  '/admin/upload-policies': typeof AdminUploadPoliciesRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/vat': typeof AdminVatRoute
   '/admin/verification': typeof AdminVerificationRoute
+  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin': typeof AdminIndexRoute
+  '/onboarding': typeof OnboardingIndexRoute
   '/register': typeof RegisterIndexRoute
   '/electricity/order': typeof AppElectricityOrderRoute
+  '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/settings/addresses': typeof AppSettingsAddressesRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
+  '/settings/team': typeof AppSettingsTeamRoute
   '/settings/timezone': typeof AppSettingsTimezoneRoute
   '/settings/username': typeof AppSettingsUsernameRoute
+  '/admin/crm/corrections': typeof AdminCrmCorrectionsRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/electricity': typeof AppElectricityIndexRoute
+  '/invoices': typeof AppInvoicesIndexRoute
   '/settings': typeof AppSettingsIndexRoute
   '/admin/crm': typeof AdminCrmIndexRoute
+  '/app/crm': typeof AppCrmIndexRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
+  '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/activate': typeof ActivateRoute
   '/admin': typeof AdminRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -400,48 +617,75 @@ export interface FileRoutesById {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/_app/ai': typeof AppAiRoute
+  '/_app/app': typeof AppAppRoute
   '/_app/charts': typeof AppChartsRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/documents': typeof AppDocumentsRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/savings': typeof AppSavingsRoute
+  '/_app/tickets': typeof AppTicketsRoute
   '/_app/videos': typeof AppVideosRoute
   '/_app/wallet': typeof AppWalletRoute
-  '/_app/invoices/': typeof AppInvoicesIndexRoute
-  '/_app/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
+  '/admin/agent-slots': typeof AdminAgentSlotsRoute
+  '/admin/agents': typeof AdminAgentsRoute
+  '/admin/ai-models': typeof AdminAiModelsRoute
+  '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
+  '/admin/catalogue': typeof AdminCatalogueRoute
+  '/admin/contract-limits': typeof AdminContractLimitsRoute
+  '/admin/contract-templates': typeof AdminContractTemplatesRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
+  '/admin/electricity-rules': typeof AdminElectricityRulesRoute
+  '/admin/failed-jobs': typeof AdminFailedJobsRoute
+  '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
+  '/admin/gift-codes': typeof AdminGiftCodesRoute
   '/admin/invoices': typeof AdminInvoicesRoute
-  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
+  '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/policies': typeof AdminPoliciesRoute
   '/admin/providers': typeof AdminProvidersRoute
+  '/admin/reconciliation': typeof AdminReconciliationRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/service-targets': typeof AdminServiceTargetsRoute
+  '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
+  '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
+  '/admin/upload-policies': typeof AdminUploadPoliciesRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/vat': typeof AdminVatRoute
   '/admin/verification': typeof AdminVerificationRoute
+  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin/': typeof AdminIndexRoute
+  '/onboarding/': typeof OnboardingIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/_app/electricity/order': typeof AppElectricityOrderRoute
+  '/_app/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/_app/settings/addresses': typeof AppSettingsAddressesRoute
   '/_app/settings/profile': typeof AppSettingsProfileRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
+  '/_app/settings/team': typeof AppSettingsTeamRoute
   '/_app/settings/timezone': typeof AppSettingsTimezoneRoute
   '/_app/settings/username': typeof AppSettingsUsernameRoute
+  '/admin/crm/corrections': typeof AdminCrmCorrectionsRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/_app/electricity/': typeof AppElectricityIndexRoute
+  '/_app/invoices/': typeof AppInvoicesIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
   '/admin/crm/': typeof AdminCrmIndexRoute
+  '/app/crm/': typeof AppCrmIndexRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
+  '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/activate'
     | '/admin'
     | '/forgot-password'
     | '/login'
@@ -450,92 +694,145 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/ai'
+    | '/app'
     | '/charts'
     | '/dashboard'
     | '/documents'
     | '/notifications'
     | '/savings'
+    | '/tickets'
     | '/videos'
     | '/wallet'
-    | '/invoices/'
-    | '/invoices/$invoiceId'
+    | '/admin/agent-slots'
+    | '/admin/agents'
+    | '/admin/ai-models'
+    | '/admin/approval-requests'
     | '/admin/branding'
+    | '/admin/catalogue'
+    | '/admin/contract-limits'
+    | '/admin/contract-templates'
     | '/admin/crm'
+    | '/admin/electricity-rules'
+    | '/admin/failed-jobs'
+    | '/admin/failed-notifications'
     | '/admin/geography'
+    | '/admin/gift-codes'
     | '/admin/invoices'
-    | '/admin/wallet-receipts'
+    | '/admin/knowledge-bases'
     | '/admin/notifications'
+    | '/admin/policies'
     | '/admin/providers'
+    | '/admin/reconciliation'
     | '/admin/roles'
+    | '/admin/service-targets'
+    | '/admin/staff-teams'
     | '/admin/storage'
+    | '/admin/tickets'
     | '/admin/tos'
+    | '/admin/upload-policies'
     | '/admin/users'
+    | '/admin/vat'
     | '/admin/verification'
+    | '/admin/wallet-receipts'
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin/'
+    | '/onboarding/'
     | '/register/'
     | '/electricity/order'
+    | '/invoices/$invoiceId'
     | '/settings/addresses'
     | '/settings/profile'
     | '/settings/security'
+    | '/settings/team'
     | '/settings/timezone'
     | '/settings/username'
+    | '/admin/crm/corrections'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/electricity/'
+    | '/invoices/'
     | '/settings/'
     | '/admin/crm/'
+    | '/app/crm/'
     | '/admin/crm/profiles/$profileId'
+    | '/app/crm/profiles/$profileId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/activate'
     | '/forgot-password'
     | '/login'
-    | '/onboarding'
     | '/support'
     | '/terms'
     | '/ai'
+    | '/app'
     | '/charts'
     | '/dashboard'
     | '/documents'
     | '/notifications'
     | '/savings'
+    | '/tickets'
     | '/videos'
     | '/wallet'
-    | '/invoices'
-    | '/invoices/$invoiceId'
+    | '/admin/agent-slots'
+    | '/admin/agents'
+    | '/admin/ai-models'
+    | '/admin/approval-requests'
     | '/admin/branding'
+    | '/admin/catalogue'
+    | '/admin/contract-limits'
+    | '/admin/contract-templates'
+    | '/admin/electricity-rules'
+    | '/admin/failed-jobs'
+    | '/admin/failed-notifications'
     | '/admin/geography'
+    | '/admin/gift-codes'
     | '/admin/invoices'
-    | '/admin/wallet-receipts'
+    | '/admin/knowledge-bases'
     | '/admin/notifications'
+    | '/admin/policies'
     | '/admin/providers'
+    | '/admin/reconciliation'
     | '/admin/roles'
+    | '/admin/service-targets'
+    | '/admin/staff-teams'
     | '/admin/storage'
+    | '/admin/tickets'
     | '/admin/tos'
+    | '/admin/upload-policies'
     | '/admin/users'
+    | '/admin/vat'
     | '/admin/verification'
+    | '/admin/wallet-receipts'
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin'
+    | '/onboarding'
     | '/register'
     | '/electricity/order'
+    | '/invoices/$invoiceId'
     | '/settings/addresses'
     | '/settings/profile'
     | '/settings/security'
+    | '/settings/team'
     | '/settings/timezone'
     | '/settings/username'
+    | '/admin/crm/corrections'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/electricity'
+    | '/invoices'
     | '/settings'
     | '/admin/crm'
+    | '/app/crm'
     | '/admin/crm/profiles/$profileId'
+    | '/app/crm/profiles/$profileId'
   id:
     | '__root__'
     | '/'
     | '/_app'
+    | '/activate'
     | '/admin'
     | '/forgot-password'
     | '/login'
@@ -544,48 +841,75 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/_app/ai'
+    | '/_app/app'
     | '/_app/charts'
     | '/_app/dashboard'
     | '/_app/documents'
     | '/_app/notifications'
     | '/_app/savings'
+    | '/_app/tickets'
     | '/_app/videos'
     | '/_app/wallet'
-    | '/_app/invoices/'
-    | '/_app/invoices/$invoiceId'
+    | '/admin/agent-slots'
+    | '/admin/agents'
+    | '/admin/ai-models'
+    | '/admin/approval-requests'
     | '/admin/branding'
+    | '/admin/catalogue'
+    | '/admin/contract-limits'
+    | '/admin/contract-templates'
     | '/admin/crm'
+    | '/admin/electricity-rules'
+    | '/admin/failed-jobs'
+    | '/admin/failed-notifications'
     | '/admin/geography'
+    | '/admin/gift-codes'
     | '/admin/invoices'
-    | '/admin/wallet-receipts'
+    | '/admin/knowledge-bases'
     | '/admin/notifications'
+    | '/admin/policies'
     | '/admin/providers'
+    | '/admin/reconciliation'
     | '/admin/roles'
+    | '/admin/service-targets'
+    | '/admin/staff-teams'
     | '/admin/storage'
+    | '/admin/tickets'
     | '/admin/tos'
+    | '/admin/upload-policies'
     | '/admin/users'
+    | '/admin/vat'
     | '/admin/verification'
+    | '/admin/wallet-receipts'
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin/'
+    | '/onboarding/'
     | '/register/'
     | '/_app/electricity/order'
+    | '/_app/invoices/$invoiceId'
     | '/_app/settings/addresses'
     | '/_app/settings/profile'
     | '/_app/settings/security'
+    | '/_app/settings/team'
     | '/_app/settings/timezone'
     | '/_app/settings/username'
+    | '/admin/crm/corrections'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/_app/electricity/'
+    | '/_app/invoices/'
     | '/_app/settings/'
     | '/admin/crm/'
+    | '/app/crm/'
     | '/admin/crm/profiles/$profileId'
+    | '/app/crm/profiles/$profileId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  ActivateRoute: typeof ActivateRoute
   AdminRoute: typeof AdminRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
@@ -593,6 +917,8 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRouteWithChildren
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
+  AppCrmIndexRoute: typeof AppCrmIndexRoute
+  AppCrmProfilesProfileIdRoute: typeof AppCrmProfilesProfileIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -609,6 +935,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/activate': {
+      id: '/activate'
+      path: '/activate'
+      fullPath: '/activate'
+      preLoaderRoute: typeof ActivateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -667,6 +1000,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAiRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/app': {
+      id: '/_app/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppAppRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/charts': {
       id: '/_app/charts'
       path: '/charts'
@@ -702,6 +1042,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSavingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/tickets': {
+      id: '/_app/tickets'
+      path: '/tickets'
+      fullPath: '/tickets'
+      preLoaderRoute: typeof AppTicketsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/videos': {
       id: '/_app/videos'
       path: '/videos'
@@ -716,25 +1063,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWalletRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/invoices/': {
-      id: '/_app/invoices/'
-      path: '/invoices'
-      fullPath: '/invoices/'
-      preLoaderRoute: typeof AppInvoicesIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/invoices/$invoiceId': {
-      id: '/_app/invoices/$invoiceId'
-      path: '/invoices/$invoiceId'
-      fullPath: '/invoices/$invoiceId'
-      preLoaderRoute: typeof AppInvoicesInvoiceIdRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/admin/': {
       id: '/admin/'
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/agent-slots': {
+      id: '/admin/agent-slots'
+      path: '/agent-slots'
+      fullPath: '/admin/agent-slots'
+      preLoaderRoute: typeof AdminAgentSlotsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/agents': {
+      id: '/admin/agents'
+      path: '/agents'
+      fullPath: '/admin/agents'
+      preLoaderRoute: typeof AdminAgentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/ai-models': {
+      id: '/admin/ai-models'
+      path: '/ai-models'
+      fullPath: '/admin/ai-models'
+      preLoaderRoute: typeof AdminAiModelsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/approval-requests': {
+      id: '/admin/approval-requests'
+      path: '/approval-requests'
+      fullPath: '/admin/approval-requests'
+      preLoaderRoute: typeof AdminApprovalRequestsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/branding': {
@@ -744,11 +1105,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBrandingRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/catalogue': {
+      id: '/admin/catalogue'
+      path: '/catalogue'
+      fullPath: '/admin/catalogue'
+      preLoaderRoute: typeof AdminCatalogueRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contract-limits': {
+      id: '/admin/contract-limits'
+      path: '/contract-limits'
+      fullPath: '/admin/contract-limits'
+      preLoaderRoute: typeof AdminContractLimitsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contract-templates': {
+      id: '/admin/contract-templates'
+      path: '/contract-templates'
+      fullPath: '/admin/contract-templates'
+      preLoaderRoute: typeof AdminContractTemplatesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/crm': {
       id: '/admin/crm'
       path: '/crm'
       fullPath: '/admin/crm'
       preLoaderRoute: typeof AdminCrmRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/electricity-rules': {
+      id: '/admin/electricity-rules'
+      path: '/electricity-rules'
+      fullPath: '/admin/electricity-rules'
+      preLoaderRoute: typeof AdminElectricityRulesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/failed-jobs': {
+      id: '/admin/failed-jobs'
+      path: '/failed-jobs'
+      fullPath: '/admin/failed-jobs'
+      preLoaderRoute: typeof AdminFailedJobsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/failed-notifications': {
+      id: '/admin/failed-notifications'
+      path: '/failed-notifications'
+      fullPath: '/admin/failed-notifications'
+      preLoaderRoute: typeof AdminFailedNotificationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/geography': {
@@ -758,6 +1161,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGeographyRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/gift-codes': {
+      id: '/admin/gift-codes'
+      path: '/gift-codes'
+      fullPath: '/admin/gift-codes'
+      preLoaderRoute: typeof AdminGiftCodesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/invoices': {
       id: '/admin/invoices'
       path: '/invoices'
@@ -765,11 +1175,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInvoicesRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/wallet-receipts': {
-      id: '/admin/wallet-receipts'
-      path: '/wallet-receipts'
-      fullPath: '/admin/wallet-receipts'
-      preLoaderRoute: typeof AdminWalletReceiptsRouteImport
+    '/admin/knowledge-bases': {
+      id: '/admin/knowledge-bases'
+      path: '/knowledge-bases'
+      fullPath: '/admin/knowledge-bases'
+      preLoaderRoute: typeof AdminKnowledgeBasesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/notifications': {
@@ -779,11 +1189,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminNotificationsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/policies': {
+      id: '/admin/policies'
+      path: '/policies'
+      fullPath: '/admin/policies'
+      preLoaderRoute: typeof AdminPoliciesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/providers': {
       id: '/admin/providers'
       path: '/providers'
       fullPath: '/admin/providers'
       preLoaderRoute: typeof AdminProvidersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reconciliation': {
+      id: '/admin/reconciliation'
+      path: '/reconciliation'
+      fullPath: '/admin/reconciliation'
+      preLoaderRoute: typeof AdminReconciliationRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/roles': {
@@ -793,11 +1217,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRolesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/service-targets': {
+      id: '/admin/service-targets'
+      path: '/service-targets'
+      fullPath: '/admin/service-targets'
+      preLoaderRoute: typeof AdminServiceTargetsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/staff-teams': {
+      id: '/admin/staff-teams'
+      path: '/staff-teams'
+      fullPath: '/admin/staff-teams'
+      preLoaderRoute: typeof AdminStaffTeamsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/storage': {
       id: '/admin/storage'
       path: '/storage'
       fullPath: '/admin/storage'
       preLoaderRoute: typeof AdminStorageRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tickets': {
+      id: '/admin/tickets'
+      path: '/tickets'
+      fullPath: '/admin/tickets'
+      preLoaderRoute: typeof AdminTicketsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/tos': {
@@ -807,11 +1252,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/upload-policies': {
+      id: '/admin/upload-policies'
+      path: '/upload-policies'
+      fullPath: '/admin/upload-policies'
+      preLoaderRoute: typeof AdminUploadPoliciesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/users': {
       id: '/admin/users'
       path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/vat': {
+      id: '/admin/vat'
+      path: '/vat'
+      fullPath: '/admin/vat'
+      preLoaderRoute: typeof AdminVatRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/verification': {
@@ -820,6 +1279,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/verification'
       preLoaderRoute: typeof AdminVerificationRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/admin/wallet-receipts': {
+      id: '/admin/wallet-receipts'
+      path: '/wallet-receipts'
+      fullPath: '/admin/wallet-receipts'
+      preLoaderRoute: typeof AdminWalletReceiptsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/onboarding/': {
+      id: '/onboarding/'
+      path: '/'
+      fullPath: '/onboarding/'
+      preLoaderRoute: typeof OnboardingIndexRouteImport
+      parentRoute: typeof OnboardingRoute
     }
     '/onboarding/complete': {
       id: '/onboarding/complete'
@@ -856,6 +1329,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppElectricityOrderRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/invoices/': {
+      id: '/_app/invoices/'
+      path: '/invoices'
+      fullPath: '/invoices/'
+      preLoaderRoute: typeof AppInvoicesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/invoices/$invoiceId': {
+      id: '/_app/invoices/$invoiceId'
+      path: '/invoices/$invoiceId'
+      fullPath: '/invoices/$invoiceId'
+      preLoaderRoute: typeof AppInvoicesInvoiceIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/': {
       id: '/_app/settings/'
       path: '/settings'
@@ -884,6 +1371,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsSecurityRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/team': {
+      id: '/_app/settings/team'
+      path: '/settings/team'
+      fullPath: '/settings/team'
+      preLoaderRoute: typeof AppSettingsTeamRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/timezone': {
       id: '/_app/settings/timezone'
       path: '/settings/timezone'
@@ -904,6 +1398,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/crm/'
       preLoaderRoute: typeof AdminCrmIndexRouteImport
       parentRoute: typeof AdminCrmRoute
+    }
+    '/admin/crm/corrections': {
+      id: '/admin/crm/corrections'
+      path: '/corrections'
+      fullPath: '/admin/crm/corrections'
+      preLoaderRoute: typeof AdminCrmCorrectionsRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
+    '/app/crm/': {
+      id: '/app/crm/'
+      path: '/app/crm'
+      fullPath: '/app/crm/'
+      preLoaderRoute: typeof AppCrmIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/onboarding/individual/$profileId': {
       id: '/onboarding/individual/$profileId'
@@ -926,59 +1434,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCrmProfilesProfileIdRouteImport
       parentRoute: typeof AdminCrmRoute
     }
+    '/app/crm/profiles/$profileId': {
+      id: '/app/crm/profiles/$profileId'
+      path: '/app/crm/profiles/$profileId'
+      fullPath: '/app/crm/profiles/$profileId'
+      preLoaderRoute: typeof AppCrmProfilesProfileIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AppRouteChildren {
   AppAiRoute: typeof AppAiRoute
+  AppAppRoute: typeof AppAppRoute
   AppChartsRoute: typeof AppChartsRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppDocumentsRoute: typeof AppDocumentsRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppSavingsRoute: typeof AppSavingsRoute
+  AppTicketsRoute: typeof AppTicketsRoute
   AppVideosRoute: typeof AppVideosRoute
   AppWalletRoute: typeof AppWalletRoute
-  AppInvoicesIndexRoute: typeof AppInvoicesIndexRoute
-  AppInvoicesInvoiceIdRoute: typeof AppInvoicesInvoiceIdRoute
   AppElectricityOrderRoute: typeof AppElectricityOrderRoute
+  AppInvoicesInvoiceIdRoute: typeof AppInvoicesInvoiceIdRoute
   AppSettingsAddressesRoute: typeof AppSettingsAddressesRoute
   AppSettingsProfileRoute: typeof AppSettingsProfileRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
+  AppSettingsTeamRoute: typeof AppSettingsTeamRoute
   AppSettingsTimezoneRoute: typeof AppSettingsTimezoneRoute
   AppSettingsUsernameRoute: typeof AppSettingsUsernameRoute
   AppElectricityIndexRoute: typeof AppElectricityIndexRoute
+  AppInvoicesIndexRoute: typeof AppInvoicesIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAiRoute: AppAiRoute,
+  AppAppRoute: AppAppRoute,
   AppChartsRoute: AppChartsRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppDocumentsRoute: AppDocumentsRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppSavingsRoute: AppSavingsRoute,
+  AppTicketsRoute: AppTicketsRoute,
   AppVideosRoute: AppVideosRoute,
   AppWalletRoute: AppWalletRoute,
-  AppInvoicesIndexRoute: AppInvoicesIndexRoute,
-  AppInvoicesInvoiceIdRoute: AppInvoicesInvoiceIdRoute,
   AppElectricityOrderRoute: AppElectricityOrderRoute,
+  AppInvoicesInvoiceIdRoute: AppInvoicesInvoiceIdRoute,
   AppSettingsAddressesRoute: AppSettingsAddressesRoute,
   AppSettingsProfileRoute: AppSettingsProfileRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,
+  AppSettingsTeamRoute: AppSettingsTeamRoute,
   AppSettingsTimezoneRoute: AppSettingsTimezoneRoute,
   AppSettingsUsernameRoute: AppSettingsUsernameRoute,
   AppElectricityIndexRoute: AppElectricityIndexRoute,
+  AppInvoicesIndexRoute: AppInvoicesIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 interface AdminCrmRouteChildren {
+  AdminCrmCorrectionsRoute: typeof AdminCrmCorrectionsRoute
   AdminCrmIndexRoute: typeof AdminCrmIndexRoute
   AdminCrmProfilesProfileIdRoute: typeof AdminCrmProfilesProfileIdRoute
 }
 
 const AdminCrmRouteChildren: AdminCrmRouteChildren = {
+  AdminCrmCorrectionsRoute: AdminCrmCorrectionsRoute,
   AdminCrmIndexRoute: AdminCrmIndexRoute,
   AdminCrmProfilesProfileIdRoute: AdminCrmProfilesProfileIdRoute,
 }
@@ -988,34 +1511,72 @@ const AdminCrmRouteWithChildren = AdminCrmRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminAgentSlotsRoute: typeof AdminAgentSlotsRoute
+  AdminAgentsRoute: typeof AdminAgentsRoute
+  AdminAiModelsRoute: typeof AdminAiModelsRoute
+  AdminApprovalRequestsRoute: typeof AdminApprovalRequestsRoute
   AdminBrandingRoute: typeof AdminBrandingRoute
+  AdminCatalogueRoute: typeof AdminCatalogueRoute
+  AdminContractLimitsRoute: typeof AdminContractLimitsRoute
+  AdminContractTemplatesRoute: typeof AdminContractTemplatesRoute
   AdminCrmRoute: typeof AdminCrmRouteWithChildren
+  AdminElectricityRulesRoute: typeof AdminElectricityRulesRoute
+  AdminFailedJobsRoute: typeof AdminFailedJobsRoute
+  AdminFailedNotificationsRoute: typeof AdminFailedNotificationsRoute
   AdminGeographyRoute: typeof AdminGeographyRoute
+  AdminGiftCodesRoute: typeof AdminGiftCodesRoute
   AdminInvoicesRoute: typeof AdminInvoicesRoute
-  AdminWalletReceiptsRoute: typeof AdminWalletReceiptsRoute
+  AdminKnowledgeBasesRoute: typeof AdminKnowledgeBasesRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminPoliciesRoute: typeof AdminPoliciesRoute
   AdminProvidersRoute: typeof AdminProvidersRoute
+  AdminReconciliationRoute: typeof AdminReconciliationRoute
   AdminRolesRoute: typeof AdminRolesRoute
+  AdminServiceTargetsRoute: typeof AdminServiceTargetsRoute
+  AdminStaffTeamsRoute: typeof AdminStaffTeamsRoute
   AdminStorageRoute: typeof AdminStorageRoute
+  AdminTicketsRoute: typeof AdminTicketsRoute
   AdminTosRoute: typeof AdminTosRoute
+  AdminUploadPoliciesRoute: typeof AdminUploadPoliciesRoute
   AdminUsersRoute: typeof AdminUsersRoute
+  AdminVatRoute: typeof AdminVatRoute
   AdminVerificationRoute: typeof AdminVerificationRoute
+  AdminWalletReceiptsRoute: typeof AdminWalletReceiptsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAgentSlotsRoute: AdminAgentSlotsRoute,
+  AdminAgentsRoute: AdminAgentsRoute,
+  AdminAiModelsRoute: AdminAiModelsRoute,
+  AdminApprovalRequestsRoute: AdminApprovalRequestsRoute,
   AdminBrandingRoute: AdminBrandingRoute,
+  AdminCatalogueRoute: AdminCatalogueRoute,
+  AdminContractLimitsRoute: AdminContractLimitsRoute,
+  AdminContractTemplatesRoute: AdminContractTemplatesRoute,
   AdminCrmRoute: AdminCrmRouteWithChildren,
+  AdminElectricityRulesRoute: AdminElectricityRulesRoute,
+  AdminFailedJobsRoute: AdminFailedJobsRoute,
+  AdminFailedNotificationsRoute: AdminFailedNotificationsRoute,
   AdminGeographyRoute: AdminGeographyRoute,
+  AdminGiftCodesRoute: AdminGiftCodesRoute,
   AdminInvoicesRoute: AdminInvoicesRoute,
-  AdminWalletReceiptsRoute: AdminWalletReceiptsRoute,
+  AdminKnowledgeBasesRoute: AdminKnowledgeBasesRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminPoliciesRoute: AdminPoliciesRoute,
   AdminProvidersRoute: AdminProvidersRoute,
+  AdminReconciliationRoute: AdminReconciliationRoute,
   AdminRolesRoute: AdminRolesRoute,
+  AdminServiceTargetsRoute: AdminServiceTargetsRoute,
+  AdminStaffTeamsRoute: AdminStaffTeamsRoute,
   AdminStorageRoute: AdminStorageRoute,
+  AdminTicketsRoute: AdminTicketsRoute,
   AdminTosRoute: AdminTosRoute,
+  AdminUploadPoliciesRoute: AdminUploadPoliciesRoute,
   AdminUsersRoute: AdminUsersRoute,
+  AdminVatRoute: AdminVatRoute,
   AdminVerificationRoute: AdminVerificationRoute,
+  AdminWalletReceiptsRoute: AdminWalletReceiptsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
@@ -1023,12 +1584,14 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface OnboardingRouteChildren {
   OnboardingCompleteRoute: typeof OnboardingCompleteRoute
+  OnboardingIndexRoute: typeof OnboardingIndexRoute
   OnboardingIndividualProfileIdRoute: typeof OnboardingIndividualProfileIdRoute
   OnboardingLegalProfileIdRoute: typeof OnboardingLegalProfileIdRoute
 }
 
 const OnboardingRouteChildren: OnboardingRouteChildren = {
   OnboardingCompleteRoute: OnboardingCompleteRoute,
+  OnboardingIndexRoute: OnboardingIndexRoute,
   OnboardingIndividualProfileIdRoute: OnboardingIndividualProfileIdRoute,
   OnboardingLegalProfileIdRoute: OnboardingLegalProfileIdRoute,
 }
@@ -1054,6 +1617,7 @@ const RegisterRouteWithChildren = RegisterRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  ActivateRoute: ActivateRoute,
   AdminRoute: AdminRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
@@ -1061,6 +1625,8 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRouteWithChildren,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
+  AppCrmIndexRoute: AppCrmIndexRoute,
+  AppCrmProfilesProfileIdRoute: AppCrmProfilesProfileIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

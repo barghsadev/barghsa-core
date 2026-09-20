@@ -1,0 +1,544 @@
+import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
+import { randomUUID } from 'node:crypto';
+import type { NotificationTemplateResult } from './notification-template.service.js';
+import { startHttpFixture } from '../test/http-fixture.js';
+
+let http: Awaited<ReturnType<typeof startHttpFixture>>;
+const headers: Record<string, Record<string, string>> = {};
+const sessions: Record<string, { sessionId: string; csrfToken: string; userId: string }> = {};
+const grant = JSON.stringify(['admin:notifications:edit']);
+const actions = ['create', 'update', 'publish', 'unpublish', 'delete', 'test-send'] as const;
+type Action = (typeof actions)[number];
+
+beforeAll(async () => {
+  http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  await http.pool.query(
+    `INSERT INTO staff_roles(role_id,name,description,permissions)
+     VALUES ('template-editor','Template editor','Fixture',$1),
+            ('template-viewer','Template viewer','Fixture','[]')`,
+    [grant]
+  );
+  for (const user of ['editor', 'editor-two', 'viewer']) {
+    const id = `template-${user}`;
+    await http.pool.query(
+      "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,'test-only',true)",
+      [id, `${id}@example.test`]
+    );
+    await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [
+      id,
+      user === 'viewer' ? 'template-viewer' : 'template-editor',
+    ]);
+    const session = randomUUID(),
+      csrf = randomUUID();
+    sessions[user] = { sessionId: session, csrfToken: csrf, userId: id };
+    await http.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+       VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())`,
+      [session, id, csrf, randomUUID()]
+    );
+    headers[user] = {
+      Cookie: `barghsa_session=${session}`,
+      'X-CSRF-Token': csrf,
+      'Content-Type': 'application/json',
+    };
+  }
+}, 40000);
+afterAll(async () => {
+  await http?.close();
+}, 15000);
+beforeEach(async () => {
+  for (const actor of Object.values(sessions)) {
+    await http.pool.query(
+      "UPDATE sessions SET csrf_token=$2,expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '1 hour',step_up_verified_at=NOW(),revoked_at=NULL WHERE session_id=$1",
+      [actor.sessionId, actor.csrfToken]
+    );
+  }
+  await http.pool.query("DELETE FROM notification_templates WHERE event_key LIKE 'fix.template.%'");
+  await http.pool.query(
+    "DELETE FROM in_app_notifications WHERE recipient_user_id LIKE 'template-%'"
+  );
+  await http.pool.query("DELETE FROM audit_log WHERE user_id LIKE 'template-%'");
+  await http.pool.query("UPDATE staff_roles SET permissions=$1 WHERE role_id='template-editor'", [
+    grant,
+  ]);
+});
+
+async function seed(action: Action, event = `fix.template.${randomUUID()}`) {
+  const id = randomUUID();
+  if (action !== 'create')
+    await http.pool.query(
+      `INSERT INTO notification_templates(id,event_key,channel,locale,body_template,variables,status,is_active,version,created_by,published_at)
+     VALUES ($1,$2,'email','en','Original message','[]',$3,$4,1,'template-editor',CASE WHEN $4 THEN NOW() END)`,
+      [id, event, action === 'unpublish' ? 'active' : 'draft', action === 'unpublish']
+    );
+  if (action === 'test-send')
+    await http.pool.query("UPDATE notification_templates SET channel='in_app' WHERE id=$1", [id]);
+  return { id, event };
+}
+
+for (const locale of ['fa', 'en'])
+  for (const channel of ['email', 'sms', 'in_app']) {
+    it(`previews ${locale} ${channel} with current branding and actual variable semantics`, async () => {
+      await http.pool.query('DELETE FROM brand_config');
+      await http.pool.query(`INSERT INTO brand_config(config,version,status,created_by)
+      VALUES ('{"appTitle":"Published preview","primaryColor":"#123456"}',1,'active','template-editor'),
+      ('{"appTitle":"Hidden draft"}',2,'draft','template-editor')`);
+      const response = await fetch(`${http.base}/api/admin/notifications/templates/preview`, {
+        method: 'POST',
+        headers: headers.editor!,
+        body: JSON.stringify({
+          channel,
+          locale,
+          bodyTemplate: '<p>Hello {{user.name}}</p>',
+          variables: ['user.name'],
+          sampleData: { 'user.name': 'A&B' },
+        }),
+      });
+      expect(response.status).toBe(200);
+      const result = (await response.json()) as { body: string };
+      if (channel === 'email') {
+        expect(result.body).toContain('Published preview');
+        expect(result.body).toContain('#123456');
+        expect(result.body).toContain(`dir="${locale === 'fa' ? 'rtl' : 'ltr'}"`);
+        expect(result.body).toContain('<p>Hello A&amp;B</p>');
+        expect(result.body).not.toContain('Hidden draft');
+      } else expect(result.body).toBe('<p>Hello A&B</p>');
+    });
+  }
+function write(action: Action, value: { id: string; event: string }, user = 'editor') {
+  const path =
+    action === 'create'
+      ? ''
+      : `/${value.id}${action === 'publish' || action === 'unpublish' || action === 'test-send' ? `/${action}` : ''}`;
+  return fetch(`${http.base}/api/admin/notifications/templates${path}`, {
+    method: action === 'update' ? 'PUT' : action === 'delete' ? 'DELETE' : 'POST',
+    headers: headers[user]!,
+    body: JSON.stringify(
+      action === 'create'
+        ? {
+            eventKey: value.event,
+            channel: 'email',
+            locale: 'en',
+            bodyTemplate: 'Original message',
+            variables: [],
+          }
+        : action === 'update'
+          ? { bodyTemplate: 'Updated message' }
+          : {}
+    ),
+  });
+}
+async function snapshot() {
+  return {
+    inbox: (
+      await http.pool.query(
+        "SELECT * FROM in_app_notifications WHERE recipient_user_id LIKE 'template-%' ORDER BY id"
+      )
+    ).rows,
+    templates: (
+      await http.pool.query(
+        "SELECT * FROM notification_templates WHERE event_key LIKE 'fix.template.%' ORDER BY id"
+      )
+    ).rows,
+    audits: (
+      await http.pool.query(
+        "SELECT * FROM audit_log WHERE user_id LIKE 'template-%' AND event LIKE 'notification_template_%' ORDER BY id"
+      )
+    ).rows,
+  };
+}
+async function waitForLocks(count: number) {
+  await expect
+    .poll(
+      async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock'"
+            )
+          ).rows[0].count
+        ),
+      { timeout: 3000 }
+    )
+    .toBeGreaterThanOrEqual(count);
+}
+
+for (const action of actions) {
+  it(`${action}: denies a caller without the template capability`, async () => {
+    const value = await seed(action),
+      before = await snapshot();
+    expect((await write(action, value, 'viewer')).status).toBe(403);
+    expect(await snapshot()).toEqual(before);
+  });
+  it(`${action}: persists a mutation audit in the same transaction`, async () => {
+    const value = await seed(action);
+    const response = await write(action, value);
+    expect(response.status).toBe(action === 'create' ? 201 : action === 'delete' ? 204 : 200);
+    const state = await snapshot();
+    expect(state.audits).toHaveLength(1);
+    expect(state.audits[0].user_id).toBe('template-editor');
+    const metadata = JSON.parse(state.audits[0].metadata);
+    expect(metadata).toMatchObject({ sessionId: sessions.editor!.sessionId, stepUpVerified: true });
+    expect(metadata.stepUpVerifiedAt).toBe(
+      (
+        await http.pool.query('SELECT step_up_verified_at FROM sessions WHERE session_id=$1', [
+          sessions.editor!.sessionId,
+        ])
+      ).rows[0].step_up_verified_at.toISOString()
+    );
+    expect(state.audits[0].correlation_id).toBe(response.headers.get('x-correlation-id'));
+    expect(state.audits[0].metadata).not.toContain(sessions.editor!.csrfToken);
+    expect(state.audits[0].event).toBe(
+      `notification_template_${{ create: 'created', update: 'updated', publish: 'published', unpublish: 'unpublished', delete: 'deleted', 'test-send': 'test_sent' }[action]}`
+    );
+  });
+  for (const change of ['expiry', 'csrf', 'step-up'] as const) {
+    it(`${action}: rejects ${change} changed after guards while waiting for staff grants`, async () => {
+      const value = await seed(action),
+        before = await snapshot();
+      const blocker = await http.pool.connect();
+      let pending: Promise<Response> | undefined;
+      try {
+        await blocker.query('BEGIN');
+        await blocker.query(
+          "UPDATE staff_roles SET permissions=permissions WHERE role_id='template-editor'"
+        );
+        const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+        pending = write(action, value);
+        await expect
+          .poll(
+            async () =>
+              Number(
+                (
+                  await http.pool.query(
+                    "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND $1=ANY(pg_blocking_pids(pid)) AND query LIKE '%FOR SHARE OF ur,r%'",
+                    [pid]
+                  )
+                ).rows[0].count
+              ),
+            { timeout: 3000 }
+          )
+          .toBe(1);
+        const assignment =
+          change === 'expiry'
+            ? "expires_at=NOW()-INTERVAL '1 second'"
+            : change === 'csrf'
+              ? "csrf_token='changed-after-guard'"
+              : "step_up_verified_at=NOW()-INTERVAL '1 day'";
+        await http.pool.query(`UPDATE sessions SET ${assignment} WHERE session_id=$1`, [
+          sessions.editor!.sessionId,
+        ]);
+        await blocker.query('COMMIT');
+        expect((await pending).status).toBe(change === 'expiry' ? 401 : 403);
+        expect(await snapshot()).toEqual(before);
+      } finally {
+        await blocker.query('ROLLBACK');
+        blocker.release();
+        await pending;
+      }
+    });
+  }
+  if (action === 'create' || action === 'test-send')
+    for (const change of ['expiry', 'csrf', 'step-up'] as const) {
+      it(`${action}: rolls back template, inbox and audit when ${change} changes before commit`, async () => {
+        const value = await seed(action),
+          before = await snapshot();
+        const assignment =
+          change === 'expiry'
+            ? "expires_at=NOW()-INTERVAL '1 second'"
+            : change === 'csrf'
+              ? "csrf_token='changed-at-audit'"
+              : "step_up_verified_at=NOW()-INTERVAL '1 day'";
+        await http.pool.query(
+          `CREATE OR REPLACE FUNCTION invalidate_template_session() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN UPDATE sessions SET ${assignment} WHERE session_id='${sessions.editor!.sessionId}'; RETURN NEW; END $$; CREATE TRIGGER invalidate_template_session BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION invalidate_template_session()`
+        );
+        try {
+          expect((await write(action, value)).status).toBe(change === 'expiry' ? 401 : 403);
+          expect(await snapshot()).toEqual(before);
+        } finally {
+          await http.pool.query('DROP TRIGGER invalidate_template_session ON audit_log');
+        }
+      });
+    }
+  it(`${action}: rolls back state when its audit fails`, async () => {
+    const value = await seed(action),
+      before = await snapshot();
+    await http.pool.query(
+      "CREATE OR REPLACE FUNCTION reject_template_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fixture audit failure'; END $$; CREATE TRIGGER reject_template_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_template_audit()"
+    );
+    try {
+      expect((await write(action, value)).status).toBe(500);
+      expect(await snapshot()).toEqual(before);
+    } finally {
+      await http.pool.query('DROP TRIGGER reject_template_audit ON audit_log');
+    }
+  });
+  it(`${action}: rejects a capability revoked while the write waits`, async () => {
+    const value = await seed(action),
+      before = await snapshot();
+    const blocker = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query('LOCK TABLE notification_templates IN SHARE MODE');
+      await blocker.query(
+        "UPDATE staff_roles SET permissions='[]' WHERE role_id='template-editor'"
+      );
+      pending = write(action, value);
+      await waitForLocks(1);
+      await blocker.query('COMMIT');
+      expect((await pending).status).toBe(403);
+      expect(await snapshot()).toEqual(before);
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await pending;
+    }
+  });
+}
+
+it('serializes competing draft creation by different editors', async () => {
+  const value = await seed('create');
+  const blocker = await http.pool.connect();
+  let pending: Promise<Response>[] = [];
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query('LOCK TABLE notification_templates IN SHARE MODE');
+    pending = [write('create', value), write('create', value, 'editor-two')];
+    await waitForLocks(2);
+    await blocker.query('COMMIT');
+    expect((await Promise.all(pending)).map((response) => response.status).sort()).toEqual([
+      201, 409,
+    ]);
+    expect((await snapshot()).templates).toHaveLength(1);
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await Promise.all(pending);
+  }
+});
+
+it('does not edit a draft that became active while its update waited', async () => {
+  const value = await seed('update');
+  const blocker = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query(
+      "UPDATE notification_templates SET status='active',is_active=true,published_at=NOW() WHERE id=$1",
+      [value.id]
+    );
+    pending = write('update', value);
+    await waitForLocks(1);
+    await blocker.query('COMMIT');
+    expect((await pending).status).toBe(400);
+    const state = await snapshot();
+    expect(state.templates[0].body_template).toBe('Original message');
+    expect(state.templates[0].status).toBe('active');
+    expect(state.audits).toHaveLength(0);
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await pending;
+  }
+});
+
+it('keeps published content immutable through replacement and unpublication', async () => {
+  const value = await seed('create');
+  const created = await write('create', value);
+  expect(created.status).toBe(201);
+  const original = (await created.json()) as NotificationTemplateResult;
+  expect(original.version).toBe(1);
+  const first = { id: original.id, event: value.event };
+  const published = await write('publish', first);
+  expect(published.status).toBe(200);
+  expect(await published.json()).toMatchObject({ version: 1, supersedesVersion: null });
+  const replacement = await write('create', value);
+  expect(replacement.status).toBe(201);
+  const draft = (await replacement.json()) as NotificationTemplateResult;
+  expect(draft.id).not.toBe(original.id);
+  expect(draft.version).toBe(2);
+  expect((await write('create', value)).status).toBe(409);
+  expect((await write('update', first)).status).toBe(400);
+  expect((await write('delete', first)).status).toBe(400);
+  const second = { id: draft.id, event: value.event };
+  expect((await write('update', second)).status).toBe(200);
+  const secondPublished = await write('publish', second);
+  expect(secondPublished.status).toBe(200);
+  expect(await secondPublished.json()).toMatchObject({ version: 2, supersedesVersion: 1 });
+  const history = (await snapshot()).templates;
+  expect(history.find((row) => row.id === first.id)).toMatchObject({
+    status: 'archived',
+    version: 1,
+    supersedes_version: null,
+    body_template: 'Original message',
+    is_active: false,
+  });
+  expect(history.find((row) => row.id === second.id)).toMatchObject({
+    status: 'active',
+    version: 2,
+    supersedes_version: 1,
+    body_template: 'Updated message',
+    is_active: true,
+  });
+  expect((await write('unpublish', second)).status).toBe(200);
+  for (const row of [first, second]) {
+    expect((await write('update', row)).status).toBe(400);
+    expect((await write('delete', row)).status).toBe(400);
+    expect((await write('publish', row)).status).toBe(400);
+  }
+  const next = await write('create', value);
+  expect(next.status).toBe(201);
+  expect(((await next.json()) as NotificationTemplateResult).version).toBe(3);
+  expect((await snapshot()).templates.filter((row) => row.status === 'archived')).toHaveLength(2);
+});
+
+for (const action of ['update', 'publish', 'delete'] as const) {
+  it(`${action}: rejects a legacy draft that was previously published`, async () => {
+    const value = await seed('update');
+    await http.pool.query('UPDATE notification_templates SET published_at=NOW() WHERE id=$1', [
+      value.id,
+    ]);
+    const before = await snapshot();
+    expect((await write(action, value)).status).toBe(400);
+    expect(await snapshot()).toEqual(before);
+  });
+}
+
+it('commits a failed delivery outcome before returning its channel error', async () => {
+  const value = await seed('update');
+  expect((await write('test-send', value)).status).toBe(400);
+  const state = await snapshot();
+  expect(state.templates[0].last_test_status).toBe('failed');
+  expect(state.inbox).toHaveLength(0);
+  expect(state.audits).toHaveLength(1);
+  expect(JSON.parse(state.audits[0].metadata)).toMatchObject({
+    templateId: value.id,
+    version: 1,
+    status: 'failed',
+    destinationKind: 'email',
+    deliveredTo: null,
+  });
+});
+
+it('rejects template tests without current step-up or CSRF proof', async () => {
+  const value = await seed('test-send');
+  const before = await snapshot();
+  const missingCsrf = { ...headers.editor! };
+  delete missingCsrf['X-CSRF-Token'];
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/notifications/templates/${value.id}/test-send`, {
+        method: 'POST',
+        headers: missingCsrf,
+        body: '{}',
+      })
+    ).status
+  ).toBe(403);
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='template-editor'"
+  );
+  try {
+    expect((await write('test-send', value)).status).toBe(403);
+    expect(await snapshot()).toEqual(before);
+  } finally {
+    await http.pool.query(
+      "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='template-editor'"
+    );
+  }
+});
+
+for (const [kind, channel, destination] of [
+  ['email', 'email', 'secondary-template@example.test'],
+  ['mobile', 'sms', '+989121234567'],
+] as const) {
+  it(`requires current verified ${kind} proof before a template self-test can reach delivery`, async () => {
+    // No active providers: an eligible destination reaches a controlled delivery failure.
+    await http.pool.query('DELETE FROM email_provider_configs');
+    await http.pool.query('DELETE FROM sms_provider_configs');
+    const value = await seed('update');
+    await http.pool.query('UPDATE notification_templates SET channel=$2 WHERE id=$1', [
+      value.id,
+      channel,
+    ]);
+    await http.pool.query(`UPDATE users SET ${kind}=$1 WHERE user_id='template-editor'`, [
+      destination,
+    ]);
+    const send = () =>
+      fetch(`${http.base}/api/admin/notifications/templates/${value.id}/test-send`, {
+        method: 'POST',
+        headers: headers.editor!,
+        body: JSON.stringify({ destination }),
+      });
+    const before = await snapshot();
+    try {
+      expect((await send()).status).toBe(403);
+      expect(await snapshot()).toEqual(before);
+      await http.pool.query(
+        `INSERT INTO account_login_identifiers(user_id,kind,destination,verified_at)
+         VALUES ('template-editor',$1,$2,NOW())`,
+        [kind, destination]
+      );
+      expect((await send()).status).toBe(503);
+      const delivered = await snapshot();
+      expect(delivered.templates[0].last_test_status).toBe('failed');
+      expect(delivered.audits).toHaveLength(1);
+      await http.pool.query(
+        `DELETE FROM account_login_identifiers WHERE user_id='template-editor' AND kind=$1`,
+        [kind]
+      );
+      expect((await send()).status).toBe(403);
+      expect(await snapshot()).toEqual(delivered);
+    } finally {
+      await http.pool.query(`UPDATE users SET ${kind}=NULL WHERE user_id='template-editor'`);
+      await http.pool.query(
+        `DELETE FROM account_login_identifiers WHERE user_id='template-editor' AND kind=$1`,
+        [kind]
+      );
+    }
+  });
+}
+
+for (const field of ['bodyTemplate', 'subject'])
+  for (const content of ['{{}}', '}} {{name}} {{', '{{user..name}}', '{{constructor}}']) {
+    it(`rejects invalid ${field} before creating a template: ${content}`, async () => {
+      const value = await seed('create');
+      const response = await fetch(`${http.base}/api/admin/notifications/templates`, {
+        method: 'POST',
+        headers: headers.editor!,
+        body: JSON.stringify({
+          eventKey: value.event,
+          channel: 'email',
+          locale: 'en',
+          bodyTemplate: 'Valid body',
+          variables: ['name', 'user..name', 'constructor'],
+          [field]: content,
+        }),
+      });
+      expect(response.status).toBe(400);
+      expect((await snapshot()).templates).toEqual([]);
+      expect((await snapshot()).audits).toEqual([]);
+    });
+  }
+it('revalidates the retained subject when a draft update removes an allowed variable', async () => {
+  const value = await seed('update');
+  await http.pool.query(
+    "UPDATE notification_templates SET subject='Hello {{name}}',variables='[\"name\"]' WHERE id=$1",
+    [value.id]
+  );
+  const before = await snapshot();
+  const response = await fetch(`${http.base}/api/admin/notifications/templates/${value.id}`, {
+    method: 'PUT',
+    headers: headers.editor!,
+    body: JSON.stringify({ variables: [] }),
+  });
+  expect(response.status).toBe(400);
+  expect(await snapshot()).toEqual(before);
+});
+it('rejects publishing an invalid legacy draft before replacing the active template', async () => {
+  const value = await seed('publish');
+  await http.pool.query("UPDATE notification_templates SET subject='{{}}' WHERE id=$1", [value.id]);
+  const before = await snapshot();
+  expect((await write('publish', value)).status).toBe(400);
+  expect(await snapshot()).toEqual(before);
+});

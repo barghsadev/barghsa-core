@@ -1,0 +1,16 @@
+[Unit]
+Description=Barghsa isolated PostgreSQL restore exercise
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=postgres
+Group=postgres
+UMask=0077
+WorkingDirectory=/var/lib/barghsa-backup
+Environment="PATH=/opt/barghsa-backup/.venv/bin:/usr/lib/postgresql/16/bin:/usr/bin:/bin"
+EnvironmentFile=/etc/barghsa/backup.env
+ExecStart=/opt/barghsa-backup/verify-restore.sh
+TimeoutStartSec=65min
+TimeoutStopSec=90s

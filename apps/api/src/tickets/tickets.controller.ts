@@ -1,3 +1,4 @@
+import { ticketListQuery } from './ticket-input.js';
 import {
   Body,
   Controller,
@@ -5,24 +6,25 @@ import {
   Get,
   Patch,
   Param,
+  ParseUUIDPipe,
   Query,
   HttpCode,
   HttpException,
   Logger,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger'
-import { TicketsService, type ListTicketsOptions } from './tickets.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
+} from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { TicketsService } from './tickets.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 
 @ApiTags('Tickets')
 @Controller('api/tickets')
 @UseGuards(SessionAuthGuard)
 export class TicketsController {
-  private readonly logger = new Logger(TicketsController.name)
+  private readonly logger = new Logger(TicketsController.name);
 
   constructor(private readonly ticketsService: TicketsService) {}
 
@@ -36,37 +38,57 @@ export class TicketsController {
   @HttpCode(201)
   @RateLimit({ namespace: 'tickets:create:user', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Create a support ticket' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['subject', 'body'],
+      additionalProperties: false,
+      properties: {
+        subject: { type: 'string', minLength: 1, maxLength: 200 },
+        body: { type: 'string', minLength: 1, maxLength: 10000 },
+        category: { type: 'string', enum: ['general', 'billing', 'orders'], default: 'general' },
+        priority: { type: 'string', enum: ['normal', 'high'], default: 'normal' },
+        profileId: { type: 'string', format: 'uuid', nullable: true },
+        relatedEntityType: {
+          type: 'string',
+          enum: ['order', 'contract', 'invoice'],
+          nullable: true,
+        },
+        relatedEntityId: { type: 'string', minLength: 1, maxLength: 512, nullable: true },
+        attachments: {
+          type: 'array',
+          maxItems: 5,
+          nullable: true,
+          items: { type: 'string', minLength: 1, maxLength: 512 },
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 201, description: 'Ticket created.' })
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async createTicket(
-    @Body() body: {
-      subject: string
-      body: string
-      profileId?: string
-      relatedEntityType?: 'order' | 'contract' | 'invoice'
-      relatedEntityId?: string
-      priority?: 'normal' | 'high'
+    @Body()
+    body: {
+      subject: string;
+      body: string;
+      category?: 'general' | 'billing' | 'orders';
+      profileId?: string;
+      relatedEntityType?: 'order' | 'contract' | 'invoice';
+      relatedEntityId?: string;
+      priority?: 'normal' | 'high';
       /** Storage keys of previously uploaded files. */
-      attachments?: string[]
+      attachments?: string[];
     },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const userId = req.session.userId
+    const userId = req.session.userId;
 
-    const ticket = await this.ticketsService.createTicket(userId, {
-      subject: body.subject,
-      body: body.body,
-      profileId: body.profileId ?? null,
-      relatedEntityType: body.relatedEntityType ?? null,
-      relatedEntityId: body.relatedEntityId ?? null,
-      priority: body.priority ?? 'normal',
-      attachments: body.attachments ?? null,
-    })
+    const ticket = await this.ticketsService.createTicket(userId, body, req.session);
 
-    this.logger.log(`Ticket ${ticket.id} created for user ${userId}`)
-    return ticket
+    this.logger.log(`Ticket ${ticket.id} created for user ${userId}`);
+    return ticket;
   }
 
   /**
@@ -79,10 +101,18 @@ export class TicketsController {
   @RateLimit({ namespace: 'tickets:list:user', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'List user tickets' })
   @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1)' })
-  @ApiQuery({ name: 'limit', required: false, description: 'Items per page (default: 20, max: 100)' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Items per page (default: 20, max: 100)',
+  })
   @ApiQuery({ name: 'status', required: false, description: 'Filter by status' })
   @ApiQuery({ name: 'search', required: false, description: 'Search in subject and body' })
-  @ApiQuery({ name: 'sortBy', required: false, description: 'Sort column (created_at, updated_at, subject, status, priority)' })
+  @ApiQuery({
+    name: 'sortBy',
+    required: false,
+    description: 'Sort column (created_at, updated_at, subject, status, priority)',
+  })
   @ApiQuery({ name: 'sortOrder', required: false, description: 'Sort order (asc or desc)' })
   @ApiResponse({ status: 200, description: 'Paginated ticket list.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
@@ -93,22 +123,12 @@ export class TicketsController {
     @Query('search') search?: string,
     @Query('sortBy') sortBy?: string,
     @Query('sortOrder') sortOrder?: 'asc' | 'desc',
-    @Req() req?: AuthenticatedRequest,
+    @Req() req?: AuthenticatedRequest
   ) {
-    const options: Partial<ListTicketsOptions> = {}
-    if (page !== undefined) {
-      const parsed = Number(page)
-      if (Number.isFinite(parsed)) options.page = parsed
-    }
-    if (limit !== undefined) {
-      const parsed = Number(limit)
-      if (Number.isFinite(parsed)) options.limit = parsed
-    }
-    if (status !== undefined) options.status = status
-    if (search !== undefined) options.search = search
-    if (sortBy !== undefined) options.sortBy = sortBy
-    if (sortOrder !== undefined) options.sortOrder = sortOrder
-    return this.ticketsService.listTickets(req!.session.userId, options)
+    const options = ticketListQuery({ page, limit, status, search, sortBy, sortOrder });
+    return this.ticketsService.readAs(req!.session, false, (client) =>
+      this.ticketsService.listTickets(req!.session.userId, options, client)
+    );
   }
 
   /**
@@ -116,16 +136,31 @@ export class TicketsController {
    *
    * Gets a single ticket detail, scoped to the authenticated user.
    */
+  @Get('options')
+  async creationOptions(
+    @Req() req: AuthenticatedRequest,
+    @Query('profileId') profileId?: string,
+    @Query('recordPage') recordPage?: string
+  ) {
+    return this.ticketsService.readAs(req.session, false, (client) =>
+      this.ticketsService.creationOptions(
+        req.session.userId,
+        profileId,
+        recordPage === undefined ? 1 : Number(recordPage),
+        client
+      )
+    );
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get ticket detail' })
   @ApiResponse({ status: 200, description: 'Ticket detail.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
-  async getTicket(
-    @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    return this.ticketsService.getTicket(id, req.session.userId)
+  async getTicket(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+    return this.ticketsService.readAs(req.session, false, (client) =>
+      this.ticketsService.getTicket(id, req.session.userId, client)
+    );
   }
 
   /**
@@ -140,11 +175,17 @@ export class TicketsController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async updateTicketStatus(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: { status: string },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    return this.ticketsService.updateTicketStatus(id, req.session.userId, body.status, req.session.isAdmin)
+    return this.ticketsService.updateTicketStatus(
+      id,
+      req.session.userId,
+      body?.status,
+      false,
+      req.session
+    );
   }
 
   /**
@@ -158,10 +199,12 @@ export class TicketsController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async listComments(
-    @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest
   ) {
-    return this.ticketsService.listComments(id, req.session.userId, req.session.isAdmin)
+    return this.ticketsService.readAs(req.session, false, (client) =>
+      this.ticketsService.listComments(id, req.session.userId, false, client)
+    );
   }
 
   /**
@@ -169,7 +212,7 @@ export class TicketsController {
    *
    * Adds a comment to a ticket. The user must own the ticket.
    * Customers can only add public comments.
-   * Staff can add internal notes (visibility: 'internal').
+   * Staff use the separate staff endpoint for internal notes.
    */
   @Post(':id/comments')
   @HttpCode(201)
@@ -180,21 +223,29 @@ export class TicketsController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async addComment(
-    @Param('id') id: string,
-    @Body() body: {
-      body: string
-      visibility?: 'public' | 'internal'
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body()
+    body: {
+      body: string;
+      visibility?: 'public' | 'internal';
     },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    // Non-admin users cannot add internal notes
-    const visibility = body.visibility ?? 'public'
-    if (visibility === 'internal' && !req.session.isAdmin) {
+    // Internal notes belong only to the staff endpoint.
+    const visibility = body?.visibility ?? 'public';
+    if (visibility === 'internal') {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can add internal notes' },
-        403,
-      )
+        403
+      );
     }
-    return this.ticketsService.addComment(id, req.session.userId, body.body, visibility, req.session.isAdmin)
+    return this.ticketsService.addComment(
+      id,
+      req.session.userId,
+      body?.body,
+      visibility,
+      false,
+      req.session
+    );
   }
 }

@@ -3,7 +3,7 @@
 **Status:** Accepted  
 **Date:** 2026-08-24  
 **Deciders:** Platform Engineering Team  
-**Dependencies:** T-02.02.01, T-02.02.02, T-02.02.03  
+**Dependencies:** T-02.02.01, T-02.02.02, T-02.02.03
 
 ## Context
 
@@ -17,20 +17,20 @@ All primary keys use **UUIDv7** (RFC 9562) via a custom `uuidv7` column type bac
 
 **UUIDv7 benefits over UUIDv4:**
 
-| Aspect | UUIDv4 | UUIDv7 |
-|---|---|---|
-| Sort order | Random | Time-ordered (by ms) |
-| B-tree index locality | Poor — random inserts fragment pages | Good — new values cluster in time order |
-| Index page splits | Frequent | Reduced |
-| Sequential scan performance | No ordering benefit | Roughly insert-order |
-| Collision resistance | 122 random bits | 74 random bits (sufficient) |
-| Timestamp extraction | Not possible | 48-bit ms timestamp embedded |
+| Aspect                      | UUIDv4                               | UUIDv7                                  |
+| --------------------------- | ------------------------------------ | --------------------------------------- |
+| Sort order                  | Random                               | Time-ordered (by ms)                    |
+| B-tree index locality       | Poor — random inserts fragment pages | Good — new values cluster in time order |
+| Index page splits           | Frequent                             | Reduced                                 |
+| Sequential scan performance | No ordering benefit                  | Roughly insert-order                    |
+| Collision resistance        | 122 random bits                      | 74 random bits (sufficient)             |
+| Timestamp extraction        | Not possible                         | 48-bit ms timestamp embedded            |
 
 UUIDv7 provides the distribution benefits of UUIDs (not trivially enumerable like sequential integers, avoids B-tree index fragmentation that plagues UUIDv4 in large tables) while exposing approximate creation time through the embedded timestamp — a trade-off accepted for index locality.
 
 **Implementation:** `packages/db/src/types.ts` — `uuidv7()` column builder with `DEFAULT uuid_generate_v7()`. The default is generated inside PostgreSQL via the `uuid_generate_v7()` function; client-side generation is not used at this layer but could be added for offline scenarios.
 
-**Migration:** `packages/db/drizzle/0000_init_uuidv7_function.sql` creates the `uuid_generate_v7()` PL/pgSQL function using `clock_timestamp()` to obtain the current wall-clock time on each invocation. Multiple calls may share the same millisecond (depending on clock resolution); uniqueness is provided probabilistically by the random bits, and values from different milliseconds are time-ordered.
+**Migration:** `packages/db/drizzle/production/0080_complete_schema.sql` creates the `uuid_generate_v7()` PL/pgSQL function using `clock_timestamp()` to obtain the current wall-clock time on each invocation. Multiple calls may share the same millisecond (depending on clock resolution); uniqueness is provided probabilistically by the random bits, and values from different milliseconds are time-ordered.
 
 ### 2. UTC Timestamps with `timestamptz`
 
@@ -40,7 +40,7 @@ All timestamp columns use PostgreSQL `timestamp with time zone` (`timestamptz`),
 - **Mode:** `'date'` — returns native JavaScript `Date` objects.
 - **Timezone metadata:** Business/display timezone is stored **per record** where needed (e.g. a `timezone` column on the customer or account record), not in the timestamp column itself.
 - **Always UTC:** Applications read/write in UTC; timezone conversion happens at the display layer only.
-- **Default:** `created_at` has `DEFAULT now()` via `defaultNow()`. `updated_at` uses `$onUpdate(() => new Date())` for ORM-level auto-stamping.
+- **Default:** `created_at` has `DEFAULT now()` via `defaultNow()`. `updated_at` uses `$onUpdate(() => new Date())` for ORM writes and the `modify_updated_at()` database trigger for raw updates that leave the timestamp unchanged. The shared trigger preserves explicit new timestamps for audit and import writers; existing domain-specific triggers retain their previous behavior.
 
 **Rationale:** Storing timestamps with timezone offsets in the column is error-prone and makes queries, joins, and comparisons fragile. UTC is the canonical representation; timezone conversion is a presentation concern.
 
@@ -86,15 +86,17 @@ Rates, percentages, coefficients, and non-currency quantities use **`numeric(20,
 
 ### 7. Base Columns Convention
 
-Every domain table includes these three base columns, provided automatically by the `createTable()` factory:
+The standard mutable-domain shape includes these three columns, provided by `createTable()`:
 
-| Column | Type | Default | Description |
-|---|---|---|---|
-| `id` | `uuid` (UUIDv7) | `uuid_generate_v7()` | Primary key, time-sortable |
-| `created_at` | `timestamptz` | `now()` | Set on INSERT, never updated |
-| `updated_at` | `timestamptz` | `now()` + `$onUpdate` | Updated by Drizzle ORM on qualifying writes (not raw SQL outside the ORM) |
+| Column       | Type            | Default               | Description                                    |
+| ------------ | --------------- | --------------------- | ---------------------------------------------- |
+| `id`         | `uuid` (UUIDv7) | `uuid_generate_v7()`  | Primary key, time-sortable                     |
+| `created_at` | `timestamptz`   | `now()`               | Set on INSERT, never updated                   |
+| `updated_at` | `timestamptz`   | `now()` + `$onUpdate` | Updated by ORM writers or the database trigger |
 
 **Implementation:** `packages/db/src/base-table.ts` — `createTable()` spreads `baseColumns` into every table definition.
+
+**Existing deviation:** 38 current schema tables omit at least one standard field. These include authentication records with named keys, composite-key joins, append-only events, lookup/configuration rows and wallets keyed by profile. This does not satisfy the literal universal base-column requirement. Preserve existing identities and immutable history until a separate compatibility migration or an approved requirement exception resolves each case. Timestamp coverage is complete for current tables that already declare `updated_at`.
 
 ### 8. Column Naming Convention
 
@@ -105,6 +107,7 @@ Every domain table includes these three base columns, provided automatically by 
 ## Consequences
 
 **Positive:**
+
 - Consistent type system across all schemas reduces cognitive load and review effort.
 - UUIDv7 avoids the B-tree index fragmentation that plagues UUIDv4 in large tables.
 - `bigint` for IRR avoids decimal rounding errors and is faster than `numeric`.
@@ -113,10 +116,11 @@ Every domain table includes these three base columns, provided automatically by 
 - UTC-only timestamps simplify querying, indexing, and cross-timezone aggregation.
 
 **Negative:**
+
 - `bigint` amounts require explicit formatting at the presentation layer (no built-in currency formatting from the database).
 - UUIDv7 primary keys are larger than `serial`/`bigserial` (16 bytes vs 4/8 bytes), increasing index size slightly.
 - `numeric(20, 6)` returns strings in JavaScript, requiring conversion before arithmetic operations.
-- ORM-level `$onUpdate` for `updated_at` does not cover raw SQL writes outside the ORM — a future trigger-based approach (`modify_updated_at()`) should complement it.
+- Migration `0133_database_updated_at` installs `modify_updated_at()` on current application tables missing timestamp-trigger coverage. Existing domain-specific triggers remain unchanged. New mutable tables must attach this trigger in their own migration. The trigger stamps row updates with the database clock when the timestamp is unchanged; explicit writer timestamps remain authoritative. It does not backfill existing rows.
 
 ## Compliance
 

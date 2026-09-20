@@ -2,18 +2,22 @@ import type { Redis } from 'ioredis';
 import type { RateLimitResult, RateLimitLogger } from './types.js';
 import { PostgresRateLimiterStore } from './postgres-rate-limiter.js';
 
+// Keep increment and expiry in one server operation. A client disconnect between
+// separate commands must not leave a counter without an expiry.
+const INCREMENT_WITH_EXPIRY = `
+local count = redis.call('INCR', KEYS[1])
+local ttl = redis.call('PTTL', KEYS[1])
+if ttl < 0 then
+  redis.call('PEXPIRE', KEYS[1], ARGV[1])
+  ttl = tonumber(ARGV[1])
+end
+return {count, ttl}
+`;
+
 /**
- * A rate-limiter store that tries Redis first and falls back to PostgreSQL.
- *
- * This is the primary high-level store used by the NestJS guard and
- * application code.  It wraps:
- *
- * 1. A **Redis store** (fast, ephemeral) — used when `redis` is available.
- * 2. A **PostgreSQL store** (durable, slower) — used as fallback when
- *    Redis is unavailable, and always used for security-critical counters.
- *
- * Redis loss NEVER allows an unbounded rate limit — the PostgreSQL store
- * always provides a safety net.
+ * PostgreSQL records every admission. Redis may reject exhausted quotas without
+ * a database write, but it can never authorize a request by itself. Losing or
+ * replacing Redis cannot erase spent durable quota; database errors fail closed.
  */
 export class CompositeRateLimiterStore {
   private pgStore: PostgresRateLimiterStore;
@@ -32,24 +36,29 @@ export class CompositeRateLimiterStore {
   /**
    * Increment a general rate-limit counter.
    *
-   * Tries Redis first; falls back to PostgreSQL on any Redis error.
+   * Redis accelerates rejection; every admission still requires a durable write.
    */
-  async increment(
-    key: string,
-    limit: number,
-    windowMs: number,
-  ): Promise<RateLimitResult> {
+  async increment(key: string, limit: number, windowMs: number): Promise<RateLimitResult> {
+    let cached: RateLimitResult | undefined;
     if (this.redis) {
       try {
-        return await this.incrementRedis(key, limit, windowMs);
+        cached = await this.incrementRedis(key, limit, windowMs);
+        if (!cached.allowed) return cached;
       } catch (err) {
         this.logger?.warn(
-          '[CompositeRateLimiter] Redis increment failed, falling back to PostgreSQL',
-          err,
+          '[CompositeRateLimiter] Redis increment failed, using PostgreSQL quota',
+          err
         );
       }
     }
-    return this.pgStore.increment(key, limit, windowMs);
+    const durable = await this.pgStore.increment(key, limit, windowMs);
+    if (!cached) return durable;
+    return {
+      allowed: durable.allowed,
+      remaining: Math.min(durable.remaining, cached.remaining),
+      limit,
+      resetMs: durable.allowed ? Math.max(durable.resetMs, cached.resetMs) : durable.resetMs,
+    };
   }
 
   /**
@@ -58,11 +67,7 @@ export class CompositeRateLimiterStore {
    * Always writes to PostgreSQL (authoritative).  Optionally also updates
    * Redis for fast reads, but the PostgreSQL write always happens first.
    */
-  async incrementSecurity(
-    key: string,
-    limit: number,
-    windowMs: number,
-  ): Promise<RateLimitResult> {
+  async incrementSecurity(key: string, limit: number, windowMs: number): Promise<RateLimitResult> {
     // PostgreSQL first — it's the authoritative source for security counters
     const result = await this.pgStore.incrementSecurity(key, limit, windowMs);
 
@@ -119,22 +124,25 @@ export class CompositeRateLimiterStore {
   // -----------------------------------------------------------------------
 
   /**
-   * Increment using Redis `INCR` + `EXPIRE`.
+   * Atomically increment and assign an expiry using a parameterized Redis script.
    * Returns the current count and window state.
    */
   private async incrementRedis(
     key: string,
     limit: number,
-    windowMs: number,
+    windowMs: number
   ): Promise<RateLimitResult> {
     const redis = this.redis!;
-    const count = await redis.incr(key);
-    let ttl = await redis.pttl(key);
-
-    // First increment in a new window — set expiry
-    if (count === 1 || ttl <= 0) {
-      await redis.pexpire(key, windowMs);
-      ttl = windowMs;
+    const reply: unknown = await redis.eval(INCREMENT_WITH_EXPIRY, 1, key, windowMs);
+    if (!Array.isArray(reply) || reply.length !== 2) {
+      throw new Error('Redis rate-limit reply is invalid');
+    }
+    const [count, ttl] = reply;
+    if (typeof count !== 'number' || !Number.isSafeInteger(count) || count <= 0) {
+      throw new Error('Redis rate-limit count is invalid');
+    }
+    if (typeof ttl !== 'number' || !Number.isSafeInteger(ttl) || ttl < 0) {
+      throw new Error('Redis rate-limit TTL is invalid');
     }
 
     const allowed = count <= limit;
@@ -154,7 +162,7 @@ export class CompositeRateLimiterStore {
     key: string,
     count: number,
     limit: number,
-    windowMs: number,
+    windowMs: number
   ): Promise<void> {
     const redisKey = `security:${key}`;
     await this.redis!.setex(redisKey, Math.ceil(windowMs / 1000), String(count));

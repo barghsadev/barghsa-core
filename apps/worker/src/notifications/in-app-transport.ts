@@ -1,9 +1,16 @@
-import { getDbPool } from '@barghsa/db'
+import {
+  defaultInboxContent,
+  defaultInboxLink,
+  renderTemplate,
+} from '@barghsa/shared/notifications';
+export { relativeLinkRoute } from '@barghsa/shared/notifications';
+import { getDbPool } from '@barghsa/db';
+import type { QueryPool } from './channel-scheduling.js';
 import type {
   INotificationTransport,
   NotificationSendPayload,
   NotificationSendResult,
-} from '@barghsa/shared/notifications'
+} from '@barghsa/shared/notifications';
 
 /**
  * In-app notification transport adapter (E-05, T-05.02.01).
@@ -15,8 +22,8 @@ import type {
  * (it cannot be disabled), complementing the async email/SMS providers.
  *
  * Mapping from the dispatch payload to the table row:
- * - `profile_id`  ← payload.profileId (the recipient profile — always present
- *   on an outbox row; the table is profile-scoped, not user-scoped).
+ * - `profile_id`  ← payload.profileId (optional profile context; explicit account
+ *   recipients remain private even when they have no customer profile).
  * - `type`        ← payload.eventKey (drives icons & routing).
  * - `title_i18n_key` / `body_i18n_key` ← derived from the event type as
  *   `notifications.<eventKey>.title` / `.body`. This is a documented
@@ -35,7 +42,7 @@ import type {
  * delivery failure — the row must persist for in-app to count as delivered).
  */
 export class InAppNotificationTransport implements INotificationTransport {
-  readonly channel = 'in_app' as const
+  readonly channel = 'in_app' as const;
 
   /**
    * @param pool Optional query pool override for tests; defaults to the shared
@@ -44,18 +51,70 @@ export class InAppNotificationTransport implements INotificationTransport {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(private readonly pool: any = null) {}
 
-  async send(payload: NotificationSendPayload): Promise<NotificationSendResult> {
-    if (!payload.profileId) {
-      throw new Error('in_app transport requires a profileId recipient')
+  async send(
+    payload: NotificationSendPayload,
+    transaction?: QueryPool
+  ): Promise<NotificationSendResult> {
+    if (!payload.profileId && !payload.recipientId) {
+      throw new Error('in_app transport requires a profile or account recipient');
     }
 
-    const pool = this.pool ?? getDbPool()
-    const linkRoute = relativeLinkRoute(payload.payload)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const pool = transaction ?? this.pool ?? getDbPool();
+    const deliveryKey = payload.outboxId
+      ? `outbox:${payload.outboxId}`
+      : `transport:${payload.idempotencyKey}`;
+    const recipient = payload.recipientId === payload.profileId ? null : payload.recipientId;
+    const existing = await pool.query(
+      `SELECT id FROM in_app_notifications WHERE delivery_key=$1
+      AND profile_id IS NOT DISTINCT FROM $2::uuid AND recipient_user_id IS NOT DISTINCT FROM $3::text`,
+      [deliveryKey, payload.profileId, recipient]
+    );
+    if (existing.rows[0]) return { status: 'delivered', providerRef: existing.rows[0].id };
+    const content = defaultInboxContent(payload.eventKey, payload.payload);
+    const templates = await pool.query(
+      `SELECT locale,subject,body_template,variables FROM notification_templates
+      WHERE event_key=$1 AND channel='in_app' AND status='active' AND is_active=true`,
+      [payload.eventKey]
+    );
+    for (const template of templates.rows) {
+      if (template.locale !== 'fa' && template.locale !== 'en')
+        throw new Error('Invalid inbox template locale');
+      if (!Array.isArray(template.variables) || typeof template.body_template !== 'string')
+        throw new Error('Invalid inbox template');
+      const names = template.variables.map((item: unknown) =>
+        typeof item === 'string'
+          ? item.trim()
+          : item && typeof item === 'object' && 'name' in item && typeof item.name === 'string'
+            ? item.name.trim()
+            : ''
+      );
+      if (names.some((name: string) => !name)) throw new Error('Invalid inbox template variables');
+      const title = renderTemplate(
+        template.subject ?? content[template.locale as 'fa' | 'en'].title,
+        names,
+        { data: payload.payload, escapeValues: false }
+      );
+      const body = renderTemplate(template.body_template, names, {
+        data: payload.payload,
+        escapeValues: false,
+      });
+      if (
+        title.missing.length ||
+        title.unknown.length ||
+        body.missing.length ||
+        body.unknown.length
+      )
+        throw new Error('Inbox template data incomplete');
+      content[template.locale as 'fa' | 'en'] = { title: title.output, body: body.output };
+    }
+    const linkRoute = defaultInboxLink(payload.eventKey, payload.payload);
+
     const inserted: { rows: Array<{ id: string }> } = await pool.query(
       `INSERT INTO in_app_notifications
-         (profile_id, type, title_i18n_key, body_i18n_key, params, link_route)
-       VALUES ($1, $2, $3, $4, $5, $6)
+         (profile_id, type, title_i18n_key, body_i18n_key, params, link_route, delivery_key,recipient_user_id,localized_content)
+       VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9)
+       ON CONFLICT (delivery_key) DO UPDATE SET delivery_key=EXCLUDED.delivery_key
+       WHERE in_app_notifications.profile_id IS NOT DISTINCT FROM EXCLUDED.profile_id AND in_app_notifications.type=EXCLUDED.type AND in_app_notifications.recipient_user_id IS NOT DISTINCT FROM EXCLUDED.recipient_user_id
        RETURNING id`,
       [
         payload.profileId,
@@ -64,76 +123,17 @@ export class InAppNotificationTransport implements INotificationTransport {
         `notifications.${payload.eventKey}.body`,
         JSON.stringify(payload.payload ?? {}),
         linkRoute,
-      ],
-    )
+        deliveryKey,
+        recipient,
+        JSON.stringify(content),
+      ]
+    );
 
-    const id = inserted.rows[0]?.id
+    const id = inserted.rows[0]?.id;
     if (!id) {
-      throw new Error('in_app transport: insert did not return a row id')
+      throw new Error('in_app transport: insert did not return a row id');
     }
 
-    return { providerRef: id, status: 'delivered' }
+    return { providerRef: id, status: 'delivered' };
   }
-}
-
-/**
- * Fixed origin used only to detect URL-parser host hijacks such as
- * `/\\evil.example`. It is not a real application host.
- */
-const LINK_ROUTE_ORIGIN = 'https://barghsa.invalid'
-
-const LINK_ROUTE_MAX_LENGTH = 2048
-
-/** Backslash, ASCII/Unicode whitespace, and control/format characters. */
-const LINK_ROUTE_UNSAFE_CHARS = /[\\\s\p{Cc}\p{Cf}]/u
-
-function decodeUntilStable(value: string): string | null {
-  let current = value
-  for (let i = 0; i < 5; i += 1) {
-    let next: string
-    try {
-      next = decodeURIComponent(current)
-    } catch {
-      return null
-    }
-    if (next === current) return current
-    current = next
-  }
-  return null
-}
-
-function isInternalPathname(pathname: string): boolean {
-  return pathname.startsWith('/') && !pathname.startsWith('//') && !pathname.includes('://')
-}
-
-/**
- * Persist only same-origin relative paths so a crafted payload cannot
- * turn the notification-center click into an open redirect.
- *
- * Browsers treat `\` as `/` in special-scheme URLs, so `/\\evil.example`
- * parses as the protocol-relative host `//evil.example`. Percent-encoded
- * backslashes (`/%5cevil.example`) are decoded before the same checks.
- */
-export function relativeLinkRoute(payload: Record<string, unknown> | undefined): string | null {
-  const candidate = payload?.link_route
-  if (typeof candidate !== 'string') return null
-  if (candidate.length === 0 || candidate.length > LINK_ROUTE_MAX_LENGTH) return null
-  if (!candidate.startsWith('/')) return null
-  if (LINK_ROUTE_UNSAFE_CHARS.test(candidate)) return null
-
-  const decoded = decodeUntilStable(candidate)
-  if (decoded === null || LINK_ROUTE_UNSAFE_CHARS.test(decoded)) return null
-  if (!isInternalPathname(decoded)) return null
-
-  let parsed: URL
-  try {
-    parsed = new URL(candidate, LINK_ROUTE_ORIGIN)
-  } catch {
-    return null
-  }
-  if (parsed.origin !== new URL(LINK_ROUTE_ORIGIN).origin) return null
-  if (parsed.username !== '' || parsed.password !== '') return null
-  if (!isInternalPathname(parsed.pathname)) return null
-
-  return candidate
 }

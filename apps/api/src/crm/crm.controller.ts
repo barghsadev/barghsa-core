@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Controller,
   Get,
@@ -7,18 +8,20 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { CrmService, type CrmListUsersFilters } from './crm.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+  BadRequestException,
+} from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CrmService, crmSortFields, type CrmListUsersFilters } from './crm.service.js';
+import { z } from 'zod';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 @ApiTags('CRM')
 @Controller('api/crm')
 @UseGuards(SessionAuthGuard)
 export class CrmController {
-  private readonly logger = new Logger(CrmController.name)
+  private readonly logger = new Logger(CrmController.name);
 
   constructor(private readonly crmService: CrmService) {}
 
@@ -77,7 +80,7 @@ export class CrmController {
     name: 'sort',
     required: false,
     description: 'Sort column. Default: createdAt.',
-    enum: ['createdAt'],
+    enum: crmSortFields,
   })
   @ApiQuery({
     name: 'order',
@@ -102,6 +105,18 @@ export class CrmController {
               mobile: { type: 'string', nullable: true },
               registrationDate: { type: 'string' },
               lastLogin: { type: 'string', nullable: true },
+              profiles: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'string' },
+                    profileType: { type: 'string' },
+                    status: { type: 'string' },
+                    title: { type: 'string', nullable: true },
+                  },
+                },
+              },
               profileCount: { type: 'integer' },
               hasIndividualProfile: { type: 'boolean' },
               hasLegalProfile: { type: 'boolean' },
@@ -127,58 +142,76 @@ export class CrmController {
     @Query('sort') sort: string | undefined,
     @Query('order') order: string | undefined,
     @Req() req: AuthenticatedRequest,
+    @Query('staffOnly') staffOnly?: string
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'crm:read');
 
     if (!isAdmin) {
-      this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to access CRM`,
-      )
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to access CRM`);
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Staff or admin role required',
         },
-        403,
-      )
+        403
+      );
     }
 
     // Build filters object from query params
-    const filters: CrmListUsersFilters = {}
+    const query = z
+      .object({
+        sort: z.enum(crmSortFields).optional(),
+        order: z.enum(['asc', 'desc']).optional(),
+        type: z.enum(['INDIVIDUAL', 'LEGAL']).optional(),
+        verification: z.enum(['VERIFIED', 'UNVERIFIED', 'PENDING', 'DISABLED']).optional(),
+        staffOnly: z.enum(['true', 'false']).optional(),
+        search: z.string().max(256).optional(),
+        cursor: z.string().max(4096).optional(),
+        limit: z.string().regex(/^\d+$/).optional(),
+      })
+      .safeParse({ sort, order, type, verification, staffOnly, search, cursor, limit });
+    if (!query.success) throw new BadRequestException('Invalid CRM list query');
+    const filters: CrmListUsersFilters = {};
+    if (staffOnly === 'true') filters.staffOnly = true;
     if (type === 'INDIVIDUAL' || type === 'LEGAL') {
-      filters.type = type
+      filters.type = type;
     }
-    if (verification === 'VERIFIED' || verification === 'UNVERIFIED' || verification === 'PENDING' || verification === 'DISABLED') {
-      filters.verification = verification
+    if (
+      verification === 'VERIFIED' ||
+      verification === 'UNVERIFIED' ||
+      verification === 'PENDING' ||
+      verification === 'DISABLED'
+    ) {
+      filters.verification = verification;
     }
     if (search) {
-      filters.search = search
+      filters.search = search;
     }
     if (dateFrom) {
-      filters.dateFrom = dateFrom
+      filters.dateFrom = dateFrom;
     }
     if (dateTo) {
-      filters.dateTo = dateTo
+      filters.dateTo = dateTo;
     }
-    if (sort === 'createdAt') {
-      filters.sort = sort
+    if (query.data.sort) {
+      filters.sort = query.data.sort;
     }
     if (order === 'asc' || order === 'desc') {
-      filters.order = order
+      filters.order = order;
     }
 
-    const parsedLimit = limit ? parseInt(limit, 10) : 20
+    const parsedLimit = limit ? parseInt(limit, 10) : 20;
     const result = await this.crmService.listUsers(
       cursor ?? null,
       isNaN(parsedLimit) ? 20 : parsedLimit,
-      filters,
-    )
+      filters
+    );
 
     this.logger.debug(
-      `CRM users list: returned ${result.users.length} user(s), hasMore=${result.hasMore}`,
-    )
+      `CRM users list: returned ${result.users.length} user(s), hasMore=${result.hasMore}`
+    );
 
-    return result
+    return result;
   }
 }

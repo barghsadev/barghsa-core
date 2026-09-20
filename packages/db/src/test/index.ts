@@ -5,5 +5,5 @@
  * into package internals.
  */
 
-export { createIsolatedTestDb, dropTestSchema } from './testDb.js'
-export type { IsolatedTestDb } from './testDb.js'
+export { createIsolatedTestDb, dropTestSchema } from './testDb.js';
+export type { IsolatedTestDb } from './testDb.js';

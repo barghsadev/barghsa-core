@@ -1,3 +1,5 @@
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -10,26 +12,26 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   DualApprovalService,
   DUAL_APPROVAL_ACTION_TYPES,
   type ApprovalRequestDto,
-} from './dual-approval.service.js'
-import { APPROVAL_REVIEW_REASON_MAX_LENGTH } from '@barghsa/shared/finance'
+} from './dual-approval.service.js';
+import { APPROVAL_REVIEW_REASON_MAX_LENGTH } from '@barghsa/shared/finance';
 
 /** Zod schema for the reject-request body (reason is mandatory). */
 export const RejectApprovalRequestSchema = z.object({
   reason: z.string().trim().min(1).max(APPROVAL_REVIEW_REASON_MAX_LENGTH),
-})
+});
 
 /** Human-readable labels for the supported queue statuses. */
-const QUEUE_STATUSES = ['pending', 'approved', 'rejected'] as const
+const QUEUE_STATUSES = ['pending', 'approved', 'rejected'] as const;
 
 /**
  * Dual-approval workflow controller (S-09.07, T-09.07.02).
@@ -37,58 +39,54 @@ const QUEUE_STATUSES = ['pending', 'approved', 'rejected'] as const
  * Admin surface for the approval-request lifecycle:
  *
  * - `POST /api/admin/approval-requests` — initiate a request (only for
- *   actions exceeding the configured threshold, T-09.07.01);
+ *   actions meeting or exceeding the configured threshold, T-09.07.01);
  * - `GET /api/admin/approval-requests` — queue view (default: pending);
  * - `POST /api/admin/approval-requests/:id/approve` — second-user approval;
  * - `POST /api/admin/approval-requests/:id/reject` — second-user rejection
  *   with a mandatory reason.
  *
  * The whole surface is gated by the S-09.07 capability
- * `admin:financial:edit`. Today the session model exposes only `isAdmin`
- * (platform admin); granular staff-role permissions arrive with the role
- * system. Until then the capability maps to a platform admin session,
- * mirroring the threshold config (T-09.07.01) and the S-09.06
- * notification-delivery controllers.
+ * `admin:financial:edit`. Capabilities are read from current database roles.
  */
 @ApiTags('Admin')
 @Controller('api/admin/approval-requests')
-@UseGuards(SessionAuthGuard)
+@UseGuards(SessionAuthGuard, StepUpGuard)
 export class DualApprovalController {
-  private readonly logger = new Logger(DualApprovalController.name)
+  private readonly logger = new Logger(DualApprovalController.name);
 
   constructor(private readonly dualApprovalService: DualApprovalService) {}
 
   /**
    * Permission gate for the S-09.07 dual-approval surface.
    *
-   * Capability `admin:financial:edit` maps to a platform admin session
-   * today; centralized here as a single enforcement point.
+   * Checks `admin:financial:edit` against current database roles.
    */
   private assertFinancialEditPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:financial:edit')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to access the dual-approval surface`,
-      )
+        `Non-admin user ${req.session.userId} attempted to access the dual-approval surface`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required for dual-approval management',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
   /**
    * POST /api/admin/approval-requests
    *
-   * Initiate a dual-approval request for a financial action that exceeds
+   * Initiate a dual-approval request for a financial action that meets or exceeds
    * the configured threshold. If dual approval is disabled or the amount
-   * does not exceed the threshold, the request is rejected (400) — the
+   * is below the threshold, the request is rejected (400) — the
    * workflow can never be triggered for below-threshold actions.
    */
   @Post()
+  @RequiresStepUp()
   @HttpCode(201)
   @ApiOperation({ summary: 'Initiate a dual-approval request (S-09.07)' })
   @ApiBody({
@@ -103,7 +101,7 @@ export class DualApprovalController {
         },
         amount_irr: {
           type: 'integer',
-          description: 'IRR amount of the action (must exceed the configured threshold)',
+          description: 'IRR amount of the action (must meet or exceed the configured threshold)',
         },
         reason: { type: 'string', description: 'Reason for the financial action' },
         details: { type: 'object', description: 'Optional transaction details' },
@@ -116,15 +114,11 @@ export class DualApprovalController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async createApprovalRequest(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ApprovalRequestDto> {
-    this.assertFinancialEditPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.dualApprovalService.createApprovalRequest(
-      rawBody,
-      req.session.userId,
-      ip,
-    )
+    this.assertFinancialEditPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.dualApprovalService.createApprovalRequest(rawBody, req.session, ip);
   }
 
   /**
@@ -145,16 +139,16 @@ export class DualApprovalController {
     @Query('status') status: string | undefined,
     @Query('limit') limit: string | undefined,
     @Query('offset') offset: string | undefined,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ApprovalRequestDto[]> {
-    this.assertFinancialEditPermission(req)
-    const options: Parameters<DualApprovalService['listApprovalRequests']>[0] = {}
+    this.assertFinancialEditPermission(req);
+    const options: Parameters<DualApprovalService['listApprovalRequests']>[0] = {};
     if (status !== undefined) {
-      options.status = status as NonNullable<typeof options.status>
+      options.status = status as NonNullable<typeof options.status>;
     }
-    if (limit !== undefined) options.limit = Number(limit)
-    if (offset !== undefined) options.offset = Number(offset)
-    return this.dualApprovalService.listApprovalRequests(options)
+    if (limit !== undefined) options.limit = Number(limit);
+    if (offset !== undefined) options.offset = Number(offset);
+    return this.dualApprovalService.listApprovalRequests(options);
   }
 
   /**
@@ -164,6 +158,7 @@ export class DualApprovalController {
    * the initiator. Repeated resolution attempts are rejected (409).
    */
   @Post(':id/approve')
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Approve a pending dual-approval request' })
   @ApiParam({ name: 'id', description: 'Approval request ID' })
@@ -174,11 +169,11 @@ export class DualApprovalController {
   @ApiResponse({ status: 409, description: 'Request already resolved' })
   async approveApprovalRequest(
     @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ApprovalRequestDto> {
-    this.assertFinancialEditPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.dualApprovalService.approveApprovalRequest(id, req.session.userId, ip)
+    this.assertFinancialEditPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.dualApprovalService.approveApprovalRequest(id, req.session, ip);
   }
 
   /**
@@ -188,6 +183,7 @@ export class DualApprovalController {
    * different user from the initiator.
    */
   @Post(':id/reject')
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Reject a pending dual-approval request (reason required)' })
   @ApiParam({ name: 'id', description: 'Approval request ID' })
@@ -212,11 +208,11 @@ export class DualApprovalController {
   async rejectApprovalRequest(
     @Param('id') id: string,
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ApprovalRequestDto> {
-    this.assertFinancialEditPermission(req)
+    this.assertFinancialEditPermission(req);
 
-    const parsed = RejectApprovalRequestSchema.safeParse(rawBody)
+    const parsed = RejectApprovalRequestSchema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
         {
@@ -224,16 +220,11 @@ export class DualApprovalController {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'reason is required when rejecting an approval request',
         },
-        400,
-      )
+        400
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.dualApprovalService.rejectApprovalRequest(
-      id,
-      req.session.userId,
-      ip,
-      parsed.data.reason,
-    )
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.dualApprovalService.rejectApprovalRequest(id, req.session, ip, parsed.data.reason);
   }
 }

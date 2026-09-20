@@ -22,10 +22,10 @@
  */
 
 /** Service types that have open items a response target can apply to today. */
-export const SERVICE_RESPONSE_TARGET_TYPES = ['ticket', 'verification_case'] as const
+export const SERVICE_RESPONSE_TARGET_TYPES = ['ticket', 'verification_case'] as const;
 
 /** A service type whose open items are checked against response targets. */
-export type ServiceResponseTargetType = (typeof SERVICE_RESPONSE_TARGET_TYPES)[number]
+export type ServiceResponseTargetType = (typeof SERVICE_RESPONSE_TARGET_TYPES)[number];
 
 /**
  * Admin-configured response targets, keyed by service type.
@@ -33,16 +33,16 @@ export type ServiceResponseTargetType = (typeof SERVICE_RESPONSE_TARGET_TYPES)[n
  * Each value is a target in hours (integer, 1…{@link MAX_SERVICE_RESPONSE_TARGET_HOURS})
  * or `null` when no target is configured for that type.
  */
-export type ServiceResponseTargets = Record<ServiceResponseTargetType, number | null>
+export type ServiceResponseTargets = Record<ServiceResponseTargetType, number | null>;
 
 /** `app_config` key holding the service response targets (T-09.08.01). */
-export const SERVICE_RESPONSE_TARGETS_CONFIG_KEY = 'admin.service_response_targets'
+export const SERVICE_RESPONSE_TARGETS_CONFIG_KEY = 'admin.service_response_targets';
 
 /** Upper bound for a target: 8760 hours = one full year. */
-export const MAX_SERVICE_RESPONSE_TARGET_HOURS = 8760
+export const MAX_SERVICE_RESPONSE_TARGET_HOURS = 8760;
 
 /** Human-readable range description shared by validation messages. */
-export const SERVICE_RESPONSE_TARGET_HOURS_RANGE = `an integer between 1 and ${MAX_SERVICE_RESPONSE_TARGET_HOURS} hours (or null to disable)`
+export const SERVICE_RESPONSE_TARGET_HOURS_RANGE = `an integer between 1 and ${MAX_SERVICE_RESPONSE_TARGET_HOURS} hours (or null to disable)`;
 
 /**
  * Default configuration: every service type has no target configured.
@@ -54,12 +54,12 @@ export const SERVICE_RESPONSE_TARGET_HOURS_RANGE = `an integer between 1 and ${M
 export const DEFAULT_SERVICE_RESPONSE_TARGETS: ServiceResponseTargets = {
   ticket: null,
   verification_case: null,
-}
+};
 
 /** Result of validating a proposed targets map for the admin write path. */
 export interface ServiceResponseTargetsValidationResult {
-  ok: boolean
-  issues: string[]
+  ok: boolean;
+  issues: string[];
 }
 
 /**
@@ -76,7 +76,7 @@ export function isValidServiceResponseTargetHours(raw: unknown): raw is number {
     Number.isSafeInteger(raw) &&
     raw >= 1 &&
     raw <= MAX_SERVICE_RESPONSE_TARGET_HOURS
-  )
+  );
 }
 
 /**
@@ -94,33 +94,35 @@ export function isValidServiceResponseTargetHours(raw: unknown): raw is number {
  * `null` (disabled) on persist.
  */
 export function validateServiceResponseTargets(
-  input: unknown,
+  input: unknown
 ): ServiceResponseTargetsValidationResult {
-  const issues: string[] = []
+  const issues: string[] = [];
 
   if (!input || typeof input !== 'object' || Array.isArray(input)) {
-    return { ok: false, issues: ['Service response targets must be an object'] }
+    return { ok: false, issues: ['Service response targets must be an object'] };
   }
 
-  const o = input as Record<string, unknown>
-  const known = new Set<string>(SERVICE_RESPONSE_TARGET_TYPES)
+  const o = input as Record<string, unknown>;
+  const known = new Set<string>(SERVICE_RESPONSE_TARGET_TYPES);
 
   // Reject unknown keys first so the issue list is complete.
   for (const key of Object.keys(o)) {
     if (!known.has(key)) {
-      issues.push(`Unknown service type '${key}'. Supported types: ${SERVICE_RESPONSE_TARGET_TYPES.join(', ')}`)
+      issues.push(
+        `Unknown service type '${key}'. Supported types: ${SERVICE_RESPONSE_TARGET_TYPES.join(', ')}`
+      );
     }
   }
 
   for (const type of SERVICE_RESPONSE_TARGET_TYPES) {
-    const raw = o[type]
-    if (raw === undefined || raw === null) continue // absent/null → disabled, valid
+    const raw = o[type];
+    if (raw === undefined || raw === null) continue; // absent/null → disabled, valid
     if (!isValidServiceResponseTargetHours(raw)) {
-      issues.push(`${type} target must be ${SERVICE_RESPONSE_TARGET_HOURS_RANGE}`)
+      issues.push(`${type} target must be ${SERVICE_RESPONSE_TARGET_HOURS_RANGE}`);
     }
   }
 
-  return { ok: issues.length === 0, issues }
+  return { ok: issues.length === 0, issues };
 }
 
 /**
@@ -137,14 +139,14 @@ export function validateServiceResponseTargets(
  * corruption is observable).
  */
 export function toServiceResponseTargets(input: unknown): ServiceResponseTargets {
-  const result: ServiceResponseTargets = { ...DEFAULT_SERVICE_RESPONSE_TARGETS }
-  if (!input || typeof input !== 'object' || Array.isArray(input)) return result
-  const o = input as Record<string, unknown>
+  const result: ServiceResponseTargets = { ...DEFAULT_SERVICE_RESPONSE_TARGETS };
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return result;
+  const o = input as Record<string, unknown>;
   for (const type of SERVICE_RESPONSE_TARGET_TYPES) {
     if (isValidServiceResponseTargetHours(o[type])) {
-      result[type] = o[type]
+      result[type] = o[type];
     }
     // absent / null / corrupt → stays null (disabled)
   }
-  return result
+  return result;
 }

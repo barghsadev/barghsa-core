@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "reviewed_sha": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+  "date": "2026-09-08",
+  "scope": "A02 evidence reconciliation. No whole-plan completion or new full-browser/coverage claim.",
+  "verified_records_refreshed": [
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.01",
+      "prior_reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "pnpm-workspace.yaml"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.03",
+      "prior_reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "pnpm-lock.yaml"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.04",
+      "prior_reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "package.json",
+        "README.md",
+        ".github/workflows/ci.yml"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.01.05",
+      "prior_reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "pnpm-workspace.yaml",
+        ".github/workflows/ci.yml"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-04.02.04",
+      "prior_reviewed_sha": "ac900c5fb10c7ee3fd0a64fa8bf1ed339490ae5b",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "docs/adr/002-redis-scope.md"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.01",
+      "prior_reviewed_sha": "6887a78754d12e3c46040ed5988fd6e47390ec25",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "packages/db/src/test/globalSetup.ts"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.02.04",
+      "prior_reviewed_sha": "189e36c927d3bbf09d24a64a28a083a902aae15a",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "package.json",
+        ".github/workflows/ci.yml"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.04.05",
+      "prior_reviewed_sha": "189e36c927d3bbf09d24a64a28a083a902aae15a",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "package.json",
+        ".github/workflows/ci.yml",
+        "apps/web/package.json",
+        "apps/api/package.json",
+        "packages/ui/package.json",
+        "packages/shared/package.json",
+        "packages/i18n/package.json"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.01",
+      "prior_reviewed_sha": "564d14158fb1444dd96ba070c35abd68d03b04b4",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "apps/web/package.json"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-08.01.02",
+      "prior_reviewed_sha": "469a96777f93d9af4606c8aabfd3d462b6fd2b0e",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "apps/web/src/pages/DashboardPage.tsx",
+        "apps/web/src/components/WalletBalanceCard.tsx",
+        "apps/web/src/components/QuickStatusCards.tsx",
+        "apps/web/e2e/admin-settings-live.spec.ts",
+        "apps/web/e2e/profile-switch.spec.ts"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.02.03",
+      "prior_reviewed_sha": "656e91f29c0c4c2fbcc667a03b40be8490b075f6",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "apps/web/src/hooks/useAccountTime.tsx",
+        "apps/web/src/routes/_app/settings/timezone.tsx",
+        "apps/web/e2e/timezone-settings.spec.ts",
+        "apps/web/e2e/finance-timestamps.spec.ts",
+        "apps/web/e2e/team.spec.ts",
+        "apps/web/e2e/tickets.spec.ts",
+        "apps/web/e2e/form-accessibility.spec.ts",
+        "apps/web/e2e/admin-settings-live.spec.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "prior_reviewed_sha": "656e91f29c0c4c2fbcc667a03b40be8490b075f6",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "apps/api/src/public/branding-http.integration.test.ts",
+        "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
+        "apps/web/e2e/admin-settings-live.spec.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-04.01.01",
+      "prior_reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "apps/web/e2e/registration-consent.spec.ts",
+        "apps/web/e2e/admin-settings-live.spec.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-04.01.02",
+      "prior_reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "apps/api/src/auth/auth.service.ts",
+        "apps/web/e2e/registration-consent.spec.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-04.01.03",
+      "prior_reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "apps/web/src/components/TosBanner.tsx",
+        "apps/web/e2e/shell-navigation.spec.ts",
+        "apps/web/e2e/admin-settings-live.spec.ts",
+        "apps/web/src/pages/DashboardLayout.tsx",
+        "apps/web/src/pages/AdminLayout.tsx"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.03.01",
+      "prior_reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "apps/web/e2e/admin-settings-live.spec.ts",
+        "apps/web/e2e/form-accessibility.spec.ts",
+        "apps/api/src/admin/admin.controller.ts"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.03.02",
+      "prior_reviewed_sha": "5b9ac7efd94a9e7dae93135f25c86f9abc30a3df",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "apps/web/e2e/admin-settings-live.spec.ts",
+        "apps/web/e2e/form-accessibility.spec.ts",
+        "apps/api/src/admin/admin.controller.ts"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.02.05",
+      "prior_reviewed_sha": "28a50ef109a6801ae3a6a94b368d1c2a847e184c",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "apps/web/src/hooks/useNumberFormatting.ts",
+        "apps/web/src/pages/WalletPage.tsx",
+        "apps/web/src/pages/InvoicesPage.tsx",
+        "apps/web/src/pages/InvoiceDetailsPage.tsx",
+        "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+        "apps/web/src/components/WalletBalanceCard.tsx",
+        "apps/web/e2e/number-preferences.spec.ts",
+        "apps/web/e2e/admin-settings-live.spec.ts",
+        "apps/web/e2e/notification-numerals.spec.ts",
+        "apps/web/e2e/date-picker-component.spec.ts",
+        "apps/web/e2e/form-accessibility.spec.ts"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.04",
+      "prior_reviewed_sha": "e54515379bd7bb9d1cf0876c0d5ffb87d9cfb21d",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "pnpm-lock.yaml"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-01.03.05",
+      "prior_reviewed_sha": "1bbf2b050981f77430686b2880a18b0d7a654b5a",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "apps/api/src/common/http-exception.filter.ts"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.01.01",
+      "prior_reviewed_sha": "6c435c4518450ceaa64e2aef558061c6ccdffd90",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "packages/db/src/index.ts"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.01.03",
+      "prior_reviewed_sha": "6c435c4518450ceaa64e2aef558061c6ccdffd90",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "packages/db/src/index.ts"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.01.04",
+      "prior_reviewed_sha": "9392159e0986ccabcbbfe4567da8625627ec5ba0",
+      "status": "verified_evidence_refreshed",
+      "changed_paths": [
+        "packages/db/src/index.ts"
+      ]
+    }
+  ],
+  "partial_records_reviewed": 13,
+  "newly_verified_task": "01-platform-infrastructure.md#T-02.01.02",
+  "unchanged_verified_records": 12,
+  "requirement_extract_comparison": "Ten textual differences are only trailing Markdown horizontal rules; no task requirement changed in this refresh.",
+  "fresh_checks": {
+    "database_tests": 47,
+    "database_files": 6,
+    "shared_export_tests": 18,
+    "ui_distribution_tests": 5
+  },
+  "fresh_logs": [
+    "audit/evidence/a02/barghsa-a02-database.log.gz",
+    "audit/evidence/a02/barghsa-a02-shared-exports.log.gz",
+    "audit/evidence/a02/barghsa-a02-ui-exports.log.gz"
+  ],
+  "reused_evidence": "audit/final-repair-checkpoint.json",
+  "current_counts": {
+    "verified": 36,
+    "partial": 12,
+    "pending": 274
+  },
+  "remaining": "Critical domain review and required consumer repairs, strict dependency/eager loading/coverage gaps, historical pending tasks and external prerequisites remain open."
+}

@@ -1,9 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import {
   getDeploymentAllowedExtensions,
   getDeploymentAllowedMimeTypes,
   getDeploymentMaxSizeBytes,
+  getExtensionMimeTypes,
 } from './upload.config.js';
 
 /**
@@ -26,14 +27,12 @@ import {
  * - `maxSizeBytes` — `min(DB max, deployment cap)`. An admin cannot
  *   raise a category's limit beyond the deployment cap.
  *
- * Degraded mode: when no DB policy is active for the category (or the DB
- * is unavailable), the deployment config alone applies — the pre-existing
- * baseline. This is a documented fail-open-to-baseline: the deployment
- * limits are the hard floor, and a DB outage must not freeze all uploads.
- * The DB lookup error is logged for observability.
+ * A successful read with no active policy uses deployment limits. A failed
+ * policy read rejects the operation: deployment limits may be less restrictive
+ * than the unavailable administrator policy.
  *
  * Categories without an admin-configurable policy (`contract`, `general`)
- * always resolve to the deployment config (the admin API only writes
+ * use deployment limits after a successful read (the admin API only writes
  * `document` | `image` | `video`).
  */
 
@@ -67,8 +66,7 @@ export class UploadPolicyResolver {
 
   /**
    * Resolve the effective upload policy for a category (see module docs).
-   * Never throws for a missing policy or a DB outage — deployment limits
-   * always stand.
+   * A missing active policy uses deployment limits. Read failures return 503.
    */
   async resolveEffective(category: string): Promise<EffectiveUploadPolicy> {
     const deploymentExtensions = getDeploymentAllowedExtensions(category);
@@ -84,18 +82,16 @@ export class UploadPolicyResolver {
     try {
       dbPolicy = await this.findActivePolicy(category);
     } catch (error) {
-      // DB outage → deployment baseline. Logged; uploads must not freeze
-      // because the admin config store is temporarily unreachable.
-      this.logger.warn(
-        `Upload policy lookup failed for category "${category}"; falling back to deployment limits: ${String(error)}`,
-      );
+      this.logger.error(`Upload policy lookup failed for category "${category}"`);
+      throw new ServiceUnavailableException('Upload policy is temporarily unavailable', {
+        cause: error,
+      });
     }
 
     if (dbPolicy === null) {
       return {
         ...base,
-        allowedExtensions:
-          deploymentExtensions.length === 0 ? null : [...deploymentExtensions],
+        allowedExtensions: deploymentExtensions.length === 0 ? null : [...deploymentExtensions],
         source: 'deployment',
         policyId: null,
       };
@@ -105,8 +101,8 @@ export class UploadPolicyResolver {
     // policy whose entries all disappeared from the deployment set (e.g.
     // the deployment dropped a format after the policy was written)
     // yields an EMPTY list — which denies every extension (fails closed).
-    const intersected = dbPolicy.allowed_extensions.filter((ext) =>
-      deploymentExtensions.length === 0 || deploymentExtensions.includes(ext),
+    const intersected = dbPolicy.allowed_extensions.filter(
+      (ext) => deploymentExtensions.length === 0 || deploymentExtensions.includes(ext)
     );
 
     return {
@@ -128,7 +124,7 @@ export class UploadPolicyResolver {
           AND (effective_until IS NULL OR effective_until > $2)
         ORDER BY effective_from DESC
         LIMIT 1`,
-      [category, new Date()],
+      [category, new Date()]
     );
     return result.rows[0] ?? null;
   }
@@ -139,10 +135,7 @@ export class UploadPolicyResolver {
 // ---------------------------------------------------------------------------
 
 /** Whether a file name's extension is allowed by an effective policy. */
-export function effectiveAllowsExtension(
-  policy: EffectiveUploadPolicy,
-  fileName: string,
-): boolean {
+export function effectiveAllowsExtension(policy: EffectiveUploadPolicy, fileName: string): boolean {
   if (policy.allowedExtensions === null) return true;
   const dot = fileName.lastIndexOf('.');
   if (dot === -1) return false;
@@ -153,6 +146,18 @@ export function effectiveAllowsExtension(
 /** Whether a (client-claimed) content type is allowed by an effective policy. */
 export function effectiveAllowsMime(policy: EffectiveUploadPolicy, contentType: string): boolean {
   return policy.allowedMimeTypes.includes(contentType);
+}
+
+/** Intersect category MIME limits with the required format for a permitted filename. */
+export function effectiveMimeTypesForFile(
+  policy: EffectiveUploadPolicy,
+  fileName: string
+): string[] {
+  if (!effectiveAllowsExtension(policy, fileName)) return [];
+  // The general category intentionally permits arbitrary extensions.
+  if (policy.allowedExtensions === null) return [...policy.allowedMimeTypes];
+  const types = getExtensionMimeTypes(fileName);
+  return policy.allowedMimeTypes.filter((type) => types.includes(type));
 }
 
 /** Whether a file size is within the effective limit. */

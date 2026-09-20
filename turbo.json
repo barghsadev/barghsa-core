@@ -1,11 +1,17 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [".env", ".env.local"],
+  "globalDependencies": [
+    ".env",
+    ".env.local",
+    "packages/tsconfig/**",
+    "scripts/process-v8-provider.mjs",
+    "scripts/align-process-coverage.mjs"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", ".turbo/**"],
-      "env": ["NODE_ENV", "DATABASE_URL", "REDIS_URL", "CDN_URL"],
+      "outputs": ["dist/**", ".next/**", ".turbo/**", "dist-coverage/**"],
+      "env": ["NODE_ENV", "DATABASE_URL", "REDIS_URL", "CDN_URL", "BARGHSA_BROWSER_COVERAGE"],
       "outputLogs": "new-only"
     },
     "dev": {
@@ -27,13 +33,15 @@
       "dependsOn": ["^build"],
       "outputs": [],
       "outputLogs": "new-only",
-      "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"]
+      "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"],
+      "env": ["BARGHSA_TEST_PREBUILT"]
     },
     "test:coverage": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
       "outputLogs": "new-only",
-      "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"]
+      "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"],
+      "env": ["BARGHSA_TEST_PREBUILT"]
     },
     "format:check": {
       "dependsOn": [],

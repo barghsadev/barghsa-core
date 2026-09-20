@@ -1,25 +1,42 @@
-import { getDbPool } from '@barghsa/db'
-import type { INotificationTransport, NotificationChannel } from '@barghsa/shared/notifications'
-import { leaseOutbox, dispatchOutbox, type OutboxRow, type OutboxReaderOptions } from './outbox-reader.js'
-import { nextRetryDelayMs } from './retry-schedule.js'
-import { writeDeliveryLog, classifyDeliveryError } from './delivery-log.js'
-import { writeDeadLetter } from './dead-letter.js'
-import { sanitizeError } from './error-redact.js'
-import { recordDeliveryAttempt } from './worker-metrics.js'
 import {
-  decideDeliverySchedule,
-  loadDeliveryWindowConfig,
-  type DeliveryWindowConfig,
-} from './delivery-window.js'
+  withReminderDeliveryPolicy,
+  type ReminderDeliveryPolicy,
+} from '../invoices/reminder-delivery-policy.js';
+import { decideDeliverySchedule } from './delivery-window.js';
+import type { QueryPool } from './channel-scheduling.js';
+import type { QueryResultRow } from 'pg';
+import { getDbPool } from '@barghsa/db';
+import type { INotificationTransport, NotificationChannel } from '@barghsa/shared/notifications';
+import {
+  leaseOutbox,
+  dispatchOutbox,
+  normalizeLeaseDurationMs,
+  type OutboxRow,
+  type OutboxReaderOptions,
+  type WorkerNotificationTransport,
+} from './outbox-reader.js';
+import { assertOutboxClaim, OutboxLeaseLost, startOutboxLease } from './outbox-lease.js';
+import {
+  refreshOutboxState,
+  reconcileChannelWindows,
+  terminalJob,
+  type ChannelJob,
+} from './channel-scheduling.js';
+import { nextRetryDelayMs } from './retry-schedule.js';
+import { writeDeliveryLog, classifyDeliveryError } from './delivery-log.js';
+import { writeDeadLetter } from './dead-letter.js';
+import { sanitizeError } from './error-redact.js';
+import { recordDeliveryAttempt } from './worker-metrics.js';
+import { DeliveryOutcomeUnknown, readDeliveryReceipt } from './send-receipt.js';
+import { type DeliveryWindowConfig } from './delivery-window.js';
 import {
   resolveChannelAvailability,
   type ChannelAvailabilityContext,
-  type ChannelSkipReason,
-} from './channel-availability.js'
+} from './channel-availability.js';
 import {
   loadChannelAvailabilityContext,
   EMPTY_AVAILABILITY_CONTEXT,
-} from './channel-availability-loader.js'
+} from './channel-availability-loader.js';
 
 /**
  * Outbox dispatch runner (E-05, T-05.01.02 / T-05.01.03).
@@ -45,97 +62,211 @@ import {
  */
 export interface OutboxRunResult {
   /** Number of outbox rows claimed in this poll. */
-  leased: number
+  leased: number;
   /** Number of rows whose channels all delivered. */
-  delivered: number
+  delivered: number;
   /** Number of rows that failed (or are retrying) at least one channel. */
-  failed: number
+  failed: number;
 }
-
-/** How long a dispatched-but-unconfirmed row stays `sending` before re-claim. */
-const SENDING_LEASE_MS = 30_000
 
 /**
  * Redact + cap a persisted error. Kept as an alias of the shared sanitizer so
  * existing callers (and tests) importing `sanitizeLastError` from this module
  * keep working. See `./error-redact.ts`.
  */
-export const sanitizeLastError = sanitizeError
+export const sanitizeLastError = sanitizeError;
 
 export async function runOutboxPoll(
   options?: OutboxReaderOptions & {
     /** Override the pool for tests. */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    pool?: any
+    pool?: any;
     /** Override the delivery-window config for tests. */
-    deliveryWindow?: DeliveryWindowConfig
+    deliveryWindow?: DeliveryWindowConfig;
     /**
      * Override for the channel-availability gate (T-05.05.02). When omitted,
      * the worker loads the recipient's verified destinations + marketing
      * consent from the DB for every leased row. A caller may inject a
      * resolver/pre-loaded context for deterministic tests.
      */
-    availability?: (row: OutboxRow) => Promise<ChannelAvailabilityContext> | ChannelAvailabilityContext
-  },
-): Promise<OutboxRunResult> {
-  const pool = options?.pool ?? getDbPool()
-  // T-05.03.02: re-check queued rows against the delivery window on every
-  // wake-up and park daytime rows that are currently outside the quiet window
-  // (status→scheduled, scheduled_for→next open) so they are not leased until
-  // the window opens.
-  await reconcileDeliveryWindows(pool, options?.deliveryWindow)
-  const rows = await leaseOutbox(options)
-
-  const result: OutboxRunResult = { leased: rows.length, delivered: 0, failed: 0 }
-  if (rows.length === 0) return result
-
-  for (const row of rows) {
-    // Mark the row as in-flight so it isn't re-claimed mid-dispatch while leased.
-    await pool.query(
-      `UPDATE notification_outbox
-          SET status = 'sending', locked_until = $2, updated_at = NOW()
-        WHERE id = $1`,
-      [row.id, new Date(Date.now() + SENDING_LEASE_MS)],
-    )
-
-    try {
-      // T-05.05.02 — resolve which requested channels are actually available
-      // (verified destinations + marketing consent) before dispatching, so we
-      // never send an external leg the recipient can't or hasn't opted into.
-      const availability =
-        options?.availability?.(row) ?? loadChannelAvailabilityContext(pool, row.id)
-      const ctx = (await availability) ?? EMPTY_AVAILABILITY_CONTEXT
-      const decision = resolveChannelAvailability(row.eventKey, row.channels, ctx)
-      await markSkippedJobs(pool, row, decision.skipped)
-
-      const outcomes = await dispatchOutbox({ ...row, channels: decision.allowed }, options?.transports ?? {})
-      await persistOutcomes(pool, row, outcomes)
-      // A row is "delivered" only when every requested channel delivered.
-      const anyFailed = outcomes.some((o) => o.result.status === 'failed')
-      if (anyFailed) {
-        result.failed += 1
-      } else {
-        result.delivered += 1
-      }
-    } catch (err) {
-      const message = sanitizeLastError(err instanceof Error ? err.message : String(err))
-      await failRow(pool, row, message)
-      // dispatchOutbox threw before any per-channel outcome was recorded, so
-      // mark every requested job consistently with the outbox row (retrying or
-      // failed once attempts are exhausted).
-      await failAllJobs(pool, row, message)
-      result.failed += 1
-    }
+    availability?: (
+      row: OutboxRow
+    ) => Promise<ChannelAvailabilityContext> | ChannelAvailabilityContext;
   }
+): Promise<OutboxRunResult> {
+  const pool = options?.pool ?? getDbPool();
+  // Schedule due external jobs independently from in-app and derive the
+  // aggregate outbox wake-up from the earliest pending channel.
+  await reconcileDeliveryWindows(pool, options?.deliveryWindow);
+  const rows = await leaseOutbox(options);
 
-  return result
+  const result: OutboxRunResult = { leased: rows.length, delivered: 0, failed: 0 };
+  if (rows.length === 0) return result;
+
+  const settled = await Promise.allSettled(
+    rows.map(async (row) => {
+      let lease: Awaited<ReturnType<typeof startOutboxLease>> | undefined;
+      let externalOutcomes: DispatchOutcome[] = [];
+      try {
+        lease = await startOutboxLease(
+          pool,
+          row,
+          normalizeLeaseDurationMs(options?.leaseDurationMs)
+        );
+        const channelJobs: ChannelJob[] = (
+          await pool.query(
+            'SELECT channel,status,attempts,max_attempts,run_after,last_error FROM notification_job WHERE outbox_id=$1',
+            [row.id]
+          )
+        ).rows;
+        const pendingChannels = channelJobs
+          .filter(
+            (job) => !terminalJob(job) && (!job.run_after || new Date(job.run_after) <= new Date())
+          )
+          .map((job) => job.channel);
+        // Recover committed acceptance, or hold an ambiguous send, before
+        // current recipient/channel policy can hide the previous attempt.
+        const recovered: DispatchOutcome[] = [];
+        for (const channel of pendingChannels) {
+          if (channel === 'in_app') continue;
+          try {
+            const receipt = await readDeliveryReceipt(pool, row.id, channel);
+            if (receipt) recovered.push({ channel, result: receipt, latencyMs: null });
+          } catch (error) {
+            if (!(error instanceof DeliveryOutcomeUnknown)) throw error;
+            recovered.push({
+              channel,
+              result: { status: 'failed', providerRef: '' },
+              latencyMs: null,
+              error: error.message,
+              requiresReconciliation: true,
+            });
+          }
+        }
+        externalOutcomes = recovered.slice();
+        const remainingChannels = pendingChannels.filter(
+          (channel) => !recovered.some((outcome) => outcome.channel === channel)
+        );
+        const activeLease = lease;
+        const finish = async (policy: ReminderDeliveryPolicy) => {
+          const deferred: { channel: NotificationChannel; until: Date }[] = [];
+          const policySkipped: { channel: NotificationChannel; reason: string }[] = [];
+          const eligible = remainingChannels.filter((channel) => {
+            if (policy.skipReason) {
+              policySkipped.push({ channel, reason: policy.skipReason });
+              return false;
+            }
+            let until = policy.deferUntil;
+            if (!until && policy.window) {
+              const window = decideDeliverySchedule(
+                row.eventKey,
+                [channel],
+                new Date(),
+                policy.window
+              );
+              if (window.kind === 'schedule') until = window.scheduledFor;
+            }
+            if (until) {
+              deferred.push({ channel, until });
+              return false;
+            }
+            return true;
+          });
+          const availability =
+            eligible.length === 0
+              ? EMPTY_AVAILABILITY_CONTEXT
+              : (options?.availability?.(row) ?? loadChannelAvailabilityContext(pool, row.id));
+          const ctx = (await availability) ?? EMPTY_AVAILABILITY_CONTEXT;
+          const decision = resolveChannelAvailability(row.eventKey, eligible, ctx);
+          const outcomes = [
+            ...recovered,
+            ...(await dispatchOutbox(
+              { ...row, channels: decision.allowed.filter((channel) => channel !== 'in_app') },
+              options?.transports ?? {},
+              activeLease
+            )),
+          ];
+          // A rollback cannot undo an external send. Retain its actual receipt
+          // if recording the combined inbox/outcome transaction needs another try.
+          externalOutcomes = outcomes.slice();
+          if (activeLease.signal.aborted) throw new OutboxLeaseLost();
+          const aggregate = await persistOutcomes(
+            pool,
+            row,
+            outcomes,
+            channelJobs,
+            [...decision.skipped, ...policySkipped],
+            decision.allowed.includes('in_app') ? (options?.transports ?? {}) : undefined,
+            deferred
+          );
+          if (
+            outcomes.some((outcome) => outcome.result.status === 'failed') ||
+            aggregate === 'failed'
+          )
+            result.failed++;
+          else if (aggregate === 'delivered') result.delivered++;
+        };
+        if (remainingChannels.length)
+          await withReminderDeliveryPolicy(pool, row, finish, options?.deliveryWindow);
+        else await finish({});
+      } catch (error) {
+        if (!(error instanceof OutboxLeaseLost)) {
+          const message = sanitizeLastError(error instanceof Error ? error.message : String(error));
+          try {
+            const jobs: ChannelJob[] = (
+              await pool.query(
+                'SELECT channel,status,attempts,max_attempts,run_after,last_error FROM notification_job WHERE outbox_id=$1',
+                [row.id]
+              )
+            ).rows;
+            const due = jobs.filter(
+              (job) =>
+                !terminalJob(job) && (!job.run_after || new Date(job.run_after) <= new Date())
+            );
+            await persistOutcomes(
+              pool,
+              row,
+              due.map(
+                (job) =>
+                  externalOutcomes.find((outcome) => outcome.channel === job.channel) ?? {
+                    channel: job.channel,
+                    result: { status: 'failed', providerRef: '' },
+                    latencyMs: null,
+                    error: message,
+                  }
+              ),
+              jobs
+            );
+          } catch (recordingError) {
+            if (!(recordingError instanceof OutboxLeaseLost)) throw recordingError;
+          }
+        }
+        // A stale claimant never changes current jobs, logs, or aggregate state.
+        result.failed++;
+      } finally {
+        await lease?.stop();
+      }
+    })
+  );
+  const failures = settled.filter(
+    (entry): entry is PromiseRejectedResult => entry.status === 'rejected'
+  );
+  if (failures.length)
+    throw new AggregateError(
+      failures.map((entry) => entry.reason),
+      'Notification persistence failed'
+    );
+
+  return result;
 }
 
 interface DispatchOutcome {
-  channel: NotificationChannel
-  result: { providerRef: string; status: 'delivered' | 'failed' }
+  channel: NotificationChannel;
+  result: { providerRef: string; status: 'delivered' | 'failed' };
   /** Provider round-trip latency in milliseconds for this attempt. */
-  latencyMs: number
+  latencyMs: number | null;
+  error?: string;
+  requiresReconciliation?: boolean;
 }
 
 /**
@@ -150,18 +281,17 @@ interface DispatchOutcome {
  * delivering.
  */
 async function markSkippedJobs(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pool: any,
+  pool: QueryPool,
   row: OutboxRow,
-  skipped: ReadonlyArray<{ channel: 'email' | 'sms'; reason: ChannelSkipReason }>,
+  skipped: ReadonlyArray<{ channel: NotificationChannel; reason: string }>
 ): Promise<void> {
   for (const skip of skipped) {
     await pool.query(
       `UPDATE notification_job
           SET status = 'failed', last_error = $3, updated_at = NOW()
         WHERE outbox_id = $1 AND channel = $2`,
-      [row.id, skip.channel, `skipped: ${skip.reason}`],
-    )
+      [row.id, skip.channel, `skipped: ${skip.reason}`]
+    );
     await writeDeliveryLog(pool, {
       notificationId: row.id,
       channel: skip.channel,
@@ -171,7 +301,7 @@ async function markSkippedJobs(
       latencyMs: null,
       error: `skipped: ${skip.reason}`,
       errorCategory: 'permanent',
-    })
+    });
   }
 }
 
@@ -182,30 +312,41 @@ async function markSkippedJobs(
  * token — use `q(...)` for every statement so the whole per-row persistence is
  * atomic in production, while the fake test pool keeps working unchanged.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function withWorkerTx(pool: any): Promise<{
-  q: (sql: string, params?: unknown[]) => Promise<any>
-  commit: () => Promise<void>
-  rollback: () => Promise<void>
-  release: () => void
+
+async function withWorkerTx(pool: QueryPool): Promise<{
+  q: (
+    sql: string,
+    params?: unknown[]
+  ) => Promise<{ rows: QueryResultRow[]; rowCount?: number | null }>;
+  commit: () => Promise<void>;
+  rollback: () => Promise<void>;
+  release: () => void;
 }> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const client = typeof pool.connect === 'function' ? await pool.connect() : null
+  const client = typeof pool.connect === 'function' ? await pool.connect() : null;
   if (client) {
-    await client.query('BEGIN')
+    try {
+      await client.query('BEGIN');
+    } catch (error) {
+      client.release(true);
+      throw error;
+    }
     return {
       q: (sql, params) => client.query(sql, params),
-      commit: () => client.query('COMMIT'),
-      rollback: () => client.query('ROLLBACK'),
+      commit: async () => {
+        await client.query('COMMIT');
+      },
+      rollback: async () => {
+        await client.query('ROLLBACK');
+      },
       release: () => client.release(),
-    }
+    };
   }
   return {
     q: (sql, params) => pool.query(sql, params),
     commit: async () => undefined,
     rollback: async () => undefined,
     release: () => undefined,
-  }
+  };
 }
 
 /**
@@ -216,29 +357,51 @@ async function withWorkerTx(pool: any): Promise<{
  * to `dead_letter` once its per-type attempt budget is exhausted.
  */
 async function persistOutcomes(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pool: any,
+  pool: QueryPool,
   row: OutboxRow,
   outcomes: DispatchOutcome[],
-): Promise<void> {
-  // All per-row persistence (job status, dead-letter, delivery log, outbox
+  jobs: ChannelJob[],
+  skipped: ReadonlyArray<{ channel: NotificationChannel; reason: string }> = [],
+  localTransports?: Partial<Record<NotificationChannel, WorkerNotificationTransport>>,
+  deferred: ReadonlyArray<{ channel: NotificationChannel; until: Date }> = []
+): Promise<'delivered' | 'failed' | 'pending'> {
+  // All per-row persistence (inbox, job status, dead-letter, delivery log, outbox
   // state) is committed atomically on a pinned client in production.
-  const tx = await withWorkerTx(pool)
-  const q = tx.q
+  const tx = await withWorkerTx(pool);
+  const q = tx.q;
   // Minimal pool-like surface so the shared writers route through the tx.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const qpool = { query: q } as any
+  const qpool: QueryPool = { query: q };
+  let localOutcomes: DispatchOutcome[] = [];
   try {
-    let anyFailed = false
-    const attempts = row.attempts + 1
+    await assertOutboxClaim(qpool, row);
+    if (localTransports) {
+      // The parent row lock fences this write. Renewing through the pool here
+      // would wait on our own transaction, so no lease callback is passed.
+      localOutcomes = await dispatchOutbox(
+        { ...row, channels: ['in_app'] },
+        localTransports,
+        undefined,
+        qpool
+      );
+      outcomes.push(...localOutcomes);
+    }
+    await markSkippedJobs(qpool, row, skipped);
+    for (const item of deferred) {
+      await q(
+        `UPDATE notification_job SET run_after=$3,updated_at=NOW()
+        WHERE outbox_id=$1 AND channel=$2 AND status IN ('queued','retrying')`,
+        [row.id, item.channel, item.until]
+      );
+    }
     for (const outcome of outcomes) {
-      const ok = outcome.result.status === 'delivered'
-      recordDeliveryAttempt(outcome.channel, ok ? 'delivered' : 'failed')
-      if (!ok) anyFailed = true
-      const exhausted = attempts >= row.maxAttempts
+      const job = jobs.find((item) => item.channel === outcome.channel);
+      const attempts = (job?.attempts ?? row.attempts) + 1;
+      const maxAttempts = job?.max_attempts ?? row.maxAttempts;
+      const ok = outcome.result.status === 'delivered';
+      const exhausted = outcome.requiresReconciliation === true || attempts >= maxAttempts;
       // Jittered backoff before the next attempt (null when the budget is spent).
-      const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
-      const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs)
+      const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, maxAttempts);
+      const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs);
       const jobUpdate = await q(
         `UPDATE notification_job
             SET status = $2, provider_ref = $3, attempts = $4, last_error = $5,
@@ -250,22 +413,22 @@ async function persistOutcomes(
           ok ? 'done' : exhausted ? 'dead_letter' : 'retrying',
           ok ? outcome.result.providerRef : null,
           attempts,
-          ok ? null : 'delivery failed',
+          ok ? null : (outcome.error ?? 'delivery failed'),
           outcome.channel,
           runAfter,
-        ],
-      )
+        ]
+      );
       // A job that exhausted its retry budget is copied to the dead-letter queue
       // (T-05.01.06) so the admin panel can triage it (Retry / Resolve / Dismiss).
       // Same transaction as the job status update, so a crash cannot leave a
       // 'dead_letter' job with no dead-letter row.
       if (!ok && exhausted) {
-        const jobId = (jobUpdate.rows as Array<{ id: string }>)[0]?.id
+        const jobId = (jobUpdate.rows as Array<{ id: string }>)[0]?.id;
         if (jobId) {
           // Prefer the outbox row's last sanitized error (set by failRow on a
           // prior attempt) for triage; fall back to a generic description when
           // the transport reported failure without an error message.
-          const cause = row.lastError ?? 'delivery failed'
+          const cause = outcome.error ?? row.lastError ?? 'delivery failed';
           await writeDeadLetter(qpool, {
             outboxId: row.id,
             jobId,
@@ -274,11 +437,11 @@ async function persistOutcomes(
             profileId: row.profileId,
             userId: row.userId,
             attempts,
-            maxAttempts: row.maxAttempts,
+            maxAttempts,
             idempotencyKey: row.idempotencyKey,
             cause,
             errorCategory: classifyDeliveryError(cause),
-          })
+          });
         }
       }
       // Append a delivery log row for this attempt (T-05.01.05). The suspected
@@ -290,179 +453,35 @@ async function persistOutcomes(
         attemptNumber: attempts,
         providerRef: ok ? outcome.result.providerRef : null,
         latencyMs: outcome.latencyMs ?? null,
-        error: ok ? null : 'delivery failed',
-      })
+        error: ok ? null : (outcome.error ?? 'delivery failed'),
+      });
     }
 
-    if (!anyFailed) {
-      await q(
-        `UPDATE notification_outbox
-            SET status = 'delivered', locked_until = NULL, updated_at = NOW()
-          WHERE id = $1`,
-        [row.id],
-      )
-    } else {
-      await failRow(qpool, row, 'delivery failed on one or more channels')
-    }
+    const aggregate = await refreshOutboxState(qpool, row.id);
 
-    await tx.commit()
-    tx.release()
+    await tx.commit();
+    tx.release();
+    for (const outcome of localOutcomes)
+      recordDeliveryAttempt(outcome.channel, outcome.result.status);
+    return aggregate;
   } catch (err) {
-    await tx.rollback()
-    tx.release()
-    throw err
+    await tx.rollback();
+    tx.release();
+    for (const outcome of localOutcomes) recordDeliveryAttempt(outcome.channel, 'failed');
+    throw err;
   }
 }
 
 /**
- * Mark every notification_job row for an outbox row as retrying/dead_letter.
- * Used on the exception path where dispatchOutbox threw before per-channel
- * outcomes could be recorded, so job rows stay consistent with the outbox row.
- */
-async function failAllJobs(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pool: any,
-  row: OutboxRow,
-  safeMessage: string,
-): Promise<void> {
-  // Commit the job updates, all dead-letter rows, and delivery logs atomically
-  // on a pinned client in production (fallback: direct queries for test pool).
-  const tx = await withWorkerTx(pool)
-  const q = tx.q
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const qpool = { query: q } as any
-  try {
-    const attempts = row.attempts + 1
-    const exhausted = attempts >= row.maxAttempts
-    const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
-    const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs)
-    const jobUpdates = await q(
-      `UPDATE notification_job
-          SET status = $2, attempts = $3, last_error = $4, run_after = $5,
-              updated_at = NOW()
-        WHERE outbox_id = $1
-        RETURNING id, channel`,
-      [row.id, exhausted ? 'dead_letter' : 'retrying', attempts, safeMessage || null, runAfter],
-    )
-    // Exception path: exhausted jobs are also copied to the dead-letter queue
-    // (T-05.01.06) so the admin panel can triage them.
-    if (exhausted) {
-      const jobs = jobUpdates.rows as Array<{ id: string; channel: string }>
-      for (const job of jobs) {
-        await writeDeadLetter(qpool, {
-          outboxId: row.id,
-          jobId: job.id,
-          channel: job.channel as NotificationChannel,
-          eventKey: row.eventKey,
-          profileId: row.profileId,
-          userId: row.userId,
-          attempts,
-          maxAttempts: row.maxAttempts,
-          idempotencyKey: row.idempotencyKey,
-          cause: safeMessage || 'dispatch failed',
-          errorCategory: classifyDeliveryError(safeMessage || 'dispatch failed'),
-        })
-      }
-    }
-    // Exception path: dispatch threw before per-channel outcomes were recorded,
-    // so append one delivery log per requested channel describing the failure.
-    for (const channel of row.channels) {
-      recordDeliveryAttempt(channel, 'failed')
-      await writeDeliveryLog(qpool, {
-        notificationId: row.id,
-        channel,
-        delivered: false,
-        attemptNumber: attempts,
-        providerRef: null,
-        latencyMs: null,
-        error: safeMessage || 'dispatch failed',
-      })
-    }
-
-    await tx.commit()
-    tx.release()
-  } catch (err) {
-    await tx.rollback()
-    tx.release()
-    throw err
-  }
-}
-
-/**
- * Mark a row as failed. Retry-eligible rows return to `queued` with a
- * `locked_until` back-off drawn from the T-05.01.03 retry ladder; only
- * exhausted rows become `failed` permanently (their jobs are dead-lettered).
- */
-async function failRow(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pool: any,
-  row: OutboxRow,
-  safeMessage: string,
-): Promise<void> {
-  const attempts = row.attempts + 1
-  const exhausted = attempts >= row.maxAttempts
-  const backoffMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
-  const backoffUntil = backoffMs === null ? null : new Date(Date.now() + backoffMs)
-
-  await pool.query(
-    `UPDATE notification_outbox
-        SET status = $2, attempts = $3, last_error = $4, locked_until = $5,
-            updated_at = NOW()
-      WHERE id = $1`,
-    [
-      row.id,
-      exhausted ? 'failed' : 'queued',
-      attempts,
-      safeMessage || null,
-      backoffUntil,
-    ],
-  )
-}
-
-/**
- * T-05.03.02 — apply the delivery window to queued rows on each worker wake-up.
- *
- * Resolves the admin-configurable window (default 09:00–21:00) and re-checks
- * every `queued` outbox row. A `daytime` row that targets an external channel
- * (email/sms) and is currently outside the window is parked as `scheduled`
- * with `scheduled_for` set to the next window open; `immediate` and in-app-only
- * rows stay `queued` and are leased normally. Rows already `scheduled` for a
- * future boundary are intentionally left untouched — `leaseOutbox` skips them
- * until `scheduled_for` passes, which is the "re-check on wakeup" delivery
- * mechanism. Returns the number of rows re-scheduled this pass.
+ * Apply quiet hours per recipient and channel. Future dates and their captured
+ * windows stay intact; in-app jobs remain immediately runnable. Reconciliation
+ * locks each outbox row briefly so it cannot alter a live worker claim.
  */
 export async function reconcileDeliveryWindows(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pool: any,
-  config?: DeliveryWindowConfig,
+  pool: QueryPool,
+  config?: DeliveryWindowConfig
 ): Promise<number> {
-  const cfg = config ?? (await loadDeliveryWindowConfig(pool))
-  const now = new Date()
-
-  const pending = await pool.query(
-    'SELECT id, event_key, channels FROM notification_outbox WHERE status = $1',
-    ['queued'],
-  )
-  if (pending.rows.length === 0) return 0
-
-  const toSchedule: Array<{ id: string; scheduledFor: Date }> = []
-  for (const row of pending.rows) {
-    const decision = decideDeliverySchedule(row.event_key, row.channels ?? [], now, cfg)
-    if (decision.kind === 'schedule') {
-      toSchedule.push({ id: row.id, scheduledFor: decision.scheduledFor })
-    }
-  }
-  if (toSchedule.length === 0) return 0
-
-  for (const item of toSchedule) {
-    await pool.query(
-      `UPDATE notification_outbox
-          SET status = 'scheduled', scheduled_for = $2, updated_at = NOW()
-        WHERE id = $1 AND status = 'queued'`,
-      [item.id, item.scheduledFor],
-    )
-  }
-  return toSchedule.length
+  return reconcileChannelWindows(pool, config);
 }
 
-export type { OutboxReaderOptions, NotificationChannel, INotificationTransport }
+export type { OutboxReaderOptions, NotificationChannel, INotificationTransport };

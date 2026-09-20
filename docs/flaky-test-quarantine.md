@@ -31,7 +31,7 @@ Every CI run produces a flaky-test report:
 
 - The total number of known flaky tests (active quarantine records) is reported as a CI annotation.
 - The report is displayed in the CI run summary but does not block the PR pipeline by itself — blocking is handled by the production promotion gate.
-- The README's Scheduled quality gates define a nightly flaky-test report job. The CI schedule trigger for nightly runs is tracked in T-05.05.01.
+- The nightly browser workflow runs Firefox, WebKit and both mobile projects, reports observed outcomes and checks the quarantine registry. Other scheduled quality gates remain tracked in T-05.05.01.
 
 ### 4. Quarantine Lifecycle
 
@@ -90,9 +90,32 @@ Quarantine records live in a file at `scripts/quarantine-registry.json`. Each re
 ### CI Reporting
 
 The script `scripts/check-flaky-tests.sh` reads the quarantine registry and reports the
-flaky count. The CI workflow calls this script after the test step.
+active quarantine count. The CI workflow runs it even when preceding tests fail and
+uploads its JSON report. Missing or invalid registries and expired critical records
+fail the check. Expired non-critical records are reported separately.
+
+Owners use `@user` or `@organization/team`; issue links must be GitHub issue URLs.
+Severity is `critical` or `non-critical`. Test paths are normalized repository-relative
+paths; duplicate path/name pairs are rejected. Quarantines must start on or before
+the current UTC date and expire 1–30 days later. Records remain active through their
+expiry date, inclusive.
+
+This report counts registered quarantines. It does not infer flakes from test runner
+results: `observed_runtime_flake_count` is explicitly `null`. An empty registry does
+not prove a run contained no flaky tests. Automatic production promotion remains
+the separate gate described above.
+
+The browser job separately emits Playwright JSON outcomes and an always-uploaded
+count summary. CI enables `failOnFlakyTests`; a failed attempt followed by a passing
+retry still fails that job. A real runner fixture verifies this using the actual
+browser configuration. Missing/malformed browser results, no successful tests,
+runner errors, unexpected outcomes and flakes fail the outcome check. Skipped tests
+are reported separately and are not counted as passes. The registry remains the
+source for known quarantines across runners; browser counts describe that run only.
 
 ## References
 
 - `README.md` — Quality gates section (release-candidate and production-promotion gates reference the flaky-test policy)
 - `.github/workflows/ci.yml` — CI pipeline with flaky-test reporting step
+
+The nightly browser workflow is `.github/workflows/browser-nightly.yml`. Each browser project runs in its own job against a locally served production build and disposable test fixtures. It retains failure traces and outcome/quarantine reports for 14 days. The workflow also supports manual dispatch. A local workflow file does not prove that GitHub has executed it; deployment of this configuration and remote run evidence are separate from local verification.

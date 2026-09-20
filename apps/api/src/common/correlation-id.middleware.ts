@@ -43,9 +43,7 @@ export class CorrelationIdMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
     const inboundId = req.headers['x-correlation-id'] as string | undefined;
     const correlationId =
-      inboundId !== undefined && validateCorrelationId(inboundId)
-        ? inboundId
-        : uuidv7();
+      inboundId !== undefined && validateCorrelationId(inboundId) ? inboundId : uuidv7();
 
     // Store in AsyncLocalStorage so any downstream code can retrieve it
     correlationIdStorage.run(correlationId, () => {

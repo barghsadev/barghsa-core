@@ -1,0 +1,13 @@
+# Durable storage configuration
+
+The storage settings page saves the active configuration in `app_config` under `storage.active`. Before the first save, API and worker operations use deployment S3 settings. After saving, every operation reads the durable configuration; a process restart or another replica uses the same version. Configuration reads use a separate short-lived direct database connection so a file operation inside a business transaction cannot exhaust its own pool.
+
+Set `STORAGE_CONFIG_ENCRYPTION_KEY` to the same strong independent secret on every API and worker through the external runtime environment file. Secrets are encrypted using AES-256-GCM with authenticated context and random nonces. The key is not stored in the database. Back it up separately from the database; losing it prevents decryption. Changing it requires a deliberate decrypt/re-encrypt migration, not just replacing the environment value. The settings page never reads back the secret.
+
+A save tests both the server and browser endpoints, then rechecks current staff permission, version and object-location restrictions in a transaction. The configuration and audit record commit together. Failed connection tests, audit failures, revoked permissions and stale versions do not activate changes. Endpoint tests use ListObjects with a one-object limit and fixed failure messages. They do not establish bucket versioning, retention, legal hold or browser CORS correctness; validate those during deployment.
+
+Private and browser endpoints independently fall back to the default endpoint. With all endpoints empty, the SDK uses the standard regional AWS endpoint. Endpoints must be HTTP(S) origins without embedded credentials, paths, queries or fragments. Browser PUT/GET signatures use the browser endpoint; server reads/writes and cleanup use the private endpoint.
+
+Storage records currently identify objects by key, without a per-record bucket/provider identity. Once any record exists, this UI refuses changes to bucket, region or endpoint locations. Credential rotation is allowed after testing. Moving files to another location needs a separate migration that preserves all financial, contractual and audit references. Never delete metadata to bypass this gate. The existing worker only cleans explicit committed deletion requests and retains signed records.
+
+The activation test verifies listing permission and reachability; credential policies must also allow the specific required upload, read and cleanup operations. A database or decryption failure fails closed instead of silently using a different environment bucket. A successful local fixture is not evidence that production credentials, CORS, lifecycle rules or legal holds have been configured.

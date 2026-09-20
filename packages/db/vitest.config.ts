@@ -1,12 +1,16 @@
-import { createVitestConfig } from '../tsconfig/vitest.base.config'
+import { createVitestConfig } from '../tsconfig/vitest.base.config';
 
 export default createVitestConfig({
   test: {
+    // Node's snapshot guard tests run separately through check:db-snapshot.
+    include: ['src/**/*.{test,spec}.ts'],
     globalSetup: ['./src/test/globalSetup.ts'],
     // testcontainers manages its own lifecycle — no need for jsdom/browser env.
     environment: 'node',
     // Use `forks` pool so testcontainers works correctly across workers.
     pool: 'forks',
+    // Each package starts real database/server fixtures; bound nested parallelism.
+    maxWorkers: 2,
     // Exclude test helpers from coverage.
     coverage: {
       exclude: [
@@ -15,9 +19,8 @@ export default createVitestConfig({
         'src/**/__tests__/**',
         'src/test/**',
         'src/generated/**',
-        'src/**/index.ts',
         'src/**/*.d.ts',
       ],
     },
   },
-})
+});

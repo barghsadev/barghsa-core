@@ -1,11 +1,12 @@
-import { Module } from '@nestjs/common'
-import { DashboardController } from './dashboard.controller.js'
-import { DashboardService } from './dashboard.service.js'
-import { SessionModule } from '../session/index.js'
+import { WalletModule } from '../wallet/wallet.module.js';
+import { Module } from '@nestjs/common';
+import { DashboardController } from './dashboard.controller.js';
+import { DashboardService } from './dashboard.service.js';
+import { SessionModule } from '../session/index.js';
 
 @Module({
   controllers: [DashboardController],
   providers: [DashboardService],
-  imports: [SessionModule],
+  imports: [SessionModule, WalletModule],
 })
 export class DashboardModule {}

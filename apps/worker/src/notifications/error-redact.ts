@@ -6,7 +6,7 @@
  * and the delivery log `error_detail` — must be run through `sanitizeError`
  * so secrets never reach the database or the admin panel.
  */
-const LAST_ERROR_MAX_LEN = 500
+const LAST_ERROR_MAX_LEN = 500;
 
 /**
  * Redact likely secret material from an error message and cap its length.
@@ -30,10 +30,10 @@ export function sanitizeError(message: string): string {
     // Generic long alphanumeric run — high threshold to avoid scrubbing UUIDs
     // and short transaction/hash identifiers while still catching raw keys.
     { re: /([A-Za-z0-9]{48,})/g, replacement: '[REDACTED]' },
-  ]
-  let out = message
+  ];
+  let out = message;
   for (const p of SECRET_PATTERNS) {
-    out = out.replace(p.re, p.replacement)
+    out = out.replace(p.re, p.replacement);
   }
-  return out.slice(0, LAST_ERROR_MAX_LEN)
+  return out.slice(0, LAST_ERROR_MAX_LEN);
 }

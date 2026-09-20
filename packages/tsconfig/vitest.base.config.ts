@@ -1,4 +1,4 @@
-import { defineConfig, type UserConfig } from 'vitest/config'
+import { defineConfig, type UserConfig } from 'vitest/config';
 
 /**
  * Deep merge of coverage threshold values, enforcing minimum floors.
@@ -7,14 +7,14 @@ import { defineConfig, type UserConfig } from 'vitest/config'
  */
 function mergeThresholds(
   base: Record<string, number>,
-  overrides: Record<string, number | undefined>,
+  overrides: Record<string, number | undefined>
 ): Record<string, number> {
-  const merged: Record<string, number> = {}
+  const merged: Record<string, number> = {};
   for (const key of Object.keys(base)) {
-    const override = overrides[key]
-    merged[key] = override !== undefined ? Math.max(base[key]!, override) : base[key]!
+    const override = overrides[key];
+    merged[key] = override !== undefined ? Math.max(base[key]!, override) : base[key]!;
   }
-  return merged
+  return merged;
 }
 
 /**
@@ -22,9 +22,9 @@ function mergeThresholds(
  *
  * All packages/apps extend this config and may override specific fields.
  *
- * Minimum coverage thresholds (80% line / 75% branch) apply to all packages.
- * Domain packages (auth, payments, wallet, etc.) require 90% line / 85% branch
- * — exceptions require tech lead approval.
+ * Package-wide baseline thresholds are set by each package. The zero defaults
+ * below are supplemented in CI by scripts/check-changed-coverage.py for
+ * changed-code 80/75 and modified critical-file 90/85 enforcement.
  *
  * Overrides are deep-merged: `overrides.test` extends the base test config
  * rather than replacing it, preserving coverage thresholds and other defaults.
@@ -32,8 +32,9 @@ function mergeThresholds(
  * thresholds, never lower them.
  */
 export function createVitestConfig(overrides: UserConfig = {}): UserConfig {
-  const overrideTest = overrides.test ?? ({} as Record<string, unknown>)
-  const overrideCoverage = (overrideTest as Record<string, unknown>).coverage ?? ({} as Record<string, unknown>)
+  const overrideTest = overrides.test ?? ({} as Record<string, unknown>);
+  const overrideCoverage =
+    (overrideTest as Record<string, unknown>).coverage ?? ({} as Record<string, unknown>);
 
   const baseCoverage = {
     provider: 'v8' as const,
@@ -44,7 +45,6 @@ export function createVitestConfig(overrides: UserConfig = {}): UserConfig {
       'src/**/*.spec.ts',
       'src/**/__tests__/**',
       'src/generated/**',
-      'src/**/index.ts',
       'src/**/*.d.ts',
     ],
     thresholds: {
@@ -53,13 +53,13 @@ export function createVitestConfig(overrides: UserConfig = {}): UserConfig {
       functions: 0,
       statements: 0,
     },
-  }
+  };
 
-  const userThresholds = (overrideCoverage as Record<string, unknown>).thresholds ?? {}
+  const userThresholds = (overrideCoverage as Record<string, unknown>).thresholds ?? {};
   const mergedThresholds = mergeThresholds(
     baseCoverage.thresholds,
-    userThresholds as Record<string, number>,
-  )
+    userThresholds as Record<string, number>
+  );
 
   return defineConfig({
     // Top-level overrides (plugins, resolve, etc.)
@@ -81,5 +81,5 @@ export function createVitestConfig(overrides: UserConfig = {}): UserConfig {
         thresholds: mergedThresholds,
       },
     },
-  })
+  });
 }

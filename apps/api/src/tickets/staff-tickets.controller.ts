@@ -1,3 +1,6 @@
+import { ticketListQuery } from './ticket-input.js';
+import { z } from 'zod';
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -6,26 +9,33 @@ import {
   Patch,
   Put,
   Param,
+  ParseUUIDPipe,
   Query,
   HttpCode,
   HttpException,
   Logger,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger'
-import { TicketsService, type ListTicketsOptions } from './tickets.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
+} from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { TicketsService } from './tickets.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 
 @ApiTags('Staff Tickets')
 @Controller('api/staff/tickets')
 @UseGuards(SessionAuthGuard)
 export class StaffTicketsController {
-  private readonly logger = new Logger(StaffTicketsController.name)
+  private readonly logger = new Logger(StaffTicketsController.name);
 
   constructor(private readonly ticketsService: TicketsService) {}
+
+  private assignedScope(req: AuthenticatedRequest, action: 'read' | 'write'): string | undefined {
+    return hasStaffPermission(req, `tickets:${action}`) || hasStaffPermission(req, 'tickets:*')
+      ? undefined
+      : req.session.userId;
+  }
 
   /**
    * GET /api/staff/tickets
@@ -37,11 +47,23 @@ export class StaffTicketsController {
   @RateLimit({ namespace: 'staff:tickets:list', limit: 120, windowMs: 60_000 })
   @ApiOperation({ summary: 'Staff list all tickets' })
   @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1)' })
-  @ApiQuery({ name: 'limit', required: false, description: 'Items per page (default: 20, max: 100)' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Items per page (default: 20, max: 100)',
+  })
   @ApiQuery({ name: 'status', required: false, description: 'Filter by status' })
   @ApiQuery({ name: 'search', required: false, description: 'Search in subject and body' })
-  @ApiQuery({ name: 'assignedTo', required: false, description: 'Filter by assigned staff user ID' })
-  @ApiQuery({ name: 'sortBy', required: false, description: 'Sort column (created_at, updated_at, subject, status, priority)' })
+  @ApiQuery({
+    name: 'assignedTo',
+    required: false,
+    description: 'Filter by assigned staff user ID',
+  })
+  @ApiQuery({
+    name: 'sortBy',
+    required: false,
+    description: 'Sort column (created_at, updated_at, subject, status, priority)',
+  })
   @ApiQuery({ name: 'sortOrder', required: false, description: 'Sort order (asc or desc)' })
   @ApiResponse({ status: 200, description: 'Paginated ticket list.' })
   @ApiResponse({ status: 403, description: 'Not staff' })
@@ -53,31 +75,32 @@ export class StaffTicketsController {
     @Query('search') search?: string,
     @Query('assignedTo') assignedTo?: string,
     @Query('sortBy') sortBy?: string,
-    @Query('sortOrder') sortOrder?: 'asc' | 'desc',
+    @Query('sortOrder') sortOrder?: 'asc' | 'desc'
   ) {
-    if (!req.session.isAdmin) {
+    if (
+      !hasStaffPermission(req, 'tickets:read') &&
+      !hasStaffPermission(req, 'tickets:*') &&
+      !hasStaffPermission(req, 'tickets:assigned')
+    ) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can access this endpoint' },
-        403,
-      )
+        403
+      );
     }
 
-    const options: Partial<ListTicketsOptions & { assignedTo?: string }> = {}
-    if (page !== undefined) {
-      const parsed = Number(page)
-      if (Number.isFinite(parsed)) options.page = parsed
-    }
-    if (limit !== undefined) {
-      const parsed = Number(limit)
-      if (Number.isFinite(parsed)) options.limit = parsed
-    }
-    if (status !== undefined) options.status = status
-    if (search !== undefined) options.search = search
-    if (assignedTo !== undefined) options.assignedTo = assignedTo
-    if (sortBy !== undefined) options.sortBy = sortBy
-    if (sortOrder !== undefined) options.sortOrder = sortOrder
-
-    return this.ticketsService.staffListTickets(options)
+    const options = ticketListQuery({ page, limit, status, search, sortBy, sortOrder, assignedTo });
+    return this.ticketsService.readAs(req.session, 'read', async (client, access) => ({
+      ...(await this.ticketsService.staffListTickets(
+        { ...options, ...(access.scope ? { assignedTo: access.scope } : {}) },
+        client
+      )),
+      responseTargetHours: await this.ticketsService.responseTargetHours(client),
+      viewer: {
+        userId: req.session.userId,
+        canWrite: access.canWrite,
+        canAssignOthers: access.canAssignOthers,
+      },
+    }));
   }
 
   /**
@@ -85,22 +108,47 @@ export class StaffTicketsController {
    *
    * Staff view any ticket detail (no user scoping).
    */
+  @Get('teams')
+  async teams(@Req() req: AuthenticatedRequest) {
+    if (this.assignedScope(req, 'write') !== undefined)
+      throw new HttpException('Only full ticket managers can choose teams', 403);
+    return this.ticketsService.readAs(req.session, 'write', (client, access) => {
+      if (!access.canAssignOthers)
+        throw new HttpException('Only full ticket managers can choose teams', 403);
+      return this.ticketsService.assignmentTeams(client);
+    });
+  }
+
+  @Get('assignees')
+  async assignees(@Req() req: AuthenticatedRequest) {
+    if (this.assignedScope(req, 'write') !== undefined)
+      throw new HttpException('Only full ticket managers can choose other assignees', 403);
+    return this.ticketsService.readAs(req.session, 'write', (client, access) => {
+      if (!access.canAssignOthers)
+        throw new HttpException('Only full ticket managers can choose other assignees', 403);
+      return this.ticketsService.eligibleAssignees(client);
+    });
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Staff get ticket detail' })
   @ApiResponse({ status: 200, description: 'Ticket detail.' })
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
-  async getTicket(
-    @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    if (!req.session.isAdmin) {
+  async getTicket(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+    if (
+      !hasStaffPermission(req, 'tickets:read') &&
+      !hasStaffPermission(req, 'tickets:*') &&
+      !hasStaffPermission(req, 'tickets:assigned')
+    ) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can access this endpoint' },
-        403,
-      )
+        403
+      );
     }
-    return this.ticketsService.staffGetTicket(id)
+    return this.ticketsService.readAs(req.session, 'read', (client, access) =>
+      this.ticketsService.staffGetTicket(id, access.scope, client)
+    );
   }
 
   /**
@@ -117,19 +165,41 @@ export class StaffTicketsController {
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async assignTicket(
-    @Param('id') id: string,
-    @Body() body: { assigneeId?: string },
-    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: { assigneeId?: string; teamId?: string },
+    @Req() req: AuthenticatedRequest
   ) {
-    if (!req.session.isAdmin) {
+    if (
+      !hasStaffPermission(req, 'tickets:write') &&
+      !hasStaffPermission(req, 'tickets:*') &&
+      !hasStaffPermission(req, 'tickets:assigned')
+    ) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can assign tickets' },
-        403,
-      )
+        403
+      );
     }
     // Default to self-assignment if no assigneeId provided
-    const assigneeId = body.assigneeId ?? req.session.userId
-    return this.ticketsService.staffAssignTicket(id, assigneeId)
+    const parsed = z
+      .object({
+        assigneeId: z.string().trim().min(1).max(512).optional(),
+        teamId: z.uuid().optional(),
+      })
+      .strict()
+      .safeParse(body ?? {});
+    if (!parsed.success) throw new HttpException('Invalid assignment', 400);
+    const assigneeId = parsed.data.assigneeId ?? req.session.userId;
+    const scope = this.assignedScope(req, 'write');
+    if (scope && (assigneeId !== scope || parsed.data.teamId))
+      throw new HttpException('Assigned-only staff cannot reassign another user', 403);
+    return this.ticketsService.staffAssignTicket(
+      id,
+      assigneeId,
+      req.session.userId,
+      scope,
+      parsed.data.teamId,
+      req.session
+    );
   }
 
   /**
@@ -144,17 +214,27 @@ export class StaffTicketsController {
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async updateTicketStatus(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: { status: string },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    if (!req.session.isAdmin) {
+    if (
+      !hasStaffPermission(req, 'tickets:write') &&
+      !hasStaffPermission(req, 'tickets:*') &&
+      !hasStaffPermission(req, 'tickets:assigned')
+    ) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can update ticket status' },
-        403,
-      )
+        403
+      );
     }
-    return this.ticketsService.staffUpdateTicketStatus(id, body.status)
+    return this.ticketsService.staffUpdateTicketStatus(
+      id,
+      body?.status,
+      req.session.userId,
+      this.assignedScope(req, 'write'),
+      req.session
+    );
   }
 
   /**
@@ -168,16 +248,22 @@ export class StaffTicketsController {
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async listComments(
-    @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest
   ) {
-    if (!req.session.isAdmin) {
+    if (
+      !hasStaffPermission(req, 'tickets:read') &&
+      !hasStaffPermission(req, 'tickets:*') &&
+      !hasStaffPermission(req, 'tickets:assigned')
+    ) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can access this endpoint' },
-        403,
-      )
+        403
+      );
     }
-    return this.ticketsService.staffListComments(id)
+    return this.ticketsService.readAs(req.session, 'read', (client, access) =>
+      this.ticketsService.staffListComments(id, access.scope, client)
+    );
   }
 
   /**
@@ -194,20 +280,32 @@ export class StaffTicketsController {
   @ApiResponse({ status: 403, description: 'Not staff' })
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async addComment(
-    @Param('id') id: string,
-    @Body() body: {
-      body: string
-      visibility?: 'public' | 'internal'
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body()
+    body: {
+      body: string;
+      visibility?: 'public' | 'internal';
     },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    if (!req.session.isAdmin) {
+    if (
+      !hasStaffPermission(req, 'tickets:write') &&
+      !hasStaffPermission(req, 'tickets:*') &&
+      !hasStaffPermission(req, 'tickets:assigned')
+    ) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can access this endpoint' },
-        403,
-      )
+        403
+      );
     }
-    const visibility = body.visibility ?? 'public'
-    return this.ticketsService.staffAddComment(id, req.session.userId, body.body, visibility)
+    const visibility = body?.visibility ?? 'public';
+    return this.ticketsService.staffAddComment(
+      id,
+      req.session.userId,
+      body?.body,
+      visibility,
+      this.assignedScope(req, 'write'),
+      req.session
+    );
   }
 }

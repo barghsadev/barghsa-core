@@ -1,15 +1,25 @@
-import { desc } from 'drizzle-orm'
-import { jsonb, pgTable, text, boolean, index } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { profiles } from './profiles.js'
+import { desc, sql } from 'drizzle-orm';
+import {
+  jsonb,
+  pgTable,
+  text,
+  boolean,
+  index,
+  uniqueIndex,
+  uuid,
+  check,
+} from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { profiles } from './profiles.js';
+import { users } from './users.js';
 
 /**
  * In-app notification center storage (E-05, T-05.02.01).
  *
  * One row per notification shown in a user's in-app notification center. The
  * in-app transport adapter writes a row here synchronously when the outbox
- * worker dispatches an `in_app` channel, so an in-app notification is durable
- * the moment its business event fires.
+ * worker dispatches an `in_app` channel. The inbox write shares the worker
+ * outcome transaction; the originating business transaction persists outbox intent.
  *
  * Semantics:
  * - `type` — the notification/event type (e.g. 'profile_verified'). The UI
@@ -41,12 +51,18 @@ export const inAppNotifications = pgTable(
     id: uuidv7('id').primaryKey().notNull(),
 
     /** FK to the recipient profile (owner of the notification center). */
-    profileId: uuidv7('profile_id')
-      .notNull()
-      .references(() => profiles.id, { onDelete: 'cascade' }),
+    profileId: uuid('profile_id').references(() => profiles.id, { onDelete: 'cascade' }),
+
+    recipientUserId: text('recipient_user_id').references(() => users.userId, {
+      onDelete: 'cascade',
+    }),
+    localizedContent: jsonb('localized_content'),
 
     /** Notification/event type — drives iconography & routing. */
     type: text('type').notNull(),
+
+    /** Stable occurrence identity; NULL only for legacy/unlinked notifications. */
+    deliveryKey: text('delivery_key'),
 
     /** i18n key for the rendered title. */
     titleI18nKey: text('title_i18n_key').notNull(),
@@ -75,6 +91,12 @@ export const inAppNotifications = pgTable(
   (table) => [
     // Notification-center list query: a profile's notifications newest-first
     // (matches the SQL migration's (profile_id, created_at DESC) index).
+    check(
+      'chk_ian_recipient',
+      sql`${table.profileId} IS NOT NULL OR ${table.recipientUserId} IS NOT NULL`
+    ),
+    index('idx_ian_user_created').on(table.recipientUserId, desc(table.createdAt)),
+    uniqueIndex('uq_ian_delivery_key').on(table.deliveryKey),
     index('idx_ian_profile_created').on(table.profileId, desc(table.createdAt)),
-  ],
-)
+  ]
+);

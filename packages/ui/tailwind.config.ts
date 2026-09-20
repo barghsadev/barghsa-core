@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   theme: {
@@ -68,8 +68,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ["var(--app-font, 'Vazirmatn')", 'Tahoma', 'sans-serif'],
         persian: ['Vazirmatn', 'Tahoma', 'sans-serif'],
+        english: ['Inter Variable', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       borderRadius: {
@@ -173,6 +174,6 @@ const config: Config = {
     },
   },
   plugins: [],
-}
+};
 
-export default config
+export default config;

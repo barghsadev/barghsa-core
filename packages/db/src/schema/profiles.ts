@@ -1,7 +1,7 @@
-import { sql } from 'drizzle-orm'
-import { text, boolean, pgTable, timestamp } from 'drizzle-orm/pg-core'
-import { uuidv7 } from '../types'
-import { users } from './users'
+import { sql } from 'drizzle-orm';
+import { text, boolean, pgTable, timestamp } from 'drizzle-orm/pg-core';
+import { uuidv7 } from '../types';
+import { users } from './users';
 
 /**
  * User profiles table (T-03.01.01).
@@ -14,67 +14,66 @@ import { users } from './users'
  * - `user_id` — foreign key to users table, cascading delete.
  * - `profile_type` — 'INDIVIDUAL' or 'LEGAL'.
  * - `is_default` — whether this is the user's default/active profile.
- * - `status` — 'DRAFT' | 'ACTIVE' | 'VERIFIED' | 'SUSPENDED'.
+ * - `status` — 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED'.
  * - `title` — optional honorific (Dr., Mr., etc.).
  * - `first_name` / `last_name` — profile display name.
  * - `created_at` / `updated_at` — audit columns.
  */
-export const profiles = pgTable(
-  'profiles',
-  {
-    /** UUIDv7 opaque profile identifier. */
-    id: uuidv7('id').primaryKey().notNull(),
+export const profiles = pgTable('profiles', {
+  /** UUIDv7 opaque profile identifier. */
+  id: uuidv7('id').primaryKey().notNull(),
 
-    /** Soft-delete flag — true when archived by staff. */
-    archived: boolean('archived').notNull().default(false),
+  /** Soft-delete flag — true when archived by staff. */
+  archived: boolean('archived').notNull().default(false),
 
-    /** When the profile was archived (soft-deleted). */
-    archivedAt: timestamp('archived_at', { withTimezone: true, mode: 'date' }),
+  /** When the profile was archived (soft-deleted). */
+  archivedAt: timestamp('archived_at', { withTimezone: true, mode: 'date' }),
 
-    /** Reason provided by staff for archiving/deletion. */
-    archivedReason: text('archived_reason'),
+  /** Reason provided by staff for archiving/deletion. */
+  archivedReason: text('archived_reason'),
 
-    /** Foreign key to the owning user. */
-    userId: text('user_id')
-      .notNull()
-      .references(() => users.userId, { onDelete: 'cascade' }),
+  /** Foreign key to the owning user. */
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.userId, { onDelete: 'cascade' }),
 
-    /** Profile type: individual or legal entity. */
-    profileType: text('profile_type', { enum: ['INDIVIDUAL', 'LEGAL'] })
-      .notNull()
-      .default('INDIVIDUAL'),
+  /** Profile type: individual or legal entity. */
+  profileType: text('profile_type', { enum: ['INDIVIDUAL', 'LEGAL'] })
+    .notNull()
+    .default('INDIVIDUAL'),
 
-    /** Whether this profile is the user's default. */
-    isDefault: boolean('is_default').notNull().default(false),
+  /** Whether this profile is the user's default. */
+  isDefault: boolean('is_default').notNull().default(false),
 
-    /** Profile lifecycle status. */
-    status: text('status', { enum: ['DRAFT', 'ACTIVE', 'VERIFIED', 'SUSPENDED'] })
-      .notNull()
-      .default('DRAFT'),
+  /** Profile lifecycle status. */
+  status: text('status', {
+    enum: ['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED', 'SUSPENDED'],
+  })
+    .notNull()
+    .default('DRAFT'),
 
-    /** Optional honorific title. */
-    title: text('title'),
+  /** Optional honorific title. */
+  title: text('title'),
 
-    /** First (given) name. */
-    firstName: text('first_name'),
+  /** Profile contact details only; never account authentication destinations. */
+  contactEmail: text('contact_email'),
+  contactMobile: text('contact_mobile'),
 
-    /** Last (family) name. */
-    lastName: text('last_name'),
+  /** First (given) name. */
+  firstName: text('first_name'),
 
-    /** Iranian national ID (10 digits, unique among active profiles). */
-    nationalId: text('national_id'),
+  /** Last (family) name. */
+  lastName: text('last_name'),
 
-    /** When the profile was created. */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+  /** Iranian national ID (10 digits, unique among active profiles). */
+  nationalId: text('national_id'),
 
-    /** Last update timestamp. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
-  },
-)
+  /** When the profile was created. */
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+
+  /** Last update timestamp. */
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * SQL to create the profiles table.
@@ -88,7 +87,7 @@ export const createProfilesTable = sql`
     user_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     profile_type TEXT NOT NULL DEFAULT 'INDIVIDUAL' CHECK (profile_type IN ('INDIVIDUAL', 'LEGAL')),
     is_default BOOLEAN NOT NULL DEFAULT false,
-    status TEXT NOT NULL DEFAULT 'DRAFT' CHECK (status IN ('DRAFT', 'ACTIVE', 'VERIFIED', 'SUSPENDED')),
+    status TEXT NOT NULL DEFAULT 'DRAFT' CHECK (status IN ('DRAFT', 'ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED', 'SUSPENDED')),
     title TEXT,
     first_name TEXT,
     last_name TEXT,
@@ -102,9 +101,9 @@ export const createProfilesTable = sql`
 
   CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON profiles (user_id);
   CREATE UNIQUE INDEX IF NOT EXISTS idx_profiles_default_per_user ON profiles (user_id) WHERE is_default = true;
-  CREATE UNIQUE INDEX IF NOT EXISTS idx_profiles_national_id ON profiles (national_id) WHERE national_id IS NOT NULL AND status IN ('ACTIVE', 'VERIFIED');
+  CREATE UNIQUE INDEX IF NOT EXISTS idx_profiles_national_id ON profiles (national_id) WHERE national_id IS NOT NULL AND status IN ('ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED');
   CREATE INDEX IF NOT EXISTS idx_profiles_archived ON profiles (archived) WHERE archived = true;
 
   -- Additive migration: add national_id column to existing tables (runs after CREATE IF NOT EXISTS)
   ALTER TABLE profiles ADD COLUMN IF NOT EXISTS national_id TEXT;
-`
+`;

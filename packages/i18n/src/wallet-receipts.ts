@@ -1,0 +1,159 @@
+import { lookup } from './lookup.js';
+const fa: Record<string, string> = {
+  'admin.receiptThreshold.title': 'آستانه تأیید دو نفره',
+  'admin.receiptThreshold.description':
+    'پرداخت\u200cهای بانکی، بازپرداخت\u200cها و اصلاحات مالی دستی با مبلغ مساوی یا بیشتر از این آستانه ریالی به تأیید کارشناس مجاز دوم نیاز دارند.',
+  'admin.receiptThreshold.stepUp':
+    'تغییرات به تأیید رمز عبور نیاز دارند و در سابقه حسابرسی ثبت می\u200cشوند.',
+  'admin.receiptThreshold.label': 'آستانه (ریال)',
+  'admin.receiptThreshold.save': 'ذخیره آستانه',
+  'admin.receiptThreshold.saved': 'آستانه ذخیره شد.',
+  'admin.receiptThreshold.disabled':
+    'صفر آستانه را برای عملیات جدید غیرفعال می\u200cکند. درخواست\u200cهای تأیید موجود همچنان به تصمیم نیاز دارند.',
+  'admin.receiptThreshold.unavailable': 'آستانه در دسترس نیست. هیچ تنظیمی فرض نشده است.',
+  'admin.receiptThreshold.retry': 'تلاش دوباره برای بارگذاری آستانه',
+  'admin.receiptThreshold.invalid': 'یک مبلغ صحیح ریالی از ۰ تا ۹٬۰۰۷٬۱۹۹٬۲۵۴٬۷۴۰٬۹۹۱ وارد کنید.',
+  'admin.walletReceipts.emergencyTitle': 'تأیید اضطراری',
+  'admin.walletReceipts.emergencyHint':
+    'فقط همین رسید بدون تأیید کارشناس دوم تسویه می\u200cشود. دلیل ثبت می\u200cشود و کارشناسان مالی فوراً در برنامه مطلع می\u200cشوند.',
+  'admin.walletReceipts.emergencyReason': 'دلیل تأیید اضطراری (الزامی)',
+  'admin.walletReceipts.emergencyConfirm': 'تأیید اضطراری و تسویه رسید',
+  'admin.walletReceipts.emergencyConfirmed':
+    'رسید با تأیید اضطراری تسویه شد. کارشناسان مالی مطلع شدند.',
+  'admin.walletReceipts.nav': 'رسیدهای کیف پول',
+  'admin.walletReceipts.title': 'بررسی رسید شارژ کیف پول',
+  'admin.walletReceipts.description':
+    'رسید بانکی مشتری را بررسی کنید و آن را تأیید یا با دلیل رد کنید. تأیید، مبلغ را از طریق دفترکل به کیف پول واریز می‌کند و مشتری را مطلع می‌سازد. رد هرگز موجودی را افزایش نمی‌دهد و دلیل را برای مشتری ارسال می‌کند.',
+  'admin.walletReceipts.loading': 'در حال بارگذاری رسیدهای در انتظار…',
+  'admin.walletReceipts.empty': 'رسید در انتظار بررسی وجود ندارد.',
+  'admin.walletReceipts.queueLabel': 'رسیدهای در انتظار تأیید',
+  'admin.walletReceipts.reviewTitle': 'جزئیات رسید',
+  'admin.walletReceipts.amount': 'مبلغ',
+  'admin.walletReceipts.paymentDate': 'تاریخ پرداخت',
+  'admin.walletReceipts.payerReference': 'شناسه پرداخت‌کننده',
+  'admin.walletReceipts.walletId': 'شناسه کیف پول',
+  'admin.walletReceipts.submittedAt': 'زمان ثبت',
+  'admin.walletReceipts.note': 'یادداشت مشتری',
+  'admin.walletReceipts.attachment': 'تصویر رسید',
+  'admin.walletReceipts.attachmentAlt': 'اسکن رسید بانکی',
+  'admin.walletReceipts.openAttachment': 'مشاهده فایل رسید',
+  'admin.walletReceipts.confirm': 'تأیید و واریز به کیف پول',
+  'admin.walletReceipts.confirmOverpayment': 'تأیید: تسویه فاکتور و واریز مازاد به کیف پول',
+  'admin.walletReceipts.reject': 'رد رسید',
+  'admin.walletReceipts.reason': 'دلیل رد (قابل‌نمایش برای مشتری)',
+  'admin.walletReceipts.reasonHint':
+    'این متن برای مشتری ارسال می‌شود و در سابقه حسابرسی ذخیره می‌گردد.',
+  'admin.walletReceipts.saving': 'در حال ذخیره…',
+  'admin.walletReceipts.approvalPending':
+    'رسید در انتظار تأیید کارشناس مالی دیگری است. هنوز مبلغی واریز نشده است.',
+  'admin.walletReceipts.confirmed': 'رسید تأیید شد و کیف پول شارژ گردید',
+  'admin.walletReceipts.rejected': 'رسید رد شد؛ موجودی تغییر نکرد',
+  'admin.walletReceipts.alreadyDecided': 'این رسید قبلاً بررسی شده است.',
+  'admin.walletReceipts.none': '—',
+  'admin.walletReceipts.error.load': 'بارگذاری رسیدها ناموفق بود',
+  'admin.walletReceipts.error.save': 'ثبت تصمیم ناموفق بود',
+  'admin.walletReceipts.error.reason': 'دلیل الزامی است و برای مشتری نمایش داده می‌شود',
+  'admin.walletReceipts.stepUp.title': 'تأیید هویت لازم است',
+  'admin.walletReceipts.stepUp.description':
+    'تأیید یا رد رسید بانکی نیاز به تأیید مجدد هویت دارد. رمز عبور خود را وارد کنید.',
+  'admin.walletReceipts.stepUp.passwordLabel': 'رمز عبور',
+  'admin.walletReceipts.stepUp.submit': 'تأیید و ادامه',
+  'admin.walletReceipts.stepUp.cancel': 'انصراف',
+  'admin.walletReceipts.stepUp.verifying': 'در حال تأیید…',
+  'admin.walletReceipts.stepUp.failed': 'تأیید هویت ناموفق بود. رمز عبور را بررسی کنید.',
+  'admin.walletReceipts.invoiceId': 'شناسه فاکتور (اختیاری)',
+  'admin.walletReceipts.invoiceIdPlaceholder': 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+  'admin.walletReceipts.invoiceIdHint':
+    'اگر رسید بابت فاکتور است، شناسه را وارد کنید. مبلغ مازاد بر مانده فاکتور به‌صورت اعتبار جداگانه به کیف پول واریز می‌شود و فاکتور بیش از مانده تسویه نمی‌شود.',
+  'admin.walletReceipts.remaining': 'مانده فاکتور',
+  'admin.walletReceipts.invoiceAllocation': 'سهم فاکتور',
+  'admin.walletReceipts.overpaymentCredit': 'مازاد واریزی به کیف پول',
+  'admin.walletReceipts.overpaymentPreview':
+    'مبلغ رسید از مانده فاکتور بیشتر است. مازاد به‌صورت اعتبار تأییدشده به کیف پول واریز می‌شود.',
+  'admin.walletReceipts.overpaymentConfirmed':
+    'رسید تأیید شد. سهم فاکتور تا مانده اعمال شد و مازاد به کیف پول واریز گردید.',
+  'admin.walletReceipts.error.invoiceId': 'شناسه فاکتور باید یک UUID معتبر باشد',
+  'admin.walletReceipts.error.allocation': 'محاسبه مانده فاکتور ناموفق بود',
+  'admin.walletReceipts.error.allocationPending': 'صبر کنید تا پیش‌نمایش مانده فاکتور آماده شود',
+};
+const en: Record<string, string> = {
+  'admin.receiptThreshold.title': 'Dual-approval threshold',
+  'admin.receiptThreshold.description':
+    'Bank payments, refunds and manual adjustments at or above this IRR amount require a second authorized reviewer.',
+  'admin.receiptThreshold.stepUp':
+    'Changes require password verification and are recorded in audit history.',
+  'admin.receiptThreshold.label': 'Threshold (IRR)',
+  'admin.receiptThreshold.save': 'Save threshold',
+  'admin.receiptThreshold.saved': 'Threshold saved.',
+  'admin.receiptThreshold.disabled':
+    'Zero disables the threshold for new actions. Existing pending approvals still require a decision.',
+  'admin.receiptThreshold.unavailable': 'Threshold unavailable. No setting has been assumed.',
+  'admin.receiptThreshold.retry': 'Retry loading threshold',
+  'admin.receiptThreshold.invalid': 'Enter a whole IRR amount from 0 to 9,007,199,254,740,991.',
+  'admin.walletReceipts.emergencyTitle': 'Emergency override',
+  'admin.walletReceipts.emergencyHint':
+    'Settle only this receipt without a second reviewer. The reason is recorded and finance staff are alerted immediately in the app.',
+  'admin.walletReceipts.emergencyReason': 'Emergency override reason (required)',
+  'admin.walletReceipts.emergencyConfirm': 'Confirm emergency override and settle receipt',
+  'admin.walletReceipts.emergencyConfirmed':
+    'Receipt settled with emergency override. Finance staff alerted.',
+  'admin.walletReceipts.nav': 'Wallet receipts',
+  'admin.walletReceipts.title': 'Staff wallet receipt review',
+  'admin.walletReceipts.description':
+    'Review the customer bank receipt and confirm or reject it with a reason. Confirm credits the wallet through the ledger and notifies the customer. Reject never increases the balance and sends the reason to the customer.',
+  'admin.walletReceipts.loading': 'Loading pending receipts…',
+  'admin.walletReceipts.empty': 'No receipts are waiting for review.',
+  'admin.walletReceipts.queueLabel': 'Pending receipts',
+  'admin.walletReceipts.reviewTitle': 'Receipt details',
+  'admin.walletReceipts.amount': 'Amount',
+  'admin.walletReceipts.paymentDate': 'Payment date',
+  'admin.walletReceipts.payerReference': 'Payer reference',
+  'admin.walletReceipts.walletId': 'Wallet ID',
+  'admin.walletReceipts.submittedAt': 'Submitted at',
+  'admin.walletReceipts.note': 'Customer note',
+  'admin.walletReceipts.attachment': 'Receipt attachment',
+  'admin.walletReceipts.attachmentAlt': 'Bank receipt scan',
+  'admin.walletReceipts.openAttachment': 'Open receipt file',
+  'admin.walletReceipts.confirm': 'Confirm and credit wallet',
+  'admin.walletReceipts.confirmOverpayment': 'Confirm: settle invoice and credit excess',
+  'admin.walletReceipts.reject': 'Reject receipt',
+  'admin.walletReceipts.reason': 'Rejection reason (customer-visible)',
+  'admin.walletReceipts.reasonHint':
+    'This text is sent to the customer and stored in the audit trail.',
+  'admin.walletReceipts.saving': 'Saving…',
+  'admin.walletReceipts.approvalPending':
+    'Waiting for a different finance reviewer. No funds have been credited yet.',
+  'admin.walletReceipts.confirmed': 'Receipt confirmed and wallet credited',
+  'admin.walletReceipts.rejected': 'Receipt rejected; balance unchanged',
+  'admin.walletReceipts.alreadyDecided': 'This receipt has already been reviewed.',
+  'admin.walletReceipts.none': '—',
+  'admin.walletReceipts.error.load': 'Failed to load receipts',
+  'admin.walletReceipts.error.save': 'Failed to save the decision',
+  'admin.walletReceipts.error.reason': 'A customer-visible reason is required',
+  'admin.walletReceipts.stepUp.title': 'Verification required',
+  'admin.walletReceipts.stepUp.description':
+    'Confirming or rejecting a bank receipt requires a fresh identity check. Enter your password to continue.',
+  'admin.walletReceipts.stepUp.passwordLabel': 'Password',
+  'admin.walletReceipts.stepUp.submit': 'Verify and continue',
+  'admin.walletReceipts.stepUp.cancel': 'Cancel',
+  'admin.walletReceipts.stepUp.verifying': 'Verifying…',
+  'admin.walletReceipts.stepUp.failed': 'Verification failed. Check your password and try again.',
+  'admin.walletReceipts.invoiceId': 'Invoice ID (optional)',
+  'admin.walletReceipts.invoiceIdPlaceholder': 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+  'admin.walletReceipts.invoiceIdHint':
+    'If this receipt is toward an invoice, enter its ID. Amount above the invoice remaining is credited to the wallet as a separate verified credit; the invoice is never over-settled.',
+  'admin.walletReceipts.remaining': 'Invoice remaining',
+  'admin.walletReceipts.invoiceAllocation': 'Applied to invoice',
+  'admin.walletReceipts.overpaymentCredit': 'Excess credited to wallet',
+  'admin.walletReceipts.overpaymentPreview':
+    'The receipt exceeds the invoice remaining. Excess will be credited to the wallet as a verified credit.',
+  'admin.walletReceipts.overpaymentConfirmed':
+    'Receipt confirmed. The invoice was settled up to remaining and the excess was credited to the wallet.',
+  'admin.walletReceipts.error.invoiceId': 'Invoice ID must be a valid UUID',
+  'admin.walletReceipts.error.allocation': 'Could not calculate the invoice remaining',
+  'admin.walletReceipts.error.allocationPending':
+    'Wait for the invoice remaining preview before confirming',
+};
+export function tWalletReceipts(key: string, locale: 'fa' | 'en'): string {
+  return lookup(locale === 'fa' ? fa : en, key) ?? key;
+}

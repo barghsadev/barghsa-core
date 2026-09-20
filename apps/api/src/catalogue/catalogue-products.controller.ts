@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -12,12 +13,12 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import {
   CatalogueProductsService,
   CONSULTATION_CATEGORIES,
@@ -28,40 +29,44 @@ import {
   type ProductDetailDto,
   type ProductDto,
   type ProductType,
-} from './catalogue-products.service.js'
+} from './catalogue-products.service.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
-const typeSchema = z.enum(PRODUCT_TYPES)
+const typeSchema = z.enum(PRODUCT_TYPES);
 /** Product types admin can create: electricity is the immutable system set. */
-const creatableTypeSchema = typeSchema.exclude(['electricity'])
-const statusSchema = z.enum(['active', 'inactive'])
-const localizedTextSchema = z.object({
-  fa: z.string().min(1, 'Persian title is required').max(300),
-  en: z.string().min(1, 'English title is required').max(300),
-})
-const descriptionSchema = z.object({
-  fa: z.string().max(4000).optional().default(''),
-  en: z.string().max(4000).optional().default(''),
-})
-const categorySchema = z.enum([...CONSULTATION_CATEGORIES, ...ELECTRICITY_CATEGORIES])
+const creatableTypeSchema = typeSchema.exclude(['electricity']);
+const statusSchema = z.enum(['active', 'inactive']);
+const localizedTextSchema = z
+  .object({
+    fa: z.string().trim().min(1, 'Persian title is required').max(300),
+    en: z.string().trim().min(1, 'English title is required').max(300),
+  })
+  .strict();
+const descriptionSchema = z
+  .object({
+    fa: z.string().max(4000).optional().default(''),
+    en: z.string().max(4000).optional().default(''),
+  })
+  .strict();
+const categorySchema = z.enum([...CONSULTATION_CATEGORIES, ...ELECTRICITY_CATEGORIES]);
 // IRR amounts are BIGINT columns; accept digits-only strings up to 18 digits
 // (safe within BIGINT range) and reject anything else before it reaches PG.
 const irrPriceSchema = z
   .string()
-  .regex(/^\d{1,18}$/, 'Price must be a non-negative integer in IRR (up to 18 digits)')
-const kwhSchema = z
-  .string()
-  .regex(/^\d{1,18}$/, 'kWh value must be a non-negative integer')
+  .regex(/^\d{1,18}$/, 'Price must be a non-negative integer in IRR (up to 18 digits)');
+const kwhSchema = z.string().regex(/^\d{1,18}$/, 'kWh value must be a non-negative integer');
 
-export const CreateProductSchema = z.object({
-  type: creatableTypeSchema,
-  title: localizedTextSchema,
-  description: descriptionSchema.optional(),
-  price: irrPriceSchema.nullable().optional(),
-  status: statusSchema.optional(),
-  categories: z.array(categorySchema).max(10, 'At most 10 categories').optional(),
-})
+export const CreateProductSchema = z
+  .object({
+    type: creatableTypeSchema,
+    title: localizedTextSchema,
+    description: descriptionSchema.optional(),
+    price: irrPriceSchema.nullable().optional(),
+    status: statusSchema.optional(),
+    categories: z.array(categorySchema).max(10, 'At most 10 categories').optional(),
+  })
+  .strict();
 
 export const UpdateProductSchema = z
   .object({
@@ -72,57 +77,51 @@ export const UpdateProductSchema = z
     minKwh: kwhSchema.optional(),
     maxKwh: kwhSchema.optional(),
   })
-  .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided')
+  .strict()
+  .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
 
-export const AddPriceSchema = z.object({
-  price: irrPriceSchema,
-  effectiveFrom: z
-    .string()
-    .datetime({ offset: true })
-    .or(z.string().datetime({ local: true }))
-    .optional(),
-})
+export const AddPriceSchema = z
+  .object({
+    price: irrPriceSchema,
+    effectiveFrom: z.string().datetime({ offset: true }).optional(),
+  })
+  .strict();
 
-function httpError(
-  code: string,
-  message: string,
-  statusCode = 400,
-  details?: unknown,
-): never {
+function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
     { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode,
-  )
+    statusCode
+  );
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 /** Validate a route @Param id as a UUID, surfacing 400 instead of a DB 500. */
 function assertUuid(id: string, label = 'id'): void {
-  const parsed = z.string().uuid('Expected a UUID').safeParse(id)
+  const parsed = z.string().uuid('Expected a UUID').safeParse(id);
   if (!parsed.success) {
-    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400)
+    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400);
   }
 }
 
 /** Validate an optional `?type=` query filter. */
 function assertTypeFilter(raw: string | undefined, typeName = 'type'): ProductType | undefined {
-  if (raw === undefined) return undefined
-  const parsed = typeSchema.safeParse(raw)
+  if (raw === undefined) return undefined;
+  const parsed = typeSchema.safeParse(raw);
   if (!parsed.success) {
     httpError(
       ErrorCodes.VALIDATION_PARSE_ZOD.code,
       `Invalid ${typeName}: expected one of ${PRODUCT_TYPES.join(', ')}`,
-      400,
-    )
+      400
+    );
   }
-  return parsed.data
+  return parsed.data;
 }
 
 function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
-  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }))
+  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
 }
 
 /**
@@ -131,9 +130,7 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
  *
  * Security posture (mirrors the S-09 admin controllers, e.g. T-09.11.04):
  * - Every route requires an authenticated session with the
- *   `admin:catalogue:edit` capability. Today the session model exposes
- *   only `req.session.isAdmin` (platform admin); granular staff-role
- *   permissions arrive with the role system. Centralized in one
+ *   `admin:catalogue:edit` capability. Capabilities are read from current database roles. Centralized in one
  *   enforcement point per controller.
  * - All mutation endpoints additionally require recent step-up
  *   verification via `@RequiresStepUp()` (StepUpGuard) — pricing and
@@ -152,12 +149,12 @@ export class CatalogueProductsController {
 
   /** Single enforcement point for the `admin:catalogue:edit` capability. */
   private assertCataloguePermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:catalogue:edit')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage the product catalogue',
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -166,19 +163,32 @@ export class CatalogueProductsController {
   @ApiResponse({ status: 200, description: 'All products (optionally by type), newest first.' })
   async list(
     @Req() req: AuthenticatedRequest,
-    @Query('type') type?: string,
+    @Query('type') type?: string
   ): Promise<ProductDto[]> {
-    this.assertCataloguePermission(req)
-    return this.service.list(assertTypeFilter(type))
+    this.assertCataloguePermission(req);
+    return this.service.list(assertTypeFilter(type));
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a single catalogue product (admin)' })
   @ApiResponse({ status: 200, description: 'The product with its versioned price history.' })
   async get(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<ProductDetailDto> {
-    this.assertCataloguePermission(req)
-    assertUuid(id)
-    return this.service.get(id)
+    this.assertCataloguePermission(req);
+    assertUuid(id);
+    return this.service.get(id);
+  }
+
+  @Get(':id/rule-references')
+  @ApiOperation({
+    summary: 'Get enabled or scheduled configuration references before deactivation',
+  })
+  async ruleReferences(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string
+  ): Promise<{ greenModes: string[]; vatOverride: boolean }> {
+    this.assertCataloguePermission(req);
+    assertUuid(id);
+    return this.service.ruleReferences(id);
   }
 
   @Post()
@@ -195,21 +205,21 @@ export class CatalogueProductsController {
   @ApiResponse({ status: 201, description: 'Catalogue product created.' })
   async create(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateProductSchema>,
+    @Body() body: z.infer<typeof CreateProductSchema>
   ): Promise<ProductDetailDto> {
-    this.assertCataloguePermission(req)
-    const parsed = CreateProductSchema.safeParse(body)
+    this.assertCataloguePermission(req);
+    const parsed = CreateProductSchema.safeParse(body);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid catalogue product payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
-    const d = parsed.data
+    const d = parsed.data;
     const description: LocalizedText | null =
-      d.description === undefined ? null : { fa: d.description.fa, en: d.description.en }
+      d.description === undefined ? null : { fa: d.description.fa, en: d.description.en };
     return this.service.create({
       type: d.type,
       title: d.title,
@@ -218,8 +228,9 @@ export class CatalogueProductsController {
       status: d.status ?? 'inactive',
       categories: (d.categories ?? []) as ProductCategory[],
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Put(':id')
@@ -237,20 +248,20 @@ export class CatalogueProductsController {
   async update(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof UpdateProductSchema>,
+    @Body() body: z.infer<typeof UpdateProductSchema>
   ): Promise<ProductDetailDto> {
-    this.assertCataloguePermission(req)
-    assertUuid(id)
-    const parsed = UpdateProductSchema.safeParse(body)
+    this.assertCataloguePermission(req);
+    assertUuid(id);
+    const parsed = UpdateProductSchema.safeParse(body);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid catalogue product payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
-    const d = parsed.data
+    const d = parsed.data;
     return this.service.update(id, {
       ...(d.title !== undefined ? { title: d.title } : {}),
       ...(d.description !== undefined
@@ -264,8 +275,9 @@ export class CatalogueProductsController {
       ...(d.minKwh !== undefined ? { minKwh: d.minKwh } : {}),
       ...(d.maxKwh !== undefined ? { maxKwh: d.maxKwh } : {}),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Delete(':id')
@@ -281,9 +293,9 @@ export class CatalogueProductsController {
   })
   @ApiResponse({ status: 204, description: 'Catalogue product archived.' })
   async archive(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
-    this.assertCataloguePermission(req)
-    assertUuid(id)
-    return this.service.archive(id, req.session.userId, requestIp(req))
+    this.assertCataloguePermission(req);
+    assertUuid(id);
+    return this.service.archive(id, req.session.userId, requestIp(req), req.session);
   }
 
   @Post(':id/prices')
@@ -301,25 +313,26 @@ export class CatalogueProductsController {
   async addPrice(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof AddPriceSchema>,
+    @Body() body: z.infer<typeof AddPriceSchema>
   ): Promise<ProductDetailDto> {
-    this.assertCataloguePermission(req)
-    assertUuid(id)
-    const parsed = AddPriceSchema.safeParse(body)
+    this.assertCataloguePermission(req);
+    assertUuid(id);
+    const parsed = AddPriceSchema.safeParse(body);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid price payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.addPrice({
       productId: id,
       price: parsed.data.price,
       effectiveFrom: parsed.data.effectiveFrom ?? new Date().toISOString(),
       actorUserId: req.session.userId,
+      session: req.session,
       ip: requestIp(req),
-    })
+    });
   }
 }

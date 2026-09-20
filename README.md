@@ -211,11 +211,11 @@ Tool calls, inputs, authorization decision, confirmation evidence, outcome, and 
 - Shadcn UI with "BASE UI".
 - Full support for both Light and Dark themes across all pages and components.
 - Flexible theming. the admin users must be able to set theme options on dashboard.
-- Use TanStack Start. Server functions/BFF remain thin transport and rendering adapters; authorization, pricing, state transitions, and business logic live in backend modules.
+- Use Vite with TanStack Router as a client-rendered SPA. The production web server serves the HTML shell and static assets; authorization, pricing, state transitions, and business logic live in backend modules. See [ADR 004](docs/adr/004-web-spa.md).
 - Use TanStack Query or the framework's equivalent for server-state caching, request deduplication, cancellation, and targeted invalidation.
 - Optimistic UI is allowed only for low-risk, easily reversible actions such as marking a notification read. Payments, wallet changes, order submission, contract acceptance/signature, refunds, role changes, and status transitions show Pending until the authoritative backend response arrives.
 - Code-split by route and lazy-load heavy editors, charts, AI UI, video tooling, and admin-only features. Avoid large client bundles on customer purchase paths.
-- Use SSR only where it materially improves first load, public discoverability, or authenticated shell rendering. Do not add server-side data duplication or business logic for SSR.
+- Server-side React rendering and TanStack Start are outside the approved frontend architecture. Keep first-load performance, public metadata, accessible loading/error states and route splitting as explicit requirements; any future SSR migration requires a separate architecture decision.
 - Use analytics through a provider abstraction. Google Analytics is optional and enabled only with the appropriate consent; operational product events are sent to Barghsa's own backend when correctness requires them.
 - react-hook-form and zod everywhere that is needed. all forms must be validated.
 - small animations.
@@ -1215,21 +1215,21 @@ Unit tests cover configuration validation, secret masking, event/parameter mappi
 
 Barghsa is implemented as a TypeScript pnpm + Turborepo monorepo:
 
-| Path | Role |
-|------|------|
-| `apps/web` | TanStack Start frontend (shadcn/ui + Base UI, RTL, light/dark) |
-| `apps/api` | NestJS API gateway / modular monolith |
-| `packages/db` | Drizzle ORM schema + seed |
-| `packages/shared` | Shared Zod schemas / username helpers |
-| `packages/i18n` | FA (default) + EN dictionaries |
-| `packages/ui` | Shared shadcn/Base UI components |
+| Path              | Role                                                              |
+| ----------------- | ----------------------------------------------------------------- |
+| `apps/web`        | Vite + TanStack Router SPA (shadcn/ui + Base UI, RTL, light/dark) |
+| `apps/api`        | NestJS API gateway / modular monolith                             |
+| `packages/db`     | Drizzle ORM schema + seed                                         |
+| `packages/shared` | Shared Zod schemas / username helpers                             |
+| `packages/i18n`   | FA (default) + EN dictionaries                                    |
+| `packages/ui`     | Shared shadcn/Base UI components                                  |
 
 ### Prerequisites
 
 - Node.js 20+ (via Corepack for automatic pnpm version management:
   ```bash
   corepack enable
-  corepack prepare pnpm@10.8.1 --activate
+  corepack install
   ```
   )
 - pnpm 10+ (managed automatically by Corepack when enabled above)
@@ -1239,10 +1239,8 @@ Barghsa is implemented as a TypeScript pnpm + Turborepo monorepo:
 
 ```bash
 cp .env.example .env
-docker compose up -d postgres redis minio
-pnpm install
-pnpm db:push
-pnpm db:seed
+docker compose up -d postgres redis minio minio-init
+pnpm install --frozen-lockfile
 pnpm dev
 ```
 
@@ -1252,7 +1250,11 @@ pnpm dev
 
 Local development may create a seeded admin using credentials supplied through development-only environment variables. Production deployment must never use a hard-coded default password. The first admin is created through a one-time bootstrap secret or secure operator command, must change password at first login, and must enroll MFA before accessing admin settings.
 
-In development, OTP codes are printed to the API console.
+`pnpm dev` loads the root `.env`, builds required packages, runs migrations and the idempotent seed, then starts the API, worker and Vite servers. A failed build, migration or seed prevents startup. Source/configuration changes restart this sequence after stopping the prior processes; compiled outputs are ignored. Shared ESM/CommonJS packages are rebuilt before their consumers. Existing shell environment values take precedence over `.env`. Set `BARGHSA_ENV_FILE` to use another local environment file. Browser `/api` calls are proxied to the API `PORT` on the same host; `WEB_PORT` defaults to3000 and `WORKER_PORT` to9090. The seed logs created, updated and skipped counts. Repeated or concurrent runs preserve existing products, prices, activation, administrators and notification templates. `pnpm db:seed --force` restores only the Persian labels of the 31 default provinces, matched by their English seed names. Other customized geography fields remain unchanged.
+
+Set `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_KEY`, `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` explicitly for initial administrator creation. The identity may be an email or E.164 phone number. After creation, remove bootstrap credentials from the deployment environment. Staff login always requires a delivered OTP after the forced password change; configure a working delivery channel through the deployment procedure before handing over access. OTP values appear only in the local API debug console when both `NODE_ENV=development` and `OTP_CONSOLE=true`; turn the latter off to suppress them. Production never prints codes. The encrypted outbox still requires `AUTH_DELIVERY_ENCRYPTION_KEY` in local development; console output does not bypass challenge verification.
+
+In production, run migrations and the initial seed before admitting traffic; retain their successful exit results. Do not run `--force` as an automatic deployment step. Migration0134 preserves any legacy noncanonical electricity rows for explicit operator reconciliation; it does not silently delete or relabel referenced products. The seed refuses conflicting electricity identities. Green-rule reads recognize the canonical `green` key and the legacy `green_electricity` key, but reject an ambiguous pair. Reconcile legacy rows and validate the new nonnegative-limit constraint before declaring production data compliant.
 
 ### Docker-for-Mac file-watch polling
 
@@ -1264,15 +1266,11 @@ Replace `pnpm dev` with `pnpm dev:docker` to enable polling-based file watching:
 pnpm dev:docker
 ```
 
-This sets the following environment variables:
+This enables Nodemon polling for application/package changes and `CHOKIDAR_USEPOLLING=true` for Vite, binding Vite to `0.0.0.0` so a published container port is reachable. It runs the same environment loading, build, migration and seed sequence as `pnpm dev`.
 
-| Variable | Effect |
-|---|---|
-| `CHOKIDAR_USEPOLLING=true` | Enables polling for chokidar-based watchers (Vite dev server, NestJS `--watch` via SWC) |
-| `TSC_WATCHFILE=UseFsEventsWithPolling` | Tries native FS events, falls back to polling for `tsc --watch` (packages/ui, shared, i18n) |
-| `TURBO_DAEMON=false` | Disables Turborepo daemon — the daemon's file watcher is unnecessary for persistent `dev` tasks and may interfere with polling mode |
+On native macOS, `pnpm dev` uses filesystem events. Inside Docker bind mounts, use `pnpm dev:docker`. The Compose file supplies backing services; application development processes run separately. Optional PgBouncer belongs to the `pooling` profile and needs its separate pooling/operations review. Use the direct database URL for this workflow.
 
-> **Note:** On native macOS (outside Docker), `pnpm dev` runs without polling and provides faster hot reload. The `dev:docker` script is only needed when the apps are running inside Docker containers on macOS.
+MinIO initialization creates both upload and backup buckets with private access. Its credentials match `.env.example`. Existing volumes are preserved; initialization failures remain visible rather than being reported as success.
 
 ### Build
 

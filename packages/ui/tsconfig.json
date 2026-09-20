@@ -5,8 +5,6 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "exactOptionalPropertyTypes": false,
-    "noUncheckedIndexedAccess": false,
     "paths": {
       "@/*": ["./src/*"],
       "*": ["./*"]
@@ -15,8 +13,5 @@
     "outDir": "dist"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "references": [
-    {"path": "../shared"},
-    {"path": "../i18n"}
-  ]
+  "references": [{ "path": "../shared" }, { "path": "../i18n" }]
 }

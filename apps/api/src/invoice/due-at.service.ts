@@ -17,14 +17,10 @@
  * instant.
  */
 
-import { Injectable } from '@nestjs/common'
-import {
-  resolveDueAt,
-  type DueAtSource,
-  type ServiceDuePeriodType,
-} from '@barghsa/shared/finance'
-import type { DbExecutor } from './vat-calculation.repository.js'
-import { DueAtCalculationRepository } from './due-at.repository.js'
+import { Injectable } from '@nestjs/common';
+import { resolveDueAt, type DueAtSource, type ServiceDuePeriodType } from '@barghsa/shared/finance';
+import type { DbExecutor } from './vat-calculation.repository.js';
+import { DueAtCalculationRepository } from './due-at.repository.js';
 
 /** Input to {@link DueAtCalculationService.resolve}. */
 export interface ResolveInvoiceDueAtInput {
@@ -32,23 +28,23 @@ export interface ResolveInvoiceDueAtInput {
    * Canonical due-period service type. Null skips the config lookup
    * (unknown product types such as `hardware`) and uses the fallback.
    */
-  serviceType: ServiceDuePeriodType | null
+  serviceType: ServiceDuePeriodType | null;
   /** Invoice issue instant (`issuedAt`). */
-  issuedAt: Date
+  issuedAt: Date;
   /** Explicit staff due date; when set it wins over config days. */
-  staffOverride?: Date
+  staffOverride?: Date;
 }
 
 /** One resolved invoice due instant plus the rule that produced it. */
 export interface ResolvedInvoiceDueAt {
-  dueAt: Date
-  source: DueAtSource
+  dueAt: Date;
+  source: DueAtSource;
   /** Days applied for `config` / `fallback`; null for staff override. */
-  configDays: number | null
+  configDays: number | null;
   /** Active period row id when `source === 'config'`; otherwise null. */
-  periodId: string | null
+  periodId: string | null;
   /** Service type consulted (null when no canonical mapping existed). */
-  serviceType: ServiceDuePeriodType | null
+  serviceType: ServiceDuePeriodType | null;
 }
 
 @Injectable()
@@ -62,37 +58,33 @@ export class DueAtCalculationService {
    */
   async resolve(
     executor: DbExecutor,
-    input: ResolveInvoiceDueAtInput,
+    input: ResolveInvoiceDueAtInput
   ): Promise<ResolvedInvoiceDueAt> {
     if (input.staffOverride !== undefined) {
       const resolved = resolveDueAt({
         issuedAt: input.issuedAt,
         staffOverride: input.staffOverride,
-      })
+      });
       return {
         ...resolved,
         periodId: null,
         serviceType: input.serviceType,
-      }
+      };
     }
 
     const period =
       input.serviceType === null
         ? null
-        : await this.repository.findActive(
-            executor,
-            input.serviceType,
-            input.issuedAt,
-          )
+        : await this.repository.findActive(executor, input.serviceType, input.issuedAt);
 
     const resolved = resolveDueAt({
       issuedAt: input.issuedAt,
       configDays: period?.defaultDays ?? null,
-    })
+    });
     return {
       ...resolved,
       periodId: period?.id ?? null,
       serviceType: input.serviceType,
-    }
+    };
   }
 }

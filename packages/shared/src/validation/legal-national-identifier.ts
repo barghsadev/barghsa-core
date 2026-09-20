@@ -16,14 +16,14 @@
  */
 export function validateLegalNationalIdentifier(value: string): boolean {
   // Must be exactly 11 digits
-  if (!/^\d{11}$/.test(value)) return false
+  if (!/^\d{11}$/.test(value)) return false;
 
   // Must not be all zeros
-  if (/^0{11}$/.test(value)) return false
+  if (/^0{11}$/.test(value)) return false;
 
   // All same digit is invalid
-  const first = value[0]
-  if (first !== undefined && [...value].every((d) => d === first)) return false
+  const first = value[0];
+  if (first !== undefined && [...value].every((d) => d === first)) return false;
 
-  return true
+  return true;
 }

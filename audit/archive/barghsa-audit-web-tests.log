@@ -1,0 +1,13 @@
+
+> @barghsa/web@0.0.0 test /Users/majid/www/barghsa/barghsa-core/apps/web
+> vitest run --passWithNoTests
+
+
+ RUN  v4.1.11 /Users/majid/www/barghsa/barghsa-core/apps/web
+
+
+ Test Files  15 passed (15)
+      Tests  107 passed (107)
+   Start at  23:04:49
+   Duration  3.49s (transform 2.66s, setup 398ms, import 4.72s, tests 2.84s, environment 17.41s)
+

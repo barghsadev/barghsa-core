@@ -1,6 +1,11 @@
+import { ApiZodBody } from '../openapi/zod-body.decorator.js';
+import { OnboardingDraftsService, legalDraftInputSchema } from './onboarding-drafts.service.js';
+import { z } from 'zod';
 import {
   Controller,
   Post,
+  Get,
+  Put,
   Body,
   Param,
   HttpCode,
@@ -8,25 +13,59 @@ import {
   Logger,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { ProfilesService } from './profiles.service.js'
-import { LegalProfilesService } from './legal-profiles.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+  ParseUUIDPipe,
+} from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ProfilesService } from './profiles.service.js';
+import { LegalProfilesService } from './legal-profiles.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 @ApiTags('Onboarding')
 @Controller('api/onboarding')
 @UseGuards(SessionAuthGuard)
 export class OnboardingController {
-  private readonly logger = new Logger(OnboardingController.name)
+  private readonly logger = new Logger(OnboardingController.name);
 
   constructor(
     private readonly profilesService: ProfilesService,
     private readonly legalProfilesService: LegalProfilesService,
+    private readonly drafts: OnboardingDraftsService
   ) {}
+
+  @Get('documents/:profileId')
+  @RateLimit({ namespace: 'onboarding:documents:user', limit: 30, windowMs: 60000 })
+  @ApiOperation({ summary: 'Download the owned legal profile documents' })
+  getDocuments(
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.legalProfilesService.getDocuments(req.session.userId, profileId);
+  }
+
+  @Get('draft/:profileId')
+  @RateLimit({ namespace: 'onboarding:draft:get:user', limit: 60, windowMs: 60000 })
+  @ApiOperation({ summary: 'Read the current owned legal onboarding draft' })
+  getDraft(
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.drafts.get(req.session.userId, profileId);
+  }
+
+  @Put('draft/:profileId')
+  @ApiZodBody(legalDraftInputSchema)
+  @RateLimit({ namespace: 'onboarding:draft:save:user', limit: 60, windowMs: 60000 })
+  @ApiOperation({ summary: 'Save legal onboarding fields with a draft version check' })
+  saveDraft(
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.drafts.save(req.session.userId, profileId, body);
+  }
 
   /**
    * POST /api/onboarding/start
@@ -55,10 +94,18 @@ export class OnboardingController {
   @ApiResponse({ status: 400, description: 'Invalid profile type' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async startOnboarding(
-    @Body() body: { profileType: string },
-    @Req() req: AuthenticatedRequest,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
   ): Promise<{ profileId: string; profileType: 'INDIVIDUAL' | 'LEGAL'; isDefault: boolean }> {
-    const profileType = body.profileType?.toUpperCase()
+    const parsed = z
+      .object({
+        profileType: z
+          .string()
+          .transform((value) => value.toUpperCase())
+          .pipe(z.enum(['INDIVIDUAL', 'LEGAL'])),
+      })
+      .safeParse(body);
+    const profileType = parsed.success ? parsed.data.profileType : undefined;
 
     if (profileType !== 'INDIVIDUAL' && profileType !== 'LEGAL') {
       throw new HttpException(
@@ -67,24 +114,21 @@ export class OnboardingController {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'profileType must be INDIVIDUAL or LEGAL',
         },
-        400,
-      )
+        400
+      );
     }
 
-    const profile = await this.profilesService.createProfile(
-      req.session.userId,
-      profileType,
-    )
+    const profile = await this.profilesService.createProfile(req.session.userId, profileType);
 
     this.logger.log(
-      `Onboarding started for user ${req.session.userId}: profile ${profile.id} (${profileType})`,
-    )
+      `Onboarding started for user ${req.session.userId}: profile ${profile.id} (${profileType})`
+    );
 
     return {
       profileId: profile.id,
       profileType: profile.profileType,
       isDefault: profile.isDefault,
-    }
+    };
   }
 
   /**
@@ -120,116 +164,50 @@ export class OnboardingController {
   @ApiResponse({ status: 404, description: 'Profile not found' })
   @ApiResponse({ status: 409, description: 'National ID already registered' })
   async saveIndividualProfile(
-    @Param('profileId') profileId: string,
-    @Body() body: {
-      title?: string
-      firstName: string
-      lastName: string
-      nationalId: string
-      provinceId: string
-      cityId: string
-      fullAddress: string
-      postalCode: string
-    },
-    @Req() req: AuthenticatedRequest,
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
   ) {
-    // Required field validation
-    if (!body.firstName?.trim()) {
+    const parsed = z
+      .object({
+        title: z.string().trim().max(50).optional(),
+        firstName: z.string().trim().min(1).max(100),
+        lastName: z.string().trim().min(1).max(100),
+        nationalId: z.string().trim(),
+        provinceId: z.string().uuid(),
+        cityId: z.string().uuid(),
+        fullAddress: z.string().trim().min(1).max(500),
+        postalCode: z.string().trim(),
+      })
+      .safeParse(body);
+    if (!parsed.success) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'First name is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: parsed.error.issues[0]?.message ?? 'Invalid individual profile data',
+        },
+        400
+      );
     }
-    if (!body.lastName?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Last name is required' },
-        400,
-      )
-    }
-    if (!body.nationalId?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'National ID is required' },
-        400,
-      )
-    }
-    if (!body.provinceId?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Province is required' },
-        400,
-      )
-    }
-    if (!body.cityId?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'City is required' },
-        400,
-      )
-    }
-    if (!body.fullAddress?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Full address is required' },
-        400,
-      )
-    }
-    if (!body.postalCode?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Postal code is required' },
-        400,
-      )
-    }
-
-    // Field length validation
-    if (body.firstName.length > 100) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'First name must be 100 characters or fewer' },
-        400,
-      )
-    }
-    if (body.lastName.length > 100) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Last name must be 100 characters or fewer' },
-        400,
-      )
-    }
-    if (body.fullAddress.length > 500) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Full address must be 500 characters or fewer' },
-        400,
-      )
-    }
-    if (body.title && body.title.length > 50) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Title must be 50 characters or fewer' },
-        400,
-      )
-    }
-
     const profile = await this.profilesService.saveIndividualProfile(
       req.session.userId,
       profileId,
-      {
-        title: body.title?.trim() || undefined,
-        firstName: body.firstName.trim(),
-        lastName: body.lastName.trim(),
-        nationalId: body.nationalId.trim(),
-        provinceId: body.provinceId.trim(),
-        cityId: body.cityId.trim(),
-        fullAddress: body.fullAddress.trim(),
-        postalCode: body.postalCode.trim(),
-      },
-    )
+      parsed.data
+    );
 
-    this.logger.log(`Individual profile ${profileId} saved for user ${req.session.userId}`)
+    this.logger.log(`Individual profile ${profileId} saved for user ${req.session.userId}`);
 
     return {
       id: profile.id,
       profileType: profile.profileType,
       isDefault: profile.isDefault,
-      status: 'ACTIVE',
+      status: profile.status,
       title: profile.title,
       firstName: profile.firstName,
       lastName: profile.lastName,
       nationalId: profile.nationalId,
-    }
+    };
   }
 
   /**
@@ -262,119 +240,25 @@ export class OnboardingController {
   @ApiResponse({ status: 404, description: 'Profile not found' })
   @ApiResponse({ status: 409, description: 'National identifier already registered' })
   async saveLegalProfile(
-    @Param('profileId') profileId: string,
-    @Body() body: {
-      legalName: string
-      nationalIdentifier: string
-      registrationNumber: string
-      companyTypeId?: string
-      registrationDate?: string
-      economicCode?: string
-      officialPhone?: string
-      officialEmail?: string
-      officialProvinceId?: string
-      officialCityId?: string
-      officialFullAddress?: string
-      officialPostalCode?: string
-      representativeTitle: string
-      representativeRelationship: string
-    },
-    @Req() req: AuthenticatedRequest,
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
   ) {
-    // Required field validation
-    if (!body.legalName?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Legal name is required' },
-        400,
-      )
-    }
-    if (!body.nationalIdentifier?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'National identifier is required' },
-        400,
-      )
-    }
-    if (!body.registrationNumber?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Registration number is required' },
-        400,
-      )
-    }
-    if (!body.representativeTitle?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Representative title is required' },
-        400,
-      )
-    }
-    if (!body.representativeRelationship?.trim()) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Representative relationship is required' },
-        400,
-      )
-    }
-
-    // Field length validation
-    if (body.legalName.length > 200) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Legal name must be 200 characters or fewer' },
-        400,
-      )
-    }
-    if (body.registrationNumber.length > 50) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Registration number must be 50 characters or fewer' },
-        400,
-      )
-    }
-    if (body.representativeTitle.length > 100) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Representative title must be 100 characters or fewer' },
-        400,
-      )
-    }
-    if (body.representativeRelationship.length > 100) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Representative relationship must be 100 characters or fewer' },
-        400,
-      )
-    }
-    if (body.officialFullAddress && body.officialFullAddress.length > 500) {
-      throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Official full address must be 500 characters or fewer' },
-        400,
-      )
-    }
-
     const profile = await this.legalProfilesService.saveLegalProfile(
       req.session.userId,
       profileId,
-      {
-        legalName: body.legalName.trim(),
-        nationalIdentifier: body.nationalIdentifier.trim(),
-        registrationNumber: body.registrationNumber.trim(),
-        companyTypeId: body.companyTypeId?.trim() || undefined,
-        registrationDate: body.registrationDate?.trim() || undefined,
-        economicCode: body.economicCode?.trim() || undefined,
-        officialPhone: body.officialPhone?.trim() || undefined,
-        officialEmail: body.officialEmail?.trim() || undefined,
-        officialProvinceId: body.officialProvinceId?.trim() || undefined,
-        officialCityId: body.officialCityId?.trim() || undefined,
-        officialFullAddress: body.officialFullAddress?.trim() || undefined,
-        officialPostalCode: body.officialPostalCode?.trim() || undefined,
-        representativeTitle: body.representativeTitle.trim(),
-        representativeRelationship: body.representativeRelationship.trim(),
-      },
-    )
+      body
+    );
 
-    this.logger.log(`Legal profile ${profileId} saved for user ${req.session.userId}`)
+    this.logger.log(`Legal profile ${profileId} saved for user ${req.session.userId}`);
 
     return {
       id: profile.id,
       profileType: profile.profileType,
       isDefault: profile.isDefault,
-      status: 'ACTIVE',
+      status: profile.status,
       title: profile.title,
-    }
+    };
   }
 
   /**
@@ -407,17 +291,14 @@ export class OnboardingController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async completeOnboarding(
-    @Param('profileId') profileId: string,
-    @Req() req: AuthenticatedRequest,
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
   ) {
-    const profile = await this.profilesService.completeOnboarding(
-      req.session.userId,
-      profileId,
-    )
+    const profile = await this.profilesService.completeOnboarding(req.session.userId, profileId);
 
     this.logger.log(
-      `Onboarding completed for profile ${profileId} by user ${req.session.userId} (status=${profile.status})`,
-    )
+      `Onboarding completed for profile ${profileId} by user ${req.session.userId} (status=${profile.status})`
+    );
 
     return {
       id: profile.id,
@@ -425,6 +306,6 @@ export class OnboardingController {
       isDefault: profile.isDefault,
       status: profile.status,
       message: 'Onboarding completed successfully',
-    }
+    };
   }
 }

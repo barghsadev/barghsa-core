@@ -9,13 +9,13 @@
  *   - `mandatory` (and `system`) events: the in-app channel is ALWAYS
  *     delivered — transactional/security/payment/contract notifications must
  *     never be silently dropped. An external channel (email/sms) is delivered
- *     ONLY when the profile owns a verified destination for that channel.
+ *     ONLY when the recipient has enabled that channel and owns a verified destination.
  *     Without a verified email, an `email` leg is skipped; without a verified
  *     phone number, an `sms` leg is skipped.
  *   - `marketing` events: the in-app channel is still always delivered (in-app
  *     delivery is never consent-gated). An external channel (email/sms) is
  *     delivered ONLY when the profile HAS opted in to marketing on that
- *     channel AND owns a verified destination. If not opted in, the whole
+ *     channel AND owns a verified destination AND has enabled the account channel. If not opted in, the whole
  *     external surface is skipped—no email/SMS marketing is ever sent without
  *     explicit consent.
  *
@@ -33,10 +33,13 @@
  *
  * @module notifications
  */
-import { getNotificationTypeDefinition, type NotificationChannel } from '@barghsa/shared/notifications'
+import {
+  getNotificationTypeDefinition,
+  type NotificationChannel,
+} from '@barghsa/shared/notifications';
 
 /** Consent category used by the availability gate (registry value, defaulted). */
-export type ChannelAvailabilityCategory = 'mandatory' | 'marketing' | 'system'
+export type ChannelAvailabilityCategory = 'mandatory' | 'marketing' | 'system';
 
 /**
  * A profile's verified contact destinations and marketing consent, keyed for
@@ -49,29 +52,37 @@ export type ChannelAvailabilityCategory = 'mandatory' | 'marketing' | 'system'
  * (profile, channel) in `user_notification_preferences` (T-05.05.01).
  */
 export interface ChannelAvailabilityContext {
+  /** Account-wide channel choices; missing external choices are disabled. */
+  enabledChannels: Partial<Record<'email' | 'sms', boolean>>;
   /** Whether the profile owns a verified email destination. */
-  verifiedEmail: boolean
+  verifiedEmail: boolean;
   /** Whether the profile owns a verified phone (SMS) destination. */
-  verifiedPhone: boolean
+  verifiedPhone: boolean;
+  /** Hard bounce or complaint suppression, independent of marketing consent. */
+  emailSuppressed?: boolean;
   /** Whether the user has opted in to marketing on each external channel. */
-  marketingOptedIn: Partial<Record<'email' | 'sms', boolean>>
+  marketingOptedIn: Partial<Record<'email' | 'sms', boolean>>;
 }
 
 /** Reason an external channel leg was skipped by the availability gate. */
-export type ChannelSkipReason = 'verified_destination_missing' | 'marketing_opt_in_required'
+export type ChannelSkipReason =
+  | 'verified_destination_missing'
+  | 'marketing_opt_in_required'
+  | 'email_suppressed'
+  | 'channel_disabled';
 
 /** One skipped channel leg and why it was dropped. */
 export interface SkippedChannel {
-  channel: 'email' | 'sms'
-  reason: ChannelSkipReason
+  channel: 'email' | 'sms';
+  reason: ChannelSkipReason;
 }
 
 /** Result of resolving availability for one outbox row. */
 export interface ChannelAvailabilityDecision {
   /** Channels that may be dispatched (always includes `in_app` when requested). */
-  allowed: NotificationChannel[]
+  allowed: NotificationChannel[];
   /** External legs that must be skipped, with the reason. */
-  skipped: SkippedChannel[]
+  skipped: SkippedChannel[];
 }
 
 /**
@@ -80,36 +91,41 @@ export interface ChannelAvailabilityDecision {
  * never consent-gated (both transactional and marketing in-app legs are
  * always allowed once requested, per the story's acceptance criteria).
  */
-const EXTERNAL: ReadonlySet<string> = new Set(['email', 'sms'])
+const EXTERNAL: ReadonlySet<string> = new Set(['email', 'sms']);
 
 /** Whether the profile has verified the destination for a given channel. */
 export function hasVerifiedDestination(
   channel: 'email' | 'sms',
-  ctx: ChannelAvailabilityContext,
+  ctx: ChannelAvailabilityContext
 ): boolean {
-  if (channel === 'email') return ctx.verifiedEmail
-  return ctx.verifiedPhone
+  if (channel === 'email') return ctx.verifiedEmail;
+  return ctx.verifiedPhone;
 }
 
 /**
  * Evaluate the gate for one external channel. Returns whether it may be
  * dispatched and, when not, the machine-readable reason.
  *
- *   - `mandatory` / `system` — a verified destination is required; no consent.
- *   - `marketing` — verified destination AND explicit opt-in required.
+ *   - All external delivery requires the account channel enabled and a verified destination.
+ *   - `marketing` also requires explicit profile marketing consent.
  */
 export function externalChannelAllowed(
   category: ChannelAvailabilityCategory,
   channel: 'email' | 'sms',
-  ctx: ChannelAvailabilityContext,
+  ctx: ChannelAvailabilityContext
 ): { allowed: boolean; reason?: ChannelSkipReason } {
+  if (channel === 'email' && ctx.emailSuppressed)
+    return { allowed: false, reason: 'email_suppressed' };
   if (!hasVerifiedDestination(channel, ctx)) {
-    return { allowed: false, reason: 'verified_destination_missing' }
+    return { allowed: false, reason: 'verified_destination_missing' };
+  }
+  if (!ctx.enabledChannels[channel]) {
+    return { allowed: false, reason: 'channel_disabled' };
   }
   if (category === 'marketing' && !ctx.marketingOptedIn[channel]) {
-    return { allowed: false, reason: 'marketing_opt_in_required' }
+    return { allowed: false, reason: 'marketing_opt_in_required' };
   }
-  return { allowed: true }
+  return { allowed: true };
 }
 
 /**
@@ -122,35 +138,35 @@ export function externalChannelAllowed(
 export function resolveChannelAvailability(
   eventKey: string,
   requested: readonly NotificationChannel[],
-  ctx: ChannelAvailabilityContext,
+  ctx: ChannelAvailabilityContext
 ): ChannelAvailabilityDecision {
-  const def = getNotificationTypeDefinition(eventKey)
-  const category: ChannelAvailabilityCategory = def?.category ?? 'mandatory'
+  const def = getNotificationTypeDefinition(eventKey);
+  const category: ChannelAvailabilityCategory = def?.category ?? 'mandatory';
 
-  const allowed: NotificationChannel[] = []
-  const skipped: SkippedChannel[] = []
+  const allowed: NotificationChannel[] = [];
+  const skipped: SkippedChannel[] = [];
 
   for (const channel of requested) {
     if (channel === 'in_app') {
       // Never consent-gated: in-app is always delivered once requested.
-      allowed.push(channel)
-      continue
+      allowed.push(channel);
+      continue;
     }
     if (!EXTERNAL.has(channel)) {
       // Unknown/future non-external channel — do not gate it out.
-      allowed.push(channel)
-      continue
+      allowed.push(channel);
+      continue;
     }
-    const external = channel as 'email' | 'sms'
-    const gate = externalChannelAllowed(category, external, ctx)
+    const external = channel as 'email' | 'sms';
+    const gate = externalChannelAllowed(category, external, ctx);
     if (gate.allowed) {
-      allowed.push(channel)
+      allowed.push(channel);
     } else if (gate.reason) {
-      skipped.push({ channel: external, reason: gate.reason })
+      skipped.push({ channel: external, reason: gate.reason });
     }
   }
 
-  return { allowed, skipped }
+  return { allowed, skipped };
 }
 
-export type { NotificationChannel }
+export type { NotificationChannel };

@@ -3,7 +3,7 @@
 **Status:** Accepted  
 **Date:** 2026-08-24  
 **Deciders:** Platform Engineering Team  
-**Dependencies:** T-04.01.01, S-02.01  
+**Dependencies:** T-04.01.01, S-02.01
 
 ## Context
 
@@ -29,13 +29,13 @@ The platform needs to decide between:
 
 ### Transaction mode vs. Session mode
 
-- **Transaction mode** (selected): A client connection is returned to the pool after each transaction completes. This is the most efficient mode for HTTP APIs, where each request typically executes one or a few transactions. SET statements and prepared statements that span transactions are NOT supported — but the application uses neither (all queries use Drizzle ORM's parameterised queries).
-- **Session mode** (rejected): A client connection is held for the entire session. This is necessary for `LISTEN/NOTIFY`, cursors, and advisory locks — none of which the platform currently uses. If such features are needed later, a dedicated session-mode pool or direct connection can be configured.
+- **Transaction mode** (selected): A client connection is returned to the pool after each transaction completes. This is the most efficient mode for HTTP APIs, where each request typically executes one or a few transactions. Session settings do not follow a client between transactions. The application applies its timeout settings with SET LOCAL inside the transaction. Standalone statements run in short transactions; explicit BEGIN/COMMIT/ROLLBACK and savepoints remain caller-owned. Query settings and SQL stay on the same pooled backend.
+- **Session mode** (rejected): A client connection is held for the entire session. This is necessary for `LISTEN/NOTIFY`, cursors, and advisory locks — the platform now uses session advisory locks for bootstrap and other owned operations. Those callers must keep a direct connection.
 
 ### TLS
 
-- **App → PgBouncer:** TLS is optional in development (localhost) and required in production (internal network). Environment variable `PGBOUNCER_SSL_MODE` controls this.
-- **PgBouncer → PostgreSQL:** TLS is required in production. The PgBouncer config specifies `server_tls_sslmode=require` in production.
+- **App → PgBouncer:** TLS is optional in development (localhost) and required in production (internal network). The application uses `DATABASE_SSL_ENABLED=true` and `DATABASE_CA_PATH` with certificate validation. The pooler requires `PGBOUNCER_CLIENT_TLS_SSLMODE=require`, its certificate and key mounted through `PGBOUNCER_CLIENT_TLS_CERT_FILE` and `PGBOUNCER_CLIENT_TLS_KEY_FILE`.
+- **PgBouncer → PostgreSQL:** TLS is required in production. Set `PGBOUNCER_SERVER_TLS_SSLMODE=verify-full` and mount the server CA through `PGBOUNCER_SERVER_TLS_CA_FILE`. The backend hostname must match its certificate. The development Compose profile does not supply production certificates.
 
 ### Pool sizing
 
@@ -50,9 +50,9 @@ For a target of 5 API replicas, each with 20 application-level connections, PgBo
 
 - **Positive:** Connection exhaustion is prevented at scale. PostgreSQL `max_connections` can remain at its default (100) rather than being raised to 300+.
 - **Positive:** PgBouncer provides built-in statistics (`SHOW STATS`, `SHOW POOLS`) that can be exported for monitoring.
-- **Negative:** Transaction mode does not support session-level features (prepared statements, `LISTEN/NOTIFY`, temporary tables across transactions). If the platform later needs these, a dedicated direct connection pool or session-mode PgBouncer instance must be added.
+- **Negative:** Transaction pooling does not preserve session advisory locks, `LISTEN/NOTIFY` or temporary tables across transactions. Use the direct session pool for those operations.
 - **Negative:** An additional infrastructure component to deploy, monitor, and configure. PgBouncer must be included in the deployment stack (Docker Compose for single-VM, sidecar or separate container for pilot).
-- **Negative:** One extra network hop adds ~1ms of latency per query in production (negligible for the platform's workload).
+- **Negative:** Pooling and transaction-local settings add round trips. Measure the actual workload before sizing production replicas.
 
 ## Alternatives considered
 
@@ -74,20 +74,23 @@ A fork of PgBouncer with read/write splitting. The platform does not yet need re
 
 ```yaml
 pgbouncer:
-  image: bitnami/pgbouncer:latest
+  image: bitnamilegacy/pgbouncer:1.23.1
   container_name: barghsa-pgbouncer
   ports:
-    - "6432:6432"
+    - '6432:6432'
   environment:
     PGBOUNCER_DATABASE: barghsa
-    PGBOUNCER_HOST: postgres
-    PGBOUNCER_PORT: "5432"
-    PGBOUNCER_USER: barghsa
-    PGBOUNCER_PASSWORD: barghsa-dev-password
-    PGBOUNCER_MAX_CLIENT_CONN: "200"
-    PGBOUNCER_DEFAULT_POOL_SIZE: "30"
-    PGBOUNCER_RESERVE_POOL_SIZE: "10"
-    PGBOUNCER_RESERVE_POOL_TIMEOUT: "3"
+    PGBOUNCER_PORT: '6432'
+    PGBOUNCER_POOL_MODE: transaction
+    POSTGRESQL_HOST: postgres
+    POSTGRESQL_PORT: '5432'
+    POSTGRESQL_DATABASE: barghsa
+    POSTGRESQL_USERNAME: barghsa
+    POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD:-barghsa-dev-password}
+    PGBOUNCER_MAX_CLIENT_CONN: '200'
+    PGBOUNCER_DEFAULT_POOL_SIZE: '30'
+    PGBOUNCER_RESERVE_POOL_SIZE: '10'
+    PGBOUNCER_RESERVE_POOL_TIMEOUT: '3'
   depends_on:
     postgres:
       condition: service_healthy
@@ -95,9 +98,18 @@ pgbouncer:
 
 ### Application connection
 
+The optional container profile uses the image's supported backend variables, transaction mode and an authenticated SQL health check. The application does not send unsupported startup timeout options. Explicit URL `options` are rejected rather than ignored. See [PgBouncer parameter tracking](https://www.pgbouncer.org/config#track_extra_parameters) for the startup/session restrictions.
+
+Reads retain their10-second default and writes/transaction completion retain30seconds. Explicit uniform timeout overrides remain supported. Settings reset at transaction end; queued queries can expire before execution. Backend acquisition and cleanup are bounded, and commit uses its write deadline. Send transaction-control commands separately from other SQL; mixed transaction batches are rejected before execution.
+
+Session advisory locks must use `getDbPool({ session: true })`. With PgBouncer configured this selects a direct pool, bounded to five connections, using `PGDIRECT_URL` or `DATABASE_URL`. Missing direct configuration fails the session operation. Without PgBouncer it reuses the ordinary application pool. Finance receipt/payment/chargeback callers use this path because their locks span multiple transactions. API shutdown closes both shared pools. The direct endpoint must reach PostgreSQL, not a transaction pooler.
+
+Local tests exercise real PostgreSQL16 and PgBouncer1.23.1 with one backend, including timeout isolation, rollback, slow commit, queued side effects, direct session locks and cleanup. Production TLS certificates, firewall restrictions, sizing and rollout still require operational verification.
+
 The application connects to PgBouncer via `PGBOUNCER_URL` (e.g., `postgres://barghsa:password@pgbouncer:6432/barghsa`). When `PGBOUNCER_URL` is not set, the application falls back to `DATABASE_URL` (direct PostgreSQL connection).
 
 Env vars:
+
 - `DATABASE_URL` — direct PostgreSQL connection (used when PgBouncer is not configured)
 - `PGBOUNCER_URL` — PgBouncer connection (used when available; overrides `DATABASE_URL`)
 - `PGDIRECT_URL` — direct PostgreSQL connection for admin/migration operations (bypasses PgBouncer)
@@ -105,6 +117,7 @@ Env vars:
 ## Review
 
 This ADR should be reviewed when:
+
 - The platform adds read replicas or sharding
 - Session-level features (LISTEN/NOTIFY, prepared statements) are needed
 - The number of API replicas exceeds 10

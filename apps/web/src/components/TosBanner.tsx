@@ -1,6 +1,8 @@
-import { useState, useEffect, useCallback } from 'react'
-import { t, type Locale } from '@barghsa/i18n'
-import { Button } from '@barghsa/ui'
+import { useRouterState } from '@tanstack/react-router';
+import { useAccountTime } from '../hooks/useAccountTime.js';
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+import { t, type Locale } from '@barghsa/i18n/terms';
+import { Button } from '@barghsa/ui';
 import {
   Dialog,
   DialogContent,
@@ -8,31 +10,26 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@barghsa/ui'
-import { AlertCircleIcon, CheckIcon, Loader2Icon } from 'lucide-react'
-import { withCsrf } from '../lib/csrf.js'
+} from '@barghsa/ui';
+import { AlertCircleIcon, CheckIcon, Loader2Icon } from 'lucide-react';
+import { withCsrf } from '../lib/csrf.js';
+
+const TosContent = lazy(() => import('./TosContent.js'));
 
 // ─── Types ────────────────────────────────────────────────────────────
 
-interface UserInfo {
-  userId: string
-  username: string
-  email: string | null
-  mobile: string | null
-  requiresTosAcceptance: boolean
-}
-
 interface CurrentTosResponse {
-  content: string
-  versionId: string
-  updatedAt: string
-  publishedAt: string
+  id: string;
+  content: string;
+  versionId: string;
+  updatedAt: string;
+  publishedAt: string;
 }
 
 // ─── Props ────────────────────────────────────────────────────────────
 
 interface TosBannerProps {
-  locale?: Locale
+  locale?: Locale;
 }
 
 // ─── Component ────────────────────────────────────────────────────────
@@ -47,192 +44,288 @@ interface TosBannerProps {
  * re-acceptance is required, with an explicit dismiss from the user suppressing
  * further auto-opens within the same session.
  *
- * The banner does NOT appear on exempt pages: auth/*, account recovery,
- * support, or the TOS page itself — but since this component is rendered
- * inside DashboardLayout and AdminLayout those are already authenticated pages.
+ * Support and legal-record routes retain manual review without an automatic modal.
+ * Status failures offer a non-blocking retry; navigation checks status again.
  */
 export function TosBanner({ locale = 'fa' }: TosBannerProps) {
-  const [requiresAcceptance, setRequiresAcceptance] = useState(false)
-  const [checking, setChecking] = useState(true)
-  const [showModal, setShowModal] = useState(false)
-  const [currentTos, setCurrentTos] = useState<CurrentTosResponse | null>(null)
-  const [loadingTos, setLoadingTos] = useState(false)
-  const [accepting, setAccepting] = useState(false)
-  const [accepted, setAccepted] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [dismissedAutoModal, setDismissedAutoModal] = useState(false)
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const automaticReviewAllowed =
+    !/^(?:\/(?:auth|account-recovery|support|tickets|terms|invoices|contracts)|\/admin\/(?:tickets|invoices))(?:\/|$)/.test(
+      pathname
+    );
+  const reviewRequest = useRef(0);
+  const statusRequest = useRef(0);
+  const time = useAccountTime(locale);
+  const [requiresAcceptance, setRequiresAcceptance] = useState(false);
+  const [checking, setChecking] = useState(true);
+  const [statusFailed, setStatusFailed] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [currentTos, setCurrentTos] = useState<CurrentTosResponse | null>(null);
+  const [loadingTos, setLoadingTos] = useState(false);
+  const [renderedVersion, setRenderedVersion] = useState<string | null>(null);
+  const renderKey = currentTos ? `${currentTos.id}:${locale}` : null;
+  const markRendered = useCallback(() => setRenderedVersion(renderKey), [renderKey]);
+  const [accepting, setAccepting] = useState(false);
+  const [accepted, setAccepted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [dismissedAutoModal, setDismissedAutoModal] = useState(false);
 
   // ── Check TOS acceptance status ─────────────────────────────────
 
   const checkTosStatus = useCallback(async () => {
+    const request = ++statusRequest.current;
+    setChecking(true);
     try {
-      const response = await fetch('/api/auth/user')
-      if (!response.ok) {
-        setChecking(false)
-        return
+      const response = await fetch('/api/auth/user');
+      if (request !== statusRequest.current) return;
+      if (response.status === 401) {
+        setRequiresAcceptance(false);
+        setStatusFailed(false);
+        setShowModal(false);
+        return;
       }
-      const data: UserInfo = await response.json()
-      setRequiresAcceptance(data.requiresTosAcceptance)
+      if (!response.ok) throw new Error('Consent status unavailable');
+      const data: unknown = await response.json();
+      if (request !== statusRequest.current) return;
+      if (
+        !data ||
+        typeof data !== 'object' ||
+        !('userId' in data) ||
+        typeof data.userId !== 'string' ||
+        !data.userId ||
+        !('requiresTosAcceptance' in data) ||
+        typeof data.requiresTosAcceptance !== 'boolean'
+      ) {
+        throw new Error('Invalid consent status');
+      }
+      setRequiresAcceptance(data.requiresTosAcceptance);
+      setStatusFailed(false);
+      if (!data.requiresTosAcceptance) setShowModal(false);
     } catch {
-      // Silently fail — banner is non-critical UI
+      if (request === statusRequest.current) setStatusFailed(true);
     } finally {
-      setChecking(false)
+      if (request === statusRequest.current) setChecking(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    checkTosStatus()
-  }, [checkTosStatus])
+    void checkTosStatus();
+    return () => {
+      statusRequest.current++;
+    };
+  }, [checkTosStatus, pathname]);
 
   // ── Fetch current TOS content for modal ─────────────────────────
 
   const openReviewModal = useCallback(async () => {
-    setShowModal(true)
-    setLoadingTos(true)
-    setError(null)
+    const request = ++reviewRequest.current;
+    setShowModal(true);
+    setLoadingTos(true);
+    setCurrentTos(null);
+    setRenderedVersion(null);
+    setError(null);
 
     try {
-      const response = await fetch(`/api/tos/current?locale=${locale}`)
+      const response = await fetch(`/api/tos/current?locale=${locale}`);
+      if (request !== reviewRequest.current) return;
       if (!response.ok) {
-        setError(t('tos.page.error', locale))
-        return
+        setError(t('tos.page.error', locale));
+        return;
       }
-      const data: CurrentTosResponse = await response.json()
-      setCurrentTos(data)
+      const data: unknown = await response.json();
+      if (request !== reviewRequest.current) return;
+      if (!data || typeof data !== 'object') throw new Error('Invalid terms response');
+      const version = data as Partial<CurrentTosResponse>;
+      if (
+        typeof version.id !== 'string' ||
+        !version.id ||
+        typeof version.versionId !== 'string' ||
+        !version.versionId ||
+        typeof version.content !== 'string' ||
+        !version.content.trim() ||
+        typeof version.updatedAt !== 'string' ||
+        typeof version.publishedAt !== 'string'
+      )
+        throw new Error('Invalid terms response');
+      setCurrentTos(version as CurrentTosResponse);
     } catch {
-      setError(t('tos.page.error', locale))
+      if (request === reviewRequest.current) setError(t('tos.page.error', locale));
     } finally {
-      setLoadingTos(false)
+      if (request === reviewRequest.current) setLoadingTos(false);
     }
-  }, [locale])
+  }, [locale]);
 
   // ── Auto-open modal on first non-exempt page visit ─────────────
 
   useEffect(() => {
-    if (requiresAcceptance && !dismissedAutoModal) {
-      openReviewModal()
+    if (automaticReviewAllowed && requiresAcceptance && !dismissedAutoModal) {
+      openReviewModal();
     }
-  }, [requiresAcceptance, dismissedAutoModal, openReviewModal])
+  }, [automaticReviewAllowed, requiresAcceptance, dismissedAutoModal, openReviewModal]);
+
+  useEffect(() => {
+    if (!automaticReviewAllowed) {
+      reviewRequest.current++;
+      setShowModal(false);
+      setLoadingTos(false);
+    }
+  }, [automaticReviewAllowed]);
+  useEffect(
+    () => () => {
+      reviewRequest.current++;
+    },
+    []
+  );
 
   // ── Accept TOS ──────────────────────────────────────────────────
 
   const handleAccept = useCallback(async () => {
-    if (!currentTos) return
+    if (!currentTos || renderedVersion !== renderKey) return;
 
-    setAccepting(true)
-    setError(null)
+    setAccepting(true);
+    setError(null);
 
     try {
-      const response = await fetch('/api/tos/accept', {
+      const response = await fetch(`/api/tos/accept/${encodeURIComponent(currentTos.id)}`, {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ versionId: currentTos.versionId }),
-      })
+      });
 
       if (!response.ok) {
-        setError(t('tos.modal.error', locale))
-        return
+        setError(t('tos.modal.error', locale));
+        return;
       }
 
-      setAccepted(true)
-      setRequiresAcceptance(false)
+      statusRequest.current++;
+      setChecking(false);
+      setStatusFailed(false);
+      setAccepted(true);
+      setRequiresAcceptance(false);
 
       // Close modal after brief success state
       setTimeout(() => {
-        setShowModal(false)
-        setAccepted(false)
-      }, 1500)
+        setShowModal(false);
+        setAccepted(false);
+      }, 1500);
     } catch {
-      setError(t('tos.modal.error', locale))
+      setError(t('tos.modal.error', locale));
     } finally {
-      setAccepting(false)
+      setAccepting(false);
     }
-  }, [currentTos, locale])
+  }, [currentTos, locale, renderedVersion, renderKey]);
 
   // ── Render ──────────────────────────────────────────────────────
 
+  if (statusFailed) {
+    return (
+      <div
+        role="status"
+        dir={locale === 'fa' ? 'rtl' : 'ltr'}
+        className="flex flex-wrap items-center justify-between gap-3 border-b bg-muted text-foreground px-4 py-3 text-sm"
+      >
+        <span>{t('tos.banner.checkFailed', locale)}</span>
+        <Button size="sm" variant="outline" disabled={checking} onClick={checkTosStatus}>
+          {t('tos.banner.retry', locale)}
+        </Button>
+      </div>
+    );
+  }
+
   if (checking || !requiresAcceptance) {
-    return null
+    return null;
   }
 
   return (
     <>
       {/* Sticky banner */}
       <div
-        className="sticky top-0 z-40 flex items-center justify-between gap-4 bg-amber-50 border-b border-amber-200 px-4 py-3 text-sm"
+        className="sticky top-0 z-40 flex flex-wrap items-center justify-between gap-4 bg-muted text-foreground border-b px-4 py-3 text-sm"
         role="alert"
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
       >
         <div className="flex items-center gap-2">
-          <AlertCircleIcon className="h-4 w-4 text-amber-600 shrink-0" />
-          <span className="text-amber-800">{t('tos.banner.text', locale)}</span>
+          <AlertCircleIcon className="h-4 w-4 text-foreground shrink-0" />
+          <span className="text-foreground">{t('tos.banner.text', locale)}</span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <Button
-            variant="default"
-            size="sm"
-            onClick={openReviewModal}
-          >
+          <Button variant="default" size="sm" onClick={openReviewModal}>
             {t('tos.banner.review', locale)}
           </Button>
         </div>
       </div>
 
       {/* Review modal */}
-      <Dialog open={showModal} onOpenChange={(open) => {
-        if (!open && !accepted) {
-          setDismissedAutoModal(true)
-        }
-        setShowModal(open)
-      }}>
-        <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col">
+      <Dialog
+        open={showModal}
+        onOpenChange={(open) => {
+          if (!open && !accepted) {
+            setDismissedAutoModal(true);
+          }
+          setShowModal(open);
+        }}
+      >
+        <DialogContent
+          className="sm:max-w-lg max-h-[80vh] flex flex-col"
+          closeLabel={t('tos.modal.close', locale)}
+        >
           <DialogHeader>
             <DialogTitle>{t('tos.modal.title', locale)}</DialogTitle>
             {currentTos && (
               <DialogDescription>
-                {t('tos.page.lastUpdated', locale).replace('{date}', new Date(currentTos.updatedAt).toLocaleDateString(locale === 'fa' ? 'fa-IR' : 'en-US'))}
+                {t('tos.page.lastUpdated', locale).replace(
+                  '{date}',
+                  time.format(currentTos.updatedAt, { dateStyle: 'long' })
+                )}
               </DialogDescription>
             )}
           </DialogHeader>
 
+          {time.notice}
           {/* TOS content area */}
-          <div className="flex-1 overflow-y-auto min-h-[200px] max-h-[50vh] border rounded-md p-4 bg-white">
+          <div className="flex-1 overflow-y-auto min-h-[200px] max-h-[50vh] border rounded-md p-4 bg-background">
             {loadingTos && (
-              <div className="flex items-center justify-center h-full">
+              <div
+                role="status"
+                aria-label={t('tos.page.loading', locale)}
+                className="flex items-center justify-center h-full"
+              >
                 <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
               </div>
             )}
             {error && (
-              <div className="flex items-center justify-center h-full text-red-500">
+              <div className="flex items-center justify-center h-full text-destructive">
                 <p>{error}</p>
               </div>
             )}
             {currentTos && !loadingTos && !error && (
-              <div
-                className="prose prose-sm max-w-none"
-                dir={locale === 'fa' ? 'rtl' : 'ltr'}
+              <Suspense
+                fallback={
+                  <p role="status" className="sr-only">
+                    {t('tos.page.loading', locale)}
+                  </p>
+                }
               >
-                {currentTos.content.split('\n').map((line, i) => (
-                  <p key={i} className="mb-2">{line}</p>
-                ))}
-              </div>
+                <TosContent content={currentTos.content} language={locale} onReady={markRendered} />
+              </Suspense>
             )}
           </div>
 
           <DialogFooter>
             {accepted ? (
-              <div className="flex items-center gap-2 text-green-600">
+              <div className="flex items-center gap-2 text-foreground">
                 <CheckIcon className="h-4 w-4" />
                 <span>{t('tos.modal.success', locale)}</span>
               </div>
             ) : (
               <Button
                 onClick={handleAccept}
-                disabled={accepting || !currentTos}
+                disabled={
+                  accepting || loadingTos || !!error || !currentTos || renderedVersion !== renderKey
+                }
               >
                 {accepting ? (
                   <>
-                    <Loader2Icon className="h-4 w-4 mr-2 animate-spin" />
+                    <Loader2Icon className="h-4 w-4 me-2 animate-spin" />
                     {t('tos.modal.accepting', locale)}
                   </>
                 ) : (
@@ -244,5 +337,5 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }

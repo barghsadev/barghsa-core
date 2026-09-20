@@ -1,6 +1,6 @@
-import { pgTable, text, index } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { users } from './users.js'
+import { pgTable, text, index } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { users } from './users.js';
 
 /**
  * AI model record (S-09.11, T-09.11.01).
@@ -78,5 +78,5 @@ export const aiModels = pgTable(
   (table) => [
     /** List by recency for the admin UI (migration 0042). */
     index('idx_aim_created_at').on(table.createdAt),
-  ],
-)
+  ]
+);

@@ -1,19 +1,19 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
-import { sql } from 'drizzle-orm'
-import { createIsolatedTestDb, dropTestSchema } from '../test/testDb'
-import type { IsolatedTestDb } from '../test/testDb'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { sql } from 'drizzle-orm';
+import { createIsolatedTestDb, dropTestSchema } from '../test/testDb';
+import type { IsolatedTestDb } from '../test/testDb';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-const UUIDV7_MIGRATION = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql')
+const UUIDV7_MIGRATION = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql');
 const AMOUNT_MIGRATION = resolve(
   __dirname,
-  '../../drizzle/0052_add_invoice_amount_check_constraints.sql',
-)
+  '../../drizzle/0052_add_invoice_amount_check_constraints.sql'
+);
 const SNAPSHOT_MIGRATION = resolve(
   __dirname,
-  '../../drizzle/0058_add_invoice_calculation_snapshot.sql',
-)
+  '../../drizzle/0058_add_invoice_calculation_snapshot.sql'
+);
 
 /**
  * Real-PostgreSQL enforcement tests for the invoice calculation snapshot
@@ -28,70 +28,70 @@ const SNAPSHOT_MIGRATION = resolve(
  *   - the migration is idempotent (re-runnable).
  */
 describe('invoice calculation snapshot migration (T-04.1.02.08)', () => {
-  let ctx: IsolatedTestDb
+  let ctx: IsolatedTestDb;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb()
+    ctx = await createIsolatedTestDb();
 
-    const uuidSql = readFileSync(UUIDV7_MIGRATION, 'utf-8').trim()
-    await ctx.pool.query(uuidSql)
+    const uuidSql = readFileSync(UUIDV7_MIGRATION, 'utf-8').trim();
+    await ctx.pool.query(uuidSql);
 
     await ctx.db.execute(sql`
       CREATE TYPE invoice_state AS ENUM (
         'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
         'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
       )
-    `)
+    `);
     await ctx.db.execute(sql`
       CREATE TABLE IF NOT EXISTS profiles (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
       )
-    `)
+    `);
     await ctx.db.execute(sql`
       CREATE TABLE IF NOT EXISTS orders (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
       )
-    `)
+    `);
 
-    const amountSql = readFileSync(AMOUNT_MIGRATION, 'utf-8').trim()
-    await ctx.pool.query(amountSql)
+    const amountSql = readFileSync(AMOUNT_MIGRATION, 'utf-8').trim();
+    await ctx.pool.query(amountSql);
 
-    await ctx.db.execute(sql`INSERT INTO profiles (id) VALUES (uuid_generate_v7())`)
+    await ctx.db.execute(sql`INSERT INTO profiles (id) VALUES (uuid_generate_v7())`);
 
-    const snapshotSql = readFileSync(SNAPSHOT_MIGRATION, 'utf-8').trim()
-    await ctx.pool.query(snapshotSql)
-  })
+    const snapshotSql = readFileSync(SNAPSHOT_MIGRATION, 'utf-8').trim();
+    await ctx.pool.query(snapshotSql);
+  });
 
   afterAll(async () => {
-    await ctx.pool.end()
-    await dropTestSchema(ctx.schemaName)
-  })
+    await ctx.pool.end();
+    await dropTestSchema(ctx.schemaName);
+  });
 
   it('adds invoice_calculation_snapshot as a nullable JSONB column', async () => {
     const cols = await ctx.db.execute<{
-      column_name: string
-      is_nullable: string
-      data_type: string
+      column_name: string;
+      is_nullable: string;
+      data_type: string;
     }>(sql`
       SELECT column_name, is_nullable, data_type
       FROM information_schema.columns
       WHERE table_schema = current_schema()
         AND table_name = 'invoices'
         AND column_name = 'invoice_calculation_snapshot'
-    `)
-    expect(cols.rows).toHaveLength(1)
-    expect(cols.rows[0]!.is_nullable).toBe('YES')
-    expect(cols.rows[0]!.data_type).toBe('jsonb')
-  })
+    `);
+    expect(cols.rows).toHaveLength(1);
+    expect(cols.rows[0]!.is_nullable).toBe('YES');
+    expect(cols.rows[0]!.data_type).toBe('jsonb');
+  });
 
   it('allows an invoice with a NULL snapshot (legacy / expand path)', async () => {
     await expect(
       ctx.db.execute(sql`
         INSERT INTO invoices (profile_id, total_amount)
         VALUES ((SELECT id FROM profiles LIMIT 1), 500000)
-      `),
-    ).resolves.toBeDefined()
-  })
+      `)
+    ).resolves.toBeDefined();
+  });
 
   it('round-trips a snapshot with string IRR amounts, steps, and totals', async () => {
     const snapshot = {
@@ -138,40 +138,40 @@ describe('invoice calculation snapshot migration (T-04.1.02.08)', () => {
         totalDiscount: '0',
         totalAmount: '1090000',
       },
-    }
+    };
 
     await ctx.pool.query(
       `INSERT INTO invoices (profile_id, total_amount, invoice_calculation_snapshot)
        VALUES ((SELECT id FROM profiles LIMIT 1), 1090000, $1::jsonb)`,
-      [JSON.stringify(snapshot)],
-    )
+      [JSON.stringify(snapshot)]
+    );
 
     const row = await ctx.db.execute<{ invoice_calculation_snapshot: typeof snapshot }>(sql`
       SELECT invoice_calculation_snapshot FROM invoices
       WHERE total_amount = 1090000 AND invoice_calculation_snapshot IS NOT NULL
       LIMIT 1
-    `)
-    expect(row.rows).toHaveLength(1)
-    const stored = row.rows[0]!.invoice_calculation_snapshot
-    expect(stored.version).toBe(1)
-    expect(stored.source).toBe('manual')
-    expect(stored.rounding.rule).toBe('half-up-to-nearest-IRR')
-    expect(stored.inputs.lines[0]!.unitPrice).toBe('1000000')
-    expect(stored.steps[0]!.vat.numerator).toBe('900000000')
-    expect(stored.steps[0]!.vat.result).toBe('90000')
-    expect(stored.totals.totalAmount).toBe('1090000')
-  })
+    `);
+    expect(row.rows).toHaveLength(1);
+    const stored = row.rows[0]!.invoice_calculation_snapshot;
+    expect(stored.version).toBe(1);
+    expect(stored.source).toBe('manual');
+    expect(stored.rounding.rule).toBe('half-up-to-nearest-IRR');
+    expect(stored.inputs.lines[0]!.unitPrice).toBe('1000000');
+    expect(stored.steps[0]!.vat.numerator).toBe('900000000');
+    expect(stored.steps[0]!.vat.result).toBe('90000');
+    expect(stored.totals.totalAmount).toBe('1090000');
+  });
 
   it('migration 0058 is idempotent — re-running is a no-op', async () => {
-    const snapshotSql = readFileSync(SNAPSHOT_MIGRATION, 'utf-8').trim()
-    await expect(ctx.pool.query(snapshotSql)).resolves.toBeDefined()
+    const snapshotSql = readFileSync(SNAPSHOT_MIGRATION, 'utf-8').trim();
+    await expect(ctx.pool.query(snapshotSql)).resolves.toBeDefined();
 
     const cols = await ctx.db.execute<{ column_name: string }>(sql`
       SELECT column_name FROM information_schema.columns
       WHERE table_schema = current_schema()
         AND table_name = 'invoices'
         AND column_name = 'invoice_calculation_snapshot'
-    `)
-    expect(cols.rows).toHaveLength(1)
-  })
-})
+    `);
+    expect(cols.rows).toHaveLength(1);
+  });
+});

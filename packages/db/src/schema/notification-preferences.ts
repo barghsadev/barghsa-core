@@ -1,7 +1,7 @@
-import { boolean, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core'
-import { sql } from 'drizzle-orm'
-import { uuidv7, timestamptz, pgEnum } from '../types.js'
-import { profiles } from './profiles.js'
+import { boolean, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { uuidv7, timestamptz, pgEnum } from '../types.js';
+import { profiles } from './profiles.js';
 
 /**
  * Notification category discriminator (T-05.05.01).
@@ -25,7 +25,7 @@ import { profiles } from './profiles.js'
 export const notificationCategoryEnum = pgEnum('notification_category', [
   'mandatory_transactional',
   'marketing',
-])
+]);
 
 /**
  * Notification categories lookup table.
@@ -59,10 +59,8 @@ export const notificationCategories = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  (table) => [
-    uniqueIndex('uq_notification_categories_category').on(table.category),
-  ],
-)
+  (table) => [uniqueIndex('uq_notification_categories_category').on(table.category)]
+);
 
 /**
  * Per-profile notification preferences (T-05.05.01).
@@ -119,10 +117,10 @@ export const userNotificationPreferences = pgTable(
   (table) => [
     uniqueIndex('uq_user_notification_preferences_profile_channel').on(
       table.profileId,
-      table.channel,
+      table.channel
     ),
-  ],
-)
+  ]
+);
 
 /**
  * SQL to pre-seed the notification_categories lookup table.
@@ -135,4 +133,4 @@ export const seedNotificationCategoriesSql = sql`
     ('mandatory_transactional', false, 'Transactional/security notifications always delivered; never consent-gated.'),
     ('marketing', true, 'Promotional notifications gated behind explicit opt-in consent.')
   ON CONFLICT (category) DO NOTHING;
-`
+`;

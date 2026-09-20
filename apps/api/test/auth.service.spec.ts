@@ -10,17 +10,17 @@ const mockCreateChallenge = vi.fn().mockResolvedValue({
   destination: 'user@example.com',
 });
 
-const mockCreateSession = vi.fn().mockImplementation(
-  async (userId: string) => ({
-    sessionId: 'mock-session-id-' + userId,
-    csrfToken: 'mock-csrf-token',
-    refreshToken: 'mock-refresh-token',
-    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-  }),
-);
+const mockCreateSession = vi.fn().mockImplementation(async (userId: string) => ({
+  sessionId: 'mock-session-id-' + userId,
+  csrfToken: 'mock-csrf-token',
+  refreshToken: 'mock-refresh-token',
+  expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+}));
 
 vi.mock('argon2', () => ({
-  hash: vi.fn().mockResolvedValue('$argon2id$v=19$m=65536,t=3,p=1$mockhash$mockhashmockhashmockhash'),
+  hash: vi
+    .fn()
+    .mockResolvedValue('$argon2id$v=19$m=65536,t=3,p=1$mockhash$mockhashmockhashmockhash'),
 }));
 
 const mockQuery = vi.fn();
@@ -42,7 +42,7 @@ const KNOWN_OTP = '123456';
 const KNOWN_OTP_HASH = createHash('sha256').update(KNOWN_OTP).digest('hex');
 
 const mockOtpService = {
-  createChallenge: mockCreateChallenge,
+  createRegistrationChallenge: mockCreateChallenge,
   hashOtp: vi.fn((otp: string) => createHash('sha256').update(otp).digest('hex')),
   compareOtpHashes: vi.fn((hashedInput: string, storedHash: string) => {
     return hashedInput === storedHash;
@@ -62,7 +62,7 @@ function makeChallengeRow(overrides: Record<string, unknown> = {}) {
     expires_at: new Date(Date.now() + 300_000),
     consumed_at: null,
     password_hash: 'argon2id-hash-value',
-    tos_version_id: 'current',
+    tos_version_id: '00000000-0000-4000-8000-000000000001',
     ...overrides,
   };
 }
@@ -72,15 +72,30 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockQuery.mockReset();
+    mockQuery.mockImplementation(async (sql: string, params: unknown[]) => ({
+      rows:
+        sql.includes('FROM tos_versions') && params[0] === '00000000-0000-4000-8000-000000000001'
+          ? [{ id: params[0] }]
+          : [],
+    }));
     mockConnect.mockResolvedValue(mockClient);
     mockClient.query.mockReset();
-    mockClient.query.mockImplementation(async (sql: string) => {
-      // Default: COMMIT and ROLLBACK return empty result
-      if (sql === 'COMMIT' || sql.startsWith('ROLLBACK')) return { rows: [] };
-      return { rows: [] };
-    });
+    mockClient.query.mockImplementation(async (sql: string, params: unknown[] = []) => ({
+      rows:
+        sql.includes('FROM tos_versions') && params[0] === '00000000-0000-4000-8000-000000000001'
+          ? [{ id: params[0], content_fa: 'قوانین', content_en: 'Terms' }]
+          : [],
+    }));
     mockClient.release.mockReset();
-    service = new AuthService(mockOtpService, mockSessionService);
+    service = new AuthService(
+      mockOtpService,
+      mockSessionService,
+      {
+        enforceSecurityRateLimit: vi.fn().mockResolvedValue(undefined),
+      } as unknown as import('../src/rate-limit/rate-limit.service.js').RateLimitService,
+      {} as import('../src/tos/tos.service.js').TosService
+    );
   });
 
   describe('register', () => {
@@ -89,28 +104,40 @@ describe('AuthService', () => {
         {
           username: 'user@example.com',
           password: 'StrongPass1',
-          tosVersionId: 'current',
+          tosVersionId: '00000000-0000-4000-8000-000000000001',
         },
-        '127.0.0.1',
+        '127.0.0.1'
       );
 
       expect(result).toHaveProperty('challengeId');
       expect(typeof result.challengeId).toBe('string');
-      expect(mockCreateChallenge).toHaveBeenCalledWith('user@example.com', '127.0.0.1', expect.stringContaining('$argon2id'), 'current');
+      expect(mockCreateChallenge).toHaveBeenCalledWith(
+        'user@example.com',
+        '127.0.0.1',
+        expect.stringContaining('$argon2id'),
+        '00000000-0000-4000-8000-000000000001',
+        mockClient,
+        undefined
+      );
     });
 
-    it('throws USERNAME_TAKEN when username is taken (stub)', async () => {
-      // For now the stub always returns false, so this test documents the expected behavior
-      const result = await service.register(
-        {
-          username: 'user@example.com',
-          password: 'StrongPass1',
-          tosVersionId: 'current',
-        },
-        '127.0.0.1',
-      );
-
-      expect(result).toHaveProperty('challengeId');
+    it('rejects an existing username without creating a challenge', async () => {
+      mockClient.query.mockImplementation(async (sql: string) => ({
+        rows: sql.includes('FROM account_login_identifiers') ? [{ user_id: 'existing' }] : [],
+      }));
+      const error = await service
+        .register(
+          {
+            username: 'user@example.com',
+            password: 'StrongPass1',
+            tosVersionId: '00000000-0000-4000-8000-000000000001',
+          },
+          '127.0.0.1'
+        )
+        .catch((error) => error);
+      expect(error).toBeInstanceOf(HttpException);
+      expect(error.getStatus()).toBe(409);
+      expect(mockCreateChallenge).not.toHaveBeenCalled();
     });
 
     it('throws TOS_NOT_ACCEPTED for invalid tosVersionId', async () => {
@@ -121,8 +148,8 @@ describe('AuthService', () => {
             password: 'StrongPass1',
             tosVersionId: 'invalid-version',
           },
-          '127.0.0.1',
-        ),
+          '127.0.0.1'
+        )
       ).rejects.toThrow(HttpException);
 
       try {
@@ -132,7 +159,7 @@ describe('AuthService', () => {
             password: 'StrongPass1',
             tosVersionId: 'invalid-version',
           },
-          '127.0.0.1',
+          '127.0.0.1'
         );
       } catch (e) {
         expect(e).toBeInstanceOf(HttpException);
@@ -147,6 +174,13 @@ describe('AuthService', () => {
 
     it('creates user, session, and returns credentials on success', async () => {
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('clock_timestamp() AS valid')) return { rows: [{ valid: true }] };
+        if (sql.includes('FROM tos_versions'))
+          return {
+            rows: [
+              { id: makeChallengeRow().tos_version_id, content_fa: 'قوانین', content_en: 'Terms' },
+            ],
+          };
         if (sql.includes('FOR UPDATE')) {
           return { rows: [makeChallengeRow()] };
         }
@@ -183,6 +217,20 @@ describe('AuthService', () => {
 
       // Verify SessionService was called
       expect(mockCreateSession).toHaveBeenCalledTimes(1);
+      expect(mockCreateSession).toHaveBeenCalledWith(
+        result.userId,
+        false,
+        { ip: '127.0.0.1' },
+        undefined,
+        mockClient
+      );
+      const auditCall = mockClient.query.mock.calls.find(([sql]) =>
+        String(sql).includes('INSERT INTO audit_log')
+      );
+      expect(JSON.parse(auditCall![1][2]).terms.contentHashes).toEqual({
+        fa: createHash('sha256').update('قوانین').digest('hex'),
+        en: createHash('sha256').update('Terms').digest('hex'),
+      });
     });
 
     it('throws 404 when challenge is not found', async () => {
@@ -194,7 +242,7 @@ describe('AuthService', () => {
       });
 
       await expect(
-        service.completeRegistration('nonexistent', KNOWN_OTP, '127.0.0.1'),
+        service.completeRegistration('nonexistent', KNOWN_OTP, '127.0.0.1')
       ).rejects.toThrow(HttpException);
 
       try {
@@ -213,7 +261,7 @@ describe('AuthService', () => {
       });
 
       await expect(
-        service.completeRegistration(challengeId, KNOWN_OTP, '127.0.0.1'),
+        service.completeRegistration(challengeId, KNOWN_OTP, '127.0.0.1')
       ).rejects.toThrow(HttpException);
 
       try {
@@ -234,7 +282,7 @@ describe('AuthService', () => {
       });
 
       await expect(
-        service.completeRegistration(challengeId, KNOWN_OTP, '127.0.0.1'),
+        service.completeRegistration(challengeId, KNOWN_OTP, '127.0.0.1')
       ).rejects.toThrow(HttpException);
 
       try {
@@ -255,7 +303,7 @@ describe('AuthService', () => {
       });
 
       await expect(
-        service.completeRegistration(challengeId, KNOWN_OTP, '127.0.0.1'),
+        service.completeRegistration(challengeId, KNOWN_OTP, '127.0.0.1')
       ).rejects.toThrow(HttpException);
 
       try {
@@ -287,6 +335,12 @@ describe('AuthService', () => {
     it('throws 401 and decrements attempts on invalid OTP', async () => {
       let decrementCalled = false;
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('FROM tos_versions'))
+          return {
+            rows: [
+              { id: makeChallengeRow().tos_version_id, content_fa: 'قوانین', content_en: 'Terms' },
+            ],
+          };
         if (sql.includes('FOR UPDATE')) {
           return { rows: [makeChallengeRow()] };
         }
@@ -299,7 +353,7 @@ describe('AuthService', () => {
       });
 
       await expect(
-        service.completeRegistration(challengeId, 'wrong-otp', '127.0.0.1'),
+        service.completeRegistration(challengeId, 'wrong-otp', '127.0.0.1')
       ).rejects.toThrow(HttpException);
 
       expect(decrementCalled).toBe(true);
@@ -316,6 +370,12 @@ describe('AuthService', () => {
     it('rolls back on user INSERT failure and throws AUTH_REGISTER_FAILED', async () => {
       let rolledBack = false;
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('FROM tos_versions'))
+          return {
+            rows: [
+              { id: makeChallengeRow().tos_version_id, content_fa: 'قوانین', content_en: 'Terms' },
+            ],
+          };
         if (sql.includes('FOR UPDATE')) {
           return { rows: [makeChallengeRow()] };
         }

@@ -1,7 +1,8 @@
-import { pgTable, text, integer, index } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { notificationOutbox } from './notification-outbox.js'
-import { notificationJob } from './notification-outbox.js'
+import { domainChecks } from '../domain-checks';
+import { pgTable, text, integer, index } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { notificationOutbox } from './notification-outbox.js';
+import { notificationJob } from './notification-outbox.js';
 
 /**
  * Dead-letter queue record (E-05, T-05.01.06).
@@ -61,7 +62,9 @@ export const notificationDeadLetter = pgTable(
     eventKey: text('event_key').notNull(),
 
     /** Triage severity: 'critical' for urgent/security types, else 'error'. */
-    severity: text('severity', { enum: ['error', 'critical'] }).notNull().default('error'),
+    severity: text('severity', { enum: ['error', 'critical'] })
+      .notNull()
+      .default('error'),
 
     /** Recipient profile. */
     profileId: uuidv7('profile_id'),
@@ -102,11 +105,12 @@ export const notificationDeadLetter = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => [
+    ...domainChecks('notification_dead_letter'),
     // Ops panel default query: open items newest-first.
     index('idx_ndl_status_created').on(table.status, table.createdAt),
     // Triage by severity across all statuses.
     index('idx_ndl_severity').on(table.severity),
     // Lookup a single notification's dead-letter history.
     index('idx_ndl_outbox').on(table.outboxId),
-  ],
-)
+  ]
+);

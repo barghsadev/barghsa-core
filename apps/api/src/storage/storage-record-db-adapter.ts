@@ -6,27 +6,27 @@
  * `storage_records` schema.
  */
 
-import { Inject, Injectable, Logger } from '@nestjs/common'
-import type { DbInstance } from '@barghsa/db'
-import { storageRecords, type StorageRecordStatus } from '@barghsa/db/schema/storage-record'
-import { eq, sql } from '@barghsa/db'
-import type { DbAdapter } from '@barghsa/shared/storage'
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import type { DbInstance } from '@barghsa/db';
+import { storageRecords, type StorageRecordStatus } from '@barghsa/db/schema/storage-record';
+import { eq, sql } from '@barghsa/db';
+import type { DbAdapter } from '@barghsa/shared/storage';
 
 @Injectable()
 export class StorageRecordDbAdapter implements DbAdapter {
-  private readonly logger = new Logger(StorageRecordDbAdapter.name)
+  private readonly logger = new Logger(StorageRecordDbAdapter.name);
 
   constructor(@Inject('DB_INSTANCE') private readonly db: DbInstance) {}
 
   async createStorageRecord(params: {
-    storageKey: string
-    fileName?: string | null
-    contentType?: string | null
-    fileSize?: number | null
-    category?: string | null
-    metadata?: Record<string, unknown> | null
+    storageKey: string;
+    fileName?: string | null;
+    contentType?: string | null;
+    fileSize?: number | null;
+    category?: string | null;
+    metadata?: Record<string, unknown> | null;
   }): Promise<void> {
-    const metadataJson = JSON.stringify(params.metadata ?? null)
+    const metadataJson = JSON.stringify(params.metadata ?? null);
     await this.db.execute(sql`
       INSERT INTO storage_records (
         storage_key, file_name, content_type, file_size, category, status, metadata
@@ -71,7 +71,7 @@ export class StorageRecordDbAdapter implements DbAdapter {
           ))
         ),
         updated_at = NOW()
-    `)
+    `);
   }
 
   async getStorageRecordStatus(storageKey: string): Promise<StorageRecordStatus | null> {
@@ -79,14 +79,14 @@ export class StorageRecordDbAdapter implements DbAdapter {
       .select({ status: storageRecords.status })
       .from(storageRecords)
       .where(eq(storageRecords.storageKey, storageKey))
-      .limit(1)
+      .limit(1);
 
-    if (rows.length === 0) return null
-    return rows[0]!.status as StorageRecordStatus
+    if (rows.length === 0) return null;
+    return rows[0]!.status as StorageRecordStatus;
   }
 
   async markStorageRecordImmutable(storageKey: string, signedBy?: string): Promise<void> {
-    const now = new Date()
+    const now = new Date();
     await this.db
       .update(storageRecords)
       .set({
@@ -95,11 +95,11 @@ export class StorageRecordDbAdapter implements DbAdapter {
         signedBy: signedBy ?? null,
         updatedAt: now,
       })
-      .where(eq(storageRecords.storageKey, storageKey))
+      .where(eq(storageRecords.storageKey, storageKey));
   }
 
   async softDeleteStorageRecord(storageKey: string): Promise<void> {
-    const now = new Date()
+    const now = new Date();
     await this.db
       .update(storageRecords)
       .set({
@@ -107,12 +107,12 @@ export class StorageRecordDbAdapter implements DbAdapter {
         removedAt: now,
         updatedAt: now,
       })
-      .where(eq(storageRecords.storageKey, storageKey))
+      .where(eq(storageRecords.storageKey, storageKey));
   }
 
   async updateStorageRecordMetadata(
     storageKey: string,
-    metadata: Record<string, unknown>,
+    metadata: Record<string, unknown>
   ): Promise<void> {
     await this.db
       .update(storageRecords)
@@ -120,6 +120,6 @@ export class StorageRecordDbAdapter implements DbAdapter {
         metadata,
         updatedAt: new Date(),
       })
-      .where(eq(storageRecords.storageKey, storageKey))
+      .where(eq(storageRecords.storageKey, storageKey));
   }
 }

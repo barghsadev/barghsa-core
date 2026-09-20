@@ -1,44 +1,51 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ConflictException, HttpException, NotFoundException } from '@nestjs/common'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { BANK_RECEIPT_STORAGE_PURPOSE, BANK_RECEIPT_TOPUP_CHANNEL } from '@barghsa/shared/finance'
-import { BankReceiptTopUpService } from './bank-receipt-topup.service.js'
-import type { WalletService } from './wallet.service.js'
+import { sealedInvoiceBankReceiptAttachmentKey } from '@barghsa/shared/finance';
+import { pdfBytes, memoryStorage } from '../test/receipt-storage.js';
+vi.mock('../storage/reserve-storage-copy.js', () => ({
+  reserveStorageCopy: vi.fn().mockResolvedValue(undefined),
+}));
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { ConflictException, HttpException, NotFoundException } from '@nestjs/common';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { BANK_RECEIPT_STORAGE_PURPOSE, BANK_RECEIPT_TOPUP_CHANNEL } from '@barghsa/shared/finance';
+import { BankReceiptTopUpService } from './bank-receipt-topup.service.js';
+import type { WalletService } from './wallet.service.js';
 
 const mockPool = {
   query: vi.fn(),
   connect: vi.fn(),
-}
+};
 
 const mockClient = {
   query: vi.fn(),
   release: vi.fn(),
-}
+};
 
 vi.mock('@barghsa/db', () => ({
   getDbPool: () => mockPool,
-}))
+}));
 
-const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
-const TX_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
-const IDEM = 'idem-bank-receipt-1'
-const ACTOR_ID = 'user-1'
-const AMOUNT = 250_000n
-const ATTACHMENT = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'
+const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
+const TX_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc';
+const IDEM = 'idem-bank-receipt-1';
+const ACTOR_ID = 'user-1';
+const SESSION_ID = 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
+const CSRF_TOKEN = 'receipt-test-csrf';
+const AMOUNT = 250_000n;
+const ATTACHMENT = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf';
 
 const RECEIPT = {
   paymentDate: '2026-08-15',
   payerReference: 'TRK-998877',
   attachmentKey: ATTACHMENT,
   customerNote: 'Branch transfer',
-}
+};
 
 const VALID_STORAGE_METADATA = {
   verified: true,
   uploadedBy: ACTOR_ID,
   profileId: PROFILE_ID,
   purpose: BANK_RECEIPT_STORAGE_PURPOSE,
-}
+};
 
 function makePendingRow(overrides: Record<string, unknown> = {}) {
   return {
@@ -48,6 +55,7 @@ function makePendingRow(overrides: Record<string, unknown> = {}) {
     amount: AMOUNT.toString(),
     state: 'Pending',
     idempotency_key: IDEM,
+    receipt_attachment_key: ATTACHMENT,
     ref_id: null,
     description: 'Bank receipt wallet top-up',
     metadata: {
@@ -57,70 +65,88 @@ function makePendingRow(overrides: Record<string, unknown> = {}) {
     created_at: new Date('2026-09-01'),
     updated_at: new Date('2026-09-01'),
     ...overrides,
-  }
+  };
 }
 
 function makeWalletService() {
   return {
     createWallet: vi.fn().mockResolvedValue({ profileId: PROFILE_ID }),
     credit: vi.fn(),
-  }
+  };
 }
 
 type ScriptOptions = {
-  wallet?: { profile_id: string } | null
-  storageStatus?: string | null
-  storageMetadata?: Record<string, unknown> | null
-  claimType?: string | null
-  existing?: ReturnType<typeof makePendingRow> | null
-  existingAttachment?: ReturnType<typeof makePendingRow> | null
-  insert?: ReturnType<typeof makePendingRow> | Error
-}
+  wallet?: { profile_id: string } | null;
+  storageStatus?: string | null;
+  storageMetadata?: Record<string, unknown> | null;
+  claimType?: string | null;
+  existing?: ReturnType<typeof makePendingRow> | null;
+  existingAttachment?: ReturnType<typeof makePendingRow> | null;
+  insert?: ReturnType<typeof makePendingRow> | Error;
+};
 
 function scriptClient(opts: ScriptOptions = {}) {
-  mockClient.query.mockImplementation(async (sql: string) => {
+  mockClient.query.mockImplementation(async (sql: string, params: unknown[] = []) => {
     if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
-      return { rows: [] }
+      return { rows: [] };
     }
     if (sql === 'BEGIN' || sql === 'COMMIT' || sql === 'ROLLBACK') {
-      return { rows: [] }
+      return { rows: [] };
     }
+    if (sql.includes('FROM users'))
+      return { rows: [{ disabled_at: null, activation_token: null }] };
+    if (sql.includes('FROM sessions'))
+      return { rows: [{ active: true, fresh: true, csrf_token: CSRF_TOKEN }] };
     if (sql.includes('FROM storage_records')) {
-      if (opts.storageStatus === null) return { rows: [] }
+      if (opts.storageStatus === null) return { rows: [] };
       return {
         rows: [
           {
             status: opts.storageStatus ?? 'active',
+            file_size: 4096,
+            content_type: 'application/pdf',
+            category: 'document',
+            file_name: 'receipt.pdf',
             metadata:
               opts.storageMetadata === undefined ? VALID_STORAGE_METADATA : opts.storageMetadata,
           },
         ],
-      }
+      };
     }
     if (sql.includes('UPDATE storage_records')) {
-      return { rows: [], rowCount: 1 }
+      return { rows: [], rowCount: 1 };
     }
     if (sql.includes('bank_receipt_attachment_claims')) {
-      if (sql.includes('INSERT')) return { rows: [] }
-      if (opts.claimType === null) return { rows: [] }
-      return { rows: [{ claim_type: opts.claimType ?? 'wallet_topup' }] }
+      if (sql.includes('INSERT')) return { rows: [] };
+      if (opts.claimType === null) return { rows: [] };
+      return { rows: [{ claim_type: opts.claimType ?? 'wallet_topup' }] };
     }
+    if (sql.includes('FROM profiles'))
+      return { rows: [{ user_id: ACTOR_ID, profile_type: 'INDIVIDUAL', archived: false }] };
     if (sql.includes('FROM wallets')) {
-      if (opts.wallet === null) return { rows: [] }
-      return { rows: [opts.wallet ?? { profile_id: PROFILE_ID }] }
+      if (opts.wallet === null) return { rows: [] };
+      return { rows: [opts.wallet ?? { profile_id: PROFILE_ID }] };
     }
     if (sql.includes('FROM wallet_transactions WHERE receipt_attachment_key')) {
-      return { rows: opts.existingAttachment ? [opts.existingAttachment] : [] }
+      return { rows: opts.existingAttachment ? [opts.existingAttachment] : [] };
     }
     if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
-      return { rows: opts.existing ? [opts.existing] : [] }
+      return { rows: opts.existing ? [opts.existing] : [] };
     }
     if (sql.includes('INSERT INTO wallet_transactions')) {
-      if (opts.insert instanceof Error) throw opts.insert
-      return { rows: [opts.insert ?? makePendingRow()] }
+      if (opts.insert instanceof Error) throw opts.insert;
+      return {
+        rows: [
+          opts.insert ??
+            makePendingRow({
+              metadata: JSON.parse(params[4] as string),
+              receipt_attachment_key: params[5],
+            }),
+        ],
+      };
     }
-    return { rows: [] }
-  })
+    return { rows: [] };
+  });
 }
 
 function submitInput(overrides: Record<string, unknown> = {}) {
@@ -133,83 +159,92 @@ function submitInput(overrides: Record<string, unknown> = {}) {
     customerNote: RECEIPT.customerNote,
     idempotencyKey: IDEM,
     actorId: ACTOR_ID,
+    sessionId: SESSION_ID,
+    csrfToken: CSRF_TOKEN,
     ...overrides,
-  }
+  };
 }
 
 describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
-  let walletService: ReturnType<typeof makeWalletService>
-  let service: BankReceiptTopUpService
+  let walletService: ReturnType<typeof makeWalletService>;
+  let service: BankReceiptTopUpService;
 
   beforeEach(() => {
-    vi.clearAllMocks()
-    mockPool.connect.mockResolvedValue(mockClient)
-    mockClient.release.mockImplementation(() => {})
-    mockClient.query.mockReset()
-    walletService = makeWalletService()
-    service = new BankReceiptTopUpService(walletService as unknown as WalletService)
-  })
+    vi.clearAllMocks();
+    mockPool.connect.mockResolvedValue(mockClient);
+    mockClient.release.mockImplementation(() => {});
+    mockClient.query.mockReset();
+    walletService = makeWalletService();
+    service = new BankReceiptTopUpService(
+      walletService as unknown as WalletService,
+      memoryStorage(new Map([[ATTACHMENT, pdfBytes()]]))
+    );
+  });
 
   it('rejects a blank idempotency key before touching the wallet', async () => {
     await expect(service.submit(submitInput({ idempotencyKey: '   ' }))).rejects.toMatchObject({
       status: 400,
-    })
-    expect(walletService.createWallet).not.toHaveBeenCalled()
-    expect(mockPool.connect).not.toHaveBeenCalled()
-  })
+    });
+    expect(walletService.createWallet).not.toHaveBeenCalled();
+    expect(mockPool.connect).not.toHaveBeenCalled();
+  });
 
   it('rejects an invalid amount before creating a Pending row', async () => {
     await expect(service.submit(submitInput({ amount: 0 }))).rejects.toMatchObject({
       status: 400,
-    })
-    expect(walletService.createWallet).not.toHaveBeenCalled()
-    expect(walletService.credit).not.toHaveBeenCalled()
-  })
+    });
+    expect(walletService.createWallet).not.toHaveBeenCalled();
+    expect(walletService.credit).not.toHaveBeenCalled();
+  });
 
   it('does not apply the online top-up limit to a large receipt amount', async () => {
-    scriptClient()
-    const result = await service.submit(submitInput({ amount: 3_000_000_000 }))
-    expect(result.state).toBe('Pending')
-    expect(walletService.credit).not.toHaveBeenCalled()
+    scriptClient();
+    const result = await service.submit(submitInput({ amount: 3_000_000_000 }));
+    expect(result.state).toBe('Pending');
+    expect(walletService.credit).not.toHaveBeenCalled();
     const insert = mockClient.query.mock.calls.find(([sql]) =>
-      String(sql).includes('INSERT INTO wallet_transactions'),
-    )
-    expect(insert?.[1]?.[1]).toBe('3000000000')
-  })
+      String(sql).includes('INSERT INTO wallet_transactions')
+    );
+    expect(insert?.[1]?.[1]).toBe('3000000000');
+  });
 
   it('rejects a missing storage record so fabricated keys cannot pending-credit', async () => {
-    scriptClient({ storageStatus: null })
-    const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
-    expect(rejection).toBeInstanceOf(HttpException)
+    scriptClient({ storageStatus: null });
+    const rejection = await service.submit(submitInput()).catch((error: unknown) => error);
+    expect(rejection).toBeInstanceOf(HttpException);
     expect((rejection as HttpException).getResponse()).toMatchObject({
       error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-    })
+    });
     expect(
-      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),
-    ).toBe(false)
-    expect(walletService.credit).not.toHaveBeenCalled()
-  })
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO wallet_transactions')
+      )
+    ).toBe(false);
+    expect(walletService.credit).not.toHaveBeenCalled();
+  });
 
   it('rejects a removed storage record', async () => {
-    scriptClient({ storageStatus: 'removed' })
-    await expect(service.submit(submitInput())).rejects.toMatchObject({ status: 400 })
-    expect(walletService.credit).not.toHaveBeenCalled()
-  })
+    scriptClient({ storageStatus: 'removed' });
+    await expect(service.submit(submitInput())).rejects.toMatchObject({ status: 400 });
+    expect(walletService.credit).not.toHaveBeenCalled();
+  });
 
   it('rejects an unverified storage record', async () => {
     scriptClient({
       storageMetadata: { ...VALID_STORAGE_METADATA, verified: false },
-    })
-    const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
-    expect(rejection).toBeInstanceOf(HttpException)
+    });
+    const rejection = await service.submit(submitInput()).catch((error: unknown) => error);
+    expect(rejection).toBeInstanceOf(HttpException);
     expect((rejection as HttpException).getResponse()).toMatchObject({
       error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
       message: 'Bank receipt attachment has not been verified',
-    })
+    });
     expect(
-      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),
-    ).toBe(false)
-  })
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO wallet_transactions')
+      )
+    ).toBe(false);
+  });
 
   it('rejects a storage record owned by a different user and profile', async () => {
     scriptClient({
@@ -218,110 +253,120 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
         uploadedBy: 'other-user',
         profileId: 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb',
       },
-    })
-    const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
+    });
+    const rejection = await service.submit(submitInput()).catch((error: unknown) => error);
     expect((rejection as HttpException).getResponse()).toMatchObject({
       message: 'Bank receipt attachment does not belong to this account',
-    })
+    });
     expect(
-      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),
-    ).toBe(false)
-  })
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO wallet_transactions')
+      )
+    ).toBe(false);
+  });
 
   it('rejects a storage record recorded for a different purpose', async () => {
     scriptClient({
       storageMetadata: { ...VALID_STORAGE_METADATA, purpose: 'contract' },
-    })
-    const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
+    });
+    const rejection = await service.submit(submitInput()).catch((error: unknown) => error);
     expect((rejection as HttpException).getResponse()).toMatchObject({
       message: 'Bank receipt attachment was not uploaded as a bank receipt',
-    })
+    });
     expect(
-      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),
-    ).toBe(false)
-  })
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO wallet_transactions')
+      )
+    ).toBe(false);
+  });
 
   it('rejects reuse of an attachment already backing another Pending top-up', async () => {
     scriptClient({
       existingAttachment: makePendingRow({ idempotency_key: 'other-idem' }),
-    })
-    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException)
+    });
+    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException);
     expect(
-      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),
-    ).toBe(false)
-  })
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO wallet_transactions')
+      )
+    ).toBe(false);
+  });
 
   it('rejects an attachment already claimed by an invoice receipt', async () => {
-    scriptClient({ claimType: 'invoice_receipt' })
-    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException)
+    scriptClient({ claimType: 'invoice_receipt' });
+    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException);
     expect(
-      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),
-    ).toBe(false)
-  })
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO wallet_transactions')
+      )
+    ).toBe(false);
+  });
 
   it('inserts a Pending topup and does not credit the wallet', async () => {
-    scriptClient()
-    const result = await service.submit(submitInput())
+    scriptClient();
+    const result = await service.submit(submitInput());
     expect(result).toEqual({
       transactionId: TX_ID,
       amount: AMOUNT,
       state: 'Pending',
       paymentDate: RECEIPT.paymentDate,
       payerReference: RECEIPT.payerReference,
-      attachmentKey: RECEIPT.attachmentKey,
-    })
-    expect(walletService.credit).not.toHaveBeenCalled()
+      attachmentKey: sealedInvoiceBankReceiptAttachmentKey(ATTACHMENT),
+    });
+    expect(walletService.credit).not.toHaveBeenCalled();
     const insert = mockClient.query.mock.calls.find(([sql]) =>
-      String(sql).includes('INSERT INTO wallet_transactions'),
-    )
-    expect(insert?.[1]?.[3]).toBe('Bank receipt wallet top-up')
-    expect(insert?.[1]?.[5]).toBe(ATTACHMENT)
+      String(sql).includes('INSERT INTO wallet_transactions')
+    );
+    expect(insert?.[1]?.[3]).toBe('Bank receipt wallet top-up');
+    expect(insert?.[1]?.[5]).toBe(sealedInvoiceBankReceiptAttachmentKey(ATTACHMENT));
     expect(JSON.parse(String(insert?.[1]?.[4]))).toMatchObject({
       channel: BANK_RECEIPT_TOPUP_CHANNEL,
-      receipt: RECEIPT,
-    })
+      receipt: { ...RECEIPT, attachmentKey: sealedInvoiceBankReceiptAttachmentKey(ATTACHMENT) },
+    });
     const protect = mockClient.query.mock.calls.find(([sql]) =>
-      String(sql).includes('UPDATE storage_records'),
-    )
-    expect(protect?.[1]).toEqual([ATTACHMENT, ACTOR_ID])
-  })
+      String(sql).includes('UPDATE storage_records')
+    );
+    expect(protect?.[1]?.slice(0, 2)).toEqual([ATTACHMENT, ACTOR_ID]);
+  });
 
-  it('does not rewrite an already-immutable receipt', async () => {
-    scriptClient({ storageStatus: 'immutable' })
-    const result = await service.submit(submitInput())
-    expect(result.state).toBe('Pending')
+  it('does not rewrite an already-submitted immutable receipt on retry', async () => {
+    scriptClient({ storageStatus: 'immutable', existing: makePendingRow() });
+    const result = await service.submit(submitInput());
+    expect(result.state).toBe('Pending');
     expect(
-      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE storage_records')),
-    ).toBe(false)
-  })
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE storage_records'))
+    ).toBe(false);
+  });
 
   it('reuses a matching in-flight Pending row for the same idempotency key', async () => {
-    scriptClient({ existing: makePendingRow() })
-    const result = await service.submit(submitInput())
-    expect(result.transactionId).toBe(TX_ID)
+    scriptClient({ existing: makePendingRow() });
+    const result = await service.submit(submitInput());
+    expect(result.transactionId).toBe(TX_ID);
     expect(
-      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),
-    ).toBe(false)
-    expect(walletService.credit).not.toHaveBeenCalled()
-  })
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO wallet_transactions')
+      )
+    ).toBe(false);
+    expect(walletService.credit).not.toHaveBeenCalled();
+  });
 
   it('conflicts when the same key was used for a different amount', async () => {
     scriptClient({
       existing: makePendingRow({ amount: '1000' }),
-    })
-    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException)
-    expect(walletService.credit).not.toHaveBeenCalled()
-  })
+    });
+    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException);
+    expect(walletService.credit).not.toHaveBeenCalled();
+  });
 
   it('conflicts when the same key was used for an online top-up', async () => {
     scriptClient({
       existing: makePendingRow({ metadata: { channel: 'online' } }),
-    })
-    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException)
-  })
+    });
+    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException);
+  });
 
   it('throws when the wallet row disappears after createWallet', async () => {
-    scriptClient({ wallet: null })
-    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(NotFoundException)
-  })
-})
+    scriptClient({ wallet: null });
+    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(NotFoundException);
+  });
+});

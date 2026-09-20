@@ -1,1 +1,1 @@
-export * from './gift-code.js'
+export * from './gift-code.js';

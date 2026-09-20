@@ -1,8 +1,8 @@
-import { sql } from 'drizzle-orm'
-import { check, integer, jsonb, pgTable } from 'drizzle-orm/pg-core'
-import { uuidv7, irrAmount, timestamptz } from '../types'
-import { invoices } from './invoices'
-import { products } from './products'
+import { sql } from 'drizzle-orm';
+import { check, integer, jsonb, pgTable } from 'drizzle-orm/pg-core';
+import { uuidv7, irrAmount, timestamptz } from '../types';
+import { invoices } from './invoices';
+import { products } from './products';
 
 /**
  * Invoice items table (T-04.1.02.01).
@@ -63,7 +63,10 @@ export const invoiceItems = pgTable(
     createdAt: timestamptz('created_at').defaultNow().notNull(),
 
     /** When the item record was last updated. */
-    updatedAt: timestamptz('updated_at').defaultNow().notNull().$onUpdate(() => new Date()),
+    updatedAt: timestamptz('updated_at')
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
   },
   (table) => ({
     /** Quantity must be at least 1. */
@@ -71,12 +74,15 @@ export const invoiceItems = pgTable(
     /** Unit price snapshot cannot be negative. */
     unitPriceNonNegative: check(
       'ck_invoice_items_unit_price_non_negative',
-      sql`${table.unitPrice} >= 0`,
+      sql`${table.unitPrice} >= 0`
     ),
     /** VAT rate snapshot must be 0..10000 basis points (0%..100%). */
-    vatRateRange: check('ck_invoice_items_vat_rate_range', sql`${table.vatRate} BETWEEN 0 AND 10000`),
-  }),
-)
+    vatRateRange: check(
+      'ck_invoice_items_vat_rate_range',
+      sql`${table.vatRate} BETWEEN 0 AND 10000`
+    ),
+  })
+);
 
 /**
  * SQL to create the invoice_items table with CHECK constraints.
@@ -103,4 +109,4 @@ export const createInvoiceItemsTable = sql`
 
   CREATE INDEX IF NOT EXISTS idx_invoice_items_invoice_id ON invoice_items (invoice_id);
   CREATE INDEX IF NOT EXISTS idx_invoice_items_product_id ON invoice_items (product_id);
-`
+`;

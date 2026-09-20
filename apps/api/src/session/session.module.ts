@@ -1,8 +1,12 @@
-import { Module } from '@nestjs/common'
-import { APP_GUARD } from '@nestjs/core'
-import { SessionService } from './session.service.js'
-import { SessionController } from './session.controller.js'
-import { CsrfGuard } from './csrf.guard.js'
+import { PreauthCsrfService } from './preauth-csrf.service.js';
+import { PreauthCsrfController } from './preauth-csrf.controller.js';
+import { Module, RequestMethod, type MiddlewareConsumer, type NestModule } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { SessionService } from './session.service.js';
+import { SessionController } from './session.controller.js';
+import { TrustedDevicesController } from './trusted-devices.controller.js';
+import { CsrfGuard } from './csrf.guard.js';
+import { SessionContextMiddleware } from './session-context.middleware.js';
 
 /**
  * Session module (T-02.02.01 / T-02.02.02 / T-02.02.03).
@@ -14,12 +18,14 @@ import { CsrfGuard } from './csrf.guard.js'
  *
  * Registers the CsrfGuard as a global guard (T-02.02.03) so every
  * state-changing request to any endpoint is validated for CSRF tokens
- * when an authenticated session is present.
+ * for authenticated sessions and explicitly marked public authentication routes.
  */
 @Module({
-  controllers: [SessionController],
+  controllers: [SessionController, TrustedDevicesController, PreauthCsrfController],
   providers: [
     SessionService,
+    PreauthCsrfService,
+    SessionContextMiddleware,
     {
       provide: APP_GUARD,
       useClass: CsrfGuard,
@@ -27,4 +33,10 @@ import { CsrfGuard } from './csrf.guard.js'
   ],
   exports: [SessionService],
 })
-export class SessionModule {}
+export class SessionModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer
+      .apply(SessionContextMiddleware)
+      .forRoutes({ path: '{*path}', method: RequestMethod.ALL });
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "watch": ["apps", "packages", "scripts", "package.json", "turbo.json", "pnpm-lock.yaml", ".env"],
+  "ignore": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/dist-coverage/**",
+    "**/coverage/**",
+    "**/.turbo/**",
+    "**/.build-cjs-*/**",
+    "**/*.tsbuildinfo",
+    "**/test-results/**",
+    "**/playwright-report/**",
+    "**/.distribution-*/**",
+    "**/src/routeTree.gen.ts"
+  ],
+  "ext": "ts,tsx,js,mjs,cjs,json,css,html,sql,env,yaml",
+  "delay": "1",
+  "signal": "SIGTERM",
+  "exec": "dotenv -e \"${BARGHSA_ENV_FILE:-.env}\" -- pnpm dev:run"
+}

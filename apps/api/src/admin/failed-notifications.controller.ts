@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Controller,
   Get,
@@ -9,32 +10,44 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+  ParseUUIDPipe,
+} from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   FailedNotificationsService,
   DEAD_LETTER_STATUSES,
   DEAD_LETTER_SEVERITIES,
   NOTIFICATION_CHANNELS,
   type FailedNotificationDto,
-} from './failed-notifications.service.js'
+} from './failed-notifications.service.js';
 
 /** Strict validation for the list view's limit/offset query params. */
 const ListQuerySchema = z.object({
-  limit: z.coerce.number().int().min(1).max(200).optional(),
-  offset: z.coerce.number().int().min(0).optional(),
-})
+  limit: z
+    .string()
+    .regex(/^[1-9]\d*$/)
+    .transform(Number)
+    .pipe(z.number().int().min(1).max(200))
+    .optional(),
+  offset: z
+    .string()
+    .regex(/^\d+$/)
+    .transform(Number)
+    .pipe(z.number().int().min(0).max(1000000))
+    .optional(),
+});
 
 /** Swagger enum values for the dead-letter statuses. */
-const STATUSES = [...DEAD_LETTER_STATUSES] as const
+const STATUSES = [...DEAD_LETTER_STATUSES] as const;
 /** Swagger enum values for the severity classes. */
-const SEVERITIES = [...DEAD_LETTER_SEVERITIES] as const
+const SEVERITIES = [...DEAD_LETTER_SEVERITIES] as const;
 /** Swagger enum values for notification channels. */
-const CHANNELS = [...NOTIFICATION_CHANNELS] as const
+const CHANNELS = [...NOTIFICATION_CHANNELS] as const;
 
 /**
  * Failed-notifications dashboard controller (S-09.09, T-09.09.03).
@@ -51,46 +64,53 @@ const CHANNELS = [...NOTIFICATION_CHANNELS] as const
  *   remove from the active view.
  *
  * Permissions mirror the failed-jobs surface (T-09.09.02): viewing is gated
- * by `admin:jobs:view`, state transitions by `admin:jobs:retry`, both mapped
- * to a platform-admin session until the granular staff-role system lands.
+ * by `admin:jobs:view`, state transitions by `admin:jobs:retry`.
  */
 @ApiTags('Admin')
-@Controller('api/admin/failed-notifications')
+@Controller(['api/admin/failed-notifications', 'api/admin/notifications/dead-letters'])
 @UseGuards(SessionAuthGuard)
 export class FailedNotificationsController {
-  private readonly logger = new Logger(FailedNotificationsController.name)
+  private readonly logger = new Logger(FailedNotificationsController.name);
 
   constructor(private readonly failedNotificationsService: FailedNotificationsService) {}
 
+  @Get('access')
+  access(@Req() req: AuthenticatedRequest) {
+    return {
+      canView: hasStaffPermission(req, 'admin:jobs:view'),
+      canRetry: hasStaffPermission(req, 'admin:jobs:retry'),
+    };
+  }
+
   private assertViewPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:jobs:view')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to view dead-letter notifications`,
-      )
+        `Non-admin user ${req.session.userId} attempted to view dead-letter notifications`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required to view dead-letter notifications',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
   private assertRetryPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:jobs:retry')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to mutate a dead-letter notification`,
-      )
+        `Non-admin user ${req.session.userId} attempted to mutate a dead-letter notification`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required to retry, resolve, or dismiss dead-letter notifications',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
@@ -116,15 +136,15 @@ export class FailedNotificationsController {
     @Query('channel') channel: string | undefined,
     @Query('limit') limit: string | undefined,
     @Query('offset') offset: string | undefined,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<FailedNotificationDto[]> {
-    this.assertViewPermission(req)
-    const options: Parameters<FailedNotificationsService['listFailedNotifications']>[0] = {}
-    if (status !== undefined) options.status = status as NonNullable<typeof options.status>
-    if (severity !== undefined) options.severity = severity as NonNullable<typeof options.severity>
-    if (channel !== undefined) options.channel = channel
+    this.assertViewPermission(req);
+    const options: Parameters<FailedNotificationsService['listFailedNotifications']>[0] = {};
+    if (status !== undefined) options.status = status as NonNullable<typeof options.status>;
+    if (severity !== undefined) options.severity = severity as NonNullable<typeof options.severity>;
+    if (channel !== undefined) options.channel = channel;
     if (limit !== undefined || offset !== undefined) {
-      const parsed = ListQuerySchema.safeParse({ limit, offset })
+      const parsed = ListQuerySchema.safeParse({ limit, offset });
       if (!parsed.success) {
         throw new HttpException(
           {
@@ -132,13 +152,13 @@ export class FailedNotificationsController {
             error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
             message: 'limit must be an integer 1..200 and offset a non-negative integer',
           },
-          400,
-        )
+          400
+        );
       }
-      if (parsed.data.limit !== undefined) options.limit = parsed.data.limit
-      if (parsed.data.offset !== undefined) options.offset = parsed.data.offset
+      if (parsed.data.limit !== undefined) options.limit = parsed.data.limit;
+      if (parsed.data.offset !== undefined) options.offset = parsed.data.offset;
     }
-    return this.failedNotificationsService.listFailedNotifications(options)
+    return this.failedNotificationsService.listFailedNotifications(options);
   }
 
   /**
@@ -147,6 +167,8 @@ export class FailedNotificationsController {
    * Re-queue a dead-lettered notification for a fresh delivery attempt.
    */
   @Post(':id/retry')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Retry a dead-letter notification (admin)' })
   @ApiParam({ name: 'id', description: 'Dead-letter notification ID' })
@@ -155,10 +177,13 @@ export class FailedNotificationsController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
-  async retry(@Param('id') id: string, @Req() req: AuthenticatedRequest): Promise<FailedNotificationDto> {
-    this.assertRetryPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.failedNotificationsService.retryFailedNotification(id, req.session.userId, ip)
+  async retry(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest
+  ): Promise<FailedNotificationDto> {
+    this.assertRetryPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.failedNotificationsService.retryFailedNotification(id, req.session, ip);
   }
 
   /**
@@ -167,6 +192,8 @@ export class FailedNotificationsController {
    * Mark a dead-lettered notification durably resolved (terminal).
    */
   @Post(':id/resolve')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Resolve a dead-letter notification (admin)' })
   @ApiParam({ name: 'id', description: 'Dead-letter notification ID' })
@@ -175,10 +202,13 @@ export class FailedNotificationsController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
-  async resolve(@Param('id') id: string, @Req() req: AuthenticatedRequest): Promise<FailedNotificationDto> {
-    this.assertRetryPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.failedNotificationsService.resolveFailedNotification(id, req.session.userId, ip)
+  async resolve(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest
+  ): Promise<FailedNotificationDto> {
+    this.assertRetryPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.failedNotificationsService.resolveFailedNotification(id, req.session, ip);
   }
 
   /**
@@ -187,6 +217,8 @@ export class FailedNotificationsController {
    * Acknowledge a dead-lettered notification and remove it from the active view.
    */
   @Post(':id/dismiss')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Dismiss a dead-letter notification (admin)' })
   @ApiParam({ name: 'id', description: 'Dead-letter notification ID' })
@@ -195,9 +227,12 @@ export class FailedNotificationsController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
-  async dismiss(@Param('id') id: string, @Req() req: AuthenticatedRequest): Promise<FailedNotificationDto> {
-    this.assertRetryPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.failedNotificationsService.dismissFailedNotification(id, req.session.userId, ip)
+  async dismiss(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest
+  ): Promise<FailedNotificationDto> {
+    this.assertRetryPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.failedNotificationsService.dismissFailedNotification(id, req.session, ip);
   }
 }

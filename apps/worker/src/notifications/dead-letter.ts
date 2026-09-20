@@ -1,7 +1,7 @@
-import type { NotificationChannel } from '@barghsa/shared/notifications'
-import { priorityForType } from './retry-schedule.js'
-import { classifyDeliveryError } from './delivery-log.js'
-import { sanitizeError } from './error-redact.js'
+import type { NotificationChannel } from '@barghsa/shared/notifications';
+import { priorityForType } from './retry-schedule.js';
+import { classifyDeliveryError } from './delivery-log.js';
+import { sanitizeError } from './error-redact.js';
 
 /**
  * Dead-letter writer (E-05, T-05.01.06).
@@ -18,38 +18,38 @@ import { sanitizeError } from './error-redact.js'
  * all other types are `error`. This keeps security-sensitive delivery
  * failures front-and-center in the ops view.
  */
-export type DeadLetterSeverity = 'error' | 'critical'
+export type DeadLetterSeverity = 'error' | 'critical';
 
 /** Derive triage severity from the event type's queue priority class. */
 export function deadLetterSeverity(eventKey: string): DeadLetterSeverity {
-  return priorityForType(eventKey) === 'urgent' ? 'critical' : 'error'
+  return priorityForType(eventKey) === 'urgent' ? 'critical' : 'error';
 }
 
 export interface WriteDeadLetterInput {
   /** The outbox row id. */
-  outboxId: string
+  outboxId: string;
   /** The per-channel job id that dead-lettered. */
-  jobId: string
+  jobId: string;
   /** The channel that exhausted its retries. */
-  channel: NotificationChannel
+  channel: NotificationChannel;
   /** Business event key. */
-  eventKey: string
+  eventKey: string;
   /** Recipient profile id (nullable). */
-  profileId: string | null
+  profileId: string | null;
   /** Recipient user id (nullable). */
-  userId: string | null
+  userId: string | null;
   /** Retry attempts completed at the point the job dead-lettered. */
-  attempts: number
+  attempts: number;
   /** Retry budget the job exhausted. */
-  maxAttempts: number
+  maxAttempts: number;
   /** Unique idempotency key (reused on retry). */
-  idempotencyKey: string
+  idempotencyKey: string;
   /** Raw error message (sanitized before persistence). */
-  cause?: string | null
+  cause?: string | null;
   /** Precomputed error classifier; otherwise derived from the cause. */
-  errorCategory?: 'transient' | 'permanent' | 'provider' | null
+  errorCategory?: 'transient' | 'permanent' | 'provider' | null;
   /** Precomputed severity; otherwise derived from the event type. */
-  severity?: DeadLetterSeverity
+  severity?: DeadLetterSeverity;
 }
 
 /**
@@ -64,11 +64,11 @@ export interface WriteDeadLetterInput {
 export async function writeDeadLetter(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pool: any,
-  input: WriteDeadLetterInput,
+  input: WriteDeadLetterInput
 ): Promise<void> {
-  const safeCause = input.cause ? sanitizeError(input.cause) : null
-  const severity = input.severity ?? deadLetterSeverity(input.eventKey)
-  const category = input.errorCategory ?? (safeCause ? classifyDeliveryError(safeCause) : null)
+  const safeCause = input.cause ? sanitizeError(input.cause) : null;
+  const severity = input.severity ?? deadLetterSeverity(input.eventKey);
+  const category = input.errorCategory ?? (safeCause ? classifyDeliveryError(safeCause) : null);
   await pool.query(
     `INSERT INTO notification_dead_letter
        (outbox_id, job_id, channel, event_key, severity, profile_id, user_id,
@@ -104,8 +104,8 @@ export async function writeDeadLetter(
       input.attempts,
       input.maxAttempts,
       input.idempotencyKey,
-    ],
-  )
+    ]
+  );
 }
 
 /**
@@ -113,4 +113,4 @@ export async function writeDeadLetter(
  * canonical name is `deadLetterSeverity`; `severityForEvent` is exported as a
  * backward-compatible alias.
  */
-export const severityForEvent = deadLetterSeverity
+export const severityForEvent = deadLetterSeverity;

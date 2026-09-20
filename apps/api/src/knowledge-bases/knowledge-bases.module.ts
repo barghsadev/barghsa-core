@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common'
-import { SessionModule } from '../session/index.js'
-import { KnowledgeBasesController, KbGroupsController } from './knowledge-bases.controller.js'
-import { KnowledgeBasesService } from './knowledge-bases.service.js'
+import { Module } from '@nestjs/common';
+import { SessionModule } from '../session/index.js';
+import { KnowledgeBasesController, KbGroupsController } from './knowledge-bases.controller.js';
+import { KnowledgeBasesService } from './knowledge-bases.service.js';
 
 /**
  * Knowledge base administration module (S-09.11, T-09.11.02).

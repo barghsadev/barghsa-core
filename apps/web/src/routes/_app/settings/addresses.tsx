@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
-import { toast } from 'sonner'
-import { t, type Locale } from '@barghsa/i18n'
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { createFileRoute } from '@tanstack/react-router';
+import { toast } from 'sonner';
+import { t } from '@barghsa/i18n/app';
+import { addressesText } from '@barghsa/i18n/addresses';
 import {
   MapPinIcon,
   PlusIcon,
@@ -11,297 +12,360 @@ import {
   Loader2Icon,
   SaveIcon,
   XIcon,
-  HomeIcon,
-} from 'lucide-react'
-import { Button, Card, CardContent } from '@barghsa/ui'
-import { withCsrf } from '../../../lib/csrf.js'
-import { useLocale } from '../../../hooks/useLocale.js'
+} from 'lucide-react';
+import {
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from '@barghsa/ui';
+import { withCsrf } from '../../../lib/csrf.js';
+import { useLocale } from '../../../hooks/useLocale.js';
 
 export const Route = createFileRoute('/_app/settings/addresses')({
   component: SettingsAddressesPage,
-})
+});
 
 // ─── Types ────────────────────────────────────────────────────────────
 
 interface Address {
-  id: string
-  profileId: string
-  provinceId: string
-  cityId: string
-  fullAddress: string
-  postalCode: string
-  mainAddress: boolean
-  createdAt: string
-  updatedAt: string
+  id: string;
+  profileId: string;
+  provinceId: string;
+  cityId: string;
+  provinceNameFa?: string;
+  provinceNameEn?: string;
+  cityNameFa?: string;
+  cityNameEn?: string;
+  fullAddress: string;
+  postalCode: string;
+  mainAddress: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Province {
-  id: string
-  nameFa: string
-  nameEn: string
+  id: string;
+  nameFa: string;
+  nameEn: string;
 }
 
 interface City {
-  id: string
-  provinceId: string
-  nameFa: string
-  nameEn: string
+  id: string;
+  provinceId: string;
+  nameFa: string;
+  nameEn: string;
 }
 
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsAddressesPage() {
-  const locale = useLocale()
+  const locale = useLocale();
 
-  const [addresses, setAddresses] = useState<Address[]>([])
-  const [provinces, setProvinces] = useState<Province[]>([])
-  const [cities, setCities] = useState<City[]>([])
-  const [loading, setLoading] = useState(true)
-  const [showForm, setShowForm] = useState(false)
-  const [editingAddress, setEditingAddress] = useState<Address | null>(null)
-  const [saving, setSaving] = useState(false)
-  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null)
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
+  const [citiesLoading, setCitiesLoading] = useState(false);
+  const [citiesError, setCitiesError] = useState(false);
+  const [citiesRetry, setCitiesRetry] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [profileId, setProfileId] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [editingAddress, setEditingAddress] = useState<Address | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const deletingRef = useRef(false);
+  const deleteTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const cancelDeleteRef = useRef<HTMLButtonElement | null>(null);
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   // Form state
-  const [formProvinceId, setFormProvinceId] = useState('')
-  const [formCityId, setFormCityId] = useState('')
-  const [formFullAddress, setFormFullAddress] = useState('')
-  const [formPostalCode, setFormPostalCode] = useState('')
+  const [formProvinceId, setFormProvinceId] = useState('');
+  const [formCityId, setFormCityId] = useState('');
+  const [formFullAddress, setFormFullAddress] = useState('');
+  const [formPostalCode, setFormPostalCode] = useState('');
 
   // ── Fetch addresses ────────────────────────────────────────────────
 
   const fetchAddresses = useCallback(async () => {
+    setLoading(true);
+    setLoadError(false);
+    setProfileId(null);
     try {
       // First get the active profile
-      const profileRes = await fetch('/api/profiles')
+      const profileRes = await fetch('/api/profiles');
       if (!profileRes.ok) {
-        throw new Error('Failed to load profiles')
+        throw new Error('Failed to load profiles');
       }
-      const profileData: { activeProfileId: string | null } = await profileRes.json()
+      const profileData: { activeProfileId: string | null } = await profileRes.json();
       if (!profileData.activeProfileId) {
-        setLoading(false)
-        return
+        setAddresses([]);
+        return;
       }
 
-      const res = await fetch(`/api/profiles/${profileData.activeProfileId}/addresses`)
-      if (res.ok) {
-        const data: { addresses: Address[] } = await res.json()
-        setAddresses(data.addresses)
-      }
+      const res = await fetch(`/api/profiles/${profileData.activeProfileId}/addresses`);
+      if (!res.ok) throw new Error('Failed to load addresses');
+      const data: { addresses: Address[] } = await res.json();
+      if (!Array.isArray(data.addresses)) throw new Error('Invalid address list');
+      setAddresses(data.addresses);
+      setProfileId(profileData.activeProfileId);
     } catch {
-      toast.error(t('settings.addresses.error.load', locale))
+      setLoadError(true);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [locale])
+  }, []);
 
   // ── Fetch provinces ────────────────────────────────────────────────
 
   const fetchProvinces = useCallback(async () => {
     try {
-      const res = await fetch('/api/geography/provinces')
+      const res = await fetch('/api/geography/provinces');
       if (res.ok) {
-        const data: Province[] = await res.json()
-        setProvinces(data)
+        const data: Province[] = await res.json();
+        setProvinces(data);
       }
     } catch {
       // Silently fail — provinces are cosmetic for the form
     }
-  }, [])
+  }, []);
 
-  // ── Fetch cities for a province ────────────────────────────────────
+  useEffect(() => {
+    fetchAddresses();
+    fetchProvinces();
+  }, [fetchAddresses, fetchProvinces]);
 
-  const fetchCities = useCallback(async (provinceId: string) => {
-    try {
-      const res = await fetch(`/api/geography/provinces/${provinceId}/cities`)
-      if (res.ok) {
-        const data: City[] = await res.json()
-        setCities(data)
+  useEffect(() => {
+    const controller = new AbortController();
+    setCities([]);
+    setCitiesError(false);
+    if (!formProvinceId) {
+      setCitiesLoading(false);
+      return () => controller.abort();
+    }
+    setCitiesLoading(true);
+    void (async () => {
+      try {
+        const response = await fetch(`/api/geography/provinces/${formProvinceId}/cities`, {
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error('City request failed');
+        const data: City[] = await response.json();
+        if (!controller.signal.aborted) setCities(data);
+      } catch {
+        if (!controller.signal.aborted) setCitiesError(true);
+      } finally {
+        if (!controller.signal.aborted) setCitiesLoading(false);
       }
-    } catch {
-      // Silently fail
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchAddresses()
-    fetchProvinces()
-  }, [fetchAddresses, fetchProvinces])
-
-  useEffect(() => {
-    if (formProvinceId) {
-      fetchCities(formProvinceId)
-    } else {
-      setCities([])
-      setFormCityId('')
-    }
-  }, [formProvinceId, fetchCities])
+    })();
+    return () => controller.abort();
+  }, [formProvinceId, citiesRetry]);
 
   // ── Open form for add ──────────────────────────────────────────────
 
   const openAddForm = () => {
-    setEditingAddress(null)
-    setFormProvinceId('')
-    setFormCityId('')
-    setFormFullAddress('')
-    setFormPostalCode('')
-    setShowForm(true)
-  }
+    setEditingAddress(null);
+    setFormProvinceId('');
+    setFormCityId('');
+    setFormFullAddress('');
+    setFormPostalCode('');
+    setShowForm(true);
+  };
 
   // ── Open form for edit ─────────────────────────────────────────────
 
   const openEditForm = (address: Address) => {
-    setEditingAddress(address)
-    setFormProvinceId(address.provinceId)
-    setFormCityId(address.cityId)
-    setFormFullAddress(address.fullAddress)
-    setFormPostalCode(address.postalCode)
-    setShowForm(true)
-    // Fetch cities for the province
-    if (address.provinceId) {
-      fetchCities(address.provinceId)
-    }
-  }
+    setEditingAddress(address);
+    setFormProvinceId(address.provinceId);
+    setFormCityId(address.cityId);
+    setFormFullAddress(address.fullAddress);
+    setFormPostalCode(address.postalCode);
+    setShowForm(true);
+  };
 
   // ── Close form ─────────────────────────────────────────────────────
 
   const closeForm = () => {
-    setShowForm(false)
-    setEditingAddress(null)
-  }
+    setShowForm(false);
+    setEditingAddress(null);
+  };
 
   // ── Save handler (create or update) ────────────────────────────────
 
   const handleSave = useCallback(async () => {
-    if (!formProvinceId || !formCityId || !formFullAddress.trim() || !formPostalCode.trim()) {
-      toast.error(t('settings.addresses.error.create', locale))
-      return
+    if (
+      citiesLoading ||
+      !cities.some((city) => city.id === formCityId) ||
+      !formProvinceId ||
+      !formCityId ||
+      !formFullAddress.trim() ||
+      !formPostalCode.trim()
+    ) {
+      toast.error(t('settings.addresses.error.create', locale));
+      return;
     }
 
-    setSaving(true)
+    setSaving(true);
     try {
-      // Get the active profile
-      const profileRes = await fetch('/api/profiles')
-      if (!profileRes.ok) throw new Error()
-      const profileData: { activeProfileId: string | null } = await profileRes.json()
-      if (!profileData.activeProfileId) throw new Error()
-
-      const profileId = profileData.activeProfileId
+      if (!profileId) throw new Error();
       const body = {
         provinceId: formProvinceId,
         cityId: formCityId,
         fullAddress: formFullAddress.trim(),
         postalCode: formPostalCode.trim(),
-      }
+      };
 
-      let res: Response
+      let res: Response;
       if (editingAddress) {
         res = await fetch(`/api/profiles/${profileId}/addresses/${editingAddress.id}`, {
           method: 'PUT',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(body),
-        })
+        });
       } else {
         res = await fetch(`/api/profiles/${profileId}/addresses`, {
           method: 'POST',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(body),
-        })
+        });
       }
 
       if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}))
-        const message = (errBody as { message?: string }).message
-        toast.error(message || t(editingAddress ? 'settings.addresses.error.update' : 'settings.addresses.error.create', locale))
-        return
+        const errBody = await res.json().catch(() => ({}));
+        const message = (errBody as { message?: string }).message;
+        toast.error(
+          message ||
+            t(
+              editingAddress
+                ? 'settings.addresses.error.update'
+                : 'settings.addresses.error.create',
+              locale
+            )
+        );
+        return;
       }
 
-      toast.success(t(editingAddress ? 'settings.addresses.success.update' : 'settings.addresses.success.create', locale))
-      closeForm()
-      fetchAddresses()
+      toast.success(
+        t(
+          editingAddress
+            ? 'settings.addresses.success.update'
+            : 'settings.addresses.success.create',
+          locale
+        )
+      );
+      closeForm();
+      fetchAddresses();
     } catch {
-      toast.error(t(editingAddress ? 'settings.addresses.error.update' : 'settings.addresses.error.create', locale))
+      toast.error(
+        t(
+          editingAddress ? 'settings.addresses.error.update' : 'settings.addresses.error.create',
+          locale
+        )
+      );
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }, [formProvinceId, formCityId, formFullAddress, formPostalCode, editingAddress, locale, fetchAddresses])
+  }, [
+    cities,
+    citiesLoading,
+    formProvinceId,
+    formCityId,
+    formFullAddress,
+    formPostalCode,
+    editingAddress,
+    profileId,
+    locale,
+    fetchAddresses,
+  ]);
 
   // ── Set as main address ────────────────────────────────────────────
 
-  const handleSetMain = useCallback(async (addressId: string) => {
-    try {
-      const profileRes = await fetch('/api/profiles')
-      if (!profileRes.ok) throw new Error()
-      const profileData: { activeProfileId: string | null } = await profileRes.json()
-      if (!profileData.activeProfileId) throw new Error()
+  const handleSetMain = useCallback(
+    async (addressId: string) => {
+      try {
+        if (!profileId) throw new Error();
 
-      const res = await fetch(`/api/profiles/${profileData.activeProfileId}/addresses/${addressId}/set-main`, {
-        method: 'POST',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-      })
+        const res = await fetch(`/api/profiles/${profileId}/addresses/${addressId}/set-main`, {
+          method: 'POST',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+        });
 
-      if (!res.ok) {
-        toast.error(t('settings.addresses.error.setMain', locale))
-        return
+        if (!res.ok) {
+          toast.error(t('settings.addresses.error.setMain', locale));
+          return;
+        }
+
+        toast.success(t('settings.addresses.success.setMain', locale));
+        fetchAddresses();
+      } catch {
+        toast.error(t('settings.addresses.error.setMain', locale));
       }
-
-      toast.success(t('settings.addresses.success.setMain', locale))
-      fetchAddresses()
-    } catch {
-      toast.error(t('settings.addresses.error.setMain', locale))
-    }
-  }, [locale, fetchAddresses])
+    },
+    [locale, profileId, fetchAddresses]
+  );
 
   // ── Delete address ─────────────────────────────────────────────────
 
-  const handleDelete = useCallback(async (addressId: string) => {
-    try {
-      const profileRes = await fetch('/api/profiles')
-      if (!profileRes.ok) throw new Error()
-      const profileData: { activeProfileId: string | null } = await profileRes.json()
-      if (!profileData.activeProfileId) throw new Error()
+  const handleDelete = useCallback(
+    async (addressId: string) => {
+      if (deletingRef.current || !profileId) return;
+      deletingRef.current = true;
+      setDeleting(true);
+      try {
+        const res = await fetch(`/api/profiles/${profileId}/addresses/${addressId}`, {
+          method: 'DELETE',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+        });
 
-      const res = await fetch(`/api/profiles/${profileData.activeProfileId}/addresses/${addressId}`, {
-        method: 'DELETE',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-      })
+        if (!res.ok) {
+          toast.error(t('settings.addresses.error.delete', locale));
+          return;
+        }
 
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}))
-        const message = (errBody as { message?: string }).message
-        toast.error(message || t('settings.addresses.error.delete', locale))
-        return
+        toast.success(t('settings.addresses.success.delete', locale));
+        setDeleteConfirmId(null);
+        fetchAddresses();
+      } catch {
+        toast.error(t('settings.addresses.error.delete', locale));
+      } finally {
+        deletingRef.current = false;
+        setDeleting(false);
       }
-
-      toast.success(t('settings.addresses.success.delete', locale))
-      setDeleteConfirmId(null)
-      fetchAddresses()
-    } catch {
-      toast.error(t('settings.addresses.error.delete', locale))
-    }
-  }, [locale, fetchAddresses])
+    },
+    [locale, profileId, fetchAddresses]
+  );
 
   // ── Helpers ────────────────────────────────────────────────────────
 
-  const getProvinceName = (provinceId: string): string => {
-    const province = provinces.find((p) => p.id === provinceId)
-    if (!province) return provinceId
-    return locale === 'fa' ? province.nameFa : province.nameEn
-  }
+  const getProvinceName = (address: Address): string => {
+    const province = provinces.find((item) => item.id === address.provinceId);
+    return (
+      (locale === 'fa'
+        ? (address.provinceNameFa ?? province?.nameFa)
+        : (address.provinceNameEn ?? province?.nameEn)) ??
+      t('settings.addresses.unknownProvince', locale)
+    );
+  };
 
-  const getCityName = (cityId: string): string => {
-    const city = cities.find((c) => c.id === cityId)
-    if (!city) return cityId
-    return locale === 'fa' ? city.nameFa : city.nameEn
-  }
+  const getCityName = (address: Address): string =>
+    (locale === 'fa' ? address.cityNameFa : address.cityNameEn) ??
+    t('settings.addresses.unknownCity', locale);
 
   // ── Render ─────────────────────────────────────────────────────────
+  const deletingAddress = addresses.find((address) => address.id === deleteConfirmId);
 
   return (
     <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">{t('settings.addresses.title', locale)}</h1>
-        <Button onClick={openAddForm} className="gap-2">
+        <h1 ref={headingRef} tabIndex={-1} className="text-2xl font-bold">
+          {t('settings.addresses.title', locale)}
+        </h1>
+        <Button disabled={loading || !profileId} onClick={openAddForm} className="gap-2">
           <PlusIcon className="h-4 w-4" />
           {t('settings.addresses.add', locale)}
         </Button>
@@ -320,7 +384,15 @@ function SettingsAddressesPage() {
       )}
 
       {/* Address list */}
-      {!loading && (
+      {!loading && loadError && (
+        <div role="alert">
+          <p>{t('settings.addresses.error.load', locale)}</p>
+          <Button variant="outline" onClick={fetchAddresses}>
+            {t('settings.addresses.retry', locale)}
+          </Button>
+        </div>
+      )}
+      {!loading && !loadError && (
         <div className="space-y-3">
           {addresses.length === 0 && (
             <Card>
@@ -349,7 +421,7 @@ function SettingsAddressesPage() {
                         </span>
                       )}
                       <span className="text-sm font-medium truncate">
-                        {getProvinceName(address.provinceId)}، {getCityName(address.cityId)}
+                        {getProvinceName(address)}، {getCityName(address)}
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground">{address.fullAddress}</p>
@@ -379,36 +451,18 @@ function SettingsAddressesPage() {
                     >
                       <PencilIcon className="h-4 w-4" />
                     </button>
-                    {deleteConfirmId === address.id ? (
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(address.id)}
-                          className="rounded p-1.5 text-destructive hover:bg-destructive/10 transition-colors"
-                          aria-label="Confirm delete"
-                        >
-                          <Trash2Icon className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setDeleteConfirmId(null)}
-                          className="rounded p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                          aria-label="Cancel delete"
-                        >
-                          <XIcon className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setDeleteConfirmId(address.id)}
-                        className="rounded p-1.5 text-muted-foreground hover:text-destructive hover:bg-muted transition-colors"
-                        title={t('settings.addresses.delete', locale)}
-                        aria-label={t('settings.addresses.delete', locale)}
-                      >
-                        <Trash2Icon className="h-4 w-4" />
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        deleteTriggerRef.current = event.currentTarget;
+                        setDeleteConfirmId(address.id);
+                      }}
+                      className="rounded p-1.5 text-muted-foreground hover:text-destructive hover:bg-muted transition-colors"
+                      title={t('settings.addresses.delete', locale)}
+                      aria-label={t('settings.addresses.delete', locale)}
+                    >
+                      <Trash2Icon className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
               </CardContent>
@@ -417,25 +471,72 @@ function SettingsAddressesPage() {
         </div>
       )}
 
+      <Dialog
+        open={Boolean(deletingAddress)}
+        onOpenChange={(open) => {
+          if (!open && !deletingRef.current) setDeleteConfirmId(null);
+        }}
+      >
+        <DialogContent
+          showCloseButton={false}
+          initialFocus={cancelDeleteRef}
+          finalFocus={() =>
+            deleteTriggerRef.current?.isConnected ? deleteTriggerRef.current : headingRef.current
+          }
+          dir={locale === 'fa' ? 'rtl' : 'ltr'}
+        >
+          <DialogTitle>{t('settings.addresses.deleteConfirm', locale)}</DialogTitle>
+          <p className="break-words">{deletingAddress?.fullAddress}</p>
+          <DialogDescription>
+            {deletingAddress?.mainAddress
+              ? t('settings.addresses.deleteConfirmMain', locale)
+              : addressesText('removalHistory', locale)}
+          </DialogDescription>
+          <div className="flex justify-end gap-2">
+            <Button
+              ref={cancelDeleteRef}
+              variant="outline"
+              disabled={deleting}
+              onClick={() => setDeleteConfirmId(null)}
+            >
+              {t('settings.addresses.form.cancel', locale)}
+            </Button>
+            {!deletingAddress?.mainAddress && (
+              <Button
+                variant="destructive"
+                disabled={deleting || !profileId}
+                onClick={() => deletingAddress && handleDelete(deletingAddress.id)}
+              >
+                {t('settings.addresses.delete', locale)}
+              </Button>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Add/Edit Modal */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={closeForm}>
-          <div
-            className="bg-background rounded-lg shadow-lg w-full max-w-md mx-4 p-6 space-y-4"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={editingAddress ? t('settings.addresses.form.editTitle', locale) : t('settings.addresses.form.title', locale)}
+        <Dialog
+          open
+          onOpenChange={(open) => {
+            if (!open && !saving) closeForm();
+          }}
+        >
+          <DialogContent
+            showCloseButton={false}
+            className="bg-background rounded-lg shadow-lg w-full sm:max-w-md p-6 space-y-4"
           >
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">
-                {editingAddress ? t('settings.addresses.form.editTitle', locale) : t('settings.addresses.form.title', locale)}
-              </h2>
+              <DialogTitle className="text-lg font-semibold">
+                {editingAddress
+                  ? t('settings.addresses.form.editTitle', locale)
+                  : t('settings.addresses.form.title', locale)}
+              </DialogTitle>
               <button
                 type="button"
                 onClick={closeForm}
                 className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                aria-label="Close"
+                aria-label={t('settings.addresses.form.cancel', locale)}
               >
                 <XIcon className="h-4 w-4" />
               </button>
@@ -444,16 +545,23 @@ function SettingsAddressesPage() {
             <div className="space-y-3">
               {/* Province */}
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="addresses-field-1" className="block text-sm font-medium mb-1">
                   {t('settings.addresses.form.province', locale)}
                 </label>
                 <select
+                  id="addresses-field-1"
                   value={formProvinceId}
-                  onChange={(e) => setFormProvinceId(e.target.value)}
+                  onChange={(e) => {
+                    setFormCityId('');
+                    setCities([]);
+                    setFormProvinceId(e.target.value);
+                  }}
                   className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                   dir={locale === 'fa' ? 'rtl' : 'ltr'}
                 >
-                  <option value="">{t('settings.addresses.form.provincePlaceholder', locale)}</option>
+                  <option value="">
+                    {t('settings.addresses.form.provincePlaceholder', locale)}
+                  </option>
                   {provinces.map((p) => (
                     <option key={p.id} value={p.id}>
                       {locale === 'fa' ? p.nameFa : p.nameEn}
@@ -464,13 +572,14 @@ function SettingsAddressesPage() {
 
               {/* City */}
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="addresses-field-2" className="block text-sm font-medium mb-1">
                   {t('settings.addresses.form.city', locale)}
                 </label>
                 <select
+                  id="addresses-field-2"
                   value={formCityId}
                   onChange={(e) => setFormCityId(e.target.value)}
-                  disabled={!formProvinceId}
+                  disabled={!formProvinceId || citiesLoading || citiesError}
                   className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                   dir={locale === 'fa' ? 'rtl' : 'ltr'}
                 >
@@ -483,12 +592,22 @@ function SettingsAddressesPage() {
                 </select>
               </div>
 
+              {citiesError && (
+                <div>
+                  <p role="alert">{t('settings.addresses.error.loadCities', locale)}</p>
+                  <Button variant="outline" onClick={() => setCitiesRetry((value) => value + 1)}>
+                    {t('settings.addresses.retry', locale)}
+                  </Button>
+                </div>
+              )}
+
               {/* Full Address */}
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="addresses-field-3" className="block text-sm font-medium mb-1">
                   {t('settings.addresses.form.fullAddress', locale)}
                 </label>
                 <textarea
+                  id="addresses-field-3"
                   value={formFullAddress}
                   onChange={(e) => setFormFullAddress(e.target.value)}
                   placeholder={t('settings.addresses.form.fullAddressPlaceholder', locale)}
@@ -500,10 +619,11 @@ function SettingsAddressesPage() {
 
               {/* Postal Code */}
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label htmlFor="addresses-field-4" className="block text-sm font-medium mb-1">
                   {t('settings.addresses.form.postalCode', locale)}
                 </label>
                 <input
+                  id="addresses-field-4"
                   type="text"
                   value={formPostalCode}
                   onChange={(e) => setFormPostalCode(e.target.value)}
@@ -519,18 +639,24 @@ function SettingsAddressesPage() {
               <Button variant="outline" onClick={closeForm}>
                 {t('settings.addresses.form.cancel', locale)}
               </Button>
-              <Button onClick={handleSave} disabled={saving} className="gap-2">
+              <Button
+                onClick={handleSave}
+                disabled={saving || citiesLoading || citiesError}
+                className="gap-2"
+              >
                 {saving ? (
                   <Loader2Icon className="h-4 w-4 animate-spin" />
                 ) : (
                   <SaveIcon className="h-4 w-4" />
                 )}
-                {saving ? t('settings.addresses.form.saving', locale) : t('settings.addresses.form.save', locale)}
+                {saving
+                  ? t('settings.addresses.form.saving', locale)
+                  : t('settings.addresses.form.save', locale)}
               </Button>
             </div>
-          </div>
-        </div>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
-  )
+  );
 }

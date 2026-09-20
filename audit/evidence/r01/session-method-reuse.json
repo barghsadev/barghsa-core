@@ -1,0 +1,76 @@
+{
+  "source_revision": "ee5beb2e55300297953108ea1ce4c50edaaaefc2",
+  "scope": "Exact method-body comparisons against cited focused-review revisions. Dependency and broader acceptance evidence is not renewed.",
+  "methods": [
+    {
+      "path": "apps/api/src/auth/auth.service.ts",
+      "method": "login",
+      "evidence_revision": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
+      "method_unchanged": true,
+      "method_sha256": "dffdf13a970ae555d0e437e2a30a7c199a35a8a3f725fc579ab6847d0a1b92fe"
+    },
+    {
+      "path": "apps/api/src/auth/auth.service.ts",
+      "method": "completeLogin",
+      "evidence_revision": "bbb5c66768870e042f8c72b75e218d429e1ecee0",
+      "method_unchanged": true,
+      "method_sha256": "1e4d417d1dbe3ccd408d53a3e75fafad7752d9e43dbc91816cbbe8eda01bae19"
+    },
+    {
+      "path": "apps/api/src/auth/auth.service.ts",
+      "method": "forceChangePassword",
+      "evidence_revision": "8f857aa6e63619e947c8dba581cb07d5bf49723c",
+      "method_unchanged": true,
+      "method_sha256": "819ea945c1ab04303925d01c43a3945049f46598039475dd80ff8588e65a7903"
+    },
+    {
+      "path": "apps/api/src/auth/auth.service.ts",
+      "method": "resetPassword",
+      "evidence_revision": "9827e96",
+      "method_unchanged": true,
+      "method_sha256": "4668b6763b6e93fa10fdb668d76e147577a5e611a55a2812ebb01275adbc85c8"
+    },
+    {
+      "path": "apps/api/src/session/session.service.ts",
+      "method": "rotateSession",
+      "evidence_revision": "9469d35",
+      "method_unchanged": true,
+      "method_sha256": "d34218a765fffc95b8a88222f66b23ffec81b3f70191a7764888817593b7580a"
+    },
+    {
+      "path": "apps/api/src/session/session.service.ts",
+      "method": "verifyStepUp",
+      "evidence_revision": "9469d35",
+      "method_unchanged": true,
+      "method_sha256": "a6630e00202e727578cd368f296a4ee95cad507ac225c451027a7e1c3a73f391"
+    },
+    {
+      "path": "apps/api/src/session/session.service.ts",
+      "method": "redeemRefreshToken",
+      "evidence_revision": "f39132f",
+      "method_unchanged": true,
+      "method_sha256": "c7c8fa2dec1819f2c4a8d77539741d83059e32a77bb1748d8e0b2aaa31f5bce0"
+    },
+    {
+      "path": "apps/api/src/session/session.service.ts",
+      "method": "createSession",
+      "evidence_revision": "f39132f",
+      "method_unchanged": true,
+      "method_sha256": "434b384ebff666eae7f1f43b5a21386f242ebec57b6ea52907448a01f4bb0d3b"
+    },
+    {
+      "path": "apps/api/src/crm/crm-v2.service.ts",
+      "method": "expireSessions",
+      "evidence_revision": "337b965ca79375bfd83f72b49d279814e794ef24",
+      "method_unchanged": true,
+      "method_sha256": "d7024a846e6a4935d21c7c5a3bb74a255e11d6b2e40c773889e2c8770561142a"
+    },
+    {
+      "path": "apps/api/src/crm/crm-v2.service.ts",
+      "method": "forcePasswordChange",
+      "evidence_revision": "337b965ca79375bfd83f72b49d279814e794ef24",
+      "method_unchanged": true,
+      "method_sha256": "576df5e9e7c1cbd7b199c72c8a2e8c1d34394fdb874fdc12c6c8116d3267ba91"
+    }
+  ]
+}

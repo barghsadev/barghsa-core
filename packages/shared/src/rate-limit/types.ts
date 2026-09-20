@@ -16,8 +16,8 @@ export interface RateLimitResult {
  * Rate-limit store abstraction.
  *
  * The store is the only thing that differs between the PostgreSQL-backed
- * implementation and a potential Redis-backed implementation.  A composite
- * store tries Redis first and falls back to PostgreSQL.
+ * implementation and a potential Redis-backed implementation.  The composite
+ * store persists every admission in PostgreSQL and additionally checks Redis.
  */
 export interface RateLimiterStore {
   /**

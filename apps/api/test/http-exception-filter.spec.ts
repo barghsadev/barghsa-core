@@ -1,13 +1,23 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
+  BadRequestException,
+  UnauthorizedException,
+  ForbiddenException,
+  NotFoundException,
+  BadGatewayException,
   HttpException,
   HttpStatus,
   Logger,
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpExceptionFilter } from '../src/common/http-exception.filter.js';
-import { CorrelationIdMiddleware, CorrelationIdProvider, correlationIdStorage } from '../src/common/correlation-id.middleware.js';
+import {
+  CorrelationIdMiddleware,
+  CorrelationIdProvider,
+  correlationIdStorage,
+} from '../src/common/correlation-id.middleware.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { DomainErrorCodes } from '@barghsa/shared/errors/domain';
 import { ZodError, ZodIssue } from 'zod';
 
 // ---------------------------------------------------------------------------
@@ -25,9 +35,13 @@ describe('CorrelationIdMiddleware', () => {
     const res = { setHeader: vi.fn() } as any;
     let capturedId: string | undefined;
 
-    middleware.use(req, res, vi.fn(() => {
-      capturedId = correlationIdStorage.getStore();
-    }));
+    middleware.use(
+      req,
+      res,
+      vi.fn(() => {
+        capturedId = correlationIdStorage.getStore();
+      })
+    );
 
     // Should have set the header
     expect(res.setHeader).toHaveBeenCalledWith('X-Correlation-ID', expect.any(String));
@@ -42,9 +56,13 @@ describe('CorrelationIdMiddleware', () => {
     const res = { setHeader: vi.fn() } as any;
     let capturedId: string | undefined;
 
-    middleware.use(req, res, vi.fn(() => {
-      capturedId = correlationIdStorage.getStore();
-    }));
+    middleware.use(
+      req,
+      res,
+      vi.fn(() => {
+        capturedId = correlationIdStorage.getStore();
+      })
+    );
 
     expect(res.setHeader).toHaveBeenCalledWith('X-Correlation-ID', inboundId);
     expect(capturedId).toBe(inboundId);
@@ -94,14 +112,10 @@ describe('HttpExceptionFilter', () => {
     vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
   });
 
-  function createMockHost(
-    statusCode: number,
-    body: unknown,
-    headers: Record<string, string> = {},
-  ) {
+  function createMockHost(statusCode: number, body: unknown, headers: Record<string, string> = {}) {
     const json = vi.fn();
     const status = vi.fn(() => ({ json }));
-    const response = { status } as any;
+    const response = { status, setHeader: vi.fn() } as any;
     const request = {
       method: 'GET',
       url: '/test',
@@ -115,14 +129,233 @@ describe('HttpExceptionFilter', () => {
     return { json, status, response, request, host };
   }
 
+  it.each([
+    { blocker: 'internal.secret', count: 1 },
+    { blocker: 'invoices', count: -1 },
+    { blocker: 'invoices', count: '2' },
+    { blocker: 'invoices', count: Number.MAX_SAFE_INTEGER + 1 },
+    { blocker: 'invoices' },
+    { blocker: 'lastOwner', count: 1 },
+  ])('rejects untrusted archival detail $blocker/$count', (details) => {
+    const { json, host } = createMockHost(409, {}, { 'accept-language': 'en' });
+    filter.catch(
+      new HttpException(
+        { error: 'CRM:PROFILE:DELETION_BLOCKED', message: 'private detail', ...details },
+        409
+      ),
+      host
+    );
+    expect(json.mock.calls[0][0].error.message).toBe(
+      'This profile has linked records that prevent deletion.'
+    );
+    expect(JSON.stringify(json.mock.calls)).not.toContain('private detail');
+  });
+
+  it.each([403, 500])('logs only route templates and correlation for %i failures', (statusCode) => {
+    const { request, host } = createMockHost(statusCode, {});
+    const credential = 'private-session-and-reset-token';
+    request.method = 'DELETE';
+    request.url = `/api/auth/sessions/${credential}?token=${credential}`;
+    request.route = { path: '/api/auth/sessions/:id' };
+    const correlation = '550e8400-e29b-41d4-a716-446655440000';
+    correlationIdStorage.run(correlation, () => {
+      filter.catch(new HttpException(`Database rejected ${credential}`, statusCode), host);
+    });
+    const calls =
+      statusCode < 500
+        ? vi.mocked(Logger.prototype.debug).mock.calls
+        : vi.mocked(Logger.prototype.error).mock.calls;
+    const log = JSON.stringify(calls);
+    expect(log).toContain('/api/auth/sessions/:id');
+    expect(log).toContain(correlation);
+    expect(log).not.toContain(credential);
+    expect(log).not.toContain('Database rejected');
+  });
+
+  it('keeps unmatched URLs and arbitrary error stacks out of logs', () => {
+    const { request, host } = createMockHost(500, {});
+    request.url = '/private-path?password=credential-marker';
+    filter.catch(new Error('driver-error-credential-marker'), host);
+    const log = JSON.stringify(vi.mocked(Logger.prototype.error).mock.calls);
+    expect(log).toContain('unmatched');
+    expect(log).not.toContain('credential-marker');
+    expect(log).not.toContain('private-path');
+  });
+
+  it('localizes an explicit domain not-found error after a controller route matched', () => {
+    const { json, request, host } = createMockHost(404, {});
+    request.route = { path: '/profiles/:id' };
+    filter.catch(new NotFoundException('This profile is no longer available'), host);
+    expect(json.mock.calls[0][0].error.message).toBe('منبع درخواستی یافت نشد');
+    expect(json.mock.calls[0][0].error.code).toBe('NOT_FOUND:RESOURCE');
+  });
+
+  it.each([
+    [409, ErrorCodes.CONFLICT_STATE.code, 'Current state does not allow this operation'],
+    [422, 'VALIDATION:INPUT:UNPROCESSABLE', 'Invalid input value'],
+    [503, 'PROVIDER:UNAVAILABLE', 'A required service is temporarily unavailable'],
+    [415, 'VALIDATION:INPUT:UNSUPPORTED_MEDIA_TYPE', 'Unsupported request content type'],
+  ])(
+    'uses a generic fallback for HTTP %i rather than an unrelated domain error',
+    (status, code, message) => {
+      const { host, json } = createMockHost(status as number, {}, { 'accept-language': 'en' });
+      filter.catch(new HttpException('private-detail', status as number), host);
+      expect(json.mock.calls[0][0].error).toMatchObject({ code, message });
+    }
+  );
+
+  it.each(['en', 'fa'])(
+    'resolves every shared public error in %s without exposing details',
+    (locale) => {
+      for (const definition of [...Object.values(ErrorCodes), ...Object.values(DomainErrorCodes)]) {
+        const { host, json } = createMockHost(
+          definition.httpStatus,
+          {},
+          { 'accept-language': locale }
+        );
+        filter.catch(
+          new HttpException(
+            { error: definition.code, message: 'private-catalogue-detail' },
+            definition.httpStatus
+          ),
+          host
+        );
+        const { error } = json.mock.calls[0][0];
+        expect.soft(error.code).toBe(definition.code);
+        expect.soft(error.message).not.toBe(definition.messageKey);
+        expect.soft(error.message).not.toContain('private-catalogue-detail');
+        if (locale === 'en') expect.soft(error.message).toBe(definition.title);
+        else expect.soft(error.message).toMatch(/[\u0600-\u06ff]/);
+      }
+    }
+  );
+
+  it.each(['en', 'fa'])(
+    'keeps raw application details and unregistered codes out of %s responses and logs',
+    (locale) => {
+      const privateDetail = 'postgres://private-user:private-password@db/internal-table';
+      const cases = [
+        { body: privateDetail, code: 'VALIDATION:INPUT:INVALID', status: 400 },
+        {
+          body: { message: [privateDetail, { internal: privateDetail }] },
+          code: 'VALIDATION:INPUT:INVALID',
+          status: 400,
+        },
+        {
+          body: { error: 'VALIDATION:INPUT:INVALID', message: privateDetail },
+          code: 'VALIDATION:INPUT:INVALID',
+          status: 400,
+        },
+        {
+          body: { error: privateDetail, message: privateDetail },
+          code: 'VALIDATION:INPUT:INVALID',
+          status: 400,
+        },
+        {
+          body: { error: 'UNREGISTERED_PRIVATE_VALUE', message: privateDetail },
+          code: 'VALIDATION:INPUT:INVALID',
+          status: 400,
+        },
+        {
+          body: { error: 'NOTIFICATION_TEMPLATE_NOT_FOUND', message: privateDetail },
+          code: 'NOTIFICATION_TEMPLATE_NOT_FOUND',
+          status: 404,
+        },
+      ];
+      for (const code of [
+        'VERIFICATION:PROVIDER_NOT_FOUND',
+        'GIFT_CODE_NOT_FOUND',
+        'CONTRACT_TEMPLATE_NOT_FOUND',
+        'AI_KB_GROUP_NOT_FOUND',
+      ])
+        cases.push({ body: { error: code, message: privateDetail }, code, status: 404 });
+      for (const item of cases) {
+        const { host, json, response } = createMockHost(
+          item.status,
+          {},
+          { 'accept-language': locale }
+        );
+        filter.catch(new HttpException(item.body, item.status), host);
+        const result = json.mock.calls[0][0];
+        expect.soft(result.error.code).toBe(item.code);
+        expect
+          .soft(result.error.message)
+          .toBe(
+            item.status === 404
+              ? locale === 'fa'
+                ? 'منبع درخواستی یافت نشد'
+                : 'Requested resource was not found'
+              : locale === 'fa'
+                ? 'مقدار ورودی نامعتبر است'
+                : 'Invalid input value'
+          );
+        expect.soft(JSON.stringify(result)).not.toContain(privateDetail);
+        expect.soft(JSON.stringify(result)).not.toContain('UNREGISTERED_PRIVATE_VALUE');
+        expect
+          .soft(response.setHeader)
+          .toHaveBeenCalledWith('X-Correlation-ID', result.error.correlationId);
+      }
+      expect(JSON.stringify(vi.mocked(Logger.prototype.debug).mock.calls)).not.toContain(
+        privateDetail
+      );
+      expect(JSON.stringify(vi.mocked(Logger.prototype.debug).mock.calls)).not.toContain(
+        'UNREGISTERED_PRIVATE_VALUE'
+      );
+    }
+  );
+
+  it('localizes the Nest fallback when middleware has populated route metadata', () => {
+    const { json, request, host } = createMockHost(404, {});
+    request.route = { path: '/{*path}' };
+    request.originalUrl = '/api/unknown?private=route-marker';
+    filter.catch(new NotFoundException(`Cannot GET ${request.originalUrl}`), host);
+    expect(json.mock.calls[0][0].error.message).toBe('منبع درخواستی یافت نشد');
+    expect(JSON.stringify(json.mock.calls[0][0])).not.toContain('route-marker');
+  });
+
+  it.each([
+    {
+      exception: new BadRequestException(),
+      code: 'VALIDATION:INPUT:INVALID',
+      message: 'مقدار ورودی نامعتبر است',
+    },
+    {
+      exception: new UnauthorizedException(),
+      code: 'AUTH:UNAUTHENTICATED',
+      message: 'احراز هویت نشده‌اید',
+    },
+    { exception: new ForbiddenException(), code: 'AUTHZ:FORBIDDEN', message: 'دسترسی غیرمجاز' },
+    {
+      exception: new NotFoundException(),
+      code: 'NOT_FOUND:RESOURCE',
+      message: 'منبع درخواستی یافت نشد',
+    },
+    {
+      exception: new BadGatewayException(),
+      code: 'PROVIDER:DOWNSTREAM_ERROR',
+      message: 'خطا در سرویس خارجی',
+    },
+  ])(
+    'maps built-in $code to its shared code and localized message',
+    ({ exception, code, message }) => {
+      const { json, host } = createMockHost(exception.getStatus(), {});
+      filter.catch(exception, host);
+      expect(json).toHaveBeenCalledWith({
+        error: { code, message, correlationId: expect.any(String) },
+      });
+    }
+  );
+
   it('returns 400 with VALIDATION:PARSE:ZOD_ERROR for ZodError', () => {
-    const issues: ZodIssue[] = [{
-      code: 'invalid_type',
-      expected: 'string',
-      received: 'undefined',
-      path: ['name'],
-      message: 'Required',
-    }];
+    const issues: ZodIssue[] = [
+      {
+        code: 'invalid_type',
+        expected: 'string',
+        received: 'undefined',
+        path: ['name'],
+        message: 'Required',
+      },
+    ];
     const zodError = new ZodError(issues);
     const { json, status, host } = createMockHost(400, {});
 
@@ -131,6 +364,7 @@ describe('HttpExceptionFilter', () => {
     expect(status).toHaveBeenCalledWith(400);
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'VALIDATION:PARSE:ZOD_ERROR',
         message: 'داده‌های ارسالی معتبر نیستند',
       },
@@ -146,8 +380,9 @@ describe('HttpExceptionFilter', () => {
     expect(status).toHaveBeenCalledWith(400);
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'VALIDATION:INPUT:INVALID',
-        message: 'Bad input',
+        message: 'مقدار ورودی نامعتبر است',
       },
     });
   });
@@ -160,7 +395,7 @@ describe('HttpExceptionFilter', () => {
         onlineTopUpLimit: 50_000,
         configVersion: 2,
       },
-      HttpStatus.BAD_REQUEST,
+      HttpStatus.BAD_REQUEST
     );
     const { json, status, host } = createMockHost(400, {});
 
@@ -169,9 +404,9 @@ describe('HttpExceptionFilter', () => {
     expect(status).toHaveBeenCalledWith(400);
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'VALIDATION:INPUT:INVALID',
-        message:
-          'Online top-up amount 100001 IRR exceeds the configured per-transaction limit of 50000 IRR',
+        message: 'مقدار ورودی نامعتبر است',
         onlineTopUpLimit: 50_000,
         configVersion: 2,
       },
@@ -181,11 +416,11 @@ describe('HttpExceptionFilter', () => {
   it('does not forward an invalid onlineTopUpLimit on a generic 400', () => {
     const exception = new HttpException(
       {
-        message: 'Bad input',
+        message: 'مقدار ورودی نامعتبر است',
         onlineTopUpLimit: -1,
         configVersion: 2,
       },
-      HttpStatus.BAD_REQUEST,
+      HttpStatus.BAD_REQUEST
     );
     const { json, host } = createMockHost(400, {});
 
@@ -193,13 +428,14 @@ describe('HttpExceptionFilter', () => {
 
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'VALIDATION:INPUT:INVALID',
-        message: 'Bad input',
+        message: 'مقدار ورودی نامعتبر است',
       },
     });
   });
 
-  it('returns 401 for unauthorized — uses raw HttpException message for 4xx', () => {
+  it('localizes the default unauthorized message', () => {
     const exception = new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     const { json, status, host } = createMockHost(401, {});
 
@@ -208,13 +444,14 @@ describe('HttpExceptionFilter', () => {
     expect(status).toHaveBeenCalledWith(401);
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'AUTH:UNAUTHENTICATED',
-        message: 'Unauthorized',
+        message: 'احراز هویت نشده‌اید',
       },
     });
   });
 
-  it('returns 404 for not found — uses raw HttpException message for 4xx', () => {
+  it('localizes the default not-found message', () => {
     const exception = new HttpException('Not Found', HttpStatus.NOT_FOUND);
     const { json, status, host } = createMockHost(404, {});
 
@@ -223,8 +460,9 @@ describe('HttpExceptionFilter', () => {
     expect(status).toHaveBeenCalledWith(404);
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'NOT_FOUND:RESOURCE',
-        message: 'Not Found',
+        message: 'منبع درخواستی یافت نشد',
       },
     });
   });
@@ -239,6 +477,7 @@ describe('HttpExceptionFilter', () => {
     // Should NOT forward the raw error message
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'INTERNAL:UNEXPECTED',
         message: 'خطای غیرمنتظره رخ داده است',
       },
@@ -248,7 +487,7 @@ describe('HttpExceptionFilter', () => {
   it('includes correlationId in response when set', () => {
     const testId = '550e8400-e29b-41d4-a716-446655440000';
     const exception = new HttpException('Not Found', HttpStatus.NOT_FOUND);
-    const { json, status, host } = createMockHost(404, {});
+    const { json, host } = createMockHost(404, {});
 
     correlationIdStorage.run(testId, () => {
       filter.catch(exception, host);
@@ -257,22 +496,23 @@ describe('HttpExceptionFilter', () => {
     expect(json).toHaveBeenCalledWith({
       error: {
         code: 'NOT_FOUND:RESOURCE',
-        message: 'Not Found',
+        message: 'منبع درخواستی یافت نشد',
         correlationId: testId,
       },
     });
   });
 
-  it('uses English locale when accept-language is en — raw message used for 4xx', () => {
+  it('uses English locale for the default not-found message', () => {
     const exception = new HttpException('Not Found', HttpStatus.NOT_FOUND);
-    const { json, status, host } = createMockHost(404, {}, { 'accept-language': 'en-US' });
+    const { json, host } = createMockHost(404, {}, { 'accept-language': 'en-US' });
 
     filter.catch(exception, host);
 
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'NOT_FOUND:RESOURCE',
-        message: 'Not Found',
+        message: 'Requested resource was not found',
       },
     });
   });
@@ -280,7 +520,7 @@ describe('HttpExceptionFilter', () => {
   it('never leaks raw 5xx error messages to the client', () => {
     const exception = new HttpException(
       'Internal: connection pool timeout hitting primary DB replica',
-      HttpStatus.INTERNAL_SERVER_ERROR,
+      HttpStatus.INTERNAL_SERVER_ERROR
     );
     const { json, status, host } = createMockHost(500, {});
 
@@ -289,6 +529,7 @@ describe('HttpExceptionFilter', () => {
     expect(status).toHaveBeenCalledWith(500);
     expect(json).toHaveBeenCalledWith({
       error: {
+        correlationId: expect.any(String),
         code: 'INTERNAL:SERVER_ERROR',
         message: 'خطای داخلی سرور',
       },
@@ -355,7 +596,7 @@ describe('HttpExceptionFilter + CorrelationIdMiddleware (integration)', () => {
     for (const { exception, expectedStatus, expectedCode } of testCases) {
       const json = vi.fn();
       const status = vi.fn(() => ({ json }));
-      const response = { status } as any;
+      const response = { status, setHeader: vi.fn() } as any;
       const request = {
         method: 'GET',
         url: '/test',
@@ -372,7 +613,7 @@ describe('HttpExceptionFilter + CorrelationIdMiddleware (integration)', () => {
       expect(json).toHaveBeenCalledWith(
         expect.objectContaining({
           error: expect.objectContaining({ code: expectedCode }),
-        }),
+        })
       );
     }
   });

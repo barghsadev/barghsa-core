@@ -17,16 +17,11 @@
  *
  * ## Legal hold
  *
- * Objects tagged with `legal-hold: true` are **never** placed under the
- * expiration-prefix paths listed above — the application layer is responsible
- * for ensuring that legal-hold objects live outside those prefixes (e.g.
- * under `legal-hold/` or using S3 Object Lock legal hold at the object
- * level).  S3 Lifecycle rules do **not** support negative tag matching, so
- * prefix-based isolation is the enforcement mechanism.
- *
- * A preservation lifecycle rule matches objects tagged `legal-hold: true`
- * (any prefix) and transitions noncurrent versions to `GLACIER` for cheap
- * retention but never expires them.
+ * Expiration requires an explicit `legal-hold=false` tag. Held and unclassified
+ * versions are retained, including objects inside the temporary prefixes.
+ * An independent transition rule cannot override an expiration rule.
+ * Only a trusted retention workflow may classify a version as disposable.
+ * This setup does not classify existing files or protect against direct deletes.
  *
  * @module
  */
@@ -46,6 +41,12 @@ export interface BucketSetupConfig {
   /** Bucket name to configure. */
   bucket: string;
 
+  /** Exact physical key prefix used by StorageProvider; no normalization. */
+  prefix?: string;
+
+  /** MinIO configures stale multipart cleanup at server level, not lifecycle. */
+  backend?: 's3' | 'minio';
+
   /**
    * Pre-configured S3 client.  Omit to use the standard credential chain
    * (env vars / IAM / `~/.aws/credentials`).
@@ -60,14 +61,14 @@ export interface BucketSetupConfig {
 
   /**
    * Tag key that marks an object under legal hold.
-   * A preservation rule is added so these objects are never expired.
+   * Expiration requires this tag to equal `"false"`. Other values are retained.
    * Default `"legal-hold"`.
    */
   legalHoldTagKey?: string;
 
   /**
    * Tag value that activates legal hold protection.
-   * Default `"true"`.
+   * Default `"true"`. Must not equal the expiration opt-in value `"false"`.
    */
   legalHoldTagValue?: string;
 }
@@ -75,6 +76,7 @@ export interface BucketSetupConfig {
 export interface BucketSetupResult {
   versioningConfigured: boolean;
   lifecycleConfigured: boolean;
+  multipartCleanup: 'bucket-lifecycle' | 'server-config-required' | 'not-configured';
 }
 
 // ---------------------------------------------------------------------------
@@ -91,19 +93,14 @@ const DEFAULT_LEGAL_HOLD_VALUE = 'true';
 function buildLifecycleRules(
   legalHoldKey: string,
   legalHoldValue: string,
+  keyPrefix = ''
 ): LifecycleRule[] {
+  if (!legalHoldKey.trim() || !legalHoldValue.trim() || legalHoldValue === 'false') {
+    throw new Error('Legal hold tag must be nonempty and distinct from expiration value "false"');
+  }
   const rules: LifecycleRule[] = [];
-
-  // ── Prefix-based expiry rules ──────────────────────────────────────────
-  //
-  // Each rule matches ALL objects under the prefix.  Legal-hold objects
-  // MUST NOT live under these prefixes — the application layer ensures
-  // isolation via a separate path (e.g. `legal-hold/`) or S3 Object Lock.
-  //
-  // `NoncurrentVersionExpiration.NewerNoncurrentVersions: 5` keeps the
-  // latest 5 versions of each object; older versions expire after the same
-  // number of days as the current version.
-
+  // S3 only supports positive tag matching. Unknown versions stay retained.
+  // Keep the five newest noncurrent versions even after the age threshold.
   const expiryRules: { prefix: string; days: number }[] = [
     { prefix: 'tmp/', days: 1 },
     { prefix: 'uploads/', days: 1 },
@@ -116,7 +113,9 @@ function buildLifecycleRules(
     rules.push({
       ID: `expire-${safeId}-${days}d`,
       Status: 'Enabled',
-      Filter: { Prefix: prefix },
+      Filter: {
+        And: { Prefix: keyPrefix + prefix, Tags: [{ Key: legalHoldKey, Value: 'false' }] },
+      },
       Expiration: { Days: days },
       NoncurrentVersionExpiration: {
         NoncurrentDays: days,
@@ -134,30 +133,6 @@ function buildLifecycleRules(
     Status: 'Enabled',
     Filter: { Prefix: '' },
     AbortIncompleteMultipartUpload: { DaysAfterInitiation: 1 },
-  });
-
-  // ── Legal-hold preservation rule ───────────────────────────────────────
-  //
-  // Objects tagged `legal-hold: true` are transitioned to GLACIER for cheap
-  // long-term storage and never expire.  This rule runs alongside the
-  // prefix rules above, but because legal-hold objects logically live
-  // outside the expiry prefixes, the only effect is the transition.
-  //
-  // Noncurrent versions are also transitioned to GLACIER (not deleted).
-
-  rules.push({
-    ID: 'legal-hold-preserve',
-    Status: 'Enabled',
-    Filter: {
-      And: {
-        Prefix: '',
-        Tags: [{ Key: legalHoldKey, Value: legalHoldValue }],
-      },
-    },
-    Transitions: [{ Days: 0, StorageClass: 'GLACIER' }],
-    NoncurrentVersionTransitions: [
-      { NoncurrentDays: 0, StorageClass: 'GLACIER' },
-    ],
   });
 
   return rules;
@@ -184,11 +159,11 @@ function buildLifecycleRules(
  * const result = await setupBucket({ bucket: 'my-bucket', client });
  * ```
  */
-export async function setupBucket(
-  config: BucketSetupConfig,
-): Promise<BucketSetupResult> {
+export async function setupBucket(config: BucketSetupConfig): Promise<BucketSetupResult> {
   const {
     bucket,
+    backend = 's3',
+    prefix = '',
     client,
     skipVersioning = false,
     skipLifecycle = false,
@@ -196,40 +171,50 @@ export async function setupBucket(
     legalHoldTagValue = DEFAULT_LEGAL_HOLD_VALUE,
   } = config;
 
+  // Validate before any external mutation, including enabling versioning.
+  const rules = skipLifecycle
+    ? undefined
+    : buildLifecycleRules(legalHoldTagKey, legalHoldTagValue, prefix).filter(
+        (rule) => backend !== 'minio' || !rule.AbortIncompleteMultipartUpload
+      );
   const s3 = client ?? new S3Client({});
 
   const result: BucketSetupResult = {
     versioningConfigured: false,
     lifecycleConfigured: false,
+    multipartCleanup: 'not-configured',
   };
 
-  // ── Versioning ─────────────────────────────────────────────────────────
+  try {
+    // ── Versioning ─────────────────────────────────────────────────────────
 
-  if (!skipVersioning) {
-    await s3.send(
-      new PutBucketVersioningCommand({
-        Bucket: bucket,
-        VersioningConfiguration: { Status: 'Enabled' },
-      }),
-    );
-    result.versioningConfigured = true;
+    if (!skipVersioning) {
+      await s3.send(
+        new PutBucketVersioningCommand({
+          Bucket: bucket,
+          VersioningConfiguration: { Status: 'Enabled' },
+        })
+      );
+      result.versioningConfigured = true;
+    }
+
+    // ── Lifecycle ──────────────────────────────────────────────────────────
+
+    if (!skipLifecycle) {
+      await s3.send(
+        new PutBucketLifecycleConfigurationCommand({
+          Bucket: bucket,
+          LifecycleConfiguration: { Rules: rules },
+        })
+      );
+      result.lifecycleConfigured = true;
+      result.multipartCleanup = backend === 'minio' ? 'server-config-required' : 'bucket-lifecycle';
+    }
+
+    return result;
+  } finally {
+    if (!client) s3.destroy();
   }
-
-  // ── Lifecycle ──────────────────────────────────────────────────────────
-
-  if (!skipLifecycle) {
-    const rules = buildLifecycleRules(legalHoldTagKey, legalHoldTagValue);
-
-    await s3.send(
-      new PutBucketLifecycleConfigurationCommand({
-        Bucket: bucket,
-        LifecycleConfiguration: { Rules: rules },
-      }),
-    );
-    result.lifecycleConfigured = true;
-  }
-
-  return result;
 }
 
 /**
@@ -241,12 +226,13 @@ export async function setupBucket(
  * @example
  * ```ts
  * const rules = getStandardLifecycleRules();
- * expect(rules).toHaveLength(6); // 4 prefix rules + 1 multipart + 1 legal-hold
+ * expect(rules).toHaveLength(5); // 4 tagged prefix rules + 1 multipart
  * ```
  */
 export function getStandardLifecycleRules(
   legalHoldKey: string = DEFAULT_LEGAL_HOLD_KEY,
   legalHoldValue: string = DEFAULT_LEGAL_HOLD_VALUE,
+  prefix = ''
 ): LifecycleRule[] {
-  return buildLifecycleRules(legalHoldKey, legalHoldValue);
+  return buildLifecycleRules(legalHoldKey, legalHoldValue, prefix);
 }

@@ -1,0 +1,526 @@
+[
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.01.01",
+    "title": "Create Ansible playbook or deploy script for pilot topology",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": "deploy/pilot",
+    "note": "No deployment playbook/script found; proxy configuration alone is insufficient.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.01.02",
+    "title": "Create `docker-compose.prod.yml` for pilot single-VM deployment",
+    "current_assessment": "partial",
+    "evidence": "docker-compose.prod.yml",
+    "note": "Compose exists; lacks worker and tested complete production wiring. F18.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.01.03",
+    "title": "Document explicitly that single-server deployment has lower availability",
+    "current_assessment": "needs_document_review",
+    "evidence": "architecture.md",
+    "note": "Deployment material exists; validate explicit single-server availability warning.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.02.01",
+    "title": "Design and document commercial HA topology",
+    "current_assessment": "needs_document_review",
+    "evidence": "architecture.md",
+    "note": "Architecture material exists; verify complete commercial HA topology and failure domains.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.02.02",
+    "title": "Configure rolling/blue-green deployment automation for HA",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": ".github/workflows",
+    "note": "Only CI workflow found, no rolling/blue-green deployment automation.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.02.03",
+    "title": "Implement circuit breaker for external providers",
+    "current_assessment": "partial",
+    "evidence": "apps/api/src/provider-config",
+    "note": "Email provider circuit-breaker work exists; not proof of coverage for every external provider.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.02.04",
+    "title": "Configure maintenance mode per capability, not whole-application",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": "apps/api/src",
+    "note": "No complete per-capability maintenance-mode implementation identified.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.03.01",
+    "title": "Create CI workflow definition (GitHub Actions, GitLab CI, or equivalent)",
+    "current_assessment": "existing_implementation_revalidate",
+    "evidence": ".github/workflows/ci.yml",
+    "note": "CI exists; repair acceptance gaps under F19 rather than recreate it.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.03.02",
+    "title": "Implement migration validation step (two environments)",
+    "current_assessment": "partial",
+    "evidence": "packages/db/src/test",
+    "note": "Tests exist, but production clean+upgrade migration gate remains F02/F19.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.03.03",
+    "title": "Implement OpenAPI generation and drift check",
+    "current_assessment": "partial",
+    "evidence": "apps/api/package.json",
+    "note": "OpenAPI generation exists; committed contract/client drift gate needs completion.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.03.04",
+    "title": "Configure security scans in PR gate",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": ".github/workflows/ci.yml",
+    "note": "No full required scan gate in the current CI workflow.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.03.05",
+    "title": "Implement coverage threshold enforcement",
+    "current_assessment": "later_merged_needs_fix",
+    "evidence": "apps/api/vitest.config.ts",
+    "note": "Later PR #121; current critical-domain thresholds are inadequate. F19.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": [
+      121
+    ]
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.04.01",
+    "title": "Create staging gate CI workflow",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": ".github/workflows",
+    "note": "No staging deployment gate workflow found.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.04.02",
+    "title": "Create production promotion workflow with canary/gradual rollout",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": ".github/workflows",
+    "note": "No production canary/promotion workflow found.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.04.03",
+    "title": "Implement post-deploy smoke tests and SLO comparison",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": ".github/workflows",
+    "note": "No post-deploy smoke/SLO comparison workflow found.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.04.04",
+    "title": "Create runbooks for rollback scenarios",
+    "current_assessment": "partial",
+    "evidence": "docs/operations/backup/config-restore-runbook.md",
+    "note": "Config restore runbook exists; not all rollback scenarios.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.05.01",
+    "title": "Create nightly CI schedule",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": ".github/workflows/ci.yml",
+    "note": "Current CI has pull_request/push triggers, no nightly schedule.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.05.02",
+    "title": "Create weekly load/performance regression test",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": ".github/workflows",
+    "note": "No weekly load/performance workflow found.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.05.03",
+    "title": "Create quarterly disaster-recovery and restore exercise",
+    "current_assessment": "operational_evidence_required",
+    "evidence": "docs/operations/backup/config-restore-runbook.md",
+    "note": "Runbooks are not evidence a quarterly exercise happened.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-05.05.04",
+    "title": "Create quarterly access review and threat-model update",
+    "current_assessment": "operational_evidence_required",
+    "evidence": "docs",
+    "note": "No execution evidence for access review/threat-model exercise; another machine was not inspected.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.01.01",
+    "title": "Initialize `packages/shared` with tsconfig and dependencies",
+    "current_assessment": "existing_implementation_revalidate",
+    "evidence": "packages/shared/package.json",
+    "note": "Shared package builds and its 620 tests passed.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.01.02",
+    "title": "Create username validation and normalization helpers",
+    "current_assessment": "existing_implementation_revalidate",
+    "evidence": "packages/shared/src/validation/normalize-username.ts",
+    "note": "Username normalization/validation exists; retain and test against full requirement.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.01.03",
+    "title": "Create password validation with strength meter logic",
+    "current_assessment": "existing_implementation_revalidate",
+    "evidence": "apps/web/src/components/PasswordField.tsx",
+    "note": "Password validation and strength UI exist; reconcile shared-helper location and policy.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.01.04",
+    "title": "Create stable error code enum with HTTP status mapping",
+    "current_assessment": "existing_implementation_revalidate",
+    "evidence": "packages/shared/src/errors/error-codes.ts",
+    "note": "Stable errors exist; verify HTTP/client localization contracts.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.01.05",
+    "title": "Create pagination helper schemas",
+    "current_assessment": "partial",
+    "evidence": "packages/shared/src",
+    "note": "Pagination is implemented per feature; shared schema and all cursor semantics need review.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.02.01",
+    "title": "Initialize `packages/i18n` with message dictionary structure",
+    "current_assessment": "existing_implementation_revalidate",
+    "evidence": "packages/i18n/src/index.ts",
+    "note": "Both dictionaries exist; validate parity across completed features.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.02.02",
+    "title": "Create Jalali calendar date utilities",
+    "current_assessment": "partial",
+    "evidence": "packages/ui/src/components/base-ui/date-picker.tsx",
+    "note": "Jalali display exists; actual calendar semantics require F20.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.02.03",
+    "title": "Create timezone-aware date/time display utilities",
+    "current_assessment": "partial",
+    "evidence": "apps/web/src/routes/_app/settings/timezone.tsx",
+    "note": "Timezone preference exists; all consumers do not yet consistently apply it.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.02.04",
+    "title": "Create logic for RTL/LTR switching based on locale",
+    "current_assessment": "partial",
+    "evidence": "apps/web/src/pages/DashboardLayout.tsx",
+    "note": "RTL/locale pieces exist; complete context propagation and F20 checks.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.02.05",
+    "title": "Localize number/currency formatting",
+    "current_assessment": "partial",
+    "evidence": "apps/web/src",
+    "note": "Per-screen currency/number formatting exists; verify centralized exact IRR formatting.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.03.01",
+    "title": "Initialize `packages/ui` with shadcn/ui and Base UI",
+    "current_assessment": "existing_implementation_revalidate",
+    "evidence": "packages/ui/package.json",
+    "note": "UI package, shadcn and Base UI exist through later design work.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.03.02",
+    "title": "Create themed component set with RTL support",
+    "current_assessment": "existing_implementation_revalidate",
+    "evidence": "packages/ui/src/components",
+    "note": "Themed component set exists; perform RTL acceptance checks.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.03.03",
+    "title": "Implement WCAG 2.2 AA accessibility in all shared components",
+    "current_assessment": "acceptance_gap",
+    "evidence": "packages/ui/src/components",
+    "note": "WCAG acceptance is not established; triage React Doctor and run F20.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.03.04",
+    "title": "Create localized DatePicker component",
+    "current_assessment": "partial",
+    "evidence": "packages/ui/src/components/base-ui/date-picker.tsx",
+    "note": "DatePicker and range support exist; F20 must verify Jalali grid behavior.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.03.05",
+    "title": "Implement theme system with admin overrides",
+    "current_assessment": "existing_implementation_revalidate",
+    "evidence": "apps/web/src/pages/AdminBrandingConfig.tsx",
+    "note": "Admin branding configuration exists; verify theme propagation/contrast.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.03.06",
+    "title": "Create loading/empty/error state components",
+    "current_assessment": "partial",
+    "evidence": "packages/ui/src/components/ui/skeleton.tsx",
+    "note": "Skeleton and per-screen states exist; verify required shared empty/error components.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-06.04.01",
+    "title": "Create privacy-safe analytics abstraction with consent gate and redaction",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": "apps/web/src",
+    "note": "No complete privacy-safe analytics abstraction identified; marketing notification consent is a different feature.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.01.01",
+    "title": "Create `pnpm setup:dev` convenience script",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": "package.json",
+    "note": "Root setup:dev script is absent.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.01.02",
+    "title": "Configure dev-mode OTP bypass and console printing",
+    "current_assessment": "partial",
+    "evidence": "apps/api/src/auth/otp.service.ts",
+    "note": "Development OTP printing exists; validate bypass gating and production exclusion.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.01.03",
+    "title": "Create `pnpm db:push` script for dev schema synchronization",
+    "current_assessment": "existing_implementation_revalidate",
+    "evidence": "packages/db/package.json",
+    "note": "Inspect existing database push scripts and development-only constraints before adding anything.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.01.04",
+    "title": "Add environment indicator middleware",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": "apps/api/src/app.module.ts",
+    "note": "No complete required environment-indicator middleware identified.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.02.01",
+    "title": "Create versioned configuration store in PostgreSQL",
+    "current_assessment": "partial",
+    "evidence": "packages/shared/src/config-cache/config-cache.ts",
+    "note": "app_config and versioned feature configurations exist; no single fully certified store contract.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.02.02",
+    "title": "Create configuration validation framework",
+    "current_assessment": "partial",
+    "evidence": "packages/shared/src/admin",
+    "note": "Typed per-feature validators exist; verify framework-wide version/activation rules.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.02.03",
+    "title": "Implement configuration rollback",
+    "current_assessment": "partial",
+    "evidence": "apps/api/src/provider-config",
+    "note": "Provider rollback exists; verify required scope for general configuration rollback.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.02.04",
+    "title": "Create secrets encryption and masking service",
+    "current_assessment": "partial",
+    "evidence": "apps/api/src/provider-config/provider-secrets.service.ts",
+    "note": "Provider and AI secret encryption exist; verification provider handling needs F06.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.02.05",
+    "title": "Implement provider configuration lifecycle with test-send",
+    "current_assessment": "partial",
+    "evidence": "apps/api/src/provider-config",
+    "note": "Provider lifecycle/test adapters exist; production delivery remains F09.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.03.01",
+    "title": "Create shared ESLint configuration",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": "package.json",
+    "note": "Root lint delegates to empty per-package task set; no shared ESLint configuration found.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.03.02",
+    "title": "Configure Prettier with consistent formatting",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": "package.json",
+    "note": "Root format commands exist; no substantive shared Prettier task/config found.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.03.03",
+    "title": "Set up Husky, lint-staged, and commitlint",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": "package.json",
+    "note": "No Husky/lint-staged/commitlint setup found.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.03.04",
+    "title": "Create `.editorconfig` and `.vscode` workspace settings",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": "README.md",
+    "note": "No .editorconfig or .vscode workspace settings found.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.04.01",
+    "title": "Create incident runbooks directory (`docs/runbooks/`)",
+    "current_assessment": "partial",
+    "evidence": "docs/operations/backup/config-restore-runbook.md",
+    "note": "Some operational runbooks exist, not the complete incident runbook set.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.04.02",
+    "title": "Create initial ADRs",
+    "current_assessment": "existing_implementation_revalidate",
+    "evidence": "docs/adr",
+    "note": "Four ADR files exist; compare with the required initial decision list.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.04.03",
+    "title": "Create deployment guide",
+    "current_assessment": "partial",
+    "evidence": "README.md",
+    "note": "Deployment instructions are distributed across files; complete/validate guide after F18.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.04.04",
+    "title": "Create incident response plan",
+    "current_assessment": "no_matching_artifact_found",
+    "evidence": "docs",
+    "note": "No complete incident-response plan identified.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.05.01",
+    "title": "Enforce “no external call inside a database transaction”",
+    "current_assessment": "acceptance_gap",
+    "evidence": "apps/api/src",
+    "note": "Some provider flows separate calls from transactions; no repository-wide enforcement proof.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.05.02",
+    "title": "Generate and verify TypeScript API client contracts from OpenAPI",
+    "current_assessment": "partial",
+    "evidence": "apps/api/package.json",
+    "note": "OpenAPI generation exists; generated TypeScript client plus CI drift check not established.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.05.03",
+    "title": "Verify health-endpoint middleware exclusions",
+    "current_assessment": "acceptance_gap",
+    "evidence": "apps/api/src/app.module.ts",
+    "note": "Verify real HTTP health exclusions and rate-limit/auth behavior; no completed end-to-end proof.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  },
+  {
+    "task_key": "01-platform-infrastructure.md#T-07.05.04",
+    "title": "Document and gate module extraction criteria",
+    "current_assessment": "needs_document_review",
+    "evidence": "architecture.md",
+    "note": "Architecture exists; explicit module-extraction criteria/gates still need requirement comparison.",
+    "skip_commit": "c94278fd489c2a655eb6a60c5860c1ce0d4c18bd",
+    "direct_merged_prs": []
+  }
+]

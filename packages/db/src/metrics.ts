@@ -1,4 +1,4 @@
-import { getDbPool } from './index.js'
+import { getDbPool } from './index.js';
 
 // ---------------------------------------------------------------------------
 // Type definitions for PostgreSQL performance metrics collected from system
@@ -7,123 +7,133 @@ import { getDbPool } from './index.js'
 // ---------------------------------------------------------------------------
 
 export interface DatabaseMetrics {
+  /** Top-level query calls retained by pg_stat_statements; use rate for queries/second. */
+  queryCalls: number | null;
+  /** User-table scan counters, unavailable when the statistics view cannot be read. */
+  tableScans: { sequential: number; index: number } | null;
   /** Global database-level counters from pg_stat_database */
   database: {
-    xact_commit: number
-    xact_rollback: number
-    blks_read: number
-    blks_hit: number
-    tup_returned: number
-    tup_fetched: number
-    tup_inserted: number
-    tup_updated: number
-    tup_deleted: number
-    conflicts: number
-    deadlocks: number
-    blk_read_time: number
-    blk_write_time: number
-    temp_files: number
-    temp_bytes: number
-  }
+    xact_commit: number;
+    xact_rollback: number;
+    blks_read: number;
+    blks_hit: number;
+    tup_returned: number;
+    tup_fetched: number;
+    tup_inserted: number;
+    tup_updated: number;
+    tup_deleted: number;
+    conflicts: number;
+    deadlocks: number;
+    blk_read_time: number;
+    blk_write_time: number;
+    temp_files: number;
+    temp_bytes: number;
+  };
   /** Cache hit ratio (0–1), calculated from blks_hit / (blks_hit + blks_read) */
-  cacheHitRatio: number
+  cacheHitRatio: number;
   /** Connection pool saturation (0–1) — total client connections / PG max_connections */
-  connectionSaturation: number
+  connectionSaturation: number;
   /** PostgreSQL server max_connections setting */
-  maxConnections: number
+  maxConnections: number;
   /** Number of active connections currently executing a query */
-  activeConnections: number
+  activeConnections: number;
   /** Number of idle-in-transaction connections (potential issues) */
-  idleInTransaction: number
+  idleInTransaction: number;
   /** Number of connections waiting on a lock */
-  waitingConnections: number
+  waitingConnections: number;
   /** Long-running queries (>= the given threshold) */
   longRunningQueries: Array<{
-    pid: number
-    query: string
-    durationSeconds: number
-    state: string
-    waitEvent: string | null
-  }>
+    pid: number;
+    query: string;
+    durationSeconds: number;
+    state: string;
+    waitEvent: string | null;
+  }>;
   /** WAL metrics from pg_stat_wal (PG 14+) */
   wal: {
-    wal_records: number
-    wal_fpi: number
-    wal_bytes: number
-    wal_buffers_full: number
-    wal_write: number
-    wal_sync: number
-    wal_write_time: number
-    wal_sync_time: number
-  } | null
+    wal_records: number;
+    wal_fpi: number;
+    wal_bytes: number;
+    wal_buffers_full: number;
+    wal_write: number;
+    wal_sync: number;
+    wal_write_time: number;
+    wal_sync_time: number;
+  } | null;
   /** Background writer stats from pg_stat_bgwriter */
   bgwriter: {
-    checkpoints_timed: number
-    checkpoints_req: number
-    checkpoint_write_time: number
-    checkpoint_sync_time: number
-    buffers_checkpoint: number
-    buffers_clean: number
-    maxwritten_clean: number
-    buffers_backend: number
-    buffers_backend_fsync: number
-    buffers_alloc: number
-    stats_reset: string | null
-  } | null
+    checkpoints_timed: number;
+    checkpoints_req: number;
+    checkpoint_write_time: number;
+    checkpoint_sync_time: number;
+    buffers_checkpoint: number;
+    buffers_clean: number;
+    maxwritten_clean: number;
+    buffers_backend: number | null;
+    buffers_backend_fsync: number | null;
+    buffers_alloc: number;
+    stats_reset: string | null;
+  } | null;
   /** Query performance metrics from pg_stat_statements (top-N by total_time) */
   topQueries: Array<{
-    queryId: string
-    query: string
-    calls: number
-    totalTimeMs: number
-    meanTimeMs: number
-    rows: number
-    sharedBlksHit: number
-    sharedBlksRead: number
-    sharedBlksDirtied: number
-    sharedBlksWritten: number
-    localBlksHit: number
-    localBlksRead: number
-    tempBlksRead: number
-    tempBlksWritten: number
-    blkReadTimeMs: number
-    blkWriteTimeMs: number
-  }> | null
+    queryId: string;
+    query: string;
+    calls: number;
+    totalTimeMs: number;
+    meanTimeMs: number;
+    rows: number;
+    sharedBlksHit: number;
+    sharedBlksRead: number;
+    sharedBlksDirtied: number;
+    sharedBlksWritten: number;
+    localBlksHit: number;
+    localBlksRead: number;
+    tempBlksRead: number;
+    tempBlksWritten: number;
+    blkReadTimeMs: number;
+    blkWriteTimeMs: number;
+  }> | null;
 }
 
 export interface MetricsResult {
-  ok: boolean
-  metrics: DatabaseMetrics | null
-  error?: string
-  latencyMs: number
+  ok: boolean;
+  metrics: DatabaseMetrics | null;
+  error?: string;
+  latencyMs: number;
 }
 
-const SLOW_QUERY_THRESHOLD_SECONDS = 30
+const SLOW_QUERY_THRESHOLD_SECONDS = 30;
 
 /**
  * Collect replication lag from pg_stat_replication.
- * Returns the lag in seconds, or null if no replica is configured / not streaming.
+ * Returns the worst streaming-replica lag, or null when lag is unavailable.
  * This is queried separately from the main metrics to isolate failures.
  */
 export async function collectReplicationLag(): Promise<number | null> {
   try {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = await pool.query(`
-      SELECT
-        COALESCE(
+      SELECT CASE
+        WHEN COUNT(*) = 0 OR COUNT(lag_seconds) <> COUNT(*) OR MIN(lag_seconds) < 0
+          THEN NULL
+        ELSE MAX(lag_seconds)
+      END AS lag_seconds
+      FROM (
+        SELECT COALESCE(
           EXTRACT(EPOCH FROM replay_lag),
           EXTRACT(EPOCH FROM write_lag),
-          EXTRACT(EPOCH FROM flush_lag),
-          0
+          EXTRACT(EPOCH FROM flush_lag)
         ) AS lag_seconds
-      FROM pg_stat_replication
-      WHERE state = 'streaming'
-      LIMIT 1
-    `)
-    if (result.rows.length === 0) return null
-    return Number(result.rows[0].lag_seconds)
+        FROM pg_stat_replication
+        WHERE state = 'streaming'
+      ) replicas
+    `);
+    const raw = result.rows[0]?.lag_seconds;
+    if (raw === null || raw === undefined) return null;
+    const lag = Number(raw);
+    return Number.isFinite(lag) && lag >= 0 ? lag : null;
   } catch {
-    return null
+    return null;
   }
 }
 
@@ -143,13 +153,26 @@ export async function collectReplicationLag(): Promise<number | null> {
  */
 export async function collectPerformanceMetrics(
   topN = 10,
-  slowThresholdSeconds = SLOW_QUERY_THRESHOLD_SECONDS,
+  slowThresholdSeconds = SLOW_QUERY_THRESHOLD_SECONDS
 ): Promise<MetricsResult> {
-  const startedAt = Date.now()
-
-  const pool = getDbPool()
+  const startedAt = Date.now();
 
   try {
+    if (
+      !Number.isInteger(topN) ||
+      topN < 1 ||
+      topN > 100 ||
+      !Number.isFinite(slowThresholdSeconds) ||
+      slowThresholdSeconds < 0
+    ) {
+      throw new RangeError('Invalid PostgreSQL metrics collection bounds');
+    }
+    const pool = getDbPool();
+    const versionResult = await pool.query('SHOW server_version_num');
+    const version = Number(versionResult.rows[0]?.server_version_num);
+    if (!Number.isInteger(version) || version < 160000)
+      throw new Error('PostgreSQL metrics require a readable server version of 16 or later');
+    const separateCheckpointer = version >= 170000;
     // Query pg_stat_database for the barghsa database
     const dbStats = pool.query(`
       SELECT
@@ -172,7 +195,7 @@ export async function collectPerformanceMetrics(
         datname
       FROM pg_stat_database
       WHERE datname = current_database()
-    `)
+    `);
 
     // Query pg_stat_activity for connection state
     const activityStats = pool.query(`
@@ -184,10 +207,11 @@ export async function collectPerformanceMetrics(
       FROM pg_stat_activity
       WHERE backend_type = 'client backend'
         AND pid <> pg_backend_pid()
-    `)
+    `);
 
     // Query long-running queries
-    const longRunningStats = pool.query(`
+    const longRunningStats = pool.query(
+      `
       SELECT
         pid,
         query,
@@ -202,24 +226,37 @@ export async function collectPerformanceMetrics(
         AND pid <> pg_backend_pid()
       ORDER BY duration_seconds DESC
       LIMIT 20
-    `, [String(slowThresholdSeconds)])
+    `,
+      [String(slowThresholdSeconds)]
+    );
 
-    // Query pg_stat_bgwriter
-    const bgwriterStats = pool.query(`
+    // PostgreSQL 17 moved checkpoint counters into pg_stat_checkpointer.
+    // Removed backend-buffer fields have no equivalent in this view; keep them unavailable.
+    const bgwriterStats = pool.query(
+      separateCheckpointer
+        ? `
       SELECT
-        checkpoints_timed,
-        checkpoints_req,
-        checkpoint_write_time,
-        checkpoint_sync_time,
-        buffers_checkpoint,
-        buffers_clean,
-        maxwritten_clean,
-        buffers_backend,
-        buffers_backend_fsync,
-        buffers_alloc,
-        stats_reset
+        c.num_timed AS checkpoints_timed,
+        c.num_requested AS checkpoints_req,
+        c.write_time AS checkpoint_write_time,
+        c.sync_time AS checkpoint_sync_time,
+        c.buffers_written AS buffers_checkpoint,
+        b.buffers_clean,
+        b.maxwritten_clean,
+        NULL::bigint AS buffers_backend,
+        NULL::bigint AS buffers_backend_fsync,
+        b.buffers_alloc,
+        b.stats_reset
+      FROM pg_stat_bgwriter b CROSS JOIN pg_stat_checkpointer c
+    `
+        : `
+      SELECT checkpoints_timed, checkpoints_req, checkpoint_write_time,
+             checkpoint_sync_time, buffers_checkpoint, buffers_clean,
+             maxwritten_clean, buffers_backend, buffers_backend_fsync,
+             buffers_alloc, stats_reset
       FROM pg_stat_bgwriter
-    `)
+    `
+    );
 
     // Query pg_stat_wal (PG 14+)
     const walStats = pool.query(`
@@ -233,12 +270,14 @@ export async function collectPerformanceMetrics(
         wal_write_time,
         wal_sync_time
       FROM pg_stat_wal
-    `)
+    `);
 
     // Query pg_stat_statements for top-N by total time
-    const queryStats = pool.query(`
+    const queryStats = pool.query(
+      `
       SELECT
         queryid,
+        SUM(calls) FILTER (WHERE toplevel) OVER () AS total_calls,
         left(query, 200) AS query,
         calls,
         total_exec_time,
@@ -252,26 +291,42 @@ export async function collectPerformanceMetrics(
         local_blks_read,
         temp_blks_read,
         temp_blks_written,
-        blk_read_time,
-        blk_write_time
+        ${separateCheckpointer ? 'shared_blk_read_time' : 'blk_read_time'} AS blk_read_time,
+        ${separateCheckpointer ? 'shared_blk_write_time' : 'blk_write_time'} AS blk_write_time
       FROM pg_stat_statements
       WHERE calls > 0
+        AND dbid = (SELECT oid FROM pg_database WHERE datname = current_database())
       ORDER BY total_exec_time DESC
       LIMIT $1::integer
-    `, [String(topN)])
+    `,
+      [String(topN)]
+    );
+
+    const tableStats = pool.query(`
+      SELECT COALESCE(SUM(seq_scan), 0) AS sequential_scans,
+             COALESCE(SUM(idx_scan), 0) AS index_scans
+      FROM pg_stat_user_tables
+    `);
 
     // Query server max_connections from pg_settings
     const maxConnResult = pool.query(`
-      SELECT setting::integer AS max_connections
+      SELECT setting::integer AS max_connections,
+             pg_has_role(current_user, 'pg_read_all_stats', 'USAGE') AS stats_readable
       FROM pg_settings
       WHERE name = 'max_connections'
-    `)
+    `);
 
     // Use allSettled so a single failing view doesn't kill all metrics
     const settled = await Promise.allSettled([
-      dbStats, activityStats, longRunningStats,
-      bgwriterStats, walStats, queryStats, maxConnResult,
-    ])
+      dbStats,
+      activityStats,
+      longRunningStats,
+      bgwriterStats,
+      walStats,
+      queryStats,
+      maxConnResult,
+      tableStats,
+    ]);
 
     const [
       dbResultSettled,
@@ -281,35 +336,50 @@ export async function collectPerformanceMetrics(
       walResultSettled,
       queryResultSettled,
       maxConnResultSettled,
-    ] = settled
+      tableResultSettled,
+    ] = settled;
 
-    // Gracefully handle each query result, defaulting to empty/null on failure
-    const dbResult = dbResultSettled.status === 'fulfilled' ? dbResultSettled.value : { rows: [] }
-    const activityResult = activityResultSettled.status === 'fulfilled' ? activityResultSettled.value : { rows: [] }
-    const longRunningResult = longRunningResultSettled.status === 'fulfilled' ? longRunningResultSettled.value : { rows: [] }
-    const bgwriterResult = bgwriterResultSettled.status === 'fulfilled' ? bgwriterResultSettled.value : { rows: [] }
-    const walResult = walResultSettled.status === 'fulfilled' ? walResultSettled.value : { rows: [] }
-    const queryResult = queryResultSettled.status === 'fulfilled' ? queryResultSettled.value : { rows: [] }
+    // Core views must succeed. Otherwise zeros would hide outages and suppress alerts.
+    if (
+      dbResultSettled.status !== 'fulfilled' ||
+      !dbResultSettled.value.rows[0] ||
+      activityResultSettled.status !== 'fulfilled' ||
+      !activityResultSettled.value.rows[0] ||
+      longRunningResultSettled.status !== 'fulfilled' ||
+      maxConnResultSettled.status !== 'fulfilled' ||
+      !maxConnResultSettled.value.rows[0]
+    ) {
+      throw new Error('Required PostgreSQL metrics are unavailable');
+    }
+    const longRunningResult = longRunningResultSettled.value;
+    const bgwriterResult =
+      bgwriterResultSettled.status === 'fulfilled' ? bgwriterResultSettled.value : { rows: [] };
+    const walResult =
+      walResultSettled.status === 'fulfilled' ? walResultSettled.value : { rows: [] };
+    const queryResult = queryResultSettled.status === 'fulfilled' ? queryResultSettled.value : null;
+    const dbRow = dbResultSettled.value.rows[0];
+    const actRow = activityResultSettled.value.rows[0];
+    if (maxConnResultSettled.value.rows[0].stats_readable !== true)
+      throw new Error('PostgreSQL monitoring requires pg_read_all_stats privileges');
+    const maxConnections = Number(maxConnResultSettled.value.rows[0].max_connections);
+    if (!Number.isSafeInteger(maxConnections) || maxConnections <= 0)
+      throw new Error('Invalid PostgreSQL max_connections metric');
 
-    const maxConn = maxConnResultSettled.status === 'fulfilled' && maxConnResultSettled.value.rows.length > 0
-      ? Number(maxConnResultSettled.value.rows[0].max_connections)
-      : pool.options?.max ?? 100
+    const blksHit = Number(dbRow?.blks_hit ?? 0);
+    const blksRead = Number(dbRow?.blks_read ?? 0);
+    const totalBlks = blksHit + blksRead;
+    const cacheHitRatio = totalBlks > 0 ? blksHit / totalBlks : 1;
 
-    const dbRow = dbResult.rows[0] ?? null
-    const actRow = activityResult.rows[0] ?? null
-    const maxConnections = maxConn
+    const totalConnections = Number(actRow?.total_connections ?? 0);
+    const connectionSaturation = maxConnections > 0 ? totalConnections / maxConnections : 0;
 
-    const blksHit = Number(dbRow?.blks_hit ?? 0)
-    const blksRead = Number(dbRow?.blks_read ?? 0)
-    const totalBlks = blksHit + blksRead
-    const cacheHitRatio = totalBlks > 0 ? blksHit / totalBlks : 1
-
-    const totalConnections = Number(actRow?.total_connections ?? 0)
-    const connectionSaturation = maxConnections > 0
-      ? totalConnections / maxConnections
-      : 0
-
+    const tableRow =
+      tableResultSettled.status === 'fulfilled' ? tableResultSettled.value.rows[0] : null;
     const metrics: DatabaseMetrics = {
+      queryCalls: queryResult ? Number(queryResult.rows[0]?.total_calls ?? 0) : null,
+      tableScans: tableRow
+        ? { sequential: Number(tableRow.sequential_scans), index: Number(tableRow.index_scans) }
+        : null,
       database: {
         xact_commit: Number(dbRow?.xact_commit ?? 0),
         xact_rollback: Number(dbRow?.xact_rollback ?? 0),
@@ -361,45 +431,47 @@ export async function collectPerformanceMetrics(
             buffers_checkpoint: Number(bgwriterResult.rows[0].buffers_checkpoint ?? 0),
             buffers_clean: Number(bgwriterResult.rows[0].buffers_clean ?? 0),
             maxwritten_clean: Number(bgwriterResult.rows[0].maxwritten_clean ?? 0),
-            buffers_backend: Number(bgwriterResult.rows[0].buffers_backend ?? 0),
-            buffers_backend_fsync: Number(bgwriterResult.rows[0].buffers_backend_fsync ?? 0),
+            buffers_backend: null,
+            buffers_backend_fsync: null,
             buffers_alloc: Number(bgwriterResult.rows[0].buffers_alloc ?? 0),
             stats_reset: bgwriterResult.rows[0].stats_reset
               ? String(bgwriterResult.rows[0].stats_reset)
               : null,
           }
         : null,
-      topQueries: (queryResult?.rows ?? []).map((r: Record<string, unknown>) => ({
-        queryId: String(r.queryid ?? ''),
-        query: String(r.query ?? ''),
-        calls: Number(r.calls ?? 0),
-        totalTimeMs: Number(r.total_exec_time ?? 0),
-        meanTimeMs: Number(r.mean_exec_time ?? 0),
-        rows: Number(r.rows ?? 0),
-        sharedBlksHit: Number(r.shared_blks_hit ?? 0),
-        sharedBlksRead: Number(r.shared_blks_read ?? 0),
-        sharedBlksDirtied: Number(r.shared_blks_dirtied ?? 0),
-        sharedBlksWritten: Number(r.shared_blks_written ?? 0),
-        localBlksHit: Number(r.local_blks_hit ?? 0),
-        localBlksRead: Number(r.local_blks_read ?? 0),
-        tempBlksRead: Number(r.temp_blks_read ?? 0),
-        tempBlksWritten: Number(r.temp_blks_written ?? 0),
-        blkReadTimeMs: Number(r.blk_read_time ?? 0),
-        blkWriteTimeMs: Number(r.blk_write_time ?? 0),
-      })),
-    }
+      topQueries: queryResult
+        ? queryResult.rows.map((r: Record<string, unknown>) => ({
+            queryId: String(r.queryid ?? ''),
+            query: String(r.query ?? ''),
+            calls: Number(r.calls ?? 0),
+            totalTimeMs: Number(r.total_exec_time ?? 0),
+            meanTimeMs: Number(r.mean_exec_time ?? 0),
+            rows: Number(r.rows ?? 0),
+            sharedBlksHit: Number(r.shared_blks_hit ?? 0),
+            sharedBlksRead: Number(r.shared_blks_read ?? 0),
+            sharedBlksDirtied: Number(r.shared_blks_dirtied ?? 0),
+            sharedBlksWritten: Number(r.shared_blks_written ?? 0),
+            localBlksHit: Number(r.local_blks_hit ?? 0),
+            localBlksRead: Number(r.local_blks_read ?? 0),
+            tempBlksRead: Number(r.temp_blks_read ?? 0),
+            tempBlksWritten: Number(r.temp_blks_written ?? 0),
+            blkReadTimeMs: Number(r.blk_read_time ?? 0),
+            blkWriteTimeMs: Number(r.blk_write_time ?? 0),
+          }))
+        : null,
+    };
 
     return {
       ok: true,
       metrics,
       latencyMs: Date.now() - startedAt,
-    }
+    };
   } catch (err) {
     return {
       ok: false,
       metrics: null,
       error: err instanceof Error ? err.message : String(err),
       latencyMs: Date.now() - startedAt,
-    }
+    };
   }
 }

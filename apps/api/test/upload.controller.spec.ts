@@ -8,8 +8,12 @@ import {
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { StorageObjectNotFound } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../src/storage/index.js';
+import { ProfilesService } from '../src/profiles/profiles.service.js';
 import { UploadController } from '../src/upload/upload.controller.js';
-import { UploadPolicyResolver, type EffectiveUploadPolicy } from '../src/upload/upload-policy.resolver.js';
+import {
+  UploadPolicyResolver,
+  type EffectiveUploadPolicy,
+} from '../src/upload/upload-policy.resolver.js';
 import { SessionAuthGuard } from '../src/session/session.guard.js';
 import type { AuthenticatedRequest } from '../src/session/session.guard.js';
 import {
@@ -18,6 +22,19 @@ import {
   getDeploymentMaxSizeBytes,
 } from '../src/upload/upload.config.js';
 
+const actorRequest = { session: { userId: 'user-1' } } as AuthenticatedRequest;
+const reservation = vi.hoisted(() => ({
+  reserve: vi.fn(),
+  owned: vi.fn(),
+  complete: vi.fn(),
+  inspect: vi.fn(),
+}));
+vi.mock('../src/upload/upload-reservations.js', () => ({
+  reserveUpload: reservation.reserve,
+  requireOwnedUpload: reservation.owned,
+  completeUpload: reservation.complete,
+  recordUploadInspection: reservation.inspect,
+}));
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -84,7 +101,7 @@ describe('UploadController', () => {
   let controller: UploadController;
   let storage: StorageProvider;
   let resolver: { resolveEffective: ReturnType<typeof vi.fn> };
-  const mockImmutableService = { createRecord: vi.fn() };
+  const mockImmutableService = { createRecord: reservation.complete };
 
   async function buildModule(overrides: { storage?: StorageProvider | null } = {}) {
     storage = overrides.storage === undefined ? mockStorageProvider() : overrides.storage;
@@ -92,6 +109,15 @@ describe('UploadController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UploadController],
       providers: [
+        {
+          provide: ProfilesService,
+          useValue: {
+            getAccessibleProfile: vi.fn().mockResolvedValue({
+              id: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+              profileType: 'INDIVIDUAL',
+            }),
+          },
+        },
         {
           provide: STORAGE_PROVIDER,
           useValue: storage,
@@ -114,6 +140,14 @@ describe('UploadController', () => {
 
   beforeEach(async () => {
     mockImmutableService.createRecord.mockReset();
+    reservation.inspect.mockReset();
+    reservation.reserve.mockResolvedValue(undefined);
+    reservation.owned.mockResolvedValue({
+      status: 'removed',
+      metadata: {},
+      file_size: '18',
+      content_type: 'application/pdf',
+    });
     controller = await buildModule();
   });
 
@@ -125,69 +159,84 @@ describe('UploadController', () => {
     it('returns 503 when storage is null', async () => {
       const ctrl = await buildModule({ storage: null });
 
-      await expect(
-        ctrl.getPresignedUrl({}),
-      ).rejects.toThrow(ServiceUnavailableException);
+      await expect(ctrl.getPresignedUrl({}, actorRequest)).rejects.toThrow(
+        ServiceUnavailableException
+      );
     });
 
     it('rejects requests with missing fileName', async () => {
       await expect(
-        controller.getPresignedUrl({ contentType: 'image/jpeg', fileSize: 1000 }),
+        controller.getPresignedUrl({ contentType: 'image/jpeg', fileSize: 1000 }, actorRequest)
       ).rejects.toThrow(BadRequestException);
     });
 
     it('rejects requests with missing contentType', async () => {
       await expect(
-        controller.getPresignedUrl({ fileName: 'test.jpg', fileSize: 1000 }),
+        controller.getPresignedUrl({ fileName: 'test.jpg', fileSize: 1000 }, actorRequest)
       ).rejects.toThrow(BadRequestException);
     });
 
     it('rejects requests with missing fileSize', async () => {
       await expect(
-        controller.getPresignedUrl({ fileName: 'test.jpg', contentType: 'image/jpeg' }),
+        controller.getPresignedUrl(
+          { fileName: 'test.jpg', contentType: 'image/jpeg' },
+          actorRequest
+        )
       ).rejects.toThrow(BadRequestException);
     });
 
     it('rejects requests with negative fileSize', async () => {
       await expect(
-        controller.getPresignedUrl({
-          fileName: 'test.jpg',
-          contentType: 'image/jpeg',
-          fileSize: -1,
-        }),
+        controller.getPresignedUrl(
+          {
+            fileName: 'test.jpg',
+            contentType: 'image/jpeg',
+            fileSize: -1,
+          },
+          actorRequest
+        )
       ).rejects.toThrow(BadRequestException);
     });
 
     it('rejects disallowed file extension for image category', async () => {
       await expect(
-        controller.getPresignedUrl({
-          fileName: 'malware.exe',
-          contentType: 'application/x-msdownload',
-          fileSize: 1000,
-          category: 'image',
-        }),
+        controller.getPresignedUrl(
+          {
+            fileName: 'malware.exe',
+            contentType: 'application/x-msdownload',
+            fileSize: 1000,
+            category: 'image',
+          },
+          actorRequest
+        )
       ).rejects.toThrow(BadRequestException);
     });
 
     it('rejects disallowed MIME type for document category', async () => {
       await expect(
-        controller.getPresignedUrl({
-          fileName: 'report.pdf',
-          contentType: 'video/mp4',
-          fileSize: 1000,
-          category: 'document',
-        }),
+        controller.getPresignedUrl(
+          {
+            fileName: 'report.pdf',
+            contentType: 'video/mp4',
+            fileSize: 1000,
+            category: 'document',
+          },
+          actorRequest
+        )
       ).rejects.toThrow(BadRequestException);
     });
 
     it('rejects oversized files for document category', async () => {
       await expect(
-        controller.getPresignedUrl({
-          fileName: 'huge.pdf',
-          contentType: 'application/pdf',
-          fileSize: 15 * 1024 * 1024, // 15MB > 10MB deployment cap for documents
-          category: 'document',
-        }),
+        controller.getPresignedUrl(
+          {
+            fileName: 'huge.pdf',
+            contentType: 'application/pdf',
+            fileSize: 15 * 1024 * 1024, // 15MB > 10MB deployment cap for documents
+            category: 'document',
+          },
+          actorRequest
+        )
       ).rejects.toThrow(BadRequestException);
     });
 
@@ -201,34 +250,43 @@ describe('UploadController', () => {
       } satisfies EffectiveUploadPolicy);
 
       await expect(
-        controller.getPresignedUrl({
-          fileName: 'draft.docx',
-          contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-          fileSize: 1024,
-          category: 'document',
-        }),
+        controller.getPresignedUrl(
+          {
+            fileName: 'draft.docx',
+            contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            fileSize: 1024,
+            category: 'document',
+          },
+          actorRequest
+        )
       ).rejects.toThrow(BadRequestException); // .docx allowed by deployment, narrowed out by DB
 
       await expect(
-        controller.getPresignedUrl({
-          fileName: 'big.pdf',
-          contentType: 'application/pdf',
-          fileSize: 2 * 1024 * 1024, // above the 1 MB DB policy
-          category: 'document',
-        }),
+        controller.getPresignedUrl(
+          {
+            fileName: 'big.pdf',
+            contentType: 'application/pdf',
+            fileSize: 2 * 1024 * 1024, // above the 1 MB DB policy
+            category: 'document',
+          },
+          actorRequest
+        )
       ).rejects.toThrow(BadRequestException);
     });
 
     it('allows a valid image upload request', async () => {
       vi.mocked(storage.presignedPutUrl).mockResolvedValue('https://s3.example.com/presigned');
 
-      const result = await controller.getPresignedUrl({
-        fileName: 'photo.jpg',
-        contentType: 'image/jpeg',
-        fileSize: 1024 * 1024,
-        category: 'image',
-        metadata: { recordType: 'avatar' },
-      });
+      const result = await controller.getPresignedUrl(
+        {
+          fileName: 'photo.jpg',
+          contentType: 'image/jpeg',
+          fileSize: 1024 * 1024,
+          category: 'image',
+          metadata: { recordType: 'avatar' },
+        },
+        actorRequest
+      );
 
       expect(result).toMatchObject({
         key: expect.stringContaining('uploads/'),
@@ -237,18 +295,21 @@ describe('UploadController', () => {
       });
       expect(storage.presignedPutUrl).toHaveBeenCalledWith(
         expect.stringContaining('uploads/'),
-        3600,
+        3600
       );
     });
 
     it('allows a valid document upload request with general category', async () => {
       vi.mocked(storage.presignedPutUrl).mockResolvedValue('https://s3.example.com/presigned');
 
-      const result = await controller.getPresignedUrl({
-        fileName: 'data.zip',
-        contentType: 'application/zip',
-        fileSize: 5 * 1024 * 1024,
-      });
+      const result = await controller.getPresignedUrl(
+        {
+          fileName: 'data.zip',
+          contentType: 'application/zip',
+          fileSize: 5 * 1024 * 1024,
+        },
+        actorRequest
+      );
 
       expect(result).toMatchObject({
         key: expect.stringContaining('uploads/'),
@@ -260,12 +321,15 @@ describe('UploadController', () => {
     it('allows a valid video upload request (video deployment category)', async () => {
       vi.mocked(storage.presignedPutUrl).mockResolvedValue('https://s3.example.com/presigned');
 
-      const result = await controller.getPresignedUrl({
-        fileName: 'clip.mp4',
-        contentType: 'video/mp4',
-        fileSize: 50 * 1024 * 1024,
-        category: 'video',
-      });
+      const result = await controller.getPresignedUrl(
+        {
+          fileName: 'clip.mp4',
+          contentType: 'video/mp4',
+          fileSize: 50 * 1024 * 1024,
+          category: 'video',
+        },
+        actorRequest
+      );
 
       expect(result).toMatchObject({
         key: expect.stringContaining('uploads/'),
@@ -275,17 +339,18 @@ describe('UploadController', () => {
     });
 
     it('throws InternalServerError on S3 provider failure', async () => {
-      vi.mocked(storage.presignedPutUrl).mockRejectedValue(
-        new Error('S3 timeout'),
-      );
+      vi.mocked(storage.presignedPutUrl).mockRejectedValue(new Error('S3 timeout'));
 
       await expect(
-        controller.getPresignedUrl({
-          fileName: 'test.pdf',
-          contentType: 'application/pdf',
-          fileSize: 1000,
-          category: 'document',
-        }),
+        controller.getPresignedUrl(
+          {
+            fileName: 'test.pdf',
+            contentType: 'application/pdf',
+            fileSize: 1000,
+            category: 'document',
+          },
+          actorRequest
+        )
       ).rejects.toThrow(InternalServerErrorException);
     });
   });
@@ -295,6 +360,40 @@ describe('UploadController', () => {
   // -----------------------------------------------------------------------
 
   describe('verifyUpload', () => {
+    it('cancels an oversized Office stream even when storage reports a smaller length', async () => {
+      resolver.resolveEffective.mockResolvedValue({
+        ...deploymentPolicy('document'),
+        maxSizeBytes: 8,
+      });
+      const cancel = vi.fn();
+      vi.mocked(storage.getObject).mockResolvedValue({
+        body: new ReadableStream({
+          start(stream) {
+            stream.enqueue(new Uint8Array(9));
+          },
+          cancel,
+        }),
+        contentLength: 1,
+        contentType: 'application/zip',
+        metadata: {},
+      });
+      await expect(
+        controller.verifyUpload('uploads/document/oversized.docx', actorRequest)
+      ).rejects.toThrow('Uploaded file exceeds the active size limit');
+      expect(cancel).toHaveBeenCalledOnce();
+    });
+
+    it('rejects a truncated Office container without surfacing a parser failure', async () => {
+      vi.mocked(storage.getObject).mockResolvedValue({
+        body: streamOf('PK\x03\x04'),
+        contentLength: 4,
+        contentType: 'application/zip',
+        metadata: {},
+      });
+      await expect(
+        controller.verifyUpload('uploads/document/broken.docx', actorRequest)
+      ).resolves.toMatchObject({ status: 'type_mismatch' });
+    });
     it('fails closed when the key has no category segment', async () => {
       vi.mocked(storage.getObject).mockResolvedValue({
         body: new ReadableStream(),
@@ -305,15 +404,15 @@ describe('UploadController', () => {
       });
 
       // Legacy key shape `uploads/<uuid><ext>` — no category to resolve.
-      await expect(
-        controller.verifyUpload('uploads/some-uuid.jpg'),
-      ).rejects.toThrow(BadRequestException);
+      await expect(controller.verifyUpload('uploads/some-uuid.jpg', actorRequest)).rejects.toThrow(
+        BadRequestException
+      );
       expect(storage.getObject).not.toHaveBeenCalled();
     });
 
     it('fails closed when the key carries an unknown category', async () => {
       await expect(
-        controller.verifyUpload('uploads/bogus/some-uuid.pdf'),
+        controller.verifyUpload('uploads/bogus/some-uuid.pdf', actorRequest)
       ).rejects.toThrow(BadRequestException);
       expect(storage.getObject).not.toHaveBeenCalled();
     });
@@ -327,7 +426,9 @@ describe('UploadController', () => {
         'uploads/document/', // no file segment
         'uploads/document/a/b.pdf', // extra segment
       ]) {
-        await expect(controller.verifyUpload(bad)).rejects.toThrow(BadRequestException);
+        await expect(controller.verifyUpload(bad, actorRequest)).rejects.toThrow(
+          BadRequestException
+        );
       }
       expect(storage.getObject).not.toHaveBeenCalled();
     });
@@ -372,9 +473,9 @@ describe('UploadController', () => {
           fileName: 'file.mp4',
           contentType: 'video/mp4',
           object: {
-            body: streamOfBytes([0x00, 0x00, 0x00, 0x18, 'ftypisom']),
+            body: streamOfBytes([0x00, 0x00, 0x00, 0x10, 'ftypisom', 0, 0, 0, 0]),
             contentType: 'video/mp4',
-            contentLength: 12,
+            contentLength: 16,
             metadata: {},
             etag: '"mp4"',
           },
@@ -387,14 +488,23 @@ describe('UploadController', () => {
         },
       ];
       for (const c of cases) {
-        vi.mocked(storage.getObject).mockResolvedValue(c.object);
-        const presigned = await controller.getPresignedUrl({
-          fileName: c.fileName,
-          contentType: c.contentType,
-          fileSize: 1000,
-          metadata: { recordType: c.recordType },
+        reservation.owned.mockResolvedValue({
+          status: 'removed',
+          metadata: {},
+          file_size: String(c.object.contentLength),
+          content_type: c.contentType,
         });
-        const result = await controller.verifyUpload(presigned.key);
+        vi.mocked(storage.getObject).mockResolvedValue(c.object);
+        const presigned = await controller.getPresignedUrl(
+          {
+            fileName: c.fileName,
+            contentType: c.contentType,
+            fileSize: c.object.contentLength,
+            metadata: { recordType: c.recordType },
+          },
+          actorRequest
+        );
+        const result = await controller.verifyUpload(presigned.key, actorRequest);
         expect(result.status).toBe('confirmed');
       }
     });
@@ -402,7 +512,7 @@ describe('UploadController', () => {
     it('returns confirmed when detected bytes match the category policy', async () => {
       vi.mocked(storage.getObject).mockResolvedValue(pdfObject());
 
-      const result = await controller.verifyUpload('uploads/document/some-uuid.pdf');
+      const result = await controller.verifyUpload('uploads/document/some-uuid.pdf', actorRequest);
 
       expect(result).toEqual({
         key: 'uploads/document/some-uuid.pdf',
@@ -421,7 +531,7 @@ describe('UploadController', () => {
         etag: '"png"',
       });
 
-      const result = await controller.verifyUpload('uploads/document/some-uuid.pdf');
+      const result = await controller.verifyUpload('uploads/document/some-uuid.pdf', actorRequest);
 
       expect(result).toMatchObject({
         key: 'uploads/document/some-uuid.pdf',
@@ -433,7 +543,7 @@ describe('UploadController', () => {
       expect(result.allowedMimeTypes).not.toContain('image/png');
     });
 
-    it('returns type_mismatch for an empty object (no sniffable signature, fail closed)', async () => {
+    it('rejects an empty stored object before accepting any detected type', async () => {
       vi.mocked(storage.getObject).mockResolvedValue({
         body: streamOf(''),
         contentType: 'application/pdf',
@@ -441,44 +551,51 @@ describe('UploadController', () => {
         metadata: {},
         etag: '"empty"',
       });
-
-      const result = await controller.verifyUpload('uploads/document/some-uuid.pdf');
-
-      expect(result).toMatchObject({ exists: true, status: 'type_mismatch', detectedContentType: null });
+      await expect(
+        controller.verifyUpload('uploads/document/some-uuid.pdf', actorRequest)
+      ).rejects.toThrow(BadRequestException);
+      expect(reservation.inspect).not.toHaveBeenCalled();
     });
 
     it('returns not_found when object does not exist', async () => {
       vi.mocked(storage.getObject).mockRejectedValue(
-        new StorageObjectNotFound('uploads/document/missing.jpg'),
+        new StorageObjectNotFound('uploads/document/missing.pdf')
       );
 
-      const result = await controller.verifyUpload('uploads/document/missing.jpg');
+      const result = await controller.verifyUpload('uploads/document/missing.pdf', actorRequest);
 
       expect(result).toEqual({
-        key: 'uploads/document/missing.jpg',
+        key: 'uploads/document/missing.pdf',
         exists: false,
         status: 'not_found',
       });
     });
 
-    it('rejects keys that do not start with uploads/', async () => {
+    it('rejects a disallowed category extension before opening storage', async () => {
       await expect(
-        controller.verifyUpload('etc/passwd'),
+        controller.verifyUpload('uploads/document/missing.jpg', actorRequest)
       ).rejects.toThrow(BadRequestException);
+      expect(storage.getObject).not.toHaveBeenCalled();
+    });
+
+    it('rejects keys that do not start with uploads/', async () => {
+      await expect(controller.verifyUpload('etc/passwd', actorRequest)).rejects.toThrow(
+        BadRequestException
+      );
     });
 
     it('rejects keys with directory traversal', async () => {
       await expect(
-        controller.verifyUpload('uploads/../../etc/passwd'),
+        controller.verifyUpload('uploads/../../etc/passwd', actorRequest)
       ).rejects.toThrow(BadRequestException);
     });
 
     it('returns 503 when storage is null', async () => {
       const ctrl = await buildModule({ storage: null });
 
-      await expect(
-        ctrl.verifyUpload('uploads/test.pdf'),
-      ).rejects.toThrow(ServiceUnavailableException);
+      await expect(ctrl.verifyUpload('uploads/test.pdf', actorRequest)).rejects.toThrow(
+        ServiceUnavailableException
+      );
     });
   });
 
@@ -500,7 +617,7 @@ describe('UploadController', () => {
           purpose: 'bank_receipt',
           profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
         },
-        req,
+        req
       );
 
       expect(result).toEqual({
@@ -517,7 +634,7 @@ describe('UploadController', () => {
             purpose: 'bank_receipt',
             profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
           }),
-        }),
+        })
       );
     });
 
@@ -527,12 +644,17 @@ describe('UploadController', () => {
 
       await controller.recordUpload(
         'uploads/document/some-uuid.pdf',
-        { fileName: 'receipt.pdf', fileSize: 18, purpose: 'bank_receipt' },
-        req,
+        {
+          fileName: 'receipt.pdf',
+          fileSize: 18,
+          purpose: 'bank_receipt',
+          profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+        },
+        req
       );
 
       expect(mockImmutableService.createRecord).toHaveBeenCalledWith(
-        expect.objectContaining({ fileSize: 18 }),
+        expect.objectContaining({ fileSize: 18 })
       );
     });
 
@@ -545,9 +667,14 @@ describe('UploadController', () => {
       await expect(
         controller.recordUpload(
           'uploads/document/some-uuid.pdf',
-          { fileName: 'receipt.pdf', fileSize: 4096, purpose: 'bank_receipt' },
-          req,
-        ),
+          {
+            fileName: 'receipt.pdf',
+            fileSize: 4096,
+            purpose: 'bank_receipt',
+            profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+          },
+          req
+        )
       ).rejects.toThrow(BadRequestException);
       expect(mockImmutableService.createRecord).not.toHaveBeenCalled();
     });
@@ -561,9 +688,13 @@ describe('UploadController', () => {
       await expect(
         controller.recordUpload(
           'uploads/document/some-uuid.pdf',
-          { fileName: 'receipt.pdf', purpose: 'bank_receipt' },
-          req,
-        ),
+          {
+            fileName: 'receipt.pdf',
+            purpose: 'bank_receipt',
+            profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+          },
+          req
+        )
       ).rejects.toThrow(BadRequestException);
       expect(mockImmutableService.createRecord).not.toHaveBeenCalled();
     });
@@ -577,20 +708,29 @@ describe('UploadController', () => {
       await expect(
         controller.recordUpload(
           'uploads/document/some-uuid.pdf',
-          { fileName: 'receipt.pdf', fileSize: 18, purpose: 'bank_receipt' },
-          req,
-        ),
+          {
+            fileName: 'receipt.pdf',
+            fileSize: 18,
+            purpose: 'bank_receipt',
+            profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+          },
+          req
+        )
       ).rejects.toThrow(BadRequestException);
       expect(mockImmutableService.createRecord).not.toHaveBeenCalled();
     });
 
     it('refuses to record when the object was never uploaded', async () => {
       vi.mocked(storage.getObject).mockRejectedValue(
-        new StorageObjectNotFound('uploads/document/missing.pdf'),
+        new StorageObjectNotFound('uploads/document/missing.pdf')
       );
 
       await expect(
-        controller.recordUpload('uploads/document/missing.pdf', { purpose: 'bank_receipt' }, req),
+        controller.recordUpload(
+          'uploads/document/missing.pdf',
+          { purpose: 'bank_receipt', profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa' },
+          req
+        )
       ).rejects.toThrow(BadRequestException);
       expect(mockImmutableService.createRecord).not.toHaveBeenCalled();
     });
@@ -607,9 +747,9 @@ describe('UploadController', () => {
       await expect(
         controller.recordUpload(
           'uploads/document/some-uuid.pdf',
-          { purpose: 'bank_receipt' },
-          req,
-        ),
+          { purpose: 'bank_receipt', profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa' },
+          req
+        )
       ).rejects.toThrow(BadRequestException);
       expect(mockImmutableService.createRecord).not.toHaveBeenCalled();
     });

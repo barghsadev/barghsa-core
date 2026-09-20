@@ -1,4 +1,5 @@
-import { createHash } from 'node:crypto'
+import { ApiZodBody } from '../openapi/zod-body.decorator.js';
+import { createHash, randomUUID } from 'node:crypto';
 import {
   Controller,
   Post,
@@ -11,61 +12,68 @@ import {
   Req,
   Res,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import type { Request, Response } from 'express'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
-import { AuthService } from './auth.service.js'
-import { RegisterSchema } from './dto/register.dto.js'
-import type { RegisterResponse } from './dto/register.dto.js'
-import type { RegisterVerifyResponse } from './dto/otp.dto.js'
-import { VerifyOtpSchema, ResendOtpSchema } from './dto/otp.dto.js'
-import type { LoginResponse } from './dto/login.dto.js'
-import { LoginSchema } from './dto/login.dto.js'
-import type { LoginVerifyResponse } from './dto/login.dto.js'
+} from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import type { Request, Response } from 'express';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { AuthService } from './auth.service.js';
+import { RegisterSchema } from './dto/register.dto.js';
+import type { RegisterResponse } from './dto/register.dto.js';
+import type { RegisterVerifyResponse } from './dto/otp.dto.js';
+import { VerifyOtpSchema, ResendOtpSchema } from './dto/otp.dto.js';
+import type { LoginResponse } from './dto/login.dto.js';
+import { LoginSchema } from './dto/login.dto.js';
+import type { LoginVerifyResponse } from './dto/login.dto.js';
+import { LoginVerifySchema, LoginResendSchema } from './dto/login.dto.js';
+
+import { ForceChangePasswordSchema } from './dto/force-change-password.dto.js';
+import { OtpService } from './otp.service.js';
+import type { ForgotPasswordResponse } from './dto/forgot-password.dto.js';
+import { ForgotPasswordSchema } from './dto/forgot-password.dto.js';
+import type { ResetPasswordResponse, VerifyResetOtpResponse } from './dto/reset-password.dto.js';
 import {
-  LoginVerifySchema,
-  LoginResendSchema,
-  type LoginVerifyInput,
-  type LoginResendInput,
-} from './dto/login.dto.js'
-import type { ForceChangePasswordInput } from './dto/force-change-password.dto.js'
-import { ForceChangePasswordSchema } from './dto/force-change-password.dto.js'
-import { OtpService } from './otp.service.js'
-import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-password.dto.js'
-import { ForgotPasswordSchema } from './dto/forgot-password.dto.js'
-import type { ResetPasswordInput, ResetPasswordResponse } from './dto/reset-password.dto.js'
-import { ResetPasswordSchema } from './dto/reset-password.dto.js'
-import type { ChangeUsernameSendOtpResponse, ChangeUsernameVerifyResponse } from './dto/change-username.dto.js'
-import { ChangeUsernameSendOtpSchema, ChangeUsernameVerifySchema } from './dto/change-username.dto.js'
-import type { AddContactSendOtpResponse, AddContactVerifyResponse } from './dto/add-contact.dto.js'
-import { AddContactSendOtpSchema, AddContactVerifySchema } from './dto/add-contact.dto.js'
-import { SessionService } from '../session/session.service.js'
+  ResetPasswordSchema,
+  ResetPasswordStrengthSchema,
+  VerifyResetOtpSchema,
+} from './dto/reset-password.dto.js';
+import type {
+  ChangeUsernameSendOtpResponse,
+  ChangeUsernameVerifyResponse,
+} from './dto/change-username.dto.js';
+import {
+  ChangeUsernameSendOtpSchema,
+  ChangeUsernameVerifySchema,
+} from './dto/change-username.dto.js';
+import type { AddContactSendOtpResponse, AddContactVerifyResponse } from './dto/add-contact.dto.js';
+import { AddContactSendOtpSchema, AddContactVerifySchema } from './dto/add-contact.dto.js';
+import { SessionService } from '../session/session.service.js';
 import {
   SESSION_COOKIE_NAME,
   REFRESH_COOKIE_NAME,
+  getOrCreateDeviceCookie,
   setSessionCookie,
   setRefreshCookie,
   clearSessionCookie,
   clearRefreshCookie,
   setCsrfCookie,
   clearCsrfCookie,
-} from '../session/cookie.helper.js'
-import { SkipCsrf } from '../session/csrf.guard.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
+} from '../session/cookie.helper.js';
+import { SkipCsrf, RequirePreauthCsrf } from '../session/csrf.guard.js';
+import { RefreshCsrfGuard } from '../session/refresh-csrf.guard.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 @ApiTags('Auth')
 @Controller('api/auth')
 export class AuthController {
-  private readonly logger = new Logger(AuthController.name)
+  private readonly logger = new Logger(AuthController.name);
 
   constructor(
     private readonly authService: AuthService,
     private readonly otpService: OtpService,
-    private readonly sessionService: SessionService,
+    private readonly sessionService: SessionService
   ) {}
 
   /**
@@ -75,13 +83,13 @@ export class AuthController {
    *
    * Rate limits:
    * - 3 attempts per IP per 60s
-   * - 10 attempts per IP per 3600s (1h)
+   * - 10 starts per normalized destination per hour in the service
    */
-  @SkipCsrf()
+  @RequirePreauthCsrf()
+  @ApiZodBody(RegisterSchema)
   @Post('register')
   @HttpCode(200)
   @RateLimit({ namespace: 'registration:ip', limit: 3, windowMs: 60_000, security: true })
-  @RateLimit({ namespace: 'registration:ip-hourly', limit: 10, windowMs: 3_600_000, security: true })
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({
     status: 200,
@@ -100,38 +108,33 @@ export class AuthController {
   async register(
     @Body() rawBody: unknown,
     @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
   ): Promise<RegisterResponse> {
     // ── Validate with Zod ───────────────────────────────────────────
-    const parsed = RegisterSchema.safeParse(rawBody)
+    const parsed = RegisterSchema.safeParse(rawBody);
 
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
+      const firstIssue = parsed.error.issues[0];
       // Determine which specific error to surface
-      const message = firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code
+      const message = firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code;
 
       if (message === ErrorCodes.AUTH_REGISTER_INVALID_USERNAME.code) {
-        throw new HttpException(
-          { statusCode: 400, error: message },
-          HttpStatus.BAD_REQUEST,
-        )
+        throw new HttpException({ statusCode: 400, error: message }, HttpStatus.BAD_REQUEST);
       }
       if (message === ErrorCodes.AUTH_REGISTER_WEAK_PASSWORD.code) {
-        throw new HttpException(
-          { statusCode: 422, error: message },
-          422,
-        )
+        throw new HttpException({ statusCode: 422, error: message }, 422);
       }
 
       // Generic validation failure
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
     // ── Delegate to service ─────────────────────────────────────────
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.authService.register(parsed.data, ip)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.authService.register(parsed.data, ip, getOrCreateDeviceCookie(req, res));
   }
 
   /**
@@ -145,16 +148,16 @@ export class AuthController {
    * - If OTP is required → returns `{ requiresOtp: true, challengeId }` for step-up.
    *
    * Rate limits (security-critical, PostgreSQL-backend):
-   * - 5 attempts per account-and-IP per 15 minutes
+   * - Progressive delay after 5 failed credentials per account-and-IP in 15 minutes
    * - 50 attempts per IP per 15 minutes (broad spraying mitigation)
    *
    * Error response is always generic ("Invalid username or password")
    * to avoid revealing whether the username exists.
    */
-  @SkipCsrf()
+  @RequirePreauthCsrf()
+  @ApiZodBody(LoginSchema)
   @Post('login')
   @HttpCode(200)
-  @RateLimit({ namespace: 'login:account-ip', limit: 5, windowMs: 900_000, security: true })
   @RateLimit({ namespace: 'login:ip', limit: 50, windowMs: 900_000, security: true })
   @ApiOperation({ summary: 'Authenticate a user' })
   @ApiResponse({
@@ -164,11 +167,20 @@ export class AuthController {
       type: 'object',
       properties: {
         requiresOtp: { type: 'boolean', description: 'Whether step-up OTP is needed' },
-        challengeId: { type: 'string', description: 'Challenge ID for OTP step (when requiresOtp is true)' },
+        challengeId: {
+          type: 'string',
+          description: 'Challenge ID for OTP step (when requiresOtp is true)',
+        },
         userId: { type: 'string', description: 'User UUID (when requiresOtp is false)' },
-        sessionId: { type: 'string', description: 'Session identifier (when requiresOtp is false)' },
+        sessionId: {
+          type: 'string',
+          description: 'Session identifier (when requiresOtp is false)',
+        },
         csrfToken: { type: 'string', description: 'CSRF token (when requiresOtp is false)' },
-        expiresAt: { type: 'string', description: 'Session expiry timestamp (when requiresOtp is false)' },
+        expiresAt: {
+          type: 'string',
+          description: 'Session expiry timestamp (when requiresOtp is false)',
+        },
       },
     },
   })
@@ -177,45 +189,55 @@ export class AuthController {
   async login(
     @Body() rawBody: unknown,
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response
   ): Promise<LoginResponse> {
     // ── Validate with Zod ───────────────────────────────────────────
-    const parsed = LoginSchema.safeParse(rawBody)
+    const parsed = LoginSchema.safeParse(rawBody);
 
     if (!parsed.success) {
       // Generic credential error — never reveal which field is invalid
       throw new HttpException(
         { statusCode: 401, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
-        HttpStatus.UNAUTHORIZED,
-      )
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     // ── Delegate to service ─────────────────────────────────────────
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    const result = await this.authService.login(parsed.data, ip)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    const deviceToken = getOrCreateDeviceCookie(req, res);
+    const result = await this.authService.login(
+      {
+        ...parsed.data,
+        deviceInfo: {
+          fingerprint: deviceToken,
+          userAgent: req.headers['user-agent'] ?? '',
+        },
+      },
+      ip
+    );
 
     // If password change is required, return the token without setting a session
     if (result.mustChangePassword) {
-      this.logger.log(`Password change required for user — no session established`)
-      return result
+      this.logger.log(`Password change required for user — no session established`);
+      return result;
     }
 
     // If OTP is not required, set the session and refresh cookies
     if (!result.requiresOtp) {
-      setSessionCookie(res, result.sessionId!, new Date(result.expiresAt!))
+      setSessionCookie(res, result.sessionId!, new Date(result.expiresAt!));
       if (result.refreshToken) {
-        setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt!))
+        setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt!));
       }
 
       // Set CSRF cookie for frontend access
       if (result.csrfToken) {
-        setCsrfCookie(res, result.csrfToken)
+        setCsrfCookie(res, result.csrfToken);
       }
 
-      this.logger.log(`Session established for user ${result.userId}`)
+      this.logger.log(`Session established for user ${result.userId}`);
     }
 
-    return result
+    return result;
   }
 
   /**
@@ -227,7 +249,8 @@ export class AuthController {
    * Rate limits:
    * - 5 verification attempts per IP per 60s
    */
-  @SkipCsrf()
+  @RequirePreauthCsrf()
+  @ApiZodBody(LoginVerifySchema)
   @Post('login/verify')
   @HttpCode(200)
   @RateLimit({ namespace: 'otp:login:verify:ip', limit: 5, windowMs: 60_000, security: true })
@@ -241,22 +264,22 @@ export class AuthController {
   async verifyLoginOtp(
     @Body() rawBody: unknown,
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response
   ): Promise<LoginVerifyResponse> {
-    const parsed = LoginVerifySchema.safeParse(rawBody)
+    const parsed = LoginVerifySchema.safeParse(rawBody);
 
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    const userAgent = req.headers['user-agent'] ?? ''
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    const userAgent = req.headers['user-agent'] ?? '';
     const deviceFingerprint = parsed.data.trustDevice
-      ? createHash('sha256').update(userAgent).digest('hex')
-      : undefined
+      ? createHash('sha256').update(getOrCreateDeviceCookie(req, res)).digest('hex')
+      : undefined;
 
     // Perform login OTP verification → session creation
     const result = await this.authService.completeLogin(
@@ -265,20 +288,20 @@ export class AuthController {
       ip,
       parsed.data.trustDevice,
       deviceFingerprint,
-      userAgent,
-    )
+      userAgent
+    );
 
     // ── Set HttpOnly session and refresh cookies ─────────────────
-    setSessionCookie(res, result.sessionId, new Date(result.expiresAt))
-    setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt))
+    setSessionCookie(res, result.sessionId, new Date(result.expiresAt));
+    setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt));
     // Set CSRF cookie for frontend access
     if (result.csrfToken) {
-      setCsrfCookie(res, result.csrfToken)
+      setCsrfCookie(res, result.csrfToken);
     }
 
-    this.logger.log(`Session established for user ${result.userId} via login OTP`)
+    this.logger.log(`Session established for user ${result.userId} via login OTP`);
 
-    return result
+    return result;
   }
 
   /**
@@ -289,7 +312,8 @@ export class AuthController {
    * Rate limits:
    * - 3 resend attempts per IP per 120s
    */
-  @SkipCsrf()
+  @RequirePreauthCsrf()
+  @ApiZodBody(LoginResendSchema)
   @Post('login/resend')
   @HttpCode(200)
   @RateLimit({ namespace: 'otp:login:resend:ip', limit: 3, windowMs: 120_000, security: true })
@@ -302,18 +326,24 @@ export class AuthController {
   async resendLoginOtp(
     @Body() rawBody: unknown,
     @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
   ): Promise<{ challengeId: string }> {
-    const parsed = LoginResendSchema.safeParse(rawBody)
+    const parsed = LoginResendSchema.safeParse(rawBody);
 
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.otpService.resendChallenge(parsed.data.challengeId, ip)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.otpService.resendChallenge(
+      parsed.data.challengeId,
+      ip,
+      'login',
+      getOrCreateDeviceCookie(req, res)
+    );
   }
 
   /**
@@ -328,7 +358,8 @@ export class AuthController {
    * Rate limits:
    * - 5 attempts per IP per 300s
    */
-  @SkipCsrf()
+  @RequirePreauthCsrf()
+  @ApiZodBody(ForceChangePasswordSchema)
   @Post('force-change-password')
   @HttpCode(200)
   @RateLimit({ namespace: 'password:change:ip', limit: 5, windowMs: 300_000, security: true })
@@ -342,29 +373,26 @@ export class AuthController {
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async forceChangePassword(
     @Body() rawBody: unknown,
-    @Req() req: Request,
+    @Req() req: Request
   ): Promise<{ message: string }> {
-    const parsed = ForceChangePasswordSchema.safeParse(rawBody)
+    const parsed = ForceChangePasswordSchema.safeParse(rawBody);
 
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
-      const message = firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code
+      const firstIssue = parsed.error.issues[0];
+      const message = firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code;
 
       if (message === ErrorCodes.AUTH_REGISTER_WEAK_PASSWORD.code) {
-        throw new HttpException(
-          { statusCode: 422, error: message },
-          422,
-        )
+        throw new HttpException({ statusCode: 422, error: message }, 422);
       }
 
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.authService.forceChangePassword(parsed.data, ip)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.authService.forceChangePassword(parsed.data, ip);
   }
 
   /**
@@ -378,10 +406,32 @@ export class AuthController {
    * - 5 attempts per destination per hour
    * - 5 attempts per IP per hour
    */
-  @SkipCsrf()
+  @RequirePreauthCsrf()
+  @Post('activate-staff')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'activate-staff:ip', limit: 10, windowMs: 900_000, security: true })
+  @ApiOperation({ summary: 'Consume a staff activation link and set a password' })
+  async activateStaff(@Body() body: unknown, @Req() req: Request): Promise<{ activated: true }> {
+    const parsed = z
+      .object({ newPassword: ResetPasswordStrengthSchema })
+      .extend({ token: z.string().regex(/^[a-f0-9]{64}$/) })
+      .safeParse(body);
+    if (!parsed.success)
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
+    return this.authService.activateStaff(
+      parsed.data.token,
+      parsed.data.newPassword,
+      req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    );
+  }
+
+  @RequirePreauthCsrf()
+  @ApiZodBody(ForgotPasswordSchema)
   @Post('forgot-password')
   @HttpCode(200)
-  @RateLimit({ namespace: 'forgot-password:dest', limit: 5, windowMs: 3_600_000, security: true })
   @RateLimit({ namespace: 'forgot-password:ip', limit: 5, windowMs: 3_600_000, security: true })
   @ApiOperation({ summary: 'Initiate forgot-password OTP flow' })
   @ApiResponse({
@@ -390,6 +440,7 @@ export class AuthController {
     schema: {
       type: 'object',
       properties: {
+        challengeId: { type: 'string', format: 'uuid' },
         sent: { type: 'boolean' },
         message: { type: 'string' },
       },
@@ -399,19 +450,63 @@ export class AuthController {
   async forgotPassword(
     @Body() rawBody: unknown,
     @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
   ): Promise<ForgotPasswordResponse> {
-    const parsed = ForgotPasswordSchema.safeParse(rawBody)
+    const parsed = ForgotPasswordSchema.safeParse(rawBody);
 
     if (!parsed.success) {
       // Always return generic success — never reveal invalid input
       return {
+        challengeId: randomUUID(),
         sent: true,
-        message: 'If an account exists, an OTP has been sent.',
-      }
+        message: 'If an account exists, a verification code has been queued.',
+      };
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.authService.forgotPassword(parsed.data, ip)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.authService.forgotPassword(parsed.data, ip, getOrCreateDeviceCookie(req, res));
+  }
+
+  @RequirePreauthCsrf()
+  @ApiZodBody(VerifyResetOtpSchema)
+  @Post('reset-password/verify')
+  @HttpCode(200)
+  @RateLimit({
+    namespace: 'reset-password-verify:ip',
+    limit: 5,
+    windowMs: 3_600_000,
+    security: true,
+  })
+  @ApiOperation({
+    summary: 'Consume reset OTP and issue a single-use password-reset authorization',
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      required: ['verified', 'challengeId', 'resetToken', 'expiresAt'],
+      properties: {
+        verified: { type: 'boolean', enum: [true] },
+        challengeId: { type: 'string', format: 'uuid' },
+        resetToken: { type: 'string', pattern: '^[a-f0-9]{64}$' },
+        expiresAt: { type: 'string', format: 'date-time' },
+      },
+    },
+  })
+  async verifyResetOtp(
+    @Body() rawBody: unknown,
+    @Req() req: Request
+  ): Promise<VerifyResetOtpResponse> {
+    const parsed = VerifyResetOtpSchema.safeParse(rawBody);
+    if (!parsed.success)
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
+    return this.authService.verifyResetOtp(
+      parsed.data,
+      req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    );
   }
 
   /**
@@ -429,10 +524,10 @@ export class AuthController {
    * - 5 reset attempts per destination per hour
    * - 5 reset attempts per IP per hour
    */
-  @SkipCsrf()
+  @RequirePreauthCsrf()
+  @ApiZodBody(ResetPasswordSchema)
   @Post('reset-password')
   @HttpCode(200)
-  @RateLimit({ namespace: 'reset-password:dest', limit: 5, windowMs: 3_600_000, security: true })
   @RateLimit({ namespace: 'reset-password:ip', limit: 5, windowMs: 3_600_000, security: true })
   @ApiOperation({ summary: 'Reset password after OTP verification' })
   @ApiResponse({
@@ -452,29 +547,32 @@ export class AuthController {
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async resetPassword(
     @Body() rawBody: unknown,
-    @Req() req: Request,
+    @Req() req: Request
   ): Promise<ResetPasswordResponse> {
-    const parsed = ResetPasswordSchema.safeParse(rawBody)
+    const parsed = ResetPasswordSchema.safeParse(rawBody);
 
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
-      const message = firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code
-
-      if (message === ErrorCodes.AUTH_REGISTER_WEAK_PASSWORD.code) {
-        throw new HttpException(
-          { statusCode: 422, error: message },
-          422,
+      const strength = z.object({ newPassword: ResetPasswordStrengthSchema }).safeParse(rawBody);
+      if (
+        !strength.success &&
+        strength.error.issues.some(
+          (issue) => issue.message === ErrorCodes.AUTH_REGISTER_WEAK_PASSWORD.code
         )
+      ) {
+        throw new HttpException(
+          { statusCode: 422, error: ErrorCodes.AUTH_REGISTER_WEAK_PASSWORD.code },
+          422
+        );
       }
 
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.authService.resetPassword(parsed.data, ip)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.authService.resetPassword(parsed.data, ip);
   }
 
   /**
@@ -486,7 +584,8 @@ export class AuthController {
    * Rate limits:
    * - 5 verification attempts per IP per 60s
    */
-  @SkipCsrf()
+  @RequirePreauthCsrf()
+  @ApiZodBody(VerifyOtpSchema)
   @Post('register/verify')
   @HttpCode(200)
   @RateLimit({ namespace: 'otp:verify:ip', limit: 5, windowMs: 60_000, security: true })
@@ -500,39 +599,39 @@ export class AuthController {
   async verifyOtp(
     @Body() rawBody: unknown,
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response
   ): Promise<RegisterVerifyResponse> {
-    const parsed = VerifyOtpSchema.safeParse(rawBody)
+    const parsed = VerifyOtpSchema.safeParse(rawBody);
 
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    const userAgent = req.headers['user-agent']
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    const userAgent = req.headers['user-agent'];
 
     // Perform the complete registration: OTP verify → user create → session create
     const result = await this.authService.completeRegistration(
       parsed.data.challengeId,
       parsed.data.otp,
       ip,
-      userAgent,
-    )
+      userAgent
+    );
 
     // ── Set HttpOnly session and refresh cookies ─────────────────
-    setSessionCookie(res, result.sessionId, new Date(result.expiresAt))
-    setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt))
+    setSessionCookie(res, result.sessionId, new Date(result.expiresAt));
+    setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt));
     // Set CSRF cookie for frontend access
     if (result.csrfToken) {
-      setCsrfCookie(res, result.csrfToken)
+      setCsrfCookie(res, result.csrfToken);
     }
 
-    this.logger.log(`Session established for user ${result.userId}`)
+    this.logger.log(`Session established for user ${result.userId}`);
 
-    return result
+    return result;
   }
 
   /**
@@ -543,7 +642,6 @@ export class AuthController {
    * Rate limits:
    * - 10 logout attempts per IP per 60s
    */
-  @SkipCsrf()
   @Post('logout')
   @HttpCode(200)
   @RateLimit({ namespace: 'auth:logout:ip', limit: 10, windowMs: 60_000, security: true })
@@ -554,20 +652,20 @@ export class AuthController {
   })
   async logout(
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response
   ): Promise<{ message: string }> {
-    const sessionId = req.cookies?.[SESSION_COOKIE_NAME]
+    const sessionId = req.cookies?.[SESSION_COOKIE_NAME];
 
     if (sessionId && typeof sessionId === 'string') {
-      await this.sessionService.revokeSession(sessionId)
-      this.logger.log(`Logout: session ${sessionId} revoked`)
+      await this.sessionService.revokeSession(sessionId);
+      this.logger.log(`Logout: session revoked`);
     }
 
-    clearSessionCookie(res)
-    clearRefreshCookie(res)
-    clearCsrfCookie(res)
+    clearSessionCookie(res);
+    clearRefreshCookie(res);
+    clearCsrfCookie(res);
 
-    return { message: 'Logged out successfully.' }
+    return { message: 'Logged out successfully.' };
   }
 
   /**
@@ -585,6 +683,7 @@ export class AuthController {
    * - 10 refresh attempts per IP per 60s
    */
   @SkipCsrf()
+  @UseGuards(RefreshCsrfGuard)
   @Post('refresh')
   @HttpCode(200)
   @RateLimit({ namespace: 'auth:refresh:ip', limit: 10, windowMs: 60_000, security: true })
@@ -605,48 +704,48 @@ export class AuthController {
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async refresh(
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response
   ): Promise<{ sessionId: string; csrfToken: string; expiresAt: string }> {
-    const refreshToken = req.cookies?.[REFRESH_COOKIE_NAME]
+    const refreshToken = req.cookies?.[REFRESH_COOKIE_NAME];
 
     if (!refreshToken || typeof refreshToken !== 'string') {
       throw new HttpException(
         { statusCode: 401, error: ErrorCodes.AUTH_UNAUTHENTICATED.code },
-        HttpStatus.UNAUTHORIZED,
-      )
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     // Redeem the refresh token (rotation + family check)
     const { sessionId, refreshToken: newRefreshToken } =
-      await this.sessionService.redeemRefreshToken(refreshToken)
+      await this.sessionService.redeemRefreshToken(refreshToken);
 
     // Look up the session to get its expiry and CSRF token
-    const session = await this.sessionService.getSessionById(sessionId)
+    const session = await this.sessionService.getSessionById(sessionId);
 
     if (!session) {
       throw new HttpException(
         { statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code },
-        HttpStatus.UNAUTHORIZED,
-      )
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
-    const expiresAt = new Date(session.expires_at)
+    const expiresAt = new Date(session.expires_at);
 
     // Set new cookies
-    setSessionCookie(res, sessionId, expiresAt)
-    setRefreshCookie(res, newRefreshToken, expiresAt)
+    setSessionCookie(res, sessionId, expiresAt);
+    setRefreshCookie(res, newRefreshToken, expiresAt);
     // Set CSRF cookie for frontend access
     if (session.csrf_token) {
-      setCsrfCookie(res, session.csrf_token)
+      setCsrfCookie(res, session.csrf_token);
     }
 
-    this.logger.log(`Session refreshed: ${sessionId} for user ${session.user_id}`)
+    this.logger.log(`Session refreshed for user ${session.user_id}`);
 
     return {
       sessionId,
       csrfToken: session.csrf_token ?? '',
       expiresAt: expiresAt.toISOString(),
-    }
+    };
   }
 
   /**
@@ -657,7 +756,8 @@ export class AuthController {
    * Rate limits:
    * - 3 resend attempts per IP per 120s
    */
-  @SkipCsrf()
+  @RequirePreauthCsrf()
+  @ApiZodBody(ResendOtpSchema)
   @Post('register/resend')
   @HttpCode(200)
   @RateLimit({ namespace: 'otp:resend:ip', limit: 3, windowMs: 120_000, security: true })
@@ -670,18 +770,24 @@ export class AuthController {
   async resendOtp(
     @Body() rawBody: unknown,
     @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
   ): Promise<{ challengeId: string }> {
-    const parsed = ResendOtpSchema.safeParse(rawBody)
+    const parsed = ResendOtpSchema.safeParse(rawBody);
 
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.otpService.resendChallenge(parsed.data.challengeId, ip)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.otpService.resendChallenge(
+      parsed.data.challengeId,
+      ip,
+      'registration',
+      getOrCreateDeviceCookie(req, res)
+    );
   }
 
   /**
@@ -690,13 +796,13 @@ export class AuthController {
    * Performs step-up authentication for sensitive actions (T-02.02.04).
    *
    * Requires the authenticated session (session cookie) and the user's
-   * current password. On success, updates the session's
-   * `step_up_verified_at` timestamp, which the StepUpGuard checks
+   * current password. Success replaces session, refresh and CSRF cookies and
+   * records the replacement session's `step_up_verified_at`, which StepUpGuard checks
    * against the configured window (default 15 minutes).
    *
    * The frontend should call this endpoint when the API returns a
    * `requiresStepUp` flag (403 with AUTHZ:STEP_UP_REQUIRED), then
-   * retry the original sensitive request.
+   * retry the original sensitive request with the current CSRF cookie.
    *
    * Rate limits:
    * - 5 attempts per IP per 60s
@@ -716,51 +822,42 @@ export class AuthController {
   async stepUp(
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response
   ): Promise<{ message: string; stepUpVerifiedAt: string }> {
     const StepUpSchema = z
       .object({
         /** Current password to verify identity. */
         password: z.string().min(1, ErrorCodes.VALIDATION_INPUT_MISSING.code),
       })
-      .strict()
+      .strict();
 
-    const parsed = StepUpSchema.safeParse(rawBody)
+    const parsed = StepUpSchema.safeParse(rawBody);
 
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
-    const userId = req.session.userId
-    const sessionId = req.session.sessionId
+    const userId = req.session.userId;
+    const sessionId = req.session.sessionId;
 
-    // ── Verify password ────────────────────────────────────────
-    const passwordValid = await this.sessionService.verifyUserPassword(
+    const rotated = await this.sessionService.verifyStepUp(
       userId,
+      sessionId,
       parsed.data.password,
-    )
+      req.ip ?? req.socket?.remoteAddress ?? null
+    );
 
-    if (!passwordValid) {
-      throw new HttpException(
-        { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
-        422,
-      )
-    }
-
-    // ── Set step-up timestamp ──────────────────────────────────
-    await this.sessionService.setStepUpVerifiedTimestamp(sessionId)
-
-    const now = new Date()
-    this.logger.log(
-      `Step-up verified for user ${userId}, session ${sessionId} at ${now.toISOString()}`,
-    )
+    setSessionCookie(res, rotated.sessionId, rotated.expiresAt);
+    setRefreshCookie(res, rotated.refreshToken, rotated.expiresAt);
+    setCsrfCookie(res, rotated.csrfToken);
 
     return {
       message: 'Step-up authentication successful.',
-      stepUpVerifiedAt: now.toISOString(),
-    }
+      stepUpVerifiedAt: rotated.stepUpVerifiedAt.toISOString(),
+    };
   }
 
   // ── Username / Contact Change (T-03.03.04) ────────────────────────
@@ -777,16 +874,21 @@ export class AuthController {
   @ApiOperation({ summary: 'Get current user info' })
   @ApiResponse({ status: 200, description: 'User info returned.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
-  async getUser(
-    @Req() req: AuthenticatedRequest,
-  ): Promise<{ userId: string; username: string; email: string | null; mobile: string | null }> {
-    return this.authService.getUser(req.session.userId)
+  async getUser(@Req() req: AuthenticatedRequest): Promise<{
+    userId: string;
+    username: string;
+    email: string | null;
+    mobile: string | null;
+    emailVerified: boolean;
+    mobileVerified: boolean;
+  }> {
+    return this.authService.getUser(req.session.userId);
   }
 
   /**
    * POST /api/auth/change-username/send-otp
    *
-   * Initiates a username change by sending an OTP to the new username.
+   * Initiates a username change by queuing codes for both destinations.
    * Requires an authenticated session.
    *
    * Checks: new username is not the same as current, not already taken.
@@ -796,9 +898,16 @@ export class AuthController {
    * - 5 attempts per IP per 300s
    */
   @UseGuards(SessionAuthGuard)
+  @ApiZodBody(ChangeUsernameSendOtpSchema)
   @Post('change-username/send-otp')
   @HttpCode(200)
-  @RateLimit({ namespace: 'change-username:user', limit: 3, windowMs: 300_000, security: true })
+  @RateLimit({
+    namespace: 'change-username:user',
+    scope: 'user',
+    limit: 3,
+    windowMs: 300_000,
+    security: true,
+  })
   @RateLimit({ namespace: 'change-username:ip', limit: 5, windowMs: 300_000, security: true })
   @ApiOperation({ summary: 'Send OTP to initiate username change' })
   @ApiResponse({ status: 200, description: 'OTP sent. Returns challengeId.' })
@@ -808,19 +917,25 @@ export class AuthController {
   async sendChangeUsernameOtp(
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response
   ): Promise<ChangeUsernameSendOtpResponse> {
-    const parsed = ChangeUsernameSendOtpSchema.safeParse(rawBody)
+    const parsed = ChangeUsernameSendOtpSchema.safeParse(rawBody);
 
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
+      const firstIssue = parsed.error.issues[0];
       throw new HttpException(
         { statusCode: 400, error: firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.authService.sendChangeUsernameOtp(req.session.userId, parsed.data.newUsername, ip)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.authService.sendChangeUsernameOtp(
+      req.session,
+      parsed.data.newUsername,
+      ip,
+      getOrCreateDeviceCookie(req, res)
+    );
   }
 
   /**
@@ -835,6 +950,7 @@ export class AuthController {
    * - 5 verification attempts per IP per 60s
    */
   @UseGuards(SessionAuthGuard)
+  @ApiZodBody(ChangeUsernameVerifySchema)
   @Post('change-username')
   @HttpCode(200)
   @RateLimit({ namespace: 'change-username:verify:ip', limit: 5, windowMs: 60_000, security: true })
@@ -846,27 +962,27 @@ export class AuthController {
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async changeUsername(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ChangeUsernameVerifyResponse> {
-    const parsed = ChangeUsernameVerifySchema.safeParse(rawBody)
+    const parsed = ChangeUsernameVerifySchema.safeParse(rawBody);
 
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
+      const firstIssue = parsed.error.issues[0];
       throw new HttpException(
         { statusCode: 400, error: firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.authService.completeChangeUsername(
-      req.session.userId,
+      req.session,
       parsed.data.newUsername,
       parsed.data.otpChallengeId,
       parsed.data.otp,
       ip,
-      req.session.sessionId,
-    )
+      parsed.data.previousOtp
+    );
   }
 
   /**
@@ -882,9 +998,16 @@ export class AuthController {
    * - 5 attempts per IP per 300s
    */
   @UseGuards(SessionAuthGuard)
+  @ApiZodBody(AddContactSendOtpSchema)
   @Post('add-contact/send-otp')
   @HttpCode(200)
-  @RateLimit({ namespace: 'add-contact:user', limit: 3, windowMs: 300_000, security: true })
+  @RateLimit({
+    namespace: 'add-contact:user',
+    scope: 'user',
+    limit: 3,
+    windowMs: 300_000,
+    security: true,
+  })
   @RateLimit({ namespace: 'add-contact:ip', limit: 5, windowMs: 300_000, security: true })
   @ApiOperation({ summary: 'Send OTP to add a new contact' })
   @ApiResponse({ status: 200, description: 'OTP sent. Returns challengeId.' })
@@ -894,24 +1017,26 @@ export class AuthController {
   async sendAddContactOtp(
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response
   ): Promise<AddContactSendOtpResponse> {
-    const parsed = AddContactSendOtpSchema.safeParse(rawBody)
+    const parsed = AddContactSendOtpSchema.safeParse(rawBody);
 
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
+      const firstIssue = parsed.error.issues[0];
       throw new HttpException(
         { statusCode: 400, error: firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.authService.sendAddContactOtp(
-      req.session.userId,
+      req.session,
       parsed.data.contactType,
       parsed.data.contactValue,
       ip,
-    )
+      getOrCreateDeviceCookie(req, res)
+    );
   }
 
   /**
@@ -924,6 +1049,7 @@ export class AuthController {
    * - 5 verification attempts per IP per 60s
    */
   @UseGuards(SessionAuthGuard)
+  @ApiZodBody(AddContactVerifySchema)
   @Post('add-contact')
   @HttpCode(200)
   @RateLimit({ namespace: 'add-contact:verify:ip', limit: 5, windowMs: 60_000, security: true })
@@ -935,26 +1061,26 @@ export class AuthController {
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async addContact(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<AddContactVerifyResponse> {
-    const parsed = AddContactVerifySchema.safeParse(rawBody)
+    const parsed = AddContactVerifySchema.safeParse(rawBody);
 
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
+      const firstIssue = parsed.error.issues[0];
       throw new HttpException(
         { statusCode: 400, error: firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.authService.completeAddContact(
-      req.session.userId,
+      req.session,
       parsed.data.contactType,
       parsed.data.contactValue,
       parsed.data.otpChallengeId,
       parsed.data.otp,
-      ip,
-    )
+      ip
+    );
   }
 }

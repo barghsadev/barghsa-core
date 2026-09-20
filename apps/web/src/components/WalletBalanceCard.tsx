@@ -1,30 +1,21 @@
-import { Link } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
+import { Wallet, Plus } from 'lucide-react';
+import { Alert, AlertDescription, buttonVariants, cn } from '@barghsa/ui';
+import { exactIrr } from '@barghsa/i18n/numbers';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { Link } from '@tanstack/react-router';
+import { t, type Locale } from '@barghsa/i18n/app';
 
 export interface WalletBalanceCardProps {
   /** Wallet balance in IRR (Rial). */
-  balance: number
+  balance: string | number;
   /** Currency label, e.g. 'IRR'. */
-  currency: string
+  currency: string;
   /** Whether balance is low relative to pending invoices. */
-  lowBalanceWarning: boolean
+  lowBalanceWarning: boolean;
   /** Number of pending invoices (for contextual warning). */
-  pendingInvoices: number
+  pendingInvoices: number;
   /** UI locale for number formatting and translation. */
-  locale?: Locale
-}
-
-/**
- * Formats a number with locale-aware digit grouping.
- */
-function formatAmount(amount: number, locale: Locale): string {
-  try {
-    return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-      style: 'decimal',
-    }).format(amount)
-  } catch {
-    return amount.toLocaleString()
-  }
+  locale?: Locale;
 }
 
 /**
@@ -40,47 +31,57 @@ export function WalletBalanceCard({
   pendingInvoices,
   locale = 'fa',
 }: WalletBalanceCardProps) {
-  const isRtl = locale === 'fa'
-  const tomanAmount = Math.round(balance / 10)
+  const isRtl = locale === 'fa';
+  const numbers = useNumberFormatting(locale);
+  let exactBalance: bigint | null;
+  try {
+    exactBalance = exactIrr(balance);
+  } catch {
+    exactBalance = null;
+  }
+  const tomanAmount =
+    exactBalance === null
+      ? null
+      : exactBalance >= 0n
+        ? (exactBalance + 5n) / 10n
+        : -((-exactBalance + 4n) / 10n);
 
   return (
     <div
-      className="bg-white rounded-lg shadow-sm p-6"
+      className="flex h-full flex-col rounded-xl border bg-card p-6 text-card-foreground shadow-sm"
       dir={isRtl ? 'rtl' : 'ltr'}
     >
+      <Wallet className="mb-6 size-6 text-muted-foreground" strokeWidth={1.6} aria-hidden="true" />
       {/* Balance section */}
       <div className="mb-4">
-        <p className="text-sm text-gray-500 mb-1">
+        <p className="text-sm text-muted-foreground mb-1">
           {t('dashboard.overview.walletBalance', locale)}
         </p>
-        <p className="text-3xl font-bold text-gray-900 leading-tight">
-          {formatAmount(balance, locale)}{' '}
-          <span className="text-lg font-medium text-gray-500">{currency}</span>
+        <p className="break-words text-[clamp(1.5rem,2.5vw,2rem)] font-semibold text-foreground leading-relaxed tabular-nums">
+          {currency === 'IRR'
+            ? numbers.money(balance)
+            : `${numbers.irrDigits(balance)} ${currency}`}
         </p>
-        <p className="text-base text-gray-500 mt-1">
+        <p className="text-base text-muted-foreground mt-1">
           {t('dashboard.overview.balanceInToman', locale).replace(
             '{amount}',
-            formatAmount(tomanAmount, locale),
+            tomanAmount === null ? '—' : numbers.irrDigits(tomanAmount)
           )}
         </p>
       </div>
 
       {/* Low-balance warning */}
       {lowBalanceWarning && pendingInvoices > 0 && (
-        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p className="text-sm text-yellow-800">
-            {t('dashboard.overview.lowBalanceWarning', locale)}
-          </p>
-        </div>
+        <Alert variant="warning" className="mb-4">
+          <AlertDescription>{t('dashboard.overview.lowBalanceWarning', locale)}</AlertDescription>
+        </Alert>
       )}
 
       {/* Action button */}
-      <Link
-        to="/wallet"
-        className="block w-full text-center px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors"
-      >
+      <Link to="/wallet" className={cn(buttonVariants({ variant: 'default' }), 'mt-auto w-full')}>
+        <Plus data-icon="inline-start" aria-hidden="true" />
         {t('dashboard.overview.chargeWallet', locale)}
       </Link>
     </div>
-  )
+  );
 }

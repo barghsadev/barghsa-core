@@ -1,0 +1,391 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 80,
+      "version": "7",
+      "when": 1789862400000,
+      "tag": "0080_complete_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 81,
+      "version": "7",
+      "when": 1789948800000,
+      "tag": "0081_restore_domain_constraints",
+      "breakpoints": true
+    },
+    {
+      "idx": 82,
+      "version": "7",
+      "when": 1790035200000,
+      "tag": "0082_restore_foundation_constraints",
+      "breakpoints": true
+    },
+    {
+      "idx": 83,
+      "version": "7",
+      "when": 1790121600000,
+      "tag": "0083_staff_identity",
+      "breakpoints": true
+    },
+    {
+      "idx": 84,
+      "version": "7",
+      "when": 1790208000000,
+      "tag": "0084_staff_capabilities",
+      "breakpoints": true
+    },
+    {
+      "idx": 85,
+      "version": "7",
+      "when": 1790294400000,
+      "tag": "0085_otp_purpose_binding",
+      "breakpoints": true
+    },
+    {
+      "idx": 86,
+      "version": "7",
+      "when": 1790380800000,
+      "tag": "0086_auth_delivery_outbox",
+      "breakpoints": true
+    },
+    {
+      "idx": 87,
+      "version": "7",
+      "when": 1790467200000,
+      "tag": "0087_authentication_version",
+      "breakpoints": true
+    },
+    {
+      "idx": 88,
+      "version": "7",
+      "when": 1790553600000,
+      "tag": "0088_staff_activation_delivery",
+      "breakpoints": true
+    },
+    {
+      "idx": 89,
+      "version": "7",
+      "when": 1790640000000,
+      "tag": "0089_pending_profile_verification",
+      "breakpoints": true
+    },
+    {
+      "idx": 90,
+      "version": "7",
+      "when": 1790726400000,
+      "tag": "0090_user_profile_context",
+      "breakpoints": true
+    },
+    {
+      "idx": 91,
+      "version": "7",
+      "when": 1790812800000,
+      "tag": "0091_additive_agent_roles",
+      "breakpoints": true
+    },
+    {
+      "idx": 92,
+      "version": "7",
+      "when": 1790899200000,
+      "tag": "0092_notification_delivery_identity",
+      "breakpoints": true
+    },
+    {
+      "idx": 93,
+      "version": "7",
+      "when": 1790985600000,
+      "tag": "0093_notification_window_snapshot",
+      "breakpoints": true
+    },
+    {
+      "idx": 94,
+      "version": "7",
+      "when": 1791072000000,
+      "tag": "0094_notification_claim_fencing",
+      "breakpoints": true
+    },
+    {
+      "idx": 95,
+      "version": "7",
+      "when": 1791158400000,
+      "tag": "0095_notification_message_snapshot",
+      "breakpoints": true
+    },
+    {
+      "idx": 96,
+      "version": "7",
+      "when": 1791244800000,
+      "tag": "0096_unified_notification_inbox",
+      "breakpoints": true
+    },
+    {
+      "idx": 97,
+      "version": "7",
+      "when": 1791331200000,
+      "tag": "0097_notification_recipient_backfill",
+      "breakpoints": true
+    },
+    {
+      "idx": 98,
+      "version": "7",
+      "when": 1791331200001,
+      "tag": "0098_ticket_attachments",
+      "breakpoints": true
+    },
+    {
+      "idx": 99,
+      "version": "7",
+      "when": 1791331200002,
+      "tag": "0099_ticket_team",
+      "breakpoints": true
+    },
+    {
+      "idx": 100,
+      "version": "7",
+      "when": 1791331200003,
+      "tag": "0100_staff_assignment",
+      "breakpoints": true
+    },
+    {
+      "idx": 101,
+      "version": "7",
+      "when": 1791331200004,
+      "tag": "0101_account_notification_recipients",
+      "breakpoints": true
+    },
+    {
+      "idx": 102,
+      "version": "7",
+      "when": 1791331200005,
+      "tag": "0102_service_breach_constraints",
+      "breakpoints": true
+    },
+    {
+      "idx": 103,
+      "version": "7",
+      "when": 1791331200006,
+      "tag": "0103_staff_team_leads",
+      "breakpoints": true
+    },
+    {
+      "idx": 104,
+      "version": "7",
+      "when": 1791331200007,
+      "tag": "0104_restore_inline_domain_constraints",
+      "breakpoints": true
+    },
+    {
+      "idx": 105,
+      "version": "7",
+      "when": 1791331200008,
+      "tag": "0105_optional_foreign_key_defaults",
+      "breakpoints": true
+    },
+    {
+      "idx": 106,
+      "version": "7",
+      "when": 1791331200009,
+      "tag": "0106_username_challenge_pair",
+      "breakpoints": true
+    },
+    {
+      "idx": 107,
+      "version": "7",
+      "when": 1791331200010,
+      "tag": "0107_profile_contact_details",
+      "breakpoints": true
+    },
+    {
+      "idx": 108,
+      "version": "7",
+      "when": 1791331200011,
+      "tag": "0108_legal_representative",
+      "breakpoints": true
+    },
+    {
+      "idx": 109,
+      "version": "7",
+      "when": 1791331200012,
+      "tag": "0109_onboarding_drafts",
+      "breakpoints": true
+    },
+    {
+      "idx": 110,
+      "version": "7",
+      "when": 1791331200013,
+      "tag": "0110_legal_documents",
+      "breakpoints": true
+    },
+    {
+      "idx": 111,
+      "version": "7",
+      "when": 1791331200014,
+      "tag": "0111_account_login_identifiers",
+      "breakpoints": true
+    },
+    {
+      "idx": 112,
+      "version": "7",
+      "when": 1791331200015,
+      "tag": "0112_wallet_callback_processing",
+      "breakpoints": true
+    },
+    {
+      "idx": 113,
+      "version": "7",
+      "when": 1791331200016,
+      "tag": "0113_invoice_accounting_generated",
+      "breakpoints": true
+    },
+    {
+      "idx": 114,
+      "version": "7",
+      "when": 1791331200017,
+      "tag": "0114_effective_product_price",
+      "breakpoints": true
+    },
+    {
+      "idx": 115,
+      "version": "7",
+      "when": 1791331200018,
+      "tag": "0115_ai_model_test_jobs",
+      "breakpoints": true
+    },
+    {
+      "idx": 116,
+      "version": "7",
+      "when": 1791331200019,
+      "tag": "0116_ai_agent_group_links",
+      "breakpoints": true
+    },
+    {
+      "idx": 117,
+      "version": "7",
+      "when": 1791331200020,
+      "tag": "0117_notification_template_lineage",
+      "breakpoints": true
+    },
+    {
+      "idx": 118,
+      "version": "7",
+      "when": 1791331200021,
+      "tag": "0118_reconcile_schema_snapshot",
+      "breakpoints": true
+    },
+    {
+      "idx": 119,
+      "version": "7",
+      "when": 1791331200022,
+      "tag": "0119_brand_history",
+      "breakpoints": true
+    },
+    {
+      "idx": 120,
+      "version": "7",
+      "when": 1791331200023,
+      "tag": "0120_rolling_rate_limits",
+      "breakpoints": true
+    },
+    {
+      "idx": 121,
+      "version": "7",
+      "when": 1791331200024,
+      "tag": "0121_device_trust_ip",
+      "breakpoints": true
+    },
+    {
+      "idx": 122,
+      "version": "7",
+      "when": 1791331200025,
+      "tag": "0122_password_reset_authorization",
+      "breakpoints": true
+    },
+    {
+      "idx": 123,
+      "version": "7",
+      "when": 1791331200026,
+      "tag": "0123_preauth_sessions",
+      "breakpoints": true
+    },
+    {
+      "idx": 124,
+      "version": "7",
+      "when": 1791331200027,
+      "tag": "0124_address_soft_delete",
+      "breakpoints": true
+    },
+    {
+      "idx": 125,
+      "version": "7",
+      "when": 1791331200028,
+      "tag": "0125_ticket_category",
+      "breakpoints": true
+    },
+    {
+      "idx": 126,
+      "version": "7",
+      "when": 1791331200029,
+      "tag": "0126_provider_delivery_proof",
+      "breakpoints": true
+    },
+    {
+      "idx": 127,
+      "version": "7",
+      "when": 1791331200030,
+      "tag": "0127_notification_send_receipts",
+      "breakpoints": true
+    },
+    {
+      "idx": 128,
+      "version": "7",
+      "when": 1791331200031,
+      "tag": "0128_notification_attempt_history",
+      "breakpoints": true
+    },
+    {
+      "idx": 129,
+      "version": "7",
+      "when": 1791331200032,
+      "tag": "0129_email_callback_identity",
+      "breakpoints": true
+    },
+    {
+      "idx": 130,
+      "version": "7",
+      "when": 1791331200033,
+      "tag": "0130_email_circuit_rolling_window",
+      "breakpoints": true
+    },
+    {
+      "idx": 131,
+      "version": "7",
+      "when": 1791331200034,
+      "tag": "0131_email_customer_corrections",
+      "breakpoints": true
+    },
+    {
+      "idx": 132,
+      "version": "7",
+      "when": 1791331200035,
+      "tag": "0132_outbox_request_correlation",
+      "breakpoints": true
+    },
+    {
+      "idx": 133,
+      "version": "7",
+      "when": 1791331200036,
+      "tag": "0133_database_updated_at",
+      "breakpoints": true
+    },
+    {
+      "idx": 134,
+      "version": "7",
+      "when": 1791331200037,
+      "tag": "0134_system_product_identity",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import {
   useCallback,
   useEffect,
@@ -5,19 +7,23 @@ import {
   useState,
   type FormEvent,
   type KeyboardEvent as ReactKeyboardEvent,
-} from 'react'
-import { t } from '@barghsa/i18n'
-import type { Locale } from '@barghsa/i18n'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from 'react';
+import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
+import type { Locale } from '@barghsa/i18n/app';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
+  APPROVAL_REVIEW_REASON_MAX_LENGTH,
   parseBankReceiptRejectReason,
-} from '@barghsa/shared/finance'
-import { useLocale } from '../hooks/useLocale.js'
-import { withCsrf } from '../lib/csrf.js'
-import { formatIrr } from '../lib/customer-invoices.js'
-import { isImageAttachment, isPdfAttachment, isTransactionUuid } from '../lib/bank-receipt-confirmation.js'
-import WalletTopUpLimitConfigPanel from '../components/WalletTopUpLimitConfigPanel.js'
+} from '@barghsa/shared/finance';
+import { useLocale } from '../hooks/useLocale.js';
+import { withCsrf } from '../lib/csrf.js';
+import {
+  isImageAttachment,
+  isPdfAttachment,
+  isTransactionUuid,
+} from '../lib/bank-receipt-confirmation.js';
+import WalletTopUpLimitConfigPanel from '../components/WalletTopUpLimitConfigPanel.js';
 
 /**
  * Staff bank-receipt confirmation queue (T-04.2.02.04 / T-04.2.02.05).
@@ -32,88 +38,91 @@ import WalletTopUpLimitConfigPanel from '../components/WalletTopUpLimitConfigPan
  */
 
 interface StaffDecision {
-  decision: 'confirmed' | 'rejected'
-  actorUserId: string
-  decidedAt: string
-  reason: string | null
-  customerVisible: boolean
-  creditTransactionId: string | null
+  decision: 'confirmed' | 'rejected';
+  actorUserId: string;
+  decidedAt: string;
+  reason: string | null;
+  customerVisible: boolean;
+  creditTransactionId: string | null;
 }
 
 interface BankReceiptReviewDto {
-  transactionId: string
-  walletId: string
-  amount: string
-  currency: 'IRR'
-  state: string
-  paymentDate: string | null
-  payerReference: string | null
-  attachmentKey: string | null
-  attachmentUrl: string | null
-  customerNote: string | null
-  submittedAt: string
-  canDecide: boolean
-  staffDecision: StaffDecision | null
-  creditTransactionId: string | null
-  overpayment: OverpaymentSnapshot | null
+  canEmergencyOverride?: boolean;
+  transactionId: string;
+  walletId: string;
+  amount: string;
+  currency: 'IRR';
+  dualApproval?: { requestId: string; initiatorId: string; invoiceId: string | null } | null;
+  state: string;
+  paymentDate: string | null;
+  payerReference: string | null;
+  attachmentKey: string | null;
+  attachmentUrl: string | null;
+  customerNote: string | null;
+  submittedAt: string;
+  canDecide: boolean;
+  staffDecision: StaffDecision | null;
+  creditTransactionId: string | null;
+  overpayment: OverpaymentSnapshot | null;
 }
 
 interface OverpaymentSnapshot {
-  invoiceId: string
-  remainingBefore: string
-  invoiceAllocation: string
-  walletCreditAmount: string
-  overpaymentCreditTransactionId: string | null
+  invoiceId: string;
+  remainingBefore: string;
+  invoiceAllocation: string;
+  walletCreditAmount: string;
+  overpaymentCreditTransactionId: string | null;
 }
 
 interface AllocationPreview {
-  transactionId: string
-  invoiceId: string
-  invoiceState: string
-  receiptAmount: string
-  remaining: string
-  invoiceAllocation: string
-  walletCreditAmount: string
-  isOverpayment: boolean
+  transactionId: string;
+  invoiceId: string;
+  invoiceState: string;
+  receiptAmount: string;
+  remaining: string;
+  invoiceAllocation: string;
+  walletCreditAmount: string;
+  isOverpayment: boolean;
 }
 
-type PendingAction =
-  | { kind: 'confirm'; invoiceId: string | null }
+type PendingAction = { transactionId: string } & (
+  | { kind: 'confirm'; invoiceId: string | null; emergencyOverrideReason?: string }
   | { kind: 'reject'; reason: string }
+);
 
 function readErrorCode(data: unknown): string | null {
-  if (!data || typeof data !== 'object') return null
-  const rec = data as { error?: unknown; requiresStepUp?: unknown }
-  if (typeof rec.error === 'string') return rec.error
+  if (!data || typeof data !== 'object') return null;
+  const rec = data as { error?: unknown; requiresStepUp?: unknown };
+  if (typeof rec.error === 'string') return rec.error;
   if (rec.error && typeof rec.error === 'object') {
-    const nested = rec.error as { code?: unknown }
-    if (typeof nested.code === 'string') return nested.code
+    const nested = rec.error as { code?: unknown };
+    if (typeof nested.code === 'string') return nested.code;
   }
-  if (rec.requiresStepUp === true) return ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code
-  return null
+  if (rec.requiresStepUp === true) return ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code;
+  return null;
 }
 
 function errorMessage(data: unknown, fallback: string): string {
-  if (!data || typeof data !== 'object') return fallback
-  const rec = data as { message?: unknown; error?: unknown }
-  if (typeof rec.message === 'string' && rec.message) return rec.message
+  if (!data || typeof data !== 'object') return fallback;
+  const rec = data as { message?: unknown; error?: unknown };
+  if (typeof rec.message === 'string' && rec.message) return rec.message;
   if (rec.error && typeof rec.error === 'object') {
-    const nested = rec.error as { message?: unknown }
-    if (typeof nested.message === 'string' && nested.message) return nested.message
+    const nested = rec.error as { message?: unknown };
+    if (typeof nested.message === 'string' && nested.message) return nested.message;
   }
-  if (typeof rec.error === 'string' && rec.error) return rec.error
-  return fallback
+  if (typeof rec.error === 'string' && rec.error) return rec.error;
+  return fallback;
 }
 
 function isStepUpRequired(res: Response, data: unknown): boolean {
-  return res.status === 403 && readErrorCode(data) === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code
+  return res.status === 403 && readErrorCode(data) === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code;
 }
 
 async function parseError(res: Response, fallback: string): Promise<string> {
   try {
-    return errorMessage(await res.json(), fallback)
+    return errorMessage(await res.json(), fallback);
   } catch {
-    return fallback
+    return fallback;
   }
 }
 
@@ -123,10 +132,10 @@ async function verifyStepUp(password: string): Promise<boolean> {
       method: 'POST',
       headers: withCsrf({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ password }),
-    })
-    return res.ok
+    });
+    return res.ok;
   } catch {
-    return false
+    return false;
   }
 }
 
@@ -137,360 +146,402 @@ const TABBABLE_SELECTOR = [
   'select:not([disabled])',
   'textarea:not([disabled])',
   '[tabindex]:not([tabindex="-1"])',
-].join(',')
+].join(',');
 
 function getTabbable(root: HTMLElement): HTMLElement[] {
   return Array.from(root.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR)).filter((el) => {
-    if (el.tabIndex < 0) return false
-    if (el.getAttribute('aria-hidden') === 'true') return false
-    return true
-  })
+    if (el.tabIndex < 0) return false;
+    if (el.getAttribute('aria-hidden') === 'true') return false;
+    return true;
+  });
 }
 
 function inertOutside(keep: HTMLElement): () => void {
-  const applied: HTMLElement[] = []
-  let current: HTMLElement | null = keep
+  const applied: HTMLElement[] = [];
+  let current: HTMLElement | null = keep;
   while (current && current !== document.body) {
-    const parent: HTMLElement | null = current.parentElement
-    if (!parent) break
+    const parent: HTMLElement | null = current.parentElement;
+    if (!parent) break;
     for (const sibling of Array.from(parent.children)) {
-      if (sibling === current || !(sibling instanceof HTMLElement)) continue
-      if (sibling.hasAttribute('inert')) continue
-      sibling.setAttribute('inert', '')
-      applied.push(sibling)
+      if (sibling === current || !(sibling instanceof HTMLElement)) continue;
+      if (sibling.hasAttribute('inert')) continue;
+      sibling.setAttribute('inert', '');
+      applied.push(sibling);
     }
-    current = parent
+    current = parent;
   }
   return () => {
-    for (const el of applied) el.removeAttribute('inert')
-  }
+    for (const el of applied) el.removeAttribute('inert');
+  };
 }
 
-function formatDate(value: string | null, locale: Locale): string {
-  if (!value) return t('admin.walletReceipts.none', locale)
+function formatPaymentDate(value: string | null, locale: Locale): string {
+  if (!value) return t('admin.walletReceipts.none', locale);
   if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    const parts = value.split('-')
-    const year = Number(parts[0])
-    const month = Number(parts[1])
-    const day = Number(parts[2])
-    const d = new Date(Date.UTC(year, month - 1, day))
-    if (Number.isNaN(d.getTime())) return value
+    const parts = value.split('-');
+    const year = Number(parts[0]);
+    const month = Number(parts[1]);
+    const day = Number(parts[2]);
+    const d = new Date(Date.UTC(year, month - 1, day));
+    if (Number.isNaN(d.getTime())) return value;
     return new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fa-IR', {
       dateStyle: 'medium',
       timeZone: 'UTC',
-    }).format(d)
+    }).format(d);
   }
-  const d = new Date(value)
-  if (Number.isNaN(d.getTime())) return value
-  return new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'fa-IR', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: 'UTC',
-  }).format(d)
+  return t('admin.walletReceipts.none', locale);
 }
 
 export default function AdminWalletReceiptsPage() {
-  const locale = useLocale()
-  const isRtl = locale === 'fa'
-  const [items, setItems] = useState<BankReceiptReviewDto[]>([])
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [selected, setSelected] = useState<BankReceiptReviewDto | null>(null)
-  const [reason, setReason] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [acting, setActing] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [clientIssue, setClientIssue] = useState<string | null>(null)
-  const [status, setStatus] = useState<string | null>(null)
-  const [invoiceId, setInvoiceId] = useState('')
-  const [allocation, setAllocation] = useState<AllocationPreview | null>(null)
-  const [allocationError, setAllocationError] = useState<string | null>(null)
-  const [allocationLoading, setAllocationLoading] = useState(false)
+  const time = useAccountTime();
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const isRtl = locale === 'fa';
+  const [items, setItems] = useState<BankReceiptReviewDto[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selected, setSelected] = useState<BankReceiptReviewDto | null>(null);
+  const [reason, setReason] = useState('');
+  const [emergencyReason, setEmergencyReason] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [acting, setActing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [clientIssue, setClientIssue] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
+  const [invoiceId, setInvoiceId] = useState('');
+  const [allocation, setAllocation] = useState<AllocationPreview | null>(null);
+  const [allocationError, setAllocationError] = useState<string | null>(null);
+  const [allocationLoading, setAllocationLoading] = useState(false);
 
-  const [stepUpOpen, setStepUpOpen] = useState(false)
-  const [stepUpPassword, setStepUpPassword] = useState('')
-  const [stepUpError, setStepUpError] = useState<string | null>(null)
-  const [stepUpSubmitting, setStepUpSubmitting] = useState(false)
-  const [pendingAction, setPendingAction] = useState<PendingAction | null>(null)
-  const [reasonInvalid, setReasonInvalid] = useState(false)
-  const stepUpDialogRef = useRef<HTMLDivElement | null>(null)
-  const stepUpPasswordRef = useRef<HTMLInputElement | null>(null)
-  const confirmButtonRef = useRef<HTMLButtonElement | null>(null)
-  const rejectButtonRef = useRef<HTMLButtonElement | null>(null)
-  const statusRef = useRef<HTMLParagraphElement | null>(null)
-  const stepUpTriggerRef = useRef<HTMLButtonElement | null>(null)
-  const restoreTriggerRef = useRef(false)
+  const [stepUpOpen, setStepUpOpen] = useState(false);
+  const [stepUpPassword, setStepUpPassword] = useState('');
+  const [stepUpError, setStepUpError] = useState<string | null>(null);
+  const [stepUpSubmitting, setStepUpSubmitting] = useState(false);
+  const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
+  const [reasonInvalid, setReasonInvalid] = useState(false);
+  const stepUpDialogRef = useRef<HTMLDivElement | null>(null);
+  const stepUpPasswordRef = useRef<HTMLInputElement | null>(null);
+  const confirmButtonRef = useRef<HTMLButtonElement | null>(null);
+  const emergencyButtonRef = useRef<HTMLButtonElement | null>(null);
+  const rejectButtonRef = useRef<HTMLButtonElement | null>(null);
+  const statusRef = useRef<HTMLParagraphElement | null>(null);
+  const stepUpTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const restoreTriggerRef = useRef(false);
 
   const loadQueue = useCallback(async () => {
-    setError(null)
-    setLoading(true)
+    setError(null);
+    setLoading(true);
     try {
-      const res = await fetch('/api/admin/wallet/bank-receipt-top-ups')
-      if (!res.ok) throw new Error(await parseError(res, t('admin.walletReceipts.error.load', locale)))
-      const data = (await res.json()) as { items?: BankReceiptReviewDto[] }
-      const next = Array.isArray(data.items) ? data.items : []
-      setItems(next)
+      const res = await fetch('/api/admin/wallet/bank-receipt-top-ups');
+      if (!res.ok)
+        throw new Error(await parseError(res, t('admin.walletReceipts.error.load', locale)));
+      const data = (await res.json()) as { items?: BankReceiptReviewDto[] };
+      const next = Array.isArray(data.items) ? data.items : [];
+      setItems(next);
       setSelectedId((current) => {
-        if (current && next.some((row) => row.transactionId === current)) return current
-        return next[0]?.transactionId ?? null
-      })
+        if (current && next.some((row) => row.transactionId === current)) return current;
+        return next[0]?.transactionId ?? null;
+      });
     } catch (err) {
-      setItems([])
-      setSelected(null)
-      setSelectedId(null)
-      setError(err instanceof Error ? err.message : t('admin.walletReceipts.error.load', locale))
+      setItems([]);
+      setSelected(null);
+      setSelectedId(null);
+      setError(err instanceof Error ? err.message : t('admin.walletReceipts.error.load', locale));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [locale])
+  }, [locale]);
 
   useEffect(() => {
-    void loadQueue()
-  }, [loadQueue])
+    void loadQueue();
+  }, [loadQueue]);
 
   useEffect(() => {
     if (!selectedId) {
-      setSelected(null)
-      return
+      setSelected(null);
+      return;
     }
-    const fromList = items.find((row) => row.transactionId === selectedId)
-    if (fromList) setSelected(fromList)
-    setInvoiceId('')
-    setAllocation(null)
-    setAllocationError(null)
-    let cancelled = false
+    const fromList = items.find((row) => row.transactionId === selectedId);
+    if (fromList) setSelected(fromList);
+    setInvoiceId(fromList?.dualApproval?.invoiceId ?? '');
+    setAllocation(null);
+    setAllocationError(null);
+    let cancelled = false;
     void (async () => {
       try {
-        const res = await fetch(`/api/admin/wallet/bank-receipt-top-ups/${selectedId}`)
-        if (!res.ok) return
-        const data = (await res.json()) as BankReceiptReviewDto
-        if (!cancelled) setSelected(data)
+        const res = await fetch(`/api/admin/wallet/bank-receipt-top-ups/${selectedId}`);
+        if (!res.ok) return;
+        const data = (await res.json()) as BankReceiptReviewDto;
+        if (!cancelled) {
+          setSelected(data);
+          setInvoiceId(data.dualApproval?.invoiceId ?? '');
+        }
       } catch {
         /* keep list snapshot */
       }
-    })()
+    })();
     return () => {
-      cancelled = true
-    }
-  }, [selectedId, items])
+      cancelled = true;
+    };
+  }, [selectedId, items]);
 
   useEffect(() => {
-    const trimmed = invoiceId.trim()
+    const trimmed = invoiceId.trim();
     if (!selected || !trimmed) {
-      setAllocation(null)
-      setAllocationError(null)
-      setAllocationLoading(false)
-      return
+      setAllocation(null);
+      setAllocationError(null);
+      setAllocationLoading(false);
+      return;
     }
     if (!isTransactionUuid(trimmed)) {
-      setAllocation(null)
-      setAllocationError(t('admin.walletReceipts.error.invoiceId', locale))
-      setAllocationLoading(false)
-      return
+      setAllocation(null);
+      setAllocationError(t('admin.walletReceipts.error.invoiceId', locale));
+      setAllocationLoading(false);
+      return;
     }
-    let cancelled = false
-    setAllocation(null)
-    setAllocationError(null)
-    setAllocationLoading(true)
+    let cancelled = false;
+    setAllocation(null);
+    setAllocationError(null);
+    setAllocationLoading(true);
     void (async () => {
       try {
         const res = await fetch(
-          `/api/admin/wallet/bank-receipt-top-ups/${selected.transactionId}/allocation?invoiceId=${encodeURIComponent(trimmed)}`,
-        )
-        const data: unknown = await res.json().catch(() => null)
-        if (cancelled) return
+          `/api/admin/wallet/bank-receipt-top-ups/${selected.transactionId}/allocation?invoiceId=${encodeURIComponent(trimmed)}`
+        );
+        const data: unknown = await res.json().catch(() => null);
+        if (cancelled) return;
         if (!res.ok) {
-          setAllocation(null)
-          setAllocationError(errorMessage(data, t('admin.walletReceipts.error.allocation', locale)))
-          return
+          setAllocation(null);
+          setAllocationError(
+            errorMessage(data, t('admin.walletReceipts.error.allocation', locale))
+          );
+          return;
         }
-        setAllocation(data as AllocationPreview)
+        setAllocation(data as AllocationPreview);
       } catch {
         if (!cancelled) {
-          setAllocation(null)
-          setAllocationError(t('admin.walletReceipts.error.allocation', locale))
+          setAllocation(null);
+          setAllocationError(t('admin.walletReceipts.error.allocation', locale));
         }
       } finally {
-        if (!cancelled) setAllocationLoading(false)
+        if (!cancelled) setAllocationLoading(false);
       }
-    })()
+    })();
     return () => {
-      cancelled = true
-    }
-  }, [invoiceId, selected, locale])
+      cancelled = true;
+    };
+  }, [invoiceId, selected, locale]);
 
   useEffect(() => {
-    if (!stepUpOpen) return
-    const dialog = stepUpDialogRef.current
-    if (!dialog) return
-    const restore = inertOutside(dialog)
-    stepUpPasswordRef.current?.focus()
-    return restore
-  }, [stepUpOpen])
+    if (!stepUpOpen) return;
+    const dialog = stepUpDialogRef.current;
+    if (!dialog) return;
+    const restore = inertOutside(dialog);
+    stepUpPasswordRef.current?.focus();
+    return restore;
+  }, [stepUpOpen]);
 
   useEffect(() => {
-    if (stepUpOpen || !restoreTriggerRef.current) return
-    restoreTriggerRef.current = false
-    const trigger = stepUpTriggerRef.current
-    stepUpTriggerRef.current = null
+    if (stepUpOpen || !restoreTriggerRef.current) return;
+    restoreTriggerRef.current = false;
+    const trigger = stepUpTriggerRef.current;
+    stepUpTriggerRef.current = null;
     if (trigger && document.body.contains(trigger) && !trigger.disabled) {
-      trigger.focus()
-      return
+      trigger.focus();
+      return;
     }
-    statusRef.current?.focus()
-  }, [stepUpOpen, selectedId, status])
+    statusRef.current?.focus();
+  }, [stepUpOpen, selectedId, status]);
 
   async function postDecision(action: PendingAction): Promise<'step_up' | 'ok' | 'error'> {
-    if (!selected) return 'error'
     const path =
       action.kind === 'confirm'
-        ? `/api/admin/wallet/bank-receipt-top-ups/${selected.transactionId}/confirm`
-        : `/api/admin/wallet/bank-receipt-top-ups/${selected.transactionId}/reject`
+        ? `/api/admin/wallet/bank-receipt-top-ups/${action.transactionId}/confirm`
+        : `/api/admin/wallet/bank-receipt-top-ups/${action.transactionId}/reject`;
     const res = await fetch(path, {
       method: 'POST',
       headers: withCsrf({ 'Content-Type': 'application/json' }),
       body:
         action.kind === 'reject'
           ? JSON.stringify({ reason: action.reason })
-          : JSON.stringify(
-              action.invoiceId ? { invoiceId: action.invoiceId } : {},
-            ),
-    })
-    const data: unknown = await res.json().catch(() => null)
-    if (isStepUpRequired(res, data)) return 'step_up'
+          : JSON.stringify({
+              ...(action.invoiceId ? { invoiceId: action.invoiceId } : {}),
+              ...(action.emergencyOverrideReason !== undefined
+                ? { emergencyOverrideReason: action.emergencyOverrideReason }
+                : {}),
+            }),
+    });
+    const data: unknown = await res.json().catch(() => null);
+    if (isStepUpRequired(res, data)) return 'step_up';
     if (!res.ok) {
-      setError(errorMessage(data, t('admin.walletReceipts.error.save', locale)))
-      return 'error'
+      setError(errorMessage(data, t('admin.walletReceipts.error.save', locale)));
+      return 'error';
     }
-    const dto = data as BankReceiptReviewDto
-    const overpay = dto.overpayment && BigInt(dto.overpayment.walletCreditAmount) > 0n
+    const dto = data as BankReceiptReviewDto;
+    if (dto.state === 'Pending' && dto.dualApproval) {
+      setStatus(t('admin.walletReceipts.approvalPending', locale));
+      setSelected(dto);
+      setItems((current) =>
+        current.map((row) => (row.transactionId === dto.transactionId ? dto : row))
+      );
+      setInvoiceId(dto.dualApproval.invoiceId ?? '');
+      return 'ok';
+    }
+    const overpay = dto.overpayment && BigInt(dto.overpayment.walletCreditAmount) > 0n;
     setStatus(
       action.kind === 'confirm'
-        ? overpay
-          ? t('admin.walletReceipts.overpaymentConfirmed', locale)
-          : t('admin.walletReceipts.confirmed', locale)
-        : t('admin.walletReceipts.rejected', locale),
-    )
-    setReason('')
-    setInvoiceId('')
-    setAllocation(null)
-    setClientIssue(null)
-    setReasonInvalid(false)
-    const remaining = items.filter((row) => row.transactionId !== dto.transactionId)
-    setItems(remaining)
-    setSelectedId(remaining[0]?.transactionId ?? null)
-    return 'ok'
+        ? action.emergencyOverrideReason !== undefined
+          ? t('admin.walletReceipts.emergencyConfirmed', locale)
+          : overpay
+            ? t('admin.walletReceipts.overpaymentConfirmed', locale)
+            : t('admin.walletReceipts.confirmed', locale)
+        : t('admin.walletReceipts.rejected', locale)
+    );
+    setReason('');
+    setEmergencyReason('');
+    setInvoiceId('');
+    setAllocation(null);
+    setClientIssue(null);
+    setReasonInvalid(false);
+    const remaining = items.filter((row) => row.transactionId !== dto.transactionId);
+    setItems(remaining);
+    setSelectedId(remaining[0]?.transactionId ?? null);
+    return 'ok';
   }
 
   async function runAction(action: PendingAction) {
-    setActing(true)
-    setError(null)
-    setStatus(null)
+    setActing(true);
+    setError(null);
+    setStatus(null);
     try {
-      const outcome = await postDecision(action)
+      const outcome = await postDecision(action);
       if (outcome === 'step_up') {
-        restoreTriggerRef.current = true
+        restoreTriggerRef.current = true;
         stepUpTriggerRef.current =
-          action.kind === 'confirm' ? confirmButtonRef.current : rejectButtonRef.current
-        setPendingAction(action)
-        setStepUpPassword('')
-        setStepUpError(null)
-        setStepUpOpen(true)
+          action.kind === 'confirm'
+            ? action.emergencyOverrideReason !== undefined
+              ? emergencyButtonRef.current
+              : confirmButtonRef.current
+            : rejectButtonRef.current;
+        setPendingAction(action);
+        setStepUpPassword('');
+        setStepUpError(null);
+        setStepUpOpen(true);
       }
     } catch {
-      setError(t('admin.walletReceipts.error.save', locale))
+      setError(t('admin.walletReceipts.error.save', locale));
     } finally {
-      setActing(false)
+      setActing(false);
     }
   }
 
-  function handleConfirm() {
-    const trimmed = invoiceId.trim()
+  function handleConfirm(emergencyOverrideReason?: string) {
+    if (!selected || acting || stepUpOpen) return;
+    if (
+      emergencyOverrideReason !== undefined &&
+      (!selected.canEmergencyOverride ||
+        !selected.dualApproval ||
+        !emergencyOverrideReason.trim() ||
+        emergencyOverrideReason.trim().length > APPROVAL_REVIEW_REASON_MAX_LENGTH)
+    )
+      return;
+    const trimmed = invoiceId.trim();
     if (trimmed && !isTransactionUuid(trimmed)) {
-      setReasonInvalid(false)
-      setClientIssue(t('admin.walletReceipts.error.invoiceId', locale))
-      return
+      setReasonInvalid(false);
+      setClientIssue(t('admin.walletReceipts.error.invoiceId', locale));
+      return;
     }
-    if (trimmed && isTransactionUuid(trimmed) && (allocationLoading || allocationError || !allocation)) {
-      setReasonInvalid(false)
-      setClientIssue(
-        allocationError ?? t('admin.walletReceipts.error.allocationPending', locale),
-      )
-      return
+    if (
+      trimmed &&
+      isTransactionUuid(trimmed) &&
+      (allocationLoading || allocationError || !allocation)
+    ) {
+      setReasonInvalid(false);
+      setClientIssue(allocationError ?? t('admin.walletReceipts.error.allocationPending', locale));
+      return;
     }
-    setReasonInvalid(false)
-    setClientIssue(null)
+    setReasonInvalid(false);
+    setClientIssue(null);
     void runAction({
+      transactionId: selected.transactionId,
       kind: 'confirm',
       invoiceId: isTransactionUuid(trimmed) ? trimmed : null,
-    })
+      ...(emergencyOverrideReason !== undefined
+        ? { emergencyOverrideReason: emergencyOverrideReason.trim() }
+        : {}),
+    });
   }
 
   function handleReject(e: FormEvent) {
-    e.preventDefault()
-    const parsed = parseBankReceiptRejectReason({ reason })
+    e.preventDefault();
+    if (!selected || acting || stepUpOpen) return;
+    const parsed = parseBankReceiptRejectReason({ reason });
     if (!parsed.ok) {
-      setReasonInvalid(true)
-      setClientIssue(t('admin.walletReceipts.error.reason', locale))
-      return
+      setReasonInvalid(true);
+      setClientIssue(t('admin.walletReceipts.error.reason', locale));
+      return;
     }
-    setReasonInvalid(false)
-    setClientIssue(null)
-    void runAction({ kind: 'reject', reason: parsed.reason })
+    setReasonInvalid(false);
+    setClientIssue(null);
+    void runAction({
+      transactionId: selected.transactionId,
+      kind: 'reject',
+      reason: parsed.reason,
+    });
   }
 
   function cancelStepUp() {
-    if (stepUpSubmitting) return
-    setStepUpOpen(false)
-    setPendingAction(null)
-    setStepUpPassword('')
-    setStepUpError(null)
+    if (stepUpSubmitting) return;
+    setStepUpOpen(false);
+    setPendingAction(null);
+    setStepUpPassword('');
+    setStepUpError(null);
   }
 
   async function submitStepUp(e?: FormEvent) {
-    e?.preventDefault()
-    if (!stepUpPassword.trim() || stepUpSubmitting || !pendingAction) return
-    setStepUpSubmitting(true)
-    setStepUpError(null)
+    e?.preventDefault();
+    if (!stepUpPassword.trim() || stepUpSubmitting || !pendingAction) return;
+    setStepUpSubmitting(true);
+    setStepUpError(null);
     try {
-      const verified = await verifyStepUp(stepUpPassword)
+      const verified = await verifyStepUp(stepUpPassword);
       if (!verified) {
-        setStepUpError(t('admin.walletReceipts.stepUp.failed', locale))
-        return
+        setStepUpError(t('admin.walletReceipts.stepUp.failed', locale));
+        return;
       }
-      const outcome = await postDecision(pendingAction)
+      const outcome = await postDecision(pendingAction);
       if (outcome === 'step_up') {
-        setStepUpError(t('admin.walletReceipts.stepUp.failed', locale))
-        return
+        setStepUpError(t('admin.walletReceipts.stepUp.failed', locale));
+        return;
       }
       if (outcome === 'ok') {
-        setStepUpOpen(false)
-        setPendingAction(null)
-        setStepUpPassword('')
+        setStepUpOpen(false);
+        setPendingAction(null);
+        setStepUpPassword('');
       }
     } catch {
-      setStepUpError(t('admin.walletReceipts.stepUp.failed', locale))
+      setStepUpError(t('admin.walletReceipts.stepUp.failed', locale));
     } finally {
-      setStepUpSubmitting(false)
+      setStepUpSubmitting(false);
     }
   }
 
   function onStepUpKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Escape') {
-      event.preventDefault()
-      cancelStepUp()
-      return
+      event.preventDefault();
+      cancelStepUp();
+      return;
     }
-    if (event.key !== 'Tab' || !stepUpDialogRef.current) return
-    const tabbable = getTabbable(stepUpDialogRef.current)
-    if (tabbable.length === 0) return
-    const first = tabbable[0]!
-    const last = tabbable[tabbable.length - 1]!
+    if (event.key !== 'Tab' || !stepUpDialogRef.current) return;
+    const tabbable = getTabbable(stepUpDialogRef.current);
+    if (tabbable.length === 0) return;
+    const first = tabbable[0]!;
+    const last = tabbable[tabbable.length - 1]!;
     if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault()
-      last.focus()
+      event.preventDefault();
+      last.focus();
     } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault()
-      first.focus()
+      event.preventDefault();
+      first.focus();
     }
   }
 
@@ -500,16 +551,19 @@ export default function AdminWalletReceiptsPage() {
       dir={isRtl ? 'rtl' : 'ltr'}
       data-testid="admin-wallet-receipts-page"
     >
+      {time.notice}
       <header>
         <h1 className="text-2xl font-bold">{t('admin.walletReceipts.title', locale)}</h1>
-        <p className="text-gray-600 mt-2">{t('admin.walletReceipts.description', locale)}</p>
+        <p className="text-muted-foreground mt-2">
+          {t('admin.walletReceipts.description', locale)}
+        </p>
       </header>
 
       <WalletTopUpLimitConfigPanel />
 
       {error && (
         <div
-          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded"
+          className="bg-danger-soft border border-destructive/20 text-destructive px-4 py-3 rounded"
           role="alert"
         >
           {error}
@@ -517,116 +571,133 @@ export default function AdminWalletReceiptsPage() {
       )}
 
       {status && (
-        <p
-          ref={statusRef}
-          className="text-sm text-green-700"
-          role="status"
-          tabIndex={-1}
-        >
+        <p ref={statusRef} className="text-sm text-success" role="status" tabIndex={-1}>
           {status}
         </p>
       )}
 
       {loading ? (
-        <p className="text-sm text-gray-600" role="status">
+        <p className="text-sm text-muted-foreground" role="status">
           {t('admin.walletReceipts.loading', locale)}
         </p>
       ) : items.length === 0 && !selected ? (
-        <p className="text-sm text-gray-600" role="status">
+        <p className="text-sm text-muted-foreground" role="status">
           {t('admin.walletReceipts.empty', locale)}
         </p>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
           <nav
             aria-label={t('admin.walletReceipts.queueLabel', locale)}
-            className="bg-white rounded-lg border border-gray-200 p-3 space-y-1"
+            className="bg-card text-card-foreground rounded-lg border border-border p-3 space-y-1"
           >
             {items.map((row) => {
-              const active = row.transactionId === selectedId
+              const active = row.transactionId === selectedId;
               return (
                 <button
                   key={row.transactionId}
                   type="button"
+                  disabled={acting || stepUpOpen}
                   onClick={() => {
-                    setSelectedId(row.transactionId)
-                    setStatus(null)
-                    setClientIssue(null)
-                    setReasonInvalid(false)
-                    setReason('')
+                    setSelectedId(row.transactionId);
+                    setStatus(null);
+                    setClientIssue(null);
+                    setReasonInvalid(false);
+                    setReason('');
+                    setEmergencyReason('');
                   }}
                   className={`w-full text-start rounded px-3 py-2 text-sm ${
-                    active ? 'bg-blue-50 text-blue-900' : 'hover:bg-gray-50'
+                    active ? 'bg-blue-50 text-blue-900' : 'hover:bg-muted'
                   }`}
                   aria-current={active ? 'true' : undefined}
                 >
                   <span className="block font-medium">
-                    {formatIrr(row.amount, locale)} {row.currency}
+                    {numbers.irrDigits(row.amount)} {row.currency}
                   </span>
-                  <span className="block text-xs text-gray-500" dir="ltr">
+                  <span className="block text-xs text-muted-foreground" dir="ltr">
                     {row.payerReference}
                   </span>
                 </button>
-              )
+              );
             })}
           </nav>
 
           {selected && (
             <section
-              className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
+              className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
               aria-labelledby="receipt-review-heading"
             >
               <h2 id="receipt-review-heading" className="text-lg font-semibold">
                 {t('admin.walletReceipts.reviewTitle', locale)}
               </h2>
 
+              {selected.dualApproval && selected.state === 'Pending' && (
+                <p
+                  className="rounded border border-warning/20 bg-warning-soft p-3 text-sm text-amber-950"
+                  role="status"
+                >
+                  {t('admin.walletReceipts.approvalPending', locale)}
+                </p>
+              )}
               <dl className="grid grid-cols-1 gap-2 text-sm">
                 <div>
-                  <dt className="text-gray-500">{t('admin.walletReceipts.amount', locale)}</dt>
+                  <dt className="text-muted-foreground">
+                    {t('admin.walletReceipts.amount', locale)}
+                  </dt>
                   <dd className="font-medium">
-                    {formatIrr(selected.amount, locale)} {selected.currency}
+                    {numbers.irrDigits(selected.amount)} {selected.currency}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-gray-500">{t('admin.walletReceipts.paymentDate', locale)}</dt>
-                  <dd>{formatDate(selected.paymentDate, locale)}</dd>
+                  <dt className="text-muted-foreground">
+                    {t('admin.walletReceipts.paymentDate', locale)}
+                  </dt>
+                  <dd>{formatPaymentDate(selected.paymentDate, locale)}</dd>
                 </div>
                 <div>
-                  <dt className="text-gray-500">{t('admin.walletReceipts.payerReference', locale)}</dt>
+                  <dt className="text-muted-foreground">
+                    {t('admin.walletReceipts.payerReference', locale)}
+                  </dt>
                   <dd className="font-mono text-sm" dir="ltr">
                     {selected.payerReference ?? t('admin.walletReceipts.none', locale)}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-gray-500">{t('admin.walletReceipts.walletId', locale)}</dt>
+                  <dt className="text-muted-foreground">
+                    {t('admin.walletReceipts.walletId', locale)}
+                  </dt>
                   <dd className="font-mono text-sm" dir="ltr">
                     {selected.walletId}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-gray-500">{t('admin.walletReceipts.submittedAt', locale)}</dt>
-                  <dd>{formatDate(selected.submittedAt, locale)}</dd>
+                  <dt className="text-muted-foreground">
+                    {t('admin.walletReceipts.submittedAt', locale)}
+                  </dt>
+                  <dd>{time.format(selected.submittedAt)}</dd>
                 </div>
                 <div>
-                  <dt className="text-gray-500">{t('admin.walletReceipts.note', locale)}</dt>
+                  <dt className="text-muted-foreground">
+                    {t('admin.walletReceipts.note', locale)}
+                  </dt>
                   <dd>{selected.customerNote ?? t('admin.walletReceipts.none', locale)}</dd>
                 </div>
               </dl>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-700 mb-2">
+                <h3 className="text-sm font-medium text-foreground mb-2">
                   {t('admin.walletReceipts.attachment', locale)}
                 </h3>
                 {selected.attachmentUrl && isImageAttachment(selected.attachmentKey) ? (
                   <img
                     src={selected.attachmentUrl}
                     alt={t('admin.walletReceipts.attachmentAlt', locale)}
-                    className="max-h-80 rounded border border-gray-200"
+                    className="max-h-80 rounded border border-border"
                   />
                 ) : selected.attachmentUrl && isPdfAttachment(selected.attachmentKey) ? (
                   <iframe
                     title={t('admin.walletReceipts.attachmentAlt', locale)}
                     src={selected.attachmentUrl}
-                    className="w-full h-80 rounded border border-gray-200"
+                    className="w-full h-80 rounded border border-border"
                   />
                 ) : selected.attachmentUrl ? (
                   <a
@@ -638,24 +709,25 @@ export default function AdminWalletReceiptsPage() {
                     {t('admin.walletReceipts.openAttachment', locale)}
                   </a>
                 ) : (
-                  <p className="text-sm text-gray-600" dir="ltr">
+                  <p className="text-sm text-muted-foreground" dir="ltr">
                     {selected.attachmentKey ?? t('admin.walletReceipts.none', locale)}
                   </p>
                 )}
               </div>
 
               {selected.canDecide ? (
-                <div className="space-y-4 border-t border-gray-100 pt-4">
+                <div className="space-y-4 border-t border-border pt-4">
                   <div>
                     <label
                       htmlFor="apply-invoice-id"
-                      className="block text-sm font-medium text-gray-700 mb-1"
+                      className="block text-sm font-medium text-foreground mb-1"
                     >
                       {t('admin.walletReceipts.invoiceId', locale)}
                     </label>
                     <input
                       id="apply-invoice-id"
                       name="invoiceId"
+                      readOnly={Boolean(selected.dualApproval)}
                       type="text"
                       dir="ltr"
                       inputMode="text"
@@ -665,50 +737,50 @@ export default function AdminWalletReceiptsPage() {
                       onChange={(e) => setInvoiceId(e.target.value)}
                       placeholder={t('admin.walletReceipts.invoiceIdPlaceholder', locale)}
                       aria-describedby="apply-invoice-hint"
-                      className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
+                      className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
                     />
-                    <p id="apply-invoice-hint" className="text-xs text-gray-500 mt-1">
+                    <p id="apply-invoice-hint" className="text-xs text-muted-foreground mt-1">
                       {t('admin.walletReceipts.invoiceIdHint', locale)}
                     </p>
                   </div>
 
                   {allocationError && (
-                    <p className="text-sm text-red-600" role="alert">
+                    <p className="text-sm text-destructive" role="alert">
                       {allocationError}
                     </p>
                   )}
 
                   {allocation && (
                     <dl
-                      className="rounded border border-amber-200 bg-amber-50 p-3 text-sm space-y-1"
+                      className="rounded border border-warning/20 bg-warning-soft p-3 text-sm space-y-1"
                       aria-live="polite"
                     >
                       <div>
-                        <dt className="text-gray-600">
+                        <dt className="text-muted-foreground">
                           {t('admin.walletReceipts.remaining', locale)}
                         </dt>
                         <dd className="font-medium">
-                          {formatIrr(allocation.remaining, locale)} {selected.currency}
+                          {numbers.irrDigits(allocation.remaining)} {selected.currency}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-gray-600">
+                        <dt className="text-muted-foreground">
                           {t('admin.walletReceipts.invoiceAllocation', locale)}
                         </dt>
                         <dd className="font-medium">
-                          {formatIrr(allocation.invoiceAllocation, locale)} {selected.currency}
+                          {numbers.irrDigits(allocation.invoiceAllocation)} {selected.currency}
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-gray-600">
+                        <dt className="text-muted-foreground">
                           {t('admin.walletReceipts.overpaymentCredit', locale)}
                         </dt>
                         <dd className="font-medium">
-                          {formatIrr(allocation.walletCreditAmount, locale)} {selected.currency}
+                          {numbers.irrDigits(allocation.walletCreditAmount)} {selected.currency}
                         </dd>
                       </div>
                       {allocation.isOverpayment && (
-                        <p className="text-amber-900 pt-1">
+                        <p className="text-warning pt-1">
                           {t('admin.walletReceipts.overpaymentPreview', locale)}
                         </p>
                       )}
@@ -718,7 +790,7 @@ export default function AdminWalletReceiptsPage() {
                   {clientIssue && (
                     <p
                       id={reasonInvalid ? 'reject-reason-error' : 'wallet-receipt-client-issue'}
-                      className="text-sm text-red-600"
+                      className="text-sm text-destructive"
                       role="alert"
                     >
                       {clientIssue}
@@ -729,7 +801,7 @@ export default function AdminWalletReceiptsPage() {
                     ref={confirmButtonRef}
                     type="button"
                     data-testid="wallet-receipt-confirm"
-                    onClick={handleConfirm}
+                    onClick={() => handleConfirm()}
                     disabled={
                       acting ||
                       (isTransactionUuid(invoiceId.trim()) &&
@@ -745,14 +817,58 @@ export default function AdminWalletReceiptsPage() {
                         : t('admin.walletReceipts.confirm', locale)}
                   </button>
 
+                  {selected.dualApproval && selected.canEmergencyOverride && (
+                    <fieldset className="space-y-3 rounded border border-amber-500 p-4">
+                      <legend className="px-1 font-medium">
+                        {t('admin.walletReceipts.emergencyTitle', locale)}
+                      </legend>
+                      <p id="receipt-emergency-hint" className="text-sm">
+                        {t('admin.walletReceipts.emergencyHint', locale)}
+                      </p>
+                      <label
+                        htmlFor="receipt-emergency-reason"
+                        className="block text-sm font-medium"
+                      >
+                        {t('admin.walletReceipts.emergencyReason', locale)}
+                      </label>
+                      <textarea
+                        id="receipt-emergency-reason"
+                        rows={3}
+                        required
+                        aria-describedby="receipt-emergency-hint"
+                        maxLength={APPROVAL_REVIEW_REASON_MAX_LENGTH}
+                        value={emergencyReason}
+                        onChange={(event) => setEmergencyReason(event.target.value)}
+                        disabled={acting || stepUpOpen}
+                        className="w-full rounded border border-input px-3 py-2"
+                      />
+                      <button
+                        type="button"
+                        ref={emergencyButtonRef}
+                        data-testid="wallet-receipt-emergency-confirm"
+                        disabled={
+                          acting ||
+                          stepUpOpen ||
+                          !emergencyReason.trim() ||
+                          (!!invoiceId.trim() &&
+                            (allocationLoading || !!allocationError || !allocation))
+                        }
+                        onClick={() => handleConfirm(emergencyReason)}
+                        className="rounded bg-amber-900 px-4 py-2 text-white disabled:opacity-50"
+                      >
+                        {t('admin.walletReceipts.emergencyConfirm', locale)}
+                      </button>
+                    </fieldset>
+                  )}
+
                   <form onSubmit={handleReject} className="space-y-3" noValidate>
                     <div>
                       <label
                         htmlFor="reject-reason"
-                        className="block text-sm font-medium text-gray-700 mb-1"
+                        className="block text-sm font-medium text-foreground mb-1"
                       >
                         {t('admin.walletReceipts.reason', locale)}{' '}
-                        <span className="text-red-500" aria-hidden="true">
+                        <span className="text-destructive" aria-hidden="true">
                           *
                         </span>
                       </label>
@@ -771,15 +887,15 @@ export default function AdminWalletReceiptsPage() {
                         rows={3}
                         value={reason}
                         onChange={(e) => {
-                          setReason(e.target.value)
+                          setReason(e.target.value);
                           if (reasonInvalid) {
-                            setReasonInvalid(false)
-                            setClientIssue(null)
+                            setReasonInvalid(false);
+                            setClientIssue(null);
                           }
                         }}
-                        className="w-full border border-gray-300 rounded px-3 py-2"
+                        className="w-full border border-input rounded px-3 py-2"
                       />
-                      <p id="reject-reason-hint" className="text-xs text-gray-500 mt-1">
+                      <p id="reject-reason-hint" className="text-xs text-muted-foreground mt-1">
                         {t('admin.walletReceipts.reasonHint', locale)}
                       </p>
                     </div>
@@ -798,7 +914,7 @@ export default function AdminWalletReceiptsPage() {
                   </form>
                 </div>
               ) : (
-                <p className="text-sm text-amber-700" role="status">
+                <p className="text-sm text-warning" role="status">
                   {t('admin.walletReceipts.alreadyDecided', locale)}
                 </p>
               )}
@@ -808,6 +924,7 @@ export default function AdminWalletReceiptsPage() {
       )}
 
       {stepUpOpen && (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Dialog handles bubbled Escape/Tab and backdrop dismissal; controls remain keyboard accessible.
         <div
           ref={stepUpDialogRef}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
@@ -818,23 +935,23 @@ export default function AdminWalletReceiptsPage() {
           data-testid="wallet-receipt-step-up-dialog"
           onKeyDown={onStepUpKeyDown}
           onMouseDown={(event) => {
-            if (event.target === event.currentTarget && !stepUpSubmitting) cancelStepUp()
+            if (event.target === event.currentTarget && !stepUpSubmitting) cancelStepUp();
           }}
         >
           <form
             onSubmit={submitStepUp}
-            className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg space-y-4"
+            className="w-full max-w-md rounded-lg bg-card text-card-foreground p-6 shadow-lg space-y-4"
           >
-            <h3 id="wallet-receipt-step-up-title" className="text-lg font-semibold text-gray-900">
+            <h3 id="wallet-receipt-step-up-title" className="text-lg font-semibold text-foreground">
               {t('admin.walletReceipts.stepUp.title', locale)}
             </h3>
-            <p id="wallet-receipt-step-up-description" className="text-sm text-gray-600">
+            <p id="wallet-receipt-step-up-description" className="text-sm text-muted-foreground">
               {t('admin.walletReceipts.stepUp.description', locale)}
             </p>
             <div>
               <label
                 htmlFor="wallet-receipt-step-up-password"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 {t('admin.walletReceipts.stepUp.passwordLabel', locale)}
               </label>
@@ -851,14 +968,18 @@ export default function AdminWalletReceiptsPage() {
                 aria-describedby={stepUpError ? 'wallet-receipt-step-up-error' : undefined}
                 value={stepUpPassword}
                 onChange={(e) => {
-                  setStepUpPassword(e.target.value)
-                  if (stepUpError) setStepUpError(null)
+                  setStepUpPassword(e.target.value);
+                  if (stepUpError) setStepUpError(null);
                 }}
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                className="w-full border border-input rounded px-3 py-2"
               />
             </div>
             {stepUpError && (
-              <p id="wallet-receipt-step-up-error" className="text-sm text-red-600" role="alert">
+              <p
+                id="wallet-receipt-step-up-error"
+                className="text-sm text-destructive"
+                role="alert"
+              >
                 {stepUpError}
               </p>
             )}
@@ -878,7 +999,7 @@ export default function AdminWalletReceiptsPage() {
                 data-testid="wallet-receipt-step-up-cancel"
                 onClick={cancelStepUp}
                 disabled={stepUpSubmitting}
-                className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                className="px-4 py-2 border border-input rounded text-foreground hover:bg-muted disabled:opacity-50"
               >
                 {t('admin.walletReceipts.stepUp.cancel', locale)}
               </button>
@@ -887,5 +1008,5 @@ export default function AdminWalletReceiptsPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

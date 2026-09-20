@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -10,94 +11,93 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES,
   MAX_UPLOAD_POLICY_EXTENSIONS,
   UPLOAD_POLICY_CATEGORIES,
   type UploadPolicyDto,
-} from '@barghsa/shared/admin'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import { UploadPolicyService } from './upload-policy.service.js'
+} from '@barghsa/shared/admin';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import {
+  getDeploymentAllowedExtensions,
+  getDeploymentMaxSizeBytes,
+} from '../upload/upload.config.js';
+import { UploadPolicyService } from './upload-policy.service.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
-const categorySchema = z.enum([...UPLOAD_POLICY_CATEGORIES])
-const effectiveDateSchema = z
-  .string()
-  .datetime({ offset: true })
-  .or(z.string().datetime({ local: true }))
-  .optional()
+const categorySchema = z.enum([...UPLOAD_POLICY_CATEGORIES]);
+const effectiveDateSchema = z.string().datetime({ offset: true }).optional();
 
-export const CreateUploadPolicySchema = z.object({
-  category: categorySchema,
-  allowedExtensions: z
-    .array(z.string())
-    .min(1, 'At least one extension is required')
-    .max(MAX_UPLOAD_POLICY_EXTENSIONS, `At most ${MAX_UPLOAD_POLICY_EXTENSIONS} extensions`)
-    .refine(
-      (exts) => exts.every((ext) => /^\.[a-z0-9]{1,10}$/.test(ext.trim().toLowerCase())),
-      'Extensions must be lowercase .ext tokens, e.g. ".pdf"',
-    ),
-  maxSizeBytes: z
-    .number()
-    .int('maxSizeBytes must be an integer')
-    .min(1, 'maxSizeBytes must be at least 1 byte')
-    .max(
-      GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES,
-      `maxSizeBytes cannot exceed the ${GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES}-byte global deployment cap`,
-    ),
-  effectiveFrom: effectiveDateSchema,
-})
+export const CreateUploadPolicySchema = z
+  .object({
+    category: categorySchema,
+    allowedExtensions: z
+      .array(z.string())
+      .min(1, 'At least one extension is required')
+      .max(MAX_UPLOAD_POLICY_EXTENSIONS, `At most ${MAX_UPLOAD_POLICY_EXTENSIONS} extensions`)
+      .refine(
+        (exts) => exts.every((ext) => /^\.[a-z0-9]{1,10}$/.test(ext.trim().toLowerCase())),
+        'Extensions must be lowercase .ext tokens, e.g. ".pdf"'
+      ),
+    maxSizeBytes: z
+      .number()
+      .int('maxSizeBytes must be an integer')
+      .min(1, 'maxSizeBytes must be at least 1 byte')
+      .max(
+        GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES,
+        `maxSizeBytes cannot exceed the ${GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES}-byte global deployment cap`
+      ),
+    effectiveFrom: effectiveDateSchema,
+  })
+  .strict();
 
-export const EndUploadPolicySchema = z.object({
-  effectiveUntil: effectiveDateSchema,
-})
+export const EndUploadPolicySchema = z
+  .object({
+    effectiveUntil: effectiveDateSchema,
+  })
+  .strict();
 
-function httpError(
-  code: string,
-  message: string,
-  statusCode = 400,
-  details?: unknown,
-): never {
+function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
     { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode,
-  )
+    statusCode
+  );
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 /** Validate a route @Param id as a UUID, surfacing 400 instead of a DB 500. */
 function assertUuid(id: string, label = 'id'): void {
-  const parsed = z.string().uuid('Expected a UUID').safeParse(id)
+  const parsed = z.string().uuid('Expected a UUID').safeParse(id);
   if (!parsed.success) {
-    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400)
+    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400);
   }
 }
 
 /** Validate an optional `?category=` query filter. */
 function assertCategoryFilter(raw: string | undefined): string | undefined {
-  if (raw === undefined) return undefined
-  const parsed = categorySchema.safeParse(raw)
+  if (raw === undefined) return undefined;
+  const parsed = categorySchema.safeParse(raw);
   if (!parsed.success) {
     httpError(
       ErrorCodes.VALIDATION_PARSE_ZOD.code,
       `Invalid category: expected one of ${UPLOAD_POLICY_CATEGORIES.join(', ')}`,
-      400,
-    )
+      400
+    );
   }
-  return parsed.data
+  return parsed.data;
 }
 
 function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
-  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }))
+  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
 }
 
 /**
@@ -107,18 +107,15 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
  * Security posture (mirrors the S-09 admin controllers, e.g. the VAT
  * configuration controller T-09.12.02):
  * - Every route requires an authenticated session with the
- *   `admin:uploads:edit` capability. Today the session model exposes only
- *   `req.session.isAdmin` (platform admin); granular staff-role
- *   permissions arrive with the role system (E-10). Centralized in one
+ *   `admin:uploads:edit` capability. Capabilities are read from current database roles. Centralized in one
  *   enforcement point per controller.
  * - All mutation endpoints additionally require recent step-up
  *   verification via `@RequiresStepUp()` (StepUpGuard) — upload policies
  *   are a security boundary (they determine what file formats and sizes
  *   the platform accepts), so writes are guarded.
  *
- * The admin web UI slice (table: category, formats, max size; edit modal
- * with a security-implications warning; fa/en dicts, RTL/a11y) is
- * deferred.
+ * The administrator UI uses these endpoints for version history, editing
+ * format/size limits and ending a policy, with localized confirmation.
  */
 @ApiTags('Admin · Upload Policies')
 @ApiBearerAuth()
@@ -127,14 +124,31 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
 export class UploadPolicyController {
   constructor(private readonly service: UploadPolicyService) {}
 
+  @Get('access')
+  access(@Req() req: AuthenticatedRequest) {
+    return { canEdit: hasStaffPermission(req, 'admin:uploads:edit') };
+  }
+  @Get('limits')
+  limits(@Req() req: AuthenticatedRequest) {
+    this.assertUploadsPermission(req);
+    return UPLOAD_POLICY_CATEGORIES.map((category) => ({
+      category,
+      allowedExtensions: getDeploymentAllowedExtensions(category),
+      maxSizeBytes: Math.min(
+        getDeploymentMaxSizeBytes(category),
+        GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES
+      ),
+    }));
+  }
+
   /** Single enforcement point for the `admin:uploads:edit` capability. */
   private assertUploadsPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:uploads:edit')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage upload policies',
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -148,11 +162,11 @@ export class UploadPolicyController {
   @ApiResponse({ status: 200, description: 'Upload policies.' })
   async list(
     @Req() req: AuthenticatedRequest,
-    @Query('category') category?: string,
+    @Query('category') category?: string
   ): Promise<UploadPolicyDto[]> {
-    this.assertUploadsPermission(req)
-    const filter = assertCategoryFilter(category)
-    return this.service.list(filter)
+    this.assertUploadsPermission(req);
+    const filter = assertCategoryFilter(category);
+    return this.service.list(filter);
   }
 
   @Post()
@@ -171,17 +185,17 @@ export class UploadPolicyController {
   @ApiResponse({ status: 201, description: 'Upload policy created.' })
   async create(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateUploadPolicySchema>,
+    @Body() body: z.infer<typeof CreateUploadPolicySchema>
   ): Promise<UploadPolicyDto> {
-    this.assertUploadsPermission(req)
-    const parsed = CreateUploadPolicySchema.safeParse(body)
+    this.assertUploadsPermission(req);
+    const parsed = CreateUploadPolicySchema.safeParse(body);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid upload policy payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.create({
       category: parsed.data.category,
@@ -192,7 +206,7 @@ export class UploadPolicyController {
         : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Post(':id/end')
@@ -210,18 +224,18 @@ export class UploadPolicyController {
   async end(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof EndUploadPolicySchema>,
+    @Body() body: z.infer<typeof EndUploadPolicySchema>
   ): Promise<UploadPolicyDto> {
-    this.assertUploadsPermission(req)
-    assertUuid(id)
-    const parsed = EndUploadPolicySchema.safeParse(body ?? {})
+    this.assertUploadsPermission(req);
+    assertUuid(id);
+    const parsed = EndUploadPolicySchema.safeParse(body ?? {});
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid upload policy payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.end({
       id,
@@ -230,6 +244,6 @@ export class UploadPolicyController {
         : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 }

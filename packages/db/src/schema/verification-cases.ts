@@ -1,7 +1,8 @@
-import { sql } from 'drizzle-orm'
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
-import { profiles } from './profiles.js'
-import { users } from './users.js'
+import { sql } from 'drizzle-orm';
+import { uuid, pgTable, text, timestamp, index } from 'drizzle-orm/pg-core';
+import { staffTeams } from './staff-teams.js';
+import { profiles } from './profiles.js';
+import { users } from './users.js';
 
 /**
  * Verification cases table (T-05.02.05).
@@ -23,7 +24,7 @@ export const verificationCases = pgTable(
     id: text('id').primaryKey(),
 
     /** The profile whose identity field is being corrected. */
-    profileId: text('profile_id')
+    profileId: uuid('profile_id')
       .notNull()
       .references(() => profiles.id, { onDelete: 'restrict' }),
 
@@ -52,9 +53,13 @@ export const verificationCases = pgTable(
       .notNull()
       .references(() => users.userId, { onDelete: 'restrict' }),
 
+    assignedTo: text('assigned_to').references(() => users.userId, { onDelete: 'set null' }),
+    assignedTeamId: uuid('assigned_team_id').references(() => staffTeams.id, {
+      onDelete: 'set null',
+    }),
+
     /** The staff user who reviewed the case (reviewer). Null until reviewed. */
-    reviewedBy: text('reviewed_by')
-      .references(() => users.userId, { onDelete: 'restrict' }),
+    reviewedBy: text('reviewed_by').references(() => users.userId, { onDelete: 'restrict' }),
 
     /** When the review decision was made. Null until reviewed. */
     reviewedAt: timestamp('reviewed_at', { withTimezone: true, mode: 'date' }),
@@ -63,16 +68,17 @@ export const verificationCases = pgTable(
     reviewerNotes: text('reviewer_notes'),
 
     /** When the case was created. */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
     /** Last update timestamp. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
-)
+  (table) => [
+    index('verification_cases_assigned_open_idx')
+      .on(table.assignedTo)
+      .where(sql`${table.status} IN ('Open','Under Review')`),
+  ]
+);
 
 /**
  * SQL to create the verification_cases table.
@@ -82,7 +88,7 @@ export const verificationCases = pgTable(
 export const createVerificationCasesTable = sql`
   CREATE TABLE IF NOT EXISTS verification_cases (
     id TEXT PRIMARY KEY,
-    profile_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE RESTRICT,
+    profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE RESTRICT,
     field_name TEXT NOT NULL,
     current_value TEXT,
     requested_value TEXT NOT NULL,
@@ -101,4 +107,4 @@ export const createVerificationCasesTable = sql`
   CREATE INDEX IF NOT EXISTS idx_verification_cases_status ON verification_cases (status);
   CREATE INDEX IF NOT EXISTS idx_verification_cases_created_by ON verification_cases (created_by);
   CREATE INDEX IF NOT EXISTS idx_verification_cases_reviewed_by ON verification_cases (reviewed_by);
-`
+`;

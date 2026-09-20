@@ -1,0 +1,2 @@
+ALTER TABLE "tickets" ADD COLUMN "category" text DEFAULT 'general' NOT NULL;--> statement-breakpoint
+ALTER TABLE "tickets" ADD CONSTRAINT "tickets_category_valid" CHECK ("tickets"."category" IN ('general','billing','orders'));

@@ -6,10 +6,58 @@ on:
     branches: [main]
 
 env:
-  NODE_VERSION: "22"
-  PNPM_VERSION: "10.8.1"
+  NODE_VERSION: '24'
+  PNPM_VERSION: '10.11.1'
 
 jobs:
+  sast:
+    name: Static security checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      SEMGREP_SEND_METRICS: 'off'
+      SEMGREP_ENABLE_VERSION_CHECK: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install static scanner
+        run: python -m pip install semgrep==1.176.1
+      - name: Verify static scan report handling
+        run: python -m unittest discover -s scripts -p 'test_check_sast.py'
+      - name: Verify rules and scan application source
+        run: python scripts/check-sast.py --report "$RUNNER_TEMP/static-security.json"
+      - name: Upload static scan locations without source snippets
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-security
+          path: ${{ runner.temp }}/static-security.json
+          retention-days: 14
+
+  secrets:
+    name: Scan Git history for secrets
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify secret scan failure handling
+        run: python3 -m unittest discover -s scripts -p 'test_check_secrets.py'
+      - name: Verify scanner and scan complete history
+        run: python3 scripts/check-secrets.py --report "$RUNNER_TEMP/secret-scan.json"
+      - name: Upload redacted secret scan
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: secret-scan
+          path: ${{ runner.temp }}/secret-scan.json
+          retention-days: 14
+
   integrity:
     name: Verify monorepo integrity
     runs-on: ubuntu-latest
@@ -22,11 +70,84 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
+      - name: Validate canonical task queue
+        run: python3 kanban/scripts/build_backlog.py --check
+      - name: Verify loop state and dispatch protocol
+        run: python3 -m unittest discover -s kanban/scripts -p 'test_*.py'
       - run: pnpm install --frozen-lockfile
+      - name: Scan dependencies for high and critical advisories
+        run: pnpm audit --audit-level=high --json > "$RUNNER_TEMP/dependency-audit.json"
+      - name: Upload dependency scan
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-audit
+          path: ${{ runner.temp }}/dependency-audit.json
+          retention-days: 14
       - run: pnpm build
       - run: pnpm typecheck
+      - run: pnpm format:check
+      - run: pnpm lint
       - run: pnpm check:suppressed-errors
       - run: pnpm check:bundle
+      - name: Validate pilot TLS proxy and edge quotas
+        run: python3 scripts/test-pilot-proxy.py
+      - run: pnpm check:contract
+      - run: pnpm check:db-snapshot
+      - name: Install production browser check runtime
+        run: pnpm --filter @barghsa/web exec playwright install --with-deps chromium
+      - name: Verify actual cold authentication transfers
+        run: node scripts/check-auth-transfer.mjs
+      - name: Verify browser retry failure gate
+        run: node --test scripts/test-browser-flake-gate.mjs scripts/browser-projects.test.mjs
+
+      - name: Test process coverage merging
+        run: node --test scripts/align-process-coverage.test.mjs
+      - name: Build isolated browser coverage assets
+        run: pnpm --filter @barghsa/web build
+        env:
+          BARGHSA_BROWSER_COVERAGE: '1'
+      - name: Verify clean checkout before browser coverage
+        run: |
+          changed=$(git status --porcelain)
+          if [ -n "$changed" ]; then
+            echo "$changed"
+            echo "::error::Browser coverage requires a clean source checkout"
+            exit 1
+          fi
+      - name: Exercise all production browser flows and shared components
+        run: node scripts/run-production-browser.mjs
+        env:
+          BARGHSA_BROWSER_COVERAGE: '1'
+      - name: Map browser coverage to workspace source
+        if: always()
+        run: node scripts/collect-browser-coverage.mjs
+      - name: Upload mapped browser coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-source-coverage
+          path: apps/web/test-results/browser-coverage.json
+          retention-days: 14
+      - name: Report observed browser flakes and failures
+        if: always()
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
+          python3 scripts/check-browser-results.py --input apps/web/test-results/results.json --report "$RUNNER_TEMP/browser-outcomes.json"
+      - name: Upload browser outcome counts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-outcomes
+          path: ${{ runner.temp }}/browser-outcomes.json
+          retention-days: 14
+      - name: Upload production browser failures
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-browser-failures
+          path: apps/web/test-results/
+          retention-days: 7
 
   test:
     name: Run tests
@@ -44,34 +165,80 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - name: Run tests (affected on PR, full on main)
+      # Every workspace coverage script runs the same test suite with coverage enabled.
+      # Run it once, with at most two packages starting database/server fixtures together.
+      - name: Run tests with coverage and threshold enforcement
+        id: coverage
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            pnpm turbo run test --filter="...[origin/main]"
+            pnpm turbo run test:coverage --concurrency=2 --filter="...[origin/main]" --filter=@barghsa/web --filter=@barghsa/ui --filter=@barghsa/shared --filter=@barghsa/i18n
           else
-            pnpm test
-          fi
-      - name: Run coverage with threshold enforcement
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            pnpm turbo run test:coverage --filter="...[origin/main]"
-          else
-            pnpm test:coverage
+            pnpm test:coverage --concurrency=2
           fi
       - name: Upload coverage reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-reports
-          path: coverage/
+          path: |
+            apps/*/coverage/
+            packages/*/coverage/
           retention-days: 14
       - name: Report flaky test count
+        if: always()
         id: flaky-check
-        run: ./scripts/check-flaky-tests.sh
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_check_flaky_tests.py'
+          ./scripts/check-flaky-tests.sh --report "$RUNNER_TEMP/flaky-test-report.json"
       - name: Upload flaky test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: flaky-test-report
-          path: scripts/quarantine-registry.json
+          path: ${{ runner.temp }}/flaky-test-report.json
           retention-days: 7
+
+  coverage:
+    name: Verify combined source coverage
+    needs: [test, integrity]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage-reports
+          path: .
+      - uses: actions/download-artifact@v4
+        with:
+          name: browser-source-coverage
+          path: ${{ runner.temp }}/browser-source
+      - name: Verify coverage collection and failure handling
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_check_changed_coverage.py'
+          node --test scripts/browser-coverage.test.mjs
+      - name: Merge browser and unit coverage for the same revision
+        run: node scripts/merge-browser-coverage.mjs "$RUNNER_TEMP/browser-source/browser-coverage.json"
+      - name: Enforce changed source and critical file coverage
+        env:
+          COVERAGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python3 scripts/check-changed-coverage.py --base "$COVERAGE_BASE" --report "$RUNNER_TEMP/changed-coverage.json"
+      - name: Upload changed coverage results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: changed-coverage
+          path: ${{ runner.temp }}/changed-coverage.json
+          retention-days: 14

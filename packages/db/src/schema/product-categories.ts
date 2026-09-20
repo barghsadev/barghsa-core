@@ -1,7 +1,7 @@
-import { uuid } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table'
-import { pgEnum } from '../types'
-import { products } from './products'
+import { uuid } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table';
+import { pgEnum } from '../types';
+import { products } from './products';
 
 /**
  * Product category discriminator.
@@ -22,7 +22,7 @@ export const productCategoryEnum = pgEnum('product_category', [
   'green_electricity',
   'free_market_electricity',
   'energy_saving_electricity',
-])
+]);
 
 /**
  * Product categories table.
@@ -42,4 +42,4 @@ export const productCategories = createTable('product_categories', {
 
   /** Product category enum value. */
   category: productCategoryEnum('category').notNull(),
-})
+});

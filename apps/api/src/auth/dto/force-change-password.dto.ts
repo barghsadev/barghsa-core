@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 /**
  * Zod schema for the force password change request body (T-02.01.04).
@@ -15,14 +15,14 @@ export const ForceChangePasswordSchema = z.object({
     .regex(/[A-Z]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
     .regex(/[a-z]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
     .regex(/[0-9]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' }),
-})
+});
 
-export type ForceChangePasswordInput = z.infer<typeof ForceChangePasswordSchema>
+export type ForceChangePasswordInput = z.infer<typeof ForceChangePasswordSchema>;
 
 /**
  * Successful force password change response.
  */
 export interface ForceChangePasswordResponse {
   /** Success message for the frontend toast. */
-  message: string
+  message: string;
 }

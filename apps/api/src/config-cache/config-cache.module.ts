@@ -1,5 +1,5 @@
-import { Global, Module } from '@nestjs/common'
-import { ConfigCacheService, CONFIG_CACHE } from './config-cache.service.js'
+import { Global, Module } from '@nestjs/common';
+import { ConfigCacheService, CONFIG_CACHE } from './config-cache.service.js';
 
 /**
  * Configuration caching module for the Barghsa API.

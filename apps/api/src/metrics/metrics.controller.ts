@@ -1,5 +1,5 @@
-import { Controller, Get, Header, Logger } from '@nestjs/common'
-import { MetricsService } from './metrics.service.js'
+import { Controller, Get, Header, Logger } from '@nestjs/common';
+import { MetricsService } from './metrics.service.js';
 
 /**
  * Controller that exposes PostgreSQL performance metrics in Prometheus
@@ -16,7 +16,7 @@ import { MetricsService } from './metrics.service.js'
  */
 @Controller()
 export class MetricsController {
-  private readonly logger = new Logger(MetricsController.name)
+  private readonly logger = new Logger(MetricsController.name);
 
   constructor(private readonly metricsService: MetricsService) {}
 
@@ -25,12 +25,12 @@ export class MetricsController {
   @Header('Cache-Control', 'no-store, no-cache, must-revalidate')
   async getMetrics(): Promise<string> {
     try {
-      return await this.metricsService.collect()
+      return await this.metricsService.collect();
     } catch (err) {
       this.logger.error(
-        `Failed to serve /metrics: ${err instanceof Error ? err.message : String(err)}`,
-      )
-      throw err
+        `Failed to serve /metrics: ${err instanceof Error ? err.message : String(err)}`
+      );
+      throw err;
     }
   }
 }

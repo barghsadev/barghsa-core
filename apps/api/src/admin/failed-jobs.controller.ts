@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -10,31 +11,45 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { FailedJobsService, type FailedJobDto } from './failed-jobs.service.js'
-import { BACKGROUND_JOB_STATUSES, BACKGROUND_JOB_TYPES } from '@barghsa/shared/admin'
+  ParseUUIDPipe,
+} from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { FailedJobsService, type FailedJobDto } from './failed-jobs.service.js';
+import { BACKGROUND_JOB_STATUSES, BACKGROUND_JOB_TYPES } from '@barghsa/shared/admin';
 
 /** Strict validation for the list view's limit/offset query params. */
 const ListQuerySchema = z.object({
-  limit: z.coerce.number().int().min(1).max(200).optional(),
-  offset: z.coerce.number().int().min(0).optional(),
-})
+  limit: z
+    .string()
+    .regex(/^[1-9]\d*$/)
+    .transform(Number)
+    .pipe(z.number().int().min(1).max(200))
+    .optional(),
+  offset: z
+    .string()
+    .regex(/^\d+$/)
+    .transform(Number)
+    .pipe(z.number().int().min(0).max(1000000))
+    .optional(),
+});
 
 /** Strict validation for the bulk-retry body. */
-const BulkRetrySchema = z.object({
-  ids: z.array(z.string().trim().min(1)).min(1).max(200),
-})
+const BulkRetrySchema = z
+  .object({
+    ids: z.array(z.string().uuid()).min(1).max(200),
+  })
+  .strict();
 
 /** Swagger enum values for the background job statuses. */
-const STATUSES = [...BACKGROUND_JOB_STATUSES] as const
+const STATUSES = [...BACKGROUND_JOB_STATUSES] as const;
 
 /** Swagger enum values for the job types. */
-const JOB_TYPES = BACKGROUND_JOB_TYPES.map((t) => t.key) as readonly string[]
+const JOB_TYPES = BACKGROUND_JOB_TYPES.map((t) => t.key) as readonly string[];
 
 /**
  * Failed-jobs dashboard controller (S-09.09, T-09.09.02).
@@ -49,59 +64,59 @@ const JOB_TYPES = BACKGROUND_JOB_TYPES.map((t) => t.key) as readonly string[]
  * - `POST /api/admin/failed-jobs/:id/resolve` — mark a job resolved.
  *
  * The list view is gated by the S-09.09 capability `admin:jobs:view`;
- * state transitions by `admin:jobs:retry`. Today the session model exposes
- * only `isAdmin` (platform admin); granular staff-role permissions arrive
- * with the role system. Until then both capabilities map to a platform admin
- * session, mirroring the S-09.09 reconciliation controller.
+ * state transitions by `admin:jobs:retry`. Capabilities are read from current database roles.
  */
 @ApiTags('Admin')
 @Controller('api/admin/failed-jobs')
 @UseGuards(SessionAuthGuard)
 export class FailedJobsController {
-  private readonly logger = new Logger(FailedJobsController.name)
+  private readonly logger = new Logger(FailedJobsController.name);
 
   constructor(private readonly failedJobsService: FailedJobsService) {}
+
+  @Get('access')
+  access(@Req() req: AuthenticatedRequest) {
+    return {
+      canView: hasStaffPermission(req, 'admin:jobs:view'),
+      canRetry: hasStaffPermission(req, 'admin:jobs:retry'),
+    };
+  }
 
   /**
    * Permission gate for viewing the failed-jobs dashboard.
    *
-   * Capability `admin:jobs:view` maps to a platform admin session today;
-   * centralized here as a single enforcement point.
+   * Checks `admin:jobs:view` against current database roles.
    */
   private assertViewPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
-      this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to view background jobs`,
-      )
+    if (!hasStaffPermission(req, 'admin:jobs:view')) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to view background jobs`);
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required to view background jobs',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
   /**
    * Permission gate for background-job state transitions.
    *
-   * Capability `admin:jobs:retry` maps to a platform admin session today.
+   * Checks `admin:jobs:retry` against current database roles.
    */
   private assertRetryPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
-      this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to mutate a background job`,
-      )
+    if (!hasStaffPermission(req, 'admin:jobs:retry')) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to mutate a background job`);
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required to retry or resolve background jobs',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
@@ -124,18 +139,18 @@ export class FailedJobsController {
     @Query('jobType') jobType: string | undefined,
     @Query('limit') limit: string | undefined,
     @Query('offset') offset: string | undefined,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<FailedJobDto[]> {
-    this.assertViewPermission(req)
-    const options: Parameters<FailedJobsService['listFailedJobs']>[0] = {}
+    this.assertViewPermission(req);
+    const options: Parameters<FailedJobsService['listFailedJobs']>[0] = {};
     if (status !== undefined) {
-      options.status = status as NonNullable<typeof options.status>
+      options.status = status as NonNullable<typeof options.status>;
     }
     if (jobType !== undefined) {
-      options.jobType = jobType
+      options.jobType = jobType;
     }
     if (limit !== undefined || offset !== undefined) {
-      const parsed = ListQuerySchema.safeParse({ limit, offset })
+      const parsed = ListQuerySchema.safeParse({ limit, offset });
       if (!parsed.success) {
         throw new HttpException(
           {
@@ -143,13 +158,13 @@ export class FailedJobsController {
             error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
             message: 'limit must be an integer 1..200 and offset a non-negative integer',
           },
-          400,
-        )
+          400
+        );
       }
-      if (parsed.data.limit !== undefined) options.limit = parsed.data.limit
-      if (parsed.data.offset !== undefined) options.offset = parsed.data.offset
+      if (parsed.data.limit !== undefined) options.limit = parsed.data.limit;
+      if (parsed.data.offset !== undefined) options.offset = parsed.data.offset;
     }
-    return this.failedJobsService.listFailedJobs(options)
+    return this.failedJobsService.listFailedJobs(options);
   }
 
   /**
@@ -159,6 +174,8 @@ export class FailedJobsController {
    * A resolved job or an unknown id is rejected (409/404).
    */
   @Post(':id/retry')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Retry a failed background job (admin)' })
   @ApiParam({ name: 'id', description: 'Background job ID' })
@@ -168,12 +185,12 @@ export class FailedJobsController {
   @ApiResponse({ status: 404, description: 'Job not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async retryJob(
-    @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest
   ): Promise<FailedJobDto> {
-    this.assertRetryPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.failedJobsService.retryFailedJob(id, req.session.userId, ip)
+    this.assertRetryPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.failedJobsService.retryFailedJob(id, req.session, ip);
   }
 
   /**
@@ -183,13 +200,17 @@ export class FailedJobsController {
    * ids are skipped. Body: `{ "ids": ["...", "..."] }`.
    */
   @Post('retry-bulk')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Bulk-retry failed background jobs (admin)' })
   @ApiBody({
     schema: {
       type: 'object',
       required: ['ids'],
-      properties: { ids: { type: 'array', items: { type: 'string' }, description: 'Job IDs to retry' } },
+      properties: {
+        ids: { type: 'array', items: { type: 'string' }, description: 'Job IDs to retry' },
+      },
     },
   })
   @ApiResponse({ status: 200, description: 'Retried jobs', type: [Object] })
@@ -198,10 +219,10 @@ export class FailedJobsController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async retryBulk(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<FailedJobDto[]> {
-    this.assertRetryPermission(req)
-    const parsed = BulkRetrySchema.safeParse(rawBody)
+    this.assertRetryPermission(req);
+    const parsed = BulkRetrySchema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
         {
@@ -209,11 +230,11 @@ export class FailedJobsController {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'ids must be a non-empty array of job ids (max 200)',
         },
-        400,
-      )
+        400
+      );
     }
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.failedJobsService.retryFailedJobsBulk(parsed.data.ids, req.session.userId, ip)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.failedJobsService.retryFailedJobsBulk(parsed.data.ids, req.session, ip);
   }
 
   /**
@@ -222,6 +243,8 @@ export class FailedJobsController {
    * Mark a failed/retrying/dead-lettered job resolved (terminal).
    */
   @Post(':id/resolve')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Resolve a failed background job (admin)' })
   @ApiParam({ name: 'id', description: 'Background job ID' })
@@ -231,11 +254,11 @@ export class FailedJobsController {
   @ApiResponse({ status: 404, description: 'Job not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async resolveJob(
-    @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest
   ): Promise<FailedJobDto> {
-    this.assertRetryPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.failedJobsService.resolveFailedJob(id, req.session.userId, ip)
+    this.assertRetryPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.failedJobsService.resolveFailedJob(id, req.session, ip);
   }
 }

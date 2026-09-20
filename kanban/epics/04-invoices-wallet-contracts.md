@@ -62,20 +62,20 @@ This epic covers everything related to **money and legal commitments**:
 | Transition | From | To | Trigger | Permissions | Side effects |
 |------------|------|----|---------|-------------|--------------|
 | Issue | Draft | Unpaid | Staff action or auto-generation from order/contract | Finance staff or system | Notify customer; set `issuedAt`, `payableFrom`, `dueAt`; begin reminder schedule |
-| Submit bank receipt | Unpaid, Partially funded | Payment under review | Customer uploads receipt | Customer (active profile) | Create pending bank receipt record |
+| Submit bank receipt | Unpaid, Partially funded, Overdue | Payment under review | Customer uploads receipt | Customer (active profile) | Create pending bank receipt record |
 | Confirm bank receipt | Payment under review | Unpaid / Partially funded / Paid | Finance staff confirmation | Finance (or dual-approval if ≥ threshold) | Wallet credit if overpayment occurs; invoice progress update |
-| Pay from wallet | Unpaid, Partially funded | Paid | Customer or system | Customer (sufficient wallet balance) | Atomic wallet debit; close invoice; stop reminders |
+| Pay from wallet | Unpaid, Partially funded, Overdue | Paid | Customer or system | Customer (sufficient wallet balance) | Atomic wallet debit; close invoice; stop reminders |
 | Overdue | Unpaid, Partially funded | Overdue | Time-based cron | System | Set overdue flag; continue reminders; no auto-penalty in v1 |
 | Cancel | Unpaid, Overdue, Draft | Cancelled | Staff action | Finance (+ reason) | Release any reserved funds; notify customer; stop reminders |
 | Partial refund | Paid, Partially refunded | Partially refunded | Staff action | Finance (dual-approval if ≥ threshold) | Create refund transaction; update invoice paid/refunded amounts |
-| Full refund | Paid | Refunded | Staff action | Finance (dual-approval if ≥ threshold) | Create refund transaction; close invoice fully |
+| Full refund | Paid, Partially refunded | Refunded | Staff action | Finance (dual-approval if ≥ threshold) | Create refund transaction; close invoice fully |
 | Correction (replace) | Draft, Unpaid | Cancelled + new Draft | Staff action | Finance (+ reason) | Cancel old, create linked replacement invoice |
 
 **Constraints enforced by DB and application:**
 - `Paid` can only be reached when `confirmed_amount >= total_amount`
 - `Refunded` requires `total_refunded == total_paid`
 - `Partially funded` applies when `0 < confirmed_amount < total_amount`
-- No transition from a terminal state (`Paid`, `Cancelled`, `Refunded`) except `Partially refunded` from `Paid`
+- `Cancelled` and `Refunded` are terminal. `Paid` may enter `Partially refunded` or `Refunded`. Cumulative refunds strictly below the paid amount remain `Partially refunded`; exactly the paid amount reaches `Refunded`, including after earlier partial refunds.
 - `Payment under review` is a transient holding state per bank receipt submission, not a stored invoice state — reconsider if multiple receipts overlap
 - **`Refund pending` is NOT an invoice state** — it is a derived/composite order-level financial state (README.md §Electricity orders). When an order has one or more invoices in `Refunded` or `Partially refunded` states, the order-level financial status reflects `Refund pending` or `Refunded`. The invoice state machine above (9 states) is the complete, authoritative set.
 
@@ -134,7 +134,7 @@ This epic covers everything related to **money and legal commitments**:
 - Admin configures default due period (in days) per service type (electricity, saving plan, consultation, manual).
 - Each invoice stores `issuedAt`, `payableFrom`, `dueAt`.
 - Staff override of `dueAt` requires explicit permission and a customer-visible reason stored in audit.
-- Overdue invoice remains payable unless explicitly Cancelled. No automatic late fees in v1.
+- Overdue invoice remains payable unless explicitly Cancelled, through wallet debit or bank receipt submission/confirmation. Partial receipt settlement becomes Partially funded; the overdue worker can mark it Overdue again while a balance remains. No automatic late fees in v1.
 
 #### Tasks
 

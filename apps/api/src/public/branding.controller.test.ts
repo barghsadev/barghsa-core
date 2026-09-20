@@ -1,21 +1,21 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { PublicBrandingController } from './branding.controller.js'
-import { BrandConfigService } from '../admin/brand-config.service.js'
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { PublicBrandingController } from './branding.controller.js';
+import { BrandConfigService } from '../admin/brand-config.service.js';
 
 // ─── Mock BrandConfigService ─────────────────────────────────────────────
 
-const mockGetActiveConfig = vi.fn()
+const mockGetActiveConfig = vi.fn();
 
 // ─── Suite ───────────────────────────────────────────────────────────────
 
 describe('PublicBrandingController', () => {
-  let controller: PublicBrandingController
+  let controller: PublicBrandingController;
 
   beforeEach(() => {
-    vi.clearAllMocks()
-    const mockService = { getActiveConfig: mockGetActiveConfig } as unknown as BrandConfigService
-    controller = new PublicBrandingController(mockService)
-  })
+    vi.clearAllMocks();
+    const mockService = { getActiveConfig: mockGetActiveConfig } as unknown as BrandConfigService;
+    controller = new PublicBrandingController(mockService);
+  });
 
   describe('GET /api/public/branding/config', () => {
     it('returns the active brand config as a public DTO', async () => {
@@ -36,11 +36,12 @@ describe('PublicBrandingController', () => {
         createdBy: 'admin-1',
         createdAt: '2026-01-01T00:00:00Z',
         updatedAt: '2026-01-01T00:00:00Z',
-      })
+      });
 
-      const result = await controller.getActiveBrandConfig()
+      const result = await controller.getActiveBrandConfig();
 
       expect(result).toEqual({
+        numberStyle: 'locale',
         appTitle: 'My Brand',
         slogan: 'My Slogan',
         primaryColor: '#ff0000',
@@ -49,16 +50,16 @@ describe('PublicBrandingController', () => {
         logoUrl: 'https://cdn.example.com/logo.png',
         faviconUrl: 'https://cdn.example.com/favicon.ico',
         darkMode: true,
-      })
+      });
 
       // Assert internal fields are stripped
-      expect(result).not.toHaveProperty('id')
-      expect(result).not.toHaveProperty('version')
-      expect(result).not.toHaveProperty('status')
-      expect(result).not.toHaveProperty('createdBy')
-      expect(result).not.toHaveProperty('createdAt')
-      expect(result).not.toHaveProperty('updatedAt')
-    })
+      expect(result).not.toHaveProperty('id');
+      expect(result).not.toHaveProperty('version');
+      expect(result).not.toHaveProperty('status');
+      expect(result).not.toHaveProperty('createdBy');
+      expect(result).not.toHaveProperty('createdAt');
+      expect(result).not.toHaveProperty('updatedAt');
+    });
 
     it('applies default fallbacks when config fields are missing', async () => {
       mockGetActiveConfig.mockResolvedValue({
@@ -69,11 +70,12 @@ describe('PublicBrandingController', () => {
         createdBy: 'system',
         createdAt: '2026-01-01T00:00:00Z',
         updatedAt: '2026-01-01T00:00:00Z',
-      })
+      });
 
-      const result = await controller.getActiveBrandConfig()
+      const result = await controller.getActiveBrandConfig();
 
       expect(result).toEqual({
+        numberStyle: 'locale',
         appTitle: 'Barghsa',
         slogan: '',
         primaryColor: '#2563eb',
@@ -82,8 +84,8 @@ describe('PublicBrandingController', () => {
         logoUrl: null,
         faviconUrl: null,
         darkMode: false,
-      })
-    })
+      });
+    });
 
     it('handles null values for optional fields', async () => {
       mockGetActiveConfig.mockResolvedValue({
@@ -102,15 +104,15 @@ describe('PublicBrandingController', () => {
         createdBy: 'admin-1',
         createdAt: '2026-01-01T00:00:00Z',
         updatedAt: '2026-01-01T00:00:00Z',
-      })
+      });
 
-      const result = await controller.getActiveBrandConfig()
+      const result = await controller.getActiveBrandConfig();
 
-      expect(result.appTitle).toBe('Test')
-      expect(result.logoUrl).toBeNull()
-      expect(result.faviconUrl).toBeNull()
-      expect(result.darkMode).toBe(false)
-    })
+      expect(result.appTitle).toBe('Test');
+      expect(result.logoUrl).toBeNull();
+      expect(result.faviconUrl).toBeNull();
+      expect(result.darkMode).toBe(false);
+    });
 
     it('preserves string values correctly', async () => {
       mockGetActiveConfig.mockResolvedValue({
@@ -130,13 +132,13 @@ describe('PublicBrandingController', () => {
         createdBy: 'admin-1',
         createdAt: '2026-01-01T00:00:00Z',
         updatedAt: '2026-01-01T00:00:00Z',
-      })
+      });
 
-      const result = await controller.getActiveBrandConfig()
+      const result = await controller.getActiveBrandConfig();
 
-      expect(result.appTitle).toBe('  Spaces  ')
-      expect(result.slogan).toBe('With spaces')
-      expect(result.logoUrl).toBe('https://cdn.example.com/logo.svg')
-    })
-  })
-})
+      expect(result.appTitle).toBe('  Spaces  ');
+      expect(result.slogan).toBe('With spaces');
+      expect(result.logoUrl).toBe('https://cdn.example.com/logo.svg');
+    });
+  });
+});

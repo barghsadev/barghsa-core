@@ -1,0 +1,24 @@
+diff --git a/dist/cjs/Matches.d.cts b/dist/cjs/Matches.d.cts
+index 5eaf58752ef938c104326c826d376faade9661bb..ef8683ee24ee74bb1aaf87de923d4d4be6688f0c 100644
+--- a/dist/cjs/Matches.d.cts
++++ b/dist/cjs/Matches.d.cts
+@@ -53,6 +53,7 @@ export interface RouteMatch<out TRouteId, out TFullPath, out TAllParams, out TFu
+     searchError: unknown;
+     updatedAt: number;
+     loaderData?: TLoaderData;
++    __beforeLoadContext?: Record<string, unknown>;
+     context: TAllContext;
+     search: TFullSearchSchema;
+     _strictSearch: TFullSearchSchema;
+diff --git a/dist/esm/Matches.d.ts b/dist/esm/Matches.d.ts
+index 9a27fb9d3e720707a2549e12547fc7ba89c1230a..71319195342e2ea6d6161eac6a36e12cffbfc6bc 100644
+--- a/dist/esm/Matches.d.ts
++++ b/dist/esm/Matches.d.ts
+@@ -53,6 +53,7 @@ export interface RouteMatch<out TRouteId, out TFullPath, out TAllParams, out TFu
+     searchError: unknown;
+     updatedAt: number;
+     loaderData?: TLoaderData;
++    __beforeLoadContext?: Record<string, unknown>;
+     context: TAllContext;
+     search: TFullSearchSchema;
+     _strictSearch: TFullSearchSchema;

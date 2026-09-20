@@ -1,8 +1,8 @@
-import { sql } from 'drizzle-orm'
-import { bigint, text } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table'
-import { timestamptz } from '../types'
-import { users } from './users'
+import { sql } from 'drizzle-orm';
+import { bigint, text } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table';
+import { timestamptz } from '../types';
+import { users } from './users';
 
 /**
  * Upload policies (T-09.12.05) — admin-managed file upload policies.
@@ -51,7 +51,7 @@ export const uploadPolicies = createTable('upload_policies', {
   createdBy: text('created_by')
     .notNull()
     .references(() => users.userId, { onDelete: 'restrict' }),
-})
+});
 
 /** SQL to create the upload_policies table (migration 0050 source). */
 export const createUploadPoliciesTable = sql`
@@ -109,4 +109,4 @@ export const createUploadPoliciesTable = sql`
     BEFORE UPDATE ON upload_policies
     FOR EACH ROW
     EXECUTE FUNCTION update_upload_policies_updated_at();
-`
+`;

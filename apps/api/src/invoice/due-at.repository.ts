@@ -11,15 +11,15 @@
  * inside the same transaction that creates the invoice.
  */
 
-import { Injectable } from '@nestjs/common'
-import type { ServiceDuePeriodType } from '@barghsa/shared/finance'
-import type { DbExecutor } from './vat-calculation.repository.js'
+import { Injectable } from '@nestjs/common';
+import type { ServiceDuePeriodType } from '@barghsa/shared/finance';
+import type { DbExecutor } from './vat-calculation.repository.js';
 
 /** One active due-period row at a point in time. */
 export interface ActiveDuePeriod {
-  id: string
-  serviceType: ServiceDuePeriodType
-  defaultDays: number
+  id: string;
+  serviceType: ServiceDuePeriodType;
+  defaultDays: number;
 }
 
 @Injectable()
@@ -35,12 +35,12 @@ export class DueAtCalculationRepository {
   async findActive(
     executor: DbExecutor,
     serviceType: ServiceDuePeriodType,
-    at: Date,
+    at: Date
   ): Promise<ActiveDuePeriod | null> {
     const result = await executor.query<{
-      id: string
-      service_type: ServiceDuePeriodType
-      default_days: number
+      id: string;
+      service_type: ServiceDuePeriodType;
+      default_days: number;
     }>(
       `SELECT id, service_type, default_days
          FROM service_due_periods
@@ -49,14 +49,14 @@ export class DueAtCalculationRepository {
           AND (effective_until IS NULL OR effective_until > $2)
         ORDER BY effective_from DESC
         LIMIT 1`,
-      [serviceType, at],
-    )
-    const row = result.rows[0]
-    if (row === undefined) return null
+      [serviceType, at]
+    );
+    const row = result.rows[0];
+    if (row === undefined) return null;
     return {
       id: row.id,
       serviceType: row.service_type,
       defaultDays: row.default_days,
-    }
+    };
   }
 }

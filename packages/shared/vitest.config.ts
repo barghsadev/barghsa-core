@@ -1,3 +1,3 @@
-import { createVitestConfig } from '../tsconfig/vitest.base.config'
+import { createVitestConfig } from '../tsconfig/vitest.base.config';
 
-export default createVitestConfig()
+export default createVitestConfig();

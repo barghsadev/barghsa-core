@@ -1,11 +1,26 @@
 {
   "files": [],
   "references": [
-    { "path": "packages/shared" },
-    { "path": "packages/db" },
-    { "path": "packages/i18n" },
-    { "path": "packages/ui" },
-    { "path": "apps/web" },
-    { "path": "apps/api" }
+    {
+      "path": "packages/shared"
+    },
+    {
+      "path": "packages/db"
+    },
+    {
+      "path": "packages/i18n"
+    },
+    {
+      "path": "packages/ui"
+    },
+    {
+      "path": "apps/web"
+    },
+    {
+      "path": "apps/api"
+    },
+    {
+      "path": "apps/worker"
+    }
   ]
 }

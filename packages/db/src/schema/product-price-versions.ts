@@ -1,8 +1,8 @@
-import { uuid, text } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table'
-import { irrAmount, timestamptz } from '../types'
-import { products } from './products'
-import { users } from './users'
+import { uuid, text } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table';
+import { irrAmount, timestamptz } from '../types';
+import { products } from './products';
+import { users } from './users';
 
 /**
  * Product price versions table.
@@ -58,4 +58,4 @@ export const productPriceVersions = createTable('product_price_versions', {
   createdBy: text('created_by')
     .notNull()
     .references(() => users.userId, { onDelete: 'restrict' }),
-})
+});

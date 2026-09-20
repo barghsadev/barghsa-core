@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "status": "passed_across_recorded_runs",
+  "scope": "Local production-browser checks; no remote workflow or future business-flow certification.",
+  "web_source_tree": "44a4610872738d0846ebe4a30a4a258eab92fcd8",
+  "checks": [
+    {
+      "source_sha": "5a495f670c6a21593ead2006edcca1d112e2266f",
+      "projects": {
+        "chromium": {
+          "passed": 325,
+          "failed": 0,
+          "skipped": 0,
+          "flaky": 0
+        },
+        "firefox": {
+          "passed": 325,
+          "failed": 0,
+          "skipped": 0,
+          "flaky": 0
+        },
+        "webkit": {
+          "passed": 325,
+          "failed": 0,
+          "skipped": 0,
+          "flaky": 0
+        }
+      },
+      "raw_report_sha256": "370c2663bda39e23c7bcaf24653018c4fc6598822418ff7ecb871ac57a1fa7d7"
+    },
+    {
+      "source_sha": "d55c7685d6adac4abdd669395904ad3954434b08",
+      "projects": {
+        "mobile-chrome": {
+          "passed": 325,
+          "failed": 0,
+          "skipped": 0,
+          "flaky": 0
+        },
+        "mobile-safari": {
+          "passed": 325,
+          "failed": 0,
+          "skipped": 0,
+          "flaky": 0
+        }
+      },
+      "raw_report_sha256": "3cea8415e7b12099f0213b4485dff495f2853fecd7f3ea10ed958f0899889cbe"
+    }
+  ],
+  "total_unique_cases": 1625,
+  "focused_profile_checks": 60,
+  "limitations": [
+    "Desktop suites ran before test-only mobile menu corrections; all changed profile cases were then repeated twice in all five projects.",
+    "This is combined evidence from the listed runs, not one all-project green run.",
+    "Combined source coverage and production-image checkpoints remain separate."
+  ]
+}

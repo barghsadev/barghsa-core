@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common'
-import { SessionModule } from '../session/index.js'
-import { CatalogueProductsController } from './catalogue-products.controller.js'
-import { CatalogueProductsService } from './catalogue-products.service.js'
+import { Module } from '@nestjs/common';
+import { SessionModule } from '../session/index.js';
+import { CatalogueProductsController } from './catalogue-products.controller.js';
+import { CatalogueProductsService } from './catalogue-products.service.js';
 
 /**
  * Admin product catalogue module (S-09.12, T-09.12.01) — API slice.

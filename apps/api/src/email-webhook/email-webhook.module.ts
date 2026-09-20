@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common'
-import { EmailWebhookController } from './email-webhook.controller'
-import { EmailWebhookService } from './email-webhook.service'
-import { ProviderSecretsService } from '../provider-config/provider-secrets.service'
+import { Module } from '@nestjs/common';
+import { EmailWebhookController } from './email-webhook.controller';
+import { EmailWebhookService } from './email-webhook.service';
+import { ProviderSecretsService } from '../provider-config/provider-secrets.service';
 
 /**
  * Resend delivery-callback receiver module (E-05, T-05.06.07).

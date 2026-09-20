@@ -1,0 +1,1 @@
+ALTER TABLE "device_trusts" ADD COLUMN "ip_address" "inet";

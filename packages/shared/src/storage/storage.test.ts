@@ -1,8 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import {
-  StorageObjectNotFound,
-  StorageProviderError,
-} from './storage-provider.js';
+import { StorageObjectNotFound, StorageProviderError } from './storage-provider.js';
 import { S3StorageProvider, type S3StorageProviderConfig } from './s3-storage-provider.js';
 import { createStorageProvider } from './storage-factory.js';
 
@@ -28,7 +25,9 @@ function makeConfig(overrides?: Partial<S3StorageProviderConfig>): S3StorageProv
  * Create an S3StorageProvider with a mocked send function.
  * Returns [provider, sendMock] so tests can configure responses.
  */
-function createMockedProvider(config?: Partial<S3StorageProviderConfig>): [S3StorageProvider, ReturnType<typeof vi.fn>] {
+function createMockedProvider(
+  config?: Partial<S3StorageProviderConfig>
+): [S3StorageProvider, ReturnType<typeof vi.fn>] {
   const send = vi.fn();
   const provider = new S3StorageProvider(makeConfig(config));
   // Replace the internal S3Client.send with a controlled mock
@@ -122,7 +121,7 @@ describe('S3StorageProvider.putObject', () => {
     send.mockRejectedValue(new Error('net error'));
 
     await expect(provider.putObject('test.txt', 'hello', 'text/plain')).rejects.toThrow(
-      StorageProviderError,
+      StorageProviderError
     );
   });
 });
@@ -134,8 +133,9 @@ describe('S3StorageProvider.putObject', () => {
 describe('S3StorageProvider.getObject', () => {
   it('returns body, contentType, contentLength, metadata, etag', async () => {
     const [provider, send] = createMockedProvider();
+    const body = new ReadableStream();
     send.mockResolvedValue({
-      Body: 'stream-data',
+      Body: { transformToWebStream: () => body },
       ContentType: 'image/png',
       ContentLength: 42,
       Metadata: { author: 'user1' },
@@ -144,7 +144,7 @@ describe('S3StorageProvider.getObject', () => {
 
     const obj = await provider.getObject('photo.png');
 
-    expect(obj.body).toBe('stream-data');
+    expect(obj.body).toBe(body);
     expect(obj.contentType).toBe('image/png');
     expect(obj.contentLength).toBe(42);
     expect(obj.metadata).toEqual({ author: 'user1' });
@@ -230,8 +230,18 @@ describe('S3StorageProvider.listObjects', () => {
     const [provider, send] = createMockedProvider({ prefix: 'uploads/' });
     send.mockResolvedValue({
       Contents: [
-        { Key: 'uploads/photo1.jpg', Size: 1024, ETag: '"e1"', LastModified: new Date('2026-01-01') },
-        { Key: 'uploads/photo2.jpg', Size: 2048, ETag: '"e2"', LastModified: new Date('2026-01-02') },
+        {
+          Key: 'uploads/photo1.jpg',
+          Size: 1024,
+          ETag: '"e1"',
+          LastModified: new Date('2026-01-01'),
+        },
+        {
+          Key: 'uploads/photo2.jpg',
+          Size: 2048,
+          ETag: '"e2"',
+          LastModified: new Date('2026-01-02'),
+        },
       ],
       IsTruncated: true,
       NextContinuationToken: 'next-page-token',
@@ -283,8 +293,8 @@ describe('createStorageProvider', () => {
     expect(() =>
       createStorageProvider(
         // @ts-expect-error — testing invalid type
-        { ...makeConfig(), type: 'gcs' },
-      ),
+        { ...makeConfig(), type: 'gcs' }
+      )
     ).toThrow('Unknown storage provider type: "gcs"');
   });
 });

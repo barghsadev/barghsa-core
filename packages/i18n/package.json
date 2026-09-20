@@ -1,20 +1,176 @@
 {
-    "name": "@barghsa/i18n",
-    "version": "0.0.0",
-    "private": true,
-    "type": "module",
-        "exports": {
-            ".": {
-                "types": "./dist/index.d.ts",
-                "import": "./dist/index.js",
-                "default": "./dist/index.js"
-            }
-        },
-    "scripts": {
-        "build": "tsc",
-        "dev": "tsc --watch --noEmit",
-        "test": "vitest run --passWithNoTests",
-        "test:coverage": "vitest run --coverage --passWithNoTests",
-        "typecheck": "tsc"
+  "name": "@barghsa/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    "./addresses": {
+      "types": "./dist/addresses.d.ts",
+      "import": "./dist/addresses.js",
+      "default": "./dist/addresses.js"
+    },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./auth": {
+      "types": "./dist/auth.d.ts",
+      "import": "./dist/auth.js",
+      "default": "./dist/auth.js"
+    },
+    "./vat": {
+      "types": "./dist/vat.d.ts",
+      "import": "./dist/vat.js",
+      "default": "./dist/vat.js"
+    },
+    "./gifts": {
+      "types": "./dist/gifts.d.ts",
+      "import": "./dist/gifts.js",
+      "default": "./dist/gifts.js"
+    },
+    "./catalogue": {
+      "types": "./dist/catalogue.d.ts",
+      "import": "./dist/catalogue.js",
+      "default": "./dist/catalogue.js"
+    },
+    "./timezone": {
+      "types": "./dist/timezone.d.ts",
+      "import": "./dist/timezone.js",
+      "default": "./dist/timezone.js"
+    },
+    "./preferences": {
+      "types": "./dist/preferences.d.ts",
+      "import": "./dist/preferences.js",
+      "default": "./dist/preferences.js"
+    },
+    "./admin-controls": {
+      "types": "./dist/admin-controls.d.ts",
+      "import": "./dist/admin-controls.js",
+      "default": "./dist/admin-controls.js"
+    },
+    "./verification-config": {
+      "types": "./dist/verification-config.d.ts",
+      "import": "./dist/verification-config.js",
+      "default": "./dist/verification-config.js"
+    },
+    "./wallet-limit": {
+      "types": "./dist/wallet-limit.d.ts",
+      "import": "./dist/wallet-limit.js",
+      "default": "./dist/wallet-limit.js"
+    },
+    "./wallet-receipts": {
+      "types": "./dist/wallet-receipts.d.ts",
+      "import": "./dist/wallet-receipts.js",
+      "default": "./dist/wallet-receipts.js"
+    },
+    "./branding": {
+      "types": "./dist/branding.d.ts",
+      "import": "./dist/branding.js",
+      "default": "./dist/branding.js"
+    },
+    "./date-time": {
+      "types": "./dist/date-time.d.ts",
+      "import": "./dist/date-time.js",
+      "default": "./dist/date-time.js"
+    },
+    "./providers": {
+      "types": "./dist/providers.d.ts",
+      "import": "./dist/providers.js",
+      "default": "./dist/providers.js"
+    },
+    "./contract-templates": {
+      "types": "./dist/contract-templates.d.ts",
+      "import": "./dist/contract-templates.js",
+      "default": "./dist/contract-templates.js"
+    },
+    "./admin-ui": {
+      "types": "./dist/admin-ui.d.ts",
+      "import": "./dist/admin-ui.js",
+      "default": "./dist/admin-ui.js"
+    },
+    "./crm": {
+      "types": "./dist/crm.d.ts",
+      "import": "./dist/crm.js",
+      "default": "./dist/crm.js"
+    },
+    "./numbers": {
+      "types": "./dist/numbers.d.ts",
+      "import": "./dist/numbers.js",
+      "default": "./dist/numbers.js"
+    },
+    "./feedback": {
+      "types": "./dist/feedback.d.ts",
+      "import": "./dist/feedback.js",
+      "default": "./dist/feedback.js"
+    },
+    "./app": {
+      "types": "./dist/app.d.ts",
+      "import": "./dist/app.js",
+      "default": "./dist/app.js"
+    },
+    "./terms": {
+      "types": "./dist/terms.d.ts",
+      "import": "./dist/terms.js",
+      "default": "./dist/terms.js"
+    },
+    "./geography": {
+      "types": "./dist/geography.d.ts",
+      "import": "./dist/geography.js",
+      "default": "./dist/geography.js"
+    },
+    "./trusted-devices": {
+      "types": "./dist/trusted-devices.d.ts",
+      "import": "./dist/trusted-devices.js",
+      "default": "./dist/trusted-devices.js"
+    },
+    "./team": {
+      "types": "./dist/team.d.ts",
+      "import": "./dist/team.js",
+      "default": "./dist/team.js"
+    },
+    "./wallet-payment-return": {
+      "types": "./dist/wallet-payment-return.d.ts",
+      "import": "./dist/wallet-payment-return.js",
+      "default": "./dist/wallet-payment-return.js"
+    },
+    "./manual-invoice": {
+      "types": "./dist/manual-invoice.d.ts",
+      "import": "./dist/manual-invoice.js",
+      "default": "./dist/manual-invoice.js"
+    },
+    "./invoice-due-periods": {
+      "types": "./dist/invoice-due-periods.d.ts",
+      "import": "./dist/invoice-due-periods.js",
+      "default": "./dist/invoice-due-periods.js"
+    },
+    "./invoice-corrections": {
+      "types": "./dist/invoice-corrections.d.ts",
+      "import": "./dist/invoice-corrections.js",
+      "default": "./dist/invoice-corrections.js"
+    },
+    "./wallet-invoice-payment": {
+      "types": "./dist/wallet-invoice-payment.d.ts",
+      "import": "./dist/wallet-invoice-payment.js",
+      "default": "./dist/wallet-invoice-payment.js"
+    },
+    "./shell": {
+      "types": "./dist/shell.d.ts",
+      "import": "./dist/shell.js",
+      "default": "./dist/shell.js"
     }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "@barghsa/tsconfig": "workspace:*"
+  }
 }

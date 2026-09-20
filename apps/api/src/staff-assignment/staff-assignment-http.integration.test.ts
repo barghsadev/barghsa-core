@@ -1,0 +1,413 @@
+import { StaffAssignmentService } from './staff-assignment.service.js';
+import { randomUUID } from 'node:crypto';
+import { beforeAll, beforeEach, afterAll, it, expect } from 'vitest';
+import { startHttpFixture } from '../test/http-fixture.js';
+let http: Awaited<ReturnType<typeof startHttpFixture>>;
+let headers: Record<string, string>;
+const teamId = randomUUID();
+beforeAll(async () => {
+  http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  for (const user of ['customer', 'alpha', 'beta', 'ineligible'])
+    await http.pool.query(
+      "INSERT INTO users(user_id,username,password_hash,is_admin) VALUES ($1,$2,'test-only',$3)",
+      [user, `${user}@example.test`, ['alpha', 'beta'].includes(user)]
+    );
+  const session = randomUUID(),
+    csrf = randomUUID();
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+    VALUES ($1,'customer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+    [session, csrf, randomUUID()]
+  );
+  headers = {
+    Cookie: `barghsa_session=${session}`,
+    'X-CSRF-Token': csrf,
+    'Content-Type': 'application/json',
+  };
+  await http.pool.query(
+    "INSERT INTO staff_teams(id,name,skill_tags) VALUES ($1,'Routing team','[]')",
+    [teamId]
+  );
+  for (const user of ['alpha', 'beta', 'ineligible'])
+    await http.pool.query('INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,$2)', [
+      teamId,
+      user,
+    ]);
+}, 40000);
+beforeEach(async () => {
+  await http.pool.query(
+    "DELETE FROM rate_limit_counters; DELETE FROM rate_limit_windows WHERE NOT security; DELETE FROM app_config WHERE key='admin.staff_assignment_rules'; DELETE FROM staff_assignment_cursors; UPDATE users SET disabled_at=NULL; UPDATE staff_teams SET is_active=true,skill_tags='[]'"
+  );
+});
+afterAll(async () => {
+  await http?.close();
+});
+function create(subject = 'Routing test') {
+  return fetch(`${http.base}/api/tickets`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ subject, body: 'Details' }),
+  });
+}
+async function rule(strategy: string, team: string | null = teamId) {
+  await http.pool.query(
+    `INSERT INTO app_config(key,value) VALUES ('admin.staff_assignment_rules',$1::jsonb)
+    ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,version=app_config.version+1`,
+    [JSON.stringify({ ticket: { teamId: team, strategy } })]
+  );
+}
+it('allows staff ticket creation alongside manual assignment to that staff member', async () => {
+  const existing = (await (await create('Existing customer ticket')).json()) as { id: string };
+  const staffHeaders: Record<string, Record<string, string>> = {};
+  for (const user of ['alpha', 'beta']) {
+    const session = randomUUID(),
+      csrf = randomUUID();
+    await http.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+       VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+      [session, user, csrf, randomUUID()]
+    );
+    staffHeaders[user] = {
+      Cookie: `barghsa_session=${session}`,
+      'X-CSRF-Token': csrf,
+      'Content-Type': 'application/json',
+    };
+  }
+  await rule('round_robin');
+  const blocker = await http.pool.connect();
+  let creation: Promise<Response> | undefined, assignment: Promise<Response> | undefined;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+      'admin.staff_assignment_rules',
+    ]);
+    const blockerPid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+    creation = fetch(`${http.base}/api/tickets`, {
+      method: 'POST',
+      headers: staffHeaders.alpha!,
+      body: JSON.stringify({ subject: 'Staff support question', body: 'Details' }),
+    });
+    let creatorPid: number | undefined;
+    await expect
+      .poll(
+        async () => {
+          creatorPid = (
+            await http.pool.query(
+              'SELECT pid FROM pg_stat_activity WHERE $1::int=ANY(pg_blocking_pids(pid))',
+              [blockerPid]
+            )
+          ).rows[0]?.pid;
+          return creatorPid;
+        },
+        { timeout: 5000, interval: 20 }
+      )
+      .toBeDefined();
+    let assigned = false;
+    assignment = fetch(`${http.base}/api/staff/tickets/${existing.id}/assign`, {
+      method: 'PUT',
+      headers: staffHeaders.beta!,
+      body: JSON.stringify({ assigneeId: 'alpha', teamId }),
+    }).finally(() => {
+      assigned = true;
+    });
+    await expect
+      .poll(
+        async () =>
+          assigned ||
+          (
+            await http.pool.query(
+              'SELECT 1 FROM pg_stat_activity WHERE $1::int=ANY(pg_blocking_pids(pid))',
+              [creatorPid]
+            )
+          ).rows.length > 0,
+        { timeout: 5000, interval: 20 }
+      )
+      .toBe(true);
+    await blocker.query('COMMIT');
+    const [created, reassigned] = await Promise.all([creation, assignment]);
+    expect([created.status, reassigned.status], http.logs()).toEqual([201, 200]);
+    expect(await reassigned.json()).toMatchObject({ assignedTo: 'alpha', assignedTeamId: teamId });
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await Promise.allSettled([creation, assignment].filter(Boolean));
+  }
+});
+
+it.each(['automatic', 'manual'] as const)(
+  'uses current candidate permissions during role revocation (%s)',
+  async (mode) => {
+    const restrictedTeam = randomUUID(),
+      roleId = randomUUID();
+    await http.pool.query('INSERT INTO staff_teams(id,name) VALUES ($1,$2)', [
+      restrictedTeam,
+      `Role-bound support ${mode}`,
+    ]);
+    await http.pool.query(
+      "INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,'ineligible')",
+      [restrictedTeam]
+    );
+    await http.pool.query(
+      `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$1,'Support','["tickets:write"]')`,
+      [roleId]
+    );
+    await http.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ('ineligible',$1)", [
+      roleId,
+    ]);
+    await rule('round_robin', restrictedTeam);
+    const existing = (await (await create('Manual assignment target')).json()) as { id: string };
+    const session = randomUUID(),
+      csrf = randomUUID();
+    await http.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+     VALUES ($1,'alpha',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+      [session, csrf, randomUUID()]
+    );
+    await http.pool.query(
+      "UPDATE tickets SET assigned_to=NULL,assigned_team_id=NULL,status='open' WHERE id=$1",
+      [existing.id]
+    );
+    const blocker = await http.pool.connect();
+    let response: Promise<Response> | undefined,
+      finished = false;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query("UPDATE staff_roles SET permissions='[]' WHERE role_id=$1", [roleId]);
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      response = (
+        mode === 'automatic'
+          ? create('Revoked candidate')
+          : fetch(`${http.base}/api/staff/tickets/${existing.id}/assign`, {
+              method: 'PUT',
+              headers: {
+                Cookie: `barghsa_session=${session}`,
+                'X-CSRF-Token': csrf,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ assigneeId: 'ineligible', teamId: restrictedTeam }),
+            })
+      ).finally(() => {
+        finished = true;
+      });
+      await expect
+        .poll(
+          async () =>
+            finished ||
+            (
+              await http.pool.query(
+                'SELECT 1 FROM pg_stat_activity WHERE $1::int=ANY(pg_blocking_pids(pid))',
+                [pid]
+              )
+            ).rows.length > 0,
+          { timeout: 5000, interval: 20 }
+        )
+        .toBe(true);
+      await blocker.query('COMMIT');
+      const result = await response;
+      if (mode === 'automatic') {
+        expect(result.status).toBe(201);
+        expect(await result.json()).toMatchObject({ assignedTo: null, status: 'open' });
+      } else {
+        expect(result.status).toBe(400);
+        expect(
+          (
+            await http.pool.query('SELECT assigned_to,status FROM tickets WHERE id=$1', [
+              existing.id,
+            ])
+          ).rows[0]
+        ).toMatchObject({ assigned_to: null, status: 'open' });
+      }
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await response;
+      await http.pool.query("DELETE FROM user_roles WHERE user_id='ineligible' AND role_id=$1", [
+        roleId,
+      ]);
+    }
+  }
+);
+
+it('keeps work manual by default and assigns eight concurrent new tickets evenly without selecting ineligible members', async () => {
+  const manual = await create(),
+    old = (await manual.json()) as { id: string; assignedTo: string | null; status: string };
+  expect(manual.status).toBe(201);
+  expect(old.assignedTo).toBeNull();
+  expect(old.status).toBe('open');
+  await rule('round_robin');
+  const responses = await Promise.all(Array.from({ length: 8 }, () => create()));
+  expect(
+    responses.map((response) => response.status),
+    http.logs()
+  ).toEqual(Array(8).fill(201));
+  const records = (await Promise.all(responses.map((response) => response.json()))) as {
+    assignedTo: string;
+    assignedTeamId: string;
+    status: string;
+  }[];
+  expect(records.filter((row) => row.assignedTo === 'alpha')).toHaveLength(4);
+  expect(records.filter((row) => row.assignedTo === 'beta')).toHaveLength(4);
+  expect(
+    records.every((row) => row.assignedTeamId === teamId && row.status === 'in_progress')
+  ).toBe(true);
+  expect(
+    (await http.pool.query('SELECT assigned_to FROM tickets WHERE id=$1', [old.id])).rows[0]
+      .assigned_to
+  ).toBeNull();
+});
+it('rolls back round-robin position and new work when the assignment audit fails', async () => {
+  await rule('round_robin');
+  expect(((await (await create()).json()) as { assignedTo: string }).assignedTo).toBe('alpha');
+  await http.pool
+    .query(`CREATE FUNCTION fail_assignment_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+    IF NEW.event='work_auto_assigned' THEN RAISE EXCEPTION 'test failure'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER fail_assignment_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_assignment_audit()`);
+  try {
+    expect((await create('Failed assignment')).status).toBe(500);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT last_user_id FROM staff_assignment_cursors WHERE team_id=$1',
+          [teamId]
+        )
+      ).rows[0].last_user_id
+    ).toBe('alpha');
+    expect(
+      (await http.pool.query("SELECT id FROM tickets WHERE subject='Failed assignment'")).rows
+    ).toHaveLength(0);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER fail_assignment_audit ON audit_log; DROP FUNCTION fail_assignment_audit()'
+    );
+  }
+  expect(
+    ((await (await create('Retry assignment')).json()) as { assignedTo: string }).assignedTo
+  ).toBe('beta');
+});
+it('selects by current load, excludes disabled accounts and requires matching team expertise tags', async () => {
+  await http.pool.query("UPDATE tickets SET assigned_to='alpha'");
+  await rule('load');
+  expect(((await (await create()).json()) as { assignedTo: string }).assignedTo).toBe('beta');
+  await http.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='beta'");
+  expect(((await (await create()).json()) as { assignedTo: string }).assignedTo).toBe('alpha');
+  await rule('expertise');
+  expect(((await (await create()).json()) as { assignedTo: string | null }).assignedTo).toBeNull();
+  await http.pool.query('UPDATE staff_teams SET skill_tags=\'["support"]\' WHERE id=$1', [teamId]);
+  expect(((await (await create()).json()) as { assignedTo: string }).assignedTo).toBe('alpha');
+});
+it('falls back to manual assignment for malformed rules, missing or inactive teams and no eligible members', async () => {
+  for (const [strategy, team] of [
+    ['bogus', teamId],
+    ['load', randomUUID()],
+    ['round_robin', 'bad-id'],
+  ] as const) {
+    await rule(strategy, team);
+    expect(
+      ((await (await create()).json()) as { assignedTo: string | null }).assignedTo
+    ).toBeNull();
+  }
+  await rule('round_robin');
+  await http.pool.query('UPDATE staff_teams SET is_active=false WHERE id=$1', [teamId]);
+  expect(((await (await create()).json()) as { assignedTo: string | null }).assignedTo).toBeNull();
+  await http.pool.query('UPDATE staff_teams SET is_active=true WHERE id=$1', [teamId]);
+  await http.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id IN ('alpha','beta')");
+  expect(((await (await create()).json()) as { assignedTo: string | null }).assignedTo).toBeNull();
+});
+
+it('tries ordered fallback teams and records the chosen priority without advancing skipped cursors', async () => {
+  const backup = randomUUID();
+  await http.pool.query("INSERT INTO staff_teams(id,name) VALUES ($1,'Fallback team')", [backup]);
+  await http.pool.query("INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,'beta')", [
+    backup,
+  ]);
+  await http.pool.query(
+    `INSERT INTO app_config(key,value) VALUES ('admin.staff_assignment_rules',$1::jsonb)`,
+    [
+      JSON.stringify({
+        ticket: {
+          teamId,
+          strategy: 'expertise',
+          fallbacks: [{ teamId: backup, strategy: 'round_robin' }],
+        },
+      }),
+    ]
+  );
+  const response = await create();
+  expect(response.status, http.logs()).toBe(201);
+  const ticket = (await response.json()) as {
+    id: string;
+    assignedTo: string;
+    assignedTeamId: string;
+  };
+  expect(ticket).toMatchObject({ assignedTo: 'beta', assignedTeamId: backup });
+  expect((await http.pool.query('SELECT team_id FROM staff_assignment_cursors')).rows).toEqual([
+    { team_id: backup },
+  ]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='work_auto_assigned' AND metadata::jsonb->>'itemId'=$1",
+        [ticket.id]
+      )
+    ).rows[0].metadata
+  ).toMatchObject({ priorityIndex: 1, teamId: backup });
+  await http.pool.query('UPDATE staff_teams SET is_active=false WHERE id=$1', [backup]);
+  expect(await (await create()).json()).toMatchObject({ assignedTo: null });
+});
+it('honors reversed priorities without deadlocking teams or shared members', async () => {
+  const backup = randomUUID();
+  await http.pool.query("INSERT INTO staff_teams(id,name) VALUES ($1,'Shared fallback team')", [
+    backup,
+  ]);
+  for (const user of ['alpha', 'beta'])
+    await http.pool.query('INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,$2)', [
+      backup,
+      user,
+    ]);
+  await http.pool.query(
+    `INSERT INTO app_config(key,value) VALUES ('admin.staff_assignment_rules',$1::jsonb)`,
+    [
+      JSON.stringify({
+        ticket: {
+          teamId,
+          strategy: 'round_robin',
+          fallbacks: [{ teamId: backup, strategy: 'round_robin' }],
+        },
+        verification_case: {
+          teamId: backup,
+          strategy: 'round_robin',
+          fallbacks: [{ teamId, strategy: 'round_robin' }],
+        },
+      }),
+    ]
+  );
+  const service = new StaffAssignmentService();
+  const assignments = await Promise.all(
+    Array.from({ length: 12 }, async (_, index) => {
+      const client = await http.pool.connect();
+      try {
+        await client.query('BEGIN');
+        await client.query("SET LOCAL lock_timeout='5s'");
+        const result = await service.choose(
+          client,
+          index % 2 ? 'ticket' : 'verification_case',
+          randomUUID(),
+          'customer',
+          []
+        );
+        await client.query('COMMIT');
+        return result;
+      } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+      } finally {
+        client.release();
+      }
+    })
+  );
+  assignments.forEach((assignment, index) =>
+    expect(assignment?.teamId).toBe(index % 2 ? teamId : backup)
+  );
+  expect(assignments.filter((assignment) => assignment?.userId === 'alpha')).toHaveLength(6);
+  expect(assignments.filter((assignment) => assignment?.userId === 'beta')).toHaveLength(6);
+});

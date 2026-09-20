@@ -16,62 +16,64 @@
  */
 
 /** All channels the notification pipeline can deliver to. */
-export type NotificationChannel = 'in_app' | 'email' | 'sms'
+export type NotificationChannel = 'in_app' | 'email' | 'sms';
 
 /**
  * Delivery lifecycle states for an outbox row / job.
  * Mirrors the `notification_outbox.status` CHECK constraint in the migration.
  */
 export type NotificationDeliveryStatus =
-  | 'queued'
-  | 'scheduled'
-  | 'sending'
-  | 'delivered'
-  | 'failed'
-  | 'cancelled'
+  'queued' | 'scheduled' | 'sending' | 'delivered' | 'failed' | 'cancelled';
 
 /** Result status returned by a transport after a send attempt. */
-export type NotificationSendResultStatus = 'delivered' | 'failed'
+export type NotificationSendResultStatus = 'delivered' | 'failed';
 
 /**
  * A single logical delivery request handed to a transport adapter.
  *
- * `idempotencyKey` is unique per (event, channel, recipient). Reminder events
- * also fold the outbox row key so distinct invoices/offsets stay distinct;
- * other events keep sha256(eventKey:channel:profileId) so retries of
- * pre-existing rows cannot redeliver. `payload` carries the business
- * variables needed to render the message through the active template.
+ * `idempotencyKey` is stable for a logical occurrence and channel. New outbox
+ * rows use occurrence-based keys; versioned legacy retries retain their old
+ * provider identity. `outboxId` independently binds the durable inbox insert.
+ * `payload` carries business variables for the active template.
  */
 export interface NotificationSendPayload {
-  /** Unique idempotency key, typically sha256(eventKey:channel:profileId). */
-  idempotencyKey: string
+  /** Originating request/job trace. Never included in customer template variables. */
+  correlationId?: string;
+  /** Stable, versioned per-occurrence provider key. */
+  idempotencyKey: string;
+
+  /** Durable outbox occurrence, independent of legacy provider key format. */
+  outboxId?: string;
+
+  /** Abort external work if this worker loses its durable claim. */
+  signal?: AbortSignal;
 
   /** The channel this payload should be delivered on. */
-  channel: NotificationChannel
+  channel: NotificationChannel;
 
   /** Stable recipient identifier (profile id, or user id for in-app). */
-  recipientId: string
+  recipientId: string;
 
   /** Optional owning profile id for scoping / preference resolution. */
-  profileId: string | null
+  profileId: string | null;
 
   /** Business event key, e.g. 'profile_verified'. Used for template lookup. */
-  eventKey: string
+  eventKey: string;
 
   /** JSON variables used to render the message body/title. */
-  payload: Record<string, unknown>
+  payload: Record<string, unknown>;
 
   /** Provider reference from a previous attempt, if any (for idempotency). */
-  providerRef?: string
+  providerRef?: string;
 }
 
 /** Result returned from a transport `send()` call. */
 export interface NotificationSendResult {
   /** Provider-specific reference (e.g. provider message id, SMTP message id). */
-  providerRef: string
+  providerRef: string;
 
   /** Final delivery outcome — 'delivered' or 'failed'. */
-  status: NotificationSendResultStatus
+  status: NotificationSendResultStatus;
 }
 
 /**
@@ -83,7 +85,7 @@ export interface NotificationSendResult {
  */
 export interface INotificationTransport {
   /** The channel this transport delivers to. */
-  readonly channel: NotificationChannel
+  readonly channel: NotificationChannel;
 
   /**
    * Deliver a single message.
@@ -91,5 +93,5 @@ export interface INotificationTransport {
    * @throws On unexpected/provider failure — the worker catches the error and
    *   records it in the outbox row's `last_error` before scheduling a retry.
    */
-  send(payload: NotificationSendPayload): Promise<NotificationSendResult>
+  send(payload: NotificationSendPayload): Promise<NotificationSendResult>;
 }

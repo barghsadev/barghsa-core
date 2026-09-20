@@ -205,7 +205,7 @@
 **T-03.01.01 — App-level profile check middleware**
 
 - Description: After login, app checks if user has any profiles. If none, redirect to `/onboarding`. If exactly one profile, set it as default and proceed to dashboard. If multiple, show profile selector to choose default, then proceed.
-- Technical notes: Implemented as route guard/loader in TanStack Start. Query GET `/api/profiles` returns `{ profiles: [...], hasDefault: boolean, activeProfileId }`. Profile switch is persistent in DB (not just session). API must never return profiles belonging to another user.
+- Technical notes: Implemented as client route guard/loader in TanStack Router, with independent API authorization. Query GET `/api/profiles` returns `{ profiles: [...], hasDefault: boolean, activeProfileId }`. Profile switch is persistent in DB (not just session). API must never return profiles belonging to another user.
 - UI/UX: Brief loading state while fetching profiles. If no profiles, redirect to `/onboarding`. If multiple profiles, show a selection modal/dropdown briefly.
 - Dependencies: T-01.02.03, T-04.01.01
 - Complexity: M
@@ -535,8 +535,8 @@
 **T-06.01.01 — Ticket creation**
 
 - Description: User can create a support ticket. Subject, body (rich text optional), related profile, related entity type/ID (order, contract, invoice), priority, optional file attachments. All users can access.
-- Technical notes: POST `/api/tickets` with `{ subject, body, profileId, relatedEntityType, relatedEntityId, priority, attachments[] }`. Permissions: authenticated user, scoped to own profiles. Files uploaded then linked (document storage integration).
-- UI/UX: "Contact Support" / "Create Ticket" button. Form with: subject, category/type selector, priority (normal/high), body textarea, attachment upload, related entity selector (optional). Persian/EN labels.
+- Technical notes: POST `/api/tickets` with `{ subject, body, category, profileId, relatedEntityType, relatedEntityId, priority, attachments[] }`. Categories are `general`, `billing`, and `orders`; omitted category and existing tickets default to `general`. Permissions: authenticated user, scoped to own profiles. Files uploaded then linked (document storage integration).
+- UI/UX: "Contact Support" / "Create Ticket" button. Form with: subject, category selector (General, Billing, Orders; approved September 9), priority (normal/high), body textarea, attachment upload, related entity selector (optional). Show the saved category in list and detail. Persian/EN labels.
 - Dependencies: documents module
 - Complexity: M
 
@@ -731,7 +731,7 @@
 
 **T-09.07.01 — Dual-approval threshold configuration**
 
-- Description: Admin configures the IRR threshold above which refunds, manual financial adjustments, and bank payment confirmations require approval by a second authorized user.
+- Description: Admin configures the IRR threshold at or above which refunds, manual financial adjustments, and bank payment confirmations require approval by a second authorized user.
 - Technical notes: Value stored, requires step-up auth to change. Versioned config. Emergency override available (requires reason + elevated permission + immediate alert + audit).
 - UI/UX: Number input with large IRR display. Description of which actions are affected. "Changes require step-up authentication."
 - Dependencies: admin config framework, finance module
@@ -739,7 +739,7 @@
 
 **T-09.07.02 — Dual-approval workflow**
 
-- Description: When a financial action exceeds threshold, it enters Pending Approval state. Second authorized user (different from initiator) must approve or reject. Audit trail of both actions.
+- Description: When a financial action meets or exceeds the positive threshold, it enters Pending Approval state. Second authorized user (different from initiator) must approve or reject. Audit trail of both actions.
 - Technical notes: Initiation creates approval request with transaction details. Notification to approval-eligible staff. Second user reviews and approves/rejects. Cannot approve own requests. Queue view for pending approvals.
 - UI/UX: "Pending approvals" section in finance dashboard. Each: amount, initiator, reason, details. Approve/Reject buttons with reason (reason required for reject).
 - Dependencies: T-09.07.01

@@ -1,75 +1,78 @@
-import { Injectable, Logger } from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
-import { getDbPool } from '@barghsa/db'
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { classifyNotificationType, notificationLink } from '@barghsa/shared/notifications';
+import { NotificationCenterService, notificationScope } from './notification-center.service.js';
+import { Injectable, Logger } from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import { getDbPool } from '@barghsa/db';
 
 export interface CreateNotificationParams {
-  userId: string
-  profileId?: string
-  type: 'verification_status' | 'profile_verified' | 'profile_unverified' | 'profile_pending' | 'general'
-  title: string
-  body?: string
-  link?: string
+  userId: string;
+  profileId?: string;
+  type:
+    | 'verification_status'
+    | 'profile_verified'
+    | 'profile_unverified'
+    | 'profile_pending'
+    | 'general';
+  title: string;
+  localizedContent?: Record<'fa' | 'en', { title: string; body: string }>;
+  body?: string;
+  link?: string;
 }
 
 export interface NotificationResult {
-  id: string
-  userId: string
-  profileId: string | null
-  type: string
-  title: string
-  body: string | null
-  link: string | null
-  read: boolean
-  readAt: Date | null
-  createdAt: Date
-  updatedAt: Date
+  id: string;
+  userId: string;
+  profileId: string | null;
+  type: string;
+  title: string;
+  body: string | null;
+  link: string | null;
+  read: boolean;
+  readAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 /** A single delivery-log row surfaced to the admin panel (E-05, T-05.01.05). */
 export interface DeliveryLogRow {
-  id: string
-  notificationId: string
-  channel: 'in_app' | 'email' | 'sms'
-  status: 'delivered' | 'failed'
-  attemptNumber: number
-  providerRef: string | null
-  latencyMs: number | null
-  errorCategory: string | null
-  errorDetail: string | null
-  createdAt: Date
+  id: string;
+  notificationId: string;
+  channel: 'in_app' | 'email' | 'sms';
+  status: 'delivered' | 'failed' | 'sending' | 'unknown';
+  attemptNumber: number;
+  providerRef: string | null;
+  latencyMs: number | null;
+  errorCategory: string | null;
+  errorDetail: string | null;
+  createdAt: Date;
 }
 
-/**
- * In-app notification service (minimal stub for E-02 scope).
- *
- * Responsible for creating and retrieving in-app notifications.
- * The full delivery infrastructure (email/SMS transport, outbox,
- * worker) belongs to E-05.
- *
- * T-07.01.03 — Verification notification to user.
- */
+/** Canonical inbox writes and transactional delivery for verification notices. */
 @Injectable()
 export class NotificationsService {
-  private readonly logger = new Logger(NotificationsService.name)
+  private readonly logger = new Logger(NotificationsService.name);
 
   /**
    * Create a new in-app notification for a user.
    *
-   * Inserts a notification record into the `notifications` table.
-   * Future E-05 infrastructure will handle out-of-app delivery
-   * (email/SMS) based on user preferences.
+   * Writes to the canonical notification center, including private account notices.
    *
    * @param params - Notification creation parameters.
    * @returns The created notification record.
    */
-  async create(params: CreateNotificationParams): Promise<NotificationResult> {
-    const pool = getDbPool()
-    const id = uuidv7()
-    const now = new Date()
+  async create(
+    params: CreateNotificationParams,
+    transaction?: { query: (sql: string, params?: unknown[]) => Promise<unknown> }
+  ): Promise<NotificationResult> {
+    const pool = transaction ?? getDbPool();
+    const id = uuidv7();
+    const now = new Date();
 
     await pool.query(
-      `INSERT INTO notifications (id, user_id, profile_id, type, title, body, link, read, created_at, updated_at)
-       VALUES ($1, $2, $3, $4::notification_type, $5, $6, $7, false, $8, $8)`,
+      `INSERT INTO in_app_notifications (id,recipient_user_id,profile_id,type,title_i18n_key,body_i18n_key,localized_content,link_route,is_read,created_at,delivery_key)
+       VALUES ($1::uuid,$2,$3,$4,'notifications.legacy.title','notifications.legacy.body',
+       COALESCE($9::jsonb,jsonb_build_object('original',jsonb_build_object('title',$5::text,'body',COALESCE($6::text,'')))),$7,false,$8,'direct:'||$1::text)`,
       [
         id,
         params.userId,
@@ -77,12 +80,13 @@ export class NotificationsService {
         params.type,
         params.title,
         params.body ?? null,
-        params.link ?? null,
+        notificationLink(params.link),
         now,
-      ],
-    )
+        params.localizedContent ? JSON.stringify(params.localizedContent) : null,
+      ]
+    );
 
-    this.logger.log(`Notification created: id=${id} type=${params.type} user=${params.userId}`)
+    this.logger.log(`Notification created: id=${id} type=${params.type} user=${params.userId}`);
 
     return {
       id,
@@ -91,12 +95,53 @@ export class NotificationsService {
       type: params.type,
       title: params.title,
       body: params.body ?? null,
-      link: params.link ?? null,
+      link: notificationLink(params.link),
       read: false,
       readAt: null,
       createdAt: now,
       updatedAt: now,
-    }
+    };
+  }
+
+  /** Queue external verification channels in the caller's status-change transaction. */
+  async createVerification(
+    params: CreateNotificationParams & {
+      profileId: string;
+      profileName: string;
+      status: string;
+      localizedContent: NonNullable<CreateNotificationParams['localizedContent']>;
+    },
+    transaction: { query(sql: string, params?: unknown[]): Promise<unknown> }
+  ): Promise<NotificationResult> {
+    const notice = await this.create(params, transaction);
+    const outboxId = uuidv7();
+    const eventKey = 'profile.verification_status';
+    // The inbox entry already exists; external workers enforce current recipients/preferences.
+    await transaction.query(
+      `INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
+       VALUES($1,$2,$3,$4,$5,ARRAY['email','sms'],'queued',$6,5,$7)`,
+      [
+        outboxId,
+        params.profileId,
+        params.userId,
+        eventKey,
+        {
+          profileName: params.profileName,
+          status: params.status,
+          messageFa: params.localizedContent.fa.body,
+          messageEn: params.localizedContent.en.body,
+        },
+        `verification-notice:${notice.id}`,
+        correlationIdStorage.getStore() ?? null,
+      ]
+    );
+    const priority = classifyNotificationType(eventKey) === 'immediate' ? 'urgent' : 'normal';
+    await transaction.query(
+      `INSERT INTO notification_job(outbox_id,channel,status,priority,max_attempts)
+       VALUES($1,'email','queued',$2,5),($1,'sms','queued',$2,5)`,
+      [outboxId, priority]
+    );
+    return notice;
   }
 
   /**
@@ -110,78 +155,49 @@ export class NotificationsService {
   async findByUser(
     userId: string,
     limit: number = 50,
-    offset: number = 0,
+    offset: number = 0
   ): Promise<{ notifications: NotificationResult[]; total: number; unreadCount: number }> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
-    const countResult = await pool.query<{ total: string }>(
-      `SELECT COUNT(*) AS total FROM notifications WHERE user_id = $1`,
-      [userId],
-    )
-
-    const unreadResult = await pool.query<{ unread: string }>(
-      `SELECT COUNT(*) AS unread FROM notifications WHERE user_id = $1 AND read = false`,
-      [userId],
-    )
-
-    const rowsResult = await pool.query<NotificationResult>(
-      `SELECT id, user_id, profile_id, type, title, body, link, read, read_at, created_at, updated_at
-       FROM notifications
-       WHERE user_id = $1
-       ORDER BY created_at DESC
-       LIMIT $2 OFFSET $3`,
-      [userId, limit, offset],
-    )
-
+    const center = new NotificationCenterService(pool);
+    const profileId = await center.resolveActiveProfileId(userId);
+    const safeLimit = Number.isFinite(limit) ? Math.min(Math.max(Math.trunc(limit), 1), 100) : 50;
+    const safeOffset = Number.isFinite(offset) ? Math.max(Math.trunc(offset), 0) : 0;
+    const counts = (
+      await pool.query(
+        `SELECT count(*)::int AS total,
+      count(*) FILTER (WHERE NOT is_read)::int AS unread FROM in_app_notifications WHERE ${notificationScope}`,
+        [profileId, userId]
+      )
+    ).rows[0];
+    const rows = await pool.query(
+      `SELECT id,profile_id AS "profileId",type,
+      COALESCE(localized_content->'original'->>'title',localized_content->'fa'->>'title',title_i18n_key) AS title,
+      COALESCE(localized_content->'original'->>'body',localized_content->'fa'->>'body',body_i18n_key) AS body,
+      link_route AS link,is_read AS read,read_at AS "readAt",created_at AS "createdAt",created_at AS "updatedAt"
+      FROM in_app_notifications WHERE ${notificationScope} ORDER BY created_at DESC,id DESC LIMIT $3 OFFSET $4`,
+      [profileId, userId, safeLimit, safeOffset]
+    );
     return {
-      notifications: rowsResult.rows,
-      total: parseInt(countResult.rows[0]?.total ?? '0', 10),
-      unreadCount: parseInt(unreadResult.rows[0]?.unread ?? '0', 10),
-    }
+      notifications: rows.rows.map((row) => ({ ...row, userId })),
+      total: counts?.total ?? 0,
+      unreadCount: counts?.unread ?? 0,
+    };
   }
 
-  /**
-   * Get count of unread notifications for a user.
-   *
-   * @param userId - The user's UUID.
-   */
   async countUnread(userId: string): Promise<number> {
-    const pool = getDbPool()
-    const result = await pool.query<{ unread: string }>(
-      `SELECT COUNT(*) AS unread FROM notifications WHERE user_id = $1 AND read = false`,
-      [userId],
-    )
-    return parseInt(result.rows[0]?.unread ?? '0', 10)
+    const center = new NotificationCenterService(getDbPool());
+    return center.countUnread(await center.resolveActiveProfileId(userId), userId);
   }
 
-  /**
-   * Mark a single notification as read.
-   *
-   * @param notificationId - The notification UUID.
-   * @param userId - The user's UUID (for authorization check).
-   */
   async markAsRead(notificationId: string, userId: string): Promise<void> {
-    const pool = getDbPool()
-    await pool.query(
-      `UPDATE notifications SET read = true, read_at = $1, updated_at = $1
-       WHERE id = $2 AND user_id = $3`,
-      [new Date(), notificationId, userId],
-    )
+    const center = new NotificationCenterService(getDbPool());
+    await center.markRead(await center.resolveActiveProfileId(userId), notificationId, userId);
   }
 
-  /**
-   * Mark all notifications as read for a user.
-   *
-   * @param userId - The user's UUID.
-   */
   async markAllAsRead(userId: string): Promise<void> {
-    const pool = getDbPool()
-    const now = new Date()
-    await pool.query(
-      `UPDATE notifications SET read = true, read_at = $1, updated_at = $1
-       WHERE user_id = $2 AND read = false`,
-      [now, userId],
-    )
+    const center = new NotificationCenterService(getDbPool());
+    await center.markAllRead(await center.resolveActiveProfileId(userId), userId);
   }
 
   /**
@@ -196,30 +212,30 @@ export class NotificationsService {
    * @param options - Optional filters and pagination.
    */
   async findDeliveryLogs(options: {
-    notificationId?: string
-    channel?: 'in_app' | 'email' | 'sms'
-    status?: 'delivered' | 'failed'
-    limit?: number
-    offset?: number
+    notificationId?: string;
+    channel?: 'in_app' | 'email' | 'sms';
+    status?: 'delivered' | 'failed' | 'sending' | 'unknown';
+    limit?: number;
+    offset?: number;
   }): Promise<DeliveryLogRow[]> {
-    const pool = getDbPool()
-    const limit = Math.min(Math.max(options.limit ?? 50, 1), 200)
-    const offset = Math.max(options.offset ?? 0, 0)
+    const pool = getDbPool();
+    const limit = Math.min(Math.max(options.limit ?? 50, 1), 200);
+    const offset = Math.max(options.offset ?? 0, 0);
 
-    const conditions: string[] = []
-    const params: unknown[] = []
+    const conditions: string[] = [];
+    const params: unknown[] = [];
     // Counter-based placeholder builder. Each filter appends its value and a
     // fresh `$N` placeholder, so conditions never share or misnumber indexes.
     const push = (column: string, value: string) => {
-      params.push(value)
-      conditions.push(`${column} = $${params.length}`)
-    }
+      params.push(value);
+      conditions.push(`${column} = $${params.length}`);
+    };
 
-    if (options.notificationId) push('notification_id', options.notificationId)
-    if (options.channel) push('channel', options.channel)
-    if (options.status) push('status', options.status)
+    if (options.notificationId) push('notification_id', options.notificationId);
+    if (options.channel) push('channel', options.channel);
+    if (options.status) push('status', options.status);
 
-    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
     // Alias snake_case DB columns to camelCase so runtime rows match the
     // declared DeliveryLogRow shape (the `pg` driver does not auto-convert).
     const rowsResult = await pool.query<DeliveryLogRow>(
@@ -233,184 +249,31 @@ export class NotificationsService {
               error_category AS "errorCategory",
               error_detail AS "errorDetail",
               created_at AS "createdAt"
-       FROM notification_delivery_log
+       FROM (
+         SELECT l.id,l.notification_id,l.channel,l.attempt_number,l.provider_ref,l.latency_ms,l.created_at,
+           CASE WHEN feedback.event_type IS NOT NULL THEN 'failed' ELSE l.status END AS status,
+           CASE WHEN feedback.event_type IS NULL THEN l.error_category
+                WHEN feedback.raw->'data'->'bounce'->>'type'='Permanent' THEN 'permanent'
+                WHEN feedback.raw->'data'->'bounce'->>'type'='Temporary' THEN 'transient'
+                ELSE 'provider' END AS error_category,
+           CASE WHEN feedback.event_type IS NOT NULL THEN 'Provider reported bounce' ELSE l.error_detail END AS error_detail
+         FROM notification_delivery_log l
+         LEFT JOIN notification_send_receipts r
+           ON r.outbox_id=l.notification_id AND r.channel=l.channel AND r.attempt_token=l.send_attempt_token
+           AND r.status='accepted' AND r.transport='resend' AND r.provider_ref=l.provider_ref
+         LEFT JOIN LATERAL (
+           SELECT e.event_type,e.raw FROM email_webhook_events e
+           WHERE e.message_id=r.provider_ref AND r.provider_id=ANY(e.verified_provider_ids)
+             AND e.event_type='email.bounced'
+           ORDER BY (e.raw->'data'->'bounce'->>'type'='Permanent') DESC NULLS LAST,e.created_at DESC,e.id DESC
+           LIMIT 1
+         ) feedback ON true
+       ) history
        ${where}
-       ORDER BY created_at DESC
+       ORDER BY created_at DESC, id DESC
        LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
-      [...params, limit, offset],
-    )
-    return rowsResult.rows
-  }
-
-  /** A single dead-letter row surfaced to the admin panel (E-05, T-05.01.06). */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async listDeadLetters(options: {
-    status?: 'open' | 'retried' | 'resolved' | 'dismissed'
-    severity?: 'error' | 'critical'
-    channel?: 'in_app' | 'email' | 'sms'
-    limit?: number
-    offset?: number
-  }): Promise<any[]> {
-    const pool = getDbPool()
-    const limit = Math.min(Math.max(options.limit ?? 50, 1), 200)
-    const offset = Math.max(options.offset ?? 0, 0)
-
-    const conditions: string[] = []
-    const params: unknown[] = []
-    const push = (column: string, value: string) => {
-      params.push(value)
-      conditions.push(`${column} = $${params.length}`)
-    }
-    if (options.status) push('status', options.status)
-    if (options.severity) push('severity', options.severity)
-    if (options.channel) push('channel', options.channel)
-
-    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
-    const limitIdx = params.length + 1
-    const offsetIdx = params.length + 2
-    const rows = await pool.query(
-      `SELECT id,
-              outbox_id AS "outboxId",
-              job_id AS "jobId",
-              channel,
-              event_key AS "eventKey",
-              severity,
-              profile_id AS "profileId",
-              user_id AS "userId",
-              cause,
-              error_category AS "errorCategory",
-              attempts,
-              max_attempts AS "maxAttempts",
-              idempotency_key AS "idempotencyKey",
-              status,
-              resolved_at AS "resolvedAt",
-              resolved_by AS "resolvedBy",
-              created_at AS "createdAt",
-              updated_at AS "updatedAt"
-       FROM notification_dead_letter
-       ${where}
-       ORDER BY
-         /* Open/retried first, then critical severity, then newest. */
-         CASE status WHEN 'open' THEN 0 WHEN 'retried' THEN 1 WHEN 'resolved' THEN 2 ELSE 3 END,
-         CASE severity WHEN 'critical' THEN 0 ELSE 1 END,
-         created_at DESC
-       LIMIT $${limitIdx} OFFSET $${offsetIdx}`,
-      [...params, limit, offset],
-    )
-    return rows.rows
-  }
-
-  /**
-   * Apply a triage action to a dead-letter record (E-05, T-05.01.06).
-   *
-   * - `retry`   re-queues the underlying `notification_job` (same idempotency
-   *             key, so re-processing cannot double-deliver) and re-queues the
-   *             parent outbox row so the worker picks it up. Marked 'retried'.
-   * - `resolve` marks the record final (no further retry) — 'resolved'.
-   * - `dismiss` acknowledges/dismisses the record from the active view —
-   *             'dismissed'.
-   *
-   * Idempotent: acting on a record already resolved/dismissed/retried is a
-   * no-op that returns the current row. Returns the updated record.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async deadLetterAction(
-    id: string,
-    action: 'retry' | 'resolve' | 'dismiss',
-    actor: string,
-  ): Promise<any | null> {
-    const pool = getDbPool()
-    const current = await pool.query<{
-      id: string
-      jobId: string
-      outboxId: string
-      status: string
-    }>(
-      `SELECT id, job_id AS "jobId", outbox_id AS "outboxId", status
-         FROM notification_dead_letter WHERE id = $1`,
-      [id],
-    )
-    if (current.rows.length === 0) return null
-
-    const row = current.rows[0]
-    if (!row) return null
-
-    // Map the requested action to the persisted status (matches the
-    // chk_ndl_status CHECK constraint).
-    const nextStatus =
-      action === 'retry' ? 'retried' : action === 'resolve' ? 'resolved' : 'dismissed'
-
-    // The retry re-queue touches three tables; acquire a dedicated client and
-    // run it as a single transaction so a crash mid-way cannot leave the job
-    // re-queued while the dead-letter row stays open (or vice versa). A
-    // dedicated client is required — multi-statement `pool.query('BEGIN')`
-    // does not pin a connection across statements.
-    const client = await pool.connect()
-    try {
-      await client.query('BEGIN')
-
-      // Terminal states are immutable once acted upon (idempotent no-op); the
-      // UPDATE below is guarded to match only 'open' rows.
-      if (action === 'retry') {
-        // Reset the job to a fresh budget AND the parent outbox row (attempts
-        // and lock) so the worker re-dispatches instead of instantly
-        // re-dead-lettering from stale attempt counts. Idempotency keys are
-        // preserved, so re-processing cannot double-deliver (T-05.01.04).
-        await client.query(
-          `UPDATE notification_job
-              SET status = 'queued', run_after = NULL, attempts = 0,
-                  last_error = NULL, updated_at = NOW()
-            WHERE id = $1`,
-          [row.jobId],
-        )
-        await client.query(
-          `UPDATE notification_outbox
-              SET status = 'queued', locked_until = NULL, attempts = 0,
-                  updated_at = NOW()
-            WHERE id = $1`,
-          [row.outboxId],
-        )
-      }
-
-      const updated = await client.query(
-        `UPDATE notification_dead_letter
-            SET status = $1, resolved_at = NOW(), resolved_by = $2, updated_at = NOW()
-          WHERE id = $3 AND status = 'open'
-          RETURNING id,
-                    outbox_id AS "outboxId",
-                    job_id AS "jobId",
-                    channel,
-                    event_key AS "eventKey",
-                    severity,
-                    profile_id AS "profileId",
-                    user_id AS "userId",
-                    cause,
-                    error_category AS "errorCategory",
-                    attempts,
-                    max_attempts AS "maxAttempts",
-                    idempotency_key AS "idempotencyKey",
-                    status,
-                    resolved_at AS "resolvedAt",
-                    resolved_by AS "resolvedBy",
-                    created_at AS "createdAt",
-                    updated_at AS "updatedAt"`,
-        [nextStatus, actor, id],
-      )
-
-      await client.query('COMMIT')
-
-      // If the row was already acted upon (status != 'open'), the guarded
-      // UPDATE affected zero rows: report the terminal state so the caller
-      // treats it as an idempotent no-op.
-      if (updated.rows.length === 0) {
-        return { id: row.id, status: row.status }
-      }
-      return updated.rows[0]
-    } catch (err) {
-      await client.query('ROLLBACK')
-      throw err
-    } finally {
-      client.release()
-    }
+      [...params, limit, offset]
+    );
+    return rowsResult.rows;
   }
 }

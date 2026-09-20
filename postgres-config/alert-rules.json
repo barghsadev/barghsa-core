@@ -5,6 +5,18 @@
       "name": "barghsa-postgresql",
       "rules": [
         {
+          "alert": "PostgresMetricsCollectionFailed",
+          "expr": "pg_metrics_collection_success == 0",
+          "for": "1m",
+          "labels": {
+            "severity": "critical"
+          },
+          "annotations": {
+            "summary": "PostgreSQL metrics collection is failing",
+            "description": "Core database metrics are unavailable. Check database connectivity and monitoring permissions; missing samples are not healthy zeros."
+          }
+        },
+        {
           "alert": "PostgresCacheHitRatioLow",
           "expr": "pg_cache_hit_ratio < 0.95",
           "for": "5m",

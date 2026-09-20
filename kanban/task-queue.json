@@ -75,7 +75,7 @@
     "key": "01-platform-infrastructure.md#T-01.03.01",
     "fname": "01-platform-infrastructure.md",
     "id": "T-01.03.01",
-    "title": "Configure TanStack Start build pipeline in `apps/web`",
+    "title": "Configure Vite SPA build pipeline in `apps/web`",
     "complexity": "L",
     "source_line": 129
   },
@@ -5883,7 +5883,7 @@
     "key": "06-security-testing-observability.md#T-06.02.02.04",
     "fname": "06-security-testing-observability.md",
     "id": "T-06.02.02.04",
-    "title": "Ensure nonce generation and propagation for inline scripts/styles across SSR and client",
+    "title": "Ensure nonce generation and propagation for inline scripts/styles across the served HTML shell and client",
     "complexity": "L",
     "source_line": 143
   },
@@ -8915,7 +8915,7 @@
     "key": "07-ui-ux-design.md#T-07.03.02.01",
     "fname": "07-ui-ux-design.md",
     "id": "T-07.03.02.01",
-    "title": "Build LanguageSwitcher component: button/dropdown showing \"FA\" / \"EN\" labels. Changes language, toggles direction, persists in cookie (for SSR) and localStorage.",
+    "title": "Build LanguageSwitcher component: button/dropdown showing \"FA\" / \"EN\" labels. Changes language, toggles direction, persists in cookie and localStorage for subsequent client visits.",
     "complexity": "M",
     "source_line": 232
   },
@@ -8923,7 +8923,7 @@
     "key": "07-ui-ux-design.md#T-07.03.02.02",
     "fname": "07-ui-ux-design.md",
     "id": "T-07.03.02.02",
-    "title": "Implement SSR-friendly language detection: read `Accept-Language` header and language cookie. Set `dir` and `lang` attributes on `<html>` during server render. No flash of wrong direction on hydration.",
+    "title": "Implement early client language detection for the approved Vite SPA: read the persisted language preference from cookie/localStorage, falling back to browser language preferences. Set `dir` and `lang` attributes on `<html>` before React renders. No flash of the wrong direction during initial client rendering.",
     "complexity": "M",
     "source_line": 233
   },

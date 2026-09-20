@@ -1,10 +1,10 @@
-import { pgTable, text, uuid, index, boolean, primaryKey } from 'drizzle-orm/pg-core'
-import { desc } from 'drizzle-orm'
-import { uuidv7, timestamptz } from '../types.js'
-import { users } from './users.js'
-import { aiModels } from './ai-models.js'
-import { knowledgeBases } from './knowledge-bases.js'
-import { aiPolicies } from './ai-policies.js'
+import { pgTable, text, uuid, index, boolean, primaryKey } from 'drizzle-orm/pg-core';
+import { desc } from 'drizzle-orm';
+import { uuidv7, timestamptz } from '../types.js';
+import { users } from './users.js';
+import { aiModels } from './ai-models.js';
+import { knowledgeBases } from './knowledge-bases.js';
+import { aiPolicies } from './ai-policies.js';
 
 /**
  * AI agent record (S-09.11, T-09.11.04).
@@ -17,8 +17,8 @@ import { aiPolicies } from './ai-policies.js'
  * - `modelId` — the AI model (T-09.11.01) this agent talks to. RESTRICT on
  *   delete: an agent must never silently lose its brain, so deleting a
  *   referenced model fails with a 409 (AI_MODEL_IN_USE) in the models API.
- * - `enabled` — active/inactive flag; disabled agents cannot be assigned to
- *   slots (slot assignment lands with T-09.11.05).
+ * - `enabled` — active/inactive configuration flag. Assigning a slot does
+ *   not change this flag.
  * - Links (`aiAgentKbs`, `aiAgentPolicies`) — the referenced knowledge
  *   bases (T-09.11.02) and usage policies (T-09.11.03). The epic's agent
  *   config contract is model_id + kb_ids[] + policy_ids[]; the link tables
@@ -62,8 +62,8 @@ export const aiAgents = pgTable(
     index('idx_aia_created_at').on(desc(table.createdAt)),
     /** Admin list model filter + referential integrity (migration 0045). */
     index('idx_aia_model_id').on(table.modelId),
-  ],
-)
+  ]
+);
 
 /**
  * AI agent knowledge-base link (S-09.11, T-09.11.04).
@@ -98,8 +98,8 @@ export const aiAgentKbs = pgTable(
     index('idx_aiak_agent_id').on(table.agentId),
     /** Reverse lookup for KB delete cascade (migration 0045). */
     index('idx_aiak_kb_id').on(table.kbId),
-  ],
-)
+  ]
+);
 
 /**
  * AI agent policy link (S-09.11, T-09.11.04).
@@ -134,5 +134,5 @@ export const aiAgentPolicies = pgTable(
     index('idx_aiap_agent_id').on(table.agentId),
     /** Reverse lookup for policy delete cascade (migration 0045). */
     index('idx_aiap_policy_id').on(table.policyId),
-  ],
-)
+  ]
+);

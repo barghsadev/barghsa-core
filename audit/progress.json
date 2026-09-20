@@ -1,0 +1,1403 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-20",
+  "status": "local_repair_complete",
+  "plan": "audit/fix-plan.md",
+  "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+  "active_step": "B01",
+  "next_action": "Local repair sprint complete. Use the skipped-work handoff and exact partial criteria for separately authorized future work; no further serial repair batches.",
+  "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
+  "acceptance_ledger": "audit/acceptance-closure.json",
+  "evidence_checkpoint": "audit/final-repair-checkpoint.json",
+  "steps": [
+    {
+      "id": "A01",
+      "title": "Audit cleanup",
+      "status": "completed"
+    },
+    {
+      "id": "A02",
+      "title": "Evidence reconciliation",
+      "status": "completed"
+    },
+    {
+      "id": "R01",
+      "title": "Critical acceptance and repairs",
+      "status": "partial",
+      "remaining": "Local critical repairs and R02 caller/delivery linkage complete; unanswered lost-contact/signed-webhook policy and exact future/operational prerequisites remain."
+    },
+    {
+      "id": "R02",
+      "title": "Required administration consumers",
+      "status": "partial",
+      "remaining": "Local implemented consumer repairs complete. Explicit future AI/verification consumers, template/mapping rollout and deployed operational proof remain in V01/B01; theme acceptance continues R03."
+    },
+    {
+      "id": "R03",
+      "title": "Errors and UI acceptance",
+      "status": "partial",
+      "remaining": "Local error/tracing/UI/theme/timezone repairs complete. Native authenticated CSP telemetry awaits owner decision and production rollout evidence."
+    },
+    {
+      "id": "R04",
+      "title": "Purchase loading",
+      "status": "completed"
+    },
+    {
+      "id": "R05",
+      "title": "Strict dependencies",
+      "status": "completed"
+    },
+    {
+      "id": "V01",
+      "title": "Task and PR dispositions",
+      "status": "completed"
+    },
+    {
+      "id": "R06",
+      "title": "Coverage closure",
+      "status": "completed"
+    },
+    {
+      "id": "V02",
+      "title": "Final checkpoint",
+      "status": "completed"
+    },
+    {
+      "id": "B01",
+      "title": "Skipped-work handoff",
+      "status": "completed"
+    }
+  ],
+  "groups": [
+    {
+      "id": "F01",
+      "title": "Make task identity and completion durable",
+      "priority": "P0",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Local assignment, durable state, correction, exact-review and merge safety verified in V01-loop-durability. Remote bootstrap/restart and PR304 reconciliation remain external; scheduler remains untouched."
+      ]
+    },
+    {
+      "id": "F02",
+      "title": "Repair the production migration chain",
+      "priority": "P0",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Local migration, pool, clean/upgrade/repeat and snapshot checks are reviewed. Deployed inventory, restore/proxy checks and the explicit base-column design decision remain external."
+      ]
+    },
+    {
+      "id": "F03",
+      "title": "Fix session loading and CSRF execution order",
+      "priority": "P0",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Current browser sessions, CSRF and sensitive mutation callers are repaired and tested. Signed-provider callback and native CSP telemetry exceptions await the recorded owner decisions."
+      ]
+    },
+    {
+      "id": "F04",
+      "title": "Restore staff permission boundaries",
+      "priority": "P0",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Current role, staff and administration authority is repaired and tested through commit. Deployed administrator inventory and unbuilt domain consumers retain their prerequisites."
+      ]
+    },
+    {
+      "id": "F05",
+      "title": "Complete registration and OTP delivery",
+      "priority": "P0",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Registration, OTP, reset and contact/settings repairs are verified locally. Lost-contact approval/evidence policy and real-provider delivery remain prerequisites."
+      ]
+    },
+    {
+      "id": "F06",
+      "title": "Remove unconditional identity verification",
+      "priority": "P0",
+      "implementation_status": "safe_unavailable_provider",
+      "acceptance_status": "partial",
+      "remaining": [
+        "DISABLED/MANUAL verification is implemented and tested. API identity verification remains safely unavailable pending a real provider and deployed delivery evidence."
+      ]
+    },
+    {
+      "id": "F07",
+      "title": "Finish agent membership and ownership transfer",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Membership/ownership and implemented wallet/receipt/payment/invoice/address/electricity role criteria linked. Wallet read/create authority repaired. Refund, contract signing/documents and future product consumers remain prerequisites."
+      ]
+    },
+    {
+      "id": "F08",
+      "title": "Fix address deletion against the actual order schema",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Address and existing electricity order references are repaired and tested. Unbuilt savings/solar workflows and historical production reconciliation retain their dependencies."
+      ]
+    },
+    {
+      "id": "F09",
+      "title": "Connect real notification delivery and template test-send",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Current notification provider/template/branding/test-send consumers are implemented and tested locally. Real delivery, credential provisioning and legacy secrets require operations evidence."
+      ]
+    },
+    {
+      "id": "F10",
+      "title": "Make notification retries and quiet hours correct",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Retries, occurrence identity, leases, independent quiet hours and recovery are tested. Legacy attempted-message reconciliation remains an operator task."
+      ]
+    },
+    {
+      "id": "F11",
+      "title": "Unify notification inboxes and active-profile context",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "local_task_verified",
+      "remaining": [
+        "Current implemented workflows pass the complete production-browser suite. Unbuilt consumers remain assigned to their separate tasks."
+      ]
+    },
+    {
+      "id": "F12",
+      "title": "Resolve payable-overdue and refund transition conflicts",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Current overdue state and refund-model boundaries are tested. A complete refund workflow is a separately unbuilt feature."
+      ]
+    },
+    {
+      "id": "F13",
+      "title": "Apply dual approval to every built bank-payment path",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Current thresholds, distinct current reviewers, receipt fingerprints, concurrency and pending UI are tested. Legacy approval reconciliation remains external."
+      ]
+    },
+    {
+      "id": "F14",
+      "title": "Close invoice integration and duplicate-payment regression checks",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Implemented invoice/payment/ledger/receipt repairs are tested. Actual future refund/contract/order integration and operational reconciliation remain explicit prerequisites."
+      ]
+    },
+    {
+      "id": "F15",
+      "title": "Complete CRM screens and correct list queries",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "All nine F15 records reviewed: eight acceptance_verified; T-05.02.06 partial only for future production contracts and approved retention policy. Preserve source-bound local evidence; no whole-group acceptance claim."
+      ]
+    },
+    {
+      "id": "F16",
+      "title": "Finish customer and staff ticket workflows",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "local_task_verified",
+      "remaining": [
+        "Current implemented workflows pass the complete production-browser suite. Unbuilt consumers remain assigned to their separate tasks."
+      ]
+    },
+    {
+      "id": "F17",
+      "title": "Complete deferred administration screens and required consumers",
+      "priority": "P1",
+      "implementation_status": "partial",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Current administration consumers, geography/import and commit-time authority are repaired. Future consultation, ordering, contract/document, cancellation/refund and separate AI consumers remain itemized in the acceptance ledger."
+      ]
+    },
+    {
+      "id": "F18",
+      "title": "Test the actual production images and drain running work",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Current production images pass local boot, migration, readiness, shutdown and retry tests. Node24 requirement decision, release tags, rollout and real backing-service proof remain external."
+      ]
+    },
+    {
+      "id": "F19",
+      "title": "Make quality gates reflect the promised requirements",
+      "priority": "P1",
+      "implementation_status": "partial",
+      "acceptance_status": "local_task_verified",
+      "remaining": [
+        "All unchanged combined coverage gates and local build/type/lint/format/contract/budget checks pass. Hosted CI and deployment remain separate evidence."
+      ]
+    },
+    {
+      "id": "F20",
+      "title": "Verify localization, calendar behavior and accessibility",
+      "priority": "P2",
+      "implementation_status": "partial",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Current localization, RTL, calendar, theme and accessibility behavior passes production-browser regression. Unbuilt theme-editor/per-user controls and the literal Base UI versus Radix requirement remain explicit."
+      ]
+    },
+    {
+      "id": "F21",
+      "title": "Keep useful follow-up fixes and remove proven implementation drift",
+      "priority": "P2",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "partial",
+      "remaining": [
+        "Useful fixes and provenance are retained; saved PR statements are dispositioned. Remote PR304 reconciliation and scheduler dispatch remain untouched."
+      ]
+    },
+    {
+      "id": "F22",
+      "title": "Run acceptance closure for every recorded task",
+      "priority": "P1",
+      "implementation_status": "not_applicable_acceptance_gate",
+      "acceptance_status": "disposition_complete",
+      "remaining": [
+        "All 322 claims and 301 saved PRs have explicit dispositions, with no pending review or stale source binding. Partial/deferred criteria are retained; this does not certify unbuilt or external work."
+      ]
+    },
+    {
+      "id": "F23",
+      "title": "Align authentication rate limits with account and destination rules",
+      "priority": "P1",
+      "implementation_status": "implemented_with_recorded_local_checks",
+      "acceptance_status": "local_task_verified",
+      "remaining": [
+        "Auth rate-limit task02#T-02.04.01 verified locally at86bff51. Actual deployment/trusted proxy topology and provider delivery require operational evidence."
+      ]
+    }
+  ],
+  "completed_steps": [
+    {
+      "id": "A01",
+      "review_record": "audit/evidence/step-reviews.json#A01"
+    },
+    {
+      "id": "A02",
+      "review_record": "audit/evidence/step-reviews.json#A02"
+    },
+    {
+      "id": "R01-route-errors",
+      "review_record": "audit/evidence/step-reviews.json#R01-route-errors"
+    },
+    {
+      "id": "R01-session-revocation",
+      "review_record": "audit/evidence/step-reviews.json#R01-session-revocation"
+    },
+    {
+      "id": "R01-session-reuse-alert",
+      "review_record": "audit/evidence/step-reviews.json#R01-session-reuse-alert"
+    },
+    {
+      "id": "R01-atomic-step-up",
+      "review_record": "audit/evidence/step-reviews.json#R01-atomic-step-up"
+    },
+    {
+      "id": "R01-public-auth-csrf",
+      "review_record": "audit/evidence/step-reviews.json#R01-public-auth-csrf"
+    },
+    {
+      "id": "R01-auth-rate-and-support",
+      "review_record": "audit/evidence/step-reviews.json#R01-auth-rate-and-support"
+    },
+    {
+      "id": "A01-plan-refresh",
+      "review_record": "audit/evidence/step-reviews.json#A01-plan-refresh"
+    },
+    {
+      "id": "R01-recovery-runbook",
+      "review_record": "audit/evidence/step-reviews.json#R01-recovery-runbook"
+    },
+    {
+      "id": "R01-crm-session-permission",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-session-permission"
+    },
+    {
+      "id": "R01-crm-profile-permission",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-profile-permission"
+    },
+    {
+      "id": "R01-crm-account-notices",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-account-notices"
+    },
+    {
+      "id": "R01-crm-action-acceptance",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-action-acceptance"
+    },
+    {
+      "id": "R01-crm-password-change-date",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-password-change-date"
+    },
+    {
+      "id": "R01-crm-profile-records",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-profile-records"
+    },
+    {
+      "id": "R01-crm-profile-route-lifecycle",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-profile-route-lifecycle"
+    },
+    {
+      "id": "R01-crm-legal-fields",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-legal-fields"
+    },
+    {
+      "id": "R01-crm-legal-documents",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-legal-documents"
+    },
+    {
+      "id": "R01-crm-address-edit",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-address-edit"
+    },
+    {
+      "id": "R01-crm-correction-acknowledgements",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-acknowledgements"
+    },
+    {
+      "id": "R01-crm-correction-field-entry",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-field-entry"
+    },
+    {
+      "id": "R01-crm-correction-only-access",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-only-access"
+    },
+    {
+      "id": "R01-crm-correction-theme-and-scope",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-theme-and-scope"
+    },
+    {
+      "id": "A01-audit-reconciliation-2",
+      "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-2"
+    },
+    {
+      "id": "R01-crm-correction-acceptance",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-correction-acceptance"
+    },
+    {
+      "id": "R01-crm-legal-edit",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-legal-edit"
+    },
+    {
+      "id": "R01-archive-invoice-writers",
+      "review_record": "audit/evidence/step-reviews.json#R01-archive-invoice-writers"
+    },
+    {
+      "id": "R01-archive-wallet-writers",
+      "review_record": "audit/evidence/step-reviews.json#R01-archive-wallet-writers"
+    },
+    {
+      "id": "R01-archive-confirmation-and-retention",
+      "review_record": "audit/evidence/step-reviews.json#R01-archive-confirmation-and-retention"
+    },
+    {
+      "id": "R01-crm-profile-page-acceptance",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-profile-page-acceptance"
+    },
+    {
+      "id": "R01-crm-users-list",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-users-list"
+    },
+    {
+      "id": "R01-crm-search-filters",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-search-filters"
+    },
+    {
+      "id": "R01-crm-pending-widget",
+      "review_record": "audit/evidence/step-reviews.json#R01-crm-pending-widget"
+    },
+    {
+      "id": "R01-login-ui",
+      "review_record": "audit/evidence/step-reviews.json#R01-login-ui"
+    },
+    {
+      "id": "R01-device-trust-network",
+      "review_record": "audit/evidence/step-reviews.json#R01-device-trust-network"
+    },
+    {
+      "id": "R01-device-trust-atomic",
+      "review_record": "audit/evidence/step-reviews.json#R01-device-trust-atomic"
+    },
+    {
+      "id": "R01-trusted-device-management",
+      "review_record": "audit/evidence/step-reviews.json#R01-trusted-device-management"
+    },
+    {
+      "id": "R01-password-hash-policy",
+      "review_record": "audit/evidence/step-reviews.json#R01-password-hash-policy"
+    },
+    {
+      "id": "R01-login-destination",
+      "review_record": "audit/evidence/step-reviews.json#R01-login-destination"
+    },
+    {
+      "id": "R01-otp-trust-atomic",
+      "review_record": "audit/evidence/step-reviews.json#R01-otp-trust-atomic"
+    },
+    {
+      "id": "R01-forced-password-change",
+      "review_record": "audit/evidence/step-reviews.json#R01-forced-password-change"
+    },
+    {
+      "id": "R01-session-deadlines",
+      "review_record": "audit/evidence/step-reviews.json#R01-session-deadlines"
+    },
+    {
+      "id": "R01-step-up-rotation",
+      "review_record": "audit/evidence/step-reviews.json#R01-step-up-rotation"
+    },
+    {
+      "id": "R01-reset-transaction",
+      "review_record": "audit/evidence/step-reviews.json#R01-reset-transaction"
+    },
+    {
+      "id": "A01-audit-reconciliation-3",
+      "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
+    },
+    {
+      "id": "R01-reset-otp-first",
+      "review_record": "audit/evidence/step-reviews.json#R01-reset-otp-first"
+    },
+    {
+      "id": "R01-session-display",
+      "review_record": "audit/evidence/step-reviews.json#R01-session-display"
+    },
+    {
+      "id": "R01-cookie-policy",
+      "review_record": "audit/evidence/step-reviews.json#R01-cookie-policy"
+    },
+    {
+      "id": "R01-session-location",
+      "review_record": "audit/evidence/step-reviews.json#R01-session-location"
+    },
+    {
+      "id": "R01-self-revocation",
+      "review_record": "audit/evidence/step-reviews.json#R01-self-revocation"
+    },
+    {
+      "id": "R01-trusted-device-deadlines",
+      "review_record": "audit/evidence/step-reviews.json#R01-trusted-device-deadlines"
+    },
+    {
+      "id": "R01-staff-activation-deadlines",
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-activation-deadlines"
+    },
+    {
+      "id": "R01-session-caller-review",
+      "review_record": "audit/evidence/step-reviews.json#R01-session-caller-review"
+    },
+    {
+      "id": "R01-agent-role-credentials",
+      "review_record": "audit/evidence/step-reviews.json#R01-agent-role-credentials"
+    },
+    {
+      "id": "R01-invitation-credentials",
+      "review_record": "audit/evidence/step-reviews.json#R01-invitation-credentials"
+    },
+    {
+      "id": "R01-guard-boundaries",
+      "review_record": "audit/evidence/step-reviews.json#R01-guard-boundaries"
+    },
+    {
+      "id": "R01-staff-creation-step-up",
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-creation-step-up"
+    },
+    {
+      "id": "R01-staff-sensitive-actions",
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-sensitive-actions"
+    },
+    {
+      "id": "R01-staff-task-acceptance",
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
+    },
+    {
+      "id": "R01-agent-sensitive-actions",
+      "review_record": "audit/evidence/step-reviews.json#R01-agent-sensitive-actions"
+    },
+    {
+      "id": "R01-invitation-authority",
+      "review_record": "audit/evidence/step-reviews.json#R01-invitation-authority"
+    },
+    {
+      "id": "R01-ownership-authority",
+      "review_record": "audit/evidence/step-reviews.json#R01-ownership-authority"
+    },
+    {
+      "id": "R01-ownership-recipient-notice",
+      "review_record": "audit/evidence/step-reviews.json#R01-ownership-recipient-notice"
+    },
+    {
+      "id": "R01-agents-invitations-ownership",
+      "review_record": "audit/evidence/step-reviews.json#R01-agents-invitations-ownership"
+    },
+    {
+      "id": "R01-registration-otp",
+      "review_record": "audit/evidence/step-reviews.json#R01-registration-otp"
+    },
+    {
+      "id": "R01-session-recovery",
+      "review_record": "audit/evidence/step-reviews.json#R01-session-recovery"
+    },
+    {
+      "id": "R01-profiles-onboarding",
+      "review_record": "audit/evidence/step-reviews.json#R01-profiles-onboarding"
+    },
+    {
+      "id": "R01-account-settings",
+      "review_record": "audit/evidence/step-reviews.json#R01-account-settings"
+    },
+    {
+      "id": "R01-profile-addresses",
+      "review_record": "audit/evidence/step-reviews.json#R01-profile-addresses"
+    },
+    {
+      "id": "R01-wallet-ledger",
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-ledger"
+    },
+    {
+      "id": "R01-bank-receipts-approval",
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+    },
+    {
+      "id": "R01-online-topups-callbacks",
+      "review_record": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+    },
+    {
+      "id": "R01-chargebacks-alerts",
+      "review_record": "audit/evidence/step-reviews.json#R01-chargebacks-alerts"
+    },
+    {
+      "id": "R01-invoice-state-transitions",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-state-transitions"
+    },
+    {
+      "id": "R01-invoice-creation-calculation",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+    },
+    {
+      "id": "R01-invoice-deadlines-reminders",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-deadlines-reminders"
+    },
+    {
+      "id": "R01-invoice-corrections",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+    },
+    {
+      "id": "R01-invoice-adjustment-approval",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-adjustment-approval"
+    },
+    {
+      "id": "R01-wallet-invoice-payments-reversals",
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+    },
+    {
+      "id": "R01-tickets",
+      "review_record": "audit/evidence/step-reviews.json#R01-tickets"
+    },
+    {
+      "id": "R01-verification-policy",
+      "review_record": "audit/evidence/step-reviews.json#R01-verification-policy"
+    },
+    {
+      "id": "R01-invitation-dashboard",
+      "review_record": "audit/evidence/step-reviews.json#R01-invitation-dashboard"
+    },
+    {
+      "id": "R01-staff-permission-audit",
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-permission-audit"
+    },
+    {
+      "id": "R01-staff-role-catalogue",
+      "review_record": "audit/evidence/step-reviews.json#R01-staff-role-catalogue"
+    },
+    {
+      "id": "R01-cross-domain-authorization",
+      "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
+    },
+    {
+      "id": "R02-provider-session-authority",
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-session-authority"
+    },
+    {
+      "id": "R02-template-session-authority",
+      "review_record": "audit/evidence/step-reviews.json#R02-template-session-authority"
+    },
+    {
+      "id": "R02-provider-self-tests",
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-self-tests"
+    },
+    {
+      "id": "R02-provider-activation-proof",
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-activation-proof"
+    },
+    {
+      "id": "R02-email-branding-delivery",
+      "review_record": "audit/evidence/step-reviews.json#R02-email-branding-delivery"
+    },
+    {
+      "id": "R02-branded-admin-previews",
+      "review_record": "audit/evidence/step-reviews.json#R02-branded-admin-previews"
+    },
+    {
+      "id": "R02-recipient-channel-delivery",
+      "review_record": "audit/evidence/step-reviews.json#R02-recipient-channel-delivery"
+    },
+    {
+      "id": "R02-daytime-window",
+      "review_record": "audit/evidence/step-reviews.json#R02-daytime-window"
+    },
+    {
+      "id": "R02-sms-provider-ui-and-verified-self-tests",
+      "review_record": "audit/evidence/step-reviews.json#R02-sms-provider-ui-and-verified-self-tests"
+    },
+    {
+      "id": "R02-provider-template-authoring",
+      "review_record": "audit/evidence/step-reviews.json#R02-provider-template-authoring"
+    },
+    {
+      "id": "R02-outbox-delivery-checkpoint",
+      "review_record": "audit/evidence/step-reviews.json#R02-outbox-delivery-checkpoint"
+    },
+    {
+      "id": "R02-inbox-notification-policy",
+      "review_record": "audit/evidence/step-reviews.json#R02-inbox-notification-policy"
+    },
+    {
+      "id": "R02-template-lifecycle-seeding",
+      "review_record": "audit/evidence/step-reviews.json#R02-template-lifecycle-seeding"
+    },
+    {
+      "id": "R02-marketing-consent-channels",
+      "review_record": "audit/evidence/step-reviews.json#R02-marketing-consent-channels"
+    },
+    {
+      "id": "R02-email-provider-callbacks",
+      "review_record": "audit/evidence/step-reviews.json#R02-email-provider-callbacks"
+    },
+    {
+      "id": "R02-invoice-reminder-delivery",
+      "review_record": "audit/evidence/step-reviews.json#R02-invoice-reminder-delivery"
+    },
+    {
+      "id": "R02-receipt-expiry-notices",
+      "review_record": "audit/evidence/step-reviews.json#R02-receipt-expiry-notices"
+    },
+    {
+      "id": "R02-kb-agent-integration",
+      "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration"
+    },
+    {
+      "id": "R02-ai-settings",
+      "review_record": "audit/evidence/step-reviews.json#R02-ai-settings"
+    },
+    {
+      "id": "R02-catalogue-vat",
+      "review_record": "audit/evidence/step-reviews.json#R02-catalogue-vat"
+    },
+    {
+      "id": "R02-sensitive-actions-verification-delivery",
+      "review_record": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery"
+    },
+    {
+      "id": "R03-theme-contrast",
+      "review_record": "audit/evidence/step-reviews.json#R03-theme-contrast"
+    },
+    {
+      "id": "R03-controls",
+      "review_record": "audit/evidence/step-reviews.json#R03-controls"
+    },
+    {
+      "id": "R03-errors",
+      "review_record": "audit/evidence/step-reviews.json#R03-errors"
+    },
+    {
+      "id": "R03-correlation",
+      "review_record": "audit/evidence/step-reviews.json#R03-correlation"
+    },
+    {
+      "id": "R03-auxiliary-ui",
+      "review_record": "audit/evidence/step-reviews.json#R03-auxiliary-ui"
+    },
+    {
+      "id": "R03-consumer-theme-time",
+      "review_record": "audit/evidence/step-reviews.json#R03-consumer-theme-time"
+    },
+    {
+      "id": "R04-purchase-loading",
+      "review_record": "audit/evidence/step-reviews.json#R04-purchase-loading"
+    },
+    {
+      "id": "R05-strict-dependencies",
+      "review_record": "audit/evidence/step-reviews.json#R05-strict-dependencies"
+    },
+    {
+      "id": "V01-database-foundations",
+      "review_record": "audit/evidence/step-reviews.json#V01-database-foundations"
+    },
+    {
+      "id": "V01-seed-bootstrap",
+      "review_record": "audit/evidence/step-reviews.json#V01-seed-bootstrap"
+    },
+    {
+      "id": "V01-database-pr-reconciliation",
+      "review_record": "audit/evidence/step-reviews.json#V01-database-pr-reconciliation"
+    },
+    {
+      "id": "V01-local-development",
+      "review_record": "audit/evidence/step-reviews.json#V01-local-development"
+    },
+    {
+      "id": "V01-runtime-lifecycle",
+      "review_record": "audit/evidence/step-reviews.json#V01-runtime-lifecycle"
+    },
+    {
+      "id": "V01-loop-durability",
+      "review_record": "audit/evidence/step-reviews.json#V01-loop-durability"
+    },
+    {
+      "id": "V01-operations-configuration",
+      "review_record": "audit/evidence/step-reviews.json#V01-operations-configuration",
+      "scope": "Local review consolidated; six task acceptances and PRs retain operational prerequisites."
+    },
+    {
+      "id": "V01-config-backup",
+      "review_record": "audit/evidence/step-reviews.json#V01-config-backup"
+    },
+    {
+      "id": "V01-container-images",
+      "review_record": "audit/evidence/step-reviews.json#V01-container-images"
+    },
+    {
+      "id": "V01-distributed-limits",
+      "review_record": "audit/evidence/step-reviews.json#V01-distributed-limits"
+    },
+    {
+      "id": "V01-storage-workflow",
+      "review_record": "audit/evidence/step-reviews.json#V01-storage-workflow"
+    },
+    {
+      "id": "V01-redis-cache",
+      "review_record": "audit/evidence/step-reviews.json#V01-redis-cache"
+    },
+    {
+      "id": "V01-edge-caching",
+      "review_record": "audit/evidence/step-reviews.json#V01-edge-caching"
+    },
+    {
+      "id": "V01-ui-foundations",
+      "review_record": "audit/evidence/step-reviews.json#V01-ui-foundations"
+    },
+    {
+      "id": "V01-login-authentication",
+      "review_record": "audit/evidence/step-reviews.json#V01-login-authentication"
+    },
+    {
+      "id": "V01-terms-lifecycle",
+      "review_record": "audit/evidence/step-reviews.json#V01-terms-lifecycle"
+    },
+    {
+      "id": "V01-crm-management",
+      "review_record": "audit/evidence/step-reviews.json#V01-crm-management"
+    },
+    {
+      "id": "V01-staff-administration",
+      "review_record": "audit/evidence/step-reviews.json#V01-staff-administration"
+    },
+    {
+      "id": "V01-completion-sprint",
+      "review_record": "audit/evidence/step-reviews.json#V01-completion-sprint"
+    }
+  ],
+  "deferred_improvements": [
+    {
+      "task_key": "02-auth-users-admin.md#T-05.02.05",
+      "issue": "After a successful review, Corrections clears creation-form state even if the reviewer had an unrelated draft. Preserve that independent draft in a later noncritical UI pass. Invalid responses now preserve it.",
+      "source_revision": "054d28c15589c3485ccc16e88eec2b1d0d042518"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.01.01",
+      "issue": "Noncritical duplicated Register wording in the login footer is recorded for later copy cleanup, outside the controlled repair stopping criteria.",
+      "source_revision": "f461e5dd05fb8659d9adfacb2f96688b09492d59"
+    },
+    {
+      "task_key": "05-notifications-documents-ai.md#T-05.01.05",
+      "issue": "Optional dedicated processing-kind field for historical dispatch/recovery/hold rows. Current requirement specifies per-job attempt_number; UI now says processing attempt, explains receipt reuse and leaves recovered send duration null. No extra schema/history subsystem is required for that clarification. Defer the richer marker outside confirmed repairs.",
+      "source_revision": "fe7a366bd2090de6013ef035a6f33bc6bcc9b8bb"
+    },
+    {
+      "issue": "Login username blur inserts its required-field error and moves the support link during a pointer click. Keyboard activation works. Existing form layout issue, outside purchase-loading repairs.",
+      "source_revision": "7eecc144cb01bdafd9860b867ca163683b49a727"
+    }
+  ],
+  "scope_note": "Group implementation labels summarize recorded repairs, not whole-group acceptance. Historical status counts are generated from the ledger, never inferred from these labels.",
+  "step_evidence": "audit/evidence/step-reviews.json",
+  "counts": {
+    "historical_tasks": 322,
+    "acceptance_verified": 219,
+    "partial": 54,
+    "pending": 0,
+    "merged_prs": 301,
+    "historical_skips": 58,
+    "skips_verified": 8,
+    "skips_pending": 0
+  },
+  "user_decisions": [
+    "Retain Vite SPA under ADR004.",
+    "No automatic identity provider; retain safe unavailable state and supported manual verification.",
+    "Dependency license allowlist waived. Coverage thresholds and existing route numeric limits remain unchanged; see approved estimator measurement below.",
+    "Confirmed support contacts: info@barghsa.com, office 021-26658042, mobile 09002550292. Unsupported response-time promise removed.",
+    "September9: owner approved \"Initial-load limit; measure estimator separately\". Auth initial-load gate stays150KB gzip; full estimator measured independently against900KB. Initial registration149.22KB, estimator837.80KB. Eager imports remain counted. Canonical T-01.03.04 updated at06a4b44.",
+    "September9: implement a pre-login CSRF-token flow. Do not amend public login/registration to accept JSON-only protection as final CSRF acceptance.",
+    "September9: ticket categories are General, Billing, Orders. Canonical T-06.01.01 now records these values, defaults and display requirements. Implemented at0ad0760.",
+    "September13: permit limited trusted server-side secret decryption for sending workers, authorized verified-recipient provider tests, webhook verification of its signing secret, masking and rollback. T-05.06.05 updated at981e98d6."
+  ],
+  "pending_questions": [
+    {
+      "task_key": "02-auth-users-admin.md#T-02.03.03",
+      "question": "Who may approve lost-contact account recovery, and which identity checks does support use?",
+      "status": "awaiting_owner",
+      "independent_work": "R01 session/capability callers"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.03",
+      "question": "May signed provider webhooks use their independent HMAC/time/event/merchant proof without a browser session CSRF token, with that narrow exception documented?",
+      "status": "awaiting_owner",
+      "independent_work": "Complete current provider/expiry and saved PR reviews. Browser confirmation already requires session CSRF.",
+      "asked_once": "2026-09-09 via request_user_input_async; do not repeat."
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.03",
+      "question": "Allow a narrow native same-origin CSP telemetry exception and document it in T-02.02.03? Browser supplies session cookies but cannot supply X-CSRF-Token.",
+      "status": "awaiting_owner",
+      "asked_once": "2026-09-13 via request_user_input_async; do not repeat.",
+      "independent_work": "R03-correlation; existing CSP guard remains enforced."
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-02.02.02",
+      "question": "Preserve the38 named/composite/immutable table designs with explicit base-column exceptions, or plan compatibility migrations?",
+      "status": "awaiting_owner",
+      "asked_once": "2026-09-13 via request_user_input_async; do not repeat.",
+      "independent_work": "Remaining V01 saved PR reviews"
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.01.01",
+      "question": "Keep the existing tested Node24 production images and update the old Node20 requirement?",
+      "status": "awaiting_owner",
+      "asked_once": "2026-09-18 via request_user_input_async; do not repeat.",
+      "independent_work": "Continue container/context/runtime checks and remaining feature batches."
+    },
+    {
+      "task_key": "07-ui-ux-design.md#T-07.01.01.02",
+      "question": "Retain tested Base UI/base-nova and update literal Radix/new-york requirement, or migrate preserving behavior?",
+      "status": "awaiting_owner",
+      "asked_once": "2026-09-18 via request_user_input_async; do not repeat.",
+      "independent_work": "UI font/build configuration and complex widget acceptance."
+    }
+  ],
+  "inventory_freshness": {
+    "saved_merged_prs": 301,
+    "last_recorded_github_check": "2026-09-08",
+    "latest_saved_merge": "2026-09-03T15:47:41Z",
+    "refresh_attempt": "unavailable",
+    "reason": "gh executable remains unavailable at this audit refresh; all saved PR bodies were read. No new remote inventory or remote state change claimed."
+  },
+  "evidence_refresh_queue": [],
+  "audit_refresh": {
+    "date": "2026-09-08",
+    "source_revision": "9a114cfc3daf4397f0ec7bcd4101d7cf33d34060",
+    "record": "audit/cleanup-manifest.json#refresh",
+    "scope": "Directory reconciliation and plan cleanup only; product files and acceptance statuses unchanged.",
+    "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
+  },
+  "active_batch": {
+    "id": "V01-completion-sprint",
+    "status": "completed_locally",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-05.01.01",
+      "01-platform-infrastructure.md#T-05.01.02",
+      "01-platform-infrastructure.md#T-05.01.03",
+      "01-platform-infrastructure.md#T-05.02.01",
+      "01-platform-infrastructure.md#T-05.02.02",
+      "01-platform-infrastructure.md#T-05.02.03",
+      "01-platform-infrastructure.md#T-05.02.04",
+      "01-platform-infrastructure.md#T-05.03.01",
+      "01-platform-infrastructure.md#T-05.03.02",
+      "01-platform-infrastructure.md#T-05.03.03",
+      "01-platform-infrastructure.md#T-05.03.04",
+      "01-platform-infrastructure.md#T-05.03.05",
+      "01-platform-infrastructure.md#T-05.04.01",
+      "01-platform-infrastructure.md#T-05.04.02",
+      "01-platform-infrastructure.md#T-05.04.03",
+      "01-platform-infrastructure.md#T-05.04.04",
+      "01-platform-infrastructure.md#T-05.05.01",
+      "01-platform-infrastructure.md#T-05.05.02",
+      "01-platform-infrastructure.md#T-05.05.03",
+      "01-platform-infrastructure.md#T-05.05.04",
+      "01-platform-infrastructure.md#T-06.01.01",
+      "01-platform-infrastructure.md#T-06.01.02",
+      "01-platform-infrastructure.md#T-06.01.03",
+      "01-platform-infrastructure.md#T-06.01.05",
+      "01-platform-infrastructure.md#T-06.02.01",
+      "01-platform-infrastructure.md#T-06.02.02",
+      "01-platform-infrastructure.md#T-06.03.01",
+      "01-platform-infrastructure.md#T-06.04.01",
+      "01-platform-infrastructure.md#T-07.01.01",
+      "01-platform-infrastructure.md#T-07.01.02",
+      "01-platform-infrastructure.md#T-07.01.03",
+      "01-platform-infrastructure.md#T-07.01.04",
+      "01-platform-infrastructure.md#T-07.02.01",
+      "01-platform-infrastructure.md#T-07.02.02",
+      "01-platform-infrastructure.md#T-07.02.03",
+      "01-platform-infrastructure.md#T-07.02.04",
+      "01-platform-infrastructure.md#T-07.02.05",
+      "01-platform-infrastructure.md#T-07.03.01",
+      "01-platform-infrastructure.md#T-07.03.02",
+      "01-platform-infrastructure.md#T-07.03.03",
+      "01-platform-infrastructure.md#T-07.03.04",
+      "01-platform-infrastructure.md#T-07.04.01",
+      "01-platform-infrastructure.md#T-07.04.02",
+      "01-platform-infrastructure.md#T-07.04.03",
+      "01-platform-infrastructure.md#T-07.04.04",
+      "01-platform-infrastructure.md#T-07.05.01",
+      "01-platform-infrastructure.md#T-07.05.02",
+      "01-platform-infrastructure.md#T-07.05.03",
+      "01-platform-infrastructure.md#T-07.05.04",
+      "02-auth-users-admin.md#T-09.02.01",
+      "02-auth-users-admin.md#T-09.02.02",
+      "02-auth-users-admin.md#T-09.08.01",
+      "02-auth-users-admin.md#T-09.08.02",
+      "02-auth-users-admin.md#T-09.08.03",
+      "02-auth-users-admin.md#T-09.09.01",
+      "02-auth-users-admin.md#T-09.09.02",
+      "02-auth-users-admin.md#T-09.10.01",
+      "02-auth-users-admin.md#T-09.10.02",
+      "02-auth-users-admin.md#T-09.10.03",
+      "02-auth-users-admin.md#T-09.12.03",
+      "02-auth-users-admin.md#T-09.12.04",
+      "02-auth-users-admin.md#T-09.12.06",
+      "03-core-business.md#T-03.01.01.01",
+      "03-core-business.md#T-03.01.01.02",
+      "03-core-business.md#T-03.01.01.03",
+      "03-core-business.md#T-03.01.01.04"
+    ],
+    "prs": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      9,
+      10,
+      11,
+      13,
+      14,
+      15,
+      16,
+      25,
+      26,
+      28,
+      121,
+      143,
+      144,
+      145,
+      147,
+      148,
+      154,
+      155,
+      157,
+      158,
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      204,
+      205,
+      206,
+      214,
+      215,
+      216,
+      217
+    ],
+    "next_action": "Resolve final validation and coverage gates; retain external/future handoff.",
+    "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9"
+  },
+  "open_domain_reviews": [
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "owner_batch": "wallet/ledger and receipts/approvals/payments",
+      "criteria": "Finance wallet/payment/receipt/refund rights; Manager/Legal money denial",
+      "status": "Implemented customer wallet read/create/charge/receipt and owner settlement reviewed. Refund consumers remain future prerequisites.",
+      "evidence": "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "owner_batch": "invoices",
+      "criteria": "Finance invoice visibility and additive scope",
+      "status": "verified for implemented invoice reads; source-bound Finance/removed-member/concurrency evidence linked",
+      "evidence": "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "owner_batch": "contracts/documents",
+      "criteria": "Legal accept/sign/reject/change rights; Finance signing denial",
+      "status": "Dispositioned in current acceptance ledger; complete future contract/document consumers remain prerequisites."
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "owner_batch": "orders and addresses",
+      "criteria": "Manager operations, documents/comments/consultation and protected identity denial",
+      "status": "verified for implemented address/order operations; future product flows remain",
+      "evidence": "audit/evidence/step-reviews.json#R01-profile-addresses"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.03",
+      "owner_batch": "R01 payments/callbacks",
+      "criteria": "Signed callback/chargeback authentication, replay/ledger effects and state-changing payment return GET against literal CSRF requirement",
+      "status": "Browser return and chargeback authentication/replay are reviewed and tested; signed-provider CSRF wording awaits owner decision.",
+      "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.03",
+      "owner_batch": "R02 email delivery",
+      "criteria": "Signed email webhook/replay and CSRF disposition",
+      "status": "Current local delivery reviewed; signed-webhook policy remains the recorded owner prerequisite."
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.03",
+      "owner_batch": "R03 telemetry",
+      "criteria": "Actual browser CSP report transport, cookie context, payload safety and CSRF disposition",
+      "status": "Nonce/parser/sanitization repaired. Native signed-in reports are403; narrow CSRF decision pending.",
+      "evidence": "audit/evidence/step-reviews.json#R03-errors"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-02.02.04",
+      "owner_batch": "V01/B01 future sensitive consumers",
+      "criteria": "Required sensitive caller authorization through writes, verification audit and UI re-prompt; retain separate refund/contract/no-provider prerequisites",
+      "status": "Implemented callers verified, including all four storage routes. Exact future dependencies retained.",
+      "evidence": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
+      "prerequisite_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.4.01.01",
+        "04-invoices-wallet-contracts.md#T-04.4.01.02",
+        "04-invoices-wallet-contracts.md#T-04.4.01.04",
+        "04-invoices-wallet-contracts.md#T-04.4.01.05",
+        "04-invoices-wallet-contracts.md#T-04.4.01.06",
+        "04-invoices-wallet-contracts.md#T-04.5.01.01",
+        "04-invoices-wallet-contracts.md#T-04.5.01.02",
+        "04-invoices-wallet-contracts.md#T-04.5.01.03",
+        "04-invoices-wallet-contracts.md#T-04.5.01.05",
+        "04-invoices-wallet-contracts.md#T-04.5.01.06",
+        "04-invoices-wallet-contracts.md#T-04.5.04.01",
+        "04-invoices-wallet-contracts.md#T-04.5.04.02"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.01.02",
+      "pr": 103,
+      "owning_batch": "R01 commercial orders",
+      "remaining": "Current commercial-order acceptance closes at1c06613; no-provider/future product prerequisites remain as recorded.",
+      "review_record": "audit/evidence/step-reviews.json#R01-profile-addresses",
+      "status": "verified for implemented commercial orders"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-03.03.06",
+      "pr": 114,
+      "owning_batch": "R03 timestamp consumers",
+      "remaining": "R03: link complete timestamp-consumer coverage to the account timezone while calendar selection remains locale-based.",
+      "review_record": "audit/evidence/step-reviews.json#R01-account-settings"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.3.01.06",
+      "owning_batch": "V01/B01 incidental implementation",
+      "status": "implemented_and_reviewed_incidentally",
+      "remaining": "Retain separate overpayment credit implementation fromPR298; link this evidence during full backlog disposition. Outside322 historical claims; not an unbuilt task.",
+      "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
+      "prs": [
+        225
+      ],
+      "owning_batch": "V01/B01 product prerequisites",
+      "remaining": "AutoInvoiceService supports a caller-owned transaction and freezes price/VAT/terms/gift inputs, but has no production submission caller. Current OrdersService saves DRAFTs; charging drafts would violate the story. Concrete electricity simple/advanced, savings, consultation and contract submission workflows remain required future prerequisites in V01/B01. No automatic submission acceptance is claimed.",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
+      "prs": [
+        227
+      ],
+      "owning_batch": "V01/B01 product prerequisites",
+      "remaining": "orderId is a real nullable orders foreign key. contractId and consultationId remain nullable text references because target tables do not exist. Required foreign keys and validated consumer selection remain with the contract/consultation prerequisites in V01/B01.",
+      "review_record": "audit/evidence/step-reviews.json#R01-invoice-creation-calculation"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
+      "owner_batch": "V01 operational migration validation",
+      "criteria": "Retire old adjustment writers and validate legacy ck_invoices_adjustment_kind_matches_link after reconciliation.",
+      "status": "External operational evidence required; current new writes and backfill tested.",
+      "evidence": "audit/evidence/step-reviews.json#R01-invoice-corrections"
+    },
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.04.01",
+      "prs": [
+        285
+      ],
+      "owner_batch": "V01 operational migration validation",
+      "remaining": "Reconcile reported legacy reversal rows and validate chk_wallet_tx_reversal_original. Current new-write constraints and reversal service are verified; no operator execution claimed.",
+      "review_record": "audit/evidence/step-reviews.json#R01-wallet-invoice-payments-reversals"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-06.01.01",
+      "prs": [
+        138
+      ],
+      "owner_batch": "V01/B01 unmet product dependencies",
+      "remaining": "T-06.01.01: contract linking remains unavailable409 until the contract table and creation workflow exist. Preserve the explicit V01/B01 dependency; current invoice/order linking and optional general support are verified.",
+      "review_record": "audit/evidence/step-reviews.json#R01-tickets",
+      "prerequisite_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.5.01.01",
+        "04-invoices-wallet-contracts.md#T-04.5.01.02",
+        "04-invoices-wallet-contracts.md#T-04.5.01.03"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-06.01.02",
+      "prs": [
+        139
+      ],
+      "owner_batch": "V01/B01 unmet product dependencies",
+      "remaining": "T-06.01.02: customer invoice links work in list and detail; dedicated order/contract record views remain unbuilt. Unsupported links are labeled unavailable. Staff invoice detail is also absent; /admin/invoices is a collection of forms and is not treated as a record destination.",
+      "review_record": "audit/evidence/step-reviews.json#R01-tickets",
+      "prerequisite_task_keys": [
+        "03-core-business.md#T-03.07.04.02",
+        "03-core-business.md#T-03.09.04.04",
+        "04-invoices-wallet-contracts.md#T-04.5.03.03"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-07.01.01",
+      "prs": [
+        141
+      ],
+      "owner_batch": "V01/B01 external provider prerequisite",
+      "remaining": "DISABLED/MANUAL Draft→Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
+      "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
+      "prerequisite_task_keys": [
+        "02-auth-users-admin.md#T-07.01.02"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-07.01.02",
+      "prs": [
+        142
+      ],
+      "owner_batch": "V01/B01 external provider prerequisite",
+      "remaining": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create→outbox→worker→result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
+      "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
+      "prerequisite_task_keys": []
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-07.01.03",
+      "prs": [
+        146
+      ],
+      "owner_batch": "V01/B01 provider and deployment prerequisites",
+      "remaining": "Manual in-app/email/SMS delivery verified. Automatic results need the real provider; publish reviewed verification templates and SMS mappings before producer rollout.",
+      "review_record": "audit/evidence/step-reviews.json#R02-sensitive-actions-verification-delivery",
+      "prerequisite_task_keys": [
+        "02-auth-users-admin.md#T-07.01.02"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-05.04.04",
+      "owner_batch": "V01/B01 future refund/contract/document consumers",
+      "remaining": "Integrate the recorded role matrix into actual refund, cancellation, signing and contract-document flows; do not treat shared permission labels as completed consumers.",
+      "prerequisite_task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.4.01.01",
+        "04-invoices-wallet-contracts.md#T-04.4.01.02",
+        "04-invoices-wallet-contracts.md#T-04.4.01.04",
+        "04-invoices-wallet-contracts.md#T-04.4.01.05",
+        "04-invoices-wallet-contracts.md#T-04.4.01.06",
+        "04-invoices-wallet-contracts.md#T-04.5.01.01",
+        "04-invoices-wallet-contracts.md#T-04.5.01.02",
+        "04-invoices-wallet-contracts.md#T-04.5.01.03",
+        "04-invoices-wallet-contracts.md#T-04.5.01.05",
+        "04-invoices-wallet-contracts.md#T-04.5.01.06",
+        "04-invoices-wallet-contracts.md#T-04.5.04.01",
+        "04-invoices-wallet-contracts.md#T-04.5.04.02"
+      ],
+      "review_record": "audit/evidence/step-reviews.json#R01-cross-domain-authorization"
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.02",
+      "prs": [
+        208
+      ],
+      "owner_batch": "V01/B01 future AI processing and agent chat",
+      "remaining": "Actual extraction, chunking, embeddings and retrieval remain unbuilt under 05-notifications-documents-ai.md#T-05.17.02. Stored pending status is not processing completion.",
+      "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration",
+      "prerequisite_task_keys": [
+        "05-notifications-documents-ai.md#T-05.17.02"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.04",
+      "prs": [
+        210
+      ],
+      "owner_batch": "V01/B01 future AI processing and agent chat",
+      "remaining": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01–03 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
+      "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration",
+      "prerequisite_task_keys": [
+        "05-notifications-documents-ai.md#T-05.17.02",
+        "05-notifications-documents-ai.md#T-05.18.03",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03"
+      ]
+    },
+    {
+      "task_key": "02-auth-users-admin.md#T-09.11.05",
+      "prs": [
+        211
+      ],
+      "owner_batch": "V01/B01 future chatbot consumers",
+      "remaining": "Actual chatbot/frontend/external slot consumers remain unbuilt. The administration endpoint and stable slot keys do not prove runtime consumption. Requires the actual agent backend under 02-auth-users-admin.md#T-09.11.04 and profile-scoped slot context under 05-notifications-documents-ai.md#T-05.22.04.",
+      "review_record": "audit/evidence/step-reviews.json#R02-ai-settings",
+      "prerequisite_task_keys": [
+        "02-auth-users-admin.md#T-09.11.04",
+        "05-notifications-documents-ai.md#T-05.22.04"
+      ]
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-06.03.02",
+      "owner_batch": "R03 implemented consumer acceptance",
+      "criteria": "Toast/command/avatar/progress logical placement; remaining shared/consumer themes and keyboard/focus; linked T-06.03.03 and .06 skeleton/state acceptance.",
+      "status": "Auxiliary shared repairs pass21 browser/49 UI checks. Remaining page themes/RTL/loading states continue in R03.",
+      "evidence": "audit/evidence/step-reviews.json#R03-auxiliary-ui"
+    }
+  ],
+  "completion_sprint": {
+    "approved": "2026-09-20",
+    "base_revision": "08f97589",
+    "status": "completed_locally",
+    "weekly_used_baseline": 0,
+    "weekly_used_stop_target": 45,
+    "weekly_used_ceiling": 50,
+    "scope": "Finish actionable local repairs, coverage and final validation; disposition external, owner and future prerequisites without certifying them.",
+    "review_policy": "One combined independent review after repairs; focused safety checks during implementation.",
+    "preserved_in_flight": [
+      "apps/worker/src/service-targets/support-scanners.integration.test.ts",
+      "audit/progress.json"
+    ],
+    "reconciliation": {
+      "pending_claims": 66,
+      "historically_skipped_pending": 49,
+      "other_pending": 17,
+      "evidence_refreshes": 22
+    },
+    "next_action": "Local repair sprint complete. Use the skipped-work handoff and exact partial criteria for separately authorized future work; no further serial repair batches.",
+    "latest_weekly_used_percent": 22,
+    "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+    "coverage_thresholds_changed": false,
+    "final_review": "No remaining actionable issues in combined product review and focused test/measurement follow-ups; reviewed source hashes and exact logs are archived.",
+    "resolved_historical_note": "The auth.refresh_token_reused seed gap from the older R02 review is resolved in the current bilingual email/in-app seed registry; full database suite760 passes. Historical failed evidence remains unchanged."
+  },
+  "kanban_readiness": {
+    "checked": "2026-09-20",
+    "local_development": "resolve_pr_305_ci_before_next_feature_batch",
+    "automatic_loop": "blocked_pending_remote_reconciliation",
+    "backlog_validation": {
+      "tasks": 1355,
+      "traceability_entries": 116,
+      "status": "passed"
+    },
+    "audit_population": {
+      "verified": 219,
+      "partial": 54,
+      "deferred": 49,
+      "pending": 0
+    },
+    "continuation": "kanban/CONTINUATION.md",
+    "remote_main_observed": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
+    "remote_state_branch_observed": "absent",
+    "pr_304_status": "closed_without_merge; verified through public GitHub API",
+    "runtime_state_changed": false,
+    "pr_305": {
+      "url": "https://github.com/barghsadev/barghsa-core/pull/305",
+      "state": "open",
+      "draft": false,
+      "merged": false,
+      "head_sha": "51c8296eb681483716111d7f1c3390f03b0002fb",
+      "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35496904395",
+      "previous_failed_checks": [
+        "Run tests",
+        "Verify monorepo integrity",
+        "Scan Git history for secrets",
+        "Verify combined source coverage"
+      ],
+      "previous_passed_checks": [
+        "Static security checks"
+      ],
+      "ci_status": "tests_browser_integrity_security_passed; coverage_report_merge_failed; generated_cache_followup_validated_locally"
+    },
+    "remote_check_scope": "Read-only checks of PRs 304 and 305, main, and kanban-state refs; not a full PR inventory refresh.",
+    "ci_repair": {
+      "status": "coverage_checkout_cache_followup_validated_locally",
+      "scope": "PR #305 only; next feature batch remains on hold",
+      "changes": [
+        "Reuse the completed CI build during parallel tests",
+        "Update vulnerable dependencies and preserve GeoIP updater compatibility",
+        "Ignore only 101 verified historical metadata fingerprints",
+        "Bound API/worker/database test concurrency and give full migration/PgBouncer fixtures explicit 30-second budgets",
+        "Drop temporary test databases after closing pools without forced connection termination",
+        "Target the expected SMS status message when multiple accessible status elements exist",
+        "Verify mutual role removal permits exactly one update and rejects the loser whether session revocation occurs before or after authentication; check roles, revoked session and exactly one audit event",
+        "Run each CI unit suite once with coverage; every workspace coverage command runs the same tests, and coverage thresholds remain unchanged",
+        "Give the PgBouncer lock-holder setup connection the normal budget while preserving the 200 ms tested timeout and 1500 ms wait bound",
+        "Limit CI coverage to two concurrent packages to avoid overlapping too many database/server fixtures",
+        "Ignore generated Python bytecode caches so Linux test runs do not mark coverage source checkouts dirty",
+        "Check checkout cleanliness before the full browser run and annotate coverage-merge errors without relaxing report validation"
+      ],
+      "dependency_scan": "passed; zero vulnerabilities",
+      "secret_scan": "passed; synthetic detection and complete history",
+      "checks": "Build, typecheck, changed-file lint, frozen install, zero-vulnerability dependency scan and committed-history secret scan passed. API 5162, frontend 777 and shared 976 passed together; worker 458 and database 760 passed with two workers. GitHub security checks pass; newest CI verification still required. Revision 861780bf passes the full GitHub test stage and both security checks. Database cleanup follow-up passes 760 tests locally. Prior complete GitHub browser run: 768 passed, one ambiguous SMS selector failed; selector repair passes all 50 repeated English/Persian SMS cases locally. Revision 861780bf passes the complete GitHub Run tests job including coverage. Revision 9ccaea81 exposed a timing-dependent mutual role removal assertion. Both concurrent and post-revocation cases plus the existing 16 permission races pass locally (18 tests); the losing request may correctly receive 401 before authentication or 403 after it. Revision 9ccaea81 passes the complete browser/integrity job. Revision 8902b5ae exposed a 200 ms PgBouncer setup connection timeout; separating fixture setup from the timed pool passes all 760 database tests with coverage locally (90.25% lines, 76.59% branches). Revision 51c8296e passes tests with coverage, browser/integrity, static security and secret scanning; final report merge fails. Linux-style Python bytecode generation reproduces an untracked-cache dirty checkout; ignore rules remove only generated caches and still detect source edits. All 22 coverage merge/alignment tests pass, and invalid reports still fail with a GitHub error annotation."
+    }
+  }
+}
