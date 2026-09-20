@@ -399,6 +399,80 @@ it('keeps internal contract documents private through reads, downloads and notif
     (await http.pool.query('SELECT state,signed_at FROM contracts WHERE id=$1', [contract.id]))
       .rows[0]
   ).toEqual({ state: 'Accepted', signed_at: null });
+
+  // A replacement must keep both the exact version and document role.
+  for (const [actor, staff, predecessor, role] of [
+    ['document-legal', true, signedCopy.id, 'original'],
+    [f.user, false, original.id, 'signed'],
+  ] as const) {
+    expect(
+      (
+        await send(staff ? 'admin/documents' : 'documents', actor, 'POST', {
+          ...input,
+          idempotencyKey: randomUUID(),
+          contractRole: role,
+          supersedesDocumentId: predecessor,
+        })
+      ).status
+    ).toBe(409);
+  }
+  const nextVersion = randomUUID();
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query("UPDATE contracts SET state='Draft' WHERE id=$1", [contract.id]);
+    await client.query(
+      "INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by) VALUES($1,$2,2,$3,'Amendment','document-legal')",
+      [nextVersion, contract.id, JSON.stringify({ text: 'Amended contract' })]
+    );
+    await client.query(
+      "UPDATE contracts SET current_version_id=$2,state='AwaitingStaffReview' WHERE id=$1",
+      [contract.id, nextVersion]
+    );
+    await client.query(
+      "INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,'document-legal')",
+      [contract.id, nextVersion]
+    );
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+  expect(
+    (
+      await send(`contracts/${contract.id}/accept`, f.user, 'POST', {
+        expectedVersionId: nextVersion,
+        idempotencyKey: randomUUID(),
+      })
+    ).status
+  ).toBe(200);
+  for (const [actor, staff] of [
+    ['document-legal', true],
+    [f.user, false],
+  ] as const) {
+    expect(
+      (
+        await send(staff ? 'admin/documents' : 'documents', actor, 'POST', {
+          ...input,
+          idempotencyKey: randomUUID(),
+          contractVersionId: nextVersion,
+          supersedesDocumentId: signedCopy.id,
+        })
+      ).status
+    ).toBe(409);
+  }
+  expect(
+    (await http.pool.query('SELECT state FROM documents WHERE id=$1', [signedCopy.id])).rows[0]
+  ).toEqual({ state: 'Approved' });
+  expect(
+    (
+      await http.pool.query('SELECT id FROM documents WHERE supersedes_document_id=$1', [
+        signedCopy.id,
+      ])
+    ).rows
+  ).toEqual([]);
 });
 
 it('exposes a staff queue across profiles and preserves customer pagination and archived audit access', async () => {

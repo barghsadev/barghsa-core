@@ -198,9 +198,7 @@ CREATE TRIGGER contract_documents_immutable BEFORE UPDATE OR DELETE ON contract_
   FOR EACH ROW EXECUTE FUNCTION retain_document_evidence();
 --> statement-breakpoint
 CREATE FUNCTION validate_document_commit() RETURNS trigger LANGUAGE plpgsql AS $$
-DECLARE current_document documents%ROWTYPE;
 BEGIN
-  SELECT * INTO current_document FROM documents WHERE id=NEW.id;
   IF NOT EXISTS (SELECT 1 FROM document_events e WHERE e.document_id=NEW.id
     AND e.revision=NEW.revision AND e.state=NEW.state
     AND (e.previous_state IS NOT DISTINCT FROM CASE WHEN TG_OP='UPDATE' THEN OLD.state ELSE NULL END)) THEN
@@ -210,6 +208,16 @@ BEGIN
     SELECT 1 FROM contract_documents cd WHERE cd.document_id=NEW.id AND cd.contract_id=NEW.business_record_id
   ) THEN
     RAISE EXCEPTION 'Contract documents require an exact version association' USING ERRCODE='23514';
+  END IF;
+  IF NEW.business_record_type='contract' AND NEW.supersedes_document_id IS NOT NULL AND NOT EXISTS (
+    SELECT 1 FROM contract_documents successor
+      JOIN contract_documents predecessor ON predecessor.document_id=NEW.supersedes_document_id
+    WHERE successor.document_id=NEW.id
+      AND successor.contract_id=predecessor.contract_id
+      AND successor.contract_version_id=predecessor.contract_version_id
+      AND successor.role=predecessor.role
+  ) THEN
+    RAISE EXCEPTION 'Replacement must keep the contract version and role' USING ERRCODE='23514';
   END IF;
   IF NEW.state='Superseded' AND NOT EXISTS (
     SELECT 1 FROM documents successor WHERE successor.supersedes_document_id=NEW.id

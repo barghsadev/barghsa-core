@@ -1431,7 +1431,7 @@
     },
     "manual_batch": {
       "branch": "codex/document-lifecycle",
-      "status": "locally_validated_pending_coverage_review_ci",
+      "status": "review_fix_validated_pending_final_review_ci",
       "record": "kanban/batches/2026-09-20-document-lifecycle.md",
       "previous_batch": {
         "pr": 318,
@@ -1447,7 +1447,7 @@
         "Amendments, cancellation and automatic refund obligations"
       ],
       "token_limit": "User withdrew prior token ceiling; normal work authorized.",
-      "validation": "111 API, 7 database and 9 permission tests; builds, API types, migration snapshot, OpenAPI and backlog checks pass."
+      "validation": "111 API, 10 database and 9 permission tests; builds, API types, migration snapshot, OpenAPI and backlog checks pass. Cross-version/role lineage review correction tested."
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",
@@ -1461,12 +1461,13 @@
     "latest_full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35532300421",
       "commit": "f27e982e8065081d79bab0ca92669cae6ffd5a21",
-      "status": "merged_pending_full_ci",
+      "status": "verified",
       "finding": "All 830 database assertions passed; provider-delivery-proof afterAll timed out dropping both databases at the default 10 seconds. Browser/integrity and security checks passed.",
-      "resolution": "Specific database cleanup hook budget and controlled worker heartbeat scheduler merged in PR318 after final approval and all five checks passed. Full main verification remains separate.",
+      "resolution": "PR318 merged after exact-HEAD approval. Its full main run passes all five jobs, including browser validation, unit coverage and combined changed-source coverage.",
       "followup_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35534682919",
       "resolution_pr": 318,
-      "verification_pr_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35535166515"
+      "verification_pr_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35535166515",
+      "verification_main_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35536182258"
     }
   }
 }

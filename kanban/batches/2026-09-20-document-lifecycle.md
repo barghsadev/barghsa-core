@@ -27,7 +27,7 @@ The scheduler, historical supervisor state and completion arrays remain unchange
 ## Local evidence
 
 - 111 API tests pass across document, upload, storage, legal-document and contract HTTP integration suites, including real MinIO uploads and downloads.
-- Seven production-migrated database tests pass, covering guards, append-only history, retained signed-version locks, schema metadata, upgrade and rerun.
+- Ten production-migrated database tests pass, covering guards, append-only history, retained signed-version locks, schema metadata, upgrade and rerun.
 - Nine shared permission tests pass.
 - Shared/database builds, API typecheck/build, OpenAPI comparison and migration snapshot checks pass.
 - Backlog validation passes for 1,355 tasks and 116 traceability entries; all 322 historical requirement bindings validate.
@@ -53,3 +53,7 @@ python3 audit/current_requirements.py
 ```
 
 All commands above pass. Targeted ESLint and Prettier checks also pass.
+
+## Review correction
+
+Initial exact-HEAD review found cross-version/cross-role contract replacement lineage was insufficiently guarded. The API now requires the same version and role; a deferred database constraint checks both immutable links at commit. Database regression tests reproduced both invalid commits before the fix, then passed both rejection cases and a valid matching replacement. HTTP tests cover staff and customer mismatches. All 111 API and ten database tests pass after the correction; types and lint pass. Final exact-HEAD review remains pending.

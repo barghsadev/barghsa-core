@@ -260,6 +260,61 @@ it('requires a reason when staff return a document for changes', async () => {
   ).toMatchObject({ state: 'Available', reviewComment: 'Please correct the scan' });
 });
 
+it.each(['version', 'role', 'matching'] as const)(
+  'guards contract replacement lineage at commit: %s',
+  async (mismatch) => {
+    const f = await ready(true);
+    const operation = transaction(async (client) => {
+      let version = f.version;
+      if (mismatch === 'version') {
+        version = randomUUID();
+        await client.query(
+          "INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by) VALUES($1,$2,2,$3,'Amendment',$4)",
+          [version, f.contractId, JSON.stringify({ text: 'Amended' }), f.owner]
+        );
+        await client.query('UPDATE contracts SET current_version_id=$2 WHERE id=$1', [
+          f.contractId,
+          version,
+        ]);
+      }
+      const key = `uploads/document/${randomUUID()}.pdf`;
+      await client.query(
+        `INSERT INTO storage_records(storage_key,status,file_name,content_type,file_size,category,metadata)
+       SELECT $1,'removed',file_name,content_type,file_size,category,metadata FROM storage_records WHERE storage_key=$2`,
+        [key, f.doc.uploadKey]
+      );
+      const successor = (
+        await createDbClient(client)
+          .insert(documents)
+          .values({
+            profileId: f.profile,
+            businessRecordType: 'contract',
+            businessRecordId: f.contractId,
+            category: 'document',
+            uploadKey: key,
+            originalName: 'proof.pdf',
+            sizeBytes: 20,
+            uploadedBy: f.owner,
+            uploadedByType: 'staff',
+            supersedesDocumentId: f.doc.id,
+          })
+          .returning()
+      )[0]!;
+      await client.query(
+        'INSERT INTO contract_documents(contract_id,contract_version_id,document_id,role) VALUES($1,$2,$3,$4)',
+        [f.contractId, version, successor.id, mismatch === 'role' ? 'original' : 'signed']
+      );
+      await event(client, successor, null);
+      return successor.id;
+    });
+    if (mismatch === 'matching') await expect(operation).resolves.toEqual(expect.any(String));
+    else await expect(operation).rejects.toMatchObject({ code: '23514' });
+    expect(
+      (await fixture.pool.query('SELECT state FROM documents WHERE id=$1', [f.doc.id])).rows[0]
+    ).toEqual({ state: 'Available' });
+  }
+);
+
 it('retains the signed-version lock even after a later contract version becomes current', async () => {
   const f = await ready(true);
   await move(f.doc.id, 'SubmittedForReview');

@@ -202,8 +202,12 @@ export class DocumentService {
             throw new NotFoundException();
           if (!['Available', 'Approved', 'Rejected'].includes(prior.document.state))
             throw new ConflictException('Document cannot be replaced in this state');
-          if (!staff && input.businessRecordType === 'contract' && prior.contractRole !== 'signed')
-            throw new ConflictException('Customers may replace only signed-copy uploads');
+          if (
+            input.businessRecordType === 'contract' &&
+            (prior.contractVersionId !== input.contractVersionId ||
+              prior.contractRole !== input.contractRole)
+          )
+            throw new ConflictException('Replacement must keep the contract version and role');
         }
         const result = await idempotentMutation(
           client,
