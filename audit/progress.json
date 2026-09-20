@@ -1430,12 +1430,16 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "pr": 306,
-      "url": "https://github.com/barghsadev/barghsa-core/pull/306",
-      "status": "merged",
-      "record": "kanban/batches/2026-09-20-wallet-history.md",
-      "token_limit": "User withdrew prior token ceiling on September 20; normal work authorized.",
-      "merge_commit_sha": "999a1f440a25d25a3d944e9233fbd3ba1bd99e87"
+      "pr": 307,
+      "url": "https://github.com/barghsadev/barghsa-core/pull/307",
+      "status": "in_review",
+      "record": "kanban/batches/2026-09-20-refund-storage.md",
+      "previous_batch": {
+        "pr": 306,
+        "status": "merged",
+        "merge_commit_sha": "999a1f440a25d25a3d944e9233fbd3ba1bd99e87"
+      },
+      "token_limit": "User withdrew prior token ceiling on September 20; normal work authorized."
     }
   }
 }

@@ -79,11 +79,6 @@ DECLARE
 BEGIN
   SELECT paid_amount, refunded_amount INTO paid, returned
     FROM invoices WHERE id = NEW.invoice_id FOR UPDATE;
-  IF TG_OP = 'UPDATE' AND NEW.state = 'Completed' AND OLD.state <> 'Completed' THEN
-    -- The invoice guard below sees the completed refund and remaining holds.
-    UPDATE invoices SET refunded_amount = refunded_amount + NEW.amount
-      WHERE id = NEW.invoice_id RETURNING refunded_amount INTO returned;
-  END IF;
   SELECT COALESCE(SUM(amount), 0) INTO reserved FROM refunds
     WHERE invoice_id = NEW.invoice_id AND state NOT IN ('Completed', 'Rejected', 'Cancelled');
   IF reserved + returned > paid THEN
@@ -113,3 +108,24 @@ $$;
 --> statement-breakpoint
 CREATE TRIGGER invoices_refund_budget_guard BEFORE UPDATE OF paid_amount, refunded_amount ON invoices
 FOR EACH ROW EXECUTE FUNCTION guard_invoice_refund_budget();
+
+--> statement-breakpoint
+-- AFTER ROW triggers see every row changed by a statement. Apply the entire
+-- completion delta per invoice before its history guard checks that total.
+CREATE FUNCTION apply_refund_completion_totals() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+  UPDATE invoices i SET refunded_amount = i.refunded_amount + deltas.amount
+  FROM (
+    SELECT n.invoice_id, SUM(n.amount) AS amount
+    FROM refund_new n JOIN refund_old o ON o.id = n.id
+    WHERE n.state = 'Completed' AND o.state <> 'Completed'
+    GROUP BY n.invoice_id
+  ) deltas
+  WHERE i.id = deltas.invoice_id;
+  RETURN NULL;
+END;
+$$;
+--> statement-breakpoint
+CREATE TRIGGER refunds_completion_totals AFTER UPDATE ON refunds
+REFERENCING OLD TABLE AS refund_old NEW TABLE AS refund_new
+FOR EACH STATEMENT EXECUTE FUNCTION apply_refund_completion_totals();

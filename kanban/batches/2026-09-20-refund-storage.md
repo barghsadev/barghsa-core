@@ -1,7 +1,7 @@
 # Refund storage and reservation limits
 
 Branch: `codex/refund-storage-batch`.
-Status: rebased onto merged PR #306; validation and independent review in progress.
+Status: PR #307 open; independent review found and prompted a fix for multi-row completion counters. Final validation and renewed review in progress.
 
 ## Task scope
 
@@ -10,7 +10,7 @@ Status: rebased onto merged PR #306; validation and independent review in progre
 
 Requested, Approved, Processing, and Failed refunds reserve funds. Rejected and Cancelled requests release their reservations. Completion atomically increments the invoice's refunded amount exactly once, including when the invoice already has legacy refunds. Identity and terminal history cannot be rewritten or deleted. Invoice amount edits cannot invalidate existing reservations. Each reservation also changes the invoice row version, so stale repeatable-read/serializable transactions must retry rather than reuse an old aggregate snapshot.
 
-The database owns that completion counter increment. A future processor must write its wallet transfer and refund completion in one transaction and must not independently increment the counter. The existing invoice state machine can then validate the resulting amounts and change invoice state in that transaction.
+The database owns that completion counter increment. A statement-level transition-table trigger groups newly completed refunds by invoice, so bulk completion and repeated updates preserve the same exact totals. A future processor must write its wallet transfer and refund completion in one transaction and must not independently increment the counter. The existing invoice state machine can then validate the resulting amounts and change invoice state in that transaction.
 
 ## Boundaries
 
@@ -18,4 +18,4 @@ This is storage and integrity work. It exposes no refund endpoint or worker. Sta
 
 ## Validation
 
-The production migration is exercised against PostgreSQL. Tests cover exact amounts beyond JavaScript's safe integer range, ownership, invalid amounts, idempotency, concurrent reservations at default and repeatable-read isolation, legacy refunded balances, failed requests retaining reservations, released reservations, completion retries, rollback, immutable history, and external completion prerequisites. The database suite passed 770 tests across 96 files. Full workspace build, typecheck, lint, formatting, contract, generated-schema drift, changed-file coverage, kanban, and audit checks passed. No task is claimed merged until GitHub confirms its reviewed PR merge.
+The production migration is exercised against PostgreSQL. Tests cover exact amounts beyond JavaScript's safe integer range, ownership, invalid amounts, idempotency, concurrent reservations at default and repeatable-read isolation, legacy refunded balances, failed requests retaining reservations, released reservations, completion retries, rollback, immutable history, and external completion prerequisites. The final database suite passed 771 tests across 96 files, including 10 refund migration cases. The multi-row completion regression was reproduced before the fix and passes afterward; typecheck and formatting also pass after the fix. Full workspace build, typecheck, lint, formatting, contract, generated-schema drift, changed-file coverage, kanban, and audit checks passed. No task is claimed merged until GitHub confirms its reviewed PR merge.

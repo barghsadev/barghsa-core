@@ -107,6 +107,36 @@ it('counts legacy refunds and increments the invoice exactly once on completion'
   ).rejects.toThrow();
 });
 
+it('completes multiple refunds per invoice in one statement without double counting retries', async () => {
+  const owner = await invoice('100', '10');
+  const other = await invoice('50');
+  const first = await request(owner, '40');
+  const second = await request(owner, '50');
+  const third = await request(other, '30');
+  const ids = [first.id, second.id, third.id];
+  await fixture.pool.query("UPDATE refunds SET state='Processing' WHERE id=ANY($1::uuid[])", [ids]);
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await fixture.pool.query("UPDATE refunds SET state='Completed' WHERE id=ANY($1::uuid[])", [
+      ids,
+    ]);
+    const counters = await fixture.pool.query(
+      'SELECT id, refunded_amount FROM invoices WHERE id=ANY($1::uuid[])',
+      [[owner.id, other.id]]
+    );
+    expect(counters.rows).toEqual(
+      expect.arrayContaining([
+        { id: owner.id, refunded_amount: '100' },
+        { id: other.id, refunded_amount: '30' },
+      ])
+    );
+  }
+  expect(
+    (await fixture.pool.query('SELECT state FROM refunds WHERE id=ANY($1::uuid[])', [ids])).rows
+  ).toEqual([{ state: 'Completed' }, { state: 'Completed' }, { state: 'Completed' }]);
+  await expect(request(owner, '1')).rejects.toThrow();
+  await expect(request(other, '20')).resolves.toMatchObject({ amount: '20' });
+});
+
 it('protects reservations against invoice edits and rolls back completion with its transaction', async () => {
   const owner = await invoice();
   const row = await request(owner, '70');
