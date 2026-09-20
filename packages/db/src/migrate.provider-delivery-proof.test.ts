@@ -24,7 +24,7 @@ beforeAll(() => {
 });
 afterAll(async () => {
   try {
-    for (const name of databases) await management.query(`DROP DATABASE "${name}" WITH (FORCE)`);
+    for (const name of databases) await management.query(`DROP DATABASE "${name}"`);
   } finally {
     await management?.end();
     rmSync(previous, { recursive: true, force: true });

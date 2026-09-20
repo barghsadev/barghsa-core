@@ -68,7 +68,7 @@ it('adds anonymous CSRF storage without changing existing accounts or sessions a
     ).toBe(1);
   } finally {
     await pool?.end();
-    await management.query(`DROP DATABASE IF EXISTS "${name}" WITH (FORCE)`);
+    await management.query(`DROP DATABASE IF EXISTS "${name}"`);
     await management.end();
   }
 }, 20000);

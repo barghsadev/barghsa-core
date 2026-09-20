@@ -20,7 +20,7 @@ afterAll(async () => {
   await pool?.end();
   const management = new Pool({ connectionString: process.env.TEST_DATABASE_URL });
   try {
-    await management.query(`DROP DATABASE "${database}" WITH (FORCE)`);
+    await management.query(`DROP DATABASE "${database}"`);
   } finally {
     await management.end();
   }

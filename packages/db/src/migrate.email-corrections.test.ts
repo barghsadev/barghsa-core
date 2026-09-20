@@ -69,7 +69,7 @@ it('upgrades legacy complaints into open tasks without clearing suppressions or 
     ).toBe('2026-01-01T00:00:00.000Z');
   } finally {
     await pool?.end();
-    await management.query(`DROP DATABASE IF EXISTS "${name}" WITH (FORCE)`);
+    await management.query(`DROP DATABASE IF EXISTS "${name}"`);
     await management.end();
   }
 }, 30000);

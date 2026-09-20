@@ -65,7 +65,7 @@ it('preserves existing trust on upgrade with unknown IP, supports IPv4/IPv6 and 
     expect((await pool.query('SELECT * FROM device_trusts')).rows).toEqual(upgraded);
   } finally {
     await pool?.end();
-    await management.query(`DROP DATABASE IF EXISTS "${name}" WITH (FORCE)`);
+    await management.query(`DROP DATABASE IF EXISTS "${name}"`);
     await management.end();
   }
 }, 20000);

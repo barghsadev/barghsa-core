@@ -81,7 +81,7 @@ it('upgrades existing OTPs without consuming them, enforces grant state and repe
     expect((await pool.query('SELECT * FROM otp_challenges')).rows).toEqual(completed);
   } finally {
     await pool?.end();
-    await management.query(`DROP DATABASE IF EXISTS "${name}" WITH (FORCE)`);
+    await management.query(`DROP DATABASE IF EXISTS "${name}"`);
     await management.end();
   }
 }, 20000);

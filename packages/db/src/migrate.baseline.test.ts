@@ -18,8 +18,7 @@ const journalEntries = (
 afterEach(async () => {
   const pool = new Pool({ connectionString: process.env.TEST_DATABASE_URL });
   try {
-    for (const name of databases.splice(0))
-      await pool.query(`DROP DATABASE "${name}" WITH (FORCE)`);
+    for (const name of databases.splice(0)) await pool.query(`DROP DATABASE "${name}"`);
   } finally {
     await pool.end();
   }

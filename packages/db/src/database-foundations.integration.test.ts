@@ -23,7 +23,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await pool?.end();
   if (management) {
-    await management.query(`DROP DATABASE IF EXISTS "${database}" WITH (FORCE)`);
+    await management.query(`DROP DATABASE IF EXISTS "${database}"`);
     await management.end();
   }
 });
