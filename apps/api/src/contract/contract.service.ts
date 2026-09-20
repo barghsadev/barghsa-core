@@ -55,13 +55,11 @@ export class ContractService {
       .orderBy(desc(contracts.id))
       .limit(input.limit + 1);
     return {
-      contracts: rows
-        .slice(0, input.limit)
-        .map((row) => ({
-          ...row,
-          updatedAt: row.updatedAt.toISOString(),
-          acceptedAt: row.acceptedAt?.toISOString() ?? null,
-        })),
+      contracts: rows.slice(0, input.limit).map((row) => ({
+        ...row,
+        updatedAt: row.updatedAt.toISOString(),
+        acceptedAt: row.acceptedAt?.toISOString() ?? null,
+      })),
       nextBefore: rows.length > input.limit ? rows[input.limit - 1]!.id : null,
     };
   }

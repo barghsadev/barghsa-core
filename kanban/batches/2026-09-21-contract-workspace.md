@@ -26,3 +26,7 @@ New draft creation/editing, typed financial preview, activation, signatures, ame
 One local frontend coverage attempt collided with the API fixture rebuilding a shared package; the sequential rerun passed. No source or policy exclusion was introduced.
 
 Actual committed coverage gate passes against the verified #320 merge: critical API 107/108 lines and 85/91 branches; critical frontend 164/168 lines and 150/161 branches; document filter changes 4/4 API branches; remaining frontend 6/6 lines and 16/16 branches; dictionary 3/3 lines and 4/4 branches. Floors remain unchanged.
+
+## PR and CI follow-up
+
+PR [#321](https://github.com/barghsadev/barghsa-core/pull/321) was independently approved at `e40f2f591fc8a63be5b9a42ba60c0730fefbffa2`. CI found formatting differences in two method chains. The correction changes whitespace only, and the repository-wide format check now passes. API coverage is refreshed for the shifted source lines; a new exact-HEAD review and CI run are required.

@@ -173,13 +173,11 @@ for (const locale of ['en', 'fa'] as const)
       if (!staff) {
         await detail.getByRole('button', { name: words.uploadSigned, exact: true }).click();
         const upload = detail.getByRole('region', { name: documentWords.upload, exact: true });
-        await upload
-          .getByLabel(documentWords.file, { exact: true })
-          .setInputFiles({
-            name: 'signed.pdf',
-            mimeType: 'application/pdf',
-            buffer: Buffer.from('%PDF-1.7'),
-          });
+        await upload.getByLabel(documentWords.file, { exact: true }).setInputFiles({
+          name: 'signed.pdf',
+          mimeType: 'application/pdf',
+          buffer: Buffer.from('%PDF-1.7'),
+        });
         await upload.getByRole('button', { name: documentWords.upload, exact: true }).click();
         await page.getByRole('dialog').getByRole('button', { name: confirm, exact: true }).click();
         await expect(detail.getByRole('button', { name: 'signed.pdf', exact: true })).toBeVisible();

@@ -1431,7 +1431,7 @@
     },
     "manual_batch": {
       "branch": "codex/contract-workspace",
-      "status": "locally_validated_pending_review_ci",
+      "status": "fixing_format_pending_review_ci",
       "record": "kanban/batches/2026-09-21-contract-workspace.md",
       "previous_batch": {
         "pr": 320,
@@ -1446,7 +1446,9 @@
         "Contract signatures and activation",
         "Amendments, cancellation and automatic refund obligations",
         "Configured malware scanning and physical document retention deletion"
-      ]
+      ],
+      "pr": 321,
+      "prior_review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/321#issuecomment-5753199373"
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",
