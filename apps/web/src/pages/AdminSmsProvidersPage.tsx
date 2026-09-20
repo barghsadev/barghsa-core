@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex -- Labelled horizontal table regions need keyboard focus so keyboard users can scroll them. */
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button, Input, Label } from '@barghsa/ui';
 import { buildSmsTestParameters } from '@barghsa/shared/notifications';
@@ -342,7 +343,7 @@ export default function AdminSmsProvidersPage() {
       {notice && <p role="status">{notice}</p>}
       {!loading && !loadFailed && !providers.length && <p>{text('empty')}</p>}
       {providers.length > 0 && (
-        <div className="overflow-x-auto" tabIndex={0} role="group" aria-label={text('title')}>
+        <div className="overflow-x-auto" tabIndex={0} role="region" aria-label={text('title')}>
           <table className="w-full text-start text-sm">
             <caption className="sr-only">{text('title')}</caption>
             <thead>
@@ -481,7 +482,7 @@ export default function AdminSmsProvidersPage() {
             <div
               className="overflow-x-auto"
               tabIndex={0}
-              role="group"
+              role="region"
               aria-label={text('mappings')}
             >
               <table className="w-full text-sm">
