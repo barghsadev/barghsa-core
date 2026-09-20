@@ -1341,7 +1341,7 @@
   },
   "kanban_readiness": {
     "checked": "2026-09-20",
-    "local_development": "manual_wallet_refund_batch",
+    "local_development": "manual_http_fixture_maintenance",
     "automatic_loop": "blocked_pending_remote_reconciliation",
     "backlog_validation": {
       "tasks": 1355,
@@ -1355,7 +1355,7 @@
       "pending": 0
     },
     "continuation": "kanban/CONTINUATION.md",
-    "remote_main_observed": "460c6d5fac5c7756898f0f535693d8f8597a7ea9",
+    "remote_main_observed": "d8df79866ec002f50df1ff52430db4da515f88c0",
     "remote_state_branch_observed": "absent",
     "pr_304_status": "closed_without_merge; verified through public GitHub API",
     "runtime_state_changed": false,
@@ -1430,17 +1430,22 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/refund-workflow-batch",
+      "branch": "codex/http-fixture-template",
       "status": "in_review",
-      "record": "kanban/batches/2026-09-20-wallet-refund-workflow.md",
+      "record": "kanban/batches/2026-09-20-http-fixture-template.md",
       "previous_batch": {
-        "pr": 308,
+        "pr": 309,
         "status": "merged",
-        "merge_commit_sha": "460c6d5fac5c7756898f0f535693d8f8597a7ea9",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/308#issuecomment-5749700076",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35509683285"
+        "merge_commit_sha": "d8df79866ec002f50df1ff52430db4da515f88c0",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/309#issuecomment-5749835770",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510921434"
       },
-      "token_limit": "User withdrew prior token ceiling on September 20; normal work authorized."
+      "token_limit": "User withdrew prior token ceiling on September 20; normal work authorized.",
+      "next_batch": {
+        "branch": "codex/external-refund-batch",
+        "status": "implemented_locally_awaiting_review",
+        "focused_refund_tests_passed": 32
+      }
     }
   }
 }

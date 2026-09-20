@@ -1,7 +1,7 @@
 # Manual wallet refunds and financial approval
 
 Branch: `codex/refund-workflow-batch`.
-Status: implementation and local validation complete; independent review and CI pending.
+Status: PR #309 merged at `d8df79866ec002f50df1ff52430db4da515f88c0` after independent approval and all active CI checks passed.
 
 ## Task scope
 
@@ -24,3 +24,5 @@ This batch does not provide an admin refund page, external bank reconciliation, 
 - Refund model and real PostgreSQL/HTTP suites pass 25 tests, covering exact int8 amounts, request validation, permissions/CSRF/step-up, reservation races, duplicate processing, bound second approval, changed/corrupt policy, lost reviewer authority, terminal states, missing wallet, archived profiles, audit failure rollback and session expiry during a wallet lock wait.
 - Related invoice state, customer history and bank-receipt dual-approval suites pass 40 tests.
 - Independent exact-HEAD review and active GitHub checks remain merge gates. PR fast mode does not measure coverage or run the full browser suite; no UI changes are included here.
+
+Independent review approved exact HEAD `f93c20bd533ea99a3420c6790705a79b0e962c32`: [durable review](https://github.com/barghsadev/barghsa-core/pull/309#issuecomment-5749835770). [CI run](https://github.com/barghsadev/barghsa-core/actions/runs/35510921434) passed all five active checks; test job took 18m25s. PR fast mode did not measure coverage or run the full browser suite.

@@ -56,12 +56,25 @@ export async function startHttpFixture(
   }
 
   try {
-    await management.query(`CREATE DATABASE "${database}"`);
+    const template = process.env.BARGHSA_HTTP_TEMPLATE_DATABASE;
+    const useTemplate =
+      process.env.BARGHSA_HTTP_FIXTURE_FRESH_MIGRATIONS !== '1' &&
+      testDatabaseUrl === process.env.TEST_DATABASE_URL &&
+      template !== undefined &&
+      /^http_template_[a-f0-9]{32}$/.test(template);
+    await management.query(
+      useTemplate
+        ? `CREATE DATABASE "${database}" TEMPLATE "${template}"`
+        : `CREATE DATABASE "${database}"`
+    );
     created = true;
     const url = new URL(testDatabaseUrl);
     url.pathname = `/${database}`;
-    const migration = await runMigrations({ connection: { pgdirectUrl: url.toString() } });
-    if (!migration.ok) throw new Error(`Production migration failed: ${JSON.stringify(migration)}`);
+    if (!useTemplate) {
+      const migration = await runMigrations({ connection: { pgdirectUrl: url.toString() } });
+      if (!migration.ok)
+        throw new Error(`Production migration failed: ${JSON.stringify(migration)}`);
+    }
     pool = new Pool({ connectionString: url.toString(), max: poolMax });
     child = fork(resolve(__dirname, '../../scripts/http-test-server.cjs'), [], {
       silent: true,
