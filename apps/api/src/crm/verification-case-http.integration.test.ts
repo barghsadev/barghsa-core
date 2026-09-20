@@ -376,7 +376,8 @@ it('requires step-up for creation and review', async () => {
     expect((await create(target)).status).toBe(403);
     expect((await review(data.id, 'Under Review')).status).toBe(403);
   } finally {
-    await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW()');
+    // Restore a recent verification without relying on identical host/DB clocks.
+    await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 second'");
   }
 });
 it('seals evidence bytes and returns authorized short-lived downloads for the fixed copy', async () => {

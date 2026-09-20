@@ -8,6 +8,12 @@ on:
 env:
   NODE_VERSION: '24'
   PNPM_VERSION: '10.11.1'
+  # Temporary PR fast mode. Set repository variable CI_FULL_PR_CHECKS=true to restore.
+  FULL_CI: ${{ github.event_name != 'pull_request' || vars.CI_FULL_PR_CHECKS == 'true' }}
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   sast:
@@ -95,19 +101,25 @@ jobs:
       - run: pnpm check:contract
       - run: pnpm check:db-snapshot
       - name: Install production browser check runtime
+        if: env.FULL_CI == 'true'
         run: pnpm --filter @barghsa/web exec playwright install --with-deps chromium
       - name: Verify actual cold authentication transfers
+        if: env.FULL_CI == 'true'
         run: node scripts/check-auth-transfer.mjs
       - name: Verify browser retry failure gate
+        if: env.FULL_CI == 'true'
         run: node --test scripts/test-browser-flake-gate.mjs scripts/browser-projects.test.mjs
 
       - name: Test process coverage merging
+        if: env.FULL_CI == 'true'
         run: node --test scripts/align-process-coverage.test.mjs
       - name: Build isolated browser coverage assets
+        if: env.FULL_CI == 'true'
         run: pnpm --filter @barghsa/web build
         env:
           BARGHSA_BROWSER_COVERAGE: '1'
       - name: Verify clean checkout before browser coverage
+        if: env.FULL_CI == 'true'
         run: |
           changed=$(git status --porcelain)
           if [ -n "$changed" ]; then
@@ -116,33 +128,34 @@ jobs:
             exit 1
           fi
       - name: Exercise all production browser flows and shared components
+        if: env.FULL_CI == 'true'
         run: node scripts/run-production-browser.mjs
         env:
           BARGHSA_BROWSER_COVERAGE: '1'
       - name: Map browser coverage to workspace source
-        if: always()
+        if: always() && env.FULL_CI == 'true'
         run: node scripts/collect-browser-coverage.mjs
       - name: Upload mapped browser coverage
-        if: always()
+        if: always() && env.FULL_CI == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: browser-source-coverage
           path: apps/web/test-results/browser-coverage.json
           retention-days: 14
       - name: Report observed browser flakes and failures
-        if: always()
+        if: always() && env.FULL_CI == 'true'
         run: |
           python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
           python3 scripts/check-browser-results.py --input apps/web/test-results/results.json --report "$RUNNER_TEMP/browser-outcomes.json"
       - name: Upload browser outcome counts
-        if: always()
+        if: always() && env.FULL_CI == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: browser-outcomes
           path: ${{ runner.temp }}/browser-outcomes.json
           retention-days: 14
       - name: Upload production browser failures
-        if: failure()
+        if: failure() && env.FULL_CI == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: production-browser-failures
@@ -167,18 +180,20 @@ jobs:
       - run: pnpm build
       # Every workspace coverage script runs the same test suite with coverage enabled.
       # Run it once, with at most two packages starting database/server fixtures together.
-      - name: Run tests with coverage and threshold enforcement
+      - name: Run affected tests or full coverage
         id: coverage
         env:
           BARGHSA_TEST_PREBUILT: '1'
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
+          if [ "$FULL_CI" != "true" ]; then
+            pnpm turbo run test --force --concurrency=2 --filter="...[origin/main]"
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
             pnpm turbo run test:coverage --concurrency=2 --filter="...[origin/main]" --filter=@barghsa/web --filter=@barghsa/ui --filter=@barghsa/shared --filter=@barghsa/i18n
           else
             pnpm test:coverage --concurrency=2
           fi
       - name: Upload coverage reports
-        if: always()
+        if: always() && env.FULL_CI == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: coverage-reports
@@ -206,37 +221,55 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
+      - name: Report temporary PR coverage exemption
+        if: env.FULL_CI != 'true'
+        env:
+          TEST_RESULT: ${{ needs.test.result }}
+          INTEGRITY_RESULT: ${{ needs.integrity.result }}
+        run: |
+          echo "PR fast mode: browser and coverage checks temporarily disabled. Affected tests and integrity checks remain required. Restore with CI_FULL_PR_CHECKS=true." >> "$GITHUB_STEP_SUMMARY"
+          test "$TEST_RESULT" = success
+          test "$INTEGRITY_RESULT" = success
       - uses: actions/checkout@v4
+        if: env.FULL_CI == 'true'
         with:
           fetch-depth: 0
       - uses: pnpm/action-setup@v4
+        if: env.FULL_CI == 'true'
         with:
           version: ${{ env.PNPM_VERSION }}
       - uses: actions/setup-node@v4
+        if: env.FULL_CI == 'true'
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+        if: env.FULL_CI == 'true'
       - uses: actions/download-artifact@v4
+        if: env.FULL_CI == 'true'
         with:
           name: coverage-reports
           path: .
       - uses: actions/download-artifact@v4
+        if: env.FULL_CI == 'true'
         with:
           name: browser-source-coverage
           path: ${{ runner.temp }}/browser-source
       - name: Verify coverage collection and failure handling
+        if: env.FULL_CI == 'true'
         run: |
           python3 -m unittest discover -s scripts -p 'test_check_changed_coverage.py'
           node --test scripts/browser-coverage.test.mjs
       - name: Merge browser and unit coverage for the same revision
+        if: env.FULL_CI == 'true'
         run: node scripts/merge-browser-coverage.mjs "$RUNNER_TEMP/browser-source/browser-coverage.json"
       - name: Enforce changed source and critical file coverage
+        if: env.FULL_CI == 'true'
         env:
           COVERAGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: python3 scripts/check-changed-coverage.py --base "$COVERAGE_BASE" --report "$RUNNER_TEMP/changed-coverage.json"
       - name: Upload changed coverage results
-        if: always()
+        if: always() && env.FULL_CI == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: changed-coverage

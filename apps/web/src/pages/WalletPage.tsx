@@ -1,3 +1,4 @@
+import { WalletTransactionList } from '../components/WalletTransactionList.js';
 import {
   OnlinePaymentReturnPanel,
   type WalletPaymentReturn,
@@ -650,6 +651,14 @@ export function WalletPage({
                   : t('wallet.page.receiptSubmit', locale)}
               </button>
             </form>
+          )}
+
+          {profileId && (
+            <WalletTransactionList
+              key={`${profileId}-${receiptSuccess}`}
+              profileId={profileId}
+              locale={locale}
+            />
           )}
 
           {(error === 'load' || error === 'gateway') && (

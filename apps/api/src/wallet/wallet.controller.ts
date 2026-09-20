@@ -11,9 +11,17 @@ import {
   Param,
   Post,
   Req,
+  Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { parseOnlineTopUpAmountIrR } from '@barghsa/shared/finance';
@@ -24,6 +32,8 @@ import { WalletService } from './wallet.service.js';
 import { ProfilesService } from '../profiles/profiles.service.js';
 import { OnlineTopUpService } from './online-topup.service.js';
 import { BankReceiptTopUpService } from './bank-receipt-topup.service.js';
+import { parseWalletHistoryQuery, readWalletHistory } from './wallet-history.js';
+import { activeProfileSql } from '../profiles/profile-context.js';
 import { withCustomerWalletAccess } from './customer-wallet-access.js';
 
 const InitiateBodySchema = z
@@ -281,14 +291,30 @@ export class WalletController {
   }
 
   @Get(':profileId/transactions')
-  @ApiOperation({ summary: 'Get wallet transaction history' })
+  @ApiOperation({ summary: 'Get filtered, cursor-paginated history for the active profile' })
+  @ApiQuery({ name: 'limit', required: false, type: Number, description: '1–100, default 50' })
+  @ApiQuery({
+    name: 'type',
+    required: false,
+    enum: ['topup', 'payment', 'refund', 'reservation', 'release', 'reversal', 'compensating'],
+  })
+  @ApiQuery({
+    name: 'state',
+    required: false,
+    enum: ['Pending', 'Reserved', 'Completed', 'Failed', 'Rejected', 'Released', 'Reversed'],
+  })
+  @ApiQuery({ name: 'from', required: false, type: String, description: 'Inclusive ISO timestamp' })
+  @ApiQuery({ name: 'to', required: false, type: String, description: 'Inclusive ISO timestamp' })
+  @ApiQuery({ name: 'sort', required: false, enum: ['asc', 'desc'] })
+  @ApiQuery({ name: 'cursor', required: false, type: String })
   @ApiResponse({
     status: 200,
     description: 'Wallet history; signed IRR amounts are exact decimal strings.',
     schema: {
       type: 'object',
-      required: ['transactions'],
+      required: ['transactions', 'nextCursor'],
       properties: {
+        nextCursor: { type: 'string', nullable: true },
         transactions: {
           type: 'array',
           items: {
@@ -308,22 +334,18 @@ export class WalletController {
       },
     },
   })
-  async getTransactions(@Param('profileId') profileId: string, @Req() req: AuthenticatedRequest) {
+  async getTransactions(
+    @Param('profileId') profileId: string,
+    @Req() req: AuthenticatedRequest,
+    @Query() rawQuery: unknown = {}
+  ) {
     assertUuid(profileId, 'profileId');
+    profileId = profileId.toLowerCase();
+    const query = parseWalletHistoryQuery(rawQuery);
     return withCustomerWalletAccess(req.session, profileId, 'wallet:view', async (client) => {
-      this.logger.debug(`Wallet transactions: user=${req.session.userId} profile=${profileId}`);
-      const transactions = await this.walletService.getTransactions(profileId, 50, 0, client);
-      return {
-        transactions: transactions.map((tx) => ({
-          id: tx.id,
-          type: tx.type,
-          amount: tx.amount.toString(),
-          state: tx.state,
-          refId: tx.refId,
-          description: tx.description,
-          createdAt: tx.createdAt,
-        })),
-      };
+      const active = await client.query(activeProfileSql('wallet:view'), [req.session.userId]);
+      if (active.rows[0]?.id !== profileId) throw new NotFoundException('No active profile');
+      return readWalletHistory(client, profileId, query);
     });
   }
 }

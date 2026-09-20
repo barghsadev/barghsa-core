@@ -38,8 +38,9 @@ afterAll(async () => {
 beforeEach(async () => {
   await http.pool.query('DELETE FROM service_due_periods');
   await http.pool.query('DELETE FROM audit_log');
+  // These cases test configuration changes, not sub-millisecond clock agreement.
   await http.pool.query(
-    "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '30 minutes',step_up_verified_at=NOW()"
+    "UPDATE sessions SET expires_at=NOW()+INTERVAL '1 day',idle_deadline=NOW()+INTERVAL '30 minutes',step_up_verified_at=NOW()-INTERVAL '1 second'"
   );
 });
 function request(body?: unknown, user = 'due-admin-a') {

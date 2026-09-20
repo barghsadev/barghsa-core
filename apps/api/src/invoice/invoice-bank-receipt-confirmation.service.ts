@@ -1429,10 +1429,26 @@ export class InvoiceBankReceiptConfirmationService {
     const invoice = await this.loadInvoice(client, receipt.invoiceId);
     const walletCreditAmount = credit?.amount ?? 0n;
     const invoiceAllocation = receipt.amount - walletCreditAmount;
+    // Partial settlements have no excess-credit row. Preserve the original
+    // remaining amount from the immutable confirmation audit on retries.
+    const confirmation = await client.query(
+      `SELECT metadata::jsonb ->> 'remainingBefore' AS remaining_before
+         FROM audit_log WHERE event = $1
+          AND metadata::jsonb ->> 'receiptId' = $2
+          AND metadata::jsonb ->> 'invoiceId' = $3
+         ORDER BY created_at ASC LIMIT 1`,
+      [INVOICE_BANK_RECEIPT_CONFIRMED_EVENT, receipt.id, receipt.invoiceId]
+    );
+    const recordedRemaining = (confirmation.rows[0] as { remaining_before?: unknown } | undefined)
+      ?.remaining_before;
+    const remainingBefore =
+      typeof recordedRemaining === 'string' && /^[0-9]+$/.test(recordedRemaining)
+        ? BigInt(recordedRemaining)
+        : invoiceAllocation;
     return {
       overpayment: bankReceiptOverpaymentSnapshot({
         invoiceId: receipt.invoiceId,
-        remainingBefore: invoiceAllocation,
+        remainingBefore,
         invoiceAllocation,
         walletCreditAmount,
         overpaymentCreditTransactionId: credit?.id ?? null,

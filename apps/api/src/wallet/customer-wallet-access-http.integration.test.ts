@@ -35,6 +35,10 @@ async function seed(roles?: string[]) {
     "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES ($1,$2,$3,$1,NOW()+INTERVAL '1 hour',NOW()+INTERVAL '30 minutes')",
     [session, user, csrf]
   );
+  await http.pool.query('INSERT INTO user_profile_contexts(user_id,profile_id) VALUES($1,$2)', [
+    user,
+    profile,
+  ]);
   const headers = {
     Cookie: `barghsa_session=${session}`,
     'X-CSRF-Token': csrf,
@@ -208,4 +212,75 @@ it('rejects expired creation at commit and rolls back a new wallet', async () =>
     blocker.release();
     await pending;
   }
+});
+
+it('paginates timestamp ties in both directions, filters, and binds cursors to the active profile', async () => {
+  const f = await seed();
+  await http.pool.query('INSERT INTO wallets(profile_id) VALUES($1)', [f.profile]);
+  const ids = [randomUUID(), randomUUID(), randomUUID()].sort();
+  for (const id of ids)
+    await http.pool.query(
+      "INSERT INTO wallet_transactions(id,wallet_id,type,amount,state,idempotency_key,created_at) VALUES($1::uuid,$2,'topup',100,'Pending',$1::text,'2026-09-01T12:00:00.123456Z')",
+      [id, f.profile]
+    );
+  for (const sort of ['asc', 'desc']) {
+    const found: string[] = [];
+    let cursor: string | null = null;
+    do {
+      const response = await f.read(
+        `/transactions?limit=1&sort=${sort}&type=topup&state=Pending&from=2026-09-01T00:00:00Z&to=2026-09-02T00:00:00Z${cursor ? `&cursor=${cursor}` : ''}`
+      );
+      expect(response.status).toBe(200);
+      const body = (await response.json()) as {
+        transactions: { id: string; createdAt: string }[];
+        nextCursor: string | null;
+      };
+      expect(body.transactions).toHaveLength(1);
+      expect(body.transactions[0]!.createdAt).toBe('2026-09-01T12:00:00.123456Z');
+      found.push(body.transactions[0]!.id);
+      cursor = body.nextCursor;
+      expect(found.length).toBeLessThanOrEqual(3);
+    } while (cursor);
+    expect(found).toEqual(sort === 'asc' ? ids : [...ids].reverse());
+  }
+  for (const filter of [
+    'type=payment',
+    'state=Failed',
+    'from=2026-09-02T00:00:00Z',
+    'to=2026-08-31T00:00:00Z',
+  ]) {
+    expect(await (await f.read(`/transactions?${filter}`)).json()).toEqual({
+      transactions: [],
+      nextCursor: null,
+    });
+  }
+  const first = (await (await f.read('/transactions?limit=1')).json()) as { nextCursor: string };
+  expect((await f.read(`/transactions?sort=asc&cursor=${first.nextCursor}`)).status).toBe(400);
+  const other = await seed();
+  expect((await other.read(`/transactions?cursor=${first.nextCursor}`)).status).toBe(400);
+  for (const query of [
+    'limit=0',
+    'limit=101',
+    'limit=1.5',
+    'type=unknown',
+    'state=unknown',
+    'sort=invalid',
+    'from=invalid',
+    'from=2026-09-02T00:00:00Z&to=2026-09-01T00:00:00Z',
+    'cursor=broken',
+    'unknown=1',
+    'type=topup&type=payment',
+  ]) {
+    expect((await f.read(`/transactions?${query}`)).status).toBe(400);
+  }
+  const secondProfile = randomUUID();
+  await http.pool.query(
+    "INSERT INTO profiles(id,user_id,profile_type,status) VALUES($1,$2,'LEGAL','ACTIVE')",
+    [secondProfile, f.user]
+  );
+  await http.pool.query('UPDATE user_profile_contexts SET profile_id=$1 WHERE user_id=$2', [
+    secondProfile,
+    f.user,
+  ]);
+  expect((await f.read('/transactions')).status).toBe(404);
 });

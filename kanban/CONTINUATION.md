@@ -1,10 +1,10 @@
 # Development continuation status
 
-Checked September 20, 2026 after local repair completion at `13bed9d0`. Product/test changes are committed through `7b45c215`. The repaired branch is `codex/audit-fixes`.
+Checked September 20, 2026 against CI-verified commit `faf9a2de2825e2bb829699aec2802d68c2d1f2a8` on `codex/audit-fixes`.
 
 ## Local development
 
-The next development batch can use this branch after PR #305 passes CI. The original CI run failed tests, monorepo integrity, Git history secret scanning and combined source coverage. CI repair commit `861780bf` passes the full CI test stage and both security checks. Coverage remains pending. The prior browser run passed 768 of 769 scenarios; a selector fix for its remaining SMS failure passes 50 repeated local scenarios and awaits a complete GitHub run. Resolve these baseline failures before adding feature changes. The backlog validator passes for 1,355 tasks and 116 traceability entries. The audit validator passes for all 322 historical claims, 301 saved PRs and 58 historical skips.
+PR #305 is merged at `0b768cf1`. The current manual batch is [PR #306](https://github.com/barghsadev/barghsa-core/pull/306), tracked in [batch status](batches/2026-09-20-wallet-history.md). PR #305 passes all five CI jobs, including full browser validation, unit coverage thresholds, security scans and combined changed/critical source coverage. [Verified run](https://github.com/barghsadev/barghsa-core/actions/runs/35498578584). The backlog validator passes for 1,355 tasks and 116 traceability entries. The audit validator passes for all 322 historical claims, 301 saved PRs and 58 historical skips.
 
 Historical claim acceptance is 219 verified, 54 partial and 49 deferred. The other 1,033 canonical tasks are outside that historical audit population. They are not automatically proven unimplemented or ready. Reuse existing code and acceptance evidence before choosing a new build.
 
@@ -21,16 +21,12 @@ Use the consolidated workflow: build a coherent dependency-related batch, run fo
 
 Automatic restart is not ready:
 
-- Remote `main` still points to `2f80d92df51556d47f778b5230e5eea577e2a8d4`. The repairs are published in [PR #305](https://github.com/barghsadev/barghsa-core/pull/305), but remain unmerged. CI follow-up is in progress; see the exact observed head/run and local check results in `audit/progress.json`.
+- PR #305 was verified merged at `0b768cf1` on September 20. The baseline blocker is resolved.
 - A read-only remote ref check found no `kanban-state` branch. The default local durable-state cache is also absent on this machine.
-- A read-only GitHub API check confirmed PR #304 is closed without merging and PR #305 is open and not draft. A complete live loop-owned PR inventory remains necessary before automatic restart.
+- A read-only GitHub API check confirmed PR #304 is closed without merging and PR #305 is merged. A complete live loop-owned PR inventory remains necessary before automatic restart.
 - `kanban/loop-state.json` is the September 1 historical snapshot. Its 308 completion claims are not current acceptance. Its apparent next tasks include already verified repairs.
 - `audit/reconciled-loop-state.json` is the earlier blocked import of saved history. Its 263 merged identities and empty acceptance-verification array are import provenance, not the current audit ledger or dispatch authority.
 
-Before enabling automation, fix CI and review/integrate the published repair baseline, reconcile current PR and state history against the acceptance ledger, and explicitly recover/bootstrap durable state under [STATE-PROTOCOL.md](STATE-PROTOCOL.md). Keep the configured scheduler paused throughout reconciliation. Do not directly edit completion arrays to skip partial or deferred work.
+Before enabling automation, reconcile current PR and state history against the acceptance ledger, and explicitly recover/bootstrap durable state under [STATE-PROTOCOL.md](STATE-PROTOCOL.md). Keep the configured scheduler paused throughout reconciliation. Do not directly edit completion arrays to skip partial or deferred work.
 
-Only local documentation was updated by this readiness check. No scheduler, PR, remote branch or runtime state was changed.
-
-## Latest CI follow-up
-
-Revision `51c8296e` passes the complete test/coverage, browser/integrity and both security jobs. The final coverage-report merge fails. Linux-style Python test execution reproduces untracked bytecode caches that make the source checkout appear dirty; generated caches are now ignored while real source changes remain detectable. A clean-checkout check runs before the browser suite, and report-merge failures now expose their reason as GitHub annotations. All 22 coverage merge/alignment tests pass locally. The latest follow-up still requires a complete GitHub run; exact observations are in `audit/progress.json`.
+The user authorized repeated manual build/review/merge batches on September 20 and withdrew the prior token ceiling. This does not restart the scheduler or alter legacy supervisor state. Partial task criteria remain explicit in the batch record.

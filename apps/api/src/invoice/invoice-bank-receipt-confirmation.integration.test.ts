@@ -310,6 +310,38 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     expect(receiptAudit.rows).toHaveLength(1);
   });
 
+  it('accumulates receipts from Unpaid through PartiallyFunded to Paid without duplicate credit', async () => {
+    const invoiceId = await insertInvoice({ total: 1_000_000n, paid: 0n, state: 'Unpaid' });
+    const before = await walletBalances();
+    for (const [index, amount] of [300_000n, 800_000n].entries()) {
+      const receiptId = await insertReceipt({ invoiceId, amount, suffix: `cumulative-${index}` });
+      const input = {
+        receiptId,
+        actorUserId: ACTOR_USER_ID,
+        ...receiptDecisionSession(ACTOR_USER_ID),
+        ip: '10.0.0.9',
+        now: NOW,
+      };
+      const first = await service.confirm(input);
+      const retry = await service.confirm(input);
+      expect(retry.overpayment).toEqual(first.overpayment);
+      const invoice = await invoiceSettlement(invoiceId);
+      expect(invoice.state).toBe(index === 0 ? 'PartiallyFunded' : 'Paid');
+      expect(invoice.paid).toBe(index === 0 ? 300_000n : 1_000_000n);
+      if (index === 1) {
+        expect(invoice.paidAt).not.toBeNull();
+        expect(first.overpayment?.walletCreditAmount).toBe('100000');
+        const credits = await ctx.pool.query(
+          'SELECT amount FROM wallet_transactions WHERE idempotency_key=$1',
+          [invoiceBankReceiptOverpaymentCreditIdempotencyKey(receiptId)]
+        );
+        expect(credits.rows).toHaveLength(1);
+        expect(BigInt(credits.rows[0]!.amount)).toBe(100_000n);
+      }
+    }
+    expect((await walletBalances()).posted).toBe(before.posted + 100_000n);
+  });
+
   it('credits the full receipt to the wallet when the linked invoice is already Paid', async () => {
     const invoiceId = await insertInvoice({
       total: 500_000n,

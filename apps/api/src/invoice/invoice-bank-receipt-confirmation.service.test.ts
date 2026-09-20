@@ -115,6 +115,7 @@ type ScriptOptions = {
   listed?: ReturnType<typeof makeReceiptRow>[];
   getRow?: ReturnType<typeof makeReceiptRow> | null;
   existingCredit?: Record<string, unknown> | null;
+  recordedRemaining?: unknown;
   invoice?: ReturnType<typeof makeInvoiceRow> | null;
   invoiceUpdated?: boolean;
   wallet?: { profile_id: string } | null;
@@ -140,6 +141,9 @@ function thresholdRows(opts: ScriptOptions): { rows: Array<{ value: unknown }> }
 
 function script(opts: ScriptOptions = {}) {
   mockClient.query.mockImplementation(async (sql: string) => {
+    if (sql.includes("->> 'remainingBefore' AS remaining_before")) {
+      return { rows: [{ remaining_before: opts.recordedRemaining }] };
+    }
     if (sql.startsWith('SELECT id, archived FROM profiles')) {
       return { rows: [{ id: PROFILE_ID, archived: false }] };
     }
@@ -266,6 +270,9 @@ function script(opts: ScriptOptions = {}) {
   });
 
   mockPool.query.mockImplementation(async (sql: string) => {
+    if (sql.includes("->> 'remainingBefore' AS remaining_before")) {
+      return { rows: [{ remaining_before: opts.recordedRemaining }] };
+    }
     if (sql.includes("state IN ('Submitted', 'UnderReview')")) {
       return { rows: opts.listed ?? [makeReceiptRow()] };
     }
@@ -510,6 +517,68 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
     expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
     expect(result.state).toBe('Confirmed');
     expect(result.overpayment?.overpaymentCreditTransactionId).toBe(CREDIT_ID);
+  });
+
+  it.each(['400000', 'malformed', null, undefined])(
+    'reads a confirmed receipt using its audit snapshot or legacy fallback: %s',
+    async (recordedRemaining) => {
+      script({
+        getRow: makeReceiptRow({ state: 'Confirmed', confirmed_by: ACTOR_ID, confirmed_at: NOW }),
+        recordedRemaining,
+      });
+      const result = await service.get(RECEIPT_ID);
+      expect(result.overpayment).toMatchObject({
+        remainingBefore: recordedRemaining === '400000' ? '400000' : '250000',
+        invoiceAllocation: '250000',
+        walletCreditAmount: '0',
+      });
+      expect(walletService.credit).not.toHaveBeenCalled();
+      expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
+    }
+  );
+
+  it('reconstructs a legacy credit without a stored allocation snapshot', async () => {
+    script({
+      getRow: makeReceiptRow({ state: 'Confirmed', confirmed_by: ACTOR_ID, confirmed_at: NOW }),
+      existingCredit: {
+        id: CREDIT_ID,
+        wallet_id: PROFILE_ID,
+        type: 'topup',
+        amount: '100000',
+        state: 'Completed',
+        metadata: {},
+      },
+    });
+    const result = await service.get(RECEIPT_ID);
+    expect(result.overpayment).toMatchObject({
+      remainingBefore: '150000',
+      invoiceAllocation: '150000',
+      walletCreditAmount: '100000',
+      overpaymentCreditTransactionId: CREDIT_ID,
+    });
+    expect(walletService.credit).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    null,
+    makeInvoiceRow({ adjustment_kind: 'credit' }),
+    makeInvoiceRow({ state: 'Cancelled' }),
+  ])(
+    'does not offer a pending receipt allocation for a missing or ineligible invoice: %j',
+    async (invoice) => {
+      script({ invoice });
+      const result = await service.get(RECEIPT_ID);
+      expect(result.overpayment).toBeNull();
+      expect(result.remaining).toBeNull();
+    }
+  );
+
+  it('returns not found for missing receipt details and previews', async () => {
+    script({ getRow: null });
+    await expect(service.get(RECEIPT_ID)).rejects.toMatchObject({ status: 404 });
+    await expect(service.previewAllocation(RECEIPT_ID)).rejects.toMatchObject({ status: 404 });
+    script({ invoice: null });
+    await expect(service.previewAllocation(RECEIPT_ID)).rejects.toMatchObject({ status: 404 });
   });
 
   it('rejects confirmation of a Rejected receipt', async () => {
