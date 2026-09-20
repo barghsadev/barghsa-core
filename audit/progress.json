@@ -1431,7 +1431,7 @@
     },
     "manual_batch": {
       "branch": "codex/contract-signature-evidence",
-      "status": "local_validation",
+      "status": "approved_pending_ci",
       "record": "kanban/batches/2026-09-21-contract-signature-evidence.md",
       "previous_batch": {
         "pr": 321,
@@ -1440,7 +1440,7 @@
         "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/321#issuecomment-5753234841",
         "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35542614185"
       },
-      "validation": "15 database,44 API,15 frontend and8 bilingual production browser checks pass; types/build/lint/snapshot/OpenAPI pass. Final coverage/review/CI remain.",
+      "validation": "15 database,44 API,15 frontend and8 bilingual production browser checks pass; types/build/lint/format/snapshot/OpenAPI/bundle and actual changed-source coverage pass. Independent corrected-HEAD approval posted/read back; CI security/secrets/integrity pass, tests pending.",
       "remaining_tasks": [
         "Automatic contract template-to-PDF generation",
         "Contract draft/edit UI and typed financial preview",
@@ -1448,7 +1448,16 @@
         "Amendments, cancellation and automatic refund obligations",
         "Configured malware scanning and physical retention deletion"
       ],
-      "main320_followup": "Tests/security/integrity pass; combined coverage found one missing admin navigation branch. Investigation open."
+      "main320_followup": "Functional checks pass; generated import-line conditional reproduced. Locally removed redundant nested lazy loading for document/contract routes. 27 frontend and12 browser checks, actual combined coverage and44 bundle budgets pass.",
+      "pr": 322,
+      "reviewed_head_sha": "16d4ee986a1ca1d6023bf1f43f3b88c7e42523c3",
+      "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/322#issuecomment-5753480348",
+      "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35544425429",
+      "next_batch": {
+        "branch": "codex/contract-route-loading",
+        "record": "kanban/batches/2026-09-21-contract-route-loading.md",
+        "status": "locally_validated_awaiting_parent_merge"
+      }
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",
