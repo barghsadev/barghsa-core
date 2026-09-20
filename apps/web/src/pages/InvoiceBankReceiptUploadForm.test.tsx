@@ -11,11 +11,11 @@ const upload = vi.hoisted(() => vi.fn());
 vi.mock('../hooks/useReceiptAttachmentUpload.js', () => ({
   useReceiptAttachmentUpload: () => upload,
 }));
-vi.mock('../lib/invoice-bank-receipt-upload.js', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('../lib/invoice-bank-receipt-upload.js')>()),
-  fetchActiveProfileId: vi.fn(),
-  submitInvoiceBankReceipt: vi.fn(),
-}));
+type ReceiptUploadModule = typeof import('../lib/invoice-bank-receipt-upload.js');
+vi.mock('../lib/invoice-bank-receipt-upload.js', async (importOriginal) => {
+  const actual = (await importOriginal()) as ReceiptUploadModule;
+  return { ...actual, fetchActiveProfileId: vi.fn(), submitInvoiceBankReceipt: vi.fn() };
+});
 let container: HTMLDivElement, root: Root;
 beforeEach(() => {
   document.documentElement.lang = 'en';
