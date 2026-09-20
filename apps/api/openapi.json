@@ -15159,6 +15159,87 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Inclusive ISO timestamp",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Inclusive ISO timestamp",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "enum": [
+                "Pending",
+                "Reserved",
+                "Completed",
+                "Failed",
+                "Rejected",
+                "Released",
+                "Reversed"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "topup",
+                "payment",
+                "refund",
+                "reservation",
+                "release",
+                "reversal",
+                "compensating"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "1–100, default 50",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
           }
         ],
         "responses": {
@@ -15167,6 +15248,10 @@
               "application/json": {
                 "schema": {
                   "properties": {
+                    "nextCursor": {
+                      "nullable": true,
+                      "type": "string"
+                    },
                     "transactions": {
                       "items": {
                         "properties": {
@@ -15213,7 +15298,8 @@
                     }
                   },
                   "required": [
-                    "transactions"
+                    "transactions",
+                    "nextCursor"
                   ],
                   "type": "object"
                 }
@@ -15227,7 +15313,7 @@
             "bearer": []
           }
         ],
-        "summary": "Get wallet transaction history",
+        "summary": "Get filtered, cursor-paginated history for the active profile",
         "tags": [
           "Wallet"
         ]

@@ -23,7 +23,7 @@ Automatic restart is not ready:
 
 - Remote `main` still points to `2f80d92df51556d47f778b5230e5eea577e2a8d4`. The repairs are published in [PR #305](https://github.com/barghsadev/barghsa-core/pull/305), but remain unmerged. CI follow-up is in progress; see the exact observed head/run and local check results in `audit/progress.json`.
 - A read-only remote ref check found no `kanban-state` branch. The default local durable-state cache is also absent on this machine.
-- A read-only GitHub API check confirmed PR #304 is closed without merging and PR #305 is open and not draft. A complete live loop-owned PR inventory remains necessary before automatic restart.
+- A read-only GitHub API check confirmed PR #304 is closed without merging and PR #305 is merged. A complete live loop-owned PR inventory remains necessary before automatic restart.
 - `kanban/loop-state.json` is the September 1 historical snapshot. Its 308 completion claims are not current acceptance. Its apparent next tasks include already verified repairs.
 - `audit/reconciled-loop-state.json` is the earlier blocked import of saved history. Its 263 merged identities and empty acceptance-verification array are import provenance, not the current audit ledger or dispatch authority.
 
