@@ -28,7 +28,8 @@ import {
   type DocumentPage,
 } from '../lib/documents.js';
 
-interface Filters {
+export interface DocumentFilters {
+  contractVersionId?: string;
   kind: DocumentKind;
   state: string;
   category: string;
@@ -47,7 +48,7 @@ function Workspace({ staff }: { staff: boolean }) {
   const [activeProfile, setActiveProfile] = useState<string | null>(null);
   const [profileError, setProfileError] = useState(false);
   const [profileRetry, setProfileRetry] = useState(0);
-  const [filters, setFilters] = useState<Filters>({
+  const [filters, setFilters] = useState<DocumentFilters>({
     kind: 'standalone',
     state: staff ? 'SubmittedForReview' : '',
     category: '',
@@ -89,7 +90,7 @@ function Workspace({ staff }: { staff: boolean }) {
     setApplied({ ...filters });
     setGeneration((value) => value + 1);
   }
-  function change(key: keyof Filters, value: string) {
+  function change(key: keyof DocumentFilters, value: string) {
     setFilters((previous) => ({ ...previous, [key]: value }));
   }
   return (
@@ -210,13 +211,13 @@ function Workspace({ staff }: { staff: boolean }) {
     </div>
   );
 }
-function DocumentResults({
+export function DocumentResults({
   staff,
   filters,
   profileId,
 }: {
   staff: boolean;
-  filters: Filters;
+  filters: DocumentFilters;
   profileId: string;
 }) {
   const locale = useLocale();
@@ -234,6 +235,7 @@ function DocumentResults({
     const controller = new AbortController();
     const params = new URLSearchParams({ businessRecordType: filters.kind });
     if (profileId) params.set('profileId', profileId);
+    if (filters.contractVersionId) params.set('contractVersionId', filters.contractVersionId);
     if (filters.state) params.set('state', filters.state);
     if (filters.category) params.set('category', filters.category);
     if (filters.query.trim()) params.set('q', filters.query.trim());

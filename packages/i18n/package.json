@@ -166,6 +166,11 @@
       "types": "./dist/documents.d.ts",
       "import": "./dist/documents.js",
       "default": "./dist/documents.js"
+    },
+    "./contracts": {
+      "types": "./dist/contracts.d.ts",
+      "import": "./dist/contracts.js",
+      "default": "./dist/contracts.js"
     }
   },
   "scripts": {

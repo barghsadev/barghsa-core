@@ -1430,43 +1430,25 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/documents-ui",
-      "status": "fixing_static_scan_pending_review_ci",
-      "record": "kanban/batches/2026-09-21-document-workspace.md",
-      "validation": "21 frontend, 53 API, one dictionary and four production browser tests pass; builds/types/lint/contract/bundle and actual changed-source gate pass.",
+      "branch": "codex/contract-workspace",
+      "status": "fixing_format_pending_review_ci",
+      "record": "kanban/batches/2026-09-21-contract-workspace.md",
       "previous_batch": {
-        "branch": "codex/document-lifecycle",
+        "pr": 320,
         "status": "merged",
-        "record": "kanban/batches/2026-09-20-document-lifecycle.md",
-        "previous_batch": {
-          "pr": 318,
-          "status": "merged",
-          "merge_commit_sha": "420a69d6043dd59cf46d08397c64460752bdce84",
-          "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/318#issuecomment-5752409614",
-          "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35535166515"
-        },
-        "remaining_tasks": [
-          "Document lifecycle backend and exact contract-version linking, in progress",
-          "Configured malware scanner, document UI and retention policy",
-          "Contract UI, signatures and activation",
-          "Amendments, cancellation and automatic refund obligations"
-        ],
-        "token_limit": "User withdrew prior token ceiling; normal work authorized.",
-        "validation": "111 API, 10 database and 9 permission tests; builds, API types, migration snapshot, OpenAPI and backlog checks pass. Cross-version/role lineage review correction tested.",
-        "pr": 319,
-        "reviewed_head_sha": "770d601e29476faebc1eb0c648a160b7dc6d4243",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/319#issuecomment-5752910813",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35539788097",
-        "merge_commit_sha": "d6686cb619fb2de180a8f7aa6d02d4fda6f1f434"
+        "merge_commit_sha": "cefe44c42df68473bb5bb3488e053987cac78823",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/320#issuecomment-5753077285",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35541233169"
       },
+      "validation": "62 API,21 frontend,dictionary and4 production browser checks pass; builds/types/lint/static scan/OpenAPI/bundle pass. Actual committed changed-source coverage gate passes.",
       "remaining_tasks": [
-        "Contract UI and contextual associated-document uploads",
-        "Configured malware scanner and physical retention deletion",
+        "Contract draft creation/editing UI and typed financial preview",
         "Contract signatures and activation",
-        "Amendments, cancellation and automatic refund obligations"
+        "Amendments, cancellation and automatic refund obligations",
+        "Configured malware scanning and physical document retention deletion"
       ],
-      "pr": 320,
-      "prior_review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/320#issuecomment-5753041098"
+      "pr": 321,
+      "prior_review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/321#issuecomment-5753199373"
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",

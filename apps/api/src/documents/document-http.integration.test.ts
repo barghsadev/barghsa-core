@@ -440,6 +440,45 @@ it('keeps internal contract documents private through reads, downloads and notif
   } finally {
     client.release();
   }
+  const nextDocument = await confirm(
+    await create(
+      'document-legal',
+      {
+        profileId: f.profile,
+        businessRecordType: 'contract',
+        businessRecordId: contract.id,
+        contractVersionId: nextVersion,
+        contractRole: 'original',
+      },
+      true
+    ),
+    'document-legal',
+    true
+  );
+  for (const [actor, prefix] of [
+    [f.user, 'documents'],
+    ['document-legal', 'admin/documents'],
+  ] as const) {
+    const page = (await (
+      await send(
+        `${prefix}?businessRecordType=contract&businessRecordId=${contract.id}&contractVersionId=${nextVersion}`,
+        actor
+      )
+    ).json()) as DocumentList;
+    expect(page.documents.map((row) => row.id)).toEqual([nextDocument.id]);
+    const previous = (await (
+      await send(
+        `${prefix}?businessRecordType=contract&businessRecordId=${contract.id}&contractVersionId=${contract.currentVersionId}`,
+        actor
+      )
+    ).json()) as DocumentList;
+    expect(previous.documents.map((row) => row.id).sort()).toEqual(
+      [original.id, signedCopy.id].sort()
+    );
+    expect(
+      (await send(`${prefix}?businessRecordType=contract&contractVersionId=invalid`, actor)).status
+    ).toBe(400);
+  }
   expect(
     (
       await send(`contracts/${contract.id}/accept`, f.user, 'POST', {
