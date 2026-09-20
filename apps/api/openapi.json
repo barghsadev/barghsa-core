@@ -3164,6 +3164,174 @@
         ]
       }
     },
+    "/api/admin/contracts/{id}/signature": {
+      "get": {
+        "operationId": "ContractSignatureController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read exact-version signing request and signed-copy evidence for staff",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      },
+      "post": {
+        "operationId": "ContractSignatureController_record",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "requestId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "signedDocumentId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedVersionId",
+                  "idempotencyKey",
+                  "requestId",
+                  "signedDocumentId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Record an approved signed copy as staff without attributing the customer signature to staff",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}/signature-request": {
+      "post": {
+        "operationId": "ContractSignatureController_request",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedRequestId": {
+                    "description": "Null for the first request; otherwise the current latest request ID.",
+                    "format": "uuid",
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "originalDocumentId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedVersionId",
+                  "idempotencyKey",
+                  "originalDocumentId",
+                  "expectedRequestId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Prepare a numbered signing request from the accepted version and approved original PDF",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
     "/api/admin/contracts/{id}/versions": {
       "get": {
         "operationId": "ContractController_versions",
@@ -11141,6 +11309,107 @@
           }
         ],
         "summary": "Accept the exact current published version as the authorized customer",
+        "tags": [
+          "Contracts"
+        ]
+      }
+    },
+    "/api/contracts/{id}/signature": {
+      "get": {
+        "operationId": "CustomerContractSignatureController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read signing evidence for an authorized published version without staff identifiers",
+        "tags": [
+          "Contracts"
+        ]
+      },
+      "post": {
+        "operationId": "CustomerContractSignatureController_record",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "requestId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "signedDocumentId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedVersionId",
+                  "idempotencyKey",
+                  "requestId",
+                  "signedDocumentId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Record an approved signed copy for the exact accepted contract version",
         "tags": [
           "Contracts"
         ]

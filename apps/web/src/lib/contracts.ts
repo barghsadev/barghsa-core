@@ -37,3 +37,32 @@ export interface ContractDetailData extends Omit<ContractSummary, 'versionId' | 
   canAccept?: boolean;
 }
 export const contractBase = (staff: boolean) => (staff ? '/api/admin/contracts' : '/api/contracts');
+
+export interface ContractSignatureData {
+  contractId: string;
+  versionId: string;
+  state: string;
+  isCurrent: boolean;
+  canRequest: boolean;
+  canRecord: boolean;
+  request: {
+    id: string;
+    requestNumber: number;
+    originalDocumentId: string;
+    originalName: string;
+    documentState: string;
+    requestedAt: string;
+    requestedBy?: string;
+  } | null;
+  signature: {
+    requestId: string;
+    signedDocumentId: string;
+    originalName: string;
+    documentState: string;
+    recordedByType: 'customer' | 'staff';
+    uploadedByType: 'customer' | 'staff' | 'system';
+    recordedAt: string;
+    recordedBy?: string;
+    uploadedBy?: string;
+  } | null;
+}

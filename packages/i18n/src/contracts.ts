@@ -54,6 +54,28 @@ export const en = {
   uploadAmendment: 'Upload amendment document',
   copyNotice:
     'Uploading a signed copy records the document and its uploader. Signature confirmation remains a separate step.',
+  signatureTitle: 'Signature record',
+  signatureNotice:
+    'This records an approved signed copy. It does not create a digital signature or activate the contract.',
+  signatureRequest: 'Signing request',
+  noSignatureRequest: 'No signing request for this version.',
+  signatureRecorded: 'Signed copy recorded',
+  recordedBy: 'Recorded by',
+  uploadedBy: 'Uploaded by',
+  customer: 'Customer',
+  staff: 'Staff',
+  system: 'System',
+  approvedOriginal: 'Approved original PDF',
+  approvedSigned: 'Approved signed copy',
+  selectDocument: 'Select a document',
+  prepareSignature: 'Prepare signing request',
+  recordSignature: 'Record signed copy',
+  signatureAcknowledgement:
+    'I have checked that this approved copy contains the signatures for this version and signing request.',
+  signatureDocumentHint:
+    'Only approved documents for this version are listed. Upload or review documents below, then refresh this section.',
+  signatureConflict:
+    'The version, signing request or document changed. Refresh and check the selected copy before continuing.',
   noValue: 'Not specified',
   yes: 'Yes',
   no: 'No',
@@ -119,6 +141,28 @@ export const fa: Record<keyof typeof en, string> = {
   uploadAmendment: 'بارگذاری مدرک الحاقیه',
   copyNotice:
     'بارگذاری نسخه امضاشده، مدرک و بارگذار آن را ثبت می‌کند. تأیید امضا مرحله‌ای جداگانه است.',
+  signatureTitle: 'ثبت امضا',
+  signatureNotice:
+    'این اقدام نسخه امضاشده و تأییدشده را ثبت می‌کند و به معنی ایجاد امضای دیجیتال یا فعال‌سازی قرارداد نیست.',
+  signatureRequest: 'درخواست امضا',
+  noSignatureRequest: 'برای این نسخه درخواست امضا ثبت نشده است.',
+  signatureRecorded: 'نسخه امضاشده ثبت شد',
+  recordedBy: 'ثبت‌کننده',
+  uploadedBy: 'بارگذار',
+  customer: 'مشتری',
+  staff: 'کارشناس',
+  system: 'سامانه',
+  approvedOriginal: 'اصل PDF تأییدشده',
+  approvedSigned: 'نسخه امضاشده تأییدشده',
+  selectDocument: 'انتخاب مدرک',
+  prepareSignature: 'آماده‌سازی درخواست امضا',
+  recordSignature: 'ثبت نسخه امضاشده',
+  signatureAcknowledgement:
+    'بررسی کرده‌ام که این مدرک تأییدشده دارای امضاهای مربوط به همین نسخه و درخواست امضا است.',
+  signatureDocumentHint:
+    'فقط مدارک تأییدشده این نسخه نمایش داده می‌شوند. مدارک را در بخش زیر بارگذاری یا بررسی کنید و سپس این بخش را تازه‌سازی کنید.',
+  signatureConflict:
+    'نسخه، درخواست امضا یا مدرک تغییر کرده است. تازه‌سازی کنید و پیش از ادامه مدرک انتخابی را بررسی کنید.',
   noValue: 'ذکر نشده',
   yes: 'بله',
   no: 'خیر',

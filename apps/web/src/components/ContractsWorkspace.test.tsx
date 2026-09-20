@@ -111,6 +111,8 @@ async function value(selector: string, text: string) {
 function api(current = detail()) {
   return vi.fn(async (raw: string) => {
     const url = new URL(raw, 'https://app.test');
+    if (url.pathname.endsWith('/signature'))
+      return response({ canRequest: false, canRecord: false, request: null, signature: null });
     if (url.pathname.endsWith('/documents')) return response({ documents: [], nextBefore: null });
     if (url.pathname.endsWith('/versions'))
       return response({

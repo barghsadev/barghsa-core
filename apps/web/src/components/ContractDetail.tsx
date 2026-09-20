@@ -15,6 +15,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { documentRequest } from '../lib/documents.js';
 import { contractBase, type ContractDetailData, type ContractVersion } from '../lib/contracts.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { ContractSignaturePanel } from './ContractSignaturePanel.js';
 import { ContractTerms } from './ContractTerms.js';
 import { DocumentResults, type DocumentFilters } from './DocumentsWorkspace.js';
 import { DocumentUpload, type ContractDocumentAssociation } from './DocumentUpload.js';
@@ -258,6 +259,17 @@ export function ContractDetail({
               {word('next')}
             </Button>
           ) : null}
+          <ContractSignaturePanel
+            key={'signature:' + data.version.id + ':' + reload}
+            id={id}
+            versionId={data.version.id}
+            profileId={data.contract.profileId}
+            staff={staff}
+            onChanged={() => {
+              setReload((value) => value + 1);
+              onChanged();
+            }}
+          />
           <ContractDocuments
             key={data.version.id + ':' + reload}
             contract={data.contract}
