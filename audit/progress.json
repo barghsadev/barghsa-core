@@ -1430,19 +1430,18 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/refund-retry-batch",
-      "status": "building",
-      "record": "kanban/batches/2026-09-20-refund-retries.md",
+      "branch": "codex/refund-pending-ledger",
+      "status": "selected",
+      "record": "kanban/batches/2026-09-20-refund-pending-ledger.md",
       "previous_batch": {
-        "pr": 312,
+        "pr": 313,
         "status": "merged",
-        "merge_commit_sha": "4eea6d198341581d1b3f8af2e7a9b9ddaf5ca5fb",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/312#issuecomment-5750199254",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35514431398"
+        "merge_commit_sha": "b7bc57b456c92c0094b88c17cf354df6b998f112",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/313#issuecomment-5751498269",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35526638700"
       },
       "remaining_tasks": [
-        "04-invoices-wallet-contracts.md#T-04.4.01.07",
-        "04-invoices-wallet-contracts.md#T-04.4.01.02 pending ledger and failure processing"
+        "04-invoices-wallet-contracts.md#T-04.4.01.02 approval-time pending transactions"
       ],
       "token_limit": "User withdrew prior token ceiling; normal work authorized."
     },

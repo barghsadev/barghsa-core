@@ -2,7 +2,7 @@
 
 Branch: `codex/refund-retry-batch`, based on merged PR #312 at `4eea6d198341581d1b3f8af2e7a9b9ddaf5ca5fb`.
 
-Status: implementation and local validation complete; independent review and GitHub CI remain.
+Status: merged as [PR #313](https://github.com/barghsadev/barghsa-core/pull/313) at `b7bc57b456c92c0094b88c17cf354df6b998f112`.
 
 ## Scope
 
@@ -39,6 +39,8 @@ External refunds still require recorded transfer evidence and distinct current f
 
 The first PR run exposed shared-package Node tests being collected by Vitest and a race with the shared build deleting its output. Shared Vitest now includes source tests only; both package test commands run the existing bucket tests through Node afterward. Package task dependencies wait for the shared build. Validation: 977 Vitest tests and 16 native storage/CLI tests pass, including real MinIO; the task graph confirms test depends on the shared build. The monitoring test formatting is corrected. These changes require a fresh exact-HEAD review.
 
-## Before merge
+## Merge evidence
 
-Obtain independent exact-HEAD review and require all active GitHub CI checks. Keep the historical supervisor arrays and paused scheduler unchanged.
+Final reviewed HEAD: `8b10b024200bb1dcf330fb959482cf2c01a06c3b`. [Independent approval](https://github.com/barghsadev/barghsa-core/pull/313#issuecomment-5751498269) has no findings. [CI run](https://github.com/barghsadev/barghsa-core/actions/runs/35526638700) passes all five active checks; package tests took 18m25s. Local changed/critical coverage supplies actual coverage evidence because PR CI is in its existing fast mode.
+
+The storage fixture also pins the identical MinIO digest from its official Quay registry after Docker Hub stopped serving the old image. Public pull and all 16 native tests pass. GitHub merge and the durable review binding were read back and verified. Historical supervisor arrays and the paused scheduler are unchanged.
