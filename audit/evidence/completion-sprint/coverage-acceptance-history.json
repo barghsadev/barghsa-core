@@ -1,0 +1,44 @@
+{
+  "previous": {
+    "task_key": "01-platform-infrastructure.md#T-01.04.02",
+    "status": "partial",
+    "reviewed_sha": "189e36c927d3bbf09d24a64a28a083a902aae15a",
+    "requirement_file": "kanban/epics/01-platform-infrastructure.md",
+    "requirement_line": 177,
+    "requirement": "- **T-01.04.02:** Configure per-package Vitest with coverage thresholds\n  - **Notes:** Minimum thresholds: 80% line / 75% branch for changed code. Auth, authorization, payments, wallet, refunds, pricing, contracts, and state-machine domain packages: 90% line / 85% branch. Exceptions require tech lead approval. Coverage checks in `vitest.config.ts` via `coverage.thresholds`.\n  - **Dependencies:** T-01.04.01\n  - **Complexity:** M",
+    "requirement_sha256": "36013018d53384a8ba285ec35fe6cd14159cb6e40c540394a521f4dfe73e66c8",
+    "source_evidence": [
+      {
+        "path": ".github/workflows/ci.yml",
+        "sha256": "0e63f1cf774c6faa9121b665144718f046a1f14d14b8e11eeea72d5a8a806dce"
+      },
+      {
+        "path": "scripts/check-changed-coverage.py",
+        "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+      },
+      {
+        "path": "audit/combined-coverage-checkpoint.json",
+        "sha256": "3ac9e021a8c5121a497233a696d49ef385cb45294ef1f7cf587128dd77be3f19"
+      }
+    ],
+    "checks": [
+      "Combined coverage checkpoint at 89e71e8 has no checker errors and six of thirteen groups fail",
+      "Changed source gates enforce 80/75 and critical file gates enforce 90/85",
+      "Current source bindings reconciled at the completion sprint; prior hashes, applicable later reviews and tested deltas are retained in the source-refresh evidence. Acceptance status is unchanged by hash refresh."
+    ],
+    "limitations": [
+      "Latest complete combined measurement at9529872 fails three groups: API critical branches and both web groups; no report errors.",
+      "Subsequent callback/notification repairs have focused evidence only; global coverage refresh is batched.",
+      "Diff-aware combined checker enforces80/75 general and90/85 critical outside native per-package floors. No lowered-threshold exception approved."
+    ],
+    "merged_prs": [
+      16
+    ],
+    "historically_skipped": false,
+    "remaining_work_reconciled_at": "9635e767191ef6468bf8c60b7da9df75ec6dec81",
+    "remaining_work_evidence": "audit/evidence/acceptance-refresh.json",
+    "source_refresh_revision": "90af2feea4489a779a200d0d0a0fcc8cf7c1586a",
+    "source_refresh_record": "audit/evidence/completion-sprint/source-refresh.json"
+  },
+  "current_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9"
+}

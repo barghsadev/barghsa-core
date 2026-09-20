@@ -1,45 +1,33 @@
-# Continue here
+# Repair sprint handoff
 
-Read the feature-batch rules in [fix-plan.md](fix-plan.md) and `active_batch` in [progress.json](progress.json). Completed reviews and valid evidence live in [step-reviews.json](evidence/step-reviews.json). Do not reread the archive routinely.
+Local repair work is complete on `codex/audit-fixes` at `7b45c21507ad4fae597e4b00227f3a770b25f7e9`. No further step-by-step repair batches are queued. See [final checkpoint](final-repair-checkpoint.json) for passing checks and precise revision reuse, [fix plan](fix-plan.md) for scope, and [acceptance](acceptance-closure.json) for remaining criteria.
 
-## Current checkpoint
+## Current disposition
 
-Branch `codex/audit-fixes`. Latest product/test **bf2b23ec**. **209 verified /47 partial /66 pending** of322 claims. Saved PRs: **217 closed /44 open /40 unreviewed**,301 total.58 skips:8 verified/1 partial/49 pending.3606 logs indexed;22 older evidence refreshes remain. Inventory ends September3; no current GitHub or deployment claim.
+219 verified / 54 partial / 49 deferred / 0 pending of 322 claims. Saved PRs: 242 closed/59 open/0 unreviewed of 301. Historical skips: 8 verified/1 partial/49 deferred of 58. Every saved PR statement is dispositioned; source refreshes retain old hashes. Open means an exact owner, future-consumer or external prerequisite remains; it does not automatically mean a new defect.
 
-Staff administration consolidated at **0475db83**: saved PR129/130/218 close; three existing acceptances preserved. Exact method comparison and10 current creation cases verify later defaults/correlation changes. Valid role/disable/activation/UI evidence reused. No product edits. Three older bindings close;22 refresh records remain. [Batch review](evidence/step-reviews.json#V01-staff-administration).
-
-**Next:** support response targets, staff teams/assignment and escalation, saved PR197/198/199. Reuse completed ticket/team/worker evidence. Full regression stays V02.
-
-CRM checkpoint bf2b23ec closes8 reviews; PR128 retains contract/retention prerequisites. Seven mutation authority repairs, archival messages and assignment notices pass297 distinct API cases.
-
-Terms checkpoint d9ed9dd5 closes PR117/118/119/159/160;42 API/47 browser cases pass. Consent-expiry and shared fixture repairs remain verified.
-
-UI foundations checkpoint **21438625** verifies1 task;2 remain partial for explicit stack/table requirement discrepancies. PR65 closed;66/67 open. Font/PostCSS/keyboard-highlight repairs pass45 browser,56 UI and42 budget checks. Both PR67 visual/form deferrals are satisfied.
-
-Edge/cache checkpoint **6d801999** verifies4 tasks and closes PR60/62/63/64.42 focused cases and actual NGINX TLS/routing/gzip/cache/limits/SSE/WebSocket checks pass. Deploy web/proxy cache changes together; production TLS/topology and final image regression remain external/V02. PR61's pending CSP decision stays open.
-
-Previous storage checkpoint **cf0fa042** verifies3 tasks and closes3 PRs; PR57 retains deployed retention/future classifiers, PR59 future contract/document integration.180 affected cases pass. Redis checkpoint **c32ff819** closes PR51/53/54 using matching prior evidence. Preserve both consolidated reviews.
+Complete Chromium suites: 769 passed against optimized production, and 769 passed against the unminified coverage build. All unchanged combined coverage gates pass. Actual local image lifecycle checks pass. The API broad run's two timing-fixture failures are resolved by the 103-case focused rerun; new boundary cases pass separately. Overlapping runs are not added. Earlier failed logs remain archived alongside successful reruns.
 
 ## Preserve completed work
 
-Reuse source-bound authentication, profiles, CRM, finance, notification, UI, database, operations, container, runtime and loop reviews. Their exact limitations remain in [acceptance](acceptance-closure.json) and `progress.json.open_domain_reviews`; do not rebuild completed workflows or count future/operational prerequisites as passed.
+Reuse source-bound authentication, profiles, CRM, finance, notification, UI, database, operations and loop reviews in [step evidence](evidence/step-reviews.json). Read the active documents first; do not routinely reread the historical archive or rebuild verified workflows.
 
-- Apply migrations through0134 before this API accepts traffic. Reconcile legacy electricity identities/nonnegative limits before seed/constraint validation. Historical traces stay NULL. Published image tags, current packaged-image refresh and production seed remain separate evidence.
-- Do not charge DRAFT orders: PR225 still lacks its submission caller. Refund/order/contract/document consumers and legacy invoice/reversal constraint validation retain their recorded prerequisites.
-- Notifications require coordinated migrations/workers, published templates/mappings and old-writer retirement. Reminder pools need2+ connections. Follow [delivery recovery](../docs/operations/notification-delivery-recovery.md) and [template seeding](../docs/operations/notification-template-seeding.md). No historical backfill/resend or live send is authorized.
-- Storage rollout must ship API/helpers together, permit If-None-Match in bucket CORS, drain old writers and expire old PUT URLs for at least1hour. Reconcile deployed lifecycle rules/MinIO multipart settings. No real bucket or elapsed-day expiry proof. Future scanner/quarantine/SHA256 and document consumers remain separate. Manual hold edits must not race classification; independent hold authority requires provider Object Lock.
-- Production TLS/firewall/load, off-server backups, secrets, installed schedules, quarterly recovery and delivered monitoring alerts remain unverified. Loop state bootstrap/recovery and PR304 remain external; scheduler stays unchanged.
+- Apply migrations through 0134 before API traffic. Reconcile legacy electricity identities and nonnegative limits before seed/constraint validation. Historical traces stay NULL. Published image tags and production seed remain separate evidence.
+- Do not charge DRAFT orders: the real submission caller remains a future consumer. Refund/order/contract/document workflows and legacy invoice/reversal constraint validation keep their recorded prerequisites.
+- Notifications require coordinated migrations/workers, published templates/mappings and retirement of old writers. Reminder pools need at least 2 connections. Follow [delivery recovery](../docs/operations/notification-delivery-recovery.md) and [template seeding](../docs/operations/notification-template-seeding.md). No historical backfill/resend or live send is authorized.
+- Ship storage API/helpers together; allow If-None-Match in bucket CORS, drain old writers and expire old PUT URLs for at least 1 hour. Reconcile deployed lifecycle/MinIO multipart settings. Real bucket/elapsed-day expiry and future scanner/quarantine/document consumers remain unverified. Manual hold changes must not race classification; independent hold authority needs provider Object Lock.
+- Ship web/proxy cache changes together. Production TLS/firewall/load, off-server backups, secrets, installed schedules, recovery exercises and delivered alerts remain unverified. Scheduler and PR304 remain untouched.
 
-## Decisions and pending questions
+## Decisions and future work
 
-Retain Vite SPA/ADR004. License restrictions waived. No automatic identity provider exists; manual verification remains supported. Never simulate approval or ask again for a provider. Support:info@barghsa.com,021-26658042,09002550292. Ticket categories:General,Billing,Orders. Auth150KB covers initial load; estimator900KB separately. Numeric budgets/coverage floors unchanged. Pre-login CSRF is implemented. Limited trusted server-side secret uses approved September13 and T-05.06.05 updated.
+The six already-recorded owner questions remain in [progress](progress.json): recovery policy, signed callback CSRF wording, native CSP-report exception, 38 base-column deviations, Node 24 requirement and Base UI requirement. Preserve them; do not repeatedly reask or silently approve them.
 
-Already asked, still pending: lost-contact recovery policy; signed-webhook CSRF wording; authenticated native CSP-report exception;38 base-column deviations; retain tested Node24 images versus literal Node20 requirement; retain tested Base UI/base-nova versus Radix/new-york. Do not reask or silently waive these. Continue independent work.
+Retain Vite SPA/ADR004, supported manual identity verification, approved pre-login CSRF and the September 13 limited trusted server-side secret uses. Dependency license restrictions are waived. Ticket categories are General/Billing/Orders. Support contacts remain info@barghsa.com, 021-26658042, 09002550292. Auth initial load 150 KB and estimator 900 KB are separately measured; other numeric budgets and coverage floors are unchanged.
 
-## Execution
+[Skipped-work handoff](skipped-work-handoff.md) orders the remaining 49 deferred historical claims by dependencies. Partial claims separately retain actual future consumers, manual IDE proof, infrastructure and operations requirements. No provider, deployment or scheduled-exercise success is implied by local checks.
 
-Local edits and explicit commits only. No push, PR publication/merge, deployment, scheduler/state changes, external messages or PR304 action. Preserve user-owned untracked `output/`.
+## Continuing efficiently
 
-Use rtk and codebase-memory. Keep outputs small; save complete logs. Review each meaningful fix, run focused checks, consolidate once per feature batch. Reuse valid evidence. Full regression stays V02; skipped builds follow repair closure/B01 handoff.
+Start only from a concrete remaining criterion. Use focused tests for edits, reuse matching source-bound evidence, and consolidate review/validation. Keep full API/worker setup builds separate from consumers in the same checkout, and never edit source/tests while their checks run. Preserve complete logs with concise summaries. Use RTK and the codebase graph when available.
 
-API/worker test setup rebuilds shared packages and applications. Run those checks alone, then consumer checks. Never edit source/tests while their checks run or overlap shared/API builds with consumer checks. Read every process exit before edits/commits. Build web before browser checks. Graph ranges can be stale after edits; read bounded current source.
+Authority remains local edits and explicit commits. No push, PR publication/merge, deployment, scheduler/state change, external message or PR304 action. Preserve untracked user-owned `output/`. Latest account meter: 19% weekly used, below the 50% ceiling.

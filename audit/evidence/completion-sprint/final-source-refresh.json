@@ -1,0 +1,19 @@
+{
+  "revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+  "refreshes": [
+    {
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.04",
+      "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+      "previous_sha256": "b9d4dc43aa87ae39f67523646dae0b3bcaf2273838738d85391afc8bc3e62eb7",
+      "current_sha256": "6adcc88bc0637c16101601e5884f3e70e6251c2359f226b9aad0810eb513b845",
+      "evidence": "Full web777/shared976 and independent read-only review; production behavior unchanged."
+    },
+    {
+      "task_key": "01-platform-infrastructure.md#T-03.03.02",
+      "path": "packages/shared/src/storage/runtime-config.test.ts",
+      "previous_sha256": "5068411207f4bd7eedfe0e9d54868747e8fcd42700a27ddb54d1eae91708acec",
+      "current_sha256": "f8f4033bb0f26b93808d316ec7f9a57a3d9ae87b2ec0ea1a30da2f964951840d",
+      "evidence": "Full web777/shared976 and independent read-only review; production behavior unchanged."
+    }
+  ]
+}

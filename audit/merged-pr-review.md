@@ -3,10 +3,10 @@
 Generated from the saved inventory and current task acceptance. This report makes no new GitHub query.
 A PR body checkbox is historical author evidence, not independent acceptance. Review the final combined implementation once per qualified task; reuse valid evidence for every contributing PR.
 
-301 merged PRs: 68 have unresolved mapped tasks; 4 have no current task mapping; 229 map only to verified tasks.
+301 merged PRs: 57 have unresolved mapped tasks; 4 have no current task mapping; 240 map only to verified tasks.
 172 historical deferral statements from 102 PRs are retained; see the deferral register for explicit dispositions. Even a verified task does not automatically dispose of every statement in its PR body.
 
-Explicit PR dispositions: **217 closed / 44 open / 0 blocked**; 40 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
+Explicit PR dispositions: **242 closed / 59 open / 0 blocked**; 0 have no explicit PR review yet. These are local review dispositions at the recorded revisions, not GitHub merge or approval actions.
 
 Use [current requirements](current-task-requirements.json), [task acceptance](acceptance-closure.json), [PR bodies](merged-pr-evidence.json), [changed files](pr-files.json) and [deferral statements](pr-deferrals.json).
 
@@ -14,13 +14,12 @@ Use [current requirements](current-task-requirements.json), [task acceptance](ac
 
 | Canonical epic | PR-backed tasks unresolved |
 | --- | ---: |
-| 01-platform-infrastructure.md | 21 |
-| 02-auth-users-admin.md | 30 |
-| 03-core-business.md | 4 |
+| 01-platform-infrastructure.md | 20 |
+| 02-auth-users-admin.md | 25 |
 | 04-invoices-wallet-contracts.md | 4 |
 | 05-notifications-documents-ai.md | 3 |
 | 07-ui-ux-design.md | 2 |
-| Total | 64 |
+| Total | 54 |
 
 Also review 49 unresolved historical claims without a direct merged PR. Their exact keys are retained in the task ledger. Historical skips overlap these populations.
 
@@ -30,22 +29,22 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 
 | PR | Qualified tasks and current acceptance | Task mapping | PR disposition | Historical deferrals |
 | --- | --- | --- | --- | ---: |
-| [#1](https://github.com/barghsadev/barghsa-core/pull/1) | 01-platform-infrastructure.md#T-01.01.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#2](https://github.com/barghsadev/barghsa-core/pull/2) | 01-platform-infrastructure.md#T-01.01.02 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#3](https://github.com/barghsadev/barghsa-core/pull/3) | 01-platform-infrastructure.md#T-01.01.03 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#4](https://github.com/barghsadev/barghsa-core/pull/4) | 01-platform-infrastructure.md#T-01.01.04 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#5](https://github.com/barghsadev/barghsa-core/pull/5) | 01-platform-infrastructure.md#T-01.01.05 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#6](https://github.com/barghsadev/barghsa-core/pull/6) | 01-platform-infrastructure.md#T-01.02.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
+| [#1](https://github.com/barghsadev/barghsa-core/pull/1) | 01-platform-infrastructure.md#T-01.01.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#2](https://github.com/barghsadev/barghsa-core/pull/2) | 01-platform-infrastructure.md#T-01.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#3](https://github.com/barghsadev/barghsa-core/pull/3) | 01-platform-infrastructure.md#T-01.01.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#4](https://github.com/barghsadev/barghsa-core/pull/4) | 01-platform-infrastructure.md#T-01.01.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#5](https://github.com/barghsadev/barghsa-core/pull/5) | 01-platform-infrastructure.md#T-01.01.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#6](https://github.com/barghsadev/barghsa-core/pull/6) | 01-platform-infrastructure.md#T-01.02.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
 | [#7](https://github.com/barghsadev/barghsa-core/pull/7) | 01-platform-infrastructure.md#T-01.02.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R05-strict-dependencies) | 1 |
-| [#8](https://github.com/barghsadev/barghsa-core/pull/8) | 01-platform-infrastructure.md#T-01.02.03 (acceptance_verified) | Mapped tasks verified | Not reviewed | 1 |
-| [#9](https://github.com/barghsadev/barghsa-core/pull/9) | 01-platform-infrastructure.md#T-01.02.04 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#10](https://github.com/barghsadev/barghsa-core/pull/10) | 01-platform-infrastructure.md#T-01.03.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#11](https://github.com/barghsadev/barghsa-core/pull/11) | 01-platform-infrastructure.md#T-01.03.02 (acceptance_verified) | Mapped tasks verified | Not reviewed | 1 |
+| [#8](https://github.com/barghsadev/barghsa-core/pull/8) | 01-platform-infrastructure.md#T-01.02.03 (acceptance_verified) | Mapped tasks verified | [open](evidence/step-reviews.json#V01-completion-sprint) | 1 |
+| [#9](https://github.com/barghsadev/barghsa-core/pull/9) | 01-platform-infrastructure.md#T-01.02.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#10](https://github.com/barghsadev/barghsa-core/pull/10) | 01-platform-infrastructure.md#T-01.03.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#11](https://github.com/barghsadev/barghsa-core/pull/11) | 01-platform-infrastructure.md#T-01.03.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 1 |
 | [#12](https://github.com/barghsadev/barghsa-core/pull/12) | 01-platform-infrastructure.md#T-01.03.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R04-purchase-loading) | 0 |
-| [#13](https://github.com/barghsadev/barghsa-core/pull/13) | 01-platform-infrastructure.md#T-01.03.04 (acceptance_verified) | Mapped tasks verified | Not reviewed | 1 |
-| [#14](https://github.com/barghsadev/barghsa-core/pull/14) | 01-platform-infrastructure.md#T-01.03.05 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#15](https://github.com/barghsadev/barghsa-core/pull/15) | 01-platform-infrastructure.md#T-01.04.01 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
-| [#16](https://github.com/barghsadev/barghsa-core/pull/16) | 01-platform-infrastructure.md#T-01.04.02 (partial) | Task review remains | Not reviewed | 0 |
+| [#13](https://github.com/barghsadev/barghsa-core/pull/13) | 01-platform-infrastructure.md#T-01.03.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 1 |
+| [#14](https://github.com/barghsadev/barghsa-core/pull/14) | 01-platform-infrastructure.md#T-01.03.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#15](https://github.com/barghsadev/barghsa-core/pull/15) | 01-platform-infrastructure.md#T-01.04.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#16](https://github.com/barghsadev/barghsa-core/pull/16) | 01-platform-infrastructure.md#T-01.04.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
 | [#17](https://github.com/barghsadev/barghsa-core/pull/17) | 01-platform-infrastructure.md#T-02.01.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-database-pr-reconciliation) | 1 |
 | [#18](https://github.com/barghsadev/barghsa-core/pull/18) | 01-platform-infrastructure.md#T-02.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-database-pr-reconciliation) | 0 |
 | [#19](https://github.com/barghsadev/barghsa-core/pull/19) | 01-platform-infrastructure.md#T-02.01.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-database-pr-reconciliation) | 0 |
@@ -54,10 +53,10 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#22](https://github.com/barghsadev/barghsa-core/pull/22) | 01-platform-infrastructure.md#T-02.02.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-database-pr-reconciliation) | 0 |
 | [#23](https://github.com/barghsadev/barghsa-core/pull/23) | 01-platform-infrastructure.md#T-02.02.02 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-database-foundations) | 0 |
 | [#24](https://github.com/barghsadev/barghsa-core/pull/24) | 01-platform-infrastructure.md#T-02.02.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-database-foundations) | 0 |
-| [#25](https://github.com/barghsadev/barghsa-core/pull/25) | 01-platform-infrastructure.md#T-01.04.04 (partial) | Task review remains | Not reviewed | 0 |
-| [#26](https://github.com/barghsadev/barghsa-core/pull/26) | 01-platform-infrastructure.md#T-01.04.05 (acceptance_verified) | Mapped tasks verified | Not reviewed | 0 |
+| [#25](https://github.com/barghsadev/barghsa-core/pull/25) | 01-platform-infrastructure.md#T-01.04.04 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#26](https://github.com/barghsadev/barghsa-core/pull/26) | 01-platform-infrastructure.md#T-01.04.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
 | [#27](https://github.com/barghsadev/barghsa-core/pull/27) | 01-platform-infrastructure.md#T-02.02.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-database-foundations) | 0 |
-| [#28](https://github.com/barghsadev/barghsa-core/pull/28) | 01-platform-infrastructure.md#T-01.04.06 (partial) | Task review remains | Not reviewed | 0 |
+| [#28](https://github.com/barghsadev/barghsa-core/pull/28) | 01-platform-infrastructure.md#T-01.04.06 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 0 |
 | [#29](https://github.com/barghsadev/barghsa-core/pull/29) | 01-platform-infrastructure.md#T-01.05.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-runtime-lifecycle) | 0 |
 | [#30](https://github.com/barghsadev/barghsa-core/pull/30) | 01-platform-infrastructure.md#T-03.01.01 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-container-images) | 0 |
 | [#31](https://github.com/barghsadev/barghsa-core/pull/31) | 01-platform-infrastructure.md#T-03.01.02 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-container-images) | 0 |
@@ -150,7 +149,7 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#118](https://github.com/barghsadev/barghsa-core/pull/118) | 02-auth-users-admin.md#T-04.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-terms-lifecycle) | 0 |
 | [#119](https://github.com/barghsadev/barghsa-core/pull/119) | 02-auth-users-admin.md#T-04.01.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-terms-lifecycle) | 0 |
 | [#120](https://github.com/barghsadev/barghsa-core/pull/120) | 02-auth-users-admin.md#T-05.01.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-crm-management) | 1 |
-| [#121](https://github.com/barghsadev/barghsa-core/pull/121) | 01-platform-infrastructure.md#T-05.03.05 (pending) | Task review remains | Not reviewed | 0 |
+| [#121](https://github.com/barghsadev/barghsa-core/pull/121) | 01-platform-infrastructure.md#T-05.03.05 (deferred) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 0 |
 | [#122](https://github.com/barghsadev/barghsa-core/pull/122) | 02-auth-users-admin.md#T-05.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-crm-management) | 0 |
 | [#123](https://github.com/barghsadev/barghsa-core/pull/123) | 02-auth-users-admin.md#T-05.02.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-crm-management) | 0 |
 | [#124](https://github.com/barghsadev/barghsa-core/pull/124) | 02-auth-users-admin.md#T-05.02.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-crm-management) | 0 |
@@ -172,22 +171,22 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#140](https://github.com/barghsadev/barghsa-core/pull/140) | 02-auth-users-admin.md#T-06.01.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-tickets) | 2 |
 | [#141](https://github.com/barghsadev/barghsa-core/pull/141) | 02-auth-users-admin.md#T-07.01.01 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-verification-policy) | 0 |
 | [#142](https://github.com/barghsadev/barghsa-core/pull/142) | 02-auth-users-admin.md#T-07.01.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R01-verification-policy) | 0 |
-| [#143](https://github.com/barghsadev/barghsa-core/pull/143) | 02-auth-users-admin.md#T-08.01.01 (partial) | Task review remains | Not reviewed | 0 |
-| [#144](https://github.com/barghsadev/barghsa-core/pull/144) | 03-core-business.md#T-03.01.01.01 (pending) | Task review remains | Not reviewed | 0 |
-| [#145](https://github.com/barghsadev/barghsa-core/pull/145) | 03-core-business.md#T-03.01.01.02 (pending) | Task review remains | Not reviewed | 0 |
+| [#143](https://github.com/barghsadev/barghsa-core/pull/143) | 02-auth-users-admin.md#T-08.01.01 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#144](https://github.com/barghsadev/barghsa-core/pull/144) | 03-core-business.md#T-03.01.01.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#145](https://github.com/barghsadev/barghsa-core/pull/145) | 03-core-business.md#T-03.01.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
 | [#146](https://github.com/barghsadev/barghsa-core/pull/146) | 02-auth-users-admin.md#T-07.01.03 (partial) | Task review remains | [open](evidence/step-reviews.json#R02-sensitive-actions-verification-delivery) | 1 |
-| [#147](https://github.com/barghsadev/barghsa-core/pull/147) | 03-core-business.md#T-03.01.01.03 (pending) | Task review remains | Not reviewed | 0 |
-| [#148](https://github.com/barghsadev/barghsa-core/pull/148) | 03-core-business.md#T-03.01.01.04 (pending) | Task review remains | Not reviewed | 0 |
+| [#147](https://github.com/barghsadev/barghsa-core/pull/147) | 03-core-business.md#T-03.01.01.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#148](https://github.com/barghsadev/barghsa-core/pull/148) | 03-core-business.md#T-03.01.01.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
 | [#149](https://github.com/barghsadev/barghsa-core/pull/149) | 04-invoices-wallet-contracts.md#T-04.2.01.01 (acceptance_verified)<br>04-invoices-wallet-contracts.md#T-04.2.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
 | [#150](https://github.com/barghsadev/barghsa-core/pull/150) | 04-invoices-wallet-contracts.md#T-04.1.01.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-state-transitions) | 1 |
 | [#151](https://github.com/barghsadev/barghsa-core/pull/151) | 04-invoices-wallet-contracts.md#T-04.1.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-state-transitions) | 0 |
 | [#152](https://github.com/barghsadev/barghsa-core/pull/152) | 04-invoices-wallet-contracts.md#T-04.1.01.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-state-transitions) | 0 |
 | [#153](https://github.com/barghsadev/barghsa-core/pull/153) | 02-auth-users-admin.md#T-08.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-wallet-ledger) | 0 |
-| [#154](https://github.com/barghsadev/barghsa-core/pull/154) | 02-auth-users-admin.md#T-08.01.03 (partial) | Task review remains | Not reviewed | 1 |
-| [#155](https://github.com/barghsadev/barghsa-core/pull/155) | 02-auth-users-admin.md#T-09.01.01 (partial) | Task review remains | Not reviewed | 0 |
+| [#154](https://github.com/barghsadev/barghsa-core/pull/154) | 02-auth-users-admin.md#T-08.01.03 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 1 |
+| [#155](https://github.com/barghsadev/barghsa-core/pull/155) | 02-auth-users-admin.md#T-09.01.01 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 0 |
 | [#156](https://github.com/barghsadev/barghsa-core/pull/156) | 02-auth-users-admin.md#T-09.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R03-consumer-theme-time) | 1 |
-| [#157](https://github.com/barghsadev/barghsa-core/pull/157) | 02-auth-users-admin.md#T-09.02.01 (pending) | Task review remains | Not reviewed | 0 |
-| [#158](https://github.com/barghsadev/barghsa-core/pull/158) | 02-auth-users-admin.md#T-09.02.02 (pending) | Task review remains | Not reviewed | 0 |
+| [#157](https://github.com/barghsadev/barghsa-core/pull/157) | 02-auth-users-admin.md#T-09.02.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#158](https://github.com/barghsadev/barghsa-core/pull/158) | 02-auth-users-admin.md#T-09.02.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
 | [#159](https://github.com/barghsadev/barghsa-core/pull/159) | 02-auth-users-admin.md#T-09.03.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-terms-lifecycle) | 0 |
 | [#160](https://github.com/barghsadev/barghsa-core/pull/160) | 02-auth-users-admin.md#T-09.03.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-terms-lifecycle) | 0 |
 | [#161](https://github.com/barghsadev/barghsa-core/pull/161) | 02-auth-users-admin.md#T-09.04.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-provider-template-authoring) | 2 |
@@ -226,16 +225,16 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#194](https://github.com/barghsadev/barghsa-core/pull/194) | 02-auth-users-admin.md#T-09.06.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-daytime-window) | 2 |
 | [#195](https://github.com/barghsadev/barghsa-core/pull/195) | 02-auth-users-admin.md#T-09.07.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-adjustment-approval) | 3 |
 | [#196](https://github.com/barghsadev/barghsa-core/pull/196) | 02-auth-users-admin.md#T-09.07.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-adjustment-approval) | 4 |
-| [#197](https://github.com/barghsadev/barghsa-core/pull/197) | 02-auth-users-admin.md#T-09.08.01 (pending) | Task review remains | Not reviewed | 2 |
-| [#198](https://github.com/barghsadev/barghsa-core/pull/198) | 02-auth-users-admin.md#T-09.08.02 (pending) | Task review remains | Not reviewed | 3 |
-| [#199](https://github.com/barghsadev/barghsa-core/pull/199) | 02-auth-users-admin.md#T-09.08.03 (pending) | Task review remains | Not reviewed | 0 |
-| [#200](https://github.com/barghsadev/barghsa-core/pull/200) | 02-auth-users-admin.md#T-09.09.01 (pending) | Task review remains | Not reviewed | 2 |
-| [#201](https://github.com/barghsadev/barghsa-core/pull/201) | 02-auth-users-admin.md#T-09.09.02 (pending) | Task review remains | Not reviewed | 0 |
-| [#202](https://github.com/barghsadev/barghsa-core/pull/202) | 02-auth-users-admin.md#T-09.09.02 (pending) | Task review remains | Not reviewed | 0 |
+| [#197](https://github.com/barghsadev/barghsa-core/pull/197) | 02-auth-users-admin.md#T-09.08.01 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 2 |
+| [#198](https://github.com/barghsadev/barghsa-core/pull/198) | 02-auth-users-admin.md#T-09.08.02 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 3 |
+| [#199](https://github.com/barghsadev/barghsa-core/pull/199) | 02-auth-users-admin.md#T-09.08.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#200](https://github.com/barghsadev/barghsa-core/pull/200) | 02-auth-users-admin.md#T-09.09.01 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 2 |
+| [#201](https://github.com/barghsadev/barghsa-core/pull/201) | 02-auth-users-admin.md#T-09.09.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
+| [#202](https://github.com/barghsadev/barghsa-core/pull/202) | 02-auth-users-admin.md#T-09.09.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 0 |
 | [#203](https://github.com/barghsadev/barghsa-core/pull/203) | 02-auth-users-admin.md#T-09.09.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-outbox-delivery-checkpoint) | 1 |
-| [#204](https://github.com/barghsadev/barghsa-core/pull/204) | 02-auth-users-admin.md#T-09.10.01 (pending) | Task review remains | Not reviewed | 4 |
-| [#205](https://github.com/barghsadev/barghsa-core/pull/205) | 02-auth-users-admin.md#T-09.10.02 (pending) | Task review remains | Not reviewed | 2 |
-| [#206](https://github.com/barghsadev/barghsa-core/pull/206) | 02-auth-users-admin.md#T-09.10.03 (pending) | Task review remains | Not reviewed | 2 |
+| [#204](https://github.com/barghsadev/barghsa-core/pull/204) | 02-auth-users-admin.md#T-09.10.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 4 |
+| [#205](https://github.com/barghsadev/barghsa-core/pull/205) | 02-auth-users-admin.md#T-09.10.02 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 2 |
+| [#206](https://github.com/barghsadev/barghsa-core/pull/206) | 02-auth-users-admin.md#T-09.10.03 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 2 |
 | [#207](https://github.com/barghsadev/barghsa-core/pull/207) | 02-auth-users-admin.md#T-09.11.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-ai-settings) | 1 |
 | [#208](https://github.com/barghsadev/barghsa-core/pull/208) | 02-auth-users-admin.md#T-09.11.02 (partial) | Task review remains | [open](evidence/step-reviews.json#R02-kb-agent-integration) | 3 |
 | [#209](https://github.com/barghsadev/barghsa-core/pull/209) | 02-auth-users-admin.md#T-09.11.03 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-ai-settings) | 2 |
@@ -243,10 +242,10 @@ The task-status column is derived. It is not a new PR approval or a claim that h
 | [#211](https://github.com/barghsadev/barghsa-core/pull/211) | 02-auth-users-admin.md#T-09.11.05 (partial) | Task review remains | [open](evidence/step-reviews.json#R02-ai-settings) | 1 |
 | [#212](https://github.com/barghsadev/barghsa-core/pull/212) | 02-auth-users-admin.md#T-09.12.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-catalogue-vat) | 1 |
 | [#213](https://github.com/barghsadev/barghsa-core/pull/213) | 02-auth-users-admin.md#T-09.12.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R02-catalogue-vat) | 1 |
-| [#214](https://github.com/barghsadev/barghsa-core/pull/214) | 02-auth-users-admin.md#T-09.12.03 (pending) | Task review remains | Not reviewed | 2 |
-| [#215](https://github.com/barghsadev/barghsa-core/pull/215) | 02-auth-users-admin.md#T-09.12.04 (pending) | Task review remains | Not reviewed | 2 |
-| [#216](https://github.com/barghsadev/barghsa-core/pull/216) | 02-auth-users-admin.md#T-09.12.05 (acceptance_verified) | Mapped tasks verified | Not reviewed | 1 |
-| [#217](https://github.com/barghsadev/barghsa-core/pull/217) | 02-auth-users-admin.md#T-09.12.06 (pending) | Task review remains | Not reviewed | 2 |
+| [#214](https://github.com/barghsadev/barghsa-core/pull/214) | 02-auth-users-admin.md#T-09.12.03 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 2 |
+| [#215](https://github.com/barghsadev/barghsa-core/pull/215) | 02-auth-users-admin.md#T-09.12.04 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 2 |
+| [#216](https://github.com/barghsadev/barghsa-core/pull/216) | 02-auth-users-admin.md#T-09.12.05 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-completion-sprint) | 1 |
+| [#217](https://github.com/barghsadev/barghsa-core/pull/217) | 02-auth-users-admin.md#T-09.12.06 (partial) | Task review remains | [open](evidence/step-reviews.json#V01-completion-sprint) | 2 |
 | [#218](https://github.com/barghsadev/barghsa-core/pull/218) | 02-auth-users-admin.md#T-10.01.01 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#V01-staff-administration) | 2 |
 | [#219](https://github.com/barghsadev/barghsa-core/pull/219) | 02-auth-users-admin.md#T-10.01.02 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-staff-permission-audit) | 2 |
 | [#220](https://github.com/barghsadev/barghsa-core/pull/220) | 04-invoices-wallet-contracts.md#T-04.1.01.04 (acceptance_verified) | Mapped tasks verified | [closed](evidence/step-reviews.json#R01-invoice-state-transitions) | 0 |
@@ -368,6 +367,6 @@ Unmapped historical PRs retain their original inventory. A superseded workaround
 
 - `merged-pr-evidence.json`: `d5816c2cdf65423fc948cf78f8d126067dff8167c8205c72853580bf4fb38d65`
 - `task-review.json`: `8da7fd41d67629df74fc26750bab4fbcc96197a778a4d8584fe3a4d4b6279060`
-- `acceptance-closure.json`: `0bc1a30915a7cfa3b7370bb1a57b06f124bb8aa8368e61ca7754e366a19eca04`
-- `pr-deferrals.json`: `c87a7cac3bb6265c65be2e2890c02b5d1851ddb0c53ddeb15f33f5796122816d`
-- `evidence/step-reviews.json`: `79f26674c87b233bd427b08df34b35056aa90fff44be068db71c5a8137e7f5b2`
+- `acceptance-closure.json`: `49b0da412e0ff09b050fde891c6216d8ac59b28afb2017b23c775b5521a1bb51`
+- `pr-deferrals.json`: `74284527e5be0db5c846b854a570dbfcd28c3f09b542ba7b0b639d104ad250e7`
+- `evidence/step-reviews.json`: `78da827cbc3d8485b3c6ad0be43c2b59c500f54336662d4b526e26a2719165e5`

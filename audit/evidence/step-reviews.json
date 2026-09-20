@@ -23881,6 +23881,1115 @@
           "evidence": "audit/evidence/step-reviews.json#V01-staff-administration"
         }
       ]
+    },
+    {
+      "id": "V01-completion-sprint",
+      "date": "2026-09-20",
+      "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+      "base_revision": "08f97589",
+      "product_commits": [
+        "d4cc0193fe9846968f88133ff890b69f21d51e41",
+        "d7eccb05c25213577d527d4f5644dd1c6f2b273b",
+        "81ce547da494a09a86eea2f33ed717e3e0d6d09f",
+        "09117d73bf5fbb87be4bb137b6b334bb40b8e72d",
+        "90af2feea4489a779a200d0d0a0fcc8cf7c1586a",
+        "17a50381b29866f6ff83c1b26d748dd53172ffaa",
+        "de4e3c4513c226f38ae3e6bc2f97366693e9c7ef",
+        "7b45c21507ad4fae597e4b00227f3a770b25f7e9"
+      ],
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.01.01",
+        "01-platform-infrastructure.md#T-05.01.02",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.02.02",
+        "01-platform-infrastructure.md#T-05.02.03",
+        "01-platform-infrastructure.md#T-05.02.04",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-05.04.03",
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "01-platform-infrastructure.md#T-05.05.02",
+        "01-platform-infrastructure.md#T-05.05.03",
+        "01-platform-infrastructure.md#T-05.05.04",
+        "01-platform-infrastructure.md#T-06.01.01",
+        "01-platform-infrastructure.md#T-06.01.02",
+        "01-platform-infrastructure.md#T-06.01.03",
+        "01-platform-infrastructure.md#T-06.01.05",
+        "01-platform-infrastructure.md#T-06.02.01",
+        "01-platform-infrastructure.md#T-06.02.02",
+        "01-platform-infrastructure.md#T-06.03.01",
+        "01-platform-infrastructure.md#T-06.04.01",
+        "01-platform-infrastructure.md#T-07.01.01",
+        "01-platform-infrastructure.md#T-07.01.02",
+        "01-platform-infrastructure.md#T-07.01.03",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.02.01",
+        "01-platform-infrastructure.md#T-07.02.02",
+        "01-platform-infrastructure.md#T-07.02.03",
+        "01-platform-infrastructure.md#T-07.02.04",
+        "01-platform-infrastructure.md#T-07.02.05",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.03.04",
+        "01-platform-infrastructure.md#T-07.04.01",
+        "01-platform-infrastructure.md#T-07.04.02",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.04.04",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "02-auth-users-admin.md#T-09.02.01",
+        "02-auth-users-admin.md#T-09.02.02",
+        "02-auth-users-admin.md#T-09.08.01",
+        "02-auth-users-admin.md#T-09.08.02",
+        "02-auth-users-admin.md#T-09.08.03",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.09.02",
+        "02-auth-users-admin.md#T-09.10.01",
+        "02-auth-users-admin.md#T-09.10.02",
+        "02-auth-users-admin.md#T-09.10.03",
+        "02-auth-users-admin.md#T-09.12.03",
+        "02-auth-users-admin.md#T-09.12.04",
+        "02-auth-users-admin.md#T-09.12.06",
+        "03-core-business.md#T-03.01.01.01",
+        "03-core-business.md#T-03.01.01.02",
+        "03-core-business.md#T-03.01.01.03",
+        "03-core-business.md#T-03.01.01.04",
+        "01-platform-infrastructure.md#T-01.04.02"
+      ],
+      "summary": "Consolidated completion sprint: administrative authority through commit, city management/import and support scanner paging repaired; remaining skipped/future/operational criteria explicitly retained.",
+      "review": [
+        "Independent reviewer found the PATCH city deactivation bypass; shared reference guard and HTTP rollback assertions repair it. No other blocking findings were reported.",
+        "Historical skipped builds are handed off in dependency order, not reconstructed or marked passed.",
+        "Final static follow-up at09117d73 found no blockers in pending-response draining or new boundary assertions. Conservative conversion keeps every unmeasurable branch arm uncovered and retains raw data. SMS scroll groups use the existing documented keyboard-scroll accessibility pattern."
+      ],
+      "verification": [
+        "Local completion checkpoint passed; full browser769/769, worker 458/458 and unchanged coverage gates. API full5019-case run had two timing-fixture failures, both corrected and covered by a103-case passing rerun; new boundary tests288-case plus updated114-case run pass, with overlap.",
+        "Full remaining package suites, clean frozen install/build, typecheck, lint, formatting, contract, route budgets, migration snapshot and tooling/loop tests pass; exact logs and revision reuse are in final-repair-checkpoint.json.",
+        "Earlier failures are preserved alongside fixes and passing reruns. No hosted CI, production/provider delivery or rollout is claimed."
+      ],
+      "remaining": [
+        "Ticket and verification-case targets, UI, authority, breach scans and notification delivery are implemented. Consultation targets require the future consultation module; preserve that explicit PR197 prerequisite.",
+        "Ticket and verification assignment, team membership/lead selection, fallback priorities and round-robin/expertise/load strategies are implemented. Consultation assignment requires its future module.",
+        "The wallet scanner produces persisted exceptions; current lifecycle, permissions, audit and filter/detail UI are tested. Required related-transaction navigation and additional finance producers remain with the corresponding staff transaction/reconciliation consumers.",
+        "Admin rules and activation/product-change safety are implemented. Complete simple/advanced order confirmation and immutable green-rule snapshots require the future ordering-engine consumers; existing DRAFT creation is not confirmation.",
+        "Admin activation validation and fail-closed safety seam exist. Per-order required-green-quantity enforcement remains T-03.04.01.02 and must be proven at actual submission.",
+        "Administration, atomic redemption, failed-order rollback, pre-payment cancellation release and invoice discount-before-VAT behavior are implemented. After-payment cancellation policy requires the future cancellation/refund workflow; do not treat DRAFT cancellation as that proof.",
+        "Template metadata, bounded immutable uploads, placeholders and retained version history are implemented. Active-contract-type linkage/deletion acceptance and download consumers remain with the future contract/document workflows.",
+        "Versioned settings, guarded administration and UI exist. Changes-only-for-new-drafts enforcement requires consuming tasks T-03.06.01.02 and T-04.6.01.01."
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "2c0301ffc8a0bc86089f2d13f6cbc107a6dfcfdacbc07b5a99769474f842e461"
+        },
+        {
+          "path": "apps/api/src/admin/admin-audit-network-metadata.test.ts",
+          "sha256": "eb74fd0d425ac4e008467af607f97d831b4ddebefdf1d9e707eb80b74c29332c"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "5f5f3d14b40358dfbe418e487a4b5eae2a6dbb43bfe9c8d8a281d28821d63cc3"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "028871f87fb142ad1ad3ffcccd8cb37e1f245d39d9a30423f4035fe27e2370d9"
+        },
+        {
+          "path": "apps/api/src/admin/brand-config.service.ts",
+          "sha256": "38ed5912ba8b306183711181da56cb620e94ebe33c9cc25a873b7fc99778bee4"
+        },
+        {
+          "path": "apps/api/src/admin/completion-authority-http.integration.test.ts",
+          "sha256": "f1711c17cd5ef56bff961988834ac3412969ed0be5a312cfdb039e6a8e8168d0"
+        },
+        {
+          "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
+          "sha256": "78614f0516638d1012b122942bf538578371dc5d1784aaebe9539d29a7d7ecc0"
+        },
+        {
+          "path": "apps/api/src/admin/contract-electricity-limits.controller.test.ts",
+          "sha256": "2d6e25b34fbb6be70b016d214cd495221a2bc5b06a44795abf2b58cfca6f27fe"
+        },
+        {
+          "path": "apps/api/src/admin/contract-electricity-limits.controller.ts",
+          "sha256": "33cd2a5406374ee42b5dee5e84a6b2c0004901ba5e8c016f9267f6c2d90b7b73"
+        },
+        {
+          "path": "apps/api/src/admin/contract-electricity-limits.service.test.ts",
+          "sha256": "5cdff63bb078d546a8af481d005f5bd3273ef4b3ba99b0e5872e9cf041fcd837"
+        },
+        {
+          "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
+          "sha256": "623d779001038342a698efd0e84e120c0bb7122b07bb1221c28f36990a684d75"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
+          "sha256": "847dad0492206df5c6f3abc5d55a1333cd327eb62322371f8d3d66f4f07e29ba"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
+          "sha256": "16f7b11ca1fba9467b5859a0648c2edd3b7a69a7bbfd7808bc44013df70ef87f"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template.controller.test.ts",
+          "sha256": "b6ee408c7ff604a77bb481a0a1aad5edef3e3f9138dd5066e04cc5ece1489368"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template.controller.ts",
+          "sha256": "320e2af201aec34db6208fb0231c2665a8dfa13183a964dd46d23ef07f77c981"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template.service.test.ts",
+          "sha256": "0d715f70aab053fe021c6fd6644a4f08930af97397d72b4a30baaeab9565a0d6"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template.service.ts",
+          "sha256": "2a367c097de2d0d56dd6fa2d5cf64ca20b8cb971a8ba9c8579b4e3a499e5b9ec"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+          "sha256": "269f867ba57cd8162f30836127c5ddeb4f07da9b89da193f21c40cd4a19fec52"
+        },
+        {
+          "path": "apps/api/src/admin/failed-jobs-http.integration.test.ts",
+          "sha256": "b68fe1a0ad5c4c4a7e90378823f67dc95e65d72fe2e85cbd0c3ca76984b98325"
+        },
+        {
+          "path": "apps/api/src/admin/failed-jobs.controller.test.ts",
+          "sha256": "fd72c0edbd99903ad6292475b8ee8910671964b0b2899203f6fad70839d25a2b"
+        },
+        {
+          "path": "apps/api/src/admin/failed-jobs.controller.ts",
+          "sha256": "2ff8fab9ca4d9ef9041754449ed41a48d87d8fa7915018fadbdfdf8da113f2cf"
+        },
+        {
+          "path": "apps/api/src/admin/failed-jobs.service.ts",
+          "sha256": "e70e280f9a0a5e85659ff80314a781722fc9612de63d3216abf129216b70437e"
+        },
+        {
+          "path": "apps/api/src/admin/gift-code.controller.test.ts",
+          "sha256": "244cab5828dad1ab10201a17af2f1058bc3fb9392d2bba6801a1d02ecf6bf2a3"
+        },
+        {
+          "path": "apps/api/src/admin/gift-code.controller.ts",
+          "sha256": "0c938c598723a030fed361f127916cefd5d0a78507fe8bee0b19d848983b4812"
+        },
+        {
+          "path": "apps/api/src/admin/gift-code.service.test.ts",
+          "sha256": "a9334d634eb8c73c60b326af8892c071e1b9b254e5e74eb41a0bd100acaecb38"
+        },
+        {
+          "path": "apps/api/src/admin/gift-code.service.ts",
+          "sha256": "772a3897dbfdd80e021dbfc40437ee8589e28685256115d4dd8f9e0714b581db"
+        },
+        {
+          "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
+          "sha256": "2f5789e75f46a50ce5a6dfa9b3156605889574c78fafe23691c3374c384dbfdb"
+        },
+        {
+          "path": "apps/api/src/admin/green-electricity-config.service.test.ts",
+          "sha256": "1ee8d438066c36b4e1c2f0316dac5379bfb6715446dd0cf684efc570a7539773"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
+          "sha256": "501c131b83128d4cbeb9a287a08edfc0bf8d99d431f73e55e89394072038577c"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
+          "sha256": "e8850265fa20662645e2b4a20f8fd9c91fff6afdad51885ace9fe9f8394508fd"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+          "sha256": "d2a4bc5da3f548763d1f6537bec8af2711ef15bb91e40c378d5a7673aaa7e5a0"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.service.test.ts",
+          "sha256": "586c2f3cd6223f6d0f62dcaba6e08591a146d16dd476ab71e5bf9b115946023e"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.service.ts",
+          "sha256": "b537b2e6eca1b866aac458a6c2c2f15e6109a30f188c22cdd75f508cf50c10fa"
+        },
+        {
+          "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
+          "sha256": "7ca95c161941c81552536594d4dc132abd3fe16cab57f5017c5ba85e33c5fe4b"
+        },
+        {
+          "path": "apps/api/src/admin/vat-config-http.integration.test.ts",
+          "sha256": "d087ad1e5fd9aecb51f9a883b472f84856707016ddd66bdd87950b4112fa8916"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.test.ts",
+          "sha256": "3474658bc2faa88e1fc8c3432ddb9306bc4ee3e97a419707f981f7420d0de0d4"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "e1ab4ee28da0ee77f9154bd2eb1a2dd6e7f1e822b441ec150c1e5e24afb11976"
+        },
+        {
+          "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
+          "sha256": "80ab5096c5d40c846affde9e7390a6e5b0e314df5600a557794793a9d84e5bdf"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "904f8a9e21197790eef71f1f7ba3efa83a1ae0bea67c6bb6cf661a429c4d1c25"
+        },
+        {
+          "path": "apps/api/src/crm/profile-archive-invoice.integration.test.ts",
+          "sha256": "b4926692ca6858bbe41bbc34f057ec7b85816d4a0d59811eb219a95f763ae2bd"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.controller.test.ts",
+          "sha256": "ac76714dad2c507ec641a483ffbca611847b0a0abcf47e52767a9610a4c0511b"
+        },
+        {
+          "path": "apps/api/src/finance/seal-bank-receipt-attachment.test.ts",
+          "sha256": "86d2ea0b39dfb5269db14289153331d36b644b098a40a2da0695b1643f1f6636"
+        },
+        {
+          "path": "apps/api/src/geography/admin-geography.controller.ts",
+          "sha256": "5f882ede313c70f85ad96149b67e73ab3dc7f900d4d76b87902ce830565a8d9d"
+        },
+        {
+          "path": "apps/api/src/geography/admin-geography.service.test.ts",
+          "sha256": "82609cd3d3fb2af3e0a7c74da2518e46646b6156ae8b5c2eea3d711475e79237"
+        },
+        {
+          "path": "apps/api/src/geography/admin-geography.service.ts",
+          "sha256": "ec316fc4d53289f762f661167d3f03c9842b159aa92c7e2c7fcb018e613970f9"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.integration.test.ts",
+          "sha256": "6f9629dab9615bfb110064d976141580c7b09ea9c3210957f9e44ae2e51f32d5"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.integration.test.ts",
+          "sha256": "8cfab74733f4b888e130e2f274f1e5fe326a4954639ba58035005ded082ae8e0"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+          "sha256": "ef8b7b804091083bdb78f0c363da733d9de627fa18f800cc4c1be5e74997f1b6"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice.controller.test.ts",
+          "sha256": "bf8439ac373dd6e189dadb71c586e5088ce05f8ae48fccad460a69d325dca04a"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-calculation-replay.integration.test.ts",
+          "sha256": "4a7264b75c595482a772fd98f3add6cf1e6e48fa827b18e7ee8b1d2478ab3240"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+        },
+        {
+          "path": "apps/api/src/orders/order-access-http.integration.test.ts",
+          "sha256": "989ae02d4937dec56a77855d9b355dac0409db97e93f4a16c274742d9ff84ad7"
+        },
+        {
+          "path": "apps/api/src/session/session-cap.integration.test.ts",
+          "sha256": "4dda2632f1ac095e64d88846a84abcffd95e7139d00310777bba9386f38eb190"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.service.test.ts",
+          "sha256": "15f7f241b69211b4daf263b30b5152e5cac1230737cb37b4a6034cbf59cf1c1b"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
+          "sha256": "405dfe53be4e1d1d149c320fa5991ebaa2da4dd5513868949ec39c9602dc5155"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.test.ts",
+          "sha256": "ad52b2aa1d07f79905aa4dc20c86c3435beaf6ef4f4152847b849a638534b246"
+        },
+        {
+          "path": "apps/api/test/upload.controller.spec.ts",
+          "sha256": "1b1e91dac93d4d87115a4aa5c54e63f0a3860d4365b45539022bdcfccad8542a"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "1da1e0b0a1627c4914b33481b22c7dba5408847d693ae5754cd5b70cae1c510c"
+        },
+        {
+          "path": "apps/web/e2e/crm-corrections.spec.ts",
+          "sha256": "3ea6181065b246b547135ee4a96d3e174acf68b469aebf935e6244ca0ac1174e"
+        },
+        {
+          "path": "apps/web/e2e/crm-dashboard.spec.ts",
+          "sha256": "cc8ebbe369a15d45912446da8ca6fd0c1546e4b0bb64b8fda1a7db95beb2e5a7"
+        },
+        {
+          "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
+          "sha256": "138a8f19bf85898cdf958802f07bc10e28000144a454cf9a5124e85c5fb9ba60"
+        },
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "504657df30e37a558bdce0a337a66cb228e7fe341c8b17c0fd234f350cb68501"
+        },
+        {
+          "path": "apps/web/e2e/finance-timestamps.spec.ts",
+          "sha256": "c413ea8703386a6202a686c53d311ff28bdf75d750e41f41ddb5055c6708b1e4"
+        },
+        {
+          "path": "apps/web/e2e/geography.spec.ts",
+          "sha256": "17a102a0bb93ff8ba77313457534b78d3cfc23e0e2033be32d1fa5914e354ee6"
+        },
+        {
+          "path": "apps/web/e2e/global-setup.ts",
+          "sha256": "26c3a1b7f928e58254e33b57e486ced1882ff07296d41fa619309094a7db9d61"
+        },
+        {
+          "path": "apps/web/e2e/otp-numerals.spec.ts",
+          "sha256": "7e73e53cf8eb746ce90771de9a4b9a4a45fea0fc4ba27cd57f7e156e9908e146"
+        },
+        {
+          "path": "apps/web/e2e/purchase-loading.spec.ts",
+          "sha256": "13f14e5fdd4e24cfe19a0b7988eed6fd4b26539df5727965671dff4f79a98626"
+        },
+        {
+          "path": "apps/web/e2e/registration-feature.spec.ts",
+          "sha256": "d28fe46ccfb16c40f38a9c8e0a876bc5a34ccd9af5eb22ff15a8fa7817508acd"
+        },
+        {
+          "path": "apps/web/e2e/sms-provider-settings.spec.ts",
+          "sha256": "541d756981be6a0977ff189265e84ce8e6a599e632e0b60a8ce6db989019fb43"
+        },
+        {
+          "path": "apps/web/e2e/staff-creation.spec.ts",
+          "sha256": "c9a862ee5c10d8c3cfd478f5a8ccf945900fa9fd855b6cdde75e77dc1c13cb01"
+        },
+        {
+          "path": "apps/web/e2e/staff-users.spec.ts",
+          "sha256": "5bca6ea67bbde74ecb4c6b6a56f8899f07b43c1b5baf39e39b0c48084cf7ad8c"
+        },
+        {
+          "path": "apps/web/e2e/tickets.spec.ts",
+          "sha256": "9c8384ef8cc718bd425520c235dfe35c46b91d3f7553aef0cff23f2dfd10da8b"
+        },
+        {
+          "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
+          "sha256": "c39db134a2bb695cdb5d40f492c402b788121e77ae8deaac33ba5216e5b6f2cb"
+        },
+        {
+          "path": "apps/web/src/components/OtpInput.test.tsx",
+          "sha256": "565586ec6ea975904f86c915466ef3082f4c183f6929296b544107a04c3a02bc"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.test.ts",
+          "sha256": "528e7710a2e821029f8a6f80ab87fefb4aaa8d462b72dd18a6fa61ec63580a5b"
+        },
+        {
+          "path": "apps/web/src/lib/geography-api.ts",
+          "sha256": "3ea75952f178c4a3456458a9662614e714f50ae9ae0cabeef2d3ae78013cb606"
+        },
+        {
+          "path": "apps/web/src/pages/AdminCitiesPanel.tsx",
+          "sha256": "9c8f27b18aeb6328ef45418b2ee88b55f09299ddc2fa07537f1c872b6318503b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGeographyDialog.tsx",
+          "sha256": "84928e04587a757d963c7d01eadf2eff8c7bcabbd4e93da02d3a3764e5f687b7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminGeographyPage.tsx",
+          "sha256": "a5bd678cfff7f58ba741711f50e1a35134667ea026d2b53d07ad85feb44e47a5"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "b48f10fd2bd6984d5ee9b943a64a22589ecba3de31fed118853f2420ea940bd4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosDraft.test.tsx",
+          "sha256": "18007a0d2de6d665181f192e81ef53a02084079c52811953c76a9746febf721c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+          "sha256": "6adcc88bc0637c16101601e5884f3e70e6251c2359f226b9aad0810eb513b845"
+        },
+        {
+          "path": "apps/web/src/pages/admin-boundaries.test.tsx",
+          "sha256": "17cc46ac8a1e4d7aa87d64d6ac2f51d26facfa94b76c40291ed8ab04a42a3cd5"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "20a18ad58ae473e476533f870fccdc74f7d6a28e2d7e6794b145051354991ad8"
+        },
+        {
+          "path": "apps/worker/src/service-targets/breach-scanner.test.ts",
+          "sha256": "2a6aad2fd53d19bced2e6f14b0d1e4b922e20242c6b8816c31f473711fec7f6e"
+        },
+        {
+          "path": "apps/worker/src/service-targets/breach-scanner.ts",
+          "sha256": "f2b04fa705f36eb690c684ec4e6e28f700757498784081237455e53587b14b56"
+        },
+        {
+          "path": "apps/worker/src/service-targets/escalation-scanner.ts",
+          "sha256": "2ce9f83e21caa572ebcc493f6ecca44f16be3746aba1eea9e3bb3fcea639e563"
+        },
+        {
+          "path": "apps/worker/src/service-targets/support-scanners.integration.test.ts",
+          "sha256": "c3e64f769a6fd75c05941991aceda768d66bc93127dfe99b00b9f9f55eb6b7f1"
+        },
+        {
+          "path": "audit/combined-coverage-checkpoint.json",
+          "sha256": "d50bda8326f9114d094d2941fabc0a26125f2020ab42067b02952be0decbeaff"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.test.yml",
+          "sha256": "154b85c5af545d129aa27b07e8c5aa9484e76f8b1d7af6a8178eb55d1ab1ecf9"
+        },
+        {
+          "path": "docs/flaky-test-quarantine.md",
+          "sha256": "67ee4f86a8db1a70ed70ad8d649b908a952279af206d4806e048d3b41881465e"
+        },
+        {
+          "path": "packages/i18n/src/geography.ts",
+          "sha256": "2dd19e032a7bc6194327182a7018ae53d1c442c4f8ac60cc5d76349a388202bd"
+        },
+        {
+          "path": "packages/shared/src/errors/domain-error-codes.ts",
+          "sha256": "2cdff0f41f08ba3949f843b3f9ef811c21f2569afa38fc320738257cdf064390"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.test.ts",
+          "sha256": "f8f4033bb0f26b93808d316ec7f9a57a3d9ae87b2ec0ea1a30da2f964951840d"
+        },
+        {
+          "path": "packages/ui/src/field.test.tsx",
+          "sha256": "ce963a9066970f155eb64dbc6386799028b245b37e779c9f319281a578c1fd98"
+        },
+        {
+          "path": "packages/ui/tsup.config.ts",
+          "sha256": "8ced390036c6e944c1d18206af1b31f3cf874d8304bd25135dff0f0c1121ab32"
+        },
+        {
+          "path": "scripts/browser-coverage.test.mjs",
+          "sha256": "7c016f40fd741ced0d486a8366a68309e42341804c84e6182fffdad1aa3b8b09"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+        },
+        {
+          "path": "scripts/collect-browser-coverage.mjs",
+          "sha256": "b3a734210f745cd07bd2af35af764b686bbfdc486a325aae6ef8dbd0cc0ceb22"
+        },
+        {
+          "path": "scripts/conservative-branch-coverage.mjs",
+          "sha256": "fb4e4026439684c2a34c90636c820e6a9ab15936d95cae48e08e8a7d80223f5d"
+        },
+        {
+          "path": "scripts/conservative-branch-coverage.test.mjs",
+          "sha256": "c731f27ed508d2d89df8183a5784548a07b3b66268d15ad14bdfac37a6d352cc"
+        },
+        {
+          "path": "scripts/process-v8-provider.mjs",
+          "sha256": "a3a2aba695e9c28ad9ebd6c3011aa4c1db802925464ecc04113d7cc81ddd5aca"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        },
+        {
+          "path": "scripts/test-production-images.py",
+          "sha256": "4a5fcee8afce4d31487be92aac0681bafb204317026c7ff08552b05be63f9010"
+        }
+      ],
+      "logs": [
+        "/tmp/barghsa-completion-sprint/admin-focused.log",
+        "/tmp/barghsa-completion-sprint/admin-focused2.log",
+        "/tmp/barghsa-completion-sprint/admin-load-coverage.log",
+        "/tmp/barghsa-completion-sprint/admin-load-coverage2.log",
+        "/tmp/barghsa-completion-sprint/admin-load-coverage3.log",
+        "/tmp/barghsa-completion-sprint/admin-load-coverage4.log",
+        "/tmp/barghsa-completion-sprint/admin-load-format.log",
+        "/tmp/barghsa-completion-sprint/admin-load-format2.log",
+        "/tmp/barghsa-completion-sprint/admin-load-format3.log",
+        "/tmp/barghsa-completion-sprint/api-expiry-final.log",
+        "/tmp/barghsa-completion-sprint/api-fixture-format.log",
+        "/tmp/barghsa-completion-sprint/api-types-final.log",
+        "/tmp/barghsa-completion-sprint/api-types.log",
+        "/tmp/barghsa-completion-sprint/api-types2.log",
+        "/tmp/barghsa-completion-sprint/api-types3.log",
+        "/tmp/barghsa-completion-sprint/audit-first.log",
+        "/tmp/barghsa-completion-sprint/audit-reconciled.log",
+        "/tmp/barghsa-completion-sprint/auth-corrected-coverage.log",
+        "/tmp/barghsa-completion-sprint/backlog-final.log",
+        "/tmp/barghsa-completion-sprint/browser-build.log",
+        "/tmp/barghsa-completion-sprint/browser-closure-build.log",
+        "/tmp/barghsa-completion-sprint/browser-closure-build2.log",
+        "/tmp/barghsa-completion-sprint/browser-closure-build3.log",
+        "/tmp/barghsa-completion-sprint/browser-closure-first.log",
+        "/tmp/barghsa-completion-sprint/browser-closure.log",
+        "/tmp/barghsa-completion-sprint/browser-coverage-build.log",
+        "/tmp/barghsa-completion-sprint/browser-coverage-collect-auth.log",
+        "/tmp/barghsa-completion-sprint/browser-coverage-collect-final.log",
+        "/tmp/barghsa-completion-sprint/browser-coverage-collect.log",
+        "/tmp/barghsa-completion-sprint/browser-coverage-conservative.log",
+        "/tmp/barghsa-completion-sprint/browser-coverage-merge-auth.log",
+        "/tmp/barghsa-completion-sprint/browser-coverage-merge-final.log",
+        "/tmp/barghsa-completion-sprint/browser-coverage-merge.log",
+        "/tmp/barghsa-completion-sprint/browser-coverage-tools-final.log",
+        "/tmp/barghsa-completion-sprint/browser-final-build.log",
+        "/tmp/barghsa-completion-sprint/browser-final.log",
+        "/tmp/barghsa-completion-sprint/browser-fixes-build.log",
+        "/tmp/barghsa-completion-sprint/browser-fixes.log",
+        "/tmp/barghsa-completion-sprint/browser-fixes2-build.log",
+        "/tmp/barghsa-completion-sprint/browser-fixes2.log",
+        "/tmp/barghsa-completion-sprint/browser-format.log",
+        "/tmp/barghsa-completion-sprint/browser-format2.log",
+        "/tmp/barghsa-completion-sprint/browser-full.log",
+        "/tmp/barghsa-completion-sprint/browser-merge-boundaries.log",
+        "/tmp/barghsa-completion-sprint/browser-navigation-final.log",
+        "/tmp/barghsa-completion-sprint/browser-optimized.log",
+        "/tmp/barghsa-completion-sprint/bundle-final.log",
+        "/tmp/barghsa-completion-sprint/cities-api.log",
+        "/tmp/barghsa-completion-sprint/cities-api2.log",
+        "/tmp/barghsa-completion-sprint/cities-browser.log",
+        "/tmp/barghsa-completion-sprint/clean-install.log",
+        "/tmp/barghsa-completion-sprint/contract-final.log",
+        "/tmp/barghsa-completion-sprint/contract-update.log",
+        "/tmp/barghsa-completion-sprint/coverage-before-browser.log",
+        "/tmp/barghsa-completion-sprint/coverage-boundaries10.log",
+        "/tmp/barghsa-completion-sprint/coverage-boundaries11.log",
+        "/tmp/barghsa-completion-sprint/coverage-boundaries12.log",
+        "/tmp/barghsa-completion-sprint/coverage-boundaries2.log",
+        "/tmp/barghsa-completion-sprint/coverage-boundaries3.log",
+        "/tmp/barghsa-completion-sprint/coverage-boundaries4.log",
+        "/tmp/barghsa-completion-sprint/coverage-boundaries5.log",
+        "/tmp/barghsa-completion-sprint/coverage-boundaries6.log",
+        "/tmp/barghsa-completion-sprint/coverage-boundaries9.log",
+        "/tmp/barghsa-completion-sprint/coverage-format2.log",
+        "/tmp/barghsa-completion-sprint/coverage-format3.log",
+        "/tmp/barghsa-completion-sprint/coverage-format4.log",
+        "/tmp/barghsa-completion-sprint/coverage-format5.log",
+        "/tmp/barghsa-completion-sprint/coverage-format6.log",
+        "/tmp/barghsa-completion-sprint/coverage-format7.log",
+        "/tmp/barghsa-completion-sprint/coverage-format8.log",
+        "/tmp/barghsa-completion-sprint/coverage-matrix.log",
+        "/tmp/barghsa-completion-sprint/coverage-measurement-closure.log",
+        "/tmp/barghsa-completion-sprint/coverage-measurement-final.log",
+        "/tmp/barghsa-completion-sprint/coverage-measurement-test.log",
+        "/tmp/barghsa-completion-sprint/coverage-measurement-test2.log",
+        "/tmp/barghsa-completion-sprint/coverage-new-api.log",
+        "/tmp/barghsa-completion-sprint/coverage-new-api2.log",
+        "/tmp/barghsa-completion-sprint/coverage-new-api3.log",
+        "/tmp/barghsa-completion-sprint/coverage-new-api4.log",
+        "/tmp/barghsa-completion-sprint/coverage-new-api5.log",
+        "/tmp/barghsa-completion-sprint/coverage-pre-final-browser.log",
+        "/tmp/barghsa-completion-sprint/coverage-tests-format.log",
+        "/tmp/barghsa-completion-sprint/coverage-tool-format.log",
+        "/tmp/barghsa-completion-sprint/coverage-tools-lint.log",
+        "/tmp/barghsa-completion-sprint/coverage-with-boundaries.log",
+        "/tmp/barghsa-completion-sprint/current-coverage.log",
+        "/tmp/barghsa-completion-sprint/field-type-format.log",
+        "/tmp/barghsa-completion-sprint/final-api2.log",
+        "/tmp/barghsa-completion-sprint/final-boundary-format.log",
+        "/tmp/barghsa-completion-sprint/final-bundle.log",
+        "/tmp/barghsa-completion-sprint/final-change-format.log",
+        "/tmp/barghsa-completion-sprint/final-contract.log",
+        "/tmp/barghsa-completion-sprint/final-coverage-api.log",
+        "/tmp/barghsa-completion-sprint/final-coverage-db.log",
+        "/tmp/barghsa-completion-sprint/final-coverage-i18n.log",
+        "/tmp/barghsa-completion-sprint/final-coverage-shared.log",
+        "/tmp/barghsa-completion-sprint/final-coverage-tsconfig.log",
+        "/tmp/barghsa-completion-sprint/final-coverage-ui.log",
+        "/tmp/barghsa-completion-sprint/final-coverage-web.log",
+        "/tmp/barghsa-completion-sprint/final-coverage-worker.log",
+        "/tmp/barghsa-completion-sprint/final-coverage.log",
+        "/tmp/barghsa-completion-sprint/final-db-snapshot.log",
+        "/tmp/barghsa-completion-sprint/final-format.log",
+        "/tmp/barghsa-completion-sprint/final-format2.log",
+        "/tmp/barghsa-completion-sprint/final-format3.log",
+        "/tmp/barghsa-completion-sprint/final-format4.log",
+        "/tmp/barghsa-completion-sprint/final-lint.log",
+        "/tmp/barghsa-completion-sprint/final-lint2.log",
+        "/tmp/barghsa-completion-sprint/final-lint3.log",
+        "/tmp/barghsa-completion-sprint/final-lint4.log",
+        "/tmp/barghsa-completion-sprint/final-lint5.log",
+        "/tmp/barghsa-completion-sprint/final-lint6.log",
+        "/tmp/barghsa-completion-sprint/final-loop-tests.log",
+        "/tmp/barghsa-completion-sprint/final-python-tests.log",
+        "/tmp/barghsa-completion-sprint/final-script-tests.log",
+        "/tmp/barghsa-completion-sprint/final-small-tests-format.log",
+        "/tmp/barghsa-completion-sprint/final-suppressed.log",
+        "/tmp/barghsa-completion-sprint/final-types.log",
+        "/tmp/barghsa-completion-sprint/final-types2.log",
+        "/tmp/barghsa-completion-sprint/final-types3.log",
+        "/tmp/barghsa-completion-sprint/final-types4.log",
+        "/tmp/barghsa-completion-sprint/final-types5.log",
+        "/tmp/barghsa-completion-sprint/focused-lint.log",
+        "/tmp/barghsa-completion-sprint/full-build.log",
+        "/tmp/barghsa-completion-sprint/image-api.log",
+        "/tmp/barghsa-completion-sprint/image-runtime-final-first.log",
+        "/tmp/barghsa-completion-sprint/image-runtime-final.log",
+        "/tmp/barghsa-completion-sprint/image-runtime.log",
+        "/tmp/barghsa-completion-sprint/image-runtime2.log",
+        "/tmp/barghsa-completion-sprint/image-web-final-first.log",
+        "/tmp/barghsa-completion-sprint/image-web-final.log",
+        "/tmp/barghsa-completion-sprint/image-web.log",
+        "/tmp/barghsa-completion-sprint/image-worker.log",
+        "/tmp/barghsa-completion-sprint/metadata-format.log",
+        "/tmp/barghsa-completion-sprint/pre-browser-coverage.log",
+        "/tmp/barghsa-completion-sprint/regression-triage.log",
+        "/tmp/barghsa-completion-sprint/regression-triage2.log",
+        "/tmp/barghsa-completion-sprint/regression-triage3.log",
+        "/tmp/barghsa-completion-sprint/regression-triage4.log",
+        "/tmp/barghsa-completion-sprint/regression-triage5.log",
+        "/tmp/barghsa-completion-sprint/regression-triage6.log",
+        "/tmp/barghsa-completion-sprint/scripts-final.log",
+        "/tmp/barghsa-completion-sprint/shared-coverage-final.log",
+        "/tmp/barghsa-completion-sprint/sms-group-lint.log",
+        "/tmp/barghsa-completion-sprint/sms-region-format.log",
+        "/tmp/barghsa-completion-sprint/sms-region-lint.log",
+        "/tmp/barghsa-completion-sprint/support-after.log",
+        "/tmp/barghsa-completion-sprint/support-after2.log",
+        "/tmp/barghsa-completion-sprint/support-after3.log",
+        "/tmp/barghsa-completion-sprint/support-after4.log",
+        "/tmp/barghsa-completion-sprint/support-before.log",
+        "/tmp/barghsa-completion-sprint/support-final.log",
+        "/tmp/barghsa-completion-sprint/support-final2.log",
+        "/tmp/barghsa-completion-sprint/suppressed-final.log",
+        "/tmp/barghsa-completion-sprint/suppressed-final2.log",
+        "/tmp/barghsa-completion-sprint/ui-build.log",
+        "/tmp/barghsa-completion-sprint/ui-closure-coverage.log",
+        "/tmp/barghsa-completion-sprint/ui-coverage-final.log",
+        "/tmp/barghsa-completion-sprint/ui-docs.log",
+        "/tmp/barghsa-completion-sprint/web-boundaries1.log",
+        "/tmp/barghsa-completion-sprint/web-boundaries10.log",
+        "/tmp/barghsa-completion-sprint/web-boundaries11.log",
+        "/tmp/barghsa-completion-sprint/web-boundaries12.log",
+        "/tmp/barghsa-completion-sprint/web-boundaries2.log",
+        "/tmp/barghsa-completion-sprint/web-boundaries3.log",
+        "/tmp/barghsa-completion-sprint/web-boundaries4.log",
+        "/tmp/barghsa-completion-sprint/web-boundaries5.log",
+        "/tmp/barghsa-completion-sprint/web-boundaries6.log",
+        "/tmp/barghsa-completion-sprint/web-boundaries7.log",
+        "/tmp/barghsa-completion-sprint/web-boundaries8.log",
+        "/tmp/barghsa-completion-sprint/web-boundaries9.log",
+        "/tmp/barghsa-completion-sprint/web-coverage-current.log",
+        "/tmp/barghsa-completion-sprint/web-final-coverage.log",
+        "/tmp/barghsa-completion-sprint/web-full-final.log",
+        "/tmp/barghsa-completion-sprint/web-types-coverage-config.log",
+        "/tmp/barghsa-completion-sprint/web-types.log",
+        "/tmp/barghsa-completion-sprint/worker-final-coverage.log"
+      ],
+      "reused_evidence": [
+        "audit/evidence/step-reviews.json"
+      ],
+      "pr_dispositions": [
+        {
+          "pr": 1,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.01.01"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 2,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.01.02"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 3,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.01.03"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 4,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.01.04"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 5,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.01.05"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 6,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.02.01"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 8,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.02.03"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 9,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.02.04"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 10,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.03.01"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 11,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.03.02"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 13,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.03.04"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 14,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.03.05"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 15,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.04.01"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 16,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.04.02"
+          ],
+          "reason": "All unchanged combined coverage thresholds now pass with complete source-bound evidence and no checker errors.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 25,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.04.04"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 26,
+          "status": "closed",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.04.05"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 28,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-01.04.06"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 121,
+          "status": "open",
+          "task_keys": [
+            "01-platform-infrastructure.md#T-05.03.05"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 143,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-08.01.01"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 144,
+          "status": "closed",
+          "task_keys": [
+            "03-core-business.md#T-03.01.01.01"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 145,
+          "status": "closed",
+          "task_keys": [
+            "03-core-business.md#T-03.01.01.02"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 147,
+          "status": "closed",
+          "task_keys": [
+            "03-core-business.md#T-03.01.01.03"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 148,
+          "status": "closed",
+          "task_keys": [
+            "03-core-business.md#T-03.01.01.04"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 154,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-08.01.03"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 155,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.01.01"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 157,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.02.01"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 158,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.02.02"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 197,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.08.01"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 198,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.08.02"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 199,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.08.03"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 200,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.09.01"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 201,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.09.02"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 202,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.09.02"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 204,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.10.01"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 205,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.10.02"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 206,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.10.03"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 214,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.12.03"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 215,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.12.04"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 216,
+          "status": "closed",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.12.05"
+          ],
+          "reason": "Mapped requirements and saved deferrals are locally verified.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        },
+        {
+          "pr": 217,
+          "status": "open",
+          "task_keys": [
+            "02-auth-users-admin.md#T-09.12.06"
+          ],
+          "reason": "Explicit remaining task, manual or future prerequisites are retained in acceptance and handoff; no completion claim.",
+          "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+          "evidence": "audit/evidence/step-reviews.json#V01-completion-sprint"
+        }
+      ],
+      "status": "completed_locally"
     }
   ]
 }

@@ -25243,6 +25243,1791 @@
       "sha256": "863265d0b0b3a00874d5eb91795bb37bbc102db02ef02a0d6c6af479e808cd64",
       "encoding": "gzip",
       "stored_sha256": "84510c58012f1d9ec215eb0db09be6f7d7caf688c23cbea161d28da6931c0bab"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/admin-focused.log",
+      "path": "audit/evidence/completion-sprint/admin-focused.log.gz",
+      "sha256": "75f4a5c0154ad45248877f04a32016eec3c6f1e79a9bcaa6ad0657a5c9a64d90",
+      "encoding": "gzip",
+      "stored_sha256": "82bd52fa454cc0d670eb9672429f798b6032774f4bc3e228b6043944252ccadf"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/admin-focused2.log",
+      "path": "audit/evidence/completion-sprint/admin-focused2.log.gz",
+      "sha256": "1ce892deb9db42a943ea077b18a208a954a63efc1ba6d347550c702bf4fb46cd",
+      "encoding": "gzip",
+      "stored_sha256": "b25054768d9211a5fab998d8aa25d74ba996f80ffff58b53ef1cb26aa8141e55"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/admin-load-coverage.log",
+      "path": "audit/evidence/completion-sprint/admin-load-coverage.log.gz",
+      "sha256": "b250d9f800aec9d666da47d3e6f05756ca19ad58832a3256b5a2879a42bb08f9",
+      "encoding": "gzip",
+      "stored_sha256": "b0ac3495c4c9460c23ae9a9f2c659e35334b9f7d4a7f711622e18eabe2452e49"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/admin-load-coverage2.log",
+      "path": "audit/evidence/completion-sprint/admin-load-coverage2.log.gz",
+      "sha256": "f2b71e218010ff3257b1921723991e93c2ecbdb24deac78a24b074676c0a6b08",
+      "encoding": "gzip",
+      "stored_sha256": "8c81b00d40ed8a54c95bbf67412a6d0694eb28a9cffadf3e32006d2f62732618"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/admin-load-coverage3.log",
+      "path": "audit/evidence/completion-sprint/admin-load-coverage3.log.gz",
+      "sha256": "ebbd4326d6c7d3746e796ace745798540c1555ac6cc47978bd5b5214fa8ae2a4",
+      "encoding": "gzip",
+      "stored_sha256": "e6b3176cd8d91d1c64d87800d71ebfa761dd454f6a7a820a4cb8bf420ad5304b"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/admin-load-coverage4.log",
+      "path": "audit/evidence/completion-sprint/admin-load-coverage4.log.gz",
+      "sha256": "76e059d8783239f43948572d46bb9a3cfb0a17dbd6ab4617fc391ca69f45011a",
+      "encoding": "gzip",
+      "stored_sha256": "b604f538193aa751ded8b966253d17270e20f223ce0921b370ba0a7ca94684b4"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/admin-load-focused-coverage.json",
+      "path": "audit/evidence/completion-sprint/admin-load-focused-coverage.json.gz",
+      "sha256": "3556cfe99dd68952e0eb021aa05e9153e7bf8dcf78f6b8e1353784b15a4f43af",
+      "encoding": "gzip",
+      "stored_sha256": "526c7a26ff410566cdf72ebf74ea49192e3e84df1733c49596326ce7adc21cf3"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/admin-load-format.log",
+      "path": "audit/evidence/completion-sprint/admin-load-format.log.gz",
+      "sha256": "3836688e6b1a78580fcb80f9c15e3f5a935a085d3c7098bf6ff8da054a64e5ae",
+      "encoding": "gzip",
+      "stored_sha256": "b68095bdf726ae3ad99ce3385caa1c5ba817df6b520416e8f17af65461961859"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/admin-load-format2.log",
+      "path": "audit/evidence/completion-sprint/admin-load-format2.log.gz",
+      "sha256": "f9c254b9b6a16b246d46f148638d46df5e42a6a132409e779ca3ae39ad9c9d5b",
+      "encoding": "gzip",
+      "stored_sha256": "7c13c47bad7b000cf50ab2607c00ca47df622c0b738e73cf26641a45f716a393"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/admin-load-format3.log",
+      "path": "audit/evidence/completion-sprint/admin-load-format3.log.gz",
+      "sha256": "7e384924b390fd92d1da867d3fa06cf9a7e3361c780f8d83e967e58eac6fa0ba",
+      "encoding": "gzip",
+      "stored_sha256": "6b1a449df5efdb1ed300e7f76f5349f00f28210fe0c30b49692a6875e0763ad4"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/api-baseline-coverage.json",
+      "path": "audit/evidence/completion-sprint/api-baseline-coverage.json.gz",
+      "sha256": "bb0669ef238914615628441dc88281613900f4358880834c84eac14ea7916b4c",
+      "encoding": "gzip",
+      "stored_sha256": "19855bb10e187430effdcfd6bf9c3e165f69d128f9e325d6d9c6fde02e8dd4dd"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/api-coverage-provenance.json",
+      "path": "audit/evidence/completion-sprint/api-coverage-provenance.json.gz",
+      "sha256": "bc54b435c304f88c57a22cd01e8c92cf3b04d4a8b56b4582a4c4d4265e9fc4ca",
+      "encoding": "gzip",
+      "stored_sha256": "360953e036c7e75b82c826713c1d2a05a1d0c98edcf4704d4408cc7c2e1e449d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/api-expiry-final.log",
+      "path": "audit/evidence/completion-sprint/api-expiry-final.log.gz",
+      "sha256": "a6fb3266ba8201102c644f31e70bc78d1b3509fd1c731038030537f74a010d0c",
+      "encoding": "gzip",
+      "stored_sha256": "fa5211c6641026bf560772863054fd777298ff4d97ff36248ec898f526236377"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/api-final-unit-coverage.json",
+      "path": "audit/evidence/completion-sprint/api-final-unit-coverage.json.gz",
+      "sha256": "58cba9b18b596697980e126b936270428d2bf480c0183ffe330017c295959e08",
+      "encoding": "gzip",
+      "stored_sha256": "49527e6fc636b889a70f8dfce58970c946b887c00c76a736923151a602bb60e8"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/api-fixture-format.log",
+      "path": "audit/evidence/completion-sprint/api-fixture-format.log.gz",
+      "sha256": "71f3b23c5697fba840d4c67807738d32d9b87e317692984ca81870969bd92f3f",
+      "encoding": "gzip",
+      "stored_sha256": "842cf003008ef7c0e1cb13deb40ffa1f5e75cf331986e9bb9ccac92aa0051d78"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/api-focused-final-coverage.json",
+      "path": "audit/evidence/completion-sprint/api-focused-final-coverage.json.gz",
+      "sha256": "1f79918fe9612aa8878b105585cd3e0e6466c444262f8d994e27c79ea0467013",
+      "encoding": "gzip",
+      "stored_sha256": "cd88c379f8e471aec6b5e199ae6d16b16f6f537acdea739279baa72187caa22e"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/api-focused-last-coverage.json",
+      "path": "audit/evidence/completion-sprint/api-focused-last-coverage.json.gz",
+      "sha256": "c4e6c359c60d9160cc0d52d3761028e7ec8047b31220d97aed7743d7b71f65a6",
+      "encoding": "gzip",
+      "stored_sha256": "4ad5d7eba3c715330ba37b0d1d2c52bbe05121abc72b68ff24693d9b5ec9dd6d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/api-merged-before-last.json",
+      "path": "audit/evidence/completion-sprint/api-merged-before-last.json.gz",
+      "sha256": "26ec0e2aa630e4615324e9035f803079e853a75549906687ff95aaa6ecd467ec",
+      "encoding": "gzip",
+      "stored_sha256": "4e9dfd903e2d820966284ed4c5bfe392e1646e5e5466576e26201d719fa9e3ab"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/api-types-final.log",
+      "path": "audit/evidence/completion-sprint/api-types-final.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/api-types.log",
+      "path": "audit/evidence/completion-sprint/api-types.log.gz",
+      "sha256": "6b7afdae790b75011abfcdce33eac8c663a7636ffbab460ab1dd52fada57d517",
+      "encoding": "gzip",
+      "stored_sha256": "32a5918a773c8bf9216fe9049da98d01d84e4eb19624eef9f75695ba094eb48a"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/api-types2.log",
+      "path": "audit/evidence/completion-sprint/api-types2.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/api-types3.log",
+      "path": "audit/evidence/completion-sprint/api-types3.log.gz",
+      "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353",
+      "encoding": "gzip",
+      "stored_sha256": "34421d5fb32f3e1c56b6ff6dc0fe870149b7930c3b9cf37c752eb0feb9144f70"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/audit-first.log",
+      "path": "audit/evidence/completion-sprint/audit-first.log.gz",
+      "sha256": "f74142c483d4fcc9d4e7fc8e6654787342e7cf3fb3dde7574e02f55587d8c1f9",
+      "encoding": "gzip",
+      "stored_sha256": "e5210f6f0992d20acfe5845bb0feda95afce44fc1d14b82fd1de604ab03b01d6"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/audit-reconciled.log",
+      "path": "audit/evidence/completion-sprint/audit-reconciled.log.gz",
+      "sha256": "f74142c483d4fcc9d4e7fc8e6654787342e7cf3fb3dde7574e02f55587d8c1f9",
+      "encoding": "gzip",
+      "stored_sha256": "e5210f6f0992d20acfe5845bb0feda95afce44fc1d14b82fd1de604ab03b01d6"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/auth-corrected-coverage.json",
+      "path": "audit/evidence/completion-sprint/auth-corrected-coverage.json.gz",
+      "sha256": "171d8a82af8c1532623a2652e969cdda533110ebe91bbe46b22a2d6bda7b8ddc",
+      "encoding": "gzip",
+      "stored_sha256": "08256fd17630ae8ffc986b0a9f46f823f897f1c40782242e8f91a40c08c4c83d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/auth-corrected-coverage.log",
+      "path": "audit/evidence/completion-sprint/auth-corrected-coverage.log.gz",
+      "sha256": "171d8a82af8c1532623a2652e969cdda533110ebe91bbe46b22a2d6bda7b8ddc",
+      "encoding": "gzip",
+      "stored_sha256": "08256fd17630ae8ffc986b0a9f46f823f897f1c40782242e8f91a40c08c4c83d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/backlog-final.log",
+      "path": "audit/evidence/completion-sprint/backlog-final.log.gz",
+      "sha256": "a6d34b78b336d819c18f1e32f44b5cad575c5cd02ed1e46bedafa6fca6185b34",
+      "encoding": "gzip",
+      "stored_sha256": "149f6f242b1562d94902a4cbf86c551599463e11a4337124f9d2f6efb1cc833e"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-build.log",
+      "path": "audit/evidence/completion-sprint/browser-build.log.gz",
+      "sha256": "844eaafe3e7aac98c373ee647883193b3f508c270ba71f65dcd56575f7087e74",
+      "encoding": "gzip",
+      "stored_sha256": "065a50eb698b14b77cc75d368f98e79e407e48a4242d86b58f16e220c7710040"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-closure-build.log",
+      "path": "audit/evidence/completion-sprint/browser-closure-build.log.gz",
+      "sha256": "58ce1228f9557fffe25643552db67514adc3957a461063a5b8816eb2dce5d5e7",
+      "encoding": "gzip",
+      "stored_sha256": "830f719aca85bcdce52f422e57f15788ba5c987c52f1ce396b3eef090e17a77d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-closure-build2.log",
+      "path": "audit/evidence/completion-sprint/browser-closure-build2.log.gz",
+      "sha256": "247006a8d73b3af69a1bca8ae73d2b01fb0ebaa83131ac4f33f8a033b5e5d819",
+      "encoding": "gzip",
+      "stored_sha256": "7e611d4eec4f658d771533865d5691bae4451be74a57c0fcc8ca2fc7e09aa8d6"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-closure-build3.log",
+      "path": "audit/evidence/completion-sprint/browser-closure-build3.log.gz",
+      "sha256": "e6e089e68dee8cb27f6bed4ef8a4ff1ac2a531ce3717e2fcfcd5c28320889f38",
+      "encoding": "gzip",
+      "stored_sha256": "b6d4bbc4452b0c23879ab2a1a06e73fa572a7cddfbd937e99a77d463d73fcd76"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-closure-first.log",
+      "path": "audit/evidence/completion-sprint/browser-closure-first.log.gz",
+      "sha256": "88859024fe4312b4a45df88911d187b80e8881c935bdcf03e10570198dfbfa22",
+      "encoding": "gzip",
+      "stored_sha256": "b64e761b5fd5d1b19432fc417e5193421051486ec0e65e1aa6e5e1d17a0f9017"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-closure.log",
+      "path": "audit/evidence/completion-sprint/browser-closure.log.gz",
+      "sha256": "28ce3db40a02524e5781ed9d79dced65032a47874a3863f0fa3d889836963a7a",
+      "encoding": "gzip",
+      "stored_sha256": "b8e52e696c7932d1e28c031a6420b533e05a8a5bfdd88adf79897d935e7e9e78"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-coverage-build.log",
+      "path": "audit/evidence/completion-sprint/browser-coverage-build.log.gz",
+      "sha256": "788f2cdf76f76a58ea947f41b0baa1150c8c3caddb29922c0e16f4e9644871b2",
+      "encoding": "gzip",
+      "stored_sha256": "24db0c25cd823c1d1ac795c8d1a0f191a19243d578392dff8a38c53e793bff9b"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-coverage-collect-auth.log",
+      "path": "audit/evidence/completion-sprint/browser-coverage-collect-auth.log.gz",
+      "sha256": "689420185cd36cc327a6e3e2664851e859a4e61358fe13c234888b05b5c95610",
+      "encoding": "gzip",
+      "stored_sha256": "77d0df64c0efc519681bbbcd70cf75a8ef245b37e3fbd3b77f8e8645808b8f8e"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-coverage-collect-final.log",
+      "path": "audit/evidence/completion-sprint/browser-coverage-collect-final.log.gz",
+      "sha256": "a9758b474a3ce2239fcfd21316466f9e24b0babe79240ca825e3fbcdbcfed817",
+      "encoding": "gzip",
+      "stored_sha256": "0d7ee91dbaf5e62cd8a50f4a9fc7c1754dff5d419fb5356af515e1c70a9f3d3c"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-coverage-collect.log",
+      "path": "audit/evidence/completion-sprint/browser-coverage-collect.log.gz",
+      "sha256": "8029a154d6c9884531e958593f7e515711b90add22bd0b47092a06e3b431bd49",
+      "encoding": "gzip",
+      "stored_sha256": "95081151807bb6807122a3e0bdb834f3b920f13ca50bb0370e38a0f1f2c0f74d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-coverage-conservative.log",
+      "path": "audit/evidence/completion-sprint/browser-coverage-conservative.log.gz",
+      "sha256": "4382e1d23f62a2f9c83767edb9ae6bc6e93455084f543624335fee1f8b0e5b9d",
+      "encoding": "gzip",
+      "stored_sha256": "0c751f63b4dc67cf693ce691dad79912dfcedcaa37fb86ff4d7dcbd0864cb850"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-coverage-merge-auth.log",
+      "path": "audit/evidence/completion-sprint/browser-coverage-merge-auth.log.gz",
+      "sha256": "9fedad9b8f665285a30a2eb37afecfe96e6a2bc84e0b4697ea45bb9f294ba46c",
+      "encoding": "gzip",
+      "stored_sha256": "31ca245ad6864c51ba08bb2c98770c2a38f07c1e2e4ac1dbfe6fc71ff19cabda"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-coverage-merge-final.log",
+      "path": "audit/evidence/completion-sprint/browser-coverage-merge-final.log.gz",
+      "sha256": "658637a2fcb6168e153381addd14fd208638a8984f9b57afb0aa008a1a0f6898",
+      "encoding": "gzip",
+      "stored_sha256": "a8ec1de074b715c4ffbe3a06c3d51097db23a0ae1bf3b2517c43aa36fad34c85"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-coverage-merge.log",
+      "path": "audit/evidence/completion-sprint/browser-coverage-merge.log.gz",
+      "sha256": "9fedad9b8f665285a30a2eb37afecfe96e6a2bc84e0b4697ea45bb9f294ba46c",
+      "encoding": "gzip",
+      "stored_sha256": "31ca245ad6864c51ba08bb2c98770c2a38f07c1e2e4ac1dbfe6fc71ff19cabda"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-coverage-tools-final.log",
+      "path": "audit/evidence/completion-sprint/browser-coverage-tools-final.log.gz",
+      "sha256": "780e09b75a748c1bc386a049eba246c9013b18468cc6e059869717503816d37a",
+      "encoding": "gzip",
+      "stored_sha256": "90820b3386fda0bf52f6503c4da28dbf299d74fd4a09bce2d115fd63746d9fb0"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-final-build.log",
+      "path": "audit/evidence/completion-sprint/browser-final-build.log.gz",
+      "sha256": "9eb6c5d5f472851d0cabe577f1ccd3caee51b49a90ad168ec2f503d8df41082b",
+      "encoding": "gzip",
+      "stored_sha256": "5283bc1b7b15f303611186540b4bbd916411a372d8f6a4dab4749d25fc02ed20"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-final-coverage.json",
+      "path": "audit/evidence/completion-sprint/browser-final-coverage.json.gz",
+      "sha256": "e4a7c773c61e100c801ece0c75a9cf4e5a043864d8d76e6d07a7288b8253dc34",
+      "encoding": "gzip",
+      "stored_sha256": "4b956d8f71ba3f483496b7fbc839e2df3906109a03eff6bb5df3540f671598f6"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-final-raw.json",
+      "path": "audit/evidence/completion-sprint/browser-final-raw.json.gz",
+      "sha256": "abefc98d1a0a9143524c680acf41836aa01aaa793b6dfb5a6a17aa44a7c8ae49",
+      "encoding": "gzip",
+      "stored_sha256": "4da1ef5dae9941e6fa5957ca6c50919fffc202bf9ff70eba1fcb4c773da53f16"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-final-results.json",
+      "path": "audit/evidence/completion-sprint/browser-final-results.json.gz",
+      "sha256": "2cae78c2ce36be3df66737c730014838160ae5f29dbc3d4699eba9f33907e127",
+      "encoding": "gzip",
+      "stored_sha256": "b2007d4b3fa61ac57efc436506a004ba1cb0e4d789d7f6f9d139941a0b96b79d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-final.log",
+      "path": "audit/evidence/completion-sprint/browser-final.log.gz",
+      "sha256": "4a175dca83b6f0b89264cf566604de421b23b148ac86b3e160feeea4593c7e92",
+      "encoding": "gzip",
+      "stored_sha256": "4795b03e810d4adb32c0d4a3bee5a000ea853becb4ea84a981f200cb6a11a410"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-first-results.json",
+      "path": "audit/evidence/completion-sprint/browser-first-results.json.gz",
+      "sha256": "99e2b6b88250fc4bdbe76a742f442dcbe4a0d15d4022576d1d29972b9d200399",
+      "encoding": "gzip",
+      "stored_sha256": "1cb73130e25400d2b641edd928afea8a1c7a1d146bbba5aa07db24b563ae478b"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-fixes-build.log",
+      "path": "audit/evidence/completion-sprint/browser-fixes-build.log.gz",
+      "sha256": "11a87ba455fc5033736075639f4de38b69875b17f12201eb567ace5c9a2a2bf0",
+      "encoding": "gzip",
+      "stored_sha256": "3296be67d6d454d3c4544f91df41111aa4ebaaec7e676ca8fd5da062467e2d07"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-fixes.log",
+      "path": "audit/evidence/completion-sprint/browser-fixes.log.gz",
+      "sha256": "f274b2a6048f53d2d68f8b32367906d1bcb992033c7ffb56a84ddd3f0d8a3428",
+      "encoding": "gzip",
+      "stored_sha256": "e454cfeaf68798a75af5450e7e2ef97e44e8956595d93d621814aa94e975fa47"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-fixes2-build.log",
+      "path": "audit/evidence/completion-sprint/browser-fixes2-build.log.gz",
+      "sha256": "5884b3ef7687f40e3a8848552f4af241516cf640485fc5b7241b24bd50c31d91",
+      "encoding": "gzip",
+      "stored_sha256": "41d9aac6a7af867fa571d2c3bb1b4edeb40b8c1a4989ea9b5ca8f31347e4274d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-fixes2.log",
+      "path": "audit/evidence/completion-sprint/browser-fixes2.log.gz",
+      "sha256": "cedeb488c06dbc4ec44275aa0beef2cdf443999cbc3e63332bd791520268cf7b",
+      "encoding": "gzip",
+      "stored_sha256": "4fbb1b9f76ae007afc59b23082f052cb67cd92ddd2d47a9954dfc801fdd49f40"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-format.log",
+      "path": "audit/evidence/completion-sprint/browser-format.log.gz",
+      "sha256": "8f46b9dc2de321f9582383332df5888ec4144eed0eacc29e0cefda29066a9b8d",
+      "encoding": "gzip",
+      "stored_sha256": "b4b0f5f5079e8c4a88ff4165d06d31905c63d4c5d1798294b0026975171c4d7f"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-format2.log",
+      "path": "audit/evidence/completion-sprint/browser-format2.log.gz",
+      "sha256": "173b74091ec9f4bafe0c325c479bb736563cf2cd3002b2f4bf37d80d0c08961e",
+      "encoding": "gzip",
+      "stored_sha256": "42c740b5e86b02b691889d341a40c28dd371b18cb03b25814ccbfaf8dd78d270"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-full.log",
+      "path": "audit/evidence/completion-sprint/browser-full.log.gz",
+      "sha256": "5f1ab4281421170e52022601356615903aa533b7ac78fa0a85d269666fce3391",
+      "encoding": "gzip",
+      "stored_sha256": "f481e6d984c578d7677d408cd57a866d548a4bb2c8b905d2bfbf9fec0737aad4"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-merge-boundaries.log",
+      "path": "audit/evidence/completion-sprint/browser-merge-boundaries.log.gz",
+      "sha256": "658637a2fcb6168e153381addd14fd208638a8984f9b57afb0aa008a1a0f6898",
+      "encoding": "gzip",
+      "stored_sha256": "a8ec1de074b715c4ffbe3a06c3d51097db23a0ae1bf3b2517c43aa36fad34c85"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-navigation-final.log",
+      "path": "audit/evidence/completion-sprint/browser-navigation-final.log.gz",
+      "sha256": "08acbc6b7645c068e25f54e11019d43c20b2be15a4e5ec225233ec739587fbf3",
+      "encoding": "gzip",
+      "stored_sha256": "9bcf9db968121028c08e50839e4d40ed1a608006c8bcfbf2926fc4ec3879ffa3"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-optimized-coverage.json",
+      "path": "audit/evidence/completion-sprint/browser-optimized-coverage.json.gz",
+      "sha256": "17011dc1cd63a31b31d647cc7a9166f25109b3a409a32dad17c022250abeeb78",
+      "encoding": "gzip",
+      "stored_sha256": "3f3edd3114d682782ad18ff87f306d58062c03e7228cb7489c93ce81a3f67926"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-optimized-raw.json",
+      "path": "audit/evidence/completion-sprint/browser-optimized-raw.json.gz",
+      "sha256": "cb5140645bb4cffaa1eb37662358d40df373dd15dd5cb6678bce064664295683",
+      "encoding": "gzip",
+      "stored_sha256": "42d57c937b6aa99db52693bbd1e6536e86c0ead590456c0f064ffe6b9b82106b"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-optimized-results.json",
+      "path": "audit/evidence/completion-sprint/browser-optimized-results.json.gz",
+      "sha256": "3a28944e24e79e7ffd9e1bbaf6cffc189c08504fedf71bf9ffb58e10f808aaf5",
+      "encoding": "gzip",
+      "stored_sha256": "73c399ca237ccd34c71af7a947d8ee49c3760d51ad4c31233aeb973e4cc54fdf"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-optimized.log",
+      "path": "audit/evidence/completion-sprint/browser-optimized.log.gz",
+      "sha256": "b475be3cf33bc4c97e9d55a7f3c37f0efad5546657b8a5cecc7d6aa1e11e0a89",
+      "encoding": "gzip",
+      "stored_sha256": "f8a42333e3e4699eb8a8cb04bd3ffb60e510bf9d45c78bb94e6313a0be66d353"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/bundle-final.log",
+      "path": "audit/evidence/completion-sprint/bundle-final.log.gz",
+      "sha256": "c95a48c3188a01a3d1f021b9f4ae3423ce637c2477ecd0d13d9b3d3029ef76de",
+      "encoding": "gzip",
+      "stored_sha256": "c0604d81fbd2882d635f9ef7f79d3fc505443ecbcbc77da3321137ee8ecbb5de"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/cities-api.log",
+      "path": "audit/evidence/completion-sprint/cities-api.log.gz",
+      "sha256": "c5d471ca2f1cde1e69d16d6f1d71fc6bd2653ba9193578d40c5258dc9df49d91",
+      "encoding": "gzip",
+      "stored_sha256": "8db09dfdfbc76d17913ed4105692e647cfabf9b191ecee1353fd68bb4b51ebc4"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/cities-api2.log",
+      "path": "audit/evidence/completion-sprint/cities-api2.log.gz",
+      "sha256": "9f6e2fb40556fda4ea0b2d3cda176978ab805397678c346d454d3c3565b25ef6",
+      "encoding": "gzip",
+      "stored_sha256": "aed0880b1766f1f484be77e0ffad4a61ae49fb566fa2efc110e1f9c5ba676de1"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/cities-browser.log",
+      "path": "audit/evidence/completion-sprint/cities-browser.log.gz",
+      "sha256": "3cad14ad9af19f78b663a95ea0c140c8b92bd73cf0b23f0462a67bf8eb84806c",
+      "encoding": "gzip",
+      "stored_sha256": "277c96656d9bba923adc5f42efa4dc23ec124d61dcea873c00cfd79ff739f0ac"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/clean-install.log",
+      "path": "audit/evidence/completion-sprint/clean-install.log.gz",
+      "sha256": "8165509456e7d54dd6e27a9d9d73652470e5c92dfb8fd1eb9297f6f641663b30",
+      "encoding": "gzip",
+      "stored_sha256": "71c89666d54fcb8f1121ddbe9a0295c89db68c1a499892d159d5e2bad52b415d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/closing-checks.json",
+      "path": "audit/evidence/completion-sprint/closing-checks.json.gz",
+      "sha256": "f8c531f59f9fa9f1821edefbbc81952b91ed2959b6cbaa3db9ac2cbfd8131f2a",
+      "encoding": "gzip",
+      "stored_sha256": "290eea42a51d87bfaf18e3d022d7e35927bc831df5401db493fbc5b93294ec8d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/contract-final.log",
+      "path": "audit/evidence/completion-sprint/contract-final.log.gz",
+      "sha256": "1d3025438c3332d4e6927a0866da063b92f5ca3416ee10e3100f241725b7aea6",
+      "encoding": "gzip",
+      "stored_sha256": "ae566da86b76e2613fb7ebf1c7bd4efef9b9eb62cfc99d1716c9ed85175bbfee"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/contract-update.log",
+      "path": "audit/evidence/completion-sprint/contract-update.log.gz",
+      "sha256": "20621c82f7d646e1d97734385736b1ce6f7540413c39d24e2d25069f77c4ea40",
+      "encoding": "gzip",
+      "stored_sha256": "da215e06f1967d5ea345c80d2d428f752b565f29e4c2b262aa0511105f92edb1"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-before-browser.json",
+      "path": "audit/evidence/completion-sprint/coverage-before-browser.json.gz",
+      "sha256": "a697beb8c8cd9e56396b7c553e4c148fc4e5ecfdeffc32c62b11afd156af9a05",
+      "encoding": "gzip",
+      "stored_sha256": "c8146ea350e5a54450c7f0ad9c2e9126484d44b4cdb1da46e1ca56e2b10b36e5"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-before-browser.log",
+      "path": "audit/evidence/completion-sprint/coverage-before-browser.log.gz",
+      "sha256": "a697beb8c8cd9e56396b7c553e4c148fc4e5ecfdeffc32c62b11afd156af9a05",
+      "encoding": "gzip",
+      "stored_sha256": "c8146ea350e5a54450c7f0ad9c2e9126484d44b4cdb1da46e1ca56e2b10b36e5"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries10.json",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries10.json.gz",
+      "sha256": "3bc1f26033eea825f36b469a67ca2ce4ba3b5d2dfe51228ecae84a4d327a6285",
+      "encoding": "gzip",
+      "stored_sha256": "79db806c55bc7e4d877694d78848406e1bb99bfae53e158e8b68e60d8a9d15f3"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries10.log",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries10.log.gz",
+      "sha256": "3bc1f26033eea825f36b469a67ca2ce4ba3b5d2dfe51228ecae84a4d327a6285",
+      "encoding": "gzip",
+      "stored_sha256": "79db806c55bc7e4d877694d78848406e1bb99bfae53e158e8b68e60d8a9d15f3"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries11.json",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries11.json.gz",
+      "sha256": "29831130be00c6282d511cbca7b7d8e743fcca7816e7a3204470504e51a900f7",
+      "encoding": "gzip",
+      "stored_sha256": "caedb7c81a42a55b0399545b41bd21cbfdd358f7a130ba59a5022432816434db"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries11.log",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries11.log.gz",
+      "sha256": "29831130be00c6282d511cbca7b7d8e743fcca7816e7a3204470504e51a900f7",
+      "encoding": "gzip",
+      "stored_sha256": "caedb7c81a42a55b0399545b41bd21cbfdd358f7a130ba59a5022432816434db"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries12.json",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries12.json.gz",
+      "sha256": "d50bda8326f9114d094d2941fabc0a26125f2020ab42067b02952be0decbeaff",
+      "encoding": "gzip",
+      "stored_sha256": "58d3e6d2f783e7bbc2b7d5333a6c0936966860aaaff70df383d6e93c22f01b84"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries12.log",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries12.log.gz",
+      "sha256": "d50bda8326f9114d094d2941fabc0a26125f2020ab42067b02952be0decbeaff",
+      "encoding": "gzip",
+      "stored_sha256": "58d3e6d2f783e7bbc2b7d5333a6c0936966860aaaff70df383d6e93c22f01b84"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries2.json",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries2.json.gz",
+      "sha256": "60267a3f4d83b8f85bcab274a3154dd3e6a4d25d43d984da1d2e5f79bbbae08c",
+      "encoding": "gzip",
+      "stored_sha256": "d716407aa2f761b66bc04059b30c78c2b239dd6166298b7ae95d3c79ec9628c1"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries2.log",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries2.log.gz",
+      "sha256": "60267a3f4d83b8f85bcab274a3154dd3e6a4d25d43d984da1d2e5f79bbbae08c",
+      "encoding": "gzip",
+      "stored_sha256": "d716407aa2f761b66bc04059b30c78c2b239dd6166298b7ae95d3c79ec9628c1"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries3.json",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries3.json.gz",
+      "sha256": "384ce3e0753ee9ae4628eaed267c3505faa265ce16577b6e05696826fedacf38",
+      "encoding": "gzip",
+      "stored_sha256": "45fcfd37f8f40e2883e6f714a39f049547d4f272eef44358c1ab7922a096e77a"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries3.log",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries3.log.gz",
+      "sha256": "384ce3e0753ee9ae4628eaed267c3505faa265ce16577b6e05696826fedacf38",
+      "encoding": "gzip",
+      "stored_sha256": "45fcfd37f8f40e2883e6f714a39f049547d4f272eef44358c1ab7922a096e77a"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries4.json",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries4.json.gz",
+      "sha256": "c4d1b7eae8164793d950cffaf6a165919328759f547cb2c38f9d2cac19a8defd",
+      "encoding": "gzip",
+      "stored_sha256": "a7f9d5232b1196fdb1971269afca84b10b65e6ab6ab4f7334b152e76d4c8dafc"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries4.log",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries4.log.gz",
+      "sha256": "c4d1b7eae8164793d950cffaf6a165919328759f547cb2c38f9d2cac19a8defd",
+      "encoding": "gzip",
+      "stored_sha256": "a7f9d5232b1196fdb1971269afca84b10b65e6ab6ab4f7334b152e76d4c8dafc"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries5.json",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries5.json.gz",
+      "sha256": "f0be06fad3ba0c05d35c854dd75affce76ef75689c8f98dff754abdc0cf6da20",
+      "encoding": "gzip",
+      "stored_sha256": "2b3d89707602263de9f86a3d8ee276ed921577a3a0f0e5e44fa06021b93f555b"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries5.log",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries5.log.gz",
+      "sha256": "f0be06fad3ba0c05d35c854dd75affce76ef75689c8f98dff754abdc0cf6da20",
+      "encoding": "gzip",
+      "stored_sha256": "2b3d89707602263de9f86a3d8ee276ed921577a3a0f0e5e44fa06021b93f555b"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries6.json",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries6.json.gz",
+      "sha256": "81e8fe13b7d7d947ff87631d4a4c14ac22301a400c88987d30bff5fa1e9e7203",
+      "encoding": "gzip",
+      "stored_sha256": "62e05ad0e9b744820e44ca8dc5c8777ce7e890a762b7def84722b6d85e3b6c77"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries6.log",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries6.log.gz",
+      "sha256": "81e8fe13b7d7d947ff87631d4a4c14ac22301a400c88987d30bff5fa1e9e7203",
+      "encoding": "gzip",
+      "stored_sha256": "62e05ad0e9b744820e44ca8dc5c8777ce7e890a762b7def84722b6d85e3b6c77"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries9.json",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries9.json.gz",
+      "sha256": "f56488ba1d8b174bab46c527dfeda10fe8d276a4111fcac04540c47c5f7c9c20",
+      "encoding": "gzip",
+      "stored_sha256": "024505a5392cad003f213070df98d80a75d76331eaf3c40d568a6c9ff2bacb39"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-boundaries9.log",
+      "path": "audit/evidence/completion-sprint/coverage-boundaries9.log.gz",
+      "sha256": "f56488ba1d8b174bab46c527dfeda10fe8d276a4111fcac04540c47c5f7c9c20",
+      "encoding": "gzip",
+      "stored_sha256": "024505a5392cad003f213070df98d80a75d76331eaf3c40d568a6c9ff2bacb39"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-format2.log",
+      "path": "audit/evidence/completion-sprint/coverage-format2.log.gz",
+      "sha256": "b40f88b35b381be3fef8e75ddbc804bb6c35db61f763f916a1af2e97bfa0bb13",
+      "encoding": "gzip",
+      "stored_sha256": "d2230fa19df1ebcc6b4e469e6cc799c45a20c6c9c79448e74f7292b8e48ceea6"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-format3.log",
+      "path": "audit/evidence/completion-sprint/coverage-format3.log.gz",
+      "sha256": "b12cd143dc25c9376b8f2fe4b71c2a9f0d25abcc99893aad63d541e4ded6e98d",
+      "encoding": "gzip",
+      "stored_sha256": "f99ac4e8a688bcf8daa888dd8ee9c2c1f2a8c58a14d214490959aab2350bfb60"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-format4.log",
+      "path": "audit/evidence/completion-sprint/coverage-format4.log.gz",
+      "sha256": "f4422964779375703d961162b16749fc9e06d6c6da2c5de1fc9814ea7252cfb9",
+      "encoding": "gzip",
+      "stored_sha256": "03f2474d21ec5107f5ffd87e2c85b20fe03be82d53be12baec040e7dd038aebd"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-format5.log",
+      "path": "audit/evidence/completion-sprint/coverage-format5.log.gz",
+      "sha256": "3dd190f4756fffb24c303b8937889118826299f4889ee6bcc4594570611255a9",
+      "encoding": "gzip",
+      "stored_sha256": "872f69bd277a3ea2bd19f6e9f5061fa2688f8aedab8ed439131808fb03c9bc4c"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-format6.log",
+      "path": "audit/evidence/completion-sprint/coverage-format6.log.gz",
+      "sha256": "03d1020f12d6c374987fb3b1529200cdcbc872cf47638b64a5dbcb45b6fb6927",
+      "encoding": "gzip",
+      "stored_sha256": "070c4a16bdd2049679a518e6b30e8eeaba77ff3e5dba3e1a478601e2675e37db"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-format7.log",
+      "path": "audit/evidence/completion-sprint/coverage-format7.log.gz",
+      "sha256": "8014800a1e50262be7b04a7f40eec172375074b1522398018bab1db1855e0e73",
+      "encoding": "gzip",
+      "stored_sha256": "6a45939d78b11346d1182f552890c83d0faf3712389b097fbe575e424a031195"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-format8.log",
+      "path": "audit/evidence/completion-sprint/coverage-format8.log.gz",
+      "sha256": "f2d9c8c595814f79558030286da1067d5de4ff1cb901087c21eb4c3e970f3d74",
+      "encoding": "gzip",
+      "stored_sha256": "e1dab6aabfa39bf8e8067e60198597220c693b65b8203909c60fc5c948b5d011"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-matrix.json",
+      "path": "audit/evidence/completion-sprint/coverage-matrix.json.gz",
+      "sha256": "e564082725731454fee43b81b693bb9af1752810c3d6e9fc163272bf8ceee724",
+      "encoding": "gzip",
+      "stored_sha256": "2f7dba5a162d83fe52e8cc2da7dfb4ccf8ccc5e00234f9ee49e0db0e7798cf03"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-matrix.log",
+      "path": "audit/evidence/completion-sprint/coverage-matrix.log.gz",
+      "sha256": "e564082725731454fee43b81b693bb9af1752810c3d6e9fc163272bf8ceee724",
+      "encoding": "gzip",
+      "stored_sha256": "2f7dba5a162d83fe52e8cc2da7dfb4ccf8ccc5e00234f9ee49e0db0e7798cf03"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-measurement-closure.log",
+      "path": "audit/evidence/completion-sprint/coverage-measurement-closure.log.gz",
+      "sha256": "3ad063921519c5a6d5c9a97ea26e9f454d059b244255a369f318de779e95631c",
+      "encoding": "gzip",
+      "stored_sha256": "71b7271bde380a3317f654380988b7f3ffa53d1b420bb5c6803766c606d368a9"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-measurement-final.log",
+      "path": "audit/evidence/completion-sprint/coverage-measurement-final.log.gz",
+      "sha256": "6b3670938f411b835031aaf2d98da55a1cfdddc94b81637f5766e5466be9eb88",
+      "encoding": "gzip",
+      "stored_sha256": "9771d2544ad945fa8296efa9afde86f66fdc6ee9635acef3a89f794b20d84f78"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-measurement-test.log",
+      "path": "audit/evidence/completion-sprint/coverage-measurement-test.log.gz",
+      "sha256": "b7a0ad09cbb11bea3b7339611bf24e5a7092314f58673fa5243073a80cdd78e6",
+      "encoding": "gzip",
+      "stored_sha256": "1c44e54e7d78b21134503c16c088835e88bae36f5ef4edc09a7d42e58fc90050"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-measurement-test2.log",
+      "path": "audit/evidence/completion-sprint/coverage-measurement-test2.log.gz",
+      "sha256": "7af4b9b83ff3b2e00d06ff21a6da70f498bd1a36fcb28560947c321b763deb26",
+      "encoding": "gzip",
+      "stored_sha256": "02600b1a6b3ee49de585631300cdc7e4d942cd5584cb1c9d3257099bbfe932c6"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-new-api.log",
+      "path": "audit/evidence/completion-sprint/coverage-new-api.log.gz",
+      "sha256": "96148b6a8e887128c734e3f16c3e0d96af8aef9771f34bc6b0d14cbca3ba75b3",
+      "encoding": "gzip",
+      "stored_sha256": "00cdf863e04643b746cfabcb7c975774556e4b2e9e8eb16ff8ed24734dfb42c7"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-new-api2.log",
+      "path": "audit/evidence/completion-sprint/coverage-new-api2.log.gz",
+      "sha256": "ed413cf6b0fce87153e6d3fc8d8714ce5309b93d0dd4f6b83a08558e6fdae00f",
+      "encoding": "gzip",
+      "stored_sha256": "b9ad1bddb1b8edd21546f79344497aa8b4bdbb2864980eb3ce9675fa3f9f4dd6"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-new-api3.log",
+      "path": "audit/evidence/completion-sprint/coverage-new-api3.log.gz",
+      "sha256": "2f263bf75d6fb965c67b3445a633ad1668bfa702ea00b4d96c19dd6be5507bae",
+      "encoding": "gzip",
+      "stored_sha256": "03842dcd7d4dbfb971becaf14480f0bed6bdb4cfde723c2cd8c48a1dd0d05dfe"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-new-api4.log",
+      "path": "audit/evidence/completion-sprint/coverage-new-api4.log.gz",
+      "sha256": "1d7c18f4c2c265093f6aaf7d1671511a214ea597d9bc7333d2c625ab8e7a91ba",
+      "encoding": "gzip",
+      "stored_sha256": "1f6623c469e721a18d2dd22f975c03eaec81bf52638bd73924b542e472c32f0f"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-new-api5.log",
+      "path": "audit/evidence/completion-sprint/coverage-new-api5.log.gz",
+      "sha256": "845b12f8264ad12436a1f24f74ee6cebbc853057c0013db59a9bc4ea862496ef",
+      "encoding": "gzip",
+      "stored_sha256": "7abfe4b511c071975abdcc0b08632546f2997167b2ae0b59cce13b0e9b1f42c7"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-pre-final-browser.json",
+      "path": "audit/evidence/completion-sprint/coverage-pre-final-browser.json.gz",
+      "sha256": "463e38363e7f7040edb9b775ccaba9552cc97cbaca81ead51eaf5192d2dd95ed",
+      "encoding": "gzip",
+      "stored_sha256": "8b315904d8663a30969de6a5c2d5b5cb885d17fbde3b4f89064eb892c1ed83e1"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-pre-final-browser.log",
+      "path": "audit/evidence/completion-sprint/coverage-pre-final-browser.log.gz",
+      "sha256": "463e38363e7f7040edb9b775ccaba9552cc97cbaca81ead51eaf5192d2dd95ed",
+      "encoding": "gzip",
+      "stored_sha256": "8b315904d8663a30969de6a5c2d5b5cb885d17fbde3b4f89064eb892c1ed83e1"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-tests-format.log",
+      "path": "audit/evidence/completion-sprint/coverage-tests-format.log.gz",
+      "sha256": "5d04aa9b642eaccbdf76d895ed6796960df829eab4125aaf671f8c2fc8afb0ad",
+      "encoding": "gzip",
+      "stored_sha256": "230e7a91d62b92f148853650389bcda1dbaa52e09c9498d9e43dd7e507d93b4a"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-tool-format.log",
+      "path": "audit/evidence/completion-sprint/coverage-tool-format.log.gz",
+      "sha256": "5a919094741c790f0d5a0488ab35473f480e74217c3cef9cc5897a232592eb65",
+      "encoding": "gzip",
+      "stored_sha256": "f615759034517141678cab457d126949453d933e50a125d734e862b29e89daf1"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-tools-lint.log",
+      "path": "audit/evidence/completion-sprint/coverage-tools-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-with-boundaries.json",
+      "path": "audit/evidence/completion-sprint/coverage-with-boundaries.json.gz",
+      "sha256": "b38b0ae23108b2a25e434975fb1edb94cb3df0f89075a02ac8d00ae9baa134fe",
+      "encoding": "gzip",
+      "stored_sha256": "69c8d23c44dab9123bbc733220175d8cb95cbb043d64eab0c45c0edc75f84d93"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/coverage-with-boundaries.log",
+      "path": "audit/evidence/completion-sprint/coverage-with-boundaries.log.gz",
+      "sha256": "b38b0ae23108b2a25e434975fb1edb94cb3df0f89075a02ac8d00ae9baa134fe",
+      "encoding": "gzip",
+      "stored_sha256": "69c8d23c44dab9123bbc733220175d8cb95cbb043d64eab0c45c0edc75f84d93"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/create-admin-error-tests.py",
+      "path": "audit/evidence/completion-sprint/create-admin-error-tests.py.gz",
+      "sha256": "46114895a0058d51e09661f77a35af229d6597515c05256f4676709b47145324",
+      "encoding": "gzip",
+      "stored_sha256": "46ce367aad98ff0df10ed1519d4b01e36b38d832be84a5877b79eb151592ca8b"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/current-coverage.json",
+      "path": "audit/evidence/completion-sprint/current-coverage.json.gz",
+      "sha256": "d885726ad769bba2d720c7fe595e4a3788639ff6ede2d310d2ecec9ad1a141a4",
+      "encoding": "gzip",
+      "stored_sha256": "0d39f34e4b9f65e071da91d7fc57a73385d11bf2002866a6f369336343280083"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/current-coverage.log",
+      "path": "audit/evidence/completion-sprint/current-coverage.log.gz",
+      "sha256": "d885726ad769bba2d720c7fe595e4a3788639ff6ede2d310d2ecec9ad1a141a4",
+      "encoding": "gzip",
+      "stored_sha256": "0d39f34e4b9f65e071da91d7fc57a73385d11bf2002866a6f369336343280083"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/field-type-format.log",
+      "path": "audit/evidence/completion-sprint/field-type-format.log.gz",
+      "sha256": "a1cb531df6c32598b2f9218a3cebf1493418259d5108f1c459466e9912576792",
+      "encoding": "gzip",
+      "stored_sha256": "ae92195150211fa6a707557844f7bca8d49029571e59eb962a932240dcdb7a82"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-api2.log",
+      "path": "audit/evidence/completion-sprint/final-api2.log.gz",
+      "sha256": "d19fa51aab23840058df91a8e05767010536b7d25c09dc4a3bd4740a530e675f",
+      "encoding": "gzip",
+      "stored_sha256": "e7078b9ba4f3a642d227af99ad82df700c4117388eaf28719a09dacf4a3bd070"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-boundary-format.log",
+      "path": "audit/evidence/completion-sprint/final-boundary-format.log.gz",
+      "sha256": "3d906b0b83654df24bd13f497d5bd0416c4534cf0a6176de0d66f039e95c0031",
+      "encoding": "gzip",
+      "stored_sha256": "4e0788cf05095123ddade0e097f2b517886c20fd72861bd8d0c48478fee77843"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-bundle.log",
+      "path": "audit/evidence/completion-sprint/final-bundle.log.gz",
+      "sha256": "3ff6251bcb200d7c23c71be5b8ae919ea09dcbd3b80e886efe1d0f13fd7b4a38",
+      "encoding": "gzip",
+      "stored_sha256": "065a49811969cdbd2bf7c1caa5cf4ad5e79a0e84da2dee719620853762fc2010"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-change-format.log",
+      "path": "audit/evidence/completion-sprint/final-change-format.log.gz",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "encoding": "gzip",
+      "stored_sha256": "6cd316ae8e81df0ff79776205007450fac3d62e1ba8e884e169e326d7955ebe5"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-combined-apps-api.json",
+      "path": "audit/evidence/completion-sprint/final-combined-apps-api.json.gz",
+      "sha256": "551b6fe41da9c76d75ff2e64e774ed3b37615855215c34a7722fc7c1069a8b6c",
+      "encoding": "gzip",
+      "stored_sha256": "0aa30772da98bba8c8f1263617b2fb1982f9fd24e59ecf0b8f84ef04435858c6"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-combined-apps-web.json",
+      "path": "audit/evidence/completion-sprint/final-combined-apps-web.json.gz",
+      "sha256": "619e897684639a46e2b40c2d27a4b09b20ae219397914ddb593edc8f26c1c9d6",
+      "encoding": "gzip",
+      "stored_sha256": "2537412d45d7aee113785a7c9f4493ad4b1b5fabcb318418997d140d8daf30a1"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-combined-apps-worker.json",
+      "path": "audit/evidence/completion-sprint/final-combined-apps-worker.json.gz",
+      "sha256": "de75589f58f5c5dfdfa9afa679388d012c99f51710264e1b281dfb0423859b89",
+      "encoding": "gzip",
+      "stored_sha256": "21cce5ec47381e65241726391772697d1803a7f0f7625b457e32ca9ccfcefd9a"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-combined-packages-db.json",
+      "path": "audit/evidence/completion-sprint/final-combined-packages-db.json.gz",
+      "sha256": "468d37562da59d0cc6bd949962c5c1c4b1f0215cecfaa7e2a58ab5a5f9f43a6f",
+      "encoding": "gzip",
+      "stored_sha256": "d82532b470d285b663bd155b786bd4d1a1f92d3e0a70394dc4d30fda91d4bce2"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-combined-packages-i18n.json",
+      "path": "audit/evidence/completion-sprint/final-combined-packages-i18n.json.gz",
+      "sha256": "05b635fe3ffb08c07963a488c0b946b57846cd54258a0d988e5a858d73ba67a1",
+      "encoding": "gzip",
+      "stored_sha256": "387e3e4c3c89e82b752d80b10062c95bda984db44f7432a7123231d2f36c6ed4"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-combined-packages-shared.json",
+      "path": "audit/evidence/completion-sprint/final-combined-packages-shared.json.gz",
+      "sha256": "f3fe1df2dd09a8b156b6d29ad6561eca7678821a328bc15ed764472aee3ea7a5",
+      "encoding": "gzip",
+      "stored_sha256": "9b54e28d729cba06aaa76537d45ea7ab17c6476142ca242cb11e05405bbc9adf"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-combined-packages-tsconfig.json",
+      "path": "audit/evidence/completion-sprint/final-combined-packages-tsconfig.json.gz",
+      "sha256": "15c7db1f836946954524cd7387b2127f60ec3fe386971f0e9a40bb45890f3d2a",
+      "encoding": "gzip",
+      "stored_sha256": "e52cb302be5188f96505c47aae459aabe8053d735632e8fe5dde30f8d2fb135b"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-combined-packages-ui.json",
+      "path": "audit/evidence/completion-sprint/final-combined-packages-ui.json.gz",
+      "sha256": "9c009ccc1bf247d7c87ee79c8877e73f84900b2061970e24c43cc9436017f37d",
+      "encoding": "gzip",
+      "stored_sha256": "3bf5981c8962f19d5d9478524c4670113370903076495a1ee8c56d55091eb827"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-contract.log",
+      "path": "audit/evidence/completion-sprint/final-contract.log.gz",
+      "sha256": "8a168d2e446335a62d4f791ae6032c67ccb372fce2fbac9ed24db066995afdec",
+      "encoding": "gzip",
+      "stored_sha256": "c8f2f854d7037c2814f69648e1a3db377e4e63422a75a508cde3c39d5515efde"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-coverage-api.log",
+      "path": "audit/evidence/completion-sprint/final-coverage-api.log.gz",
+      "sha256": "1cd1a5d921030aadba7a344846ac99131ac5c7b28a2835a54dfb18c19ab379f6",
+      "encoding": "gzip",
+      "stored_sha256": "2d8509878b388e823f1920e6299178ee0ab65b0bb99a627b4bd402382ac1da93"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-coverage-db.log",
+      "path": "audit/evidence/completion-sprint/final-coverage-db.log.gz",
+      "sha256": "2d786f424a2369916659723fe2d3797553338104b56b2b321fb71f91ea210cd8",
+      "encoding": "gzip",
+      "stored_sha256": "ecc3de8bce97414cb2ab91899c61ee1eafacd47b0e785d850980ab737620f6b4"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-coverage-i18n.log",
+      "path": "audit/evidence/completion-sprint/final-coverage-i18n.log.gz",
+      "sha256": "d669f4b4d05d1720e21acd98170af896f45d8405b382ff74a7d5863bc5f762e8",
+      "encoding": "gzip",
+      "stored_sha256": "39e8d9a56e880ccbdc7756a80ce395bb34058119e367bc7c1891e3a95375ce5a"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-coverage-shared.log",
+      "path": "audit/evidence/completion-sprint/final-coverage-shared.log.gz",
+      "sha256": "366abaf4bae21bddeb92240f46bc1717f3139f2ac11823662bab620bb6e60938",
+      "encoding": "gzip",
+      "stored_sha256": "610ba959fb448277807b0e669bb63560090907bf916df0e84bfe32b4a88ab499"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-coverage-tsconfig.log",
+      "path": "audit/evidence/completion-sprint/final-coverage-tsconfig.log.gz",
+      "sha256": "5b2ae4c55c2f8bb8a660be17c02355362dc2e1e70faa5fada79bef0bbfb343cd",
+      "encoding": "gzip",
+      "stored_sha256": "47b261e7811f808dfb96199266a7449007bf7ffc63f50554806f1f4ae9331aeb"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-coverage-ui.log",
+      "path": "audit/evidence/completion-sprint/final-coverage-ui.log.gz",
+      "sha256": "6f0ca208008b8ab7ae0c23471079621e862bf3aca632f7f69a00dbfed3d6b480",
+      "encoding": "gzip",
+      "stored_sha256": "ae7d692d15260c21d396a16a90237ee40e95f4aad1ebac5792ded41da176ccdf"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-coverage-web.log",
+      "path": "audit/evidence/completion-sprint/final-coverage-web.log.gz",
+      "sha256": "681b5e76147d1d44386908e3e7975779950d4f5358ae33d8022c2b93a6630586",
+      "encoding": "gzip",
+      "stored_sha256": "2f10740eb74ee7bef0d01f75312dbd580d080834abf6d812662ff7cb3548c821"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-coverage-worker.log",
+      "path": "audit/evidence/completion-sprint/final-coverage-worker.log.gz",
+      "sha256": "4690a0119d46d5026dfb14d49b9c0262f6df204807e56e10d4f910185ee54d54",
+      "encoding": "gzip",
+      "stored_sha256": "0e18e2c4b641aa329f63c685b5e0bdcf24c388fefc7bbc7426c2ed1d308eb26f"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-coverage.json",
+      "path": "audit/evidence/completion-sprint/final-coverage.json.gz",
+      "sha256": "d50bda8326f9114d094d2941fabc0a26125f2020ab42067b02952be0decbeaff",
+      "encoding": "gzip",
+      "stored_sha256": "58d3e6d2f783e7bbc2b7d5333a6c0936966860aaaff70df383d6e93c22f01b84"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-coverage.log",
+      "path": "audit/evidence/completion-sprint/final-coverage.log.gz",
+      "sha256": "d50bda8326f9114d094d2941fabc0a26125f2020ab42067b02952be0decbeaff",
+      "encoding": "gzip",
+      "stored_sha256": "58d3e6d2f783e7bbc2b7d5333a6c0936966860aaaff70df383d6e93c22f01b84"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-db-snapshot.log",
+      "path": "audit/evidence/completion-sprint/final-db-snapshot.log.gz",
+      "sha256": "2a64772ce9c2418c61c2880fec9995b7a4a69ee58dbee8982cd932499d83ccf7",
+      "encoding": "gzip",
+      "stored_sha256": "f4c2881ddadc7bc239ee4d190d812f0b108bcaeb13f7d0f530ca69fdaddce2dd"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-format.log",
+      "path": "audit/evidence/completion-sprint/final-format.log.gz",
+      "sha256": "a553f2c9453f54cb70018fb1de3d1d6440df1e8ec0b501c0cf4ebadf0f5b289c",
+      "encoding": "gzip",
+      "stored_sha256": "7a1e4bb65b347840611f31f2e813dcee29566bba7e935b9be188c350715d0425"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-format2.log",
+      "path": "audit/evidence/completion-sprint/final-format2.log.gz",
+      "sha256": "49817b59ed202a732a0b9759c5227a47a2e8f5ffe7725fc3934ed43593072dd2",
+      "encoding": "gzip",
+      "stored_sha256": "802d7b5361bd957a2ab777942d885a5240ace060ea2b5d0c2353ca4097f297f9"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-format3.log",
+      "path": "audit/evidence/completion-sprint/final-format3.log.gz",
+      "sha256": "807a9cdb1d8d86661080aaf9b1025ac7b5a235ad096b7d4e43c15ea6633d966e",
+      "encoding": "gzip",
+      "stored_sha256": "5358352a78804577b9721c682eb2fa6e5de09a7b5556f309745b390606fc6a27"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-format4.log",
+      "path": "audit/evidence/completion-sprint/final-format4.log.gz",
+      "sha256": "807a9cdb1d8d86661080aaf9b1025ac7b5a235ad096b7d4e43c15ea6633d966e",
+      "encoding": "gzip",
+      "stored_sha256": "5358352a78804577b9721c682eb2fa6e5de09a7b5556f309745b390606fc6a27"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-image-identities.json",
+      "path": "audit/evidence/completion-sprint/final-image-identities.json.gz",
+      "sha256": "77799c4fb532690d98e250f77f490bbe3fa0f0a25177e914dfb54a1065e6b862",
+      "encoding": "gzip",
+      "stored_sha256": "1950e110cca220c609779a12fc2babf2abccc7f9727729c622448735b03704f0"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-lint.log",
+      "path": "audit/evidence/completion-sprint/final-lint.log.gz",
+      "sha256": "1ce8812c15ed4ae47cf0fe8a6b94cd42006f4e519e8bd215b3953d8744514bf8",
+      "encoding": "gzip",
+      "stored_sha256": "8fe08a3fcd1bf9db3b779c3959f5213119e80ea79972b74c7b97713535141be1"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-lint2.log",
+      "path": "audit/evidence/completion-sprint/final-lint2.log.gz",
+      "sha256": "1ce8812c15ed4ae47cf0fe8a6b94cd42006f4e519e8bd215b3953d8744514bf8",
+      "encoding": "gzip",
+      "stored_sha256": "8fe08a3fcd1bf9db3b779c3959f5213119e80ea79972b74c7b97713535141be1"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-lint3.log",
+      "path": "audit/evidence/completion-sprint/final-lint3.log.gz",
+      "sha256": "ca976ad87ea159084c9750907f80544e4eba2797fb79447ccc6c7d0a3d92de8b",
+      "encoding": "gzip",
+      "stored_sha256": "7c850c9804eb6afa6d8677db4209a919cb5394e01395c9d5a758547a94880259"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-lint4.log",
+      "path": "audit/evidence/completion-sprint/final-lint4.log.gz",
+      "sha256": "6f7fd8c30e6e479a38ebb29d79a58dcb5975506b3ecf1ae99a4083024b73b436",
+      "encoding": "gzip",
+      "stored_sha256": "67edb379d34911ed37815648c68afc7f89e034cddc9f3fe56054d1781bbcf2cb"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-lint5.log",
+      "path": "audit/evidence/completion-sprint/final-lint5.log.gz",
+      "sha256": "decca119ea5e5802b36fdf8d3811abc873e7062ce843e180f3ca8feea51ba7c5",
+      "encoding": "gzip",
+      "stored_sha256": "ce9fff3f22ef62d9b2b4a009375048b9e738dedbd12aece8a0ae8b6c49e94192"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-lint6.log",
+      "path": "audit/evidence/completion-sprint/final-lint6.log.gz",
+      "sha256": "6f7fd8c30e6e479a38ebb29d79a58dcb5975506b3ecf1ae99a4083024b73b436",
+      "encoding": "gzip",
+      "stored_sha256": "67edb379d34911ed37815648c68afc7f89e034cddc9f3fe56054d1781bbcf2cb"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-loop-tests.log",
+      "path": "audit/evidence/completion-sprint/final-loop-tests.log.gz",
+      "sha256": "31aae47877bd843da5e2a83d43c52251ed92231fb3d33481b387fc3a6b4ad766",
+      "encoding": "gzip",
+      "stored_sha256": "76b120107038fac6fc15f6dd2abd39f3a74d2c57e022c50d20523581f01b60df"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-python-tests.log",
+      "path": "audit/evidence/completion-sprint/final-python-tests.log.gz",
+      "sha256": "d796810e127eb6ff0c0e4149ad1ff4e32f7fc424a43ef7e557fa011412117f6d",
+      "encoding": "gzip",
+      "stored_sha256": "d5addb09c7e312e51ffbd1e93d0871972cb3fba2a323983bc29b6bf553dff54d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-revision-reuse.json",
+      "path": "audit/evidence/completion-sprint/final-revision-reuse.json.gz",
+      "sha256": "1dd39e3bb37d81c5b083c2087185acbfd4fe21d6b7c32b457b14b5e4777ef947",
+      "encoding": "gzip",
+      "stored_sha256": "0c369af425fe37d225cd2e5fd53808e1c4458d48686f2d47af145fe1bd1a1009"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-script-tests.log",
+      "path": "audit/evidence/completion-sprint/final-script-tests.log.gz",
+      "sha256": "71ea1a7a45b1d4599e99ca2e50c2a56ddbfe0cb0746cf2c5f5ee6107651afecf",
+      "encoding": "gzip",
+      "stored_sha256": "8775604de1b837e5eb08c195bcc338d65b5a8c2e6a8cecab1b0789c7d40a05e7"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-small-tests-format.log",
+      "path": "audit/evidence/completion-sprint/final-small-tests-format.log.gz",
+      "sha256": "b859e6e6724075770af664c196e20a815038ee1eca37488742bab4694a6a08eb",
+      "encoding": "gzip",
+      "stored_sha256": "06aa40cc173df8eb3bd5e63ba296d23aca84c0c51dcbb331afb66ca312e3e172"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-suppressed.log",
+      "path": "audit/evidence/completion-sprint/final-suppressed.log.gz",
+      "sha256": "366a1ab10dcd162ad111bb3daeaf70445a14ad2e31a16b870460494c078a9ff9",
+      "encoding": "gzip",
+      "stored_sha256": "e255d78c25073ed3b013f4d58d80b6800f753e264cf8fb55f4fb99bfa5b40201"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-types.log",
+      "path": "audit/evidence/completion-sprint/final-types.log.gz",
+      "sha256": "3233c0dadb2b39a76bbcc0d3b624dbe1987af0f2354713c5676660846302db2c",
+      "encoding": "gzip",
+      "stored_sha256": "6e4af97f257b767342077d6a498169f751d1e551a26fa85bd0a58b3e0134b217"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-types2.log",
+      "path": "audit/evidence/completion-sprint/final-types2.log.gz",
+      "sha256": "db87ffe02f576578f039020d1b51c26615d53c838dfdb6e55cafab860f3ca1ea",
+      "encoding": "gzip",
+      "stored_sha256": "28f8e7c526db619c3e75ef1bfbc3faa490adff042d7ba1e11aa5af4d8df5f5c2"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-types3.log",
+      "path": "audit/evidence/completion-sprint/final-types3.log.gz",
+      "sha256": "a0323cf4e4dc968c5011d6476d310a8b8ffce40222877bf361b3935e58188c2d",
+      "encoding": "gzip",
+      "stored_sha256": "addbb44b1d35849023f00a40c6b578749827ed8f9e38bc912d7387695a5ff1a3"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-types4.log",
+      "path": "audit/evidence/completion-sprint/final-types4.log.gz",
+      "sha256": "d47904157ca960a7960df1fea1aad94b24042b94489e8bb0fb2f60ce2124749e",
+      "encoding": "gzip",
+      "stored_sha256": "1c7abe1fa694345f720b898633e6c97695509120e5cb76c216872fe9d7506eb8"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-types5.log",
+      "path": "audit/evidence/completion-sprint/final-types5.log.gz",
+      "sha256": "1edeaab9103bee7c72be98e0bf50607420d78b028f5047774c3f3d1923848293",
+      "encoding": "gzip",
+      "stored_sha256": "e90d3bfc847926f9b4c26d2c7e028b83fce5cbd1c88312c6f9664e1fc5cd6a82"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-unit-coverage-provenance.json",
+      "path": "audit/evidence/completion-sprint/final-unit-coverage-provenance.json.gz",
+      "sha256": "6c878f23f4ba25e3b30944ea8c0a3475170dbb9a2e0b8b4c56686f622adba9cc",
+      "encoding": "gzip",
+      "stored_sha256": "4e08912efd4512ed91c9a7693d7e34b5a78a4947bf0fcb384812a87f4754d511"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/finalize-audit.py",
+      "path": "audit/evidence/completion-sprint/finalize-audit.py.gz",
+      "sha256": "f875a130ba0b668ebf5e97eabf0fed69c89bec5cab05a07bd77393f134032cee",
+      "encoding": "gzip",
+      "stored_sha256": "c5dc725a207818ac582c8772b37488e0019400922dc6e6450c776350272ed6fc"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/focused-lint.log",
+      "path": "audit/evidence/completion-sprint/focused-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/full-build.log",
+      "path": "audit/evidence/completion-sprint/full-build.log.gz",
+      "sha256": "4d53d68b76d5e835891de810035ee7d7d7349f4f016b3a56fda1bdf16ffdfda9",
+      "encoding": "gzip",
+      "stored_sha256": "3ad2c94a887de9c612d77a62890878bda557e29444bd86492ba1af111605ec01"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/image-api.log",
+      "path": "audit/evidence/completion-sprint/image-api.log.gz",
+      "sha256": "4cb298f6cfcbd83f26cc610fee2dcc9bff5f3b2a05a64f62806db175cf682609",
+      "encoding": "gzip",
+      "stored_sha256": "b3bfe1dd0d4b6a075308798215ebe5f6dc10375b7f606731ee2e6a1f0f94d0fb"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/image-runtime-final-first.log",
+      "path": "audit/evidence/completion-sprint/image-runtime-final-first.log.gz",
+      "sha256": "438d52054df32fd6423cac41b40e9a66913a8f19e956d82369fec7e7ed29ed93",
+      "encoding": "gzip",
+      "stored_sha256": "a71b678e2158c6c5c5047c3636dd78fbd86cfc8fde7523089ef8a2c5fd9562cb"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/image-runtime-final.log",
+      "path": "audit/evidence/completion-sprint/image-runtime-final.log.gz",
+      "sha256": "438d52054df32fd6423cac41b40e9a66913a8f19e956d82369fec7e7ed29ed93",
+      "encoding": "gzip",
+      "stored_sha256": "a71b678e2158c6c5c5047c3636dd78fbd86cfc8fde7523089ef8a2c5fd9562cb"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/image-runtime.log",
+      "path": "audit/evidence/completion-sprint/image-runtime.log.gz",
+      "sha256": "c660c51f8e6bde632da1ab63879111184de1b93d91d30ac87272ac5a82cec20d",
+      "encoding": "gzip",
+      "stored_sha256": "60f47bf615d5eec533bafb51457b692e987f314b5c47fef72758a3cc8387941f"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/image-runtime2.log",
+      "path": "audit/evidence/completion-sprint/image-runtime2.log.gz",
+      "sha256": "438d52054df32fd6423cac41b40e9a66913a8f19e956d82369fec7e7ed29ed93",
+      "encoding": "gzip",
+      "stored_sha256": "a71b678e2158c6c5c5047c3636dd78fbd86cfc8fde7523089ef8a2c5fd9562cb"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/image-source-equivalence.json",
+      "path": "audit/evidence/completion-sprint/image-source-equivalence.json.gz",
+      "sha256": "41f3ec1a3c6de0400cefdc254f3bb607d0022f8671cf5fbdeb8b51d6ec6c2743",
+      "encoding": "gzip",
+      "stored_sha256": "b941fa2c895c0960ff2cbe8af9ee723fff36c27c13e0acd4f4b6881543f60060"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/image-web-final-first.log",
+      "path": "audit/evidence/completion-sprint/image-web-final-first.log.gz",
+      "sha256": "bf02cdd02d00fd184eb1e9af2339727ef45052539d6f9d18a890df161652ff9e",
+      "encoding": "gzip",
+      "stored_sha256": "00ccc0c460f0ca1c2ed14d1c57ccbf31be208ece60183bcf8f09885234fcb282"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/image-web-final.log",
+      "path": "audit/evidence/completion-sprint/image-web-final.log.gz",
+      "sha256": "de09b8743e4d48760088660b26230aa21302c4d4925be3031c1f44a774e04377",
+      "encoding": "gzip",
+      "stored_sha256": "1f652ffc43dadd910786adc2e137a2af2cebc3da8806a9ecf6cc3ac977c3f065"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/image-web.log",
+      "path": "audit/evidence/completion-sprint/image-web.log.gz",
+      "sha256": "8368651a5c585a564b98d733d3c59478c6edab1c6a82a78d3e1b1c968c422244",
+      "encoding": "gzip",
+      "stored_sha256": "66fe2e447fe4b4d1c5b1ab91c731c9dcf5c581ad5f373c949231c4a4382c511f"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/image-worker.log",
+      "path": "audit/evidence/completion-sprint/image-worker.log.gz",
+      "sha256": "733b5851b47d56eae8f9d8ad3efaa60808b2d6356d0bad3ce72821d677303730",
+      "encoding": "gzip",
+      "stored_sha256": "6d3979ab626f5a44ccdb2d182e2ce464a3d558087769c5c2ab5a5de60eb311d2"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/independent-review.md",
+      "path": "audit/evidence/completion-sprint/independent-review.md.gz",
+      "sha256": "d2e2ab82a61ecf486b979bb01840aef968eed928725db2523803446d6566a977",
+      "encoding": "gzip",
+      "stored_sha256": "5076b5b35f06dd0a4c2f02aed4ccfd97b6ca7f170198f4e601bb3f98d390d1eb"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/metadata-format.log",
+      "path": "audit/evidence/completion-sprint/metadata-format.log.gz",
+      "sha256": "3975f56328ef93d39f0510eea1335432d48884ee17fb64b24e21d260d4ac3dc7",
+      "encoding": "gzip",
+      "stored_sha256": "14d3180cd463714fbdcf5959aaa9d7e5a61bb461c946583ca422b634cbe96e94"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/pre-browser-coverage.json",
+      "path": "audit/evidence/completion-sprint/pre-browser-coverage.json.gz",
+      "sha256": "3ae558815851b72cfca8bd3e9d9382ccf0942792fbbb5eb2fe010cd49503e938",
+      "encoding": "gzip",
+      "stored_sha256": "b96e4dacb83d35b46f91fe64777865c50958fc940c38331c2bac0bd75b31194f"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/pre-browser-coverage.log",
+      "path": "audit/evidence/completion-sprint/pre-browser-coverage.log.gz",
+      "sha256": "3ae558815851b72cfca8bd3e9d9382ccf0942792fbbb5eb2fe010cd49503e938",
+      "encoding": "gzip",
+      "stored_sha256": "b96e4dacb83d35b46f91fe64777865c50958fc940c38331c2bac0bd75b31194f"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/previous-HANDOFF.md",
+      "path": "audit/evidence/completion-sprint/previous-HANDOFF.md.gz",
+      "sha256": "f8096d4a2f309d72bec6883dcb5008b6fe8243dad2ddbb3518bdea7a74213727",
+      "encoding": "gzip",
+      "stored_sha256": "3a537c5a43843f6f87e65c2f15cfec8db4c5c2944d1eac8a2fce4caeb92d7e4e"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/previous-combined-coverage-checkpoint.json",
+      "path": "audit/evidence/completion-sprint/previous-combined-coverage-checkpoint.json.gz",
+      "sha256": "ce878134bbd22baadf99e14e410096806c82ee82ed0030510fdbe4b95fb22c57",
+      "encoding": "gzip",
+      "stored_sha256": "e5372c5b980ceddbf69603714c08e6fcfcc283cc597c71812ae69a340ca1d3fc"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/previous-final-repair-checkpoint.json",
+      "path": "audit/evidence/completion-sprint/previous-final-repair-checkpoint.json.gz",
+      "sha256": "dfd32fc84bb083c6e3b3b3e2ac693cf229a5057810259bbfcbac8549268e1adf",
+      "encoding": "gzip",
+      "stored_sha256": "f919164bccb7ec272c89209f1208e559b02f0b99798492348eb49627ba56f693"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/previous-fix-plan.md",
+      "path": "audit/evidence/completion-sprint/previous-fix-plan.md.gz",
+      "sha256": "051f353c0136fdaf33245c31ff18332acde627c6b62362f0d6ba75841cb1d904",
+      "encoding": "gzip",
+      "stored_sha256": "5c64f9a00d336ab964449e60bfd77c97b6c093721a1cd747954f4c2b7c7613e3"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/reconcile-audit.py",
+      "path": "audit/evidence/completion-sprint/reconcile-audit.py.gz",
+      "sha256": "3613815164b5b1fb5a21601da7b594cb862ad90a89ed3ba82cdfad0529170231",
+      "encoding": "gzip",
+      "stored_sha256": "7016f6b1aa2474546273db5701b3035cad18d28c8f4cdb2e51ac96f510ccd1fb"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/regression-triage.log",
+      "path": "audit/evidence/completion-sprint/regression-triage.log.gz",
+      "sha256": "93a3fbbc4ca1eeb1f89aa58eb434c4fe82250bb23f0fef7c08f668a1ffef629a",
+      "encoding": "gzip",
+      "stored_sha256": "4b0750a887479ddbefba7b4b8ed674caaab71cf29acc465559e14992e71693bc"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/regression-triage2.log",
+      "path": "audit/evidence/completion-sprint/regression-triage2.log.gz",
+      "sha256": "3e6737e8cdba8911a574f5a2b17502821bdb2a1428bd846d4b388c7a9f6f5496",
+      "encoding": "gzip",
+      "stored_sha256": "c76982e4373e61c5ada8a9da75f39c8712cf78a3c28da84ba18c3d1be1b618a8"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/regression-triage3.log",
+      "path": "audit/evidence/completion-sprint/regression-triage3.log.gz",
+      "sha256": "033b1d76eafee0ba81aa88bb4f22e49ca9927744f45c8bd3e455e6be02c3c7b9",
+      "encoding": "gzip",
+      "stored_sha256": "feb4917cb6822092ef1c75764489e373e8e7a471384e702869ec40fabd83e75d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/regression-triage4.log",
+      "path": "audit/evidence/completion-sprint/regression-triage4.log.gz",
+      "sha256": "8d07ee2b5722c02efd537d99e6374c1b84eed790280b68cd2b779de4fc987184",
+      "encoding": "gzip",
+      "stored_sha256": "6f9ebf4e061a12cbc814451a03f7a018a7eb2bf602a9f03b1ace9ed785dcf7d3"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/regression-triage5.log",
+      "path": "audit/evidence/completion-sprint/regression-triage5.log.gz",
+      "sha256": "163782656a56097446b97dfdf4bbfd93b3e06d4710c13b99b200fd1a642bd64b",
+      "encoding": "gzip",
+      "stored_sha256": "98f724bbdc2e73062afc1d07aa88c4de605f522c8d69d369e2c9fcd0ea732554"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/regression-triage6.log",
+      "path": "audit/evidence/completion-sprint/regression-triage6.log.gz",
+      "sha256": "ee9b6de5ef7d9085ab3a4b7338445c54cfa838fe5345b54418404f7f5450e2c2",
+      "encoding": "gzip",
+      "stored_sha256": "2778bd864b39e138c77fa7f14e3f5094f7053f0c4d247c8870e3763a06b3ea02"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/run-validation.py",
+      "path": "audit/evidence/completion-sprint/run-validation.py.gz",
+      "sha256": "306b118f768cdfde0c4a02d7cdb904f6ea8bf717ecd6fcff529d4aca089969d8",
+      "encoding": "gzip",
+      "stored_sha256": "b6ae656ac6685635c946ef4c3eb475e82547949d098abfcd0cd6f51149dc0023"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/scripts-final.log",
+      "path": "audit/evidence/completion-sprint/scripts-final.log.gz",
+      "sha256": "1c85091fc7bd0ac71ae396a2d1db1c9a32700081af11fdecc2856710eca61dbf",
+      "encoding": "gzip",
+      "stored_sha256": "6eb649dcaa5e760da78046c32cef673c7e4b8e8fec1d7f48bdd03186032afd6c"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/shared-coverage-final.log",
+      "path": "audit/evidence/completion-sprint/shared-coverage-final.log.gz",
+      "sha256": "fb92456d04fbf4e42f5d23007939ca21dad2949695fca41d1300c9bb70b301a8",
+      "encoding": "gzip",
+      "stored_sha256": "cd8dbd49ffa90e85382e1fd5af62b000ee31f15b4c39eb4ba96791faf01b73d1"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/sms-group-lint.log",
+      "path": "audit/evidence/completion-sprint/sms-group-lint.log.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/sms-region-format.log",
+      "path": "audit/evidence/completion-sprint/sms-region-format.log.gz",
+      "sha256": "eeaa69143ffa54acfb7b7c1ec4ce6ef0e7901bc6508c683b0baebe9fe1420933",
+      "encoding": "gzip",
+      "stored_sha256": "d57e89f7aa8fb73a2bc6bbffeb941dcd8c8c75c51fdb8aedf362071188c4f649"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/sms-region-lint.log",
+      "path": "audit/evidence/completion-sprint/sms-region-lint.log.gz",
+      "sha256": "6a055057273c7aa95c1aee14ce16b4a39b07d7cc13b8073ecb47c5bc1ebe85be",
+      "encoding": "gzip",
+      "stored_sha256": "974e0d697cd1bf462975b3b859dbc9b8048feb2f73fd921b359c5dd7bc6e5196"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/source-refresh-unmapped.json",
+      "path": "audit/evidence/completion-sprint/source-refresh-unmapped.json.gz",
+      "sha256": "fb24708437c52e3bcda26fe87d67ec55ffeafaf5e341acf9bfa4803dc85bf0f0",
+      "encoding": "gzip",
+      "stored_sha256": "0f9780d4a06db4ead6eadac724730c84b32348a372e56c5d205ce55f2a7ce1c7"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/source-refresh.json",
+      "path": "audit/evidence/completion-sprint/source-refresh.json.gz",
+      "sha256": "ad8202b8c6c30d53eab0999dbfc04737d87fa45e7963a5f390848b1780a4d82a",
+      "encoding": "gzip",
+      "stored_sha256": "808ee6ac651ee5e247202e4b5145d6114f6fc52708c3247615adf3b29a41591f"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/support-after.log",
+      "path": "audit/evidence/completion-sprint/support-after.log.gz",
+      "sha256": "c3e3ac8166b5c134488b122813909b37eddb78c630f0638831d470344782991f",
+      "encoding": "gzip",
+      "stored_sha256": "36b4a110df52a636fe50c1244d6979c73f5685c88b7f5964d28cb720509b48d6"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/support-after2.log",
+      "path": "audit/evidence/completion-sprint/support-after2.log.gz",
+      "sha256": "6ef13b90a674360ce21f001465b1cd493ebab1c4e9af7188232821bce13f20de",
+      "encoding": "gzip",
+      "stored_sha256": "e9cdfdbec30167fd5d133e30f17480b98068d243c62482ea71a40b06616cc31f"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/support-after3.log",
+      "path": "audit/evidence/completion-sprint/support-after3.log.gz",
+      "sha256": "ac15791e6542c70d7393dd7e0cbb4fa6678b8ed8164b72cb61b9541504d7b273",
+      "encoding": "gzip",
+      "stored_sha256": "3da13c27bf89e1f68f76e9dced1f5bb72db3c5879bdfd552306290a2c2bec2e7"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/support-after4.log",
+      "path": "audit/evidence/completion-sprint/support-after4.log.gz",
+      "sha256": "981dababb5c7b40603e8090073f700858c8416cd6282ef704da5a66fe99d59fb",
+      "encoding": "gzip",
+      "stored_sha256": "58908f65f5b6d6016a16d796f74ac4af780eaa68330adb673da60d78db1af733"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/support-before.log",
+      "path": "audit/evidence/completion-sprint/support-before.log.gz",
+      "sha256": "a0781e76c026753c53c7090e94a10c3263eae44ab95047a2e5fe58ccccb79082",
+      "encoding": "gzip",
+      "stored_sha256": "45c7878bc80734de34edeb8f9de1610a11184301d7879f27f7fd69c874064e9a"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/support-final.log",
+      "path": "audit/evidence/completion-sprint/support-final.log.gz",
+      "sha256": "694839eeecdbaf7bed407cd67aaad77a7aac9facd37c9a85936a8d3b3c831b63",
+      "encoding": "gzip",
+      "stored_sha256": "14c1d2937bfa201329b3bd59e3919ab746078d9f72d2b2269774501f8ca1552c"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/support-final2.log",
+      "path": "audit/evidence/completion-sprint/support-final2.log.gz",
+      "sha256": "39270c95d1070208f8f175995fb33a7916ba5a17d68b861607472a1843d66f6c",
+      "encoding": "gzip",
+      "stored_sha256": "6caba1f0c4a8bcc68337c7ef607aadadeac9518be810a88c0212e65fccfcfc03"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/suppressed-final.log",
+      "path": "audit/evidence/completion-sprint/suppressed-final.log.gz",
+      "sha256": "8f4dc01ea3864c9949406d11748c05da3ff4f74f4782509cac284324e2d3b831",
+      "encoding": "gzip",
+      "stored_sha256": "fcde101561b7dfb985052f3e75c3cff17dae87d551e7931ac53d62adb4fdd932"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/suppressed-final2.log",
+      "path": "audit/evidence/completion-sprint/suppressed-final2.log.gz",
+      "sha256": "80c603e530857087a6cb3e6cb298fb0913e40b03e14c5d2e6547d315bb9e2259",
+      "encoding": "gzip",
+      "stored_sha256": "62cb13c020fd81735ed964906e71965286b0ed70f038ead7aafdc31a12e714f2"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/ui-build.log",
+      "path": "audit/evidence/completion-sprint/ui-build.log.gz",
+      "sha256": "cd739e14da59c1120bcae1324894c2057e2a5d0bbb7449d16e79c1f7759caf37",
+      "encoding": "gzip",
+      "stored_sha256": "972c2039260557125dfb204be37b22435b8922e792059e21ce8ad43239b67cc0"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/ui-closure-coverage.log",
+      "path": "audit/evidence/completion-sprint/ui-closure-coverage.log.gz",
+      "sha256": "f36f103abd18858e5f3e091d13779b56a92a34d5eea3a14d67904688ca727302",
+      "encoding": "gzip",
+      "stored_sha256": "d09ecb9e7f5a609518c5be765ea8791eaf2961453e18ae91e8558be1a54ff4d6"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/ui-coverage-final.log",
+      "path": "audit/evidence/completion-sprint/ui-coverage-final.log.gz",
+      "sha256": "54d2425883bf5e6f370afb4c540f6ec022e0481885ff02c933b64032e4b8625c",
+      "encoding": "gzip",
+      "stored_sha256": "b18048a7c73397bb86c454257bb69358c3db1fbcc80ed1ba2a15ef8dd27fc824"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/ui-docs.log",
+      "path": "audit/evidence/completion-sprint/ui-docs.log.gz",
+      "sha256": "a8d18b497287b44358c37672fbd08396be07e8f232de90e5692cd1ecc3c08bf3",
+      "encoding": "gzip",
+      "stored_sha256": "81ed7b3a0fdb9593757502cb2d8165ef7af074f00e34bf28e51771ccd685da8a"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-apps-api.json",
+      "path": "audit/evidence/completion-sprint/unit-apps-api.json.gz",
+      "sha256": "551b6fe41da9c76d75ff2e64e774ed3b37615855215c34a7722fc7c1069a8b6c",
+      "encoding": "gzip",
+      "stored_sha256": "0aa30772da98bba8c8f1263617b2fb1982f9fd24e59ecf0b8f84ef04435858c6"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-apps-web-current.json",
+      "path": "audit/evidence/completion-sprint/unit-apps-web-current.json.gz",
+      "sha256": "c07ff34cf2d4027e3d6570da108099fcbe189cc5954e9789dab3086bdf373d26",
+      "encoding": "gzip",
+      "stored_sha256": "a8e76daf5c2647a7623d03548c519462be6dea082f61e5aee7a1cf764e8ffd3d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-apps-web-plus-load.json",
+      "path": "audit/evidence/completion-sprint/unit-apps-web-plus-load.json.gz",
+      "sha256": "cd740586c18890e60b123e065ad47be41be08e4b78c56f1126b1259a1e7bec6f",
+      "encoding": "gzip",
+      "stored_sha256": "9a2f5a418982c7ad70937de530ac194411e3658db55f0dacbdedbfc061c7ef07"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-apps-web.json",
+      "path": "audit/evidence/completion-sprint/unit-apps-web.json.gz",
+      "sha256": "3fd44b80ed67da81199f9acd8b6ccd804ea406eb8aee3622f8f921bba22c69ec",
+      "encoding": "gzip",
+      "stored_sha256": "31af567ff5fefe8360418507bc43b3dc4ab0afe15003e5037a38477a1db09fb9"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-apps-worker.json",
+      "path": "audit/evidence/completion-sprint/unit-apps-worker.json.gz",
+      "sha256": "de75589f58f5c5dfdfa9afa679388d012c99f51710264e1b281dfb0423859b89",
+      "encoding": "gzip",
+      "stored_sha256": "21cce5ec47381e65241726391772697d1803a7f0f7625b457e32ca9ccfcefd9a"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-packages-db.json",
+      "path": "audit/evidence/completion-sprint/unit-packages-db.json.gz",
+      "sha256": "468d37562da59d0cc6bd949962c5c1c4b1f0215cecfaa7e2a58ab5a5f9f43a6f",
+      "encoding": "gzip",
+      "stored_sha256": "d82532b470d285b663bd155b786bd4d1a1f92d3e0a70394dc4d30fda91d4bce2"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-packages-i18n.json",
+      "path": "audit/evidence/completion-sprint/unit-packages-i18n.json.gz",
+      "sha256": "72c21b21a81ce37fdd3f64b333320384c6c78884ba669080f0acd975971e36b9",
+      "encoding": "gzip",
+      "stored_sha256": "b734bbd837b9fb3cd5f6244d10f52d7812103188f289cee284eeddf002f2031c"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-packages-shared-current.json",
+      "path": "audit/evidence/completion-sprint/unit-packages-shared-current.json.gz",
+      "sha256": "d94c89dee68a1ae14e65a2ed74f4948e0329ea293c09276203dba2180d4d8ee5",
+      "encoding": "gzip",
+      "stored_sha256": "942134724eb30ad8691b208896c63d8c25c1d185488f9c61c4af036e2d95fd93"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-packages-shared.json",
+      "path": "audit/evidence/completion-sprint/unit-packages-shared.json.gz",
+      "sha256": "9db3b85337e11b946f95eebc7c6b3abdd2d3310adff2e9195b3d03e57a8fbdfd",
+      "encoding": "gzip",
+      "stored_sha256": "126be9d09c0e8895a0e774ec4596c969c37b73fd8fc3f7a298bb3f86089db50f"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-packages-tsconfig.json",
+      "path": "audit/evidence/completion-sprint/unit-packages-tsconfig.json.gz",
+      "sha256": "15c7db1f836946954524cd7387b2127f60ec3fe386971f0e9a40bb45890f3d2a",
+      "encoding": "gzip",
+      "stored_sha256": "e52cb302be5188f96505c47aae459aabe8053d735632e8fe5dde30f8d2fb135b"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-packages-ui-current.json",
+      "path": "audit/evidence/completion-sprint/unit-packages-ui-current.json.gz",
+      "sha256": "bce87b59ad1298a621b9ab8a26cd9e4f0d3bc4a1bc4e1516a805087ae4a83606",
+      "encoding": "gzip",
+      "stored_sha256": "789c91bc0e2e69bfd67738cdc4505d667d2bf4ca106d56c20af4e5e160fbf675"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-packages-ui.json",
+      "path": "audit/evidence/completion-sprint/unit-packages-ui.json.gz",
+      "sha256": "a0aa5f50d32e0cb9f3b46371e3663102cd26098905e7cdff2541b89864fa4e3d",
+      "encoding": "gzip",
+      "stored_sha256": "fea6cba0272ff1ecbb1a63b9f327adab94684d45d291def5bd6ec73d1bf47f6e"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/unit-report-manifest.json",
+      "path": "audit/evidence/completion-sprint/unit-report-manifest.json.gz",
+      "sha256": "46640bbcd050a1e4473f0288f8a6639ab4bb490756cfdb84587a284940fde776",
+      "encoding": "gzip",
+      "stored_sha256": "f0d104639b3626b2e4db4d3c9b34cd651860118cc8631e9437bfc45e9bbda848"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/validation-results.json",
+      "path": "audit/evidence/completion-sprint/validation-results.json.gz",
+      "sha256": "af726e8c7a89140b0c91e9c9157d90d46cad440e7c0b9e640f4f8a532d2dd614",
+      "encoding": "gzip",
+      "stored_sha256": "6d491581750f22912aec179cdc89acdd19136a763661367a5053df0a5c89cad0"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-boundaries1.log",
+      "path": "audit/evidence/completion-sprint/web-boundaries1.log.gz",
+      "sha256": "ff1e1188289afeaab20b2620446be6e6727355eb484ec14082c3cd7151aa7815",
+      "encoding": "gzip",
+      "stored_sha256": "4bfd4c020978eae0ef74595dc0bd3b2b2c19b0717d7454241e3b275b62fd018d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-boundaries10.log",
+      "path": "audit/evidence/completion-sprint/web-boundaries10.log.gz",
+      "sha256": "73c4af099aae62442920bbdfab01b5646acd534799bedb560c93ae3275bb5216",
+      "encoding": "gzip",
+      "stored_sha256": "96b9151bd5b5b9da6e744a0c19de0b263d173c56805a5d86e4de2ff23eeb9e73"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-boundaries11.log",
+      "path": "audit/evidence/completion-sprint/web-boundaries11.log.gz",
+      "sha256": "d50d833b396d6fbbd66b16e556c74a550c9e56c6f4e0cd8de9d67be240785198",
+      "encoding": "gzip",
+      "stored_sha256": "664a6f78b3eeb73da3986c44c5918b783679bc7e0b291e163b0bf53473b5eb5a"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-boundaries12.log",
+      "path": "audit/evidence/completion-sprint/web-boundaries12.log.gz",
+      "sha256": "e8e2a8b789cfc70c98f0f8b1c454cae3fca3e3fca61d8bef0c785ac6c0f8fc7f",
+      "encoding": "gzip",
+      "stored_sha256": "4202a3a40b321dd487a7ead85d56651238ffb53f7ea39da77d9e10ec365cb916"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-boundaries2.log",
+      "path": "audit/evidence/completion-sprint/web-boundaries2.log.gz",
+      "sha256": "5969cbcbc839b6b2449c9b95840966312167213f58572ae7af25cfbc68991bfc",
+      "encoding": "gzip",
+      "stored_sha256": "91bcb67474b3f8f852ccd89405880a8f56c2db101110fa68b10bfd78675bfd96"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-boundaries3.log",
+      "path": "audit/evidence/completion-sprint/web-boundaries3.log.gz",
+      "sha256": "17934d523caf1d2fa35a0b5ac10280011a703425ddcc905e89b3e32d253eab4d",
+      "encoding": "gzip",
+      "stored_sha256": "ba91dd466b55a456a04632706ce4a3bf4aa81b64dc4bade1f7a06a1b465938a9"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-boundaries4.log",
+      "path": "audit/evidence/completion-sprint/web-boundaries4.log.gz",
+      "sha256": "e8aab575afee50dc7747816ade8c621df13ed8759400f525edeb3ce4d46afbae",
+      "encoding": "gzip",
+      "stored_sha256": "f328f210f7588fcd64d42955d48faeb09eb39a3e36082c2d0dae799254f119d8"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-boundaries5.log",
+      "path": "audit/evidence/completion-sprint/web-boundaries5.log.gz",
+      "sha256": "8301ad287a13499bd0de4a5924f3d2a6f34cc1e66304b072c5237047dbfb0f72",
+      "encoding": "gzip",
+      "stored_sha256": "7c3ec6d9ae09b7668ac6daae6305a1ab584e201e44b6118a901b89e758a3e34d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-boundaries6.log",
+      "path": "audit/evidence/completion-sprint/web-boundaries6.log.gz",
+      "sha256": "7f9d9b8d59d36608ce629eb3626c6ceb62bc8f06ac9bdd5408db9899879f7649",
+      "encoding": "gzip",
+      "stored_sha256": "bef4a3363540b1843105b4de870c542f80ba0f64ff2ac56104e665bf0c1778fa"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-boundaries7.log",
+      "path": "audit/evidence/completion-sprint/web-boundaries7.log.gz",
+      "sha256": "869ae8dac657d1a837a43735b3a46cf9db5b612f9979af7d9580f9a6adf2031d",
+      "encoding": "gzip",
+      "stored_sha256": "898d1c6f8d5da6ec90a16c0f04c7b565e1e952f77bb87f775aaced1b43719bdc"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-boundaries8.log",
+      "path": "audit/evidence/completion-sprint/web-boundaries8.log.gz",
+      "sha256": "c90465859cb12e06ceff568debf997e4f74237b376253a2c00e08c6aa6584516",
+      "encoding": "gzip",
+      "stored_sha256": "707443cf061a0e788c52d344f31b8a388bcbc470397b5dc03094d0f4265ca291"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-boundaries9.log",
+      "path": "audit/evidence/completion-sprint/web-boundaries9.log.gz",
+      "sha256": "a5cc8572bf66fa403893d748552f9ef29956532e02b071d7bdc53a45f15faafd",
+      "encoding": "gzip",
+      "stored_sha256": "0d573790aa546793915df3c32e09d3c6ce1ca7a95edcabd798e6d59141294dbc"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-coverage-current.log",
+      "path": "audit/evidence/completion-sprint/web-coverage-current.log.gz",
+      "sha256": "050bdec2aa86b239fad479646fc29022e9dbd5ed8b2f3fa886e0218fa2c008f8",
+      "encoding": "gzip",
+      "stored_sha256": "919a1a967d57729d3eee760b142b33ccb2f31555c064f091ef18b56d07f3ceb2"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-final-coverage.log",
+      "path": "audit/evidence/completion-sprint/web-final-coverage.log.gz",
+      "sha256": "338156f28555366c3311a05e5993d081b1d6bfcb6fc44cb32cca9ddbf3725eaf",
+      "encoding": "gzip",
+      "stored_sha256": "31a5b63f1216bc7c1faf7d18fdac2108020af57c81ac47dded7639c38f0918ed"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-focused-449-coverage.json",
+      "path": "audit/evidence/completion-sprint/web-focused-449-coverage.json.gz",
+      "sha256": "39d039f7374eb3efa1abeae20b65ee1519d02dd892d99c99fe0d9c424aa1ecbd",
+      "encoding": "gzip",
+      "stored_sha256": "a42c036d47521ca3e8ce537c784370ead63ab6c45b2f99dfe0fffe65a2f5ae19"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-focused-latest.json",
+      "path": "audit/evidence/completion-sprint/web-focused-latest.json.gz",
+      "sha256": "311d346d695329ded40d2301a53ccdaf4d2aa2bf37b3841ee0b38d9d2e276918",
+      "encoding": "gzip",
+      "stored_sha256": "26bdac867eb8e395227083e3a6ff5e4e11a9c1f6bc31e7ae4f6e4a2dfb4ecda1"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-full-777-unit-coverage.json",
+      "path": "audit/evidence/completion-sprint/web-full-777-unit-coverage.json.gz",
+      "sha256": "70b85bf0315a9569ea9dba3f71f714a34de1054907ebad96508cff4cca22d682",
+      "encoding": "gzip",
+      "stored_sha256": "067ee085d1c053fb110654abd00f369db827e2240852d98a37e9a0d65d46141d"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-full-final.log",
+      "path": "audit/evidence/completion-sprint/web-full-final.log.gz",
+      "sha256": "602eb37b09c706983962f9af576b23802c57329c54faf3d6cfb094a589008da3",
+      "encoding": "gzip",
+      "stored_sha256": "48ebb691107b031e23de8e4bbb3342416d76c6240e834fc3c40b69e682e24728"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-types-coverage-config.log",
+      "path": "audit/evidence/completion-sprint/web-types-coverage-config.log.gz",
+      "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d",
+      "encoding": "gzip",
+      "stored_sha256": "8f4e5414915ac8035770939032657d192dc9732af0be33dce3222146172bae91"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/web-types.log",
+      "path": "audit/evidence/completion-sprint/web-types.log.gz",
+      "sha256": "4081ee9e2bc781314fd423a143b4111e8383fbe2cdc089e639f44f58fd737e30",
+      "encoding": "gzip",
+      "stored_sha256": "f9ab21e9033ba02584cb2c1c2ca1d5a9be8767da018152dce4077d4d30a6c83a"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/worker-final-coverage.log",
+      "path": "audit/evidence/completion-sprint/worker-final-coverage.log.gz",
+      "sha256": "ec55ecd0c18de6280544605e23b00d40cd54639eae060593f4f354697c691512",
+      "encoding": "gzip",
+      "stored_sha256": "aa7282be0681d4d525d9efd128cf551f75c1e8a74eca225c03b51f8a3ccfc96a"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/worker-final-unit-coverage.json",
+      "path": "audit/evidence/completion-sprint/worker-final-unit-coverage.json.gz",
+      "sha256": "41043f7d1da8de0e1cee29907ed0f3112dd59e3970d0e77e72f4c189f0546724",
+      "encoding": "gzip",
+      "stored_sha256": "58a5fc562575e323712971ea96c3dbc598423f61e47989c829051f4ff927e032"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/worker-unmeasured-branches.json",
+      "path": "audit/evidence/completion-sprint/worker-unmeasured-branches.json.gz",
+      "sha256": "8cd49c398cc6a2321e8df6e8a61b037578f395aa7d7fe631e1998eca6bd5c5b4",
+      "encoding": "gzip",
+      "stored_sha256": "336016b8789463888eb92eee7ffd23b53bbfdeef8df24acf2bb669376483f618"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/write-handoff.py",
+      "path": "audit/evidence/completion-sprint/write-handoff.py.gz",
+      "sha256": "52033b8f39770d784df0fbab6e66af3292c5b06ae5c96964e9eb033a98502390",
+      "encoding": "gzip",
+      "stored_sha256": "b74fb81a66b8b29042b580d710c8ee52173732e7aa6ac3933c4621bccdb42b10"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/audit-closure-final.log",
+      "path": "audit/evidence/completion-sprint/audit-closure-final.log.gz",
+      "sha256": "52d78daa28332ebde54bd6b1d7d49ccd9c4369259ea6214b0f592e3b534f896b",
+      "encoding": "gzip",
+      "stored_sha256": "9d613280b0e33009592808457d19ccea49b642ae4325802ef6dabb2ebbda64b9"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/browser-raw-roundtrip.log",
+      "path": "audit/evidence/completion-sprint/browser-raw-roundtrip.log.gz",
+      "sha256": "d3381f80e6056ef87a76930a8854a48d6f4e10d5c6d434eeb845d3ae08507857",
+      "encoding": "gzip",
+      "stored_sha256": "9ffdc5c5afad0d49998e3e68ea00ca2b6c74fc64238826a0f01d2d22fb447442"
+    },
+    {
+      "original_path": "/tmp/barghsa-completion-sprint/final-usage.json",
+      "path": "audit/evidence/completion-sprint/final-usage.json.gz",
+      "sha256": "65ed173917cb4767ed5d8ae11e51f9e00d0db9407d1e725de394c5155cb09cd4",
+      "encoding": "gzip",
+      "stored_sha256": "74a5bec906488eeef3db3975cd3771d75d6c7daeab094040550528c09a554a91"
     }
   ]
 }

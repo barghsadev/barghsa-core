@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated": "2026-09-19",
-  "status": "in_progress",
+  "updated": "2026-09-20",
+  "status": "local_repair_complete",
   "plan": "audit/fix-plan.md",
-  "source_revision": "0475db83d9f0182099431efe3d46788a62a93605",
-  "active_step": "V01",
-  "next_action": "Review support operations settings: response targets, staff teams/assignment rules and escalation scanner, saved PR197/198/199. Reuse current ticket/team/worker evidence; retain required future consumers.",
+  "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+  "active_step": "B01",
+  "next_action": "Local repair sprint complete. Use the skipped-work handoff and exact partial criteria for separately authorized future work; no further serial repair batches.",
   "authority": "Local implementation and commits only; no remote action or feature-loop dispatch.",
   "acceptance_ledger": "audit/acceptance-closure.json",
   "evidence_checkpoint": "audit/final-repair-checkpoint.json",
@@ -51,22 +51,22 @@
     {
       "id": "V01",
       "title": "Task and PR dispositions",
-      "status": "in_progress"
+      "status": "completed"
     },
     {
       "id": "R06",
       "title": "Coverage closure",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "V02",
       "title": "Final checkpoint",
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "B01",
       "title": "Skipped-work handoff",
-      "status": "pending"
+      "status": "completed"
     }
   ],
   "groups": [
@@ -85,9 +85,9 @@
       "title": "Repair the production migration chain",
       "priority": "P0",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Four pool-foundation tasks have refreshed acceptance. Review remaining database/migration requirements and preserve clean/upgrade/repeat/snapshot evidence. Production inventory, restore and proxy checks remain external."
+        "Local migration, pool, clean/upgrade/repeat and snapshot checks are reviewed. Deployed inventory, restore/proxy checks and the explicit base-column design decision remain external."
       ]
     },
     {
@@ -95,9 +95,9 @@
       "title": "Fix session loading and CSRF execution order",
       "priority": "P0",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Completed session/refresh/prelogin-CSRF and current sensitive domain evidence retained. R02 provider/storage/price callers, email webhook, R03 telemetry and pending signed-webhook policy remain."
+        "Current browser sessions, CSRF and sensitive mutation callers are repaired and tested. Signed-provider callback and native CSP telemetry exceptions await the recorded owner decisions."
       ]
     },
     {
@@ -107,7 +107,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "partial",
       "remaining": [
-        "Staff tasks, role catalogue and audit timeline verified. Completed finance/profile authority linked; remaining administration consumers are R02. Deployed administrator inventory remains external."
+        "Current role, staff and administration authority is repaired and tested through commit. Deployed administrator inventory and unbuilt domain consumers retain their prerequisites."
       ]
     },
     {
@@ -115,9 +115,9 @@
       "title": "Complete registration and OTP delivery",
       "priority": "P0",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Registration/OTP, forgot/reset and contact/settings repairs locally verified. Lost-contact owner policy, reviewed execution and case audit remain unanswered prerequisites; live provider delivery remains external."
+        "Registration, OTP, reset and contact/settings repairs are verified locally. Lost-contact approval/evidence policy and real-provider delivery remain prerequisites."
       ]
     },
     {
@@ -125,9 +125,9 @@
       "title": "Remove unconditional identity verification",
       "priority": "P0",
       "implementation_status": "safe_unavailable_provider",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "DISABLED/MANUAL mode lifecycle and named manual in-app notices verified. API mode remains unavailable; real-provider prerequisites and R02 external notification delivery retain partial task acceptance."
+        "DISABLED/MANUAL verification is implemented and tested. API identity verification remains safely unavailable pending a real provider and deployed delivery evidence."
       ]
     },
     {
@@ -145,9 +145,9 @@
       "title": "Fix address deletion against the actual order schema",
       "priority": "P1",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Address CRUD and implemented electricity ordering/snapshots are reviewed. Savings/solar consumers remain with unbuilt product flows; deployed historical reconciliation remains external."
+        "Address and existing electricity order references are repaired and tested. Unbuilt savings/solar workflows and historical production reconciliation retain their dependencies."
       ]
     },
     {
@@ -155,9 +155,9 @@
       "title": "Connect real notification delivery and template test-send",
       "priority": "P1",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Finish required branding consumers and template/provider acceptance; retain latest notification step-up and acknowledgement repairs. Real delivery and legacy secrets remain external."
+        "Current notification provider/template/branding/test-send consumers are implemented and tested locally. Real delivery, credential provisioning and legacy secrets require operations evidence."
       ]
     },
     {
@@ -165,9 +165,9 @@
       "title": "Make notification retries and quiet hours correct",
       "priority": "P1",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Finish task-level retries, occurrence identity, leases, independent quiet hours and recovery acceptance. Legacy attempted messages require operator reconciliation."
+        "Retries, occurrence identity, leases, independent quiet hours and recovery are tested. Legacy attempted-message reconciliation remains an operator task."
       ]
     },
     {
@@ -175,9 +175,9 @@
       "title": "Unify notification inboxes and active-profile context",
       "priority": "P1",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "local_task_verified",
       "remaining": [
-        "Finish scoped inbox, preserved legacy read history, localized event/link and active-profile acceptance."
+        "Current implemented workflows pass the complete production-browser suite. Unbuilt consumers remain assigned to their separate tasks."
       ]
     },
     {
@@ -185,9 +185,9 @@
       "title": "Resolve payable-overdue and refund transition conflicts",
       "priority": "P1",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Close agreed overdue/refund-model requirements with existing evidence; keep new refund module outside this repair."
+        "Current overdue state and refund-model boundaries are tested. A complete refund workflow is a separately unbuilt feature."
       ]
     },
     {
@@ -195,9 +195,9 @@
       "title": "Apply dual approval to every built bank-payment path",
       "priority": "P1",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Finish threshold, independent current reviewer, receipt fingerprint, concurrent settlement and pending UI acceptance. Legacy approvals require manual reconciliation."
+        "Current thresholds, distinct current reviewers, receipt fingerprints, concurrency and pending UI are tested. Legacy approval reconciliation remains external."
       ]
     },
     {
@@ -205,9 +205,9 @@
       "title": "Close invoice integration and duplicate-payment regression checks",
       "priority": "P1",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Implemented invoice/ledger/receipt/payment/reversal repairs retained, including reviewed overpayment credit. Remaining actual refund/contract/order integration, notification delivery and operational reconciliation keep group acceptance incomplete."
+        "Implemented invoice/payment/ledger/receipt repairs are tested. Actual future refund/contract/order integration and operational reconciliation remain explicit prerequisites."
       ]
     },
     {
@@ -225,9 +225,9 @@
       "title": "Finish customer and staff ticket workflows",
       "priority": "P1",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "local_task_verified",
       "remaining": [
-        "Finish customer/staff ticket, attachment, privacy, assignment, target and transition acceptance."
+        "Current implemented workflows pass the complete production-browser suite. Unbuilt consumers remain assigned to their separate tasks."
       ]
     },
     {
@@ -235,9 +235,9 @@
       "title": "Complete deferred administration screens and required consumers",
       "priority": "P1",
       "implementation_status": "partial",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Finish email/notification branding, KB upload control and actual-agent test chat; review policy integration. Keep document processing and other separate consumers explicitly dependent."
+        "Current administration consumers, geography/import and commit-time authority are repaired. Future consultation, ordering, contract/document, cancellation/refund and separate AI consumers remain itemized in the acceptance ledger."
       ]
     },
     {
@@ -247,8 +247,7 @@
       "implementation_status": "implemented_with_recorded_local_checks",
       "acceptance_status": "partial",
       "remaining": [
-        "Container tasks reviewed at5045a627:3 verified/2 partial, pending Node24 requirement decision and release tag/rollout evidence. Current image runtime proof is bound to5045a627; include later shared-library changes in final V02 build.",
-        "Production backing services, rollout, DNS/TLS and restore remain external."
+        "Current production images pass local boot, migration, readiness, shutdown and retry tests. Node24 requirement decision, release tags, rollout and real backing-service proof remain external."
       ]
     },
     {
@@ -256,9 +255,9 @@
       "title": "Make quality gates reflect the promised requirements",
       "priority": "P1",
       "implementation_status": "partial",
-      "acceptance_status": "pending",
+      "acceptance_status": "local_task_verified",
       "remaining": [
-        "Close three measured coverage gaps and final gate acceptance. Eager purchase loading, strict dependencies, local error/correlation and parser maintenance review are verified."
+        "All unchanged combined coverage gates and local build/type/lint/format/contract/budget checks pass. Hosted CI and deployment remain separate evidence."
       ]
     },
     {
@@ -266,9 +265,9 @@
       "title": "Verify localization, calendar behavior and accessibility",
       "priority": "P2",
       "implementation_status": "partial",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Current shared/consumer theme, RTL, timezone and accessibility repairs locally verified in R03. Unbuilt theme-editor/per-user controls remain B01; V01/V02 finish historical dispositions and regression."
+        "Current localization, RTL, calendar, theme and accessibility behavior passes production-browser regression. Unbuilt theme-editor/per-user controls and the literal Base UI versus Radix requirement remain explicit."
       ]
     },
     {
@@ -276,9 +275,9 @@
       "title": "Keep useful follow-up fixes and remove proven implementation drift",
       "priority": "P2",
       "implementation_status": "implemented_with_recorded_local_checks",
-      "acceptance_status": "pending",
+      "acceptance_status": "partial",
       "remaining": [
-        "Retain useful repeated-task fixes and provenance; reuse consolidated production-server checks. PR304/remote dispatch remains blocked."
+        "Useful fixes and provenance are retained; saved PR statements are dispositioned. Remote PR304 reconciliation and scheduler dispatch remain untouched."
       ]
     },
     {
@@ -286,9 +285,9 @@
       "title": "Run acceptance closure for every recorded task",
       "priority": "P1",
       "implementation_status": "not_applicable_acceptance_gate",
-      "acceptance_status": "pending",
+      "acceptance_status": "disposition_complete",
       "remaining": [
-        "Review34 partial and94 pending claims; preserve194 verified assessments. Reconcile remaining saved PRs and38 older source refreshes; preserve58 skips."
+        "All 322 claims and 301 saved PRs have explicit dispositions, with no pending review or stale source binding. Partial/deferred criteria are retained; this does not certify unbuilt or external work."
       ]
     },
     {
@@ -835,6 +834,10 @@
     {
       "id": "V01-staff-administration",
       "review_record": "audit/evidence/step-reviews.json#V01-staff-administration"
+    },
+    {
+      "id": "V01-completion-sprint",
+      "review_record": "audit/evidence/step-reviews.json#V01-completion-sprint"
     }
   ],
   "deferred_improvements": [
@@ -856,24 +859,19 @@
     {
       "issue": "Login username blur inserts its required-field error and moves the support link during a pointer click. Keyboard activation works. Existing form layout issue, outside purchase-loading repairs.",
       "source_revision": "7eecc144cb01bdafd9860b867ca163683b49a727"
-    },
-    {
-      "task_key": "01-platform-infrastructure.md#T-03.01.02",
-      "issue": "Refresh legacy scripts/test-production-images.py separate-worker image/health layout and old business fixture at V02. Current packaging-specific script provides actual same-image migration/readiness/shutdown proof; prior lifecycle tests retain their scoped evidence.",
-      "source_revision": "5045a6274a03ada5ebc0396be96eadebda9df9f0"
     }
   ],
   "scope_note": "Group implementation labels summarize recorded repairs, not whole-group acceptance. Historical status counts are generated from the ledger, never inferred from these labels.",
   "step_evidence": "audit/evidence/step-reviews.json",
   "counts": {
     "historical_tasks": 322,
-    "acceptance_verified": 209,
-    "partial": 47,
-    "pending": 66,
+    "acceptance_verified": 219,
+    "partial": 54,
+    "pending": 0,
     "merged_prs": 301,
     "historical_skips": 58,
     "skips_verified": 8,
-    "skips_pending": 49
+    "skips_pending": 0
   },
   "user_decisions": [
     "Retain Vite SPA under ADR004.",
@@ -935,147 +933,7 @@
     "refresh_attempt": "unavailable",
     "reason": "gh executable remains unavailable at this audit refresh; all saved PR bodies were read. No new remote inventory or remote state change claimed."
   },
-  "evidence_refresh_queue": [
-    {
-      "task_key": "01-platform-infrastructure.md#T-01.01.03",
-      "changed_paths": [
-        "pnpm-lock.yaml"
-      ]
-    },
-    {
-      "task_key": "01-platform-infrastructure.md#T-01.04.05",
-      "changed_paths": [
-        "apps/api/package.json"
-      ]
-    },
-    {
-      "task_key": "01-platform-infrastructure.md#T-01.03.02",
-      "changed_paths": [
-        "apps/api/package.json"
-      ]
-    },
-    {
-      "task_key": "01-platform-infrastructure.md#T-01.03.04",
-      "changed_paths": [
-        "pnpm-lock.yaml"
-      ]
-    },
-    {
-      "task_key": "01-platform-infrastructure.md#T-06.02.03",
-      "changed_paths": [
-        "apps/web/e2e/tickets.spec.ts",
-        "apps/web/e2e/form-accessibility.spec.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-02.03.02",
-      "changed_paths": [
-        "packages/db/drizzle/production/meta/_journal.json",
-        "packages/db/src/migrate.baseline.test.ts"
-      ]
-    },
-    {
-      "task_key": "01-platform-infrastructure.md#T-06.02.05",
-      "changed_paths": [
-        "apps/api/src/admin/admin.controller.ts",
-        "apps/web/e2e/form-accessibility.spec.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-02.02.01",
-      "changed_paths": [
-        "apps/web/e2e/form-accessibility.spec.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-02.02.02",
-      "changed_paths": [
-        "apps/web/e2e/form-accessibility.spec.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-02.02.03",
-      "changed_paths": [
-        "apps/web/e2e/form-accessibility.spec.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-02.02.04",
-      "changed_paths": [
-        "apps/web/e2e/form-accessibility.spec.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-03.02.02",
-      "changed_paths": [
-        "apps/web/e2e/form-accessibility.spec.ts",
-        "apps/api/src/profiles/profiles.service.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-03.02.03",
-      "changed_paths": [
-        "apps/web/e2e/form-accessibility.spec.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-05.04.02",
-      "changed_paths": [
-        "apps/api/src/profiles/profiles.controller.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-05.04.04",
-      "changed_paths": [
-        "apps/api/src/profiles/profiles.controller.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-05.04.05",
-      "changed_paths": [
-        "apps/api/src/profiles/profiles.controller.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-03.01.01",
-      "changed_paths": [
-        "apps/api/src/profiles/profiles.service.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-03.02.01",
-      "changed_paths": [
-        "apps/api/src/profiles/profiles.service.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-03.02.04",
-      "changed_paths": [
-        "apps/api/src/profiles/profiles.service.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-03.03.01",
-      "changed_paths": [
-        "apps/api/src/profiles/profiles.service.ts",
-        "apps/api/src/profiles/profiles.controller.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-03.03.02",
-      "changed_paths": [
-        "apps/api/src/profiles/profiles.service.ts",
-        "apps/api/src/profiles/profiles.controller.ts"
-      ]
-    },
-    {
-      "task_key": "02-auth-users-admin.md#T-03.03.03",
-      "changed_paths": [
-        "apps/api/src/profiles/profiles.service.ts",
-        "apps/api/src/profiles/profiles.controller.ts"
-      ]
-    }
-  ],
+  "evidence_refresh_queue": [],
   "audit_refresh": {
     "date": "2026-09-08",
     "source_revision": "9a114cfc3daf4397f0ec7bcd4101d7cf33d34060",
@@ -1084,90 +942,120 @@
     "review_record": "audit/evidence/step-reviews.json#A01-audit-reconciliation-3"
   },
   "active_batch": {
-    "id": "V01-staff-administration",
-    "name": "Staff creation, roles and account management",
-    "status": "completed",
-    "prs": [
-      129,
-      130,
-      218
-    ],
+    "id": "V01-completion-sprint",
+    "status": "completed_locally",
     "task_keys": [
-      "02-auth-users-admin.md#T-05.03.01",
-      "02-auth-users-admin.md#T-05.03.02",
-      "02-auth-users-admin.md#T-10.01.01"
+      "01-platform-infrastructure.md#T-05.01.01",
+      "01-platform-infrastructure.md#T-05.01.02",
+      "01-platform-infrastructure.md#T-05.01.03",
+      "01-platform-infrastructure.md#T-05.02.01",
+      "01-platform-infrastructure.md#T-05.02.02",
+      "01-platform-infrastructure.md#T-05.02.03",
+      "01-platform-infrastructure.md#T-05.02.04",
+      "01-platform-infrastructure.md#T-05.03.01",
+      "01-platform-infrastructure.md#T-05.03.02",
+      "01-platform-infrastructure.md#T-05.03.03",
+      "01-platform-infrastructure.md#T-05.03.04",
+      "01-platform-infrastructure.md#T-05.03.05",
+      "01-platform-infrastructure.md#T-05.04.01",
+      "01-platform-infrastructure.md#T-05.04.02",
+      "01-platform-infrastructure.md#T-05.04.03",
+      "01-platform-infrastructure.md#T-05.04.04",
+      "01-platform-infrastructure.md#T-05.05.01",
+      "01-platform-infrastructure.md#T-05.05.02",
+      "01-platform-infrastructure.md#T-05.05.03",
+      "01-platform-infrastructure.md#T-05.05.04",
+      "01-platform-infrastructure.md#T-06.01.01",
+      "01-platform-infrastructure.md#T-06.01.02",
+      "01-platform-infrastructure.md#T-06.01.03",
+      "01-platform-infrastructure.md#T-06.01.05",
+      "01-platform-infrastructure.md#T-06.02.01",
+      "01-platform-infrastructure.md#T-06.02.02",
+      "01-platform-infrastructure.md#T-06.03.01",
+      "01-platform-infrastructure.md#T-06.04.01",
+      "01-platform-infrastructure.md#T-07.01.01",
+      "01-platform-infrastructure.md#T-07.01.02",
+      "01-platform-infrastructure.md#T-07.01.03",
+      "01-platform-infrastructure.md#T-07.01.04",
+      "01-platform-infrastructure.md#T-07.02.01",
+      "01-platform-infrastructure.md#T-07.02.02",
+      "01-platform-infrastructure.md#T-07.02.03",
+      "01-platform-infrastructure.md#T-07.02.04",
+      "01-platform-infrastructure.md#T-07.02.05",
+      "01-platform-infrastructure.md#T-07.03.01",
+      "01-platform-infrastructure.md#T-07.03.02",
+      "01-platform-infrastructure.md#T-07.03.03",
+      "01-platform-infrastructure.md#T-07.03.04",
+      "01-platform-infrastructure.md#T-07.04.01",
+      "01-platform-infrastructure.md#T-07.04.02",
+      "01-platform-infrastructure.md#T-07.04.03",
+      "01-platform-infrastructure.md#T-07.04.04",
+      "01-platform-infrastructure.md#T-07.05.01",
+      "01-platform-infrastructure.md#T-07.05.02",
+      "01-platform-infrastructure.md#T-07.05.03",
+      "01-platform-infrastructure.md#T-07.05.04",
+      "02-auth-users-admin.md#T-09.02.01",
+      "02-auth-users-admin.md#T-09.02.02",
+      "02-auth-users-admin.md#T-09.08.01",
+      "02-auth-users-admin.md#T-09.08.02",
+      "02-auth-users-admin.md#T-09.08.03",
+      "02-auth-users-admin.md#T-09.09.01",
+      "02-auth-users-admin.md#T-09.09.02",
+      "02-auth-users-admin.md#T-09.10.01",
+      "02-auth-users-admin.md#T-09.10.02",
+      "02-auth-users-admin.md#T-09.10.03",
+      "02-auth-users-admin.md#T-09.12.03",
+      "02-auth-users-admin.md#T-09.12.04",
+      "02-auth-users-admin.md#T-09.12.06",
+      "03-core-business.md#T-03.01.01.01",
+      "03-core-business.md#T-03.01.01.02",
+      "03-core-business.md#T-03.01.01.03",
+      "03-core-business.md#T-03.01.01.04"
     ],
-    "base_revision": "0475db83d9f0182099431efe3d46788a62a93605",
-    "remaining_checklist": [],
-    "historical_deferrals": [
-      {
-        "pr": 218,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/218",
-        "task_keys": [
-          "02-auth-users-admin.md#T-10.01.01"
-        ],
-        "historical_deferrals": [
-          "Deferred (repo convention): admin web UI slice (table view, disable button + confirmation, fa/en dicts, RTL/a11y), re-enable endpoint.",
-          "- [ ] Admin web UI table + disable button — deferred UI slice (API contract ready)"
-        ],
-        "status": "Reviewed locally: required staff UI is implemented; re-enable is outside the canonical task.",
-        "dispositions": [
-          {
-            "statement_index": 0,
-            "disposition": "required_part_satisfied_optional_part_separate",
-            "evidence": "Table, confirmation, fa/en and staff-content light/dark accessibility verified. Re-enable is an author-proposed future feature absent from canonical T-10.01.01, not a missing acceptance criterion."
-          },
-          {
-            "statement_index": 1,
-            "disposition": "satisfied_by_later_implementation",
-            "evidence": "Staff table and permission-bound disable confirmation are implemented and reviewed."
-          }
-        ],
-        "reviewed_source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
-        "review_record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
-      },
-      {
-        "pr": 129,
-        "url": "https://github.com/barghsadev/barghsa-core/pull/129",
-        "task_keys": [
-          "02-auth-users-admin.md#T-05.03.01"
-        ],
-        "historical_deferrals": [
-          "- [ ] Role assignment at creation (roleIds accepted but not persisted — role management is T-05.03.02 depending on T-09.05.01)",
-          "- [ ] Activation link email delivery (email transport — separate epic)"
-        ],
-        "status": "Reviewed locally: both required deferrals are satisfied by current implementation; live delivery remains operational evidence.",
-        "dispositions": [
-          {
-            "statement_index": 0,
-            "disposition": "satisfied_by_later_implementation",
-            "evidence": "Initial roles persist atomically; creator-only API and UI selection verified."
-          },
-          {
-            "statement_index": 1,
-            "disposition": "satisfied_by_later_implementation",
-            "evidence": "Encrypted outbox and email adapter delivery verified with a local provider receiver; production credentials/delivery remain operational."
-          }
-        ],
-        "reviewed_source_revision": "ab1077183c94d157d59884d7cd6d7699ccec14c0",
-        "review_record": "audit/evidence/step-reviews.json#R01-staff-task-acceptance"
-      }
+    "prs": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      9,
+      10,
+      11,
+      13,
+      14,
+      15,
+      16,
+      25,
+      26,
+      28,
+      121,
+      143,
+      144,
+      145,
+      147,
+      148,
+      154,
+      155,
+      157,
+      158,
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      204,
+      205,
+      206,
+      214,
+      215,
+      216,
+      217
     ],
-    "confirmed_defects": [],
-    "reused_evidence": [
-      "R01-staff-task-acceptance",
-      "R01-staff-sensitive-actions",
-      "R01-staff-creation-step-up",
-      "R01-staff-activation-deadlines"
-    ],
-    "next_action": "Review support operations settings: response targets, staff teams/assignment rules and escalation scanner, saved PR197/198/199. Reuse current ticket/team/worker evidence; retain required future consumers.",
-    "source_revision": "0475db83d9f0182099431efe3d46788a62a93605",
-    "review_record": "audit/evidence/step-reviews.json#V01-staff-administration",
-    "verification": [
-      "10 current migrated-HTTP staff creation cases pass, covering both activation methods, exact audit/step-up proof, atomic failure/expiry rollback and new email/mobile notification defaults. No product changes were needed.",
-      "51 task source bindings reconciled:37 unchanged and14 later bindings. Only staff creation defaults and activation outbox correlation changed in the selected service methods; staff controllers, role replacement, disabling, list and activation preparation match the prior acceptance exactly. Current source-bound authentication/delivery/session and seed reviews cover the other changes.",
-      "Reuse prior215/231/220-case scoped staff authority/acceptance runs and12 distinct production-browser cases at their recorded revisions; they overlap and are not summed. Later source-bound V01 login delivery and R03 correlation evidence covers encrypted activation delivery. Current API types/lint/OpenAPI and42 unchanged browser budgets remain valid; no new code, dependency, schema, browser or broad regression run is claimed."
-    ]
+    "next_action": "Resolve final validation and coverage gates; retain external/future handoff.",
+    "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9"
   },
   "open_domain_reviews": [
     {
@@ -1188,7 +1076,7 @@
       "task_key": "02-auth-users-admin.md#T-05.04.04",
       "owner_batch": "contracts/documents",
       "criteria": "Legal accept/sign/reject/change rights; Finance signing denial",
-      "status": "pending linked acceptance"
+      "status": "Dispositioned in current acceptance ledger; complete future contract/document consumers remain prerequisites."
     },
     {
       "task_key": "02-auth-users-admin.md#T-05.04.04",
@@ -1201,14 +1089,14 @@
       "task_key": "02-auth-users-admin.md#T-02.02.03",
       "owner_batch": "R01 payments/callbacks",
       "criteria": "Signed callback/chargeback authentication, replay/ledger effects and state-changing payment return GET against literal CSRF requirement",
-      "status": "Browser return repaired and verified; signed payment-webhook exception awaits owner. Chargeback review follows.",
+      "status": "Browser return and chargeback authentication/replay are reviewed and tested; signed-provider CSRF wording awaits owner decision.",
       "evidence": "audit/evidence/step-reviews.json#R01-online-topups-callbacks"
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.03",
       "owner_batch": "R02 email delivery",
       "criteria": "Signed email webhook/replay and CSRF disposition",
-      "status": "pending linked acceptance"
+      "status": "Current local delivery reviewed; signed-webhook policy remains the recorded owner prerequisite."
     },
     {
       "task_key": "02-auth-users-admin.md#T-02.02.03",
@@ -1260,7 +1148,6 @@
       "remaining": "Retain separate overpayment credit implementation fromPR298; link this evidence during full backlog disposition. Outside322 historical claims; not an unbuilt task.",
       "review_record": "audit/evidence/step-reviews.json#R01-bank-receipts-approval"
     },
-    "R02: seed registry check12 pass/1 fail atab17007; auth.refresh_token_reused has no seeded template before or after the chargeback repair. Add/review its intended delivery template in the notification batch; existing/new chargeback templates are valid.",
     {
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
       "prs": [
@@ -1425,5 +1312,31 @@
       "status": "Auxiliary shared repairs pass21 browser/49 UI checks. Remaining page themes/RTL/loading states continue in R03.",
       "evidence": "audit/evidence/step-reviews.json#R03-auxiliary-ui"
     }
-  ]
+  ],
+  "completion_sprint": {
+    "approved": "2026-09-20",
+    "base_revision": "08f97589",
+    "status": "completed_locally",
+    "weekly_used_baseline": 0,
+    "weekly_used_stop_target": 45,
+    "weekly_used_ceiling": 50,
+    "scope": "Finish actionable local repairs, coverage and final validation; disposition external, owner and future prerequisites without certifying them.",
+    "review_policy": "One combined independent review after repairs; focused safety checks during implementation.",
+    "preserved_in_flight": [
+      "apps/worker/src/service-targets/support-scanners.integration.test.ts",
+      "audit/progress.json"
+    ],
+    "reconciliation": {
+      "pending_claims": 66,
+      "historically_skipped_pending": 49,
+      "other_pending": 17,
+      "evidence_refreshes": 22
+    },
+    "next_action": "Local repair sprint complete. Use the skipped-work handoff and exact partial criteria for separately authorized future work; no further serial repair batches.",
+    "latest_weekly_used_percent": 19,
+    "source_revision": "7b45c21507ad4fae597e4b00227f3a770b25f7e9",
+    "coverage_thresholds_changed": false,
+    "final_review": "No remaining actionable issues in combined product review and focused test/measurement follow-ups; reviewed source hashes and exact logs are archived.",
+    "resolved_historical_note": "The auth.refresh_token_reused seed gap from the older R02 review is resolved in the current bilingual email/in-app seed registry; full database suite760 passes. Historical failed evidence remains unchanged."
+  }
 }
