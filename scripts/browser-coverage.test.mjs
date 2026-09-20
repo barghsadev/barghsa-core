@@ -105,6 +105,28 @@ test('maps real V8 ranges and merges hits while retaining uncovered unit source'
   });
 });
 
+test('maps the separate auth entry with the same source and range validation', async () => {
+  await fixture(async (options) => {
+    const directory = join(options.distDir, 'auth/assets');
+    await mkdir(directory, { recursive: true });
+    const asset = join(directory, 'sample.js');
+    await writeFile(asset, options.entries[0].source);
+    const map = JSON.parse(await readFile(options.asset + '.map', 'utf8'));
+    await writeFile(
+      asset + '.map',
+      JSON.stringify({ ...map, sources: ['../../../src/sample.ts'] })
+    );
+    options.entries[0].url = 'http://127.0.0.1:1234/auth/assets/sample.js';
+    await writeFile(options.raw, JSON.stringify(options.record));
+    const report = await collectBrowserCoverage(options);
+    assert.equal(report.asset_count, 1);
+    assert.ok(Object.values(report.coverage[options.source].s).some((hit) => hit > 0));
+    options.entries[0].source = 'mismatched auth build';
+    await writeFile(options.raw, JSON.stringify(options.record));
+    await assert.rejects(collectBrowserCoverage(options), /differs from built asset/);
+  });
+});
+
 test('merges compiler end-column differences without duplicating branch denominators', async () => {
   await fixture(async (options) => {
     const report = await collectBrowserCoverage(options);

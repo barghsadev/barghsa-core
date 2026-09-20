@@ -92,7 +92,8 @@ export default defineConfig(({ mode }) => {
         (process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'dist-coverage' : 'dist') +
         (authEntry ? '/auth' : ''),
       sourcemap: process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'hidden' : false,
-      minify: 'terser',
+      // Coverage needs original statement boundaries; production remains minified.
+      minify: process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? false : 'terser',
       terserOptions: { ecma: 2020, compress: { passes: 2 } },
     },
     ssr: {

@@ -99,7 +99,7 @@ export async function collectBrowserCoverage({
         ignoredScripts++;
         continue;
       }
-      if (!url.pathname.startsWith('/assets/') || !url.pathname.endsWith('.js')) continue;
+      if (!/^\/(?:auth\/)?assets\/.+\.js$/.test(url.pathname)) continue;
       const filename = resolve(assetRoot, '.' + decodeURIComponent(url.pathname));
       if (!filename.startsWith(resolve(assetRoot) + sep)) throw new Error('Invalid asset path');
       const code = await readFile(filename, 'utf8');
