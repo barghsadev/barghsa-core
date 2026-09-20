@@ -4,16 +4,13 @@ Checked September 20, 2026 against CI-verified commit `faf9a2de2825e2bb829699aec
 
 ## Local development
 
-PR #305 is merged at `0b768cf1`. PR #306 is merged at `999a1f44`, tracked in [batch status](batches/2026-09-20-wallet-history.md). The next batch is [refund storage and reservation limits](batches/2026-09-20-refund-storage.md). PR #305 passes all five CI jobs, including full browser validation, unit coverage thresholds, security scans and combined changed/critical source coverage. [Verified run](https://github.com/barghsadev/barghsa-core/actions/runs/35498578584). The backlog validator passes for 1,355 tasks and 116 traceability entries. The audit validator passes for all 322 historical claims, 301 saved PRs and 58 historical skips.
+PR #305 is merged at `0b768cf1`. PR #306 is merged at `999a1f44`, tracked in [batch status](batches/2026-09-20-wallet-history.md). PR #307 merged [refund storage and reservation limits](batches/2026-09-20-refund-storage.md) at `e326bdbe`. The active batch is [invoice activity and customer history](batches/2026-09-20-invoice-activity.md). PR #305 passes all five CI jobs, including full browser validation, unit coverage thresholds, security scans and combined changed/critical source coverage. [Verified run](https://github.com/barghsadev/barghsa-core/actions/runs/35498578584). The backlog validator passes for 1,355 tasks and 116 traceability entries. The audit validator passes for all 322 historical claims, 301 saved PRs and 58 historical skips.
 
 Historical claim acceptance is 219 verified, 54 partial and 49 deferred. The other 1,033 canonical tasks are outside that historical audit population. They are not automatically proven unimplemented or ready. Reuse existing code and acceptance evidence before choosing a new build.
 
-The earliest queue entries outside the historical audit are the remaining invoice overpayment/state/detail tasks:
+Wallet history and cumulative receipt settlement were merged in PR #306. Refund storage and reservation limits were merged in PR #307. The active invoice activity batch completes aggregation and the remaining customer history displays; use its record for exact scope and evidence.
 
-- `04-invoices-wallet-contracts.md#T-04.3.01.06` and `#T-04.3.01.07`
-- `04-invoices-wallet-contracts.md#T-04.3.02.01` through `#T-04.3.02.04`
-
-Start with a focused comparison of those criteria against the repaired invoice, wallet and receipt implementation. Complete only missing behavior and reuse passing evidence. The following queue family is refunds, `04-invoices-wallet-contracts.md#T-04.4.01.*`; check its dependencies before implementation. This is a candidate continuation order, not a new acceptance claim or supervisor assignment.
+The next dependency-related work is refund workflow: `04-invoices-wallet-contracts.md#T-04.4.01.02` and `.04` through `.07`. Reuse the merged schema and counter ownership, and implement guarded transitions, atomic wallet refunds, dual approval, external reconciliation and retry behavior. The automatic contract-return tasks remain dependent on the contract workflow. This is a manual continuation order, not a supervisor assignment.
 
 Use the consolidated workflow: build a coherent dependency-related batch, run focused checks as needed, and perform one combined review and final validation. The 54 partial and 49 deferred historical claims retain their exact unmet requirements in [acceptance](../audit/acceptance-closure.json) and [skipped-work handoff](../audit/skipped-work-handoff.md). Do not restart completed repairs or silently waive owner decisions.
 

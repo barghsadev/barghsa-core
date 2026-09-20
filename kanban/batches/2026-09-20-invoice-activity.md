@@ -1,7 +1,7 @@
 # Invoice activity API and customer history
 
 Branch: `codex/invoice-activity-batch`.
-Status: local build and validation; depends on refund storage PR #307.
+Status: implementation and local validation complete; rebased onto merged PR #307 for independent review and CI.
 
 ## Task scope
 
