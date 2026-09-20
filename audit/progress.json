@@ -1341,7 +1341,7 @@
   },
   "kanban_readiness": {
     "checked": "2026-09-20",
-    "local_development": "resolve_pr_305_ci_before_next_feature_batch",
+    "local_development": "manual_batch_pr_306_in_review",
     "automatic_loop": "blocked_pending_remote_reconciliation",
     "backlog_validation": {
       "tasks": 1355,
@@ -1355,17 +1355,17 @@
       "pending": 0
     },
     "continuation": "kanban/CONTINUATION.md",
-    "remote_main_observed": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
+    "remote_main_observed": "0b768cf165fd8667db7ad0c8849b518a55cbf2b3",
     "remote_state_branch_observed": "absent",
     "pr_304_status": "closed_without_merge; verified through public GitHub API",
     "runtime_state_changed": false,
     "pr_305": {
       "url": "https://github.com/barghsadev/barghsa-core/pull/305",
-      "state": "open",
+      "state": "closed",
       "draft": false,
-      "merged": false,
-      "head_sha": "51c8296eb681483716111d7f1c3390f03b0002fb",
-      "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35496904395",
+      "merged": true,
+      "head_sha": "faf9a2de2825e2bb829699aec2802d68c2d1f2a8",
+      "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35498578584",
       "previous_failed_checks": [
         "Run tests",
         "Verify monorepo integrity",
@@ -1375,12 +1375,40 @@
       "previous_passed_checks": [
         "Static security checks"
       ],
-      "ci_status": "tests_browser_integrity_security_passed; coverage_report_merge_failed; generated_cache_followup_validated_locally"
+      "ci_status": "success; all five checks completed successfully",
+      "checks": [
+        {
+          "name": "Verify combined source coverage",
+          "conclusion": "success",
+          "url": "https://github.com/barghsadev/barghsa-core/actions/runs/35498578584/job/106050458333"
+        },
+        {
+          "name": "Verify monorepo integrity",
+          "conclusion": "success",
+          "url": "https://github.com/barghsadev/barghsa-core/actions/runs/35498578584/job/106046073499"
+        },
+        {
+          "name": "Scan Git history for secrets",
+          "conclusion": "success",
+          "url": "https://github.com/barghsadev/barghsa-core/actions/runs/35498578584/job/106046073450"
+        },
+        {
+          "name": "Static security checks",
+          "conclusion": "success",
+          "url": "https://github.com/barghsadev/barghsa-core/actions/runs/35498578584/job/106046073439"
+        },
+        {
+          "name": "Run tests",
+          "conclusion": "success",
+          "url": "https://github.com/barghsadev/barghsa-core/actions/runs/35498578584/job/106046073436"
+        }
+      ],
+      "merge_commit_sha": "0b768cf165fd8667db7ad0c8849b518a55cbf2b3"
     },
     "remote_check_scope": "Read-only checks of PRs 304 and 305, main, and kanban-state refs; not a full PR inventory refresh.",
     "ci_repair": {
-      "status": "coverage_checkout_cache_followup_validated_locally",
-      "scope": "PR #305 only; next feature batch remains on hold",
+      "status": "complete",
+      "scope": "PR #305 CI repair complete and merged; manual feature batches authorized September 20",
       "changes": [
         "Reuse the completed CI build during parallel tests",
         "Update vulnerable dependencies and preserve GeoIP updater compatibility",
@@ -1397,7 +1425,16 @@
       ],
       "dependency_scan": "passed; zero vulnerabilities",
       "secret_scan": "passed; synthetic detection and complete history",
-      "checks": "Build, typecheck, changed-file lint, frozen install, zero-vulnerability dependency scan and committed-history secret scan passed. API 5162, frontend 777 and shared 976 passed together; worker 458 and database 760 passed with two workers. GitHub security checks pass; newest CI verification still required. Revision 861780bf passes the full GitHub test stage and both security checks. Database cleanup follow-up passes 760 tests locally. Prior complete GitHub browser run: 768 passed, one ambiguous SMS selector failed; selector repair passes all 50 repeated English/Persian SMS cases locally. Revision 861780bf passes the complete GitHub Run tests job including coverage. Revision 9ccaea81 exposed a timing-dependent mutual role removal assertion. Both concurrent and post-revocation cases plus the existing 16 permission races pass locally (18 tests); the losing request may correctly receive 401 before authentication or 403 after it. Revision 9ccaea81 passes the complete browser/integrity job. Revision 8902b5ae exposed a 200 ms PgBouncer setup connection timeout; separating fixture setup from the timed pool passes all 760 database tests with coverage locally (90.25% lines, 76.59% branches). Revision 51c8296e passes tests with coverage, browser/integrity, static security and secret scanning; final report merge fails. Linux-style Python bytecode generation reproduces an untracked-cache dirty checkout; ignore rules remove only generated caches and still detect source edits. All 22 coverage merge/alignment tests pass, and invalid reports still fail with a GitHub error annotation."
+      "checks": "GitHub run 35498578584 passes all five jobs at faf9a2de2825e2bb829699aec2802d68c2d1f2a8: tests with coverage thresholds, full browser/monorepo integrity, static security, complete-history secret scan, and combined changed/critical source coverage. The PR HEAD and successful run SHA were read back and match. Local focused validation includes 50 repeated SMS browser cases, 18 staff permission race cases, 760 database cases with coverage, 22 coverage merge/alignment cases, and Linux-style Python cache reproduction. No coverage floor was lowered and no failure was skipped.",
+      "weekly_usage_observed_percent": 32,
+      "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
+    },
+    "manual_batch": {
+      "pr": 306,
+      "url": "https://github.com/barghsadev/barghsa-core/pull/306",
+      "status": "in_review",
+      "record": "kanban/batches/2026-09-20-wallet-history.md",
+      "token_limit": "User withdrew prior token ceiling on September 20; normal work authorized."
     }
   }
 }

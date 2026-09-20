@@ -1,7 +1,7 @@
 # Wallet history and cumulative invoice receipts
 
 Base: `0b768cf1` (merged PR #305). Branch: `codex/invoice-history-batch`.
-Status: implemented locally; independent review and CI merge gates pending. This is a manual batch under the user's September 20 instruction, not a supervisor assignment.
+Status: published in [PR #306](https://github.com/barghsadev/barghsa-core/pull/306); independent review approved source commit `614e7ed6`; CI and final-HEAD approval remain merge gates. This is a manual batch under the user's September 20 instruction, not a supervisor assignment.
 
 ## Task scope
 
