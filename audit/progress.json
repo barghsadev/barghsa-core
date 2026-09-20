@@ -1431,7 +1431,7 @@
     },
     "manual_batch": {
       "branch": "codex/refund-pending-ledger",
-      "status": "selected",
+      "status": "locally_validated",
       "record": "kanban/batches/2026-09-20-refund-pending-ledger.md",
       "previous_batch": {
         "pr": 313,
