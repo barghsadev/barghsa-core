@@ -262,7 +262,7 @@ for (const locale of ['en', 'fa'] as const) {
       'href',
       `/admin/crm/profiles/${profileId}`
     );
-      await expect(page.locator('article a[href="/admin/invoices"]')).toHaveCount(0);
+    await expect(page.locator('article a[href="/admin/invoices"]')).toHaveCount(0);
     expect(
       (
         await new AxeBuilder({ page })

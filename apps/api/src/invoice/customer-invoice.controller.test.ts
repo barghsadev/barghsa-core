@@ -60,14 +60,14 @@ describe('CustomerInvoiceController (T-04.1.05.04)', () => {
   it('loads details for the authenticated user', async () => {
     const { controller, service } = makeController();
     const result = await controller.get(req, INVOICE_ID);
-    expect(service.getForUser).toHaveBeenCalledWith('user-1', INVOICE_ID);
+    expect(service.getForUser).toHaveBeenCalledWith('user-1', INVOICE_ID, req.session);
     expect(result.viewedInvoiceId).toBe(INVOICE_ID);
   });
 
   it('lists invoices for the authenticated user', async () => {
     const { controller, service } = makeController();
     const result = await controller.list(req);
-    expect(service.listForUser).toHaveBeenCalledWith('user-1');
+    expect(service.listForUser).toHaveBeenCalledWith('user-1', req.session);
     expect(result.invoices).toHaveLength(1);
   });
 });

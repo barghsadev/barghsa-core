@@ -24,7 +24,7 @@ import {
   type City,
   type Province,
 } from '../lib/geography-api.js';
-import { GeographyDialog, type GeographyModal } from './GeographyDialog.js';
+import { GeographyDialog, type GeographyModal } from './AdminGeographyDialog.js';
 
 function ImportCitiesDialog({
   province,

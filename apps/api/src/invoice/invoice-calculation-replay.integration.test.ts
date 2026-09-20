@@ -84,7 +84,7 @@ describe('invoice calculation snapshot replay — real PostgreSQL (T-04.1.02.09)
     );
     await ctx.db.execute(
       `INSERT INTO products (id, type, system_key, title, price, status)
-       VALUES ('${PRODUCT_ID}', 'electricity', 'thermal_electricity',
+       VALUES ('${PRODUCT_ID}', 'electricity', 'thermal',
                '{"fa":"برق حرارتی","en":"Thermal Electricity"}'::jsonb, 1000000, 'active')
        ON CONFLICT (id) DO NOTHING`
     );

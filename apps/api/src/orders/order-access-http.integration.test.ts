@@ -51,7 +51,7 @@ beforeEach(async () => {
     ]);
   const productId = (
     await http.pool.query(
-      `INSERT INTO products(type,system_key,title,status,price) VALUES ('electricity','thermal_electricity','{"en":"Thermal"}','active',100000) RETURNING id`
+      `INSERT INTO products(type,system_key,title,status,price) VALUES ('electricity','thermal','{"en":"Thermal"}','active',100000) RETURNING id`
     )
   ).rows[0].id;
   const provinceId = (

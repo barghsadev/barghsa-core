@@ -77,6 +77,7 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
       `finance.chargeback_unresolved:${EVENT_ID}:${USER_ID}`,
       5,
       null,
+      null,
     ]);
     const jobCall = client.query.mock.calls.find((call) =>
       String(call[0]).includes('INSERT INTO notification_job')

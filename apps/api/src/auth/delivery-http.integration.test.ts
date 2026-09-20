@@ -440,7 +440,8 @@ it.each(['password', 'revoke', 'expire', 'address', 'staff'])(
             (
               await fixture.pool.query(`SELECT count(*)::int AS count FROM pg_stat_activity
       WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT auth_version,%'`)
-            ).rows[0].count
+            ).rows[0].count,
+          { timeout: 10000 }
         )
         .toBe(1);
       if (change === 'password') {

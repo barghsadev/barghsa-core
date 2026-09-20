@@ -58,9 +58,9 @@ describe('VatCalculationRepository — real PostgreSQL integration (T-04.1.02.04
       `INSERT INTO users (user_id, username, password_hash) VALUES ('${USER_ID}', 'vat@example.test', 'test-only') ON CONFLICT (user_id) DO NOTHING`
     );
     await ctx.pool.query(
-      `INSERT INTO products (id, type, title, price) VALUES
-         ('${PRODUCT_ID}', '${CATEGORY_A}', '{"en":"Test product"}', 1000),
-         ('${PRODUCT_B}', '${CATEGORY_A}', '{"en":"Test product B"}', 1000)
+      `INSERT INTO products (id, type, system_key, title, price) VALUES
+         ('${PRODUCT_ID}', '${CATEGORY_A}', 'thermal', '{"en":"Test product"}', 1000),
+         ('${PRODUCT_B}', '${CATEGORY_A}', 'green', '{"en":"Test product B"}', 1000)
        ON CONFLICT (id) DO NOTHING`
     );
     await ctx.pool.query(

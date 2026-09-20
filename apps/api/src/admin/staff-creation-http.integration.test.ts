@@ -20,7 +20,7 @@ async function actor() {
   );
   const result = await http.pool.query(
     `INSERT INTO sessions(session_id,user_id,csrf_token,expires_at,idle_deadline,step_up_verified_at)
-     VALUES ($1,$2,$3,clock_timestamp()+INTERVAL '1 day',clock_timestamp()+INTERVAL '30 minutes',clock_timestamp())
+     VALUES ($1,$2,$3,clock_timestamp()+INTERVAL '1 day',clock_timestamp()+INTERVAL '30 minutes',clock_timestamp()-INTERVAL '1 second')
      RETURNING step_up_verified_at`,
     [sessionId, userId, csrfToken]
   );

@@ -52,7 +52,11 @@ def run_app(kind, suffix=None, extra=()):
 
 
 def ready(name):
-    return docker("exec", name, "node", "healthcheck.js", check=False).returncode == 0
+    command = json.loads(docker("inspect", name).stdout)[0]["Config"]["Healthcheck"]["Test"]
+    if command[0] == "CMD":
+        return docker("exec", name, *command[1:], check=False).returncode == 0
+    assert command[0] == "CMD-SHELL"
+    return docker("exec", name, "sh", "-c", command[1], check=False).returncode == 0
 
 
 def probe(name, port, path):

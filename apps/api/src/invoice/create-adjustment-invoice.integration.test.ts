@@ -55,6 +55,8 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
   beforeAll(async () => {
     ctx = await createMigratedTestDb();
     poolHolder.pool = ctx.pool;
+    await ctx.pool.query(`INSERT INTO products(type,system_key,title,price)
+      VALUES ('electricity','thermal','{"en":"Test electricity"}',1000000)`);
     stateMachine = new InvoiceStateMachineService(new InvoiceAuditRepository());
     service = new CreateAdjustmentInvoiceService(
       stateMachine,
@@ -81,10 +83,8 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
   });
 
   async function insertOrder(id: string) {
-    const product = (
-      await ctx.pool.query(`INSERT INTO products(type,title,price)
-      VALUES ('electricity', '{"en":"Test electricity"}', 1000000) RETURNING id`)
-    ).rows[0].id;
+    const product = (await ctx.pool.query("SELECT id FROM products WHERE system_key='thermal'"))
+      .rows[0].id;
     await ctx.pool.query(
       `INSERT INTO orders(id,user_id,profile_id,product_id,order_type,
       snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code)

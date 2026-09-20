@@ -32,7 +32,7 @@ beforeEach(async () => {
   );
   productId = (
     await http.pool.query(
-      "INSERT INTO products(system_key,title,price,status) VALUES ('vat_test','{\"en\":\"VAT product\"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active' RETURNING id"
+      "INSERT INTO products(system_key,title,price,status) VALUES ('thermal','{\"en\":\"VAT product\"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active' RETURNING id"
     )
   ).rows[0].id;
   rateId = (
@@ -57,7 +57,7 @@ async function mutation(action: 'create' | 'end' | 'override' | 'endOverride') {
   if (action === 'override')
     productId = (
       await http.pool.query(
-        "INSERT INTO products(system_key,title,price,status) VALUES ('vat_second','{}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active' RETURNING id"
+        "INSERT INTO products(system_key,title,price,status) VALUES ('green','{}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active' RETURNING id"
       )
     ).rows[0].id;
   const bodies = {

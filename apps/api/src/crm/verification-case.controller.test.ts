@@ -110,7 +110,7 @@ describe('verification correction validation and results', () => {
         reason: 'Checked evidence',
         currentValue: null,
       },
-      'reviewer',
+      request(['crm:edit-identity']).session,
       'unknown'
     );
   });
@@ -137,7 +137,7 @@ describe('verification correction validation and results', () => {
     expect(service.reviewCase).toHaveBeenCalledWith(
       caseId,
       { decision: 'Rejected', reviewerNotes: 'Missing proof' },
-      'reviewer',
+      req.session,
       '192.0.2.1'
     );
   });

@@ -8,6 +8,7 @@ import {
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { StorageObjectNotFound } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../src/storage/index.js';
+import { ProfilesService } from '../src/profiles/profiles.service.js';
 import { UploadController } from '../src/upload/upload.controller.js';
 import {
   UploadPolicyResolver,
@@ -22,11 +23,17 @@ import {
 } from '../src/upload/upload.config.js';
 
 const actorRequest = { session: { userId: 'user-1' } } as AuthenticatedRequest;
-const reservation = vi.hoisted(() => ({ reserve: vi.fn(), owned: vi.fn(), complete: vi.fn() }));
+const reservation = vi.hoisted(() => ({
+  reserve: vi.fn(),
+  owned: vi.fn(),
+  complete: vi.fn(),
+  inspect: vi.fn(),
+}));
 vi.mock('../src/upload/upload-reservations.js', () => ({
   reserveUpload: reservation.reserve,
   requireOwnedUpload: reservation.owned,
   completeUpload: reservation.complete,
+  recordUploadInspection: reservation.inspect,
 }));
 // ---------------------------------------------------------------------------
 // Helpers
@@ -103,6 +110,15 @@ describe('UploadController', () => {
       controllers: [UploadController],
       providers: [
         {
+          provide: ProfilesService,
+          useValue: {
+            getAccessibleProfile: vi.fn().mockResolvedValue({
+              id: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+              profileType: 'INDIVIDUAL',
+            }),
+          },
+        },
+        {
           provide: STORAGE_PROVIDER,
           useValue: storage,
         },
@@ -124,9 +140,11 @@ describe('UploadController', () => {
 
   beforeEach(async () => {
     mockImmutableService.createRecord.mockReset();
+    reservation.inspect.mockReset();
     reservation.reserve.mockResolvedValue(undefined);
     reservation.owned.mockResolvedValue({
       status: 'removed',
+      metadata: {},
       file_size: '18',
       content_type: 'application/pdf',
     });
@@ -470,12 +488,18 @@ describe('UploadController', () => {
         },
       ];
       for (const c of cases) {
+        reservation.owned.mockResolvedValue({
+          status: 'removed',
+          metadata: {},
+          file_size: String(c.object.contentLength),
+          content_type: c.contentType,
+        });
         vi.mocked(storage.getObject).mockResolvedValue(c.object);
         const presigned = await controller.getPresignedUrl(
           {
             fileName: c.fileName,
             contentType: c.contentType,
-            fileSize: 1000,
+            fileSize: c.object.contentLength,
             metadata: { recordType: c.recordType },
           },
           actorRequest
@@ -519,7 +543,7 @@ describe('UploadController', () => {
       expect(result.allowedMimeTypes).not.toContain('image/png');
     });
 
-    it('returns type_mismatch for an empty object (no sniffable signature, fail closed)', async () => {
+    it('rejects an empty stored object before accepting any detected type', async () => {
       vi.mocked(storage.getObject).mockResolvedValue({
         body: streamOf(''),
         contentType: 'application/pdf',
@@ -527,14 +551,10 @@ describe('UploadController', () => {
         metadata: {},
         etag: '"empty"',
       });
-
-      const result = await controller.verifyUpload('uploads/document/some-uuid.pdf', actorRequest);
-
-      expect(result).toMatchObject({
-        exists: true,
-        status: 'type_mismatch',
-        detectedContentType: null,
-      });
+      await expect(
+        controller.verifyUpload('uploads/document/some-uuid.pdf', actorRequest)
+      ).rejects.toThrow(BadRequestException);
+      expect(reservation.inspect).not.toHaveBeenCalled();
     });
 
     it('returns not_found when object does not exist', async () => {
@@ -624,7 +644,12 @@ describe('UploadController', () => {
 
       await controller.recordUpload(
         'uploads/document/some-uuid.pdf',
-        { fileName: 'receipt.pdf', fileSize: 18, purpose: 'bank_receipt' },
+        {
+          fileName: 'receipt.pdf',
+          fileSize: 18,
+          purpose: 'bank_receipt',
+          profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+        },
         req
       );
 
@@ -642,7 +667,12 @@ describe('UploadController', () => {
       await expect(
         controller.recordUpload(
           'uploads/document/some-uuid.pdf',
-          { fileName: 'receipt.pdf', fileSize: 4096, purpose: 'bank_receipt' },
+          {
+            fileName: 'receipt.pdf',
+            fileSize: 4096,
+            purpose: 'bank_receipt',
+            profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+          },
           req
         )
       ).rejects.toThrow(BadRequestException);
@@ -658,7 +688,11 @@ describe('UploadController', () => {
       await expect(
         controller.recordUpload(
           'uploads/document/some-uuid.pdf',
-          { fileName: 'receipt.pdf', purpose: 'bank_receipt' },
+          {
+            fileName: 'receipt.pdf',
+            purpose: 'bank_receipt',
+            profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+          },
           req
         )
       ).rejects.toThrow(BadRequestException);
@@ -674,7 +708,12 @@ describe('UploadController', () => {
       await expect(
         controller.recordUpload(
           'uploads/document/some-uuid.pdf',
-          { fileName: 'receipt.pdf', fileSize: 18, purpose: 'bank_receipt' },
+          {
+            fileName: 'receipt.pdf',
+            fileSize: 18,
+            purpose: 'bank_receipt',
+            profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+          },
           req
         )
       ).rejects.toThrow(BadRequestException);
@@ -687,7 +726,11 @@ describe('UploadController', () => {
       );
 
       await expect(
-        controller.recordUpload('uploads/document/missing.pdf', { purpose: 'bank_receipt' }, req)
+        controller.recordUpload(
+          'uploads/document/missing.pdf',
+          { purpose: 'bank_receipt', profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa' },
+          req
+        )
       ).rejects.toThrow(BadRequestException);
       expect(mockImmutableService.createRecord).not.toHaveBeenCalled();
     });
@@ -702,7 +745,11 @@ describe('UploadController', () => {
       });
 
       await expect(
-        controller.recordUpload('uploads/document/some-uuid.pdf', { purpose: 'bank_receipt' }, req)
+        controller.recordUpload(
+          'uploads/document/some-uuid.pdf',
+          { purpose: 'bank_receipt', profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa' },
+          req
+        )
       ).rejects.toThrow(BadRequestException);
       expect(mockImmutableService.createRecord).not.toHaveBeenCalled();
     });

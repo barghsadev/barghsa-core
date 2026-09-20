@@ -78,7 +78,7 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     );
     await ctx.db.execute(
       `INSERT INTO products (id, type, system_key, title, price, status)
-       VALUES ('${PRODUCT_ID}', 'electricity', 'thermal_electricity',
+       VALUES ('${PRODUCT_ID}', 'electricity', 'thermal',
                '{"fa":"برق حرارتی","en":"Thermal Electricity"}'::jsonb, 1000000, 'active')
        ON CONFLICT (id) DO NOTHING`
     );
@@ -197,7 +197,7 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     };
     expect(meta.source).toBe('auto');
     expect(snapshot.product.id).toBe(PRODUCT_ID);
-    expect(snapshot.product.systemKey).toBe('thermal_electricity');
+    expect(snapshot.product.systemKey).toBe('thermal');
     expect(snapshot.vat.source).toBe('product_override');
     expect(snapshot.vat.rateBasisPoints).toBe(900);
     expect(snapshot.terms.orderType).toBe('electricity');

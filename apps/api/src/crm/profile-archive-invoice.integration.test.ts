@@ -68,7 +68,8 @@ async function setup(kind: Kind) {
   if (kind === 'auto') {
     const product = (
       await http.pool.query(
-        'INSERT INTO products(type,title,price) VALUES (\'electricity\',\'{"en":"Fixture"}\',100000) RETURNING id'
+        `INSERT INTO products(type,system_key,title,price) VALUES ('electricity','thermal','{"en":"Fixture"}',100000)
+         ON CONFLICT(system_key) DO UPDATE SET price=EXCLUDED.price RETURNING id`
       )
     ).rows[0].id;
     await http.pool.query(

@@ -1,3 +1,4 @@
+import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import * as argon2 from 'argon2';
@@ -50,7 +51,7 @@ function request(
   body?: unknown,
   headers: Record<string, string> = {}
 ) {
-  return fetch(`${http.base}/api/${path}`, {
+  return (path.startsWith('auth/') ? fetchWithPreauth : fetch)(`${http.base}/api/${path}`, {
     method,
     headers: { 'Content-Type': 'application/json', ...headers },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),

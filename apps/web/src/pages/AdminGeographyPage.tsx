@@ -4,8 +4,8 @@ import { geographyText, type GeographyTextKey } from '@barghsa/i18n/geography';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { GeographyRequestError, listProvinces, type Province } from '../lib/geography-api.js';
-import { CitiesPanel } from './CitiesPanel.js';
-import { GeographyDialog, type GeographyModal } from './GeographyDialog.js';
+import { CitiesPanel } from './AdminCitiesPanel.js';
+import { GeographyDialog, type GeographyModal } from './AdminGeographyDialog.js';
 const selectClass =
   'h-10 rounded-md border border-input bg-background px-3 text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring';
 function failureKey(error: unknown): GeographyTextKey {

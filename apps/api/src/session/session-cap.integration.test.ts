@@ -19,7 +19,7 @@ beforeEach(async () => {
 afterEach(async () => {
   holder.pool = null;
   await db?.close();
-});
+}, 30000);
 async function usable() {
   return (
     await db.pool

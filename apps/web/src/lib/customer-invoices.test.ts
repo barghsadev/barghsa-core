@@ -7,7 +7,9 @@ describe('customer invoice helpers (T-04.1.05.04)', () => {
   it('preserves a failed detail request status even when its body is not JSON', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('Unavailable', { status: 503 })));
     await expect(fetchInvoiceDetails('invoice-1')).rejects.toMatchObject({
-      name: 'InvoiceRequestError', status: 503, message: 'HTTP 503',
+      name: 'InvoiceRequestError',
+      status: 503,
+      message: 'HTTP 503',
     });
   });
 
