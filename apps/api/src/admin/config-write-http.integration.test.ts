@@ -478,8 +478,9 @@ for (const item of cases.filter((item) => item.grant === 'admin:financial:edit')
       expect((await write(item)).status).toBe(403);
       expect(await snapshot()).toEqual(before);
     } finally {
+      // Keep the fresh fixture away from the database/application clock boundary.
       await http.pool.query(
-        "UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='operator'"
+        "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 second' WHERE user_id='operator'"
       );
     }
     expect((await write(item)).status).toBe(200);
