@@ -13,7 +13,7 @@
   "dependencies": {
     "@barghsa/db": "workspace:*",
     "@barghsa/shared": "workspace:*",
-    "nodemailer": "9.0.5",
+    "nodemailer": "9.1.1",
     "pg": "^8.14.0",
     "prom-client": "15.1.3"
   },

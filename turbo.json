@@ -33,13 +33,15 @@
       "dependsOn": ["^build"],
       "outputs": [],
       "outputLogs": "new-only",
-      "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"]
+      "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"],
+      "env": ["BARGHSA_TEST_PREBUILT"]
     },
     "test:coverage": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
       "outputLogs": "new-only",
-      "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"]
+      "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"],
+      "env": ["BARGHSA_TEST_PREBUILT"]
     },
     "format:check": {
       "dependsOn": [],

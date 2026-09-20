@@ -4,6 +4,9 @@ import { resolve } from 'node:path';
 
 /** HTTP integration tests must never silently exercise stale compiled code. */
 export function setup(): void {
+  // CI builds this exact checkout before parallel tests; rebuilding here removes
+  // shared outputs while other suites import them. Standalone runs still build.
+  if (process.env['BARGHSA_TEST_PREBUILT'] === '1') return;
   const require = createRequire(__filename);
   execFileSync(
     'pnpm',

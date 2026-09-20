@@ -48,7 +48,7 @@ afterAll(async () => {
     await management.query(`DROP DATABASE IF EXISTS "${database}"`);
     await management.end();
   }
-});
+}, 30000);
 async function queue() {
   const id = randomUUID();
   await pool.query(

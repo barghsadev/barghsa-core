@@ -1,0 +1,26 @@
+diff --git a/scripts/updatedb.js b/scripts/updatedb.js
+index eff91388f060e49bd0ba40d27c5ef8f2072e6979..6e20c1e917ea55ff8fc33df2aa81d4e526fe3634 100644
+--- a/scripts/updatedb.js
++++ b/scripts/updatedb.js
+@@ -395,8 +395,8 @@ function processCountryData(src, dest, cb) {
+ 			bsz = 10
+ 
+ 			rngip = new Address4(fields[0])
+-			sip = parseInt(rngip.startAddress().bigInteger(),10)
+-			eip = parseInt(rngip.endAddress().bigInteger(),10)
++			sip = parseInt(rngip.startAddress().bigInt(),10)
++			eip = parseInt(rngip.endAddress().bigInt(),10)
+ 
+ 			if (preEip + 1 !== sip && !addFakeData) {
+ 				preCC = null
+@@ -630,8 +630,8 @@ function processCityData(src, dest, cb) {
+ 			bsz = ipv4Size
+ 
+ 			rngip = new Address4(fields[0])
+-			sip = parseInt(rngip.startAddress().bigInteger(),10)
+-			eip = parseInt(rngip.endAddress().bigInteger(),10)
++			sip = parseInt(rngip.startAddress().bigInt(),10)
++			eip = parseInt(rngip.endAddress().bigInt(),10)
+ 
+ 			if(!isNew && !addFakeData){
+ 				if(preEip + 1 !== sip){

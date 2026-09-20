@@ -158,6 +158,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - name: Run tests (affected on PR, full on main)
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             pnpm turbo run test --filter="...[origin/main]"
@@ -166,6 +168,8 @@ jobs:
           fi
       - name: Run coverage with threshold enforcement
         id: coverage
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             pnpm turbo run test:coverage --filter="...[origin/main]" --filter=@barghsa/web --filter=@barghsa/ui --filter=@barghsa/shared --filter=@barghsa/i18n

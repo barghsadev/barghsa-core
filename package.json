@@ -54,7 +54,11 @@
     ],
     "overrides": {
       "drizzle-kit@0.31.10>@esbuild-kit/esm-loader": "-",
-      "qs@<6.16.0": "6.16.0"
+      "qs@<6.16.0": "6.16.0",
+      "js-yaml@>=4.0.0 <4.3.2": "4.3.2",
+      "multer@<2.3.0": "2.3.0",
+      "geoip-country>ip-address": "10.5.0",
+      "esbuild@>=0.27.3 <0.28.1": "0.28.2"
     },
     "packageExtensions": {
       "@swc/cli@0.8.1": {
@@ -74,7 +78,8 @@
       "drizzle-orm@0.45.2": "patches/drizzle-orm@0.45.2.patch",
       "@tanstack/router-core@1.171.27": "patches/@tanstack__router-core@1.171.27.patch",
       "vite@6.4.3": "patches/vite@6.4.3.patch",
-      "gel@2.2.0": "patches/gel@2.2.0.patch"
+      "gel@2.2.0": "patches/gel@2.2.0.patch",
+      "geoip-country@5.0.202609050122": "patches/geoip-country@5.0.202609050122.patch"
     }
   }
 }
