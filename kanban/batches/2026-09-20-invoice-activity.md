@@ -1,7 +1,7 @@
 # Invoice activity API and customer history
 
 Branch: `codex/invoice-activity-batch`.
-Status: implementation and local validation complete; rebased onto merged PR #307 for independent review and CI.
+Status: PR #308 merged at `460c6d5fac5c7756898f0f535693d8f8597a7ea9` after independent approval and all five active CI checks passed.
 
 ## Task scope
 
@@ -19,4 +19,4 @@ This batch does not create refunds or replace the pending refund lifecycle/proce
 
 ## Validation
 
-The three focused invoice service/controller/HTTP suites pass 38 tests. New HTTP cases exercise exact int8 amounts, net receipt allocations, foreign-wallet reference isolation, cross-profile denial, empty histories, unconfirmed receipt states and private-field omission. API/dependency build passes. API typecheck, changed-file lint/formatting and backlog validation pass. The complete frontend suite passes 823 tests; the final page suite passes 13 tests after adding saved-receipt refresh-failure coverage, and six optimized production-browser checks pass for English/Persian receipt flows, history refresh, mobile layout and accessibility. Independent review is pending.
+The three focused invoice service/controller/HTTP suites pass 38 tests. New HTTP cases exercise exact int8 amounts, net receipt allocations, foreign-wallet reference isolation, cross-profile denial, empty histories, unconfirmed receipt states and private-field omission. API/dependency build passes. API typecheck, changed-file lint/formatting and backlog validation pass. The complete frontend suite passes 823 tests; the final page suite passes 13 tests after adding saved-receipt refresh-failure coverage, and six optimized production-browser checks pass for English/Persian receipt flows, history refresh, mobile layout and accessibility. Independent review approved exact HEAD `752e657529928eff83f5772e1dff20a7bbab2942` in [review comment](https://github.com/barghsadev/barghsa-core/pull/308#issuecomment-5749700076). [CI run](https://github.com/barghsadev/barghsa-core/actions/runs/35509683285) passed all five active checks. PR fast mode did not collect coverage or run the full browser suite.
