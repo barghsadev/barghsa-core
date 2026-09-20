@@ -2,7 +2,7 @@
 
 Branch: `codex/document-lifecycle`, based on PR #318 merge `420a69d6043dd59cf46d08397c64460752bdce84`.
 
-Status: local validation passed; changed-source coverage, independent review and GitHub checks pending.
+Status: local validation and changed-source coverage passed. PR #319 awaits independent review and GitHub checks.
 
 ## Scope
 
@@ -31,4 +31,25 @@ The scheduler, historical supervisor state and completion arrays remain unchange
 - Nine shared permission tests pass.
 - Shared/database builds, API typecheck/build, OpenAPI comparison and migration snapshot checks pass.
 - Backlog validation passes for 1,355 tasks and 116 traceability entries; all 322 historical requirement bindings validate.
-- API focused coverage is 92.73% lines and 81.40% branches. The committed changed-source gate remains separate.
+- API focused coverage is 92.73% lines and 81.40% branches. The committed changed-source gate passes: API 472/511 lines and 399/480 branches; critical contract helper 23/23 lines and 3/3 branches; changed database schema and critical permission lines all covered.
+
+## Reproduction commands
+
+All commands run from the repository root unless using a package filter.
+
+```sh
+pnpm --filter @barghsa/api exec vitest run src/documents/document-http.integration.test.ts src/upload src/admin/upload-policy-http.integration.test.ts src/storage/storage-access-http.integration.test.ts src/profiles/legal-documents-http.integration.test.ts src/contract/contract-http.integration.test.ts src/contract/contract-review-http.integration.test.ts --coverage --coverage.include="src/documents/*.ts" --coverage.include="src/upload/upload.service.ts" --coverage.include="src/upload/upload.controller.ts" --coverage.include="src/upload/upload-access.ts" --coverage.include="src/upload/upload.module.ts" --coverage.include="src/database/idempotency.ts" --coverage.include="src/contract/contract-transactions.ts" --coverage.include="src/app.module.ts"
+pnpm --filter @barghsa/db exec vitest run src/documents.migrated.test.ts --coverage --coverage.include="src/schema/documents.ts" --coverage.include="src/index.ts"
+pnpm --filter @barghsa/shared exec vitest run src/agent-permissions/agent-permissions.test.ts --coverage --coverage.include="src/agent-permissions/index.ts"
+python3 scripts/check-changed-coverage.py --base 420a69d6043dd59cf46d08397c64460752bdce84 --report /tmp/barghsa-document-coverage-gate.json
+pnpm --filter @barghsa/shared build
+pnpm --filter @barghsa/db build
+pnpm --filter @barghsa/api typecheck
+pnpm contract:update
+pnpm check:contract
+pnpm check:db-snapshot
+python3 kanban/scripts/build_backlog.py --check
+python3 audit/current_requirements.py
+```
+
+All commands above pass. Targeted ESLint and Prettier checks also pass.
