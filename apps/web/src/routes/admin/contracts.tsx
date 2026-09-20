@@ -1,8 +1,9 @@
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
+import AdminContractsPage from '../../pages/AdminContractsPage.js';
 import { RouteSkeleton } from '../../components/RouteSkeleton.js';
 import { RouteErrorBoundary } from '../../components/RouteErrorBoundary.js';
 export const Route = createFileRoute('/admin/contracts')({
-  component: lazyRouteComponent(() => import('../../pages/AdminContractsPage.js')),
+  component: AdminContractsPage,
   pendingComponent: () => <RouteSkeleton layout="admin" />,
   errorComponent: RouteErrorBoundary,
 });

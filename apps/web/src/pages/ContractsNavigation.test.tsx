@@ -1,3 +1,6 @@
+import { Route as CustomerRoute } from '../routes/_app/contracts.js';
+import ContractsPage from './ContractsPage.js';
+import AdminContractsPage from './AdminContractsPage.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -37,9 +40,13 @@ it('makes the implemented document workspaces reachable from both existing shell
     });
     expect(router.matchRoutes('/contracts').at(-1)?.routeId).toBe('/_app/contracts');
     expect(router.matchRoutes('/admin/contracts').at(-1)?.routeId).toBe('/admin/contracts');
-    await ContractsRoute.options.component?.preload?.();
+    expect(ContractsRoute.options.component).toBe(AdminContractsPage);
     const Pending = ContractsRoute.options.pendingComponent;
     await act(async () => root.render(Pending ? <Pending /> : null));
+    expect(container.querySelector('[role=status]')).not.toBeNull();
+    expect(CustomerRoute.options.component).toBe(ContractsPage);
+    const CustomerPending = CustomerRoute.options.pendingComponent;
+    await act(async () => root.render(CustomerPending ? <CustomerPending /> : null));
     expect(container.querySelector('[role=status]')).not.toBeNull();
     await act(async () => root.render(<AdminLayout />));
     expect(container.querySelector('a[href="/admin/contracts"]')?.textContent).toBe(
