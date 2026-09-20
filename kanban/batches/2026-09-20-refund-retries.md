@@ -35,6 +35,10 @@ External refunds still require recorded transfer evidence and distinct current f
 - Changed/critical source coverage passes against main `4eea6d19`: API critical 95.71% lines / 92.10% branches; shared database critical 97.26% / 98.47%; worker refund runner 100% / 100%. Other changed-source groups pass their existing floors.
 - Canonical backlog and audit requirement checks pass. No coverage floor was lowered.
 
+## CI repair
+
+The first PR run exposed shared-package Node tests being collected by Vitest and a race with the shared build deleting its output. Shared Vitest now includes source tests only; both package test commands run the existing bucket tests through Node afterward. Package task dependencies wait for the shared build. Validation: 977 Vitest tests and 16 native storage/CLI tests pass, including real MinIO; the task graph confirms test depends on the shared build. The monitoring test formatting is corrected. These changes require a fresh exact-HEAD review.
+
 ## Before merge
 
 Obtain independent exact-HEAD review and require all active GitHub CI checks. Keep the historical supervisor arrays and paused scheduler unchanged.
