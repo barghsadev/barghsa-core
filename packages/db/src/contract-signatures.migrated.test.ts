@@ -323,7 +323,7 @@ it('upgrades 0140 without inventing evidence for historical signed flags and rer
     const before = (await pool.query('SELECT * FROM contracts WHERE id=$1', [contract])).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0141_contract_signature_evidence'],
+      applied: ['0141_contract_signature_evidence', '0142_contract_activation_requirements'],
     });
     expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [contract])).rows).toEqual(
       before
@@ -331,6 +331,20 @@ it('upgrades 0140 without inventing evidence for historical signed flags and rer
     for (const table of ['contract_signature_requests', 'contract_signatures'])
       expect((await pool.query(`SELECT count(*)::int AS n FROM ${table}`)).rows[0].n).toBe(0);
     expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+    expect(
+      (
+        await pool.query(
+          'SELECT rule_revision,signature_required,payment_required,initial_invoice_id FROM contract_activation_requirements WHERE version_id=$1',
+          [version]
+        )
+      ).rows[0]
+    ).toEqual({
+      rule_revision: 1,
+      signature_required: false,
+      payment_required: true,
+      initial_invoice_id: null,
+    });
+
     await pool.query('UPDATE contracts SET updated_at=NOW() WHERE id=$1', [contract]);
     for (const state of ['Active', 'Completed']) {
       await pool.query('UPDATE contracts SET state=$2 WHERE id=$1', [contract, state]);
