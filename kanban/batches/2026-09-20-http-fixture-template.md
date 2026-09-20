@@ -15,4 +15,4 @@ Templates are created anew on each test run and disappear with the test containe
 
 ## Validation
 
-The initial template run passed 58 tests across the isolation test, auth delivery and profile writes in 37.18 seconds. The same two existing suites passed 57 tests in 58.67 seconds with fresh migrations. This is a local comparison, not a measured GitHub speedup. API build, typecheck and changed-file lint pass. The full API suite passes all 5,183 tests across 309 files in 407.38 seconds on the PR #308 baseline. Independent review is pending.
+The initial template run passed 58 tests across the isolation test, auth delivery and profile writes in 37.18 seconds. The same two existing suites passed 57 tests in 58.67 seconds with fresh migrations. This is a local comparison, not a measured GitHub speedup. API build, typecheck and changed-file lint pass. The full API suite passes all 5,183 tests across 309 files in 407.38 seconds on the PR #308 baseline. After rebase onto merged PR #309, the API rebuild and 26 refund/template tests pass. Independent review is pending.
