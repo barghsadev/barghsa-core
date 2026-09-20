@@ -113,7 +113,7 @@ export class RefundService {
           throw new ConflictException('Refund idempotency key belongs to a different request');
         // A policy change can require a new review for an existing unpaid request.
         if (
-          ['Requested', 'Approved', 'Processing'].includes(existing.state) &&
+          ['Requested', 'Approved'].includes(existing.state) &&
           (await this.requiresApproval(client, amount)) &&
           !(await this.latestApproval(client, existing))
         ) {
@@ -216,7 +216,9 @@ export class RefundService {
       }
       assertWalletProfileWritable({ id: invoice.profile_id, archived });
       this.refundableInvoice(invoice);
-      await this.requireApproval(client, row);
+      // Approval is rechecked before money leaves. Reconciliation confirms an
+      // already recorded transfer using its immutable evidence and a current reviewer.
+      if (action !== 'reconcile') await this.requireApproval(client, row);
       if (action === 'approve') {
         await this.move(client, row, 'Approved', actor, ip, 'Finance approved the refund');
         return this.dto(client, row);
@@ -262,7 +264,6 @@ export class RefundService {
           throw new ConflictException('Recorded transfer evidence is missing');
         if (transfer.user_id === actor.userId)
           throw new ForbiddenException('A second finance staff member must reconcile the transfer');
-        await requireCurrentFinancePermission(client, transfer.user_id);
         await client.query("UPDATE refunds SET reconciliation_status='Confirmed' WHERE id=$1", [
           row.id,
         ]);

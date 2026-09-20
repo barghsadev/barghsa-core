@@ -224,28 +224,29 @@ it('binds high-value approval to the external destination and preserves exact am
   });
 });
 
-it('can establish a newly required review while bank reconciliation is pending', async () => {
-  const f = await invoice(),
-    body = requestBody(f.id),
-    refund = await request(body),
-    bankReference = randomUUID();
-  expect((await decide(refund.id, 'approve')).status).toBe(200);
-  expect((await decide(refund.id, 'record-transfer', { bankReference })).status).toBe(200);
-  await threshold(100);
-  expect((await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status).toBe(
-    409
-  );
-  const replay = await request(body);
-  expect(replay.id).toBe(refund.id);
-  expect(replay.approvalRequestId).toBeTruthy();
-  expect(
-    (await post(`approval-requests/${replay.approvalRequestId}/approve`, {}, 'refund-reviewer'))
-      .status
-  ).toBe(200);
-  expect((await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status).toBe(
-    200
-  );
-});
+it.each([100, 'broken'])(
+  'reconciles an already recorded transfer when the later policy becomes %s',
+  async (policy) => {
+    const f = await invoice(),
+      body = requestBody(f.id),
+      refund = await request(body),
+      bankReference = randomUUID();
+    expect((await decide(refund.id, 'approve')).status).toBe(200);
+    expect((await decide(refund.id, 'record-transfer', { bankReference })).status).toBe(200);
+    await threshold(policy);
+    const replay = await request(body);
+    expect(replay.id).toBe(refund.id);
+    expect(replay.approvalRequestId).toBeNull();
+    expect(
+      (await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status
+    ).toBe(200);
+    expect(await balances(f)).toEqual({
+      refunded_amount: '100',
+      state: 'Refunded',
+      posted_balance: '0',
+    });
+  }
+);
 
 it('rolls reconciliation back if the completion audit fails', async () => {
   const f = await invoice(),
@@ -286,30 +287,34 @@ it('rolls reconciliation back if the completion audit fails', async () => {
   );
 });
 
-it('rechecks recorder authority and archived profiles before reconciliation', async () => {
+it('requires current reconciler authority without invalidating an offboarded recorder history', async () => {
   const f = await invoice(),
     refund = await request(requestBody(f.id)),
     bankReference = randomUUID();
   expect((await decide(refund.id, 'approve')).status).toBe(200);
   expect((await decide(refund.id, 'record-transfer', { bankReference })).status).toBe(200);
-  await http.pool.query("DELETE FROM user_roles WHERE user_id='refund-finance'");
-  try {
-    expect(
-      (await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status
-    ).toBe(403);
-  } finally {
-    await http.pool.query(
-      "INSERT INTO user_roles(user_id,role_id) VALUES ('refund-finance','role-finance')"
-    );
-  }
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='refund-reviewer'");
+  expect((await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status).toBe(
+    403
+  );
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES ('refund-reviewer','role-finance')"
+  );
   await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [f.profile]);
   expect((await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status).toBe(
     409
   );
   await http.pool.query('UPDATE profiles SET archived=false WHERE id=$1', [f.profile]);
-  expect((await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status).toBe(
-    200
-  );
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='refund-finance'");
+  try {
+    expect(
+      (await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status
+    ).toBe(200);
+  } finally {
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES ('refund-finance','role-finance')"
+    );
+  }
 });
 
 it('notifies only the profile owner in both languages once per committed outcome', async () => {
