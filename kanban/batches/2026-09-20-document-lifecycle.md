@@ -57,3 +57,7 @@ All commands above pass. Targeted ESLint and Prettier checks also pass.
 ## Review correction
 
 Initial exact-HEAD review found cross-version/cross-role contract replacement lineage was insufficiently guarded. The API now requires the same version and role; a deferred database constraint checks both immutable links at commit. Database regression tests reproduced both invalid commits before the fix, then passed both rejection cases and a valid matching replacement. HTTP tests cover staff and customer mismatches. All 111 API and ten database tests pass after the correction; types and lint pass. Final exact-HEAD review remains pending.
+
+## CI fixture correction
+
+Run 35538262905 passed all 851 database assertions but failed on an unhandled PostgreSQL 57P01 shutdown error in the independent PostgreSQL 17 metrics fixture. The installed pool implementation removes clients before their disconnect callbacks finish, so awaiting pool.end alone can stop the container too early. The fixture now registers end promises on connected clients and awaits them before stopping PostgreSQL. All 17 metrics tests, targeted lint and formatting pass. No production behavior, test assertions or coverage thresholds changed.

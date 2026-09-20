@@ -86,6 +86,10 @@ it.each(['16', '17'])(
       .start();
     const previous = pool;
     const monitored = new Pool({ connectionString: container.getConnectionUri(), max: 8 });
+    const connectionsClosed: Promise<void>[] = [];
+    monitored.on('connect', (client) => {
+      connectionsClosed.push(new Promise<void>((resolve) => client.once('end', resolve)));
+    });
     try {
       pool = monitored;
       await pool.query('CREATE EXTENSION pg_stat_statements');
@@ -108,6 +112,9 @@ it.each(['16', '17'])(
     } finally {
       pool = previous;
       await monitored.end();
+      // Pool.end can resolve once clients are removed, before their sockets have closed.
+      // Keep PostgreSQL alive until each client finishes its graceful disconnect.
+      await Promise.all(connectionsClosed);
       await container.stop();
     }
   },
