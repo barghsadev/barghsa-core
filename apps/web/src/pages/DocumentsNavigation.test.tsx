@@ -1,3 +1,4 @@
+import AdminDocumentsPage from './AdminDocumentsPage.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
@@ -37,7 +38,7 @@ it('makes the implemented document workspaces reachable from both existing shell
     });
     expect(router.matchRoutes('/documents').at(-1)?.routeId).toBe('/_app/documents');
     expect(router.matchRoutes('/admin/documents').at(-1)?.routeId).toBe('/admin/documents');
-    await DocumentsRoute.options.component?.preload?.();
+    expect(DocumentsRoute.options.component).toBe(AdminDocumentsPage);
     const Pending = DocumentsRoute.options.pendingComponent;
     await act(async () => root.render(Pending ? <Pending /> : null));
     expect(container.querySelector('[role=status]')).not.toBeNull();
