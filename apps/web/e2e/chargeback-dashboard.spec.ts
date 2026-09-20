@@ -62,7 +62,8 @@ for (const locale of ['fa', 'en'])
           });
         await route.fulfill({ status, json: body });
       });
-      await page.clock.install();
+      const clockStart = new Date('2026-09-09T08:00:00Z');
+      await page.clock.install({ time: clockStart });
       await page.goto('/admin');
       const banner = page.getByRole('alert', {
         name: locale === 'fa' ? 'هشدار شارژبک‌های حل‌نشده' : 'Unresolved chargeback warning',
@@ -77,7 +78,8 @@ for (const locale of ['fa', 'en'])
       expect(accessibility.violations).toEqual([]);
       expect(accessibility.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
 
-      await page.clock.pauseAt(new Date());
+      // Use the browser clock's timeline, not the runner's wall clock.
+      await page.clock.pauseAt(new Date(clockStart.getTime() + 60_000));
       status = 503;
       await page.clock.runFor(30000);
       await expect(

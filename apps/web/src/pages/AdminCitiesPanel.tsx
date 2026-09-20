@@ -155,12 +155,13 @@ export function CitiesPanel({ province }: { province: Province }) {
   const [modal, setModal] = useState<GeographyModal | null>(null);
   const [importTrigger, setImportTrigger] = useState<HTMLElement | null>(null);
   useEffect(() => {
+    if (searchInput === search) return;
     const timer = setTimeout(() => {
       setSearch(searchInput);
       setPage(1);
     }, 300);
     return () => clearTimeout(timer);
-  }, [searchInput]);
+  }, [searchInput, search]);
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);

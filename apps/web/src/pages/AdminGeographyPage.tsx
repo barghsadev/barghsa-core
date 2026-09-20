@@ -27,12 +27,13 @@ export default function AdminGeographyPage() {
   const [error, setError] = useState<GeographyTextKey | null>(null);
   const [modal, setModal] = useState<GeographyModal | null>(null);
   useEffect(() => {
+    if (searchInput === search) return;
     const timer = setTimeout(() => {
       setSearch(searchInput);
       setPage(1);
     }, 300);
     return () => clearTimeout(timer);
-  }, [searchInput]);
+  }, [searchInput, search]);
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
