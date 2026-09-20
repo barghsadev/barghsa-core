@@ -17,17 +17,23 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { z } from 'zod';
-import { refundUuid, refundRequestSchema, refundDecisionSchema } from './refund-validation.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { RefundService } from './refund.service.js';
-@ApiTags('Admin · Wallet refunds')
+import { refundUuid, refundRequestSchema } from './refund-validation.js';
+const decisionSchema = z
+  .object({
+    reason: z.string().trim().min(1).max(1000).optional(),
+    bankReference: z.string().trim().min(1).max(200).optional(),
+  })
+  .strict();
+@ApiTags('Admin · External bank refunds')
 @ApiBearerAuth()
 @UseGuards(SessionAuthGuard, StepUpGuard)
-@Controller('api/admin/wallet-refunds')
-export class WalletRefundController {
+@Controller('api/admin/external-refunds')
+export class ExternalRefundController {
   constructor(private readonly refunds: RefundService) {}
   private authorize(req: AuthenticatedRequest) {
     if (!hasStaffPermission(req, 'admin:financial:edit'))
@@ -35,12 +41,12 @@ export class WalletRefundController {
   }
   @Post()
   @RequiresStepUp()
-  @ApiOperation({ summary: 'Request an invoice refund to the customer wallet' })
+  @ApiOperation({ summary: 'Request an invoice refund by external bank transfer' })
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['invoiceId', 'amount', 'idempotencyKey', 'reason'],
       additionalProperties: false,
+      required: ['invoiceId', 'amount', 'idempotencyKey', 'reason'],
       properties: {
         invoiceId: { type: 'string', format: 'uuid' },
         amount: {
@@ -55,22 +61,26 @@ export class WalletRefundController {
   })
   @ApiResponse({
     status: 201,
-    description:
-      'Refund request and optional financial approval request ID. Amount is a decimal string.',
+    description: 'Reserved external refund and optional financial approval request ID',
   })
   async request(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
     this.authorize(req);
     const parsed = refundRequestSchema.safeParse(body);
     if (!parsed.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
-    return this.refunds.request(parsed.data, req.session, req.ip ?? '127.0.0.1');
+    return this.refunds.request(parsed.data, req.session, req.ip ?? '127.0.0.1', 'external_bank');
   }
   @Post(':id/:action')
   @HttpCode(200)
   @RequiresStepUp()
-  @ApiOperation({ summary: 'Approve, reject, cancel or atomically process a wallet refund' })
+  @ApiOperation({
+    summary: 'Approve, reject, cancel, record a transfer or reconcile an external refund',
+  })
   @ApiParam({ name: 'id', format: 'uuid' })
-  @ApiParam({ name: 'action', enum: ['approve', 'reject', 'cancel', 'process'] })
+  @ApiParam({
+    name: 'action',
+    enum: ['approve', 'reject', 'cancel', 'record-transfer', 'reconcile'],
+  })
   @ApiBody({
     schema: {
       type: 'object',
@@ -80,7 +90,14 @@ export class WalletRefundController {
           type: 'string',
           minLength: 1,
           maxLength: 1000,
-          description: 'Required for reject and cancel',
+          description: 'Required for reject/cancel',
+        },
+        bankReference: {
+          type: 'string',
+          minLength: 1,
+          maxLength: 200,
+          description:
+            'Required for record-transfer and reconcile; reconciliation must match the recorded reference',
         },
       },
     },
@@ -88,7 +105,7 @@ export class WalletRefundController {
   @ApiResponse({
     status: 200,
     description:
-      'Current refund state; processing returns Completed only after ledger credit and invoice transition commit.',
+      'Current refund state; a distinct finance staff member must reconcile the recorded transfer before completion',
   })
   async decide(
     @Req() req: AuthenticatedRequest,
@@ -98,8 +115,10 @@ export class WalletRefundController {
   ) {
     this.authorize(req);
     const parsedId = refundUuid.safeParse(id),
-      parsedAction = z.enum(['approve', 'reject', 'cancel', 'process']).safeParse(action),
-      parsedBody = refundDecisionSchema.safeParse(body ?? {});
+      parsedAction = z
+        .enum(['approve', 'reject', 'cancel', 'record-transfer', 'reconcile'])
+        .safeParse(action),
+      parsedBody = decisionSchema.safeParse(body ?? {});
     if (!parsedId.success || !parsedAction.success || !parsedBody.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
     return this.refunds.decide(
@@ -107,7 +126,9 @@ export class WalletRefundController {
       parsedAction.data,
       parsedBody.data.reason,
       req.session,
-      req.ip ?? '127.0.0.1'
+      req.ip ?? '127.0.0.1',
+      'external_bank',
+      parsedBody.data.bankReference
     );
   }
 }
