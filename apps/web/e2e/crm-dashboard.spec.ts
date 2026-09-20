@@ -85,7 +85,7 @@ for (const locale of ['fa', 'en'])
             testInfo.project.name +
             '.png',
         });
-        await page.clock.pauseAt(new Date());
+        await page.clock.pauseAt((await page.evaluate(() => Date.now())) + 1000);
         status = 403;
         await page.clock.runFor(30000);
         await expect(widget).toHaveCount(0);

@@ -99,12 +99,18 @@ for (const [locale, darkMode] of [
     await expect
       .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
       .toBe(darkMode);
+    const viewport = page.viewportSize()!;
+    const sectionHeight = await page
+      .locator('section:has(#correction-field)')
+      .evaluate((node) => node.scrollHeight);
+    await page.setViewportSize({ width: viewport.width, height: sectionHeight + 300 });
     const accessibility = await new AxeBuilder({ page })
       .include('section:has(#correction-field)')
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
       .analyze();
     expect(accessibility.violations).toEqual([]);
     expect(accessibility.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
+    await page.setViewportSize(viewport);
     await page.locator('#correction-field').focus();
     await page.keyboard.press('Tab');
     await expect(page.locator('#correction-value')).toBeFocused();

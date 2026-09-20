@@ -353,10 +353,15 @@ for (const locale of ['en', 'fa'] as const) {
       locale === 'fa' ? 'rtl' : 'ltr'
     );
     for (const dark of [false, true]) {
-      await page.evaluate(
-        (value) => document.documentElement.classList.toggle('dark', value),
-        dark
-      );
+      await page.evaluate(async (value) => {
+        document.documentElement.classList.toggle('dark', value);
+        await Promise.all(
+          document
+            .getAnimations()
+            .filter((animation) => animation.effect?.getComputedTiming().endTime !== Infinity)
+            .map((animation) => animation.finished.catch(() => {}))
+        );
+      }, dark);
       await expect
         .poll(() =>
           panel.evaluate(

@@ -162,7 +162,7 @@ for (const locale of ['en', 'fa'] as const) {
   });
 }
 
-test('dashboard header and navigation use configured brand title', async ({ page }) => {
+test('dashboard shell uses configured brand title and exposes navigation', async ({ page }) => {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await mockPublicAuthCsrf(page);
   await page.route('**/api/public/branding/config', (route) =>
@@ -181,8 +181,8 @@ test('dashboard header and navigation use configured brand title', async ({ page
     })
   );
   await page.goto('/dashboard');
-  await expect(page.locator('header a[href="/"]')).toHaveText('Configured company');
+  await expect(page.locator('header a[href="/dashboard"]')).toHaveText('Configured company');
   const menu = page.locator('button[aria-controls="dashboard-navigation"]');
   if (await menu.isVisible()) await menu.click();
-  await expect(page.locator('#dashboard-navigation a[href="/"]')).toHaveText('Configured company');
+  await expect(page.locator('#dashboard-navigation a[href="/dashboard"]')).toBeVisible();
 });

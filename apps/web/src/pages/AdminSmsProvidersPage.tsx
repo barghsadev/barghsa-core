@@ -342,7 +342,7 @@ export default function AdminSmsProvidersPage() {
       {notice && <p role="status">{notice}</p>}
       {!loading && !loadFailed && !providers.length && <p>{text('empty')}</p>}
       {providers.length > 0 && (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" tabIndex={0} role="group" aria-label={text('title')}>
           <table className="w-full text-start text-sm">
             <caption className="sr-only">{text('title')}</caption>
             <thead>
@@ -478,7 +478,12 @@ export default function AdminSmsProvidersPage() {
                 <option key={event} value={event} />
               ))}
             </datalist>
-            <div className="overflow-x-auto">
+            <div
+              className="overflow-x-auto"
+              tabIndex={0}
+              role="group"
+              aria-label={text('mappings')}
+            >
               <table className="w-full text-sm">
                 <caption className="font-semibold text-start">{text('mappings')}</caption>
                 <thead>

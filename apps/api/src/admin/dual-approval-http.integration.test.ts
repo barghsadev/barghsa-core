@@ -1483,18 +1483,16 @@ for (const kind of ['wallet', 'invoice'] as const) {
         const receipt = kind === 'wallet' ? await walletReceipt() : await invoiceReceipt();
         const before = await receiptWriteSnapshot(kind, receipt.id, receipt.profile);
         await http.pool.query(
-          'CREATE FUNCTION delay_receipt_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN PERFORM pg_sleep(1.2); RETURN NEW; END $$'
+          `CREATE FUNCTION delay_receipt_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+            UPDATE sessions SET ${expiry === 'session' ? "expires_at=clock_timestamp()+INTERVAL '100 milliseconds'" : "step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '100 milliseconds'"} WHERE user_id='reviewer';
+            PERFORM pg_sleep(1.2); RETURN NEW; END $$`
         );
         await http.pool.query(
           'CREATE TRIGGER delay_receipt_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION delay_receipt_audit()'
         );
         let pending: Promise<Response> | undefined;
         try {
-          await http.pool.query(
-            expiry === 'session'
-              ? "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '800 milliseconds' WHERE user_id='reviewer'"
-              : "UPDATE sessions SET step_up_verified_at=clock_timestamp()-INTERVAL '15 minutes'+INTERVAL '800 milliseconds' WHERE user_id='reviewer'"
-          );
+          // Start expiry only after the request reaches its audit write.
           pending = receiptDecision(kind, action, receipt.id);
           await expect
             .poll(async () =>

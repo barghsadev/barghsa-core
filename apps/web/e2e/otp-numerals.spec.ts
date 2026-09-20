@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { mockPublicAuthCsrf } from './public-auth-fixture';
 
 for (const sample of [
   { name: 'Persian keyboard', value: '۱۲۳۴۵۶', paste: false },
@@ -8,6 +9,7 @@ for (const sample of [
 ]) {
   test(`OTP normalizes ${sample.name} and keeps digit order in RTL`, async ({ page }) => {
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockPublicAuthCsrf(page);
     await page.route('**/api/auth/login', (route) =>
       route.fulfill({ json: { requiresOtp: true, challengeId: 'digits-challenge' } })
     );
@@ -48,7 +50,7 @@ for (const sample of [
     } else {
       for (let index = 0; index < 6; index++) await inputs.nth(index).fill(sample.value[index]!);
     }
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/app$/);
     expect(first!.x).toBeLessThan(last!.x);
     expect(submitted).toEqual({
       challengeId: 'digits-challenge',

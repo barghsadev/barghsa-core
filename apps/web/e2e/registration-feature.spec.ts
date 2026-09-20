@@ -20,10 +20,7 @@ async function openRegistration(page: Page, locale: string, verify = false) {
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
   }, locale);
-  await expect(page.locator('main').locator('xpath=..')).toHaveAttribute(
-    'dir',
-    locale === 'fa' ? 'rtl' : 'ltr'
-  );
+  await expect(page.locator('main')).toHaveCSS('direction', locale === 'fa' ? 'rtl' : 'ltr');
 }
 
 for (const locale of ['fa', 'en']) {

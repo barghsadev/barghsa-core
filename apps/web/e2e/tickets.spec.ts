@@ -344,7 +344,7 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
     )
   );
   await expect(page.getByText('Private reasoning', { exact: true }).locator('..')).toHaveClass(
-    /bg-amber-50/
+    /bg-warning-soft/
   );
   await page.screenshot({ path: '/tmp/barghsa-ticket-staff-review.png', fullPage: true });
   await page.locator('#ticket-next-status').selectOption('resolved');

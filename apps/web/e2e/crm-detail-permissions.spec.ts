@@ -1095,7 +1095,9 @@ for (const locale of ['fa', 'en'] as const)
       const closeBounds = await dialog
         .getByRole('button', { name: 'Close', exact: true })
         .boundingBox();
-      expect(titleBounds!.x + titleBounds!.width).toBeLessThanOrEqual(closeBounds!.x);
+      if (locale === 'fa')
+        expect(closeBounds!.x + closeBounds!.width).toBeLessThanOrEqual(titleBounds!.x);
+      else expect(titleBounds!.x + titleBounds!.width).toBeLessThanOrEqual(closeBounds!.x);
       await dialog.screenshot({
         path: `/tmp/barghsa-archive-dialog-${locale}-${darkMode ? 'dark' : 'light'}-${testInfo.project.name}.png`,
       });

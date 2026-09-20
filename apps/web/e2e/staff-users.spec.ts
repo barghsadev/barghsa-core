@@ -100,7 +100,7 @@ for (const locale of ['en', 'fa'] as const) {
             .map((animation) => animation.finished.catch(() => {}))
         );
       }, dark);
-      const report = await new AxeBuilder({ page }).include('#admin-content > section').analyze();
+      const report = await new AxeBuilder({ page }).include('#admin-content section').analyze();
       expect(report.violations, `staff list and role editor accessibility, dark=${dark}`).toEqual(
         []
       );

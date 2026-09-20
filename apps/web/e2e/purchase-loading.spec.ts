@@ -92,7 +92,7 @@ for (const locale of ['en', 'fa'] as const) {
       }
       const header = page.getByRole('banner');
       const before = await header.boundingBox();
-      await page.locator('#dashboard-navigation a[href="/videos"]').click();
+      await page.locator('#dashboard-navigation a[href="/invoices"]').click();
       await expect.poll(() => scripts.length).toBeGreaterThan(0);
       const pending = main.getByRole('status', {
         name: feedbackText('loading', locale),
@@ -106,7 +106,7 @@ for (const locale of ['en', 'fa'] as const) {
         await blocks.first().evaluate((e) => getComputedStyle(e, '::after').animationName)
       ).toBe('none');
       release();
-      await expect(page).toHaveURL(/\/videos$/);
+      await expect(page).toHaveURL(/\/invoices$/);
       await expect(main.getByRole('heading').first()).toBeVisible();
       expect(await header.boundingBox()).toEqual(before);
     } finally {

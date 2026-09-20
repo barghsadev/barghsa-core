@@ -185,7 +185,11 @@ for (const locale of ['en', 'fa']) {
     expect(writes[0]!.dueAt).toBe('2026-11-01T08:30:45.000Z');
     await input.fill('2026-03-08T02:30');
     await save.click();
-    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(
+      page
+        .getByRole('alert')
+        .filter({ hasText: locale === 'fa' ? 'تاریخ سررسید نامعتبر است' : 'Due date is invalid' })
+    ).toBeVisible();
     expect(writes).toHaveLength(1);
     await input.fill('2026-11-02T10:15');
     await save.click();

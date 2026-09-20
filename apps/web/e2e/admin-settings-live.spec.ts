@@ -1,4 +1,4 @@
-import type { APIRequestContext } from '@playwright/test';
+import type { APIRequestContext, APIResponse, Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { fork, type ChildProcess } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -42,6 +42,20 @@ async function publishNumericPreference(
       })
     ).status()
   ).toBe(200);
+}
+
+async function fulfillLiveResponse(route: Route, response: APIResponse) {
+  try {
+    await route.fulfill({ response });
+  } catch (error) {
+    // Reloading can cancel a background read while the real API is still replying.
+    if (
+      !(error instanceof Error) ||
+      !error.message.includes('Route is already handled!') ||
+      !route.request().failure()?.errorText.includes('ERR_ABORTED')
+    )
+      throw error;
+  }
 }
 
 test.afterEach(async ({ page }) => {
@@ -121,7 +135,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const fa = locale === 'fa',
       name = `Team live ${locale}`;
@@ -225,7 +239,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const fa = locale === 'fa',
       enabled = fa ? 'فعال کردن هشدار — تیکت‌ها' : 'Enable alerts — Tickets',
@@ -271,7 +285,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const fa = locale === 'fa',
       username = `new-staff-${locale}@example.test`;
@@ -311,6 +325,7 @@ for (const locale of ['en', 'fa'])
     await row
       .getByRole('button', { name: fa ? 'ویرایش نقش‌ها' : 'Edit roles', exact: true })
       .click();
+    await page.locator('form summary').click();
     await page.getByRole('checkbox', { name: fa ? /مالی/ : /Finance/ }).check();
     await page.locator('#staff-role-reason').fill('Assign finance duties');
     await page
@@ -378,7 +393,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const fa = locale === 'fa',
       username = `pending-${locale}@example.test`;
@@ -438,7 +453,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const fa = locale === 'fa',
       ids = http.jobs[locale]!;
@@ -519,7 +534,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     await page.goto('/admin/failed-notifications');
     for (const [action, label, status] of [
@@ -585,7 +600,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     await page.goto('/admin/upload-policies');
     const row = page
@@ -665,7 +680,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     await page.goto('/admin/storage');
     await expect(page.getByLabel(fa ? 'مخزن' : 'Bucket', { exact: true })).toHaveValue(
@@ -734,7 +749,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const fa = locale === 'fa',
       description = `Reconciliation live ${locale}`;
@@ -811,7 +826,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     async function confirmAndWaitForSavedRules() {
       const refreshed = Promise.all([
@@ -961,7 +976,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const fa = locale === 'fa';
     await page.goto('/admin/contract-limits');
@@ -1031,7 +1046,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const fa = locale === 'fa',
       title = `Local AI ${locale}`;
@@ -1122,7 +1137,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const confirm = async () => {
       await page
@@ -1280,7 +1295,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const confirm = async () => {
       await page
@@ -1430,7 +1445,7 @@ for (const locale of ['en', 'fa'])
         url: `${http.base}${url.pathname}${url.search}`,
         headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const confirm = async () => {
       await page
@@ -1546,7 +1561,7 @@ for (const locale of ['en', 'fa'])
         url: `${http.base}${url.pathname}${url.search}`,
         headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const confirm = async () => {
       await page
@@ -1648,7 +1663,7 @@ for (const locale of ['en', 'fa'])
         url: `${http.base}${url.pathname}${url.search}`,
         headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const confirm = async () => {
       await page
@@ -1786,7 +1801,7 @@ for (const locale of ['en', 'fa'])
         url: `${http.base}${url.pathname}${url.search}`,
         headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const confirm = async () => {
       await page
@@ -1909,7 +1924,7 @@ for (const locale of ['en', 'fa'])
         url: `${http.base}${url.pathname}${url.search}`,
         headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const confirm = async () => {
       await page
@@ -2050,7 +2065,7 @@ for (const locale of ['en', 'fa'])
         url: `${http.base}${url.pathname}${url.search}`,
         headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const confirm = async () => {
       await page
@@ -2283,7 +2298,7 @@ for (const locale of ['en', 'fa'] as const) {
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const fa = locale === 'fa';
     await page.goto('/dashboard');
@@ -2305,7 +2320,7 @@ for (const locale of ['en', 'fa'] as const) {
     ).toHaveAttribute('href', '/wallet');
     failDashboard = true;
     await page.reload();
-    await expect(main.getByRole('alert')).toHaveText(
+    await expect(main.getByRole('alert').locator('p')).toHaveText(
       fa
         ? 'دریافت اطلاعات داشبورد انجام نشد. دوباره تلاش کنید.'
         : 'Could not load dashboard data. Try again.'
@@ -2357,7 +2372,7 @@ for (const locale of ['en', 'fa'] as const) {
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const publicTitle = async () =>
       (await (await page.request.get(`${http.base}/api/public/branding/config`)).json()).appTitle;
@@ -2512,7 +2527,7 @@ for (const locale of ['en', 'fa'])
           'x-csrf-token': http.csrf,
         },
       });
-      await route.fulfill({ response });
+      await fulfillLiveResponse(route, response);
     });
     const actor = await page.request.get(`${http.base}/api/auth/user`, {
       headers: { cookie: `barghsa_session=${http.session}` },
