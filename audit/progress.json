@@ -1341,7 +1341,7 @@
   },
   "kanban_readiness": {
     "checked": "2026-09-20",
-    "local_development": "manual_refund_storage_batch",
+    "local_development": "manual_invoice_activity_batch",
     "automatic_loop": "blocked_pending_remote_reconciliation",
     "backlog_validation": {
       "tasks": 1355,
@@ -1355,7 +1355,7 @@
       "pending": 0
     },
     "continuation": "kanban/CONTINUATION.md",
-    "remote_main_observed": "999a1f440a25d25a3d944e9233fbd3ba1bd99e87",
+    "remote_main_observed": "e326bdbecf94ff37a69932500f6a720546f8830f",
     "remote_state_branch_observed": "absent",
     "pr_304_status": "closed_without_merge; verified through public GitHub API",
     "runtime_state_changed": false,
@@ -1430,14 +1430,13 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "pr": 307,
-      "url": "https://github.com/barghsadev/barghsa-core/pull/307",
+      "branch": "codex/invoice-activity-batch",
       "status": "in_review",
-      "record": "kanban/batches/2026-09-20-refund-storage.md",
+      "record": "kanban/batches/2026-09-20-invoice-activity.md",
       "previous_batch": {
-        "pr": 306,
+        "pr": 307,
         "status": "merged",
-        "merge_commit_sha": "999a1f440a25d25a3d944e9233fbd3ba1bd99e87"
+        "merge_commit_sha": "e326bdbecf94ff37a69932500f6a720546f8830f"
       },
       "token_limit": "User withdrew prior token ceiling on September 20; normal work authorized."
     }

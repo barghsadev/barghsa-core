@@ -18,6 +18,7 @@ import {
 
 interface InvoiceBankReceiptUploadFormProps {
   invoiceId: string;
+  onSubmitted?: () => Promise<void>;
 }
 
 const ERROR_I18N: Record<InvoiceReceiptError, string> = {
@@ -38,7 +39,10 @@ const ERROR_I18N: Record<InvoiceReceiptError, string> = {
  * uploads the scan, then creates a Submitted receipt. Settlement waits
  * for finance confirmation.
  */
-export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUploadFormProps) {
+export function InvoiceBankReceiptUploadForm({
+  invoiceId,
+  onSubmitted,
+}: InvoiceBankReceiptUploadFormProps) {
   const locale = useLocale();
   const uploadInvoiceReceiptAttachment = useReceiptAttachmentUpload();
   const fileInput = useRef<HTMLInputElement>(null);
@@ -121,6 +125,7 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
       setAmountInput('');
       setPayerReference('');
       setCustomerNote('');
+      await onSubmitted?.();
     } catch {
       setError('upload');
     } finally {

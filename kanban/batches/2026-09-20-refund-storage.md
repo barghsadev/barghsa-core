@@ -1,7 +1,7 @@
 # Refund storage and reservation limits
 
 Branch: `codex/refund-storage-batch`.
-Status: PR #307 open; independent review found and prompted a fix for multi-row completion counters. Final validation and renewed review in progress.
+Status: PR #307 reviewed, validated and merged.
 
 ## Task scope
 
@@ -19,3 +19,7 @@ This is storage and integrity work. It exposes no refund endpoint or worker. Sta
 ## Validation
 
 The production migration is exercised against PostgreSQL. Tests cover exact amounts beyond JavaScript's safe integer range, ownership, invalid amounts, idempotency, concurrent reservations at default and repeatable-read isolation, legacy refunded balances, failed requests retaining reservations, released reservations, completion retries, rollback, immutable history, and external completion prerequisites. The final database suite passed 771 tests across 96 files, including 10 refund migration cases. The multi-row completion regression was reproduced before the fix and passes afterward; typecheck and formatting also pass after the fix. Full workspace build, typecheck, lint, formatting, contract, generated-schema drift, changed-file coverage, kanban, and audit checks passed. No task is claimed merged until GitHub confirms its reviewed PR merge.
+
+## Merge confirmation
+
+PR #307 is merged at `e326bdbecf94ff37a69932500f6a720546f8830f`. Exact reviewed HEAD `c0fdd848352bc25ff71ccf6f281d9521b9e3300e` and approval [5749567332](https://github.com/barghsadev/barghsa-core/pull/307#issuecomment-5749567332) were verified before and after merge. CI run 35508429899 passed all active checks, including 771 database, 458 worker and 5,180 API tests. Combined coverage reported the authorized temporary PR exemption; no new coverage claim is made.

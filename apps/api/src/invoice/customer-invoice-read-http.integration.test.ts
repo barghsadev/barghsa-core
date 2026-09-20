@@ -1,3 +1,4 @@
+import type { CustomerInvoiceDetailsDto } from './customer-invoice-details.service.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -224,4 +225,117 @@ it('holds agent view permission until the read completes, then applies revocatio
     await pending;
     await removal;
   }
+});
+
+it('aggregates exact payment allocations, receipt states and refunds without private fields', async () => {
+  const f = await fixture();
+  const other = await fixture();
+  const receipt = randomUUID();
+  const payment = randomUUID();
+  const refund = randomUUID();
+  const amount = '9007199254740993';
+  await http.pool.query('UPDATE invoices SET total_amount=$2,paid_amount=$2 WHERE id=$1', [
+    f.invoice,
+    amount,
+  ]);
+  await http.pool.query('INSERT INTO wallets(profile_id) VALUES ($1),($2)', [
+    f.profile,
+    other.profile,
+  ]);
+  await http.pool.query(
+    "INSERT INTO wallet_transactions(id,wallet_id,type,amount,state,idempotency_key,ref_id,metadata) VALUES ($1,$2,'payment',-40,'Pending',$3,$4,'{\"private\":\"staff-only\"}')",
+    [payment, f.profile, randomUUID(), f.invoice]
+  );
+  // A forged reference on a different wallet must never appear in this invoice.
+  await http.pool.query(
+    "INSERT INTO wallet_transactions(wallet_id,type,amount,state,idempotency_key,ref_id) VALUES ($1,'payment',-90,'Pending',$2,$3)",
+    [other.profile, randomUUID(), f.invoice]
+  );
+  await http.pool.query(
+    `INSERT INTO bank_receipts(id,invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key,customer_note)
+     VALUES ($1,$2,$3,$4,'2026-09-01','public-reference',$5,'Customer note')`,
+    [receipt, f.invoice, f.profile, amount, randomUUID()]
+  );
+  await http.pool.query(
+    "UPDATE bank_receipts SET state='Confirmed',confirmed_by=$2,confirmed_at=NOW() WHERE id=$1",
+    [receipt, f.owner]
+  );
+  await http.pool.query(
+    "INSERT INTO wallet_transactions(wallet_id,type,amount,state,idempotency_key,ref_id) VALUES ($1,'topup',13,'Pending',$2,$3)",
+    [f.profile, `invoice-bank-receipt-overpayment-credit:${receipt}`, receipt]
+  );
+  await http.pool.query(
+    "INSERT INTO refunds(id,invoice_id,profile_id,amount,destination,staff_id,idempotency_key) VALUES ($1,$2,$3,$4,'wallet',$5,$6)",
+    [refund, f.invoice, f.profile, amount, f.owner, randomUUID()]
+  );
+  const response = await read(f);
+  expect(response.status).toBe(200);
+  const body = (await response.json()) as CustomerInvoiceDetailsDto;
+  expect(body.payments).toHaveLength(2);
+  expect(body.payments).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ id: payment, source: 'wallet', amount: '40', state: 'Pending' }),
+      expect.objectContaining({
+        id: receipt,
+        source: 'bank_receipt',
+        amount: '9007199254740980',
+        state: 'Confirmed',
+      }),
+    ])
+  );
+  expect(body.bankReceipts).toEqual([
+    expect.objectContaining({
+      id: receipt,
+      amount,
+      paymentDate: '2026-09-01',
+      payerReference: 'public-reference',
+      customerNote: 'Customer note',
+    }),
+  ]);
+  expect(body.refunds).toEqual([
+    expect.objectContaining({ id: refund, amount, state: 'Requested', destination: 'wallet' }),
+  ]);
+  for (const row of [...body.payments, ...body.bankReceipts, ...body.refunds]) {
+    expect(row.createdAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+    for (const key of [
+      'staffId',
+      'confirmedBy',
+      'attachmentKey',
+      'metadata',
+      'idempotencyKey',
+      'bankReference',
+    ])
+      expect(row).not.toHaveProperty(key);
+  }
+  expect((await read(other, true, f.invoice)).status).toBe(404);
+});
+
+it('returns empty activity and includes unconfirmed receipts only in the receipt list', async () => {
+  const f = await fixture();
+  expect(await (await read(f)).json()).toMatchObject({
+    payments: [],
+    bankReceipts: [],
+    refunds: [],
+  });
+  for (const state of ['Submitted', 'UnderReview', 'Rejected']) {
+    await http.pool.query(
+      `INSERT INTO bank_receipts(invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key,state,rejection_reason)
+       VALUES ($1,$2,100,'2026-09-01','reference',$3,$4,$5)`,
+      [
+        f.invoice,
+        f.profile,
+        randomUUID(),
+        state,
+        state === 'Rejected' ? 'Unreadable receipt' : null,
+      ]
+    );
+  }
+  const body = (await (await read(f)).json()) as CustomerInvoiceDetailsDto;
+  expect(body.payments).toEqual([]);
+  expect(body.bankReceipts.map((row: { state: string }) => row.state)).toEqual([
+    'Submitted',
+    'UnderReview',
+    'Rejected',
+  ]);
+  expect(body.bankReceipts[2]!.rejectionReason).toBe('Unreadable receipt');
 });

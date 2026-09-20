@@ -1,3 +1,7 @@
+import {
+  loadCustomerInvoiceActivity,
+  type CustomerInvoiceActivity,
+} from './customer-invoice-activity.js';
 import type { Pool, PoolClient } from 'pg';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -70,7 +74,7 @@ export interface CustomerInvoiceNodeDto {
   lines: CustomerInvoiceLineDto[];
 }
 
-export interface CustomerInvoiceDetailsDto {
+export interface CustomerInvoiceDetailsDto extends CustomerInvoiceActivity {
   viewedInvoiceId: string;
   originalInvoiceId: string;
   invoice: CustomerInvoiceNodeDto;
@@ -303,6 +307,9 @@ export function assembleCustomerInvoiceDetails(input: {
     originalInvoiceId: input.originalInvoiceId,
     invoice,
     chain: nodes,
+    payments: [],
+    bankReceipts: [],
+    refunds: [],
   };
 }
 
@@ -432,12 +439,13 @@ export class CustomerInvoiceDetailsService {
         family.map((row) => row.id),
         client
       );
-      return assembleCustomerInvoiceDetails({
+      const details = assembleCustomerInvoiceDetails({
         viewedInvoiceId: invoiceId,
         originalInvoiceId: original.id,
         rows: family,
         linesByInvoiceId,
       });
+      return { ...details, ...(await loadCustomerInvoiceActivity(client, invoiceId, profileId)) };
     });
   }
 

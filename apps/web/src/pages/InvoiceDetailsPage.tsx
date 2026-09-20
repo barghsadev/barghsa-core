@@ -1,3 +1,4 @@
+import { InvoiceActivity } from './InvoiceActivity.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useState } from 'react';
@@ -35,6 +36,7 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
   const [details, setDetails] = useState<CustomerInvoiceDetails | null>(null);
   const [error, setError] = useState<'not-found' | 'load' | null>(null);
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(0);
   const refreshDetails = useCallback(async () => {
     const next = await fetchInvoiceDetails(invoiceId);
     setDetails((current) => (current?.viewedInvoiceId === invoiceId ? next : current));
@@ -63,7 +65,7 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
     return () => {
       cancelled = true;
     };
-  }, [invoiceId]);
+  }, [invoiceId, reload]);
 
   return (
     <div
@@ -98,11 +100,19 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
           {t('invoices.details.notFound', locale)}
         </p>
       ) : error ? (
-        <p className="text-destructive" role="alert">
+        <p className="text-destructive" role="alert" data-testid="invoice-load-error">
           {t('invoices.details.error', locale)}
+          <button
+            type="button"
+            className="ms-2 underline"
+            onClick={() => setReload((value) => value + 1)}
+          >
+            {t('invoices.activity.retry', locale)}
+          </button>
         </p>
       ) : details ? (
         <InvoiceDetailsBody
+          key={details.viewedInvoiceId}
           details={details}
           formatTimestamp={time.format}
           onRefreshDetails={refreshDetails}
@@ -122,6 +132,15 @@ function InvoiceDetailsBody({
   onRefreshDetails: () => Promise<void>;
 }) {
   const locale = useLocale();
+  const [refreshFailed, setRefreshFailed] = useState(false);
+  const refreshReceiptHistory = async () => {
+    try {
+      await onRefreshDetails();
+      setRefreshFailed(false);
+    } catch {
+      setRefreshFailed(true);
+    }
+  };
   const viewed = details.invoice;
   const original = details.chain.find((node) => node.invoiceId === details.originalInvoiceId);
   const linked = details.chain.filter((node) => node.invoiceId !== details.originalInvoiceId);
@@ -165,6 +184,20 @@ function InvoiceDetailsBody({
         />
       ))}
 
+      {refreshFailed ? (
+        <p role="alert" className="text-sm text-destructive">
+          {t('invoices.activity.refreshFailed', locale)}
+          <button
+            type="button"
+            className="ms-2 underline"
+            onClick={() => void refreshReceiptHistory()}
+          >
+            {t('invoices.activity.retry', locale)}
+          </button>
+        </p>
+      ) : null}
+      <InvoiceActivity details={details} formatTimestamp={formatTimestamp} />
+
       <WalletInvoicePaymentPanel
         key={viewed.invoiceId}
         invoiceId={viewed.invoiceId}
@@ -178,7 +211,10 @@ function InvoiceDetailsBody({
         state: viewed.state,
         adjustmentKind: viewed.adjustmentKind,
       }) ? (
-        <InvoiceBankReceiptUploadForm invoiceId={viewed.invoiceId} />
+        <InvoiceBankReceiptUploadForm
+          invoiceId={viewed.invoiceId}
+          onSubmitted={refreshReceiptHistory}
+        />
       ) : null}
     </section>
   );
