@@ -279,6 +279,10 @@ export class DocumentService {
           and(
             profileId ? eq(documents.profileId, profileId) : undefined,
             eq(documents.businessRecordType, input.businessRecordType),
+            input.category ? eq(documents.category, input.category) : undefined,
+            input.q
+              ? sql`strpos(lower(${documents.originalName}), lower(${input.q})) > 0`
+              : undefined,
             visible(staff),
             input.businessRecordId
               ? eq(documents.businessRecordId, input.businessRecordId)

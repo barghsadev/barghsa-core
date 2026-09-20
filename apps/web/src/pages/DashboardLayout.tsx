@@ -9,8 +9,10 @@ import {
   Bell,
   Users,
   Settings,
+  FileText,
 } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/app';
+import { documentText } from '@barghsa/i18n/documents';
 import { shellText } from '@barghsa/i18n/shell';
 import { useLocale } from '../hooks/useLocale.js';
 import { ProfileSwitcher } from '../components/ProfileSwitcher.js';
@@ -37,6 +39,7 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
         { to: '/savings', label: t('dashboard.nav.savings', locale), icon: Sprout },
         { to: '/wallet', label: t('dashboard.nav.wallet', locale), icon: Wallet },
         { to: '/invoices', label: t('dashboard.nav.invoices', locale), icon: ReceiptText },
+        { to: '/documents', label: documentText('title', locale), icon: FileText },
         { to: '/tickets', label: t('tickets.title', locale), icon: LifeBuoy },
       ],
     },
