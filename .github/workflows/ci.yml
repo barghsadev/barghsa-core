@@ -107,6 +107,14 @@ jobs:
         run: pnpm --filter @barghsa/web build
         env:
           BARGHSA_BROWSER_COVERAGE: '1'
+      - name: Verify clean checkout before browser coverage
+        run: |
+          changed=$(git status --porcelain)
+          if [ -n "$changed" ]; then
+            echo "$changed"
+            echo "::error::Browser coverage requires a clean source checkout"
+            exit 1
+          fi
       - name: Exercise all production browser flows and shared components
         run: node scripts/run-production-browser.mjs
         env:

@@ -43,11 +43,23 @@ export async function mergeBrowserCoverage({ root, report, headSha }) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  if (!process.argv[2]) throw new Error('Browser coverage report path required');
-  const root = fileURLToPath(new URL('..', import.meta.url));
-  const report = JSON.parse(await readFile(process.argv[2], 'utf8'));
-  const headSha = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], {
-    encoding: 'utf8',
-  }).trim();
-  console.log('Merged browser coverage:', await mergeBrowserCoverage({ root, report, headSha }));
+  try {
+    if (!process.argv[2]) throw new Error('Browser coverage report path required');
+    const root = fileURLToPath(new URL('..', import.meta.url));
+    const report = JSON.parse(await readFile(process.argv[2], 'utf8'));
+    const headSha = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], {
+      encoding: 'utf8',
+    }).trim();
+    console.log('Merged browser coverage:', await mergeBrowserCoverage({ root, report, headSha }));
+  } catch (error) {
+    console.error(error);
+    if (process.env.CI) {
+      const message = String(error instanceof Error ? error.message : error)
+        .replaceAll('%', '%25')
+        .replaceAll('\r', '%0D')
+        .replaceAll('\n', '%0A');
+      console.error(`::error::${message}`);
+    }
+    process.exitCode = 1;
+  }
 }

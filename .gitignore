@@ -13,3 +13,5 @@ test-results/
 dist-coverage/
 packages/shared/.build-cjs-*/
 packages/ui/.distribution-*/
+__pycache__/
+*.py[cod]

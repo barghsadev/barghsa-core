@@ -1364,8 +1364,8 @@
       "state": "open",
       "draft": false,
       "merged": false,
-      "head_sha": "8902b5ae21504f61e0ceb3f018865a8326be58ed",
-      "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35496446857",
+      "head_sha": "51c8296eb681483716111d7f1c3390f03b0002fb",
+      "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35496904395",
       "previous_failed_checks": [
         "Run tests",
         "Verify monorepo integrity",
@@ -1375,11 +1375,11 @@
       "previous_passed_checks": [
         "Static security checks"
       ],
-      "ci_status": "PgBouncer_fixture_setup_connection_timeout; followup_validated_locally; browser_pending"
+      "ci_status": "tests_browser_integrity_security_passed; coverage_report_merge_failed; generated_cache_followup_validated_locally"
     },
     "remote_check_scope": "Read-only checks of PRs 304 and 305, main, and kanban-state refs; not a full PR inventory refresh.",
     "ci_repair": {
-      "status": "pgbouncer_fixture_and_package_concurrency_followup_validated_locally",
+      "status": "coverage_checkout_cache_followup_validated_locally",
       "scope": "PR #305 only; next feature batch remains on hold",
       "changes": [
         "Reuse the completed CI build during parallel tests",
@@ -1391,11 +1391,13 @@
         "Verify mutual role removal permits exactly one update and rejects the loser whether session revocation occurs before or after authentication; check roles, revoked session and exactly one audit event",
         "Run each CI unit suite once with coverage; every workspace coverage command runs the same tests, and coverage thresholds remain unchanged",
         "Give the PgBouncer lock-holder setup connection the normal budget while preserving the 200 ms tested timeout and 1500 ms wait bound",
-        "Limit CI coverage to two concurrent packages to avoid overlapping too many database/server fixtures"
+        "Limit CI coverage to two concurrent packages to avoid overlapping too many database/server fixtures",
+        "Ignore generated Python bytecode caches so Linux test runs do not mark coverage source checkouts dirty",
+        "Check checkout cleanliness before the full browser run and annotate coverage-merge errors without relaxing report validation"
       ],
       "dependency_scan": "passed; zero vulnerabilities",
       "secret_scan": "passed; synthetic detection and complete history",
-      "checks": "Build, typecheck, changed-file lint, frozen install, zero-vulnerability dependency scan and committed-history secret scan passed. API 5162, frontend 777 and shared 976 passed together; worker 458 and database 760 passed with two workers. GitHub security checks pass; newest CI verification still required. Revision 861780bf passes the full GitHub test stage and both security checks. Database cleanup follow-up passes 760 tests locally. Prior complete GitHub browser run: 768 passed, one ambiguous SMS selector failed; selector repair passes all 50 repeated English/Persian SMS cases locally. Revision 861780bf passes the complete GitHub Run tests job including coverage. Revision 9ccaea81 exposed a timing-dependent mutual role removal assertion. Both concurrent and post-revocation cases plus the existing 16 permission races pass locally (18 tests); the losing request may correctly receive 401 before authentication or 403 after it. Revision 9ccaea81 passes the complete browser/integrity job. Revision 8902b5ae exposed a 200 ms PgBouncer setup connection timeout; separating fixture setup from the timed pool passes all 760 database tests with coverage locally (90.25% lines, 76.59% branches)."
+      "checks": "Build, typecheck, changed-file lint, frozen install, zero-vulnerability dependency scan and committed-history secret scan passed. API 5162, frontend 777 and shared 976 passed together; worker 458 and database 760 passed with two workers. GitHub security checks pass; newest CI verification still required. Revision 861780bf passes the full GitHub test stage and both security checks. Database cleanup follow-up passes 760 tests locally. Prior complete GitHub browser run: 768 passed, one ambiguous SMS selector failed; selector repair passes all 50 repeated English/Persian SMS cases locally. Revision 861780bf passes the complete GitHub Run tests job including coverage. Revision 9ccaea81 exposed a timing-dependent mutual role removal assertion. Both concurrent and post-revocation cases plus the existing 16 permission races pass locally (18 tests); the losing request may correctly receive 401 before authentication or 403 after it. Revision 9ccaea81 passes the complete browser/integrity job. Revision 8902b5ae exposed a 200 ms PgBouncer setup connection timeout; separating fixture setup from the timed pool passes all 760 database tests with coverage locally (90.25% lines, 76.59% branches). Revision 51c8296e passes tests with coverage, browser/integrity, static security and secret scanning; final report merge fails. Linux-style Python bytecode generation reproduces an untracked-cache dirty checkout; ignore rules remove only generated caches and still detect source edits. All 22 coverage merge/alignment tests pass, and invalid reports still fail with a GitHub error annotation."
     }
   }
 }
