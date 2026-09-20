@@ -1,11 +1,5 @@
-/**
- * Document editors page — heavy module, lazy-loaded.
- */
+import { DocumentsWorkspace } from '../components/DocumentsWorkspace.js';
+
 export default function DocumentsPage() {
-  return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Documents</h1>
-      <p className="text-muted-foreground">Contract management and document editing.</p>
-    </div>
-  );
+  return <DocumentsWorkspace />;
 }

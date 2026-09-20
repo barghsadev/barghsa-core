@@ -475,6 +475,38 @@ it('keeps internal contract documents private through reads, downloads and notif
   ).toEqual([]);
 });
 
+it('filters names and categories across authorized documents without treating search text as a wildcard', async () => {
+  const f = await owner();
+  const other = await owner();
+  const named = await create(f.user, { fileName: 'Alpha 100% evidence.pdf' });
+  await create(f.user, { fileName: 'Beta.pdf' });
+  await create(f.user, {
+    fileName: 'Alpha image.png',
+    category: 'image',
+    contentType: 'image/png',
+  });
+  await create(other.user, { fileName: 'Alpha 100% hidden.pdf' });
+  const query = async (path: string, user = f.user) =>
+    (await (await send(path, user)).json()) as DocumentList;
+  expect((await query('documents?q=%25')).documents.map((row) => row.id)).toEqual([
+    named.document.id,
+  ]);
+  expect(
+    (await query('documents?q=ALPHA&category=document')).documents.map((row) => row.id)
+  ).toEqual([named.document.id]);
+  expect(
+    (
+      await query(
+        `admin/documents?profileId=${f.profile}&q=alpha&category=document`,
+        'document-legal'
+      )
+    ).documents.map((row) => row.id)
+  ).toEqual([named.document.id]);
+  expect((await query('documents?q=alpha&category=image')).documents).toHaveLength(1);
+  expect((await send('documents?category=script', f.user)).status).toBe(400);
+  expect((await send(`documents?q=${'x'.repeat(129)}`, f.user)).status).toBe(400);
+});
+
 it('exposes a staff queue across profiles and preserves customer pagination and archived audit access', async () => {
   const f = await owner();
   const one = await confirm(await create(f.user), f.user);

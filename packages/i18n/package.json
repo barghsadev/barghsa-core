@@ -161,6 +161,11 @@
       "types": "./dist/shell.d.ts",
       "import": "./dist/shell.js",
       "default": "./dist/shell.js"
+    },
+    "./documents": {
+      "types": "./dist/documents.d.ts",
+      "import": "./dist/documents.js",
+      "default": "./dist/documents.js"
     }
   },
   "scripts": {

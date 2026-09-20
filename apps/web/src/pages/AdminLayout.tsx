@@ -34,6 +34,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { t } from '@barghsa/i18n/admin-ui';
+import { documentText } from '@barghsa/i18n/documents';
 import { shellText } from '@barghsa/i18n/shell';
 import { TosBanner } from '../components/TosBanner.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -50,6 +51,7 @@ export default function AdminLayout() {
       label: shellText('operations', locale),
       items: [
         { to: '/admin/tickets', label: t('tickets.staffTitle', locale), icon: LifeBuoy },
+        { to: '/admin/documents', label: documentText('staffTitle', locale), icon: FileText },
         {
           to: '/admin/reconciliation',
           label: t('admin.reconciliation.title', locale),

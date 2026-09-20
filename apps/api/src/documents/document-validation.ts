@@ -56,6 +56,8 @@ export type DocumentCommand = z.infer<typeof DocumentCommandSchema>;
 export const DocumentListSchema = z
   .object({
     businessRecordType: BusinessTypeSchema.default('standalone'),
+    q: z.string().trim().max(128).optional(),
+    category: z.enum(['document', 'image', 'contract']).optional(),
     profileId: z.string().uuid().optional(),
     businessRecordId: z.string().uuid().optional(),
     state: z
