@@ -1431,7 +1431,7 @@
     },
     "manual_batch": {
       "branch": "codex/documents-ui",
-      "status": "locally_validated_pending_review_ci",
+      "status": "fixing_static_scan_pending_review_ci",
       "record": "kanban/batches/2026-09-21-document-workspace.md",
       "validation": "21 frontend, 53 API, one dictionary and four production browser tests pass; builds/types/lint/contract/bundle and actual changed-source gate pass.",
       "previous_batch": {
@@ -1464,7 +1464,9 @@
         "Configured malware scanner and physical retention deletion",
         "Contract signatures and activation",
         "Amendments, cancellation and automatic refund obligations"
-      ]
+      ],
+      "pr": 320,
+      "prior_review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/320#issuecomment-5753041098"
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",

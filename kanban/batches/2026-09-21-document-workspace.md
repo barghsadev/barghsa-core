@@ -36,3 +36,7 @@ The scheduler and historical supervisor state remain unchanged.
 Backend PR #319 merged after exact-HEAD approval and all five CI checks passed. This batch is rebased onto that merge and awaits independent review and CI verification. No full canonical task completion is inferred.
 
 The actual changed-source gate passes: frontend 207/235 changed executable lines and 239/273 branches; critical admin/navigation code 7/7 lines; API search/filter branches 6/6; dictionary 3/3 lines and 4/4 branches. No floor was changed.
+
+## PR review and CI follow-up
+
+PR [#320](https://github.com/barghsadev/barghsa-core/pull/320) received independent approval at `7cf85a557a111053f8dcbe4879e0ab964303e682` with no issues. Initial CI detected a translation key named `password` as a literal credential and could not parse the generic dynamic-import type in the navigation mock. Renamed the label key to `verificationTitle` and used the existing Vitest importActual helper without that generic. No scanner rules or exclusions changed. The three affected files scan cleanly, all 21 frontend tests and the dictionary test pass, and web types/format pass. The new commit requires fresh exact-HEAD approval and CI.

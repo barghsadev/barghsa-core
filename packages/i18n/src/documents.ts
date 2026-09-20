@@ -72,7 +72,7 @@ export const en = {
   invalidFile:
     'Select a non-empty file no larger than 50 MB. The server checks the current category policy.',
   invalidReference: 'Enter a valid reference for the selected record.',
-  password: 'Verify your identity',
+  verificationTitle: 'Verify your identity',
   passwordHint: 'Confirm your password to continue this document action.',
   Uploading: 'Awaiting upload',
   PendingScan: 'Verifying upload',
@@ -157,7 +157,7 @@ export const fa: Record<keyof typeof en, string> = {
   invalidFile:
     'فایلی غیرخالی و حداکثر ۵۰ مگابایت انتخاب کنید. قوانین دسته‌بندی در سامانه بررسی می‌شوند.',
   invalidReference: 'شناسه معتبری برای رکورد انتخاب‌شده وارد کنید.',
-  password: 'تأیید هویت',
+  verificationTitle: 'تأیید هویت',
   passwordHint: 'برای ادامه، رمز عبور خود را تأیید کنید.',
   Uploading: 'در انتظار بارگذاری',
   PendingScan: 'در حال بررسی فایل',

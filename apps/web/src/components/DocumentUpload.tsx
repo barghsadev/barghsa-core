@@ -205,7 +205,7 @@ export function DocumentUpload({
       ) : null}
       {verification && attempt ? (
         <TeamActionDialog
-          verification={{ title: word('password'), description: word('passwordHint') }}
+          verification={{ title: word('verificationTitle'), description: word('passwordHint') }}
           onClose={() => setVerification(false)}
           onSuccess={async () => {
             setVerification(false);

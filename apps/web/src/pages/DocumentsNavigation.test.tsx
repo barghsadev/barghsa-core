@@ -7,8 +7,8 @@ import { Route as DocumentsRoute } from '../routes/admin/documents.js';
 import { createMemoryHistory, createRouter } from '@tanstack/react-router';
 import { routeTree } from '../routeTree.gen.js';
 
-vi.mock('@tanstack/react-router', async (original) => ({
-  ...(await original<typeof import('@tanstack/react-router')>()),
+vi.mock('@tanstack/react-router', async () => ({
+  ...(await vi.importActual('@tanstack/react-router')),
   Outlet: () => null,
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
