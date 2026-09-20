@@ -198,8 +198,10 @@ export class ContractReviewService {
     });
   }
   async accept(id: string, input: ContractReviewInput, actor: ContractActor, ip: string) {
-    return customerContractAccess(actor, true, (client, profileId) =>
-      contractIdempotency(
+    return customerContractAccess(actor, true, async (client, profileId) => {
+      // Replays must pass the original contract's current profile access boundary too.
+      await this.published(client, profileId, id);
+      return contractIdempotency(
         client,
         'contract_accept',
         { ...input, contractId: id },
@@ -212,7 +214,6 @@ export class ContractReviewService {
             )
           ).rows[0];
           if (!row) throw new NotFoundException();
-          await this.published(client, profileId, id);
           if (
             row.state !== 'AwaitingCustomerAcceptance' ||
             row.current_version_id !== input.expectedVersionId
@@ -226,8 +227,8 @@ export class ContractReviewService {
           await notifyContractReview(client, id, 'accepted');
           return this.published(client, profileId, id);
         }
-      )
-    );
+      );
+    });
   }
   private async published(client: PoolClient, profileId: string, id: string, versionId?: string) {
     const row = (

@@ -704,3 +704,33 @@ it('paginates more than 100 published versions and contracts without duplicates 
   expect(next.nextBefore).toBeNull();
   expect(new Set([...page.contracts, ...next.contracts].map((c) => c.id)).size).toBe(101);
 });
+
+it('revalidates the original contract profile before replaying an acceptance after access is removed', async () => {
+  const f = await fixture();
+  await publish(f);
+  const legal = await login(randomUUID());
+  await http.pool.query(
+    "INSERT INTO profile_agents(profile_id,user_id,role) VALUES($1,$2,'Legal')",
+    [f.profile, legal]
+  );
+  await http.pool.query('INSERT INTO user_profile_contexts(user_id,profile_id) VALUES($1,$2)', [
+    legal,
+    f.profile,
+  ]);
+  const body = command(f.row.currentVersionId);
+  expect((await send('contracts/' + f.row.id + '/accept', 'POST', body, legal)).status).toBe(200);
+  const other = randomUUID();
+  await http.pool.query('INSERT INTO profiles(id,user_id,is_default) VALUES($1,$2,true)', [
+    other,
+    legal,
+  ]);
+  await http.pool.query('UPDATE user_profile_contexts SET profile_id=$2 WHERE user_id=$1', [
+    legal,
+    other,
+  ]);
+  await http.pool.query('DELETE FROM profile_agents WHERE profile_id=$1 AND user_id=$2', [
+    f.profile,
+    legal,
+  ]);
+  expect((await send('contracts/' + f.row.id + '/accept', 'POST', body, legal)).status).toBe(404);
+});

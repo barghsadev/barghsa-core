@@ -24,9 +24,9 @@ Acceptance ends at Accepted. It does not imply a signature, payment or activatio
 
 ## Validation
 
-- 41 HTTP integration tests pass against the compiled application and migrated PostgreSQL. Coverage includes the complete review/acceptance cycle, hidden drafts and unpublished revisions, legal/manager/finance permissions, permission removal and profile archival during lock waits, exact-version races, retries, CSRF, step-up, paginated histories/lists above 100 records, immutable evidence and audit/notification rollback.
+- 42 HTTP integration tests pass against the compiled application and migrated PostgreSQL. Coverage includes the complete review/acceptance cycle, hidden drafts and unpublished revisions, legal/manager/finance permissions, permission removal and profile archival during lock waits, exact-version races, retries after profile switching and access removal, CSRF, step-up, paginated histories/lists above 100 records, immutable evidence and audit/notification rollback.
 - 24 database tests pass, including the actual 138-to-139 upgrade and rerun without fabricated legacy publication/acceptance.
-- API source coverage: 98.93% lines and 95.45% branches; new schema executable coverage is exercised through typed reads and schema constraint checks. Existing changed/critical gates remain required.
+- API source coverage: 98.93% lines and 94.88% branches; new schema executable coverage is exercised through typed reads and schema constraint checks. Existing changed/critical gates remain required.
 - API/database builds and typechecks, changed-file lint/formatting, snapshot generation guard and OpenAPI comparison pass.
 - Independent exact-HEAD approval and all GitHub checks remain required before merge.
 
@@ -35,3 +35,5 @@ Acceptance ends at Accepted. It does not imply a signature, payment or activatio
 Implement staff/customer contract UI and the document/signature dependency before claiming the full lifecycle complete. The immutable published-version boundary must remain in use for every customer read and acceptance action.
 
 The scheduler and historical supervisor completion arrays remain unchanged.
+
+The acceptance replay regression was verified failing before its fix: it returned the cached response after access removal. The final implementation checks current access to the original contract before looking up a cached response.
