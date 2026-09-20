@@ -1,4 +1,11 @@
 import {
+  runWalletRefund,
+  refundRequiresApproval,
+  latestRefundApproval,
+  requireRefundApproval,
+  RefundProcessingError,
+} from '@barghsa/db/refund-processing';
+import {
   BadRequestException,
   ForbiddenException,
   ConflictException,
@@ -9,17 +16,11 @@ import { createHash } from 'node:crypto';
 import { v7 as uuidv7 } from 'uuid';
 import type { PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
-import {
-  DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
-  readInvoiceBankReceiptDualApprovalThreshold,
-} from '@barghsa/shared/finance';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
-import { requireCurrentFinancePermission } from '../admin/approval-permissions.js';
 import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock.js';
 import { notifyApprovalRequested } from '../admin/approval-notifications.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
-import { WalletService } from '../wallet/wallet.service.js';
 import { lockWalletProfile, assertWalletProfileWritable } from '../wallet/profile-lock.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { isInvoiceState } from '../invoice/invoice-state.model.js';
@@ -64,6 +65,13 @@ export interface RefundDto {
   bankReference: string | null;
   reconciliationStatus: string | null;
   approvalRequestId: string | null;
+  retry: {
+    attempts: number;
+    maxAttempts: number;
+    nextAttemptAt: string | null;
+    exhausted: boolean;
+    lastErrorCode: string | null;
+  } | null;
 }
 
 /** Staff wallet refunds reuse the ledger and the existing financial review queue.
@@ -72,10 +80,7 @@ export interface RefundDto {
  */
 @Injectable()
 export class RefundService {
-  constructor(
-    private readonly wallet: WalletService,
-    private readonly invoices: InvoiceStateMachineService
-  ) {}
+  constructor(private readonly invoices: InvoiceStateMachineService) {}
 
   async request(
     input: RefundRequest,
@@ -173,134 +178,151 @@ export class RefundService {
       )
     ).rows[0];
     if (!preliminary) throw new NotFoundException('Refund not found');
-    return this.transaction(preliminary.invoice_id, actor, async (client, invoice, archived) => {
-      const row = (
-        await client.query<RefundRow>(
-          'SELECT * FROM refunds WHERE id=$1 AND invoice_id=$2 FOR UPDATE',
-          [id, invoice.id]
-        )
-      ).rows[0];
-      if (!row || row.destination !== destination) throw new NotFoundException('Refund not found');
-      if (
-        (destination === 'external_bank' && action === 'process') ||
-        (destination === 'wallet' && ['record-transfer', 'reconcile'].includes(action))
-      )
-        throw new BadRequestException('Action does not match refund destination');
-      const reference = ['record-transfer', 'reconcile'].includes(action)
-        ? this.reference(bankReference)
-        : undefined;
-      if (reference && row.bank_reference && row.bank_reference !== reference)
-        throw new ConflictException('Bank reference does not match the recorded transfer');
-      const target =
-        action === 'approve'
-          ? 'Approved'
-          : action === 'reject'
-            ? 'Rejected'
-            : action === 'cancel'
-              ? 'Cancelled'
-              : action === 'record-transfer'
-                ? 'Processing'
-                : 'Completed';
-      if (row.state === target) {
-        if (
-          action === 'record-transfer' &&
-          (!row.bank_reference || row.reconciliation_status !== 'Pending')
-        )
-          throw new ConflictException('A pending recorded transfer is required');
-        return this.dto(client, row);
-      }
-      if (action === 'reject' || action === 'cancel') {
-        await this.move(client, row, target, actor, ip, this.reason(reason));
-        if (target === 'Rejected') await notifyRefundOutcome(client, { ...row, state: 'Rejected' });
-        return this.dto(client, row);
-      }
-      assertWalletProfileWritable({ id: invoice.profile_id, archived });
-      this.refundableInvoice(invoice);
-      // Approval is rechecked before money leaves. Reconciliation confirms an
-      // already recorded transfer using its immutable evidence and a current reviewer.
-      if (action !== 'reconcile') await this.requireApproval(client, row);
-      if (action === 'approve') {
-        await this.move(client, row, 'Approved', actor, ip, 'Finance approved the refund');
-        return this.dto(client, row);
-      }
-      if (action === 'record-transfer') {
-        if (row.state !== 'Approved')
-          throw new ConflictException('Only approved refunds can record a transfer');
-        await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [
-          `external-refund-reference:${reference}`,
-        ]);
-        const duplicate = await client.query(
-          "SELECT id FROM refunds WHERE destination='external_bank' AND bank_reference=$1 AND id<>$2",
-          [reference, row.id]
-        );
-        if (duplicate.rows.length)
-          throw new ConflictException('Bank reference already belongs to another refund');
-        await client.query(
-          "UPDATE refunds SET bank_reference=$2,reconciliation_status='Pending' WHERE id=$1",
-          [row.id, reference]
-        );
-        row.bank_reference = reference!;
-        row.reconciliation_status = 'Pending';
-        await this.move(client, row, 'Processing', actor, ip, 'External bank transfer recorded');
-        await this.audit(client, row, actor, ip, 'refund.bank_transfer_recorded', {
-          bankReference: reference,
-        });
-        return this.dto(client, row);
-      }
-      if (action === 'reconcile') {
-        if (
-          row.state !== 'Processing' ||
-          !row.bank_reference ||
-          row.reconciliation_status !== 'Pending'
-        )
-          throw new ConflictException('A pending recorded transfer is required');
-        const transfer = (
-          await client.query<{ user_id: string; bank_reference: string }>(
-            "SELECT user_id,metadata::jsonb->>'bankReference' AS bank_reference FROM audit_log WHERE event='refund.bank_transfer_recorded' AND metadata::jsonb->>'refundId'=$1 ORDER BY created_at DESC,id DESC LIMIT 1",
-            [row.id]
+    const result = await this.transaction(
+      preliminary.invoice_id,
+      actor,
+      async (client, invoice, archived) => {
+        const row = (
+          await client.query<RefundRow>(
+            'SELECT * FROM refunds WHERE id=$1 AND invoice_id=$2 FOR UPDATE',
+            [id, invoice.id]
           )
         ).rows[0];
-        if (!transfer || transfer.bank_reference !== reference)
-          throw new ConflictException('Recorded transfer evidence is missing');
-        if (transfer.user_id === actor.userId)
-          throw new ForbiddenException('A second finance staff member must reconcile the transfer');
-        await client.query("UPDATE refunds SET reconciliation_status='Confirmed' WHERE id=$1", [
-          row.id,
-        ]);
-        row.reconciliation_status = 'Confirmed';
-        await this.audit(client, row, actor, ip, 'refund.bank_reconciled', {
-          bankReference: reference,
-          recordedBy: transfer.user_id,
-        });
-        await this.complete(client, row, invoice, actor, ip);
+        if (!row || row.destination !== destination)
+          throw new NotFoundException('Refund not found');
+        if (
+          (destination === 'external_bank' && action === 'process') ||
+          (destination === 'wallet' && ['record-transfer', 'reconcile'].includes(action))
+        )
+          throw new BadRequestException('Action does not match refund destination');
+        const reference = ['record-transfer', 'reconcile'].includes(action)
+          ? this.reference(bankReference)
+          : undefined;
+        if (reference && row.bank_reference && row.bank_reference !== reference)
+          throw new ConflictException('Bank reference does not match the recorded transfer');
+        const target =
+          action === 'approve'
+            ? 'Approved'
+            : action === 'reject'
+              ? 'Rejected'
+              : action === 'cancel'
+                ? 'Cancelled'
+                : action === 'record-transfer'
+                  ? 'Processing'
+                  : 'Completed';
+        if (row.state === target) {
+          if (
+            action === 'record-transfer' &&
+            (!row.bank_reference || row.reconciliation_status !== 'Pending')
+          )
+            throw new ConflictException('A pending recorded transfer is required');
+          return this.dto(client, row);
+        }
+        if (action === 'reject' || action === 'cancel') {
+          await this.move(client, row, target, actor, ip, this.reason(reason));
+          if (target === 'Rejected')
+            await notifyRefundOutcome(client, { ...row, state: 'Rejected' });
+          return this.dto(client, row);
+        }
+        assertWalletProfileWritable({ id: invoice.profile_id, archived });
+        this.refundableInvoice(invoice);
+        // Approval is rechecked before money leaves. Reconciliation confirms an
+        // already recorded transfer using its immutable evidence and a current reviewer.
+        if (action !== 'reconcile') await this.requireApproval(client, row);
+        if (action === 'approve') {
+          await this.move(client, row, 'Approved', actor, ip, 'Finance approved the refund');
+          return this.dto(client, row);
+        }
+        if (action === 'record-transfer') {
+          if (row.state !== 'Approved')
+            throw new ConflictException('Only approved refunds can record a transfer');
+          await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [
+            `external-refund-reference:${reference}`,
+          ]);
+          const duplicate = await client.query(
+            "SELECT id FROM refunds WHERE destination='external_bank' AND bank_reference=$1 AND id<>$2",
+            [reference, row.id]
+          );
+          if (duplicate.rows.length)
+            throw new ConflictException('Bank reference already belongs to another refund');
+          await client.query(
+            "UPDATE refunds SET bank_reference=$2,reconciliation_status='Pending' WHERE id=$1",
+            [row.id, reference]
+          );
+          row.bank_reference = reference!;
+          row.reconciliation_status = 'Pending';
+          await this.move(client, row, 'Processing', actor, ip, 'External bank transfer recorded');
+          await this.audit(client, row, actor, ip, 'refund.bank_transfer_recorded', {
+            bankReference: reference,
+          });
+          return this.dto(client, row);
+        }
+        if (action === 'reconcile') {
+          if (
+            row.state !== 'Processing' ||
+            !row.bank_reference ||
+            row.reconciliation_status !== 'Pending'
+          )
+            throw new ConflictException('A pending recorded transfer is required');
+          const transfer = (
+            await client.query<{ user_id: string; bank_reference: string }>(
+              "SELECT user_id,metadata::jsonb->>'bankReference' AS bank_reference FROM audit_log WHERE event='refund.bank_transfer_recorded' AND metadata::jsonb->>'refundId'=$1 ORDER BY created_at DESC,id DESC LIMIT 1",
+              [row.id]
+            )
+          ).rows[0];
+          if (!transfer || transfer.bank_reference !== reference)
+            throw new ConflictException('Recorded transfer evidence is missing');
+          if (transfer.user_id === actor.userId)
+            throw new ForbiddenException(
+              'A second finance staff member must reconcile the transfer'
+            );
+          await client.query("UPDATE refunds SET reconciliation_status='Confirmed' WHERE id=$1", [
+            row.id,
+          ]);
+          row.reconciliation_status = 'Confirmed';
+          await this.audit(client, row, actor, ip, 'refund.bank_reconciled', {
+            bankReference: reference,
+            recordedBy: transfer.user_id,
+          });
+          await this.complete(client, row, invoice, actor, ip);
+          return this.dto(client, row);
+        }
+        if (!['Approved', 'Processing', 'Failed'].includes(row.state))
+          throw new ConflictException('Only approved wallet refunds can be processed');
+        if (row.state === 'Approved')
+          await this.move(
+            client,
+            row,
+            'Processing',
+            actor,
+            ip,
+            'Wallet refund processing requested'
+          );
+        await client.query(
+          'INSERT INTO refund_retry_jobs(refund_id,executor_user_id) VALUES($1,$2) ON CONFLICT(refund_id) DO NOTHING',
+          [row.id, actor.userId]
+        );
         return this.dto(client, row);
       }
-      if (row.state !== 'Processing')
-        await this.move(client, row, 'Processing', actor, ip, 'Wallet refund processing');
-      await this.wallet.createWallet(row.profile_id, client);
-      const credit = await this.wallet.credit(
-        row.profile_id,
-        BigInt(row.amount),
-        {
-          type: 'refund',
-          refId: row.id,
-          description: 'Invoice wallet refund',
-          metadata: { refundId: row.id, invoiceId: row.invoice_id },
-        },
-        `refund-wallet-credit:${row.id}`,
-        client
-      );
-      if (
-        credit.walletId !== row.profile_id ||
-        credit.type !== 'refund' ||
-        credit.refId !== row.id ||
-        credit.amount !== BigInt(row.amount) ||
-        credit.state !== 'Completed'
-      )
-        throw new ConflictException('Refund ledger identity does not match the request');
-      await this.complete(client, row, invoice, actor, ip);
-      return this.dto(client, row);
-    });
+    );
+    if (action !== 'process' || result.state === 'Completed') return result;
+    // The durable processing request is committed before attempting any money move.
+    await runWalletRefund(getDbPool(), id);
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const row = (
+        await client.query<RefundRow>('SELECT * FROM refunds WHERE id=$1 FOR UPDATE', [id])
+      ).rows[0]!;
+      const current = await this.dto(client, row);
+      await client.query('COMMIT');
+      return current;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   private reference(value: string | undefined): string {
@@ -412,61 +434,25 @@ export class RefundService {
     return reason;
   }
   private async requiresApproval(client: PoolClient, amount: string): Promise<boolean> {
-    const raw = (
-      await client.query<{ value: unknown }>('SELECT value FROM app_config WHERE key=$1', [
-        DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
-      ])
-    ).rows[0]?.value;
-    const threshold = readInvoiceBankReceiptDualApprovalThreshold(raw);
-    if (threshold.status === 'corrupt')
-      throw new ConflictException('Dual approval configuration is invalid');
-    return threshold.status === 'enabled' && BigInt(amount) >= BigInt(threshold.thresholdIrR);
+    try {
+      return await refundRequiresApproval(client, amount);
+    } catch (error) {
+      return refundGuardError(error);
+    }
   }
   private async latestApproval(client: PoolClient, row: RefundRow) {
-    const binding = (
-      await client.query<{ id: string }>(
-        "SELECT metadata::jsonb->>'approvalRequestId' AS id FROM audit_log WHERE event='refund.approval_requested' AND metadata::jsonb->>'refundId'=$1 ORDER BY created_at DESC,audit_log.id DESC LIMIT 1",
-        [row.id]
-      )
-    ).rows[0];
-    if (!binding) return undefined;
-    const approval = (
-      await client.query<{
-        id: string;
-        action_type: string;
-        amount_irr: string;
-        initiator_id: string;
-        reviewer_id: string | null;
-        status: string;
-        details: Record<string, string>;
-      }>('SELECT * FROM approval_requests WHERE id=$1 FOR UPDATE', [binding.id])
-    ).rows[0];
-    if (!approval) throw new ConflictException('The bound approval request is missing');
-    return approval;
+    try {
+      return await latestRefundApproval(client, row);
+    } catch (error) {
+      return refundGuardError(error);
+    }
   }
   private async requireApproval(client: PoolClient, row: RefundRow): Promise<void> {
-    const approval = await this.latestApproval(client, row);
-    if (approval?.status === 'rejected')
-      throw new ConflictException('The financial review rejected this refund');
-    if (!(await this.requiresApproval(client, row.amount)) && !approval) return;
-    if (
-      !approval ||
-      approval.action_type !== 'refund' ||
-      approval.details.refundId !== row.id ||
-      approval.status !== 'approved' ||
-      !approval.reviewer_id ||
-      approval.reviewer_id === approval.initiator_id ||
-      approval.initiator_id !== row.staff_id ||
-      approval.amount_irr !== row.amount ||
-      approval.details.invoiceId !== row.invoice_id ||
-      approval.details.profileId !== row.profile_id ||
-      approval.details.destination !== row.destination
-    )
-      throw new ConflictException(
-        'A matching approval by a second finance staff member is required'
-      );
-    await requireCurrentFinancePermission(client, approval.initiator_id);
-    await requireCurrentFinancePermission(client, approval.reviewer_id);
+    try {
+      await requireRefundApproval(client, row);
+    } catch (error) {
+      refundGuardError(error);
+    }
   }
   private async createApproval(
     client: PoolClient,
@@ -552,6 +538,21 @@ export class RefundService {
   }
   private async dto(client: PoolClient, row: RefundRow): Promise<RefundDto> {
     const approval = await this.latestApproval(client, row);
+    const job =
+      row.destination === 'wallet'
+        ? (
+            await client.query<{
+              attempts: number;
+              max_attempts: number;
+              next_attempt_at: Date | null;
+              exhausted_at: Date | null;
+              last_error_code: string | null;
+            }>(
+              'SELECT attempts,max_attempts,next_attempt_at,exhausted_at,last_error_code FROM refund_retry_jobs WHERE refund_id=$1',
+              [row.id]
+            )
+          ).rows[0]
+        : undefined;
     return {
       id: row.id,
       invoiceId: row.invoice_id,
@@ -562,6 +563,25 @@ export class RefundService {
       bankReference: row.bank_reference,
       reconciliationStatus: row.reconciliation_status,
       approvalRequestId: approval?.id ?? null,
+      retry: job
+        ? {
+            attempts: job.attempts,
+            maxAttempts: job.max_attempts,
+            nextAttemptAt: job.next_attempt_at?.toISOString() ?? null,
+            exhausted: job.exhausted_at !== null,
+            lastErrorCode: job.last_error_code,
+          }
+        : null,
     };
   }
+}
+
+function refundGuardError(error: unknown): never {
+  if (error instanceof RefundProcessingError) {
+    if (error.code === 'finance_permission_required') throw new ForbiddenException(error.message);
+    throw new ConflictException(error.message);
+  }
+  if ((error as { code?: string }).code === '55P03')
+    throw new ConflictException('Another finance action is in progress; retry');
+  throw error;
 }

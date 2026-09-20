@@ -2,25 +2,35 @@
 
 Branch: `codex/refund-retry-batch`, based on merged PR #312 at `4eea6d198341581d1b3f8af2e7a9b9ddaf5ca5fb`.
 
-## Scope and current state
+Status: implementation and focused validation complete; coverage closure, independent review and CI remain. No PR is published yet.
 
-Continue `04-invoices-wallet-contracts.md#T-04.4.01.07` and the remaining `.02` lifecycle criteria. This batch is in progress, not accepted or merged.
+## Scope
 
-The first implementation step moves wallet credit posting into the server-only `@barghsa/db/wallet-credit` entry point. The API still owns its existing transaction, profile lock and HTTP error mapping. The shared helper preserves ledger identity, exact bigint amounts, profile/wallet matching, archived-profile restrictions, row locking, optimistic balance updates and caller-owned commit/rollback. It does not start a background worker by itself.
+`04-invoices-wallet-contracts.md#T-04.4.01.07`: durable manual wallet-refund processing and bounded retry worker. The remaining `.02` pending approval-time ledger criterion is not implemented by this batch. Automatic contract obligations and external bank execution remain separate work.
 
-API unit mocks now return the canonical profile ID for profile-based lookups, matching PostgreSQL behavior. New real-database cases prove worker-style posting followed by an API replay returns one credit, including an amount above JavaScript safe integer precision, and that caller rollback removes both ledger and balance changes.
+## Behavior
 
-## Validation for the first implementation step
+The API validates finance permission, step-up, profile and current approval policy, then atomically records Processing, its audit and a unique retry job before attempting credit. A successful immediate attempt still returns Completed. A failed attempt rolls the financial work back to a savepoint, commits Failed with a safe error code, and schedules another attempt. Responses include attempt count, limit, due time and exhaustion status.
 
-- API and worker dependency builds pass.
-- API typecheck and changed-file ESLint pass.
-- Wallet service, real PostgreSQL credit and refund suites: 167 tests pass.
-- Full pinned Semgrep scan passes with zero findings and scanner errors.
+The registered worker polls every 15 seconds. Both API and worker enforce the same per-refund due time. Five attempts use exponential backoff starting at one minute; exhausted requests remain Failed and send one localized in-app alert to each current finance recipient. Generic job monitoring separately reports worker availability failures.
 
-## Remaining implementation
+Processing authorization is a durable command. Session expiry after that command commits does not cancel it. A request whose session expires before the command commits cannot create a job. Each money-moving attempt still checks current finance authority, exact canonical approval binding, policy and profile state, holding the relevant locks through commit. Audit entries identify the authorizing staff user and distinguish the worker executor.
 
-The API currently rolls a failed wallet process back to Approved, so a durable failure producer is required along with worker scheduling. Add per-refund due times, bounded attempt counts and exhausted-retry alerts; the existing generic worker job recorder does not enforce its display-only next-run time. Reuse shared credit posting in the actual registered worker. Keep profile, threshold/current financial authority, invoice, refund and wallet locks in consistent order. Test concurrent workers/staff, crashes and retries, changed approval/policy/profile state, due-time enforcement, exhaustion, and atomic invoice/audit/notice completion.
+The shared server-side credit helper preserves exact money, idempotency, profile/wallet identity, archival checks and optimistic balance updates. Credit, refund completion, the database-owned invoice counter, invoice state/audits and the owner notification commit together. A crash before commit leaves the durable job available; an advisory lock and row locks serialize duplicate worker/API attempts.
 
-Pending approval-time ledger entries remain a `.02` criterion. External bank transfers must retain distinct current finance reconciliation against immutable recorded evidence; the worker must never invent or replay a bank transfer. Automatic contract obligations remain separately dependent on contract work.
+Migration 0136 adds the retry table, due-time index, attempt bounds, immutable job identity/history, terminal guards and update timestamps. Its journal timestamp follows the existing production journal monotonically. Older Failed rows without a processing job require an explicit authorized process request; migration does not invent historical processing authority.
 
-Run the relevant final validation, obtain independent exact-HEAD review and require all active CI checks before publishing completion or merging. No supervisor state or historical completion arrays are changed.
+External refunds still require recorded transfer evidence and distinct current finance reconciliation. They cannot enter the wallet retry queue. Customer notices remain in-app only. An exhausted job cannot be silently reset by repeating the process API call.
+
+## Validation
+
+- API, worker and database builds/typechecks pass.
+- Combined wallet service, PostgreSQL credit and refund suites: 172 tests pass, including all 40 refund cases.
+- New worker integration cases cover durable failure, due-time enforcement, exponential delays, five-attempt exhaustion, localized finance-only alerts, safe error codes, duplicate suppression, committed-request recovery, concurrent workers, current authority/policy/profile changes, and both sides of the session-expiry authorization boundary.
+- Existing audit/notification rollback tests now assert durable Failed plus zero financial changes, followed by a due retry and one completion.
+- Changed-file ESLint, database snapshot validation and generated OpenAPI comparison pass.
+- Full pinned Semgrep scan: five fixtures pass, 829 files, zero findings/errors.
+
+## Before review and merge
+
+Complete package-level changed/critical source coverage, including direct shared database helper and worker coverage; check the remaining relevant worker/shared/i18n suites and production migration behavior. Run the canonical backlog/audit checks, obtain independent exact-HEAD review and require all active GitHub CI checks. Keep the historical supervisor arrays and paused scheduler unchanged.

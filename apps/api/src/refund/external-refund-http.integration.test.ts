@@ -379,11 +379,13 @@ it('rolls wallet completion back if its customer notice cannot be persisted', as
     "CREATE FUNCTION fail_refund_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.profile_id IS NOT NULL THEN RAISE EXCEPTION 'test notice unavailable'; END IF; RETURN NEW; END; $$; CREATE TRIGGER fail_refund_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION fail_refund_notice()"
   );
   try {
-    expect((await post(`wallet-refunds/${refund.id}/process`)).status).toBe(500);
+    const failed = await post(`wallet-refunds/${refund.id}/process`);
+    expect(failed.status).toBe(200);
+    expect(await failed.json()).toMatchObject({ state: 'Failed', retry: { attempts: 1 } });
     expect(await balances(f)).toEqual({ refunded_amount: '0', state: 'Paid', posted_balance: '0' });
     expect(
       (await http.pool.query('SELECT state FROM refunds WHERE id=$1', [refund.id])).rows
-    ).toEqual([{ state: 'Approved' }]);
+    ).toEqual([{ state: 'Failed' }]);
     expect(
       (await http.pool.query('SELECT id FROM wallet_transactions WHERE ref_id=$1', [refund.id]))
         .rows
@@ -393,6 +395,9 @@ it('rolls wallet completion back if its customer notice cannot be persisted', as
       'DROP TRIGGER fail_refund_notice ON in_app_notifications; DROP FUNCTION fail_refund_notice()'
     );
   }
+  await http.pool.query('UPDATE refund_retry_jobs SET next_attempt_at=now() WHERE refund_id=$1', [
+    refund.id,
+  ]);
   for (let retry = 0; retry < 2; retry++)
     expect((await post(`wallet-refunds/${refund.id}/process`)).status).toBe(200);
   const notices = (

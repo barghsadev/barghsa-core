@@ -1,3 +1,4 @@
+import { runRefundRetries, REFUND_RETRY_INTERVAL_MS } from './refunds/retry-runner.js';
 import { runAiModelTest } from './ai-models/test-runner.js';
 import { cleanupStorageObjects, cleanupStorageProvider } from './storage/cleanup.js';
 import { SmsNotificationTransport } from './notifications/sms-transport.js';
@@ -127,6 +128,9 @@ async function main(): Promise<void> {
   });
 
   const pollers = new PollerGroup(() => logger.error('Worker job or failure recording failed'));
+  pollers.every(async () => {
+    await runRefundRetries();
+  }, REFUND_RETRY_INTERVAL_MS);
 
   /* ------------------------------------------------------------------ */
   /*  Graceful shutdown handler                                          */
