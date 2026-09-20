@@ -139,6 +139,8 @@ test('province list retries malformed data and applies pagination and filters', 
   await expect(page.getByRole('cell', { name: 'Tehran', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Next', exact: true }).click();
   await expect(page.getByRole('cell', { name: 'Second Page', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Previous', exact: true })).toBeEnabled();
+  await expect(page.getByRole('cell', { name: 'Second Page', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Previous', exact: true }).click();
   await expect(page.getByRole('cell', { name: 'Tehran', exact: true })).toBeVisible();
   await page
@@ -148,6 +150,52 @@ test('province list retries malformed data and applies pagination and filters', 
   await page.getByRole('textbox', { name: 'Search provinces', exact: true }).fill('تهران');
   await expect.poll(() => new URLSearchParams(queries.at(-1)).get('search')).toBe('تهران');
   expect(new URLSearchParams(queries.at(-1)).get('page')).toBe('1');
+});
+
+test('city pagination resets only when the search changes', async ({ page }) => {
+  const queries: string[] = [];
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/admin/geography/provinces?*', (route) =>
+    route.fulfill({
+      json: {
+        provinces: [{ id: 'p1', nameFa: 'تهران', nameEn: 'Tehran', status: 'active' }],
+        total: 1,
+      },
+    })
+  );
+  await page.route('**/api/admin/geography/provinces/p1/cities?*', (route) => {
+    const query = new URL(route.request().url()).searchParams;
+    queries.push(query.toString());
+    return route.fulfill({
+      json: {
+        cities: [
+          {
+            id: 'c1',
+            provinceId: 'p1',
+            nameFa: 'ری',
+            nameEn: query.get('page') === '2' ? 'Second City Page' : 'Rey',
+            status: 'active',
+          },
+        ],
+        total: 21,
+      },
+    });
+  });
+  await page.goto('/admin/geography');
+  await page.evaluate(() => {
+    document.documentElement.lang = 'en';
+  });
+  await page.getByRole('button', { name: 'Cities', exact: true }).click();
+  const panel = page.getByRole('region', { name: 'Cities — Tehran', exact: true });
+  await expect(panel.getByRole('cell', { name: 'Rey', exact: true })).toBeVisible();
+  await panel.getByRole('button', { name: 'Next', exact: true }).click();
+  await expect(panel.getByRole('cell', { name: 'Second City Page', exact: true })).toBeVisible();
+  await expect(panel.getByRole('button', { name: 'Previous', exact: true })).toBeEnabled();
+  await expect(panel.getByRole('cell', { name: 'Second City Page', exact: true })).toBeVisible();
+  await panel.getByRole('textbox').fill('Rey');
+  await expect.poll(() => new URLSearchParams(queries.at(-1)).get('search')).toBe('Rey');
+  expect(new URLSearchParams(queries.at(-1)).get('page')).toBe('1');
+  await expect(panel.getByRole('button', { name: 'Previous', exact: true })).toBeDisabled();
 });
 
 for (const locale of ['en', 'fa'] as const) {

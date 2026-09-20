@@ -1430,18 +1430,19 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/refund-pending-ledger",
-      "status": "locally_validated",
-      "record": "kanban/batches/2026-09-20-refund-pending-ledger.md",
+      "branch": "codex/browser-ci-stability",
+      "status": "validating",
+      "record": "kanban/batches/2026-09-20-geography-browser-stability.md",
       "previous_batch": {
-        "pr": 313,
+        "pr": 314,
         "status": "merged",
-        "merge_commit_sha": "b7bc57b456c92c0094b88c17cf354df6b998f112",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/313#issuecomment-5751498269",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35526638700"
+        "merge_commit_sha": "5fa83cc490ad299f0bce68e48e193f9877157d33",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/314#issuecomment-5751680973",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35528336189"
       },
       "remaining_tasks": [
-        "04-invoices-wallet-contracts.md#T-04.4.01.02 approval-time pending transactions"
+        "Resolve main-run chargeback clock and geography pagination regressions",
+        "Contract drafts and immutable versioning before automatic refund obligations"
       ],
       "token_limit": "User withdrew prior token ceiling; normal work authorized."
     },
@@ -1453,6 +1454,12 @@
       "resolution": "focused invoice API and frontend tests; original coverage floors preserved",
       "status": "merged",
       "resolution_pr": 311
+    },
+    "latest_full_ci_followup": {
+      "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35527639080",
+      "commit": "b7bc57b456c92c0094b88c17cf354df6b998f112",
+      "status": "fix_in_validation",
+      "finding": "Two browser flakes: runner/browser clock drift and real mount-time geography pagination reset. Unit/security checks passed; browser coverage was rejected by the flake gate."
     }
   }
 }

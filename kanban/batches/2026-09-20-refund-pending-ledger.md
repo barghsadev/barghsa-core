@@ -2,7 +2,7 @@
 
 Branch: `codex/refund-pending-ledger`, based on merged PR #313 at `b7bc57b456c92c0094b88c17cf354df6b998f112`.
 
-Status: implementation and local validation complete; independent review and GitHub checks remain.
+Status: merged as [PR #314](https://github.com/barghsadev/barghsa-core/pull/314) at `5fa83cc490ad299f0bce68e48e193f9877157d33`.
 
 ## Scope and behavior
 
@@ -22,6 +22,6 @@ The migration backfills only Approved/Processing/Failed refunds as unpaid Pendin
 - API and database builds/typechecks, changed-file ESLint, snapshot guard and generated OpenAPI comparison pass.
 - Changed/critical source gate against `b7bc57b4`: API refund service 93.01% lines / 90% branches; new database schema 100% executable lines. Existing coverage floors are unchanged.
 
-## Before merge
+## Merge evidence
 
-Require independent exact-HEAD approval and all active GitHub checks. Automatic contract obligations remain the next separate workflow. Do not change historical supervisor completion arrays or restart the paused scheduler.
+[Independent review](https://github.com/barghsadev/barghsa-core/pull/314#issuecomment-5751680973) approved final HEAD `d814891d3b99d64e65aed78d7d42186dfb4f75bf` with no findings. [CI run](https://github.com/barghsadev/barghsa-core/actions/runs/35528336189) passed all five active checks; tests took 17m29s. Merge and durable review binding were read back and verified. Automatic contract obligations remain the next separate workflow. Do not change historical supervisor completion arrays or restart the paused scheduler.
