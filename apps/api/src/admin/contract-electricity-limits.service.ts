@@ -1,3 +1,5 @@
+import type { ValidatedSession } from '../session/session.service.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Inject, Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -54,7 +56,7 @@ import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
 export interface UpdateContractElectricityLimitsInput {
   /** Raw request body (snake_case wire shape accepted). */
   raw: unknown;
-  actorUserId: string;
+  actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   ip: string;
 }
 
@@ -136,7 +138,8 @@ export class ContractElectricityLimitsService {
     const now = new Date();
     try {
       await client.query('BEGIN');
-      await requireStaffMutationPermission(client, input.actorUserId, 'admin:catalogue:edit');
+      await requireStaffMutationPermission(client, input.actor.userId, 'admin:catalogue:edit');
+      await requireSessionStepUp(client, input.actor);
       await client.query("SELECT pg_advisory_xact_lock(hashtext('contract-electricity-limits'))");
 
       // Lock the existing row (if any) so the previous value recorded in
@@ -172,7 +175,7 @@ export class ContractElectricityLimitsService {
          VALUES ($1, $2, 'change_recorded', $3::jsonb, $4, $5, $6)`,
         [
           uuidv7(),
-          input.actorUserId,
+          input.actor.userId,
           JSON.stringify({
             entity: 'contract_electricity_limits',
             action: 'updated',
@@ -188,10 +191,11 @@ export class ContractElectricityLimitsService {
         ]
       );
 
+      await requireSessionStepUp(client, input.actor);
       await client.query('COMMIT');
 
       this.logger.log(
-        `Contract electricity limits updated by ${input.actorUserId} (version ${newVersion})`
+        `Contract electricity limits updated by ${input.actor.userId} (version ${newVersion})`
       );
       return config;
     } catch (error) {

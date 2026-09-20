@@ -4085,6 +4085,30 @@
         ]
       }
     },
+    "/api/admin/geography/provinces/{provinceId}/cities/import": {
+      "post": {
+        "operationId": "AdminGeographyController_importCities",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "provinceId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Import cities atomically (admin)",
+        "tags": [
+          "Admin Geography"
+        ]
+      }
+    },
     "/api/admin/geography/provinces/{provinceId}/cities/{id}": {
       "delete": {
         "operationId": "AdminGeographyController_deleteCity",

@@ -1,3 +1,8 @@
+// Session revocation and expiry are exercised through the migrated HTTP fixture.
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(undefined),
+  requireCurrentSession: vi.fn().mockResolvedValue(undefined),
+}));
 vi.mock('./staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
@@ -130,7 +135,7 @@ const createInput = {
   validUntil: null,
   minOrderAmount: '0',
   categories: [],
-  actorUserId: ACTOR,
+  actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
   ip: '127.0.0.1',
 };
 
@@ -390,7 +395,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       const result = await service.update(CODE_ID, {
         code: ' sale20 ',
-        actorUserId: ACTOR,
+        actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
         ip: '127.0.0.1',
       });
 
@@ -407,7 +412,11 @@ describe('GiftCodeService (T-09.12.03)', () => {
       service = await loadService(pool);
 
       await expect(
-        service.update(CODE_ID, { code: 'OTHER', actorUserId: ACTOR, ip: 'x' })
+        service.update(CODE_ID, {
+          code: 'OTHER',
+          actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
+          ip: 'x',
+        })
       ).rejects.toThrow(/already exists/);
     });
 
@@ -432,7 +441,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
       const result = await service.update(CODE_ID, {
         discountType: 'fixed_irr',
         discountValue: '100000',
-        actorUserId: ACTOR,
+        actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
         ip: 'x',
       });
 
@@ -462,7 +471,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
       await service.update(CODE_ID, {
         eligibility: 'profile',
         profileIds: [PROFILE_ID],
-        actorUserId: ACTOR,
+        actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
         ip: 'x',
       });
 
@@ -481,7 +490,12 @@ describe('GiftCodeService (T-09.12.03)', () => {
       router.on('ANY($1::uuid[])', () => ({ rows: [] }));
       service = await loadService(pool);
 
-      const result = await service.setStatus(CODE_ID, 'inactive', ACTOR, '127.0.0.1');
+      const result = await service.setStatus(
+        CODE_ID,
+        'inactive',
+        { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
+        '127.0.0.1'
+      );
 
       expect(result.status).toBe('inactive');
       const audit = router.queries('INSERT INTO audit_log')[0]!;
@@ -495,7 +509,12 @@ describe('GiftCodeService (T-09.12.03)', () => {
       router.on('ANY($1::uuid[])', () => ({ rows: [] }));
       service = await loadService(pool);
 
-      await service.setStatus(CODE_ID, 'active', ACTOR, '127.0.0.1');
+      await service.setStatus(
+        CODE_ID,
+        'active',
+        { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
+        '127.0.0.1'
+      );
 
       expect(router.queries('UPDATE gift_codes')).toHaveLength(0);
       expect(router.queries('INSERT INTO audit_log')).toHaveLength(0);

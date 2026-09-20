@@ -64,6 +64,7 @@ const storage: StorageProvider = {
     throw new Error('Unused listing');
   },
 };
+const actor = { userId: 'template-commit', sessionId: randomUUID(), csrfToken: randomUUID() };
 let templateId: string;
 beforeAll(async () => {
   management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
@@ -77,6 +78,10 @@ beforeAll(async () => {
   state.pool = new Pool({ connectionString: state.url });
   await state.pool.query(
     "INSERT INTO users(user_id,username,password_hash,is_staff,is_admin) VALUES ('template-commit','template-commit@example.test','fixture',true,true)"
+  );
+  await state.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
+    [actor.sessionId, actor.userId, actor.csrfToken, randomUUID()]
   );
   templateId = (
     await state.pool.query(
@@ -115,7 +120,7 @@ function upload() {
     {
       fileName: 'contract.txt',
       content: '{{customerName}}',
-      actorUserId: 'template-commit',
+      actor,
       ip: '127.0.0.1',
     }
   );

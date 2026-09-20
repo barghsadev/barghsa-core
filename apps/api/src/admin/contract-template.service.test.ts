@@ -1,3 +1,8 @@
+// Session revocation and expiry are exercised through the migrated HTTP fixture.
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(undefined),
+  requireCurrentSession: vi.fn().mockResolvedValue(undefined),
+}));
 vi.mock('../storage/reserve-storage-copy.js', () => ({
   reserveStorageCopy: vi.fn().mockResolvedValue(undefined),
 }));
@@ -119,7 +124,7 @@ beforeEach(() => {
 function createInput(over: Record<string, unknown> = {}) {
   return {
     name: ' Power Contract ',
-    actorUserId: ACTOR,
+    actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
     ip: '127.0.0.1',
     ...over,
   };
@@ -208,7 +213,7 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
       fileName: 'power.docx',
       contentType: 'text/plain',
       content: 'Dear {{customerName}}, amount {{amount}}',
-      actorUserId: ACTOR,
+      actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
       ip: '127.0.0.1',
     });
 
@@ -250,7 +255,7 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
       service.uploadVersion(TEMPLATE_ID, {
         fileName: 'a.docx',
         content: '{{x}}',
-        actorUserId: ACTOR,
+        actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
         ip: 'ip',
       })
     );
@@ -281,7 +286,7 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
       service.uploadVersion(TEMPLATE_ID, {
         fileName: 'a.docx',
         content: '{{x}}',
-        actorUserId: ACTOR,
+        actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
         ip: 'ip',
       })
     ).rejects.toThrow('insert boom');
@@ -299,7 +304,7 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
     const version = await service.uploadVersion(TEMPLATE_ID, {
       fileName: '../../evil.d/../../../etc/passwd',
       content: '{{x}}',
-      actorUserId: ACTOR,
+      actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
       ip: '127.0.0.1',
     });
     expect(version.fileName).toBe('passwd');
@@ -324,7 +329,7 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
       service.uploadVersion(TEMPLATE_ID, {
         fileName: 'a.docx',
         content: 'x',
-        actorUserId: ACTOR,
+        actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
         ip: 'ip',
       })
     );
@@ -345,7 +350,7 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
     const version = await service.uploadVersion(TEMPLATE_ID, {
       fileName: 'a.docx',
       content: '{{x}}',
-      actorUserId: ACTOR,
+      actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
       ip: 'ip',
     });
     expect(version.versionNumber).toBe(1);
@@ -359,7 +364,7 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
       service.uploadVersion(TEMPLATE_ID, {
         fileName: 'a.docx',
         content: '{{x}}',
-        actorUserId: ACTOR,
+        actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
         ip: 'ip',
       })
     );
@@ -388,7 +393,7 @@ describe('ContractTemplateService.update (T-09.12.04)', () => {
     const { service } = await loadService(db.pool);
     await service.update(TEMPLATE_ID, {
       name: 'New Name',
-      actorUserId: ACTOR,
+      actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
       ip: 'ip',
     });
     // update() returns readDto which reads back the (still-stale) mock row,
@@ -402,7 +407,11 @@ describe('ContractTemplateService.update (T-09.12.04)', () => {
     db.router.on('FROM contract_templates', () => ({ rows: [] }));
     const { service } = await loadService(db.pool);
     const error = await expectError(
-      service.update(TEMPLATE_ID, { name: 'X', actorUserId: ACTOR, ip: 'ip' })
+      service.update(TEMPLATE_ID, {
+        name: 'X',
+        actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
+        ip: 'ip',
+      })
     );
     expect(error.getStatus()).toBe(404);
     expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_NOT_FOUND' });
@@ -418,7 +427,13 @@ describe('ContractTemplateService.delete (T-09.12.04)', () => {
       rows: [{ id: 'v' }],
     }));
     const { service } = await loadService(db.pool);
-    const error = await expectError(service.delete(TEMPLATE_ID, ACTOR, 'ip'));
+    const error = await expectError(
+      service.delete(
+        TEMPLATE_ID,
+        { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
+        'ip'
+      )
+    );
     expect(error.getStatus()).toBe(409);
     expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_VERSIONED' });
   });
@@ -432,7 +447,13 @@ describe('ContractTemplateService.delete (T-09.12.04)', () => {
       rows: [{ id: 'r' }],
     }));
     const { service } = await loadService(db.pool);
-    const error = await expectError(service.delete(TEMPLATE_ID, ACTOR, 'ip'));
+    const error = await expectError(
+      service.delete(
+        TEMPLATE_ID,
+        { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
+        'ip'
+      )
+    );
     expect(error.getStatus()).toBe(409);
     expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_REFERENCED' });
   });
@@ -448,7 +469,11 @@ describe('ContractTemplateService.delete (T-09.12.04)', () => {
     db.router.on('DELETE FROM contract_templates', () => ({ rows: [], rowCount: 1 }));
     db.router.on('INSERT INTO audit_log', () => ({ rows: [] }));
     const { service } = await loadService(db.pool);
-    const result = await service.delete(TEMPLATE_ID, ACTOR, 'ip');
+    const result = await service.delete(
+      TEMPLATE_ID,
+      { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
+      'ip'
+    );
     expect(result.deleted).toBe(true);
     expect(db.router.queries('DELETE FROM contract_templates').length).toBe(1);
   });
@@ -456,7 +481,13 @@ describe('ContractTemplateService.delete (T-09.12.04)', () => {
   it('rejects deleting an unknown template with 404', async () => {
     db.router.on('FROM contract_templates', () => ({ rows: [] }));
     const { service } = await loadService(db.pool);
-    const error = await expectError(service.delete(TEMPLATE_ID, ACTOR, 'ip'));
+    const error = await expectError(
+      service.delete(
+        TEMPLATE_ID,
+        { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
+        'ip'
+      )
+    );
     expect(error.getStatus()).toBe(404);
     expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_NOT_FOUND' });
   });
@@ -506,7 +537,7 @@ describe('ContractTemplateService pg race translation (T-09.12.04)', () => {
       service.uploadVersion(TEMPLATE_ID, {
         fileName: 'a.docx',
         content: '{{x}}',
-        actorUserId: ACTOR,
+        actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
         ip: 'ip',
       })
     );
@@ -525,7 +556,7 @@ describe('ContractTemplateService pg race translation (T-09.12.04)', () => {
       service.uploadVersion(TEMPLATE_ID, {
         fileName: 'a.docx',
         content: '{{x}}',
-        actorUserId: ACTOR,
+        actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
         ip: 'ip',
       })
     );

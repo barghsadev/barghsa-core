@@ -203,11 +203,7 @@ export class ReconciliationExceptionsController {
   ): Promise<ReconciliationExceptionDto> {
     this.assertResolvePermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.reconciliationService.investigateReconciliationException(
-      id,
-      req.session.userId,
-      ip
-    );
+    return this.reconciliationService.investigateReconciliationException(id, req.session, ip);
   }
 
   /**
@@ -252,7 +248,7 @@ export class ReconciliationExceptionsController {
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.reconciliationService.resolveReconciliationException(
       id,
-      req.session.userId,
+      req.session,
       ip,
       parsed.data.note
     );
@@ -301,7 +297,7 @@ export class ReconciliationExceptionsController {
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.reconciliationService.closeReconciliationException(
       id,
-      req.session.userId,
+      req.session,
       ip,
       parsed.data.note
     );

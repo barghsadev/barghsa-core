@@ -2305,7 +2305,7 @@ export class AdminController {
   async setGreenElectricityRules(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertElectricitySettingsPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.adminService.setGreenElectricityConfig(rawBody, req.session.userId, ip);
+    return this.adminService.setGreenElectricityConfig(rawBody, req.session, ip);
   }
 
   /**

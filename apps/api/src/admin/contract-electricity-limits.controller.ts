@@ -152,7 +152,7 @@ export class ContractElectricityLimitsController {
     this.assertElectricitySettingsPermission(req);
     return this.service.update({
       raw: body,
-      actorUserId: req.session.userId,
+      actor: req.session,
       ip: requestIp(req),
     });
   }

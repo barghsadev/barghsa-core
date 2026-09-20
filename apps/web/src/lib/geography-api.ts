@@ -79,3 +79,75 @@ export async function deactivateProvince(id: string) {
   );
   if (result?.success !== true) throw new GeographyRequestError();
 }
+
+export interface City extends Province {
+  provinceId: string;
+}
+function cityPath(provinceId: string) {
+  return `/${encodeURIComponent(provinceId)}/cities`;
+}
+function isCity(value: unknown): value is City {
+  return isProvince(value) && typeof record(value)?.provinceId === 'string';
+}
+export async function listCities(
+  provinceId: string,
+  params: { search: string; status: string; page: number },
+  signal: AbortSignal
+) {
+  const query = new URLSearchParams({
+    page: String(params.page),
+    limit: '20',
+    search: params.search,
+    status: params.status,
+  });
+  const result = record(await request(`${cityPath(provinceId)}?${query}`, { signal }));
+  if (
+    !result ||
+    !Array.isArray(result.cities) ||
+    !result.cities.every((c) => isCity(c) && c.provinceId === provinceId) ||
+    typeof result.total !== 'number' ||
+    !Number.isSafeInteger(result.total) ||
+    result.total < 0
+  )
+    throw new GeographyRequestError();
+  return { cities: result.cities as City[], total: result.total };
+}
+export async function saveCity(
+  provinceId: string,
+  city: Province | null,
+  data: { nameFa: string; nameEn: string; status: 'active' | 'inactive' }
+) {
+  const result = await request(
+    `${cityPath(provinceId)}${city ? `/${encodeURIComponent(city.id)}` : ''}`,
+    {
+      method: city ? 'PATCH' : 'POST',
+      headers: withCsrf({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify(city ? data : { nameFa: data.nameFa, nameEn: data.nameEn }),
+    }
+  );
+  if (!isCity(result) || result.provinceId !== provinceId || (city && result.id !== city.id))
+    throw new GeographyRequestError();
+  return result;
+}
+export async function deactivateCity(provinceId: string, id: string) {
+  const result = record(
+    await request(`${cityPath(provinceId)}/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: withCsrf(),
+    })
+  );
+  if (result?.success !== true) throw new GeographyRequestError();
+}
+export async function importCities(
+  provinceId: string,
+  cities: { nameFa: string; nameEn: string }[]
+) {
+  const result = record(
+    await request(`${cityPath(provinceId)}/import`, {
+      method: 'POST',
+      headers: withCsrf({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ cities }),
+    })
+  );
+  if (result?.imported !== cities.length) throw new GeographyRequestError();
+}

@@ -187,7 +187,7 @@ export class AdminGeographyController {
         400
       );
     }
-    return this.adminGeographyService.createProvince(parsed.data);
+    return this.adminGeographyService.createProvince(parsed.data, req.session, req.ip ?? 'unknown');
   }
 
   /**
@@ -220,7 +220,9 @@ export class AdminGeographyController {
     }
     const province = await this.adminGeographyService.updateProvince(
       id,
-      parsed.data as UpdateProvinceDto
+      parsed.data as UpdateProvinceDto,
+      req.session,
+      req.ip ?? 'unknown'
     );
     if (!province) {
       throw new HttpException(
@@ -244,7 +246,11 @@ export class AdminGeographyController {
   @ApiResponse({ status: 409, description: 'Province has cities.' })
   async deleteProvince(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     this.requireAdmin(req);
-    const deleted = await this.adminGeographyService.deleteProvince(id);
+    const deleted = await this.adminGeographyService.deleteProvince(
+      id,
+      req.session,
+      req.ip ?? 'unknown'
+    );
     if (!deleted) {
       throw new HttpException(
         { statusCode: 404, error: 'GEOGRAPHY:PROVINCE_NOT_FOUND', message: 'Province not found' },
@@ -318,6 +324,29 @@ export class AdminGeographyController {
    *
    * Create a new city in a province.
    */
+  @Post('provinces/:provinceId/cities/import')
+  @HttpCode(201)
+  @ApiOperation({ summary: 'Import cities atomically (admin)' })
+  async importCities(
+    @Req() req: AuthenticatedRequest,
+    @Param('provinceId') provinceId: string,
+    @Body() body: unknown
+  ) {
+    this.requireAdmin(req);
+    const parsed = z
+      .object({ cities: z.array(CreateCitySchema).min(1).max(200) })
+      .strict()
+      .safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ statusCode: 400, error: 'VALIDATION:INPUT' }, 400);
+    return this.adminGeographyService.importCities(
+      provinceId,
+      parsed.data.cities,
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
   @Post('provinces/:provinceId/cities')
   @HttpCode(201)
   @ApiOperation({ summary: 'Create city (admin)' })
@@ -343,7 +372,12 @@ export class AdminGeographyController {
         400
       );
     }
-    return this.adminGeographyService.createCity(provinceId, parsed.data);
+    return this.adminGeographyService.createCity(
+      provinceId,
+      parsed.data,
+      req.session,
+      req.ip ?? 'unknown'
+    );
   }
 
   /**
@@ -374,7 +408,12 @@ export class AdminGeographyController {
         400
       );
     }
-    const city = await this.adminGeographyService.updateCity(id, parsed.data as UpdateCityDto);
+    const city = await this.adminGeographyService.updateCity(
+      id,
+      parsed.data as UpdateCityDto,
+      req.session,
+      req.ip ?? 'unknown'
+    );
     if (!city) {
       throw new HttpException(
         { statusCode: 404, error: 'GEOGRAPHY:CITY_NOT_FOUND', message: 'City not found' },
@@ -396,7 +435,11 @@ export class AdminGeographyController {
   @ApiResponse({ status: 404, description: 'City not found.' })
   async deleteCity(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     this.requireAdmin(req);
-    const deleted = await this.adminGeographyService.deleteCity(id);
+    const deleted = await this.adminGeographyService.deleteCity(
+      id,
+      req.session,
+      req.ip ?? 'unknown'
+    );
     if (!deleted) {
       throw new HttpException(
         { statusCode: 404, error: 'GEOGRAPHY:CITY_NOT_FOUND', message: 'City not found' },

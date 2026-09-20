@@ -1,3 +1,8 @@
+import type { Pool, PoolClient } from 'pg';
+import type { ValidatedSession } from '../session/session.service.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -163,8 +168,10 @@ export class AdminGeographyService {
   /**
    * Get a single province by ID.
    */
-  async getProvince(id: string): Promise<ProvinceRow | null> {
-    const pool = getDbPool();
+  async getProvince(
+    id: string,
+    pool: Pick<Pool, 'query'> = getDbPool()
+  ): Promise<ProvinceRow | null> {
     const result = await pool.query(
       `SELECT id, name_fa, name_en, status, created_at, updated_at
        FROM provinces WHERE id = $1`,
@@ -177,145 +184,160 @@ export class AdminGeographyService {
   /**
    * Create a new province.
    */
-  async createProvince(input: CreateProvinceInput): Promise<ProvinceRow> {
-    const pool = getDbPool();
-    const id = uuidv7();
-    const now = new Date();
+  async createProvince(
+    input: CreateProvinceInput,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ): Promise<ProvinceRow> {
+    return this.withMutation(actor, ip, 'provinces', null, async (pool) => {
+      const id = uuidv7();
+      const now = new Date();
 
-    try {
-      const result = await pool.query(
-        `INSERT INTO provinces (id, name_fa, name_en, created_at, updated_at)
+      try {
+        const result = await pool.query(
+          `INSERT INTO provinces (id, name_fa, name_en, created_at, updated_at)
          VALUES ($1, $2, $3, $4, $5)
          RETURNING id, name_fa, name_en, status, created_at, updated_at`,
-        [id, input.nameFa, input.nameEn, now, now]
-      );
-      return mapProvinceRow(result.rows[0]!);
-    } catch (error) {
-      // Unique constraint on name_en (if added later) or other DB error
-      if (
-        typeof error === 'object' &&
-        error !== null &&
-        'code' in error &&
-        (error as { code: string }).code === '23505'
-      ) {
+          [id, input.nameFa, input.nameEn, now, now]
+        );
+        return mapProvinceRow(result.rows[0]!);
+      } catch (error) {
+        // Unique constraint on name_en (if added later) or other DB error
+        if (
+          typeof error === 'object' &&
+          error !== null &&
+          'code' in error &&
+          (error as { code: string }).code === '23505'
+        ) {
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: 'GEOGRAPHY:PROVINCE_EXISTS',
+              message: 'A province with this name already exists',
+            },
+            409
+          );
+        }
+        this.logger.error(`Failed to create province: ${String(error)}`);
         throw new HttpException(
-          {
-            statusCode: 409,
-            error: 'GEOGRAPHY:PROVINCE_EXISTS',
-            message: 'A province with this name already exists',
-          },
-          409
+          { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to create province' },
+          500
         );
       }
-      this.logger.error(`Failed to create province: ${String(error)}`);
-      throw new HttpException(
-        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to create province' },
-        500
-      );
-    }
+    });
   }
 
   /**
    * Update an existing province.
    */
-  async updateProvince(id: string, input: UpdateProvinceInput): Promise<ProvinceRow | null> {
-    const pool = getDbPool();
+  async updateProvince(
+    id: string,
+    input: UpdateProvinceInput,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ): Promise<ProvinceRow | null> {
+    return this.withMutation(actor, ip, 'provinces', id, async (pool) => {
+      // First check existence
+      const existing = await this.getProvince(id, pool);
+      if (!existing) return null;
 
-    // First check existence
-    const existing = await this.getProvince(id);
-    if (!existing) return null;
+      // Build dynamic UPDATE
+      const setClauses: string[] = [];
+      const params: unknown[] = [];
+      let paramIdx = 1;
 
-    // Build dynamic UPDATE
-    const setClauses: string[] = [];
-    const params: unknown[] = [];
-    let paramIdx = 1;
+      if (input.nameFa !== undefined) {
+        setClauses.push(`name_fa = $${paramIdx}`);
+        params.push(input.nameFa);
+        paramIdx++;
+      }
+      if (input.nameEn !== undefined) {
+        setClauses.push(`name_en = $${paramIdx}`);
+        params.push(input.nameEn);
+        paramIdx++;
+      }
+      if (input.status !== undefined) {
+        setClauses.push(`status = $${paramIdx}`);
+        params.push(input.status);
+        paramIdx++;
+      }
 
-    if (input.nameFa !== undefined) {
-      setClauses.push(`name_fa = $${paramIdx}`);
-      params.push(input.nameFa);
-      paramIdx++;
-    }
-    if (input.nameEn !== undefined) {
-      setClauses.push(`name_en = $${paramIdx}`);
-      params.push(input.nameEn);
-      paramIdx++;
-    }
-    if (input.status !== undefined) {
-      setClauses.push(`status = $${paramIdx}`);
-      params.push(input.status);
-      paramIdx++;
-    }
+      if (setClauses.length === 0) {
+        return existing;
+      }
 
-    if (setClauses.length === 0) {
-      return existing;
-    }
+      params.push(id);
 
-    params.push(id);
-
-    try {
-      const result = await pool.query(
-        `UPDATE provinces SET ${setClauses.join(', ')}
+      try {
+        const result = await pool.query(
+          `UPDATE provinces SET ${setClauses.join(', ')}, updated_at=clock_timestamp()
          WHERE id = $${paramIdx}
          RETURNING id, name_fa, name_en, status, created_at, updated_at`,
-        params
-      );
-      return mapProvinceRow(result.rows[0]!);
-    } catch (error) {
-      if (
-        typeof error === 'object' &&
-        error !== null &&
-        'code' in error &&
-        (error as { code: string }).code === '23505'
-      ) {
+          params
+        );
+        return mapProvinceRow(result.rows[0]!);
+      } catch (error) {
+        if (
+          typeof error === 'object' &&
+          error !== null &&
+          'code' in error &&
+          (error as { code: string }).code === '23505'
+        ) {
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: 'GEOGRAPHY:PROVINCE_EXISTS',
+              message: 'A province with this name already exists',
+            },
+            409
+          );
+        }
+        this.logger.error(`Failed to update province ${id}: ${String(error)}`);
         throw new HttpException(
-          {
-            statusCode: 409,
-            error: 'GEOGRAPHY:PROVINCE_EXISTS',
-            message: 'A province with this name already exists',
-          },
-          409
+          { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update province' },
+          500
         );
       }
-      this.logger.error(`Failed to update province ${id}: ${String(error)}`);
-      throw new HttpException(
-        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update province' },
-        500
-      );
-    }
+    });
   }
 
   /**
    * Delete (set inactive) a province. Rejects deletion if cities reference it
    * or if it's referenced by active profiles.
    */
-  async deleteProvince(id: string): Promise<boolean> {
-    const pool = getDbPool();
+  async deleteProvince(
+    id: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ): Promise<boolean> {
+    return this.withMutation(actor, ip, 'provinces', id, async (pool) => {
+      const existing = await this.getProvince(id, pool);
+      if (!existing) return false;
 
-    const existing = await this.getProvince(id);
-    if (!existing) return false;
-
-    // Check for cities referencing this province
-    const citiesResult = await pool.query(
-      `SELECT COUNT(*) AS cnt FROM cities WHERE province_id = $1`,
-      [id]
-    );
-    const cityCount = parseInt(citiesResult.rows[0]!.cnt as string, 10);
-    if (cityCount > 0) {
-      throw new HttpException(
-        {
-          statusCode: 409,
-          error: 'GEOGRAPHY:PROVINCE_HAS_CITIES',
-          message: `Cannot delete province with ${cityCount} associated cities. Deactivate it instead.`,
-        },
-        409
+      // Check for cities referencing this province
+      const citiesResult = await pool.query(
+        `SELECT COUNT(*) AS cnt FROM cities WHERE province_id = $1`,
+        [id]
       );
-    }
+      const cityCount = parseInt(citiesResult.rows[0]!.cnt as string, 10);
+      if (cityCount > 0) {
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'GEOGRAPHY:PROVINCE_HAS_CITIES',
+            message: `Cannot delete province with ${cityCount} associated cities. Deactivate it instead.`,
+          },
+          409
+        );
+      }
 
-    // Soft-delete by setting inactive
-    await pool.query(`UPDATE provinces SET status = 'inactive', updated_at = NOW() WHERE id = $1`, [
-      id,
-    ]);
-    return true;
+      // Soft-delete by setting inactive
+      await pool.query(
+        `UPDATE provinces SET status = 'inactive', updated_at = NOW() WHERE id = $1`,
+        [id]
+      );
+      return true;
+    });
   }
 
   // ---------------------------------------------------------------------------
@@ -382,8 +404,7 @@ export class AdminGeographyService {
   /**
    * Get a single city by ID.
    */
-  async getCity(id: string): Promise<CityRow | null> {
-    const pool = getDbPool();
+  async getCity(id: string, pool: Pick<Pool, 'query'> = getDbPool()): Promise<CityRow | null> {
     const result = await pool.query(
       `SELECT id, province_id, name_fa, name_en, status, created_at, updated_at
        FROM cities WHERE id = $1`,
@@ -396,8 +417,35 @@ export class AdminGeographyService {
   /**
    * Create a new city in a province.
    */
-  async createCity(provinceId: string, input: CreateCityInput): Promise<CityRow> {
-    const pool = getDbPool();
+  async createCity(
+    provinceId: string,
+    input: CreateCityInput,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ): Promise<CityRow> {
+    return this.withMutation(actor, ip, 'cities', null, async (pool) => {
+      return this.insertCity(pool, provinceId, input);
+    });
+  }
+
+  async importCities(
+    provinceId: string,
+    inputs: CreateCityInput[],
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ) {
+    return this.withMutation(actor, ip, 'cities', null, async (pool) => {
+      const cities: CityRow[] = [];
+      for (const input of inputs) cities.push(await this.insertCity(pool, provinceId, input));
+      return { cities, imported: cities.length };
+    });
+  }
+
+  private async insertCity(
+    pool: PoolClient,
+    provinceId: string,
+    input: CreateCityInput
+  ): Promise<CityRow> {
     const id = uuidv7();
     const now = new Date();
 
@@ -449,84 +497,164 @@ export class AdminGeographyService {
   /**
    * Update an existing city.
    */
-  async updateCity(id: string, input: UpdateCityInput): Promise<CityRow | null> {
-    const pool = getDbPool();
+  async updateCity(
+    id: string,
+    input: UpdateCityInput,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ): Promise<CityRow | null> {
+    return this.withMutation(actor, ip, 'cities', id, async (pool) => {
+      const existing = await this.getCity(id, pool);
+      if (!existing) return null;
 
-    const existing = await this.getCity(id);
-    if (!existing) return null;
+      if (input.status === 'inactive' && existing.status !== 'inactive') {
+        await this.requireUnreferencedCity(pool, id);
+      }
 
-    const setClauses: string[] = [];
-    const params: unknown[] = [];
-    let paramIdx = 1;
+      const setClauses: string[] = [];
+      const params: unknown[] = [];
+      let paramIdx = 1;
 
-    if (input.nameFa !== undefined) {
-      setClauses.push(`name_fa = $${paramIdx}`);
-      params.push(input.nameFa);
-      paramIdx++;
-    }
-    if (input.nameEn !== undefined) {
-      setClauses.push(`name_en = $${paramIdx}`);
-      params.push(input.nameEn);
-      paramIdx++;
-    }
-    if (input.status !== undefined) {
-      setClauses.push(`status = $${paramIdx}`);
-      params.push(input.status);
-      paramIdx++;
-    }
+      if (input.nameFa !== undefined) {
+        setClauses.push(`name_fa = $${paramIdx}`);
+        params.push(input.nameFa);
+        paramIdx++;
+      }
+      if (input.nameEn !== undefined) {
+        setClauses.push(`name_en = $${paramIdx}`);
+        params.push(input.nameEn);
+        paramIdx++;
+      }
+      if (input.status !== undefined) {
+        setClauses.push(`status = $${paramIdx}`);
+        params.push(input.status);
+        paramIdx++;
+      }
 
-    if (setClauses.length === 0) {
-      return existing;
-    }
+      if (setClauses.length === 0) {
+        return existing;
+      }
 
-    params.push(id);
+      params.push(id);
 
-    try {
-      const result = await pool.query(
-        `UPDATE cities SET ${setClauses.join(', ')}
+      try {
+        const result = await pool.query(
+          `UPDATE cities SET ${setClauses.join(', ')}, updated_at=clock_timestamp()
          WHERE id = $${paramIdx}
          RETURNING id, province_id, name_fa, name_en, status, created_at, updated_at`,
-        params
-      );
-      return mapCityRow(result.rows[0]!);
-    } catch (error) {
-      if (
-        typeof error === 'object' &&
-        error !== null &&
-        'code' in error &&
-        (error as { code: string }).code === '23505'
-      ) {
+          params
+        );
+        return mapCityRow(result.rows[0]!);
+      } catch (error) {
+        if (
+          typeof error === 'object' &&
+          error !== null &&
+          'code' in error &&
+          (error as { code: string }).code === '23505'
+        ) {
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: 'GEOGRAPHY:CITY_EXISTS',
+              message: 'A city with this English name already exists in this province',
+            },
+            409
+          );
+        }
+        this.logger.error(`Failed to update city ${id}: ${String(error)}`);
         throw new HttpException(
-          {
-            statusCode: 409,
-            error: 'GEOGRAPHY:CITY_EXISTS',
-            message: 'A city with this English name already exists in this province',
-          },
-          409
+          { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update city' },
+          500
         );
       }
-      this.logger.error(`Failed to update city ${id}: ${String(error)}`);
-      throw new HttpException(
-        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update city' },
-        500
-      );
-    }
+    });
   }
 
   /**
    * Delete (set inactive) a city. Rejects deletion if the city is referenced
    * by active customer profiles (soft delete).
    */
-  async deleteCity(id: string): Promise<boolean> {
-    const pool = getDbPool();
+  async deleteCity(
+    id: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ): Promise<boolean> {
+    return this.withMutation(actor, ip, 'cities', id, async (pool) => {
+      const existing = await this.getCity(id, pool);
+      if (!existing) return false;
 
-    const existing = await this.getCity(id);
-    if (!existing) return false;
+      await this.requireUnreferencedCity(pool, id);
 
-    // Soft-delete by setting inactive
-    await pool.query(`UPDATE cities SET status = 'inactive', updated_at = NOW() WHERE id = $1`, [
-      id,
-    ]);
-    return true;
+      // Soft-delete by setting inactive
+      await pool.query(`UPDATE cities SET status = 'inactive', updated_at = NOW() WHERE id = $1`, [
+        id,
+      ]);
+      return true;
+    });
+  }
+
+  private async requireUnreferencedCity(pool: PoolClient, id: string): Promise<void> {
+    const references = await pool.query(
+      `SELECT EXISTS (
+      SELECT 1 FROM addresses a JOIN profiles p ON p.id=a.profile_id
+        WHERE a.city_id=$1::uuid AND p.archived_at IS NULL
+      UNION ALL
+      SELECT 1 FROM legal_profiles l JOIN profiles p ON p.id=l.id
+        WHERE l.official_city_id=$1::text AND p.archived_at IS NULL
+    ) AS referenced`,
+      [id]
+    );
+    if (references.rows[0]?.referenced)
+      throw new HttpException({ statusCode: 409, error: 'CONFLICT:STATE' }, 409);
+  }
+
+  private async withMutation<T>(
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string,
+    table: 'provinces' | 'cities',
+    id: string | null,
+    fn: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:geography:edit');
+      await requireCurrentSession(client, actor);
+      await client.query("SELECT pg_advisory_xact_lock(hashtext('admin-geography'))");
+      const before =
+        id === null
+          ? null
+          : ((
+              await client.query(
+                `SELECT to_jsonb(g) AS previous FROM ${table} g WHERE id=$1 FOR UPDATE`,
+                [id]
+              )
+            ).rows[0]?.previous ?? null);
+      const result = await fn(client);
+      if (result !== null && result !== false) {
+        await client.query(
+          "UPDATE config_version SET version=version+1,updated_at=clock_timestamp() WHERE id='global'"
+        );
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+           VALUES ($1,$2,'config_change',$3::jsonb,$4,$5)`,
+          [
+            uuidv7(),
+            actor.userId,
+            JSON.stringify({ entity: table, id, before, after: result }),
+            correlationIdStorage.getStore() ?? uuidv7(),
+            ip,
+          ]
+        );
+      }
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 }

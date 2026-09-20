@@ -1,3 +1,8 @@
+// Session revocation and expiry are exercised through the migrated HTTP fixture.
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(undefined),
+  requireCurrentSession: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import type { AdminService as AdminServiceType } from './admin.service.js';
@@ -128,7 +133,11 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
   it('rejects a non-object body with a 400', async () => {
     const { pool } = await loadService();
     await expect(
-      service.setGreenElectricityConfig('nope', 'admin-1', '127.0.0.1')
+      service.setGreenElectricityConfig(
+        'nope',
+        { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
+        '127.0.0.1'
+      )
     ).rejects.toMatchObject({ status: 400 });
     expect(pool.connect).not.toHaveBeenCalled();
   });
@@ -145,7 +154,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
           },
           advanced_order: VALID_INPUT.advanced_order,
         },
-        'admin-1',
+        { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
         '127.0.0.1'
       )
     ).rejects.toThrowError(HttpException);
@@ -163,7 +172,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
           },
           advanced_order: VALID_INPUT.advanced_order,
         },
-        'admin-1',
+        { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
         '127.0.0.1'
       )
     ).rejects.toMatchObject({ status: 400 });
@@ -181,7 +190,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
           },
           advanced_order: VALID_INPUT.advanced_order,
         },
-        'admin-1',
+        { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
         '127.0.0.1'
       )
     ).rejects.toMatchObject({ status: 400 });
@@ -195,7 +204,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
           simple_order: { average_power_threshold_kw: 1000, mandatory_green_share_percent: 4 },
           advanced_order: VALID_INPUT.advanced_order,
         },
-        'admin-1',
+        { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
         '127.0.0.1'
       )
     ).rejects.toMatchObject({ status: 400 });
@@ -232,7 +241,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
           mandatoryGreenSharePercent: 4,
         },
       },
-      'admin-1',
+      { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
       '127.0.0.1'
     );
 
@@ -261,7 +270,11 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       .mockResolvedValueOnce({ rows: [] }) // audit_log
       .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-    await service.setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1');
+    await service.setGreenElectricityConfig(
+      VALID_INPUT,
+      { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
+      '127.0.0.1'
+    );
 
     expect(mockConnect).toHaveBeenCalledTimes(1);
     const queries = client.query.mock.calls.map((c: unknown[]) => String(c[0]));
@@ -343,7 +356,11 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       .mockResolvedValueOnce({ rows: [] }) // audit_log
       .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-    await service.setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1');
+    await service.setGreenElectricityConfig(
+      VALID_INPUT,
+      { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
+      '127.0.0.1'
+    );
 
     const auditQuery = client.query.mock.calls[6]!;
     const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string);
@@ -381,7 +398,11 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       .mockResolvedValueOnce({ rows: [] }) // audit_log
       .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-    const result = await service.setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1');
+    const result = await service.setGreenElectricityConfig(
+      VALID_INPUT,
+      { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
+      '127.0.0.1'
+    );
     expect(result.simpleOrder).toEqual({
       mandatoryGreenEnabled: true,
       averagePowerThresholdKw: 1000,
@@ -403,7 +424,11 @@ describe('AdminService.setGreenElectricityConfig activation safety (T-09.10.03)'
     mockQuery.mockResolvedValueOnce({ rows: [] }); // no green product row
 
     const err = (await service
-      .setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1')
+      .setGreenElectricityConfig(
+        VALID_INPUT,
+        { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
+        '127.0.0.1'
+      )
       .catch((e: unknown) => e)) as HttpException;
     expect(err.getStatus()).toBe(400);
     expect(String(err.message)).toMatch(/Cannot activate/i);
@@ -418,7 +443,11 @@ describe('AdminService.setGreenElectricityConfig activation safety (T-09.10.03)'
     });
 
     const err = (await service
-      .setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1')
+      .setGreenElectricityConfig(
+        VALID_INPUT,
+        { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
+        '127.0.0.1'
+      )
       .catch((e: unknown) => e)) as HttpException;
     expect(err.getStatus()).toBe(400);
     expect(String(err.message)).toMatch(/inactive/i);
@@ -432,7 +461,11 @@ describe('AdminService.setGreenElectricityConfig activation safety (T-09.10.03)'
     });
 
     const err = (await service
-      .setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1')
+      .setGreenElectricityConfig(
+        VALID_INPUT,
+        { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
+        '127.0.0.1'
+      )
       .catch((e: unknown) => e)) as HttpException;
     expect(err.getStatus()).toBe(400);
     expect(String(err.message)).toMatch(/unpriced/i);
@@ -468,7 +501,11 @@ describe('AdminService.setGreenElectricityConfig activation safety (T-09.10.03)'
         mandatory_green_share_percent: 4,
       },
     };
-    await service.setGreenElectricityConfig(bothDisabled, 'admin-1', '127.0.0.1');
+    await service.setGreenElectricityConfig(
+      bothDisabled,
+      { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
+      '127.0.0.1'
+    );
     expect(mockConnect).toHaveBeenCalledTimes(1);
   });
 });

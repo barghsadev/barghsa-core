@@ -1,3 +1,8 @@
+// Session revocation and expiry are exercised through the migrated HTTP fixture.
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(undefined),
+  requireCurrentSession: vi.fn().mockResolvedValue(undefined),
+}));
 vi.mock('./staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
@@ -137,7 +142,7 @@ describe('ContractElectricityLimitsService.update (T-09.12.06)', () => {
         max_contract_duration_months: 12,
         lead_time_days: 3,
       },
-      actorUserId: ACTOR,
+      actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
       ip: '127.0.0.1',
     });
 
@@ -192,7 +197,7 @@ describe('ContractElectricityLimitsService.update (T-09.12.06)', () => {
         max_contract_duration_months: 24,
         lead_time_days: 0,
       },
-      actorUserId: ACTOR,
+      actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
       ip: '10.0.0.1',
     });
 
@@ -215,7 +220,7 @@ describe('ContractElectricityLimitsService.update (T-09.12.06)', () => {
           max_contract_duration_months: 0,
           lead_time_days: 'x',
         },
-        actorUserId: ACTOR,
+        actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
         ip: '127.0.0.1',
       })
       .catch((e: unknown) => e);
@@ -246,7 +251,7 @@ describe('ContractElectricityLimitsService.update (T-09.12.06)', () => {
           max_contract_duration_months: 12,
           lead_time_days: 3,
         },
-        actorUserId: ACTOR,
+        actor: { userId: ACTOR, sessionId: 'test-session', csrfToken: 'test-csrf' },
         ip: '127.0.0.1',
       })
       .catch((e: unknown) => e);

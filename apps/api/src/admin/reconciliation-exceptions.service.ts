@@ -1,3 +1,5 @@
+import type { ValidatedSession } from '../session/session.service.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { z } from 'zod';
 import { v7 as uuidv7 } from 'uuid';
@@ -155,10 +157,10 @@ export class ReconciliationExceptionsService {
    */
   async investigateReconciliationException(
     exceptionId: string,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<ReconciliationExceptionDto> {
-    return this.transition(exceptionId, actorUserId, ip, 'investigating', {
+    return this.transition(exceptionId, actor, ip, 'investigating', {
       allowedFrom: ['open'],
       event: 'reconciliation_status_changed',
       note: null,
@@ -173,7 +175,7 @@ export class ReconciliationExceptionsService {
    */
   async resolveReconciliationException(
     exceptionId: string,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string,
     note: unknown
   ): Promise<ReconciliationExceptionDto> {
@@ -188,7 +190,7 @@ export class ReconciliationExceptionsService {
         400
       );
     }
-    return this.transition(exceptionId, actorUserId, ip, 'resolved', {
+    return this.transition(exceptionId, actor, ip, 'resolved', {
       allowedFrom: ['open', 'investigating'],
       event: 'resolution_recorded',
       note: parsed.note ?? null,
@@ -203,7 +205,7 @@ export class ReconciliationExceptionsService {
    */
   async closeReconciliationException(
     exceptionId: string,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string,
     note: unknown
   ): Promise<ReconciliationExceptionDto> {
@@ -218,7 +220,7 @@ export class ReconciliationExceptionsService {
         400
       );
     }
-    return this.transition(exceptionId, actorUserId, ip, 'closed', {
+    return this.transition(exceptionId, actor, ip, 'closed', {
       allowedFrom: ['open', 'investigating', 'resolved'],
       event: 'resolution_recorded',
       note: parsed.note ?? null,
@@ -244,7 +246,7 @@ export class ReconciliationExceptionsService {
    */
   private async transition(
     exceptionId: string,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string,
     toStatus: ReconciliationStatus,
     opts: {
@@ -253,6 +255,7 @@ export class ReconciliationExceptionsService {
       note: string | null;
     }
   ): Promise<ReconciliationExceptionDto> {
+    const actorUserId = actor.userId;
     const pool = getDbPool();
     const now = new Date();
 
@@ -261,6 +264,7 @@ export class ReconciliationExceptionsService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:reconciliation:resolve');
+      await requireCurrentSession(client, actor);
 
       const result = await client.query(
         `SELECT exc.*, assignee.username AS assigned_to_username, resolver.username AS resolved_by_username
@@ -348,6 +352,7 @@ export class ReconciliationExceptionsService {
         ]
       );
 
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       committed = true;
 

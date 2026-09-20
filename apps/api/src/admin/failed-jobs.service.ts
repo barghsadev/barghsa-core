@@ -1,3 +1,5 @@
+import type { ValidatedSession } from '../session/session.service.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -120,8 +122,12 @@ export class FailedJobsService {
    *
    * @throws 404 when the job does not exist, 409 when it is already resolved.
    */
-  async retryFailedJob(jobId: string, actorUserId: string, ip: string): Promise<FailedJobDto> {
-    return (await this.transition([jobId], actorUserId, ip, 'retrying', false))[0]!;
+  async retryFailedJob(
+    jobId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ): Promise<FailedJobDto> {
+    return (await this.transition([jobId], actor, ip, 'retrying', false))[0]!;
   }
 
   /**
@@ -131,7 +137,7 @@ export class FailedJobsService {
    */
   async retryFailedJobsBulk(
     ids: string[],
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<FailedJobDto[]> {
     if (!Array.isArray(ids) || ids.length === 0) {
@@ -155,7 +161,7 @@ export class FailedJobsService {
       );
     }
 
-    return this.transition([...new Set(ids)].sort(), actorUserId, ip, 'retrying', true);
+    return this.transition([...new Set(ids)].sort(), actor, ip, 'retrying', true);
   }
 
   /**
@@ -165,22 +171,28 @@ export class FailedJobsService {
    *
    * @throws 404 when the job does not exist, 409 when it is already resolved.
    */
-  async resolveFailedJob(jobId: string, actorUserId: string, ip: string): Promise<FailedJobDto> {
-    return (await this.transition([jobId], actorUserId, ip, 'resolved', false))[0]!;
+  async resolveFailedJob(
+    jobId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ): Promise<FailedJobDto> {
+    return (await this.transition([jobId], actor, ip, 'resolved', false))[0]!;
   }
 
   private async transition(
     ids: string[],
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string,
     toStatus: 'retrying' | 'resolved',
     skipInvalid: boolean
   ): Promise<FailedJobDto[]> {
+    const actorUserId = actor.userId;
     const client = await getDbPool().connect();
     const now = new Date();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:jobs:retry');
+      await requireSessionStepUp(client, actor);
       const found = await client.query(
         `SELECT * FROM background_jobs WHERE id=ANY($1::uuid[]) ORDER BY id FOR UPDATE`,
         [ids]
@@ -236,6 +248,7 @@ export class FailedJobsService {
         );
         results.push(toFailedJobDto(updated.rows[0]!));
       }
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
       return results;
     } catch (error) {

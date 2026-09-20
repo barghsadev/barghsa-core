@@ -1,3 +1,10 @@
+const actor = { userId: 'geography-admin', sessionId: 'test-session', csrfToken: 'test-csrf' };
+vi.mock('../session/session-step-up.js', () => ({
+  requireCurrentSession: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import { AdminGeographyService } from './admin-geography.service.js';
@@ -35,6 +42,21 @@ describe('AdminGeographyService', () => {
     service = new AdminGeographyService();
     mockPool.query.mockReset();
     mockPool.connect.mockReset();
+    mockPool.connect.mockResolvedValue({
+      release: vi.fn(),
+      query: async (sql: string, params?: unknown[]) => {
+        if (
+          ['BEGIN', 'COMMIT', 'ROLLBACK'].includes(sql) ||
+          sql.includes('pg_advisory_xact_lock') ||
+          sql.includes('to_jsonb(g)') ||
+          sql.includes('UPDATE config_version') ||
+          sql.includes('INSERT INTO audit_log')
+        )
+          return { rows: [] };
+        if (sql.includes('AS referenced')) return { rows: [{ referenced: false }] };
+        return mockPool.query(sql, params);
+      },
+    });
   });
 
   // -----------------------------------------------------------------------
@@ -138,7 +160,11 @@ describe('AdminGeographyService', () => {
         rows: [makeRow({ id: 'test-uuid-v7', name_fa: 'اصفهان', name_en: 'Isfahan' })],
       });
 
-      const result = await service.createProvince({ nameFa: 'اصفهان', nameEn: 'Isfahan' });
+      const result = await service.createProvince(
+        { nameFa: 'اصفهان', nameEn: 'Isfahan' },
+        actor,
+        '127.0.0.1'
+      );
 
       expect(result.id).toBe('test-uuid-v7');
       expect(result.nameFa).toBe('اصفهان');
@@ -148,7 +174,11 @@ describe('AdminGeographyService', () => {
     it('throws 409 on duplicate name (PG error 23505)', async () => {
       mockPool.query.mockRejectedValueOnce({ code: '23505' });
 
-      const promise = service.createProvince({ nameFa: 'اصفهان', nameEn: 'Isfahan' });
+      const promise = service.createProvince(
+        { nameFa: 'اصفهان', nameEn: 'Isfahan' },
+        actor,
+        '127.0.0.1'
+      );
       await expect(promise).rejects.toThrow(HttpException);
       try {
         await promise;
@@ -160,7 +190,11 @@ describe('AdminGeographyService', () => {
     it('throws 500 on unexpected DB error', async () => {
       mockPool.query.mockRejectedValueOnce(new Error('Connection lost'));
 
-      const promise = service.createProvince({ nameFa: 'تهران', nameEn: 'Tehran' });
+      const promise = service.createProvince(
+        { nameFa: 'تهران', nameEn: 'Tehran' },
+        actor,
+        '127.0.0.1'
+      );
       await expect(promise).rejects.toThrow(HttpException);
       try {
         await promise;
@@ -183,7 +217,12 @@ describe('AdminGeographyService', () => {
         rows: [makeRow({ name_en: 'Tehran Updated' })],
       });
 
-      const result = await service.updateProvince('province-001', { nameEn: 'Tehran Updated' });
+      const result = await service.updateProvince(
+        'province-001',
+        { nameEn: 'Tehran Updated' },
+        actor,
+        '127.0.0.1'
+      );
 
       expect(result).not.toBeNull();
       expect(result!.nameEn).toBe('Tehran Updated');
@@ -192,7 +231,12 @@ describe('AdminGeographyService', () => {
     it('returns null for non-existent province', async () => {
       mockPool.query.mockResolvedValueOnce({ rows: [] });
 
-      const result = await service.updateProvince('non-existent', { nameEn: 'Test' });
+      const result = await service.updateProvince(
+        'non-existent',
+        { nameEn: 'Test' },
+        actor,
+        '127.0.0.1'
+      );
 
       expect(result).toBeNull();
     });
@@ -200,7 +244,7 @@ describe('AdminGeographyService', () => {
     it('returns existing row when no changes provided', async () => {
       mockPool.query.mockResolvedValueOnce({ rows: [makeRow()] });
 
-      const result = await service.updateProvince('province-001', {});
+      const result = await service.updateProvince('province-001', {}, actor, '127.0.0.1');
 
       expect(result).not.toBeNull();
       expect(result!.nameEn).toBe('Tehran');
@@ -212,7 +256,12 @@ describe('AdminGeographyService', () => {
       mockPool.query.mockResolvedValueOnce({ rows: [makeRow()] });
       mockPool.query.mockRejectedValueOnce({ code: '23505' });
 
-      const promise = service.updateProvince('province-001', { nameEn: 'Duplicate' });
+      const promise = service.updateProvince(
+        'province-001',
+        { nameEn: 'Duplicate' },
+        actor,
+        '127.0.0.1'
+      );
       await expect(promise).rejects.toThrow(HttpException);
       try {
         await promise;
@@ -235,7 +284,7 @@ describe('AdminGeographyService', () => {
       // UPDATE to set inactive
       mockPool.query.mockResolvedValueOnce({ rows: [] });
 
-      const result = await service.deleteProvince('province-001');
+      const result = await service.deleteProvince('province-001', actor, '127.0.0.1');
 
       expect(result).toBe(true);
       expect(mockPool.query).toHaveBeenCalledWith(expect.stringContaining("status = 'inactive'"), [
@@ -246,7 +295,7 @@ describe('AdminGeographyService', () => {
     it('returns false for non-existent province', async () => {
       mockPool.query.mockResolvedValueOnce({ rows: [] });
 
-      const result = await service.deleteProvince('non-existent');
+      const result = await service.deleteProvince('non-existent', actor, '127.0.0.1');
 
       expect(result).toBe(false);
     });
@@ -255,7 +304,7 @@ describe('AdminGeographyService', () => {
       mockPool.query.mockResolvedValueOnce({ rows: [makeRow()] });
       mockPool.query.mockResolvedValueOnce({ rows: [{ cnt: '5' }] });
 
-      const promise = service.deleteProvince('province-001');
+      const promise = service.deleteProvince('province-001', actor, '127.0.0.1');
       await expect(promise).rejects.toThrow(HttpException);
       try {
         await promise;
@@ -352,10 +401,15 @@ describe('AdminGeographyService', () => {
         mockPool.query.mockResolvedValueOnce({ rows: [{ id: 'province-001' }] }); // province exists
         mockPool.query.mockResolvedValueOnce({ rows: [makeCityRow()] }); // insert
 
-        const city = await service.createCity('province-001', {
-          nameFa: 'تهران',
-          nameEn: 'Tehran',
-        });
+        const city = await service.createCity(
+          'province-001',
+          {
+            nameFa: 'تهران',
+            nameEn: 'Tehran',
+          },
+          actor,
+          '127.0.0.1'
+        );
 
         expect(city.nameEn).toBe('Tehran');
       });
@@ -363,7 +417,12 @@ describe('AdminGeographyService', () => {
       it('throws 404 when parent province not found', async () => {
         mockPool.query.mockResolvedValueOnce({ rows: [] }); // province not found
 
-        const promise = service.createCity('nonexistent', { nameFa: 'تهران', nameEn: 'Tehran' });
+        const promise = service.createCity(
+          'nonexistent',
+          { nameFa: 'تهران', nameEn: 'Tehran' },
+          actor,
+          '127.0.0.1'
+        );
         await expect(promise).rejects.toThrow(HttpException);
         try {
           await promise;
@@ -376,7 +435,12 @@ describe('AdminGeographyService', () => {
         mockPool.query.mockResolvedValueOnce({ rows: [{ id: 'province-001' }] }); // province exists
         mockPool.query.mockRejectedValueOnce({ code: '23505' }); // unique violation
 
-        const promise = service.createCity('province-001', { nameFa: 'تهران', nameEn: 'Tehran' });
+        const promise = service.createCity(
+          'province-001',
+          { nameFa: 'تهران', nameEn: 'Tehran' },
+          actor,
+          '127.0.0.1'
+        );
         await expect(promise).rejects.toThrow(HttpException);
         try {
           await promise;
@@ -389,7 +453,12 @@ describe('AdminGeographyService', () => {
         mockPool.query.mockResolvedValueOnce({ rows: [{ id: 'province-001' }] }); // province exists
         mockPool.query.mockRejectedValueOnce(new Error('DB connection lost'));
 
-        const promise = service.createCity('province-001', { nameFa: 'تهران', nameEn: 'Tehran' });
+        const promise = service.createCity(
+          'province-001',
+          { nameFa: 'تهران', nameEn: 'Tehran' },
+          actor,
+          '127.0.0.1'
+        );
         await expect(promise).rejects.toThrow(HttpException);
         try {
           await promise;
@@ -406,7 +475,12 @@ describe('AdminGeographyService', () => {
           rows: [{ ...makeCityRow(), name_en: 'Tehran Updated' }],
         }); // update
 
-        const city = await service.updateCity('city-001', { nameEn: 'Tehran Updated' });
+        const city = await service.updateCity(
+          'city-001',
+          { nameEn: 'Tehran Updated' },
+          actor,
+          '127.0.0.1'
+        );
 
         expect(city).not.toBeNull();
         expect(city!.nameEn).toBe('Tehran Updated');
@@ -415,7 +489,12 @@ describe('AdminGeographyService', () => {
       it('returns null when city not found', async () => {
         mockPool.query.mockResolvedValueOnce({ rows: [] });
 
-        const city = await service.updateCity('nonexistent', { nameFa: 'test' });
+        const city = await service.updateCity(
+          'nonexistent',
+          { nameFa: 'test' },
+          actor,
+          '127.0.0.1'
+        );
 
         expect(city).toBeNull();
       });
@@ -423,7 +502,7 @@ describe('AdminGeographyService', () => {
       it('returns existing row when no changes provided', async () => {
         mockPool.query.mockResolvedValueOnce({ rows: [makeCityRow()] });
 
-        const city = await service.updateCity('city-001', {});
+        const city = await service.updateCity('city-001', {}, actor, '127.0.0.1');
 
         expect(city).not.toBeNull();
         expect(city!.nameEn).toBe('Tehran');
@@ -435,7 +514,7 @@ describe('AdminGeographyService', () => {
         mockPool.query.mockResolvedValueOnce({ rows: [makeCityRow()] }); // existing
         mockPool.query.mockRejectedValueOnce({ code: '23505' }); // unique violation
 
-        const promise = service.updateCity('city-001', { nameEn: 'Duplicate' });
+        const promise = service.updateCity('city-001', { nameEn: 'Duplicate' }, actor, '127.0.0.1');
         await expect(promise).rejects.toThrow(HttpException);
         try {
           await promise;
@@ -450,7 +529,7 @@ describe('AdminGeographyService', () => {
         mockPool.query.mockResolvedValueOnce({ rows: [makeCityRow()] }); // existing
         mockPool.query.mockResolvedValueOnce({ rows: [] }); // set inactive
 
-        const result = await service.deleteCity('city-001');
+        const result = await service.deleteCity('city-001', actor, '127.0.0.1');
 
         expect(result).toBe(true);
         expect(mockPool.query).toHaveBeenCalledWith(
@@ -462,7 +541,7 @@ describe('AdminGeographyService', () => {
       it('returns false when city not found', async () => {
         mockPool.query.mockResolvedValueOnce({ rows: [] });
 
-        const result = await service.deleteCity('nonexistent');
+        const result = await service.deleteCity('nonexistent', actor, '127.0.0.1');
 
         expect(result).toBe(false);
       });

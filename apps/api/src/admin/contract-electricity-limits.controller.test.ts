@@ -76,7 +76,7 @@ describe('contract electricity limits permission gate (T-09.12.06)', () => {
     await controller.update(adminReq, VALID_BODY);
     expect(service.update).toHaveBeenCalledWith({
       raw: VALID_BODY,
-      actorUserId: 'admin-1',
+      actor: adminReq.session,
       ip: '127.0.0.1',
     });
   });

@@ -1,3 +1,5 @@
+import type { ValidatedSession } from '../session/session.service.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
@@ -87,12 +89,12 @@ export interface CreateGiftCodeInput {
   validUntil: string | null;
   minOrderAmount: string;
   categories: string[];
-  actorUserId: string;
+  actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   ip: string;
 }
 
-export type UpdateGiftCodeInput = Partial<Omit<CreateGiftCodeInput, 'actorUserId' | 'ip'>> & {
-  actorUserId: string;
+export type UpdateGiftCodeInput = Partial<Omit<CreateGiftCodeInput, 'actor' | 'ip'>> & {
+  actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   ip: string;
 };
 
@@ -339,7 +341,7 @@ export class GiftCodeService {
       );
     }
 
-    return this.withAdminTransaction(input.actorUserId, async (q) => {
+    return this.withAdminTransaction(input.actor, async (q) => {
       const id = uuidv7();
       await q.query(
         `INSERT INTO gift_codes
@@ -360,7 +362,7 @@ export class GiftCodeService {
           validUntil,
           minOrderAmount,
           categories,
-          input.actorUserId,
+          input.actor.userId,
           new Date(),
         ]
       );
@@ -368,7 +370,7 @@ export class GiftCodeService {
         await this.insertProfiles(q, id, profileIds);
       }
       await this.recordChange(q, {
-        actorUserId: input.actorUserId,
+        actorUserId: input.actor.userId,
         ip: input.ip,
         entity: 'gift_code',
         action: 'created',
@@ -388,7 +390,7 @@ export class GiftCodeService {
           categories: categories.length > 0 ? categories : undefined,
         },
       });
-      this.logger.log(`Gift code created: id=${id}, code=${code}, actor=${input.actorUserId}`);
+      this.logger.log(`Gift code created: id=${id}, code=${code}, actor=${input.actor.userId}`);
       return this.readDto(q, id);
     });
   }
@@ -400,7 +402,7 @@ export class GiftCodeService {
    * non-empty list; public codes clear scopes). Audits the change.
    */
   async update(id: string, input: UpdateGiftCodeInput): Promise<GiftCodeDto> {
-    return this.withAdminTransaction(input.actorUserId, async (q) => {
+    return this.withAdminTransaction(input.actor, async (q) => {
       const current = await this.findById(q, id, true);
       if (!current) throw this.notFound(id);
 
@@ -534,7 +536,7 @@ export class GiftCodeService {
       }
 
       await this.recordChange(q, {
-        actorUserId: input.actorUserId,
+        actorUserId: input.actor.userId,
         ip: input.ip,
         entity: 'gift_code',
         action: 'updated',
@@ -548,7 +550,7 @@ export class GiftCodeService {
           ...(input.eligibility !== undefined ? { eligibility } : {}),
         },
       });
-      this.logger.log(`Gift code updated: id=${id}, code=${code}, actor=${input.actorUserId}`);
+      this.logger.log(`Gift code updated: id=${id}, code=${code}, actor=${input.actor.userId}`);
       return this.readDto(q, id);
     });
   }
@@ -560,11 +562,12 @@ export class GiftCodeService {
   async setStatus(
     id: string,
     status: GiftCodeStatus,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<GiftCodeDto> {
+    const actorUserId = actor.userId;
     if (!isGiftCodeStatus(status)) throw this.invalidField('status');
-    return this.withAdminTransaction(actorUserId, async (q) => {
+    return this.withAdminTransaction(actor, async (q) => {
       const current = await this.findById(q, id, true);
       if (!current) throw this.notFound(id);
       if (status === 'active' && current.eligibility === 'profile') {
@@ -1018,12 +1021,15 @@ export class GiftCodeService {
 
   /** Run `fn` inside a single DB transaction on one client; any error rolls back. */
   private async withAdminTransaction<T>(
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     fn: (q: DbExecutor) => Promise<T>
   ): Promise<T> {
     return this.withTransaction(async (q) => {
-      await requireStaffMutationPermission(q, actorUserId, 'admin:promotions:edit');
-      return fn(q);
+      await requireStaffMutationPermission(q, actor.userId, 'admin:promotions:edit');
+      await requireSessionStepUp(q, actor);
+      const result = await fn(q);
+      await requireSessionStepUp(q, actor);
+      return result;
     });
   }
 

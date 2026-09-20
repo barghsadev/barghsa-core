@@ -1579,9 +1579,10 @@ export class AdminService {
    */
   async setGreenElectricityConfig(
     input: unknown,
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<GreenElectricityConfig> {
+    const actorUserId = actor.userId;
     const validation = validateGreenElectricityConfig(input);
     if (!validation.ok) {
       throw new HttpException(
@@ -1606,6 +1607,7 @@ export class AdminService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:catalogue:edit');
+      await requireSessionStepUp(client, actor);
       await client.query("SELECT pg_advisory_xact_lock(hashtext('green-electricity-config'))");
       await this.assertGreenElectricityActivation(config, client);
 
@@ -1659,6 +1661,7 @@ export class AdminService {
         ]
       );
 
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(`Mandatory green-electricity rules updated by ${actorUserId}`);

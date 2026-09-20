@@ -126,7 +126,7 @@ it.each(['investigate', 'resolve', 'close'])(
           Number(
             (
               await http.pool.query(
-                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' "
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%users%' AND cardinality(pg_blocking_pids(pid)) > 0 "
               )
             ).rows[0].count
           )

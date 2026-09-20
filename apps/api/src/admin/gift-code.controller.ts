@@ -324,7 +324,7 @@ export class GiftCodeController {
       validUntil: parsed.data.validUntil ?? null,
       minOrderAmount: parsed.data.minOrderAmount,
       categories: parsed.data.categories,
-      actorUserId: req.session.userId,
+      actor: req.session,
       ip: requestIp(req),
     });
   }
@@ -371,7 +371,7 @@ export class GiftCodeController {
       ...(data.validUntil !== undefined ? { validUntil: data.validUntil } : {}),
       ...(data.minOrderAmount !== undefined ? { minOrderAmount: data.minOrderAmount } : {}),
       ...(data.categories !== undefined ? { categories: data.categories } : {}),
-      actorUserId: req.session.userId,
+      actor: req.session,
       ip: requestIp(req),
     });
   }
@@ -403,6 +403,6 @@ export class GiftCodeController {
         validationDetails(parsed.error.issues)
       );
     }
-    return this.service.setStatus(id, parsed.data.status, req.session.userId, requestIp(req));
+    return this.service.setStatus(id, parsed.data.status, req.session, requestIp(req));
   }
 }

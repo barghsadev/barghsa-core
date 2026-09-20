@@ -120,7 +120,7 @@ describe('green-electricity-rules config permission gate (T-09.10.02)', () => {
     expect(result.advancedOrder.mandatoryGreenEnabled).toBe(false);
     expect(adminService.setGreenElectricityConfig).toHaveBeenCalledWith(
       VALID_BODY,
-      'admin-1',
+      adminReq.session,
       '127.0.0.1'
     );
   });

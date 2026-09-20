@@ -147,7 +147,7 @@ describe('reconciliation-exceptions body validation', () => {
     await controller.resolveItem('ex-1', { note: 'fixed' }, adminReq);
     expect(service.resolveReconciliationException).toHaveBeenCalledWith(
       'ex-1',
-      'admin-1',
+      adminReq.session,
       '127.0.0.1',
       'fixed'
     );

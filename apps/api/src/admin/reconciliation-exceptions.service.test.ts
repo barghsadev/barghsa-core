@@ -1,3 +1,8 @@
+// Session revocation and expiry are exercised through the migrated HTTP fixture.
+vi.mock('../session/session-step-up.js', () => ({
+  requireSessionStepUp: vi.fn().mockResolvedValue(undefined),
+  requireCurrentSession: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import type { ReconciliationExceptionsService as ServiceType } from './reconciliation-exceptions.service.js';
@@ -143,7 +148,11 @@ describe('ReconciliationExceptionsService.investigate (T-09.09.01)', () => {
       returnRow({ ...OPEN_ROW, status: 'investigating', assigned_to_id: 'admin-1' })
     ); // DTO read
 
-    const dto = await service.investigateReconciliationException('ex-1', 'admin-1', '1.1.1.1');
+    const dto = await service.investigateReconciliationException(
+      'ex-1',
+      { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
+      '1.1.1.1'
+    );
 
     expect(dto).toMatchObject({ id: 'ex-1', status: 'investigating', assignedToId: 'admin-1' });
 
@@ -169,7 +178,11 @@ describe('ReconciliationExceptionsService.investigate (T-09.09.01)', () => {
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce(returnRow({ ...OPEN_ROW, status: 'resolved' })); // locked SELECT
     const rejection = await service
-      .investigateReconciliationException('ex-1', 'admin', '1.1.1.1')
+      .investigateReconciliationException(
+        'ex-1',
+        { userId: 'admin', sessionId: 'test-session', csrfToken: 'test-csrf' },
+        '1.1.1.1'
+      )
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(409);
     const calls = mockClientQuery.mock.calls.map((c) => String(c[0]));
@@ -184,7 +197,12 @@ describe('ReconciliationExceptionsService.resolve (T-09.09.01)', () => {
   it('rejects a missing note with 400 before touching the DB', async () => {
     const { service, mockQuery } = await loadService();
     const rejection = await service
-      .resolveReconciliationException('ex-1', 'admin-1', '1.1.1.1', undefined)
+      .resolveReconciliationException(
+        'ex-1',
+        { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
+        '1.1.1.1',
+        undefined
+      )
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(400);
     expect(mockQuery).not.toHaveBeenCalled();
@@ -212,7 +230,7 @@ describe('ReconciliationExceptionsService.resolve (T-09.09.01)', () => {
 
     const dto = await service.resolveReconciliationException(
       'ex-1',
-      'admin-1',
+      { userId: 'admin-1', sessionId: 'test-session', csrfToken: 'test-csrf' },
       '1.1.1.1',
       'balanced'
     );
@@ -241,7 +259,12 @@ describe('ReconciliationExceptionsService.resolve (T-09.09.01)', () => {
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce(returnRow({ ...OPEN_ROW, status: 'closed' })); // locked SELECT
     const rejection = await service
-      .resolveReconciliationException('ex-1', 'admin', '1.1.1.1', 'nope')
+      .resolveReconciliationException(
+        'ex-1',
+        { userId: 'admin', sessionId: 'test-session', csrfToken: 'test-csrf' },
+        '1.1.1.1',
+        'nope'
+      )
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(409);
     const calls = mockClientQuery.mock.calls.map((c) => String(c[0]));
@@ -257,7 +280,12 @@ describe('ReconciliationExceptionsService.resolve (T-09.09.01)', () => {
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce({ rows: [] }); // locked SELECT empty
     const rejection = await service
-      .resolveReconciliationException('missing', 'admin', '1.1.1.1', 'x')
+      .resolveReconciliationException(
+        'missing',
+        { userId: 'admin', sessionId: 'test-session', csrfToken: 'test-csrf' },
+        '1.1.1.1',
+        'x'
+      )
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(404);
   });
@@ -287,7 +315,12 @@ describe('ReconciliationExceptionsService.close (T-09.09.01)', () => {
       rows: [{ ...resolvedRow, status: 'closed' }],
     }); // DTO read
 
-    const dto = await service.closeReconciliationException('ex-1', 'admin', '1.1.1.1', 'dismissed');
+    const dto = await service.closeReconciliationException(
+      'ex-1',
+      { userId: 'admin', sessionId: 'test-session', csrfToken: 'test-csrf' },
+      '1.1.1.1',
+      'dismissed'
+    );
 
     expect(dto).toMatchObject({
       id: 'ex-1',
@@ -325,7 +358,12 @@ describe('ReconciliationExceptionsService.close (T-09.09.01)', () => {
       ],
     }); // DTO read
 
-    const dto = await service.closeReconciliationException('ex-1', 'admin', '1.1.1.1', 'dismissed');
+    const dto = await service.closeReconciliationException(
+      'ex-1',
+      { userId: 'admin', sessionId: 'test-session', csrfToken: 'test-csrf' },
+      '1.1.1.1',
+      'dismissed'
+    );
 
     expect(dto).toMatchObject({
       id: 'ex-1',
@@ -343,7 +381,12 @@ describe('ReconciliationExceptionsService.close (T-09.09.01)', () => {
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce(returnRow({ ...OPEN_ROW, status: 'closed' })); // locked SELECT
     const rejection = await service
-      .closeReconciliationException('ex-1', 'admin', '1.1.1.1', 'x')
+      .closeReconciliationException(
+        'ex-1',
+        { userId: 'admin', sessionId: 'test-session', csrfToken: 'test-csrf' },
+        '1.1.1.1',
+        'x'
+      )
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(409);
     const calls = mockClientQuery.mock.calls.map((c) => String(c[0]));

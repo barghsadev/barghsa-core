@@ -1,3 +1,5 @@
+import type { ValidatedSession } from '../session/session.service.js';
+import { requireSessionStepUp } from '../session/session-step-up.js';
 import { reserveStorageCopy } from '../storage/reserve-storage-copy.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Inject, Injectable, Logger, HttpException } from '@nestjs/common';
@@ -62,7 +64,7 @@ import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
 export interface CreateContractTemplateInput {
   name: string;
   description?: string;
-  actorUserId: string;
+  actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   ip: string;
 }
 
@@ -70,7 +72,7 @@ export interface UpdateContractTemplateInput {
   name?: string;
   description?: string | null;
   status?: ContractTemplateStatus;
-  actorUserId: string;
+  actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   ip: string;
 }
 
@@ -81,7 +83,7 @@ export interface UploadContractTemplateVersionInput {
   contentType?: string;
   /** Raw template content. Placeholders are extracted from this. */
   content: string;
-  actorUserId: string;
+  actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   ip: string;
 }
 
@@ -189,7 +191,7 @@ export class ContractTemplateService {
    */
   async create(input: CreateContractTemplateInput): Promise<ContractTemplateDto> {
     const name = this.assertName(input.name);
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actor, async (q) => {
       const existing = await q.query('SELECT 1 FROM contract_templates WHERE LOWER(name) = $1', [
         name.toLowerCase(),
       ]);
@@ -206,12 +208,12 @@ export class ContractTemplateService {
           name,
           input.description ?? null,
           CONTRACT_TEMPLATE_STATUS_DEFAULT,
-          input.actorUserId,
+          input.actor.userId,
           now,
         ]
       );
       await this.recordChange(q, {
-        actorUserId: input.actorUserId,
+        actorUserId: input.actor.userId,
         ip: input.ip,
         entity: 'contract_template',
         action: 'created',
@@ -222,7 +224,7 @@ export class ContractTemplateService {
         },
       });
       this.logger.log(
-        `Contract template created: id=${id}, name=${name}, actor=${input.actorUserId}`
+        `Contract template created: id=${id}, name=${name}, actor=${input.actor.userId}`
       );
       return this.readDto(q, id);
     });
@@ -235,7 +237,7 @@ export class ContractTemplateService {
    * hard-deleted, so deactivation is how an admin retires them.
    */
   async update(id: string, input: UpdateContractTemplateInput): Promise<ContractTemplateDto> {
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actor, async (q) => {
       const current = await this.findById(q, id, true);
       if (!current) throw this.notFound(id);
 
@@ -257,7 +259,7 @@ export class ContractTemplateService {
         [name, description, status, id]
       );
       await this.recordChange(q, {
-        actorUserId: input.actorUserId,
+        actorUserId: input.actor.userId,
         ip: input.ip,
         entity: 'contract_template',
         action: 'updated',
@@ -268,7 +270,7 @@ export class ContractTemplateService {
           ...(input.status !== undefined ? { status } : {}),
         },
       });
-      this.logger.log(`Contract template updated: id=${id}, actor=${input.actorUserId}`);
+      this.logger.log(`Contract template updated: id=${id}, actor=${input.actor.userId}`);
       return this.readDto(q, id);
     });
   }
@@ -301,13 +303,13 @@ export class ContractTemplateService {
 
     const storage = this.storage;
     const fileSize = Buffer.byteLength(content, 'utf8');
-    return this.withTransaction(input.actorUserId, async (q) => {
+    return this.withTransaction(input.actor, async (q) => {
       const current = await this.findById(q, id, true);
       if (!current) throw this.notFound(id);
       const metadata = {
         purpose: 'contract_template',
         templateId: id,
-        uploadedBy: input.actorUserId,
+        uploadedBy: input.actor.userId,
       };
       await reserveStorageCopy(storageKey, metadata);
       const reservation = await q.query(
@@ -346,7 +348,7 @@ export class ContractTemplateService {
           fileSize,
           effectiveContentType,
           name,
-          input.actorUserId,
+          input.actor.userId,
         ]
       );
 
@@ -372,7 +374,7 @@ export class ContractTemplateService {
           effectiveContentType,
           fileSize,
           placeholders,
-          input.actorUserId,
+          input.actor.userId,
           new Date(),
         ]
       );
@@ -382,7 +384,7 @@ export class ContractTemplateService {
         await q.query("UPDATE contract_templates SET status = 'active' WHERE id = $1", [id]);
       }
       await this.recordChange(q, {
-        actorUserId: input.actorUserId,
+        actorUserId: input.actor.userId,
         ip: input.ip,
         entity: 'contract_template',
         action: 'version_uploaded',
@@ -405,7 +407,7 @@ export class ContractTemplateService {
         contentType: effectiveContentType,
         fileSize,
         placeholders,
-        createdBy: input.actorUserId,
+        createdBy: input.actor.userId,
         createdAt: inserted.rows[0]?.created_at
           ? new Date(inserted.rows[0].created_at).toISOString()
           : new Date().toISOString(),
@@ -421,8 +423,13 @@ export class ContractTemplateService {
    * FK is the hard guarantee). Soft-path: the service prefers to
    * deactivate rather than throw where context allows.
    */
-  async delete(id: string, actorUserId: string, ip: string): Promise<{ deleted: boolean }> {
-    return this.withTransaction(actorUserId, async (q) => {
+  async delete(
+    id: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ): Promise<{ deleted: boolean }> {
+    const actorUserId = actor.userId;
+    return this.withTransaction(actor, async (q) => {
       const current = await this.findById(q, id, true);
       if (!current) throw this.notFound(id);
 
@@ -670,15 +677,17 @@ export class ContractTemplateService {
 
   /** Run `fn` inside a single DB transaction; any error rolls back. */
   private async withTransaction<T>(
-    actorUserId: string,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     fn: (q: DbExecutor) => Promise<T>
   ): Promise<T> {
     const client = await getDbPool().connect();
     let committed = false;
     try {
       await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actorUserId, 'admin:documents:edit');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:documents:edit');
+      await requireSessionStepUp(client, actor);
       const result = await fn(client);
+      await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
       committed = true;
       return result;

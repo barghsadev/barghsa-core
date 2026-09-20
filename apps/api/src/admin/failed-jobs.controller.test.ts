@@ -140,7 +140,7 @@ describe('failed-jobs body validation', () => {
     );
     expect(service.retryFailedJobsBulk).toHaveBeenCalledWith(
       ['10000000-0000-4000-8000-000000000001', '10000000-0000-4000-8000-000000000002'],
-      'admin-1',
+      adminReq.session,
       '127.0.0.1'
     );
   });
@@ -150,7 +150,7 @@ describe('failed-jobs body validation', () => {
     await controller.retryJob('10000000-0000-4000-8000-000000000001', adminReq);
     expect(service.retryFailedJob).toHaveBeenCalledWith(
       '10000000-0000-4000-8000-000000000001',
-      'admin-1',
+      adminReq.session,
       '127.0.0.1'
     );
   });
@@ -160,7 +160,7 @@ describe('failed-jobs body validation', () => {
     await controller.resolveJob('10000000-0000-4000-8000-000000000001', adminReq);
     expect(service.resolveFailedJob).toHaveBeenCalledWith(
       '10000000-0000-4000-8000-000000000001',
-      'admin-1',
+      adminReq.session,
       '127.0.0.1'
     );
   });

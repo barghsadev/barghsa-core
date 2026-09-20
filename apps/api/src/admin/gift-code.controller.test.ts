@@ -247,7 +247,7 @@ describe('Gift code validation (T-09.12.03)', () => {
       validUntil: null,
       minOrderAmount: '100000',
       categories: ['electricity'],
-      actorUserId: 'admin-1',
+      actor: adminReq.session,
       ip: '127.0.0.1',
     });
   });
@@ -298,6 +298,11 @@ describe('Gift code validation (T-09.12.03)', () => {
   it('forwards toggle status to the service', async () => {
     const { controller, service } = makeController();
     await controller.setStatus(adminReq, CODE_ID, { status: 'inactive' });
-    expect(service.setStatus).toHaveBeenCalledWith(CODE_ID, 'inactive', 'admin-1', '127.0.0.1');
+    expect(service.setStatus).toHaveBeenCalledWith(
+      CODE_ID,
+      'inactive',
+      adminReq.session,
+      '127.0.0.1'
+    );
   });
 });

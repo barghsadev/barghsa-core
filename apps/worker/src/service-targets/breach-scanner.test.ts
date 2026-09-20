@@ -112,13 +112,13 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
 
     // The breach query applies the ticket open-statuses + target cutoff,
     // measuring the item's age from its last-activity timestamp, and runs a
-    // bounded batch oldest-first.
+    // bounded page in stable ID order.
     const breachCall = db.calls.find((c) => c.sql.includes('FROM tickets'));
     expect(breachCall!.params[0]).toEqual(['open', 'in_progress', 'waiting_staff']);
     expect(breachCall!.params[1]).toBeInstanceOf(Date);
     expect(breachCall!.params[2]).toBe(DEFAULT_BREACH_BATCH_SIZE);
     expect(breachCall!.sql).toContain('updated_at <= $2');
-    expect(breachCall!.sql).toContain('ORDER BY updated_at ASC');
+    expect(breachCall!.sql).toContain('ORDER BY id::text ASC');
     expect(breachCall!.sql).toContain('LIMIT $3');
 
     // Ledger upsert carries a positive target snapshot and reports the
@@ -366,12 +366,12 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
   });
 
   it('processes batches and reports truncated when the batch cap is hit', async () => {
-    const db = makeFakeDb((sql) => {
+    const db = makeFakeDb((sql, params) => {
       if (sql.includes('FROM app_config')) {
         return { rows: [{ value: { ticket: 48 } }] };
       }
       if (sql.includes('FROM tickets')) {
-        return { rows: [{ id: 'ticket-1', recipient_user_id: 'staff-1' }] };
+        return { rows: params[3] ? [] : [{ id: 'ticket-1', recipient_user_id: 'staff-1' }] };
       }
       if (sql.includes('FROM profiles')) {
         return { rows: [{ id: 'profile-1', user_id: 'staff-1' }] };

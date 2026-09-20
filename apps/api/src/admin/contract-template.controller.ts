@@ -178,7 +178,7 @@ export class ContractTemplateController {
     return this.service.create({
       name: parsed.data.name,
       ...(parsed.data.description !== undefined ? { description: parsed.data.description } : {}),
-      actorUserId: req.session.userId,
+      actor: req.session,
       ip: requestIp(req),
     });
   }
@@ -216,7 +216,7 @@ export class ContractTemplateController {
       ...(data.name !== undefined ? { name: data.name } : {}),
       ...(data.description !== undefined ? { description: data.description } : {}),
       ...(data.status !== undefined ? { status: data.status } : {}),
-      actorUserId: req.session.userId,
+      actor: req.session,
       ip: requestIp(req),
     });
   }
@@ -256,7 +256,7 @@ export class ContractTemplateController {
       fileName: parsed.data.fileName,
       ...(parsed.data.contentType !== undefined ? { contentType: parsed.data.contentType } : {}),
       content: parsed.data.content,
-      actorUserId: req.session.userId,
+      actor: req.session,
       ip: requestIp(req),
     });
   }
@@ -279,6 +279,6 @@ export class ContractTemplateController {
   ): Promise<{ deleted: boolean }> {
     this.assertDocumentsPermission(req);
     assertUuid(id);
-    return this.service.delete(id, req.session.userId, requestIp(req));
+    return this.service.delete(id, req.session, requestIp(req));
   }
 }

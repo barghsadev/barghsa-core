@@ -1,4 +1,22 @@
 const en = {
+  cities: 'Cities',
+  addCity: 'Add City',
+  editCity: 'Edit City',
+  deactivateCity: 'Deactivate City',
+  cityDescription: 'Enter the city name in both languages.',
+  cityDeactivateDescription:
+    'Deactivate {name}? Cities used by active profiles cannot be deactivated.',
+  citySearch: 'Search cities',
+  cityEmpty: 'No cities found.',
+  cityLoading: 'Loading cities…',
+  cityConflict: 'The city name already exists or the city is still in use.',
+  importCities: 'Import Cities',
+  importDescription:
+    'Paste up to 200 rows from a spreadsheet: Persian name, then English name, separated by a tab. All rows are saved together.',
+  importRows: 'City rows',
+  importInvalid: 'Enter 1–200 rows with valid Persian and English names separated by a tab.',
+  importCount: '{count} cities ready to import.',
+
   title: 'Province Management',
   add: 'Add Province',
   editTitle: 'Edit Province',
@@ -35,6 +53,24 @@ const en = {
     'The change conflicts with existing data. The province may still be in use or its name may already exist.',
 };
 const fa: Record<keyof typeof en, string> = {
+  cities: 'شهرها',
+  addCity: 'افزودن شهر',
+  editCity: 'ویرایش شهر',
+  deactivateCity: 'غیرفعال‌سازی شهر',
+  cityDescription: 'نام شهر را به هر دو زبان وارد کنید.',
+  cityDeactivateDescription:
+    'شهر {name} غیرفعال شود؟ شهرهای مورد استفاده در پروفایل‌های فعال قابل غیرفعال‌سازی نیستند.',
+  citySearch: 'جستجوی شهرها',
+  cityEmpty: 'شهری یافت نشد.',
+  cityLoading: 'در حال بارگذاری شهرها…',
+  cityConflict: 'نام شهر تکراری است یا شهر همچنان در استفاده است.',
+  importCities: 'ورود گروهی شهرها',
+  importDescription:
+    'حداکثر ۲۰۰ ردیف از صفحه گسترده بچسبانید: نام فارسی و سپس نام انگلیسی با جداکننده تب. همه ردیف‌ها با هم ذخیره می‌شوند.',
+  importRows: 'ردیف‌های شهر',
+  importInvalid: '۱ تا ۲۰۰ ردیف با نام فارسی و انگلیسی معتبر و جداکننده تب وارد کنید.',
+  importCount: '{count} شهر آماده ورود است.',
+
   title: 'مدیریت استان‌ها',
   add: 'افزودن استان',
   editTitle: 'ویرایش استان',

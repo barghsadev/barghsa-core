@@ -1,4 +1,4 @@
-import type { Pool } from 'pg';
+import type { Pool, QueryResult } from 'pg';
 import { getDbPool } from '@barghsa/db';
 import {
   SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
@@ -41,7 +41,7 @@ import { enqueueOutbox } from '../notifications/outbox-writer.js';
  *   (staff account without a default profile) skips the ledger insert and
  *   is re-evaluated on the next scan, logged for visibility.
  * - **Atomicity.** The ledger insert and the outbox rows for a service type
- *   share one transaction: a crash mid-scan can never leave an alert without
+ *   share one transaction per page: a crash mid-scan can never leave an alert without
  *   its dedup row (which would re-alert on the next scan).
  * - **Failure isolation.** A failure while scanning one service type is
  *   recorded and skipped; the other types are still scanned.
@@ -76,8 +76,8 @@ export interface BreachScanResult {
   /** Ledger rows pruned (episodes that ended, or a type got disabled). */
   pruned: number;
   /**
-   * True when any service type hit the per-scan batch cap (LIMIT), meaning
-   * more breached items remain and the next scan continues draining them.
+   * True when a service type needed more than one page. All pages are visited
+   * in this pass, including pages occupied by duplicates or unavailable staff.
    */
   truncated: boolean;
   /** Per-type failure messages; the other types still got scanned. */
@@ -90,10 +90,10 @@ interface BreachDomainSpec {
   /** Statuses that count as "open and awaiting staff". */
   openStatuses: readonly string[];
   /**
-   * SQL returning up to `$3` breached open items, oldest activity first:
+   * SQL returning up to `$3` breached open items, in stable ID order:
    * `id` plus `recipient_user_id` (nullable — the staff user responsible,
    * or NULL when unassigned). `$1` = statuses, `$2` = cutoff timestamp,
-   * `$3` = batch size.
+   * `$3` = page size, `$4` = last visited ID.
    */
   findBreachedSql: string;
   /**
@@ -117,7 +117,8 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
         FROM tickets
         WHERE status = ANY($1::text[])
           AND updated_at <= $2
-        ORDER BY updated_at ASC
+        AND ($4::text IS NULL OR id::text > $4)
+        ORDER BY id::text ASC
         LIMIT $3`,
     pruneSql: `DELETE FROM service_breach_alerts
         WHERE service_type = $1
@@ -137,7 +138,8 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
         FROM verification_cases
         WHERE status = ANY($1::text[])
           AND updated_at <= $2
-        ORDER BY updated_at ASC
+        AND ($4::text IS NULL OR id::text > $4)
+        ORDER BY id::text ASC
         LIMIT $3`,
     pruneSql: `DELETE FROM service_breach_alerts
         WHERE service_type = $1
@@ -214,6 +216,8 @@ export async function scanServiceBreaches(
   const enqueue = options.enqueue ?? enqueueOutbox;
   const logger = options.logger ?? defaultLogger;
   const batchSize = options.batchSize ?? DEFAULT_BREACH_BATCH_SIZE;
+  if (!Number.isSafeInteger(batchSize) || batchSize < 1)
+    throw new Error('Invalid breach page size');
 
   const result: BreachScanResult = {
     enabled: true,
@@ -257,128 +261,132 @@ export async function scanServiceBreaches(
 
   for (const domain of BREACH_DOMAINS) {
     const targetHours = targets[domain.serviceType];
-    const before = {
-      alerted: result.alerted,
-      pruned: result.pruned,
-      skippedDuplicates: result.skippedDuplicates,
-    };
+    let afterId: string | null = null;
+    let more = true;
+    while (more) {
+      const before = {
+        alerted: result.alerted,
+        pruned: result.pruned,
+        skippedDuplicates: result.skippedDuplicates,
+      };
 
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
 
-      // Disabled type: no scanning, but clear its episode ledger so a later
-      // re-enable re-evaluates every open item from scratch (episodes do not
-      // survive across a disable/enable cycle).
-      if (targetHours === null) {
-        const cleared = await client.query(domain.clearSql, [domain.serviceType]);
-        result.pruned += cleared.rowCount ?? 0;
-        await client.query('COMMIT');
-        continue;
-      }
+        // Disabled type: no scanning, but clear its episode ledger so a later
+        // re-enable re-evaluates every open item from scratch (episodes do not
+        // survive across a disable/enable cycle).
+        if (targetHours === null) {
+          const cleared = await client.query(domain.clearSql, [domain.serviceType]);
+          result.pruned += cleared.rowCount ?? 0;
+          await client.query('COMMIT');
+          break;
+        }
 
-      const cutoff = new Date(now.getTime() - targetHours * HOUR_MS);
+        const cutoff = new Date(now.getTime() - targetHours * HOUR_MS);
 
-      const breached = await client.query<{
-        id: string;
-        recipient_user_id: string | null;
-      }>(domain.findBreachedSql, [domain.openStatuses, cutoff, batchSize]);
-      result.scanned[domain.serviceType] = breached.rows.length;
-      // A full batch means more breached items likely remain; the next scan
-      // (same cutoff) continues draining the backlog oldest-first.
-      if (breached.rows.length >= batchSize) {
-        result.truncated = true;
-      }
+        const breached: QueryResult<{ id: string; recipient_user_id: string | null }> =
+          await client.query<{
+            id: string;
+            recipient_user_id: string | null;
+          }>(domain.findBreachedSql, [domain.openStatuses, cutoff, batchSize, afterId]);
+        result.scanned[domain.serviceType] += breached.rows.length;
+        more = breached.rows.length === batchSize;
+        afterId = breached.rows.at(-1)?.id ?? afterId;
+        // Advance past every visited row, even when it cannot produce an alert.
+        if (breached.rows.length >= batchSize) {
+          result.truncated = true;
+        }
 
-      if (breached.rows.length > 0) {
-        const recipients = await resolveRecipients(client, breached.rows, domain);
-        const noRecipientSkips: Array<{ itemId: string; reason: string }> = [];
-        for (const row of breached.rows) {
-          const itemRecipients = recipients.forItem(row.recipient_user_id);
+        if (breached.rows.length > 0) {
+          const recipients = await resolveRecipients(client, breached.rows, domain);
+          const noRecipientSkips: Array<{ itemId: string; reason: string }> = [];
+          for (const row of breached.rows) {
+            const itemRecipients = recipients.forItem(row.recipient_user_id);
 
-          // No deliverable recipient (e.g. the responsible staff account has
-          // no active account): skip the ledger insert entirely so the item
-          // is re-evaluated on the next scan — a silent, permanent alert
-          // suppression is worse than re-checking a few minutes later.
-          // Warnings are aggregated (one line per pass) so a persistent
-          // condition cannot spam the worker log.
-          if (itemRecipients.length === 0) {
-            noRecipientSkips.push({ itemId: row.id, reason: 'no active recipient' });
-            continue;
-          }
+            // No deliverable recipient (e.g. the responsible staff account has
+            // no active account): skip the ledger insert entirely so the item
+            // is re-evaluated on the next scan — a silent, permanent alert
+            // suppression is worse than re-checking a few minutes later.
+            // Warnings are aggregated (one line per pass) so a persistent
+            // condition cannot spam the worker log.
+            if (itemRecipients.length === 0) {
+              noRecipientSkips.push({ itemId: row.id, reason: 'no active recipient' });
+              continue;
+            }
 
-          // Dedup + target-snapshot refresh in one statement. No row comes
-          // back for an already-alerted episode with an unchanged target;
-          // a fresh episode returns inserted=true; a changed target returns
-          // the refreshed row with inserted=false (no re-alert).
-          const ledger = await client.query<{ id: string; inserted: boolean }>(LEDGER_UPSERT_SQL, [
-            domain.serviceType,
-            row.id,
-            targetHours,
-          ]);
-          if (ledger.rows.length === 0 || !ledger.rows[0]!.inserted) {
-            result.skippedDuplicates++;
-            continue;
-          }
-          result.alerted++;
-          const ledgerId = ledger.rows[0]!.id;
+            // Dedup + target-snapshot refresh in one statement. No row comes
+            // back for an already-alerted episode with an unchanged target;
+            // a fresh episode returns inserted=true; a changed target returns
+            // the refreshed row with inserted=false (no re-alert).
+            const ledger = await client.query<{ id: string; inserted: boolean }>(
+              LEDGER_UPSERT_SQL,
+              [domain.serviceType, row.id, targetHours]
+            );
+            if (ledger.rows.length === 0 || !ledger.rows[0]!.inserted) {
+              result.skippedDuplicates++;
+              continue;
+            }
+            result.alerted++;
+            const ledgerId = ledger.rows[0]!.id;
 
-          for (const profile of itemRecipients) {
-            const enqueueResult = await enqueue(client, {
-              profileId: profile.id,
-              userId: profile.userId,
-              eventKey: SERVICE_TARGET_BREACHED_EVENT_KEY,
-              payload: {
-                service_type: domain.serviceType,
-                service_type_name_fa: SERVICE_TYPE_LABELS[domain.serviceType].fa,
-                service_type_name_en: SERVICE_TYPE_LABELS[domain.serviceType].en,
-                item_id: row.id,
-                target_hours: targetHours,
-              },
-              channels: ['in_app'],
-              // Episode-scoped: the ledger row id guarantees a NEW key every
-              // episode, so an item that re-breaches after being pruned can
-              // never collide with its first episode's outbox row.
-              idempotencyKey: `${SERVICE_TARGET_BREACHED_EVENT_KEY}:${domain.serviceType}:${row.id}:${profile.id ?? profile.userId}:${ledgerId}`,
-            });
-            if (!enqueueResult.inserted) {
-              logger.warn(
-                `Outbox deduped breach alert for ${domain.serviceType} ${row.id} → ${profile.id ?? profile.userId} (unexpected for a fresh episode)`
-              );
+            for (const profile of itemRecipients) {
+              const enqueueResult = await enqueue(client, {
+                profileId: profile.id,
+                userId: profile.userId,
+                eventKey: SERVICE_TARGET_BREACHED_EVENT_KEY,
+                payload: {
+                  service_type: domain.serviceType,
+                  service_type_name_fa: SERVICE_TYPE_LABELS[domain.serviceType].fa,
+                  service_type_name_en: SERVICE_TYPE_LABELS[domain.serviceType].en,
+                  item_id: row.id,
+                  target_hours: targetHours,
+                },
+                channels: ['in_app'],
+                // Episode-scoped: the ledger row id guarantees a NEW key every
+                // episode, so an item that re-breaches after being pruned can
+                // never collide with its first episode's outbox row.
+                idempotencyKey: `${SERVICE_TARGET_BREACHED_EVENT_KEY}:${domain.serviceType}:${row.id}:${profile.id ?? profile.userId}:${ledgerId}`,
+              });
+              if (!enqueueResult.inserted) {
+                logger.warn(
+                  `Outbox deduped breach alert for ${domain.serviceType} ${row.id} → ${profile.id ?? profile.userId} (unexpected for a fresh episode)`
+                );
+              }
             }
           }
+          if (noRecipientSkips.length > 0) {
+            const samples = noRecipientSkips
+              .slice(0, 3)
+              .map((s) => s.itemId)
+              .join(', ');
+            logger.warn(
+              `No in-app recipient for ${noRecipientSkips.length} breached ${domain.serviceType}(s) (${samples}${noRecipientSkips.length > 3 ? ', …' : ''}); re-evaluated next scan`
+            );
+          }
         }
-        if (noRecipientSkips.length > 0) {
-          const samples = noRecipientSkips
-            .slice(0, 3)
-            .map((s) => s.itemId)
-            .join(', ');
-          logger.warn(
-            `No in-app recipient for ${noRecipientSkips.length} breached ${domain.serviceType}(s) (${samples}${noRecipientSkips.length > 3 ? ', …' : ''}); re-evaluated next scan`
-          );
-        }
+
+        // Episode reset: drop ledger rows whose item is no longer breached
+        // (resolved, closed, silent again, or younger than the current
+        // target). The anti-join is exactly the breached set (same statuses +
+        // cutoff).
+        const prune = !more
+          ? await client.query(domain.pruneSql, [domain.serviceType, domain.openStatuses, cutoff])
+          : { rowCount: 0 };
+        result.pruned += prune.rowCount ?? 0;
+
+        await client.query('COMMIT');
+      } catch (error) {
+        await client.query('ROLLBACK').catch(() => {});
+        const message = (error as Error)?.message ?? String(error);
+        Object.assign(result, before);
+        result.errors.push(`${domain.serviceType}: ${message}`);
+        logger.warn(`Scan failed for ${domain.serviceType}: ${message}`);
+        break;
+      } finally {
+        client.release();
       }
-
-      // Episode reset: drop ledger rows whose item is no longer breached
-      // (resolved, closed, silent again, or younger than the current
-      // target). The anti-join is exactly the breached set (same statuses +
-      // cutoff).
-      const prune = await client.query(domain.pruneSql, [
-        domain.serviceType,
-        domain.openStatuses,
-        cutoff,
-      ]);
-      result.pruned += prune.rowCount ?? 0;
-
-      await client.query('COMMIT');
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
-      const message = (error as Error)?.message ?? String(error);
-      Object.assign(result, before);
-      result.errors.push(`${domain.serviceType}: ${message}`);
-      logger.warn(`Scan failed for ${domain.serviceType}: ${message}`);
-    } finally {
-      client.release();
     }
   }
 

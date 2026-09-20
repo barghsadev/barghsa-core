@@ -190,7 +190,7 @@ export class FailedJobsController {
   ): Promise<FailedJobDto> {
     this.assertRetryPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.failedJobsService.retryFailedJob(id, req.session.userId, ip);
+    return this.failedJobsService.retryFailedJob(id, req.session, ip);
   }
 
   /**
@@ -234,7 +234,7 @@ export class FailedJobsController {
       );
     }
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.failedJobsService.retryFailedJobsBulk(parsed.data.ids, req.session.userId, ip);
+    return this.failedJobsService.retryFailedJobsBulk(parsed.data.ids, req.session, ip);
   }
 
   /**
@@ -259,6 +259,6 @@ export class FailedJobsController {
   ): Promise<FailedJobDto> {
     this.assertRetryPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
-    return this.failedJobsService.resolveFailedJob(id, req.session.userId, ip);
+    return this.failedJobsService.resolveFailedJob(id, req.session, ip);
   }
 }

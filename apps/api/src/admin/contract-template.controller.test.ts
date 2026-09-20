@@ -128,7 +128,7 @@ describe('ContractTemplateController (T-09.12.04)', () => {
     expect(service.create).toHaveBeenCalledWith({
       name: 'New Template',
       description: 'desc',
-      actorUserId: 'admin-1',
+      actor: adminReq.session,
       ip: '127.0.0.1',
     });
   });
@@ -138,7 +138,7 @@ describe('ContractTemplateController (T-09.12.04)', () => {
     await controller.update(adminReq, TEMPLATE_ID, { status: 'inactive' });
     expect(service.update).toHaveBeenCalledWith(TEMPLATE_ID, {
       status: 'inactive',
-      actorUserId: 'admin-1',
+      actor: adminReq.session,
       ip: '127.0.0.1',
     });
   });
@@ -154,7 +154,7 @@ describe('ContractTemplateController (T-09.12.04)', () => {
       fileName: 'power.docx',
       contentType: 'text/plain',
       content: '{{x}}',
-      actorUserId: 'admin-1',
+      actor: adminReq.session,
       ip: '127.0.0.1',
     });
     expect(result.versionNumber).toBe(2);
@@ -163,7 +163,7 @@ describe('ContractTemplateController (T-09.12.04)', () => {
   it('delete delegates the actor metadata', async () => {
     const { controller, service } = makeController();
     const result = await controller.delete(adminReq, TEMPLATE_ID);
-    expect(service.delete).toHaveBeenCalledWith(TEMPLATE_ID, 'admin-1', '127.0.0.1');
+    expect(service.delete).toHaveBeenCalledWith(TEMPLATE_ID, adminReq.session, '127.0.0.1');
     expect(result.deleted).toBe(true);
   });
 });

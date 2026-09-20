@@ -94,7 +94,7 @@ interface EscalationDomainSpec {
    * `$1` service_type, `$2` expected escalation_level,
    * `$3` escalation cutoff (previous-tier time + delay),
    * `$4` `now` (for the per-episode target-hours re-verify),
-   * `$5` open statuses (source re-verify), `$6` batch size.
+   * `$5` open statuses, `$6` page size, `$7` last visited ledger ID.
    * Selects `l.id AS ledger_id`, `l.item_id`, and the responsible staff user.
    */
   findDueSql: (baseColumn: 'alerted_at' | 'escalated_at') => string;
@@ -114,7 +114,8 @@ const ESCALATION_DOMAINS: readonly EscalationDomainSpec[] = [
           AND t.status = ANY($5::text[])
           AND t.updated_at <= $4::timestamptz - (l.target_hours * INTERVAL '1 hour')
           AND l.${column} <= $3
-        ORDER BY l.updated_at ASC
+        AND ($7::uuid IS NULL OR l.id > $7::uuid)
+        ORDER BY l.id ASC
         LIMIT $6`,
   },
   {
@@ -130,7 +131,8 @@ const ESCALATION_DOMAINS: readonly EscalationDomainSpec[] = [
           AND vc.status = ANY($5::text[])
           AND vc.updated_at <= $4::timestamptz - (l.target_hours * INTERVAL '1 hour')
           AND l.${column} <= $3
-        ORDER BY l.updated_at ASC
+        AND ($7::uuid IS NULL OR l.id > $7::uuid)
+        ORDER BY l.id ASC
         LIMIT $6`,
   },
 ];
@@ -199,6 +201,8 @@ export async function scanServiceEscalations(
   const enqueue = options.enqueue ?? enqueueOutbox;
   const logger = options.logger ?? defaultLogger;
   const batchSize = options.batchSize ?? DEFAULT_ESCALATION_BATCH_SIZE;
+  if (!Number.isSafeInteger(batchSize) || batchSize < 1)
+    throw new Error('Invalid escalation page size');
 
   const result: EscalationScanResult = {
     enabled: true,
@@ -233,59 +237,42 @@ export async function scanServiceEscalations(
       let tier2 = 0;
       let tier3 = 0;
 
-      // Level 2: assigned → team lead, measured from the breach alert.
-      if (policy.level2.delayHours !== null) {
-        const due = await fetchDue(
-          client,
-          domain,
-          policy.level2.delayHours,
-          now,
-          batchSize,
-          1,
-          'alerted_at'
-        );
-        for (const candidate of due) {
-          const outcome = await escalateOne(
+      // Visit every page, including candidates with no deliverable recipient.
+      // The immutable ledger ID remains stable when escalation changes timestamps.
+      for (const fromLevel of [1, 2] as const) {
+        const level = fromLevel === 1 ? policy.level2 : policy.level3;
+        if (level.delayHours === null) continue;
+        let afterId: string | null = null;
+        while (true) {
+          const due = await fetchDue(
             client,
-            enqueue,
-            logger,
             domain,
-            candidate,
-            policy.level2,
-            /* fromLevel */ 1,
-            /* toLevel */ 2,
-            now
+            level.delayHours,
+            now,
+            batchSize,
+            fromLevel,
+            fromLevel === 1 ? 'alerted_at' : 'escalated_at',
+            afterId
           );
-          if (outcome === 'escalated') tier2++;
-          else if (outcome === 'concurrent') result.skippedConcurrent++;
-        }
-      }
-
-      // Level 3: team lead → admin, measured from the level-2 escalation.
-      if (policy.level3.delayHours !== null) {
-        const due = await fetchDue(
-          client,
-          domain,
-          policy.level3.delayHours,
-          now,
-          batchSize,
-          2,
-          'escalated_at'
-        );
-        for (const candidate of due) {
-          const outcome = await escalateOne(
-            client,
-            enqueue,
-            logger,
-            domain,
-            candidate,
-            policy.level3,
-            /* fromLevel */ 2,
-            /* toLevel */ 3,
-            now
-          );
-          if (outcome === 'escalated') tier3++;
-          else if (outcome === 'concurrent') result.skippedConcurrent++;
+          for (const candidate of due) {
+            const outcome = await escalateOne(
+              client,
+              enqueue,
+              logger,
+              domain,
+              candidate,
+              level,
+              fromLevel,
+              fromLevel + 1,
+              now
+            );
+            if (outcome === 'escalated') {
+              if (fromLevel === 1) tier2++;
+              else tier3++;
+            } else if (outcome === 'concurrent') result.skippedConcurrent++;
+          }
+          if (due.length < batchSize) break;
+          afterId = due.at(-1)!.ledger_id;
         }
       }
 
@@ -313,7 +300,8 @@ async function fetchDue(
   now: Date,
   batchSize: number,
   expectedLevel: number,
-  baseColumn: 'alerted_at' | 'escalated_at'
+  baseColumn: 'alerted_at' | 'escalated_at',
+  afterId: string | null
 ): Promise<DueRow[]> {
   const cutoff = new Date(now.getTime() - delayHours * HOUR_MS);
   const rows = await client.query<DueRow>(domain.findDueSql(baseColumn), [
@@ -323,6 +311,7 @@ async function fetchDue(
     now,
     domain.openStatuses,
     batchSize,
+    afterId,
   ]);
   return rows.rows;
 }
