@@ -107,7 +107,14 @@ it('records a transfer without settling until a second staff member reconciles i
     bankReference = randomUUID();
   expect(refund.destination).toBe('external_bank');
   expect((await decide(refund.id, 'record-transfer', { bankReference })).status).toBe(409);
-  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  const approval = await decide(refund.id, 'approve');
+  expect(approval.status).toBe(200);
+  const approved = (await approval.json()) as RefundDto;
+  expect(approved.transaction).toMatchObject({
+    state: 'Pending',
+    walletTransactionId: null,
+    finishedAt: null,
+  });
   for (let retry = 0; retry < 2; retry++) {
     const response = await decide(refund.id, 'record-transfer', { bankReference });
     expect(response.status).toBe(200);
@@ -115,6 +122,7 @@ it('records a transfer without settling until a second staff member reconciles i
       state: 'Processing',
       bankReference,
       reconciliationStatus: 'Pending',
+      transaction: { id: approved.transaction!.id, state: 'Pending', walletTransactionId: null },
     });
   }
   expect(await balances(f)).toEqual({ refunded_amount: '0', state: 'Paid', posted_balance: '0' });
@@ -126,10 +134,16 @@ it('records a transfer without settling until a second staff member reconciles i
   expect(
     (await decide(refund.id, 'reconcile', { bankReference: 'different' }, 'refund-reviewer')).status
   ).toBe(409);
-  for (let retry = 0; retry < 2; retry++)
-    expect(
-      (await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status
-    ).toBe(200);
+  for (let retry = 0; retry < 2; retry++) {
+    const completion = await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer');
+    expect(completion.status).toBe(200);
+    expect(((await completion.json()) as RefundDto).transaction).toMatchObject({
+      id: approved.transaction!.id,
+      state: 'Completed',
+      walletTransactionId: null,
+      finishedAt: expect.any(String),
+    });
+  }
   expect(await balances(f)).toEqual({
     refunded_amount: '40',
     state: 'PartiallyRefunded',

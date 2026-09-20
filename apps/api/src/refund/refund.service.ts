@@ -15,7 +15,7 @@ import {
 import { createHash } from 'node:crypto';
 import { v7 as uuidv7 } from 'uuid';
 import type { PoolClient } from 'pg';
-import { getDbPool } from '@barghsa/db';
+import { getDbPool, type RefundTransaction } from '@barghsa/db';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock.js';
 import { notifyApprovalRequested } from '../admin/approval-notifications.js';
@@ -65,6 +65,13 @@ export interface RefundDto {
   bankReference: string | null;
   reconciliationStatus: string | null;
   approvalRequestId: string | null;
+  transaction: {
+    id: string;
+    state: RefundTransaction['state'];
+    walletTransactionId: string | null;
+    createdAt: string;
+    finishedAt: string | null;
+  } | null;
   retry: {
     attempts: number;
     maxAttempts: number;
@@ -538,6 +545,18 @@ export class RefundService {
   }
   private async dto(client: PoolClient, row: RefundRow): Promise<RefundDto> {
     const approval = await this.latestApproval(client, row);
+    const transaction = (
+      await client.query<{
+        id: string;
+        state: RefundTransaction['state'];
+        wallet_transaction_id: string | null;
+        created_at: Date;
+        finished_at: Date | null;
+      }>(
+        'SELECT id,state,wallet_transaction_id,created_at,finished_at FROM refund_transactions WHERE refund_id=$1',
+        [row.id]
+      )
+    ).rows[0];
     const job =
       row.destination === 'wallet'
         ? (
@@ -563,6 +582,15 @@ export class RefundService {
       bankReference: row.bank_reference,
       reconciliationStatus: row.reconciliation_status,
       approvalRequestId: approval?.id ?? null,
+      transaction: transaction
+        ? {
+            id: transaction.id,
+            state: transaction.state,
+            walletTransactionId: transaction.wallet_transaction_id,
+            createdAt: transaction.created_at.toISOString(),
+            finishedAt: transaction.finished_at?.toISOString() ?? null,
+          }
+        : null,
       retry: job
         ? {
             attempts: job.attempts,
