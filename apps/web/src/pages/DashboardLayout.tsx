@@ -1,3 +1,4 @@
+import { contractText } from '@barghsa/i18n/contracts';
 import { Outlet } from '@tanstack/react-router';
 import {
   LayoutDashboard,
@@ -39,6 +40,7 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
         { to: '/savings', label: t('dashboard.nav.savings', locale), icon: Sprout },
         { to: '/wallet', label: t('dashboard.nav.wallet', locale), icon: Wallet },
         { to: '/invoices', label: t('dashboard.nav.invoices', locale), icon: ReceiptText },
+        { to: '/contracts', label: contractText('title', locale), icon: FileText },
         { to: '/documents', label: documentText('title', locale), icon: FileText },
         { to: '/tickets', label: t('tickets.title', locale), icon: LifeBuoy },
       ],

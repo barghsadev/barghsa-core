@@ -1,3 +1,4 @@
+import { contractText } from '@barghsa/i18n/contracts';
 import { Outlet } from '@tanstack/react-router';
 import {
   Activity,
@@ -51,6 +52,7 @@ export default function AdminLayout() {
       label: shellText('operations', locale),
       items: [
         { to: '/admin/tickets', label: t('tickets.staffTitle', locale), icon: LifeBuoy },
+        { to: '/admin/contracts', label: contractText('staffTitle', locale), icon: FileText },
         { to: '/admin/documents', label: documentText('staffTitle', locale), icon: FileText },
         {
           to: '/admin/reconciliation',

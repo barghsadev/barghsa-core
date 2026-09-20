@@ -22,17 +22,25 @@ import {
   type DocumentUpload as Upload,
 } from '../lib/documents.js';
 
+export interface ContractDocumentAssociation {
+  businessRecordType: 'contract';
+  businessRecordId: string;
+  contractVersionId: string;
+  contractRole: 'original' | 'signed' | 'amendment';
+}
 type Attempt = { upload: Upload; file: File; uploaded: boolean; confirmKey: string };
 export function DocumentUpload({
   staff,
   profileId,
   replacement,
+  association,
   onClose,
   onUploaded,
 }: {
   staff: boolean;
   profileId: string;
   replacement: BusinessDocument | null;
+  association?: ContractDocumentAssociation;
   onClose: () => void;
   onUploaded: (document: BusinessDocument) => void;
 }) {
@@ -80,7 +88,7 @@ export function DocumentUpload({
             : {}),
           supersedesDocumentId: replacement.id,
         }
-      : { businessRecordType: 'standalone', profileId };
+      : { ...(association ?? { businessRecordType: 'standalone' }), profileId };
     setAction({
       title: word(replacement ? 'replace' : 'upload'),
       description: file.name,
@@ -88,7 +96,7 @@ export function DocumentUpload({
       method: 'POST',
       body: {
         ...context,
-        category: replacement?.category ?? category,
+        category: replacement?.category ?? (association ? 'contract' : category),
         fileName: file.name,
         fileSize: file.size,
         contentType: file.type || 'application/octet-stream',
@@ -155,7 +163,7 @@ export function DocumentUpload({
       ) : (
         <form onSubmit={submit} className="flex flex-col gap-4">
           <FieldGroup>
-            {!replacement ? (
+            {!replacement && !association ? (
               <Field>
                 <FieldLabel htmlFor="document-category">{word('category')}</FieldLabel>
                 <NativeSelect

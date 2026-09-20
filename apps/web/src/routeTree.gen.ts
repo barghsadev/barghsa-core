@@ -22,6 +22,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AppAiRouteImport } from './routes/_app/ai'
 import { Route as AppAppRouteImport } from './routes/_app/app'
 import { Route as AppChartsRouteImport } from './routes/_app/charts'
+import { Route as AppContractsRouteImport } from './routes/_app/contracts'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
 import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
@@ -38,6 +39,7 @@ import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminCatalogueRouteImport } from './routes/admin/catalogue'
 import { Route as AdminContractLimitsRouteImport } from './routes/admin/contract-limits'
 import { Route as AdminContractTemplatesRouteImport } from './routes/admin/contract-templates'
+import { Route as AdminContractsRouteImport } from './routes/admin/contracts'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
 import { Route as AdminDocumentsRouteImport } from './routes/admin/documents'
 import { Route as AdminElectricityRulesRouteImport } from './routes/admin/electricity-rules'
@@ -149,6 +151,11 @@ const AppChartsRoute = AppChartsRouteImport.update({
   path: '/charts',
   getParentRoute: () => AppRoute,
 } as any)
+const AppContractsRoute = AppContractsRouteImport.update({
+  id: '/contracts',
+  path: '/contracts',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -227,6 +234,11 @@ const AdminContractLimitsRoute = AdminContractLimitsRouteImport.update({
 const AdminContractTemplatesRoute = AdminContractTemplatesRouteImport.update({
   id: '/contract-templates',
   path: '/contract-templates',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContractsRoute = AdminContractsRouteImport.update({
+  id: '/contracts',
+  path: '/contracts',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminCrmRoute = AdminCrmRouteImport.update({
@@ -477,6 +489,7 @@ export interface FileRoutesByFullPath {
   '/ai': typeof AppAiRoute
   '/app': typeof AppAppRoute
   '/charts': typeof AppChartsRoute
+  '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
   '/notifications': typeof AppNotificationsRoute
@@ -492,6 +505,7 @@ export interface FileRoutesByFullPath {
   '/admin/catalogue': typeof AdminCatalogueRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
   '/admin/contract-templates': typeof AdminContractTemplatesRoute
+  '/admin/contracts': typeof AdminContractsRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/documents': typeof AdminDocumentsRoute
   '/admin/electricity-rules': typeof AdminElectricityRulesRoute
@@ -550,6 +564,7 @@ export interface FileRoutesByTo {
   '/ai': typeof AppAiRoute
   '/app': typeof AppAppRoute
   '/charts': typeof AppChartsRoute
+  '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
   '/notifications': typeof AppNotificationsRoute
@@ -565,6 +580,7 @@ export interface FileRoutesByTo {
   '/admin/catalogue': typeof AdminCatalogueRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
   '/admin/contract-templates': typeof AdminContractTemplatesRoute
+  '/admin/contracts': typeof AdminContractsRoute
   '/admin/documents': typeof AdminDocumentsRoute
   '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
@@ -627,6 +643,7 @@ export interface FileRoutesById {
   '/_app/ai': typeof AppAiRoute
   '/_app/app': typeof AppAppRoute
   '/_app/charts': typeof AppChartsRoute
+  '/_app/contracts': typeof AppContractsRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/documents': typeof AppDocumentsRoute
   '/_app/notifications': typeof AppNotificationsRoute
@@ -642,6 +659,7 @@ export interface FileRoutesById {
   '/admin/catalogue': typeof AdminCatalogueRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
   '/admin/contract-templates': typeof AdminContractTemplatesRoute
+  '/admin/contracts': typeof AdminContractsRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/documents': typeof AdminDocumentsRoute
   '/admin/electricity-rules': typeof AdminElectricityRulesRoute
@@ -705,6 +723,7 @@ export interface FileRouteTypes {
     | '/ai'
     | '/app'
     | '/charts'
+    | '/contracts'
     | '/dashboard'
     | '/documents'
     | '/notifications'
@@ -720,6 +739,7 @@ export interface FileRouteTypes {
     | '/admin/catalogue'
     | '/admin/contract-limits'
     | '/admin/contract-templates'
+    | '/admin/contracts'
     | '/admin/crm'
     | '/admin/documents'
     | '/admin/electricity-rules'
@@ -778,6 +798,7 @@ export interface FileRouteTypes {
     | '/ai'
     | '/app'
     | '/charts'
+    | '/contracts'
     | '/dashboard'
     | '/documents'
     | '/notifications'
@@ -793,6 +814,7 @@ export interface FileRouteTypes {
     | '/admin/catalogue'
     | '/admin/contract-limits'
     | '/admin/contract-templates'
+    | '/admin/contracts'
     | '/admin/documents'
     | '/admin/electricity-rules'
     | '/admin/failed-jobs'
@@ -854,6 +876,7 @@ export interface FileRouteTypes {
     | '/_app/ai'
     | '/_app/app'
     | '/_app/charts'
+    | '/_app/contracts'
     | '/_app/dashboard'
     | '/_app/documents'
     | '/_app/notifications'
@@ -869,6 +892,7 @@ export interface FileRouteTypes {
     | '/admin/catalogue'
     | '/admin/contract-limits'
     | '/admin/contract-templates'
+    | '/admin/contracts'
     | '/admin/crm'
     | '/admin/documents'
     | '/admin/electricity-rules'
@@ -1026,6 +1050,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppChartsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/contracts': {
+      id: '/_app/contracts'
+      path: '/contracts'
+      fullPath: '/contracts'
+      preLoaderRoute: typeof AppContractsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -1136,6 +1167,13 @@ declare module '@tanstack/react-router' {
       path: '/contract-templates'
       fullPath: '/admin/contract-templates'
       preLoaderRoute: typeof AdminContractTemplatesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contracts': {
+      id: '/admin/contracts'
+      path: '/contracts'
+      fullPath: '/admin/contracts'
+      preLoaderRoute: typeof AdminContractsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/crm': {
@@ -1467,6 +1505,7 @@ interface AppRouteChildren {
   AppAiRoute: typeof AppAiRoute
   AppAppRoute: typeof AppAppRoute
   AppChartsRoute: typeof AppChartsRoute
+  AppContractsRoute: typeof AppContractsRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppDocumentsRoute: typeof AppDocumentsRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
@@ -1491,6 +1530,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAiRoute: AppAiRoute,
   AppAppRoute: AppAppRoute,
   AppChartsRoute: AppChartsRoute,
+  AppContractsRoute: AppContractsRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppDocumentsRoute: AppDocumentsRoute,
   AppNotificationsRoute: AppNotificationsRoute,
@@ -1538,6 +1578,7 @@ interface AdminRouteChildren {
   AdminCatalogueRoute: typeof AdminCatalogueRoute
   AdminContractLimitsRoute: typeof AdminContractLimitsRoute
   AdminContractTemplatesRoute: typeof AdminContractTemplatesRoute
+  AdminContractsRoute: typeof AdminContractsRoute
   AdminCrmRoute: typeof AdminCrmRouteWithChildren
   AdminDocumentsRoute: typeof AdminDocumentsRoute
   AdminElectricityRulesRoute: typeof AdminElectricityRulesRoute
@@ -1574,6 +1615,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCatalogueRoute: AdminCatalogueRoute,
   AdminContractLimitsRoute: AdminContractLimitsRoute,
   AdminContractTemplatesRoute: AdminContractTemplatesRoute,
+  AdminContractsRoute: AdminContractsRoute,
   AdminCrmRoute: AdminCrmRouteWithChildren,
   AdminDocumentsRoute: AdminDocumentsRoute,
   AdminElectricityRulesRoute: AdminElectricityRulesRoute,

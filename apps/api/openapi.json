@@ -2933,6 +2933,70 @@
       }
     },
     "/api/admin/contracts": {
+      "get": {
+        "operationId": "ContractController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "serviceType",
+            "required": false,
+            "schema": {
+              "enum": [
+                "electricity",
+                "savings",
+                "solar"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "profileId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List staff contract metadata with bounded filters and pagination",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      },
       "post": {
         "operationId": "ContractController_create",
         "parameters": [],

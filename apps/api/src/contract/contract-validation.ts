@@ -41,3 +41,27 @@ export const contractReviewSchema = z
 export const contractChangesSchema = contractReviewSchema.extend({
   reason: z.string().trim().min(1).max(1000),
 });
+
+export const contractListSchema = z
+  .object({
+    profileId: contractUuid.optional(),
+    serviceType: z.enum(['electricity', 'savings', 'solar']).optional(),
+    state: z
+      .enum([
+        'Draft',
+        'AwaitingStaffReview',
+        'ChangesRequested',
+        'AwaitingCustomerAcceptance',
+        'Accepted',
+        'AwaitingSignature',
+        'Signed',
+        'Active',
+        'Completed',
+        'Cancelled',
+      ])
+      .optional(),
+    before: contractUuid.optional(),
+    limit: z.coerce.number().int().min(1).max(100).default(30),
+  })
+  .strict();
+export type ContractListInput = z.infer<typeof contractListSchema>;

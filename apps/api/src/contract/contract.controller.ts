@@ -25,7 +25,12 @@ import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { ContractService } from './contract.service.js';
-import { contractUuid, createContractSchema, updateContractSchema } from './contract-validation.js';
+import {
+  contractUuid,
+  createContractSchema,
+  updateContractSchema,
+  contractListSchema,
+} from './contract-validation.js';
 const editProperties = {
   content: {
     type: 'object' as const,
@@ -51,6 +56,17 @@ export class ContractController {
   private authorize(req: AuthenticatedRequest, write = false) {
     if (!hasStaffPermission(req, write ? 'contracts:write' : 'contracts:read'))
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+  }
+  @Get()
+  @ApiOperation({ summary: 'List staff contract metadata with bounded filters and pagination' })
+  @ApiQuery({ name: 'profileId', required: false, type: String })
+  @ApiQuery({ name: 'serviceType', required: false, enum: ['electricity', 'savings', 'solar'] })
+  @ApiQuery({ name: 'state', required: false, type: String })
+  @ApiQuery({ name: 'before', required: false, type: String })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  list(@Req() req: AuthenticatedRequest, @Query() query: unknown) {
+    this.authorize(req);
+    return this.service.list(parse(contractListSchema, query));
   }
   @Post()
   @RequiresStepUp()

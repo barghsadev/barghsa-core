@@ -361,3 +361,46 @@ it('rejects revoked legal grants after an in-flight request waits for the actor 
     await pending;
   }
 });
+
+it('lists staff contract metadata with profile/type/state filters and exclusive cursors', async () => {
+  async function list(query: string) {
+    const response = await send(query);
+    expect(response.status).toBe(200);
+    return (await response.json()) as Awaited<ReturnType<ContractService['list']>>;
+  }
+  const body = await input();
+  const first = await create(body);
+  const second = await create({ ...body, idempotencyKey: randomUUID(), serviceType: 'savings' });
+  const unrelated = await create();
+  const page = await list(`?profileId=${body.profileId}&limit=1`);
+  const sorted = [first.id, second.id].sort().reverse();
+  expect(page.contracts.map((row: { id: string }) => row.id)).toEqual([sorted[0]]);
+  expect(page.nextBefore).toBe(sorted[0]);
+  expect(page.contracts[0]).not.toHaveProperty('content');
+  expect(page.contracts[0]).not.toHaveProperty('currentVersion');
+  const next = await list(`?profileId=${body.profileId}&limit=1&before=${page.nextBefore}`);
+  expect(next.contracts.map((row: { id: string }) => row.id)).toEqual([sorted[1]]);
+  expect(next.nextBefore).toBeNull();
+  const filtered = await list(`?profileId=${body.profileId}&serviceType=electricity&state=Draft`);
+  expect(filtered.contracts).toHaveLength(1);
+  expect(filtered.contracts[0]).toMatchObject({
+    id: first.id,
+    versionId: first.currentVersionId,
+    versionNumber: 1,
+  });
+  expect(filtered.contracts.some((row: { id: string }) => row.id === unrelated.id)).toBe(false);
+  expect((await list(`?profileId=${body.profileId}&state=Active`)).contracts).toEqual([]);
+  expect((await send('', 'GET', undefined, 'contract-support')).status).toBe(403);
+  expect((await fetch(http.base + '/api/admin/contracts')).status).toBe(401);
+  for (const query of [
+    'limit=0',
+    'limit=101',
+    'before=invalid',
+    'profileId=invalid',
+    'state=Invalid',
+    'serviceType=Invalid',
+    'extra=true',
+  ]) {
+    expect((await send('?' + query)).status).toBe(400);
+  }
+});

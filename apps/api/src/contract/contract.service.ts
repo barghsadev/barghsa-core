@@ -3,7 +3,11 @@ import { getDbPool, contracts, contractVersions } from '@barghsa/db';
 import { and, desc, eq, lt, createDbClient as drizzle } from '@barghsa/db';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
-import type { CreateContractInput, UpdateContractInput } from './contract-validation.js';
+import type {
+  CreateContractInput,
+  UpdateContractInput,
+  ContractListInput,
+} from './contract-validation.js';
 
 import {
   contractIdempotency,
@@ -19,6 +23,49 @@ const versionDto = (row: typeof contractVersions.$inferSelect) => ({
 });
 @Injectable()
 export class ContractService {
+  async list(input: ContractListInput) {
+    const rows = await drizzle(getDbPool())
+      .select({
+        id: contracts.id,
+        profileId: contracts.profileId,
+        serviceType: contracts.serviceType,
+        state: contracts.state,
+        versionId: contractVersions.id,
+        versionNumber: contractVersions.versionNumber,
+        changeDescription: contractVersions.changeDescription,
+        updatedAt: contracts.updatedAt,
+        acceptedAt: contracts.acceptedAt,
+      })
+      .from(contracts)
+      .innerJoin(
+        contractVersions,
+        and(
+          eq(contractVersions.contractId, contracts.id),
+          eq(contractVersions.id, contracts.currentVersionId)
+        )
+      )
+      .where(
+        and(
+          input.profileId ? eq(contracts.profileId, input.profileId) : undefined,
+          input.serviceType ? eq(contracts.serviceType, input.serviceType) : undefined,
+          input.state ? eq(contracts.state, input.state) : undefined,
+          input.before ? lt(contracts.id, input.before) : undefined
+        )
+      )
+      .orderBy(desc(contracts.id))
+      .limit(input.limit + 1);
+    return {
+      contracts: rows
+        .slice(0, input.limit)
+        .map((row) => ({
+          ...row,
+          updatedAt: row.updatedAt.toISOString(),
+          acceptedAt: row.acceptedAt?.toISOString() ?? null,
+        })),
+      nextBefore: rows.length > input.limit ? rows[input.limit - 1]!.id : null,
+    };
+  }
+
   async get(id: string, client: ReturnType<typeof getDbPool> | PoolClient = getDbPool()) {
     const db = drizzle(client);
     const row = (await db.select().from(contracts).where(eq(contracts.id, id)))[0];
