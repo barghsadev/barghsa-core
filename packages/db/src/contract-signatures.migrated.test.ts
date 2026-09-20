@@ -174,6 +174,18 @@ it('rejects signature flags without immutable evidence and requires accepted ori
       fixture.pool.query(`UPDATE contracts SET ${clause} WHERE id=$1`, [f.contract])
     ).rejects.toMatchObject({ code: '23514' });
   }
+  const client = await fixture.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query("UPDATE contracts SET state='Signed',signed_at=NOW() WHERE id=$1", [
+      f.contract,
+    ]);
+    await client.query("UPDATE contracts SET state='Active' WHERE id=$1", [f.contract]);
+    await expect(client.query('COMMIT')).rejects.toMatchObject({ code: '23514' });
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
   const accepted = await seed();
   await expect(request(accepted, 1, accepted.signed)).rejects.toMatchObject({ code: '23514' });
   const other = await seed();
@@ -319,6 +331,22 @@ it('upgrades 0140 without inventing evidence for historical signed flags and rer
     for (const table of ['contract_signature_requests', 'contract_signatures'])
       expect((await pool.query(`SELECT count(*)::int AS n FROM ${table}`)).rows[0].n).toBe(0);
     expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+    await pool.query('UPDATE contracts SET updated_at=NOW() WHERE id=$1', [contract]);
+    for (const state of ['Active', 'Completed']) {
+      await pool.query('UPDATE contracts SET state=$2 WHERE id=$1', [contract, state]);
+      expect(
+        (await pool.query('SELECT state,signed_at FROM contracts WHERE id=$1', [contract])).rows[0]
+      ).toEqual({ state, signed_at: before[0].signed_at });
+    }
+    await expect(
+      pool.query('UPDATE contracts SET signed_at=NOW() WHERE id=$1', [contract])
+    ).rejects.toMatchObject({ code: '23514' });
+    await expect(
+      pool.query("UPDATE contracts SET state='Draft' WHERE id=$1", [contract])
+    ).rejects.toMatchObject({ code: '23514' });
+    expect((await pool.query('SELECT count(*)::int AS n FROM contract_signatures')).rows[0].n).toBe(
+      0
+    );
   } finally {
     await pool?.end();
     try {
