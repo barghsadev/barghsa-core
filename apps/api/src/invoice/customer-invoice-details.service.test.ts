@@ -11,6 +11,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
+  asMetadataObject,
   CUSTOMER_INVOICE_FAMILY_CTE_MARKER,
   CUSTOMER_INVOICE_MAX_CHAIN,
   CUSTOMER_VISIBLE_STATE_SQL,
@@ -635,5 +636,153 @@ describe('CustomerInvoiceDetailsService', () => {
     expect(list.invoices[0]!.explanation).toBe('Qty fix');
     const listSql = mockPool.query.mock.calls[1]![0] as string;
     expect(listSql).toContain(CUSTOMER_VISIBLE_STATE_SQL);
+  });
+});
+
+describe('legacy invoice data and incomplete correction histories', () => {
+  it('reads serialized metadata while ignoring malformed or non-object legacy values', () => {
+    const original = { reason: 'Correction' };
+    const parsed = asMetadataObject(original);
+    expect(parsed).toEqual(original);
+    expect(parsed).not.toBe(original);
+    expect(asMetadataObject('{"reason":"Correction"}')).toEqual(original);
+    for (const value of [null, undefined, [], 4, 'null', '[]', '42', '{bad json']) {
+      expect(asMetadataObject(value)).toEqual({});
+    }
+    expect(
+      explanationForCorrection({
+        replacesInvoiceId: ORIGINAL_ID,
+        adjustmentForInvoiceId: null,
+        metadata: { reason: '   ', replacementReason: '  Legacy correction  ' },
+        firstLineDescription: 'Fallback',
+      })
+    ).toBe('Legacy correction');
+    expect(
+      explanationForCorrection({
+        replacesInvoiceId: ORIGINAL_ID,
+        adjustmentForInvoiceId: null,
+        metadata: { reason: 12 },
+        firstLineDescription: '  ',
+      })
+    ).toBeNull();
+  });
+
+  it('normalizes legacy numeric/date representations and orders invoice lines', () => {
+    const legacy = row({
+      id: ORIGINAL_ID,
+      state: 'legacy-state',
+      total_amount: 9007199254740993n,
+      paid_amount: 12.9,
+      refunded_amount: 'invalid',
+      accounting_amount: '',
+      adjustment_kind: 'legacy-kind',
+      issued_at: 'invalid date',
+      payable_from: new Date(Number.NaN),
+      due_at: '2026-09-20T00:00:00Z',
+      created_at: 'invalid date',
+      metadata: '{"reason":" Legacy adjustment "}',
+    });
+    const result = assembleCustomerInvoiceDetails({
+      viewedInvoiceId: ORIGINAL_ID,
+      originalInvoiceId: ORIGINAL_ID,
+      rows: [legacy],
+      linesByInvoiceId: new Map([
+        [
+          ORIGINAL_ID,
+          [
+            {
+              ...line(ORIGINAL_ID, 'Second'),
+              position: 2,
+              unit_price: 7n,
+              line_total: 14.9,
+              vat_amount: Number.NaN,
+            },
+            {
+              ...line(ORIGINAL_ID, 'First'),
+              position: 1,
+              unit_price: ' 10 ',
+              line_total: '20',
+              vat_amount: '-1',
+            },
+          ],
+        ],
+      ]),
+    });
+    expect(result.invoice).toMatchObject({
+      state: 'Unpaid',
+      totalAmount: '9007199254740993',
+      paidAmount: '12',
+      refundedAmount: '0',
+      accountingAmount: null,
+      adjustmentKind: null,
+      issuedAt: null,
+      payableFrom: null,
+      dueAt: '2026-09-20T00:00:00.000Z',
+      createdAt: '1970-01-01T00:00:00.000Z',
+      explanation: null,
+    });
+    expect(
+      result.invoice.lines.map((item) => ({
+        description: item.description,
+        unitPrice: item.unitPrice,
+        lineTotal: item.lineTotal,
+        vatAmount: item.vatAmount,
+      }))
+    ).toEqual([
+      { description: 'First', unitPrice: '10', lineTotal: '20', vatAmount: '-1' },
+      { description: 'Second', unitPrice: '7', lineTotal: '14', vatAmount: '0' },
+    ]);
+  });
+
+  it('rejects disconnected roots, cycles, and a missing viewed invoice', () => {
+    expect(() =>
+      assertCompleteInvoiceFamily([row({ id: ORIGINAL_ID }), row({ id: OTHER_ID })], false)
+    ).toThrow();
+    expect(() =>
+      assertCompleteInvoiceFamily(
+        [
+          row({ id: ORIGINAL_ID, replaces_invoice_id: OTHER_ID }),
+          row({ id: OTHER_ID, replaces_invoice_id: ORIGINAL_ID }),
+        ],
+        false
+      )
+    ).toThrow();
+    expect(() =>
+      assembleCustomerInvoiceDetails({
+        viewedInvoiceId: OTHER_ID,
+        originalInvoiceId: ORIGINAL_ID,
+        rows: [row({ id: ORIGINAL_ID })],
+        linesByInvoiceId: new Map(),
+      })
+    ).toThrow(`Invoice not found: ${OTHER_ID}`);
+  });
+
+  it('sorts a correction with an invalid legacy date deterministically and rejects a mismatched session actor', async () => {
+    const result = assembleCustomerInvoiceDetails({
+      viewedInvoiceId: ORIGINAL_ID,
+      originalInvoiceId: ORIGINAL_ID,
+      rows: [
+        row({ id: ORIGINAL_ID }),
+        row({ id: REPLACEMENT_ID, replaces_invoice_id: ORIGINAL_ID, created_at: 'invalid date' }),
+        row({
+          id: ADJUSTMENT_ID,
+          adjustment_for_invoice_id: ORIGINAL_ID,
+          created_at: '2026-09-20T00:00:00Z',
+        }),
+      ],
+      linesByInvoiceId: new Map(),
+    });
+    expect(result.chain.map((item) => item.invoiceId)).toEqual([
+      ORIGINAL_ID,
+      REPLACEMENT_ID,
+      ADJUSTMENT_ID,
+    ]);
+    await expect(
+      new CustomerInvoiceDetailsService().getForUser(USER_ID, ORIGINAL_ID, {
+        userId: 'other-user',
+        sessionId: 'other-session',
+        csrfToken: 'other-token',
+      })
+    ).rejects.toMatchObject({ status: 401 });
   });
 });
