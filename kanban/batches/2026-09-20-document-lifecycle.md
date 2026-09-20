@@ -61,3 +61,5 @@ Initial exact-HEAD review found cross-version/cross-role contract replacement li
 ## CI fixture correction
 
 Run 35538262905 passed all 851 database assertions but failed on an unhandled PostgreSQL 57P01 shutdown error in the independent PostgreSQL 17 metrics fixture. The installed pool implementation removes clients before their disconnect callbacks finish, so awaiting pool.end alone can stop the container too early. The fixture now registers end promises on connected clients and awaits them before stopping PostgreSQL. All 17 metrics tests, targeted lint and formatting pass. No production behavior, test assertions or coverage thresholds changed.
+
+The next CI run, 35538659062, passed all 851 database tests and 460 worker tests, but the API suite found 34 legacy upload-controller tests whose isolated Nest fixture did not provide the extracted UploadService. Its other 5,258 API tests passed. The fixture now registers the real service alongside the existing storage/policy stubs; all 34 legacy tests and 18 document HTTP tests pass locally. No production behavior or assertion was changed.
