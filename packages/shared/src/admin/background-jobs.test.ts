@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { backgroundJobLabel, isBackgroundJobStatus, isBackgroundJobType } from './background-jobs';
+import { backgroundJobLabel, isBackgroundJobStatus, isBackgroundJobType } from './background-jobs.js';
 
 it('accepts refund retry monitoring and preserves labels for unknown historical job types', () => {
   expect(isBackgroundJobType('refund_retry')).toBe(true);
