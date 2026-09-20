@@ -1,7 +1,15 @@
 import {
+  postWalletCredit,
+  assertMatchingWalletCredit,
+  validateWalletCredit,
+  WalletCreditError,
+  type WalletCreditReference,
+} from '@barghsa/db/wallet-credit';
+import {
   lockWalletProfile,
   assertWalletProfileWritable,
   assertWalletProfileMatches,
+  WalletProfileArchivedError,
 } from './profile-lock.js';
 import {
   Injectable,
@@ -37,10 +45,6 @@ import { ConfigCacheService } from '../config-cache/config-cache.service.js';
 const PG_UNIQUE_VIOLATION = '23505';
 const WALLET_TX_IDEMPOTENCY_CONSTRAINT = 'idx_wallet_tx_idempotency';
 
-/** Ledger types that post as a credit (positive amount, money in). */
-const WALLET_CREDIT_TYPES = ['topup', 'refund', 'compensating'] as const;
-type WalletCreditType = (typeof WALLET_CREDIT_TYPES)[number];
-
 /** Ledger types that post as a debit (negative amount, money out). */
 const WALLET_DEBIT_TYPES = ['payment', 'compensating'] as const;
 type WalletDebitType = (typeof WALLET_DEBIT_TYPES)[number];
@@ -75,12 +79,7 @@ export interface TransactionRow {
  * `type` is the ledger discriminator; `refId` optionally points at the
  * originating domain entity (invoice, refund, provider event, …).
  */
-export interface WalletCreditRef {
-  type: WalletCreditType;
-  refId?: string | null;
-  description?: string | null;
-  metadata?: unknown;
-}
+export type WalletCreditRef = WalletCreditReference;
 
 /**
  * Debit reference payload (T-04.2.01.04).
@@ -273,7 +272,7 @@ export class WalletService {
    *      throw ConflictException — they must not report success.
    *   3. INSERT a Completed ledger row (positive amount) using the wallet
    *      row's canonical `profile_id`.
-   *   4. UPDATE `posted_balance` via `applyPostedBalanceDelta`
+   *   4. UPDATE `posted_balance` through the shared credit posting helper
    *      (`posted_balance + amount`, `version + 1`,
    *      `WHERE profile_id = X AND version = expectedVersion
    *       AND posted_balance >= 0`).
@@ -293,15 +292,10 @@ export class WalletService {
     idempotencyKey: string,
     client?: WalletQueryClient
   ): Promise<TransactionRow> {
-    if (amount <= 0n) throw new BadRequestException('Credit amount must be positive');
-    if (!idempotencyKey.trim()) {
-      throw new BadRequestException('Idempotency key is required');
-    }
-    assertNotReversalLedgerType(ref.type);
-    if (!isWalletCreditType(ref.type)) {
-      throw new BadRequestException(
-        `Credit type must be one of: ${WALLET_CREDIT_TYPES.join(', ')}`
-      );
+    try {
+      validateWalletCredit(amount, ref, idempotencyKey);
+    } catch (error) {
+      rethrowWalletCreditError(error);
     }
 
     const pool = getDbPool();
@@ -317,68 +311,17 @@ export class WalletService {
       }
 
       const profile = await lockWalletProfile(queryable, 'profile', walletId);
-      const walletResult = await queryable.query(
-        `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-        [walletId]
+      canonicalWalletId = profile.id;
+      const posted = await postWalletCredit(
+        queryable,
+        profile,
+        walletId,
+        amount,
+        ref,
+        idempotencyKey
       );
-      if (walletResult.rows.length === 0) {
-        throw new NotFoundException(`Wallet not found: ${walletId}`);
-      }
-      const wallet = walletResult.rows[0] as {
-        version: number;
-        profile_id: string;
-      };
-      canonicalWalletId = wallet.profile_id;
-      assertWalletProfileMatches(profile, canonicalWalletId);
-
-      const idemResult = await queryable.query(
-        `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-        [idempotencyKey]
-      );
-      if (idemResult.rows.length > 0) {
-        const existing = idemResult.rows[0] as WalletLedgerIdempotencyRow;
-        assertMatchingCreditReplay(existing, canonicalWalletId, amount, ref);
-        if (ownsTransaction) {
-          await queryable.query('COMMIT');
-        }
-        return mapTransaction(existing);
-      }
-
-      assertWalletProfileWritable(profile);
-
-      const txResult = await queryable.query(
-        `INSERT INTO wallet_transactions
-           (wallet_id, type, amount, state, idempotency_key, ref_id, description, metadata)
-         VALUES ($1, $2, $3::bigint, 'Completed', $4, $5, $6, COALESCE($7::jsonb, '{}'::jsonb))
-         RETURNING *`,
-        [
-          canonicalWalletId,
-          ref.type,
-          amount,
-          idempotencyKey,
-          ref.refId ?? null,
-          ref.description ?? null,
-          ref.metadata === undefined ? null : JSON.stringify(ref.metadata),
-        ]
-      );
-
-      try {
-        await this.applyPostedBalanceDelta(canonicalWalletId, amount, wallet.version, queryable, {
-          requireNonNegativePostedBalance: true,
-        });
-      } catch (error) {
-        if (error instanceof ConflictException) {
-          throw new ConflictException(
-            'Wallet credit rejected: version mismatch or postedBalance < 0'
-          );
-        }
-        throw error;
-      }
-
-      if (ownsTransaction) {
-        await queryable.query('COMMIT');
-      }
-      return mapTransaction(txResult.rows[0]);
+      if (ownsTransaction) await queryable.query('COMMIT');
+      return mapTransaction(posted);
     } catch (error) {
       if (ownsTransaction) {
         await queryable.query('ROLLBACK');
@@ -391,11 +334,15 @@ export class WalletService {
             throw new ConflictException('Idempotency key already used');
           }
           const committed = existing.rows[0]!;
-          assertMatchingCreditReplay(committed, canonicalWalletId, amount, ref);
+          try {
+            assertMatchingWalletCredit(committed, canonicalWalletId, amount, ref);
+          } catch (replayError) {
+            rethrowWalletCreditError(replayError);
+          }
           return mapTransaction(committed);
         }
       }
-      throw error;
+      return rethrowWalletCreditError(error);
     } finally {
       ownedClient?.release();
     }
@@ -1225,10 +1172,6 @@ function mapTransaction(input: unknown): TransactionRow {
   };
 }
 
-function isWalletCreditType(type: string): type is WalletCreditType {
-  return (WALLET_CREDIT_TYPES as readonly string[]).includes(type);
-}
-
 function isWalletDebitType(type: string): type is WalletDebitType {
   return (WALLET_DEBIT_TYPES as readonly string[]).includes(type);
 }
@@ -1253,33 +1196,6 @@ type WalletLedgerIdempotencyRow = {
   description?: string | null;
   reverses_transaction_id?: string | null;
 };
-
-/**
- * Idempotent credit replay is only valid for the same Completed credit
- * command: same wallet, type, positive amount, and refId. A colliding
- * debit, reservation, or credit with different parameters must not be
- * returned as a successful credit.
- */
-function assertMatchingCreditReplay(
-  existing: WalletLedgerIdempotencyRow,
-  canonicalWalletId: string,
-  amount: bigint,
-  ref: WalletCreditRef
-): void {
-  if (existing.wallet_id !== canonicalWalletId) {
-    throw new ConflictException('Idempotency key already used for a different wallet');
-  }
-  const existingRefId = existing.ref_id ?? null;
-  const expectedRefId = ref.refId ?? null;
-  const isSameCredit =
-    existing.state === 'Completed' &&
-    existing.type === ref.type &&
-    BigInt(existing.amount) === amount &&
-    existingRefId === expectedRefId;
-  if (!isSameCredit) {
-    throw new ConflictException('Idempotency key already used for a different wallet operation');
-  }
-}
 
 /**
  * Idempotent debit replay is only valid for the same Completed debit
@@ -1375,4 +1291,14 @@ function isPgUniqueViolation(error: unknown, constraint?: string): boolean {
   const pgError = error as { code?: string; constraint?: string };
   if (pgError.code !== PG_UNIQUE_VIOLATION) return false;
   return constraint === undefined || pgError.constraint === constraint;
+}
+
+function rethrowWalletCreditError(error: unknown): never {
+  if (error instanceof WalletCreditError) {
+    if (error.kind === 'invalid') throw new BadRequestException(error.message);
+    if (error.kind === 'not_found') throw new NotFoundException(error.message);
+    if (error.kind === 'archived') throw new WalletProfileArchivedError();
+    throw new ConflictException(error.message);
+  }
+  throw error;
 }

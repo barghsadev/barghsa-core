@@ -10,7 +10,10 @@ import { WalletService } from './wallet.service.js';
 // and lock ordering are covered in profile-archive-wallet.integration.test.ts.
 vi.mock('./profile-lock.js', async (original) => ({
   ...(await original<typeof import('./profile-lock.js')>()),
-  lockWalletProfile: async () => ({ id: 'profile-1', archived: false }),
+  lockWalletProfile: async (_client: unknown, source: string, id: string) => ({
+    id: source === 'profile' ? id.toLowerCase() : 'profile-1',
+    archived: false,
+  }),
   assertWalletProfileMatches: () => {},
 }));
 

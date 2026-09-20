@@ -88,7 +88,7 @@ export class WalletRefundController {
   @ApiResponse({
     status: 200,
     description:
-      'Current refund state; processing returns Completed only after ledger credit and invoice transition commit.',
+      'Current refund state and bounded retry metadata. Processing intent is durable; Completed is returned only after ledger, invoice and notice commit. Failed includes the next due time or exhausted status.',
   })
   async decide(
     @Req() req: AuthenticatedRequest,

@@ -1341,7 +1341,7 @@
   },
   "kanban_readiness": {
     "checked": "2026-09-20",
-    "local_development": "manual_external_refund_batch",
+    "local_development": "manual_refund_retry_batch",
     "automatic_loop": "blocked_pending_remote_reconciliation",
     "backlog_validation": {
       "tasks": 1355,
@@ -1355,7 +1355,7 @@
       "pending": 0
     },
     "continuation": "kanban/CONTINUATION.md",
-    "remote_main_observed": "25a85079975c9a123aa983bf5029c30b6893e6e7",
+    "remote_main_observed": "4eea6d198341581d1b3f8af2e7a9b9ddaf5ca5fb",
     "remote_state_branch_observed": "absent",
     "pr_304_status": "closed_without_merge; verified through public GitHub API",
     "runtime_state_changed": false,
@@ -1430,21 +1430,21 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/external-refund-batch",
-      "status": "implementation_validated_live_status_in_pull_request",
-      "record": "kanban/batches/2026-09-20-external-refunds.md",
+      "branch": "codex/refund-retry-batch",
+      "status": "building",
+      "record": "kanban/batches/2026-09-20-refund-retries.md",
       "previous_batch": {
-        "pr": 311,
+        "pr": 312,
         "status": "merged",
-        "merge_commit_sha": "25a85079975c9a123aa983bf5029c30b6893e6e7",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/311#issuecomment-5750114942",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35513669564"
+        "merge_commit_sha": "4eea6d198341581d1b3f8af2e7a9b9ddaf5ca5fb",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/312#issuecomment-5750199254",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35514431398"
       },
-      "token_limit": "User withdrew prior token ceiling on September 20; normal work authorized.",
       "remaining_tasks": [
         "04-invoices-wallet-contracts.md#T-04.4.01.07",
         "04-invoices-wallet-contracts.md#T-04.4.01.02 pending ledger and failure processing"
-      ]
+      ],
+      "token_limit": "User withdrew prior token ceiling; normal work authorized."
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",

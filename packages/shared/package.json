@@ -194,8 +194,8 @@
   "scripts": {
     "build": "node scripts/build.mjs && node --test scripts/package-exports.check.mjs",
     "dev": "turbo watch build --filter=@barghsa/shared",
-    "test": "vitest run --passWithNoTests",
-    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "test": "vitest run --passWithNoTests && node --test scripts/setup-bucket.test.mjs scripts/setup-bucket.integration.test.mjs",
+    "test:coverage": "vitest run --coverage --passWithNoTests && node --test scripts/setup-bucket.test.mjs scripts/setup-bucket.integration.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

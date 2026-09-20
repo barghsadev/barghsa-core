@@ -36,7 +36,7 @@ test('bucket setup against real MinIO', { timeout: 90_000 }, async (t) => {
         `MINIO_ROOT_USER=${credentials.accessKeyId}`,
         '-e',
         `MINIO_ROOT_PASSWORD=${credentials.secretAccessKey}`,
-        'minio/minio:latest',
+        'quay.io/minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e',
         'server',
         '/data',
       ],

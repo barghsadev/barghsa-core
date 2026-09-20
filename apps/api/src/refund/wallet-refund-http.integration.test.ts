@@ -1,3 +1,4 @@
+import { runRefundRetries } from '../../../worker/dist/refunds/retry-runner.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -300,16 +301,24 @@ it('rolls the credit and invoice counter back when the completion audit fails', 
     "CREATE FUNCTION fail_refund_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='refund.completed' THEN RAISE EXCEPTION 'test audit unavailable'; END IF; RETURN NEW; END; $$; CREATE TRIGGER fail_refund_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_refund_audit()"
   );
   try {
-    expect((await decide(refund.id, 'process')).status).toBe(500);
+    const failed = await decide(refund.id, 'process');
+    expect(failed.status).toBe(200);
+    expect(await failed.json()).toMatchObject({
+      state: 'Failed',
+      retry: { attempts: 1, lastErrorCode: 'posting_failed' },
+    });
     expect(await balances(f)).toEqual({ refunded_amount: '0', state: 'Paid', posted_balance: '0' });
     expect(
       (await http.pool.query('SELECT state FROM refunds WHERE id=$1', [refund.id])).rows
-    ).toEqual([{ state: 'Approved' }]);
+    ).toEqual([{ state: 'Failed' }]);
   } finally {
     await http.pool.query(
       'DROP TRIGGER fail_refund_audit ON audit_log; DROP FUNCTION fail_refund_audit()'
     );
   }
+  await http.pool.query('UPDATE refund_retry_jobs SET next_attempt_at=now() WHERE refund_id=$1', [
+    refund.id,
+  ]);
   const responses = await Promise.all([
     decide(refund.id, 'process'),
     post(`wallet-refunds/${refund.id}/process`, {}, 'refund-reviewer'),
@@ -364,7 +373,7 @@ it('creates the destination wallet for a customer who paid only by bank receipt'
   });
 });
 
-it('rolls back a credit if the staff session expires while processing waits', async () => {
+it('finishes a durably authorized refund after the requesting session expires', async () => {
   const f = await invoice(),
     refund = await request(requestBody(f.id));
   expect((await decide(refund.id, 'approve')).status).toBe(200);
@@ -404,15 +413,253 @@ it('rolls back a credit if the staff session expires while processing waits', as
       )
       .toBe(true);
     await blocker.query('COMMIT');
-    expect((await pending).status).toBe(401);
-    expect(await balances(f)).toEqual({ refunded_amount: '0', state: 'Paid', posted_balance: '0' });
+    expect((await pending).status).toBe(200);
+    expect(await balances(f)).toEqual({
+      refunded_amount: '100',
+      state: 'Refunded',
+      posted_balance: '100',
+    });
     expect(
       (await http.pool.query('SELECT state FROM refunds WHERE id=$1', [refund.id])).rows
-    ).toEqual([{ state: 'Approved' }]);
+    ).toEqual([{ state: 'Completed' }]);
     expect(
       (await http.pool.query('SELECT id FROM wallet_transactions WHERE ref_id=$1', [refund.id]))
         .rows
-    ).toEqual([]);
+    ).toHaveLength(1);
+  } finally {
+    await blocker.query('ROLLBACK');
+    blocker.release();
+    await pending;
+  }
+});
+
+async function job(id: string) {
+  return (
+    await http.pool.query(
+      'SELECT *,extract(epoch FROM (next_attempt_at-clock_timestamp())) AS seconds_until_due FROM refund_retry_jobs WHERE refund_id=$1',
+      [id]
+    )
+  ).rows[0];
+}
+async function due(id: string) {
+  await http.pool.query('UPDATE refund_retry_jobs SET next_attempt_at=now() WHERE refund_id=$1', [
+    id,
+  ]);
+}
+async function queueWithoutAttempt(id: string) {
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query("UPDATE refunds SET state='Processing' WHERE id=$1", [id]);
+    await client.query(
+      "INSERT INTO refund_retry_jobs(refund_id,executor_user_id) VALUES($1,'refund-finance')",
+      [id]
+    );
+    await client.query('COMMIT');
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
+}
+async function failPosting() {
+  await http.pool.query(
+    "CREATE FUNCTION fail_retry_credit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.type='refund' THEN RAISE EXCEPTION 'private provider details must not escape'; END IF; RETURN NEW; END; $$; CREATE TRIGGER fail_retry_credit BEFORE INSERT ON wallet_transactions FOR EACH ROW EXECUTE FUNCTION fail_retry_credit()"
+  );
+}
+async function restorePosting() {
+  await http.pool.query(
+    'DROP TRIGGER fail_retry_credit ON wallet_transactions; DROP FUNCTION fail_retry_credit()'
+  );
+}
+
+it('persists Failed with backoff and lets the registered worker retry exactly once when due', async () => {
+  const f = await invoice(),
+    refund = await request(requestBody(f.id));
+  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  await failPosting();
+  try {
+    const failed = await decide(refund.id, 'process');
+    expect(await failed.json()).toMatchObject({
+      state: 'Failed',
+      retry: { attempts: 1, maxAttempts: 5, lastErrorCode: 'posting_failed', exhausted: false },
+    });
+    expect(Number((await job(refund.id)).seconds_until_due)).toBeGreaterThan(50);
+    expect(await runRefundRetries(http.pool)).not.toContain('completed');
+    expect((await decide(refund.id, 'process')).status).toBe(200);
+    expect((await job(refund.id)).attempts).toBe(1);
+    expect(await balances(f)).toEqual({ refunded_amount: '0', state: 'Paid', posted_balance: '0' });
+  } finally {
+    await restorePosting();
+  }
+  await due(refund.id);
+  expect(await runRefundRetries(http.pool)).toContain('completed');
+  expect(await balances(f)).toEqual({
+    refunded_amount: '100',
+    state: 'Refunded',
+    posted_balance: '100',
+  });
+  expect(await job(refund.id)).toMatchObject({
+    attempts: 2,
+    next_attempt_at: null,
+    last_error_code: null,
+  });
+  expect((await job(refund.id)).completed_at).toBeInstanceOf(Date);
+  await runRefundRetries(http.pool);
+  expect((await decide(refund.id, 'process')).status).toBe(200);
+  expect(
+    (await http.pool.query('SELECT id FROM wallet_transactions WHERE ref_id=$1', [refund.id])).rows
+  ).toHaveLength(1);
+  expect(
+    (await http.pool.query('SELECT id FROM in_app_notifications WHERE profile_id=$1', [f.profile]))
+      .rows
+  ).toHaveLength(1);
+});
+
+it('recovers a committed processing request after a crash and serializes concurrent worker attempts', async () => {
+  const f = await invoice(),
+    refund = await request(requestBody(f.id));
+  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  await queueWithoutAttempt(refund.id);
+  const results = (
+    await Promise.all([runRefundRetries(http.pool), runRefundRetries(http.pool)])
+  ).flat();
+  expect(results.filter((result) => result === 'completed')).toHaveLength(1);
+  expect((await job(refund.id)).attempts).toBe(1);
+  expect(await balances(f)).toEqual({
+    refunded_amount: '100',
+    state: 'Refunded',
+    posted_balance: '100',
+  });
+  await expect(
+    http.pool.query('UPDATE refund_retry_jobs SET attempts=0 WHERE refund_id=$1', [refund.id])
+  ).rejects.toThrow();
+  await expect(
+    http.pool.query('DELETE FROM refund_retry_jobs WHERE refund_id=$1', [refund.id])
+  ).rejects.toThrow();
+});
+
+it('stops after five failed attempts and alerts finance once without leaking raw errors', async () => {
+  const f = await invoice(),
+    refund = await request(requestBody(f.id));
+  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  await failPosting();
+  try {
+    expect((await decide(refund.id, 'process')).status).toBe(200);
+    for (let attempt = 2; attempt <= 5; attempt++) {
+      await due(refund.id);
+      expect(await runRefundRetries(http.pool)).toContain(attempt === 5 ? 'exhausted' : 'failed');
+      expect((await job(refund.id)).attempts).toBe(attempt);
+      if (attempt < 5)
+        expect(Number((await job(refund.id)).seconds_until_due)).toBeGreaterThan(
+          60 * 2 ** (attempt - 1) - 10
+        );
+    }
+    expect(await job(refund.id)).toMatchObject({
+      attempts: 5,
+      next_attempt_at: null,
+      last_error_code: 'posting_failed',
+    });
+    expect((await job(refund.id)).exhausted_at).toBeInstanceOf(Date);
+    await runRefundRetries(http.pool);
+    const replay = await decide(refund.id, 'process');
+    expect(await replay.json()).toMatchObject({
+      state: 'Failed',
+      retry: { attempts: 5, exhausted: true },
+    });
+    const alerts = (
+      await http.pool.query(
+        'SELECT recipient_user_id,localized_content FROM in_app_notifications WHERE delivery_key LIKE $1',
+        [`refund-exhausted:${refund.id}:%`]
+      )
+    ).rows;
+    expect(alerts.map((row) => row.recipient_user_id).sort()).toEqual([
+      'refund-finance',
+      'refund-reviewer',
+    ]);
+    expect(alerts[0].localized_content.en.title).toBe('Refund needs attention');
+    expect(alerts[0].localized_content.fa.title).toBeTruthy();
+    expect(JSON.stringify(alerts)).not.toContain('private provider');
+    expect(await balances(f)).toEqual({ refunded_amount: '0', state: 'Paid', posted_balance: '0' });
+    await expect(
+      http.pool.query(
+        'UPDATE refund_retry_jobs SET next_attempt_at=now(),exhausted_at=NULL WHERE refund_id=$1',
+        [refund.id]
+      )
+    ).rejects.toThrow();
+  } finally {
+    await restorePosting();
+  }
+});
+
+it('rechecks finance authority, policy and profile state on delayed attempts', async () => {
+  const f = await invoice(),
+    refund = await request(requestBody(f.id));
+  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  await queueWithoutAttempt(refund.id);
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='refund-finance'");
+  try {
+    expect(await runRefundRetries(http.pool)).toContain('failed');
+    expect((await job(refund.id)).last_error_code).toBe('finance_permission_required');
+  } finally {
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES('refund-finance','role-finance') ON CONFLICT DO NOTHING"
+    );
+  }
+  await due(refund.id);
+  await threshold(100);
+  expect(await runRefundRetries(http.pool)).toContain('failed');
+  expect((await job(refund.id)).last_error_code).toBe('approval_required');
+  await threshold(0);
+  await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [f.profile]);
+  await due(refund.id);
+  expect(await runRefundRetries(http.pool)).toContain('failed');
+  expect((await job(refund.id)).last_error_code).toBe('profile_archived');
+  await http.pool.query('UPDATE profiles SET archived=false WHERE id=$1', [f.profile]);
+  await due(refund.id);
+  expect(await runRefundRetries(http.pool)).toContain('completed');
+  expect((await job(refund.id)).attempts).toBe(4);
+});
+
+it('cannot commit a processing grant after the requesting session expires while waiting for the invoice', async () => {
+  const f = await invoice(),
+    refund = await request(requestBody(f.id));
+  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  const blocker = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [f.id]);
+    await http.pool.query(
+      "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '1 second' WHERE session_id=$1",
+      [sessions['refund-finance']]
+    );
+    pending = decide(refund.id, 'process');
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT id,profile_id,state%'"
+            )
+          ).rows[0].count
+        )
+      )
+      .toBeGreaterThan(0);
+    await expect
+      .poll(
+        async () =>
+          (
+            await http.pool.query(
+              'SELECT expires_at<=clock_timestamp() AS expired FROM sessions WHERE session_id=$1',
+              [sessions['refund-finance']]
+            )
+          ).rows[0].expired
+      )
+      .toBe(true);
+    await blocker.query('COMMIT');
+    expect((await pending).status).toBe(401);
+    expect(await job(refund.id)).toBeUndefined();
+    expect(await balances(f)).toEqual({ refunded_amount: '0', state: 'Paid', posted_balance: '0' });
   } finally {
     await blocker.query('ROLLBACK');
     blocker.release();

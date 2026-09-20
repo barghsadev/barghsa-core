@@ -13,7 +13,9 @@
     "./config": "./dist/schema/config.js",
     "./schema/storage-record": "./dist/schema/storage-record.js",
     "./test": "./dist/test/index.js",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./wallet-credit": "./dist/wallet-credit.js",
+    "./refund-processing": "./dist/refund-processing.js"
   },
   "scripts": {
     "build": "tsc -b",

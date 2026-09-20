@@ -1,3 +1,4 @@
+import { postWalletCredit } from '@barghsa/db/wallet-credit';
 /**
  * Real-PostgreSQL integration tests for WalletService.credit
  * (T-04.2.01.03).
@@ -359,5 +360,76 @@ describe('WalletService.credit — real PostgreSQL (T-04.2.01.03)', () => {
         ref_id: 'refund-ref-a',
       }),
     ]);
+  });
+  it('shares exact credit identity between a transaction-owned worker call and the API', async () => {
+    const before = await fetchWallet(PROFILE_A);
+    const client = await ctx.pool.connect();
+    const amount = 9007199254740993n;
+    const key = 'credit-worker-api-replay';
+    const ref = { type: 'refund' as const, refId: 'shared-refund' };
+    let posted: { id: string };
+    try {
+      await client.query('BEGIN');
+      const profile = (
+        await client.query<{ id: string; archived: boolean }>(
+          'SELECT id, archived FROM profiles WHERE id=$1 FOR SHARE',
+          [PROFILE_A]
+        )
+      ).rows[0]!;
+      posted = (await postWalletCredit(
+        client,
+        profile,
+        PROFILE_A.toUpperCase(),
+        amount,
+        ref,
+        key
+      )) as { id: string };
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+    const replay = await service.credit(PROFILE_A, amount, ref, key);
+    expect(replay.id).toBe(posted.id);
+    expect(replay.amount).toBe(amount);
+    expect((await fetchWallet(PROFILE_A)).posted_balance).toBe(
+      (BigInt(before.posted_balance) + amount).toString()
+    );
+    expect(
+      (await fetchLedger(PROFILE_A)).filter((row) => row.idempotency_key === key)
+    ).toHaveLength(1);
+  });
+
+  it('leaves commit ownership with the caller so a failed refund can roll back its credit', async () => {
+    const before = await fetchWallet(PROFILE_B);
+    const client = await ctx.pool.connect();
+    const key = 'credit-worker-rollback';
+    try {
+      await client.query('BEGIN');
+      const profile = (
+        await client.query<{ id: string; archived: boolean }>(
+          'SELECT id, archived FROM profiles WHERE id=$1 FOR SHARE',
+          [PROFILE_B]
+        )
+      ).rows[0]!;
+      await expect(
+        postWalletCredit(
+          client,
+          { ...profile, id: PROFILE_A },
+          PROFILE_B,
+          5n,
+          { type: 'refund' },
+          key
+        )
+      ).rejects.toThrow('Wallet profile changed');
+      await postWalletCredit(client, profile, PROFILE_B, 5n, { type: 'refund' }, key);
+      await client.query('ROLLBACK');
+    } finally {
+      client.release();
+    }
+    expect(await fetchWallet(PROFILE_B)).toEqual(before);
+    expect((await fetchLedger(PROFILE_B)).some((row) => row.idempotency_key === key)).toBe(false);
   });
 });
