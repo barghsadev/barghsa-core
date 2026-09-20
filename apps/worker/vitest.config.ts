@@ -8,5 +8,7 @@ export default createVitestConfig({
     coverage: { provider: 'custom', customProviderModule: './scripts/coverage-provider.mjs' },
     // Use `forks` pool so testcontainers works correctly across workers.
     pool: 'forks',
+    // Each package starts real database/server fixtures; bound nested parallelism.
+    maxWorkers: 2,
   },
 });

@@ -28,8 +28,8 @@ Retain Vite SPA/ADR004, supported manual identity verification, approved pre-log
 
 ## Continuing efficiently
 
-See [kanban continuation status](../kanban/CONTINUATION.md) for queue validation, candidate next tasks and the separate automation restart blockers.
+See [kanban continuation status](../kanban/CONTINUATION.md) for queue validation, candidate next tasks and the separate automation restart blockers. The repairs are now published in PR #305, but its original CI run failed. The first CI repair push clears security checks and frontend imports; the next run exposed database-test timing failures. Concurrency and fixture-budget follow-ups pass locally and await GitHub verification before the next feature batch. Local validation above does not certify CI success.
 
 Start only from a concrete remaining criterion. Use focused tests for edits, reuse matching source-bound evidence, and consolidate review/validation. Keep full API/worker setup builds separate from consumers in the same checkout, and never edit source/tests while their checks run. Preserve complete logs with concise summaries. Use RTK and the codebase graph when available.
 
-Authority remains local edits and explicit commits. No push, PR publication/merge, deployment, scheduler/state change, external message or PR304 action. Preserve untracked user-owned `output/`. Latest account meter: 19% weekly used, below the 50% ceiling.
+The original repair sprint permitted local edits and explicit commits only. The subsequent CI repair request authorizes updating existing PR #305. Merge, deployment, scheduler/runtime state changes and PR304 changes remain outside this follow-up. Preserve untracked user-owned `output/`. Latest account meter: 22% weekly used, below the 50% ceiling.

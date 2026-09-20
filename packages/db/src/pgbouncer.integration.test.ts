@@ -82,7 +82,7 @@ it('applies read/write defaults without leaking settings across pooled transacti
   } finally {
     await raw.end();
   }
-});
+}, 30_000);
 
 it('times out reads, permits longer writes and preserves explicit rollback', async () => {
   const db = await pool({ readTimeoutMs: 100, writeTimeoutMs: 1000 });

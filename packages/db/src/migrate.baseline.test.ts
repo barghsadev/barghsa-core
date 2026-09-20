@@ -117,7 +117,7 @@ describe('complete production schema baseline', () => {
       await pool.end();
       rmSync(previousFolder, { recursive: true, force: true });
     }
-  });
+  }, 30_000);
   it('upgrades populated legacy state from a fixed 0125 fixture and preserves its history', async () => {
     if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run');
     const name = `test_baseline_${randomUUID().replaceAll('-', '')}`;

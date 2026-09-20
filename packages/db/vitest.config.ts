@@ -9,6 +9,8 @@ export default createVitestConfig({
     environment: 'node',
     // Use `forks` pool so testcontainers works correctly across workers.
     pool: 'forks',
+    // Each package starts real database/server fixtures; bound nested parallelism.
+    maxWorkers: 2,
     // Exclude test helpers from coverage.
     coverage: {
       exclude: [

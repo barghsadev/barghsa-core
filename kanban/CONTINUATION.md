@@ -4,7 +4,7 @@ Checked September 20, 2026 after local repair completion at `13bed9d0`. Product/
 
 ## Local development
 
-Local development can continue from this branch. The backlog validator passes for 1,355 tasks and 116 traceability entries. The audit validator passes for all 322 historical claims, 301 saved PRs and 58 historical skips.
+The next development batch can use this branch after PR #305 passes CI. The original CI run failed tests, monorepo integrity, Git history secret scanning and combined source coverage. CI repair commit `4dbd2cb3` clears security checks and frontend imports; its run exposed two database-test timeouts. The concurrency and fixture-budget follow-up passes locally and awaits a new CI run. Resolve these baseline failures before adding feature changes. The backlog validator passes for 1,355 tasks and 116 traceability entries. The audit validator passes for all 322 historical claims, 301 saved PRs and 58 historical skips.
 
 Historical claim acceptance is 219 verified, 54 partial and 49 deferred. The other 1,033 canonical tasks are outside that historical audit population. They are not automatically proven unimplemented or ready. Reuse existing code and acceptance evidence before choosing a new build.
 
@@ -21,12 +21,12 @@ Use the consolidated workflow: build a coherent dependency-related batch, run fo
 
 Automatic restart is not ready:
 
-- Remote `main` still points to `2f80d92df51556d47f778b5230e5eea577e2a8d4`. The local repairs have not been published or merged.
+- Remote `main` still points to `2f80d92df51556d47f778b5230e5eea577e2a8d4`. The repairs are published in [PR #305](https://github.com/barghsadev/barghsa-core/pull/305), but remain unmerged. CI follow-up is in progress; see the exact observed head/run and local check results in `audit/progress.json`.
 - A read-only remote ref check found no `kanban-state` branch. The default local durable-state cache is also absent on this machine.
-- PR #304 and other live loop-owned PRs need a fresh remote inventory. The GitHub CLI is unavailable here, so their current status was not verified.
+- A read-only GitHub API check confirmed PR #304 is closed without merging and PR #305 is open and not draft. A complete live loop-owned PR inventory remains necessary before automatic restart.
 - `kanban/loop-state.json` is the September 1 historical snapshot. Its 308 completion claims are not current acceptance. Its apparent next tasks include already verified repairs.
 - `audit/reconciled-loop-state.json` is the earlier blocked import of saved history. Its 263 merged identities and empty acceptance-verification array are import provenance, not the current audit ledger or dispatch authority.
 
-Before enabling automation, publish/review/integrate the repaired baseline, reconcile current PR and state history against the acceptance ledger, and explicitly recover/bootstrap durable state under [STATE-PROTOCOL.md](STATE-PROTOCOL.md). Keep the configured scheduler paused throughout reconciliation. Do not directly edit completion arrays to skip partial or deferred work.
+Before enabling automation, fix CI and review/integrate the published repair baseline, reconcile current PR and state history against the acceptance ledger, and explicitly recover/bootstrap durable state under [STATE-PROTOCOL.md](STATE-PROTOCOL.md). Keep the configured scheduler paused throughout reconciliation. Do not directly edit completion arrays to skip partial or deferred work.
 
 Only local documentation was updated by this readiness check. No scheduler, PR, remote branch or runtime state was changed.
