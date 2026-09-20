@@ -59,7 +59,10 @@ BEGIN
       RAISE EXCEPTION 'Only processing refunds can complete' USING ERRCODE = '23514';
     END IF;
   END IF;
-  PERFORM id FROM invoices WHERE id = NEW.invoice_id FOR UPDATE;
+  -- A row version change also forces stale REPEATABLE READ / SERIALIZABLE
+  -- writers to retry. A lock alone would leave their old aggregate snapshot
+  -- blind to a reservation committed while they waited.
+  UPDATE invoices SET updated_at = clock_timestamp() WHERE id = NEW.invoice_id;
   NEW.updated_at := clock_timestamp();
   RETURN NEW;
 END;

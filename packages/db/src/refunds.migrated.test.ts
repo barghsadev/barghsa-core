@@ -166,6 +166,40 @@ it('retains immutable request identity and terminal history', async () => {
   await expect(setState(row.id, 'Requested')).rejects.toThrow();
 });
 
+it('rejects a stale repeatable-read reservation instead of spending the same balance twice', async () => {
+  const owner = await invoice();
+  const first = await fixture.pool.connect();
+  const second = await fixture.pool.connect();
+  try {
+    for (const client of [first, second]) {
+      await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ');
+      await client.query('SELECT paid_amount FROM invoices WHERE id=$1', [owner.id]);
+    }
+    const query =
+      "INSERT INTO refunds(invoice_id,profile_id,amount,destination,idempotency_key) VALUES ($1,$2,70,'wallet',$3)";
+    await first.query(query, [owner.id, owner.profile, randomUUID()]);
+    const competing = second
+      .query(query, [owner.id, owner.profile, randomUUID()])
+      .catch((error: unknown) => error);
+    await first.query('COMMIT');
+    expect(await competing).toMatchObject({ code: '40001' });
+    await second.query('ROLLBACK');
+    expect(
+      (
+        await fixture.pool.query(
+          'SELECT SUM(amount)::text AS amount FROM refunds WHERE invoice_id=$1',
+          [owner.id]
+        )
+      ).rows
+    ).toEqual([{ amount: '70' }]);
+  } finally {
+    await first.query('ROLLBACK');
+    await second.query('ROLLBACK');
+    first.release();
+    second.release();
+  }
+});
+
 it('requires reconciliation and a bank reference before an external refund can complete', async () => {
   const owner = await invoice();
   const row = await request(owner, '50', 'external_bank');
