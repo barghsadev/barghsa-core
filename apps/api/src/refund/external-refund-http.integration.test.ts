@@ -311,3 +311,91 @@ it('rechecks recorder authority and archived profiles before reconciliation', as
     200
   );
 });
+
+it('notifies only the profile owner in both languages once per committed outcome', async () => {
+  const f = await invoice(),
+    refund = await request(requestBody(f.id)),
+    bankReference = randomUUID();
+  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  expect((await decide(refund.id, 'record-transfer', { bankReference })).status).toBe(200);
+  expect(
+    (await http.pool.query('SELECT id FROM in_app_notifications WHERE profile_id=$1', [f.profile]))
+      .rows
+  ).toEqual([]);
+  for (let retry = 0; retry < 2; retry++)
+    expect(
+      (await decide(refund.id, 'reconcile', { bankReference }, 'refund-reviewer')).status
+    ).toBe(200);
+  const notices = (
+    await http.pool.query(
+      'SELECT recipient_user_id,profile_id,localized_content,link_route FROM in_app_notifications WHERE profile_id=$1',
+      [f.profile]
+    )
+  ).rows;
+  expect(notices).toHaveLength(1);
+  expect(notices[0]).toMatchObject({
+    recipient_user_id: f.owner,
+    profile_id: f.profile,
+    link_route: `/invoices/${f.id}`,
+    localized_content: {
+      en: { title: 'Refund completed', body: expect.stringContaining('100 IRR') },
+      fa: { title: 'بازپرداخت انجام شد', body: expect.stringContaining('۱۰۰') },
+    },
+  });
+  const g = await invoice(),
+    rejected = await request(requestBody(g.id));
+  for (let retry = 0; retry < 2; retry++)
+    expect(
+      (await decide(rejected.id, 'reject', { reason: 'Private internal reason' })).status
+    ).toBe(200);
+  const rejection = (
+    await http.pool.query(
+      'SELECT recipient_user_id,localized_content FROM in_app_notifications WHERE profile_id=$1',
+      [g.profile]
+    )
+  ).rows;
+  expect(rejection).toHaveLength(1);
+  expect(rejection[0]).toMatchObject({
+    recipient_user_id: g.owner,
+    localized_content: {
+      en: { title: 'Refund request rejected' },
+      fa: { title: 'درخواست بازپرداخت رد شد' },
+    },
+  });
+  expect(JSON.stringify(rejection)).not.toContain('Private internal reason');
+});
+
+it('rolls wallet completion back if its customer notice cannot be persisted', async () => {
+  const f = await invoice(),
+    response = await post('wallet-refunds', requestBody(f.id));
+  const refund = (await response.json()) as RefundDto;
+  expect((await post(`wallet-refunds/${refund.id}/approve`)).status).toBe(200);
+  await http.pool.query(
+    "CREATE FUNCTION fail_refund_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.profile_id IS NOT NULL THEN RAISE EXCEPTION 'test notice unavailable'; END IF; RETURN NEW; END; $$; CREATE TRIGGER fail_refund_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION fail_refund_notice()"
+  );
+  try {
+    expect((await post(`wallet-refunds/${refund.id}/process`)).status).toBe(500);
+    expect(await balances(f)).toEqual({ refunded_amount: '0', state: 'Paid', posted_balance: '0' });
+    expect(
+      (await http.pool.query('SELECT state FROM refunds WHERE id=$1', [refund.id])).rows
+    ).toEqual([{ state: 'Approved' }]);
+    expect(
+      (await http.pool.query('SELECT id FROM wallet_transactions WHERE ref_id=$1', [refund.id]))
+        .rows
+    ).toEqual([]);
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER fail_refund_notice ON in_app_notifications; DROP FUNCTION fail_refund_notice()'
+    );
+  }
+  for (let retry = 0; retry < 2; retry++)
+    expect((await post(`wallet-refunds/${refund.id}/process`)).status).toBe(200);
+  const notices = (
+    await http.pool.query(
+      'SELECT localized_content FROM in_app_notifications WHERE profile_id=$1',
+      [f.profile]
+    )
+  ).rows;
+  expect(notices).toHaveLength(1);
+  expect(notices[0].localized_content.en.body).toContain('returned to your wallet');
+});

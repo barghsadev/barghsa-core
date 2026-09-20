@@ -24,6 +24,7 @@ import { lockWalletProfile, assertWalletProfileWritable } from '../wallet/profil
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { isInvoiceState } from '../invoice/invoice-state.model.js';
 import { loadCustomerInvoiceActivity } from '../invoice/customer-invoice-activity.js';
+import { notifyRefundOutcome } from './refund-notifications.js';
 import { assertRefundTransition, type RefundState } from './refund-state.model.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
@@ -210,6 +211,7 @@ export class RefundService {
       }
       if (action === 'reject' || action === 'cancel') {
         await this.move(client, row, target, actor, ip, this.reason(reason));
+        if (target === 'Rejected') await notifyRefundOutcome(client, { ...row, state: 'Rejected' });
         return this.dto(client, row);
       }
       assertWalletProfileWritable({ id: invoice.profile_id, archived });
@@ -350,6 +352,7 @@ export class RefundService {
         client,
       }
     );
+    await notifyRefundOutcome(client, { ...row, state: 'Completed' });
   }
 
   private async transaction<T>(
