@@ -152,9 +152,17 @@ it.each([
 });
 it('retains acceptance evidence once recorded', async () => {
   const row = await create();
-  await fixture.pool.query('UPDATE contract_versions SET accepted_at=NOW() WHERE id=$1', [
-    row.version,
+  await fixture.pool.query("UPDATE contracts SET state='AwaitingStaffReview' WHERE id=$1", [
+    row.id,
   ]);
+  await fixture.pool.query(
+    'INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,$3)',
+    [row.id, row.version, user]
+  );
+  await fixture.pool.query(
+    'INSERT INTO contract_acceptances(contract_id,version_id,accepted_by) VALUES($1,$2,$3)',
+    [row.id, row.version, user]
+  );
   await expect(
     fixture.pool.query('UPDATE contract_versions SET accepted_at=NULL WHERE id=$1', [row.version])
   ).rejects.toMatchObject({ code: '23514' });

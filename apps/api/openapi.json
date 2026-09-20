@@ -3083,7 +3083,7 @@
         },
         "responses": {
           "200": {
-            "description": "Updated draft. Unchanged content does not create a new version."
+            "description": "Updated draft, or revised contract resubmitted for staff review. Unchanged draft content creates no version; resubmission requires changed content."
           },
           "409": {
             "description": "Stale version, non-draft state, archived profile or conflicting idempotency key."
@@ -3094,7 +3094,7 @@
             "bearer": []
           }
         ],
-        "summary": "Replace draft content by creating a new immutable version",
+        "summary": "Replace draft content or revise and resubmit requested changes as a new version",
         "tags": [
           "Admin · Contracts"
         ]
@@ -3173,6 +3173,83 @@
           }
         ],
         "summary": "Read a specific immutable contract snapshot",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}/{action}": {
+      "post": {
+        "operationId": "ContractReviewController_act",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "schema": {
+              "enum": [
+                "submit",
+                "request-changes",
+                "publish"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "description": "Required only for request-changes.",
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedVersionId",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Updated staff contract. Matching retries return the original result."
+          },
+          "409": {
+            "description": "Stale version or invalid state transition."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit, request changes or publish the exact current contract version",
         "tags": [
           "Admin · Contracts"
         ]
@@ -10766,6 +10843,202 @@
         "summary": "Get current user info",
         "tags": [
           "Auth"
+        ]
+      }
+    },
+    "/api/contracts": {
+      "get": {
+        "operationId": "CustomerContractController_list",
+        "parameters": [
+          {
+            "description": "Exclusive contract UUID cursor; at most 100 records.",
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List published contracts on the current authorized profile",
+        "tags": [
+          "Contracts"
+        ]
+      }
+    },
+    "/api/contracts/{id}": {
+      "get": {
+        "operationId": "CustomerContractController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read the latest published contract snapshot, excluding internal drafts",
+        "tags": [
+          "Contracts"
+        ]
+      }
+    },
+    "/api/contracts/{id}/accept": {
+      "post": {
+        "operationId": "CustomerContractController_accept",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedVersionId",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Published snapshot with immutable customer acceptance evidence. Does not activate or sign the contract."
+          },
+          "409": {
+            "description": "Stale version, conflicting retry or contract no longer awaiting acceptance."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Accept the exact current published version as the authorized customer",
+        "tags": [
+          "Contracts"
+        ]
+      }
+    },
+    "/api/contracts/{id}/versions": {
+      "get": {
+        "operationId": "CustomerContractController_versions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Exclusive version-number cursor; at most 100 published metadata records.",
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List only published version metadata for the authorized profile",
+        "tags": [
+          "Contracts"
+        ]
+      }
+    },
+    "/api/contracts/{id}/versions/{versionId}": {
+      "get": {
+        "operationId": "CustomerContractController_version",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "versionId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read an individual published snapshot for the authorized profile",
+        "tags": [
+          "Contracts"
         ]
       }
     },

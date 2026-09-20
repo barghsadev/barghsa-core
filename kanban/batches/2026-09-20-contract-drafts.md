@@ -2,7 +2,7 @@
 
 Branch: `codex/contract-drafts`, based on PR #315 merge `7f4cb2c1383c7ef5b46c5c39862f716cddff0616`.
 
-Status: local implementation and validation complete; independent review and CI pending.
+Status: merged as PR #316 at `f27e982e8065081d79bab0ca92669cae6ffd5a21`.
 
 ## Scope
 
@@ -27,3 +27,7 @@ Customer contract detail/version UI and visibility policy, review/submission, ac
 - Existing changed/critical coverage floors, independent exact-HEAD approval and all GitHub checks remain required before merge.
 
 No scheduler or supervisor completion history is changed.
+
+## Merge evidence
+
+[Independent review](https://github.com/barghsadev/barghsa-core/pull/316#issuecomment-5751993430) approved exact HEAD `761cbbd08732ded94807e54b1c6b599620115bef` with no findings. [CI run](https://github.com/barghsadev/barghsa-core/actions/runs/35531321775) passed all five checks; tests took 17m22s. Merge and durable review binding were read back and verified.

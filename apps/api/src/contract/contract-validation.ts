@@ -31,3 +31,13 @@ export const updateContractSchema = z
   .strict();
 export type CreateContractInput = z.infer<typeof createContractSchema>;
 export type UpdateContractInput = z.infer<typeof updateContractSchema>;
+
+export const contractReviewSchema = z
+  .object({
+    expectedVersionId: contractUuid,
+    idempotencyKey: contractUuid,
+  })
+  .strict();
+export const contractChangesSchema = contractReviewSchema.extend({
+  reason: z.string().trim().min(1).max(1000),
+});

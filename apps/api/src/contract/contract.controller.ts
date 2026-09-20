@@ -84,7 +84,9 @@ export class ContractController {
   @Patch(':id')
   @RequiresStepUp()
   @ApiParam({ name: 'id', format: 'uuid' })
-  @ApiOperation({ summary: 'Replace draft content by creating a new immutable version' })
+  @ApiOperation({
+    summary: 'Replace draft content or revise and resubmit requested changes as a new version',
+  })
   @ApiBody({
     schema: {
       type: 'object',
@@ -95,7 +97,8 @@ export class ContractController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Updated draft. Unchanged content does not create a new version.',
+    description:
+      'Updated draft, or revised contract resubmitted for staff review. Unchanged draft content creates no version; resubmission requires changed content.',
   })
   @ApiResponse({
     status: 409,

@@ -26,3 +26,5 @@ This repairs `07-ui-ux-design.md#T-07.30.02.03` and the province/city management
 Resume contract draft creation and immutable version history after this repair merges. Keep supervisor history and the scheduler unchanged.
 
 Review: https://github.com/barghsadev/barghsa-core/pull/315#issuecomment-5751879309. Merge and durable comment binding were read back and verified. Full main CI remains separately monitored.
+
+Full main CI at merge `7f4cb2c1` also passed all five checks, including full browsers and actual combined coverage: [run 35530458605](https://github.com/barghsadev/barghsa-core/actions/runs/35530458605).
