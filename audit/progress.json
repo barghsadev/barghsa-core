@@ -1441,7 +1441,7 @@
         "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35533547908"
       },
       "remaining_tasks": [
-        "Provider migration fixture cleanup CI follow-up",
+        "Database cleanup and worker heartbeat CI follow-up",
         "Document lifecycle prerequisite for contract signatures",
         "Contract UI, document/signature integration and activation",
         "Amendments, cancellation and automatic refund obligations"
@@ -1462,7 +1462,8 @@
       "commit": "f27e982e8065081d79bab0ca92669cae6ffd5a21",
       "status": "locally_validated",
       "finding": "All 830 database assertions passed; provider-delivery-proof afterAll timed out dropping both databases at the default 10 seconds. Browser/integrity and security checks passed.",
-      "resolution": "Specific teardown hook budget increased to 30 seconds; all 837 current database tests pass with coverage. Review and CI verification pending."
+      "resolution": "Provider cleanup uses a specific 30-second hook limit. PR318 run35534682919 passed all837DB tests but exposed a 150ms notification lease test expiry; control only heartbeat intervals with the normal60-second lease and real database/expiry clock. Focused20delivery tests and full460worker tests with coverage pass. Updated exact-HEAD review and CI pending.",
+      "followup_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35534682919"
     }
   }
 }
