@@ -1341,7 +1341,7 @@
   },
   "kanban_readiness": {
     "checked": "2026-09-20",
-    "local_development": "manual_invoice_history_coverage",
+    "local_development": "manual_external_refund_batch",
     "automatic_loop": "blocked_pending_remote_reconciliation",
     "backlog_validation": {
       "tasks": 1355,
@@ -1355,7 +1355,7 @@
       "pending": 0
     },
     "continuation": "kanban/CONTINUATION.md",
-    "remote_main_observed": "d56de886c52c9f193cfde60eefe56b0b3aa15aff",
+    "remote_main_observed": "25a85079975c9a123aa983bf5029c30b6893e6e7",
     "remote_state_branch_observed": "absent",
     "pr_304_status": "closed_without_merge; verified through public GitHub API",
     "runtime_state_changed": false,
@@ -1430,23 +1430,21 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/invoice-history-coverage",
-      "status": "in_review",
-      "record": "kanban/batches/2026-09-20-invoice-history-coverage.md",
+      "branch": "codex/external-refund-batch",
+      "status": "implementation_validated_live_status_in_pull_request",
+      "record": "kanban/batches/2026-09-20-external-refunds.md",
       "previous_batch": {
-        "pr": 310,
+        "pr": 311,
         "status": "merged",
-        "merge_commit_sha": "d56de886c52c9f193cfde60eefe56b0b3aa15aff",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/310#issuecomment-5749942819",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35511992353"
+        "merge_commit_sha": "25a85079975c9a123aa983bf5029c30b6893e6e7",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/311#issuecomment-5750114942",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35513669564"
       },
       "token_limit": "User withdrew prior token ceiling on September 20; normal work authorized.",
-      "next_batch": {
-        "branch": "codex/external-refund-batch",
-        "status": "implemented_locally_awaiting_review",
-        "focused_refund_tests_passed": 35,
-        "combined_refund_template_tests_passed": 36
-      }
+      "remaining_tasks": [
+        "04-invoices-wallet-contracts.md#T-04.4.01.07",
+        "04-invoices-wallet-contracts.md#T-04.4.01.02 pending ledger and failure processing"
+      ]
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",
@@ -1454,7 +1452,8 @@
       "failed_check": "Verify combined source coverage",
       "functional_browser_security_checks": "passed",
       "resolution": "focused invoice API and frontend tests; original coverage floors preserved",
-      "status": "in_review"
+      "status": "merged",
+      "resolution_pr": 311
     }
   }
 }

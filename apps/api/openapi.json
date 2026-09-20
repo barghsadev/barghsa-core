@@ -3146,6 +3146,133 @@
         ]
       }
     },
+    "/api/admin/external-refunds": {
+      "post": {
+        "operationId": "ExternalRefundController_request",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "amount": {
+                    "description": "Positive exact int8 IRR",
+                    "pattern": "^[0-9]{1,19}$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "invoiceId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "invoiceId",
+                  "amount",
+                  "idempotencyKey",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Reserved external refund and optional financial approval request ID"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Request an invoice refund by external bank transfer",
+        "tags": [
+          "Admin · External bank refunds"
+        ]
+      }
+    },
+    "/api/admin/external-refunds/{id}/{action}": {
+      "post": {
+        "operationId": "ExternalRefundController_decide",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "schema": {
+              "enum": [
+                "approve",
+                "reject",
+                "cancel",
+                "record-transfer",
+                "reconcile"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "bankReference": {
+                    "description": "Required for record-transfer and reconcile; reconciliation must match the recorded reference",
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "reason": {
+                    "description": "Required for reject/cancel",
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Current refund state; a distinct finance staff member must reconcile the recorded transfer before completion"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve, reject, cancel, record a transfer or reconcile an external refund",
+        "tags": [
+          "Admin · External bank refunds"
+        ]
+      }
+    },
     "/api/admin/failed-jobs": {
       "get": {
         "operationId": "FailedJobsController_listFailedJobs",

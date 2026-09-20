@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
-import type { WalletRefundDto } from './wallet-refund.service.js';
+import type { RefundDto } from './refund.service.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 const sessions: Record<string, string> = {};
@@ -88,7 +88,7 @@ function requestBody(invoiceId: string, amount = '100') {
 async function request(body: ReturnType<typeof requestBody>) {
   const response = await post('wallet-refunds', body);
   expect(response.status).toBe(201);
-  return (await response.json()) as WalletRefundDto;
+  return (await response.json()) as RefundDto;
 }
 const decide = (id: string, action: string, body: unknown = {}) =>
   post(`wallet-refunds/${id}/${action}`, body);
