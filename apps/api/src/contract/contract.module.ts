@@ -1,3 +1,9 @@
+import { ContractActivationService } from './contract-activation.service.js';
+import {
+  ContractActivationRulesController,
+  StaffContractActivationController,
+  CustomerContractActivationController,
+} from './contract-activation.controller.js';
 import {
   ContractSignatureController,
   CustomerContractSignatureController,
@@ -15,13 +21,21 @@ import { ContractService } from './contract.service.js';
 @Module({
   imports: [SessionModule],
   controllers: [
+    ContractActivationRulesController,
+    StaffContractActivationController,
+    CustomerContractActivationController,
     ContractSignatureController,
     CustomerContractSignatureController,
     ContractController,
     ContractReviewController,
     CustomerContractController,
   ],
-  providers: [ContractService, ContractReviewService, ContractSignatureService],
+  providers: [
+    ContractService,
+    ContractReviewService,
+    ContractSignatureService,
+    ContractActivationService,
+  ],
   exports: [ContractService],
 })
 export class ContractModule {}

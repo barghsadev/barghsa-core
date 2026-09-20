@@ -445,7 +445,7 @@ it('versions activation-context changes even when terms stay the same, and prese
     expectedVersionId: revised.currentVersionId,
     idempotencyKey: randomUUID(),
   });
-  expect((await unchanged.json()).currentVersionId).toBe(revised.currentVersionId);
+  expect(((await unchanged.json()) as ContractDto).currentVersionId).toBe(revised.currentVersionId);
   const contentEdit = await send('/' + row.id, 'PATCH', edit(revised));
   expect(contentEdit.status).toBe(200);
   const edited = (await contentEdit.json()) as ContractDto;
@@ -468,7 +468,9 @@ it('rejects foreign or missing activation invoices and rolls back the new versio
         })
       ).status
     ).toBe(409);
-    expect((await (await send('/' + row.id)).json()).currentVersionId).toBe(row.currentVersionId);
+    expect(((await (await send('/' + row.id)).json()) as ContractDto).currentVersionId).toBe(
+      row.currentVersionId
+    );
   }
   expect(
     (

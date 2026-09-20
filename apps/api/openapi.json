@@ -2776,6 +2776,98 @@
         ]
       }
     },
+    "/api/admin/contract-activation-rules": {
+      "get": {
+        "operationId": "ContractActivationRulesController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read per-service activation rules; changes apply to new contract versions",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contract-activation-rules/{serviceType}": {
+      "put": {
+        "operationId": "ContractActivationRulesController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "serviceType",
+            "required": true,
+            "schema": {
+              "enum": [
+                "electricity",
+                "savings",
+                "solar"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedRevision": {
+                    "maximum": 2147483646,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "paymentRequired": {
+                    "type": "boolean"
+                  },
+                  "serviceStartRequired": {
+                    "type": "boolean"
+                  },
+                  "signatureRequired": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "expectedRevision",
+                  "signatureRequired",
+                  "paymentRequired",
+                  "serviceStartRequired",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update versioned activation rules for future contract versions",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
     "/api/admin/contract-templates": {
       "get": {
         "description": "Newest first, with version count and the latest version of each template.",
@@ -3006,6 +3098,26 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "activationContext": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "initialInvoiceId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "serviceStartsAt": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "initialInvoiceId",
+                      "serviceStartsAt"
+                    ],
+                    "type": "object"
+                  },
                   "changeDescription": {
                     "maxLength": 1000,
                     "minLength": 1,
@@ -3114,6 +3226,26 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "activationContext": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "initialInvoiceId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "serviceStartsAt": {
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "initialInvoiceId",
+                      "serviceStartsAt"
+                    ],
+                    "type": "object"
+                  },
                   "changeDescription": {
                     "maxLength": 1000,
                     "minLength": 1,
@@ -3147,7 +3279,7 @@
         },
         "responses": {
           "200": {
-            "description": "Updated draft, or revised contract resubmitted for staff review. Unchanged draft content creates no version; resubmission requires changed content."
+            "description": "Updated draft, or revised contract resubmitted for staff review. Unchanged content and activation context create no version; resubmission requires a material change."
           },
           "409": {
             "description": "Stale version, non-draft state, archived profile or conflicting idempotency key."
@@ -3159,6 +3291,44 @@
           }
         ],
         "summary": "Replace draft content or revise and resubmit requested changes as a new version",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}/activation": {
+      "get": {
+        "operationId": "StaffContractActivationController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read exact-version activation prerequisites without changing contract state",
         "tags": [
           "Admin · Contracts"
         ]
@@ -11309,6 +11479,44 @@
           }
         ],
         "summary": "Accept the exact current published version as the authorized customer",
+        "tags": [
+          "Contracts"
+        ]
+      }
+    },
+    "/api/contracts/{id}/activation": {
+      "get": {
+        "operationId": "CustomerContractActivationController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read activation prerequisites for an authorized published contract version",
         "tags": [
           "Contracts"
         ]

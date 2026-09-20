@@ -1430,17 +1430,17 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/contract-route-loading",
-      "status": "locally_validated_pending_review",
-      "record": "kanban/batches/2026-09-21-contract-route-loading.md",
+      "branch": "codex/contract-activation-prerequisites",
+      "status": "building_ui",
+      "record": "kanban/batches/2026-09-21-contract-activation-prerequisites.md",
       "previous_batch": {
-        "pr": 322,
+        "pr": 323,
         "status": "merged",
-        "merge_commit_sha": "c9bdd1c76fa173965bc3282e8ce8d9d4f677529a",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/322#issuecomment-5753480348",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35544425429"
+        "merge_commit_sha": "fee178e7ae6637645d3d742ec414f4e0231ee7a0",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/323#issuecomment-5753614975",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35545528581"
       },
-      "validation": "27 frontend and12 bilingual browser tests, actual combined coverage, web types/build/lint and44 bundle budgets pass. Rebased onto verified signature merge; final exact-HEAD coverage binding/review/CI remain.",
+      "validation": "43 migrated database and60 related HTTP API tests pass. API types/lint pass. Rule administration UI, prerequisite display, final coverage/browser/static validation, independent review and CI remain.",
       "remaining_tasks": [
         "Automatic contract template-to-PDF generation",
         "Contract draft/edit UI and typed financial preview",
@@ -1448,12 +1448,10 @@
         "Amendments, cancellation and automatic refund obligations",
         "Configured malware scanning and physical retention deletion"
       ],
-      "next_batch": {
-        "branch": "codex/contract-activation-prerequisites",
-        "record": "kanban/batches/2026-09-21-contract-activation-prerequisites.md",
-        "status": "local_foundation",
-        "validation": "43 DB and29 API tests pass for snapshot rules and versioned invoice/date context. Rule administration/resolver/UI and final validation remain."
-      }
+      "main_full_runs_pending": [
+        35545314934,
+        35545814385
+      ]
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",
