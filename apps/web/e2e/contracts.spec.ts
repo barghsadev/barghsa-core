@@ -26,7 +26,11 @@ for (const locale of ['en', 'fa'] as const)
       const version = {
         id: VERSION,
         versionNumber: 2,
-        content: { price: '9007199254740993', text: 'Published terms' },
+        content: {
+          price: '9007199254740993',
+          text: 'Published terms',
+          deliveryZone: 'Northern district',
+        },
         changeDescription: 'Revised terms',
         createdAt: '2026-09-21T00:00:00Z',
         createdBy: 'legal-reviewer',
@@ -141,6 +145,8 @@ for (const locale of ['en', 'fa'] as const)
         .click();
       const detail = page.getByRole('region', { name: words.terms, exact: true });
       await expect(detail.getByText('9007199254740993', { exact: true })).toBeVisible();
+      await expect(detail.getByText('deliveryZone', { exact: true })).toBeVisible();
+      await expect(detail.getByText('Northern district', { exact: true })).toBeVisible();
       if (!staff) {
         await expect(
           detail.getByRole('button', { name: words.accept, exact: true })
