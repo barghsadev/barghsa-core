@@ -1,3 +1,5 @@
+import { Route as CustomerRoute } from '../routes/_app/documents.js';
+import DocumentsPage from './DocumentsPage.js';
 import AdminDocumentsPage from './AdminDocumentsPage.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -41,6 +43,10 @@ it('makes the implemented document workspaces reachable from both existing shell
     expect(DocumentsRoute.options.component).toBe(AdminDocumentsPage);
     const Pending = DocumentsRoute.options.pendingComponent;
     await act(async () => root.render(Pending ? <Pending /> : null));
+    expect(container.querySelector('[role=status]')).not.toBeNull();
+    expect(CustomerRoute.options.component).toBe(DocumentsPage);
+    const CustomerPending = CustomerRoute.options.pendingComponent;
+    await act(async () => root.render(CustomerPending ? <CustomerPending /> : null));
     expect(container.querySelector('[role=status]')).not.toBeNull();
     await act(async () => root.render(<AdminLayout />));
     expect(container.querySelector('a[href="/admin/documents"]')?.textContent).toBe(
