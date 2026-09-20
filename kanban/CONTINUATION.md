@@ -4,7 +4,7 @@ Checked September 20, 2026 against CI-verified commit `faf9a2de2825e2bb829699aec
 
 ## Local development
 
-PR #305 is merged at `0b768cf1`. The current manual batch is [PR #306](https://github.com/barghsadev/barghsa-core/pull/306), tracked in [batch status](batches/2026-09-20-wallet-history.md). PR #305 passes all five CI jobs, including full browser validation, unit coverage thresholds, security scans and combined changed/critical source coverage. [Verified run](https://github.com/barghsadev/barghsa-core/actions/runs/35498578584). The backlog validator passes for 1,355 tasks and 116 traceability entries. The audit validator passes for all 322 historical claims, 301 saved PRs and 58 historical skips.
+PR #305 is merged at `0b768cf1`. PR #306 is merged at `999a1f44`, tracked in [batch status](batches/2026-09-20-wallet-history.md). The next batch is [refund storage and reservation limits](batches/2026-09-20-refund-storage.md). PR #305 passes all five CI jobs, including full browser validation, unit coverage thresholds, security scans and combined changed/critical source coverage. [Verified run](https://github.com/barghsadev/barghsa-core/actions/runs/35498578584). The backlog validator passes for 1,355 tasks and 116 traceability entries. The audit validator passes for all 322 historical claims, 301 saved PRs and 58 historical skips.
 
 Historical claim acceptance is 219 verified, 54 partial and 49 deferred. The other 1,033 canonical tasks are outside that historical audit population. They are not automatically proven unimplemented or ready. Reuse existing code and acceptance evidence before choosing a new build.
 
