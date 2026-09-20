@@ -5,6 +5,8 @@ import {
   encryptStorageSecret,
   decryptStorageSecret,
   runtimeStorageProvider,
+  storageConfigFields,
+  environmentStorageConfig,
 } from './runtime-config.js';
 afterEach(() => vi.unstubAllEnvs());
 const fields = {
@@ -16,6 +18,45 @@ const fields = {
   accessKeyId: 'first-key',
   forcePathStyle: true,
 };
+it.each([
+  'not a URL',
+  'ftp://storage.test',
+  'https://user@storage.test',
+  'https://:password@storage.test',
+  'https://storage.test/path',
+  'https://storage.test?secret=value',
+  'https://storage.test#fragment',
+])('rejects a storage endpoint that is not a credential-free origin: %s', (endpoint) => {
+  for (const field of ['endpoint', 'privateEndpointUrl', 'publicEndpointUrl'])
+    expect(storageConfigFields.safeParse({ ...fields, [field]: endpoint }).success).toBe(false);
+});
+it('reads explicit environment configuration and uses empty values only when absent', () => {
+  const variables = {
+    S3_ENDPOINT: fields.endpoint,
+    S3_REGION: fields.region,
+    S3_BUCKET: fields.bucket,
+    S3_ACCESS_KEY_ID: fields.accessKeyId,
+    S3_SECRET_ACCESS_KEY: 'environment-secret',
+    S3_FORCE_PATH_STYLE: 'true',
+    S3_PRIVATE_ENDPOINT: fields.privateEndpointUrl,
+    S3_PUBLIC_ENDPOINT: fields.publicEndpointUrl,
+  };
+  for (const [name, value] of Object.entries(variables)) vi.stubEnv(name, value);
+  expect(environmentStorageConfig()).toEqual({ ...fields, secretAccessKey: 'environment-secret' });
+  for (const name of Object.keys(variables)) vi.stubEnv(name, undefined);
+  expect(environmentStorageConfig()).toEqual({
+    endpoint: '',
+    region: '',
+    bucket: '',
+    accessKeyId: '',
+    secretAccessKey: '',
+    forcePathStyle: false,
+    privateEndpointUrl: '',
+    publicEndpointUrl: '',
+  });
+  expect(encryptStorageSecret('')).toBeNull();
+  expect(decryptStorageSecret(null)).toBe('');
+});
 it('encrypts secrets with authenticated encryption and refuses a missing or wrong key', () => {
   vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', '');
   expect(() => encryptStorageSecret('private')).toThrow();

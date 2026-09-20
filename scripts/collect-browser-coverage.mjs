@@ -8,6 +8,7 @@ import { mergeProcessCovs } from '@bcoe/v8-coverage';
 import { convert } from 'ast-v8-to-istanbul';
 import coverageLibrary from 'istanbul-lib-coverage';
 import remapping from '@jridgewell/remapping';
+import { retainUnmeasuredBranches } from './conservative-branch-coverage.mjs';
 
 const sourcePattern = /^(apps\/web|packages\/(ui|i18n|shared))\/src\//;
 
@@ -171,6 +172,7 @@ export async function collectBrowserCoverage({
       filename.startsWith(resolve(root) + sep)
   );
   if (!coverage.files().length) throw new Error('No workspace source mapped from browser coverage');
+  const unmeasuredBranches = retainUnmeasuredBranches(coverage);
   const report = {
     schema_version: 1,
     status: 'mapped',
@@ -185,6 +187,7 @@ export async function collectBrowserCoverage({
     component_asset_count: componentAssets.size,
     ignored_non_application_scripts: ignoredScripts,
     unmeasured_missing_source_scripts: missingSources,
+    unmeasured_branches: unmeasuredBranches,
     coverage: JSON.parse(JSON.stringify(coverage.toJSON())),
   };
   await writeFile(output, JSON.stringify(report) + '\n');

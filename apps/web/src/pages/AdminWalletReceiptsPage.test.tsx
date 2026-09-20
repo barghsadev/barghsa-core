@@ -831,4 +831,193 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       container.querySelector('[data-testid="admin-wallet-receipts-page"]')?.getAttribute('dir')
     ).toBe('rtl');
   });
+  it.each([
+    { body: null },
+    { body: 'denied' },
+    { body: {} },
+    { body: { message: 'Policy denied' } },
+    { body: { error: 'Policy denied' } },
+    { body: { error: { message: 'Policy denied' } } },
+    { body: { error: { code: 12, message: '' } } },
+    { body: { error: 12 } },
+    { body: { error: { code: 'OTHER' } } },
+  ])('keeps a failed receipt decision available for correction %#', async ({ body }) => {
+    vi.mocked(fetch).mockImplementation(async (input, init) =>
+      String(input).endsWith(`/${TX_A}/confirm`)
+        ? new Response(JSON.stringify(body), { status: 403 })
+        : defaultFetch(input, init)
+    );
+    await act(async () => root.render(<AdminWalletReceiptsPage />));
+    await flush();
+    await act(async () =>
+      container.querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-confirm"]')!.click()
+    );
+    expect(container.querySelector('[role=alert]')?.textContent).toBeTruthy();
+    expect(container.textContent).toContain('TRK-aaaa');
+    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
+    expect(
+      container.querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-confirm"]')?.disabled
+    ).toBe(false);
+  });
+  it.each(['invalid-json', 'network', 'non-error'] as const)(
+    'shows receipt queue failure %s without granting decision controls',
+    async (kind) => {
+      vi.mocked(fetch).mockImplementation(async (input, init) => {
+        if (String(input).endsWith('/bank-receipt-top-ups')) {
+          if (kind === 'network') throw new Error('Queue unavailable');
+          if (kind === 'non-error') throw 'offline';
+          return new Response('not json', { status: 503 });
+        }
+        return defaultFetch(input, init);
+      });
+      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await flush();
+      expect(container.querySelector('[role=alert]')?.textContent).toBeTruthy();
+      expect(container.querySelector('[data-testid="wallet-receipt-confirm"]')).toBeNull();
+    }
+  );
+  it.each(['network', 'denied', 'expired-again'] as const)(
+    'keeps failed step-up %s open without crediting the receipt',
+    async (kind) => {
+      let confirms = 0;
+      vi.mocked(fetch).mockImplementation(async (input, init) => {
+        if (String(input).endsWith(`/${TX_A}/confirm`)) {
+          confirms++;
+          return new Response(JSON.stringify({ requiresStepUp: true }), { status: 403 });
+        }
+        if (String(input).endsWith('/auth/step-up')) {
+          if (kind === 'network') throw new Error('offline');
+          return new Response('{}', { status: kind === 'denied' ? 403 : 200 });
+        }
+        return defaultFetch(input, init);
+      });
+      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await flush();
+      await act(async () =>
+        container
+          .querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-confirm"]')!
+          .click()
+      );
+      const password = container.querySelector<HTMLInputElement>(
+        '[data-testid="wallet-receipt-step-up-password"]'
+      )!;
+      await act(async () => {
+        Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+          password,
+          'secret'
+        );
+        password.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      await act(async () =>
+        container
+          .querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-step-up-submit"]')!
+          .click()
+      );
+      expect(confirms).toBe(kind === 'expired-again' ? 2 : 1);
+      const dialog = container.querySelector<HTMLElement>(
+        '[data-testid="wallet-receipt-step-up-dialog"]'
+      )!;
+      expect(dialog.querySelector('[role=alert]')?.textContent).toBeTruthy();
+      await act(async () =>
+        dialog.dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, shiftKey: true })
+        )
+      );
+      expect(dialog.contains(document.activeElement)).toBe(true);
+      await act(async () =>
+        dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }))
+      );
+      expect(document.activeElement).toBe(password);
+      await act(async () =>
+        dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+      );
+      expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull();
+    }
+  );
+
+  it.each([
+    { key: 'receipt.png', selector: 'img' },
+    { key: 'receipt.pdf', selector: 'iframe' },
+    { key: 'receipt.txt', selector: 'a[target=_blank]' },
+  ])(
+    'renders a receipt attachment using its safe $selector presentation',
+    async ({ key, selector }) => {
+      const dto = receiptDto(TX_A, {
+        attachmentKey: key,
+        attachmentUrl: 'https://files.example.com/receipt',
+        paymentDate: null,
+        payerReference: null,
+        customerNote: null,
+        submittedAt: null,
+      });
+      vi.mocked(fetch).mockImplementation(async (input, init) =>
+        String(input).endsWith('/bank-receipt-top-ups')
+          ? new Response(JSON.stringify({ items: [dto] }))
+          : String(input).endsWith('/' + TX_A)
+            ? new Response(JSON.stringify(dto))
+            : defaultFetch(input, init)
+      );
+      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await flush();
+      expect(container.querySelector(selector)).not.toBeNull();
+      expect(container.textContent).not.toContain('Invalid Date');
+    }
+  );
+  it.each(['network', 'invalid-json'] as const)(
+    'keeps the queue snapshot when detail read fails: %s',
+    async (kind) => {
+      vi.mocked(fetch).mockImplementation(async (input, init) => {
+        if (String(input).endsWith('/' + TX_A)) {
+          if (kind === 'network') throw new Error('offline');
+          return new Response('not json');
+        }
+        return defaultFetch(input, init);
+      });
+      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await flush();
+      expect(container.textContent).toContain('TRK-aaaa');
+      expect(container.querySelector('[data-testid="wallet-receipt-confirm"]')).not.toBeNull();
+    }
+  );
+  it.each(['network', 'invalid-json'] as const)(
+    'preserves the selected receipt after uncertain decision %s',
+    async (kind) => {
+      vi.mocked(fetch).mockImplementation(async (input, init) => {
+        if (String(input).endsWith(`/${TX_A}/confirm`)) {
+          if (kind === 'network') throw new Error('offline');
+          return new Response('not json');
+        }
+        return defaultFetch(input, init);
+      });
+      await act(async () => root.render(<AdminWalletReceiptsPage />));
+      await flush();
+      await act(async () =>
+        container
+          .querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-confirm"]')!
+          .click()
+      );
+      expect(container.querySelector('[role=alert]')).not.toBeNull();
+      expect(container.textContent).toContain('TRK-aaaa');
+    }
+  );
+  it('does not enable an invoice confirmation when the allocation request disconnects', async () => {
+    vi.mocked(fetch).mockImplementation(async (input, init) => {
+      if (String(input).includes('/allocation?')) throw new Error('offline');
+      return defaultFetch(input, init);
+    });
+    await act(async () => root.render(<AdminWalletReceiptsPage />));
+    await flush();
+    const input = container.querySelector<HTMLInputElement>('#apply-invoice-id')!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+        input,
+        INVOICE_ID
+      );
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    expect(
+      container.querySelector<HTMLButtonElement>('[data-testid="wallet-receipt-confirm"]')?.disabled
+    ).toBe(true);
+    expect(vi.mocked(fetch).mock.calls.some(([, init]) => init?.method === 'POST')).toBe(false);
+  });
 });
