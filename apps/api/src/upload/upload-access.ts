@@ -12,6 +12,18 @@ export async function requireUploadContext(
   context: UploadContext
 ) {
   const { purpose, profileId } = context;
+  if (purpose === 'staff_business_document') {
+    if (
+      !profileId ||
+      !['contracts:write', 'invoices:write', 'orders:write', 'legal:write'].some((permission) =>
+        hasStaffPermission(request, permission)
+      )
+    )
+      throw new ForbiddenException('Document upload is not permitted');
+    if (!(await profiles.getProfileById(profileId)))
+      throw new NotFoundException('Upload profile is not accessible');
+    return;
+  }
   const staffPermission =
     purpose === 'branding_logo'
       ? 'admin:branding:edit'
@@ -27,7 +39,14 @@ export async function requireUploadContext(
     return;
   }
   if (!profileId) {
-    if (['bank_receipt', 'verification_evidence', 'legal_profile_document'].includes(purpose ?? ''))
+    if (
+      [
+        'bank_receipt',
+        'verification_evidence',
+        'legal_profile_document',
+        'business_document',
+      ].includes(purpose ?? '')
+    )
       throw new BadRequestException('This upload purpose requires a profile');
     return;
   }

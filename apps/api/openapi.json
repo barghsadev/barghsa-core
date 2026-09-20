@@ -3255,6 +3255,124 @@
         ]
       }
     },
+    "/api/admin/documents": {
+      "get": {
+        "operationId": "StaffDocumentController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "StaffDocument"
+        ]
+      },
+      "post": {
+        "operationId": "StaffDocumentController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "StaffDocument"
+        ]
+      }
+    },
+    "/api/admin/documents/{id}": {
+      "get": {
+        "operationId": "StaffDocumentController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "StaffDocument"
+        ]
+      }
+    },
+    "/api/admin/documents/{id}/confirm": {
+      "post": {
+        "operationId": "StaffDocumentController_confirm",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "StaffDocument"
+        ]
+      }
+    },
+    "/api/admin/documents/{id}/download": {
+      "get": {
+        "operationId": "StaffDocumentController_download",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "StaffDocument"
+        ]
+      }
+    },
+    "/api/admin/documents/{id}/{action}": {
+      "post": {
+        "operationId": "StaffDocumentController_act",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "StaffDocument"
+        ]
+      }
+    },
     "/api/admin/email-providers": {
       "get": {
         "operationId": "EmailProviderConfigController_list",
@@ -12336,6 +12454,124 @@
         "summary": "Get dashboard overview data for active profile",
         "tags": [
           "Dashboard"
+        ]
+      }
+    },
+    "/api/documents": {
+      "get": {
+        "operationId": "DocumentController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Document"
+        ]
+      },
+      "post": {
+        "operationId": "DocumentController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Document"
+        ]
+      }
+    },
+    "/api/documents/{id}": {
+      "get": {
+        "operationId": "DocumentController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Document"
+        ]
+      }
+    },
+    "/api/documents/{id}/confirm": {
+      "post": {
+        "operationId": "DocumentController_confirm",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Document"
+        ]
+      }
+    },
+    "/api/documents/{id}/download": {
+      "get": {
+        "operationId": "DocumentController_download",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Document"
+        ]
+      }
+    },
+    "/api/documents/{id}/{action}": {
+      "post": {
+        "operationId": "DocumentController_act",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Document"
         ]
       }
     },

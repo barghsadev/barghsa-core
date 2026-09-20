@@ -1,4 +1,5 @@
 import { ContractModule } from './contract/contract.module.js';
+import { DocumentModule } from './documents/document.module.js';
 import { RefundModule } from './refund/refund.module.js';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller.js';
@@ -70,6 +71,7 @@ import { PublicModule } from './public/public.module.js';
     InvoiceModule,
     RefundModule,
     ContractModule,
+    DocumentModule,
     PublicModule,
   ],
   controllers: [AppController],
