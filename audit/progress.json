@@ -1338,5 +1338,26 @@
     "coverage_thresholds_changed": false,
     "final_review": "No remaining actionable issues in combined product review and focused test/measurement follow-ups; reviewed source hashes and exact logs are archived.",
     "resolved_historical_note": "The auth.refresh_token_reused seed gap from the older R02 review is resolved in the current bilingual email/in-app seed registry; full database suite760 passes. Historical failed evidence remains unchanged."
+  },
+  "kanban_readiness": {
+    "checked": "2026-09-20",
+    "local_development": "ready_from_codex/audit-fixes",
+    "automatic_loop": "blocked_pending_remote_reconciliation",
+    "backlog_validation": {
+      "tasks": 1355,
+      "traceability_entries": 116,
+      "status": "passed"
+    },
+    "audit_population": {
+      "verified": 219,
+      "partial": 54,
+      "deferred": 49,
+      "pending": 0
+    },
+    "continuation": "kanban/CONTINUATION.md",
+    "remote_main_observed": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
+    "remote_state_branch_observed": "absent",
+    "pr_304_status": "unverified; gh executable unavailable",
+    "runtime_state_changed": false
   }
 }

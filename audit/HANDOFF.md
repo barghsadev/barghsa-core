@@ -28,6 +28,8 @@ Retain Vite SPA/ADR004, supported manual identity verification, approved pre-log
 
 ## Continuing efficiently
 
+See [kanban continuation status](../kanban/CONTINUATION.md) for queue validation, candidate next tasks and the separate automation restart blockers.
+
 Start only from a concrete remaining criterion. Use focused tests for edits, reuse matching source-bound evidence, and consolidate review/validation. Keep full API/worker setup builds separate from consumers in the same checkout, and never edit source/tests while their checks run. Preserve complete logs with concise summaries. Use RTK and the codebase graph when available.
 
 Authority remains local edits and explicit commits. No push, PR publication/merge, deployment, scheduler/state change, external message or PR304 action. Preserve untracked user-owned `output/`. Latest account meter: 19% weekly used, below the 50% ceiling.
