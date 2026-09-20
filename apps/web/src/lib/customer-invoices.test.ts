@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fetchInvoiceDetails, formatIrr, roleI18nKey, stateI18nKey } from './customer-invoices.js';
+import {
+  fetchInvoiceDetails,
+  fetchInvoiceList,
+  formatIrr,
+  roleI18nKey,
+  stateI18nKey,
+} from './customer-invoices.js';
 
 describe('customer invoice helpers (T-04.1.05.04)', () => {
   afterEach(() => vi.unstubAllGlobals());
@@ -24,5 +30,18 @@ describe('customer invoice helpers (T-04.1.05.04)', () => {
   it('maps roles and states to i18n keys', () => {
     expect(roleI18nKey('replacement')).toBe('invoices.details.role.replacement');
     expect(stateI18nKey('Cancelled')).toBe('invoices.state.Cancelled');
+  });
+  it('loads the invoice list with credentials and preserves list errors', async () => {
+    const fetch = vi
+      .fn()
+      .mockResolvedValueOnce(Response.json({ invoices: [] }))
+      .mockResolvedValueOnce(new Response('Unavailable', { status: 503 }));
+    vi.stubGlobal('fetch', fetch);
+    await expect(fetchInvoiceList()).resolves.toEqual({ invoices: [] });
+    expect(fetch).toHaveBeenCalledWith(
+      '/api/invoices',
+      expect.objectContaining({ credentials: 'include', headers: { Accept: 'application/json' } })
+    );
+    await expect(fetchInvoiceList()).rejects.toMatchObject({ status: 503, message: 'HTTP 503' });
   });
 });
