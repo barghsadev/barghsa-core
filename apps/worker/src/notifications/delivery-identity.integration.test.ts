@@ -564,7 +564,7 @@ it('renews a slow delivery claim so another poll cannot take it', async () => {
   });
   const options = {
     pool,
-    leaseDurationMs: 150,
+    leaseDurationMs: 60_000,
     transports: {
       in_app: new InAppNotificationTransport(pool),
       email: {
@@ -584,24 +584,38 @@ it('renews a slow delivery claim so another poll cannot take it', async () => {
     }),
     deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 },
   };
+  // Control only the heartbeat schedule. PostgreSQL, promise gates, polling,
+  // and the lease-expiry clock remain real; CI load must not expire a 150ms lease.
+  vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
   const running = runOutboxPoll(options);
   try {
     await expect.poll(() => started).toBe(true);
-    const firstDeadline = (
-      await pool.query('SELECT locked_until FROM notification_outbox WHERE id=$1', [id])
+    const shortenedDeadline = (
+      await pool.query(
+        `UPDATE notification_outbox SET locked_until=locked_until-INTERVAL '10 seconds'
+         WHERE id=$1 RETURNING locked_until`,
+        [id]
+      )
     ).rows[0].locked_until.getTime();
+    await vi.advanceTimersByTimeAsync(20_000);
     await expect
       .poll(async () =>
         (
           await pool.query('SELECT locked_until FROM notification_outbox WHERE id=$1', [id])
         ).rows[0].locked_until.getTime()
       )
-      .toBeGreaterThan(firstDeadline + 250);
+      .toBeGreaterThan(shortenedDeadline + 9_000);
     expect((await runOutboxPoll(options)).leased).toBe(0);
+    release();
+    expect(await running).toMatchObject({ delivered: 1, failed: 0 });
   } finally {
     release();
+    try {
+      await running;
+    } finally {
+      vi.useRealTimers();
+    }
   }
-  expect(await running).toMatchObject({ delivered: 1, failed: 0 });
 });
 
 it('a replaced claim cannot send the next channel or overwrite its successor', async () => {

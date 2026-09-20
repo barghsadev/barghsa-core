@@ -2,7 +2,7 @@
 
 Branch: `codex/contract-review-acceptance`, based on PR #316 merge `f27e982e8065081d79bab0ca92669cae6ffd5a21`.
 
-Status: implemented and locally validated; independent review and CI pending.
+Status: merged in [PR #317](https://github.com/barghsadev/barghsa-core/pull/317) at `50620a01b4d5398c1f0cce7284b0f167ca8968cb` after independent exact-HEAD approval and all five CI checks passed.
 
 ## Scope
 
@@ -28,7 +28,7 @@ Acceptance ends at Accepted. It does not imply a signature, payment or activatio
 - 24 database tests pass, including the actual 138-to-139 upgrade and rerun without fabricated legacy publication/acceptance.
 - API source coverage: 98.93% lines and 94.88% branches; new schema executable coverage is exercised through typed reads and schema constraint checks. Existing changed/critical gates remain required.
 - API/database builds and typechecks, changed-file lint/formatting, snapshot generation guard and OpenAPI comparison pass.
-- Independent exact-HEAD approval and all GitHub checks remain required before merge.
+- [Independent approval](https://github.com/barghsadev/barghsa-core/pull/317#issuecomment-5752243040) binds reviewed HEAD `327ba4ab3c2eed3c81662c3f568fd4a1ff667d7e`. All five checks in [run 35533547908](https://github.com/barghsadev/barghsa-core/actions/runs/35533547908) passed. Merge and durable review were read back and verified.
 
 ## Next
 
