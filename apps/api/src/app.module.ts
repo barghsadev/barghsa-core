@@ -1,3 +1,4 @@
+import { RefundModule } from './refund/refund.module.js';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller.js';
 import { CorrelationIdMiddleware, CorrelationIdProvider, ShutdownService } from './common/index.js';
@@ -66,6 +67,7 @@ import { PublicModule } from './public/public.module.js';
     EmailWebhookModule,
     WalletModule,
     InvoiceModule,
+    RefundModule,
     PublicModule,
   ],
   controllers: [AppController],
