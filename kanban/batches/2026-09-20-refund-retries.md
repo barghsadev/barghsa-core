@@ -2,7 +2,7 @@
 
 Branch: `codex/refund-retry-batch`, based on merged PR #312 at `4eea6d198341581d1b3f8af2e7a9b9ddaf5ca5fb`.
 
-Status: implementation and focused validation complete; coverage closure, independent review and CI remain. No PR is published yet.
+Status: implementation and local validation complete; independent review and GitHub CI remain.
 
 ## Scope
 
@@ -31,6 +31,10 @@ External refunds still require recorded transfer evidence and distinct current f
 - Changed-file ESLint, database snapshot validation and generated OpenAPI comparison pass.
 - Full pinned Semgrep scan: five fixtures pass, 829 files, zero findings/errors.
 
-## Before review and merge
+- Direct production-migration refund tests: 22 pass, including schema export, immutable authority, attempt bounds and deletion guards. Worker process and retry runner: 11 pass. Shared source suite: 976 pass, plus the new monitoring contract test. Localization: 50 pass.
+- Changed/critical source coverage passes against main `4eea6d19`: API critical 95.71% lines / 92.10% branches; shared database critical 97.26% / 98.47%; worker refund runner 100% / 100%. Other changed-source groups pass their existing floors.
+- Canonical backlog and audit requirement checks pass. No coverage floor was lowered.
 
-Complete package-level changed/critical source coverage, including direct shared database helper and worker coverage; check the remaining relevant worker/shared/i18n suites and production migration behavior. Run the canonical backlog/audit checks, obtain independent exact-HEAD review and require all active GitHub CI checks. Keep the historical supervisor arrays and paused scheduler unchanged.
+## Before merge
+
+Obtain independent exact-HEAD review and require all active GitHub CI checks. Keep the historical supervisor arrays and paused scheduler unchanged.
