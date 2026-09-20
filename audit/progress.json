@@ -1430,20 +1430,20 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/contract-drafts",
+      "branch": "codex/contract-review-acceptance",
       "status": "validating",
-      "record": "kanban/batches/2026-09-20-contract-drafts.md",
+      "record": "kanban/batches/2026-09-20-contract-review-acceptance.md",
       "previous_batch": {
-        "pr": 315,
+        "pr": 316,
         "status": "merged",
-        "merge_commit_sha": "7f4cb2c1383c7ef5b46c5c39862f716cddff0616",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/315#issuecomment-5751879309",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35530234599"
+        "merge_commit_sha": "f27e982e8065081d79bab0ca92669cae6ffd5a21",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/316#issuecomment-5751993430",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35531321775"
       },
       "remaining_tasks": [
-        "Finish and validate contract drafts and immutable version APIs",
-        "Customer visibility and full contract lifecycle",
-        "Automatic contract refund obligations"
+        "Contract review, published versions and customer acceptance",
+        "Contract UI, document/signature integration and activation",
+        "Amendments, cancellation and automatic refund obligations"
       ],
       "token_limit": "User withdrew prior token ceiling; normal work authorized."
     },
@@ -1459,9 +1459,11 @@
     "latest_full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35527639080",
       "commit": "b7bc57b456c92c0094b88c17cf354df6b998f112",
-      "status": "fix_merged",
+      "status": "verified_full_ci",
       "finding": "Two browser flakes: runner/browser clock drift and real mount-time geography pagination reset. Unit/security checks passed; browser coverage was rejected by the flake gate.",
-      "resolution_pr": 315
+      "resolution_pr": 315,
+      "verification_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35530458605",
+      "verification_commit": "7f4cb2c1383c7ef5b46c5c39862f716cddff0616"
     }
   }
 }

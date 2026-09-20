@@ -171,7 +171,18 @@ it.each([
   'Completed',
 ])('rejects draft edits in %s', async (state) => {
   const row = await create();
-  await http.pool.query('UPDATE contracts SET state=$2 WHERE id=$1', [row.id, state]);
+  if (['AwaitingCustomerAcceptance', 'Accepted'].includes(state)) {
+    await http.pool.query("UPDATE contracts SET state='AwaitingStaffReview' WHERE id=$1", [row.id]);
+    await http.pool.query(
+      "INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,'contract-legal')",
+      [row.id, row.currentVersionId]
+    );
+    if (state === 'Accepted')
+      await http.pool.query(
+        "INSERT INTO contract_acceptances(contract_id,version_id,accepted_by) VALUES($1,$2,'contract-legal')",
+        [row.id, row.currentVersionId]
+      );
+  } else await http.pool.query('UPDATE contracts SET state=$2 WHERE id=$1', [row.id, state]);
   expect((await send('/' + row.id, 'PATCH', edit(row))).status).toBe(409);
 });
 it('enforces authentication, legal permission, current grants and step-up', async () => {
