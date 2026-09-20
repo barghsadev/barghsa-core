@@ -42,11 +42,42 @@ export interface CustomerInvoiceNode {
   lines: CustomerInvoiceLine[];
 }
 
+export interface InvoicePaymentActivity {
+  id: string;
+  source: 'wallet' | 'bank_receipt';
+  amount: string;
+  state: string;
+  createdAt: string;
+}
+export interface InvoiceReceiptActivity {
+  id: string;
+  amount: string;
+  state: string;
+  paymentDate: string;
+  payerReference: string;
+  customerNote: string | null;
+  rejectionReason: string | null;
+  confirmedAt: string | null;
+  createdAt: string;
+}
+export interface InvoiceRefundActivity {
+  id: string;
+  amount: string;
+  state: string;
+  destination: 'wallet' | 'external_bank';
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CustomerInvoiceDetails {
   viewedInvoiceId: string;
   originalInvoiceId: string;
   invoice: CustomerInvoiceNode;
   chain: CustomerInvoiceNode[];
+  /** Optional during rolling deployment of the expanded details API. */
+  payments?: InvoicePaymentActivity[];
+  bankReceipts?: InvoiceReceiptActivity[];
+  refunds?: InvoiceRefundActivity[];
 }
 
 export interface CustomerInvoiceListItem {

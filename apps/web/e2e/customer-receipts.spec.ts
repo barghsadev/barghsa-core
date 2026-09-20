@@ -37,6 +37,7 @@ async function setup(page: Page, locale: string, kind: 'wallet' | 'invoice', los
   await page.route(`**/api/wallet/${profileId}`, (route) =>
     route.fulfill({ json: { balance: '100', currency: 'IRR', onlineTopUpLimit: 0 } })
   );
+  const receipts = new Map<string, Record<string, unknown>>();
   const invoice = {
     invoiceId,
     role: 'original',
@@ -51,7 +52,22 @@ async function setup(page: Page, locale: string, kind: 'wallet' | 'invoice', los
   };
   await page.route(`**/api/invoices/${invoiceId}`, (route) =>
     route.fulfill({
-      json: { invoice, chain: [invoice], viewedInvoiceId: invoiceId, originalInvoiceId: invoiceId },
+      json: {
+        invoice,
+        chain: [invoice],
+        viewedInvoiceId: invoiceId,
+        originalInvoiceId: invoiceId,
+        payments: [],
+        refunds: [],
+        bankReceipts: Array.from(receipts.entries()).map(([id, body]) => ({
+          id,
+          ...body,
+          state: 'Submitted',
+          rejectionReason: null,
+          confirmedAt: null,
+          createdAt: '2026-09-01T12:00:00Z',
+        })),
+      },
     })
   );
   const uploads: Record<string, unknown>[] = [];
@@ -70,7 +86,6 @@ async function setup(page: Page, locale: string, kind: 'wallet' | 'invoice', los
   );
   await page.route('**/api/upload/*/record', (route) => route.fulfill({ status: 201, json: {} }));
   const submissions: { body: Record<string, unknown>; key: string | undefined }[] = [];
-  const receipts = new Map<string, Record<string, unknown>>();
   const endpoint =
     kind === 'wallet'
       ? `/api/wallet/${profileId}/bank-receipt-top-ups`
@@ -101,7 +116,7 @@ async function setup(page: Page, locale: string, kind: 'wallet' | 'invoice', los
   await page.getByTestId(`${prefix}-payer-ref`).fill('  TRACK-123  ');
   await page.getByTestId(`${prefix}-note`).fill('  Customer note  ');
   await page.getByTestId(`${prefix}-file`).setInputFiles(pdf);
-  return { form, prefix, uploads, submissions, receipts };
+  return { form, prefix, uploads, submissions, receipts, invoice };
 }
 
 for (const kind of ['wallet', 'invoice'] as const) {
@@ -126,6 +141,8 @@ for (const kind of ['wallet', 'invoice'] as const) {
       expect(submissions[1]).toEqual(submissions[0]);
       expect(uploads).toHaveLength(1);
       expect(receipts.size).toBe(1);
+      if (kind === 'invoice')
+        await expect(page.getByTestId('invoice-activity').locator('li')).toHaveCount(1);
       await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
       await expect(page.getByTestId(`${prefix}-file`)).toHaveValue('');
       if (kind === 'wallet')
@@ -140,6 +157,8 @@ for (const kind of ['wallet', 'invoice'] as const) {
       await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
       expect(uploads).toHaveLength(2);
       expect(receipts.size).toBe(2);
+      if (kind === 'invoice')
+        await expect(page.getByTestId('invoice-activity').locator('li')).toHaveCount(2);
       if (kind === 'wallet') expect(submissions[2]!.key).not.toBe(submissions[0]!.key);
       const accessibility = await new AxeBuilder({ page })
         .include(`[data-testid="${prefix}-form"]`)
@@ -169,4 +188,70 @@ for (const kind of ['wallet', 'invoice'] as const) {
       expect(submissions).toHaveLength(1);
     });
   }
+}
+
+for (const locale of ['en', 'fa']) {
+  test(`invoice activity remains readable and accessible on mobile (${locale})`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const { invoice } = await setup(page, locale, 'invoice');
+    await page.route(`**/api/invoices/${invoiceId}`, (route) =>
+      route.fulfill({
+        json: {
+          invoice,
+          chain: [invoice],
+          viewedInvoiceId: invoiceId,
+          originalInvoiceId: invoiceId,
+          payments: [
+            {
+              id: 'payment',
+              amount,
+              source: 'wallet',
+              state: 'Completed',
+              createdAt: '2026-09-01T12:00:00Z',
+            },
+          ],
+          bankReceipts: [
+            {
+              id: 'receipt',
+              amount,
+              state: 'Rejected',
+              paymentDate: '2026-09-01',
+              payerReference: 'TRACK-123',
+              customerNote: 'Customer note',
+              rejectionReason: 'Please upload a clearer receipt.',
+              confirmedAt: null,
+              createdAt: '2026-09-01T12:00:00Z',
+            },
+          ],
+          refunds: [
+            {
+              id: 'refund',
+              amount: '250000',
+              state: 'Processing',
+              destination: 'external_bank',
+              createdAt: '2026-09-01T12:00:00Z',
+              updatedAt: '2026-09-02T12:00:00Z',
+            },
+          ],
+        },
+      })
+    );
+    await page.reload();
+    const activity = page.getByTestId('invoice-activity');
+    await expect(activity.locator('li')).toHaveCount(3);
+    await expect(activity).toContainText(
+      locale === 'fa' ? '۱۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۱' : '10,000,000,000,000,001'
+    );
+    await expect(activity).toContainText('Please upload a clearer receipt.');
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+    ).toBe(true);
+    expect(
+      (await new AxeBuilder({ page }).include('[data-testid="invoice-activity"]').analyze())
+        .violations
+    ).toEqual([]);
+    await activity.screenshot({ path: `/tmp/barghsa-invoice-activity-${locale}.png` });
+  });
 }

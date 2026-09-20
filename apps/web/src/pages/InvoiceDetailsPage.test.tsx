@@ -142,6 +142,105 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     vi.restoreAllMocks();
   });
 
+  it.each(['en', 'fa'] as const)(
+    'shows localized activity, exact amounts and safe receipt text in %s',
+    async (locale) => {
+      document.documentElement.lang = locale;
+      const payload = adjustmentPayload();
+      payload.payments = [
+        {
+          id: 'payment',
+          source: 'wallet',
+          amount: '9007199254740993',
+          state: 'Completed',
+          createdAt: '2026-09-01T12:00:00Z',
+        },
+      ];
+      payload.bankReceipts = ['Submitted', 'UnderReview', 'Confirmed', 'Rejected'].map((state) => ({
+        id: state,
+        amount: '200',
+        state,
+        paymentDate: '2026-09-01',
+        payerReference: '<img src=x>',
+        customerNote: 'Customer note',
+        rejectionReason: state === 'Rejected' ? 'Unreadable' : null,
+        confirmedAt: null,
+        createdAt: '2026-09-01T12:00:00Z',
+      }));
+      payload.refunds = [
+        'Requested',
+        'Approved',
+        'Processing',
+        'Completed',
+        'Failed',
+        'Rejected',
+        'Cancelled',
+      ].map((state) => ({
+        id: state,
+        amount: '100',
+        state,
+        destination: state === 'Processing' ? 'external_bank' : 'wallet',
+        createdAt: '2026-09-01T12:00:00Z',
+        updatedAt: '2026-09-02T12:00:00Z',
+      }));
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (input: RequestInfo | URL) =>
+          String(input).endsWith(`/api/invoices/${ORIGINAL_ID}`)
+            ? { ok: true, status: 200, json: async () => payload }
+            : { ok: false, status: 404, json: async () => ({}) }
+        )
+      );
+      await act(async () => {
+        root.render(<InvoiceDetailsPage invoiceId={ORIGINAL_ID} />);
+      });
+      const activity = container.querySelector('[data-testid="invoice-activity"]')!;
+      expect(activity.querySelectorAll('li')).toHaveLength(12);
+      expect(activity.querySelector('img')).toBeNull();
+      expect(activity.textContent).toContain('<img src=x>');
+      expect(activity.textContent).toContain('Unreadable');
+      expect(activity.textContent).not.toContain('invoices.activity.');
+      expect(activity.textContent).toContain(locale === 'en' ? 'Bank receipts' : 'رسیدهای بانکی');
+      expect(activity.textContent).toContain(
+        locale === 'en' ? '9,007,199,254,740,993' : '۹٬۰۰۷٬۱۹۹٬۲۵۴٬۷۴۰٬۹۹۳'
+      );
+      expect(container.querySelector('[dir]')?.getAttribute('dir')).toBe(
+        locale === 'fa' ? 'rtl' : 'ltr'
+      );
+    }
+  );
+
+  it('retries an initial load failure and displays empty history', async () => {
+    let requests = 0;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL) => {
+        if (String(input).endsWith(`/api/invoices/${ORIGINAL_ID}`)) {
+          requests++;
+          return {
+            ok: requests > 1,
+            status: requests > 1 ? 200 : 500,
+            json: async () => adjustmentPayload(),
+          };
+        }
+        return { ok: false, status: 404, json: async () => ({}) };
+      })
+    );
+    await act(async () => {
+      root.render(<InvoiceDetailsPage invoiceId={ORIGINAL_ID} />);
+    });
+    expect(container.querySelector('[role="alert"]')).not.toBeNull();
+    await act(async () => {
+      (
+        container.querySelector('[data-testid="invoice-load-error"] button') as HTMLButtonElement
+      ).click();
+    });
+    expect(requests).toBe(2);
+    expect(container.textContent).toContain('No payments recorded.');
+    expect(container.textContent).toContain('No bank receipts submitted.');
+    expect(container.textContent).toContain('No refunds requested.');
+  });
+
   it('shows the original invoice and the replacement with its explanation', async () => {
     const payload = replacementPayload();
     payload.chain[0]!.dueAtOverrideReason = '<strong>Extra time requested</strong>';
