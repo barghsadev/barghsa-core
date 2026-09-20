@@ -28,7 +28,7 @@ Retain Vite SPA/ADR004, supported manual identity verification, approved pre-log
 
 ## Continuing efficiently
 
-See [kanban continuation status](../kanban/CONTINUATION.md) for candidate next tasks and the separate automation restart blockers. All five CI jobs pass for PR #305 at `faf9a2de2825e2bb829699aec2802d68c2d1f2a8`, including combined source coverage. PR #305 is merged at `0b768cf1`. Manual feature batches are authorized; PR #306 contains the first wallet-history batch. Automatic restart still requires durable-state reconciliation.
+See [kanban continuation status](../kanban/CONTINUATION.md) for candidate next tasks and the separate automation restart blockers. All five CI jobs pass for PR #305 at `faf9a2de2825e2bb829699aec2802d68c2d1f2a8`, including combined source coverage. PR #305 is merged at `0b768cf1`. Manual feature batches are authorized; PR #306 merged the first wallet-history batch at `999a1f44`. Refund storage and reservation limits are next. Automatic restart still requires durable-state reconciliation.
 
 Start only from a concrete remaining criterion. Use focused tests for edits, reuse matching source-bound evidence, and consolidate review/validation. Keep full API/worker setup builds separate from consumers in the same checkout, and never edit source/tests while their checks run. Preserve complete logs with concise summaries. Use RTK and the codebase graph when available.
 
@@ -36,6 +36,6 @@ On September 20 the user authorized repeated manual build/review/merge batches a
 
 ## CI repair complete
 
-[GitHub run 35498578584](https://github.com/barghsadev/barghsa-core/actions/runs/35498578584) passes tests with coverage thresholds, full browser/monorepo integrity, static security, complete-history secret scanning and combined source coverage. Its exact SHA matches the merged PR #305 source HEAD. CI now runs each unit suite once with coverage and at most two concurrent packages. Fixes cover build/test races, vulnerable dependencies, verified secret-scan false positives, database fixtures, SMS selectors, permission-race expectations and generated Python caches. Coverage and security gates remain enforced.
+[GitHub run 35498578584](https://github.com/barghsadev/barghsa-core/actions/runs/35498578584) passes tests with coverage thresholds, full browser/monorepo integrity, static security, complete-history secret scanning and combined source coverage. Its exact SHA matches the merged PR #305 source HEAD. CI now runs each unit suite once with coverage and at most two concurrent packages. Fixes cover build/test races, vulnerable dependencies, verified secret-scan false positives, database fixtures, SMS selectors, permission-race expectations and generated Python caches. Those baseline runs enforced coverage and security gates. The subsequent temporary PR policy is recorded in [CI fast mode](../kanban/CI-FAST-MODE.md).
 
 PR #305 is merged. The current batch and remaining criteria are recorded in [kanban batch status](../kanban/batches/2026-09-20-wallet-history.md). No deployment or scheduler change was performed.

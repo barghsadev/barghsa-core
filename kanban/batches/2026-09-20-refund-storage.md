@@ -1,7 +1,7 @@
 # Refund storage and reservation limits
 
 Branch: `codex/refund-storage-batch`.
-Status: prepared locally while PR #306 runs CI; not published, reviewed, or merged.
+Status: rebased onto merged PR #306; validation and independent review in progress.
 
 ## Task scope
 

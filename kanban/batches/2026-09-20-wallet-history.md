@@ -22,3 +22,7 @@ Full regression testing also exposed a CRM search mismatch: full-text parsing di
 ## Next batch
 
 Refund storage and reservation limits (`T-04.4.01.01`, `.03`) are prepared separately. Publish that batch after this PR merges, then continue refund workflow and invoice payment/receipt history aggregation (`T-04.3.02.01`, remaining `.03`/`.04`). Keep unmet refund aggregation explicit until its data model and workflow exist.
+
+## Merge confirmation
+
+PR #306 was merged by the user at `999a1f440a25d25a3d944e9233fbd3ba1bd99e87`; confirmed through GitHub CLI. Temporary PR CI policy is documented in `kanban/CI-FAST-MODE.md`. The user merged the final revision; this record does not claim an independent exact-HEAD approval for that final CI-policy commit.
