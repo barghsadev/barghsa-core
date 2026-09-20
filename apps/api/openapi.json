@@ -8725,6 +8725,126 @@
         ]
       }
     },
+    "/api/admin/wallet-refunds": {
+      "post": {
+        "operationId": "WalletRefundController_request",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "amount": {
+                    "description": "Positive exact int8 IRR",
+                    "pattern": "^[0-9]{1,19}$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "invoiceId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "invoiceId",
+                  "amount",
+                  "idempotencyKey",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Refund request and optional financial approval request ID. Amount is a decimal string."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Request an invoice refund to the customer wallet",
+        "tags": [
+          "Admin · Wallet refunds"
+        ]
+      }
+    },
+    "/api/admin/wallet-refunds/{id}/{action}": {
+      "post": {
+        "operationId": "WalletRefundController_decide",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "schema": {
+              "enum": [
+                "approve",
+                "reject",
+                "cancel",
+                "process"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "description": "Required for reject and cancel",
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Current refund state; processing returns Completed only after ledger credit and invoice transition commit."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve, reject, cancel or atomically process a wallet refund",
+        "tags": [
+          "Admin · Wallet refunds"
+        ]
+      }
+    },
     "/api/admin/wallet/bank-receipt-top-ups": {
       "get": {
         "operationId": "BankReceiptConfirmationController_list",
