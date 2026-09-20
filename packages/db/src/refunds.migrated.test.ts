@@ -2,6 +2,8 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { createMigratedTestDb } from './test/migrated-db';
 import { refunds } from './schema/refunds';
+import type { Pool, PoolClient } from 'pg';
+import { postWalletCredit } from './wallet-credit';
 
 let fixture: Awaited<ReturnType<typeof createMigratedTestDb>>;
 beforeAll(async () => {
@@ -34,8 +36,36 @@ async function request(owner: Invoice, amount: string, destination = 'wallet') {
     )
   ).rows[0] as { id: string; idempotency_key: string; amount: string; state: string };
 }
-const setState = (id: string, state: string) =>
-  fixture.pool.query('UPDATE refunds SET state=$2 WHERE id=$1', [id, state]);
+async function credit(id: string, client: Pool | PoolClient) {
+  const row = (await client.query('SELECT * FROM refunds WHERE id=$1', [id])).rows[0];
+  await client.query('INSERT INTO wallets(profile_id) VALUES($1) ON CONFLICT DO NOTHING', [
+    row.profile_id,
+  ]);
+  await postWalletCredit(
+    client,
+    { id: row.profile_id, archived: false },
+    row.profile_id,
+    BigInt(row.amount),
+    { type: 'refund', refId: row.id },
+    `refund-wallet-credit:${row.id}`
+  );
+}
+async function setState(id: string, state: string) {
+  const client = await fixture.pool.connect();
+  try {
+    await client.query('BEGIN');
+    const row = (await client.query('SELECT state FROM refunds WHERE id=$1', [id])).rows[0];
+    if (state === 'Completed' && row.state === 'Processing') await credit(id, client);
+    const result = await client.query('UPDATE refunds SET state=$2 WHERE id=$1', [id, state]);
+    await client.query('COMMIT');
+    return result;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+}
 
 it('creates the schema through the production journal and preserves exact int8 amounts', async () => {
   const owner = await invoice('9007199254740993');
@@ -116,6 +146,7 @@ it('completes multiple refunds per invoice in one statement without double count
   const ids = [first.id, second.id, third.id];
   await fixture.pool.query("UPDATE refunds SET state='Processing' WHERE id=ANY($1::uuid[])", [ids]);
   for (let attempt = 0; attempt < 2; attempt++) {
+    for (const id of ids) await credit(id, fixture.pool);
     await fixture.pool.query("UPDATE refunds SET state='Completed' WHERE id=ANY($1::uuid[])", [
       ids,
     ]);
@@ -150,6 +181,7 @@ it('protects reservations against invoice edits and rolls back completion with i
   const client = await fixture.pool.connect();
   try {
     await client.query('BEGIN');
+    await credit(row.id, client);
     await client.query("UPDATE refunds SET state='Completed' WHERE id=$1", [row.id]);
     await client.query('ROLLBACK');
   } finally {

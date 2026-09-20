@@ -109,12 +109,31 @@ it('posts partial and full refunds once and links their original payment evidenc
     replay = await request(body);
   expect(replay.id).toBe(refund.id);
   expect(refund.approvalRequestId).toBeNull();
+  expect(refund.transaction).toBeNull();
   expect((await decide(refund.id, 'process')).status).toBe(409);
-  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  const approvals = await Promise.all([decide(refund.id, 'approve'), decide(refund.id, 'approve')]);
+  expect(approvals.map((r) => r.status)).toEqual([200, 200]);
+  const approved = (await approvals[0]!.json()) as RefundDto;
+  expect(((await approvals[1]!.json()) as RefundDto).transaction).toEqual(approved.transaction);
+  expect(approved.transaction).toMatchObject({
+    state: 'Pending',
+    walletTransactionId: null,
+    finishedAt: null,
+  });
+  expect(await balances(f)).toEqual({ refunded_amount: '0', state: 'Paid', posted_balance: '0' });
   for (let attempt = 0; attempt < 2; attempt++) {
     const response = await decide(refund.id, 'process');
     expect(response.status).toBe(200);
-    expect(await response.json()).toMatchObject({ state: 'Completed', amount: '40' });
+    expect(await response.json()).toMatchObject({
+      state: 'Completed',
+      amount: '40',
+      transaction: {
+        id: approved.transaction!.id,
+        state: 'Completed',
+        walletTransactionId: expect.any(String),
+        finishedAt: expect.any(String),
+      },
+    });
   }
   expect(await balances(f)).toEqual({
     refunded_amount: '40',
@@ -148,6 +167,56 @@ it('posts partial and full refunds once and links their original payment evidenc
       )
     ).rows
   ).toHaveLength(2);
+});
+
+it.each(['reject', 'cancel'])(
+  'closes an approved transaction on %s without moving money',
+  async (action) => {
+    const f = await invoice(),
+      refund = await request(requestBody(f.id));
+    const approval = await decide(refund.id, 'approve');
+    expect(approval.status).toBe(200);
+    const approved = (await approval.json()) as RefundDto;
+    const response = await decide(refund.id, action, {
+      reason: 'Finance closed the request before processing',
+    });
+    expect(response.status).toBe(200);
+    const outcome = action === 'reject' ? 'Rejected' : 'Cancelled';
+    expect(await response.json()).toMatchObject({
+      state: outcome,
+      transaction: {
+        id: approved.transaction!.id,
+        state: outcome,
+        walletTransactionId: null,
+        finishedAt: expect.any(String),
+      },
+    });
+    expect((await decide(refund.id, 'process')).status).toBe(409);
+    expect(await balances(f)).toEqual({ refunded_amount: '0', state: 'Paid', posted_balance: '0' });
+  }
+);
+
+it('rolls back the pending transaction if the approval audit cannot persist', async () => {
+  const f = await invoice(),
+    refund = await request(requestBody(f.id));
+  await http.pool.query(
+    "CREATE FUNCTION fail_pending_refund_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='refund.approved' THEN RAISE EXCEPTION 'test audit unavailable'; END IF; RETURN NEW; END; $$; CREATE TRIGGER fail_pending_refund_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_pending_refund_audit()"
+  );
+  try {
+    expect((await decide(refund.id, 'approve')).status).toBe(500);
+    expect(
+      (await http.pool.query('SELECT state FROM refunds WHERE id=$1', [refund.id])).rows
+    ).toEqual([{ state: 'Requested' }]);
+    expect(
+      (await http.pool.query('SELECT id FROM refund_transactions WHERE refund_id=$1', [refund.id]))
+        .rows
+    ).toEqual([]);
+    expect(await balances(f)).toEqual({ refunded_amount: '0', state: 'Paid', posted_balance: '0' });
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER fail_pending_refund_audit ON audit_log; DROP FUNCTION fail_pending_refund_audit()'
+    );
+  }
 });
 
 it('preserves bigint amounts and validates requests before writing', async () => {
@@ -306,6 +375,7 @@ it('rolls the credit and invoice counter back when the completion audit fails', 
     expect(await failed.json()).toMatchObject({
       state: 'Failed',
       retry: { attempts: 1, lastErrorCode: 'posting_failed' },
+      transaction: { state: 'Pending', walletTransactionId: null, finishedAt: null },
     });
     expect(await balances(f)).toEqual({ refunded_amount: '0', state: 'Paid', posted_balance: '0' });
     expect(
