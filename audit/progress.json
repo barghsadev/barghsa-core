@@ -1430,23 +1430,24 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/provider-proof-cleanup",
-      "status": "validating",
-      "record": "kanban/batches/2026-09-20-provider-proof-cleanup.md",
+      "branch": "codex/document-lifecycle",
+      "status": "review_fix_validated_pending_final_review_ci",
+      "record": "kanban/batches/2026-09-20-document-lifecycle.md",
       "previous_batch": {
-        "pr": 317,
+        "pr": 318,
         "status": "merged",
-        "merge_commit_sha": "50620a01b4d5398c1f0cce7284b0f167ca8968cb",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/317#issuecomment-5752243040",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35533547908"
+        "merge_commit_sha": "420a69d6043dd59cf46d08397c64460752bdce84",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/318#issuecomment-5752409614",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35535166515"
       },
       "remaining_tasks": [
-        "Database cleanup and worker heartbeat CI follow-up",
-        "Document lifecycle prerequisite for contract signatures",
-        "Contract UI, document/signature integration and activation",
+        "Document lifecycle backend and exact contract-version linking, in progress",
+        "Configured malware scanner, document UI and retention policy",
+        "Contract UI, signatures and activation",
         "Amendments, cancellation and automatic refund obligations"
       ],
-      "token_limit": "User withdrew prior token ceiling; normal work authorized."
+      "token_limit": "User withdrew prior token ceiling; normal work authorized.",
+      "validation": "111 API, 10 database and 9 permission tests; builds, API types, migration snapshot, OpenAPI and backlog checks pass. Cross-version/role lineage review correction tested."
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",
@@ -1460,10 +1461,13 @@
     "latest_full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35532300421",
       "commit": "f27e982e8065081d79bab0ca92669cae6ffd5a21",
-      "status": "locally_validated",
+      "status": "verified",
       "finding": "All 830 database assertions passed; provider-delivery-proof afterAll timed out dropping both databases at the default 10 seconds. Browser/integrity and security checks passed.",
-      "resolution": "Provider cleanup uses a specific 30-second hook limit. PR318 run35534682919 passed all837DB tests but exposed a 150ms notification lease test expiry; control only heartbeat intervals with the normal60-second lease and real database/expiry clock. Focused20delivery tests and full460worker tests with coverage pass. Updated exact-HEAD review and CI pending.",
-      "followup_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35534682919"
+      "resolution": "PR318 merged after exact-HEAD approval. Its full main run passes all five jobs, including browser validation, unit coverage and combined changed-source coverage.",
+      "followup_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35534682919",
+      "resolution_pr": 318,
+      "verification_pr_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35535166515",
+      "verification_main_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35536182258"
     }
   }
 }

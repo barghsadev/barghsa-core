@@ -421,6 +421,13 @@
       "when": 1791331200042,
       "tag": "0139_contract_review",
       "breakpoints": true
+    },
+    {
+      "idx": 140,
+      "version": "7",
+      "when": 1791331200043,
+      "tag": "0140_document_lifecycle",
+      "breakpoints": true
     }
   ]
 }

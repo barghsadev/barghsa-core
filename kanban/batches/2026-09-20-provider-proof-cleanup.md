@@ -2,7 +2,7 @@
 
 Branch: `codex/provider-proof-cleanup`.
 
-Status: implemented and locally validated; independent review and CI pending.
+Status: merged in [PR #318](https://github.com/barghsadev/barghsa-core/pull/318) at `420a69d6043dd59cf46d08397c64460752bdce84` after final exact-HEAD approval and all five checks passed.
 
 ## Problem and change
 
@@ -20,5 +20,7 @@ The first PR #318 run [35534682919](https://github.com/barghsadev/barghsa-core/a
 - `pnpm --filter @barghsa/worker test:coverage`: all 460 tests across 38 files pass; 97.74% lines and 82.84% branches, existing gates pass.
 - Changed-file ESLint/Prettier and backlog validation pass.
 - Independent approval and all active GitHub checks are required before merge. A subsequent full main run must verify the repair under shared CI load; local success does not prove the intermittent timeout cannot recur.
+
+Final review approved `4ce095781ce60774d1aa90a2be10bb748db6c554` in [the durable review](https://github.com/barghsadev/barghsa-core/pull/318#issuecomment-5752409614). [Run 35535166515](https://github.com/barghsadev/barghsa-core/actions/runs/35535166515) passed all five checks. Merge and durable approval were read back and verified. A full main run remains a separate post-merge verification.
 
 This repair completes no additional product task. Continue the E-05 document lifecycle dependency for contract signatures after merge. Scheduler and historical supervisor state remain unchanged.

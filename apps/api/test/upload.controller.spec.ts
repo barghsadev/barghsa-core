@@ -10,6 +10,7 @@ import { StorageObjectNotFound } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../src/storage/index.js';
 import { ProfilesService } from '../src/profiles/profiles.service.js';
 import { UploadController } from '../src/upload/upload.controller.js';
+import { UploadService } from '../src/upload/upload.service.js';
 import {
   UploadPolicyResolver,
   type EffectiveUploadPolicy,
@@ -109,6 +110,7 @@ describe('UploadController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UploadController],
       providers: [
+        UploadService,
         {
           provide: ProfilesService,
           useValue: {

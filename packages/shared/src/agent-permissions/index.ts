@@ -53,6 +53,7 @@ export const AGENT_PERMISSIONS = [
   // ── Consultation / Documents ─────────────────────────────────
   'consultation:view',
   'documents:view',
+  'documents:write',
   'cancellation:request',
 
   // ── Addresses ────────────────────────────────────────────────
@@ -89,6 +90,7 @@ const PERMISSION_MATRIX: Record<AgentRole, ReadonlySet<AgentPermission>> = {
     'wallet:view',
     'consultation:view',
     'documents:view',
+    'documents:write',
     'cancellation:request',
     'addresses:view',
     'addresses:edit',
