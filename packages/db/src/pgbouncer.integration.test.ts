@@ -183,8 +183,10 @@ it('attempts direct-pool shutdown even when main-pool shutdown fails', async () 
 });
 
 it('bounds waiting for a backend and recovers with a new connection', async () => {
+  // The lock holder is fixture setup, not the connection whose deadline is tested.
+  const ownerPool = await pool();
+  const owner = await ownerPool.connect();
   const db = await pool({ connectionTimeoutMillis: 200 });
-  const owner = await db.connect();
   try {
     await owner.query('BEGIN');
     const started = Date.now();

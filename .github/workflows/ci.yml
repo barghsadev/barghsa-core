@@ -158,16 +158,16 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       # Every workspace coverage script runs the same test suite with coverage enabled.
-      # Run it once; the previous plain run duplicated every test and database fixture.
+      # Run it once, with at most two packages starting database/server fixtures together.
       - name: Run tests with coverage and threshold enforcement
         id: coverage
         env:
           BARGHSA_TEST_PREBUILT: '1'
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            pnpm turbo run test:coverage --filter="...[origin/main]" --filter=@barghsa/web --filter=@barghsa/ui --filter=@barghsa/shared --filter=@barghsa/i18n
+            pnpm turbo run test:coverage --concurrency=2 --filter="...[origin/main]" --filter=@barghsa/web --filter=@barghsa/ui --filter=@barghsa/shared --filter=@barghsa/i18n
           else
-            pnpm test:coverage
+            pnpm test:coverage --concurrency=2
           fi
       - name: Upload coverage reports
         if: always()
