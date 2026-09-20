@@ -1,8 +1,9 @@
+import { retainUnmeasuredBranches } from './conservative-branch-coverage.mjs';
 import { createCoverageMap } from 'istanbul-lib-coverage';
 import { alignProcessBranches } from './align-process-coverage.mjs';
 import { V8CoverageProvider } from '@vitest/coverage-v8/dist/provider.js';
 import { mergeProcessCovs } from '@bcoe/v8-coverage';
-import { mkdir, readdir, readFile, rm } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readProcessCoverageSource } from './process-coverage-source.mjs';
@@ -63,6 +64,15 @@ export class ProcessV8CoverageProvider extends V8CoverageProvider {
     this.ctx.logger.log(
       `Merged ${files.length} ${this.processLabel}-process coverage files (${merged.result.length} compiled modules)`
     );
+    const unmeasured = retainUnmeasuredBranches(coverage);
+    await writeFile(
+      resolve(this.options.reportsDirectory, 'unmeasured-branches.json'),
+      JSON.stringify(unmeasured, null, 2) + '\n'
+    );
+    if (unmeasured.length)
+      this.ctx.logger.log(
+        `Retained ${unmeasured.length} inconsistent source-map branches as uncovered; see unmeasured-branches.json`
+      );
     return coverage;
   }
 }

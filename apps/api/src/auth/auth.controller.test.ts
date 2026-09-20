@@ -28,6 +28,7 @@ function fixture() {
     register: vi.fn(),
     forceChangePassword: vi.fn(),
     resetPassword: vi.fn(),
+    verifyResetOtp: vi.fn(),
     activateStaff: vi.fn(),
     forgotPassword: vi.fn(),
     sendChangeUsernameOtp: vi.fn(),
@@ -346,4 +347,81 @@ describe('authentication input and step-up failures', () => {
       expect.stringMatching(/^[a-f0-9]{64}$/)
     );
   });
+});
+
+describe('authentication network metadata at the trusted server boundary', () => {
+  const password = 'Strong-Password-123!';
+  const operations = [
+    [
+      'register',
+      'register',
+      { username: 'user@example.test', password, tosVersionId: challengeId },
+    ],
+    ['forgotPassword', 'forgotPassword', { username: 'user@example.test' }],
+    [
+      'forceChangePassword',
+      'forceChangePassword',
+      { passwordChangeToken: 'change', newPassword: password },
+    ],
+    ['verifyResetOtp', 'verifyResetOtp', { challengeId, otp: '123456' }],
+    ['resetPassword', 'resetPassword', { challengeId, otp: '123456', newPassword: password }],
+    ['verifyOtp', 'completeRegistration', { challengeId, otp: '123456' }],
+    ['verifyLoginOtp', 'completeLogin', { challengeId, otp: '123456', trustDevice: false }],
+    ['sendChangeUsernameOtp', 'sendChangeUsernameOtp', { newUsername: 'next@example.test' }],
+    [
+      'changeUsername',
+      'completeChangeUsername',
+      {
+        newUsername: 'next@example.test',
+        otpChallengeId: challengeId,
+        otp: '123456',
+        previousOtp: '654321',
+      },
+    ],
+    [
+      'sendAddContactOtp',
+      'sendAddContactOtp',
+      { contactType: 'email', contactValue: 'next@example.test' },
+    ],
+    [
+      'addContact',
+      'completeAddContact',
+      {
+        contactType: 'email',
+        contactValue: 'next@example.test',
+        otpChallengeId: challengeId,
+        otp: '123456',
+      },
+    ],
+  ] as const;
+  for (const [method, service, body] of operations) {
+    it.each([
+      { socket: { remoteAddress: '192.0.2.44' }, expected: '192.0.2.44' },
+      { socket: {}, expected: 'unknown' },
+      { expected: 'unknown' },
+    ])(`${method} never trusts a forged forwarded address: %j`, async (sample) => {
+      const { controller, auth, res } = fixture();
+      await controller[method](
+        body,
+        request({ ...sample, headers: { 'x-forwarded-for': 'spoofed' } }),
+        res
+      );
+      const spy = auth[service];
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy.mock.calls[0]).toContain(sample.expected);
+      expect(spy.mock.calls[0]).not.toContain('spoofed');
+    });
+  }
+  it.each([
+    ['register', { username: 'user@example.test', password: 'weak', tosVersionId: challengeId }],
+    ['forceChangePassword', { passwordChangeToken: 'change', newPassword: 'weak' }],
+  ] as const)(
+    '%s rejects a weak password with the specific validation status and no side effects',
+    async (method, body) => {
+      const { controller, auth, res, cookies } = fixture();
+      await expect(controller[method](body, request(), res)).rejects.toMatchObject({ status: 422 });
+      expect(auth[method]).not.toHaveBeenCalled();
+      expect(cookies.cookie).not.toHaveBeenCalled();
+    }
+  );
 });

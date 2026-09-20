@@ -895,3 +895,87 @@ describe('GiftCodeService (T-09.12.03)', () => {
     });
   });
 });
+
+describe('gift-code invalid edits and missing persisted acknowledgements', () => {
+  it.each([
+    { eligibility: 'unknown' },
+    { validFrom: 'not-a-date' },
+    { validUntil: 'not-a-date' },
+    { validFrom: '2026-02-01', validUntil: '2026-01-01' },
+    { minOrderAmount: '-1' },
+    { minOrderAmount: '1.2' },
+    { categories: null },
+    { categories: ['bad category!'] },
+    { eligibility: 'profile', profileIds: ['invalid-profile'] },
+  ])('rejects invalid create and edit fields without committing: %j', async (fields) => {
+    const { pool, router } = makeDb();
+    router.on('WHERE id = $1', () => ({ rows: [giftRow()] }));
+    service = await loadService(pool);
+    await expect(service.create({ ...createInput, ...fields } as never)).rejects.toMatchObject({
+      status: 400,
+    });
+    await expect(
+      service.update(CODE_ID, { ...fields, actor: createInput.actor, ip: 'test' } as never)
+    ).rejects.toMatchObject({ status: 400 });
+    expect(router.queries('INSERT INTO gift_codes')).toHaveLength(0);
+    expect(router.queries('UPDATE gift_codes')).toHaveLength(0);
+    expect(router.calls.filter((c) => c.sql === 'COMMIT')).toHaveLength(0);
+  });
+  it('persists an explicit limited validity window, category and usage limits as one audited edit', async () => {
+    const { pool, router } = makeDb();
+    router.on('WHERE id = $1', () => ({
+      rows: [giftRow({ valid_until: '2026-06-01T00:00:00.000Z' })],
+    }));
+    router.on('GROUP BY gc.id', () => ({ rows: [giftRow()] }));
+    router.on('UPDATE gift_codes', () => ({ rows: [], rowCount: 1 }));
+    service = await loadService(pool);
+    await service.update(CODE_ID, {
+      actor: createInput.actor,
+      ip: 'test',
+      validFrom: '2026-02-01T00:00:00.000Z',
+      validUntil: '2026-05-01T00:00:00.000Z',
+      minOrderAmount: '100',
+      categories: [' electricity ', 'electricity'],
+      totalLimit: 10,
+      perProfileLimit: 2,
+    });
+    const values = router.queries('UPDATE gift_codes')[0]!.values;
+    expect(values).toEqual(
+      expect.arrayContaining([
+        new Date('2026-02-01T00:00:00.000Z'),
+        new Date('2026-05-01T00:00:00.000Z'),
+        '100',
+        10,
+        2,
+        ['electricity'],
+      ])
+    );
+    expect(router.queries('INSERT INTO audit_log')).toHaveLength(1);
+    expect(router.calls.at(-1)!.sql).toBe('COMMIT');
+  });
+  it.each(['update', 'setStatus'] as const)(
+    'does not acknowledge %s of a missing gift code',
+    async (operation) => {
+      const { pool, router } = makeDb();
+      service = await loadService(pool);
+      const action =
+        operation === 'update'
+          ? service.update(CODE_ID, { actor: createInput.actor, ip: 'test', code: 'NEW' })
+          : service.setStatus(CODE_ID, 'inactive', createInput.actor, 'test');
+      await expect(action).rejects.toMatchObject({ status: 404 });
+      expect(router.calls.filter((c) => c.sql === 'COMMIT')).toHaveLength(0);
+    }
+  );
+  it.each([{ code: '23505' }, { code: '23503' }])(
+    'rolls back a raced database constraint %j',
+    async (error) => {
+      const { pool, router } = makeDb();
+      router.on('INSERT INTO gift_codes', () => {
+        throw error;
+      });
+      service = await loadService(pool);
+      await expect(service.create(createInput)).rejects.toMatchObject({ status: 409 });
+      expect(router.calls.at(-1)!.sql).toBe('ROLLBACK');
+    }
+  );
+});

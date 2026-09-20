@@ -14,6 +14,7 @@ import {
   resolvePaymentGatewayCallbackUrl,
   resolvePaymentGatewayMerchantId,
   resolvePaymentGatewayStartUrl,
+  resolvePaymentGatewayWebhookSecret,
   resolveZarinpalUnverifiedUrl,
   resolveZarinpalVerifyUrl,
   type PaymentGatewayFetch,
@@ -31,6 +32,17 @@ const PRODUCTION_CALLBACK_ENV = {
   NODE_ENV: 'production',
   API_PUBLIC_URL: 'https://api.barghsa.test',
 } as const;
+
+it('requires the production merchant and preserves trimmed callback secrets', () => {
+  expect(() => resolvePaymentGatewayMerchantId({ NODE_ENV: 'production' })).toThrow('required');
+  expect(resolvePaymentGatewayWebhookSecret({ PAYMENT_GATEWAY_WEBHOOK_SECRET: '  secret  ' })).toBe(
+    'secret'
+  );
+  expect(resolvePaymentGatewayWebhookSecret({})).toBe('');
+  expect(() =>
+    resolvePaymentGatewayCallbackUrl({ NODE_ENV: 'test', API_PUBLIC_URL: 'ftp://example.test' })
+  ).toThrow('unsupported URL scheme');
+});
 
 describe('RedirectPaymentGateway (T-04.2.02.01)', () => {
   const originalStart = process.env.PAYMENT_GATEWAY_START_URL;
@@ -826,4 +838,199 @@ describe('ZarinPal recovery amount integrity', () => {
       });
     });
   }
+});
+
+describe('ZarinPal recovery and verification failure boundaries', () => {
+  function response(body: unknown, status = 200, invalidJson = false) {
+    const fetch = vi.fn<PaymentGatewayFetch>().mockResolvedValue({
+      ok: status >= 200 && status < 300,
+      status,
+      json: invalidJson
+        ? vi.fn().mockRejectedValue(new SyntaxError('invalid JSON'))
+        : vi.fn().mockResolvedValue(body),
+    });
+    return {
+      fetch,
+      gateway: createZarinpalPaymentGateway({ merchantId: 'merchant', fetchImpl: fetch }),
+    };
+  }
+  const recovery = {
+    ...START_REQUEST,
+    callbackUrl: 'https://app.example.test/callback?orderId=tx-001',
+  };
+  it.each([
+    null,
+    {},
+    { data: null },
+    { data: { authorities: null } },
+    { data: { authorities: [null, [], 'invalid', {}, { authority: 4 }, { authority: ' ' }] } },
+    { data: { authorities: [{ authority: 'A', amount: 250000 }] } },
+    {
+      data: {
+        authorities: [
+          {
+            authority: 'A',
+            amount: 250000,
+            callback_url: 'https://other.example.test/callback?orderId=tx-001',
+          },
+        ],
+      },
+    },
+    {
+      data: {
+        authorities: [
+          {
+            authority: 'A',
+            amount: 250000,
+            callback_url: 'https://app.example.test/other?orderId=tx-001',
+          },
+        ],
+      },
+    },
+    {
+      data: {
+        authorities: [
+          {
+            authority: 'A',
+            amount: 250000,
+            callback_url: 'https://app.example.test/callback?orderId=other',
+          },
+        ],
+      },
+    },
+    {
+      data: {
+        authorities: ['A', 'B'].map((authority) => ({
+          authority,
+          amount: 250000,
+          callbackUrl: recovery.callbackUrl,
+        })),
+      },
+    },
+  ])('does not guess a session from missing, mismatched or ambiguous inquiry %j', async (body) => {
+    const { gateway, fetch } = response(body);
+    await expect(gateway.recoverPayment(recovery)).resolves.toBeNull();
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch.mock.calls[0]![0]).toContain('unVerified.json');
+  });
+  it('accepts the camel-case callback and caches the uniquely bound recovery', async () => {
+    const { gateway, fetch } = response({
+      data: {
+        authorities: [{ authority: ' A ', amount: '250000', callbackUrl: recovery.callbackUrl }],
+      },
+    });
+    const result = await gateway.recoverPayment(recovery);
+    expect(result).toMatchObject({ authority: 'A' });
+    await expect(gateway.recoverPayment(recovery)).resolves.toEqual(result);
+    await expect(gateway.startPayment(recovery)).resolves.toEqual(result);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+  it.each(['startPayment', 'recoverPayment', 'verifyPayment'] as const)(
+    '%s preserves uncertain transport and JSON failures',
+    async (method) => {
+      for (const [status, invalidJson] of [
+        [503, false],
+        [200, true],
+      ] as const) {
+        const { gateway } = response({}, status, invalidJson);
+        await expect(gateway[method]({ ...recovery, authority: 'A' })).rejects.toThrow();
+      }
+    }
+  );
+  it.each([
+    [{ data: { code: 100, ref_id: 123 } }, { paid: true, providerRefId: '123' }],
+    [
+      { data: { code: 101, ref_id: 'already-paid' } },
+      { paid: true, providerRefId: 'already-paid' },
+    ],
+    [{ data: { code: 100 } }, { paid: true, providerRefId: null }],
+    [{ data: { code: -1, ref_id: 'untrusted' } }, { paid: false, providerRefId: null }],
+    [null, { paid: false, providerRefId: null }],
+  ])('does not turn an unconfirmed verification response into paid: %j', async (body, expected) => {
+    const { gateway } = response(body);
+    await expect(gateway.verifyPayment({ ...recovery, authority: 'A' })).resolves.toEqual(expected);
+  });
+  it.each([-1n, 0n, 9007199254740992n])(
+    'never sends an invalid or lossy amount %s',
+    async (amountIrR) => {
+      const { gateway, fetch } = response({});
+      for (const method of ['startPayment', 'recoverPayment', 'verifyPayment'] as const)
+        await expect(gateway[method]({ ...recovery, amountIrR, authority: 'A' })).rejects.toThrow();
+      expect(fetch).not.toHaveBeenCalled();
+    }
+  );
+});
+
+describe('payment adapter configuration boundaries', () => {
+  it.each(['http', 'zarinpal'] as const)(
+    'uses configured %s endpoints and bounded timeouts',
+    async (adapter) => {
+      for (const [timeout, expected] of [
+        ['1000', 1000],
+        ['60001', 15000],
+        ['invalid', 15000],
+        [' ', 15000],
+      ] as const) {
+        const timer = vi
+          .spyOn(AbortSignal, 'timeout')
+          .mockReturnValue(new AbortController().signal);
+        try {
+          const fetch = vi.fn<PaymentGatewayFetch>().mockResolvedValue({
+            ok: true,
+            status: 200,
+            json: async () => ({
+              authority: 'A',
+              redirectUrl: 'https://psp.example.test/checkout/A',
+              paid: true,
+              refId: 'ref',
+              data: { code: 100, authority: 'A', ref_id: 'ref' },
+            }),
+          });
+          const gateway = createPaymentGatewayFromEnv({
+            fetchImpl: fetch,
+            env: {
+              NODE_ENV: 'production',
+              API_PUBLIC_URL: 'https://api.example.test',
+              PAYMENT_GATEWAY_ADAPTER: adapter,
+              PAYMENT_GATEWAY_MERCHANT_ID: 'merchant',
+              PAYMENT_GATEWAY_API_KEY: 'test-key',
+              PAYMENT_GATEWAY_START_URL: 'https://psp.example.test/checkout',
+              PAYMENT_GATEWAY_REQUEST_URL: 'https://psp.example.test/request',
+              PAYMENT_GATEWAY_VERIFY_URL: 'https://psp.example.test/verify',
+              PAYMENT_GATEWAY_INQUIRY_URL: 'https://psp.example.test/inquiry',
+              PAYMENT_GATEWAY_TIMEOUT_MS: timeout,
+            },
+          });
+          await expect(gateway.startPayment(START_REQUEST)).resolves.toMatchObject({
+            authority: 'A',
+          });
+          await expect(
+            gateway.verifyPayment({ ...START_REQUEST, authority: 'A' })
+          ).resolves.toEqual({ paid: true, providerRefId: 'ref' });
+          expect(fetch.mock.calls.map((call) => call[0])).toEqual([
+            'https://psp.example.test/request',
+            'https://psp.example.test/verify',
+          ]);
+          expect(timer).toHaveBeenCalledWith(expected);
+        } finally {
+          timer.mockRestore();
+        }
+      }
+    }
+  );
+  it('rejects unknown adapters and ignores malformed optional allow-list derivations', () => {
+    expect(() => resolvePaymentGatewayAdapterName({ PAYMENT_GATEWAY_ADAPTER: 'typo' })).toThrow(
+      'Unknown'
+    );
+    expect(
+      resolvePaymentGatewayAllowedHosts({}, [
+        'invalid URL',
+        undefined,
+        'https://valid.example.test/path',
+      ])
+    ).toEqual(['valid.example.test']);
+    expect(resolvePaymentGatewayMerchantId({})).toBe('barghsa-dev-merchant');
+    expect(resolveZarinpalUnverifiedUrl('invalid URL')).toMatch(/^https:.*unVerified.json$/);
+    expect(resolveZarinpalVerifyUrl('invalid URL')).toMatch(/^https:.*verify.json$/);
+  });
 });

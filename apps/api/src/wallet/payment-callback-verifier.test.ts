@@ -74,3 +74,57 @@ describe('verifyPaymentCallbackSignature (T-04.2.02.02)', () => {
     ).toEqual({ ok: false, reason: 'replayed' });
   });
 });
+
+it.each(['timestamp', 'signature'] as const)(
+  'requires the callback %s header independently',
+  (field) => {
+    const headers = {
+      eventId: EVENT_ID,
+      timestamp: '1700000000',
+      signature: 'v1,AAAA',
+      [field]: undefined,
+    };
+    expect(verifyPaymentCallbackSignature(PAYLOAD, headers, SECRET, 1700000000)).toEqual({
+      ok: false,
+      reason: 'missing_headers',
+    });
+  }
+);
+it.each(['NaN', 'Infinity', '1700000000.5'])(
+  'rejects a nonintegral or nonfinite timestamp %s',
+  (timestamp) => {
+    expect(
+      verifyPaymentCallbackSignature(
+        PAYLOAD,
+        { eventId: EVENT_ID, timestamp, signature: 'v1,AAAA' },
+        SECRET,
+        1700000000
+      )
+    ).toEqual({ ok: false, reason: 'tampered' });
+  }
+);
+it.each(['v2,AAAA', 'v1,', 'v1,***'])(
+  'rejects unsupported or empty signature candidates %s',
+  (signature) => {
+    expect(
+      verifyPaymentCallbackSignature(
+        PAYLOAD,
+        { eventId: EVENT_ID, timestamp: '1700000000', signature },
+        SECRET,
+        1700000000
+      )
+    ).toEqual({ ok: false, reason: 'tampered' });
+  }
+);
+it('accepts a later valid rotated signature without accepting an earlier invalid candidate', () => {
+  const timestamp = '1700000000';
+  const valid = signPaymentCallback(PAYLOAD, EVENT_ID, timestamp, SECRET);
+  expect(
+    verifyPaymentCallbackSignature(
+      PAYLOAD,
+      { eventId: EVENT_ID, timestamp, signature: 'v1,AAAA,' + valid },
+      SECRET,
+      1700000000
+    )
+  ).toEqual({ ok: true });
+});
