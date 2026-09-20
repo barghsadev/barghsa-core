@@ -29,7 +29,8 @@ afterAll(async () => {
     await management?.end();
     rmSync(previous, { recursive: true, force: true });
   }
-});
+  // Both migrated databases must be dropped; shared CI disk contention can exceed 10s.
+}, 30000);
 
 for (const channel of ['email', 'sms']) {
   it(`${channel}: upgrades legacy providers without downtime or invented proof; blocks old writers`, async () => {
