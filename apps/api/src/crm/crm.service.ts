@@ -239,7 +239,9 @@ export class CrmService {
             OR lp.legal_name ILIKE $${paramIndex + 1}))
       )`);
       const ilikePattern = `%${searchTerm.replace(/[\\%_]/g, '\\$&')}%`;
-      params.push(searchTerm, ilikePattern);
+      // Full-text parsing discards these characters. Such searches must use
+      // only the escaped literal pattern, or the OR branch broadens the match.
+      params.push(/[\\%_]/.test(searchTerm) ? null : searchTerm, ilikePattern);
       paramIndex += 2;
     }
 

@@ -159,6 +159,24 @@ it('includes the full microsecond registration range and treats search wildcards
     expect(((await r.json()) as CrmUsersResponse).users).toEqual([]);
   }
 });
+it('finds literal wildcard characters in profile names without broadening the search', async () => {
+  const name = 'literal-' + randomUUID();
+  try {
+    for (const marker of ['%', '_', '\\']) {
+      await http.pool.query('UPDATE profiles SET first_name=$1 WHERE user_id=$2', [
+        name + marker,
+        ids[1],
+      ]);
+      const response = await list({ search: name + marker });
+      expect(response.status).toBe(200);
+      expect(
+        ((await response.json()) as CrmUsersResponse).users.map((user) => user.userId)
+      ).toEqual([ids[1]]);
+    }
+  } finally {
+    await http.pool.query('UPDATE profiles SET first_name=NULL WHERE user_id=$1', [ids[1]]);
+  }
+});
 it('requires current CRM read permission and never accepts customer session access', async () => {
   const session = randomUUID();
   await http.pool.query(

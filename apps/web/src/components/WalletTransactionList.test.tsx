@@ -19,8 +19,8 @@ const tx = {
   type: 'topup',
   amount: '9007199254740993',
   state: 'Pending',
-  refId: 'invoice-ref',
-  description: 'Bank transfer',
+  refId: 'invoice-ref' as string | null,
+  description: 'Bank transfer' as string | null,
   createdAt: '2026-09-01T12:00:00.123456Z',
 };
 const response = (transactions = [tx], nextCursor: string | null = null) => ({
@@ -102,5 +102,56 @@ describe('WalletTransactionList', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }));
     await render();
     expect(host.querySelector('[role=alert]')).not.toBeNull();
+  });
+  it('shows debits without a positive sign or absent optional details', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValue(response([{ ...tx, amount: '-25', refId: null, description: null }]))
+    );
+    await render();
+    expect(host.textContent).toContain('-25');
+    expect(host.textContent).not.toContain('+-25');
+    expect(host.textContent).not.toContain('invoice-ref');
+    expect(host.textContent).not.toContain('Bank transfer');
+  });
+  it('applies state and ascending sort without adding empty date filters', async () => {
+    const fetcher = vi.fn().mockResolvedValue(response([]));
+    vi.stubGlobal('fetch', fetcher);
+    await render();
+    host.querySelector<HTMLSelectElement>('[name=state]')!.value = 'Completed';
+    host.querySelector<HTMLSelectElement>('[name=sort]')!.value = 'asc';
+    await click('Apply filters');
+    const url = String(fetcher.mock.calls.at(-1)![0]);
+    expect(url).toContain('state=Completed');
+    expect(url).toContain('sort=asc');
+    expect(url).not.toContain('from=');
+    expect(url).not.toContain('to=');
+  });
+  it('rejects a malformed continuation cursor', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValue({ ok: true, json: async () => ({ transactions: [], nextCursor: 42 }) })
+    );
+    await render();
+    expect(host.querySelector('[role=alert]')).not.toBeNull();
+  });
+  it('ignores a rejected request after switching profiles', async () => {
+    let reject!: (reason: Error) => void;
+    const pending = new Promise((_, fail) => {
+      reject = fail;
+    });
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockReturnValueOnce(pending).mockResolvedValueOnce(response([]))
+    );
+    await render('profile-a');
+    await render('profile-b');
+    await act(async () => reject(new Error('aborted')));
+    expect(host.querySelector('[role=alert]')).toBeNull();
+    expect(host.textContent).toContain('No transactions match these filters.');
   });
 });
