@@ -1,3 +1,4 @@
+import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -37,7 +38,9 @@ async function login(user: string, role?: string) {
   };
   return user;
 }
-function send(path: string, method = 'GET', body?: unknown, user = 'activation-legal') {
+async function send(path: string, method = 'GET', body?: unknown, user = 'activation-legal') {
+  if (method === 'POST')
+    body = await contractReviewConfirmation(http.base, path, headers[user]!, body);
   return fetch(http.base + '/api/' + path, {
     method,
     headers: headers[user]!,

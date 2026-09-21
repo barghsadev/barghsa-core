@@ -8,9 +8,10 @@ import type { ContractActor } from './contract-transactions.js';
 export async function customerContractAccess<T>(
   actor: ContractActor,
   accept: boolean,
-  work: (client: PoolClient, profileId: string) => Promise<T>
+  work: (client: PoolClient, profileId: string) => Promise<T>,
+  options: { financialReview?: boolean } = {}
 ): Promise<T> {
-  const permission = accept ? 'contracts:sign' : 'contracts:view';
+  const permission = accept || options.financialReview ? 'contracts:sign' : 'contracts:view';
   const client = await getDbPool().connect();
   try {
     await client.query('BEGIN');
@@ -20,7 +21,7 @@ export async function customerContractAccess<T>(
     if (!selected) throw new NotFoundException();
     const profile = (
       await client.query<{ archived: boolean }>(
-        'SELECT archived FROM profiles WHERE id=$1 FOR SHARE',
+        `SELECT archived FROM profiles WHERE id=$1 FOR ${options.financialReview ? 'UPDATE' : 'SHARE'}`,
         [selected]
       )
     ).rows[0];

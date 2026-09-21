@@ -16,6 +16,11 @@ vi.mock('../hooks/useAccountTime.js', () => ({
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ number: (value: number) => String(value) }),
 }));
+// Panel tests cover intent selection; the review dialog has its own boundary tests.
+vi.mock('./ContractFinancialReviewDialog.js', async () => {
+  const { TeamActionDialog } = await import('./TeamActionDialog.js');
+  return { ContractFinancialReviewDialog: TeamActionDialog };
+});
 vi.mock('./TeamActionDialog.js', () => ({
   TeamActionDialog: ({
     action,

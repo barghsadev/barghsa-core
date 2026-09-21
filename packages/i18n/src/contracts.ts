@@ -1,6 +1,15 @@
 import { lookup } from './lookup.js';
 
 export const en = {
+  financialReview: 'Review contract and financial obligations',
+  financialReviewNotice:
+    'This action collects no payment. Review the published terms, activation requirements and linked invoice before confirming.',
+  financialReviewError:
+    'The review could not be loaded. Close this dialog and refresh before trying again.',
+  paymentNow: 'Payment collected now',
+  documentChecksum: 'Document checksum',
+  publishedAt: 'Published on',
+
   draftCreate: 'Create contract draft',
   draftEdit: 'Edit draft terms',
   draftSave: 'Save new version',
@@ -247,6 +256,15 @@ export const en = {
 } satisfies Record<string, string>;
 
 export const fa: Record<keyof typeof en, string> = {
+  financialReview: 'بررسی قرارداد و تعهدات مالی',
+  financialReviewNotice:
+    'این اقدام هیچ مبلغی دریافت نمی‌کند. پیش از تأیید، شرایط منتشرشده، الزامات فعال‌سازی و صورتحساب مرتبط را بررسی کنید.',
+  financialReviewError:
+    'اطلاعات بررسی بارگذاری نشد. این پنجره را ببندید و پیش از تلاش دوباره صفحه را تازه‌سازی کنید.',
+  paymentNow: 'مبلغ دریافتی در این اقدام',
+  documentChecksum: 'اثر انگشت مدرک',
+  publishedAt: 'تاریخ انتشار',
+
   draftCreate: 'ایجاد پیش‌نویس قرارداد',
   draftEdit: 'ویرایش متن پیش‌نویس',
   draftSave: 'ذخیره نسخه جدید',

@@ -3886,6 +3886,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "type": "string"
@@ -3907,7 +3911,8 @@
                   "expectedVersionId",
                   "idempotencyKey",
                   "requestId",
-                  "signedDocumentId"
+                  "signedDocumentId",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -3957,6 +3962,10 @@
                     "nullable": true,
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "type": "string"
@@ -3974,7 +3983,8 @@
                   "expectedVersionId",
                   "idempotencyKey",
                   "originalDocumentId",
-                  "expectedRequestId"
+                  "expectedRequestId",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -3993,6 +4003,108 @@
           }
         ],
         "summary": "Prepare a numbered signing request from the accepted version and approved original PDF",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}/signature/review": {
+      "post": {
+        "operationId": "ContractSignatureController_financialReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "action": {
+                        "enum": [
+                          "request"
+                        ],
+                        "type": "string"
+                      },
+                      "expectedRequestId": {
+                        "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "expectedVersionId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "originalDocumentId": {
+                        "format": "uuid",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "action",
+                      "expectedVersionId",
+                      "originalDocumentId",
+                      "expectedRequestId"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "action": {
+                        "enum": [
+                          "record"
+                        ],
+                        "type": "string"
+                      },
+                      "expectedVersionId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "requestId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "signedDocumentId": {
+                        "format": "uuid",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "action",
+                      "expectedVersionId",
+                      "signedDocumentId",
+                      "requestId"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review financial terms and selected signing documents before confirmation",
         "tags": [
           "Admin · Contracts"
         ]
@@ -12018,6 +12130,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "type": "string"
@@ -12029,7 +12145,8 @@
                 },
                 "required": [
                   "expectedVersionId",
-                  "idempotencyKey"
+                  "idempotencyKey",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -12051,6 +12168,44 @@
           }
         ],
         "summary": "Accept the exact current published version as the authorized customer",
+        "tags": [
+          "Contracts"
+        ]
+      }
+    },
+    "/api/contracts/{id}/acceptance-review": {
+      "get": {
+        "operationId": "CustomerContractController_acceptanceReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the published terms and financial conditions before acceptance",
         "tags": [
           "Contracts"
         ]
@@ -12277,6 +12432,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "expectedVersionId": {
                     "format": "uuid",
                     "type": "string"
@@ -12298,7 +12457,8 @@
                   "expectedVersionId",
                   "idempotencyKey",
                   "requestId",
-                  "signedDocumentId"
+                  "signedDocumentId",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -12317,6 +12477,73 @@
           }
         ],
         "summary": "Record an approved signed copy for the exact accepted contract version",
+        "tags": [
+          "Contracts"
+        ]
+      }
+    },
+    "/api/contracts/{id}/signature/review": {
+      "post": {
+        "operationId": "CustomerContractSignatureController_financialReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "record"
+                    ],
+                    "type": "string"
+                  },
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "requestId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "signedDocumentId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action",
+                  "expectedVersionId",
+                  "signedDocumentId",
+                  "requestId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the published terms and signed copy before recording customer evidence",
         "tags": [
           "Contracts"
         ]

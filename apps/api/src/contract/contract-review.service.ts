@@ -11,10 +11,13 @@ import {
 import { customerContractAccess } from './contract-customer-access.js';
 import { activeProfileSql } from '../profiles/profile-context.js';
 import { notifyContractReview } from './contract-review-notifications.js';
+import { readContractFinancialReview } from './contract-financial-review.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 export interface ContractReviewInput {
   expectedVersionId: string;
   idempotencyKey: string;
   reason?: string;
+  expectedReviewHash?: string;
 }
 type ReviewAction = 'submit' | 'request-changes' | 'publish';
 interface PublishedRow {
@@ -197,38 +200,82 @@ export class ContractReviewService {
       };
     });
   }
+  async acceptanceReview(id: string, versionId: string, actor: ContractActor) {
+    return customerContractAccess(
+      actor,
+      false,
+      (client, profileId) =>
+        readContractFinancialReview(client, {
+          action: 'contract.acceptance',
+          contractId: id,
+          profileId,
+          versionId,
+        }),
+      { financialReview: true }
+    );
+  }
   async accept(id: string, input: ContractReviewInput, actor: ContractActor, ip: string) {
-    return customerContractAccess(actor, true, async (client, profileId) => {
-      // Replays must pass the original contract's current profile access boundary too.
-      await this.published(client, profileId, id);
-      return contractIdempotency(
-        client,
-        'contract_accept',
-        { ...input, contractId: id },
-        actor,
-        async () => {
-          const row = (
-            await client.query<{ state: string; current_version_id: string }>(
-              'SELECT state,current_version_id FROM contracts WHERE id=$1 AND profile_id=$2 FOR UPDATE',
-              [id, profileId]
+    return customerContractAccess(
+      actor,
+      true,
+      async (client, profileId) => {
+        // Replays must pass the original contract's current profile access boundary too.
+        await this.published(client, profileId, id);
+        return contractIdempotency(
+          client,
+          'contract_accept',
+          { ...input, contractId: id },
+          actor,
+          async () => {
+            const row = (
+              await client.query<{ state: string; current_version_id: string }>(
+                'SELECT state,current_version_id FROM contracts WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+                [id, profileId]
+              )
+            ).rows[0];
+            if (!row) throw new NotFoundException();
+            if (
+              row.state !== 'AwaitingCustomerAcceptance' ||
+              row.current_version_id !== input.expectedVersionId
             )
-          ).rows[0];
-          if (!row) throw new NotFoundException();
-          if (
-            row.state !== 'AwaitingCustomerAcceptance' ||
-            row.current_version_id !== input.expectedVersionId
-          )
-            throw new ConflictException('Contract is not awaiting acceptance of this version');
-          await client.query(
-            'INSERT INTO contract_acceptances(contract_id,version_id,accepted_by) VALUES($1,$2,$3)',
-            [id, input.expectedVersionId, actor.userId]
-          );
-          await auditContract(client, id, input.expectedVersionId, 'contract.accepted', actor, ip);
-          await notifyContractReview(client, id, 'accepted');
-          return this.published(client, profileId, id);
-        }
-      );
-    });
+              throw new ConflictException('Contract is not awaiting acceptance of this version');
+            const financialReview =
+              input.expectedReviewHash === undefined
+                ? undefined
+                : await readContractFinancialReview(client, {
+                    action: 'contract.acceptance',
+                    contractId: id,
+                    profileId,
+                    versionId: input.expectedVersionId,
+                  });
+            if (financialReview)
+              new ReviewSnapshotService().assertConfirmed(
+                financialReview,
+                input.expectedReviewHash!
+              );
+            await client.query(
+              'INSERT INTO contract_acceptances(contract_id,version_id,accepted_by) VALUES($1,$2,$3)',
+              [id, input.expectedVersionId, actor.userId]
+            );
+            await auditContract(
+              client,
+              id,
+              input.expectedVersionId,
+              'contract.accepted',
+              actor,
+              ip,
+              financialReview ? { financialReview } : {}
+            );
+            await notifyContractReview(client, id, 'accepted');
+            return {
+              ...(await this.published(client, profileId, id)),
+              ...(financialReview ? { financialReview } : {}),
+            };
+          }
+        );
+      },
+      { financialReview: input.expectedReviewHash !== undefined }
+    );
   }
   private async published(client: PoolClient, profileId: string, id: string, versionId?: string) {
     const row = (

@@ -1,3 +1,4 @@
+import { contractReview, ORIGINAL, SIGNED, REQUEST } from './contract-review-fixture';
 import { test, expect } from './coverage-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { t } from '../../../packages/i18n/src/app';
@@ -53,9 +54,9 @@ for (const locale of ['en', 'fa'] as const)
         canRecord: requested && !recorded,
         request: requested
           ? {
-              id: 'request-1',
+              id: REQUEST,
               requestNumber: 1,
-              originalDocumentId: 'original',
+              originalDocumentId: ORIGINAL,
               originalName: 'original.pdf',
               documentState: 'Approved',
               requestedAt: '2026-09-21T00:02:00Z',
@@ -63,8 +64,8 @@ for (const locale of ['en', 'fa'] as const)
           : null,
         signature: recorded
           ? {
-              requestId: 'request-1',
-              signedDocumentId: 'signed',
+              requestId: REQUEST,
+              signedDocumentId: SIGNED,
               originalName: 'signed.pdf',
               documentState: 'Approved',
               recordedByType: staff ? 'staff' : 'customer',
@@ -94,7 +95,7 @@ for (const locale of ['en', 'fa'] as const)
         const query = new URL(route.request().url()).searchParams;
         expect(query.get('contractVersionId')).toBe(VERSION);
         const documents = ['original', 'signed'].map((id) => ({
-          id,
+          id: id === 'original' ? ORIGINAL : SIGNED,
           profileId: PROFILE,
           businessRecordType: 'contract',
           businessRecordId: ID,
@@ -111,17 +112,26 @@ for (const locale of ['en', 'fa'] as const)
         }));
         return route.fulfill({ json: { documents, nextBefore: null } });
       });
+      let financialReview = contractReview('request');
+      await page.route(`**${base}/${ID}/signature/review`, (route) => {
+        const input = route.request().postDataJSON();
+        financialReview = contractReview(input.action, requested);
+        return route.fulfill({ json: financialReview });
+      });
+      await page.route('**/api/user/settings/timezone', (route) =>
+        route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+      );
       const attempts: unknown[] = [];
       await page.route(`**${base}/${ID}/signature-request`, (route) => {
         expect(route.request().postDataJSON()).toMatchObject({
           expectedVersionId: VERSION,
           expectedRequestId: null,
-          originalDocumentId: 'original',
+          originalDocumentId: ORIGINAL,
           idempotencyKey: expect.any(String),
         });
         requested = true;
         state = 'AwaitingSignature';
-        return route.fulfill({ json: signature() });
+        return route.fulfill({ json: { ...signature(), financialReview } });
       });
       await page.route(`**${base}/${ID}/signature`, (route) => {
         attempts.push(route.request().postDataJSON());
@@ -129,7 +139,7 @@ for (const locale of ['en', 'fa'] as const)
           return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
         recorded = true;
         state = 'Signed';
-        return route.fulfill({ json: signature() });
+        return route.fulfill({ json: { ...signature(), financialReview } });
       });
       await page.route('**/api/auth/step-up', (route) => {
         verified = true;
@@ -146,13 +156,13 @@ for (const locale of ['en', 'fa'] as const)
       const dialog = page.getByRole('dialog');
       const confirm = t('team.confirm', locale);
       if (staff) {
-        await panel.getByLabel(words.approvedOriginal, { exact: true }).selectOption('original');
+        await panel.getByLabel(words.approvedOriginal, { exact: true }).selectOption(ORIGINAL);
         await panel.getByRole('button', { name: words.prepareSignature, exact: true }).click();
         await dialog.getByRole('button', { name: confirm, exact: true }).click();
         await expect(dialog).toHaveCount(0);
       }
       await expect(panel.getByText('original.pdf', { exact: false }).first()).toBeVisible();
-      await panel.getByLabel(words.approvedSigned, { exact: true }).selectOption('signed');
+      await panel.getByLabel(words.approvedSigned, { exact: true }).selectOption(SIGNED);
       await expect(
         panel.getByRole('button', { name: words.recordSignature, exact: true })
       ).toBeDisabled();
@@ -164,10 +174,11 @@ for (const locale of ['en', 'fa'] as const)
       await expect(dialog).toHaveCount(0);
       expect(attempts).toHaveLength(2);
       expect(attempts[0]).toEqual(attempts[1]);
+      expect(attempts[1]).toMatchObject({ expectedReviewHash: financialReview.hash });
       expect(attempts[1]).toMatchObject({
         expectedVersionId: VERSION,
-        requestId: 'request-1',
-        signedDocumentId: 'signed',
+        requestId: REQUEST,
+        signedDocumentId: SIGNED,
         idempotencyKey: expect.any(String),
       });
       await expect(panel.getByRole('status')).toContainText(words.signatureRecorded);

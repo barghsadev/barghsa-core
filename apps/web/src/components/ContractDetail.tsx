@@ -1,3 +1,4 @@
+import { ContractFinancialReviewDialog } from './ContractFinancialReviewDialog.js';
 import { ContractCancellationPanel } from './ContractCancellationPanel.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -317,7 +318,20 @@ export function ContractDetail({
           />
         </>
       )}
-      {action ? (
+      {action && action.path.endsWith('/accept') && data ? (
+        <ContractFinancialReviewDialog
+          action={action}
+          profileId={data.contract.profileId}
+          contractId={id}
+          time={time}
+          onClose={() => setAction(null)}
+          onSuccess={async () => {
+            setAction(null);
+            setReload((value) => value + 1);
+            onChanged();
+          }}
+        />
+      ) : action ? (
         <TeamActionDialog
           action={action}
           onClose={() => setAction(null)}
