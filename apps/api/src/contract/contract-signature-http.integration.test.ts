@@ -1,3 +1,4 @@
+import { activateReadyContracts } from '@barghsa/db/contract-activation';
 import type { ContractSignatureService } from './contract-signature.service.js';
 type SignatureView = Awaited<ReturnType<ContractSignatureService['get']>>;
 import { randomUUID } from 'node:crypto';
@@ -531,4 +532,7 @@ it('resolves a required solar signature only after recording its approved signed
   expect(result.ready).toBe(true);
   expect(result.state).toBe('Signed');
   expect(result.checks.find((item) => item.key === 'signature')?.status).toBe('met');
+  expect((await activateReadyContracts(http.pool)).activated).toBe(1);
+  expect((await read()).state).toBe('Active');
+  expect((await read()).ready).toBe(false);
 });

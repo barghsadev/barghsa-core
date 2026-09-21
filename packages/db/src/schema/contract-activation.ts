@@ -68,3 +68,21 @@ export const contractActivationRequirements = pgTable(
 );
 export type ContractActivationRule = typeof contractActivationRules.$inferSelect;
 export type ContractActivationRequirement = typeof contractActivationRequirements.$inferSelect;
+
+/** Durable proof that the system activated this exact version. */
+export const contractActivations = pgTable(
+  'contract_activations',
+  {
+    versionId: uuid('version_id').primaryKey().notNull(),
+    contractId: uuid('contract_id').notNull(),
+    activatedAt: timestamptz('activated_at').notNull().defaultNow(),
+  },
+  (t) => [
+    foreignKey({
+      name: 'contract_activations_version_fk',
+      columns: [t.contractId, t.versionId],
+      foreignColumns: [contractVersions.contractId, contractVersions.id],
+    }).onDelete('restrict'),
+    index('contract_activations_contract_idx').on(t.contractId),
+  ]
+);

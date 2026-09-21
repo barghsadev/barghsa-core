@@ -437,6 +437,7 @@ it('upgrades the actual 139 schema and reruns without fabricating documents or c
         '0140_document_lifecycle',
         '0141_contract_signature_evidence',
         '0142_contract_activation_requirements',
+        '0143_contract_system_activation',
       ],
     });
     expect(

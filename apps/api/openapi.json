@@ -4142,6 +4142,7 @@
             "required": false,
             "schema": {
               "enum": [
+                "contract_activation",
                 "refund_retry",
                 "ai_model_test",
                 "storage_cleanup",

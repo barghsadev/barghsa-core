@@ -15,7 +15,14 @@ for (const locale of ['en', 'fa'])
     }, locale);
     const jobs = Array.from({ length: 26 }, (_, index) => ({
       id: `10000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
-      jobType: index === 0 ? 'storage_cleanup' : 'auth_delivery',
+      jobType:
+        index === 0
+          ? 'storage_cleanup'
+          : index === 1
+            ? 'contract_activation'
+            : index === 2
+              ? 'retired_job'
+              : 'auth_delivery',
       status: 'failed',
       error: 'Test transport failed',
       attempts: 5,
@@ -73,6 +80,10 @@ for (const locale of ['en', 'fa'])
     failLoad = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Try again', exact: true }).click();
     await expect(page.locator('tbody tr')).toHaveCount(25);
+    await expect(page.locator('tbody tr').nth(1)).toContainText(
+      fa ? 'فعال‌سازی قرارداد' : 'Contract activation'
+    );
+    await expect(page.locator('tbody tr').nth(2)).toContainText('retired_job');
     await expect(page.locator('tbody tr').first()).toContainText(fa ? '5 / 5' : '۵ / ۵');
     await expect(page.locator('tbody tr').first()).toContainText(
       await formatBrowserDate(
