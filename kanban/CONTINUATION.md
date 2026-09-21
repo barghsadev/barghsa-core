@@ -81,3 +81,9 @@ Local branch `codex/contract-system-activation` is stacked on that head and impl
 ### PR #324 merged; system activation on current main
 
 Verified PR #324 merged as `7c3816394f81ad909818d505f210ebbd53986213` after all five gates passed in run35546506754. Exact reviewed head331ac8b375fd089879b1a21e43876d65c2701add and durable review were read back after merge. System activation batch has been rebased onto this verified main commit. Final committed coverage, its independent review and CI remain. This supersedes the prior pending-merge note.
+
+### PR #325 contract snapshot correction
+
+Initial headc3f738c72c54934580d1473f035d78d9d362252b was independently approved at https://github.com/barghsadev/barghsa-core/pull/325#issuecomment-5753875481 and passed local combined coverage. CI found the newly registered contract_activation job enum missing from generated OpenAPI. Regeneration adds exactly that enum value; check:contract passes. New review/CI are required after this correction. The end-of-term completion draft is preserved in named stash `contract-term-completion draft before PR325 OpenAPI correction` on branch `codex/contract-term-completion`.
+
+Full main run35545814385 after PR #323 now passes all five checks. PR #324 full main run35547612589 remains running.

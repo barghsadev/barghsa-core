@@ -19,3 +19,7 @@ The contract workspace refresh also reloads its open detail so a system state ch
 Validation:53 related migrated database cases, including migration from0142 and contention/audit rollback;60 HTTP cases including approved solar signed-copy activation;14 worker/poller cases across two focused runs, including actual compiled worker activation/shutdown;17 frontend cases;6 production browser flows in English/Persian;53 dictionary tests across the full existing suite and new monitoring test;shared job labels;API/worker/db/web typechecks;targeted lint;format;snapshot;44bundle budgets;backlog;static scan886files with0findings. Final committed combined browser/process/unit coverage, independent review and CI remain pending. No source coverage floors or tests were disabled.
 
 Automatic completion at end of term, general editing UI, template PDF generation, amendments/cancellation and automatic refund obligations remain unfinished.
+
+## CI correction
+
+Initial exact-HEAD review approved without findings. CI caught a missing generated OpenAPI enum for the new worker job type. Regeneration adds only `contract_activation` to the existing job filter enum; `pnpm check:contract` now passes. Updated review and CI are pending. Full main after PR #323 passes all five gates.
