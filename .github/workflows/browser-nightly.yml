@@ -13,13 +13,19 @@ concurrency:
 
 jobs:
   browsers:
-    name: Production browser / ${{ matrix.project }}
+    name: Production browser / ${{ matrix.project }} / ${{ matrix.shard }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        project: [firefox, webkit, mobile-chrome, mobile-safari]
+        include:
+          - { project: firefox, shard: '1/1', artifact: firefox }
+          - { project: mobile-chrome, shard: '1/1', artifact: mobile-chrome }
+          - { project: webkit, shard: '1/2', artifact: webkit-1 }
+          - { project: webkit, shard: '2/2', artifact: webkit-2 }
+          - { project: mobile-safari, shard: '1/2', artifact: mobile-safari-1 }
+          - { project: mobile-safari, shard: '2/2', artifact: mobile-safari-2 }
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -38,7 +44,7 @@ jobs:
           node --test scripts/browser-projects.test.mjs
           python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
       - name: Exercise the production app in the selected browser
-        run: node scripts/run-production-browser.mjs --project "${{ matrix.project }}"
+        run: node scripts/run-production-browser.mjs --project "${{ matrix.project }}" --shard "${{ matrix.shard }}"
       - name: Report observed browser outcomes
         if: always()
         run: python3 scripts/check-browser-results.py --input apps/web/test-results/results.json --report "${{ runner.temp }}/browser-outcomes.json"
@@ -49,7 +55,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: browser-${{ matrix.project }}
+          name: browser-${{ matrix.artifact }}
           path: |
             ${{ runner.temp }}/browser-outcomes.json
             ${{ runner.temp }}/quarantine.json

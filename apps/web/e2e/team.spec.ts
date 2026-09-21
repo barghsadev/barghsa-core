@@ -1,3 +1,4 @@
+import { cookieResponse } from './cookie-response';
 import AxeBuilder from '@axe-core/playwright';
 import { formatBrowserDate } from './browser-date';
 import { test, expect, type Page } from './coverage-fixture';
@@ -554,7 +555,8 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/auth/step-up', (route) => {
       verifies++;
       expect(route.request().postDataJSON()).toEqual({ password: 'Team-password-123!' });
-      return route.fulfill(
+      return cookieResponse(
+        route,
         verifies === 1
           ? { status: 401, json: { error: { code: 'AUTH:UNAUTHENTICATED' } } }
           : {

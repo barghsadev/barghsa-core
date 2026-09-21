@@ -1,4 +1,4 @@
-import { test, expect } from './coverage-fixture';
+import { test, expect } from './upload-fixture';
 import { en, fa } from '../../../packages/i18n/src/documents';
 
 const PROFILE = '11111111-1111-4111-8111-111111111111';
@@ -90,6 +90,7 @@ for (const locale of ['en', 'fa'] as const) {
   });
   test(`${locale}: customer uploads a document and submits its displayed revision`, async ({
     page,
+    uploadReceiver,
   }) => {
     await page.addInitScript((language) => {
       if (document.documentElement) document.documentElement.lang = language;
@@ -137,8 +138,7 @@ for (const locale of ['en', 'fa'] as const) {
       createdAt: '2026-09-21T00:00:00Z',
       updatedAt: '2026-09-21T00:00:00Z',
     };
-    let created = false,
-      stored = false;
+    let created = false;
     await page.route('**/api/documents?*', (route) =>
       route.fulfill({
         json: {
@@ -159,21 +159,19 @@ for (const locale of ['en', 'fa'] as const) {
         json: {
           document: current,
           upload: {
-            presignedUrl: new URL('/document-storage/proof', page.url()).href,
+            presignedUrl: uploadReceiver.url,
             headers: { 'If-None-Match': '*' },
           },
         },
       });
     });
-    await page.route('**/document-storage/proof', async (route) => {
-      expect(route.request().method()).toBe('PUT');
-      expect(route.request().headers()['x-csrf-token']).toBeUndefined();
-      expect(route.request().postDataBuffer()?.toString()).toBe('%PDF-1.7');
-      stored = true;
-      await route.fulfill({ status: 200, body: '' });
-    });
     await page.route(`**/api/documents/${ID}/confirm`, (route) => {
-      expect(stored).toBe(true);
+      expect(uploadReceiver.uploads).toHaveLength(1);
+      const upload = uploadReceiver.uploads[0]!;
+      expect(upload.method).toBe('PUT');
+      expect(upload.headers['x-csrf-token']).toBeUndefined();
+      expect(upload.headers['if-none-match']).toBe('*');
+      expect(upload.body.toString()).toBe('%PDF-1.7');
       expect(route.request().postDataJSON()).toMatchObject({ expectedRevision: 1 });
       current = {
         ...current,

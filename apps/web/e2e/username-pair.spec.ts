@@ -1,3 +1,4 @@
+import { dismissMessages } from './dismiss-messages';
 import { test, expect } from './coverage-fixture';
 
 for (const locale of ['en', 'fa'] as const) {
@@ -72,11 +73,13 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#change-otp').fill('123456');
     await expect(submit).toBeDisabled();
     await page.locator('#previous-otp').fill('112233');
+    await dismissMessages(page, locale);
     await submit.click();
     await expect(page.locator('#previous-otp')).toHaveValue('112233');
     await expect(submit).toBeEnabled();
     expect(attempts).toHaveLength(1);
     fail = false;
+    await dismissMessages(page, locale);
     await submit.click();
     await expect(page.locator('#previous-otp')).toHaveCount(0);
     expect(attempts).toEqual(
@@ -170,11 +173,13 @@ for (const locale of ['en', 'fa'] as const) {
         name: locale === 'en' ? 'Verify & Save' : 'تأیید و ذخیره',
         exact: true,
       });
+      await dismissMessages(page, locale);
       await submit.click();
       await expect(submit).toBeEnabled();
       await expect(page.locator('#contact-otp')).toHaveValue('123456');
       expect(attempts).toHaveLength(1);
       fail = false;
+      await dismissMessages(page, locale);
       await submit.click();
       await expect(page.locator('#contact-otp')).toHaveCount(0);
       await expect(action).toHaveCount(0);

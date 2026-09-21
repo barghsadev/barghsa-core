@@ -229,10 +229,10 @@ for (const locale of ['en', 'fa'])
 
 for (const locale of ['en', 'fa'])
   for (const darkMode of [false, true])
-    test(`shared controls remain readable and focused (${locale}, dark=${darkMode})`, async ({
-      page,
-    }) => {
-      for (const primaryColor of ['#2563eb', '#777777', '#ffffff']) {
+    for (const primaryColor of ['#2563eb', '#777777', '#ffffff'])
+      test(`shared controls remain readable and focused (${locale}, dark=${darkMode}, primary=${primaryColor})`, async ({
+        page,
+      }) => {
         await page.route('**/api/public/branding/config', (route) =>
           route.fulfill({
             json: {
@@ -310,8 +310,7 @@ for (const locale of ['en', 'fa'])
         ).toBe('0s');
         await page.emulateMedia({ reducedMotion: 'no-preference' });
         await page.unroute('**/api/public/branding/config');
-      }
-    });
+      });
 
 for (const locale of ['en', 'fa'])
   for (const darkMode of [false, true]) {

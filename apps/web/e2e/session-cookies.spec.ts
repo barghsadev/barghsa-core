@@ -61,17 +61,19 @@ test('browser narrows session delivery, removes legacy scope and clears every lo
   expect(
     await page.evaluate(async () => (await fetch('/api/auth/login', { method: 'POST' })).status)
   ).toBe(200);
-  const sessions = (await page.context().cookies()).filter(
-    (cookie) => cookie.name === 'barghsa_session'
-  );
-  expect(sessions).toHaveLength(1);
-  expect(sessions[0]).toMatchObject({
-    value: 'replacement-session',
-    path: '/api',
-    sameSite: 'Lax',
-    httpOnly: true,
-  });
-  expect(await page.evaluate(() => document.cookie)).toBe('barghsa_csrf=csrf-proof');
+  await expect
+    .poll(async () =>
+      (await page.context().cookies()).filter((cookie) => cookie.name === 'barghsa_session')
+    )
+    .toEqual([
+      expect.objectContaining({
+        value: 'replacement-session',
+        path: '/api',
+        sameSite: 'Lax',
+        httpOnly: true,
+      }),
+    ]);
+  await expect.poll(() => page.evaluate(() => document.cookie)).toBe('barghsa_csrf=csrf-proof');
   const delivered = await page.evaluate(async () => {
     const result: Record<string, string> = {};
     for (const path of [
@@ -100,9 +102,11 @@ test('browser narrows session delivery, removes legacy scope and clears every lo
   expect(
     await page.evaluate(async () => (await fetch('/api/auth/logout', { method: 'POST' })).status)
   ).toBe(200);
-  expect(
-    (await page.context().cookies()).filter((cookie) =>
-      ['barghsa_session', 'barghsa_refresh', 'barghsa_csrf'].includes(cookie.name)
+  await expect
+    .poll(async () =>
+      (await page.context().cookies()).filter((cookie) =>
+        ['barghsa_session', 'barghsa_refresh', 'barghsa_csrf'].includes(cookie.name)
+      )
     )
-  ).toEqual([]);
+    .toEqual([]);
 });

@@ -1,3 +1,5 @@
+import { dismissMessages } from './dismiss-messages';
+import { cookieResponse } from './cookie-response';
 import { formatBrowserDate } from './browser-date';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -1308,7 +1310,7 @@ for (const locale of ['en', 'fa']) {
         sessionId: currentCsrf,
         createdAt: `2026-09-0${verifications.length}T12:00:00.000Z`,
       };
-      return route.fulfill({
+      return cookieResponse(route, {
         headers: { 'set-cookie': `barghsa_csrf=${currentCsrf}; Path=/; SameSite=Strict` },
         json: {},
       });
@@ -1995,7 +1997,7 @@ for (const locale of ['en', 'fa']) {
       if (route.request().postDataJSON().password !== 'right-password')
         return route.fulfill({ status: 401, json: {} });
       verified = true;
-      return route.fulfill({
+      return cookieResponse(route, {
         headers: { 'set-cookie': 'barghsa_csrf=daytime-rotated; Path=/; SameSite=Strict' },
         json: {},
       });
@@ -2612,6 +2614,7 @@ for (const locale of ['en', 'fa']) {
     }
     await expect(save).toBeEnabled();
     for (let index = 0; index < invalid.length; index++) {
+      await dismissMessages(page, locale as 'en' | 'fa');
       await save.click();
       await expect.poll(() => writes.length).toBe(index + 2);
       await expect(save).toBeEnabled();
@@ -2622,6 +2625,7 @@ for (const locale of ['en', 'fa']) {
         })
       ).toHaveCount(0);
     }
+    await dismissMessages(page, locale as 'en' | 'fa');
     await save.click();
     await expect(
       page.getByRole('heading', {
@@ -2867,7 +2871,8 @@ for (const locale of ['en', 'fa']) {
     await expect(english).toHaveAttribute('dir', 'ltr');
     await persian.fill('شرایط جدید');
     await english.fill('Important terms');
-    await english.press('ControlOrMeta+a');
+    await english.press('ArrowRight');
+    for (const _character of 'Important terms') await english.press('Shift+ArrowLeft');
     await page
       .getByRole('group', {
         name: locale === 'fa' ? 'محتوای انگلیسی: قالب‌بندی' : 'English content: Formatting',

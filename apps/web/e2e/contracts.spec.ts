@@ -1,4 +1,4 @@
-import { test, expect } from './coverage-fixture';
+import { test, expect } from './upload-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { en as documentEn, fa as documentFa } from '../../../packages/i18n/src/documents';
 const ID = '11111111-1111-4111-8111-111111111111',
@@ -9,6 +9,7 @@ for (const locale of ['en', 'fa'] as const)
   for (const staff of [false, true]) {
     test(`${locale}: ${staff ? 'staff publishes' : 'customer accepts and uploads'} the exact contract version`, async ({
       page,
+      uploadReceiver,
     }) => {
       const words = locale === 'fa' ? fa : en,
         documentWords = locale === 'fa' ? documentFa : documentEn,
@@ -64,8 +65,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.route(`**${base}/${ID}/versions`, (route) =>
         route.fulfill({ json: { versions: [version], nextBefore: null } })
       );
-      let uploaded = false,
-        stored = false;
+      let uploaded = false;
       const document = {
         id: DOCUMENT,
         profileId: PROFILE,
@@ -123,20 +123,19 @@ for (const locale of ['en', 'fa'] as const)
           json: {
             document: { ...document, state: 'Uploading', revision: 1 },
             upload: {
-              presignedUrl: new URL('/contract-storage/signed', page.url()).href,
+              presignedUrl: uploadReceiver.url,
               headers: { 'If-None-Match': '*' },
             },
           },
         });
       });
-      await page.route('**/contract-storage/signed', (route) => {
-        expect(route.request().method()).toBe('PUT');
-        expect(route.request().postDataBuffer()?.toString()).toBe('%PDF-1.7');
-        stored = true;
-        return route.fulfill({ status: 200, body: '' });
-      });
       await page.route(`**/api/documents/${DOCUMENT}/confirm`, (route) => {
-        expect(stored).toBe(true);
+        expect(uploadReceiver.uploads).toHaveLength(1);
+        const upload = uploadReceiver.uploads[0]!;
+        expect(upload.method).toBe('PUT');
+        expect(upload.headers['x-csrf-token']).toBeUndefined();
+        expect(upload.headers['if-none-match']).toBe('*');
+        expect(upload.body.toString()).toBe('%PDF-1.7');
         expect(route.request().postDataJSON()).toMatchObject({ expectedRevision: 1 });
         uploaded = true;
         return route.fulfill({ json: document });
