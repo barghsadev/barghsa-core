@@ -196,11 +196,13 @@ export class ContractService {
             input.activationContext !== undefined &&
             !(
               await client.query<{ same: boolean }>(
-                'SELECT initial_invoice_id IS NOT DISTINCT FROM $2::uuid AND service_starts_at IS NOT DISTINCT FROM $3::timestamptz AS same FROM contract_activation_requirements WHERE version_id=$1',
+                'SELECT initial_invoice_id IS NOT DISTINCT FROM $2::uuid AND service_starts_at IS NOT DISTINCT FROM $3::timestamptz AND (NOT $4::boolean OR service_ends_at IS NOT DISTINCT FROM $5::timestamptz) AS same FROM contract_activation_requirements WHERE version_id=$1',
                 [
                   row.current_version_id,
                   input.activationContext.initialInvoiceId,
                   input.activationContext.serviceStartsAt,
+                  input.activationContext.serviceEndsAt !== undefined,
+                  input.activationContext.serviceEndsAt ?? null,
                 ]
               )
             ).rows[0]?.same;
@@ -245,8 +247,14 @@ export class ContractService {
     if (context === undefined) return;
     try {
       await client.query(
-        'UPDATE contract_activation_requirements SET initial_invoice_id=$2,service_starts_at=$3 WHERE version_id=$1',
-        [versionId, context.initialInvoiceId, context.serviceStartsAt]
+        'UPDATE contract_activation_requirements SET initial_invoice_id=$2,service_starts_at=$3,service_ends_at=CASE WHEN $4::boolean THEN $5::timestamptz ELSE service_ends_at END WHERE version_id=$1',
+        [
+          versionId,
+          context.initialInvoiceId,
+          context.serviceStartsAt,
+          context.serviceEndsAt !== undefined,
+          context.serviceEndsAt ?? null,
+        ]
       );
     } catch (error) {
       if (

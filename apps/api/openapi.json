@@ -3106,6 +3106,12 @@
                         "nullable": true,
                         "type": "string"
                       },
+                      "serviceEndsAt": {
+                        "description": "Optional end of service term; omitted edits preserve the existing end.",
+                        "format": "date-time",
+                        "nullable": true,
+                        "type": "string"
+                      },
                       "serviceStartsAt": {
                         "format": "date-time",
                         "nullable": true,
@@ -3231,6 +3237,12 @@
                     "properties": {
                       "initialInvoiceId": {
                         "format": "uuid",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "serviceEndsAt": {
+                        "description": "Optional end of service term; omitted edits preserve the existing end.",
+                        "format": "date-time",
                         "nullable": true,
                         "type": "string"
                       },
@@ -4142,6 +4154,7 @@
             "required": false,
             "schema": {
               "enum": [
+                "contract_completion",
                 "contract_activation",
                 "refund_retry",
                 "ai_model_test",

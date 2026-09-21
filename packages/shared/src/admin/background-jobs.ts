@@ -39,6 +39,7 @@ export function isBackgroundJobStatus(raw: unknown): raw is BackgroundJobStatus 
  * stable worker task key with the human-readable label the dashboard shows.
  */
 export const BACKGROUND_JOB_TYPES = [
+  { key: 'contract_completion', label: 'Contract term completion' },
   { key: 'contract_activation', label: 'Contract activation' },
   { key: 'refund_retry', label: 'Wallet refund retries' },
   { key: 'ai_model_test', label: 'AI model connection tests' },

@@ -53,6 +53,7 @@ export const contractActivationRequirements = pgTable(
       onDelete: 'restrict',
     }),
     serviceStartsAt: timestamptz('service_starts_at'),
+    serviceEndsAt: timestamptz('service_ends_at'),
     capturedAt: timestamptz('captured_at').notNull().defaultNow(),
   },
   (t) => [
@@ -62,6 +63,11 @@ export const contractActivationRequirements = pgTable(
       foreignColumns: [contractVersions.contractId, contractVersions.id],
     }).onDelete('restrict'),
     check('activation_requirements_revision_positive', sql`${t.ruleRevision}>0`),
+    check(
+      'activation_requirements_term_order',
+      sql`${t.serviceEndsAt} IS NULL OR ${t.serviceStartsAt} IS NULL OR ${t.serviceEndsAt}>${t.serviceStartsAt}`
+    ),
+    index('activation_requirements_end_idx').on(t.serviceEndsAt),
     index('activation_requirements_contract_idx').on(t.contractId),
     index('activation_requirements_invoice_idx').on(t.initialInvoiceId),
   ]
@@ -84,5 +90,23 @@ export const contractActivations = pgTable(
       foreignColumns: [contractVersions.contractId, contractVersions.id],
     }).onDelete('restrict'),
     index('contract_activations_contract_idx').on(t.contractId),
+  ]
+);
+
+/** Completion ends the service term; it does not settle invoices or refunds. */
+export const contractCompletions = pgTable(
+  'contract_completions',
+  {
+    versionId: uuid('version_id').primaryKey().notNull(),
+    contractId: uuid('contract_id').notNull(),
+    completedAt: timestamptz('completed_at').notNull().defaultNow(),
+  },
+  (t) => [
+    foreignKey({
+      name: 'contract_completions_version_fk',
+      columns: [t.contractId, t.versionId],
+      foreignColumns: [contractVersions.contractId, contractVersions.id],
+    }).onDelete('restrict'),
+    index('contract_completions_contract_idx').on(t.contractId),
   ]
 );

@@ -37,13 +37,13 @@ async function transaction(work: (client: PoolClient) => Promise<void>) {
     client.release();
   }
 }
-async function create() {
+async function create(service = 'electricity') {
   const id = randomUUID(),
     version = randomUUID();
   await transaction(async (client) => {
     await client.query(
-      "INSERT INTO contracts(id,profile_id,service_type,current_version_id) VALUES($1,$2,'electricity',$3)",
-      [id, profile, version]
+      'INSERT INTO contracts(id,profile_id,service_type,current_version_id) VALUES($1,$2,$4,$3)',
+      [id, profile, version, service]
     );
     await client.query(
       "INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by) VALUES($1,$2,1,$3,'Initial',$4)",
@@ -170,8 +170,32 @@ it('retains acceptance evidence once recorded', async () => {
 it.each(['Completed', 'Cancelled'])(
   'prevents reopening or versioning %s contracts',
   async (state) => {
-    const row = await create();
-    await fixture.pool.query('UPDATE contracts SET state=$2 WHERE id=$1', [row.id, state]);
+    const row = await create('savings');
+    if (state === 'Completed') {
+      await fixture.pool.query(
+        "UPDATE contract_activation_requirements SET service_ends_at='2000-01-01T00:00:00Z' WHERE version_id=$1",
+        [row.version]
+      );
+      await fixture.pool.query("UPDATE contracts SET state='AwaitingStaffReview' WHERE id=$1", [
+        row.id,
+      ]);
+      await fixture.pool.query(
+        'INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,$3)',
+        [row.id, row.version, user]
+      );
+      await fixture.pool.query(
+        'INSERT INTO contract_acceptances(contract_id,version_id,accepted_by) VALUES($1,$2,$3)',
+        [row.id, row.version, user]
+      );
+      await fixture.pool.query(
+        'INSERT INTO contract_activations(contract_id,version_id) VALUES($1,$2)',
+        [row.id, row.version]
+      );
+      await fixture.pool.query(
+        'INSERT INTO contract_completions(contract_id,version_id) VALUES($1,$2)',
+        [row.id, row.version]
+      );
+    } else await fixture.pool.query('UPDATE contracts SET state=$2 WHERE id=$1', [row.id, state]);
     await expect(
       fixture.pool.query("UPDATE contracts SET state='Draft' WHERE id=$1", [row.id])
     ).rejects.toMatchObject({ code: '23514' });

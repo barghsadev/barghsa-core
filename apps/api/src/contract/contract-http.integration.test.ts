@@ -171,22 +171,34 @@ it.each([
   'Completed',
 ])('rejects draft edits in %s', async (state) => {
   const row = await create(
-    state === 'Active' ? { ...(await input()), serviceType: 'savings' } : undefined
+    ['Active', 'Completed'].includes(state)
+      ? { ...(await input()), serviceType: 'savings' }
+      : undefined
   );
-  if (['AwaitingCustomerAcceptance', 'Accepted', 'Active'].includes(state)) {
+  if (['AwaitingCustomerAcceptance', 'Accepted', 'Active', 'Completed'].includes(state)) {
+    if (state === 'Completed')
+      await http.pool.query(
+        "UPDATE contract_activation_requirements SET service_ends_at='2000-01-01T00:00:00Z' WHERE version_id=$1",
+        [row.currentVersionId]
+      );
     await http.pool.query("UPDATE contracts SET state='AwaitingStaffReview' WHERE id=$1", [row.id]);
     await http.pool.query(
       "INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,'contract-legal')",
       [row.id, row.currentVersionId]
     );
-    if (state === 'Accepted' || state === 'Active')
+    if (['Accepted', 'Active', 'Completed'].includes(state))
       await http.pool.query(
         "INSERT INTO contract_acceptances(contract_id,version_id,accepted_by) VALUES($1,$2,'contract-legal')",
         [row.id, row.currentVersionId]
       );
-    if (state === 'Active')
+    if (['Active', 'Completed'].includes(state))
       await http.pool.query(
         'INSERT INTO contract_activations(contract_id,version_id) VALUES($1,$2)',
+        [row.id, row.currentVersionId]
+      );
+    if (state === 'Completed')
+      await http.pool.query(
+        'INSERT INTO contract_completions(contract_id,version_id) VALUES($1,$2)',
         [row.id, row.currentVersionId]
       );
   } else await http.pool.query('UPDATE contracts SET state=$2 WHERE id=$1', [row.id, state]);
@@ -511,5 +523,85 @@ it('accepts explicit initial date context and rejects timezone-free or malformed
   ])
     expect(
       (await send('', 'POST', { ...body, idempotencyKey: randomUUID(), activationContext })).status
+    ).toBe(400);
+});
+
+it('versions end-date edits, preserves omitted dates and freezes the published term', async () => {
+  const body = {
+    ...(await input()),
+    serviceType: 'savings',
+    activationContext: {
+      initialInvoiceId: null,
+      serviceStartsAt: '2026-01-01T00:00:00Z',
+      serviceEndsAt: '2027-01-01T03:30:00+03:30',
+    },
+  };
+  const initial = await send('', 'POST', body);
+  expect(initial.status).toBe(201);
+  let row = (await initial.json()) as ContractDto;
+  const read = async () => {
+    const response = await send('/' + row.id + '/activation');
+    expect(response.status).toBe(200);
+    return (await response.json()) as { serviceEndsAt: string | null };
+  };
+  expect((await read()).serviceEndsAt).toBe('2027-01-01T00:00:00.000Z');
+  const first = row.currentVersionId;
+  const changed = {
+    ...edit(row),
+    content: row.currentVersion.content,
+    activationContext: { ...body.activationContext, serviceEndsAt: '2028-01-01T00:00:00Z' },
+  };
+  const response = await send('/' + row.id, 'PATCH', changed);
+  expect(response.status).toBe(200);
+  row = (await response.json()) as ContractDto;
+  expect(row.currentVersionId).not.toBe(first);
+  expect(row.currentVersion.versionNumber).toBe(2);
+  expect((await read()).serviceEndsAt).toBe('2028-01-01T00:00:00.000Z');
+  expect(await (await send('/' + row.id, 'PATCH', changed)).json()).toEqual(row);
+  const inherited = await send('/' + row.id, 'PATCH', {
+    ...edit(row),
+    activationContext: { initialInvoiceId: null, serviceStartsAt: '2026-02-01T00:00:00Z' },
+  });
+  expect(inherited.status).toBe(200);
+  row = (await inherited.json()) as ContractDto;
+  expect((await read()).serviceEndsAt).toBe('2028-01-01T00:00:00.000Z');
+  const cleared = await send('/' + row.id, 'PATCH', {
+    ...edit(row),
+    content: row.currentVersion.content,
+    activationContext: {
+      initialInvoiceId: null,
+      serviceStartsAt: '2026-02-01T00:00:00Z',
+      serviceEndsAt: null,
+    },
+  });
+  expect(cleared.status).toBe(200);
+  row = (await cleared.json()) as ContractDto;
+  expect((await read()).serviceEndsAt).toBeNull();
+  const command = { expectedVersionId: row.currentVersionId, idempotencyKey: randomUUID() };
+  expect((await send('/' + row.id + '/submit', 'POST', command)).status).toBe(200);
+  expect(
+    (await send('/' + row.id + '/publish', 'POST', { ...command, idempotencyKey: randomUUID() }))
+      .status
+  ).toBe(200);
+  expect((await send('/' + row.id, 'PATCH', edit(row))).status).toBe(409);
+});
+it('rejects invalid end timestamps and reversed service intervals', async () => {
+  for (const serviceEndsAt of [
+    '2026-01-01',
+    '2026-01-01T00:00:00',
+    '2025-01-01T00:00:00Z',
+    '2026-01-01T00:00:00Z',
+  ])
+    expect(
+      (
+        await send('', 'POST', {
+          ...(await input()),
+          activationContext: {
+            initialInvoiceId: null,
+            serviceStartsAt: '2026-01-01T00:00:00Z',
+            serviceEndsAt,
+          },
+        })
+      ).status
     ).toBe(400);
 });
