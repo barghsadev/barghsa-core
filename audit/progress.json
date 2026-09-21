@@ -1441,8 +1441,8 @@
         "status": "merged",
         "merge_commit_sha": "9960e956e105f0d8067cfbe8b6e52f67da4da41e"
       },
-      "validation": "Customer request backend:51 HTTP and33 DB/upgrade tests pass;API/DB types,targeted lint,OpenAPI and database snapshot checks pass. Interface,combined coverage,independent review and CI remain.",
-      "next_action": "Build bilingual customer request/status controls and staff review queue connected to the existing cancellation editor;validate full flow before review and merge.",
+      "validation": "Backend and UI built:60 API coverage tests,58 frontend tests,16 DB coverage tests plus earlier33 DB/upgrade cases,8 bilingual production browser flows pass. Types,lint,build,44 bundle budgets,static security and corrected proxy probe pass. Final committed combined coverage,independent review and CI remain.",
+      "next_action": "Collect combined coverage on clean committed head,close evidence gaps,review exact head and merge only after all CI gates pass.",
       "remaining_tasks": [
         "Customer cancellation requests",
         "Contract draft/edit UI and typed financial preview",
@@ -1457,18 +1457,28 @@
         35549306810,
         35550597502
       ],
-      "main_full_runs_pending": [
-        35554299044,
-        35556867140
-      ],
+      "main_full_runs_pending": [],
       "main_full_runs_failed": [
         {
           "run_id": 35551479937,
           "reason": "317 API files passed; uncaught PostgreSQL termination during config-cache forced-drop cleanup",
           "local_fix": "Wait for clients before ordinary DROP; focused tests pass",
           "remote_revalidation": "pending next full CI"
+        },
+        {
+          "run_id": 35556867140,
+          "reason": "Pilot proxy upload fixture returned502 before browsers ran;combined coverage missing browser evidence. Tests/security passed.",
+          "local_fix": "Consume upload before responding and assert full received byte count;complete proxy probe passes",
+          "remote_revalidation": "pending next full CI"
         }
-      ]
+      ],
+      "nightly_browser_follow_up": {
+        "run_id": 35554299044,
+        "head_sha": "cac42489bf39a7b08443d1acb547480cf8572cee",
+        "status": "failed",
+        "details": "Separate scheduled Nightly browser checks, not full main CI. Mobile Chrome20 failures;Firefox6 failures including existing contrast/theme/font/OTP/CSP cases;mobile Safari/WebKit cancelled. Diagnose after completing current batch.",
+        "log": "/tmp/barghsa-main327-rerun-failed.log"
+      }
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",

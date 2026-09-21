@@ -1,6 +1,6 @@
 # Customer cancellation requests
 
-Task `04-invoices-wallet-contracts.md#T-04.5.01.06`. Base is verified PR #328 merge `9960e956e105f0d8067cfbe8b6e52f67da4da41e`. Status: backend built and locally validated; customer/staff interface and final review/CI remain.
+Task `04-invoices-wallet-contracts.md#T-04.5.01.06`. Base is verified PR #328 merge `9960e956e105f0d8067cfbe8b6e52f67da4da41e`. Status: full interface and backend built and locally validated; committed combined coverage, independent review and CI remain.
 
 Reuse cancellation intents/execution rather than inventing another refund path. A customer with contracts:sign and step-up can submit a reason and preferred destination for a published, current nonterminal contract. Request creates durable staff-review state and notifications only; no contract/refund mutation. Use current session/profile checks and idempotency, one unresolved request per contract, immutable customer request evidence.
 
@@ -17,3 +17,11 @@ Migration0146 adds retained, version-bound customer requests with one pending re
 Validation passes51 real HTTP cases across request/cancellation/customer-review flows and33 migrated database/upgrade cases. Tests cover profile isolation, CSRF/step-up, revoked permission, duplicate/idempotent requests, rejection, dual approval before mandatory wallet returns, rejection/execution races, and rollback when notices fail. API/DB types, targeted lint, generated OpenAPI consistency and database snapshot checks pass. No final combined coverage, independent approval or remote CI is claimed for this new batch.
 
 Next: bilingual customer request/status controls, staff queue and review integration with the existing cancellation editor; then frontend/browser checks, committed combined coverage, independent exact-head review and CI before merge.
+
+## Interface and proxy checkpoint
+
+Customers can submit a reason and refund preference, resume pending requests, read rejection explanations and distinguish fulfilled cancellation from independent termination. Staff have a paginated request queue, explanation-required rejection and a request-bound entry into the existing financial cancellation editor. Stale-version requests cannot be approved. Password confirmation preserves request identity across retry.
+
+Focused validation passes58 frontend tests and8 production Chromium flows,including both languages,step-up/reload,decline,resubmit and bound cancellation. API coverage collection passes60 tests;DB collection passes16 plus earlier upgrade evidence. Web types,lint,production build,44 bundle budgets and static security907 files pass.
+
+Full main after #328,run35556867140,passed tests and security but failed its pilot proxy probe on the allowed11MiB upload with502. Browsers never ran,so combined coverage also failed from missing evidence. The test backend previously responded before consuming the upload; it now waits for request end and reports bytes received. The probe asserts all11MiB arrive. Local complete proxy integration passes cache,TLS,routing,body limits,SSE,WebSocket and quota checks. Remote confirmation remains required.

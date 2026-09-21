@@ -1,4 +1,5 @@
 import { ContractRefundQueue } from './ContractRefundQueue.js';
+import { ContractCancellationRequestQueue } from './ContractCancellationRequestQueue.js';
 import { useEffect, useState, type FormEvent } from 'react';
 import {
   Alert,
@@ -105,6 +106,7 @@ function Workspace({ staff }: { staff: boolean }) {
         </form>
       ) : null}
       {staff ? <ContractRefundQueue /> : null}
+      {staff ? <ContractCancellationRequestQueue /> : null}
       {staff ? <ContractActivationRules /> : null}
       <ContractResults key={generation} staff={staff} query={query} />
     </div>

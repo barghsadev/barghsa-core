@@ -49,12 +49,19 @@ for (const [port, service] of [
       setTimeout(() => res.end('data: last\n\n'), 600);
       return;
     }
-    res.writeHead(200, {
-      'Content-Type': 'application/json',
-      'Cache-Control': service === 'api' ? 'private, no-cache' : 'no-cache',
+    // Consume uploads before responding: closing an upstream connection while
+    // NGINX is still sending the body can reset it and turn a valid upload into 502.
+    let receivedBytes = 0;
+    req.on('data', (chunk) => {
+      receivedBytes += chunk.length;
     });
-    req.resume();
-    res.end(JSON.stringify({ service, path: req.url, headers: req.headers }));
+    req.on('end', () => {
+      res.writeHead(200, {
+        'Content-Type': 'application/json',
+        'Cache-Control': service === 'api' ? 'private, no-cache' : 'no-cache',
+      });
+      res.end(JSON.stringify({ service, path: req.url, headers: req.headers, receivedBytes }));
+    });
   });
   server.on('upgrade', (req, socket) => {
     const accept = createHash('sha1')

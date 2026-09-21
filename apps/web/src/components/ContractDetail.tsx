@@ -265,6 +265,7 @@ export function ContractDetail({
             <ContractCancellationPanel
               key={'cancellation:' + id + ':' + reload}
               id={id}
+              versionId={data.version.id}
               staff={staff}
               onChanged={() => {
                 setReload((value) => value + 1);

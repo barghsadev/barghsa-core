@@ -149,3 +149,11 @@ Next batch is `04-invoices-wallet-contracts.md#T-04.5.01.06` on `codex/customer-
 ### Customer cancellation request backend validated
 
 The next branch now has migration0146 and customer submit/read,staff queue/read/reject endpoints. An optional immutable request binding on cancellation intent makes approved execution fulfill the request atomically; rejection invalidates the saved decision. Customers cannot directly cancel or create refunds. Independent terminal outcomes read as Closed. Local checks pass51 HTTP and33 migrated DB/upgrade cases,API/DB types,lint,OpenAPI and snapshot consistency. The bilingual interface,coverage,independent review and CI remain; keep the complete workflow in one PR.
+
+### Customer request interface validated; proxy fixture repaired
+
+The request workflow now has bilingual customer submission/status and staff queue/review controls. Local58 frontend tests and8 production browser flows pass alongside60 API coverage cases,types,lint,build,budgets and static security. Commit-bound combined coverage and independent review/CI remain.
+
+Full main #328 run35556867140 passed tests/security but failed before browser execution: the proxy test upload received502 because the fixture responded before consuming its body. The fixture now consumes before responding; the probe verifies all11MiB were received. The complete local proxy probe passes. Missing browser evidence caused the downstream combined-coverage failure; do not claim the old run green.
+
+Correction: run35554299044 is the separate scheduled **Nightly browser checks**,not a main CI rerun. It failed20 mobile Chrome and6 Firefox cases in existing theme/contrast/font/OTP/CSP coverage;mobile Safari/WebKit were cancelled. Keep this as an explicit follow-up after the customer request batch;no cross-browser cleanliness is claimed. Detailed failed log is `/tmp/barghsa-main327-rerun-failed.log`.

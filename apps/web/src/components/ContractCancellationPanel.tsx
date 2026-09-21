@@ -22,13 +22,16 @@ import {
   type CancellationRefund,
 } from '../lib/contract-cancellation.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { ContractCancellationRequestPanel } from './ContractCancellationRequestPanel.js';
 
 export function ContractCancellationPanel({
   id,
+  versionId,
   staff,
   onChanged,
 }: {
   id: string;
+  versionId: string;
   staff: boolean;
   onChanged: () => void;
 }) {
@@ -38,12 +41,14 @@ export function ContractCancellationPanel({
   const [status, setStatus] = useState<CancellationStatus | null>(null),
     [error, setError] = useState(false),
     [reload, setReload] = useState(0),
-    [open, setOpen] = useState(false);
+    [open, setOpen] = useState(false),
+    [customerRequestId, setCustomerRequestId] = useState<string | null>(null);
   useEffect(() => {
     const controller = new AbortController();
     setStatus(null);
     setError(false);
     setOpen(false);
+    setCustomerRequestId(null);
     void documentRequest<CancellationStatus>(`${contractBase(staff)}/${id}/cancellation-status`, {
       signal: controller.signal,
     })
@@ -74,6 +79,18 @@ export function ContractCancellationPanel({
         <PageLoading label={word('loading')} />
       ) : (
         <>
+          {!staff || status.canCancel ? (
+            <ContractCancellationRequestPanel
+              id={id}
+              versionId={versionId}
+              staff={staff}
+              onChanged={onChanged}
+              onReview={(request) => {
+                setCustomerRequestId(request.id);
+                setOpen(true);
+              }}
+            />
+          ) : null}
           {status.state === 'Cancelled' ? (
             <>
               <p>{word('cancellationServiceEnded')}</p>
@@ -111,14 +128,18 @@ export function ContractCancellationPanel({
                 variant="outline"
                 className="self-start"
                 aria-expanded={open}
-                onClick={() => setOpen(!open)}
+                onClick={() => {
+                  setCustomerRequestId(null);
+                  setOpen(!open);
+                }}
               >
                 {word('cancellationReview')}
               </Button>
               {open ? (
                 <CancellationEditor
-                  key={id}
+                  key={id + ':' + customerRequestId}
                   id={id}
+                  customerRequestId={customerRequestId}
                   canChooseRefund={status.canChooseRefund === true}
                   onChanged={onChanged}
                 />
@@ -134,10 +155,12 @@ export function ContractCancellationPanel({
 }
 function CancellationEditor({
   id,
+  customerRequestId,
   canChooseRefund,
   onChanged,
 }: {
   id: string;
+  customerRequestId: string | null;
   canChooseRefund: boolean;
   onChanged: () => void;
 }) {
@@ -175,7 +198,11 @@ function CancellationEditor({
       .then(([snapshot, saved]) => {
         if (controller.signal.aborted) return;
         setPreview(snapshot);
-        setIntent(saved.intent);
+        setIntent(
+          customerRequestId && saved.intent?.customerRequestId !== customerRequestId
+            ? null
+            : saved.intent
+        );
         setLines(
           Object.fromEntries(
             snapshot.invoices.map((i) => [
@@ -189,7 +216,7 @@ function CancellationEditor({
         if (!controller.signal.aborted) setError(true);
       });
     return () => controller.abort();
-  }, [id, reload]);
+  }, [id, reload, customerRequestId]);
   function prepare(event: FormEvent) {
     event.preventDefault();
     if (!preview) return;
@@ -218,6 +245,7 @@ function CancellationEditor({
         expectedVersionId: preview.versionId,
         expectedFingerprint: preview.fingerprint,
         reason: reason.trim(),
+        ...(customerRequestId ? { customerRequestId } : {}),
         refundDecision: custom ? { mode: 'custom', refunds } : { mode: 'full_wallet' },
         idempotencyKey: crypto.randomUUID(),
       },
