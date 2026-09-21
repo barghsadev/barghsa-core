@@ -10476,17 +10476,24 @@
                     "minLength": 1,
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "invoiceId": {
                     "description": "Optional invoice to apply the receipt against. Excess over remaining is credited to the wallet.",
                     "format": "uuid",
                     "type": "string"
                   }
                 },
+                "required": [
+                  "expectedReviewHash"
+                ],
                 "type": "object"
               }
             }
           },
-          "required": false
+          "required": true
         },
         "responses": {
           "200": {
@@ -10573,6 +10580,44 @@
           }
         ],
         "summary": "Reject a bank-receipt top-up with a customer-visible reason",
+        "tags": [
+          "Admin · Wallet bank receipts"
+        ]
+      }
+    },
+    "/api/admin/wallet/bank-receipt-top-ups/{transactionId}/review": {
+      "get": {
+        "operationId": "BankReceiptConfirmationController_review",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "transactionId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative financial review and confirmation hash."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review the exact receipt allocation and approval conditions before confirmation",
         "tags": [
           "Admin · Wallet bank receipts"
         ]

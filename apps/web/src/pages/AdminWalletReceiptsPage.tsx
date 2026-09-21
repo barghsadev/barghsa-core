@@ -15,7 +15,11 @@ import {
   BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
   APPROVAL_REVIEW_REASON_MAX_LENGTH,
   parseBankReceiptRejectReason,
+  parseBankReceiptConfirmationReview,
+  type BankReceiptConfirmationReview,
 } from '@barghsa/shared/finance';
+import { BankReceiptFinancialReview } from '../components/BankReceiptFinancialReview.js';
+import { ScrollArea } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import {
@@ -86,7 +90,12 @@ interface AllocationPreview {
 }
 
 type PendingAction = { transactionId: string } & (
-  | { kind: 'confirm'; invoiceId: string | null; emergencyOverrideReason?: string }
+  | {
+      kind: 'confirm';
+      invoiceId: string | null;
+      review: BankReceiptConfirmationReview;
+      emergencyOverrideReason?: string;
+    }
   | { kind: 'reject'; reason: string }
 );
 
@@ -211,6 +220,19 @@ export default function AdminWalletReceiptsPage() {
   const [allocation, setAllocation] = useState<AllocationPreview | null>(null);
   const [allocationError, setAllocationError] = useState<string | null>(null);
   const [allocationLoading, setAllocationLoading] = useState(false);
+  const [financialReview, setFinancialReview] = useState<BankReceiptConfirmationReview | null>(
+    null
+  );
+  const reviewReady =
+    financialReview !== null &&
+    selected !== null &&
+    financialReview.scope.resourceId === selected.transactionId &&
+    financialReview.scope.profileId === selected.walletId &&
+    financialReview.data.receipt.amount === selected.amount &&
+    (financialReview.data.invoice?.invoice.id ?? '') === invoiceId.trim() &&
+    !allocationLoading &&
+    !allocationError &&
+    time.status === 'ready';
 
   const [stepUpOpen, setStepUpOpen] = useState(false);
   const [stepUpPassword, setStepUpPassword] = useState('');
@@ -286,13 +308,14 @@ export default function AdminWalletReceiptsPage() {
 
   useEffect(() => {
     const trimmed = invoiceId.trim();
-    if (!selected || !trimmed) {
+    setFinancialReview(null);
+    if (!selected || !selected.canDecide) {
       setAllocation(null);
       setAllocationError(null);
       setAllocationLoading(false);
       return;
     }
-    if (!isTransactionUuid(trimmed)) {
+    if (trimmed && !isTransactionUuid(trimmed)) {
       setAllocation(null);
       setAllocationError(t('admin.walletReceipts.error.invoiceId', locale));
       setAllocationLoading(false);
@@ -305,7 +328,7 @@ export default function AdminWalletReceiptsPage() {
     void (async () => {
       try {
         const res = await fetch(
-          `/api/admin/wallet/bank-receipt-top-ups/${selected.transactionId}/allocation?invoiceId=${encodeURIComponent(trimmed)}`
+          `/api/admin/wallet/bank-receipt-top-ups/${selected.transactionId}/review${trimmed ? `?invoiceId=${encodeURIComponent(trimmed)}` : ''}`
         );
         const data: unknown = await res.json().catch(() => null);
         if (cancelled) return;
@@ -316,11 +339,34 @@ export default function AdminWalletReceiptsPage() {
           );
           return;
         }
-        setAllocation(data as AllocationPreview);
+        const review = parseBankReceiptConfirmationReview(data);
+        if (
+          !review ||
+          review.scope.resourceId !== selected.transactionId ||
+          review.scope.profileId !== selected.walletId ||
+          review.data.receipt.amount !== selected.amount ||
+          (review.data.invoice?.invoice.id ?? '') !== trimmed
+        )
+          throw new Error('Invalid receipt review');
+        setFinancialReview(review);
+        setAllocation(
+          review.data.invoice
+            ? {
+                transactionId: selected.transactionId,
+                invoiceId: trimmed,
+                invoiceState: review.data.invoice.invoice.state,
+                receiptAmount: review.data.receipt.amount,
+                remaining: review.data.invoice.invoice.remainingAmount,
+                invoiceAllocation: review.data.allocation.invoiceAmount,
+                walletCreditAmount: review.data.allocation.walletCredit,
+                isOverpayment: BigInt(review.data.allocation.walletCredit) > 0n,
+              }
+            : null
+        );
       } catch {
         if (!cancelled) {
           setAllocation(null);
-          setAllocationError(t('admin.walletReceipts.error.allocation', locale));
+          setAllocationError(t('admin.walletReceipts.review.error', locale));
         }
       } finally {
         if (!cancelled) setAllocationLoading(false);
@@ -364,6 +410,7 @@ export default function AdminWalletReceiptsPage() {
         action.kind === 'reject'
           ? JSON.stringify({ reason: action.reason })
           : JSON.stringify({
+              expectedReviewHash: action.review.hash,
               ...(action.invoiceId ? { invoiceId: action.invoiceId } : {}),
               ...(action.emergencyOverrideReason !== undefined
                 ? { emergencyOverrideReason: action.emergencyOverrideReason }
@@ -373,10 +420,22 @@ export default function AdminWalletReceiptsPage() {
     const data: unknown = await res.json().catch(() => null);
     if (isStepUpRequired(res, data)) return 'step_up';
     if (!res.ok) {
-      setError(errorMessage(data, t('admin.walletReceipts.error.save', locale)));
+      if (res.status === 409 && action.kind === 'confirm') setFinancialReview(null);
+      setError(
+        res.status === 409 && action.kind === 'confirm'
+          ? t('admin.walletReceipts.review.changed', locale)
+          : errorMessage(data, t('admin.walletReceipts.error.save', locale))
+      );
       return 'error';
     }
     const dto = data as BankReceiptReviewDto;
+    if (
+      action.kind === 'confirm' &&
+      (!dto ||
+        dto.transactionId !== action.transactionId ||
+        (data as { reviewHash?: unknown }).reviewHash !== action.review.hash)
+    )
+      throw new Error('Unconfirmed receipt response');
     if (dto.state === 'Pending' && dto.dualApproval) {
       setStatus(t('admin.walletReceipts.approvalPending', locale));
       setSelected(dto);
@@ -435,7 +494,7 @@ export default function AdminWalletReceiptsPage() {
   }
 
   function handleConfirm(emergencyOverrideReason?: string) {
-    if (!selected || acting || stepUpOpen) return;
+    if (!selected || acting || stepUpOpen || !reviewReady || !financialReview) return;
     if (
       emergencyOverrideReason !== undefined &&
       (!selected.canEmergencyOverride ||
@@ -464,6 +523,7 @@ export default function AdminWalletReceiptsPage() {
     void runAction({
       transactionId: selected.transactionId,
       kind: 'confirm',
+      review: financialReview,
       invoiceId: isTransactionUuid(trimmed) ? trimmed : null,
       ...(emergencyOverrideReason !== undefined
         ? { emergencyOverrideReason: emergencyOverrideReason.trim() }
@@ -500,6 +560,7 @@ export default function AdminWalletReceiptsPage() {
   async function submitStepUp(e?: FormEvent) {
     e?.preventDefault();
     if (!stepUpPassword.trim() || stepUpSubmitting || !pendingAction) return;
+    if (pendingAction.kind === 'confirm' && time.status !== 'ready') return;
     setStepUpSubmitting(true);
     setStepUpError(null);
     try {
@@ -513,7 +574,7 @@ export default function AdminWalletReceiptsPage() {
         setStepUpError(t('admin.walletReceipts.stepUp.failed', locale));
         return;
       }
-      if (outcome === 'ok') {
+      if (outcome === 'ok' || outcome === 'error') {
         setStepUpOpen(false);
         setPendingAction(null);
         setStepUpPassword('');
@@ -750,42 +811,24 @@ export default function AdminWalletReceiptsPage() {
                     </p>
                   )}
 
-                  {allocation && (
-                    <dl
-                      className="rounded border border-warning/20 bg-warning-soft p-3 text-sm space-y-1"
-                      aria-live="polite"
-                    >
-                      <div>
-                        <dt className="text-muted-foreground">
-                          {t('admin.walletReceipts.remaining', locale)}
-                        </dt>
-                        <dd className="font-medium">
-                          {numbers.irrDigits(allocation.remaining)} {selected.currency}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-muted-foreground">
-                          {t('admin.walletReceipts.invoiceAllocation', locale)}
-                        </dt>
-                        <dd className="font-medium">
-                          {numbers.irrDigits(allocation.invoiceAllocation)} {selected.currency}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-muted-foreground">
-                          {t('admin.walletReceipts.overpaymentCredit', locale)}
-                        </dt>
-                        <dd className="font-medium">
-                          {numbers.irrDigits(allocation.walletCreditAmount)} {selected.currency}
-                        </dd>
-                      </div>
-                      {allocation.isOverpayment && (
-                        <p className="text-warning pt-1">
-                          {t('admin.walletReceipts.overpaymentPreview', locale)}
-                        </p>
-                      )}
-                    </dl>
+                  {allocationLoading && (
+                    <p role="status">{t('admin.walletReceipts.review.loading', locale)}</p>
                   )}
+                  {financialReview && (
+                    <BankReceiptFinancialReview
+                      review={financialReview}
+                      formatDate={time.format}
+                      formatPaymentDate={(value) => formatPaymentDate(value, locale)}
+                    />
+                  )}
+                  <button
+                    type="button"
+                    disabled={acting || stepUpOpen || allocationLoading}
+                    onClick={() => void loadQueue()}
+                    className="rounded border px-3 py-2"
+                  >
+                    {t('admin.walletReceipts.review.refresh', locale)}
+                  </button>
 
                   {clientIssue && (
                     <p
@@ -804,6 +847,7 @@ export default function AdminWalletReceiptsPage() {
                     onClick={() => handleConfirm()}
                     disabled={
                       acting ||
+                      !reviewReady ||
                       (isTransactionUuid(invoiceId.trim()) &&
                         (allocationLoading || !!allocationError || !allocation))
                     }
@@ -848,6 +892,7 @@ export default function AdminWalletReceiptsPage() {
                         data-testid="wallet-receipt-emergency-confirm"
                         disabled={
                           acting ||
+                          !reviewReady ||
                           stepUpOpen ||
                           !emergencyReason.trim() ||
                           (!!invoiceId.trim() &&
@@ -948,6 +993,22 @@ export default function AdminWalletReceiptsPage() {
             <p id="wallet-receipt-step-up-description" className="text-sm text-muted-foreground">
               {t('admin.walletReceipts.stepUp.description', locale)}
             </p>
+            {pendingAction?.kind === 'confirm' && (
+              <>
+                {time.notice}
+                <ScrollArea
+                  className="h-[35dvh]"
+                  role="region"
+                  aria-label={t('admin.walletReceipts.review.title', locale)}
+                >
+                  <BankReceiptFinancialReview
+                    review={pendingAction.review}
+                    formatDate={time.format}
+                    formatPaymentDate={(value) => formatPaymentDate(value, locale)}
+                  />
+                </ScrollArea>
+              </>
+            )}
             <div>
               <label
                 htmlFor="wallet-receipt-step-up-password"
@@ -987,7 +1048,11 @@ export default function AdminWalletReceiptsPage() {
               <button
                 type="submit"
                 data-testid="wallet-receipt-step-up-submit"
-                disabled={stepUpSubmitting || !stepUpPassword.trim()}
+                disabled={
+                  stepUpSubmitting ||
+                  !stepUpPassword.trim() ||
+                  (pendingAction?.kind === 'confirm' && time.status !== 'ready')
+                }
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
               >
                 {stepUpSubmitting

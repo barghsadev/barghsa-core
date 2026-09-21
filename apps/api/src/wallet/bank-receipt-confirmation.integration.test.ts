@@ -34,6 +34,7 @@ import { v7 as uuidv7 } from 'uuid';
 import { startHttpFixture } from '../test/http-fixture';
 import {
   BANK_RECEIPT_CONFIRMED_EVENT,
+  DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
   BANK_RECEIPT_OVERPAYMENT_ERRORS,
   BANK_RECEIPT_REJECTED_EVENT,
   BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY,
@@ -68,6 +69,7 @@ const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
 const CUSTOMER_USER_ID = 'customer-bank-receipt-owner';
 const ACTOR_USER_ID = 'staff-bank-receipt-confirm';
+const REVIEWER_USER_ID = 'staff-bank-receipt-reviewer';
 const AMOUNT = 250_000n;
 const NOW = new Date('2026-09-02T08:00:00.000Z');
 
@@ -96,13 +98,18 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
 
     await ctx.pool.query(
       `INSERT INTO users (user_id, username, password_hash) VALUES
-      ($1, 'customer@example.test', 'test-only'), ($2, 'staff@example.test', 'test-only')`,
-      [CUSTOMER_USER_ID, ACTOR_USER_ID]
+      ($1, 'customer@example.test', 'test-only'), ($2, 'staff@example.test', 'test-only'),
+      ($3, 'reviewer@example.test', 'test-only')`,
+      [CUSTOMER_USER_ID, ACTOR_USER_ID, REVIEWER_USER_ID]
     );
-    await ctx.pool.query(`UPDATE users SET is_staff=true WHERE user_id=$1`, [ACTOR_USER_ID]);
-    await ctx.pool.query(`INSERT INTO user_roles(user_id, role_id) VALUES ($1, 'role-finance')`, [
+    await ctx.pool.query(`UPDATE users SET is_staff=true WHERE user_id IN ($1,$2)`, [
       ACTOR_USER_ID,
+      REVIEWER_USER_ID,
     ]);
+    await ctx.pool.query(
+      `INSERT INTO user_roles(user_id, role_id) VALUES ($1, 'role-finance'), ($2, 'role-finance')`,
+      [ACTOR_USER_ID, REVIEWER_USER_ID]
+    );
     await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2), ($3, $2)`, [
       PROFILE_A,
       CUSTOMER_USER_ID,
@@ -112,7 +119,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       PROFILE_A,
       PROFILE_B,
     ]);
-    await seedReceiptDecisionSessions(ctx.pool, [ACTOR_USER_ID]);
+    await seedReceiptDecisionSessions(ctx.pool, [ACTOR_USER_ID, REVIEWER_USER_ID]);
   }, 60_000);
 
   afterAll(async () => {
@@ -266,6 +273,85 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
         .rows[0].state
     ).toBe('Pending');
   });
+
+  it.each(['unchanged', 'invoice', 'threshold', 'legacy'] as const)(
+    'requires both approvers to confirm the same financial facts: %s',
+    async (change) => {
+      await ctx.pool.query(
+        `INSERT INTO app_config(key,value) VALUES($1,$2::jsonb)
+        ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`,
+        [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY, JSON.stringify({ threshold_irr: 100000 })]
+      );
+      try {
+        const transactionId = await insertPending(uuidv7().slice(-12));
+        const invoiceId = await insertInvoice({ total: 100_000n });
+        const first = {
+          transactionId,
+          invoiceId,
+          actorUserId: ACTOR_USER_ID,
+          ...receiptDecisionSession(ACTOR_USER_ID),
+          ip: '10.0.0.9',
+          now: NOW,
+        };
+        const second = {
+          ...first,
+          actorUserId: REVIEWER_USER_ID,
+          ...receiptDecisionSession(REVIEWER_USER_ID),
+        };
+        const review = await service.review(first);
+        const before = await walletBalances();
+        const pending = await service.confirm({
+          ...first,
+          ...(change === 'legacy' ? {} : { expectedReviewHash: review.hash }),
+        });
+        expect(pending.state).toBe('Pending');
+        expect(pending.dualApproval?.requestId).toBeTruthy();
+        expect(await walletBalances()).toEqual(before);
+        expect(await invoicePaid(invoiceId)).toBe(0n);
+        if (change === 'invoice')
+          await ctx.pool.query('UPDATE invoices SET total_amount=120000 WHERE id=$1', [invoiceId]);
+        if (change === 'threshold')
+          await ctx.pool.query('UPDATE app_config SET value=$2::jsonb WHERE key=$1', [
+            DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+            JSON.stringify({ threshold_irr: 0 }),
+          ]);
+        const secondReview = await service.review(second);
+        expect(secondReview.data.approval.required).toBe(true);
+        if (change === 'unchanged') {
+          expect(secondReview.hash).toBe(review.hash);
+          expect((await service.confirm({ ...first, expectedReviewHash: review.hash })).state).toBe(
+            'Pending'
+          );
+          expect(await walletBalances()).toEqual(before);
+          const confirmed = await service.confirm({
+            ...second,
+            expectedReviewHash: secondReview.hash,
+          });
+          expect(confirmed.state).toBe('Released');
+          expect(confirmed.reviewHash).toBe(review.hash);
+          expect(await invoicePaid(invoiceId)).toBe(100_000n);
+          expect((await walletBalances()).posted - before.posted).toBe(150_000n);
+        } else {
+          await expect(
+            service.confirm({ ...second, expectedReviewHash: secondReview.hash })
+          ).rejects.toMatchObject({ status: 409 });
+          expect(await walletBalances()).toEqual(before);
+          expect(await invoicePaid(invoiceId)).toBe(0n);
+          expect(
+            (
+              await ctx.pool.query('SELECT status FROM approval_requests WHERE id=$1', [
+                pending.dualApproval!.requestId,
+              ])
+            ).rows[0].status
+          ).toBe('pending');
+        }
+      } finally {
+        await ctx.pool.query('DELETE FROM app_config WHERE key=$1', [
+          DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+        ]);
+      }
+    }
+  );
 
   it.each([
     { action: 'confirm' as const, state: 'Released', returned: 'NULL' },

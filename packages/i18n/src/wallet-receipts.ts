@@ -1,5 +1,24 @@
 import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
+  'admin.walletReceipts.review.title': 'بررسی نهایی رسید بانکی',
+  'admin.walletReceipts.review.refresh': 'بررسی آخرین اطلاعات',
+  'admin.walletReceipts.review.loading': 'در حال آماده‌سازی بررسی مالی…',
+  'admin.walletReceipts.review.error': 'اطلاعات بررسی مالی در دسترس نیست. دوباره تلاش کنید.',
+  'admin.walletReceipts.review.changed':
+    'اطلاعات مالی تغییر کرده است. آخرین اطلاعات را بررسی و دوباره تأیید کنید.',
+  'admin.walletReceipts.review.profile': 'پروفایل دریافت‌کننده',
+  'admin.walletReceipts.review.source': 'منبع پرداخت',
+  'admin.walletReceipts.review.bank': 'رسید بانکی',
+  'admin.walletReceipts.review.before': 'موجودی قابل استفاده پیش از تأیید',
+  'admin.walletReceipts.review.after': 'موجودی قابل استفاده پس از تأیید',
+  'admin.walletReceipts.review.total': 'مبلغ کل رسید',
+  'admin.walletReceipts.review.walletCredit': 'واریز به کیف پول',
+  'admin.walletReceipts.review.approval': 'شرط تأیید',
+  'admin.walletReceipts.review.twoPeople': 'تأیید دو کارشناس مجاز لازم است.',
+  'admin.walletReceipts.review.onePerson': 'تأیید یک کارشناس مجاز کافی است.',
+  'admin.walletReceipts.review.threshold': 'آستانه تأیید دو نفره',
+  'admin.walletReceipts.review.notice':
+    'تأیید این رسید، قرارداد را لغو نمی‌کند و بازپرداخت به بررسی جداگانه نیاز دارد.',
   'admin.receiptThreshold.title': 'آستانه تأیید دو نفره',
   'admin.receiptThreshold.description':
     'پرداخت\u200cهای بانکی، بازپرداخت\u200cها و اصلاحات مالی دستی با مبلغ مساوی یا بیشتر از این آستانه ریالی به تأیید کارشناس مجاز دوم نیاز دارند.',
@@ -77,6 +96,25 @@ const fa: Record<string, string> = {
   'admin.walletReceipts.error.allocationPending': 'صبر کنید تا پیش‌نمایش مانده فاکتور آماده شود',
 };
 const en: Record<string, string> = {
+  'admin.walletReceipts.review.title': 'Review bank receipt confirmation',
+  'admin.walletReceipts.review.refresh': 'Review latest details',
+  'admin.walletReceipts.review.loading': 'Preparing the financial review…',
+  'admin.walletReceipts.review.error': 'The financial review is unavailable. Please try again.',
+  'admin.walletReceipts.review.changed':
+    'Financial details changed. Review the latest details and confirm again.',
+  'admin.walletReceipts.review.profile': 'Receiving profile',
+  'admin.walletReceipts.review.source': 'Payment source',
+  'admin.walletReceipts.review.bank': 'Bank receipt',
+  'admin.walletReceipts.review.before': 'Available wallet balance before confirmation',
+  'admin.walletReceipts.review.after': 'Available wallet balance after confirmation',
+  'admin.walletReceipts.review.total': 'Receipt total',
+  'admin.walletReceipts.review.walletCredit': 'Wallet credit',
+  'admin.walletReceipts.review.approval': 'Approval requirement',
+  'admin.walletReceipts.review.twoPeople': 'Two authorized staff members must approve.',
+  'admin.walletReceipts.review.onePerson': 'One authorized staff member may confirm.',
+  'admin.walletReceipts.review.threshold': 'Two-person approval threshold',
+  'admin.walletReceipts.review.notice':
+    'Confirming this receipt does not cancel a contract. Refunds require a separate review.',
   'admin.receiptThreshold.title': 'Dual-approval threshold',
   'admin.receiptThreshold.description':
     'Bank payments, refunds and manual adjustments at or above this IRR amount require a second authorized reviewer.',

@@ -37,6 +37,21 @@ export function walletReceiptApproval(metadata: unknown): WalletReceiptApproval 
     return conflict('Invalid saved receipt approval binding');
   return row as unknown as WalletReceiptApproval;
 }
+/** Preserve approval authority before the financial review waits for wallet balances. */
+export async function lockWalletReceiptApprovalAuthority(
+  client: WalletQueryClient,
+  saved: WalletReceiptApproval
+): Promise<void> {
+  const request = (
+    await client.query('SELECT status,reviewer_id FROM approval_requests WHERE id=$1 FOR UPDATE', [
+      saved.requestId,
+    ])
+  ).rows[0] as { status: string; reviewer_id: string | null } | undefined;
+  await requireCurrentFinancePermission(client, saved.initiatorId);
+  if (request?.status === 'approved' && request.reviewer_id)
+    await requireCurrentFinancePermission(client, request.reviewer_id);
+}
+
 /** Caller holds the receipt lock and owns the transaction. Returns a pending binding, or null to settle. */
 export async function gateWalletReceiptApproval(
   client: WalletQueryClient,

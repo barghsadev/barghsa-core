@@ -277,6 +277,7 @@ it('requires step-up to initiate and permits queue reads without it', async () =
   });
 });
 
+const walletReviewHashes = new Map<string, string>();
 async function walletReceipt(amount = 100000n) {
   const profile = (
     await http.pool.query(
@@ -305,13 +306,18 @@ async function walletReceipt(amount = 100000n) {
       attachment,
     ]
   );
+  const review = await fetch(`${http.base}/api/admin/wallet/bank-receipt-top-ups/${id}/review`, {
+    headers: headers.initiator!,
+  });
+  expect(review.status, await review.clone().text()).toBe(200);
+  walletReviewHashes.set(id, ((await review.json()) as { hash: string }).hash);
   return { id, profile };
 }
-async function confirmWallet(user: string, id: string, body: unknown = {}) {
+async function confirmWallet(user: string, id: string, body: Record<string, unknown> = {}) {
   return fetch(`${http.base}/api/admin/wallet/bank-receipt-top-ups/${id}/confirm`, {
     method: 'POST',
     headers: headers[user]!,
-    body: JSON.stringify(body),
+    body: JSON.stringify({ expectedReviewHash: walletReviewHashes.get(id), ...body }),
   });
 }
 it('parks threshold wallet receipts and settles once after a distinct finance confirmation', async () => {
@@ -542,7 +548,11 @@ for (const kind of ['wallet', 'invoice'] as const) {
           {
             method: 'POST',
             headers: { ...headers[user]!, 'X-Correlation-ID': correlations[index]! },
-            body: JSON.stringify({ reason: 'Receipt does not match' }),
+            body: JSON.stringify(
+              kind === 'wallet' && (index === 0 || decision === 'confirm')
+                ? { expectedReviewHash: walletReviewHashes.get(receipt.id) }
+                : { reason: 'Receipt does not match' }
+            ),
           }
         );
         expect(response.status, await response.text()).toBe(200);
@@ -588,7 +598,10 @@ function emergencyReceipt(
     {
       method: 'POST',
       headers: { ...headers.initiator!, 'X-Correlation-ID': correlation },
-      body: JSON.stringify({ emergencyOverrideReason: reason }),
+      body: JSON.stringify({
+        ...(kind === 'wallet' ? { expectedReviewHash: walletReviewHashes.get(id) } : {}),
+        emergencyOverrideReason: reason,
+      }),
     }
   );
 }
@@ -812,7 +825,7 @@ it('applies below-threshold, disabled and corrupt configuration without bypassin
   await http.pool.query(
     `UPDATE app_config SET value='{"threshold_irr":0}' WHERE key='finance.dual_approval_threshold'`
   );
-  expect((await confirmWallet('initiator', pending.id)).status).toBe(200);
+  expect((await confirmWallet('initiator', pending.id)).status).toBe(409);
   expect(
     (
       await http.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1', [
@@ -1287,7 +1300,11 @@ it('rechecks wallet receipt authority after waiting for the actor lock', async (
         {
           method: 'POST',
           headers: headers.reviewer!,
-          body: JSON.stringify({ reason: 'Receipt does not match' }),
+          body: JSON.stringify(
+            action === 'confirm'
+              ? { expectedReviewHash: walletReviewHashes.get(receipt.id) }
+              : { reason: 'Receipt does not match' }
+          ),
         }
       );
       await expect
@@ -1404,7 +1421,11 @@ function receiptDecision(kind: 'wallet' | 'invoice', action: string, id: string)
     {
       method: 'POST',
       headers: headers.reviewer!,
-      body: JSON.stringify({ reason: 'Payer reference mismatch' }),
+      body: JSON.stringify(
+        kind === 'wallet' && action === 'confirm'
+          ? { expectedReviewHash: walletReviewHashes.get(id) }
+          : { reason: 'Payer reference mismatch' }
+      ),
     }
   );
 }

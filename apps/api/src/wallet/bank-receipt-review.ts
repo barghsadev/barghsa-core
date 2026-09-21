@@ -32,6 +32,7 @@ export async function readBankReceiptConfirmationReview(
     receipt: BankReceiptTopUpDetails | null;
     attachmentKey: string | null;
     invoiceId: string | null;
+    approvalRequired?: boolean;
   }
 ) {
   const profile = (
@@ -110,7 +111,9 @@ export async function readBankReceiptConfirmationReview(
       availableAfter: (available + walletCredit).toString(),
     },
     approval: {
-      required: invoiceBankReceiptRequiresDualApproval(threshold, input.amount),
+      required:
+        input.approvalRequired === true ||
+        invoiceBankReceiptRequiresDualApproval(threshold, input.amount),
       thresholdAmount: threshold.status === 'enabled' ? threshold.thresholdIrR.toString() : null,
     },
     source: 'bank_receipt',

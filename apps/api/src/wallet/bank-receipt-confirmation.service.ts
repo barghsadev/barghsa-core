@@ -14,6 +14,7 @@ import { requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import {
   gateWalletReceiptApproval,
+  lockWalletReceiptApprovalAuthority,
   rejectWalletReceiptApproval,
   walletReceiptApproval,
   type WalletReceiptApproval,
@@ -316,6 +317,7 @@ export class BankReceiptConfirmationService {
         httpError(ErrorCodes.CONFLICT_STATE.code, 'Receipt is not pending', 409);
       const receipt = readReceiptDetails(pending.metadata);
       const review = await readBankReceiptConfirmationReview(client, {
+        approvalRequired: walletReceiptApproval(pending.metadata) !== null,
         id: pending.id,
         profileId: pending.walletId,
         amount: pending.amount,
@@ -421,10 +423,20 @@ export class BankReceiptConfirmationService {
 
         const receipt = readReceiptDetails(pending.metadata);
         const invoiceId = input.invoiceId ?? null;
+        const savedApproval = walletReceiptApproval(pending.metadata);
+        if (savedApproval && savedApproval.invoiceId !== invoiceId)
+          httpError(ErrorCodes.CONFLICT_STATE.code, 'Receipt confirmation changed', 409);
+        if (
+          input.expectedReviewHash !== undefined &&
+          savedApproval &&
+          input.emergencyOverrideReason === undefined
+        )
+          await lockWalletReceiptApprovalAuthority(client, savedApproval);
         const financialReview =
           input.expectedReviewHash === undefined
             ? undefined
             : await readBankReceiptConfirmationReview(client, {
+                approvalRequired: walletReceiptApproval(pending.metadata) !== null,
                 id: pending.id,
                 profileId: pending.walletId,
                 amount: pending.amount,
