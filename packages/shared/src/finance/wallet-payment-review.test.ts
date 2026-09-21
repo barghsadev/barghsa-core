@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { parseWalletPaymentReview, type WalletPaymentReview } from './wallet-payment-review.js';
+import { parseWalletPaymentReview, type WalletPaymentReview } from './index.js';
 
 const profileId = '01900000-0000-7000-8000-000000000001';
 const invoiceId = '01900000-0000-7000-8000-000000000002';
