@@ -525,3 +525,60 @@ for (const mode of ['graceful', 'forced', 'bookkeeping-failure'] as const) {
     }
   }, 30000);
 }
+
+it('compiled worker automatically activates eligible contracts and records a system audit', async () => {
+  const worker = await startWorker();
+  const id = randomUUID(),
+    version = randomUUID(),
+    profile = randomUUID();
+  try {
+    const c = await worker.pool.connect();
+    try {
+      await c.query('BEGIN');
+      await c.query("INSERT INTO profiles(id,user_id) VALUES($1,'worker-process-actor')", [
+        profile,
+      ]);
+      await c.query(
+        "INSERT INTO contracts(id,profile_id,service_type,current_version_id) VALUES($1,$2,'savings',$3)",
+        [id, profile, version]
+      );
+      await c.query(
+        "INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by) VALUES($1,$2,1,$3::jsonb,'Initial','worker-process-actor')",
+        [version, id, JSON.stringify({ text: 'Terms' })]
+      );
+      await c.query("UPDATE contracts SET state='AwaitingStaffReview' WHERE id=$1", [id]);
+      await c.query(
+        "INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,'worker-process-actor')",
+        [id, version]
+      );
+      await c.query(
+        "INSERT INTO contract_acceptances(contract_id,version_id,accepted_by) VALUES($1,$2,'worker-process-actor')",
+        [id, version]
+      );
+      await c.query('COMMIT');
+    } catch (e) {
+      await c.query('ROLLBACK');
+      throw e;
+    } finally {
+      c.release();
+    }
+    await expect
+      .poll(
+        async () =>
+          (await worker.pool.query('SELECT state FROM contracts WHERE id=$1', [id])).rows[0].state,
+        { timeout: 35000, interval: 1000 }
+      )
+      .toBe('Active');
+    expect(
+      (
+        await worker.pool.query(
+          "SELECT metadata::jsonb->>'actorType' AS actor FROM audit_log WHERE event='contract.activated' AND metadata::jsonb->>'contractId'=$1",
+          [id]
+        )
+      ).rows
+    ).toEqual([{ actor: 'system' }]);
+    expect(await worker.stop()).toEqual({ code: 0, signal: null });
+  } finally {
+    await worker.close();
+  }
+}, 45000);

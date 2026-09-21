@@ -180,8 +180,9 @@ it('rejects signature flags without immutable evidence and requires accepted ori
     await client.query("UPDATE contracts SET state='Signed',signed_at=NOW() WHERE id=$1", [
       f.contract,
     ]);
-    await client.query("UPDATE contracts SET state='Active' WHERE id=$1", [f.contract]);
-    await expect(client.query('COMMIT')).rejects.toMatchObject({ code: '23514' });
+    await expect(
+      client.query("UPDATE contracts SET state='Active' WHERE id=$1", [f.contract])
+    ).rejects.toMatchObject({ code: '23514' });
   } finally {
     await client.query('ROLLBACK');
     client.release();
@@ -323,7 +324,11 @@ it('upgrades 0140 without inventing evidence for historical signed flags and rer
     const before = (await pool.query('SELECT * FROM contracts WHERE id=$1', [contract])).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0141_contract_signature_evidence', '0142_contract_activation_requirements'],
+      applied: [
+        '0141_contract_signature_evidence',
+        '0142_contract_activation_requirements',
+        '0143_contract_system_activation',
+      ],
     });
     expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [contract])).rows).toEqual(
       before
@@ -346,7 +351,10 @@ it('upgrades 0140 without inventing evidence for historical signed flags and rer
     });
 
     await pool.query('UPDATE contracts SET updated_at=NOW() WHERE id=$1', [contract]);
-    for (const state of ['Active', 'Completed']) {
+    await expect(
+      pool.query("UPDATE contracts SET state='Active' WHERE id=$1", [contract])
+    ).rejects.toMatchObject({ code: '23514' });
+    for (const state of ['Cancelled']) {
       await pool.query('UPDATE contracts SET state=$2 WHERE id=$1', [contract, state]);
       expect(
         (await pool.query('SELECT state,signed_at FROM contracts WHERE id=$1', [contract])).rows[0]

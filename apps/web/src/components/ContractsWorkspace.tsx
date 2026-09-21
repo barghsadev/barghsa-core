@@ -161,7 +161,7 @@ function ContractResults({ staff, query }: { staff: boolean; query: string }) {
       </Button>
       {selected ? (
         <ContractDetail
-          key={selected}
+          key={`${selected}:${reload}`}
           id={selected}
           staff={staff}
           onClose={() => setSelected(null)}

@@ -1,3 +1,4 @@
+import { readContractActivation } from '@barghsa/db/contract-activation';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool, type ContractActivationRule } from '@barghsa/db';
 import type { PoolClient } from 'pg';
@@ -133,70 +134,8 @@ export class ContractActivationService {
     staff: boolean,
     profileId?: string
   ) {
-    const r = (
-      await client.query<{
-        id: string;
-        version_id: string;
-        current_version_id: string;
-        state: string;
-        archived: boolean;
-        rule_revision: number;
-        signature_required: boolean;
-        payment_required: boolean;
-        service_start_required: boolean;
-        initial_invoice_id: string | null;
-        service_starts_at: Date | null;
-        approved: boolean;
-        accepted: boolean;
-        signed: boolean;
-        paid: boolean;
-        started: boolean;
-        evaluated_at: Date;
-      }>(
-        `SELECT c.id,v.id AS version_id,c.current_version_id,c.state,p.archived,r.rule_revision,r.signature_required,r.payment_required,r.service_start_required,r.initial_invoice_id,r.service_starts_at,
-      EXISTS(SELECT 1 FROM contract_publications WHERE contract_id=c.id AND version_id=v.id) AS approved,
-      EXISTS(SELECT 1 FROM contract_acceptances WHERE contract_id=c.id AND version_id=v.id) AS accepted,
-      EXISTS(SELECT 1 FROM contract_signatures s JOIN documents d ON d.id=s.signed_document_id WHERE s.contract_id=c.id AND s.version_id=v.id AND d.state='Approved') AS signed,
-      EXISTS(SELECT 1 FROM invoices i WHERE i.id=r.initial_invoice_id AND i.profile_id=c.profile_id AND (i.contract_id=c.id::text OR (c.order_id IS NOT NULL AND i.order_id=c.order_id AND (i.contract_id IS NULL OR i.contract_id=c.id::text)))
-        AND i.adjustment_for_invoice_id IS NULL AND i.state='Paid' AND i.paid_amount>=i.total_amount AND i.refunded_amount=0) AS paid,
-      COALESCE(r.service_starts_at<=statement_timestamp(),false) AS started,statement_timestamp() AS evaluated_at
-      FROM contracts c JOIN profiles p ON p.id=c.profile_id JOIN contract_versions v ON v.contract_id=c.id
-      JOIN contract_activation_requirements r ON r.version_id=v.id AND r.contract_id=c.id
-      WHERE c.id=$1 AND ($2::uuid IS NULL OR c.profile_id=$2) AND ($3::uuid IS NULL OR v.id=$3)
-        AND ($4::boolean OR EXISTS(SELECT 1 FROM contract_publications WHERE contract_id=c.id AND version_id=v.id))
-      ORDER BY v.version_number DESC LIMIT 1`,
-        [id, profileId ?? null, versionId ?? null, staff]
-      )
-    ).rows[0];
-    if (!r) throw new NotFoundException();
-    const check = (key: string, required: boolean, met: boolean) => ({
-      key,
-      required,
-      status: !required ? 'not_required' : met ? 'met' : 'unmet',
-    });
-    const checks = [
-      check('staffApproval', true, r.approved),
-      check('customerAcceptance', true, r.accepted),
-      check('signature', r.signature_required, r.signed),
-      check('initialPayment', r.payment_required, r.paid),
-      check('serviceStart', r.service_start_required, r.started),
-    ];
-    const isCurrent = r.version_id === r.current_version_id;
-    return {
-      contractId: r.id,
-      versionId: r.version_id,
-      state: r.state,
-      isCurrent,
-      ruleRevision: r.rule_revision,
-      initialInvoiceId: r.initial_invoice_id,
-      serviceStartsAt: r.service_starts_at?.toISOString() ?? null,
-      evaluatedAt: r.evaluated_at.toISOString(),
-      checks,
-      ready:
-        isCurrent &&
-        !r.archived &&
-        ['Accepted', 'Signed'].includes(r.state) &&
-        checks.every((item) => item.status !== 'unmet'),
-    };
+    const result = await readContractActivation(client, id, versionId, staff, profileId);
+    if (!result) throw new NotFoundException();
+    return result;
   }
 }

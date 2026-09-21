@@ -117,7 +117,7 @@ for (const locale of ['en', 'fa'] as const) {
               {
                 id,
                 serviceType: 'electricity',
-                state: 'Accepted',
+                state: dto.state,
                 versionId: version,
                 versionNumber: 1,
               },
@@ -159,9 +159,9 @@ for (const locale of ['en', 'fa'] as const) {
           json: {
             contractId: id,
             versionId: version,
-            state: 'Accepted',
+            state: dto.state,
             isCurrent: true,
-            ready: paid,
+            ready: paid && dto.state === 'Accepted',
             ruleRevision: 1,
             initialInvoiceId: 'invoice',
             serviceStartsAt: null,
@@ -190,10 +190,13 @@ for (const locale of ['en', 'fa'] as const) {
       paid = true;
       await panel.getByRole('button', { name: words.refresh, exact: true }).click();
       await expect(panel.getByText(words.prerequisitesReady, { exact: true })).toBeVisible();
+      dto.state = 'Active';
+      await page.getByRole('button', { name: words.refresh, exact: true }).first().click();
+      await expect(panel.getByText(words.prerequisitesReady, { exact: true })).toHaveCount(0);
       await expect(
         page
           .getByRole('region', { name: words.terms, exact: true })
-          .getByText(words.Accepted, { exact: true })
+          .getByText(words.Active, { exact: true })
           .first()
       ).toBeVisible();
     }

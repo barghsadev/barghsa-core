@@ -71,3 +71,13 @@ The active [activation prerequisite batch](batches/2026-09-21-contract-activatio
 ### Activation prerequisites interface ready for review
 
 Current branch `codex/contract-activation-prerequisites` builds on verified PR #323 merge. Rule controls and exact-version checklist are implemented in both languages. Local validation: 43 database, 60 HTTP integration, 22 frontend, 12 production Chromium cases; types/lint/format/snapshot/backlog and process/unit coverage pass. Final browser coverage, independent review and CI remain. Automatic activation/completion, template PDF generation, editing UI, amendments and cancellation remain unfinished. Scheduler and historical supervisor completion records are unchanged.
+
+### Automatic activation batch built locally
+
+PR #324 head331ac8b375fd089879b1a21e43876d65c2701add has exact-HEAD approval at https://github.com/barghsadev/barghsa-core/pull/324#issuecomment-5753727815 and passes committed combined source coverage. CI35546506754 is still running; do not merge until all five gates pass. Its immutable approval binding is /tmp/barghsa-activation-review-binding.json.
+
+Local branch `codex/contract-system-activation` is stacked on that head and implements the next activation transition batch. See its batch record for53DB/60HTTP/14worker+poller/17frontend/6browser validation and remaining review/CI. After #324 merges, rebase only this new batch onto its verified squash SHA. Full main after #322 failed only the dictionary gap already corrected in #323; #323 full run35545814385 remains pending. No supervisor history or scheduler state changed.
+
+### PR #324 merged; system activation on current main
+
+Verified PR #324 merged as `7c3816394f81ad909818d505f210ebbd53986213` after all five gates passed in run35546506754. Exact reviewed head331ac8b375fd089879b1a21e43876d65c2701add and durable review were read back after merge. System activation batch has been rebased onto this verified main commit. Final committed coverage, its independent review and CI remain. This supersedes the prior pending-merge note.

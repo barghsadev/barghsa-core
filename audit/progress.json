@@ -1430,26 +1430,25 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/contract-activation-prerequisites",
+      "branch": "codex/contract-system-activation",
       "status": "local_validation_complete_review_pending",
-      "record": "kanban/batches/2026-09-21-contract-activation-prerequisites.md",
+      "record": "kanban/batches/2026-09-21-contract-system-activation.md",
       "previous_batch": {
-        "pr": 323,
+        "pr": 324,
         "status": "merged",
-        "merge_commit_sha": "fee178e7ae6637645d3d742ec414f4e0231ee7a0",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/323#issuecomment-5753614975",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35545528581"
+        "merge_commit_sha": "7c3816394f81ad909818d505f210ebbd53986213",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/324#issuecomment-5753727815",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35546506754"
       },
-      "validation": "43 migrated database, 60 HTTP integration, 22 frontend and 12 production Chromium cases pass. Bilingual rules editor and exact-version prerequisite checklist built. API/web types, targeted lint, formatting, snapshot and backlog validation pass. Unit/process changed-source coverage meets existing floors. Final committed browser coverage, independent review and CI pending.",
+      "validation": "53 DB,60 HTTP,14 worker/poller,17frontend,6production browser flows passed. API/worker/db/web types,targeted lint,format,snapshot,bundle,static/backlog checks passed. Final committed combined coverage, review and CI pending.",
       "remaining_tasks": [
-        "Automatic contract template-to-PDF generation",
+        "Automatic end-of-term completion",
         "Contract draft/edit UI and typed financial preview",
-        "Activation prerequisites and transitions",
-        "Amendments, cancellation and automatic refund obligations",
+        "Automatic contract template-to-PDF generation",
+        "Amendments,cancellation and automatic refund obligations",
         "Configured malware scanning and physical retention deletion"
       ],
       "main_full_runs_pending": [
-        35545314934,
         35545814385
       ]
     },

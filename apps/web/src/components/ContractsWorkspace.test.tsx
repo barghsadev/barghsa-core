@@ -378,3 +378,21 @@ it('renders arbitrary stored values as escaped text with a bounded deep fallback
   await render(<ContractTerms value={{ nested: { value: 'deep' } }} depth={20} />);
   expect(container.querySelector('pre')?.textContent).toContain('deep');
 });
+
+it('refreshes the open contract after a system lifecycle transition', async () => {
+  let current = detail({ state: 'Accepted', canAccept: false });
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((url: string) => api(current)(url))
+  );
+  await render(<ContractsWorkspace />);
+  await click(`${en.electricity} \u00b7 ${en.version} 2`);
+  expect(container.querySelector('section[aria-label="Contract terms"]')?.textContent).toContain(
+    en.Accepted
+  );
+  current = { ...current, state: 'Active' };
+  await click(en.refresh);
+  expect(container.querySelector('section[aria-label="Contract terms"]')?.textContent).toContain(
+    en.Active
+  );
+});
