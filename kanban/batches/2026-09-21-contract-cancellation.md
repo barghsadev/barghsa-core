@@ -66,3 +66,9 @@ The current contract view now includes cancellation review and financial outcome
 Validation:22 focused frontend tests,39 cancellation/customer HTTP tests,2 production Chromium flows covering English/Persian,step-up retry identity,reload during approval,final confirmation and financial closure refresh. API/web types,lint,generated OpenAPI and production build pass. Final combined coverage,broader browser evidence,independent exact-head review and CI remain. The batch is not merged or marked complete.
 
 Next: collect actual combined coverage against main,fill meaningful evidence gaps,inspect the rendered interface,then open the full batch PR,review its exact head and merge only after all gates pass.
+
+## Finance follow-up gap closed
+
+Requirement review found that exhausted immutable retry jobs could not be resumed. The batch now provides a finance-only,cursor-paginated queue of unresolved contract returns and a usable manual retry. A fresh step-up-verified finance action persists a one-attempt authorization; the worker verifies it and current finance permission,records its consumption and preserves the exhausted automatic job. The original obligation key still prevents duplicate ledger credit. Failed retries remain visible; successful returns leave the queue. The same bilingual queue records external bank references and invokes separate-user reconciliation. It exposes no dismissal action.
+
+Validation passes52 cancellation/wallet/external HTTP tests,36 refund processing/transaction DB cases and4 production-browser flows for cancellation and queue behavior in English/Persian. API/web/DB types,lint,OpenAPI generation pass. Persian queue rendering was inspected from the production-browser artifact. Combined coverage,remaining evidence gaps,independent review and CI remain.

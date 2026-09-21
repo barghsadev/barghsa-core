@@ -90,6 +90,34 @@ export interface RefundDto {
 export class RefundService {
   constructor(private readonly invoices: InvoiceStateMachineService) {}
 
+  async contractObligations(before?: string) {
+    const rows = (
+      await getDbPool().query<{
+        id: string;
+        contractId: string;
+        invoiceId: string;
+        amount: string;
+        destination: string;
+        state: string;
+        bankReference: string | null;
+        nextAttemptAt: Date | null;
+        exhausted: boolean;
+      }>(
+        `SELECT r.id,o.contract_id AS "contractId",r.invoice_id AS "invoiceId",r.amount::text,r.destination,r.state,
+       r.bank_reference AS "bankReference",j.next_attempt_at AS "nextAttemptAt",(j.exhausted_at IS NOT NULL) AS exhausted
+      FROM contract_refund_obligations o JOIN refunds r ON r.id=o.refund_id LEFT JOIN refund_retry_jobs j ON j.refund_id=r.id
+      WHERE r.state<>'Completed' AND ($1::uuid IS NULL OR r.id<$1) ORDER BY r.id DESC LIMIT 51`,
+        [before ?? null]
+      )
+    ).rows;
+    return {
+      obligations: rows
+        .slice(0, 50)
+        .map((row) => ({ ...row, nextAttemptAt: row.nextAttemptAt?.toISOString() ?? null })),
+      nextBefore: rows.length > 50 ? rows[49]!.id : null,
+    };
+  }
+
   async request(
     input: RefundRequest,
     actor: Actor,
@@ -186,6 +214,7 @@ export class RefundService {
       )
     ).rows[0];
     if (!preliminary) throw new NotFoundException('Refund not found');
+    let manualRetry: { actorUserId: string; authorizationId: string } | undefined;
     const result = await this.transaction(
       preliminary.invoice_id,
       actor,
@@ -311,12 +340,26 @@ export class RefundService {
           'INSERT INTO refund_retry_jobs(refund_id,executor_user_id) VALUES($1,$2) ON CONFLICT(refund_id) DO NOTHING',
           [row.id, actor.userId]
         );
+        const job = (
+          await client.query(
+            'SELECT exhausted_at FROM refund_retry_jobs WHERE refund_id=$1 FOR UPDATE',
+            [row.id]
+          )
+        ).rows[0];
+        if (obligation && row.state === 'Failed' && job?.exhausted_at) {
+          manualRetry = { actorUserId: actor.userId, authorizationId: uuidv7() };
+          await this.audit(client, row, actor, ip, 'refund.manual_retry_requested', {
+            manualRetryId: manualRetry.authorizationId,
+            contractId: obligation.contractId,
+            intentId: obligation.intentId,
+          });
+        }
         return this.dto(client, row);
       }
     );
     if (action !== 'process' || result.state === 'Completed') return result;
     // The durable processing request is committed before attempting any money move.
-    await runWalletRefund(getDbPool(), id);
+    await runWalletRefund(getDbPool(), id, manualRetry);
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');

@@ -1,6 +1,21 @@
 import { lookup } from './lookup.js';
 
 export const en = {
+  cancellationQueue: 'Contract refunds needing follow-up',
+  cancellationQueueNotice: 'Promised returns stay here until completed. They cannot be dismissed.',
+  cancellationQueueEmpty: 'No unresolved contract refunds.',
+  cancellationQueueContract: 'Contract',
+  cancellationQueueExhausted: 'Automatic attempts stopped. Review the cause before retrying.',
+  cancellationQueueScheduled: 'Another automatic attempt is scheduled.',
+  cancellationQueueRetryNotice:
+    'Confirm that you reviewed this return. The result will remain visible until the refund completes.',
+  cancellationQueueReconcileNotice:
+    'Confirm the bank transfer using its reference. A different finance user must perform this reconciliation.',
+  cancellationBankReference: 'Bank transfer reference',
+  cancellationBankReferenceRequired: 'Enter the bank reference before recording the transfer.',
+  'cancellation.queue.process': 'Retry wallet return',
+  'cancellation.queue.record-transfer': 'Record bank transfer',
+  'cancellation.queue.reconcile': 'Reconcile bank transfer',
   cancellationTitle: 'Cancellation and refunds',
   cancellationServiceEnded: 'Service is cancelled. Refunds have their own completion status.',
   cancellationReturned: 'Returned / promised return',
@@ -184,6 +199,22 @@ export const en = {
 } satisfies Record<string, string>;
 
 export const fa: Record<keyof typeof en, string> = {
+  cancellationQueue: 'بازپرداخت قراردادهای نیازمند پیگیری',
+  cancellationQueueNotice:
+    'تعهدهای بازپرداخت تا زمان تکمیل در این فهرست می‌مانند و قابل حذف نیستند.',
+  cancellationQueueEmpty: 'بازپرداخت تعیین‌تکلیف‌نشده‌ای وجود ندارد.',
+  cancellationQueueContract: 'قرارداد',
+  cancellationQueueExhausted: 'تلاش‌های خودکار متوقف شده‌اند. پیش از تلاش مجدد، علت را بررسی کنید.',
+  cancellationQueueScheduled: 'تلاش خودکار دیگری برنامه‌ریزی شده است.',
+  cancellationQueueRetryNotice:
+    'بررسی این بازپرداخت را تأیید کنید. نتیجه تا تکمیل بازپرداخت قابل مشاهده می‌ماند.',
+  cancellationQueueReconcileNotice:
+    'انتقال بانکی را با شماره پیگیری آن تطبیق دهید. این تطبیق باید توسط کاربر مالی دیگری انجام شود.',
+  cancellationBankReference: 'شماره پیگیری انتقال بانکی',
+  cancellationBankReferenceRequired: 'پیش از ثبت انتقال، شماره پیگیری بانکی را وارد کنید.',
+  'cancellation.queue.process': 'تلاش مجدد بازگشت به کیف پول',
+  'cancellation.queue.record-transfer': 'ثبت انتقال بانکی',
+  'cancellation.queue.reconcile': 'تطبیق انتقال بانکی',
   cancellationTitle: 'لغو قرارداد و بازپرداخت',
   cancellationServiceEnded: 'خدمت لغو شده است. تکمیل بازپرداخت‌ها وضعیت جداگانه‌ای دارد.',
   cancellationReturned: 'بازگردانده‌شده / مبلغ تعهد بازپرداخت',

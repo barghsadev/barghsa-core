@@ -485,6 +485,47 @@ it('keeps failed cancellation debt visible after bounded retries without posting
       ])
     ).rowCount
   ).toBe(1);
+  const queue = await send('wallet-refunds/contract-obligations', undefined, 'cancel-finance');
+  expect(queue.status).toBe(200);
+  expect(await queue.json()).toMatchObject({
+    obligations: expect.arrayContaining([
+      expect.objectContaining({ id: refund.id, state: 'Failed', exhausted: true }),
+    ]),
+  });
+  expect(
+    (await send('wallet-refunds/contract-obligations', undefined, 'cancel-support')).status
+  ).toBe(403);
+  expect((await send(`wallet-refunds/${refund.id}/process`, {}, 'cancel-support')).status).toBe(
+    403
+  );
+  expect(
+    await runWalletRefund(http.pool, refund.id, {
+      actorUserId: 'cancel-finance',
+      authorizationId: randomUUID(),
+    })
+  ).toBe('deferred');
+  const retry = await send(`wallet-refunds/${refund.id}/process`, {}, 'cancel-finance');
+  expect(retry.status, await retry.clone().text()).toBe(200);
+  expect(await retry.json()).toMatchObject({
+    state: 'Completed',
+    retry: { attempts: 5, exhausted: true },
+  });
+  expect(
+    (await http.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1', [f.profile]))
+      .rows[0].posted_balance
+  ).toBe('100');
+  expect(
+    (
+      await http.pool.query(
+        "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='refund.completed' AND metadata::jsonb->>'refundId'=$1",
+        [refund.id]
+      )
+    ).rows[0].metadata
+  ).toMatchObject({ retriedBy: 'cancel-finance', manualRetryId: expect.any(String) });
+  const after = (await (
+    await send('wallet-refunds/contract-obligations', undefined, 'cancel-finance')
+  ).json()) as { obligations: Array<{ id: string }> };
+  expect(after.obligations.some((r) => r.id === refund.id)).toBe(false);
 });
 
 it('detects submitted receipts even when the invoice has not entered review, then blocks new payments after cancellation', async () => {

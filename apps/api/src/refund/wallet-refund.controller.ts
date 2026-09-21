@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Get,
+  Query,
   HttpCode,
   HttpException,
   Param,
@@ -32,6 +34,15 @@ export class WalletRefundController {
   private authorize(req: AuthenticatedRequest) {
     if (!hasStaffPermission(req, 'admin:financial:edit'))
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+  }
+  @Get('contract-obligations')
+  @ApiOperation({ summary: 'List unresolved contract refund obligations for finance follow-up' })
+  async obligations(@Req() req: AuthenticatedRequest, @Query('before') before?: string) {
+    this.authorize(req);
+    const parsed = refundUuid.optional().safeParse(before);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    return this.refunds.contractObligations(parsed.data);
   }
   @Post()
   @RequiresStepUp()

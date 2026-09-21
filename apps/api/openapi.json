@@ -10082,6 +10082,35 @@
         ]
       }
     },
+    "/api/admin/wallet-refunds/contract-obligations": {
+      "get": {
+        "operationId": "WalletRefundController_obligations",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "before",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List unresolved contract refund obligations for finance follow-up",
+        "tags": [
+          "Admin · Wallet refunds"
+        ]
+      }
+    },
     "/api/admin/wallet-refunds/{id}/{action}": {
       "post": {
         "operationId": "WalletRefundController_decide",
