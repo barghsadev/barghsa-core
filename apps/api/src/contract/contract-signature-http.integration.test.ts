@@ -147,11 +147,11 @@ async function act(
   return (await response.json()) as DocumentDto;
 }
 
-async function contract(accepted = true) {
+async function contract(accepted = true, serviceType = 'electricity') {
   const f = await owner();
   const response = await send('admin/contracts', 'signature-legal', 'POST', {
     profileId: f.profile,
-    serviceType: 'electricity',
+    serviceType,
     content: { text: 'Exact terms' },
     changeDescription: 'Initial',
     idempotencyKey: randomUUID(),
@@ -506,4 +506,29 @@ it('allows only recording or document replacement to win a race against the same
     expect(stored).toEqual({ contract_state: 'Signed', document_state: 'Approved' });
   else
     expect(stored).toEqual({ contract_state: 'AwaitingSignature', document_state: 'Superseded' });
+});
+
+it('resolves a required solar signature only after recording its approved signed-copy evidence', async () => {
+  const f = await contract(true, 'solar');
+  const read = async () => {
+    const response = await send(`contracts/${f.row.id}/activation`, f.user);
+    expect(response.status).toBe(200);
+    return (await response.json()) as {
+      ready: boolean;
+      state: string;
+      checks: Array<{ key: string; status: string }>;
+    };
+  };
+  const initial = await read();
+  expect(initial.ready).toBe(false);
+  expect(initial.checks.find((item) => item.key === 'signature')?.status).toBe('unmet');
+  const original = await documentFor(f, 'original'),
+    request = await prepare(f, original.id),
+    signed = await documentFor(f, 'signed', false);
+  expect((await read()).ready).toBe(false);
+  expect((await record(f, recordInput(f, request.view.request!.id, signed.id))).status).toBe(200);
+  const result = await read();
+  expect(result.ready).toBe(true);
+  expect(result.state).toBe('Signed');
+  expect(result.checks.find((item) => item.key === 'signature')?.status).toBe('met');
 });

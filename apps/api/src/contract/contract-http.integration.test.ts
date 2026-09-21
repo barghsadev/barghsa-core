@@ -404,3 +404,105 @@ it('lists staff contract metadata with profile/type/state filters and exclusive 
     expect((await send('?' + query)).status).toBe(400);
   }
 });
+
+it('versions activation-context changes even when terms stay the same, and preserves context on later edits', async () => {
+  const row = await create(),
+    invoice = randomUUID();
+  await http.pool.query(
+    "INSERT INTO invoices(id,profile_id,contract_id,type,state,total_amount) VALUES($1,$2,$3,'manual','Unpaid',100)",
+    [invoice, row.profileId, row.id]
+  );
+  const body = {
+    expectedVersionId: row.currentVersionId,
+    content: row.currentVersion.content,
+    changeDescription: 'Initial payment and service start',
+    idempotencyKey: randomUUID(),
+    activationContext: { initialInvoiceId: invoice, serviceStartsAt: '2026-10-01T03:30:00+03:30' },
+  };
+  const response = await send('/' + row.id, 'PATCH', body);
+  expect(response.status).toBe(200);
+  const revised = (await response.json()) as ContractDto;
+  expect(revised.currentVersion.versionNumber).toBe(2);
+  expect(revised.currentVersion.content).toEqual(row.currentVersion.content);
+  const read = async (version: string) =>
+    (
+      await http.pool.query(
+        'SELECT initial_invoice_id,service_starts_at FROM contract_activation_requirements WHERE version_id=$1',
+        [version]
+      )
+    ).rows[0];
+  expect(await read(row.currentVersionId)).toEqual({
+    initial_invoice_id: null,
+    service_starts_at: null,
+  });
+  expect(await read(revised.currentVersionId)).toEqual({
+    initial_invoice_id: invoice,
+    service_starts_at: new Date('2026-10-01T00:00:00Z'),
+  });
+  expect(await (await send('/' + row.id, 'PATCH', body)).json()).toEqual(revised);
+  const unchanged = await send('/' + row.id, 'PATCH', {
+    ...body,
+    expectedVersionId: revised.currentVersionId,
+    idempotencyKey: randomUUID(),
+  });
+  expect(((await unchanged.json()) as ContractDto).currentVersionId).toBe(revised.currentVersionId);
+  const contentEdit = await send('/' + row.id, 'PATCH', edit(revised));
+  expect(contentEdit.status).toBe(200);
+  const edited = (await contentEdit.json()) as ContractDto;
+  expect(await read(edited.currentVersionId)).toEqual(await read(revised.currentVersionId));
+});
+it('rejects foreign or missing activation invoices and rolls back the new version', async () => {
+  const row = await create(),
+    other = await create(),
+    invoice = randomUUID();
+  await http.pool.query(
+    "INSERT INTO invoices(id,profile_id,contract_id,type,state,total_amount) VALUES($1,$2,$3,'manual','Unpaid',100)",
+    [invoice, other.profileId, other.id]
+  );
+  for (const initialInvoiceId of [invoice, randomUUID()]) {
+    expect(
+      (
+        await send('/' + row.id, 'PATCH', {
+          ...edit(row),
+          activationContext: { initialInvoiceId, serviceStartsAt: null },
+        })
+      ).status
+    ).toBe(409);
+    expect(((await (await send('/' + row.id)).json()) as ContractDto).currentVersionId).toBe(
+      row.currentVersionId
+    );
+  }
+  expect(
+    (
+      await http.pool.query(
+        'SELECT count(*)::int AS n FROM contract_versions WHERE contract_id=$1',
+        [row.id]
+      )
+    ).rows[0].n
+  ).toBe(1);
+});
+it('accepts explicit initial date context and rejects timezone-free or malformed context', async () => {
+  const body = await input();
+  const response = await send('', 'POST', {
+    ...body,
+    activationContext: { initialInvoiceId: null, serviceStartsAt: '2026-10-01T00:00:00Z' },
+  });
+  expect(response.status).toBe(201);
+  const row = (await response.json()) as ContractDto;
+  expect(
+    (
+      await http.pool.query(
+        'SELECT service_starts_at FROM contract_activation_requirements WHERE version_id=$1',
+        [row.currentVersionId]
+      )
+    ).rows[0].service_starts_at
+  ).toEqual(new Date('2026-10-01T00:00:00Z'));
+  for (const activationContext of [
+    { initialInvoiceId: null, serviceStartsAt: '2026-10-01' },
+    { initialInvoiceId: null, serviceStartsAt: '2026-10-01T00:00:00' },
+    { initialInvoiceId: null, serviceStartsAt: null, signatureRequired: false },
+  ])
+    expect(
+      (await send('', 'POST', { ...body, idempotencyKey: randomUUID(), activationContext })).status
+    ).toBe(400);
+});

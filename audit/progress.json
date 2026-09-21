@@ -1216,7 +1216,7 @@
         141
       ],
       "owner_batch": "V01/B01 external provider prerequisite",
-      "remaining": "DISABLED/MANUAL Draft→Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
+      "remaining": "DISABLED/MANUAL Draft\u2192Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
       "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
       "prerequisite_task_keys": [
         "02-auth-users-admin.md#T-07.01.02"
@@ -1228,7 +1228,7 @@
         142
       ],
       "owner_batch": "V01/B01 external provider prerequisite",
-      "remaining": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create→outbox→worker→result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
+      "remaining": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create\u2192outbox\u2192worker\u2192result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
       "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
       "prerequisite_task_keys": []
     },
@@ -1282,7 +1282,7 @@
         210
       ],
       "owner_batch": "V01/B01 future AI processing and agent chat",
-      "remaining": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01–03 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
+      "remaining": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01\u201303 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
       "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration",
       "prerequisite_task_keys": [
         "05-notifications-documents-ai.md#T-05.17.02",
@@ -1430,17 +1430,17 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/contract-route-loading",
-      "status": "locally_validated_pending_review",
-      "record": "kanban/batches/2026-09-21-contract-route-loading.md",
+      "branch": "codex/contract-activation-prerequisites",
+      "status": "local_validation_complete_review_pending",
+      "record": "kanban/batches/2026-09-21-contract-activation-prerequisites.md",
       "previous_batch": {
-        "pr": 322,
+        "pr": 323,
         "status": "merged",
-        "merge_commit_sha": "c9bdd1c76fa173965bc3282e8ce8d9d4f677529a",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/322#issuecomment-5753480348",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35544425429"
+        "merge_commit_sha": "fee178e7ae6637645d3d742ec414f4e0231ee7a0",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/323#issuecomment-5753614975",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35545528581"
       },
-      "validation": "27 frontend and12 bilingual browser tests, actual combined coverage, web types/build/lint and44 bundle budgets pass. Rebased onto verified signature merge; final exact-HEAD coverage binding/review/CI remain.",
+      "validation": "43 migrated database, 60 HTTP integration, 22 frontend and 12 production Chromium cases pass. Bilingual rules editor and exact-version prerequisite checklist built. API/web types, targeted lint, formatting, snapshot and backlog validation pass. Unit/process changed-source coverage meets existing floors. Final committed browser coverage, independent review and CI pending.",
       "remaining_tasks": [
         "Automatic contract template-to-PDF generation",
         "Contract draft/edit UI and typed financial preview",
@@ -1448,12 +1448,10 @@
         "Amendments, cancellation and automatic refund obligations",
         "Configured malware scanning and physical retention deletion"
       ],
-      "next_batch": {
-        "branch": "codex/contract-activation-prerequisites",
-        "record": "kanban/batches/2026-09-21-contract-activation-prerequisites.md",
-        "status": "local_foundation",
-        "validation": "43 DB and29 API tests pass for snapshot rules and versioned invoice/date context. Rule administration/resolver/UI and final validation remain."
-      }
+      "main_full_runs_pending": [
+        35545314934,
+        35545814385
+      ]
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",

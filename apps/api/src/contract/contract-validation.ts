@@ -10,8 +10,15 @@ const content = z
       Object.keys(value).length > 0 && Buffer.byteLength(JSON.stringify(value), 'utf8') <= 65_536,
     'Contract content must be a nonempty JSON object up to 64 KiB'
   );
+export const contractActivationContextSchema = z
+  .object({
+    initialInvoiceId: contractUuid.nullable(),
+    serviceStartsAt: z.iso.datetime({ offset: true }).nullable(),
+  })
+  .strict();
 const edit = {
   content,
+  activationContext: contractActivationContextSchema.optional(),
   changeDescription: z.string().trim().min(1).max(1000),
   idempotencyKey: contractUuid,
 };

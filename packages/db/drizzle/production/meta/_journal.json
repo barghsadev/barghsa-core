@@ -435,6 +435,13 @@
       "when": 1791331200044,
       "tag": "0141_contract_signature_evidence",
       "breakpoints": true
+    },
+    {
+      "idx": 142,
+      "version": "7",
+      "when": 1791331200045,
+      "tag": "0142_contract_activation_requirements",
+      "breakpoints": true
     }
   ]
 }

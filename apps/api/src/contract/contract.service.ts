@@ -153,6 +153,7 @@ export class ContractService {
           [id, input.profileId, input.orderId ?? null, input.serviceType, versionId]
         );
         await this.insertVersion(client, id, versionId, 1, input, actor);
+        await this.activationContext(client, versionId, input.activationContext);
         await auditContract(client, id, versionId, 'contract.created', actor, ip);
         return this.get(id, client);
       });
@@ -191,7 +192,19 @@ export class ContractService {
               [row.current_version_id, JSON.stringify(input.content)]
             )
           ).rows[0]!;
-          if (previous.unchanged) {
+          const contextChanged =
+            input.activationContext !== undefined &&
+            !(
+              await client.query<{ same: boolean }>(
+                'SELECT initial_invoice_id IS NOT DISTINCT FROM $2::uuid AND service_starts_at IS NOT DISTINCT FROM $3::timestamptz AS same FROM contract_activation_requirements WHERE version_id=$1',
+                [
+                  row.current_version_id,
+                  input.activationContext.initialInvoiceId,
+                  input.activationContext.serviceStartsAt,
+                ]
+              )
+            ).rows[0]?.same;
+          if (previous.unchanged && !contextChanged) {
             if (row.state === 'ChangesRequested')
               throw new ConflictException('Resubmission requires a new material version');
             return this.get(id, client);
@@ -209,6 +222,7 @@ export class ContractService {
             id,
             versionId,
           ]);
+          await this.activationContext(client, versionId, input.activationContext);
           await auditContract(client, id, versionId, 'contract.version_created', actor, ip);
           if (row.state === 'ChangesRequested') {
             await client.query(
@@ -222,6 +236,30 @@ export class ContractService {
         }
       );
     });
+  }
+  private async activationContext(
+    client: PoolClient,
+    versionId: string,
+    context: UpdateContractInput['activationContext']
+  ) {
+    if (context === undefined) return;
+    try {
+      await client.query(
+        'UPDATE contract_activation_requirements SET initial_invoice_id=$2,service_starts_at=$3 WHERE version_id=$1',
+        [versionId, context.initialInvoiceId, context.serviceStartsAt]
+      );
+    } catch (error) {
+      if (
+        error &&
+        typeof error === 'object' &&
+        'code' in error &&
+        ['23514', '23503'].includes(String(error.code))
+      )
+        throw new ConflictException(
+          'Activation context is unavailable or belongs to another contract'
+        );
+      throw error;
+    }
   }
   private async insertVersion(
     client: PoolClient,

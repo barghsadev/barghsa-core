@@ -32,6 +32,15 @@ import {
   contractListSchema,
 } from './contract-validation.js';
 const editProperties = {
+  activationContext: {
+    type: 'object' as const,
+    additionalProperties: false,
+    required: ['initialInvoiceId', 'serviceStartsAt'],
+    properties: {
+      initialInvoiceId: { type: 'string' as const, format: 'uuid', nullable: true },
+      serviceStartsAt: { type: 'string' as const, format: 'date-time', nullable: true },
+    },
+  },
   content: {
     type: 'object' as const,
     additionalProperties: true,
@@ -114,7 +123,7 @@ export class ContractController {
   @ApiResponse({
     status: 200,
     description:
-      'Updated draft, or revised contract resubmitted for staff review. Unchanged draft content creates no version; resubmission requires changed content.',
+      'Updated draft, or revised contract resubmitted for staff review. Unchanged content and activation context create no version; resubmission requires a material change.',
   })
   @ApiResponse({
     status: 409,
