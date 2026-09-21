@@ -14,11 +14,11 @@ The bilingual confirmation displays the captured shared summary, supports keyboa
 
 Validation:
 
-- 57 API tests pass, including non-zero VAT, inconsistent breakdown rejection, stale profile/date/balance checks, private versus published contract conditions and both replay paths.
+- 96 API tests pass, including non-zero VAT, inconsistent breakdown rejection, stale profile/date/balance checks, private versus published contract conditions and both replay paths.
 - 40 browser cases pass across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari. They cover English/Persian, light/dark, safe retries, changed conditions with unchanged amount, malformed reviews, legacy invoices and keyboard scrolling. Persian desktop/mobile screenshots were inspected.
-- 987 shared Vitest tests pass. The focused parser suite has10 cases; the focused display suite has2 cases covering taxable and exempt lines.
-- API/web types, scoped lint, OpenAPI snapshot checking, production build and44 bundle budgets pass.
-- Focused API coverage collection passes all57 tests but fails the whole-package floor because it selects only three files. It is not a full API coverage pass. Final clean-head changed-source coverage, independent review and PR CI remain required.
+- 987 shared Vitest tests pass. The focused parser suite has 10 cases; the focused display suite has 2 cases covering taxable and exempt lines.
+- API/web types, scoped lint, OpenAPI snapshot checking, production build and 44 bundle budgets pass.
+- Focused API coverage collection passes all 96 tests but fails the whole-package floor because it selects only five files. It is not a full API coverage pass. Changed-source coverage passes the original thresholds after exercising the public parser export, ownership dialog, corrupted cache, derived balance and debit-error rollback paths. Independent review and PR CI remain required.
 - Local semgrep is unavailable; the required CI scanner remains a merge gate.
 
 No supervisor state is changed.
