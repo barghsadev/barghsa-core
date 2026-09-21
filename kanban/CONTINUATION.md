@@ -1,8 +1,8 @@
 # Development continuation status
 
-## Current checkpoint: PR #330 merged
+## Current checkpoint: PR #331 merged
 
-Browser repairs merged as `331cbc005351e6f58f29fa1ee71dac93072546f1` after independent exact-head approval, all five required PR checks in run35569554222 and the complete six-job browser run35569606738. All five browser projects remain enabled. The active batch is [contract draft authoring](batches/2026-09-21-contract-draft-authoring.md), on `codex/contract-draft-authoring`. Its API, frontend, dictionary and five-browser checks pass locally. Final rebased-head coverage, independent approval and PR CI remain required before merge. The full main run35559770645 at PR329 also passed. No supervisor state is changed. The sections below retain earlier checkpoints and are not current dispatch instructions.
+Contract draft authoring merged as `abe6f4cf113ab04d67df6c937ba319a128dff5df` after exact-head approval, final changed-source coverage and all five CI checks in run35572440369. The current batch is [financial review snapshots](batches/2026-09-21-financial-review-snapshots.md), on `codex/financial-review-snapshots`. It starts the shared confirmation contract and wallet-payment integration; other financial commands remain open. PR330 browser repairs passed all six browser jobs before merge. Full main runs35572387200 at PR330 and35573972967 at PR331 both pass all five jobs. The current wallet-review implementation passes96 API tests,40 browser cases across five browsers,987 shared tests and2 focused UI cases. Final changed-source coverage, independent review and PR CI remain. No supervisor state is changed. Earlier checkpoints below are historical.
 
 Checked September 20, 2026 against CI-verified commit `faf9a2de2825e2bb829699aec2802d68c2d1f2a8` on `codex/audit-fixes`.
 

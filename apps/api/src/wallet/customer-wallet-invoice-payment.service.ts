@@ -9,6 +9,7 @@ import { activeProfileSql } from '../profiles/profile-context.js';
 import { lockFinancialSubmissionActor } from '../finance/financial-submission-actor.js';
 import { lockWalletProfile } from './profile-lock.js';
 import { PayInvoiceWithWalletService } from './pay-invoice-with-wallet.service.js';
+import { readWalletPaymentReview } from './wallet-payment-review.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
@@ -28,7 +29,7 @@ export class CustomerWalletInvoicePaymentService {
       const profile = (await client.query(activeProfileSql('wallet:move-funds'), [actor.userId]))
         .rows[0];
       if (!profile) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-      await lockWalletProfile(client, 'profile', profile.id);
+      await lockWalletProfile(client, 'profile', profile.id, 'update');
       await lockFinancialSubmissionActor(client, actor, profile.id, 'wallet:move-funds');
       const current = (await client.query(activeProfileSql('wallet:move-funds'), [actor.userId]))
         .rows[0];
@@ -79,6 +80,7 @@ export class CustomerWalletInvoicePaymentService {
         remainingAmount: remaining.toString(),
         availableBalance: available.toString(),
         canPay: invoice.payable === true && remaining > 0n && available >= remaining,
+        review: await readWalletPaymentReview(client, invoiceId, profileId, remaining, available),
       };
     });
   }
@@ -88,6 +90,7 @@ export class CustomerWalletInvoicePaymentService {
     invoiceId: string,
     idempotencyKey: string,
     expectedRemainingAmount: bigint,
+    expectedReviewHash: string,
     ip: string,
     correlationId?: string
   ) {
@@ -99,6 +102,7 @@ export class CustomerWalletInvoicePaymentService {
         {
           client,
           expectedRemainingAmount,
+          expectedReviewHash,
           actorUserId: actor.userId,
           ip,
           ...(correlationId ? { correlationId } : {}),
@@ -112,6 +116,7 @@ export class CustomerWalletInvoicePaymentService {
         amount: result.remainingPaid.toString(),
         walletTransactionId: result.walletTransaction.id,
         auditId: result.auditId,
+        reviewHash: expectedReviewHash,
       };
     });
   }

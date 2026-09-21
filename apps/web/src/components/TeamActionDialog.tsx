@@ -41,6 +41,8 @@ export function TeamActionDialog({
   action,
   verification,
   selection,
+  summary,
+  confirmationDisabled = false,
   focusConfirmation = false,
   onClose,
   onSuccess,
@@ -57,6 +59,8 @@ export function TeamActionDialog({
   onSuccess: (result: unknown) => Promise<void>;
   finalFocus?: ComponentProps<typeof DialogContent>['finalFocus'];
   focusConfirmation?: boolean;
+  summary?: ReactNode;
+  confirmationDisabled?: boolean;
 }) {
   const locale = useLocale();
   const copy = action ?? verification;
@@ -92,7 +96,7 @@ export function TeamActionDialog({
   }
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (inFlight.current || retryAt > Date.now()) return;
+    if (confirmationDisabled || inFlight.current || retryAt > Date.now()) return;
     inFlight.current = true;
     setBusy(true);
     setError(null);
@@ -178,6 +182,7 @@ export function TeamActionDialog({
               <DialogTitle>{copy.title}</DialogTitle>
               <DialogDescription>{copy.description}</DialogDescription>
             </DialogHeader>
+            {summary}
             {needsPassword && (
               <div className="space-y-2">
                 <Label htmlFor="team-step-up-password">{t('team.password', locale)}</Label>
@@ -210,7 +215,9 @@ export function TeamActionDialog({
               <Button
                 type="submit"
                 autoFocus={focusConfirmation && !needsPassword}
-                disabled={busy || remaining > 0 || (needsPassword && !password)}
+                disabled={
+                  confirmationDisabled || busy || remaining > 0 || (needsPassword && !password)
+                }
               >
                 {t(busy ? 'team.working' : 'team.confirm', locale)}
               </Button>

@@ -1430,23 +1430,21 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/contract-draft-authoring",
+      "branch": "codex/financial-review-snapshots",
       "status": "in_progress",
-      "record": "kanban/batches/2026-09-21-contract-draft-authoring.md",
+      "record": "kanban/batches/2026-09-21-financial-review-snapshots.md",
       "previous_batch": {
-        "pr": 330,
-        "reviewed_head_sha": "5f0b47a14e17602f663d244f3a8f82518346e77b",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/330#issuecomment-5756465962",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35569554222",
-        "browser_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35569606738",
+        "pr": 331,
+        "reviewed_head_sha": "1cda10995e6341b48f498d3c801b88a43813784e",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/331#issuecomment-5756860520",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35572440369",
         "status": "merged",
-        "merge_commit_sha": "331cbc005351e6f58f29fa1ee71dac93072546f1"
+        "merge_commit_sha": "abe6f4cf113ab04d67df6c937ba319a128dff5df"
       },
-      "validation": "Draft authoring:58 API,23 frontend,53 dictionary tests and10 browser cases across five projects pass. Types, lint, build,44 bundle budgets and OpenAPI validation pass. Changed-source coverage passes original floors before rebase; final-head verification remains. Focused API coverage does not satisfy the whole-package floor; local semgrep unavailable, required CI scan remains.",
-      "next_action": "Verify final rebased-head changed-source coverage, obtain independent exact-head approval and pass all PR checks before merging draft authoring.",
+      "validation": "Wallet financial review:57 API tests,40 browser cases across5 projects,987 shared tests and2 focused UI cases pass. Types, scoped lint, OpenAPI checking, production build and44 bundle budgets pass. Focused API coverage collection passes tests but not whole-package floors; final changed-source coverage, independent review and PR CI remain. Full main runs after PR330/331 also passed.",
+      "next_action": "Collect final clean-head changed-source coverage, obtain exact-head review and pass all PR checks before merging wallet review snapshots. Continue remaining financial commands afterward.",
       "remaining_tasks": [
-        "Complete and merge contract draft/edit UI",
-        "Authoritative financial review snapshots and shared confirmation UI",
+        "Financial review snapshots and confirmation UI across all irreversible/financial commands",
         "Automatic contract template-to-PDF generation",
         "Amendments",
         "Configured malware scanning and physical retention deletion",
@@ -1457,7 +1455,9 @@
         35547612589,
         35549306810,
         35550597502,
-        35559770645
+        35559770645,
+        35572387200,
+        35573972967
       ],
       "main_full_runs_pending": [],
       "main_full_runs_failed": [

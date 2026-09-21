@@ -65,18 +65,23 @@ import {
   serializePayInvoiceWithWalletCache,
   walletAvailableBalance,
   type PayInvoiceWithWalletCachedResponse,
+  type WalletPaymentReview,
 } from '@barghsa/shared/finance';
 import { IdempotencyKeysRepository } from '../idempotency/idempotency-keys.repository.js';
 import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { isInvoiceState, type InvoiceState } from '../invoice/invoice-state.model.js';
 import { WalletService, type TransactionRow, type WalletQueryClient } from './wallet.service.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
+import { readWalletPaymentReview, walletPaymentReviewScope } from './wallet-payment-review.js';
 
 export interface PayInvoiceWithWalletOptions {
   /** A caller may own the transaction to enforce authority through commit. */
   client?: PoolClient;
   /** Customer-confirmed remaining amount; reject a changed invoice or replay payload. */
   expectedRemainingAmount?: bigint;
+  /** Required by customer confirmation; stored with the debit for safe replay. */
+  expectedReviewHash?: string;
   /** Override "now" for tests (payableFrom + paid_at). */
   now?: Date;
   /** Source IP of the paying user; omit for system-initiated calls. */
@@ -162,7 +167,14 @@ export class PayInvoiceWithWalletService {
     const client = options.client ?? (await pool.connect());
     try {
       if (!options.client) await client.query('BEGIN');
-      const profile = await lockWalletProfile(client, 'profile', ids.profileId);
+      const profile = await lockWalletProfile(
+        client,
+        'profile',
+        ids.profileId,
+        options.expectedReviewHash === undefined ? 'share' : 'update'
+      );
+      const reviews = new ReviewSnapshotService();
+      const reviewScope = walletPaymentReviewScope(ids.invoiceId, ids.profileId);
 
       const claim = await this.idempotencyKeys.claimOrLoad(client, {
         key,
@@ -179,6 +191,12 @@ export class PayInvoiceWithWalletService {
         this.assertCachedMatchesRequest(parsed, ids.invoiceId, ids.profileId, key);
         const result = resultFromCache(parsed);
         this.assertExpectedAmount(result.remainingPaid, options.expectedRemainingAmount);
+        if (options.expectedReviewHash !== undefined)
+          reviews.assertStored(
+            result.walletTransaction.metadata,
+            options.expectedReviewHash,
+            reviewScope
+          );
         if (!options.client) await client.query('COMMIT');
         return result;
       }
@@ -211,6 +229,8 @@ export class PayInvoiceWithWalletService {
         options.expectedRemainingAmount
       );
       if (existing) {
+        if (options.expectedReviewHash !== undefined)
+          reviews.assertStored(existing.metadata, options.expectedReviewHash, reviewScope);
         return await this.replayOrReject({
           commit: !options.client,
           client,
@@ -231,12 +251,24 @@ export class PayInvoiceWithWalletService {
       const postedBefore = BigInt(wallet.posted_balance);
       const reserved = BigInt(wallet.reserved_balance);
       const available = this.lockedAvailableBalance(wallet);
+      const financialReview =
+        options.expectedReviewHash === undefined
+          ? undefined
+          : await readWalletPaymentReview(
+              client,
+              ids.invoiceId,
+              ids.profileId,
+              remaining,
+              available
+            );
+      if (financialReview) reviews.assertConfirmed(financialReview, options.expectedReviewHash!);
       const debit = await this.debitExactRemaining(client, {
         invoice,
         remaining,
         paidAfter,
         idempotencyKey: key,
         expectedVersion: wallet.version,
+        ...(financialReview ? { financialReview } : {}),
       });
 
       await this.recordWalletPaymentAudit(client, {
@@ -331,6 +363,7 @@ export class PayInvoiceWithWalletService {
       paidAfter: bigint;
       idempotencyKey: string;
       expectedVersion: number;
+      financialReview?: WalletPaymentReview;
     }
   ): Promise<TransactionRow> {
     let debit: TransactionRow;
@@ -342,11 +375,14 @@ export class PayInvoiceWithWalletService {
           type: 'payment',
           refId: input.invoice.id,
           description: PAY_INVOICE_WITH_WALLET_DESCRIPTION,
-          metadata: payInvoiceWithWalletMetadata({
-            invoiceId: input.invoice.id,
-            remainingBefore: input.remaining,
-            paidAmountAfter: input.paidAfter,
-          }),
+          metadata: {
+            ...payInvoiceWithWalletMetadata({
+              invoiceId: input.invoice.id,
+              remainingBefore: input.remaining,
+              paidAmountAfter: input.paidAfter,
+            }),
+            ...(input.financialReview ? { financialReview: input.financialReview } : {}),
+          },
           expectedVersion: input.expectedVersion,
         },
         input.idempotencyKey,

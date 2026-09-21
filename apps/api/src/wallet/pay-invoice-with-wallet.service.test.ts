@@ -692,4 +692,43 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     );
     expect(walletLock?.[1]).toEqual([PROFILE_ID]);
   });
+
+  it('rejects a malformed cached payment without opening another debit', async () => {
+    paymentQueries({
+      idempotencyInsert: [],
+      idempotencySelect: [{ entity_id: INVOICE_ID, response: { invoiceId: INVOICE_ID } }],
+    });
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
+    expect(walletService.debit).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+  });
+
+  it('uses posted minus reserved funds when the projected balance disagrees', async () => {
+    paymentQueries({ wallet: walletRow({ posted_balance: '10', available_balance: '2000000' }) });
+    await expect(pay()).rejects.toThrow(
+      PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(10n, 1_000_000n)
+    );
+    expect(walletService.debit).not.toHaveBeenCalled();
+  });
+
+  it.each([null, '2026-08-01T00:00:00.000Z'])(
+    'settles invoices with an absent or serialized payable date: %s',
+    async (payable_from) => {
+      paymentQueries({ invoice: invoiceRow({ payable_from }) });
+      expect((await pay()).remainingPaid).toBe(1_000_000n);
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
+    }
+  );
+
+  it.each([
+    new Error('wallet unavailable'),
+    new ConflictException({ message: ['wallet version changed'] }),
+  ])('preserves unrelated debit errors and rolls back: %s', async (error) => {
+    paymentQueries();
+    walletService.debit.mockRejectedValue(error);
+    await expect(pay()).rejects.toBe(error);
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT');
+  });
 });

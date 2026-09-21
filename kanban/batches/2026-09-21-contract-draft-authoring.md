@@ -20,3 +20,5 @@ Validation:
 Before merge: verify final-head changed-source coverage, obtain independent exact-head approval and pass all PR checks.
 
 Remaining contract work includes template generation, authoritative financial review snapshots across financial commands, and post-acceptance amendments with renewed acceptance/signatures. This editor does not substitute plain text for those workflows or claim generic draft content is an authoritative price calculation.
+
+Final outcome: PR331 merged as `abe6f4cf113ab04d67df6c937ba319a128dff5df` after exact-head approval and all five checks in run35572440369. Clean-head coverage at `1cda10995e6341b48f498d3c801b88a43813784e` passes: API53/54 lines and21/23 branches; web236/245 lines and285/309 branches; dictionaries5/5 lines and9/10 branches. The broader template, financial-review and amendment requirements remain open.

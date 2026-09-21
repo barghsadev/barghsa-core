@@ -18,10 +18,11 @@ interface LockedWalletProfile {
 export async function lockWalletProfile(
   client: WalletQueryClient,
   source: keyof typeof selectors,
-  id: string
+  id: string,
+  mode: 'share' | 'update' = 'share'
 ): Promise<LockedWalletProfile> {
   const result = await client.query(
-    `SELECT id, archived FROM profiles WHERE id = ${selectors[source]} FOR SHARE`,
+    `SELECT id, archived FROM profiles WHERE id = ${selectors[source]} FOR ${mode === 'update' ? 'UPDATE' : 'SHARE'}`,
     [id]
   );
   const profile = result.rows[0] as LockedWalletProfile | undefined;
