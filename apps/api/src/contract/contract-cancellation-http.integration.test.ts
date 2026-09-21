@@ -659,3 +659,20 @@ it('reports financial closure only after obligations settle and scopes customer 
   ).toBe(401);
   expect((await send('contracts/not-a-uuid/cancellation-status')).status).toBe(400);
 });
+
+it('returns a JSON empty decision and resumes saved approvals after reopening', async () => {
+  const f = await fixture(),
+    path = `contracts/${f.contract.id}/cancellations`;
+  const empty = await send(path);
+  expect(empty.status).toBe(200);
+  expect(await empty.json()).toEqual({ intent: null });
+  await threshold(100);
+  const intent = await prepare(f);
+  expect(await (await send(path)).json()).toMatchObject({
+    intent: { id: intent.id, status: 'awaiting_approval' },
+  });
+  expect((await send(path, undefined, 'cancel-support')).status).toBe(403);
+  expect((await send(`contracts/${randomUUID()}/cancellations`)).status).toBe(404);
+  const status = await (await send(`contracts/${f.contract.id}/cancellation-status`)).json();
+  expect(status).toMatchObject({ canCancel: true, canChooseRefund: false });
+});

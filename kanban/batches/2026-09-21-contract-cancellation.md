@@ -58,3 +58,11 @@ Dedicated staff/customer status endpoints derive financial closure from a consis
 Validation passes38 cancellation/customer-review HTTP cases plus5 config-cache integration cases,API types,targeted lint and generated OpenAPI consistency. The new HTTP evidence verifies private drafts,cross-profile isolation,anonymous access,live pending-to-closed progression and failed-return status. The bilingual staff/customer interface and final coverage/review/CI remain.
 
 Full main after #327,run35551479937,finished with all317 API test files passing but one uncaught PostgreSQL termination during config-cache fixture teardown. Its forced database drop raced a closing idle connection. The local fixture now waits for PostgreSQL to observe zero clients,uses ordinary DROP,and always closes management. Focused config-cache checks pass; full-CI confirmation remains required. Other four gates passed.
+
+## Bilingual interface built
+
+The current contract view now includes cancellation review and financial outcome. Staff review exact balances,choose full-wallet or explicit per-invoice refunds for non-electricity services,record a reason,and save a decision before irreversible confirmation. Electricity uses mandatory full wallet return. Current permission flags hide cancellation from read-only users and disable discretionary financial decisions without finance authority. The latest saved decision is recoverable after reload; second approval,stale facts and unresolved sources prevent execution. Existing password verification preserves the exact idempotent request. Customers see service cancellation and refund completion separately,with finance/support guidance for unresolved outcomes. Historical versions do not expose cancellation actions.
+
+Validation:22 focused frontend tests,39 cancellation/customer HTTP tests,2 production Chromium flows covering English/Persian,step-up retry identity,reload during approval,final confirmation and financial closure refresh. API/web types,lint,generated OpenAPI and production build pass. Final combined coverage,broader browser evidence,independent exact-head review and CI remain. The batch is not merged or marked complete.
+
+Next: collect actual combined coverage against main,fill meaningful evidence gaps,inspect the rendered interface,then open the full batch PR,review its exact head and merge only after all gates pass.

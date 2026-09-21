@@ -181,6 +181,19 @@ export class ContractCancellationService {
     };
   }
 
+  async latest(id: string) {
+    const row = (
+      await getDbPool().query<{ intent_id: string | null }>(
+        `SELECT latest.id AS intent_id FROM contracts c
+      LEFT JOIN LATERAL (SELECT i.id FROM contract_cancellation_intents i WHERE i.contract_id=c.id ORDER BY i.created_at DESC,i.id DESC LIMIT 1) latest ON true
+      WHERE c.id=$1`,
+        [id]
+      )
+    ).rows[0];
+    if (!row) throw new NotFoundException();
+    return { intent: row.intent_id ? await this.get(id, row.intent_id) : null };
+  }
+
   async execute(id: string, input: ExecuteCancellationInput, actor: ContractActor, ip: string) {
     return this.transaction(id, actor, async (client, archived) =>
       contractIdempotency(

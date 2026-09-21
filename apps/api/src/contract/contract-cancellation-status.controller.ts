@@ -23,10 +23,17 @@ export class StaffContractCancellationStatusController {
   @ApiOperation({
     summary: 'Read service cancellation and current financial closure independently',
   })
-  get(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+  async get(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     if (!hasStaffPermission(req, 'contracts:read'))
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
-    return readCancellationStatus(getDbPool(), idValue(id));
+    const status = await readCancellationStatus(getDbPool(), idValue(id));
+    return {
+      ...status,
+      canCancel:
+        hasStaffPermission(req, 'contracts:write') &&
+        !['Completed', 'Cancelled'].includes(status.state),
+      canChooseRefund: hasStaffPermission(req, 'admin:financial:edit'),
+    };
   }
 }
 @ApiTags('Contracts')

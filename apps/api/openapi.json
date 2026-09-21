@@ -3408,6 +3408,34 @@
       }
     },
     "/api/admin/contracts/{id}/cancellations": {
+      "get": {
+        "operationId": "ContractCancellationController_latest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Resume the latest saved cancellation decision for this contract",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      },
       "post": {
         "operationId": "ContractCancellationController_prepare",
         "parameters": [

@@ -31,6 +31,14 @@ export class ContractCancellationController {
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
   }
 
+  @Get()
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiOperation({ summary: 'Resume the latest saved cancellation decision for this contract' })
+  latest(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    this.authorize(req);
+    return this.service.latest(parse(contractUuid, id));
+  }
+
   @Post()
   @RequiresStepUp()
   @ApiParam({ name: 'id', format: 'uuid' })
