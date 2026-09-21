@@ -1,3 +1,4 @@
+import { cookieResponse } from './cookie-response';
 import { test, expect, type Page } from './coverage-fixture';
 
 const profile = (id: string) => ({
@@ -168,7 +169,7 @@ for (const locale of ['fa', 'en'] as const) {
       if (attempts === 1)
         return route.fulfill({ status: 409, json: { error: { code: 'CONFLICT:STATE' } } });
       accepted = true;
-      return route.fulfill({
+      return cookieResponse(route, {
         headers: { 'Set-Cookie': 'barghsa_csrf=after-accept; Path=/; SameSite=Strict' },
         json: { message: 'Invitation accepted successfully.' },
       });

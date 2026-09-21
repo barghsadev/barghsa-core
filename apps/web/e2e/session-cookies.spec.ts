@@ -1,11 +1,43 @@
 import { createRequire } from 'node:module';
 import type { Server } from 'node:http';
+import { createServer } from 'node:https';
+import { execFileSync } from 'node:child_process';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test, expect } from './coverage-fixture';
 
 let server: Server;
 let base: string;
+let certificateDirectory: string;
+const originalNodeEnv = process.env.NODE_ENV;
+test.use({ ignoreHTTPSErrors: true });
 
 test.beforeAll(async () => {
+  // Exercise production Secure cookies over TLS, rather than HTTP loopback exceptions.
+  process.env.NODE_ENV = 'production';
+  certificateDirectory = await mkdtemp(join(tmpdir(), 'barghsa-cookie-tls-'));
+  const key = join(certificateDirectory, 'key.pem');
+  const cert = join(certificateDirectory, 'cert.pem');
+  execFileSync(
+    'openssl',
+    [
+      'req',
+      '-x509',
+      '-newkey',
+      'rsa:2048',
+      '-nodes',
+      '-days',
+      '1',
+      '-subj',
+      '/CN=127.0.0.1',
+      '-keyout',
+      key,
+      '-out',
+      cert,
+    ],
+    { stdio: 'ignore' }
+  );
   const require = createRequire(new URL('../../api/package.json', import.meta.url));
   const express = require('express') as typeof import('express');
   const {
@@ -37,18 +69,22 @@ test.beforeAll(async () => {
     response.type('html').send('<title>Cookie fixture</title>')
   );
   app.use((request, response) => response.json({ cookie: request.headers.cookie ?? '' }));
-  server = app.listen(0, '127.0.0.1');
+  server = createServer({ key: await readFile(key), cert: await readFile(cert) }, app);
+  server.listen(0, '127.0.0.1');
   await new Promise<void>((resolve) => server.once('listening', resolve));
   const address = server.address();
   if (!address || typeof address === 'string') throw new Error('Missing fixture address');
-  base = `http://127.0.0.1:${address.port}`;
+  base = `https://127.0.0.1:${address.port}`;
 });
 
 test.afterAll(async () => {
+  if (originalNodeEnv === undefined) delete process.env.NODE_ENV;
+  else process.env.NODE_ENV = originalNodeEnv;
   if (server)
     await new Promise<void>((resolve, reject) =>
       server.close((error) => (error ? reject(error) : resolve()))
     );
+  if (certificateDirectory) await rm(certificateDirectory, { recursive: true, force: true });
 });
 
 test('browser narrows session delivery, removes legacy scope and clears every logout scope', async ({
@@ -56,7 +92,9 @@ test('browser narrows session delivery, removes legacy scope and clears every lo
 }) => {
   await page
     .context()
-    .addCookies([{ url: base, name: 'barghsa_session', value: 'legacy-session', httpOnly: true }]);
+    .addCookies([
+      { url: base, name: 'barghsa_session', value: 'legacy-session', httpOnly: true, secure: true },
+    ]);
   await page.goto(`${base}/settings/security`);
   expect(
     await page.evaluate(async () => (await fetch('/api/auth/login', { method: 'POST' })).status)
@@ -71,6 +109,7 @@ test('browser narrows session delivery, removes legacy scope and clears every lo
         path: '/api',
         sameSite: 'Lax',
         httpOnly: true,
+        secure: true,
       }),
     ]);
   await expect.poll(() => page.evaluate(() => document.cookie)).toBe('barghsa_csrf=csrf-proof');
@@ -98,7 +137,9 @@ test('browser narrows session delivery, removes legacy scope and clears every lo
   // A browser restored with both historical and current paths must clear both.
   await page
     .context()
-    .addCookies([{ url: base, name: 'barghsa_session', value: 'legacy-session', httpOnly: true }]);
+    .addCookies([
+      { url: base, name: 'barghsa_session', value: 'legacy-session', httpOnly: true, secure: true },
+    ]);
   expect(
     await page.evaluate(async () => (await fetch('/api/auth/logout', { method: 'POST' })).status)
   ).toBe(200);

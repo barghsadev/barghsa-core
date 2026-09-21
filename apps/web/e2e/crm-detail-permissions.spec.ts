@@ -1023,6 +1023,22 @@ for (const locale of ['fa', 'en'] as const)
       await expect
         .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
         .toBe(darkMode);
+      // Keyboard interaction can finish before the reopened popup fades in.
+      // Axe must measure the settled popup and backdrop, not their animation frames.
+      await expect
+        .poll(() =>
+          dialog.evaluate((node) => {
+            const overlay = document.querySelector('[data-slot="dialog-overlay"]');
+            return [node, ...(overlay ? [overlay] : [])].every(
+              (element) =>
+                getComputedStyle(element).opacity === '1' &&
+                element
+                  .getAnimations({ subtree: true })
+                  .every((animation) => animation.playState === 'finished')
+            );
+          })
+        )
+        .toBe(true);
       const a11y = await new AxeBuilder({ page })
         .include('[role="dialog"]')
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
