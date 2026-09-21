@@ -1,5 +1,7 @@
 # Customer cancellation requests
 
+Merged in PR [#329](https://github.com/barghsadev/barghsa-core/pull/329) at `f1d74a3d8a4962f542c2c2d80f44a0ffd7512c21`. Exact-head review approved `c85bb7d77f4db20af70b9d9db310c2fa88c37c8d`; all five checks passed in run35558485876. Merge and durable review were read back and verified. Local combined changed-source coverage passed for API, web, DB and i18n. Earlier checkpoints below are historical. Full main validation of the proxy fix remains separate.
+
 Task `04-invoices-wallet-contracts.md#T-04.5.01.06`. Base is verified PR #328 merge `9960e956e105f0d8067cfbe8b6e52f67da4da41e`. Status: full interface and backend built and locally validated; committed combined coverage, independent review and CI remain.
 
 Reuse cancellation intents/execution rather than inventing another refund path. A customer with contracts:sign and step-up can submit a reason and preferred destination for a published, current nonterminal contract. Request creates durable staff-review state and notifications only; no contract/refund mutation. Use current session/profile checks and idempotency, one unresolved request per contract, immutable customer request evidence.

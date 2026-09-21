@@ -1,3 +1,4 @@
+import { verifyClippedContrast } from './clipped-contrast';
 import AxeBuilder from '@axe-core/playwright';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
@@ -391,41 +392,7 @@ for (const locale of ['fa', 'en'])
         expect(companyBounds.x + companyBounds.width).toBeLessThanOrEqual(
           regionBounds.x + regionBounds.width
         );
-        // A horizontal table can clip a text node at the viewport edge.
-        // Prove that clipping, reveal each affected node, and rescan it fully.
-        const clipped = await Promise.all(
-          scan.incomplete
-            .filter((item) => item.id === 'color-contrast')
-            .flatMap((item) => item.nodes)
-            .map(async (node) => {
-              expect(
-                node.any.some((check) => check.data?.messageKey === 'elmPartiallyObscured')
-              ).toBe(true);
-              expect(node.target).toHaveLength(1);
-              expect(typeof node.target[0]).toBe('string');
-              const selector = node.target[0] as string;
-              return { selector, bounds: (await page.locator(selector).boundingBox())! };
-            })
-        );
-        for (const { selector, bounds } of clipped) {
-          expect(
-            bounds.x < regionBounds.x ||
-              bounds.x + bounds.width > regionBounds.x + regionBounds.width
-          ).toBe(true);
-          const node = page.locator(selector);
-          await node.scrollIntoViewIfNeeded();
-          const visible = (await node.boundingBox())!;
-          expect(visible.x).toBeGreaterThanOrEqual(regionBounds.x);
-          expect(visible.x + visible.width).toBeLessThanOrEqual(
-            regionBounds.x + regionBounds.width
-          );
-          const revealed = await new AxeBuilder({ page })
-            .include(selector)
-            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
-            .analyze();
-          expect(revealed.violations).toEqual([]);
-          expect(revealed.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
-        }
+        const clipped = await verifyClippedContrast(page, scan);
         await testInfo.attach('revealed-table-contrast', {
           contentType: 'application/json',
           body: JSON.stringify(clipped),
