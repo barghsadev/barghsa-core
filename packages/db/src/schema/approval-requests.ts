@@ -14,7 +14,7 @@ import { irrAmount } from '../types.js';
  * tamper-evident trail.
  *
  * Row layout:
- * - `action_type`   one of refund | manual_adjustment | bank_payment_confirmation
+ * - `action_type`   refund | manual_adjustment | bank_payment_confirmation | contract_cancellation
  * - `amount_irr`    positive BIGINT IRR amount
  * - `initiator_id`  the user who initiated the financial action (FK users)
  * - `reason`        human-readable reason for the action

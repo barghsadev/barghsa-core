@@ -1430,18 +1430,19 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/contract-context-editor",
-      "status": "approved_ci_pending",
-      "record": "kanban/batches/2026-09-21-contract-context-editor.md",
+      "branch": "codex/contract-cancellation",
+      "status": "in_progress",
+      "record": "kanban/batches/2026-09-21-contract-cancellation.md",
       "previous_batch": {
-        "pr": 326,
-        "reviewed_head_sha": "a21cd099c48cb2bba426f8d01e76df553b5afac0",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/326#issuecomment-5754061954",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35549391725",
+        "pr": 327,
+        "reviewed_head_sha": "5cf7b0ba7ba969388acf4ba17ab193a6cd2f1f02",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/327#issuecomment-5754208234",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35550678883",
         "status": "merged",
-        "merge_commit_sha": "0de427bda68c620b73254cc8aba80a1a90a4a36d"
+        "merge_commit_sha": "cac42489bf39a7b08443d1acb547480cf8572cee"
       },
-      "validation": "30 focused tests,10 production-browser flows,types/lint/format/build,44 bundle budgets,static scan,backlog and actual combined source coverage pass. Exact-head independent review approves without issues. CI is pending.",
+      "validation": "Financial preview passes40 unit/HTTP tests and API types/lint/OpenAPI. Storage foundation passes89 related migrated database tests plus5 approval-schema tests,DB types/lint and snapshot comparison. Commands,commit-time completeness,automatic refund processing,financial closure and UI remain unfinished.",
+      "next_action": "Complete the cancellation and automatic refund workflow in one coherent batch before opening its PR. Do not treat preview/storage as completed cancellation acceptance.",
       "remaining_tasks": [
         "Contract draft/edit UI and typed financial preview",
         "Automatic contract template-to-PDF generation",
@@ -1449,23 +1450,15 @@
         "Configured malware scanning and physical retention deletion",
         "Separate financial closure"
       ],
-      "next_local_batch": {
-        "branch": "codex/contract-cancellation",
-        "status": "financial_preview_foundation_only",
-        "validation": "40 unit/HTTP cases,API types,lint and OpenAPI pass. Actual cancellation,automatic refund obligations/processing,closure guards and UI remain unbuilt; do not open its PR until the workflow is complete.",
-        "record": "kanban/batches/2026-09-21-contract-cancellation.md"
-      },
       "main_full_runs_verified": [
         35545814385,
-        35547612589
-      ],
-      "main_full_runs_pending": [
+        35547612589,
         35549306810
       ],
-      "pr": 327,
-      "reviewed_head_sha": "5cf7b0ba7ba969388acf4ba17ab193a6cd2f1f02",
-      "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/327#issuecomment-5754208234",
-      "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35550678883"
+      "main_full_runs_pending": [
+        35550597502,
+        35551479937
+      ]
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",

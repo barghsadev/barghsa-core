@@ -2,13 +2,15 @@
 
 Canonical tasks `04-invoices-wallet-contracts.md#T-04.5.01.05`, `04-invoices-wallet-contracts.md#T-04.4.02.01` through `.05`, and the cancellation consumer of `04-invoices-wallet-contracts.md#T-04.CC.07.01`.
 
-This batch is in progress. It is stacked locally on the context editor and must be rebased onto that batch's verified merge before its PR. No cancellation command or automatic refund is complete yet.
+This batch is in progress on verified editor PR #327 merge `cac42489bf39a7b08443d1acb547480cf8572cee`. No cancellation command or automatic refund is complete yet.
 
 ## Built foundation
 
 The staff cancellation-preview endpoint reads the exact contract version and associated invoice/refund facts in one SQL statement. It distinguishes the outstanding paid balance from the portion already reserved by pending refunds, preserves bigint precision, returns a fingerprint for later commit-time comparison, and exposes archived/terminal/payment/refund blockers. Ambiguous order invoice associations and inconsistent cross-profile links block a decision without exposing another profile's amounts. The endpoint requires contract write permission and makes no state or financial changes.
 
-Focused validation passes 40 unit/HTTP cases, API typechecking, targeted lint and generated OpenAPI comparison. Review, coverage and CI are not yet claimed.
+The storage foundation adds immutable cancellation intents, execution evidence and refund obligations. It binds financial approvals to exact decisions and prevents dismissal of linked mandatory refunds. Migration0145 extends the approval action constraint and preserves historical data. The command, commit-time completeness checks, processor and UI are still unfinished; these tables alone do not authorize or complete cancellation.
+
+Focused validation passes40 unit/HTTP cases,89 related migrated database cases and5 approval-schema cases. API/database types, targeted lint, generated OpenAPI and database snapshot checks pass. Review, coverage and CI are not yet claimed.
 
 ## Required before the batch is ready
 

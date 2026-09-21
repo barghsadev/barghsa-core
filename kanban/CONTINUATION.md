@@ -109,3 +109,7 @@ Completion PR #326 merged as `0de427bda68c620b73254cc8aba80a1a90a4a36d` after ex
 ### PR #327 approved; cancellation foundation rebased
 
 The editor PR #327 is independently approved at `5cf7b0ba7ba969388acf4ba17ab193a6cd2f1f02` in [review](https://github.com/barghsadev/barghsa-core/pull/327#issuecomment-5754208234). Actual combined source coverage passes and CI run35550678883 remains pending. The cancellation foundation is rebased onto this approved head. Its40 unit/HTTP cases,API types/lint/OpenAPI checks still cover identical source. Its batch record documents the remaining cancellation/refund/closure/UI workflow. Rebase onto the verified editor squash merge before further publication.
+
+### PR #327 merged; cancellation storage validated
+
+Editor PR #327 merged at `cac42489bf39a7b08443d1acb547480cf8572cee` after its exact-HEAD approval and all five CI gates passed in run35550678883. Full main after #325, run35549306810, also passes all five checks; full main runs after #326/#327 remain live. The cancellation batch adds migration0145 for immutable decision/execution/obligation storage and bound approval/non-dismissal guards. Its89 related migrated DB cases and5 approval-schema tests pass, with DB types/lint/snapshot checks; the earlier financial preview passes40 unit/HTTP cases. Command authorization and execution,commit-time completeness,automatic returns,financial closure and UI remain unfinished. Keep the entire workflow in one future PR. No scheduler or historical supervisor completion history changed.

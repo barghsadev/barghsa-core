@@ -32,7 +32,7 @@ const definitions: Record<string, Array<[string, string]>> = {
   approval_requests: [
     [
       'chk_ar_action_type',
-      "(action_type IN ('refund', 'manual_adjustment', 'bank_payment_confirmation'))",
+      "(action_type IN ('refund', 'manual_adjustment', 'bank_payment_confirmation', 'contract_cancellation'))",
     ],
     ['chk_ar_amount_positive', '(amount_irr > 0)'],
     ['chk_ar_status', "(status IN ('pending', 'approved', 'rejected'))"],
