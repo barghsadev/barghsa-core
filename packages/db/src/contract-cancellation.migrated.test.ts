@@ -1,3 +1,4 @@
+import { runWalletRefund, readContractRefundAuthorization } from './refund-processing';
 import { randomUUID } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
 import { afterAll, beforeAll, expect, it } from 'vitest';
@@ -342,4 +343,82 @@ it('enforces pending-payment reconciliation for direct cancellation writes', asy
   await expect(
     fixture.pool.query('DELETE FROM invoices WHERE id=$1', [row.invoice])
   ).rejects.toMatchObject({ code: '23514' });
+});
+
+it('retries an exhausted obligation only with a fresh one-attempt finance authorization', async () => {
+  const row = await seed('100'),
+    id = await intent(row),
+    refund = randomUUID();
+  await fixture.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES($1,'role-finance') ON CONFLICT DO NOTHING",
+    [reviewer]
+  );
+  await transaction(async (client) => {
+    await cancel(row, id, client);
+    await client.query(
+      "INSERT INTO refunds(id,invoice_id,profile_id,amount,destination,idempotency_key) VALUES($1,$2,$3,100,'wallet',$4)",
+      [refund, row.invoice, row.profile, randomUUID()]
+    );
+    await client.query(
+      'INSERT INTO contract_refund_obligations(refund_id,contract_id,invoice_id) VALUES($1,$2,$3)',
+      [refund, row.id, row.invoice]
+    );
+    await client.query("UPDATE refunds SET state='Processing' WHERE id=$1", [refund]);
+    await client.query(
+      'INSERT INTO refund_retry_jobs(refund_id,executor_user_id,max_attempts) VALUES($1,$2,1)',
+      [refund, actor]
+    );
+  });
+  await fixture.pool.query(
+    "CREATE FUNCTION fail_obligation_posting() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='refund.completed' THEN RAISE EXCEPTION 'test failure'; END IF; RETURN NEW; END $$; CREATE TRIGGER fail_obligation_posting BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_obligation_posting()"
+  );
+  async function authorize() {
+    const authorizationId = randomUUID();
+    await fixture.pool.query(
+      "INSERT INTO audit_log(id,user_id,event,metadata,correlation_id) VALUES($1,$2,'refund.manual_retry_requested',$3,$4)",
+      [randomUUID(), reviewer, { refundId: refund, manualRetryId: authorizationId }, randomUUID()]
+    );
+    return { actorUserId: reviewer, authorizationId };
+  }
+  try {
+    expect(await runWalletRefund(fixture.pool, refund)).toBe('exhausted');
+    expect(
+      await runWalletRefund(fixture.pool, refund, {
+        actorUserId: reviewer,
+        authorizationId: randomUUID(),
+      })
+    ).toBe('deferred');
+    const first = await authorize();
+    expect(await runWalletRefund(fixture.pool, refund, first)).toBe('exhausted');
+    expect(await runWalletRefund(fixture.pool, refund, first)).toBe('deferred');
+  } finally {
+    await fixture.pool.query(
+      'DROP TRIGGER fail_obligation_posting ON audit_log; DROP FUNCTION fail_obligation_posting()'
+    );
+  }
+  expect(await runWalletRefund(fixture.pool, refund, await authorize())).toBe('completed');
+  expect(
+    (
+      await fixture.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1', [
+        row.profile,
+      ])
+    ).rows[0].posted_balance
+  ).toBe('100');
+  expect(
+    (
+      await fixture.pool.query(
+        'SELECT attempts,exhausted_at FROM refund_retry_jobs WHERE refund_id=$1',
+        [refund]
+      )
+    ).rows[0]
+  ).toEqual({ attempts: 1, exhausted_at: expect.any(Date) });
+  const client = await fixture.pool.connect();
+  try {
+    const actual = (await client.query('SELECT * FROM refunds WHERE id=$1', [refund])).rows[0];
+    await expect(
+      readContractRefundAuthorization(client, { ...actual, amount: '99' })
+    ).rejects.toMatchObject({ code: 'invalid_contract_obligation' });
+  } finally {
+    client.release();
+  }
 });
