@@ -160,3 +160,37 @@ BEGIN
 END $$;
 CREATE TRIGGER refunds_contract_obligation_guard BEFORE UPDATE ON refunds
  FOR EACH ROW EXECUTE FUNCTION guard_mandatory_contract_refund();
+
+--> statement-breakpoint
+-- Deferred so the command can update the parent and insert all evidence atomically.
+-- Existing terminal rows are not rewritten or assigned fabricated evidence.
+CREATE FUNCTION enforce_contract_cancellation_complete() RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE intent contract_cancellation_intents%ROWTYPE; actual_impact numeric; parent contracts%ROWTYPE;
+BEGIN
+ IF NEW.state<>'Cancelled' THEN RETURN NULL; END IF;
+ IF TG_OP='UPDATE' AND OLD.state='Cancelled' THEN RETURN NULL; END IF;
+ SELECT * INTO parent FROM contracts WHERE id=NEW.id;
+ SELECT i.* INTO intent FROM contract_cancellations c JOIN contract_cancellation_intents i ON i.id=c.intent_id WHERE c.contract_id=NEW.id;
+ IF intent.id IS NULL OR parent.state<>'Cancelled' OR parent.current_version_id<>intent.version_id
+ THEN RAISE EXCEPTION 'Cancellation requires immutable execution evidence' USING ERRCODE='23514'; END IF;
+ IF EXISTS(SELECT 1 FROM jsonb_array_elements(intent.refund_decision->'refunds') line
+   WHERE NOT EXISTS(SELECT 1 FROM contract_refund_obligations o JOIN refunds r ON r.id=o.refund_id
+     WHERE o.contract_id=NEW.id AND o.invoice_id::text=line->>'invoiceId'
+       AND r.amount::text=line->>'amount' AND r.destination::text=line->>'destination'))
+ THEN RAISE EXCEPTION 'Cancellation requires every recorded refund obligation' USING ERRCODE='23514'; END IF;
+ SELECT COALESCE(sum(i.paid_amount-i.refunded_amount),0) INTO actual_impact FROM invoices i
+ WHERE i.profile_id=parent.profile_id AND i.adjustment_kind IS DISTINCT FROM 'credit'
+   AND (i.contract_id=parent.id::text OR (parent.order_id IS NOT NULL AND i.order_id=parent.order_id AND i.contract_id IS NULL));
+ IF actual_impact<>intent.financial_impact_amount
+ THEN RAISE EXCEPTION 'Cancellation financial facts changed' USING ERRCODE='23514'; END IF;
+ IF parent.service_type='electricity' AND EXISTS(SELECT 1 FROM invoices i
+   WHERE i.profile_id=parent.profile_id AND i.adjustment_kind IS DISTINCT FROM 'credit'
+     AND (i.contract_id=parent.id::text OR (parent.order_id IS NOT NULL AND i.order_id=parent.order_id AND i.contract_id IS NULL))
+     AND i.paid_amount>i.refunded_amount
+     AND NOT EXISTS(SELECT 1 FROM contract_refund_obligations o JOIN refunds r ON r.id=o.refund_id
+       WHERE o.contract_id=parent.id AND o.invoice_id=i.id AND r.destination='wallet' AND r.amount=i.paid_amount-i.refunded_amount))
+ THEN RAISE EXCEPTION 'Electricity cancellation requires the full outstanding wallet return' USING ERRCODE='23514'; END IF;
+ RETURN NULL;
+END $$;
+CREATE CONSTRAINT TRIGGER contracts_cancellation_complete AFTER INSERT OR UPDATE ON contracts
+ DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION enforce_contract_cancellation_complete();

@@ -26,6 +26,44 @@ export interface RefundProcessingRow {
   destination: string;
   staff_id: string | null;
 }
+
+/** A committed cancellation creates an immutable debt. Fulfillment uses that
+ * recorded authority; later role or threshold changes cannot erase the debt. */
+export async function readContractRefundAuthorization(
+  client: PoolClient,
+  row: RefundProcessingRow
+) {
+  const obligation = (
+    await client.query<{
+      contract_id: string;
+      intent_id: string;
+      executed_by: string;
+      valid: boolean;
+    }>(
+      `SELECT o.contract_id,c.intent_id,c.executed_by,
+      (p.state='Cancelled' AND p.current_version_id=i.version_id AND p.profile_id=$3
+       AND o.invoice_id=$2 AND $4::text IS NULL
+       AND EXISTS(SELECT 1 FROM jsonb_array_elements(i.refund_decision->'refunds') d
+         WHERE d->>'invoiceId'=$2::text AND d->>'amount'=$5 AND d->>'destination'=$6)) AS valid
+    FROM contract_refund_obligations o JOIN contract_cancellations c ON c.contract_id=o.contract_id
+    JOIN contract_cancellation_intents i ON i.id=c.intent_id JOIN contracts p ON p.id=c.contract_id
+    WHERE o.refund_id=$1`,
+      [row.id, row.invoice_id, row.profile_id, row.staff_id, row.amount, row.destination]
+    )
+  ).rows[0];
+  if (!obligation) return undefined;
+  if (!obligation.valid)
+    throw new RefundProcessingError(
+      'invalid_contract_obligation',
+      'Contract refund evidence does not match the refund'
+    );
+  return {
+    contractId: obligation.contract_id,
+    intentId: obligation.intent_id,
+    authorizedBy: obligation.executed_by,
+    actorType: 'system' as const,
+  };
+}
 export async function refundRequiresApproval(client: PoolClient, amount: string): Promise<boolean> {
   const raw = (
     await client.query('SELECT value FROM app_config WHERE key=$1', [
@@ -91,6 +129,7 @@ export async function requireRefundApproval(
   client: PoolClient,
   row: RefundProcessingRow
 ): Promise<void> {
+  if (await readContractRefundAuthorization(client, row)) return;
   const approval = await latestRefundApproval(client, row);
   if (approval?.status === 'rejected')
     throw new RefundProcessingError(
@@ -188,6 +227,7 @@ async function alertExhausted(
     );
   }
   await audit(client, row, authorizedBy, 'refund.retry_exhausted', { attempts });
+  await notifyRefundOutcome(client, { ...row, destination: 'wallet', state: 'Failed' });
 }
 
 export type RefundAttemptResult = 'completed' | 'failed' | 'exhausted' | 'deferred';
@@ -259,18 +299,31 @@ export async function runWalletRefund(pool: Pool, refundId: string): Promise<Ref
     await client.query('SAVEPOINT refund_posting');
     let result: RefundAttemptResult;
     try {
+      const obligation = await readContractRefundAuthorization(client, row);
       if (!profile || profile.archived)
         throw new RefundProcessingError('profile_archived', 'Profile is unavailable');
       if (
         !invoice ||
         invoice.profile_id !== row.profile_id ||
         invoice.adjustment_kind === 'credit' ||
-        !['Paid', 'PartiallyRefunded'].includes(invoice.state) ||
+        !(
+          obligation
+            ? ['Paid', 'PartiallyFunded', 'Unpaid', 'Overdue', 'PartiallyRefunded']
+            : ['Paid', 'PartiallyRefunded']
+        ).includes(invoice.state) ||
         BigInt(invoice.total_amount) <= 0n
       )
         throw new RefundProcessingError('invoice_not_refundable', 'Invoice cannot be refunded');
-      await requireRefundFinancePermission(client, job.executor_user_id);
-      await requireRefundApproval(client, row);
+      if (obligation) {
+        if (obligation.authorizedBy !== job.executor_user_id)
+          throw new RefundProcessingError(
+            'invalid_contract_obligation',
+            'Refund job does not match cancellation authority'
+          );
+      } else {
+        await requireRefundFinancePermission(client, job.executor_user_id);
+        await requireRefundApproval(client, row);
+      }
       await client.query(
         'INSERT INTO wallets(profile_id) VALUES($1) ON CONFLICT(profile_id) DO NOTHING',
         [row.profile_id]
@@ -284,7 +337,7 @@ export async function runWalletRefund(pool: Pool, refundId: string): Promise<Ref
           type: 'refund',
           refId: row.id,
           description: 'Invoice wallet refund',
-          metadata: { refundId: row.id, invoiceId: row.invoice_id },
+          metadata: { refundId: row.id, invoiceId: row.invoice_id, ...obligation },
         },
         `refund-wallet-credit:${row.id}`
       );
@@ -294,6 +347,7 @@ export async function runWalletRefund(pool: Pool, refundId: string): Promise<Ref
         toState: 'Completed',
         attempt,
         authorizedBy: job.executor_user_id,
+        ...obligation,
       });
       const after = (
         await client.query('SELECT paid_amount,refunded_amount FROM invoices WHERE id=$1', [

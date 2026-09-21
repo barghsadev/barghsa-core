@@ -1,3 +1,4 @@
+import { cancelEmptyContract } from './test/cancel-empty-contract';
 import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
 import { afterAll, beforeAll, expect, it } from 'vitest';
@@ -153,7 +154,7 @@ it('retries locked contracts and rechecks cancellation after candidate selection
       const result = await fixture.pool.query(sql, args);
       if (!selected) {
         selected = true;
-        await fixture.pool.query("UPDATE contracts SET state='Cancelled' WHERE id=$1", [f.id]);
+        await cancelEmptyContract(fixture.pool, f.id, f.user);
       }
       return result;
     },

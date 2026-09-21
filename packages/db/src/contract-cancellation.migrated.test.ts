@@ -190,7 +190,18 @@ it('requires a bound approval at threshold and refuses execution while it is pen
     "UPDATE approval_requests SET status='approved',reviewer_id=$2,reviewed_at=now() WHERE id=$1",
     [approval, reviewer]
   );
-  await transaction((client) => cancel(row, id, client));
+  await transaction(async (client) => {
+    await cancel(row, id, client);
+    const refund = randomUUID();
+    await client.query(
+      "INSERT INTO refunds(id,invoice_id,profile_id,amount,destination,idempotency_key) VALUES($1,$2,$3,100,'wallet',$4)",
+      [refund, row.invoice, row.profile, randomUUID()]
+    );
+    await client.query(
+      'INSERT INTO contract_refund_obligations(refund_id,contract_id,invoice_id) VALUES($1,$2,$3)',
+      [refund, row.id, row.invoice]
+    );
+  });
   const saved = (
     await fixture.pool.query(
       'SELECT cancelled_at FROM contract_cancellations WHERE contract_id=$1',
@@ -274,4 +285,33 @@ it('repeats the production migration without rewriting saved decisions', async (
     (await fixture.pool.query('SELECT id FROM contract_cancellation_intents WHERE id=$1', [id]))
       .rows
   ).toEqual([{ id }]);
+});
+
+it('rejects unbacked cancellation and incomplete obligations at commit', async () => {
+  const row = await seed('100');
+  await expect(
+    fixture.pool.query("UPDATE contracts SET state='Cancelled' WHERE id=$1", [row.id])
+  ).rejects.toMatchObject({ code: '23514' });
+  const id = await intent(row);
+  await expect(transaction((client) => cancel(row, id, client))).rejects.toMatchObject({
+    code: '23514',
+  });
+  expect(
+    (await fixture.pool.query('SELECT state FROM contracts WHERE id=$1', [row.id])).rows[0].state
+  ).toBe('Draft');
+  expect(
+    (
+      await fixture.pool.query('SELECT * FROM contract_cancellations WHERE contract_id=$1', [
+        row.id,
+      ])
+    ).rows
+  ).toEqual([]);
+});
+it('rejects a fabricated financial snapshot that omits real paid electricity funds', async () => {
+  const row = await seed('100'),
+    fake = { ...row, paid: '0' },
+    id = await intent(fake);
+  await expect(transaction((client) => cancel(row, id, client))).rejects.toMatchObject({
+    code: '23514',
+  });
 });

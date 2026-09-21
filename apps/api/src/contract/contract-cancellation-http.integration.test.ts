@@ -1,3 +1,4 @@
+import { runWalletRefund } from '@barghsa/db/refund-processing';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -361,4 +362,123 @@ it('blocks cancellation while refunds or payment review remain unresolved', asyn
   expect(
     (await send(`contracts/${reviewing.contract.id}/cancellations`, reviewing.body)).status
   ).toBe(409);
+});
+
+it.each([
+  ['Paid', '100'],
+  ['PartiallyFunded', '40'],
+])(
+  'fulfills %s cancellation debt exactly once after authority and policy change',
+  async (state, paid) => {
+    const f = await fixture('electricity', paid, state),
+      intent = await prepare(f);
+    const response = await execute(f, intent);
+    expect(response.status).toBe(201);
+    const result = (await response.json()) as { refunds: Array<{ id: string; state: string }> };
+    const refund = result.refunds[0]!;
+    expect(refund.state).toBe('Processing');
+    await http.pool.query("DELETE FROM user_roles WHERE user_id='cancel-legal'");
+    await threshold(1);
+    const outcomes = await Promise.all([
+      runWalletRefund(http.pool, refund.id),
+      runWalletRefund(http.pool, refund.id),
+    ]);
+    expect(outcomes.sort()).toEqual(['completed', 'deferred']);
+    expect(await runWalletRefund(http.pool, refund.id)).toBe('deferred');
+    expect(
+      (await http.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1', [f.profile]))
+        .rows[0].posted_balance
+    ).toBe(paid);
+    expect(
+      (await http.pool.query('SELECT state,refunded_amount FROM invoices WHERE id=$1', [f.invoice]))
+        .rows[0]
+    ).toEqual({ state: 'Refunded', refunded_amount: paid });
+    expect(
+      (
+        await http.pool.query('SELECT state FROM refund_transactions WHERE refund_id=$1', [
+          refund.id,
+        ])
+      ).rows[0].state
+    ).toBe('Completed');
+    expect(
+      (
+        await http.pool.query(
+          "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='refund.completed' AND metadata::jsonb->>'refundId'=$1",
+          [refund.id]
+        )
+      ).rows[0].metadata
+    ).toMatchObject({ contractId: f.contract.id, intentId: intent.id, actorType: 'system' });
+  }
+);
+
+it('keeps failed cancellation debt visible after bounded retries without posting a partial credit', async () => {
+  const f = await fixture(),
+    intent = await prepare(f),
+    response = await execute(f, intent);
+  expect(response.status).toBe(201);
+  const result = (await response.json()) as { refunds: Array<{ id: string }> },
+    refund = result.refunds[0]!;
+  await http.pool.query(
+    "CREATE FUNCTION fail_contract_return() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.event='refund.completed' THEN RAISE EXCEPTION 'test posting failure'; END IF; RETURN NEW; END $$; CREATE TRIGGER fail_contract_return BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_contract_return()"
+  );
+  try {
+    for (let attempt = 1; attempt <= 5; attempt++) {
+      expect(await runWalletRefund(http.pool, refund.id)).toBe(
+        attempt === 5 ? 'exhausted' : 'failed'
+      );
+      if (attempt < 5)
+        await http.pool.query(
+          "UPDATE refund_retry_jobs SET next_attempt_at=NOW()-INTERVAL '1 second' WHERE refund_id=$1",
+          [refund.id]
+        );
+    }
+  } finally {
+    await http.pool.query(
+      'DROP TRIGGER fail_contract_return ON audit_log; DROP FUNCTION fail_contract_return()'
+    );
+  }
+  expect(await runWalletRefund(http.pool, refund.id)).toBe('deferred');
+  expect(
+    (await http.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1', [f.profile]))
+      .rows[0].posted_balance
+  ).toBe('0');
+  expect(
+    (await http.pool.query('SELECT state,refunded_amount FROM invoices WHERE id=$1', [f.invoice]))
+      .rows[0]
+  ).toEqual({ state: 'Paid', refunded_amount: '0' });
+  expect(
+    (await http.pool.query('SELECT state FROM refunds WHERE id=$1', [refund.id])).rows[0].state
+  ).toBe('Failed');
+  expect(
+    (
+      await http.pool.query(
+        'SELECT attempts,exhausted_at FROM refund_retry_jobs WHERE refund_id=$1',
+        [refund.id]
+      )
+    ).rows[0]
+  ).toMatchObject({ attempts: 5, exhausted_at: expect.any(Date) });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT localized_content FROM in_app_notifications WHERE delivery_key=$1',
+        [`refund:${refund.id}:Failed`]
+      )
+    ).rows[0].localized_content.en.body
+  ).toContain('contact support');
+  expect(
+    (
+      await send(
+        `wallet-refunds/${refund.id}/cancel`,
+        { reason: 'Cannot dismiss this debt' },
+        'cancel-finance'
+      )
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await http.pool.query('SELECT * FROM contract_refund_obligations WHERE refund_id=$1', [
+        refund.id,
+      ])
+    ).rowCount
+  ).toBe(1);
 });

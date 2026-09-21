@@ -1,3 +1,4 @@
+import { cancelEmptyContract } from './test/cancel-empty-contract';
 import { randomUUID } from 'node:crypto';
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -195,7 +196,7 @@ it.each(['Completed', 'Cancelled'])(
         'INSERT INTO contract_completions(contract_id,version_id) VALUES($1,$2)',
         [row.id, row.version]
       );
-    } else await fixture.pool.query('UPDATE contracts SET state=$2 WHERE id=$1', [row.id, state]);
+    } else await cancelEmptyContract(fixture.pool, row.id, user);
     await expect(
       fixture.pool.query("UPDATE contracts SET state='Draft' WHERE id=$1", [row.id])
     ).rejects.toMatchObject({ code: '23514' });

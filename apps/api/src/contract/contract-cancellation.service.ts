@@ -290,7 +290,27 @@ export class ContractCancellationService {
               paymentSources,
               legacyPaymentSourcesUnavailable: paymentSources.length === 0,
             });
-            refunds.push({ id: refundId, ...line, state: 'Requested' });
+            await client.query("UPDATE refunds SET state='Approved' WHERE id=$1", [refundId]);
+            await auditContract(client, id, intent.version_id, 'refund.approved', actor, ip, {
+              refundId,
+              invoiceId: line.invoiceId,
+              intentId: intent.id,
+              actorType: 'system',
+              authorizedBy: actor.userId,
+              reason: 'Committed contract cancellation obligation',
+            });
+            if (line.destination === 'wallet') {
+              await client.query("UPDATE refunds SET state='Processing' WHERE id=$1", [refundId]);
+              await client.query(
+                'INSERT INTO refund_retry_jobs(refund_id,executor_user_id) VALUES($1,$2)',
+                [refundId, actor.userId]
+              );
+            }
+            refunds.push({
+              id: refundId,
+              ...line,
+              state: line.destination === 'wallet' ? 'Processing' : 'Approved',
+            });
           }
           for (const invoice of snapshot.invoices) {
             if (

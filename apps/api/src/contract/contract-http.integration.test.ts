@@ -270,6 +270,27 @@ it.each([
         'INSERT INTO contract_completions(contract_id,version_id) VALUES($1,$2)',
         [row.id, row.currentVersionId]
       );
+  } else if (state === 'Cancelled') {
+    const snapshot = (await (await send('/' + row.id + '/cancellation-preview')).json()) as {
+      fingerprint: string;
+    };
+    const prepared = await send('/' + row.id + '/cancellations', 'POST', {
+      expectedVersionId: row.currentVersionId,
+      expectedFingerprint: snapshot.fingerprint,
+      reason: 'End service',
+      refundDecision: { mode: 'full_wallet' },
+      idempotencyKey: randomUUID(),
+    });
+    expect(prepared.status).toBe(201);
+    const intent = (await prepared.json()) as { id: string };
+    expect(
+      (
+        await send('/' + row.id + '/cancellations/execute', 'POST', {
+          intentId: intent.id,
+          idempotencyKey: randomUUID(),
+        })
+      ).status
+    ).toBe(201);
   } else await http.pool.query('UPDATE contracts SET state=$2 WHERE id=$1', [row.id, state]);
   expect((await send('/' + row.id, 'PATCH', edit(row))).status).toBe(409);
 });

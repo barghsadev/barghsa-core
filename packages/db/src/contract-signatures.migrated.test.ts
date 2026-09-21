@@ -1,3 +1,4 @@
+import { cancelEmptyContract } from './test/cancel-empty-contract';
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -357,7 +358,7 @@ it('upgrades 0140 without inventing evidence for historical signed flags and rer
       pool.query("UPDATE contracts SET state='Active' WHERE id=$1", [contract])
     ).rejects.toMatchObject({ code: '23514' });
     for (const state of ['Cancelled']) {
-      await pool.query('UPDATE contracts SET state=$2 WHERE id=$1', [contract, state]);
+      await cancelEmptyContract(pool, contract, actor);
       expect(
         (await pool.query('SELECT state,signed_at FROM contracts WHERE id=$1', [contract])).rows[0]
       ).toEqual({ state, signed_at: before[0].signed_at });
