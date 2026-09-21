@@ -3,6 +3,13 @@ import type { PoolClient } from 'pg';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { createMigratedTestDb } from './test/migrated-db';
 import { cancelEmptyContract } from './test/cancel-empty-contract';
+import { getTableConfig } from 'drizzle-orm/pg-core';
+import { contractCancellationRequests } from './schema/contract-cancellation-requests';
+import {
+  contractCancellationIntents,
+  contractCancellations,
+  contractRefundObligations,
+} from './schema/contract-cancellation';
 let fixture: Awaited<ReturnType<typeof createMigratedTestDb>>;
 const actor = randomUUID();
 beforeAll(async () => {
@@ -12,6 +19,34 @@ beforeAll(async () => {
   ]);
 }, 60_000);
 afterAll(async () => fixture?.close());
+it('keeps typed request and refund relationships aligned with the migrated constraints', async () => {
+  for (const table of [
+    contractCancellationRequests,
+    contractCancellationIntents,
+    contractCancellations,
+    contractRefundObligations,
+  ]) {
+    const config = getTableConfig(table);
+    const constraints = (
+      await fixture.pool.query<{ conname: string }>(
+        'SELECT conname FROM pg_constraint WHERE conrelid=$1::regclass',
+        [config.name]
+      )
+    ).rows.map((row) => row.conname);
+    for (const fk of config.foreignKeys) {
+      expect(fk.reference().columns.length).toBe(fk.reference().foreignColumns.length);
+      expect(constraints).toContain(fk.getName().slice(0, 63));
+    }
+    for (const check of config.checks) expect(constraints).toContain(check.name.slice(0, 63));
+    const indexes = (
+      await fixture.pool.query<{ indexname: string }>(
+        'SELECT indexname FROM pg_indexes WHERE tablename=$1',
+        [config.name]
+      )
+    ).rows.map((row) => row.indexname);
+    for (const index of config.indexes) expect(indexes).toContain(index.config.name);
+  }
+});
 async function tx(work: (client: PoolClient) => Promise<void>) {
   const client = await fixture.pool.connect();
   try {
