@@ -1738,6 +1738,16 @@ for (const locale of ['en', 'fa']) {
         )
         .toBe('#2563eb');
       const checkContrast = async () => {
+        const content = await new AxeBuilder({ page })
+          .include('#admin-content')
+          .withRules(['color-contrast'])
+          .analyze();
+        expect(content.violations).toEqual([]);
+        expect(content.incomplete).toEqual([]);
+        const menu = page.locator('button[aria-controls="admin-navigation"]');
+        const mobile = await menu.isVisible();
+        if (mobile) await menu.click();
+        await expect(page.locator('#admin-navigation')).toBeVisible();
         // A scrollable sidebar intentionally clips offscreen links. Inspect visible
         // labels at each scroll position instead of asking axe to infer occluded pixels.
         await page.locator('#admin-navigation').evaluate((nav) => {
@@ -1754,12 +1764,15 @@ for (const locale of ['en', 'fa']) {
           page.locator('#admin-navigation [data-contrast-visible]').first()
         ).toBeVisible();
         const result = await new AxeBuilder({ page })
-          .include('#admin-content')
           .include('#admin-navigation [data-contrast-visible]')
           .withRules(['color-contrast'])
           .analyze();
         expect(result.violations).toEqual([]);
         expect(result.incomplete).toEqual([]);
+        if (mobile) {
+          await menu.click();
+          await expect(page.locator('#admin-navigation')).toBeHidden();
+        }
       };
       await checkContrast();
       await page.locator('#admin-navigation').evaluate((node) => {

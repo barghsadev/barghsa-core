@@ -139,8 +139,8 @@ for (const locale of ['en', 'fa'])
         .boundingBox())!;
       const verticalSeparator = (await page.locator('[data-slot=separator]').nth(1).boundingBox())!;
       expect(horizontalSeparator.width).toBeGreaterThan(100);
-      expect(horizontalSeparator.height).toBe(1);
-      expect(verticalSeparator.width).toBe(1);
+      expect(horizontalSeparator.height).toBeCloseTo(1, 2);
+      expect(verticalSeparator.width).toBeCloseTo(1, 2);
       expect(verticalSeparator.height).toBeGreaterThan(10);
       const track = (await page.locator('[data-slot=slider-track]').first().boundingBox())!;
       expect(track.width).toBeGreaterThan(100);

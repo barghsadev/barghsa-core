@@ -329,9 +329,13 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(digits.nth(2)).toBeFocused();
     await digits.first().evaluate(
       (input, code) => {
-        const clipboardData = new DataTransfer();
-        clipboardData.setData('text/plain', code);
-        input.dispatchEvent(new ClipboardEvent('paste', { bubbles: true, clipboardData }));
+        // Firefox drops DataTransfer passed to a synthetic ClipboardEvent.
+        // Supply the same read-only text payload consumed by the real paste handler.
+        const event = new Event('paste', { bubbles: true, cancelable: true });
+        Object.defineProperty(event, 'clipboardData', {
+          value: { getData: (format: string) => (format === 'text/plain' ? code : '') },
+        });
+        input.dispatchEvent(event);
       },
       locale === 'fa' ? '۱۲۳۴۵۶' : '123456'
     );
