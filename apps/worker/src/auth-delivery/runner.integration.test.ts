@@ -26,7 +26,19 @@ beforeAll(async () => {
 afterAll(async () => {
   await pool?.end();
   try {
-    await management?.query(`DROP DATABASE IF EXISTS "${database}" WITH (FORCE)`);
+    // pg-pool resolves end() before idle sockets have finished closing. Forcing
+    // the database drop can send a fatal error to one of those closing clients.
+    await vi.waitFor(
+      async () => {
+        const result = await management.query(
+          'SELECT count(*) FROM pg_stat_activity WHERE datname=$1',
+          [database]
+        );
+        expect(Number(result.rows[0].count)).toBe(0);
+      },
+      { timeout: 5000 }
+    );
+    await management?.query(`DROP DATABASE IF EXISTS "${database}"`);
   } finally {
     await management?.end();
   }
