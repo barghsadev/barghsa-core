@@ -193,5 +193,7 @@ const en: Record<string, string> = {
     'Wait for the invoice remaining preview before confirming',
 };
 export function tWalletReceipts(key: string, locale: 'fa' | 'en'): string {
-  return lookup(locale === 'fa' ? fa : en, key) ?? key;
+  const dictionary = locale === 'fa' ? fa : en;
+  const value = lookup(dictionary, key) ?? key;
+  return value;
 }
