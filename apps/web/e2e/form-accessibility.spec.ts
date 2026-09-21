@@ -1737,7 +1737,7 @@ for (const locale of ['en', 'fa']) {
           page.evaluate(() => document.documentElement.style.getPropertyValue('--primary'))
         )
         .toBe('#2563eb');
-      const checkContrast = async () => {
+      const checkContrast = async (scrollToEnd = false) => {
         const content = await new AxeBuilder({ page })
           .include('#admin-content')
           .withRules(['color-contrast'])
@@ -1750,7 +1750,8 @@ for (const locale of ['en', 'fa']) {
         await expect(page.locator('#admin-navigation')).toBeVisible();
         // A scrollable sidebar intentionally clips offscreen links. Inspect visible
         // labels at each scroll position instead of asking axe to infer occluded pixels.
-        await page.locator('#admin-navigation').evaluate((nav) => {
+        await page.locator('#admin-navigation').evaluate((nav, end) => {
+          nav.scrollTop = end ? nav.scrollHeight : 0;
           const bounds = nav.getBoundingClientRect();
           for (const item of nav.querySelectorAll('a, p')) {
             const rect = item.getBoundingClientRect();
@@ -1759,7 +1760,18 @@ for (const locale of ['en', 'fa']) {
               rect.top >= bounds.top && rect.bottom <= bounds.bottom
             );
           }
-        });
+        }, scrollToEnd);
+        if (scrollToEnd) {
+          await expect(page.locator('#admin-navigation').getByRole('link').last()).toHaveAttribute(
+            'data-contrast-visible',
+            ''
+          );
+          expect(
+            await page
+              .locator('#admin-navigation')
+              .evaluate((nav) => nav.scrollHeight <= nav.clientHeight || nav.scrollTop > 0)
+          ).toBe(true);
+        }
         await expect(
           page.locator('#admin-navigation [data-contrast-visible]').first()
         ).toBeVisible();
@@ -1775,10 +1787,7 @@ for (const locale of ['en', 'fa']) {
         }
       };
       await checkContrast();
-      await page.locator('#admin-navigation').evaluate((node) => {
-        node.scrollTop = node.scrollHeight;
-      });
-      await checkContrast();
+      await checkContrast(true);
       await page.locator('#verification-mode-DISABLED').check();
       const save = page.getByRole('button', {
         name: locale === 'fa' ? 'ذخیره پیش‌نویس' : 'Save draft',
