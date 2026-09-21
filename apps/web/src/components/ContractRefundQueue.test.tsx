@@ -5,10 +5,11 @@ import { en } from '@barghsa/i18n/contracts';
 import { ContractRefundQueue } from './ContractRefundQueue.js';
 import { documentRequest, DocumentRequestError } from '../lib/documents.js';
 import type { TeamAction } from './TeamActionDialog.js';
+import type * as Documents from '../lib/documents.js';
 
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
 vi.mock('../lib/documents.js', async (original) => ({
-  ...(await original<typeof import('../lib/documents.js')>()),
+  ...(await original<typeof Documents>()),
   documentRequest: vi.fn(),
 }));
 vi.mock('./TeamActionDialog.js', () => ({
