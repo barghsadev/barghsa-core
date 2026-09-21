@@ -1,6 +1,6 @@
 # Customer cancellation requests
 
-Task `04-invoices-wallet-contracts.md#T-04.5.01.06`. Base is verified PR #328 merge `9960e956e105f0d8067cfbe8b6e52f67da4da41e`. Status: selected; implementation not yet complete.
+Task `04-invoices-wallet-contracts.md#T-04.5.01.06`. Base is verified PR #328 merge `9960e956e105f0d8067cfbe8b6e52f67da4da41e`. Status: backend built and locally validated; customer/staff interface and final review/CI remain.
 
 Reuse cancellation intents/execution rather than inventing another refund path. A customer with contracts:sign and step-up can submit a reason and preferred destination for a published, current nonterminal contract. Request creates durable staff-review state and notifications only; no contract/refund mutation. Use current session/profile checks and idempotency, one unresolved request per contract, immutable customer request evidence.
 
@@ -9,3 +9,11 @@ Staff rejects with required explanation and customer support notification, leavi
 Customer sees request pending/declined/fulfilled and explanation. Staff queue shows unresolved requests, reason and preference; approval opens existing cancellation decision with request context. Existing contract cancellations remain independently usable. Bilingual/RTL, required reason and exact retry identity.
 
 Tests: real HTTP profile isolation, current permission/session, duplicate submit, stale version, approval/rejection concurrency, reason validation, rollback when audit/notification fails, customer cannot cancel directly, failed or awaiting second approval cannot resolve request, successful refund obligation creation resolves request atomically. Migrated DB guards and production browser request-review flow. Preserve bounded task scope.
+
+## Backend checkpoint
+
+Migration0146 adds retained, version-bound customer requests with one pending request per contract. Submission requires current published contract/profile/signing authority and step-up. It records review evidence and bilingual notices without cancelling service. Staff rejection requires an explanation and current authority. Prepared cancellation decisions may bind the request; execution resolves it atomically through the existing financial approval and refund transaction. Rejection invalidates an already prepared decision, including its read status. Independent terminal changes are presented as Closed rather than pending fulfillment.
+
+Validation passes51 real HTTP cases across request/cancellation/customer-review flows and33 migrated database/upgrade cases. Tests cover profile isolation, CSRF/step-up, revoked permission, duplicate/idempotent requests, rejection, dual approval before mandatory wallet returns, rejection/execution races, and rollback when notices fail. API/DB types, targeted lint, generated OpenAPI consistency and database snapshot checks pass. No final combined coverage, independent approval or remote CI is claimed for this new batch.
+
+Next: bilingual customer request/status controls, staff queue and review integration with the existing cancellation editor; then frontend/browser checks, committed combined coverage, independent exact-head review and CI before merge.

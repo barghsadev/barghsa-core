@@ -62,7 +62,11 @@ it('upgrades existing Completed contracts without rewriting or fabricating compl
     const before = (await pool.query('SELECT * FROM contracts WHERE id=$1', [id])).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0144_contract_term_completion', '0145_contract_cancellation'],
+      applied: [
+        '0144_contract_term_completion',
+        '0145_contract_cancellation',
+        '0146_customer_cancellation_requests',
+      ],
     });
     expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [id])).rows).toEqual(before);
     expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });

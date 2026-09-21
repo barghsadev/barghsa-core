@@ -9,6 +9,7 @@ export const prepareCancellationSchema = z
     expectedVersionId: contractUuid,
     expectedFingerprint: z.string().regex(/^[0-9a-f]{64}$/),
     reason: z.string().trim().min(1).max(1000),
+    customerRequestId: contractUuid.optional(),
     refundDecision: z.discriminatedUnion('mode', [
       z.object({ mode: z.literal('full_wallet') }).strict(),
       z

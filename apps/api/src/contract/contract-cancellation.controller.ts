@@ -60,6 +60,11 @@ export class ContractCancellationController {
         expectedVersionId: { type: 'string', format: 'uuid' },
         expectedFingerprint: { type: 'string', pattern: '^[0-9a-f]{64}$' },
         reason: { type: 'string', minLength: 1, maxLength: 1000 },
+        customerRequestId: {
+          type: 'string',
+          format: 'uuid',
+          description: 'Bind this decision to a pending customer cancellation request.',
+        },
         idempotencyKey: { type: 'string', format: 'uuid' },
         refundDecision: {
           oneOf: [

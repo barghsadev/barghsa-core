@@ -2,6 +2,18 @@ import type { PoolClient } from 'pg';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 const messages = {
+  cancellation_requested: {
+    fa: 'درخواست لغو قرارداد برای بررسی کارکنان ثبت شد.',
+    en: 'A contract cancellation request is awaiting staff review.',
+  },
+  cancellation_request_rejected: {
+    fa: 'درخواست لغو قرارداد رد شد. برای پیگیری با پشتیبانی تماس بگیرید.',
+    en: 'Your cancellation request was declined. Contact support for help.',
+  },
+  cancellation_request_fulfilled: {
+    fa: 'درخواست لغو پذیرفته و قرارداد لغو شد. وضعیت بازپرداخت را در قرارداد بررسی کنید.',
+    en: 'Your request was accepted and the contract was cancelled. Check the contract for refund progress.',
+  },
   signature_requested: {
     fa: 'نسخه پذیرفته‌شده قرارداد برای ثبت نسخه امضاشده آماده است.',
     en: 'The accepted contract version is ready for its signed copy.',
@@ -49,6 +61,7 @@ export async function notifyContractReview(
       'accepted',
       'signature_requested',
       'signed_copy_recorded',
+      'cancellation_requested',
     ].includes(event)
   ) {
     const staff = await client.query<{ user_id: string; is_admin: boolean; permissions: unknown }>(

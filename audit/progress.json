@@ -1441,8 +1441,8 @@
         "status": "merged",
         "merge_commit_sha": "9960e956e105f0d8067cfbe8b6e52f67da4da41e"
       },
-      "validation": "Previous cancellation batch: combined local coverage,17 browser cases,52 frontend tests pass;remote319 API files/5344 tests and all five CI gates pass. New request batch selected;implementation validation pending.",
-      "next_action": "Build customer cancellation request storage,customer submission and staff review using the existing cancellation/refund transaction;validate before review and merge.",
+      "validation": "Customer request backend:51 HTTP and33 DB/upgrade tests pass;API/DB types,targeted lint,OpenAPI and database snapshot checks pass. Interface,combined coverage,independent review and CI remain.",
+      "next_action": "Build bilingual customer request/status controls and staff review queue connected to the existing cancellation editor;validate full flow before review and merge.",
       "remaining_tasks": [
         "Customer cancellation requests",
         "Contract draft/edit UI and typed financial preview",

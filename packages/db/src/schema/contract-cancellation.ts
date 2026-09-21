@@ -15,6 +15,7 @@ import { users } from './users';
 import { approvalRequests } from './approval-requests';
 import { invoices } from './invoices';
 import { refunds } from './refunds';
+import { contractCancellationRequests } from './contract-cancellation-requests';
 
 /** An immutable staff decision. Approval never changes the captured terms;
  * execution must revalidate the current version, policy and financial facts. */
@@ -28,6 +29,12 @@ export const contractCancellationIntents = pgTable(
       .notNull()
       .references(() => users.userId, { onDelete: 'restrict' }),
     reason: text('reason').notNull(),
+    customerRequestId: uuid('customer_request_id').references(
+      () => contractCancellationRequests.id,
+      {
+        onDelete: 'restrict',
+      }
+    ),
     refundDecision: jsonb('refund_decision').$type<Record<string, unknown>>().notNull(),
     financialSnapshot: jsonb('financial_snapshot').$type<Record<string, unknown>>().notNull(),
     financialFingerprint: text('financial_fingerprint').notNull(),

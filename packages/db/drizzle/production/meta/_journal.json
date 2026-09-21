@@ -463,6 +463,13 @@
       "when": 1791331200048,
       "tag": "0145_contract_cancellation",
       "breakpoints": true
+    },
+    {
+      "idx": 146,
+      "version": "7",
+      "when": 1791331200049,
+      "tag": "0146_customer_cancellation_requests",
+      "breakpoints": true
     }
   ]
 }
