@@ -1,6 +1,6 @@
 # Contract draft authoring
 
-Local branch: `codex/contract-draft-authoring`, started from PR330 head `a9cb854892437a5b529590bf4c03ccfa56d59cce` while its Linux browser validation runs. Rebase onto its verified squash merge before opening this batch's PR. No supervisor state is changed.
+Local branch: `codex/contract-draft-authoring`, rebased onto verified PR330 squash merge `331cbc005351e6f58f29fa1ee71dac93072546f1`. No supervisor state is changed.
 
 This batch makes the existing staff draft creation and immutable draft-edit APIs usable from the contract workspace. It supports the versioning requirement in `04-invoices-wallet-contracts.md#T-04.5.02.01` and the contract workspace pattern in `07-ui-ux-design.md#T-07.18.03.01`. It does not claim to finish every requirement of either task.
 
@@ -8,17 +8,15 @@ Staff can search active profiles by name, page eligible orders for the selected 
 
 The lookup requires contract-writing permission and returns only profile labels or eligible order references. It excludes archived profiles and cancelled orders and uses bounded cursor pages. Creation still revalidates profile/order/service identity on the server. Contract publication, customer acceptance, signatures and activation remain separate guarded commands.
 
-Validation so far:
+Validation:
 
-- Contract HTTP, review and activation suites: 58 tests pass, including lookup permissions, field minimization, literal search, malformed input, pagination and order ownership boundaries.
-- Draft editor, workspace and service-context suites: 23 tests pass, including bilingual creation, captured confirmation, imported-field preservation, oversized UTF-8 rejection, selection resets and lookup recovery.
-- API/web type checking, scoped lint, production build and 44 bundle budgets pass.
-- Browser create/edit and accessibility checks are in progress. The first scan encountered scroll-clipped text and now uses the established geometry proof plus strict rescan. The first retry scenario omitted re-entering the password cleared by the existing confirmation dialog; the fixture now follows that real interaction.
+- Contract HTTP, review and activation suites:58 tests pass, including lookup permissions, field minimization, literal search, malformed input, pagination and order ownership boundaries.
+- Draft editor, workspace and service-context suites:23 tests pass, including bilingual creation, captured confirmation, imported-field preservation, oversized UTF-8 rejection, selection resets and lookup recovery. All53 dictionary tests pass.
+- API/web types, scoped lint, production build,44 bundle budgets, OpenAPI snapshot checking and backlog validation pass.
+- All10 create/edit browser cases pass across Chromium, Firefox, WebKit, mobile Chrome and mobile Safari in English/light and Persian/dark. They verify strict accessibility after proven scroll clipping, password re-entry, identical idempotent retries, automatic display of the created contract, preservation of imported values and read-only historical versions. Persian desktop and mobile screenshots were inspected.
+- Pre-rebase changed-source coverage passes the unchanged critical90% line/85% branch floors: API53/54 lines and21/23 branches; web236/245 lines and285/309 branches; dictionaries3/3 lines and6/6 branches. Final rebased-head coverage remains a merge gate.
+- Focused API coverage collection repeats58 passing cases but fails the whole-package floor because only three test files are selected. This is not a full API coverage pass. Local static scanning is unavailable because `semgrep` is absent; the required PR scanner must pass in CI.
 
-Browser follow-up: all4 create/edit flows pass in Chromium and mobile Chrome across English/light and Persian/dark. They verify strict accessibility after proven scroll clipping, password re-entry, identical idempotent retries, automatic display of the created contract, preservation of imported values and read-only historical versions. Persian desktop and mobile screenshots were inspected. The OpenAPI snapshot is updated and its checker passes; all53 dictionary tests pass.
-
-Coverage collection repeats the58 passing API cases. Its whole-package floor fails because only three files are selected; this is not claimed as a full API coverage pass. The generated measurements will feed the separate required changed-source gate. The local static scan is unavailable because `semgrep` is absent from PATH; the PR's required scanner must pass in CI.
-
-Before merge: verify changed-source coverage on a clean commit, obtain independent exact-head approval and pass all PR checks.
+Before merge: verify final-head changed-source coverage, obtain independent exact-head approval and pass all PR checks.
 
 Remaining contract work includes template generation, authoritative financial review snapshots across financial commands, and post-acceptance amendments with renewed acceptance/signatures. This editor does not substitute plain text for those workflows or claim generic draft content is an authoritative price calculation.
