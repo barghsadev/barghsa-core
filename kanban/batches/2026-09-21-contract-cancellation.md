@@ -75,4 +75,4 @@ Validation passes52 cancellation/wallet/external HTTP tests,36 refund processing
 
 ## Final validation checkpoint
 
-Focused coverage collection passes132 API tests,57 migrated database tests,19 shared approval tests,2 dictionary tests and50 frontend tests. Seventeen production-browser cases pass, including existing contract and approval flows. Added finance queue tests cover permission denial, failed-load recovery, pagination deduplication, missing reconciliation references and stale responses after unmount. Web types pass. Final combined coverage must be collected on the clean committed head before independent review and CI.
+Focused coverage collection passes132 API tests,57 migrated database tests,19 shared approval tests,2 dictionary tests and52 frontend tests. Seventeen production-browser cases pass, including existing contract and approval flows. Added finance queue tests cover permission denial, failed-load recovery, pagination deduplication, missing reconciliation references and stale responses after unmount. Web types pass. Final combined coverage must be collected on the clean committed head before independent review and CI.

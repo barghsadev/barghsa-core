@@ -1441,7 +1441,7 @@
         "status": "merged",
         "merge_commit_sha": "cac42489bf39a7b08443d1acb547480cf8572cee"
       },
-      "validation": "Focused coverage suites:132 API,57 DB,19 shared,2 dictionary,50 frontend tests pass;17 production browser cases pass. Web types pass. Combined coverage on final committed head,independent review and CI pending.",
+      "validation": "Focused coverage suites:132 API,57 DB,19 shared,2 dictionary,52 frontend tests pass;17 production browser cases pass. Web types pass. Combined coverage on final committed head,independent review and CI pending.",
       "next_action": "Collect combined coverage on committed full cancellation batch,close meaningful test gaps and inspect rendered UI,then create PR and review exact head; merge only with all gates passing.",
       "remaining_tasks": [
         "Contract draft/edit UI and typed financial preview",

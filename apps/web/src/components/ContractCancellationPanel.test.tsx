@@ -265,6 +265,37 @@ it('recovers a failed read through refresh', async () => {
   await click(en.refresh);
   expect(container.textContent).toContain(en.cancellationReview);
 });
+it('recovers an unavailable financial preview without allowing a decision first', async () => {
+  await render();
+  h.fail = true;
+  await click(en.cancellationReview);
+  expect(container.textContent).toContain(en.error);
+  expect(container.querySelector('form')).toBeNull();
+  h.fail = false;
+  await click(en.cancellationRefresh);
+  expect(container.querySelector('form')).toBeTruthy();
+});
+it('requires a reason even for an explicit zero discretionary return', async () => {
+  h.preview!.serviceType = 'solar';
+  await render();
+  await click(en.cancellationReview);
+  await act(async () =>
+    container.querySelector<HTMLInputElement>('input[type="checkbox"]')!.click()
+  );
+  await input('input[inputmode="numeric"]', '0');
+  const submit = () =>
+    act(async () => {
+      container
+        .querySelector('form')!
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+  await submit();
+  expect(h.action).toBeNull();
+  expect(container.textContent).toContain(en.cancellationInvalid);
+  await input('textarea', 'No discretionary return approved');
+  await submit();
+  expect(h.action?.body).toMatchObject({ refundDecision: { mode: 'custom', refunds: [] } });
+});
 it.each(['-1', '1.5', ' 1', '01', '9223372036854775808'])(
   'rejects invalid IRR amount %s',
   (value) => {
