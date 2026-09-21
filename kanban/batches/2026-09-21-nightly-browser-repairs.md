@@ -1,6 +1,6 @@
 # Nightly browser repairs
 
-Follow-up to scheduled run35554299044, related to `01-platform-infrastructure.md#T-05.05.01`. Branch `codex/nightly-browser-repairs` started from reviewed PR #329 HEAD `c85bb7d77f4db20af70b9d9db310c2fa88c37c8d`. That PR is now verified merged as `f1d74a3d8a4962f542c2c2d80f44a0ffd7512c21`; rebase this batch onto it before opening a PR. This repairs browser validation, not every separate nightly-schedule requirement. No supervisor state is changed.
+Follow-up to scheduled run35554299044, related to `01-platform-infrastructure.md#T-05.05.01`. Branch `codex/nightly-browser-repairs` started from reviewed PR #329 HEAD `c85bb7d77f4db20af70b9d9db310c2fa88c37c8d`. That PR is now verified merged as `f1d74a3d8a4962f542c2c2d80f44a0ffd7512c21`; this batch is rebased onto it. This repairs browser validation, not every separate nightly-schedule requirement. No supervisor state is changed.
 
 The reproduction found browser-specific fixture assumptions and unresolved CRM contrast checks. Preserve every browser project and accessibility requirement. Do not disable failing tests or accept unresolved contrast as a pass.
 
@@ -19,3 +19,5 @@ Follow-up validation: all15 font/navigation cases pass across Firefox, WebKit an
 CRM geometry confirms vertical clipping by the scrollable main content: wrapped mobile tabs extend below its bottom edge, and the session table can be below the desktop viewport. The shared contrast helper now proves clipping against viewport and scroll ancestors before revealing each affected node and requiring a clean contrast rescan. It retains all measured violations and rejects incomplete results that cannot be explained by clipping.
 
 The Persian Firefox session reference also touched the table's right edge with fractional text geometry. Scrolling alone did not resolve it. Horizontal cell padding does, and the Persian table was visually inspected. The five-project CRM run passed39/40. Mobile Safari's English dark case timed out during initial navigation and context shutdown, before any network record or CRM assertion. Repeating the four mobile Safari variants reproduced the fourth-case startup timeout. Investigate it separately from contrast; do not call the whole suite clean. Final batch coverage, independent review and CI remain.
+
+The local Safari timeout reproduced in both four-case repetitions, while the same English dark case passed twice in fresh workers. A minimal six-context Safari reuse probe passed. No speculative browser fixture workaround is introduced. Validate the complete browser workflow on Linux and keep the local limitation explicit. Types, targeted lint and production build pass.

@@ -1441,8 +1441,8 @@
         "status": "merged",
         "merge_commit_sha": "f1d74a3d8a4962f542c2c2d80f44a0ffd7512c21"
       },
-      "validation": "Customer requests merged after exact-head approval and all five CI gates. Browser repairs pass focused font, OTP, registration, theme, navigation and CSP cases. CRM run passes39/40; mobile Safari page-load/context-close timeout before network requests is under investigation. Types, lint and production build pass.",
-      "next_action": "Finish browser validation, rebase repair commits onto verified main merge, collect clean-head coverage, independently review and require all CI gates before merge.",
+      "validation": "Customer requests merged after exact-head approval and all five CI gates. Browser repairs pass focused font, OTP, registration, theme, navigation and CSP cases. CRM run passes39/40; mobile Safari page-load/context-close timeout before network requests is under investigation. Types, lint and production build pass. The failing Safari case passes twice in isolated fresh workers; the four-case sequence still reproduces startup failure.",
+      "next_action": "Collect clean-head coverage, obtain exact-head review, and validate all browser projects on Linux CI before merge.",
       "remaining_tasks": [
         "Contract draft/edit UI and typed financial preview",
         "Automatic contract template-to-PDF generation",
@@ -1456,7 +1456,9 @@
         35549306810,
         35550597502
       ],
-      "main_full_runs_pending": [],
+      "main_full_runs_pending": [
+        35559770645
+      ],
       "main_full_runs_failed": [
         {
           "run_id": 35551479937,
