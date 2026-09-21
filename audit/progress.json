@@ -1430,19 +1430,19 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/bank-receipt-review",
+      "branch": "codex/contract-financial-review",
       "status": "in_progress",
-      "record": "kanban/batches/2026-09-21-bank-receipt-review.md",
+      "record": "kanban/batches/2026-09-21-contract-financial-review.md",
       "previous_batch": {
-        "pr": 332,
-        "reviewed_head_sha": "50f5dda56723311aea0a3693e556d5896019c69a",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/332#issuecomment-5757687909",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35578648191",
+        "pr": 333,
+        "reviewed_head_sha": "aad0d6e2d11e5d32de2d7c908459d08b0d5466a1",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/333#issuecomment-5758516000",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35584995473",
         "status": "merged",
-        "merge_commit_sha": "f665d50535040e3c45699cc14aafaa2367a71bad"
+        "merge_commit_sha": "04bc9ef180e2e1811054d6ebd064f15f57cc4030"
       },
-      "validation": "237 focused API, 42 UI, 995 shared, 53 dictionary tests and 70 production browser cases pass. Types, lint, OpenAPI, 44 bundle budgets and backlog pass. Focused API coverage misses whole-package floors; final changed-source coverage, independent review and CI remain.",
-      "next_action": "Review the completed bank-receipt batch at its committed HEAD, pass CI and merge; keep cross-command tasks partial.",
+      "validation": "133 API,83 UI,1010 shared,16 bucket,53 dictionary tests and40 production browser cases across all5projects pass. Original changed-source gates, types, lint, builds, OpenAPI,44bundle budgets and backlog pass. Instrumented browser coverage merge, independent review and CI remain.",
+      "next_action": "Complete contract acceptance/signing coverage and review, then pass CI and merge; keep cross-command tasks partial.",
       "remaining_tasks": [
         "Financial review snapshots and confirmation UI across all irreversible/financial commands",
         "Automatic contract template-to-PDF generation",
@@ -1457,9 +1457,12 @@
         35550597502,
         35559770645,
         35572387200,
-        35573972967
+        35573972967,
+        35580651560
       ],
-      "main_full_runs_pending": [],
+      "main_full_runs_pending": [
+        35586979876
+      ],
       "main_full_runs_failed": [
         {
           "run_id": 35551479937,

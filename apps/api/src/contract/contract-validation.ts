@@ -53,6 +53,10 @@ export const contractReviewSchema = z
     idempotencyKey: contractUuid,
   })
   .strict();
+export const financialReviewHashSchema = z.string().regex(/^[a-f0-9]{64}$/);
+export const contractAcceptanceSchema = contractReviewSchema.extend({
+  expectedReviewHash: financialReviewHashSchema,
+});
 export const contractChangesSchema = contractReviewSchema.extend({
   reason: z.string().trim().min(1).max(1000),
 });

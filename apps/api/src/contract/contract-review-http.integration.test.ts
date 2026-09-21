@@ -1,3 +1,5 @@
+import type { ContractFinancialReview } from '@barghsa/shared/finance';
+import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -33,7 +35,9 @@ async function login(user: string, role?: string) {
   };
   return user;
 }
-function send(path: string, method = 'GET', body?: unknown, user = 'review-legal') {
+async function send(path: string, method = 'GET', body?: unknown, user = 'review-legal') {
+  if (method === 'POST')
+    body = await contractReviewConfirmation(http.base, path, headers[user]!, body);
   return fetch(http.base + '/api/' + path, {
     method,
     headers: headers[user]!,
@@ -733,4 +737,109 @@ it('revalidates the original contract profile before replaying an acceptance aft
     legal,
   ]);
   expect((await send('contracts/' + f.row.id + '/accept', 'POST', body, legal)).status).toBe(404);
+});
+
+it('requires the current financial review and preserves the confirmed snapshot on acceptance retries', async () => {
+  const f = await fixture();
+  await publish(f);
+  const path = `contracts/${f.row.id}/accept`;
+  const preview = () => customer(f, `/acceptance-review?versionId=${f.row.currentVersionId}`);
+  const initial = await preview();
+  expect(initial.status).toBe(200);
+  const review = (await initial.json()) as ContractFinancialReview;
+  expect(review).toMatchObject({
+    scope: { action: 'contract.acceptance', profileId: f.profile, resourceId: f.row.id },
+    data: {
+      contract: { versionId: f.row.currentVersionId, content: { price: '9007199254740993' } },
+      payment: { source: 'none', amount: '0' },
+      cancellationRefund: 'full_wallet',
+    },
+  });
+  const missing = await fetch(`${http.base}/api/${path}`, {
+    method: 'POST',
+    headers: headers[f.owner]!,
+    body: JSON.stringify(command(f.row.currentVersionId)),
+  });
+  expect(missing.status).toBe(400);
+  expect(
+    (
+      await send(
+        path,
+        'POST',
+        {
+          ...command(f.row.currentVersionId),
+          expectedReviewHash: '0'.repeat(64),
+        },
+        f.owner
+      )
+    ).status
+  ).toBe(409);
+  await http.pool.query('UPDATE profiles SET title=$2 WHERE id=$1', [
+    f.profile,
+    'Updated legal entity',
+  ]);
+  expect(
+    (
+      await send(
+        path,
+        'POST',
+        {
+          ...command(f.row.currentVersionId),
+          expectedReviewHash: review.hash,
+        },
+        f.owner
+      )
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await http.pool.query('SELECT count(*) FROM contract_acceptances WHERE contract_id=$1', [
+        f.row.id,
+      ])
+    ).rows[0].count
+  ).toBe('0');
+  const refreshed = (await (await preview()).json()) as ContractFinancialReview;
+  expect(refreshed.hash).not.toBe(review.hash);
+  const body = { ...command(f.row.currentVersionId), expectedReviewHash: refreshed.hash };
+  const response = await send(path, 'POST', body, f.owner);
+  expect(response.status).toBe(200);
+  const accepted = (await response.json()) as { financialReview: ContractFinancialReview };
+  expect(accepted.financialReview).toEqual(refreshed);
+  const audit = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='contract.accepted' AND metadata::jsonb->>'contractId'=$1",
+      [f.row.id]
+    )
+  ).rows[0].metadata;
+  expect(audit.financialReview).toEqual(refreshed);
+  const retry = await send(path, 'POST', body, f.owner);
+  expect(retry.status).toBe(200);
+  expect(await retry.json()).toEqual(accepted);
+  expect(
+    (await send(path, 'POST', { ...body, expectedReviewHash: review.hash }, f.owner)).status
+  ).toBe(409);
+});
+it('allows review before step-up while keeping it scoped to the authorized customer', async () => {
+  const f = await fixture(),
+    other = await fixture();
+  await publish(f);
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE user_id=$1', [f.owner]);
+  const suffix = `/acceptance-review?versionId=${f.row.currentVersionId}`;
+  const response = await customer(f, suffix);
+  expect(response.status).toBe(200);
+  const review = (await response.json()) as ContractFinancialReview;
+  expect((await customer(f, suffix, other.owner)).status).toBe(404);
+  expect(
+    (
+      await send(
+        `contracts/${f.row.id}/accept`,
+        'POST',
+        {
+          ...command(f.row.currentVersionId),
+          expectedReviewHash: review.hash,
+        },
+        f.owner
+      )
+    ).status
+  ).toBe(403);
 });

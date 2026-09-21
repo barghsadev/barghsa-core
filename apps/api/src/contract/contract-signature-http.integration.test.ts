@@ -1,3 +1,5 @@
+import type { ContractFinancialReview } from '@barghsa/shared/finance';
+import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
 import { activateReadyContracts } from '@barghsa/db/contract-activation';
 import type { ContractSignatureService } from './contract-signature.service.js';
 type SignatureView = Awaited<ReturnType<ContractSignatureService['get']>>;
@@ -79,7 +81,9 @@ async function login(user: string = randomUUID(), role?: string) {
   };
   return user;
 }
-function send(path: string, user: string, method = 'GET', body?: unknown) {
+async function send(path: string, user: string, method = 'GET', body?: unknown) {
+  if (method === 'POST')
+    body = await contractReviewConfirmation(http.base, path, headers[user]!, body);
   return fetch(http.base + '/api/' + path, {
     method,
     headers: headers[user]!,
@@ -535,4 +539,84 @@ it('resolves a required solar signature only after recording its approved signed
   expect((await activateReadyContracts(http.pool)).activated).toBe(1);
   expect((await read()).state).toBe('Active');
   expect((await read()).ready).toBe(false);
+});
+
+it('binds signing confirmation to the selected approved documents and saves its review on retries', async () => {
+  const f = await contract();
+  const original = await documentFor(f, 'original');
+  const replacement = await documentFor(f, 'original');
+  const base = `admin/contracts/${f.row.id}`;
+  const input = requestInput(f, original.id);
+  const previewResponse = await send(`${base}/signature/review`, 'signature-legal', 'POST', {
+    action: 'request',
+    expectedVersionId: input.expectedVersionId,
+    originalDocumentId: original.id,
+    expectedRequestId: null,
+  });
+  expect(previewResponse.status).toBe(200);
+  const preview = (await previewResponse.json()) as ContractFinancialReview;
+  expect(preview.data.signature!.originalDocument).toMatchObject({
+    id: original.id,
+    checksum: expect.stringMatching(/^[a-f0-9]{64}$/),
+  });
+  const request = { ...input, expectedReviewHash: preview.hash };
+  expect(
+    (
+      await send(`${base}/signature-request`, 'signature-legal', 'POST', {
+        ...request,
+        originalDocumentId: replacement.id,
+      })
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT count(*) FROM contract_signature_requests WHERE contract_id=$1',
+        [f.row.id]
+      )
+    ).rows[0].count
+  ).toBe('0');
+  const response = await send(`${base}/signature-request`, 'signature-legal', 'POST', request);
+  expect(response.status).toBe(200);
+  const prepared = (await response.json()) as SignatureView & {
+    financialReview: ContractFinancialReview;
+  };
+  expect(prepared.financialReview).toEqual(preview);
+  expect(
+    await (await send(`${base}/signature-request`, 'signature-legal', 'POST', request)).json()
+  ).toEqual(prepared);
+  const signed = await documentFor(f, 'signed', false);
+  const otherSigned = await documentFor(f, 'signed', false);
+  const recordBody = recordInput(f, prepared.request!.id, signed.id);
+  const recordPreviewResponse = await send(
+    `contracts/${f.row.id}/signature/review`,
+    f.user,
+    'POST',
+    {
+      action: 'record',
+      expectedVersionId: recordBody.expectedVersionId,
+      signedDocumentId: signed.id,
+      requestId: prepared.request!.id,
+    }
+  );
+  expect(recordPreviewResponse.status).toBe(200);
+  const recordPreview = (await recordPreviewResponse.json()) as ContractFinancialReview;
+  expect(recordPreview.data.signature!.signedDocument!.id).toBe(signed.id);
+  const confirmed = { ...recordBody, expectedReviewHash: recordPreview.hash };
+  expect((await record(f, { ...confirmed, signedDocumentId: otherSigned.id })).status).toBe(409);
+  const recorded = await record(f, confirmed);
+  expect(recorded.status).toBe(200);
+  const result = (await recorded.json()) as SignatureView & {
+    financialReview: ContractFinancialReview;
+  };
+  expect(result.financialReview).toEqual(recordPreview);
+  expect(await (await record(f, confirmed)).json()).toEqual(result);
+  const audits = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE metadata::jsonb->>'contractId'=$1 AND metadata::jsonb ? 'financialReview'",
+      [f.row.id]
+    )
+  ).rows.map((row) => row.metadata.financialReview);
+  expect(audits).toContainEqual(preview);
+  expect(audits).toContainEqual(recordPreview);
 });

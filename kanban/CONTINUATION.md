@@ -1,10 +1,10 @@
 # Development continuation status
 
-## Current checkpoint: PR #332 merged
+## Current checkpoint: PR #333 merged
 
-Wallet financial review snapshots merged as `f665d50535040e3c45699cc14aafaa2367a71bad` after exact-head approval and all five checks in run35578648191. The final implementation passes 96 API tests, 45 wallet browser cases across all five projects, shared/UI checks and the original changed-source coverage thresholds. Review found and corrected a separate dialog date-loader race; both summaries now use the panel-owned account time and block confirmation while unavailable.
+Bank-receipt financial review merged as `04bc9ef180e2e1811054d6ebd064f15f57cc4030` after exact-head approval at `aad0d6e2d11e5d32de2d7c908459d08b0d5466a1` and all five checks in run35584995473. The cleanup fix waits for worker fixture connections before dropping its database. Main run35586979876 is pending. The full main run after PR332, run35580651560, passed all five checks.
 
-Current work is [bank-receipt financial review](batches/2026-09-21-bank-receipt-review.md), on `codex/bank-receipt-review`. Backend, bilingual staff UI and two-person authority regressions are built. Validation passes 237 API tests, 42 UI tests and 70 production browser cases across all five projects, plus shared/dictionary, types, lint, contract and bundle checks. Independent review, final changed-source coverage and CI remain. Canonical cross-command tasks are still partial.
+Current work is [contract acceptance and signing financial review](batches/2026-09-21-contract-financial-review.md), on `codex/contract-financial-review`. Backend and bilingual UI are built with authoritative hash confirmation and persisted review evidence. 133 API tests, 83 UI tests, 1,010 shared tests, 53 dictionary tests and 40 production browser cases across all five projects pass. Original changed-source coverage gates, types, lint, builds, OpenAPI, bundle budgets and backlog checks pass. Instrumented browser coverage merge, independent review and CI remain. Canonical cross-command tasks are still partial.
 
 Checked September 20, 2026 against CI-verified commit `faf9a2de2825e2bb829699aec2802d68c2d1f2a8` on `codex/audit-fixes`.
 

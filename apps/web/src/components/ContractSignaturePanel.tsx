@@ -19,7 +19,8 @@ import {
   type BusinessDocument,
   type DocumentPage,
 } from '../lib/documents.js';
-import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { ContractFinancialReviewDialog } from './ContractFinancialReviewDialog.js';
+import { type TeamAction } from './TeamActionDialog.js';
 
 function documentsPath(
   id: string,
@@ -275,8 +276,11 @@ export function ContractSignaturePanel({
         </>
       )}
       {action ? (
-        <TeamActionDialog
+        <ContractFinancialReviewDialog
           action={action}
+          profileId={profileId}
+          contractId={id}
+          time={time}
           onClose={() => setAction(null)}
           onSuccess={async () => {
             setAction(null);

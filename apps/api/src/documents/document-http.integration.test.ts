@@ -1,3 +1,4 @@
+import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
 import { createHash, randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
@@ -79,7 +80,9 @@ async function login(user: string = randomUUID(), role?: string) {
   };
   return user;
 }
-function send(path: string, user: string, method = 'GET', body?: unknown) {
+async function send(path: string, user: string, method = 'GET', body?: unknown) {
+  if (method === 'POST')
+    body = await contractReviewConfirmation(http.base, path, headers[user]!, body);
   return fetch(http.base + '/api/' + path, {
     method,
     headers: headers[user]!,

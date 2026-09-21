@@ -29,6 +29,7 @@ import {
   contractUuid,
   contractReviewSchema,
   contractChangesSchema,
+  contractAcceptanceSchema,
 } from './contract-validation.js';
 const reviewBody = {
   type: 'object' as const,
@@ -161,6 +162,23 @@ export class CustomerContractController {
   ) {
     return this.service.get(parse(contractUuid, id), req.session, parse(contractUuid, versionId));
   }
+  @Get(':id/acceptance-review')
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiQuery({ name: 'versionId', required: true, type: String })
+  @ApiOperation({
+    summary: 'Review the published terms and financial conditions before acceptance',
+  })
+  acceptanceReview(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Query('versionId') versionId: string
+  ) {
+    return this.service.acceptanceReview(
+      parse(contractUuid, id),
+      parse(contractUuid, versionId),
+      req.session
+    );
+  }
   @Post(':id/accept')
   @HttpCode(200)
   @RequiresStepUp()
@@ -168,7 +186,16 @@ export class CustomerContractController {
   @ApiOperation({
     summary: 'Accept the exact current published version as the authorized customer',
   })
-  @ApiBody({ schema: reviewBody })
+  @ApiBody({
+    schema: {
+      ...reviewBody,
+      required: [...reviewBody.required, 'expectedReviewHash'],
+      properties: {
+        ...reviewBody.properties,
+        expectedReviewHash: { type: 'string', pattern: '^[a-f0-9]{64}$' },
+      },
+    },
+  })
   @ApiResponse({
     status: 200,
     description:
@@ -181,7 +208,7 @@ export class CustomerContractController {
   accept(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() body: unknown) {
     return this.service.accept(
       parse(contractUuid, id),
-      parse(contractReviewSchema, body),
+      parse(contractAcceptanceSchema, body),
       req.session,
       req.ip ?? '127.0.0.1'
     );

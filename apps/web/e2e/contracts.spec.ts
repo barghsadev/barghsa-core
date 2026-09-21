@@ -1,3 +1,4 @@
+import { contractReview } from './contract-review-fixture';
 import { test, expect } from './upload-fixture';
 import { en, fa } from '../../../packages/i18n/src/contracts';
 import { en as documentEn, fa as documentFa } from '../../../packages/i18n/src/documents';
@@ -95,6 +96,13 @@ for (const locale of ['en', 'fa'] as const)
         expect(params.get('profileId')).toBe(PROFILE);
         return route.fulfill({ json: { documents: uploaded ? [document] : [], nextBefore: null } });
       });
+      const financialReview = contractReview('acceptance');
+      await page.route(`**${base}/${ID}/acceptance-review?*`, (route) =>
+        route.fulfill({ json: financialReview })
+      );
+      await page.route('**/api/user/settings/timezone', (route) =>
+        route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+      );
       const attempts: unknown[] = [];
       await page.route(`**${base}/${ID}/${staff ? 'publish' : 'accept'}`, (route) => {
         attempts.push(route.request().postDataJSON());
@@ -102,7 +110,7 @@ for (const locale of ['en', 'fa'] as const)
           return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
         state = staff ? 'AwaitingCustomerAcceptance' : 'Accepted';
         if (!staff) version.acceptedAt = '2026-09-21T01:00:00Z';
-        return route.fulfill({ json: dto() });
+        return route.fulfill({ json: { ...dto(), ...(!staff ? { financialReview } : {}) } });
       });
       await page.route('**/api/auth/step-up', (route) => {
         expect(route.request().postDataJSON()).toEqual({ password: 'Test-password' });
@@ -171,6 +179,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(dialog).toHaveCount(0);
       expect(attempts).toHaveLength(2);
       expect(attempts[0]).toEqual(attempts[1]);
+      if (!staff) expect(attempts[1]).toMatchObject({ expectedReviewHash: financialReview.hash });
       expect(attempts[1]).toMatchObject({
         expectedVersionId: VERSION,
         idempotencyKey: expect.any(String),

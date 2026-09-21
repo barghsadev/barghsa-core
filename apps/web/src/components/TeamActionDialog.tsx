@@ -170,6 +170,7 @@ export function TeamActionDialog({
       }}
     >
       <DialogContent
+        className="max-h-[90dvh] overflow-y-auto"
         showCloseButton={!busy}
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
         finalFocus={finalFocus}
