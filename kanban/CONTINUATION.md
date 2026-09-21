@@ -95,3 +95,13 @@ PR #325 corrected head `8a4afc3361a7118df29ee39755ddc13ea9527817` is independent
 ### PR #325 merged; completion ready for review
 
 Activation PR #325 merged at `fa6a383b9bd5369390d4175c9ac7d59a2ba0313c` after corrected-head approval and all five CI gates passed in run35548123603. The completion batch is rebased onto that verified merge. Its unit/process combined coverage passes; final committed browser coverage, independent review and CI remain. The next context-editing interface is saved on `codex/contract-context-editor` at `1bffe41d`, with types/lint and30 focused tests passing. Its browser/coverage/review/CI remain, and it must rebase onto the completion merge.
+
+### PR #326 approved; draft context editor in validation
+
+Completion PR #326 is approved at `a21cd099c48cb2bba426f8d01e76df553b5afac0` in [review](https://github.com/barghsadev/barghsa-core/pull/326#issuecomment-5754061954). Its committed combined coverage passes; CI run35549391725 is pending. Full main after #324, run35547612589, now passes all five gates. The context editor branch has been rebased onto this completion head and is running production browser checks. Its final coverage, review and CI remain. Rebase it onto the verified completion squash merge before opening the next PR.
+
+The context-editing interface now passes30 focused tests,10 bilingual production browser flows,types/lint/build,44 bundle budgets and static analysis. Final committed coverage and independent review/CI remain. No new PR is open while #326 CI is pending.
+
+### PR #326 merged; context editor ready for review
+
+Completion PR #326 merged as `0de427bda68c620b73254cc8aba80a1a90a4a36d` after exact-HEAD approval and all five CI gates passed. The context editor is rebased onto that verified merge; final browser coverage is being bound to its rebased head, followed by independent review and CI. A later cancellation foundation is preserved on `codex/contract-cancellation` at `91eac8e7`. Its read-only financial preview passes40 unit/HTTP cases,API types/lint/OpenAPI checks; cancellation commands,mandatory refund processing,financial closure and UI remain unfinished. Rebase that draft after the editor merges and complete its entire workflow before its PR.

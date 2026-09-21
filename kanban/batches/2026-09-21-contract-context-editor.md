@@ -1,0 +1,7 @@
+# Draft contract dates and invoice editing
+
+Canonical tasks `04-invoices-wallet-contracts.md#T-04.5.02.01` and `04-invoices-wallet-contracts.md#T-04.5.01.04`, staff interface portion. Build on verified completion PR #326 merge `0de427bda68c620b73254cc8aba80a1a90a4a36d`, after exact-HEAD approval and all five CI checks passed.
+
+Allow staff to edit the current Draft or ChangesRequested version's service dates and initial invoice reference. Reuse the existing versioned, authorized, step-up protected mutation. Preserve the full content snapshot and unchanged timestamp precision. Require a change reason, validate dates in the saved account timezone, reject nonexistent local times and reversed intervals, and explain the new version and resubmission effects. Published and historical versions stay read-only. Keep bilingual labels, RTL and accessible controls.
+
+Local implementation passes web typechecking, 30 focused component/date conversion tests and 10 production browser flows. Browser coverage includes English/Persian version-bound retries through password verification, preserved timestamp precision, refreshed version history and read-only historical context. Lint, production build, all 44 bundle budgets and static analysis pass. Final committed combined coverage, independent review and CI remain. This does not implement general contract content drafting, typed financial preview, cancellation, amendments or financial closure.

@@ -1,6 +1,17 @@
 import { lookup } from './lookup.js';
 
 export const en = {
+  editContext: 'Edit service dates and invoice',
+  saveContext: 'Review changes',
+  contextVersionNotice: 'Saving creates a new contract version. Published versions stay unchanged.',
+  contextResubmitNotice: 'Saving creates a new version and sends it back for staff review.',
+  contextTimezone: 'Dates use your account time zone',
+  contextInvoice: 'Initial invoice reference',
+  contextReason: 'Reason for this change',
+  contextOptional:
+    'Leave a date or invoice reference empty to remove it. The invoice must belong to this contract or its order.',
+  contextInvalid:
+    'Check the invoice reference and dates, and describe the change. The end must be after the start.',
   serviceEndsAt: 'Service term ends',
   serviceCompleted: 'The service term is complete. Invoices and refunds keep their own status.',
   activationTitle: 'Activation prerequisites',
@@ -116,6 +127,17 @@ export const en = {
 } satisfies Record<string, string>;
 
 export const fa: Record<keyof typeof en, string> = {
+  editContext: 'ویرایش تاریخ خدمت و صورتحساب',
+  saveContext: 'بررسی تغییرات',
+  contextVersionNotice: 'ذخیره، نسخه جدیدی از قرارداد می‌سازد. نسخه‌های منتشرشده تغییر نمی‌کنند.',
+  contextResubmitNotice: 'ذخیره، نسخه جدیدی می‌سازد و آن را برای بررسی مجدد کارکنان ارسال می‌کند.',
+  contextTimezone: 'تاریخ‌ها بر اساس منطقه زمانی حساب شما هستند',
+  contextInvoice: 'شناسه صورتحساب اولیه',
+  contextReason: 'دلیل این تغییر',
+  contextOptional:
+    'برای حذف تاریخ یا شناسه صورتحساب، آن را خالی بگذارید. صورتحساب باید متعلق به این قرارداد یا سفارش آن باشد.',
+  contextInvalid:
+    'شناسه صورتحساب و تاریخ‌ها را بررسی و دلیل تغییر را وارد کنید. پایان باید پس از شروع باشد.',
   serviceEndsAt: 'پایان دوره خدمت',
   serviceCompleted: 'دوره خدمت تکمیل شده است. وضعیت صورتحساب‌ها و بازپرداخت‌ها مستقل است.',
   activationTitle: 'پیش‌نیازهای فعال‌سازی',
