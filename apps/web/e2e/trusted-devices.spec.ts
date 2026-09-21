@@ -1,3 +1,4 @@
+import { cookieResponse } from './cookie-response';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 
@@ -106,7 +107,7 @@ for (const locale of ['fa', 'en'])
         if (password !== 'right-password') return route.fulfill({ status: 422, json: {} });
         currentCsrf = `rotated-${verifications.length}`;
         createdAt = `2026-09-0${verifications.length}T12:00:00.000Z`;
-        return route.fulfill({
+        return cookieResponse(route, {
           headers: { 'set-cookie': `barghsa_csrf=${currentCsrf}; Path=/; SameSite=Strict` },
           json: {
             message: 'Step-up authentication successful.',

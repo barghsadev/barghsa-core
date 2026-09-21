@@ -1233,7 +1233,7 @@ function CrmProfileDetailContent() {
                 <tbody>
                   {sessions.entries.map((s) => (
                     <tr key={s.sessionId} className="border-b border-border hover:bg-muted/50">
-                      <td className="py-2 font-mono text-xs">
+                      <td className="px-2 py-2 font-mono text-xs">
                         {s.sessionId.replace(/^session-ref:/, '').substring(0, 12)}...
                       </td>
                       <td className="py-2">{time.format(s.createdAt)}</td>

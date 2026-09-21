@@ -30,7 +30,13 @@ for (const locale of ['fa', 'en']) {
     await openRegistration(page, locale);
     const brand = page.getByRole('complementary');
     await expect(brand).toBeVisible();
-    await expect(brand.getByRole('listitem')).toHaveCount(3);
+    const benefits = brand.getByRole('listitem', { includeHidden: true });
+    await expect(benefits).toHaveCount(3);
+    const wideLayout = await page.evaluate(() => matchMedia('(min-width: 768px)').matches);
+    for (const benefit of await benefits.all()) {
+      if (wideLayout) await expect(benefit).toBeVisible();
+      else await expect(benefit).toBeHidden();
+    }
     await expect(brand.getByRole('link')).toHaveAttribute('href', '/');
     await expect(page.locator('main a[href="/login"]')).toBeVisible();
     await expect(page.locator('main a[href="/forgot-password"]')).toBeVisible();

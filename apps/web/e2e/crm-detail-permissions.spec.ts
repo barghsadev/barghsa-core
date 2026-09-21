@@ -1,3 +1,4 @@
+import { verifyClippedContrast } from './clipped-contrast';
 import { formatBrowserDate } from './browser-date';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -1022,6 +1023,22 @@ for (const locale of ['fa', 'en'] as const)
       await expect
         .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
         .toBe(darkMode);
+      // Keyboard interaction can finish before the reopened popup fades in.
+      // Axe must measure the settled popup and backdrop, not their animation frames.
+      await expect
+        .poll(() =>
+          dialog.evaluate((node) => {
+            const overlay = document.querySelector('[data-slot="dialog-overlay"]');
+            return [node, ...(overlay ? [overlay] : [])].every(
+              (element) =>
+                getComputedStyle(element).opacity === '1' &&
+                element
+                  .getAnimations({ subtree: true })
+                  .every((animation) => animation.playState === 'finished')
+            );
+          })
+        )
+        .toBe(true);
       const a11y = await new AxeBuilder({ page })
         .include('[role="dialog"]')
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
@@ -1245,7 +1262,7 @@ for (const locale of ['fa', 'en'] as const)
             `tab ${n}`
           )
           .toEqual([]);
-        expect.soft(relevant.incomplete, `tab ${n} unresolved contrast`).toEqual([]);
+        await verifyClippedContrast(page, result);
         if (n === 3 || n === 6) {
           const row = n === 3 ? panel.getByRole('row').last() : panel.locator('.rounded-lg');
           await row.hover();
@@ -1254,7 +1271,7 @@ for (const locale of ['fa', 'en'] as const)
             .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
             .analyze();
           expect(hoverScan.violations).toEqual([]);
-          expect(hoverScan.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
+          await verifyClippedContrast(page, hoverScan, row);
         }
         if (n === 0 || n === 3)
           await main.screenshot({

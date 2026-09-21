@@ -78,9 +78,9 @@ for (const locale of ['fa', 'en'])
       expect(accessibility.violations).toEqual([]);
       expect(accessibility.incomplete.filter((item) => item.id === 'color-contrast')).toEqual([]);
 
-      // Use the browser clock's timeline, not the runner's wall clock.
-      await page.clock.pauseAt(new Date(clockStart.getTime() + 60_000));
+      // Advancing the clock can start a poll immediately. Set its response first.
       status = 503;
+      await page.clock.pauseAt(new Date(clockStart.getTime() + 60_000));
       await page.clock.runFor(30000);
       await expect(
         page.getByRole('status').filter({ hasText: locale === 'fa' ? 'شارژبک' : 'chargeback' })
@@ -93,10 +93,20 @@ for (const locale of ['fa', 'en'])
         { ...warning, unmatchedCount: -1 },
         { ...warning, items: [{ ...warning.items[0], amountIrR: 'not-money' }] },
       ]) {
+        // Clear the prior error before testing each invalid payload, so retained
+        // UI from the previous request cannot satisfy this case's assertions.
+        body = warning;
+        await page.clock.runFor(30000);
+        await expect(
+          page.getByRole('status').filter({ hasText: locale === 'fa' ? 'شارژبک' : 'chargeback' })
+        ).toHaveCount(0);
         body = invalid;
         const before = requests;
         await page.clock.runFor(30000);
         await expect.poll(() => requests).toBeGreaterThan(before);
+        await expect(
+          page.getByRole('status').filter({ hasText: locale === 'fa' ? 'شارژبک' : 'chargeback' })
+        ).toBeVisible();
         await expect(banner).toContainText('evt-open');
       }
       body = warning;

@@ -1,3 +1,4 @@
+import { cookieResponse } from './cookie-response';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
@@ -248,7 +249,7 @@ for (const locale of ['en', 'fa'] as const) {
       if (route.request().postDataJSON().password !== 'right-password')
         return route.fulfill({ status: 401, json: {} });
       verified = true;
-      return route.fulfill({
+      return cookieResponse(route, {
         json: {},
         headers: { 'set-cookie': 'barghsa_csrf=sms-current; Path=/; SameSite=Strict' },
       });

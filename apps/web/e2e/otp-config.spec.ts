@@ -1,3 +1,4 @@
+import { cookieResponse } from './cookie-response';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 
@@ -17,7 +18,7 @@ async function shell(page: Page, locale: string) {
   );
   await page.route('**/api/auth/step-up', (route) => {
     expect(route.request().postDataJSON()).toEqual({ password: 'Settings-password-123!' });
-    return route.fulfill({
+    return cookieResponse(route, {
       json: { verified: true },
       headers: { 'Set-Cookie': 'barghsa_csrf=otp-fresh-csrf; Path=/; SameSite=Lax' },
     });

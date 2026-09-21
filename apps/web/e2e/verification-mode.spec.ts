@@ -1,3 +1,4 @@
+import { cookieResponse } from './cookie-response';
 import { test, expect } from './coverage-fixture';
 
 for (const locale of ['en', 'fa']) {
@@ -21,7 +22,7 @@ for (const locale of ['en', 'fa']) {
     );
     await page.route('**/api/auth/step-up', (r) => {
       expect(r.request().postDataJSON()).toEqual({ password: 'Settings-password-123!' });
-      return r.fulfill({
+      return cookieResponse(r, {
         json: { verified: true },
         headers: { 'Set-Cookie': 'barghsa_csrf=verification-fresh; Path=/; SameSite=Lax' },
       });

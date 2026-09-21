@@ -2050,6 +2050,8 @@ for (const locale of ['en', 'fa'])
 
 for (const locale of ['en', 'fa'])
   test(`catalogue UI persists products, prices and system limits (${locale})`, async ({ page }) => {
+    // This full lifecycle repeats real password verification for each protected operation.
+    test.setTimeout(60_000);
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
       if (document.documentElement) document.documentElement.lang = value;
@@ -2566,7 +2568,8 @@ for (const locale of ['en', 'fa'])
       exact: true,
     });
     await english.fill('Published terms');
-    await english.press('ControlOrMeta+a');
+    await english.press('ArrowRight');
+    for (const _character of 'Published terms') await english.press('Shift+ArrowLeft');
     await page
       .getByRole('group', {
         name: fa ? 'محتوای انگلیسی: قالب‌بندی' : 'English content: Formatting',

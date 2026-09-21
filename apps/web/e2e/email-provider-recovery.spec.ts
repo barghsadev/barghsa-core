@@ -1,3 +1,4 @@
+import { cookieResponse } from './cookie-response';
 import { test, expect } from './coverage-fixture';
 
 for (const locale of ['en', 'fa'] as const) {
@@ -199,7 +200,7 @@ for (const locale of ['en', 'fa'] as const) {
       verified = route.request().postDataJSON().password === 'correct';
       if (!verified) return route.fulfill({ status: 401, json: {} });
       currentCsrf = 'rotated-provider-csrf';
-      return route.fulfill({
+      return cookieResponse(route, {
         headers: { 'set-cookie': `barghsa_csrf=${currentCsrf}; Path=/; SameSite=Strict` },
         json: {},
       });

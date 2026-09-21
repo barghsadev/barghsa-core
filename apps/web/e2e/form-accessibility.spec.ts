@@ -1,3 +1,5 @@
+import { dismissMessages } from './dismiss-messages';
+import { cookieResponse } from './cookie-response';
 import { formatBrowserDate } from './browser-date';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -1308,7 +1310,7 @@ for (const locale of ['en', 'fa']) {
         sessionId: currentCsrf,
         createdAt: `2026-09-0${verifications.length}T12:00:00.000Z`,
       };
-      return route.fulfill({
+      return cookieResponse(route, {
         headers: { 'set-cookie': `barghsa_csrf=${currentCsrf}; Path=/; SameSite=Strict` },
         json: {},
       });
@@ -1737,10 +1739,21 @@ for (const locale of ['en', 'fa']) {
           page.evaluate(() => document.documentElement.style.getPropertyValue('--primary'))
         )
         .toBe('#2563eb');
-      const checkContrast = async () => {
+      const checkContrast = async (scrollToEnd = false) => {
+        const content = await new AxeBuilder({ page })
+          .include('#admin-content')
+          .withRules(['color-contrast'])
+          .analyze();
+        expect(content.violations).toEqual([]);
+        expect(content.incomplete).toEqual([]);
+        const menu = page.locator('button[aria-controls="admin-navigation"]');
+        const mobile = await menu.isVisible();
+        if (mobile) await menu.click();
+        await expect(page.locator('#admin-navigation')).toBeVisible();
         // A scrollable sidebar intentionally clips offscreen links. Inspect visible
         // labels at each scroll position instead of asking axe to infer occluded pixels.
-        await page.locator('#admin-navigation').evaluate((nav) => {
+        await page.locator('#admin-navigation').evaluate((nav, end) => {
+          nav.scrollTop = end ? nav.scrollHeight : 0;
           const bounds = nav.getBoundingClientRect();
           for (const item of nav.querySelectorAll('a, p')) {
             const rect = item.getBoundingClientRect();
@@ -1749,23 +1762,34 @@ for (const locale of ['en', 'fa']) {
               rect.top >= bounds.top && rect.bottom <= bounds.bottom
             );
           }
-        });
+        }, scrollToEnd);
+        if (scrollToEnd) {
+          await expect(page.locator('#admin-navigation').getByRole('link').last()).toHaveAttribute(
+            'data-contrast-visible',
+            ''
+          );
+          expect(
+            await page
+              .locator('#admin-navigation')
+              .evaluate((nav) => nav.scrollHeight <= nav.clientHeight || nav.scrollTop > 0)
+          ).toBe(true);
+        }
         await expect(
           page.locator('#admin-navigation [data-contrast-visible]').first()
         ).toBeVisible();
         const result = await new AxeBuilder({ page })
-          .include('#admin-content')
           .include('#admin-navigation [data-contrast-visible]')
           .withRules(['color-contrast'])
           .analyze();
         expect(result.violations).toEqual([]);
         expect(result.incomplete).toEqual([]);
+        if (mobile) {
+          await menu.click();
+          await expect(page.locator('#admin-navigation')).toBeHidden();
+        }
       };
       await checkContrast();
-      await page.locator('#admin-navigation').evaluate((node) => {
-        node.scrollTop = node.scrollHeight;
-      });
-      await checkContrast();
+      await checkContrast(true);
       await page.locator('#verification-mode-DISABLED').check();
       const save = page.getByRole('button', {
         name: locale === 'fa' ? 'ذخیره پیش‌نویس' : 'Save draft',
@@ -1973,7 +1997,7 @@ for (const locale of ['en', 'fa']) {
       if (route.request().postDataJSON().password !== 'right-password')
         return route.fulfill({ status: 401, json: {} });
       verified = true;
-      return route.fulfill({
+      return cookieResponse(route, {
         headers: { 'set-cookie': 'barghsa_csrf=daytime-rotated; Path=/; SameSite=Strict' },
         json: {},
       });
@@ -2590,6 +2614,7 @@ for (const locale of ['en', 'fa']) {
     }
     await expect(save).toBeEnabled();
     for (let index = 0; index < invalid.length; index++) {
+      await dismissMessages(page, locale as 'en' | 'fa');
       await save.click();
       await expect.poll(() => writes.length).toBe(index + 2);
       await expect(save).toBeEnabled();
@@ -2600,6 +2625,7 @@ for (const locale of ['en', 'fa']) {
         })
       ).toHaveCount(0);
     }
+    await dismissMessages(page, locale as 'en' | 'fa');
     await save.click();
     await expect(
       page.getByRole('heading', {
@@ -2845,7 +2871,8 @@ for (const locale of ['en', 'fa']) {
     await expect(english).toHaveAttribute('dir', 'ltr');
     await persian.fill('شرایط جدید');
     await english.fill('Important terms');
-    await english.press('ControlOrMeta+a');
+    await english.press('ArrowRight');
+    for (const _character of 'Important terms') await english.press('Shift+ArrowLeft');
     await page
       .getByRole('group', {
         name: locale === 'fa' ? 'محتوای انگلیسی: قالب‌بندی' : 'English content: Formatting',

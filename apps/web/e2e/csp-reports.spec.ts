@@ -69,11 +69,15 @@ for (const signedIn of [false, true])
   test(`native CSP reports retain browser transport (session cookie=${signedIn})`, async ({
     page,
     context,
+    browserName,
   }) => {
     reports.length = 0;
     if (signedIn)
       await context.addCookies([{ name: 'barghsa_session', value: 'fixture-session', url: base }]);
     const response = await page.goto(base);
+    expect(await response!.request().headerValue('cookie')).toBe(
+      signedIn ? 'barghsa_session=fixture-session' : null
+    );
     const policy = response!.headers()['content-security-policy-report-only'];
     const nonce = policy!.match(/'nonce-([^']+)'/)![1];
     await expect(page.locator('#ready')).toHaveText('Trusted module loaded');
@@ -85,9 +89,12 @@ for (const signedIn of [false, true])
     for (const report of reports) {
       expect(report.body['csp-report']['effective-directive']).toBe('script-src-attr');
       expect(report.headers['content-type']).toBe('application/csp-report');
-      expect(report.headers['sec-fetch-dest']).toBe('report');
+      // Native report transport differs by engine; no application request is substituted.
+      expect(report.headers['sec-fetch-dest']).toBe(browserName === 'webkit' ? 'empty' : 'report');
       expect(report.headers['sec-fetch-site']).toBe('same-origin');
       expect(report.headers['x-csrf-token']).toBeUndefined();
-      expect(report.headers.cookie).toBe(signedIn ? 'barghsa_session=fixture-session' : undefined);
+      expect(report.headers.cookie).toBe(
+        signedIn && browserName !== 'firefox' ? 'barghsa_session=fixture-session' : undefined
+      );
     }
   });

@@ -130,8 +130,14 @@ test('self-hosted fonts follow language changes without overriding code', async 
   });
   await page.goto(`${url}?locale=en`);
   const sample = page.locator('#font-sample');
-  await expect(sample).toHaveCSS('font-family', '"Inter Variable", sans-serif');
-  await expect(page.locator('#nested-language')).toHaveCSS('font-family', 'Vazirmatn, sans-serif');
+  await expect(sample).toHaveCSS(
+    'font-family',
+    /^(?:Inter Variable|"Inter Variable"), sans-serif$/
+  );
+  await expect(page.locator('#nested-language')).toHaveCSS(
+    'font-family',
+    /^(?:Vazirmatn|"Vazirmatn"), sans-serif$/
+  );
   await expect(page.locator('code')).toHaveCSS('font-family', /monospace/);
   await expect
     .poll(() =>
@@ -146,6 +152,6 @@ test('self-hosted fonts follow language changes without overriding code', async 
     )
   ).toBe(true);
   await page.getByRole('button', { name: 'Switch language' }).click();
-  await expect(sample).toHaveCSS('font-family', 'Vazirmatn, sans-serif');
+  await expect(sample).toHaveCSS('font-family', /^(?:Vazirmatn|"Vazirmatn"), sans-serif$/);
   await expect(page.locator('code')).toHaveCSS('font-family', /monospace/);
 });

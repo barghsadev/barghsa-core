@@ -1,3 +1,4 @@
+import { cookieResponse } from './cookie-response';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -66,7 +67,7 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct-password';
-      return route.fulfill({
+      return cookieResponse(route, {
         status: verified ? 200 : 401,
         ...(verified
           ? { headers: { 'Set-Cookie': 'barghsa_csrf=after-create; Path=/; SameSite=Strict' } }

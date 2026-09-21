@@ -1,5 +1,9 @@
 # Development continuation status
 
+## Current checkpoint: PR #329 merged
+
+Customer cancellation requests merged as `f1d74a3d8a4962f542c2c2d80f44a0ffd7512c21` after independent exact-head approval and all five checks in run35558485876. The active branch is now `codex/nightly-browser-repairs`; see [its batch record](batches/2026-09-21-nightly-browser-repairs.md). Browser fixture differences and CRM clipping checks are repaired. A repeatable local mobile Safari startup timeout is still being investigated; final coverage, review and CI remain. The repair commits are rebased onto the verified merge. The failing Safari case passes twice in isolation; the four-case sequence still fails before network activity. Linux workflow validation remains required. No supervisor state is changed. The sections below retain earlier checkpoints and are not current dispatch instructions.
+
 Checked September 20, 2026 against CI-verified commit `faf9a2de2825e2bb829699aec2802d68c2d1f2a8` on `codex/audit-fixes`.
 
 ## Local development
