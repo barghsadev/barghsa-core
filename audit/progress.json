@@ -1441,7 +1441,7 @@
         "status": "merged",
         "merge_commit_sha": "cac42489bf39a7b08443d1acb547480cf8572cee"
       },
-      "validation": "Finance follow-up gap fixed:52 cancellation/wallet/external HTTP tests,36 refund processing/transaction DB cases,4 bilingual production-browser flows;API/web/DB types,lint,OpenAPI pass;Persian queue rendering inspected. Prior evidence recorded in batch file. Final combined coverage,independent review and CI remain.",
+      "validation": "Focused coverage suites:132 API,57 DB,19 shared,2 dictionary,50 frontend tests pass;17 production browser cases pass. Web types pass. Combined coverage on final committed head,independent review and CI pending.",
       "next_action": "Collect combined coverage on committed full cancellation batch,close meaningful test gaps and inspect rendered UI,then create PR and review exact head; merge only with all gates passing.",
       "remaining_tasks": [
         "Contract draft/edit UI and typed financial preview",

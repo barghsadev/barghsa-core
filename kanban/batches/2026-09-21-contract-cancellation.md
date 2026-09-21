@@ -2,7 +2,7 @@
 
 Canonical tasks `04-invoices-wallet-contracts.md#T-04.5.01.05`, `04-invoices-wallet-contracts.md#T-04.4.02.01` through `.05`, and the cancellation consumer of `04-invoices-wallet-contracts.md#T-04.CC.07.01`.
 
-This batch is in progress on verified editor PR #327 merge `cac42489bf39a7b08443d1acb547480cf8572cee`. The cancellation command and automatic wallet fulfillment are locally implemented and tested; closure and UI remain unfinished.
+This batch is in progress on verified editor PR #327 merge `cac42489bf39a7b08443d1acb547480cf8572cee`. The cancellation command, automatic wallet fulfillment, derived financial closure and bilingual interface are implemented. Final coverage, independent review and CI remain.
 
 ## Built foundation
 
@@ -72,3 +72,7 @@ Next: collect actual combined coverage against main,fill meaningful evidence gap
 Requirement review found that exhausted immutable retry jobs could not be resumed. The batch now provides a finance-only,cursor-paginated queue of unresolved contract returns and a usable manual retry. A fresh step-up-verified finance action persists a one-attempt authorization; the worker verifies it and current finance permission,records its consumption and preserves the exhausted automatic job. The original obligation key still prevents duplicate ledger credit. Failed retries remain visible; successful returns leave the queue. The same bilingual queue records external bank references and invokes separate-user reconciliation. It exposes no dismissal action.
 
 Validation passes52 cancellation/wallet/external HTTP tests,36 refund processing/transaction DB cases and4 production-browser flows for cancellation and queue behavior in English/Persian. API/web/DB types,lint,OpenAPI generation pass. Persian queue rendering was inspected from the production-browser artifact. Combined coverage,remaining evidence gaps,independent review and CI remain.
+
+## Final validation checkpoint
+
+Focused coverage collection passes132 API tests,57 migrated database tests,19 shared approval tests,2 dictionary tests and50 frontend tests. Seventeen production-browser cases pass, including existing contract and approval flows. Added finance queue tests cover permission denial, failed-load recovery, pagination deduplication, missing reconciliation references and stale responses after unmount. Web types pass. Final combined coverage must be collected on the clean committed head before independent review and CI.
