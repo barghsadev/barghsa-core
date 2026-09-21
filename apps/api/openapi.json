@@ -3346,6 +3346,36 @@
         ]
       }
     },
+    "/api/admin/contracts/{id}/cancellation-preview": {
+      "get": {
+        "operationId": "ContractController_cancellationPreview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative financial snapshot and fingerprint. This read does not cancel the contract, create a refund or imply financial closure."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read the current version and refund balances before a cancellation decision",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
     "/api/admin/contracts/{id}/signature": {
       "get": {
         "operationId": "ContractSignatureController_get",

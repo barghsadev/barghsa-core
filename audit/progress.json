@@ -1431,7 +1431,7 @@
     },
     "manual_batch": {
       "branch": "codex/contract-context-editor",
-      "status": "local_validation_passed",
+      "status": "approved_ci_pending",
       "record": "kanban/batches/2026-09-21-contract-context-editor.md",
       "previous_batch": {
         "pr": 326,
@@ -1441,7 +1441,7 @@
         "status": "merged",
         "merge_commit_sha": "0de427bda68c620b73254cc8aba80a1a90a4a36d"
       },
-      "validation": "30 focused tests,10 production browser flows,types,lint,format,build,44 bundle budgets,static scan,backlog and actual combined coverage pass. Rebind browser coverage to rebased head before review/CI.",
+      "validation": "30 focused tests,10 production-browser flows,types/lint/format/build,44 bundle budgets,static scan,backlog and actual combined source coverage pass. Exact-head independent review approves without issues. CI is pending.",
       "remaining_tasks": [
         "Contract draft/edit UI and typed financial preview",
         "Automatic contract template-to-PDF generation",
@@ -1451,9 +1451,9 @@
       ],
       "next_local_batch": {
         "branch": "codex/contract-cancellation",
-        "commit": "91eac8e7",
         "status": "financial_preview_foundation_only",
-        "validation": "40 unit/HTTP cases,API types,lint and OpenAPI pass. Actual cancellation,automatic refund obligations/processing,closure guards and UI remain unbuilt; do not open its PR until the workflow is complete."
+        "validation": "40 unit/HTTP cases,API types,lint and OpenAPI pass. Actual cancellation,automatic refund obligations/processing,closure guards and UI remain unbuilt; do not open its PR until the workflow is complete.",
+        "record": "kanban/batches/2026-09-21-contract-cancellation.md"
       },
       "main_full_runs_verified": [
         35545814385,
@@ -1461,7 +1461,11 @@
       ],
       "main_full_runs_pending": [
         35549306810
-      ]
+      ],
+      "pr": 327,
+      "reviewed_head_sha": "5cf7b0ba7ba969388acf4ba17ab193a6cd2f1f02",
+      "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/327#issuecomment-5754208234",
+      "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35550678883"
     },
     "full_ci_followup": {
       "run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35510852358",

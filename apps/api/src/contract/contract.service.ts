@@ -16,6 +16,7 @@ import {
   type ContractActor as Actor,
 } from './contract-transactions.js';
 import { notifyContractReview } from './contract-review-notifications.js';
+import { readCancellationSnapshot } from './contract-cancellation-snapshot.js';
 const versionDto = (row: typeof contractVersions.$inferSelect) => ({
   ...row,
   createdAt: row.createdAt.toISOString(),
@@ -23,6 +24,10 @@ const versionDto = (row: typeof contractVersions.$inferSelect) => ({
 });
 @Injectable()
 export class ContractService {
+  cancellationPreview(id: string) {
+    return readCancellationSnapshot(getDbPool(), id);
+  }
+
   async list(input: ContractListInput) {
     const rows = await drizzle(getDbPool())
       .select({

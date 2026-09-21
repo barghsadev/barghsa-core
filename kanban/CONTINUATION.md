@@ -105,3 +105,7 @@ The context-editing interface now passes30 focused tests,10 bilingual production
 ### PR #326 merged; context editor ready for review
 
 Completion PR #326 merged as `0de427bda68c620b73254cc8aba80a1a90a4a36d` after exact-HEAD approval and all five CI gates passed. The context editor is rebased onto that verified merge; final browser coverage is being bound to its rebased head, followed by independent review and CI. A later cancellation foundation is preserved on `codex/contract-cancellation` at `91eac8e7`. Its read-only financial preview passes40 unit/HTTP cases,API types/lint/OpenAPI checks; cancellation commands,mandatory refund processing,financial closure and UI remain unfinished. Rebase that draft after the editor merges and complete its entire workflow before its PR.
+
+### PR #327 approved; cancellation foundation rebased
+
+The editor PR #327 is independently approved at `5cf7b0ba7ba969388acf4ba17ab193a6cd2f1f02` in [review](https://github.com/barghsadev/barghsa-core/pull/327#issuecomment-5754208234). Actual combined source coverage passes and CI run35550678883 remains pending. The cancellation foundation is rebased onto this approved head. Its40 unit/HTTP cases,API types/lint/OpenAPI checks still cover identical source. Its batch record documents the remaining cancellation/refund/closure/UI workflow. Rebase onto the verified editor squash merge before further publication.
