@@ -194,6 +194,7 @@ const en: Record<string, string> = {
 };
 export function tWalletReceipts(key: string, locale: 'fa' | 'en'): string {
   const dictionary = locale === 'fa' ? fa : en;
-  const value = lookup(dictionary, key) ?? key;
+  const value = lookup(dictionary, key);
+  if (value === undefined) return key;
   return value;
 }
