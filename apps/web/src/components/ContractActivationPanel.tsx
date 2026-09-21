@@ -3,16 +3,25 @@ import { Alert, AlertDescription, Button, PageLoading, StatusBadge } from '@barg
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { contractBase, type ContractActivationData } from '../lib/contracts.js';
+import {
+  contractBase,
+  type ContractActivationData,
+  type ContractVersion,
+} from '../lib/contracts.js';
 import { documentRequest } from '../lib/documents.js';
+import { ContractContextEditor } from './ContractContextEditor.js';
 export function ContractActivationPanel({
   id,
   versionId,
   staff,
+  editableVersion,
+  onChanged,
 }: {
   id: string;
   versionId: string;
   staff: boolean;
+  editableVersion?: ContractVersion | undefined;
+  onChanged?: () => void;
 }) {
   const locale = useLocale(),
     time = useAccountTime();
@@ -89,6 +98,14 @@ export function ContractActivationPanel({
           <p className="text-xs text-muted-foreground">
             {word('evaluatedAt')}: {time.format(data.evaluatedAt)}
           </p>
+          {staff &&
+          data.isCurrent &&
+          ['Draft', 'ChangesRequested'].includes(data.state) &&
+          editableVersion?.id === data.versionId &&
+          editableVersion.content &&
+          onChanged ? (
+            <ContractContextEditor context={data} version={editableVersion} onChanged={onChanged} />
+          ) : null}
         </>
       )}
     </section>

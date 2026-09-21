@@ -265,6 +265,12 @@ export function ContractDetail({
             id={id}
             versionId={data.version.id}
             staff={staff}
+            editableVersion={staff && isCurrent ? data.version : undefined}
+            onChanged={() => {
+              setSelectedVersion(null);
+              setReload((value) => value + 1);
+              onChanged();
+            }}
           />
           <ContractSignaturePanel
             key={'signature:' + data.version.id + ':' + reload}
