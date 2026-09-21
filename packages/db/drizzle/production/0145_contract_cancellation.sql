@@ -181,6 +181,8 @@ BEGIN
  SELECT COALESCE(sum(i.paid_amount-i.refunded_amount),0) INTO actual_impact FROM invoices i
  WHERE i.profile_id=parent.profile_id AND i.adjustment_kind IS DISTINCT FROM 'credit'
    AND (i.contract_id=parent.id::text OR (parent.order_id IS NOT NULL AND i.order_id=parent.order_id AND i.contract_id IS NULL));
+ IF contract_has_pending_payments(parent.id)
+ THEN RAISE EXCEPTION 'Cancellation requires payment reconciliation' USING ERRCODE='23514'; END IF;
  IF actual_impact<>intent.financial_impact_amount
  THEN RAISE EXCEPTION 'Cancellation financial facts changed' USING ERRCODE='23514'; END IF;
  IF parent.service_type='electricity' AND EXISTS(SELECT 1 FROM invoices i
@@ -194,3 +196,68 @@ BEGIN
 END $$;
 CREATE CONSTRAINT TRIGGER contracts_cancellation_complete AFTER INSERT OR UPDATE ON contracts
  DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION enforce_contract_cancellation_complete();
+
+--> statement-breakpoint
+CREATE FUNCTION contract_has_pending_payments(contract_uuid uuid) RETURNS boolean LANGUAGE sql STABLE AS $$
+ SELECT EXISTS(SELECT 1 FROM contracts c JOIN invoices i ON i.profile_id=c.profile_id
+   AND (i.contract_id=c.id::text OR (c.order_id IS NOT NULL AND i.order_id=c.order_id AND i.contract_id IS NULL))
+ WHERE c.id=contract_uuid AND (
+   EXISTS(SELECT 1 FROM bank_receipts r WHERE r.invoice_id=i.id AND r.state IN ('Submitted','UnderReview'))
+   OR EXISTS(SELECT 1 FROM wallet_transactions w WHERE w.wallet_id=i.profile_id AND lower(w.ref_id)=i.id::text
+     AND w.type='payment' AND w.state IN ('Pending','Reserved'))));
+$$;
+--> statement-breakpoint
+CREATE FUNCTION guard_cancelled_contract_invoice() RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE parent contracts%ROWTYPE;
+BEGIN
+ -- Matching both old and new associations prevents removing an invoice from terminal history.
+ FOR parent IN SELECT c.* FROM contracts c WHERE
+   c.id::text=NEW.contract_id OR (c.order_id=NEW.order_id AND NEW.contract_id IS NULL)
+   OR (TG_OP IN ('UPDATE','DELETE') AND (c.id::text=OLD.contract_id OR (c.order_id=OLD.order_id AND OLD.contract_id IS NULL)))
+   ORDER BY c.id FOR SHARE NOWAIT LOOP
+  IF parent.state='Cancelled' THEN
+   IF TG_OP IN ('INSERT','DELETE') THEN
+    RAISE EXCEPTION 'Cancelled contract invoice history cannot be added or deleted' USING ERRCODE='23514';
+   END IF;
+   IF ROW(NEW.profile_id,NEW.contract_id,NEW.order_id,NEW.total_amount,NEW.paid_amount)
+      IS DISTINCT FROM ROW(OLD.profile_id,OLD.contract_id,OLD.order_id,OLD.total_amount,OLD.paid_amount)
+      OR (NEW.state<>OLD.state AND NEW.state NOT IN ('Cancelled','Refunded','PartiallyRefunded'))
+   THEN RAISE EXCEPTION 'Cancelled contract invoices cannot be reassigned or paid' USING ERRCODE='23514'; END IF;
+  END IF;
+ END LOOP;
+ IF TG_OP='DELETE' THEN RETURN OLD; END IF;
+ RETURN NEW;
+END $$;
+CREATE TRIGGER invoices_cancelled_contract_guard BEFORE INSERT OR UPDATE OR DELETE ON invoices
+ FOR EACH ROW EXECUTE FUNCTION guard_cancelled_contract_invoice();
+--> statement-breakpoint
+CREATE FUNCTION assert_contract_invoice_payment_allowed(invoice_uuid uuid) RETURNS void LANGUAGE plpgsql AS $$
+DECLARE invoice invoices%ROWTYPE; parent contracts%ROWTYPE;
+BEGIN
+ SELECT * INTO invoice FROM invoices WHERE id=invoice_uuid FOR UPDATE NOWAIT;
+ IF invoice.id IS NULL THEN RETURN; END IF;
+ FOR parent IN SELECT c.* FROM contracts c WHERE c.id::text=invoice.contract_id
+   OR (c.order_id=invoice.order_id AND invoice.contract_id IS NULL) ORDER BY c.id FOR SHARE NOWAIT LOOP
+  IF parent.state='Cancelled'
+  THEN RAISE EXCEPTION 'Cancelled contracts cannot receive payments' USING ERRCODE='23514'; END IF;
+ END LOOP;
+END $$;
+CREATE FUNCTION guard_cancelled_contract_receipt() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+ IF NEW.state IN ('Submitted','UnderReview','Confirmed')
+    AND (TG_OP='INSERT' OR ROW(NEW.invoice_id,NEW.state,NEW.amount) IS DISTINCT FROM ROW(OLD.invoice_id,OLD.state,OLD.amount))
+ THEN PERFORM assert_contract_invoice_payment_allowed(NEW.invoice_id); END IF;
+ RETURN NEW;
+END $$;
+CREATE TRIGGER bank_receipts_cancelled_contract_guard BEFORE INSERT OR UPDATE ON bank_receipts
+ FOR EACH ROW EXECUTE FUNCTION guard_cancelled_contract_receipt();
+CREATE FUNCTION guard_cancelled_contract_wallet_payment() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+ IF NEW.type='payment' AND NEW.state IN ('Pending','Reserved','Completed')
+    AND (TG_OP='INSERT' OR ROW(NEW.ref_id,NEW.state,NEW.amount) IS DISTINCT FROM ROW(OLD.ref_id,OLD.state,OLD.amount))
+    AND NEW.ref_id ~ '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+ THEN PERFORM assert_contract_invoice_payment_allowed(NEW.ref_id::uuid); END IF;
+ RETURN NEW;
+END $$;
+CREATE TRIGGER wallet_transactions_cancelled_contract_guard BEFORE INSERT OR UPDATE ON wallet_transactions
+ FOR EACH ROW EXECUTE FUNCTION guard_cancelled_contract_wallet_payment();

@@ -3,6 +3,7 @@ import {
   refundRequiresApproval,
   latestRefundApproval,
   requireRefundApproval,
+  readContractRefundAuthorization,
   RefundProcessingError,
 } from '@barghsa/db/refund-processing';
 import {
@@ -232,7 +233,8 @@ export class RefundService {
           return this.dto(client, row);
         }
         assertWalletProfileWritable({ id: invoice.profile_id, archived });
-        this.refundableInvoice(invoice);
+        const obligation = await readContractRefundAuthorization(client, row);
+        this.refundableInvoice(invoice, Boolean(obligation));
         // Approval is rechecked before money leaves. Reconciliation confirms an
         // already recorded transfer using its immutable evidence and a current reviewer.
         if (action !== 'reconcile') await this.requireApproval(client, row);
@@ -366,6 +368,33 @@ export class RefundService {
       )
     ).rows[0]!;
     if (!isInvoiceState(after.state)) throw new ConflictException('Unknown invoice state');
+    const obligation = await readContractRefundAuthorization(client, row);
+    if (obligation && !['Paid', 'PartiallyRefunded'].includes(after.state)) {
+      const paid = BigInt(after.paid_amount),
+        returned = BigInt(after.refunded_amount);
+      if (returned <= 0n || returned > paid) throw new ConflictException('Invalid refund totals');
+      const next = returned === paid ? 'Refunded' : 'PartiallyRefunded';
+      await client.query('UPDATE invoices SET state=$2,updated_at=now() WHERE id=$1', [
+        invoice.id,
+        next,
+      ]);
+      await this.audit(
+        client,
+        row,
+        actor,
+        ip,
+        returned === paid ? 'invoice.full_refund' : 'invoice.partial_refund',
+        {
+          ...obligation,
+          fromState: after.state,
+          toState: next,
+          reason: 'Contract cancellation bank refund reconciled',
+          reconciledBy: actor.userId,
+        }
+      );
+      await notifyRefundOutcome(client, { ...row, state: 'Completed' });
+      return;
+    }
     await this.invoices.transition(
       invoice.id,
       after.state,
@@ -427,10 +456,14 @@ export class RefundService {
     }
   }
 
-  private refundableInvoice(invoice: InvoiceRow): void {
+  private refundableInvoice(invoice: InvoiceRow, contractObligation = false): void {
     if (
       invoice.adjustment_kind === 'credit' ||
-      !['Paid', 'PartiallyRefunded'].includes(invoice.state)
+      !(
+        contractObligation
+          ? ['Paid', 'PartiallyFunded', 'Unpaid', 'Overdue', 'PartiallyRefunded']
+          : ['Paid', 'PartiallyRefunded']
+      ).includes(invoice.state)
     )
       throw new ConflictException('Only a paid invoice can be refunded through this workflow');
   }

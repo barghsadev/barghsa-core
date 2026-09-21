@@ -19,6 +19,7 @@ export interface CancellationSnapshotRow {
   archived: boolean;
   association_conflict: boolean;
   ambiguous_order_invoices: boolean;
+  pending_payments: boolean;
   invoices: CancellationInvoice[];
 }
 
@@ -29,6 +30,7 @@ export async function readCancellationSnapshot(client: Pool | PoolClient, id: st
     await client.query<CancellationSnapshotRow>(
       `
     SELECT c.id,c.profile_id,c.current_version_id,c.service_type,c.state,p.archived,
+      contract_has_pending_payments(c.id) AS pending_payments,
       EXISTS(SELECT 1 FROM invoices i WHERE i.contract_id=c.id::text AND i.profile_id<>c.profile_id) AS association_conflict,
       (c.order_id IS NOT NULL
         AND EXISTS(SELECT 1 FROM contracts other WHERE other.order_id=c.order_id AND other.id<>c.id AND other.state NOT IN ('Completed','Cancelled'))
@@ -84,12 +86,14 @@ export function cancellationSnapshot(row: CancellationSnapshotRow) {
     archived: row.archived,
     associationConflict: row.association_conflict,
     ambiguousOrderInvoices: row.ambiguous_order_invoices,
+    pendingPayments: row.pending_payments,
     invoices,
   };
   const blockers = [
     ...(row.association_conflict ? ['invoice_identity_conflict'] : []),
     ...(row.ambiguous_order_invoices ? ['ambiguous_order_invoices'] : []),
     ...(row.archived ? ['profile_archived'] : []),
+    ...(row.pending_payments ? ['payment_in_progress'] : []),
     ...(['Completed', 'Cancelled'].includes(row.state) ? ['terminal_contract'] : []),
     ...(invoices.some((invoice) => invoice.pendingRefunds.length) ? ['refund_in_progress'] : []),
     ...(invoices.some((invoice) => invoice.state === 'PaymentUnderReview')

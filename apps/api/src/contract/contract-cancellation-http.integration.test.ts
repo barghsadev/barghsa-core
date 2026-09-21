@@ -13,6 +13,7 @@ beforeAll(async () => {
   for (const [user, role] of [
     ['cancel-legal', 'role-legal-contracts'],
     ['cancel-finance', 'role-finance'],
+    ['cancel-reviewer', 'role-finance'],
     ['cancel-support', 'role-customer-support'],
   ]) {
     await http.pool.query(
@@ -482,3 +483,116 @@ it('keeps failed cancellation debt visible after bounded retries without posting
     ).rowCount
   ).toBe(1);
 });
+
+it('detects submitted receipts even when the invoice has not entered review, then blocks new payments after cancellation', async () => {
+  const f = await fixture(),
+    intent = await prepare(f),
+    receipt = randomUUID();
+  const insert =
+    "INSERT INTO bank_receipts(id,invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key) VALUES($1,$2,$3,10,'2026-09-01','reference',$4)";
+  await http.pool.query(insert, [receipt, f.invoice, f.profile, randomUUID()]);
+  const preview = (await (
+    await send(`contracts/${f.contract.id}/cancellation-preview`)
+  ).json()) as { blockers: string[] };
+  expect(preview.blockers).toContain('payment_in_progress');
+  expect((await execute(f, intent)).status).toBe(409);
+  await http.pool.query(
+    "UPDATE bank_receipts SET state='Rejected',rejection_reason='Duplicate receipt' WHERE id=$1",
+    [receipt]
+  );
+  expect((await execute(f, intent)).status).toBe(201);
+  await expect(
+    http.pool.query(insert, [randomUUID(), f.invoice, f.profile, randomUUID()])
+  ).rejects.toMatchObject({ code: '23514' });
+  await expect(
+    http.pool.query('UPDATE invoices SET paid_amount=paid_amount+1 WHERE id=$1', [f.invoice])
+  ).rejects.toMatchObject({ code: '23514' });
+  await expect(
+    http.pool.query('UPDATE invoices SET contract_id=NULL WHERE id=$1', [f.invoice])
+  ).rejects.toMatchObject({ code: '23514' });
+  await expect(
+    http.pool.query(
+      "INSERT INTO invoices(profile_id,contract_id,state,total_amount) VALUES($1,$2,'Unpaid',100)",
+      [f.profile, f.contract.id]
+    )
+  ).rejects.toMatchObject({ code: '23514' });
+  await expect(
+    http.pool.query(
+      "INSERT INTO wallet_transactions(wallet_id,type,amount,state,ref_id,idempotency_key) VALUES($1,'payment',-10,'Pending',$2,$3)",
+      [f.profile, f.invoice, randomUUID()]
+    )
+  ).rejects.toMatchObject({ code: '23514' });
+});
+it('retries cancellation when a concurrent payment owns the invoice lock', async () => {
+  const f = await fixture(),
+    intent = await prepare(f),
+    client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [f.invoice]);
+    expect((await execute(f, intent)).status).toBe(409);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
+  expect((await execute(f, intent)).status).toBe(201);
+});
+
+it.each([
+  ['Paid', '100'],
+  ['PartiallyFunded', '40'],
+])(
+  'fulfills a %s discretionary bank obligation only after separate reconciliation',
+  async (state, paid) => {
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES('cancel-legal','role-finance')"
+    );
+    const f = await fixture('solar', paid, state);
+    const prepared = await send(`contracts/${f.contract.id}/cancellations`, {
+      ...f.body,
+      refundDecision: {
+        mode: 'custom',
+        refunds: [{ invoiceId: f.invoice, amount: paid, destination: 'external_bank' }],
+      },
+    });
+    expect(prepared.status).toBe(201);
+    const intent = (await prepared.json()) as Intent;
+    const executed = await execute(f, intent);
+    expect(executed.status).toBe(201);
+    const result = (await executed.json()) as { refunds: Array<{ id: string; state: string }> };
+    const refund = result.refunds[0]!;
+    expect(refund.state).toBe('Approved');
+    const bankReference = randomUUID();
+    expect(
+      (
+        await send(
+          `external-refunds/${refund.id}/record-transfer`,
+          { bankReference },
+          'cancel-finance'
+        )
+      ).status
+    ).toBe(200);
+    expect(
+      (await http.pool.query('SELECT refunded_amount FROM invoices WHERE id=$1', [f.invoice]))
+        .rows[0].refunded_amount
+    ).toBe('0');
+    expect(
+      (await send(`external-refunds/${refund.id}/reconcile`, { bankReference }, 'cancel-finance'))
+        .status
+    ).toBe(403);
+    const reconciled = await send(
+      `external-refunds/${refund.id}/reconcile`,
+      { bankReference },
+      'cancel-reviewer'
+    );
+    expect(reconciled.status, await reconciled.clone().text()).toBe(200);
+    expect(
+      (await http.pool.query('SELECT state,refunded_amount FROM invoices WHERE id=$1', [f.invoice]))
+        .rows[0]
+    ).toEqual({ state: 'Refunded', refunded_amount: paid });
+    expect(
+      (await http.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1', [f.profile]))
+        .rows[0].posted_balance
+    ).toBe('0');
+  }
+);

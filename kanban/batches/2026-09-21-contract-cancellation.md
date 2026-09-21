@@ -2,13 +2,13 @@
 
 Canonical tasks `04-invoices-wallet-contracts.md#T-04.5.01.05`, `04-invoices-wallet-contracts.md#T-04.4.02.01` through `.05`, and the cancellation consumer of `04-invoices-wallet-contracts.md#T-04.CC.07.01`.
 
-This batch is in progress on verified editor PR #327 merge `cac42489bf39a7b08443d1acb547480cf8572cee`. The cancellation command and automatic wallet fulfillment are locally implemented and tested; payment-race guards, external fulfillment integration, closure and UI remain unfinished.
+This batch is in progress on verified editor PR #327 merge `cac42489bf39a7b08443d1acb547480cf8572cee`. The cancellation command and automatic wallet fulfillment are locally implemented and tested; closure and UI remain unfinished.
 
 ## Built foundation
 
 The staff cancellation-preview endpoint reads the exact contract version and associated invoice/refund facts in one SQL statement. It distinguishes the outstanding paid balance from the portion already reserved by pending refunds, preserves bigint precision, returns a fingerprint for later commit-time comparison, and exposes archived/terminal/payment/refund blockers. Ambiguous order invoice associations and inconsistent cross-profile links block a decision without exposing another profile's amounts. The endpoint requires contract write permission and makes no state or financial changes.
 
-The storage foundation adds immutable cancellation intents, execution evidence and refund obligations. It binds financial approvals to exact decisions and prevents dismissal of linked mandatory refunds. Migration0145 extends the approval action constraint and preserves historical data. Commit-time completeness and wallet processing are implemented below. Payment-race guards, external fulfillment integration, closure and UI remain unfinished; the batch is not ready for publication.
+The storage foundation adds immutable cancellation intents, execution evidence and refund obligations. It binds financial approvals to exact decisions and prevents dismissal of linked mandatory refunds. Migration0145 extends the approval action constraint and preserves historical data. Commit-time completeness and wallet processing are implemented below. Closure and UI remain unfinished; the batch is not ready for publication.
 
 Focused validation passes40 unit/HTTP cases,89 related migrated database cases and5 approval-schema cases. API/database types, targeted lint, generated OpenAPI and database snapshot checks pass. Review, coverage and CI are not yet claimed.
 
@@ -40,3 +40,13 @@ Execution atomically approves its bound obligations and queues wallet returns in
 Validation:70 real HTTP cases covering cancellation and wallet refund regressions;41 lifecycle/upgrade database cases;55 refund/storage database cases, with9 cancellation cases overlapping those database suites. Database/API types, targeted lint and snapshot comparison pass. Exact-head review, final combined coverage and CI remain for the complete batch.
 
 Next: payment-source race guards and prevention of further payment/invoice reassociation after cancellation; external-bank obligation integration; truthful derived financial closure; bilingual staff confirmation and customer status. Do not publish this partial workflow yet.
+
+## Payment races and external fulfillment checkpoint
+
+Cancellation preview and deferred execution guards now detect submitted/under-review receipts and pending/reserved wallet payments independently of the invoice state. Payment evidence locks the invoice and associated contracts. Cancelled-contract invoice associations, paid totals and charges cannot change, invoices cannot be added/deleted, and new receipt/wallet payments cannot enter terminal history. Locks reject a racing operation so it can retry against current facts. Refund updates remain permitted.
+
+Bound external-bank obligations now use the existing finance transfer/reconciliation workflow for both fully paid and partially funded invoices. A second finance user must reconcile the bank reference before refund totals or invoice settlement change. The immutable obligation remains the authority for the promised return.
+
+Validation:44 focused cancellation/snapshot/wallet HTTP cases;43 cancellation/external-refund/bank-confirmation HTTP cases, with cancellation cases overlapping;86 lifecycle/refund DB cases plus one newly added direct-write reconciliation case, verified in a10-case cancellation suite. API types,targeted lint and snapshot checks pass. No final coverage,independent approval or CI is claimed for the batch yet.
+
+Next: expose truthful derived financial closure and refund status to staff/customers, add bilingual confirmation/status UI, then run committed combined coverage,independent review and all CI gates before merge.

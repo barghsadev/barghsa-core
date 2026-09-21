@@ -1441,8 +1441,8 @@
         "status": "merged",
         "merge_commit_sha": "cac42489bf39a7b08443d1acb547480cf8572cee"
       },
-      "validation": "Cancellation/wallet fulfillment passes70 HTTP cases,41 lifecycle/upgrade DB cases and55 refund/storage DB cases (9 overlapping cancellation cases),DB/API types,targeted lint,snapshot check. Earlier command shared approval tests19 and OpenAPI consistency passed. Payment races,external obligation integration,closure/UI,final coverage/review/CI remain.",
-      "next_action": "Complete payment-source race guards,external-bank obligation handling,derived financial closure and bilingual confirmation/status flow; then final coverage,independent review,CI and merge the whole cancellation batch.",
+      "validation": "Payment-race and bank-return integration:44 cancellation/snapshot/wallet HTTP cases,43 cancellation/external/bank-confirmation HTTP cases (overlap),86 related DB cases plus1 new direct-write case verified in10 cancellation DB cases. API types,targeted lint,snapshot pass. Derived closure/UI and final coverage/review/CI remain.",
+      "next_action": "Expose derived financial closure and refund outcomes; build bilingual staff cancellation confirmation and customer status; then final committed coverage,independent review,CI and merge the entire batch.",
       "remaining_tasks": [
         "Contract draft/edit UI and typed financial preview",
         "Automatic contract template-to-PDF generation",

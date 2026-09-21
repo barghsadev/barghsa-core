@@ -12,6 +12,7 @@ const base: CancellationSnapshotRow = {
   archived: false,
   association_conflict: false,
   ambiguous_order_invoices: false,
+  pending_payments: false,
   invoices: [],
 };
 const invoice = {

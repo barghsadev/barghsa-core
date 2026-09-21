@@ -315,3 +315,31 @@ it('rejects a fabricated financial snapshot that omits real paid electricity fun
     code: '23514',
   });
 });
+
+it('enforces pending-payment reconciliation for direct cancellation writes', async () => {
+  const row = await seed(),
+    id = await intent(row),
+    receipt = randomUUID();
+  await fixture.pool.query(
+    "INSERT INTO invoices(id,profile_id,contract_id,state,total_amount) VALUES($1,$2,$3,'Unpaid',100)",
+    [row.invoice, row.profile, row.id]
+  );
+  await fixture.pool.query(
+    "INSERT INTO bank_receipts(id,invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key) VALUES($1,$2,$3,10,'2026-09-01','test',$4)",
+    [receipt, row.invoice, row.profile, randomUUID()]
+  );
+  await expect(transaction((client) => cancel(row, id, client))).rejects.toThrow(
+    'payment reconciliation'
+  );
+  await fixture.pool.query(
+    "UPDATE bank_receipts SET state='Rejected',rejection_reason='Duplicate' WHERE id=$1",
+    [receipt]
+  );
+  await transaction(async (client) => {
+    await cancel(row, id, client);
+    await client.query("UPDATE invoices SET state='Cancelled' WHERE id=$1", [row.invoice]);
+  });
+  await expect(
+    fixture.pool.query('DELETE FROM invoices WHERE id=$1', [row.invoice])
+  ).rejects.toMatchObject({ code: '23514' });
+});
