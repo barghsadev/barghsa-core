@@ -2,6 +2,14 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { ContractService } from './contract.service.js';
+type ProfileOptions = {
+  profiles: Array<{ id: string; title: string; profileType: string }>;
+  nextBefore: string | null;
+};
+type OrderOptions = {
+  orders: Array<{ id: string; serviceType: string; createdAt: string }>;
+  nextBefore: string | null;
+};
 type ContractDto = Awaited<ReturnType<ContractService['get']>>;
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
@@ -78,6 +86,76 @@ function edit(row: ContractDto) {
     idempotencyKey: randomUUID(),
   };
 }
+it('limits draft profile lookup to contract writers, active names and stable pages', async () => {
+  const prefix = 'DraftLookup-' + randomUUID();
+  await http.pool.query(
+    `INSERT INTO users(user_id,username,password_hash)
+    SELECT $1 || n, $1 || n, 'test' FROM generate_series(1,52) n`,
+    [prefix]
+  );
+  await http.pool.query(
+    `INSERT INTO profiles(id,user_id,title,archived)
+    SELECT gen_random_uuid(), $1 || n, $1 || n, n=52 FROM generate_series(1,52) n`,
+    [prefix]
+  );
+  const url = '/authoring-options?search=' + encodeURIComponent(prefix);
+  expect((await fetch(http.base + '/api/admin/contracts' + url)).status).toBe(401);
+  expect((await send(url, 'GET', undefined, 'contract-support')).status).toBe(403);
+  const first = await send(url);
+  expect(first.status).toBe(200);
+  const page = (await first.json()) as ProfileOptions;
+  expect(page.profiles).toHaveLength(50);
+  expect(page.nextBefore).toBe(page.profiles[49]!.id);
+  expect(Object.keys(page.profiles[0]!).sort()).toEqual(['id', 'profileType', 'title']);
+  const second = (await (await send(url + '&before=' + page.nextBefore)).json()) as ProfileOptions;
+  expect(second.profiles).toHaveLength(1);
+  expect(second.nextBefore).toBeNull();
+  expect(
+    new Set([...page.profiles, ...second.profiles].map((p: { id: string }) => p.id)).size
+  ).toBe(51);
+  expect(
+    ((await (await send('/authoring-options?search=%25')).json()) as ProfileOptions).profiles
+  ).toEqual([]);
+  for (const query of ['profileId=no', 'before=no', 'extra=1', 'search=' + 'x'.repeat(101)])
+    expect((await send('/authoring-options?' + query)).status).toBe(400);
+});
+
+it('pages draft order options within the selected profile and excludes cancelled orders', async () => {
+  const id = await profile(),
+    other = await profile();
+  const user = (await http.pool.query('SELECT user_id FROM profiles WHERE id=$1', [id])).rows[0]
+    .user_id;
+  const product = (
+    await http.pool.query(
+      "INSERT INTO products(type,title) VALUES('hardware',$1::jsonb) RETURNING id",
+      [JSON.stringify({ en: 'Draft product', fa: 'Draft product' })]
+    )
+  ).rows[0].id;
+  await http.pool.query(
+    `INSERT INTO orders(id,user_id,profile_id,product_id,order_type,status,snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code)
+    SELECT gen_random_uuid(),$1,CASE WHEN n=53 THEN $3::uuid ELSE $2::uuid END,$4,'electricity',CASE WHEN n=52 THEN 'CANCELLED' ELSE 'PENDING' END,'p','c','address','1234567890'
+    FROM generate_series(1,53) n`,
+    [user, id, other, product]
+  );
+  const url = '/authoring-options?profileId=' + id;
+  const first = (await (await send(url)).json()) as OrderOptions;
+  expect(first.orders).toHaveLength(50);
+  expect(first.nextBefore).toBe(first.orders[49]!.id);
+  expect(first.orders[0]).toMatchObject({
+    serviceType: 'electricity',
+    createdAt: expect.any(String),
+  });
+  const second = (await (await send(url + '&before=' + first.nextBefore)).json()) as OrderOptions;
+  expect(second.orders).toHaveLength(1);
+  expect(second.nextBefore).toBeNull();
+  expect(new Set([...first.orders, ...second.orders].map((o: { id: string }) => o.id)).size).toBe(
+    51
+  );
+  expect(
+    ((await (await send('/authoring-options?profileId=' + randomUUID())).json()) as OrderOptions)
+      .orders
+  ).toEqual([]);
+});
 it('reads an exact cancellation financial snapshot without changing the contract or refunds', async () => {
   const row = await create();
   const invoiceId = randomUUID(),

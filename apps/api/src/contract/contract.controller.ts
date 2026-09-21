@@ -24,6 +24,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
+import { authoringQuery, contractAuthoringOptions } from './contract-authoring.js';
 import { ContractService } from './contract.service.js';
 import {
   contractUuid,
@@ -82,6 +83,17 @@ export class ContractController {
   list(@Req() req: AuthenticatedRequest, @Query() query: unknown) {
     this.authorize(req);
     return this.service.list(parse(contractListSchema, query));
+  }
+  @Get('authoring-options')
+  @ApiOperation({
+    summary: 'Search active profile names or page eligible order references for drafting',
+  })
+  @ApiQuery({ name: 'search', required: false, type: String, maxLength: 100 })
+  @ApiQuery({ name: 'profileId', required: false, type: String, format: 'uuid' })
+  @ApiQuery({ name: 'before', required: false, type: String, format: 'uuid' })
+  authoringOptions(@Req() req: AuthenticatedRequest, @Query() query: unknown) {
+    this.authorize(req, true);
+    return contractAuthoringOptions(parse(authoringQuery, query));
   }
   @Post()
   @RequiresStepUp()

@@ -3271,6 +3271,54 @@
         ]
       }
     },
+    "/api/admin/contracts/authoring-options": {
+      "get": {
+        "operationId": "ContractController_authoringOptions",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "profileId",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Search active profile names or page eligible order references for drafting",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
     "/api/admin/contracts/{id}": {
       "get": {
         "operationId": "ContractController_get",

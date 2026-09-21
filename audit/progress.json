@@ -1430,21 +1430,23 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/nightly-browser-repairs",
+      "branch": "codex/contract-draft-authoring",
       "status": "in_progress",
-      "record": "kanban/batches/2026-09-21-nightly-browser-repairs.md",
+      "record": "kanban/batches/2026-09-21-contract-draft-authoring.md",
       "previous_batch": {
-        "pr": 329,
-        "reviewed_head_sha": "c85bb7d77f4db20af70b9d9db310c2fa88c37c8d",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/329#issuecomment-5755106593",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35558485876",
+        "pr": 330,
+        "reviewed_head_sha": "5f0b47a14e17602f663d244f3a8f82518346e77b",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/330#issuecomment-5756465962",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35569554222",
+        "browser_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35569606738",
         "status": "merged",
-        "merge_commit_sha": "f1d74a3d8a4962f542c2c2d80f44a0ffd7512c21"
+        "merge_commit_sha": "331cbc005351e6f58f29fa1ee71dac93072546f1"
       },
-      "validation": "Customer requests merged after exact-head approval and all five CI gates. Browser repairs pass focused font, OTP, registration, theme, navigation and CSP cases. CRM run passes39/40; mobile Safari page-load/context-close timeout before network requests is under investigation. Types, lint and production build pass. The failing Safari case passes twice in isolated fresh workers; the four-case sequence still reproduces startup failure.",
-      "next_action": "Collect clean-head coverage, obtain exact-head review, and validate all browser projects on Linux CI before merge.",
+      "validation": "Draft authoring:58 API,23 frontend,53 dictionary tests and10 browser cases across five projects pass. Types, lint, build,44 bundle budgets and OpenAPI validation pass. Changed-source coverage passes original floors before rebase; final-head verification remains. Focused API coverage does not satisfy the whole-package floor; local semgrep unavailable, required CI scan remains.",
+      "next_action": "Verify final rebased-head changed-source coverage, obtain independent exact-head approval and pass all PR checks before merging draft authoring.",
       "remaining_tasks": [
-        "Contract draft/edit UI and typed financial preview",
+        "Complete and merge contract draft/edit UI",
+        "Authoritative financial review snapshots and shared confirmation UI",
         "Automatic contract template-to-PDF generation",
         "Amendments",
         "Configured malware scanning and physical retention deletion",
@@ -1454,31 +1456,30 @@
         35545814385,
         35547612589,
         35549306810,
-        35550597502
-      ],
-      "main_full_runs_pending": [
+        35550597502,
         35559770645
       ],
+      "main_full_runs_pending": [],
       "main_full_runs_failed": [
         {
           "run_id": 35551479937,
           "reason": "317 API files passed; uncaught PostgreSQL termination during config-cache forced-drop cleanup",
           "local_fix": "Wait for clients before ordinary DROP; focused tests pass",
-          "remote_revalidation": "pending next full CI"
+          "remote_revalidation": "Passed full main run35559770645 at PR329 merge f1d74a3d8a4962f542c2c2d80f44a0ffd7512c21"
         },
         {
           "run_id": 35556867140,
           "reason": "Pilot proxy upload fixture returned502 before browsers ran;combined coverage missing browser evidence. Tests/security passed.",
           "local_fix": "Consume upload before responding and assert full received byte count;complete proxy probe passes",
-          "remote_revalidation": "pending next full CI"
+          "remote_revalidation": "Passed full main run35559770645 at PR329 merge f1d74a3d8a4962f542c2c2d80f44a0ffd7512c21"
         }
       ],
       "nightly_browser_follow_up": {
-        "run_id": 35554299044,
-        "head_sha": "cac42489bf39a7b08443d1acb547480cf8572cee",
-        "status": "repair_in_progress",
-        "details": "Confirmed fixture differences repaired; CRM clipping checks now reveal and rescan. All five native CSP projects pass. One repeatable local mobile Safari startup timeout remains; no complete nightly pass claimed.",
-        "log": "/tmp/barghsa-main327-rerun-failed.log"
+        "run_id": 35569606738,
+        "head_sha": "5f0b47a14e17602f663d244f3a8f82518346e77b",
+        "status": "verified",
+        "details": "All six Linux browser jobs passed at the reviewed PR330 head; strict checks and fail-on-flaky remain enabled.",
+        "url": "https://github.com/barghsadev/barghsa-core/actions/runs/35569606738"
       }
     },
     "full_ci_followup": {
