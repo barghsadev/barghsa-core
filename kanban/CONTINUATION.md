@@ -125,3 +125,9 @@ Current cancellation branch enforces execution evidence and refund completeness 
 ### Cancellation payment races and external returns validated
 
 Cancellation guards now include pending receipt/wallet sources, forbid new payments and invoice reassignment/charges/deletion after cancellation, and serialize racing sources against the invoice/contract. External obligations support paid and partial-funded balances with separate current-finance transfer/reconciliation. Validation passes44 cancellation/snapshot/wallet HTTP cases and43 cancellation/external/bank-confirmation cases,with overlapping cancellation cases;86 related DB cases plus the new direct-write reconciliation case verified in10 cancellation cases;API types,lint,snapshot pass. Next is derived financial closure and bilingual staff/customer flow,then final coverage/review/CI for the whole batch. #327 full-main run35551479937 remains live.
+
+### Live cancellation financial status and CI cleanup
+
+Staff/customer status endpoints derive pending,needs-attention,closed or unverified financial outcome separately from Cancelled service state. Customer reads enforce active profile and publication; output excludes staff/approval details. Validation passes38 cancellation/customer-review HTTP cases plus5 config-cache integration cases,API types,lint,OpenAPI consistency. UI and final coverage/review/CI remain.
+
+Full main #327 run35551479937 failed only on an uncaught connection termination from config-cache fixture forced-drop cleanup,despite317 API test files passing. The fixture now waits for idle connections to disappear before ordinary DROP and closes management in finally. Local focused validation passes; remote full-CI confirmation remains. Other four gates succeeded. Do not record that run as green.

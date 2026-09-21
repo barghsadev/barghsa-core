@@ -50,3 +50,11 @@ Bound external-bank obligations now use the existing finance transfer/reconcilia
 Validation:44 focused cancellation/snapshot/wallet HTTP cases;43 cancellation/external-refund/bank-confirmation HTTP cases, with cancellation cases overlapping;86 lifecycle/refund DB cases plus one newly added direct-write reconciliation case, verified in a10-case cancellation suite. API types,targeted lint and snapshot checks pass. No final coverage,independent approval or CI is claimed for the batch yet.
 
 Next: expose truthful derived financial closure and refund status to staff/customers, add bilingual confirmation/status UI, then run committed combined coverage,independent review and all CI gates before merge.
+
+## Live cancellation status checkpoint
+
+Dedicated staff/customer status endpoints derive financial closure from a consistent database statement. Cancelled service remains financially pending while a bound refund or its transaction is incomplete. Failed returns,pending payments or unbound active refunds require attention. Historical cancellations without new execution evidence report unverified,never closed. Amounts remain exact decimal strings; customer output excludes actor and approval details. Customer reads require the current authorized profile and published contract history.
+
+Validation passes38 cancellation/customer-review HTTP cases plus5 config-cache integration cases,API types,targeted lint and generated OpenAPI consistency. The new HTTP evidence verifies private drafts,cross-profile isolation,anonymous access,live pending-to-closed progression and failed-return status. The bilingual staff/customer interface and final coverage/review/CI remain.
+
+Full main after #327,run35551479937,finished with all317 API test files passing but one uncaught PostgreSQL termination during config-cache fixture teardown. Its forced database drop raced a closing idle connection. The local fixture now waits for PostgreSQL to observe zero clients,uses ordinary DROP,and always closes management. Focused config-cache checks pass; full-CI confirmation remains required. Other four gates passed.

@@ -1,3 +1,7 @@
+import {
+  StaffContractCancellationStatusController,
+  CustomerContractCancellationStatusController,
+} from './contract-cancellation-status.controller.js';
 import { ContractActivationService } from './contract-activation.service.js';
 import { InvoiceModule } from '../invoice/invoice.module.js';
 import { ContractCancellationService } from './contract-cancellation.service.js';
@@ -24,6 +28,8 @@ import { ContractService } from './contract.service.js';
 @Module({
   imports: [SessionModule, InvoiceModule],
   controllers: [
+    StaffContractCancellationStatusController,
+    CustomerContractCancellationStatusController,
     ContractCancellationController,
     ContractActivationRulesController,
     StaffContractActivationController,

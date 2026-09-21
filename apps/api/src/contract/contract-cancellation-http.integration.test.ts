@@ -450,6 +450,9 @@ it('keeps failed cancellation debt visible after bounded retries without posting
   expect(
     (await http.pool.query('SELECT state FROM refunds WHERE id=$1', [refund.id])).rows[0].state
   ).toBe('Failed');
+  expect(await (await send(`contracts/${f.contract.id}/cancellation-status`)).json()).toMatchObject(
+    { financialStatus: 'needs_attention', financiallyClosed: false, returnedAmount: '0' }
+  );
   expect(
     (
       await http.pool.query(
@@ -596,3 +599,63 @@ it.each([
     ).toBe('0');
   }
 );
+
+it('reports financial closure only after obligations settle and scopes customer reads to published owned contracts', async () => {
+  const f = await fixture();
+  const owner = (await http.pool.query('SELECT user_id FROM profiles WHERE id=$1', [f.profile]))
+    .rows[0].user_id as string;
+  await http.pool.query('UPDATE profiles SET is_default=true WHERE id=$1', [f.profile]);
+  const session = randomUUID(),
+    csrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+    [session, owner, csrf, randomUUID()]
+  );
+  const customer = (id: string) =>
+    fetch(http.base + `/api/contracts/${id}/cancellation-status`, {
+      headers: { Cookie: `barghsa_session=${session}` },
+    });
+  expect((await customer(f.contract.id)).status).toBe(404);
+  const command = { expectedVersionId: f.contract.currentVersionId, idempotencyKey: randomUUID() };
+  expect((await send(`contracts/${f.contract.id}/submit`, command)).status).toBe(200);
+  expect(
+    (await send(`contracts/${f.contract.id}/publish`, { ...command, idempotencyKey: randomUUID() }))
+      .status
+  ).toBe(200);
+  const before = await customer(f.contract.id);
+  expect(before.status).toBe(200);
+  expect(await before.json()).toMatchObject({
+    financialStatus: 'not_cancelled',
+    financiallyClosed: false,
+  });
+  const preview = (await (
+    await send(`contracts/${f.contract.id}/cancellation-preview`)
+  ).json()) as { fingerprint: string };
+  f.body.expectedFingerprint = preview.fingerprint;
+  const intent = await prepare(f),
+    executed = await execute(f, intent);
+  expect(executed.status).toBe(201);
+  const result = (await executed.json()) as { refunds: Array<{ id: string }> };
+  const pending = await (await customer(f.contract.id)).json();
+  expect(pending).toMatchObject({
+    financialStatus: 'refunds_pending',
+    financiallyClosed: false,
+    refundAmount: '100',
+    returnedAmount: '0',
+  });
+  expect(JSON.stringify(pending)).not.toContain('authorizedBy');
+  expect((await customer((await fixture()).contract.id)).status).toBe(404);
+  expect(await runWalletRefund(http.pool, result.refunds[0]!.id)).toBe('completed');
+  expect(await (await customer(f.contract.id)).json()).toMatchObject({
+    financialStatus: 'closed',
+    financiallyClosed: true,
+    returnedAmount: '100',
+  });
+  expect(await (await send(`contracts/${f.contract.id}/cancellation-status`)).json()).toMatchObject(
+    { financialStatus: 'closed', financiallyClosed: true }
+  );
+  expect(
+    (await fetch(http.base + `/api/contracts/${f.contract.id}/cancellation-status`)).status
+  ).toBe(401);
+  expect((await send('contracts/not-a-uuid/cancellation-status')).status).toBe(400);
+});

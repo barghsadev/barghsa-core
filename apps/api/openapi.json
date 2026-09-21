@@ -3377,6 +3377,36 @@
         ]
       }
     },
+    "/api/admin/contracts/{id}/cancellation-status": {
+      "get": {
+        "operationId": "StaffContractCancellationStatusController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read service cancellation and current financial closure independently",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
     "/api/admin/contracts/{id}/cancellations": {
       "post": {
         "operationId": "ContractCancellationController_prepare",
@@ -11788,6 +11818,36 @@
           }
         ],
         "summary": "Read activation prerequisites for an authorized published contract version",
+        "tags": [
+          "Contracts"
+        ]
+      }
+    },
+    "/api/contracts/{id}/cancellation-status": {
+      "get": {
+        "operationId": "CustomerContractCancellationStatusController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read cancellation refund outcomes for a published contract on the authorized profile",
         "tags": [
           "Contracts"
         ]
