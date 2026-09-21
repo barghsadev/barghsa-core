@@ -1,11 +1,13 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
+import { bankReceiptReview } from './bank-receipt-review-fixture';
 
 const first = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const second = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
 const base = '/api/admin/wallet/bank-receipt-top-ups';
 const receipt = (transactionId: string) => ({
   transactionId,
+  reviewHash: 'a'.repeat(64),
   walletId: first,
   amount: '250000',
   currency: 'IRR',
@@ -46,6 +48,12 @@ for (const locale of ['en', 'fa']) {
     );
     for (const id of [first, second])
       await page.route(`**${base}/${id}`, (route) => route.fulfill({ json: receipt(id) }));
+    for (const id of [first, second])
+      await page.route(`**${base}/${id}/review`, (route) => {
+        const review = bankReceiptReview(id, null, first);
+        review.data.approval = { required: true, thresholdAmount: '100000' };
+        return route.fulfill({ json: review });
+      });
     let release!: () => void;
     const waiting = new Promise<void>((resolve) => {
       release = resolve;
@@ -108,7 +116,10 @@ for (const locale of ['en', 'fa']) {
     expect(actions).toEqual(
       Array(2).fill({
         url: `${base}/${first}/confirm`,
-        body: { emergencyOverrideReason: 'Bank deadline; second reviewer unavailable' },
+        body: {
+          expectedReviewHash: 'a'.repeat(64),
+          emergencyOverrideReason: 'Bank deadline; second reviewer unavailable',
+        },
       })
     );
   });

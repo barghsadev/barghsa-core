@@ -7,6 +7,7 @@ import {
   DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
   readInvoiceBankReceiptDualApprovalThreshold,
   invoiceBankReceiptRequiresDualApproval,
+  type BankReceiptConfirmationReview,
 } from '@barghsa/shared/finance';
 import { applyApprovalRequestResolutionOnClient } from '../admin/dual-approval-resolution.js';
 import { requireCurrentFinancePermission } from '../admin/approval-permissions.js';
@@ -36,6 +37,21 @@ export function walletReceiptApproval(metadata: unknown): WalletReceiptApproval 
     return conflict('Invalid saved receipt approval binding');
   return row as unknown as WalletReceiptApproval;
 }
+/** Preserve approval authority before the financial review waits for wallet balances. */
+export async function lockWalletReceiptApprovalAuthority(
+  client: WalletQueryClient,
+  saved: WalletReceiptApproval
+): Promise<void> {
+  const request = (
+    await client.query('SELECT status,reviewer_id FROM approval_requests WHERE id=$1 FOR UPDATE', [
+      saved.requestId,
+    ])
+  ).rows[0] as { status: string; reviewer_id: string | null } | undefined;
+  await requireCurrentFinancePermission(client, saved.initiatorId);
+  if (request?.status === 'approved' && request.reviewer_id)
+    await requireCurrentFinancePermission(client, request.reviewer_id);
+}
+
 /** Caller holds the receipt lock and owns the transaction. Returns a pending binding, or null to settle. */
 export async function gateWalletReceiptApproval(
   client: WalletQueryClient,
@@ -46,6 +62,7 @@ export async function gateWalletReceiptApproval(
     metadata: unknown;
     attachmentKey: string | null;
     invoiceId: string | null;
+    financialReview?: BankReceiptConfirmationReview;
     actorUserId: string;
     sessionId: string;
     emergencyOverrideReason?: string;
@@ -75,6 +92,7 @@ export async function gateWalletReceiptApproval(
         invoiceId: input.invoiceId,
         attachmentKey: input.attachmentKey,
         receipt: metadata.receipt ?? null,
+        ...(input.financialReview ? { financialReviewHash: input.financialReview.hash } : {}),
       })
     )
     .digest('hex');
@@ -106,6 +124,11 @@ export async function gateWalletReceiptApproval(
       `UPDATE wallet_transactions SET metadata=COALESCE(metadata,'{}'::jsonb)||jsonb_build_object('dualApproval',$2::jsonb) WHERE id=$1`,
       [input.id, JSON.stringify(binding)]
     );
+    if (input.financialReview)
+      await client.query(
+        `UPDATE wallet_transactions SET metadata=metadata||jsonb_build_object('financialReview',$2::jsonb) WHERE id=$1`,
+        [input.id, JSON.stringify(input.financialReview)]
+      );
     await client.query(
       `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
       VALUES ($1,$2,'wallet.bank_receipt.dual_approval_requested',$3::jsonb,$4,$5)`,
@@ -118,6 +141,7 @@ export async function gateWalletReceiptApproval(
           requestId: binding.requestId,
           amount: input.amount.toString(),
           fingerprint,
+          ...(input.financialReview ? { financialReview: input.financialReview } : {}),
         }),
         input.correlationId ?? randomUUID(),
         input.ip,

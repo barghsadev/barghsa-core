@@ -3,14 +3,75 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import AdminWalletReceiptsPage from './AdminWalletReceiptsPage.js';
+import type { BankReceiptConfirmationReview } from '@barghsa/shared/finance';
 
 const TX_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const TX_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
 const INVOICE_ID = '11111111-1111-7111-8111-111111111111';
 const CSRF = 'csrf-wallet-receipt';
+const REVIEW_HASH = 'a'.repeat(64);
+
+function reviewDto(
+  transactionId: string,
+  invoiceId: string | null = null
+): BankReceiptConfirmationReview {
+  const profile = { id: INVOICE_ID, title: 'Customer profile', type: 'LEGAL' };
+  return {
+    schemaVersion: 1,
+    hash: REVIEW_HASH,
+    scope: {
+      action: 'wallet.bank-receipt-confirmation',
+      profileId: INVOICE_ID,
+      resourceId: transactionId,
+    },
+    data: {
+      currency: 'IRR',
+      profile,
+      receipt: {
+        id: transactionId,
+        amount: '250000',
+        paymentDate: '2026-08-15',
+        payerReference: 'TRK',
+        attachmentKey: null,
+        customerNote: null,
+        submittedAt: '2026-09-01T10:00:00.000Z',
+      },
+      invoice: invoiceId
+        ? {
+            currency: 'IRR',
+            profile,
+            invoice: {
+              id: invoiceId,
+              state: 'Unpaid',
+              orderId: null,
+              serviceType: null,
+              issuedAt: null,
+              payableFrom: null,
+              dueAt: null,
+              totalAmount: '100000',
+              paidAmount: '0',
+              remainingAmount: '100000',
+            },
+            lines: [],
+            totals: null,
+            contracts: [],
+            cancellation: 'separate_review_required',
+          }
+        : null,
+      allocation: {
+        invoiceAmount: invoiceId ? '100000' : '0',
+        walletCredit: invoiceId ? '150000' : '250000',
+      },
+      wallet: { availableBefore: '0', availableAfter: invoiceId ? '150000' : '250000' },
+      approval: { required: false, thresholdAmount: null },
+      source: 'bank_receipt',
+    },
+  };
+}
 
 function receiptDto(transactionId: string, overrides: Record<string, unknown> = {}) {
   return {
+    reviewHash: REVIEW_HASH,
     transactionId,
     walletId: '11111111-1111-7111-8111-111111111111',
     amount: '250000',
@@ -42,6 +103,13 @@ function stepUpForbidden(): Response {
 async function defaultFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
   const url = String(input);
   const method = (init?.method ?? 'GET').toUpperCase();
+  const reviewMatch = url.match(/bank-receipt-top-ups\/([^/]+)\/review(?:\?|$)/);
+  if (reviewMatch && method === 'GET')
+    return new Response(
+      JSON.stringify(
+        reviewDto(reviewMatch[1]!, new URL(url, 'http://localhost').searchParams.get('invoiceId'))
+      )
+    );
   if (url.endsWith('/api/user/settings/timezone'))
     return new Response(JSON.stringify({ timezone: 'America/Los_Angeles' }));
   if (url.endsWith('/api/admin/config/wallet-top-up-limit') && method === 'GET') {
@@ -78,21 +146,6 @@ async function defaultFetch(input: RequestInfo | URL, init?: RequestInit): Promi
           state: 'Rejected',
           canDecide: false,
         }),
-    } as Response;
-  }
-  if (url.includes(`/${TX_A}/allocation?`) && method === 'GET') {
-    return {
-      ok: true,
-      json: async () => ({
-        transactionId: TX_A,
-        invoiceId: INVOICE_ID,
-        invoiceState: 'Unpaid',
-        receiptAmount: '250000',
-        remaining: '100000',
-        invoiceAllocation: '100000',
-        walletCreditAmount: '150000',
-        isOverpayment: true,
-      }),
     } as Response;
   }
   return { ok: false, status: 404, json: async () => ({ message: 'not found' }) } as Response;
@@ -160,7 +213,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         (init as RequestInit | undefined)?.method === 'POST'
     );
     expect(confirmCall).toBeTruthy();
-    expect((confirmCall?.[1] as RequestInit).body).toBe(JSON.stringify({}));
+    expect(JSON.parse(String((confirmCall?.[1] as RequestInit).body))).toEqual({
+      expectedReviewHash: REVIEW_HASH,
+    });
     expect(new Headers((confirmCall?.[1] as RequestInit).headers).get('X-CSRF-Token')).toBe(CSRF);
     expect(container.textContent).toContain('Receipt confirmed and wallet credited');
   });
@@ -289,7 +344,10 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       });
       await flush();
       expect(bodies).toEqual(
-        Array(3).fill({ emergencyOverrideReason: 'Bank deadline; second reviewer unavailable' })
+        Array(3).fill({
+          expectedReviewHash: REVIEW_HASH,
+          emergencyOverrideReason: 'Bank deadline; second reviewer unavailable',
+        })
       );
       expect(container.textContent).toContain(
         locale === 'en'
@@ -401,7 +459,10 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         (init as RequestInit | undefined)?.method === 'POST'
     );
     expect(confirmCall).toBeTruthy();
-    expect((confirmCall?.[1] as RequestInit).body).toBe(JSON.stringify({ invoiceId: INVOICE_ID }));
+    expect(JSON.parse(String((confirmCall?.[1] as RequestInit).body))).toEqual({
+      expectedReviewHash: REVIEW_HASH,
+      invoiceId: INVOICE_ID,
+    });
   });
 
   it('does not confirm against an invoice when allocation preview fails', async () => {
@@ -409,7 +470,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       const method = (init?.method ?? 'GET').toUpperCase();
-      if (url.includes(`/${TX_A}/allocation?`) && method === 'GET') {
+      if (url.includes(`/${TX_A}/review?`) && method === 'GET') {
         return {
           ok: false,
           status: 409,
@@ -456,7 +517,10 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       const method = (init?.method ?? 'GET').toUpperCase();
       if (url.endsWith(`/${TX_A}/confirm`) && method === 'POST') {
         confirmCalls += 1;
-        expect(JSON.parse(String(init?.body))).toEqual({ invoiceId: INVOICE_ID });
+        expect(JSON.parse(String(init?.body))).toEqual({
+          expectedReviewHash: REVIEW_HASH,
+          invoiceId: INVOICE_ID,
+        });
         if (confirmCalls === 1) return stepUpForbidden();
         return {
           ok: true,
@@ -1002,7 +1066,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
   );
   it('does not enable an invoice confirmation when the allocation request disconnects', async () => {
     vi.mocked(fetch).mockImplementation(async (input, init) => {
-      if (String(input).includes('/allocation?')) throw new Error('offline');
+      if (String(input).includes('/review?')) throw new Error('offline');
       return defaultFetch(input, init);
     });
     await act(async () => root.render(<AdminWalletReceiptsPage />));

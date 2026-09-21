@@ -34,6 +34,7 @@ import { v7 as uuidv7 } from 'uuid';
 import { startHttpFixture } from '../test/http-fixture';
 import {
   BANK_RECEIPT_CONFIRMED_EVENT,
+  DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
   BANK_RECEIPT_OVERPAYMENT_ERRORS,
   BANK_RECEIPT_REJECTED_EVENT,
   BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY,
@@ -68,6 +69,7 @@ const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
 const CUSTOMER_USER_ID = 'customer-bank-receipt-owner';
 const ACTOR_USER_ID = 'staff-bank-receipt-confirm';
+const REVIEWER_USER_ID = 'staff-bank-receipt-reviewer';
 const AMOUNT = 250_000n;
 const NOW = new Date('2026-09-02T08:00:00.000Z');
 
@@ -96,13 +98,18 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
 
     await ctx.pool.query(
       `INSERT INTO users (user_id, username, password_hash) VALUES
-      ($1, 'customer@example.test', 'test-only'), ($2, 'staff@example.test', 'test-only')`,
-      [CUSTOMER_USER_ID, ACTOR_USER_ID]
+      ($1, 'customer@example.test', 'test-only'), ($2, 'staff@example.test', 'test-only'),
+      ($3, 'reviewer@example.test', 'test-only')`,
+      [CUSTOMER_USER_ID, ACTOR_USER_ID, REVIEWER_USER_ID]
     );
-    await ctx.pool.query(`UPDATE users SET is_staff=true WHERE user_id=$1`, [ACTOR_USER_ID]);
-    await ctx.pool.query(`INSERT INTO user_roles(user_id, role_id) VALUES ($1, 'role-finance')`, [
+    await ctx.pool.query(`UPDATE users SET is_staff=true WHERE user_id IN ($1,$2)`, [
       ACTOR_USER_ID,
+      REVIEWER_USER_ID,
     ]);
+    await ctx.pool.query(
+      `INSERT INTO user_roles(user_id, role_id) VALUES ($1, 'role-finance'), ($2, 'role-finance')`,
+      [ACTOR_USER_ID, REVIEWER_USER_ID]
+    );
     await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2), ($3, $2)`, [
       PROFILE_A,
       CUSTOMER_USER_ID,
@@ -112,7 +119,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       PROFILE_A,
       PROFILE_B,
     ]);
-    await seedReceiptDecisionSessions(ctx.pool, [ACTOR_USER_ID]);
+    await seedReceiptDecisionSessions(ctx.pool, [ACTOR_USER_ID, REVIEWER_USER_ID]);
   }, 60_000);
 
   afterAll(async () => {
@@ -196,6 +203,206 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       reserved: BigInt(result.rows[0]!.reserved_balance),
     };
   }
+
+  it.each([false, true])(
+    'binds the stored receipt review and replay to the exact allocation, invoice=%s',
+    async (linked) => {
+      const pendingId = await insertPending(uuidv7().slice(-12));
+      const invoiceId = linked ? await insertInvoice({ total: 100_000n }) : null;
+      const input = {
+        transactionId: pendingId,
+        actorUserId: ACTOR_USER_ID,
+        invoiceId,
+        ...receiptDecisionSession(ACTOR_USER_ID),
+        ip: '10.0.0.9',
+        now: NOW,
+      };
+      const review = await service.review(input);
+      const before = await walletBalances();
+      await expect(
+        service.confirm({ ...input, expectedReviewHash: 'f'.repeat(64) })
+      ).rejects.toMatchObject({ status: 409 });
+      expect(await walletBalances()).toEqual(before);
+      const result = await service.confirm({ ...input, expectedReviewHash: review.hash });
+      expect(result.reviewHash).toBe(review.hash);
+      const stored = (
+        await ctx.pool.query('SELECT metadata FROM wallet_transactions WHERE id=$1', [pendingId])
+      ).rows[0].metadata;
+      expect(stored.financialReview).toEqual(review);
+      expect((await walletBalances()).posted - before.posted).toBe(
+        BigInt(review.data.allocation.walletCredit)
+      );
+      if (invoiceId)
+        expect(await invoicePaid(invoiceId)).toBe(BigInt(review.data.allocation.invoiceAmount));
+      const replay = await service.confirm({ ...input, expectedReviewHash: review.hash });
+      expect(replay.creditTransactionId).toBe(result.creditTransactionId);
+      await expect(
+        service.confirm({ ...input, expectedReviewHash: 'f'.repeat(64) })
+      ).rejects.toMatchObject({ status: 409 });
+      await expect(
+        service.confirm({
+          ...input,
+          invoiceId: linked ? null : await insertInvoice({ total: 100n }),
+          expectedReviewHash: review.hash,
+        })
+      ).rejects.toMatchObject({ status: 409 });
+    }
+  );
+
+  it('rejects a changed invoice allocation before crediting or approving the receipt', async () => {
+    const pendingId = await insertPending(uuidv7().slice(-12));
+    const invoiceId = await insertInvoice({ total: 100_000n });
+    const input = {
+      transactionId: pendingId,
+      actorUserId: ACTOR_USER_ID,
+      invoiceId,
+      ...receiptDecisionSession(ACTOR_USER_ID),
+      ip: '10.0.0.9',
+      now: NOW,
+    };
+    const review = await service.review(input);
+    await ctx.pool.query('UPDATE invoices SET total_amount=120000 WHERE id=$1', [invoiceId]);
+    const before = await walletBalances();
+    await expect(
+      service.confirm({ ...input, expectedReviewHash: review.hash })
+    ).rejects.toMatchObject({ status: 409 });
+    expect(await walletBalances()).toEqual(before);
+    expect(await invoicePaid(invoiceId)).toBe(0n);
+    expect(
+      (await ctx.pool.query('SELECT state FROM wallet_transactions WHERE id=$1', [pendingId]))
+        .rows[0].state
+    ).toBe('Pending');
+  });
+
+  it.each([
+    null,
+    [],
+    { paymentDate: 42 },
+    { paymentDate: '2026-09-01', payerReference: 42 },
+    { paymentDate: '2026-09-01', payerReference: 'legacy', attachmentKey: 42 },
+  ])('discloses missing legacy receipt details without moving funds: %j', async (receipt) => {
+    const transactionId = await insertPending(uuidv7().slice(-12));
+    await ctx.pool.query(
+      'UPDATE wallet_transactions SET metadata=$2::jsonb,receipt_attachment_key=NULL WHERE id=$1',
+      [transactionId, JSON.stringify({ channel: 'bank_receipt', receipt })]
+    );
+    const before = await walletBalances();
+    const review = await service.review({ transactionId, actorUserId: ACTOR_USER_ID });
+    expect(review.data.receipt).toMatchObject({
+      paymentDate: null,
+      payerReference: null,
+      attachmentKey: null,
+    });
+    expect((await service.get(transactionId)).paymentDate).toBeNull();
+    expect(await walletBalances()).toEqual(before);
+  });
+
+  it('rejects missing receipts, foreign allocation targets and nonpending reviews without writes', async () => {
+    const before = await walletBalances();
+    const missing = uuidv7();
+    await expect(service.get(missing)).rejects.toMatchObject({ status: 404 });
+    await expect(
+      service.review({ transactionId: missing, actorUserId: ACTOR_USER_ID })
+    ).rejects.toMatchObject({ status: 404 });
+    await expect(service.previewAllocation(missing, missing)).rejects.toMatchObject({
+      status: 404,
+    });
+    const transactionId = await insertPending(uuidv7().slice(-12));
+    await expect(service.previewAllocation(transactionId, missing)).rejects.toMatchObject({
+      status: 404,
+    });
+    const invoiceId = await insertInvoice({ total: 100000n });
+    await ctx.pool.query('UPDATE invoices SET profile_id=$2 WHERE id=$1', [invoiceId, PROFILE_B]);
+    await expect(service.previewAllocation(transactionId, invoiceId)).rejects.toMatchObject({
+      status: 409,
+    });
+    await ctx.pool.query("UPDATE wallet_transactions SET state='Rejected' WHERE id=$1", [
+      transactionId,
+    ]);
+    await expect(
+      service.review({ transactionId, actorUserId: ACTOR_USER_ID })
+    ).rejects.toMatchObject({ status: 409 });
+    expect(await walletBalances()).toEqual(before);
+  });
+
+  it.each(['unchanged', 'invoice', 'threshold', 'legacy'] as const)(
+    'requires both approvers to confirm the same financial facts: %s',
+    async (change) => {
+      await ctx.pool.query(
+        `INSERT INTO app_config(key,value) VALUES($1,$2::jsonb)
+        ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`,
+        [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY, JSON.stringify({ threshold_irr: 100000 })]
+      );
+      try {
+        const transactionId = await insertPending(uuidv7().slice(-12));
+        const invoiceId = await insertInvoice({ total: 100_000n });
+        const first = {
+          transactionId,
+          invoiceId,
+          actorUserId: ACTOR_USER_ID,
+          ...receiptDecisionSession(ACTOR_USER_ID),
+          ip: '10.0.0.9',
+          now: NOW,
+        };
+        const second = {
+          ...first,
+          actorUserId: REVIEWER_USER_ID,
+          ...receiptDecisionSession(REVIEWER_USER_ID),
+        };
+        const review = await service.review(first);
+        const before = await walletBalances();
+        const pending = await service.confirm({
+          ...first,
+          ...(change === 'legacy' ? {} : { expectedReviewHash: review.hash }),
+        });
+        expect(pending.state).toBe('Pending');
+        expect(pending.dualApproval?.requestId).toBeTruthy();
+        expect(await walletBalances()).toEqual(before);
+        expect(await invoicePaid(invoiceId)).toBe(0n);
+        if (change === 'invoice')
+          await ctx.pool.query('UPDATE invoices SET total_amount=120000 WHERE id=$1', [invoiceId]);
+        if (change === 'threshold')
+          await ctx.pool.query('UPDATE app_config SET value=$2::jsonb WHERE key=$1', [
+            DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+            JSON.stringify({ threshold_irr: 0 }),
+          ]);
+        const secondReview = await service.review(second);
+        expect(secondReview.data.approval.required).toBe(true);
+        if (change === 'unchanged') {
+          expect(secondReview.hash).toBe(review.hash);
+          expect((await service.confirm({ ...first, expectedReviewHash: review.hash })).state).toBe(
+            'Pending'
+          );
+          expect(await walletBalances()).toEqual(before);
+          const confirmed = await service.confirm({
+            ...second,
+            expectedReviewHash: secondReview.hash,
+          });
+          expect(confirmed.state).toBe('Released');
+          expect(confirmed.reviewHash).toBe(review.hash);
+          expect(await invoicePaid(invoiceId)).toBe(100_000n);
+          expect((await walletBalances()).posted - before.posted).toBe(150_000n);
+        } else {
+          await expect(
+            service.confirm({ ...second, expectedReviewHash: secondReview.hash })
+          ).rejects.toMatchObject({ status: 409 });
+          expect(await walletBalances()).toEqual(before);
+          expect(await invoicePaid(invoiceId)).toBe(0n);
+          expect(
+            (
+              await ctx.pool.query('SELECT status FROM approval_requests WHERE id=$1', [
+                pending.dualApproval!.requestId,
+              ])
+            ).rows[0].status
+          ).toBe('pending');
+        }
+      } finally {
+        await ctx.pool.query('DELETE FROM app_config WHERE key=$1', [
+          DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+        ]);
+      }
+    }
+  );
 
   it.each([
     { action: 'confirm' as const, state: 'Released', returned: 'NULL' },
