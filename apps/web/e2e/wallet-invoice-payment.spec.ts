@@ -404,6 +404,76 @@ test('changed contract conditions require a new review even when the amount is u
   expect(requests[1]!.idempotencyKey).not.toBe(requests[0]!.idempotencyKey);
 });
 
+test('wallet confirmation shares loaded dates and blocks payment while timezone recovery is needed', async ({
+  page,
+}) => {
+  await shell(page, 'en', false, '100000', () => '0');
+  let timezoneFails = true,
+    timezoneReads = 0,
+    payments = 0;
+  await page.route('**/api/user/settings/timezone', (route) => {
+    timezoneReads++;
+    return route.fulfill({
+      status: timezoneFails ? 503 : 200,
+      json: timezoneFails ? {} : { timezone: 'Asia/Tehran' },
+    });
+  });
+  const review = financialReview('100000', '150000');
+  await page.route(`**/api/invoices/${invoiceId}/wallet-payment`, (route) => {
+    if (route.request().method() === 'GET')
+      return route.fulfill({
+        json: {
+          invoiceId,
+          profileId,
+          remainingAmount: '100000',
+          availableBalance: '150000',
+          canPay: true,
+          review,
+        },
+      });
+    payments++;
+    return route.fulfill({
+      json: {
+        ...route.request().postDataJSON(),
+        invoiceId,
+        profileId,
+        state: 'Paid',
+        amount: '100000',
+        walletTransactionId: transactionId,
+        reviewHash: review.hash,
+      },
+    });
+  });
+  await page.goto(`/invoices/${invoiceId}`);
+  const panel = page.locator('#wallet-invoice-payment');
+  const open = panel.getByRole('button', { name: 'Review wallet payment', exact: true });
+  await expect(panel.getByRole('alert')).toContainText('Failed to load timezone');
+  await expect(open).toBeDisabled();
+  timezoneFails = false;
+  await panel.getByRole('button', { name: 'Try again', exact: true }).click();
+  await expect(open).toBeEnabled();
+  const readsBeforeDialog = timezoneReads;
+  await open.click();
+  const dialog = page.getByRole('dialog');
+  const confirm = dialog.getByRole('button', { name: 'Confirm', exact: true });
+  await expect(confirm).toBeEnabled();
+  await expect(dialog).not.toContainText('Time unavailable');
+  expect(timezoneReads).toBe(readsBeforeDialog);
+  timezoneFails = true;
+  await page.evaluate(() => window.dispatchEvent(new Event('barghsa:timezone-changed')));
+  await expect(dialog.getByRole('alert')).toContainText('Failed to load timezone');
+  await expect(confirm).toBeDisabled();
+  await dialog.locator('form').evaluate((form: HTMLFormElement) => form.requestSubmit());
+  expect(payments).toBe(0);
+  timezoneFails = false;
+  await dialog.getByRole('button', { name: 'Try again', exact: true }).click();
+  await expect(confirm).toBeEnabled();
+  await expect(dialog).not.toContainText('Time unavailable');
+  await confirm.click();
+  await expect(panel.getByRole('status')).toContainText(transactionId);
+  expect(payments).toBe(1);
+});
+
 test('an incomplete or foreign financial review cannot enable payment', async ({ page }) => {
   await shell(page, 'en', false, '100000', () => '0');
   let foreign = false;

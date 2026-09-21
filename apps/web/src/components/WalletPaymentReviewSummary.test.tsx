@@ -6,9 +6,6 @@ import type { WalletPaymentReview } from '@barghsa/shared/finance';
 import { WalletPaymentReviewSummary } from './WalletPaymentReviewSummary.js';
 
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
-vi.mock('../hooks/useAccountTime.js', () => ({
-  useAccountTime: () => ({ format: (value: string) => value }),
-}));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({
     money: (value: string) => formatCurrencyIrr(value, 'en'),
@@ -75,7 +72,9 @@ it.each([true, false])(
         cancellation: 'separate_review_required',
       },
     };
-    await act(async () => root.render(<WalletPaymentReviewSummary review={review} />));
+    await act(async () =>
+      root.render(<WalletPaymentReviewSummary review={review} formatDate={(value) => value} />)
+    );
     expect(host.textContent).toContain(formatCurrencyIrr(vat, 'en'));
     expect(host.textContent).toContain(formatPercent(taxable ? 0.09 : 0, 'en'));
     expect(host.querySelector('dl:last-of-type dd')?.textContent).toBe(

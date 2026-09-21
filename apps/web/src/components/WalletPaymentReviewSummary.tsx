@@ -4,15 +4,19 @@ import { tWalletInvoicePayment as t } from '@barghsa/i18n/wallet-invoice-payment
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useAccountTime } from '../hooks/useAccountTime.js';
 
-export function WalletPaymentReviewSummary({ review }: { review: WalletPaymentReview }) {
+export function WalletPaymentReviewSummary({
+  review,
+  formatDate,
+}: {
+  review: WalletPaymentReview;
+  formatDate: (value: string) => string;
+}) {
   const locale = useLocale(),
-    numbers = useNumberFormatting(locale),
-    time = useAccountTime(locale);
+    numbers = useNumberFormatting(locale);
   const text = (key: Parameters<typeof t>[0]) => t(key, locale);
   const data = review.data;
-  const date = (value: string | null) => (value === null ? text('notSet') : time.format(value));
+  const date = (value: string | null) => (value === null ? text('notSet') : formatDate(value));
   const rows = [
     { id: 'profile', label: text('profile'), value: data.profile.title || data.profile.id },
     { id: 'invoice', label: text('invoice'), value: data.invoice.id },

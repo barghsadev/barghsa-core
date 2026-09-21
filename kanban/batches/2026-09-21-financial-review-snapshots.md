@@ -24,3 +24,5 @@ Validation:
 No supervisor state is changed.
 
 Previous batch: [PR331](https://github.com/barghsadev/barghsa-core/pull/331) merged contract draft authoring after [exact-head approval](https://github.com/barghsadev/barghsa-core/pull/331#issuecomment-5756860520) and all five checks in [run35572440369](https://github.com/barghsadev/barghsa-core/actions/runs/35572440369). Its final changed-source coverage passes the original thresholds. Full main runs35572387200 at PR330 and35573972967 at PR331 both passed all five jobs.
+
+Independent review of the implementation found that the dialog mounted a second account-time loader and could confirm before its dates resolved. The panel now owns one formatter for both summaries, disables confirmation while it is unavailable and renders its retry notice inside the dialog. A browser regression proves initial failure, no additional dialog read, failure after opening, guarded form submission and successful recovery. All 18 Chromium/mobile Chrome cases pass after this fix. Final review and CI are pending.

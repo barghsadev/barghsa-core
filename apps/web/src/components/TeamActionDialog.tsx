@@ -42,6 +42,7 @@ export function TeamActionDialog({
   verification,
   selection,
   summary,
+  confirmationDisabled = false,
   focusConfirmation = false,
   onClose,
   onSuccess,
@@ -59,6 +60,7 @@ export function TeamActionDialog({
   finalFocus?: ComponentProps<typeof DialogContent>['finalFocus'];
   focusConfirmation?: boolean;
   summary?: ReactNode;
+  confirmationDisabled?: boolean;
 }) {
   const locale = useLocale();
   const copy = action ?? verification;
@@ -94,7 +96,7 @@ export function TeamActionDialog({
   }
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (inFlight.current || retryAt > Date.now()) return;
+    if (confirmationDisabled || inFlight.current || retryAt > Date.now()) return;
     inFlight.current = true;
     setBusy(true);
     setError(null);
@@ -213,7 +215,9 @@ export function TeamActionDialog({
               <Button
                 type="submit"
                 autoFocus={focusConfirmation && !needsPassword}
-                disabled={busy || remaining > 0 || (needsPassword && !password)}
+                disabled={
+                  confirmationDisabled || busy || remaining > 0 || (needsPassword && !password)
+                }
               >
                 {t(busy ? 'team.working' : 'team.confirm', locale)}
               </Button>

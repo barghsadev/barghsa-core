@@ -145,7 +145,7 @@ export function WalletInvoicePaymentPanel({
           ) : (
             quote && (
               <>
-                <WalletPaymentReviewSummary review={quote.review} />
+                <WalletPaymentReviewSummary review={quote.review} formatDate={time.format} />
                 {!quote.canPay && <p>{text('unavailable')}</p>}
               </>
             )
@@ -187,6 +187,7 @@ export function WalletInvoicePaymentPanel({
       {open && intent && (
         <Suspense fallback={<p role="status">{text('loading')}</p>}>
           <TeamActionDialog
+            confirmationDisabled={time.status !== 'ready'}
             action={{
               title: text('confirm'),
               description: text('description').replace(
@@ -204,9 +205,12 @@ export function WalletInvoicePaymentPanel({
               forbiddenMessage: text('denied'),
             }}
             summary={
-              <ScrollArea className="h-[40dvh]" role="region" aria-label={text('reviewTitle')}>
-                <WalletPaymentReviewSummary review={intent.review} />
-              </ScrollArea>
+              <>
+                {time.notice}
+                <ScrollArea className="h-[40dvh]" role="region" aria-label={text('reviewTitle')}>
+                  <WalletPaymentReviewSummary review={intent.review} formatDate={time.format} />
+                </ScrollArea>
+              </>
             }
             onClose={() => setOpen(false)}
             onSuccess={async (value) => {
