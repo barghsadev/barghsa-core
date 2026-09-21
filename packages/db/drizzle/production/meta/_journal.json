@@ -456,6 +456,13 @@
       "when": 1791331200047,
       "tag": "0144_contract_term_completion",
       "breakpoints": true
+    },
+    {
+      "idx": 145,
+      "version": "7",
+      "when": 1791331200048,
+      "tag": "0145_contract_cancellation",
+      "breakpoints": true
     }
   ]
 }

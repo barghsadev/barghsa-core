@@ -144,6 +144,21 @@ export class ContractController {
       req.ip ?? '127.0.0.1'
     );
   }
+  @Get(':id/cancellation-preview')
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiOperation({
+    summary: 'Read the current version and refund balances before a cancellation decision',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Authoritative financial snapshot and fingerprint. This read does not cancel the contract, create a refund or imply financial closure.',
+  })
+  cancellationPreview(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    this.authorize(req, true);
+    return this.service.cancellationPreview(parse(contractUuid, id));
+  }
+
   @Get(':id')
   @ApiParam({ name: 'id', format: 'uuid' })
   @ApiOperation({ summary: 'Read a staff contract with its current full version' })

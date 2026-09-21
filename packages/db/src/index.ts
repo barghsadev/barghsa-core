@@ -747,3 +747,4 @@ export * from './schema/documents';
 export * from './schema/contract-signatures';
 
 export * from './schema/contract-activation';
+export * from './schema/contract-cancellation';

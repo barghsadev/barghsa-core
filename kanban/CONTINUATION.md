@@ -105,3 +105,37 @@ The context-editing interface now passes30 focused tests,10 bilingual production
 ### PR #326 merged; context editor ready for review
 
 Completion PR #326 merged as `0de427bda68c620b73254cc8aba80a1a90a4a36d` after exact-HEAD approval and all five CI gates passed. The context editor is rebased onto that verified merge; final browser coverage is being bound to its rebased head, followed by independent review and CI. A later cancellation foundation is preserved on `codex/contract-cancellation` at `91eac8e7`. Its read-only financial preview passes40 unit/HTTP cases,API types/lint/OpenAPI checks; cancellation commands,mandatory refund processing,financial closure and UI remain unfinished. Rebase that draft after the editor merges and complete its entire workflow before its PR.
+
+### PR #327 approved; cancellation foundation rebased
+
+The editor PR #327 is independently approved at `5cf7b0ba7ba969388acf4ba17ab193a6cd2f1f02` in [review](https://github.com/barghsadev/barghsa-core/pull/327#issuecomment-5754208234). Actual combined source coverage passes and CI run35550678883 remains pending. The cancellation foundation is rebased onto this approved head. Its40 unit/HTTP cases,API types/lint/OpenAPI checks still cover identical source. Its batch record documents the remaining cancellation/refund/closure/UI workflow. Rebase onto the verified editor squash merge before further publication.
+
+### PR #327 merged; cancellation storage validated
+
+Editor PR #327 merged at `cac42489bf39a7b08443d1acb547480cf8572cee` after its exact-HEAD approval and all five CI gates passed in run35550678883. Full main after #325, run35549306810, also passes all five checks; full main runs after #326/#327 remain live. The cancellation batch adds migration0145 for immutable decision/execution/obligation storage and bound approval/non-dismissal guards. Its89 related migrated DB cases and5 approval-schema tests pass, with DB types/lint/snapshot checks; the earlier financial preview passes40 unit/HTTP cases. Command authorization and execution,commit-time completeness,automatic returns,financial closure and UI remain unfinished. Keep the entire workflow in one future PR. No scheduler or historical supervisor completion history changed.
+
+### Cancellation commands locally validated
+
+On `codex/contract-cancellation`, dedicated prepare/read/execute endpoints now save and revalidate immutable financial decisions, threshold approval and current authority, then atomically create cancellation evidence and refund obligations. Generic approval creation cannot produce unbound cancellation approvals. Local validation passes71 API unit/HTTP cases and19 shared approval cases,API/web types,targeted lint,OpenAPI consistency. Database commit-time completeness and payment-source race guards,automatic obligation fulfillment,financial closure and bilingual workflow remain unfinished. Keep the complete workflow in one future PR. Full main after #326,run35550597502,now passes; #327 run35551479937 remains pending. No scheduler or supervisor completion history changed.
+
+### Cancellation obligation enforcement and wallet processing
+
+Current cancellation branch enforces execution evidence and refund completeness at commit, including actual paid electricity balances. It automatically queues immutable wallet obligations through the existing ledger/retry worker, supports partial-funded invoices, records provenance and sends finance/customer exhaustion notices. Validation passes70 HTTP cases,41 lifecycle/upgrade DB cases and55 refund/storage DB cases,with9 overlapping cancellation cases,plus DB/API types,targeted lint and snapshot checks. Payment-race guards,external-bank obligation handling,financial closure and bilingual UI remain before final coverage/review/CI/PR. Full main #327 run35551479937 was still live at the latest check.
+
+### Cancellation payment races and external returns validated
+
+Cancellation guards now include pending receipt/wallet sources, forbid new payments and invoice reassignment/charges/deletion after cancellation, and serialize racing sources against the invoice/contract. External obligations support paid and partial-funded balances with separate current-finance transfer/reconciliation. Validation passes44 cancellation/snapshot/wallet HTTP cases and43 cancellation/external/bank-confirmation cases,with overlapping cancellation cases;86 related DB cases plus the new direct-write reconciliation case verified in10 cancellation cases;API types,lint,snapshot pass. Next is derived financial closure and bilingual staff/customer flow,then final coverage/review/CI for the whole batch. #327 full-main run35551479937 remains live.
+
+### Live cancellation financial status and CI cleanup
+
+Staff/customer status endpoints derive pending,needs-attention,closed or unverified financial outcome separately from Cancelled service state. Customer reads enforce active profile and publication; output excludes staff/approval details. Validation passes38 cancellation/customer-review HTTP cases plus5 config-cache integration cases,API types,lint,OpenAPI consistency. UI and final coverage/review/CI remain.
+
+Full main #327 run35551479937 failed only on an uncaught connection termination from config-cache fixture forced-drop cleanup,despite317 API test files passing. The fixture now waits for idle connections to disappear before ordinary DROP and closes management in finally. Local focused validation passes; remote full-CI confirmation remains. Other four gates succeeded. Do not record that run as green.
+
+### Cancellation interface built and locally validated
+
+Current contract detail now includes bilingual cancellation/financial status. A latest-decision endpoint returns a stable JSON envelope for empty/saved decisions and supports reload during second approval. Staff permission flags gate actions; historical versions remain read-only. Explicit decisions,step-up,idempotent retry,stale/payment blockers and final irreversible confirmation precede status refresh. Customer status separates cancellation from completed returns. Local validation passes22 frontend tests,39 cancellation/customer HTTP tests,2 production Chromium flows,API/web types,lint,OpenAPI and build. Next is actual committed combined coverage,broader browser evidence/render inspection,exact-head review and CI before the full cancellation PR can merge. No supervisor completion history changed.
+
+### Finance obligation queue and exhausted retry
+
+Requirement review found and fixed a missing exhausted-refund retry. Finance now has a paginated bilingual queue for unresolved wallet/bank obligations. Manual retry records one-time authorization,checks current finance permission,preserves exhausted automatic history and posts at most one ledger credit. Bank transfer/reconciliation controls use the existing separate-user guard. Local validation passes52 HTTP,36 DB and4 bilingual production-browser cases,types/lint/OpenAPI;Persian rendering inspected. Next is combined coverage and final review/CI. No batch completion is claimed.

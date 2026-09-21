@@ -924,6 +924,7 @@ export const fa: I18nDictionary = {
   'admin.approvals.saved':
     'تصمیم ثبت شد. رسید یا پرداخت همچنان باید در روند مربوط به خود تکمیل شود.',
   'admin.approvals.bank_payment_confirmation': 'تأیید پرداخت بانکی',
+  'admin.approvals.contract_cancellation': 'لغو قرارداد',
   'admin.approvals.refund': 'بازپرداخت',
   'admin.approvals.manual_adjustment': 'اصلاح دستی',
   'admin.approvals.requestId': 'شناسه درخواست',
@@ -1862,6 +1863,7 @@ export const en: I18nDictionary = {
   'admin.approvals.saved':
     'Decision saved. Any receipt or payment must still be completed in its own workflow.',
   'admin.approvals.bank_payment_confirmation': 'Bank payment confirmation',
+  'admin.approvals.contract_cancellation': 'Contract cancellation',
   'admin.approvals.refund': 'Refund',
   'admin.approvals.manual_adjustment': 'Manual adjustment',
   'admin.approvals.requestId': 'Request ID',

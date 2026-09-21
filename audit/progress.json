@@ -1430,18 +1430,19 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/contract-context-editor",
-      "status": "local_validation_passed",
-      "record": "kanban/batches/2026-09-21-contract-context-editor.md",
+      "branch": "codex/contract-cancellation",
+      "status": "in_progress",
+      "record": "kanban/batches/2026-09-21-contract-cancellation.md",
       "previous_batch": {
-        "pr": 326,
-        "reviewed_head_sha": "a21cd099c48cb2bba426f8d01e76df553b5afac0",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/326#issuecomment-5754061954",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35549391725",
+        "pr": 327,
+        "reviewed_head_sha": "5cf7b0ba7ba969388acf4ba17ab193a6cd2f1f02",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/327#issuecomment-5754208234",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35550678883",
         "status": "merged",
-        "merge_commit_sha": "0de427bda68c620b73254cc8aba80a1a90a4a36d"
+        "merge_commit_sha": "cac42489bf39a7b08443d1acb547480cf8572cee"
       },
-      "validation": "30 focused tests,10 production browser flows,types,lint,format,build,44 bundle budgets,static scan,backlog and actual combined coverage pass. Rebind browser coverage to rebased head before review/CI.",
+      "validation": "Focused coverage suites:132 API,57 DB,19 shared,2 dictionary,52 frontend tests pass;17 production browser cases pass. Web types pass. Combined coverage on final committed head,independent review and CI pending.",
+      "next_action": "Collect combined coverage on committed full cancellation batch,close meaningful test gaps and inspect rendered UI,then create PR and review exact head; merge only with all gates passing.",
       "remaining_tasks": [
         "Contract draft/edit UI and typed financial preview",
         "Automatic contract template-to-PDF generation",
@@ -1449,18 +1450,20 @@
         "Configured malware scanning and physical retention deletion",
         "Separate financial closure"
       ],
-      "next_local_batch": {
-        "branch": "codex/contract-cancellation",
-        "commit": "91eac8e7",
-        "status": "financial_preview_foundation_only",
-        "validation": "40 unit/HTTP cases,API types,lint and OpenAPI pass. Actual cancellation,automatic refund obligations/processing,closure guards and UI remain unbuilt; do not open its PR until the workflow is complete."
-      },
       "main_full_runs_verified": [
         35545814385,
-        35547612589
+        35547612589,
+        35549306810,
+        35550597502
       ],
-      "main_full_runs_pending": [
-        35549306810
+      "main_full_runs_pending": [],
+      "main_full_runs_failed": [
+        {
+          "run_id": 35551479937,
+          "reason": "317 API files passed; uncaught PostgreSQL termination during config-cache forced-drop cleanup",
+          "local_fix": "Wait for clients before ordinary DROP; focused tests pass",
+          "remote_revalidation": "pending next full CI"
+        }
       ]
     },
     "full_ci_followup": {

@@ -78,6 +78,75 @@ function edit(row: ContractDto) {
     idempotencyKey: randomUUID(),
   };
 }
+it('reads an exact cancellation financial snapshot without changing the contract or refunds', async () => {
+  const row = await create();
+  const invoiceId = randomUUID(),
+    unrelated = randomUUID();
+  await http.pool.query(
+    "INSERT INTO invoices(id,profile_id,contract_id,state,total_amount,paid_amount,refunded_amount) VALUES($1,$2,$3,'Paid',9007199254740999,9007199254740999,3),($4,$2,'unrelated','Paid',123,123,0)",
+    [invoiceId, row.profileId, row.id, unrelated]
+  );
+  const refund = (
+    await http.pool.query(
+      "INSERT INTO refunds(invoice_id,profile_id,amount,destination,idempotency_key) VALUES($1,$2,5,'wallet',$3) RETURNING id",
+      [invoiceId, row.profileId, randomUUID()]
+    )
+  ).rows[0]!;
+  const first = await send('/' + row.id + '/cancellation-preview');
+  expect(first.status).toBe(200);
+  const snapshot = (await first.json()) as Awaited<
+    ReturnType<ContractService['cancellationPreview']>
+  >;
+  expect(snapshot).toMatchObject({
+    contractId: row.id,
+    versionId: row.currentVersionId,
+    state: 'Draft',
+    refundableAmount: '9007199254740996',
+    availableRefundAmount: '9007199254740991',
+    mandatoryWalletReturn: true,
+    blockers: ['refund_in_progress'],
+  });
+  expect(snapshot.invoices).toHaveLength(1);
+  expect(snapshot.invoices[0]!.pendingRefunds).toEqual([
+    { id: refund.id, amount: '5', state: 'Requested', destination: 'wallet' },
+  ]);
+  const repeated = (await (
+    await send('/' + row.id + '/cancellation-preview')
+  ).json()) as typeof snapshot;
+  expect(repeated.fingerprint).toBe(snapshot.fingerprint);
+  expect(
+    (await http.pool.query('SELECT state FROM contracts WHERE id=$1', [row.id])).rows[0].state
+  ).toBe('Draft');
+  expect(
+    (await http.pool.query('SELECT state FROM refunds WHERE id=$1', [refund.id])).rows[0].state
+  ).toBe('Requested');
+  expect(
+    (await send('/' + row.id + '/cancellation-preview', 'GET', undefined, 'contract-support'))
+      .status
+  ).toBe(403);
+  expect(
+    (await fetch(http.base + '/api/admin/contracts/' + row.id + '/cancellation-preview')).status
+  ).toBe(401);
+});
+it('rejects unknown or malformed cancellation preview identities', async () => {
+  expect((await send('/' + randomUUID() + '/cancellation-preview')).status).toBe(404);
+  expect((await send('/not-a-contract/cancellation-preview')).status).toBe(400);
+});
+it('blocks inconsistent cross-profile invoice associations without exposing those amounts', async () => {
+  const row = await create();
+  await http.pool.query(
+    "INSERT INTO invoices(profile_id,contract_id,state,total_amount,paid_amount) VALUES($1,$2,'Paid',912345,912345)",
+    [await profile(), row.id]
+  );
+  const response = await send('/' + row.id + '/cancellation-preview');
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject({
+    invoices: [],
+    paidAmount: '0',
+    associationConflict: true,
+    blockers: ['invoice_identity_conflict'],
+  });
+});
 it('creates and reads exact full snapshots and immutable version metadata', async () => {
   const row = await create();
   expect(row).toMatchObject({
@@ -201,6 +270,27 @@ it.each([
         'INSERT INTO contract_completions(contract_id,version_id) VALUES($1,$2)',
         [row.id, row.currentVersionId]
       );
+  } else if (state === 'Cancelled') {
+    const snapshot = (await (await send('/' + row.id + '/cancellation-preview')).json()) as {
+      fingerprint: string;
+    };
+    const prepared = await send('/' + row.id + '/cancellations', 'POST', {
+      expectedVersionId: row.currentVersionId,
+      expectedFingerprint: snapshot.fingerprint,
+      reason: 'End service',
+      refundDecision: { mode: 'full_wallet' },
+      idempotencyKey: randomUUID(),
+    });
+    expect(prepared.status).toBe(201);
+    const intent = (await prepared.json()) as { id: string };
+    expect(
+      (
+        await send('/' + row.id + '/cancellations/execute', 'POST', {
+          intentId: intent.id,
+          idempotencyKey: randomUUID(),
+        })
+      ).status
+    ).toBe(201);
   } else await http.pool.query('UPDATE contracts SET state=$2 WHERE id=$1', [row.id, state]);
   expect((await send('/' + row.id, 'PATCH', edit(row))).status).toBe(409);
 });

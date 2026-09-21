@@ -46,8 +46,23 @@ beforeAll(async () => {
 afterAll(async () => {
   await state.pool?.end();
   if (management) {
-    await management.query(`DROP DATABASE IF EXISTS "${database}" WITH (FORCE)`);
-    await management.end();
+    try {
+      // Pool shutdown may finish before PostgreSQL observes the socket closing.
+      // Wait instead of force-terminating a client whose error listener is draining.
+      await vi.waitFor(
+        async () => {
+          const result = await management.query<{ count: number }>(
+            'SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=$1',
+            [database]
+          );
+          expect(result.rows[0]!.count).toBe(0);
+        },
+        { timeout: 5000 }
+      );
+      await management.query(`DROP DATABASE IF EXISTS "${database}"`);
+    } finally {
+      await management.end();
+    }
   }
 });
 beforeEach(async () => {

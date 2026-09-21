@@ -1,3 +1,4 @@
+import { cancelEmptyContract } from './test/cancel-empty-contract';
 import { randomUUID } from 'node:crypto';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -62,7 +63,11 @@ it('upgrades existing Active contracts without rewriting or fabricating activati
     const before = (await pool.query('SELECT * FROM contracts WHERE id=$1', [id])).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0143_contract_system_activation', '0144_contract_term_completion'],
+      applied: [
+        '0143_contract_system_activation',
+        '0144_contract_term_completion',
+        '0145_contract_cancellation',
+      ],
     });
     expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [id])).rows).toEqual(before);
     expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
@@ -74,7 +79,7 @@ it('upgrades existing Active contracts without rewriting or fabricating activati
     await expect(
       pool.query("UPDATE contracts SET state='Completed' WHERE id=$1", [id])
     ).rejects.toMatchObject({ code: '23514' });
-    await pool.query("UPDATE contracts SET state='Cancelled' WHERE id=$1", [id]);
+    await cancelEmptyContract(pool, id, actor);
     await expect(
       pool.query("UPDATE contracts SET state='Active' WHERE id=$1", [id])
     ).rejects.toMatchObject({ code: '23514' });

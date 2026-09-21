@@ -10,7 +10,7 @@ export async function notifyRefundOutcome(
     profile_id: string;
     amount: string;
     destination: 'wallet' | 'external_bank';
-    state: 'Completed' | 'Rejected';
+    state: 'Completed' | 'Rejected' | 'Failed';
   }
 ): Promise<void> {
   const owner = (
@@ -22,22 +22,35 @@ export async function notifyRefundOutcome(
   const faAmount = new Intl.NumberFormat('fa').format(BigInt(refund.amount));
   const enAmount = new Intl.NumberFormat('en').format(BigInt(refund.amount));
   const rejected = refund.state === 'Rejected';
+  const failed = refund.state === 'Failed';
   const localizedContent = {
     fa: {
-      title: rejected ? 'درخواست بازپرداخت رد شد' : 'بازپرداخت انجام شد',
-      body: rejected
-        ? `درخواست بازپرداخت ${faAmount} ریال رد شد. برای جزئیات، صورتحساب را بررسی کنید یا با پشتیبانی تماس بگیرید.`
-        : refund.destination === 'wallet'
-          ? `${faAmount} ریال به کیف پول شما بازگردانده شد. جزئیات در صورتحساب موجود است.`
-          : `بازپرداخت بانکی ${faAmount} ریال تأیید شد. جزئیات در صورتحساب موجود است.`,
+      title: failed
+        ? 'بازپرداخت نیازمند پیگیری است'
+        : rejected
+          ? 'درخواست بازپرداخت رد شد'
+          : 'بازپرداخت انجام شد',
+      body: failed
+        ? `بازپرداخت ${faAmount} ریال هنوز انجام نشده است و تیم مالی آن را پیگیری می‌کند. برای جزئیات، صورتحساب را بررسی کنید یا با پشتیبانی تماس بگیرید.`
+        : rejected
+          ? `درخواست بازپرداخت ${faAmount} ریال رد شد. برای جزئیات، صورتحساب را بررسی کنید یا با پشتیبانی تماس بگیرید.`
+          : refund.destination === 'wallet'
+            ? `${faAmount} ریال به کیف پول شما بازگردانده شد. جزئیات در صورتحساب موجود است.`
+            : `بازپرداخت بانکی ${faAmount} ریال تأیید شد. جزئیات در صورتحساب موجود است.`,
     },
     en: {
-      title: rejected ? 'Refund request rejected' : 'Refund completed',
-      body: rejected
-        ? `Your refund request for ${enAmount} IRR was rejected. View the invoice or contact support for details.`
-        : refund.destination === 'wallet'
-          ? `${enAmount} IRR has been returned to your wallet. View the invoice for details.`
-          : `Your bank refund of ${enAmount} IRR has been confirmed. View the invoice for details.`,
+      title: failed
+        ? 'Refund needs attention'
+        : rejected
+          ? 'Refund request rejected'
+          : 'Refund completed',
+      body: failed
+        ? `Your refund of ${enAmount} IRR has not completed. The finance team has been notified. View the invoice or contact support for details.`
+        : rejected
+          ? `Your refund request for ${enAmount} IRR was rejected. View the invoice or contact support for details.`
+          : refund.destination === 'wallet'
+            ? `${enAmount} IRR has been returned to your wallet. View the invoice for details.`
+            : `Your bank refund of ${enAmount} IRR has been confirmed. View the invoice for details.`,
     },
   };
   const id = uuidv7();

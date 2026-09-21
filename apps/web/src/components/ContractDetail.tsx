@@ -1,3 +1,4 @@
+import { ContractCancellationPanel } from './ContractCancellationPanel.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Alert,
@@ -259,6 +260,17 @@ export function ContractDetail({
             <Button variant="outline" disabled={loadingMore} onClick={() => void more()}>
               {word('next')}
             </Button>
+          ) : null}
+          {isCurrent ? (
+            <ContractCancellationPanel
+              key={'cancellation:' + id + ':' + reload}
+              id={id}
+              staff={staff}
+              onChanged={() => {
+                setReload((value) => value + 1);
+                onChanged();
+              }}
+            />
           ) : null}
           <ContractActivationPanel
             key={'activation:' + data.version.id + ':' + reload}

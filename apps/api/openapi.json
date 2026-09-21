@@ -577,7 +577,8 @@
                     "enum": [
                       "refund",
                       "manual_adjustment",
-                      "bank_payment_confirmation"
+                      "bank_payment_confirmation",
+                      "contract_cancellation"
                     ],
                     "type": "string"
                   },
@@ -3341,6 +3342,320 @@
           }
         ],
         "summary": "Read exact-version activation prerequisites without changing contract state",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}/cancellation-preview": {
+      "get": {
+        "operationId": "ContractController_cancellationPreview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authoritative financial snapshot and fingerprint. This read does not cancel the contract, create a refund or imply financial closure."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read the current version and refund balances before a cancellation decision",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}/cancellation-status": {
+      "get": {
+        "operationId": "StaffContractCancellationStatusController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read service cancellation and current financial closure independently",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}/cancellations": {
+      "get": {
+        "operationId": "ContractCancellationController_latest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Resume the latest saved cancellation decision for this contract",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      },
+      "post": {
+        "operationId": "ContractCancellationController_prepare",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedFingerprint": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "refundDecision": {
+                    "oneOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "mode": {
+                            "enum": [
+                              "full_wallet"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "mode"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "mode": {
+                            "enum": [
+                              "custom"
+                            ],
+                            "type": "string"
+                          },
+                          "refunds": {
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "amount": {
+                                  "pattern": "^[1-9][0-9]{0,18}$",
+                                  "type": "string"
+                                },
+                                "destination": {
+                                  "enum": [
+                                    "wallet",
+                                    "external_bank"
+                                  ],
+                                  "type": "string"
+                                },
+                                "invoiceId": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "invoiceId",
+                                "amount",
+                                "destination"
+                              ],
+                              "type": "object"
+                            },
+                            "maxItems": 500,
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "mode",
+                          "refunds"
+                        ],
+                        "type": "object"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "expectedVersionId",
+                  "expectedFingerprint",
+                  "reason",
+                  "refundDecision",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Prepare an immutable cancellation decision and any required financial approval",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}/cancellations/execute": {
+      "post": {
+        "operationId": "ContractCancellationController_execute",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "intentId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "intentId",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Execute a current approved cancellation decision and create its refund obligations atomically",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}/cancellations/{intentId}": {
+      "get": {
+        "operationId": "ContractCancellationController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "intentId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read a prepared cancellation decision and its current approval status",
         "tags": [
           "Admin · Contracts"
         ]
@@ -9767,6 +10082,35 @@
         ]
       }
     },
+    "/api/admin/wallet-refunds/contract-obligations": {
+      "get": {
+        "operationId": "WalletRefundController_obligations",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "before",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List unresolved contract refund obligations for finance follow-up",
+        "tags": [
+          "Admin · Wallet refunds"
+        ]
+      }
+    },
     "/api/admin/wallet-refunds/{id}/{action}": {
       "post": {
         "operationId": "WalletRefundController_decide",
@@ -11531,6 +11875,36 @@
           }
         ],
         "summary": "Read activation prerequisites for an authorized published contract version",
+        "tags": [
+          "Contracts"
+        ]
+      }
+    },
+    "/api/contracts/{id}/cancellation-status": {
+      "get": {
+        "operationId": "CustomerContractCancellationStatusController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read cancellation refund outcomes for a published contract on the authorized profile",
         "tags": [
           "Contracts"
         ]

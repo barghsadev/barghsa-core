@@ -26,6 +26,44 @@ export interface RefundProcessingRow {
   destination: string;
   staff_id: string | null;
 }
+
+/** A committed cancellation creates an immutable debt. Fulfillment uses that
+ * recorded authority; later role or threshold changes cannot erase the debt. */
+export async function readContractRefundAuthorization(
+  client: PoolClient,
+  row: RefundProcessingRow
+) {
+  const obligation = (
+    await client.query<{
+      contract_id: string;
+      intent_id: string;
+      executed_by: string;
+      valid: boolean;
+    }>(
+      `SELECT o.contract_id,c.intent_id,c.executed_by,
+      (p.state='Cancelled' AND p.current_version_id=i.version_id AND p.profile_id=$3
+       AND o.invoice_id=$2 AND $4::text IS NULL
+       AND EXISTS(SELECT 1 FROM jsonb_array_elements(i.refund_decision->'refunds') d
+         WHERE d->>'invoiceId'=$2::text AND d->>'amount'=$5 AND d->>'destination'=$6)) AS valid
+    FROM contract_refund_obligations o JOIN contract_cancellations c ON c.contract_id=o.contract_id
+    JOIN contract_cancellation_intents i ON i.id=c.intent_id JOIN contracts p ON p.id=c.contract_id
+    WHERE o.refund_id=$1`,
+      [row.id, row.invoice_id, row.profile_id, row.staff_id, row.amount, row.destination]
+    )
+  ).rows[0];
+  if (!obligation) return undefined;
+  if (!obligation.valid)
+    throw new RefundProcessingError(
+      'invalid_contract_obligation',
+      'Contract refund evidence does not match the refund'
+    );
+  return {
+    contractId: obligation.contract_id,
+    intentId: obligation.intent_id,
+    authorizedBy: obligation.executed_by,
+    actorType: 'system' as const,
+  };
+}
 export async function refundRequiresApproval(client: PoolClient, amount: string): Promise<boolean> {
   const raw = (
     await client.query('SELECT value FROM app_config WHERE key=$1', [
@@ -91,6 +129,7 @@ export async function requireRefundApproval(
   client: PoolClient,
   row: RefundProcessingRow
 ): Promise<void> {
+  if (await readContractRefundAuthorization(client, row)) return;
   const approval = await latestRefundApproval(client, row);
   if (approval?.status === 'rejected')
     throw new RefundProcessingError(
@@ -188,11 +227,16 @@ async function alertExhausted(
     );
   }
   await audit(client, row, authorizedBy, 'refund.retry_exhausted', { attempts });
+  await notifyRefundOutcome(client, { ...row, destination: 'wallet', state: 'Failed' });
 }
 
 export type RefundAttemptResult = 'completed' | 'failed' | 'exhausted' | 'deferred';
 /** The due time is enforced here for both API attempts and worker polls. */
-export async function runWalletRefund(pool: Pool, refundId: string): Promise<RefundAttemptResult> {
+export async function runWalletRefund(
+  pool: Pool,
+  refundId: string,
+  manualRetry?: { actorUserId: string; authorizationId: string }
+): Promise<RefundAttemptResult> {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
@@ -235,42 +279,83 @@ export async function runWalletRefund(pool: Pool, refundId: string): Promise<Ref
     ).rows[0]!;
     const job = (
       await client.query<{ executor_user_id: string; attempts: number; max_attempts: number }>(
-        'SELECT executor_user_id,attempts,max_attempts FROM refund_retry_jobs WHERE refund_id=$1 AND next_attempt_at <= now() AND exhausted_at IS NULL AND completed_at IS NULL AND attempts < max_attempts FOR UPDATE',
-        [refundId]
+        `SELECT executor_user_id,attempts,max_attempts FROM refund_retry_jobs WHERE refund_id=$1 AND completed_at IS NULL AND
+         (($2::boolean AND exhausted_at IS NOT NULL) OR (NOT $2::boolean AND next_attempt_at <= now() AND exhausted_at IS NULL AND attempts < max_attempts)) FOR UPDATE`,
+        [refundId, Boolean(manualRetry)]
       )
     ).rows[0];
     if (!job || row.destination !== 'wallet' || !['Processing', 'Failed'].includes(row.state)) {
       await client.query('ROLLBACK');
       return 'deferred';
     }
+    if (manualRetry) {
+      const authorization = (
+        await client.query(
+          `SELECT id FROM audit_log WHERE event='refund.manual_retry_requested' AND user_id=$1
+        AND metadata::jsonb->>'refundId'=$2 AND metadata::jsonb->>'manualRetryId'=$3
+        AND NOT EXISTS(SELECT 1 FROM audit_log done WHERE done.event IN ('refund.completed','refund.failed')
+          AND done.metadata::jsonb->>'manualRetryId'=$3)`,
+          [manualRetry.actorUserId, row.id, manualRetry.authorizationId]
+        )
+      ).rows[0];
+      if (
+        !authorization ||
+        row.state !== 'Failed' ||
+        !(await readContractRefundAuthorization(client, row))
+      ) {
+        await client.query('ROLLBACK');
+        return 'deferred';
+      }
+      await requireRefundFinancePermission(client, manualRetry.actorUserId);
+    }
+    const manualEvidence = manualRetry
+      ? { manualRetryId: manualRetry.authorizationId, retriedBy: manualRetry.actorUserId }
+      : {};
     const attempt = job.attempts + 1;
-    await client.query('UPDATE refund_retry_jobs SET attempts=$2 WHERE refund_id=$1', [
-      row.id,
-      attempt,
-    ]);
+    // Preserve the exhausted automatic job. A finance-authorized retry is one
+    // separately audited attempt, not a reset of the bounded automatic history.
+    if (!manualRetry)
+      await client.query('UPDATE refund_retry_jobs SET attempts=$2 WHERE refund_id=$1', [
+        row.id,
+        attempt,
+      ]);
     if (row.state === 'Failed') {
       await client.query("UPDATE refunds SET state='Processing' WHERE id=$1", [row.id]);
       await audit(client, row, job.executor_user_id, 'refund.processing', {
         fromState: 'Failed',
         toState: 'Processing',
+        ...manualEvidence,
         attempt,
       });
     }
     await client.query('SAVEPOINT refund_posting');
     let result: RefundAttemptResult;
     try {
+      const obligation = await readContractRefundAuthorization(client, row);
       if (!profile || profile.archived)
         throw new RefundProcessingError('profile_archived', 'Profile is unavailable');
       if (
         !invoice ||
         invoice.profile_id !== row.profile_id ||
         invoice.adjustment_kind === 'credit' ||
-        !['Paid', 'PartiallyRefunded'].includes(invoice.state) ||
+        !(
+          obligation
+            ? ['Paid', 'PartiallyFunded', 'Unpaid', 'Overdue', 'PartiallyRefunded']
+            : ['Paid', 'PartiallyRefunded']
+        ).includes(invoice.state) ||
         BigInt(invoice.total_amount) <= 0n
       )
         throw new RefundProcessingError('invoice_not_refundable', 'Invoice cannot be refunded');
-      await requireRefundFinancePermission(client, job.executor_user_id);
-      await requireRefundApproval(client, row);
+      if (obligation) {
+        if (obligation.authorizedBy !== job.executor_user_id)
+          throw new RefundProcessingError(
+            'invalid_contract_obligation',
+            'Refund job does not match cancellation authority'
+          );
+      } else {
+        await requireRefundFinancePermission(client, job.executor_user_id);
+        await requireRefundApproval(client, row);
+      }
       await client.query(
         'INSERT INTO wallets(profile_id) VALUES($1) ON CONFLICT(profile_id) DO NOTHING',
         [row.profile_id]
@@ -284,7 +369,7 @@ export async function runWalletRefund(pool: Pool, refundId: string): Promise<Ref
           type: 'refund',
           refId: row.id,
           description: 'Invoice wallet refund',
-          metadata: { refundId: row.id, invoiceId: row.invoice_id },
+          metadata: { refundId: row.id, invoiceId: row.invoice_id, ...obligation },
         },
         `refund-wallet-credit:${row.id}`
       );
@@ -292,8 +377,10 @@ export async function runWalletRefund(pool: Pool, refundId: string): Promise<Ref
       await audit(client, row, job.executor_user_id, 'refund.completed', {
         fromState: 'Processing',
         toState: 'Completed',
+        ...manualEvidence,
         attempt,
         authorizedBy: job.executor_user_id,
+        ...obligation,
       });
       const after = (
         await client.query('SELECT paid_amount,refunded_amount FROM invoices WHERE id=$1', [
@@ -328,30 +415,34 @@ export async function runWalletRefund(pool: Pool, refundId: string): Promise<Ref
         ]
       );
       await notifyRefundOutcome(client, { ...row, destination: 'wallet', state: 'Completed' });
-      await client.query(
-        'UPDATE refund_retry_jobs SET completed_at=now(),next_attempt_at=NULL,last_error_code=NULL WHERE refund_id=$1',
-        [row.id]
-      );
+      if (!manualRetry)
+        await client.query(
+          'UPDATE refund_retry_jobs SET completed_at=now(),next_attempt_at=NULL,last_error_code=NULL WHERE refund_id=$1',
+          [row.id]
+        );
       result = 'completed';
     } catch (error) {
       await client.query('ROLLBACK TO SAVEPOINT refund_posting');
       const code = error instanceof RefundProcessingError ? error.code : 'posting_failed';
       await client.query("UPDATE refunds SET state='Failed' WHERE id=$1", [row.id]);
-      const exhausted = attempt >= job.max_attempts;
+      const exhausted = Boolean(manualRetry) || attempt >= job.max_attempts;
       const delay = Math.min(60_000 * 2 ** (attempt - 1), 3_600_000);
-      await client.query(
-        `UPDATE refund_retry_jobs SET last_error_code=$2,
+      if (!manualRetry)
+        await client.query(
+          `UPDATE refund_retry_jobs SET last_error_code=$2,
         next_attempt_at=CASE WHEN $3 THEN NULL ELSE now()+($4::bigint * interval '1 millisecond') END,
         exhausted_at=CASE WHEN $3 THEN now() ELSE NULL END WHERE refund_id=$1`,
-        [row.id, code, exhausted, delay]
-      );
+          [row.id, code, exhausted, delay]
+        );
       await audit(client, row, job.executor_user_id, 'refund.failed', {
         fromState: 'Processing',
         toState: 'Failed',
+        ...manualEvidence,
         attempt,
         errorCode: code,
       });
-      if (exhausted) await alertExhausted(client, row, attempt, job.executor_user_id);
+      if (exhausted && !manualRetry)
+        await alertExhausted(client, row, attempt, job.executor_user_id);
       result = exhausted ? 'exhausted' : 'failed';
     }
     await client.query('COMMIT');

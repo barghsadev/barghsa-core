@@ -11,7 +11,8 @@ import DualApprovalThresholdPanel from '../components/DualApprovalThresholdPanel
 type Status = 'pending' | 'approved' | 'rejected';
 interface Request {
   id: string;
-  actionType: 'refund' | 'manual_adjustment' | 'bank_payment_confirmation';
+  actionType:
+    'refund' | 'manual_adjustment' | 'bank_payment_confirmation' | 'contract_cancellation';
   amountIrR: string;
   initiatorId: string;
   initiatorUsername: string | null;

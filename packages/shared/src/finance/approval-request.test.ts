@@ -11,11 +11,12 @@ import {
 import { DEFAULT_DUAL_APPROVAL_CONFIG } from './dual-approval-config.js';
 
 describe('approval action types and statuses', () => {
-  it('exposes the three financial actions from T-09.07.01', () => {
+  it('exposes financial actions including bound contract cancellation', () => {
     expect(APPROVAL_ACTION_TYPES).toEqual([
       'refund',
       'manual_adjustment',
       'bank_payment_confirmation',
+      'contract_cancellation',
     ]);
   });
 
@@ -23,6 +24,7 @@ describe('approval action types and statuses', () => {
     expect(isApprovalActionType('refund')).toBe(true);
     expect(isApprovalActionType('manual_adjustment')).toBe(true);
     expect(isApprovalActionType('bank_payment_confirmation')).toBe(true);
+    expect(isApprovalActionType('contract_cancellation')).toBe(true);
     expect(isApprovalActionType('withdrawal')).toBe(false);
     expect(isApprovalActionType(42)).toBe(false);
     expect(isApprovalActionType(null)).toBe(false);
