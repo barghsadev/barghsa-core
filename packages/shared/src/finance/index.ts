@@ -34,3 +34,4 @@ export type { FinancialReviewScope, FinancialReviewSnapshot } from './review-sna
 export type { WalletPaymentReview, WalletPaymentReviewData } from './wallet-payment-review.js';
 export { parseWalletPaymentReview } from './wallet-payment-review.js';
 export * from './bank-receipt-review.js';
+export * from './contract-financial-review.js';
