@@ -1441,7 +1441,7 @@
         "status": "merged",
         "merge_commit_sha": "f665d50535040e3c45699cc14aafaa2367a71bad"
       },
-      "validation": "231 focused API, 42 UI, 995 shared, 53 dictionary tests and 70 production browser cases pass. Types, lint, OpenAPI, 44 bundle budgets and backlog pass. Focused API coverage misses whole-package floors; final changed-source coverage, independent review and CI remain.",
+      "validation": "237 focused API, 42 UI, 995 shared, 53 dictionary tests and 70 production browser cases pass. Types, lint, OpenAPI, 44 bundle budgets and backlog pass. Focused API coverage misses whole-package floors; final changed-source coverage, independent review and CI remain.",
       "next_action": "Review the completed bank-receipt batch at its committed HEAD, pass CI and merge; keep cross-command tasks partial.",
       "remaining_tasks": [
         "Financial review snapshots and confirmation UI across all irreversible/financial commands",

@@ -274,6 +274,57 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     ).toBe('Pending');
   });
 
+  it.each([
+    null,
+    [],
+    { paymentDate: 42 },
+    { paymentDate: '2026-09-01', payerReference: 42 },
+    { paymentDate: '2026-09-01', payerReference: 'legacy', attachmentKey: 42 },
+  ])('discloses missing legacy receipt details without moving funds: %j', async (receipt) => {
+    const transactionId = await insertPending(uuidv7().slice(-12));
+    await ctx.pool.query(
+      'UPDATE wallet_transactions SET metadata=$2::jsonb,receipt_attachment_key=NULL WHERE id=$1',
+      [transactionId, JSON.stringify({ channel: 'bank_receipt', receipt })]
+    );
+    const before = await walletBalances();
+    const review = await service.review({ transactionId, actorUserId: ACTOR_USER_ID });
+    expect(review.data.receipt).toMatchObject({
+      paymentDate: null,
+      payerReference: null,
+      attachmentKey: null,
+    });
+    expect((await service.get(transactionId)).paymentDate).toBeNull();
+    expect(await walletBalances()).toEqual(before);
+  });
+
+  it('rejects missing receipts, foreign allocation targets and nonpending reviews without writes', async () => {
+    const before = await walletBalances();
+    const missing = uuidv7();
+    await expect(service.get(missing)).rejects.toMatchObject({ status: 404 });
+    await expect(
+      service.review({ transactionId: missing, actorUserId: ACTOR_USER_ID })
+    ).rejects.toMatchObject({ status: 404 });
+    await expect(service.previewAllocation(missing, missing)).rejects.toMatchObject({
+      status: 404,
+    });
+    const transactionId = await insertPending(uuidv7().slice(-12));
+    await expect(service.previewAllocation(transactionId, missing)).rejects.toMatchObject({
+      status: 404,
+    });
+    const invoiceId = await insertInvoice({ total: 100000n });
+    await ctx.pool.query('UPDATE invoices SET profile_id=$2 WHERE id=$1', [invoiceId, PROFILE_B]);
+    await expect(service.previewAllocation(transactionId, invoiceId)).rejects.toMatchObject({
+      status: 409,
+    });
+    await ctx.pool.query("UPDATE wallet_transactions SET state='Rejected' WHERE id=$1", [
+      transactionId,
+    ]);
+    await expect(
+      service.review({ transactionId, actorUserId: ACTOR_USER_ID })
+    ).rejects.toMatchObject({ status: 409 });
+    expect(await walletBalances()).toEqual(before);
+  });
+
   it.each(['unchanged', 'invoice', 'threshold', 'legacy'] as const)(
     'requires both approvers to confirm the same financial facts: %s',
     async (change) => {
