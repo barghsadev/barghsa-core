@@ -139,3 +139,9 @@ Current contract detail now includes bilingual cancellation/financial status. A 
 ### Finance obligation queue and exhausted retry
 
 Requirement review found and fixed a missing exhausted-refund retry. Finance now has a paginated bilingual queue for unresolved wallet/bank obligations. Manual retry records one-time authorization,checks current finance permission,preserves exhausted automatic history and posts at most one ledger credit. Bank transfer/reconciliation controls use the existing separate-user guard. Local validation passes52 HTTP,36 DB and4 bilingual production-browser cases,types/lint/OpenAPI;Persian rendering inspected. Next is combined coverage and final review/CI. No batch completion is claimed.
+
+### PR #328 merged; customer cancellation requests selected
+
+Cancellation/refund PR #328 merged as `9960e956e105f0d8067cfbe8b6e52f67da4da41e` after exact-head approval and all five CI gates passed in run35555563804. Both merged head and durable review were verified again after merge. Actual local combined coverage and17 production browser cases pass. Remote API regression passed319 files/5344 tests. Full main run35556867140 remains pending. The prior #327 run35554299044 is also still running; do not conflate it with the known failed run35551479937.
+
+Next batch is `04-invoices-wallet-contracts.md#T-04.5.01.06` on `codex/customer-cancellation-requests`, based on the verified #328 merge. Customers submit a reason and destination preference without directly cancelling. Staff rejects with explanation or uses the existing approved cancellation/refund transaction to fulfil the request. Keep request/financial states truthful, enforce profile/current authority, and provide bilingual review/status UI. No scheduler or historical supervisor state changed.
