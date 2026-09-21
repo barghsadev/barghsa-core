@@ -66,3 +66,28 @@ export interface ContractSignatureData {
     uploadedBy?: string;
   } | null;
 }
+
+export interface ContractActivationData {
+  contractId: string;
+  versionId: string;
+  state: string;
+  isCurrent: boolean;
+  ready: boolean;
+  ruleRevision: number;
+  initialInvoiceId: string | null;
+  serviceStartsAt: string | null;
+  evaluatedAt: string;
+  checks: Array<{
+    key: 'staffApproval' | 'customerAcceptance' | 'signature' | 'initialPayment' | 'serviceStart';
+    required: boolean;
+    status: 'met' | 'unmet' | 'not_required';
+  }>;
+}
+export interface ContractActivationRule {
+  serviceType: 'electricity' | 'savings' | 'solar';
+  signatureRequired: boolean;
+  paymentRequired: boolean;
+  serviceStartRequired: boolean;
+  revision: number;
+  updatedAt: string;
+}

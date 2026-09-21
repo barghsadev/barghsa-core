@@ -6,7 +6,7 @@ Canonical batch: `04-invoices-wallet-contracts.md#T-04.5.01.04`, `#T-04.5.03.01`
 
 Implementation starts with typed rules and version requirements. Electricity defaults to initial payment required and optional signature; savings skips signature/payment; solar requires signature. Staff publication and customer acceptance remain mandatory through the existing workflow. Requirements snapshot at version creation; later settings edits affect new versions only. Initial invoice and service-start context can be set only before publication; accepted versions cannot silently change them. Exact invoice lineage/profile/order ownership must be checked. Missing evidence stays unmet.
 
-Automatic Active/Completed transitions, template-to-PDF generation, contract editing UI, amendments/cancellation and automatic refund obligations remain separate unfinished criteria. This batch must not claim them complete. All validation, API/UI implementation, review and CI remain pending.
+Automatic Active/Completed transitions, template-to-PDF generation, contract editing UI, amendments/cancellation and automatic refund obligations remain separate unfinished criteria. This batch must not claim them complete. Implementation and local validation are recorded below. Review and CI remain pending.
 
 ## Local foundation validation
 
@@ -19,3 +19,9 @@ Migration 0142 adds typed rules and per-version snapshots, defaults/backfill, im
 Rule read/update APIs now enforce current staff permissions, revision checks, step-up, idempotent replay and atomic audit. The resolver reads the exact authorized version and its captured rules, publication, acceptance, signature evidence, matching paid invoice and server-evaluated start date. It never changes contract state. Customer reads keep profile/publication boundaries; archived profiles cannot become ready. Refunds make required payment unmet. Solar requires actual recorded signature evidence. Admin edits do not alter prior version requirements.
 
 All 60 related HTTP integration cases pass across contract drafts, review, signatures and activation; all 43 related database cases pass. API typecheck and targeted lint pass. UI controls, bilingual browser flows, final coverage/static checks, independent review and CI remain. The earlier pre-adjustment regression note is superseded by these results.
+
+## Interface and focused validation
+
+Customer and staff details now show exact-version prerequisites, missing invoice context, start time and readiness without changing state. Staff can view rules and permitted catalogue administrators can edit optional requirements through the existing password-confirmation flow. Mandatory solar signature and electricity payment stay locked. English/Persian labels are complete. Existing contract editing UI remains deferred; draft context is available through the validated API.
+
+43 database, 60 HTTP integration, 22 frontend and 12 production Chromium cases pass. Browser flows cover both languages, rule revision/idempotency through password verification and payment readiness separate from Accepted state. API/web types, targeted lint, formatting, migration snapshot and backlog validation pass. Local process/unit coverage meets the unchanged source thresholds. Final committed browser coverage, independent review and all five CI gates remain pending.

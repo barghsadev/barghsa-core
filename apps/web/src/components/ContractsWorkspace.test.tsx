@@ -111,6 +111,13 @@ async function value(selector: string, text: string) {
 function api(current = detail()) {
   return vi.fn(async (raw: string) => {
     const url = new URL(raw, 'https://app.test');
+    if (url.pathname.endsWith('/activation'))
+      return response({
+        checks: [],
+        isCurrent: true,
+        ready: false,
+        evaluatedAt: '2026-09-21T00:00:00Z',
+      });
     if (url.pathname.endsWith('/signature'))
       return response({ canRequest: false, canRecord: false, request: null, signature: null });
     if (url.pathname.endsWith('/documents')) return response({ documents: [], nextBefore: null });

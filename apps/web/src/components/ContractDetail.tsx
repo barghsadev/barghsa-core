@@ -15,6 +15,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { documentRequest } from '../lib/documents.js';
 import { contractBase, type ContractDetailData, type ContractVersion } from '../lib/contracts.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { ContractActivationPanel } from './ContractActivationPanel.js';
 import { ContractSignaturePanel } from './ContractSignaturePanel.js';
 import { ContractTerms } from './ContractTerms.js';
 import { DocumentResults, type DocumentFilters } from './DocumentsWorkspace.js';
@@ -259,6 +260,12 @@ export function ContractDetail({
               {word('next')}
             </Button>
           ) : null}
+          <ContractActivationPanel
+            key={'activation:' + data.version.id + ':' + reload}
+            id={id}
+            versionId={data.version.id}
+            staff={staff}
+          />
           <ContractSignaturePanel
             key={'signature:' + data.version.id + ':' + reload}
             id={id}

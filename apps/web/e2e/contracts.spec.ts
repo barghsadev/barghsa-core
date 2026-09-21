@@ -21,6 +21,11 @@ for (const locale of ['en', 'fa'] as const)
       }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
       const base = staff ? '/api/admin/contracts' : '/api/contracts';
+      await page.route(`**${base}/${ID}/activation?*`, (route) =>
+        route.fulfill({
+          json: { checks: [], isCurrent: true, ready: false, evaluatedAt: '2026-09-21T00:00:00Z' },
+        })
+      );
       let state = staff ? 'AwaitingStaffReview' : 'AwaitingCustomerAcceptance',
         verified = false;
       const version = {

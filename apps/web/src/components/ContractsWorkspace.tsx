@@ -18,6 +18,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { documentRequest } from '../lib/documents.js';
 import { contractBase, contractStates, type ContractSummary } from '../lib/contracts.js';
+import { ContractActivationRules } from './ContractActivationRules.js';
 import { ContractDetail } from './ContractDetail.js';
 
 export function ContractsWorkspace({ staff = false }: { staff?: boolean }) {
@@ -102,6 +103,7 @@ function Workspace({ staff }: { staff: boolean }) {
           </Button>
         </form>
       ) : null}
+      {staff ? <ContractActivationRules /> : null}
       <ContractResults key={generation} staff={staff} query={query} />
     </div>
   );
