@@ -1216,7 +1216,7 @@
         141
       ],
       "owner_batch": "V01/B01 external provider prerequisite",
-      "remaining": "DISABLED/MANUAL Draft→Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
+      "remaining": "DISABLED/MANUAL Draft\u2192Active configuration is locally verified. API selection/activation remains unavailable because no real provider exists. Full three-mode acceptance requires T-07.01.02; provider absence is the user decision, not a passed automatic-verification criterion.",
       "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
       "prerequisite_task_keys": [
         "02-auth-users-admin.md#T-07.01.02"
@@ -1228,7 +1228,7 @@
         142
       ],
       "owner_batch": "V01/B01 external provider prerequisite",
-      "remaining": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create→outbox→worker→result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
+      "remaining": "No real identity provider or contract exists. Real-provider configuration/credentials encryption and redaction, current authority/step-up, atomic version/audit persistence, async create\u2192outbox\u2192worker\u2192result update, failure retention and staff retry remain prerequisites before enabling production API verification. The adapter framework and safe unavailability are not the complete integration.",
       "review_record": "audit/evidence/step-reviews.json#R01-verification-policy",
       "prerequisite_task_keys": []
     },
@@ -1282,7 +1282,7 @@
         210
       ],
       "owner_batch": "V01/B01 future AI processing and agent chat",
-      "remaining": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01–03 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
+      "remaining": "Actual agent backend and test-chat widget remain absent. AIChat is a placeholder and AiModelTester is a connection probe. Future retrieval, policy evaluation and actual test-chat dependencies T-05.17.02, T-05.18.03 and T-05.21.01\u201303 in 05-notifications-documents-ai.md remain unmet. Slot assignment has its own T-09.11.05 review.",
       "review_record": "audit/evidence/step-reviews.json#R02-kb-agent-integration",
       "prerequisite_task_keys": [
         "05-notifications-documents-ai.md#T-05.17.02",
@@ -1430,19 +1430,19 @@
       "final_notes": "PR #305 verified merged at 0b768cf165fd8667db7ad0c8849b518a55cbf2b3. Final CI evidence reconciled into manual batch PR #306. Scheduler remains paused; no legacy supervisor completion arrays changed."
     },
     "manual_batch": {
-      "branch": "codex/financial-review-snapshots",
+      "branch": "codex/bank-receipt-review",
       "status": "in_progress",
-      "record": "kanban/batches/2026-09-21-financial-review-snapshots.md",
+      "record": "kanban/batches/2026-09-21-bank-receipt-review.md",
       "previous_batch": {
-        "pr": 331,
-        "reviewed_head_sha": "1cda10995e6341b48f498d3c801b88a43813784e",
-        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/331#issuecomment-5756860520",
-        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35572440369",
+        "pr": 332,
+        "reviewed_head_sha": "50f5dda56723311aea0a3693e556d5896019c69a",
+        "review_comment_url": "https://github.com/barghsadev/barghsa-core/pull/332#issuecomment-5757687909",
+        "ci_run_url": "https://github.com/barghsadev/barghsa-core/actions/runs/35578648191",
         "status": "merged",
-        "merge_commit_sha": "abe6f4cf113ab04d67df6c937ba319a128dff5df"
+        "merge_commit_sha": "f665d50535040e3c45699cc14aafaa2367a71bad"
       },
-      "validation": "Wallet financial review:57 API tests,40 browser cases across5 projects,987 shared tests and2 focused UI cases pass. Types, scoped lint, OpenAPI checking, production build and44 bundle budgets pass. Focused API coverage collection passes tests but not whole-package floors; final changed-source coverage, independent review and PR CI remain. Full main runs after PR330/331 also passed.",
-      "next_action": "Collect final clean-head changed-source coverage, obtain exact-head review and pass all PR checks before merging wallet review snapshots. Continue remaining financial commands afterward.",
+      "validation": "Backend bank-receipt review foundation: 34 wallet snapshot API regressions, 18 shared parser cases and 62 bank-receipt API/controller/service cases pass. UI, dual approval regression, OpenAPI, final coverage, review and CI remain.",
+      "next_action": "Complete the existing wallet bank-receipt staff UI and exact two-person approval tests, then validate/review/merge the complete batch.",
       "remaining_tasks": [
         "Financial review snapshots and confirmation UI across all irreversible/financial commands",
         "Automatic contract template-to-PDF generation",

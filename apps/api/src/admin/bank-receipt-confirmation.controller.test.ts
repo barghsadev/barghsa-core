@@ -6,6 +6,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { BANK_RECEIPT_CONFIRM_PERMISSION } from '@barghsa/shared/finance';
 
 const TX_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc';
+const REVIEW_HASH = 'a'.repeat(64);
 
 const DTO = {
   transactionId: TX_ID,
@@ -130,9 +131,10 @@ describe('bank-receipt confirmation permission gate (T-04.2.02.04)', () => {
 
   it('forwards actor, ip, and correlation id on confirm', async () => {
     const { controller, service } = makeController();
-    await controller.confirm(adminReq, TX_ID);
+    await controller.confirm(adminReq, TX_ID, { expectedReviewHash: REVIEW_HASH });
     expect(service.confirm).toHaveBeenCalledWith({
       transactionId: TX_ID,
+      expectedReviewHash: REVIEW_HASH,
       actorUserId: 'admin-1',
       sessionId: 'staff-session',
       csrfToken: 'staff-csrf',
@@ -145,9 +147,10 @@ describe('bank-receipt confirmation permission gate (T-04.2.02.04)', () => {
   it('forwards a confirm invoiceId for overpayment allocation', async () => {
     const { controller, service } = makeController();
     const invoiceId = '11111111-1111-7111-8111-111111111111';
-    await controller.confirm(adminReq, TX_ID, { invoiceId });
+    await controller.confirm(adminReq, TX_ID, { invoiceId, expectedReviewHash: REVIEW_HASH });
     expect(service.confirm).toHaveBeenCalledWith({
       transactionId: TX_ID,
+      expectedReviewHash: REVIEW_HASH,
       actorUserId: 'admin-1',
       sessionId: 'staff-session',
       csrfToken: 'staff-csrf',
@@ -169,6 +172,17 @@ describe('bank-receipt confirmation permission gate (T-04.2.02.04)', () => {
       ip: '127.0.0.1',
       correlationId: 'corr-1',
     });
+  });
+
+  it.each([
+    undefined,
+    {},
+    { expectedReviewHash: 'invalid' },
+    { expectedReviewHash: REVIEW_HASH, extra: true },
+  ])('rejects confirmation without an exact review contract: %j', async (body) => {
+    const { controller, service } = makeController();
+    await expect(controller.confirm(adminReq, TX_ID, body)).rejects.toMatchObject({ status: 400 });
+    expect(service.confirm).not.toHaveBeenCalled();
   });
 
   it('previews allocation for a valid invoiceId', async () => {

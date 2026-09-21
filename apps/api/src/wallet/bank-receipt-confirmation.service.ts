@@ -1,4 +1,9 @@
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
+import {
+  bankReceiptReviewScope,
+  readBankReceiptConfirmationReview,
+} from './bank-receipt-review.js';
 import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock.js';
 import {
   lockWalletProfile,
@@ -46,6 +51,7 @@ import {
   isBankReceiptInvoiceLinkAllowedState,
   isPendingBankReceiptTopUp,
   parseBankReceiptRejectReason,
+  parseBankReceiptConfirmationReview,
   readBankReceiptOverpaymentSnapshot,
   readBankReceiptStaffDecision,
   remainingForBankReceiptSettlement,
@@ -92,6 +98,7 @@ interface InvoiceRow {
 
 /** Public DTO for the staff review UI. */
 export interface BankReceiptReviewDto {
+  reviewHash?: string;
   canEmergencyOverride?: boolean;
   transactionId: string;
   walletId: string;
@@ -125,6 +132,7 @@ export interface BankReceiptAllocationPreviewDto {
 }
 
 export interface ConfirmBankReceiptInput {
+  expectedReviewHash?: string;
   emergencyOverrideReason?: string;
   transactionId: string;
   actorUserId: string;
@@ -288,6 +296,44 @@ export class BankReceiptConfirmationService {
     };
   }
 
+  async review(
+    input: Pick<ConfirmBankReceiptInput, 'transactionId' | 'actorUserId' | 'invoiceId'>
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const profile = await lockWalletProfile(client, 'transaction', input.transactionId, 'update');
+      await lockDualApprovalThreshold(client, 'read');
+      await requireStaffMutationPermission(
+        client,
+        input.actorUserId,
+        'admin:finance:wallet:bank-receipt-confirm'
+      );
+      const pending = await this.lockBankReceipt(client, input.transactionId);
+      assertWalletProfileMatches(profile, pending.walletId);
+      assertWalletProfileWritable(profile);
+      if (!isPendingBankReceiptTopUp(pending))
+        httpError(ErrorCodes.CONFLICT_STATE.code, 'Receipt is not pending', 409);
+      const receipt = readReceiptDetails(pending.metadata);
+      const review = await readBankReceiptConfirmationReview(client, {
+        id: pending.id,
+        profileId: pending.walletId,
+        amount: pending.amount,
+        submittedAt: pending.created_at,
+        receipt,
+        attachmentKey: pending.receipt_attachment_key ?? receipt?.attachmentKey ?? null,
+        invoiceId: input.invoiceId ?? null,
+      });
+      await client.query('COMMIT');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => undefined);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async confirm(input: ConfirmBankReceiptInput): Promise<BankReceiptReviewDto> {
     const actor = {
       userId: input.actorUserId,
@@ -302,7 +348,12 @@ export class BankReceiptConfirmationService {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
         await client.query('BEGIN');
-        const profile = await lockWalletProfile(client, 'transaction', input.transactionId);
+        const profile = await lockWalletProfile(
+          client,
+          'transaction',
+          input.transactionId,
+          input.expectedReviewHash === undefined ? 'share' : 'update'
+        );
         await lockDualApprovalThreshold(client, 'read');
         await requireStaffMutationPermission(
           client,
@@ -314,6 +365,16 @@ export class BankReceiptConfirmationService {
         assertWalletProfileMatches(profile, pending.walletId);
 
         if (pending.state === 'Released') {
+          if (input.expectedReviewHash !== undefined) {
+            const stored = new ReviewSnapshotService().assertStored(
+              pending.metadata,
+              input.expectedReviewHash,
+              bankReceiptReviewScope(pending.id, pending.walletId)
+            );
+            const review = parseBankReceiptConfirmationReview(stored);
+            if (!review || (review.data.invoice?.invoice.id ?? null) !== (input.invoiceId ?? null))
+              httpError(ErrorCodes.CONFLICT_STATE.code, 'Receipt confirmation changed', 409);
+          }
           const existing = await this.findExistingCredit(client, pending.id);
           const existingOverpayment = await this.findExistingOverpaymentCredit(client, pending.id);
           const overpayment = readBankReceiptOverpaymentSnapshot(pending.metadata);
@@ -327,10 +388,15 @@ export class BankReceiptConfirmationService {
           }
           await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
-          return this.toDto(pending, {
-            creditTransactionId: existing?.id ?? existingOverpayment?.id ?? null,
-            overpayment,
-          });
+          return {
+            ...(await this.toDto(pending, {
+              creditTransactionId: existing?.id ?? existingOverpayment?.id ?? null,
+              overpayment,
+            })),
+            ...(input.expectedReviewHash !== undefined
+              ? { reviewHash: input.expectedReviewHash }
+              : {}),
+          };
         }
 
         if (pending.state === 'Rejected') {
@@ -355,6 +421,20 @@ export class BankReceiptConfirmationService {
 
         const receipt = readReceiptDetails(pending.metadata);
         const invoiceId = input.invoiceId ?? null;
+        const financialReview =
+          input.expectedReviewHash === undefined
+            ? undefined
+            : await readBankReceiptConfirmationReview(client, {
+                id: pending.id,
+                profileId: pending.walletId,
+                amount: pending.amount,
+                submittedAt: pending.created_at,
+                receipt,
+                attachmentKey: pending.receipt_attachment_key ?? receipt?.attachmentKey ?? null,
+                invoiceId,
+              });
+        if (financialReview)
+          new ReviewSnapshotService().assertConfirmed(financialReview, input.expectedReviewHash!);
         const approval = await gateWalletReceiptApproval(client, {
           id: pending.id,
           walletId: pending.walletId,
@@ -362,6 +442,7 @@ export class BankReceiptConfirmationService {
           metadata: pending.metadata,
           attachmentKey: pending.receipt_attachment_key ?? receipt?.attachmentKey ?? null,
           invoiceId,
+          ...(financialReview ? { financialReview } : {}),
           actorUserId: input.actorUserId,
           sessionId: input.sessionId,
           ...(input.emergencyOverrideReason !== undefined
@@ -374,7 +455,10 @@ export class BankReceiptConfirmationService {
         if (approval) {
           await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
-          return this.toDto(pending, { dualApproval: approval });
+          return {
+            ...(await this.toDto(pending, { dualApproval: approval })),
+            ...(financialReview ? { reviewHash: financialReview.hash } : {}),
+          };
         }
         let creditId: string | null = null;
         let overpayment: BankReceiptOverpaymentSnapshot | null = null;
@@ -440,6 +524,7 @@ export class BankReceiptConfirmationService {
             creditTransactionId: creditId,
           }),
           ...(overpayment ? { overpayment } : {}),
+          ...(financialReview ? { financialReview } : {}),
         };
         const updated = await this.releasePending(client, pending.id, decision);
         const auditId = await this.recordAudit(client, {
@@ -456,6 +541,7 @@ export class BankReceiptConfirmationService {
             previousState: 'Pending',
             newState: 'Released',
             notificationOutboxId,
+            ...(financialReview ? { financialReview } : {}),
             ...(overpayment
               ? {
                   invoiceId: overpayment.invoiceId,
@@ -476,12 +562,15 @@ export class BankReceiptConfirmationService {
             ? `Bank receipt ${pending.id} allocated to invoice ${invoiceId}; wallet excess ${overpayment?.walletCreditAmount ?? '0'}`
             : `Bank receipt top-up ${pending.id} credited as ${creditId} for wallet ${pending.walletId}`
         );
-        return this.toDto(updated, {
-          creditTransactionId: creditId,
-          overpayment,
-          auditId,
-          ...(notificationOutboxId ? { notificationOutboxId } : {}),
-        });
+        return {
+          ...(await this.toDto(updated, {
+            creditTransactionId: creditId,
+            overpayment,
+            auditId,
+            ...(notificationOutboxId ? { notificationOutboxId } : {}),
+          })),
+          ...(financialReview ? { reviewHash: financialReview.hash } : {}),
+        };
       } catch (error) {
         await client.query('ROLLBACK').catch(() => undefined);
         throw error;

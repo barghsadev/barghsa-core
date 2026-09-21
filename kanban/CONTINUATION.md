@@ -1,8 +1,10 @@
 # Development continuation status
 
-## Current checkpoint: PR #331 merged
+## Current checkpoint: PR #332 merged
 
-Contract draft authoring merged as `abe6f4cf113ab04d67df6c937ba319a128dff5df` after exact-head approval, final changed-source coverage and all five CI checks in run35572440369. The current batch is [financial review snapshots](batches/2026-09-21-financial-review-snapshots.md), on `codex/financial-review-snapshots`. It starts the shared confirmation contract and wallet-payment integration; other financial commands remain open. PR330 browser repairs passed all six browser jobs before merge. Full main runs35572387200 at PR330 and35573972967 at PR331 both pass all five jobs. The current wallet-review implementation passes96 API tests,40 browser cases across five browsers,987 shared tests and2 focused UI cases. Final changed-source coverage, independent review and PR CI remain. No supervisor state is changed. Earlier checkpoints below are historical.
+Wallet financial review snapshots merged as `f665d50535040e3c45699cc14aafaa2367a71bad` after exact-head approval and all five checks in run35578648191. The final implementation passes 96 API tests, 45 wallet browser cases across all five projects, shared/UI checks and the original changed-source coverage thresholds. Review found and corrected a separate dialog date-loader race; both summaries now use the panel-owned account time and block confirmation while unavailable.
+
+Current work is [bank-receipt financial review](batches/2026-09-21-bank-receipt-review.md), on `codex/bank-receipt-review`. Backend snapshot binding is built and focused tests pass; the staff UI, dual-approval regressions and final validation remain. Other financial commands and full canonical cross-command completion remain open. No supervisor state is changed. Earlier checkpoints below are historical.
 
 Checked September 20, 2026 against CI-verified commit `faf9a2de2825e2bb829699aec2802d68c2d1f2a8` on `codex/audit-fixes`.
 

@@ -154,6 +154,31 @@ export class BankReceiptConfirmationController {
     };
   }
 
+  @Get(':transactionId/review')
+  @ApiOperation({
+    summary: 'Review the exact receipt allocation and approval conditions before confirmation',
+  })
+  @ApiParam({ name: 'transactionId', format: 'uuid' })
+  @ApiResponse({
+    status: 200,
+    description: 'Authoritative financial review and confirmation hash.',
+  })
+  async review(
+    @Req() req: AuthenticatedRequest,
+    @Param('transactionId') transactionId: string,
+    @Query('invoiceId') invoiceId?: string
+  ) {
+    this.assertConfirmPermission(req);
+    assertUuid(transactionId);
+    const parsed = parseOptionalInvoiceId({ invoiceId });
+    if (!parsed.ok) httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.message, 400);
+    return this.service.review({
+      transactionId,
+      invoiceId: parsed.invoiceId,
+      actorUserId: req.session.userId,
+    });
+  }
+
   @Post(':transactionId/confirm')
   @HttpCode(200)
   @RequiresStepUp()
@@ -164,10 +189,12 @@ export class BankReceiptConfirmationController {
   })
   @ApiParam({ name: 'transactionId', format: 'uuid' })
   @ApiBody({
-    required: false,
+    required: true,
     schema: {
       type: 'object',
+      required: ['expectedReviewHash'],
       properties: {
+        expectedReviewHash: { type: 'string', pattern: '^[a-f0-9]{64}$' },
         emergencyOverrideReason: {
           type: 'string',
           minLength: 1,
@@ -198,6 +225,25 @@ export class BankReceiptConfirmationController {
   ): Promise<BankReceiptReviewDto> {
     this.assertConfirmPermission(req);
     assertUuid(transactionId);
+    const confirmation = z
+      .object({
+        expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
+        invoiceId: z.string().uuid().nullable().optional(),
+        emergencyOverrideReason: z
+          .string()
+          .trim()
+          .min(1)
+          .max(APPROVAL_REVIEW_REASON_MAX_LENGTH)
+          .optional(),
+      })
+      .strict()
+      .safeParse(body);
+    if (!confirmation.success)
+      httpError(
+        ErrorCodes.VALIDATION_INPUT_INVALID.code,
+        'Valid financial review confirmation required',
+        400
+      );
     const parsed = parseOptionalInvoiceId(body ?? {});
     if (!parsed.ok) {
       httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.message, 400);
@@ -206,6 +252,7 @@ export class BankReceiptConfirmationController {
     const correlationId = this.correlationId.getCorrelationId();
     return this.service.confirm({
       transactionId,
+      expectedReviewHash: confirmation.data.expectedReviewHash,
       actorUserId: req.session.userId,
       ...(emergencyOverrideReason !== undefined ? { emergencyOverrideReason } : {}),
       sessionId: req.session.sessionId,

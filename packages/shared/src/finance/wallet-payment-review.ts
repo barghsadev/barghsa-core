@@ -139,3 +139,7 @@ export function parseWalletPaymentReview(value: unknown): WalletPaymentReview | 
   const parsed = snapshotSchema.safeParse(value);
   return parsed.success ? parsed.data : null;
 }
+
+/** Issued invoice facts shared by wallet and bank-receipt confirmations. */
+export const invoiceFinancialDetailsSchema = snapshotSchema.shape.data.omit({ payment: true });
+export const financialReviewMoneySchema = money;

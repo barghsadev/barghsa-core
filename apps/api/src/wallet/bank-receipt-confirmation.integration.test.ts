@@ -197,6 +197,76 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     };
   }
 
+  it.each([false, true])(
+    'binds the stored receipt review and replay to the exact allocation, invoice=%s',
+    async (linked) => {
+      const pendingId = await insertPending(uuidv7().slice(-12));
+      const invoiceId = linked ? await insertInvoice({ total: 100_000n }) : null;
+      const input = {
+        transactionId: pendingId,
+        actorUserId: ACTOR_USER_ID,
+        invoiceId,
+        ...receiptDecisionSession(ACTOR_USER_ID),
+        ip: '10.0.0.9',
+        now: NOW,
+      };
+      const review = await service.review(input);
+      const before = await walletBalances();
+      await expect(
+        service.confirm({ ...input, expectedReviewHash: 'f'.repeat(64) })
+      ).rejects.toMatchObject({ status: 409 });
+      expect(await walletBalances()).toEqual(before);
+      const result = await service.confirm({ ...input, expectedReviewHash: review.hash });
+      expect(result.reviewHash).toBe(review.hash);
+      const stored = (
+        await ctx.pool.query('SELECT metadata FROM wallet_transactions WHERE id=$1', [pendingId])
+      ).rows[0].metadata;
+      expect(stored.financialReview).toEqual(review);
+      expect((await walletBalances()).posted - before.posted).toBe(
+        BigInt(review.data.allocation.walletCredit)
+      );
+      if (invoiceId)
+        expect(await invoicePaid(invoiceId)).toBe(BigInt(review.data.allocation.invoiceAmount));
+      const replay = await service.confirm({ ...input, expectedReviewHash: review.hash });
+      expect(replay.creditTransactionId).toBe(result.creditTransactionId);
+      await expect(
+        service.confirm({ ...input, expectedReviewHash: 'f'.repeat(64) })
+      ).rejects.toMatchObject({ status: 409 });
+      await expect(
+        service.confirm({
+          ...input,
+          invoiceId: linked ? null : await insertInvoice({ total: 100n }),
+          expectedReviewHash: review.hash,
+        })
+      ).rejects.toMatchObject({ status: 409 });
+    }
+  );
+
+  it('rejects a changed invoice allocation before crediting or approving the receipt', async () => {
+    const pendingId = await insertPending(uuidv7().slice(-12));
+    const invoiceId = await insertInvoice({ total: 100_000n });
+    const input = {
+      transactionId: pendingId,
+      actorUserId: ACTOR_USER_ID,
+      invoiceId,
+      ...receiptDecisionSession(ACTOR_USER_ID),
+      ip: '10.0.0.9',
+      now: NOW,
+    };
+    const review = await service.review(input);
+    await ctx.pool.query('UPDATE invoices SET total_amount=120000 WHERE id=$1', [invoiceId]);
+    const before = await walletBalances();
+    await expect(
+      service.confirm({ ...input, expectedReviewHash: review.hash })
+    ).rejects.toMatchObject({ status: 409 });
+    expect(await walletBalances()).toEqual(before);
+    expect(await invoicePaid(invoiceId)).toBe(0n);
+    expect(
+      (await ctx.pool.query('SELECT state FROM wallet_transactions WHERE id=$1', [pendingId]))
+        .rows[0].state
+    ).toBe('Pending');
+  });
+
   it.each([
     { action: 'confirm' as const, state: 'Released', returned: 'NULL' },
     { action: 'confirm' as const, state: 'Released', returned: 'OLD' },
