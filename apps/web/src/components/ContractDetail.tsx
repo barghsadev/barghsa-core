@@ -19,6 +19,7 @@ import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { ContractActivationPanel } from './ContractActivationPanel.js';
 import { ContractSignaturePanel } from './ContractSignaturePanel.js';
 import { ContractTerms } from './ContractTerms.js';
+import { ContractDraftEditor } from './ContractDraftEditor.js';
 import { DocumentResults, type DocumentFilters } from './DocumentsWorkspace.js';
 import { DocumentUpload, type ContractDocumentAssociation } from './DocumentUpload.js';
 
@@ -182,6 +183,17 @@ export function ContractDetail({
             ) : null}
           </div>
           <ContractTerms value={data.version.content} />
+          {staff && isCurrent && ['Draft', 'ChangesRequested'].includes(data.contract.state) ? (
+            <ContractDraftEditor
+              key={data.version.id}
+              existing={data}
+              onSaved={() => {
+                setSelectedVersion(null);
+                setReload((value) => value + 1);
+                onChanged();
+              }}
+            />
+          ) : null}
           {data.version.acceptedAt ? (
             <p role="status">
               {word('acceptedAt')}: {time.format(data.version.acceptedAt)}

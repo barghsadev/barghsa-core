@@ -22,6 +22,7 @@ import { documentRequest } from '../lib/documents.js';
 import { contractBase, contractStates, type ContractSummary } from '../lib/contracts.js';
 import { ContractActivationRules } from './ContractActivationRules.js';
 import { ContractDetail } from './ContractDetail.js';
+import { ContractDraftEditor } from './ContractDraftEditor.js';
 
 export function ContractsWorkspace({ staff = false }: { staff?: boolean }) {
   const revision = useProfileContextRevision();
@@ -34,6 +35,7 @@ function Workspace({ staff }: { staff: boolean }) {
   const [query, setQuery] = useState('');
   const [generation, setGeneration] = useState(0);
   const [invalid, setInvalid] = useState(false);
+  const [createdId, setCreatedId] = useState<string | null>(null);
   function apply(event: FormEvent) {
     event.preventDefault();
     if (
@@ -44,6 +46,7 @@ function Workspace({ staff }: { staff: boolean }) {
       return;
     }
     setInvalid(false);
+    setCreatedId(null);
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) if (value) params.set(key, value);
     setQuery(params.toString());
@@ -105,14 +108,30 @@ function Workspace({ staff }: { staff: boolean }) {
           </Button>
         </form>
       ) : null}
+      {staff ? (
+        <ContractDraftEditor
+          onSaved={(id) => {
+            setCreatedId(id);
+            setGeneration((value) => value + 1);
+          }}
+        />
+      ) : null}
       {staff ? <ContractRefundQueue /> : null}
       {staff ? <ContractCancellationRequestQueue /> : null}
       {staff ? <ContractActivationRules /> : null}
-      <ContractResults key={generation} staff={staff} query={query} />
+      <ContractResults key={generation} staff={staff} query={query} initialSelected={createdId} />
     </div>
   );
 }
-function ContractResults({ staff, query }: { staff: boolean; query: string }) {
+function ContractResults({
+  staff,
+  query,
+  initialSelected,
+}: {
+  staff: boolean;
+  query: string;
+  initialSelected: string | null;
+}) {
   const locale = useLocale();
   const word = (key: string) => contractText(key, locale);
   const [items, setItems] = useState<ContractSummary[]>([]);
@@ -121,7 +140,7 @@ function ContractResults({ staff, query }: { staff: boolean; query: string }) {
   const [reload, setReload] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(initialSelected);
   useEffect(() => {
     const controller = new AbortController();
     const params = new URLSearchParams(query);

@@ -1,6 +1,31 @@
 import { lookup } from './lookup.js';
 
 export const en = {
+  draftCreate: 'Create contract draft',
+  draftEdit: 'Edit draft terms',
+  draftSave: 'Save new version',
+  draftReview: 'Review draft changes',
+  draftSaveNotice:
+    'Save an internal draft before the separate approval and customer acceptance steps. Saving does not activate service or collect payment.',
+  draftPreserveNotice:
+    'Other stored terms, prices and service dates are preserved. Review the complete contract below before submitting it for approval.',
+  draftStructuredNotice:
+    'An imported title or terms field uses structured content. It is preserved and cannot be replaced by this text editor.',
+  draftInvalid:
+    'Choose a profile and enter a title, terms and change reason for a new draft. Edits need a material change and reason. The complete terms must fit within 64 KiB.',
+  draftTerms: 'Contract terms',
+  draftSearchProfiles: 'Find a profile by name',
+  draftProfile: 'Profile',
+  draftSearch: 'Search',
+  draftChooseProfile: 'Choose a profile',
+  draftUnnamedProfile: 'Unnamed profile',
+  draftIndividual: 'Individual',
+  draftLegal: 'Legal entity',
+  draftOrder: 'Linked order',
+  draftNoOrder: 'No linked order',
+  draftNoMatches: 'No matching records. Refine the search or choose another profile.',
+  draftOptionsError:
+    'Could not load draft options. Check your contract-writing access and try again.',
   cancellationRequestTitle: 'Cancellation request',
   cancellationRequestQueue: 'Cancellation requests awaiting review',
   cancellationRequestQueueEmpty: 'No cancellation requests awaiting review.',
@@ -222,6 +247,31 @@ export const en = {
 } satisfies Record<string, string>;
 
 export const fa: Record<keyof typeof en, string> = {
+  draftCreate: 'ایجاد پیش‌نویس قرارداد',
+  draftEdit: 'ویرایش متن پیش‌نویس',
+  draftSave: 'ذخیره نسخه جدید',
+  draftReview: 'بازبینی تغییرات پیش‌نویس',
+  draftSaveNotice:
+    'پیش‌نویس داخلی را پیش از مراحل جداگانه تأیید و پذیرش مشتری ذخیره کنید. ذخیره‌سازی، خدمت را فعال نمی‌کند و پرداختی انجام نمی‌دهد.',
+  draftPreserveNotice:
+    'سایر شرایط، قیمت‌ها و تاریخ‌های خدمت حفظ می‌شوند. پیش از ارسال برای تأیید، متن کامل قرارداد را در پایین بررسی کنید.',
+  draftStructuredNotice:
+    'عنوان یا متن واردشده ساختار ویژه‌ای دارد. این محتوا حفظ می‌شود و در این ویرایشگر متنی قابل جایگزینی نیست.',
+  draftInvalid:
+    'برای پیش‌نویس جدید، پروفایل را انتخاب و عنوان، متن و دلیل تغییر را وارد کنید. ویرایش به تغییر واقعی و دلیل نیاز دارد. حجم کل شرایط باید کمتر از ۶۴ کیلوبایت باشد.',
+  draftTerms: 'متن قرارداد',
+  draftSearchProfiles: 'جست‌وجوی پروفایل با نام',
+  draftProfile: 'پروفایل',
+  draftSearch: 'جست‌وجو',
+  draftChooseProfile: 'یک پروفایل انتخاب کنید',
+  draftUnnamedProfile: 'پروفایل بدون نام',
+  draftIndividual: 'حقیقی',
+  draftLegal: 'حقوقی',
+  draftOrder: 'سفارش مرتبط',
+  draftNoOrder: 'بدون سفارش مرتبط',
+  draftNoMatches: 'موردی پیدا نشد. جست‌وجو را تغییر دهید یا پروفایل دیگری انتخاب کنید.',
+  draftOptionsError:
+    'گزینه‌های پیش‌نویس بارگیری نشد. دسترسی ویرایش قرارداد را بررسی و دوباره تلاش کنید.',
   cancellationRequestTitle: 'درخواست لغو',
   cancellationRequestQueue: 'درخواست‌های لغو در انتظار بررسی',
   cancellationRequestQueueEmpty: 'درخواست لغوی در انتظار بررسی نیست.',
