@@ -104,6 +104,7 @@ const templatePath = '/api/admin/contract-templates/01900000-0000-7000-8000-0000
 const templateUpload = await request(templatePath, { body: Buffer.alloc(11 * 1024 * 1024) });
 assert.equal(templateUpload.status, 200);
 assert.equal(JSON.parse(templateUpload.body).service, 'api');
+assert.equal(JSON.parse(templateUpload.body).receivedBytes, 11 * 1024 * 1024);
 assert.equal(templateUpload.headers['x-content-type-options'], 'nosniff');
 assert.equal(
   (await request(templatePath, { body: Buffer.alloc(61 * 1024 * 1024 + 1) })).status,

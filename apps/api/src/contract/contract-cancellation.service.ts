@@ -25,6 +25,7 @@ import type {
 import { loadCustomerInvoiceActivity } from '../invoice/customer-invoice-activity.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { isInvoiceState } from '../invoice/invoice-state.model.js';
+import { notifyContractReview } from './contract-review-notifications.js';
 
 type Snapshot = Awaited<ReturnType<typeof readCancellationSnapshot>>;
 type RefundDecision = {
@@ -38,6 +39,7 @@ interface Intent {
   version_id: string;
   actor_id: string;
   reason: string;
+  customer_request_id: string | null;
   refund_decision: RefundDecision;
   financial_snapshot: Snapshot;
   financial_fingerprint: string;
@@ -86,13 +88,14 @@ export class ContractCancellationService {
                   financialFingerprint: snapshot.fingerprint,
                   profileId: snapshot.profileId,
                   refundDecision: decision,
+                  customerRequestId: input.customerRequestId ?? null,
                 }),
               ]
             );
           }
           await client.query(
-            `INSERT INTO contract_cancellation_intents(id,contract_id,version_id,actor_id,reason,refund_decision,financial_snapshot,financial_fingerprint,financial_impact_amount,approval_policy,approval_request_id,idempotency_key)
-        VALUES($1,$2,$3,$4,$5,$6::jsonb,$7::jsonb,$8,$9,$10::jsonb,$11,$12)`,
+            `INSERT INTO contract_cancellation_intents(id,contract_id,version_id,actor_id,reason,refund_decision,financial_snapshot,financial_fingerprint,financial_impact_amount,approval_policy,approval_request_id,idempotency_key,customer_request_id)
+        VALUES($1,$2,$3,$4,$5,$6::jsonb,$7::jsonb,$8,$9,$10::jsonb,$11,$12,$13)`,
             [
               intentId,
               id,
@@ -106,6 +109,7 @@ export class ContractCancellationService {
               JSON.stringify(policy),
               approvalId,
               input.idempotencyKey,
+              input.customerRequestId ?? null,
             ]
           );
           await auditContract(
@@ -121,6 +125,7 @@ export class ContractCancellationService {
               refundDecision: decision,
               financialFingerprint: snapshot.fingerprint,
               approvalRequestId: approvalId,
+              customerRequestId: input.customerRequestId ?? null,
             }
           );
           if (approvalId) {
@@ -154,9 +159,16 @@ export class ContractCancellationService {
 
   async get(id: string, intentId: string) {
     const row = (
-      await getDbPool().query<Intent & { approval_status: string | null; executed: boolean }>(
-        `SELECT i.*,a.status AS approval_status,EXISTS(SELECT 1 FROM contract_cancellations c WHERE c.intent_id=i.id) AS executed
-      FROM contract_cancellation_intents i LEFT JOIN approval_requests a ON a.id=i.approval_request_id WHERE i.contract_id=$1 AND i.id=$2`,
+      await getDbPool().query<
+        Intent & {
+          approval_status: string | null;
+          customer_request_status: string | null;
+          executed: boolean;
+        }
+      >(
+        `SELECT i.*,a.status AS approval_status,r.status AS customer_request_status,EXISTS(SELECT 1 FROM contract_cancellations c WHERE c.intent_id=i.id) AS executed
+      FROM contract_cancellation_intents i LEFT JOIN approval_requests a ON a.id=i.approval_request_id
+      LEFT JOIN contract_cancellation_requests r ON r.id=i.customer_request_id WHERE i.contract_id=$1 AND i.id=$2`,
         [id, intentId]
       )
     ).rows[0];
@@ -166,13 +178,15 @@ export class ContractCancellationService {
       contractId: row.contract_id,
       versionId: row.version_id,
       reason: row.reason,
+      customerRequestId: row.customer_request_id,
       refundDecision: row.refund_decision,
       financialSnapshot: row.financial_snapshot,
       financialFingerprint: row.financial_fingerprint,
       approvalRequestId: row.approval_request_id,
       status: row.executed
         ? 'executed'
-        : row.approval_status === 'rejected'
+        : row.approval_status === 'rejected' ||
+            (row.customer_request_id && row.customer_request_status !== 'Pending')
           ? 'rejected'
           : row.approval_request_id && row.approval_status !== 'approved'
             ? 'awaiting_approval'
@@ -342,6 +356,18 @@ export class ContractCancellationService {
                   totalAmount: BigInt(invoice.totalAmount),
                 },
               });
+          }
+          if (intent.customer_request_id) {
+            await auditContract(
+              client,
+              id,
+              intent.version_id,
+              'contract.cancellation_request_fulfilled',
+              actor,
+              ip,
+              { requestId: intent.customer_request_id, intentId: intent.id, reason: intent.reason }
+            );
+            await notifyContractReview(client, id, 'cancellation_request_fulfilled', intent.reason);
           }
           await auditContract(client, id, intent.version_id, 'contract.cancelled', actor, ip, {
             intentId: intent.id,

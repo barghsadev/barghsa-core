@@ -331,6 +331,7 @@ it('upgrades 0140 without inventing evidence for historical signed flags and rer
         '0143_contract_system_activation',
         '0144_contract_term_completion',
         '0145_contract_cancellation',
+        '0146_customer_cancellation_requests',
       ],
     });
     expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [contract])).rows).toEqual(

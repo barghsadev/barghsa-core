@@ -2869,6 +2869,92 @@
         ]
       }
     },
+    "/api/admin/contract-cancellation-requests": {
+      "get": {
+        "operationId": "StaffCancellationRequestController_queue",
+        "parameters": [
+          {
+            "description": "Exclusive request UUID cursor; at most 50 records.",
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List pending customer cancellation requests for staff review",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contract-cancellation-requests/{requestId}/reject": {
+      "post": {
+        "operationId": "StaffCancellationRequestController_reject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reject a pending cancellation request with an explanation; retain the contract",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
     "/api/admin/contract-templates": {
       "get": {
         "description": "Newest first, with version count and the latest version of each template.",
@@ -3377,6 +3463,36 @@
         ]
       }
     },
+    "/api/admin/contracts/{id}/cancellation-requests": {
+      "get": {
+        "operationId": "StaffCancellationRequestController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read the latest customer request for a staff cancellation decision",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
     "/api/admin/contracts/{id}/cancellation-status": {
       "get": {
         "operationId": "StaffContractCancellationStatusController_get",
@@ -3455,6 +3571,11 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "customerRequestId": {
+                    "description": "Bind this decision to a pending customer cancellation request.",
+                    "format": "uuid",
+                    "type": "string"
+                  },
                   "expectedFingerprint": {
                     "pattern": "^[0-9a-f]{64}$",
                     "type": "string"
@@ -11875,6 +11996,103 @@
           }
         ],
         "summary": "Read activation prerequisites for an authorized published contract version",
+        "tags": [
+          "Contracts"
+        ]
+      }
+    },
+    "/api/contracts/{id}/cancellation-requests": {
+      "get": {
+        "operationId": "CustomerCancellationRequestController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read the latest cancellation request and whether a new request is permitted",
+        "tags": [
+          "Contracts"
+        ]
+      },
+      "post": {
+        "operationId": "CustomerCancellationRequestController_submit",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "preferredDestination": {
+                    "enum": [
+                      "wallet",
+                      "external_bank"
+                    ],
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedVersionId",
+                  "reason",
+                  "preferredDestination",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Request staff review of cancellation without changing contract or refund state",
         "tags": [
           "Contracts"
         ]

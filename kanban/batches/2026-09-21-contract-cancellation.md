@@ -2,7 +2,7 @@
 
 Canonical tasks `04-invoices-wallet-contracts.md#T-04.5.01.05`, `04-invoices-wallet-contracts.md#T-04.4.02.01` through `.05`, and the cancellation consumer of `04-invoices-wallet-contracts.md#T-04.CC.07.01`.
 
-This batch is in progress on verified editor PR #327 merge `cac42489bf39a7b08443d1acb547480cf8572cee`. The cancellation command, automatic wallet fulfillment, derived financial closure and bilingual interface are implemented. Final coverage, independent review and CI remain.
+This batch merged in PR #328 as `9960e956e105f0d8067cfbe8b6e52f67da4da41e`. The checkpoints below are historical; the final verification section supersedes their pending-work notes.
 
 ## Built foundation
 
@@ -76,3 +76,11 @@ Validation passes52 cancellation/wallet/external HTTP tests,36 refund processing
 ## Final validation checkpoint
 
 Focused coverage collection passes132 API tests,57 migrated database tests,19 shared approval tests,2 dictionary tests and52 frontend tests. Seventeen production-browser cases pass, including existing contract and approval flows. Added finance queue tests cover permission denial, failed-load recovery, pagination deduplication, missing reconciliation references and stale responses after unmount. Web types pass. Final combined coverage must be collected on the clean committed head before independent review and CI.
+
+## Final verification and merge
+
+PR #328 merged after independent approval of `d48f45197904c2a500b60eeaff4db5cb3508b9a3` and all five CI gates passed in run35555563804. Approval and immutable merged head were read back after merge. Review: https://github.com/barghsadev/barghsa-core/pull/328#issuecomment-5754768014. Merge: `9960e956e105f0d8067cfbe8b6e52f67da4da41e`.
+
+Actual local combined coverage passed for every touched package, with17 production browser cases and52 frontend tests. Remote API regression passed319 files and5344 tests, including the config-cache cleanup fix. The full-main coverage run35556867140 is pending. PR CI uses the authorized reduced workflow; its coverage gate success is not a claim that remote full coverage ran.
+
+Staff cancellation, mandatory refund execution, finance retry/transfer queue, bilingual outcome display and derived contract financial closure are delivered. Customer cancellation requests remain task T-04.5.01.06. Generic order financial closure and later amendment/PDF work are not claimed complete by this batch.

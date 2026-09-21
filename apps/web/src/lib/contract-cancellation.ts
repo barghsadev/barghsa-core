@@ -34,6 +34,7 @@ export interface CancellationPreview {
 }
 export interface CancellationIntent {
   id: string;
+  customerRequestId?: string | null;
   versionId: string;
   reason: string;
   financialFingerprint: string;

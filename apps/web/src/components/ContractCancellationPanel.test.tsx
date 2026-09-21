@@ -106,7 +106,14 @@ afterEach(async () => {
 });
 async function render(staff = true) {
   await act(async () =>
-    root.render(<ContractCancellationPanel id="contract" staff={staff} onChanged={changed} />)
+    root.render(
+      <ContractCancellationPanel
+        id="contract"
+        versionId="version"
+        staff={staff}
+        onChanged={changed}
+      />
+    )
   );
 }
 async function click(label: string) {

@@ -1,6 +1,29 @@
 import { lookup } from './lookup.js';
 
 export const en = {
+  cancellationRequestTitle: 'Cancellation request',
+  cancellationRequestQueue: 'Cancellation requests awaiting review',
+  cancellationRequestQueueEmpty: 'No cancellation requests awaiting review.',
+  cancellationRequestOpen: 'Open contract and review',
+  cancellationRequestSubmit: 'Request cancellation',
+  cancellationRequestNotice:
+    'Staff will review your reason and refund preference. Submitting this request does not cancel the contract. Electricity refunds must return to the wallet.',
+  cancellationRequestPreference: 'Preferred refund destination',
+  cancellationRequestReview: 'Review cancellation and refunds',
+  cancellationRequestReviewNotice:
+    'Review the financial decision and any required second approval before cancelling. The request is fulfilled only when cancellation succeeds.',
+  cancellationRequestReject: 'Decline request',
+  cancellationRequestRejectReason: 'Explanation for the customer',
+  cancellationRequestRejectNotice:
+    'The customer will receive your explanation. The contract will remain unchanged.',
+  cancellationRequestClosedNotice:
+    'The contract ended separately from this request. Current contract state:',
+  cancellationRequestStale:
+    'The contract version has changed. Staff must decline this request with an explanation before the customer submits a new request.',
+  'cancellationRequest.Pending': 'Awaiting staff review',
+  'cancellationRequest.Rejected': 'Request declined',
+  'cancellationRequest.Fulfilled': 'Cancellation completed; check refund progress below',
+  'cancellationRequest.Closed': 'Contract already ended',
   cancellationQueue: 'Contract refunds needing follow-up',
   cancellationQueueNotice: 'Promised returns stay here until completed. They cannot be dismissed.',
   cancellationQueueEmpty: 'No unresolved contract refunds.',
@@ -199,6 +222,28 @@ export const en = {
 } satisfies Record<string, string>;
 
 export const fa: Record<keyof typeof en, string> = {
+  cancellationRequestTitle: 'درخواست لغو',
+  cancellationRequestQueue: 'درخواست‌های لغو در انتظار بررسی',
+  cancellationRequestQueueEmpty: 'درخواست لغوی در انتظار بررسی نیست.',
+  cancellationRequestOpen: 'مشاهده قرارداد و بررسی',
+  cancellationRequestSubmit: 'ثبت درخواست لغو',
+  cancellationRequestNotice:
+    'کارکنان دلیل و مقصد بازپرداخت پیشنهادی شما را بررسی می‌کنند. ثبت درخواست قرارداد را لغو نمی‌کند. بازپرداخت قرارداد برق باید به کیف پول انجام شود.',
+  cancellationRequestPreference: 'مقصد بازپرداخت پیشنهادی',
+  cancellationRequestReview: 'بررسی لغو و بازپرداخت',
+  cancellationRequestReviewNotice:
+    'پیش از لغو، تصمیم مالی و تأیید دوم موردنیاز را بررسی کنید. درخواست تنها پس از لغو موفق انجام‌شده محسوب می‌شود.',
+  cancellationRequestReject: 'رد درخواست',
+  cancellationRequestRejectReason: 'توضیح برای مشتری',
+  cancellationRequestRejectNotice: 'توضیح شما برای مشتری ارسال می‌شود. قرارداد تغییری نمی‌کند.',
+  cancellationRequestClosedNotice:
+    'قرارداد مستقل از این درخواست پایان یافته است. وضعیت فعلی قرارداد:',
+  cancellationRequestStale:
+    'نسخه قرارداد تغییر کرده است. کارکنان باید این درخواست را با توضیح رد کنند تا مشتری درخواست تازه‌ای ثبت کند.',
+  'cancellationRequest.Pending': 'در انتظار بررسی کارکنان',
+  'cancellationRequest.Rejected': 'درخواست رد شد',
+  'cancellationRequest.Fulfilled': 'لغو انجام شد؛ وضعیت بازپرداخت را در ادامه بررسی کنید',
+  'cancellationRequest.Closed': 'قرارداد قبلاً پایان یافته است',
   cancellationQueue: 'بازپرداخت قراردادهای نیازمند پیگیری',
   cancellationQueueNotice:
     'تعهدهای بازپرداخت تا زمان تکمیل در این فهرست می‌مانند و قابل حذف نیستند.',
