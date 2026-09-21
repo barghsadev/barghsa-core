@@ -2,9 +2,77 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { createHash } from 'node:crypto';
+import type { WalletPaymentReview, WalletPaymentReviewData } from '@barghsa/shared/finance';
 const invoiceId = '11111111-1111-7111-8111-111111111111',
   profileId = '22222222-2222-7222-8222-222222222222',
   transactionId = '33333333-3333-7333-8333-333333333333';
+function financialReview(
+  amount: string,
+  balance: string,
+  paid = '0',
+  ruleRevision = 1
+): WalletPaymentReview {
+  const remaining = (BigInt(amount) - BigInt(paid)).toString();
+  const data: WalletPaymentReviewData = {
+    currency: 'IRR',
+    profile: { id: profileId, title: 'Customer profile', type: 'LEGAL' },
+    invoice: {
+      id: invoiceId,
+      state: paid === amount ? 'Paid' : 'Unpaid',
+      orderId: null,
+      serviceType: 'electricity',
+      issuedAt: '2026-09-01T10:00:00.000Z',
+      payableFrom: '2026-09-01T10:00:00.000Z',
+      dueAt: '2026-09-25T09:00:00.000Z',
+      totalAmount: amount,
+      paidAmount: paid,
+      remainingAmount: remaining,
+    },
+    lines: [
+      {
+        id: transactionId,
+        description: 'Electricity',
+        quantity: 1,
+        unitPrice: amount,
+        discount: '0',
+        subtotal: amount,
+        vatRate: 0,
+        vatAmount: '0',
+        taxable: false,
+      },
+    ],
+    totals: { subtotal: amount, discount: '0', vat: '0' },
+    payment: {
+      source: 'wallet',
+      availableBefore: balance,
+      availableAfter: (BigInt(balance) - BigInt(remaining)).toString(),
+    },
+    contracts: [
+      {
+        id: profileId,
+        versionId: transactionId,
+        state: 'Accepted',
+        serviceType: 'electricity',
+        ruleRevision,
+        signatureRequired: false,
+        paymentRequired: true,
+        initialInvoice: true,
+        serviceStartRequired: false,
+        serviceStartsAt: null,
+        serviceEndsAt: null,
+        cancellationRefund: 'full_wallet',
+      },
+    ],
+    cancellation: 'separate_review_required',
+  };
+  return {
+    schemaVersion: 1,
+    scope: { action: 'invoice.wallet-payment', profileId, resourceId: invoiceId },
+    data,
+    hash: createHash('sha256').update(JSON.stringify(data)).digest('hex'),
+  };
+}
 async function shell(
   page: Page,
   locale: 'fa' | 'en',
@@ -99,6 +167,7 @@ for (const locale of ['fa', 'en'] as const)
               remainingAmount: amount,
               availableBalance: reads === 2 ? '500' : balance,
               canPay: reads > 2,
+              review: financialReview(amount, reads === 2 ? '500' : balance),
             },
           });
         }
@@ -120,6 +189,7 @@ for (const locale of ['fa', 'en'] as const)
             state: 'Paid',
             amount: requests.length === 2 ? '999' : amount,
             walletTransactionId: transactionId,
+            reviewHash: body.expectedReviewHash,
           },
         });
       });
@@ -167,6 +237,27 @@ for (const locale of ['fa', 'en'] as const)
       let dialog = page.getByRole('dialog');
       await expect(dialog).toContainText(money);
       await expect(dialog).toContainText(invoiceId);
+      if (fa && !darkMode && ['chromium', 'mobile-chrome'].includes(test.info().project.name))
+        await page.screenshot({
+          path: `/tmp/barghsa-financial-review-${test.info().project.name}.png`,
+        });
+      await expect(dialog).toContainText('Customer profile');
+      await expect(dialog).toContainText(fa ? 'مالیات بر ارزش افزوده' : 'VAT');
+      const reviewViewport = dialog.locator('[data-slot="scroll-area-viewport"]');
+      await reviewViewport.focus();
+      await expect(reviewViewport).toBeFocused();
+      await reviewViewport.press('End');
+      await expect(
+        dialog.getByText(
+          fa
+            ? 'لغو و استرداد وجه به بررسی جداگانه نیاز دارند.'
+            : 'Cancellation and refunds require a separate review.',
+          { exact: false }
+        )
+      ).toBeInViewport();
+      await expect(dialog).toContainText(
+        fa ? 'موجودی قابل استفاده پس از پرداخت' : 'Available balance after payment'
+      );
       await expect(refresh).toBeDisabled();
       await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
       const password = dialog.getByLabel(
@@ -197,9 +288,11 @@ for (const locale of ['fa', 'en'] as const)
       expect(requests[2]).toEqual(requests[0]);
       expect(Object.keys(requests[0]!).sort()).toEqual([
         'expectedRemainingAmount',
+        'expectedReviewHash',
         'idempotencyKey',
       ]);
       expect(requests[0]!.expectedRemainingAmount).toBe(amount);
+      expect(requests[0]!.expectedReviewHash).toBe(financialReview(amount, balance).hash);
       expect(verifications).toBe(1);
     });
 
@@ -218,6 +311,7 @@ test('a changed invoice amount needs a new review and a newly captured request',
           remainingAmount: (100000n - BigInt(paid)).toString(),
           availableBalance: '150000',
           canPay: paid !== '100000',
+          review: financialReview('100000', '150000', paid),
         },
       });
     const body = route.request().postDataJSON() as Record<string, unknown>;
@@ -235,6 +329,7 @@ test('a changed invoice amount needs a new review and a newly captured request',
         state: 'Paid',
         amount: '80000',
         walletTransactionId: transactionId,
+        reviewHash: body.expectedReviewHash,
       },
     });
   });
@@ -254,4 +349,149 @@ test('a changed invoice amount needs a new review and a newly captured request',
   await expect(panel.getByRole('status')).toContainText('IRR 80,000');
   expect(requests[1]!.expectedRemainingAmount).toBe('80000');
   expect(requests[1]!.idempotencyKey).not.toBe(requests[0]!.idempotencyKey);
+});
+
+test('changed contract conditions require a new review even when the amount is unchanged', async ({
+  page,
+}) => {
+  await shell(page, 'en', false, '100000', () => '0');
+  let revision = 1;
+  const requests: Array<Record<string, unknown>> = [];
+  await page.route(`**/api/invoices/${invoiceId}/wallet-payment`, (route) => {
+    const review = financialReview('100000', '150000', '0', revision);
+    if (route.request().method() === 'GET')
+      return route.fulfill({
+        json: {
+          invoiceId,
+          profileId,
+          remainingAmount: '100000',
+          availableBalance: '150000',
+          canPay: true,
+          review,
+        },
+      });
+    const body = route.request().postDataJSON() as Record<string, unknown>;
+    requests.push(body);
+    if (requests.length === 1) {
+      revision = 2;
+      return route.fulfill({ status: 409, json: {} });
+    }
+    expect(body.expectedReviewHash).toBe(review.hash);
+    return route.fulfill({
+      json: {
+        ...body,
+        invoiceId,
+        profileId,
+        state: 'Paid',
+        amount: '100000',
+        walletTransactionId: transactionId,
+        reviewHash: review.hash,
+      },
+    });
+  });
+  await page.goto(`/invoices/${invoiceId}`);
+  const panel = page.locator('#wallet-invoice-payment');
+  await panel.getByRole('button', { name: 'Review wallet payment', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+  await expect(page.getByRole('dialog').getByRole('alert')).toBeVisible();
+  await page.getByRole('dialog').getByRole('button', { name: 'Cancel', exact: true }).click();
+  await panel.getByRole('button', { name: 'Review latest amount', exact: true }).click();
+  await panel.getByRole('button', { name: 'Review wallet payment', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+  await expect(panel.getByRole('status')).toContainText(transactionId);
+  expect(requests[1]!.expectedRemainingAmount).toBe(requests[0]!.expectedRemainingAmount);
+  expect(requests[1]!.expectedReviewHash).not.toBe(requests[0]!.expectedReviewHash);
+  expect(requests[1]!.idempotencyKey).not.toBe(requests[0]!.idempotencyKey);
+});
+
+test('an incomplete or foreign financial review cannot enable payment', async ({ page }) => {
+  await shell(page, 'en', false, '100000', () => '0');
+  let foreign = false;
+  await page.route(`**/api/invoices/${invoiceId}/wallet-payment`, (route) => {
+    expect(route.request().method()).toBe('GET');
+    const review = financialReview('100000', '150000');
+    if (foreign) review.scope.profileId = transactionId;
+    return route.fulfill({
+      json: {
+        invoiceId,
+        profileId,
+        remainingAmount: '100000',
+        availableBalance: '150000',
+        canPay: true,
+        ...(foreign ? { review } : {}),
+      },
+    });
+  });
+  await page.goto(`/invoices/${invoiceId}`);
+  const panel = page.locator('#wallet-invoice-payment');
+  await expect(panel.getByRole('alert')).toBeVisible();
+  await expect(
+    panel.getByRole('button', { name: 'Review wallet payment', exact: true })
+  ).toBeDisabled();
+  foreign = true;
+  await panel.getByRole('button', { name: 'Review latest amount', exact: true }).click();
+  await expect(panel.getByRole('alert')).toBeVisible();
+  await expect(
+    panel.getByRole('button', { name: 'Review wallet payment', exact: true })
+  ).toBeDisabled();
+});
+
+test('legacy invoice reviews disclose missing breakdowns and remaining contract prerequisites', async ({
+  page,
+}) => {
+  await shell(page, 'en', false, '100000', () => '0');
+  const review = financialReview('100000', '150000');
+  review.data.lines = [];
+  review.data.totals = null;
+  review.data.profile.title = '';
+  review.data.invoice.serviceType = null;
+  Object.assign(review.data.contracts[0]!, {
+    serviceType: 'solar',
+    state: 'Signed',
+    initialInvoice: false,
+    paymentRequired: false,
+    signatureRequired: true,
+    serviceStartRequired: true,
+    serviceStartsAt: '2026-10-01T00:00:00.000Z',
+    serviceEndsAt: '2027-10-01T00:00:00.000Z',
+    cancellationRefund: 'staff_decision',
+  });
+  review.hash = createHash('sha256').update(JSON.stringify(review.data)).digest('hex');
+  await page.route(`**/api/invoices/${invoiceId}/wallet-payment`, (route) => {
+    if (route.request().method() === 'GET')
+      return route.fulfill({
+        json: {
+          invoiceId,
+          profileId,
+          remainingAmount: '100000',
+          availableBalance: '150000',
+          canPay: true,
+          review,
+        },
+      });
+    const body = route.request().postDataJSON() as Record<string, unknown>;
+    expect(body.expectedReviewHash).toBe(review.hash);
+    return route.fulfill({
+      json: {
+        ...body,
+        invoiceId,
+        profileId,
+        state: 'Paid',
+        amount: '100000',
+        walletTransactionId: transactionId,
+        reviewHash: review.hash,
+      },
+    });
+  });
+  await page.goto(`/invoices/${invoiceId}`);
+  const panel = page.locator('#wallet-invoice-payment');
+  await expect(panel).toContainText('no stored item breakdown');
+  await panel.getByRole('button', { name: 'Review wallet payment', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toContainText('no stored item breakdown');
+  await expect(dialog).toContainText('Signature is required');
+  await expect(dialog).toContainText('start date must be reached');
+  await expect(dialog).toContainText('Refunds on cancellation require a staff decision');
+  await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
+  await expect(panel.getByRole('status')).toContainText(transactionId);
 });

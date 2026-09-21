@@ -41,6 +41,7 @@ export function TeamActionDialog({
   action,
   verification,
   selection,
+  summary,
   focusConfirmation = false,
   onClose,
   onSuccess,
@@ -57,6 +58,7 @@ export function TeamActionDialog({
   onSuccess: (result: unknown) => Promise<void>;
   finalFocus?: ComponentProps<typeof DialogContent>['finalFocus'];
   focusConfirmation?: boolean;
+  summary?: ReactNode;
 }) {
   const locale = useLocale();
   const copy = action ?? verification;
@@ -178,6 +180,7 @@ export function TeamActionDialog({
               <DialogTitle>{copy.title}</DialogTitle>
               <DialogDescription>{copy.description}</DialogDescription>
             </DialogHeader>
+            {summary}
             {needsPassword && (
               <div className="space-y-2">
                 <Label htmlFor="team-step-up-password">{t('team.password', locale)}</Label>

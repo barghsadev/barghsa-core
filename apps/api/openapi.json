@@ -14130,7 +14130,7 @@
         ],
         "responses": {
           "200": {
-            "description": "invoiceId, profileId, remainingAmount and availableBalance as exact IRR strings, and canPay."
+            "description": "invoiceId, profileId, exact IRR remainingAmount and availableBalance, canPay and a versioned financial review snapshot with its confirmation hash."
           },
           "404": {
             "description": "Invoice or wallet-debit authority unavailable on the active profile."
@@ -14141,7 +14141,7 @@
             "bearer": []
           }
         ],
-        "summary": "Review remaining invoice amount and available wallet balance for the active owner profile",
+        "summary": "Review authoritative invoice details, wallet debit and related contract implications",
         "tags": [
           "Invoices"
         ]
@@ -14170,6 +14170,11 @@
                     "pattern": "^[1-9]\\d{0,18}$",
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "description": "Exact hash returned with the authoritative financial review.",
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "type": "string"
@@ -14177,7 +14182,8 @@
                 },
                 "required": [
                   "idempotencyKey",
-                  "expectedRemainingAmount"
+                  "expectedRemainingAmount",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }

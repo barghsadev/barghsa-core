@@ -34,6 +34,7 @@ const bodySchema = z
       .string()
       .regex(/^[1-9]\d{0,18}$/)
       .pipe(z.string().refine((v) => BigInt(v) <= 9_223_372_036_854_775_807n)),
+    expectedReviewHash: z.string().regex(/^[a-f0-9]{64}$/),
   })
   .strict();
 @ApiTags('Invoices')
@@ -52,13 +53,12 @@ export class CustomerWalletInvoicePaymentController {
 
   @Get()
   @ApiOperation({
-    summary:
-      'Review remaining invoice amount and available wallet balance for the active owner profile',
+    summary: 'Review authoritative invoice details, wallet debit and related contract implications',
   })
   @ApiResponse({
     status: 200,
     description:
-      'invoiceId, profileId, remainingAmount and availableBalance as exact IRR strings, and canPay.',
+      'invoiceId, profileId, exact IRR remainingAmount and availableBalance, canPay and a versioned financial review snapshot with its confirmation hash.',
   })
   @ApiResponse({
     status: 404,
@@ -78,9 +78,14 @@ export class CustomerWalletInvoicePaymentController {
     schema: {
       type: 'object',
       additionalProperties: false,
-      required: ['idempotencyKey', 'expectedRemainingAmount'],
+      required: ['idempotencyKey', 'expectedRemainingAmount', 'expectedReviewHash'],
       properties: {
         idempotencyKey: { type: 'string', format: 'uuid' },
+        expectedReviewHash: {
+          type: 'string',
+          pattern: '^[a-f0-9]{64}$',
+          description: 'Exact hash returned with the authoritative financial review.',
+        },
         expectedRemainingAmount: {
           type: 'string',
           pattern: '^[1-9]\\d{0,18}$',
@@ -121,6 +126,7 @@ export class CustomerWalletInvoicePaymentController {
       this.id(invoiceId),
       parsed.data.idempotencyKey,
       BigInt(parsed.data.expectedRemainingAmount),
+      parsed.data.expectedReviewHash,
       req.ip ?? 'unknown',
       correlationIdStorage.getStore()
     );

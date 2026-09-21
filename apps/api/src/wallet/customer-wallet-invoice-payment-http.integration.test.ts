@@ -2,6 +2,7 @@ import { afterAll, beforeAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { SessionService } from '../session/session.service.js';
+import type { WalletPaymentReview } from '@barghsa/shared/finance';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 beforeAll(async () => {
@@ -39,7 +40,7 @@ async function fixture(
     "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES($1,$2,$3,$1,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()-INTERVAL '1 second')",
     [sessionId, userId, csrf]
   );
-  return {
+  const result = {
     userId,
     profileId,
     invoiceId,
@@ -50,6 +51,11 @@ async function fixture(
       'Content-Type': 'application/json',
     },
   };
+  const review = await fetch(`${http.base}/api/invoices/${invoiceId}/wallet-payment`, {
+    headers: result.headers,
+  });
+  const value = review.ok ? ((await review.json()) as { review: { hash: string } }) : null;
+  return { ...result, reviewHash: value?.review.hash ?? '0'.repeat(64) };
 }
 type Fixture = Awaited<ReturnType<typeof fixture>>;
 function context(f: Fixture, invoiceId: string = f.invoiceId) {
@@ -64,7 +70,11 @@ function pay(
   return fetch(`${http.base}/api/invoices/${invoiceId}/wallet-payment`, {
     method: 'POST',
     headers,
-    body: JSON.stringify(body),
+    body: JSON.stringify(
+      body && typeof body === 'object' && !Array.isArray(body)
+        ? { expectedReviewHash: f.reviewHash, ...body }
+        : body
+    ),
   });
 }
 async function snapshot(f: Fixture) {
@@ -98,6 +108,205 @@ async function snapshot(f: Fixture) {
     ).rows,
   };
 }
+
+it('requires an exact review and persists it through cache and durable-ledger replay', async () => {
+  const f = await fixture();
+  const body = { idempotencyKey: randomUUID(), expectedRemainingAmount: '100000' };
+  expect((await pay(f, { ...body, expectedReviewHash: undefined })).status).toBe(400);
+  expect((await pay(f, { ...body, expectedReviewHash: 'invalid' })).status).toBe(400);
+  expect((await pay(f, { ...body, expectedReviewHash: '0'.repeat(64) })).status).toBe(409);
+  await http.pool.query('UPDATE wallets SET posted_balance=160000 WHERE profile_id=$1', [
+    f.profileId,
+  ]);
+  const before = await snapshot(f);
+  expect((await pay(f, body)).status).toBe(409);
+  expect(await snapshot(f)).toEqual(before);
+  const quote = (await (await context(f)).json()) as { review: { hash: string; data: unknown } };
+  f.reviewHash = quote.review.hash;
+  const response = await pay(f, body);
+  expect(response.status).toBe(200);
+  const paid = (await response.json()) as { walletTransactionId: string; reviewHash: string };
+  expect(paid.reviewHash).toBe(quote.review.hash);
+  const ledger = (
+    await http.pool.query('SELECT metadata FROM wallet_transactions WHERE id=$1', [
+      paid.walletTransactionId,
+    ])
+  ).rows[0];
+  expect(ledger.metadata.financialReview).toEqual(quote.review);
+  expect((await pay(f, body)).status).toBe(200);
+  expect((await pay(f, { ...body, expectedReviewHash: 'f'.repeat(64) })).status).toBe(409);
+  await http.pool.query('DELETE FROM idempotency_keys WHERE entity_id=$1', [f.invoiceId]);
+  const replay = await pay(f, body);
+  expect(replay.status).toBe(200);
+  expect(await replay.json()).toMatchObject({
+    walletTransactionId: paid.walletTransactionId,
+    reviewHash: paid.reviewHash,
+  });
+  expect((await snapshot(f)).wallet.posted_balance).toBe('60000');
+  expect((await snapshot(f)).ledger).toHaveLength(1);
+  await http.pool.query('DELETE FROM idempotency_keys WHERE entity_id=$1', [f.invoiceId]);
+  expect((await pay(f, { ...body, expectedReviewHash: 'f'.repeat(64) })).status).toBe(409);
+});
+
+it('shows the issued line breakdown and rejects a changed profile or invoice date', async () => {
+  const f = await fixture();
+  await http.pool.query(
+    `INSERT INTO invoice_lines(id,invoice_id,description,quantity,unit_price,line_total,vat_rate,vat_amount,is_taxable,position)
+     VALUES($1,$2,'Electricity',2,60000,100000,0,0,false,0)`,
+    [randomUUID(), f.invoiceId]
+  );
+  const quote = (await (await context(f)).json()) as {
+    review: { hash: string; data: Record<string, unknown> };
+  };
+  expect(quote.review.data).toMatchObject({
+    currency: 'IRR',
+    profile: { id: f.profileId, type: 'LEGAL' },
+    invoice: { id: f.invoiceId, totalAmount: '100000', remainingAmount: '100000' },
+    lines: [
+      {
+        description: 'Electricity',
+        quantity: 2,
+        unitPrice: '60000',
+        discount: '20000',
+        subtotal: '100000',
+        vatAmount: '0',
+      },
+    ],
+    totals: { subtotal: '100000', discount: '20000', vat: '0' },
+    payment: { source: 'wallet', availableBefore: '150000', availableAfter: '50000' },
+    cancellation: 'separate_review_required',
+  });
+  f.reviewHash = quote.review.hash;
+  await http.pool.query("UPDATE profiles SET title='Updated customer' WHERE id=$1", [f.profileId]);
+  expect((await pay(f)).status).toBe(409);
+  f.reviewHash = ((await (await context(f)).json()) as { review: { hash: string } }).review.hash;
+  await http.pool.query("UPDATE invoices SET due_at=NOW()+INTERVAL '2 days' WHERE id=$1", [
+    f.invoiceId,
+  ]);
+  expect((await pay(f)).status).toBe(409);
+  expect((await snapshot(f)).ledger).toHaveLength(0);
+});
+
+it.each(['electricity', 'solar'])(
+  'binds published %s contract conditions without exposing drafts',
+  async (serviceType) => {
+    const f = await fixture();
+    await http.pool.query('UPDATE users SET is_staff=true WHERE user_id=$1', [f.userId]);
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES($1,'role-legal-contracts')",
+      [f.userId]
+    );
+    const command = (path: string, body: unknown, method = 'POST') =>
+      fetch(http.base + '/api/admin/contracts' + path, {
+        method,
+        headers: f.headers,
+        body: JSON.stringify(body),
+      });
+    const created = await command('', {
+      profileId: f.profileId,
+      serviceType,
+      content: { title: 'Customer terms', text: 'Published terms' },
+      changeDescription: 'Initial terms',
+      idempotencyKey: randomUUID(),
+      activationContext: { initialInvoiceId: null, serviceStartsAt: '2026-10-01T00:00:00.000Z' },
+    });
+    expect(created.status).toBe(201);
+    let contract = (await created.json()) as { id: string; currentVersionId: string };
+    await http.pool.query('UPDATE invoices SET contract_id=$2 WHERE id=$1', [
+      f.invoiceId,
+      contract.id,
+    ]);
+    const linked = await command(
+      `/${contract.id}`,
+      {
+        expectedVersionId: contract.currentVersionId,
+        content: { title: 'Customer terms', text: 'Published terms' },
+        changeDescription: 'Link initial invoice',
+        idempotencyKey: randomUUID(),
+        activationContext: {
+          initialInvoiceId: f.invoiceId,
+          serviceStartsAt: '2026-10-01T00:00:00.000Z',
+        },
+      },
+      'PATCH'
+    );
+    expect(linked.status, await linked.clone().text()).toBe(200);
+    contract = (await linked.json()) as { id: string; currentVersionId: string };
+    const draft = (await (await context(f)).json()) as { review: WalletPaymentReview };
+    expect(draft.review.data.contracts).toEqual([]);
+    for (const action of ['submit', 'publish']) {
+      const response = await command(`/${contract.id}/${action}`, {
+        expectedVersionId: contract.currentVersionId,
+        idempotencyKey: randomUUID(),
+      });
+      expect(response.status).toBe(200);
+    }
+    const quote = (await (await context(f)).json()) as { review: WalletPaymentReview };
+    expect(quote.review.data.contracts).toEqual([
+      expect.objectContaining({
+        id: contract.id,
+        versionId: contract.currentVersionId,
+        state: 'AwaitingCustomerAcceptance',
+        serviceType,
+        initialInvoice: true,
+        signatureRequired: serviceType === 'solar',
+        cancellationRefund: serviceType === 'electricity' ? 'full_wallet' : 'staff_decision',
+        serviceStartsAt: '2026-10-01T00:00:00.000Z',
+      }),
+    ]);
+    expect((await pay(f)).status).toBe(409);
+    f.reviewHash = quote.review.hash;
+    const paid = await pay(f);
+    expect(paid.status).toBe(200);
+    const result = (await paid.json()) as { walletTransactionId: string };
+    const ledger = (
+      await http.pool.query('SELECT metadata FROM wallet_transactions WHERE id=$1', [
+        result.walletTransactionId,
+      ])
+    ).rows[0];
+    expect(ledger.metadata.financialReview).toEqual(quote.review);
+  }
+);
+
+it.each([
+  { unit: '100000', line: '90000' },
+  { unit: '50000', line: '100000' },
+])('refuses an inconsistent invoice breakdown: %j', async ({ unit, line }) => {
+  const f = await fixture();
+  await http.pool.query(
+    `INSERT INTO invoice_lines(id,invoice_id,description,quantity,unit_price,line_total,vat_rate,vat_amount,is_taxable)
+     VALUES($1,$2,'Invalid breakdown',1,$3,$4,0,0,false)`,
+    [randomUUID(), f.invoiceId, unit, line]
+  );
+  expect((await context(f)).status).toBe(409);
+  expect((await pay(f)).status).toBe(409);
+  expect((await snapshot(f)).ledger).toHaveLength(0);
+});
+
+it('commits the exact reviewed taxable total including non-zero VAT', async () => {
+  const f = await fixture();
+  await http.pool.query('UPDATE invoices SET total_amount=109000 WHERE id=$1', [f.invoiceId]);
+  await http.pool.query(
+    `INSERT INTO invoice_lines(id,invoice_id,description,quantity,unit_price,line_total,vat_rate,vat_amount,is_taxable)
+     VALUES($1,$2,'Taxable electricity',1,100000,100000,900,9000,true)`,
+    [randomUUID(), f.invoiceId]
+  );
+  const quote = (await (await context(f)).json()) as { review: WalletPaymentReview };
+  expect(quote.review.data.totals).toEqual({ subtotal: '100000', discount: '0', vat: '9000' });
+  expect(quote.review.data.lines[0]).toMatchObject({
+    vatRate: 900,
+    vatAmount: '9000',
+    taxable: true,
+  });
+  f.reviewHash = quote.review.hash;
+  const response = await pay(f, {
+    idempotencyKey: randomUUID(),
+    expectedRemainingAmount: '109000',
+  });
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject({ amount: '109000', reviewHash: quote.review.hash });
+  expect((await snapshot(f)).wallet.posted_balance).toBe('41000');
+});
 
 it.each(['Unpaid', 'PartiallyFunded', 'Overdue'])(
   'pays exact remaining %s amount once across retries',

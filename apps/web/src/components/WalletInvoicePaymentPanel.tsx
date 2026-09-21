@@ -1,9 +1,12 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { Alert, AlertDescription, Button } from '@barghsa/ui';
+import { Alert, AlertDescription, Button, ScrollArea } from '@barghsa/ui';
 import { tWalletInvoicePayment as t } from '@barghsa/i18n/wallet-invoice-payment';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
+import { parseWalletPaymentReview, type WalletPaymentReview } from '@barghsa/shared/finance';
+import { WalletPaymentReviewSummary } from './WalletPaymentReviewSummary.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 const TeamActionDialog = lazy(() =>
   import('./TeamActionDialog.js').then((module) => ({ default: module.TeamActionDialog }))
 );
@@ -14,12 +17,19 @@ type Quote = {
   remainingAmount: string;
   availableBalance: string;
   canPay: boolean;
+  review: WalletPaymentReview;
 };
 type Intent = Quote & { idempotencyKey: string };
 function quoteFrom(value: unknown, invoiceId: string): Quote {
   const q = value as Partial<Quote> | null;
+  const review = parseWalletPaymentReview(q?.review);
   if (
     !q ||
+    !review ||
+    review.scope.resourceId !== invoiceId ||
+    review.scope.profileId !== q.profileId ||
+    review.data.invoice.remainingAmount !== q.remainingAmount ||
+    review.data.payment.availableBefore !== q.availableBalance ||
     q.invoiceId !== invoiceId ||
     typeof q.profileId !== 'string' ||
     !isInvoiceUuid(q.profileId) ||
@@ -33,7 +43,7 @@ function quoteFrom(value: unknown, invoiceId: string): Quote {
       (BigInt(q.remainingAmount) <= 0n || BigInt(q.availableBalance) < BigInt(q.remainingAmount)))
   )
     throw new Error('Invalid payment review');
-  return q as Quote;
+  return { ...q, review } as Quote;
 }
 
 export function WalletInvoicePaymentPanel({
@@ -47,6 +57,7 @@ export function WalletInvoicePaymentPanel({
 }) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
+  const time = useAccountTime(locale);
   const text = (key: Parameters<typeof t>[0]) => t(key, locale);
   const [quote, setQuote] = useState<Quote | null>(null),
     [intent, setIntent] = useState<Intent | null>(null);
@@ -80,7 +91,7 @@ export function WalletInvoicePaymentPanel({
           setIntent((previous) =>
             previous &&
             previous.profileId === next.profileId &&
-            previous.remainingAmount === next.remainingAmount
+            previous.review.hash === next.review.hash
               ? { ...next, idempotencyKey: previous.idempotencyKey }
               : null
           );
@@ -134,16 +145,7 @@ export function WalletInvoicePaymentPanel({
           ) : (
             quote && (
               <>
-                <dl className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <dt>{text('remaining')}</dt>
-                    <dd className="font-semibold">{numbers.money(quote.remainingAmount)}</dd>
-                  </div>
-                  <div>
-                    <dt>{text('available')}</dt>
-                    <dd className="font-semibold">{numbers.money(quote.availableBalance)}</dd>
-                  </div>
-                </dl>
+                <WalletPaymentReviewSummary review={quote.review} />
                 {!quote.canPay && <p>{text('unavailable')}</p>}
               </>
             )
@@ -159,9 +161,9 @@ export function WalletInvoicePaymentPanel({
           <div className="flex flex-wrap gap-3">
             <Button
               className="hover:bg-primary"
-              disabled={loading || open || !quote?.canPay}
+              disabled={loading || open || !quote?.canPay || time.status !== 'ready'}
               onClick={() => {
-                if (!quote?.canPay) return;
+                if (!quote?.canPay || time.status !== 'ready') return;
                 if (!intent) setIntent({ ...quote, idempotencyKey: crypto.randomUUID() });
                 setOpen(true);
               }}
@@ -179,6 +181,7 @@ export function WalletInvoicePaymentPanel({
               {text('refresh')}
             </Button>
           </div>
+          {time.notice}
         </>
       )}
       {open && intent && (
@@ -186,19 +189,25 @@ export function WalletInvoicePaymentPanel({
           <TeamActionDialog
             action={{
               title: text('confirm'),
-              description: text('description')
-                .replace('{amount}', numbers.money(intent.remainingAmount))
-                .replace('{invoice}', intent.invoiceId)
-                .replace('{balance}', numbers.money(intent.availableBalance)),
+              description: text('description').replace(
+                '{amount}',
+                numbers.money(intent.remainingAmount)
+              ),
               path: `/api/invoices/${intent.invoiceId}/wallet-payment`,
               method: 'POST',
               body: {
                 idempotencyKey: intent.idempotencyKey,
                 expectedRemainingAmount: intent.remainingAmount,
+                expectedReviewHash: intent.review.hash,
               },
               conflictMessage: text('conflict'),
               forbiddenMessage: text('denied'),
             }}
+            summary={
+              <ScrollArea className="h-[40dvh]" role="region" aria-label={text('reviewTitle')}>
+                <WalletPaymentReviewSummary review={intent.review} />
+              </ScrollArea>
+            }
             onClose={() => setOpen(false)}
             onSuccess={async (value) => {
               const data = value as {
@@ -208,6 +217,7 @@ export function WalletInvoicePaymentPanel({
                 state?: unknown;
                 amount?: unknown;
                 walletTransactionId?: unknown;
+                reviewHash?: unknown;
               } | null;
               if (
                 !data ||
@@ -216,6 +226,7 @@ export function WalletInvoicePaymentPanel({
                 data.idempotencyKey !== intent.idempotencyKey ||
                 data.state !== 'Paid' ||
                 data.amount !== intent.remainingAmount ||
+                data.reviewHash !== intent.review.hash ||
                 typeof data.walletTransactionId !== 'string' ||
                 !isInvoiceUuid(data.walletTransactionId)
               )

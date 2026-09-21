@@ -30,3 +30,6 @@ export * from './wallet-reconciliation.js';
 export * from './wallet-reversal.js';
 export * from './wallet-chargeback.js';
 export * from './wallet-chargeback-alert.js';
+export type { FinancialReviewScope, FinancialReviewSnapshot } from './review-snapshot.js';
+export type { WalletPaymentReview, WalletPaymentReviewData } from './wallet-payment-review.js';
+export { parseWalletPaymentReview } from './wallet-payment-review.js';
