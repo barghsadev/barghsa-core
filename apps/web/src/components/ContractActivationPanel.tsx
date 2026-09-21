@@ -75,6 +75,12 @@ export function ContractActivationPanel({
               {word('prerequisite.serviceStart')}: {time.format(data.serviceStartsAt)}
             </p>
           ) : null}
+          {data.serviceEndsAt ? (
+            <p className="text-sm">
+              {word('serviceEndsAt')}: {time.format(data.serviceEndsAt)}
+            </p>
+          ) : null}
+          {data.state === 'Completed' ? <p role="status">{word('serviceCompleted')}</p> : null}
           {data.ready ? (
             <p role="status" className="font-medium">
               {word('prerequisitesReady')}

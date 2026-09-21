@@ -76,6 +76,7 @@ export interface ContractActivationData {
   ruleRevision: number;
   initialInvoiceId: string | null;
   serviceStartsAt: string | null;
+  serviceEndsAt: string | null;
   evaluatedAt: string;
   checks: Array<{
     key: 'staffApproval' | 'customerAcceptance' | 'signature' | 'initialPayment' | 'serviceStart';

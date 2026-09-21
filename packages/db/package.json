@@ -16,7 +16,8 @@
     "./package.json": "./package.json",
     "./wallet-credit": "./dist/wallet-credit.js",
     "./refund-processing": "./dist/refund-processing.js",
-    "./contract-activation": "./dist/contract-activation.js"
+    "./contract-activation": "./dist/contract-activation.js",
+    "./contract-completion": "./dist/contract-completion.js"
   },
   "scripts": {
     "build": "tsc -b",

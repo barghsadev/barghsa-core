@@ -21,8 +21,10 @@ for (const locale of ['en', 'fa'])
           : index === 1
             ? 'contract_activation'
             : index === 2
-              ? 'retired_job'
-              : 'auth_delivery',
+              ? 'contract_completion'
+              : index === 3
+                ? 'retired_job'
+                : 'auth_delivery',
       status: 'failed',
       error: 'Test transport failed',
       attempts: 5,
@@ -83,7 +85,10 @@ for (const locale of ['en', 'fa'])
     await expect(page.locator('tbody tr').nth(1)).toContainText(
       fa ? 'فعال‌سازی قرارداد' : 'Contract activation'
     );
-    await expect(page.locator('tbody tr').nth(2)).toContainText('retired_job');
+    await expect(page.locator('tbody tr').nth(2)).toContainText(
+      fa ? 'تکمیل دوره قرارداد' : 'Contract term completion'
+    );
+    await expect(page.locator('tbody tr').nth(3)).toContainText('retired_job');
     await expect(page.locator('tbody tr').first()).toContainText(fa ? '5 / 5' : '۵ / ۵');
     await expect(page.locator('tbody tr').first()).toContainText(
       await formatBrowserDate(

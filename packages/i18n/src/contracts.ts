@@ -1,6 +1,8 @@
 import { lookup } from './lookup.js';
 
 export const en = {
+  serviceEndsAt: 'Service term ends',
+  serviceCompleted: 'The service term is complete. Invoices and refunds keep their own status.',
   activationTitle: 'Activation prerequisites',
   activationNotice:
     'Requirements belong to this version. Payment alone does not activate the contract.',
@@ -114,6 +116,8 @@ export const en = {
 } satisfies Record<string, string>;
 
 export const fa: Record<keyof typeof en, string> = {
+  serviceEndsAt: 'پایان دوره خدمت',
+  serviceCompleted: 'دوره خدمت تکمیل شده است. وضعیت صورتحساب‌ها و بازپرداخت‌ها مستقل است.',
   activationTitle: 'پیش‌نیازهای فعال‌سازی',
   activationNotice:
     'این پیش‌نیازها مربوط به همین نسخه هستند. پرداخت به‌تنهایی قرارداد را فعال نمی‌کند.',

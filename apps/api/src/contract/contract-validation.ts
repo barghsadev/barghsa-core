@@ -14,8 +14,16 @@ export const contractActivationContextSchema = z
   .object({
     initialInvoiceId: contractUuid.nullable(),
     serviceStartsAt: z.iso.datetime({ offset: true }).nullable(),
+    serviceEndsAt: z.iso.datetime({ offset: true }).nullable().optional(),
   })
-  .strict();
+  .strict()
+  .refine(
+    (value) =>
+      !value.serviceStartsAt ||
+      !value.serviceEndsAt ||
+      Date.parse(value.serviceEndsAt) > Date.parse(value.serviceStartsAt),
+    'Service end must be after its start'
+  );
 const edit = {
   content,
   activationContext: contractActivationContextSchema.optional(),

@@ -39,6 +39,12 @@ const editProperties = {
     properties: {
       initialInvoiceId: { type: 'string' as const, format: 'uuid', nullable: true },
       serviceStartsAt: { type: 'string' as const, format: 'date-time', nullable: true },
+      serviceEndsAt: {
+        type: 'string' as const,
+        format: 'date-time',
+        nullable: true,
+        description: 'Optional end of service term; omitted edits preserve the existing end.',
+      },
     },
   },
   content: {

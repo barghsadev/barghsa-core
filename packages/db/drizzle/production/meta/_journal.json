@@ -449,6 +449,13 @@
       "when": 1791331200046,
       "tag": "0143_contract_system_activation",
       "breakpoints": true
+    },
+    {
+      "idx": 144,
+      "version": "7",
+      "when": 1791331200047,
+      "tag": "0144_contract_term_completion",
+      "breakpoints": true
     }
   ]
 }

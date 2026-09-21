@@ -87,3 +87,11 @@ Verified PR #324 merged as `7c3816394f81ad909818d505f210ebbd53986213` after all 
 Initial headc3f738c72c54934580d1473f035d78d9d362252b was independently approved at https://github.com/barghsadev/barghsa-core/pull/325#issuecomment-5753875481 and passed local combined coverage. CI found the newly registered contract_activation job enum missing from generated OpenAPI. Regeneration adds exactly that enum value; check:contract passes. New review/CI are required after this correction. The end-of-term completion draft is preserved in named stash `contract-term-completion draft before PR325 OpenAPI correction` on branch `codex/contract-term-completion`.
 
 Full main run35545814385 after PR #323 now passes all five checks. PR #324 full main run35547612589 remains running.
+
+### Term completion built and locally validated
+
+PR #325 corrected head `8a4afc3361a7118df29ee39755ddc13ea9527817` is independently approved in [review](https://github.com/barghsadev/barghsa-core/pull/325#issuecomment-5753916838). CI run35548123603 still has tests pending. The completion draft was restored, built and validated on `codex/contract-term-completion`; no draft stash remains. Its batch record contains the passing focused checks. Commit coverage, independent review and CI remain. Service completion preserves invoice/refund state and does not implement financial closure. Rebase onto the verified #325 squash merge before opening the next PR.
+
+### PR #325 merged; completion ready for review
+
+Activation PR #325 merged at `fa6a383b9bd5369390d4175c9ac7d59a2ba0313c` after corrected-head approval and all five CI gates passed in run35548123603. The completion batch is rebased onto that verified merge. Its unit/process combined coverage passes; final committed browser coverage, independent review and CI remain. The next context-editing interface is saved on `codex/contract-context-editor` at `1bffe41d`, with types/lint and30 focused tests passing. Its browser/coverage/review/CI remain, and it must rebase onto the completion merge.

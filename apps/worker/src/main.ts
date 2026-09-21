@@ -1,4 +1,8 @@
 import {
+  runContractCompletion,
+  CONTRACT_COMPLETION_INTERVAL_MS,
+} from './contracts/completion-runner.js';
+import {
   runContractActivation,
   CONTRACT_ACTIVATION_INTERVAL_MS,
 } from './contracts/activation-runner.js';
@@ -138,6 +142,9 @@ async function main(): Promise<void> {
   pollers.every(async () => {
     await runContractActivation();
   }, CONTRACT_ACTIVATION_INTERVAL_MS);
+  pollers.every(async () => {
+    await runContractCompletion();
+  }, CONTRACT_COMPLETION_INTERVAL_MS);
 
   /* ------------------------------------------------------------------ */
   /*  Graceful shutdown handler                                          */

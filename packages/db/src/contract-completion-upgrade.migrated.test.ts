@@ -5,20 +5,20 @@ import { join, resolve } from 'node:path';
 import { Pool } from 'pg';
 import { expect, it } from 'vitest';
 import { runMigrations } from './migrate';
-it('upgrades existing Active contracts without rewriting or fabricating activation evidence', async () => {
-  const previous = mkdtempSync(join(tmpdir(), 'contract-activation-upgrade-')),
+it('upgrades existing Completed contracts without rewriting or fabricating completion evidence', async () => {
+  const previous = mkdtempSync(join(tmpdir(), 'contract-completion-upgrade-')),
     production = resolve('drizzle/production');
   const journal = JSON.parse(readFileSync(join(production, 'meta/_journal.json'), 'utf8'));
   const prior = {
     ...journal,
-    entries: journal.entries.filter((e: { idx: number }) => e.idx < 143),
+    entries: journal.entries.filter((e: { idx: number }) => e.idx < 144),
   };
   mkdirSync(join(previous, 'meta'));
   writeFileSync(join(previous, 'meta/_journal.json'), JSON.stringify(prior));
   for (const entry of prior.entries)
     copyFileSync(join(production, entry.tag + '.sql'), join(previous, entry.tag + '.sql'));
   const management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! }),
-    name = 'test_activation_upgrade_' + randomUUID().replaceAll('-', '');
+    name = 'test_completion_upgrade_' + randomUUID().replaceAll('-', '');
   let pool: Pool | undefined,
     created = false;
   try {
@@ -49,7 +49,7 @@ it('upgrades existing Active contracts without rewriting or fabricating activati
         [version, id, JSON.stringify({ text: 'Legacy' }), actor]
       );
       await client.query(
-        "UPDATE contracts SET state='Active',activated_at='2026-01-01T00:00:00Z' WHERE id=$1",
+        "UPDATE contracts SET state='Completed',completed_at='2026-01-01T00:00:00Z' WHERE id=$1",
         [id]
       );
       await client.query('COMMIT');
@@ -62,19 +62,14 @@ it('upgrades existing Active contracts without rewriting or fabricating activati
     const before = (await pool.query('SELECT * FROM contracts WHERE id=$1', [id])).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0143_contract_system_activation', '0144_contract_term_completion'],
+      applied: ['0144_contract_term_completion'],
     });
     expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [id])).rows).toEqual(before);
     expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
-    expect((await pool.query('SELECT * FROM contract_activations')).rows).toHaveLength(0);
-    await pool.query('UPDATE contracts SET updated_at=NOW() WHERE id=$1', [id]);
+    expect((await pool.query('SELECT * FROM contract_completions')).rows).toHaveLength(0);
     await expect(
-      pool.query('UPDATE contracts SET activated_at=NOW() WHERE id=$1', [id])
+      pool.query('UPDATE contracts SET completed_at=NOW() WHERE id=$1', [id])
     ).rejects.toMatchObject({ code: '23514' });
-    await expect(
-      pool.query("UPDATE contracts SET state='Completed' WHERE id=$1", [id])
-    ).rejects.toMatchObject({ code: '23514' });
-    await pool.query("UPDATE contracts SET state='Cancelled' WHERE id=$1", [id]);
     await expect(
       pool.query("UPDATE contracts SET state='Active' WHERE id=$1", [id])
     ).rejects.toMatchObject({ code: '23514' });

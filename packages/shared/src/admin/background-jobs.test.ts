@@ -6,6 +6,8 @@ import {
 } from './background-jobs.js';
 
 it('accepts refund retry monitoring and preserves labels for unknown historical job types', () => {
+  expect(isBackgroundJobType('contract_completion')).toBe(true);
+  expect(backgroundJobLabel('contract_completion')).toBe('Contract term completion');
   expect(isBackgroundJobType('contract_activation')).toBe(true);
   expect(backgroundJobLabel('contract_activation')).toBe('Contract activation');
   expect(isBackgroundJobType('refund_retry')).toBe(true);

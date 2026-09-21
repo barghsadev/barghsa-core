@@ -165,6 +165,7 @@ for (const locale of ['en', 'fa'] as const) {
             ruleRevision: 1,
             initialInvoiceId: 'invoice',
             serviceStartsAt: null,
+            serviceEndsAt: '2026-09-21T00:00:00Z',
             evaluatedAt: '2026-09-21T12:00:00Z',
             checks: [
               { key: 'staffApproval', required: true, status: 'met' },
@@ -197,6 +198,16 @@ for (const locale of ['en', 'fa'] as const) {
         page
           .getByRole('region', { name: words.terms, exact: true })
           .getByText(words.Active, { exact: true })
+          .first()
+      ).toBeVisible();
+      await expect(panel.getByText(words.serviceEndsAt, { exact: false })).toBeVisible();
+      dto.state = 'Completed';
+      await page.getByRole('button', { name: words.refresh, exact: true }).first().click();
+      await expect(panel.getByText(words.serviceCompleted, { exact: true })).toBeVisible();
+      await expect(
+        page
+          .getByRole('region', { name: words.terms, exact: true })
+          .getByText(words.Completed, { exact: true })
           .first()
       ).toBeVisible();
     }

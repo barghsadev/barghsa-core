@@ -20,18 +20,17 @@ export async function readContractActivation(
       service_start_required: boolean;
       initial_invoice_id: string | null;
       service_starts_at: Date | null;
+      service_ends_at: Date | null;
       approved: boolean;
       accepted: boolean;
       signed: boolean;
       paid: boolean;
       started: boolean;
       evaluated_at: Date;
-    }>('SELECT * FROM contract_activation_status($1,$3,$2,$4)', [
-      id,
-      profileId ?? null,
-      versionId ?? null,
-      staff,
-    ])
+    }>(
+      'SELECT a.*,r.service_ends_at FROM contract_activation_status($1,$3,$2,$4) a JOIN contract_activation_requirements r ON r.version_id=a.version_id',
+      [id, profileId ?? null, versionId ?? null, staff]
+    )
   ).rows[0];
   if (!r) return null;
   const check = (key: string, required: boolean, met: boolean) => ({
@@ -55,6 +54,7 @@ export async function readContractActivation(
     ruleRevision: r.rule_revision,
     initialInvoiceId: r.initial_invoice_id,
     serviceStartsAt: r.service_starts_at?.toISOString() ?? null,
+    serviceEndsAt: r.service_ends_at?.toISOString() ?? null,
     evaluatedAt: r.evaluated_at.toISOString(),
     checks,
     ready:

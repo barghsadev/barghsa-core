@@ -143,6 +143,11 @@ for (const locale of ['en', 'fa'] as const)
       words.prerequisitesReady
     );
     expect(container.querySelectorAll('button')).toHaveLength(1);
+    result = data({ state: 'Completed', ready: false, serviceEndsAt: '2026-09-21T00:00:00Z' });
+    await click(words.refresh);
+    expect(container.textContent).toContain(words.serviceEndsAt);
+    expect(container.textContent).toContain('2026-09-21T00:00:00Z');
+    expect(container.textContent).toContain(words.serviceCompleted);
   });
 it('retries failures and ignores aborted version responses', async () => {
   let finish!: (value: Response) => void;
