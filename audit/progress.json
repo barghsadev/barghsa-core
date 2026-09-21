@@ -1441,7 +1441,7 @@
         "status": "merged",
         "merge_commit_sha": "cac42489bf39a7b08443d1acb547480cf8572cee"
       },
-      "validation": "Financial preview passes40 unit/HTTP tests and API types/lint/OpenAPI. Storage foundation passes89 related migrated database tests plus5 approval-schema tests,DB types/lint and snapshot comparison. Commands,commit-time completeness,automatic refund processing,financial closure and UI remain unfinished.",
+      "validation": "Cancellation commands pass71 focused API unit/HTTP tests and19 shared approval tests,API/web types,targeted lint,OpenAPI consistency. Earlier storage validation:89 related migrated DB cases plus5 approval-schema cases. Database completeness/payment races,automatic refund fulfillment,financial closure and UI remain unfinished.",
       "next_action": "Complete the cancellation and automatic refund workflow in one coherent batch before opening its PR. Do not treat preview/storage as completed cancellation acceptance.",
       "remaining_tasks": [
         "Contract draft/edit UI and typed financial preview",
@@ -1453,10 +1453,10 @@
       "main_full_runs_verified": [
         35545814385,
         35547612589,
-        35549306810
+        35549306810,
+        35550597502
       ],
       "main_full_runs_pending": [
-        35550597502,
         35551479937
       ]
     },

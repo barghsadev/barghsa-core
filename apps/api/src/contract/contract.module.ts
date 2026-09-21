@@ -1,4 +1,7 @@
 import { ContractActivationService } from './contract-activation.service.js';
+import { InvoiceModule } from '../invoice/invoice.module.js';
+import { ContractCancellationService } from './contract-cancellation.service.js';
+import { ContractCancellationController } from './contract-cancellation.controller.js';
 import {
   ContractActivationRulesController,
   StaffContractActivationController,
@@ -19,8 +22,9 @@ import { SessionModule } from '../session/session.module.js';
 import { ContractController } from './contract.controller.js';
 import { ContractService } from './contract.service.js';
 @Module({
-  imports: [SessionModule],
+  imports: [SessionModule, InvoiceModule],
   controllers: [
+    ContractCancellationController,
     ContractActivationRulesController,
     StaffContractActivationController,
     CustomerContractActivationController,
@@ -31,6 +35,7 @@ import { ContractService } from './contract.service.js';
     CustomerContractController,
   ],
   providers: [
+    ContractCancellationService,
     ContractService,
     ContractReviewService,
     ContractSignatureService,

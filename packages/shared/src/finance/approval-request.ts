@@ -25,6 +25,7 @@ export const APPROVAL_ACTION_TYPES = [
   'refund',
   'manual_adjustment',
   'bank_payment_confirmation',
+  'contract_cancellation',
 ] as const;
 
 /** Type of the financial action an approval request covers. */

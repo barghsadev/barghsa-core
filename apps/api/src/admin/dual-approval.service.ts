@@ -128,6 +128,12 @@ export class DualApprovalService {
     }
 
     const normalized = toApprovalRequestInput(input);
+    if (normalized.actionType === 'contract_cancellation') {
+      throw new HttpException(
+        'Prepare cancellation from the contract to bind its financial decision',
+        400
+      );
+    }
 
     const pool = getDbPool();
     const id = uuidv7();
