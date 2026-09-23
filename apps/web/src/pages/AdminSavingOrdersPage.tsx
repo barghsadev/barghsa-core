@@ -10,6 +10,10 @@ import {
   SavingOrderRevisionHistory,
   type SavingOrderRevision,
 } from '../components/SavingOrderRevisionHistory.js';
+import {
+  SavingAddressAmendmentHistory,
+  type SavingAddressAmendment,
+} from '../components/SavingAddressAmendmentHistory.js';
 import { ContractCancellationRequestQueue } from '../components/ContractCancellationRequestQueue.js';
 
 type StageName =
@@ -24,9 +28,11 @@ interface Order {
   profileId: string;
   customerName: string;
   status: string;
+  financialStatus: string;
   submittedAt: string;
   billIdentifier: string;
   addressSnapshot: { full_address?: string };
+  installationAddressId: string;
   pricingSnapshot: { plan?: { title?: { fa: string; en: string } } };
   versionId: string;
   invoiceState: string;
@@ -54,6 +60,9 @@ interface Detail extends Order {
   stages: Stage[];
   events: StageEvent[];
   revisions: SavingOrderRevision[];
+  addressAmendments: SavingAddressAmendment[];
+  addressOptions: Array<{ id: string; fullAddress: string; postalCode: string }>;
+  canAmendAddress: boolean;
 }
 
 export default function AdminSavingOrdersPage() {
@@ -65,6 +74,8 @@ export default function AdminSavingOrdersPage() {
   const [detail, setDetail] = useState<Detail | null>(null);
   const [note, setNote] = useState('');
   const [handover, setHandover] = useState('');
+  const [amendAddressId, setAmendAddressId] = useState('');
+  const [amendReason, setAmendReason] = useState('');
   const [action, setAction] = useState<TeamAction | null>(null);
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'forbidden'>('loading');
@@ -109,7 +120,10 @@ export default function AdminSavingOrdersPage() {
         return response.json() as Promise<Detail>;
       })
       .then((value) => {
-        if (!controller.signal.aborted) setDetail(value);
+        if (!controller.signal.aborted) {
+          setDetail(value);
+          setAmendAddressId(value.installationAddressId);
+        }
       })
       .catch(() => {
         if (!controller.signal.aborted) setState('error');
@@ -151,6 +165,25 @@ export default function AdminSavingOrdersPage() {
         expectedStatus: 'in_progress',
         explanation: note.trim(),
         ...(handover.trim() ? { handoverDescription: handover.trim() } : {}),
+      },
+      conflictMessage: copy('staffConflict'),
+      forbiddenMessage: copy('staffForbidden'),
+    });
+  }
+
+  function amendAddress() {
+    if (!detail || !amendReason.trim() || amendAddressId === detail.installationAddressId) return;
+    setAction({
+      title: copy('staffAmendAddress'),
+      description: copy('staffConfirm'),
+      method: 'POST',
+      path: `/api/staff/saving/orders/${detail.id}/amend-address`,
+      body: {
+        idempotencyKey: crypto.randomUUID(),
+        expectedVersionId: detail.versionId,
+        expectedAddressId: detail.installationAddressId,
+        addressId: amendAddressId,
+        reason: amendReason.trim(),
       },
       conflictMessage: copy('staffConflict'),
       forbiddenMessage: copy('staffForbidden'),
@@ -240,6 +273,42 @@ export default function AdminSavingOrdersPage() {
                 </div>
               </dl>
               <SavingOrderRevisionHistory revisions={detail.revisions ?? []} />
+              <SavingAddressAmendmentHistory amendments={detail.addressAmendments ?? []} />
+              {detail.canAmendAddress && (
+                <div className="space-y-3 rounded-md border p-4">
+                  <h3 className="font-semibold">{copy('staffAmendAddress')}</h3>
+                  <p className="text-sm text-muted-foreground">{copy('staffAmendAddressHelp')}</p>
+                  <Label htmlFor="saving-amend-address">{copy('stepAddress')}</Label>
+                  <select
+                    id="saving-amend-address"
+                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                    value={amendAddressId}
+                    onChange={(event) => setAmendAddressId(event.target.value)}
+                  >
+                    {detail.addressOptions.map((address) => (
+                      <option key={address.id} value={address.id}>
+                        {address.fullAddress} · {address.postalCode}
+                      </option>
+                    ))}
+                  </select>
+                  <Label htmlFor="saving-amend-reason">{copy('staffAmendReason')}</Label>
+                  <Input
+                    id="saving-amend-reason"
+                    value={amendReason}
+                    maxLength={1000}
+                    onChange={(event) => setAmendReason(event.target.value)}
+                  />
+                  <Button
+                    variant="outline"
+                    disabled={
+                      !amendReason.trim() || amendAddressId === detail.installationAddressId
+                    }
+                    onClick={amendAddress}
+                  >
+                    {copy('staffAmendAddress')}
+                  </Button>
+                </div>
+              )}
               {detail.status === 'awaiting_staff_review' && (
                 <div className="flex flex-wrap gap-2">
                   <Button onClick={() => review('approve')}>{copy('staffApprove')}</Button>
@@ -351,6 +420,7 @@ export default function AdminSavingOrdersPage() {
           onSuccess={async () => {
             setNote('');
             setHandover('');
+            setAmendReason('');
             setRevision((n) => n + 1);
           }}
         />

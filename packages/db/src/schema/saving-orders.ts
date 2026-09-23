@@ -14,7 +14,7 @@ import { baseColumns } from '../base-table';
 import { irrAmount, uuidv7 } from '../types';
 import { addresses } from './addresses';
 import { orders } from './orders';
-import { contractVersions } from './contracts';
+import { contracts, contractVersions } from './contracts';
 import { products } from './products';
 import { profiles } from './profiles';
 import { savingPlanAgreementVersions } from './saving-plan-catalogue';
@@ -219,6 +219,50 @@ export const savingOrderRevisions = pgTable(
     uniqueIndex('saving_order_revisions_user_key').on(table.userId, table.idempotencyKey),
     index('saving_order_revisions_order_idx').on(table.orderId, table.createdAt),
     check('saving_order_revisions_snapshot', sql`jsonb_typeof(${table.previousSnapshot})='object'`),
+  ]
+);
+
+export const savingAddressAmendments = pgTable(
+  'saving_address_amendments',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => savingOrders.id, { onDelete: 'restrict' }),
+    contractId: uuid('contract_id')
+      .notNull()
+      .references(() => contracts.id, { onDelete: 'restrict' }),
+    contractVersionId: uuid('contract_version_id')
+      .notNull()
+      .references(() => contractVersions.id, { onDelete: 'restrict' }),
+    actorUserId: text('actor_user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    previousAddressId: uuid('previous_address_id')
+      .notNull()
+      .references(() => addresses.id, { onDelete: 'restrict' }),
+    addressId: uuid('address_id')
+      .notNull()
+      .references(() => addresses.id, { onDelete: 'restrict' }),
+    previousSnapshot: jsonb('previous_snapshot').notNull(),
+    addressSnapshot: jsonb('address_snapshot').notNull(),
+    reason: text('reason').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('saving_address_amendments_order_idx').on(table.orderId, table.createdAt, table.id),
+    check(
+      'saving_address_amendments_distinct',
+      sql`${table.previousAddressId}<>${table.addressId}`
+    ),
+    check(
+      'saving_address_amendments_snapshots',
+      sql`jsonb_typeof(${table.previousSnapshot})='object' AND jsonb_typeof(${table.addressSnapshot})='object'`
+    ),
+    check(
+      'saving_address_amendments_reason',
+      sql`length(trim(${table.reason})) BETWEEN 1 AND 1000`
+    ),
   ]
 );
 

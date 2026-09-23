@@ -36,6 +36,15 @@ const stageInput = z
     handoverDescription: z.string().trim().min(1).max(1000).optional(),
   })
   .strict();
+const addressAmendment = z
+  .object({
+    idempotencyKey: z.string().uuid(),
+    expectedVersionId: z.string().uuid(),
+    expectedAddressId: z.string().uuid(),
+    addressId: z.string().uuid(),
+    reason: z.string().trim().min(1).max(1000),
+  })
+  .strict();
 function parse<T>(schema: z.ZodType<T>, value: unknown): T {
   const result = schema.safeParse(value);
   if (!result.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
@@ -109,6 +118,26 @@ export class SavingFulfillmentController {
       id,
       'reject',
       parse(rejection, body),
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
+  @Post(':id/amend-address')
+  @HttpCode(201)
+  @RequiresStepUp()
+  @RateLimit({ namespace: 'saving:staff-amend-address:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Record a paid saving order installation-address amendment' })
+  @ApiZodBody(addressAmendment)
+  amendAddress(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    return this.service.amendAddress(
+      id,
+      parse(addressAmendment, body),
       req.session,
       req.ip ?? 'unknown'
     );

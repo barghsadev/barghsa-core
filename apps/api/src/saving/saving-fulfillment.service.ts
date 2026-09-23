@@ -12,6 +12,7 @@ import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.ser
 import { NotificationsService } from '../notifications/notifications.service.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { savingOrderRevisions } from './saving-order-revisions.js';
+import { savingAddressAmendments } from './saving-address-amendments.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 export const SAVING_STAGES = [
@@ -35,6 +36,7 @@ interface ReviewRow {
   submitted_at: Date;
   bill_identifier: string;
   address_snapshot: Record<string, unknown>;
+  installation_address_id: string;
   pricing_snapshot: Record<string, unknown>;
   verification_result: Record<string, unknown>;
   agreement_snapshot: string;
@@ -49,6 +51,7 @@ interface ReviewRow {
   refunded_amount: string;
   pending_refund_amount: string;
   activation_invoice_id: string | null;
+  cancellation_pending: boolean;
 }
 interface StageRow {
   stage: SavingStage;
@@ -56,11 +59,13 @@ interface StageRow {
 }
 const reviewQuery = `SELECT s.id,s.order_id,s.profile_id,p.user_id AS customer_id,
   u.username AS customer_name,s.status,s.financial_status,s.submitted_at,
-  s.bill_identifier,s.address_snapshot,s.pricing_snapshot,s.verification_result,
+  s.bill_identifier,s.address_snapshot,s.installation_address_id,s.pricing_snapshot,s.verification_result,
   s.agreement_snapshot,o.gift_code_id,c.id AS contract_id,c.state AS contract_state,
   c.current_version_id AS version_id,i.id AS invoice_id,i.state AS invoice_state,
   i.total_amount::text AS total_amount,i.paid_amount::text AS paid_amount,
   i.refunded_amount::text AS refunded_amount,ar.initial_invoice_id AS activation_invoice_id,
+  EXISTS(SELECT 1 FROM contract_cancellation_requests cr
+    WHERE cr.contract_id=c.id AND cr.status='Pending') AS cancellation_pending,
   COALESCE((SELECT SUM(r.amount)::text FROM refunds r WHERE r.invoice_id=i.id
     AND r.state NOT IN ('Completed','Rejected','Cancelled')), '0') AS pending_refund_amount
   FROM saving_orders s JOIN orders o ON o.id=s.order_id
@@ -110,7 +115,43 @@ export class SavingFulfillmentService {
         )
       ).rows;
       const revisions = await savingOrderRevisions(client, id);
-      return { ...this.present(row), stages, events, revisions };
+      const addressAmendments = await savingAddressAmendments(client, id);
+      const addressOptions = (
+        await client.query(
+          `SELECT id,full_address AS "fullAddress",postal_code AS "postalCode"
+             FROM addresses WHERE profile_id=$1 AND deleted_at IS NULL
+            ORDER BY main_address DESC,created_at DESC,id`,
+          [row.profile_id]
+        )
+      ).rows;
+      const canAmendAddress =
+        ['approved', 'in_progress'].includes(row.status) &&
+        row.financial_status === 'paid' &&
+        row.invoice_state === 'Paid' &&
+        BigInt(row.paid_amount) === BigInt(row.total_amount) &&
+        BigInt(row.pending_refund_amount) === 0n &&
+        ['AwaitingCustomerAcceptance', 'Active'].includes(row.contract_state) &&
+        !row.cancellation_pending &&
+        addressOptions.some(
+          (address: { id: string }) => address.id !== row.installation_address_id
+        ) &&
+        !stages.some(
+          (stage: StageRow) =>
+            [
+              'installation_and_document_upload',
+              'equipment_handover',
+              'process_completion',
+            ].includes(stage.stage) && stage.status !== 'pending'
+        );
+      return {
+        ...this.present(row),
+        stages,
+        events,
+        revisions,
+        addressAmendments,
+        addressOptions,
+        canAmendAddress,
+      };
     } finally {
       client.release();
     }
@@ -128,6 +169,7 @@ export class SavingFulfillmentService {
       submittedAt: row.submitted_at.toISOString(),
       billIdentifier: row.bill_identifier,
       addressSnapshot: row.address_snapshot,
+      installationAddressId: row.installation_address_id,
       pricingSnapshot: row.pricing_snapshot,
       verificationResult: row.verification_result,
       agreementSnapshot: row.agreement_snapshot,
@@ -392,6 +434,138 @@ export class SavingFulfillmentService {
         throw new ConflictException('Selected saving hardware is out of stock');
       throw error;
     }
+  }
+
+  async amendAddress(
+    id: string,
+    input: {
+      idempotencyKey: string;
+      expectedVersionId: string;
+      expectedAddressId: string;
+      addressId: string;
+      reason: string;
+    },
+    actor: Actor,
+    ip: string
+  ) {
+    const target = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM saving_orders WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!target) throw new NotFoundException('Saving order not found');
+    return staffContractMutation(target.profile_id, actor, (client, archived) =>
+      contractIdempotency(
+        client,
+        'saving_address_amendment',
+        { ...input, orderId: id },
+        actor,
+        async () => {
+          if (archived) throw new ConflictException('Profile is archived');
+          const row = await this.lockRow(client, id);
+          if (
+            !['approved', 'in_progress'].includes(row.status) ||
+            row.financial_status !== 'paid' ||
+            row.invoice_state !== 'Paid' ||
+            BigInt(row.paid_amount) !== BigInt(row.total_amount) ||
+            BigInt(row.pending_refund_amount) !== 0n ||
+            !['AwaitingCustomerAcceptance', 'Active'].includes(row.contract_state) ||
+            row.version_id !== input.expectedVersionId ||
+            row.installation_address_id !== input.expectedAddressId
+          )
+            throw new ConflictException('Saving order is not eligible for address amendment');
+          if (row.installation_address_id === input.addressId)
+            throw new ConflictException('Choose a different installation address');
+          const blocked = (
+            await client.query<{ blocked: boolean }>(
+              `SELECT EXISTS(
+                SELECT 1 FROM contract_cancellation_requests r
+                 WHERE r.contract_id=$1 AND r.status='Pending'
+                UNION ALL
+                SELECT 1 FROM saving_fulfillment_stages f
+                 WHERE f.order_id=$2 AND f.stage IN
+                   ('installation_and_document_upload','equipment_handover','process_completion')
+                   AND f.status<>'pending'
+              ) AS blocked`,
+              [row.contract_id, id]
+            )
+          ).rows[0]?.blocked;
+          if (blocked) throw new ConflictException('Installation or cancellation is in progress');
+          const address = (
+            await client.query<{
+              id: string;
+              province_id: string;
+              city_id: string;
+              full_address: string;
+              postal_code: string;
+            }>(
+              `SELECT id,province_id,city_id,full_address,postal_code FROM addresses
+                WHERE id=$1 AND profile_id=$2 AND deleted_at IS NULL FOR SHARE`,
+              [input.addressId, row.profile_id]
+            )
+          ).rows[0];
+          if (!address) throw new NotFoundException('Installation address not found');
+          const amendmentId = uuidv7();
+          await client.query(
+            `INSERT INTO saving_address_amendments(
+               id,order_id,contract_id,contract_version_id,actor_user_id,
+               previous_address_id,address_id,previous_snapshot,address_snapshot,reason)
+             VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9::jsonb,$10)`,
+            [
+              amendmentId,
+              id,
+              row.contract_id,
+              row.version_id,
+              actor.userId,
+              row.installation_address_id,
+              address.id,
+              JSON.stringify(row.address_snapshot),
+              JSON.stringify(address),
+              input.reason,
+            ]
+          );
+          await client.query(
+            `UPDATE orders SET snapshot_province_id=$2,snapshot_city_id=$3,
+               snapshot_full_address=$4,snapshot_postal_code=$5,updated_at=NOW() WHERE id=$1`,
+            [
+              row.order_id,
+              address.province_id,
+              address.city_id,
+              address.full_address,
+              address.postal_code,
+            ]
+          );
+          await client.query(
+            `UPDATE saving_orders SET installation_address_id=$2,address_snapshot=$3::jsonb,
+               updated_at=NOW() WHERE id=$1`,
+            [id, address.id, JSON.stringify(address)]
+          );
+          await auditContract(
+            client,
+            row.contract_id,
+            row.version_id,
+            'saving.address_amended',
+            actor,
+            ip,
+            {
+              savingOrderId: id,
+              amendmentId,
+              reason: input.reason,
+              previousAddress: row.address_snapshot,
+              address,
+            }
+          );
+          await this.notify(
+            client,
+            row,
+            'نشانی نصب سفارش صرفه‌جویی شما توسط کارشناس اصلاح شد. جزئیات را بررسی کنید.',
+            'Staff updated your power-saving installation address. Review the details.'
+          );
+          return { amendmentId, savingOrderId: id, address };
+        }
+      )
+    );
   }
 
   async advance(

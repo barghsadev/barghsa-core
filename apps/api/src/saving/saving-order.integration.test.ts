@@ -494,6 +494,107 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     expectedReviewHash: walletHash,
   });
   expect(paid.status, http.logs()).toBe(200);
+  const amendedAddressId = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address)
+       SELECT profile_id,province_id,city_id,'Corrected installation address','9876543210',false
+       FROM addresses WHERE id=$1 RETURNING id`,
+      [input.installationAddressId]
+    )
+  ).rows[0]!.id;
+  const amendPath = `/api/staff/saving/orders/${result.savingOrderId}/amend-address`;
+  const amendmentInput = {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: staffDetail.versionId,
+    expectedAddressId: input.installationAddressId,
+    addressId: amendedAddressId,
+    reason: 'Customer confirmed the corrected installation address',
+  };
+  expect(
+    await (
+      await request(
+        `/api/staff/saving/orders/${result.savingOrderId}`,
+        'GET',
+        undefined,
+        staffHeaders
+      )
+    ).json()
+  ).toMatchObject({ canAmendAddress: true });
+  expect((await request(amendPath, 'POST', amendmentInput)).status).toBe(403);
+  expect(
+    (
+      await request(
+        amendPath,
+        'POST',
+        { ...amendmentInput, expectedVersionId: randomUUID() },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
+  const amended = await request(amendPath, 'POST', amendmentInput, staffHeaders);
+  expect(amended.status, http.logs()).toBe(201);
+  const amendment = (await amended.json()) as { amendmentId: string };
+  expect((await request(amendPath, 'POST', amendmentInput, staffHeaders)).status).toBe(201);
+  expect(
+    (
+      await request(
+        amendPath,
+        'POST',
+        { ...amendmentInput, idempotencyKey: randomUUID() },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
+  const amendedStaffDetail = await request(
+    `/api/staff/saving/orders/${result.savingOrderId}`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(await amendedStaffDetail.json()).toMatchObject({
+    versionId: staffDetail.versionId,
+    installationAddressId: amendedAddressId,
+    addressOptions: expect.arrayContaining([expect.objectContaining({ id: amendedAddressId })]),
+    addressAmendments: [{ id: amendment.amendmentId }],
+  });
+  expect(
+    await (await request(`/api/saving/orders/${result.savingOrderId}`, 'GET')).json()
+  ).toMatchObject({
+    address_snapshot: { full_address: 'Corrected installation address' },
+    addressAmendments: [
+      {
+        id: amendment.amendmentId,
+        previousAddress: 'Test installation address',
+        address: 'Corrected installation address',
+        reason: amendmentInput.reason,
+      },
+    ],
+  });
+  expect(
+    (
+      await http.pool.query<{
+        total_amount: string;
+        snapshot_full_address: string;
+        invoiced_address: string;
+        published_address: string;
+      }>(
+        `SELECT i.total_amount::text,o.snapshot_full_address,
+          i.invoice_calculation_snapshot #>> '{address,full_address}' AS invoiced_address,
+          (SELECT content #>> '{address,full_address}' FROM contract_versions WHERE id=$2) AS published_address
+         FROM invoices i
+         JOIN orders o ON o.id=i.order_id WHERE i.id=$1`,
+        [result.invoiceId, staffDetail.versionId]
+      )
+    ).rows[0]
+  ).toMatchObject({
+    total_amount: quote.totalIrR,
+    snapshot_full_address: 'Corrected installation address',
+    invoiced_address: 'Test installation address',
+    published_address: 'Test installation address',
+  });
+  await expect(
+    http.pool.query('DELETE FROM saving_address_amendments WHERE id=$1', [amendment.amendmentId])
+  ).rejects.toMatchObject({ code: '23514' });
   const delivered = await request(
     stagePath('product_delivery'),
     'POST',
@@ -501,6 +602,31 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     staffHeaders
   );
   expect(delivered.status, http.logs()).toBe(200);
+  expect(
+    await (
+      await request(
+        `/api/staff/saving/orders/${result.savingOrderId}`,
+        'GET',
+        undefined,
+        staffHeaders
+      )
+    ).json()
+  ).toMatchObject({ canAmendAddress: false });
+  expect(
+    (
+      await request(
+        amendPath,
+        'POST',
+        {
+          ...amendmentInput,
+          idempotencyKey: randomUUID(),
+          expectedAddressId: amendedAddressId,
+          addressId: input.installationAddressId,
+        },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
   expect(await delivered.json()).toMatchObject({
     status: 'in_progress',
     nextStage: 'installation_and_document_upload',

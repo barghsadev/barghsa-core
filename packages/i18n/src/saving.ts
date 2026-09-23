@@ -68,6 +68,7 @@ const en: Record<string, string> = {
   orderDetail: 'Saving order',
   changeOrder: 'Change equipment or address',
   changeHistory: 'Order change history',
+  addressAmendments: 'Installation address amendments',
   beforeChange: 'Before',
   afterChange: 'After',
   changeOrderHelp:
@@ -132,6 +133,10 @@ const en: Record<string, string> = {
   staffReject: 'Reject request',
   staffReason: 'Reason or progress note',
   staffHandover: 'Handed-over item details',
+  staffAmendAddress: 'Amend installation address',
+  staffAmendAddressHelp:
+    'For a paid order before installation begins. The paid invoice and published contract remain as issued; the amendment records the correction.',
+  staffAmendReason: 'Amendment reason',
   staffComplete: 'Complete stage',
   staffSkip: 'Skip optional handover',
   staffConfirm: 'Record this change and notify the customer?',
@@ -227,6 +232,7 @@ const fa: Record<string, string> = {
   orderDetail: 'سفارش صرفه‌جویی',
   changeOrder: 'تغییر تجهیزات یا نشانی',
   changeHistory: 'تاریخچه تغییرات سفارش',
+  addressAmendments: 'اصلاحیه‌های نشانی نصب',
   beforeChange: 'پیش از تغییر',
   afterChange: 'پس از تغییر',
   changeOrderHelp:
@@ -291,6 +297,10 @@ const fa: Record<string, string> = {
   staffReject: 'رد درخواست',
   staffReason: 'دلیل یا شرح پیشرفت',
   staffHandover: 'شرح تجهیزات تحویل‌شده',
+  staffAmendAddress: 'اصلاح نشانی نصب',
+  staffAmendAddressHelp:
+    'برای سفارش پرداخت‌شده، پیش از آغاز نصب. فاکتور پرداخت‌شده و قرارداد منتشرشده بدون تغییر می‌مانند و اصلاحیه ثبت می‌شود.',
+  staffAmendReason: 'دلیل اصلاحیه',
   staffComplete: 'تکمیل مرحله',
   staffSkip: 'رد شدن از تحویل اختیاری',
   staffConfirm: 'این تغییر ثبت و به مشتری اطلاع داده شود؟',
