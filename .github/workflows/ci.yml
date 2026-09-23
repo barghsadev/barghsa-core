@@ -12,8 +12,8 @@ env:
   FULL_CI: ${{ vars.CI_FULL_CHECKS == 'true' || (github.event_name == 'pull_request' && vars.CI_FULL_PR_CHECKS == 'true') }}
 
 concurrency:
-  group: ci-${{ github.event.pull_request.number || github.sha }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   sast:

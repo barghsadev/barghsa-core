@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[CI main-run concurrency](batches/2026-09-24-ci-main-concurrency.md) groups checks by workflow and branch so a new direct `main` push cancels an older redundant run while preserving every check on the newest cumulative commit.
+
 [Advanced electricity payment and contract journey](batches/2026-09-24-electricity-advanced-browser-journey.md) extends the existing bilingual advanced-order browser path from reviewed submission through wallet payment and the selected contract detail.
 
 [Electricity estimate retry](batches/2026-09-24-electricity-estimate-retry.md) gives customers a direct retry after bill-data failure without clearing their quantity. It also labels the estimate's source, coverage and timestamp in the selected language.
