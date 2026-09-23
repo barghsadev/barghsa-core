@@ -254,7 +254,7 @@ for (const locale of ['en', 'fa'] as const) {
   });
 }
 
-test('paid electricity invoice returns to the order and its published contract', async ({
+test('electricity order, paid invoice and published contract keep the selected language', async ({
   page,
 }) => {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
@@ -282,6 +282,26 @@ test('paid electricity invoice returns to the order and its published contract',
   );
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+  await page.route('**/api/electricity/orders?*', (route) =>
+    route.fulfill({
+      json: {
+        orders: [
+          {
+            orderId,
+            electricityStatus: 'approved',
+            financialStatus: 'paid',
+            nextAction: 'accept_contract',
+            submittedAt: '2026-09-23T10:00:00.000Z',
+            periodStart: '2026-10-01T00:00:00.000Z',
+            periodEnd: '2026-10-08T00:00:00.000Z',
+            totalKwh: '10',
+            totalIrR: '1000000',
+          },
+        ],
+        nextBefore: null,
+      },
+    })
   );
   const invoice = {
     invoiceId,
@@ -346,9 +366,12 @@ test('paid electricity invoice returns to the order and its published contract',
     })
   );
 
-  await page.goto(`/invoices/${invoiceId}`);
-  await expect(page.getByRole('link', { name: 'بازگشت به سفارش برق' })).toBeVisible();
+  await page.goto('/electricity/orders');
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  await expect(page.getByRole('heading', { name: 'Electricity orders' })).toBeVisible();
+  await page.getByRole('link', { name: new RegExp(orderId) }).click();
+  await expect(page).toHaveURL(new RegExp(`/electricity/orders/${orderId}$`));
+  await page.getByRole('link', { name: new RegExp(invoiceId) }).click();
   await expect(page.getByRole('heading', { name: 'Invoice details' })).toBeVisible();
   await page.getByRole('link', { name: 'Back to electricity order' }).click();
   await expect(page).toHaveURL(new RegExp(`/electricity/orders/${orderId}$`));
@@ -358,4 +381,7 @@ test('paid electricity invoice returns to the order and its published contract',
   await expect(
     page.getByRole('link', { name: 'Review and accept the published contract.' })
   ).toHaveAttribute('href', `/contracts?contractId=${contractId}`);
+  await page.getByRole('link', { name: 'Review and accept the published contract.' }).click();
+  await expect(page).toHaveURL(new RegExp(`/contracts\\?contractId=${contractId}$`));
+  await expect(page.getByRole('heading', { name: 'Contracts' })).toBeVisible();
 });

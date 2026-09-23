@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { Button, Card, CardContent } from '@barghsa/ui';
@@ -83,12 +83,12 @@ export function ElectricityOrdersPage() {
             {t('electricity.orders.description', locale)}
           </p>
         </div>
-        <a
-          href="/electricity/order"
+        <Link
+          to="/electricity/order"
           className="rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4"
         >
           {t('electricity.orders.new', locale)}
-        </a>
+        </Link>
       </header>
       {loading ? (
         <p role="status">{t('electricity.orders.loading', locale)}</p>
@@ -107,12 +107,13 @@ export function ElectricityOrdersPage() {
             <Card key={order.orderId}>
               <CardContent className="space-y-3 pt-6">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <a
-                    href={`/electricity/orders/${encodeURIComponent(order.orderId)}`}
+                  <Link
+                    to="/electricity/orders/$orderId"
+                    params={{ orderId: order.orderId }}
                     className="font-semibold text-primary underline underline-offset-4"
                   >
                     {t('electricity.orders.view', locale)} · {order.orderId}
-                  </a>
+                  </Link>
                   <span className="text-sm text-muted-foreground">
                     {new Date(order.submittedAt).toLocaleDateString(locale)}
                   </span>

@@ -10,6 +10,13 @@ import { refreshProfileContext } from '../lib/profile-context.js';
 import type { TeamAction } from './TeamActionDialog.js';
 import type { ContractDetailData, ContractVersion } from '../lib/contracts.js';
 import { en, fa } from '@barghsa/i18n/contracts';
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({ children, to, className }: { children: ReactNode; to: string; className?: string }) => (
+    <a href={to} className={className}>
+      {children}
+    </a>
+  ),
+}));
 const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
   action: null as TeamAction | null,

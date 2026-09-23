@@ -1,4 +1,5 @@
 import { t } from '@barghsa/i18n/app';
+import { Link } from '@tanstack/react-router';
 
 export type WorkflowOwner = 'customer' | 'staff' | 'none';
 
@@ -47,12 +48,21 @@ export function WorkflowStatusBanner({
           <dt className="font-medium">{t('workflow.nextAction', locale)}</dt>
           <dd className="mt-1">
             {actionHref ? (
-              <a
-                className="font-medium text-primary underline underline-offset-4"
-                href={actionHref}
-              >
-                {nextAction}
-              </a>
+              actionHref.startsWith('#') ? (
+                <a
+                  className="font-medium text-primary underline underline-offset-4"
+                  href={actionHref}
+                >
+                  {nextAction}
+                </a>
+              ) : (
+                <Link
+                  className="font-medium text-primary underline underline-offset-4"
+                  to={actionHref}
+                >
+                  {nextAction}
+                </Link>
+              )
             ) : (
               <span dir="auto">{nextAction}</span>
             )}
@@ -65,9 +75,9 @@ export function WorkflowStatusBanner({
         <div>
           <dt className="font-medium">{t('workflow.help', locale)}</dt>
           <dd className="mt-1">
-            <a className="text-primary underline underline-offset-4" href={safeSupportHref}>
+            <Link className="text-primary underline underline-offset-4" to={safeSupportHref}>
               {t('workflow.support', locale)}
-            </a>
+            </Link>
           </dd>
         </div>
       </dl>

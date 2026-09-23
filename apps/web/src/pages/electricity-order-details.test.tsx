@@ -1,7 +1,33 @@
-import { act } from 'react';
+import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
 import { ElectricityOrderDetailsPage } from './ElectricityOrderDetailsPage.js';
+
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({
+    children,
+    to,
+    params,
+    search,
+    ...rest
+  }: {
+    children: ReactNode;
+    to: string;
+    params?: Record<string, string>;
+    search?: Record<string, string>;
+  }) => {
+    const path = Object.entries(params ?? {}).reduce(
+      (value, [key, param]) => value.replace(`$${key}`, encodeURIComponent(param)),
+      to
+    );
+    const query = search ? `?${new URLSearchParams(search)}` : '';
+    return (
+      <a href={`${path}${query}`} {...rest}>
+        {children}
+      </a>
+    );
+  },
+}));
 
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, irrDigits: String }),

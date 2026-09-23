@@ -1,9 +1,16 @@
-import { act } from 'react';
+import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { SolarRequestDetailPage } from './SolarRequestDetailPage.js';
 
-vi.mock('@tanstack/react-router', () => ({ useParams: () => ({ requestId: 'request-1' }) }));
+vi.mock('@tanstack/react-router', () => ({
+  useParams: () => ({ requestId: 'request-1' }),
+  Link: ({ children, to, className }: { children: ReactNode; to: string; className?: string }) => (
+    <a href={to} className={className}>
+      {children}
+    </a>
+  ),
+}));
 vi.mock('../components/DocumentsWorkspace.js', () => ({
   DocumentResults: () => <div>File list</div>,
 }));

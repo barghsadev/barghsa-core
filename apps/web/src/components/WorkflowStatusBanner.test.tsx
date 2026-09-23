@@ -1,6 +1,15 @@
+import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import { WorkflowStatusBanner } from './WorkflowStatusBanner.js';
+
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({ children, to, className }: { children: ReactNode; to: string; className?: string }) => (
+    <a href={to} className={className}>
+      {children}
+    </a>
+  ),
+}));
 
 it('shows the status, latest event, responsible party, action, and support path', () => {
   const html = renderToStaticMarkup(

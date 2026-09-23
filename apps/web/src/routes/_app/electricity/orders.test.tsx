@@ -1,7 +1,31 @@
-import { act } from 'react';
+import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
 import { ElectricityOrdersPage } from './orders.index.js';
+
+vi.mock('@tanstack/react-router', () => ({
+  createFileRoute: () => (options: unknown) => ({ options }),
+  Link: ({
+    children,
+    to,
+    params,
+    ...rest
+  }: {
+    children: ReactNode;
+    to: string;
+    params?: Record<string, string>;
+  }) => {
+    const href = Object.entries(params ?? {}).reduce(
+      (path, [key, value]) => path.replace(`$${key}`, encodeURIComponent(value)),
+      to
+    );
+    return (
+      <a href={href} {...rest}>
+        {children}
+      </a>
+    );
+  },
+}));
 
 vi.mock('../../../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, irrDigits: String }),
@@ -50,6 +74,7 @@ it('shows the active profile order with both statuses and a next action', async 
     expect(container.textContent).toContain('Unpaid');
     expect(container.textContent).toContain('2500000');
     expect(container.textContent).toContain('order-1');
+    expect(container.querySelector('a[href="/electricity/orders/order-1"]')).not.toBeNull();
   } finally {
     await act(async () => root.unmount());
     container.remove();

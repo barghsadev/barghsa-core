@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
@@ -267,9 +268,12 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <header>
-        <a href="/electricity/orders" className="text-sm text-primary underline underline-offset-4">
+        <Link
+          to="/electricity/orders"
+          className="text-sm text-primary underline underline-offset-4"
+        >
           {t('electricity.order.detail.back', locale)}
-        </a>
+        </Link>
         <h1 className="text-2xl font-bold">{t('electricity.order.detail.title', locale)}</h1>
         <p className="mt-2 text-muted-foreground">
           {t('electricity.order.detail.description', locale)}
@@ -459,9 +463,9 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                   )}
                 </p>
               ) : null}
-              <a href="/tickets" className="text-primary underline underline-offset-4">
+              <Link to="/tickets" className="text-primary underline underline-offset-4">
                 {t('electricity.order.detail.help', locale)}
-              </a>
+              </Link>
             </CardContent>
           </Card>
           {['awaiting_staff_review', 'changes_requested'].includes(detail.electricityStatus) ? (
@@ -487,9 +491,9 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                         locale
                       )}
                       {cancelError === 'stepup' ? (
-                        <a href="/settings/security" className="ms-2 underline">
+                        <Link to="/settings/security" className="ms-2 underline">
                           {t('electricity.order.detail.security', locale)}
-                        </a>
+                        </Link>
                       ) : null}
                     </p>
                   ) : null}
@@ -560,23 +564,25 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             {['AwaitingCustomerAcceptance', 'Accepted', 'Signed', 'Active', 'Completed'].includes(
               detail.contractState
             ) ? (
-              <a
-                href={`/contracts?contractId=${encodeURIComponent(detail.contractId)}`}
+              <Link
+                to="/contracts"
+                search={{ contractId: detail.contractId }}
                 className="rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4"
               >
                 {t('electricity.order.success.contract', locale)}: {detail.contractId}
-              </a>
+              </Link>
             ) : (
               <span className="rounded-md border px-4 py-2 text-sm text-muted-foreground">
                 {t('electricity.order.contractPending', locale)}: {detail.contractId}
               </span>
             )}
-            <a
-              href={`/invoices/${detail.invoiceId}`}
+            <Link
+              to="/invoices/$invoiceId"
+              params={{ invoiceId: detail.invoiceId }}
               className="rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4"
             >
               {t('electricity.order.financialReviewLink', locale)}: {detail.invoiceId}
-            </a>
+            </Link>
           </div>
           {!['rejected', 'cancelled', 'changes_requested'].includes(detail.electricityStatus) &&
           ['unpaid', 'partially_funded', 'payment_under_review'].includes(
