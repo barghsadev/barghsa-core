@@ -20600,6 +20600,179 @@
         ]
       }
     },
+    "/api/solar/requests/draft": {
+      "get": {
+        "operationId": "SolarRequestController_getDraft",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Resume a profile-owned solar request form",
+        "tags": [
+          "Solar construction requests"
+        ]
+      },
+      "put": {
+        "operationId": "SolarRequestController_saveDraft",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "currentStep": {
+                    "enum": [
+                      1
+                    ],
+                    "type": "number"
+                  },
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "billIdentifier": {
+                        "maxLength": 13,
+                        "type": "string"
+                      },
+                      "buildingCompletionDate": {
+                        "maxLength": 10,
+                        "type": "string"
+                      },
+                      "buildingType": {
+                        "enum": [
+                          "building_apartment",
+                          "non_household"
+                        ],
+                        "type": "string"
+                      },
+                      "gridType": {
+                        "enum": [
+                          "on_grid",
+                          "off_grid"
+                        ],
+                        "type": "string"
+                      },
+                      "installationSurface": {
+                        "enum": [
+                          "land",
+                          "rooftop",
+                          "both"
+                        ],
+                        "type": "string"
+                      },
+                      "propertyForm": {
+                        "enum": [
+                          "apartment",
+                          "villa"
+                        ],
+                        "type": "string"
+                      },
+                      "siteAddressId": {
+                        "maxLength": 36,
+                        "type": "string"
+                      },
+                      "siteCategory": {
+                        "enum": [
+                          "agricultural",
+                          "industrial"
+                        ],
+                        "type": "string"
+                      },
+                      "siteDescription": {
+                        "maxLength": 2000,
+                        "type": "string"
+                      },
+                      "siteRelationship": {
+                        "enum": [
+                          "owner",
+                          "tenant",
+                          "authorized_operator"
+                        ],
+                        "type": "string"
+                      },
+                      "structuralFrame": {
+                        "enum": [
+                          "concrete",
+                          "steel",
+                          "other"
+                        ],
+                        "type": "string"
+                      },
+                      "totalUnits": {
+                        "maxLength": 6,
+                        "type": "string"
+                      },
+                      "usableAreaSqm": {
+                        "maxLength": 20,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "buildingType",
+                      "propertyForm",
+                      "structuralFrame",
+                      "buildingCompletionDate",
+                      "totalUnits",
+                      "siteCategory",
+                      "installationSurface",
+                      "usableAreaSqm",
+                      "siteAddressId",
+                      "siteRelationship",
+                      "siteDescription",
+                      "gridType",
+                      "billIdentifier"
+                    ],
+                    "type": "object"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "currentStep",
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Save a profile-owned solar request form draft",
+        "tags": [
+          "Solar construction requests"
+        ]
+      }
+    },
     "/api/solar/requests/{id}": {
       "get": {
         "operationId": "SolarRequestController_detail",

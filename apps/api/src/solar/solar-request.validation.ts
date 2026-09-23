@@ -66,3 +66,31 @@ export const solarSubmission = z
   });
 
 export type SolarSubmission = z.infer<typeof solarSubmission>;
+
+/** Incomplete form values are valid here; submission still uses solarSubmission. */
+export const solarDraftData = z
+  .object({
+    buildingType: z.enum(['building_apartment', 'non_household']),
+    propertyForm: z.enum(['apartment', 'villa']),
+    structuralFrame: z.enum(['concrete', 'steel', 'other']),
+    buildingCompletionDate: z.string().max(10),
+    totalUnits: z.string().max(6),
+    siteCategory: z.enum(['agricultural', 'industrial']),
+    installationSurface: z.enum(['land', 'rooftop', 'both']),
+    usableAreaSqm: z.string().max(20),
+    siteAddressId: z.string().max(36),
+    siteRelationship: z.enum(['owner', 'tenant', 'authorized_operator']),
+    siteDescription: z.string().max(2000),
+    gridType: z.enum(['on_grid', 'off_grid']),
+    billIdentifier: z.string().max(13),
+  })
+  .strict();
+
+export const solarDraftInput = z
+  .object({
+    profileId: z.string().uuid(),
+    currentStep: z.literal(1),
+    data: solarDraftData,
+  })
+  .strict();
+export type SolarDraftInput = z.infer<typeof solarDraftInput>;

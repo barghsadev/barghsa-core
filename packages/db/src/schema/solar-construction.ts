@@ -5,6 +5,7 @@ import {
   date,
   index,
   integer,
+  jsonb,
   numeric,
   pgTable,
   text,
@@ -19,6 +20,30 @@ import { contracts } from './contracts';
 import { documents } from './documents';
 import { profiles } from './profiles';
 import { users } from './users';
+
+/** Profile-scoped, short-lived solar intake progress; removed on submission. */
+export const solarCustomerDrafts = pgTable(
+  'solar_customer_drafts',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    profileId: uuid('profile_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'restrict' }),
+    data: jsonb('data').$type<Record<string, unknown>>().notNull().default({}),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex('solar_customer_drafts_owner_key').on(t.userId, t.profileId),
+    check(
+      'solar_customer_drafts_data',
+      sql`jsonb_typeof(${t.data})='object' AND octet_length(${t.data}::text)<=8192`
+    ),
+  ]
+);
 
 export const solarConstructionRequests = pgTable(
   'solar_construction_requests',

@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
+import { useFormDraft, type DraftSchema } from '../hooks/useFormDraft.js';
 
 interface Address {
   id: string;
@@ -13,6 +14,47 @@ interface Address {
 }
 type BuildingType = 'building_apartment' | 'non_household';
 type GridType = 'on_grid' | 'off_grid';
+interface SolarDraft {
+  buildingType: BuildingType;
+  propertyForm: 'apartment' | 'villa';
+  structuralFrame: 'concrete' | 'steel' | 'other';
+  buildingCompletionDate: string;
+  totalUnits: string;
+  siteCategory: 'agricultural' | 'industrial';
+  installationSurface: 'land' | 'rooftop' | 'both';
+  usableAreaSqm: string;
+  siteAddressId: string;
+  siteRelationship: 'owner' | 'tenant' | 'authorized_operator';
+  siteDescription: string;
+  gridType: GridType;
+  billIdentifier: string;
+}
+
+const solarDraftSchema: DraftSchema<SolarDraft> = {
+  safeParse(value) {
+    if (!value || typeof value !== 'object') return { success: false };
+    const data = value as Record<string, unknown>;
+    if (
+      !['building_apartment', 'non_household'].includes(String(data.buildingType)) ||
+      !['apartment', 'villa'].includes(String(data.propertyForm)) ||
+      !['concrete', 'steel', 'other'].includes(String(data.structuralFrame)) ||
+      !['agricultural', 'industrial'].includes(String(data.siteCategory)) ||
+      !['land', 'rooftop', 'both'].includes(String(data.installationSurface)) ||
+      !['owner', 'tenant', 'authorized_operator'].includes(String(data.siteRelationship)) ||
+      !['on_grid', 'off_grid'].includes(String(data.gridType)) ||
+      [
+        'buildingCompletionDate',
+        'totalUnits',
+        'usableAreaSqm',
+        'siteAddressId',
+        'siteDescription',
+        'billIdentifier',
+      ].some((key) => typeof data[key] !== 'string')
+    )
+      return { success: false };
+    return { success: true, data: data as unknown as SolarDraft };
+  },
+};
 
 export function SolarRequestPage() {
   const navigate = useNavigate();
@@ -45,6 +87,21 @@ export function SolarRequestPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const submissionKey = useRef<string | null>(null);
+  const [draftHydrated, setDraftHydrated] = useState(false);
+  const [draftSaveError, setDraftSaveError] = useState(false);
+  const [draftSaved, setDraftSaved] = useState(false);
+  const draftTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingDraftSave = useRef<Promise<void> | null>(null);
+  const draftKey = profileId
+    ? `/api/solar/requests/draft?profileId=${encodeURIComponent(profileId)}`
+    : null;
+  const {
+    draft,
+    loading: draftLoading,
+    error: draftError,
+    save: saveDraft,
+    retry: retryDraft,
+  } = useFormDraft(draftKey, solarDraftSchema);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -71,7 +128,7 @@ export function SolarRequestPage() {
           const result = (await addressResponse.json()) as { addresses: Address[] };
           if (!controller.signal.aborted) {
             setAddresses(result.addresses);
-            setSiteAddressId(result.addresses[0]?.id ?? '');
+            setSiteAddressId((current) => current || result.addresses[0]?.id || '');
           }
         }
       } catch {
@@ -83,11 +140,99 @@ export function SolarRequestPage() {
     return () => controller.abort();
   }, []);
 
+  useEffect(() => {
+    if (!draft || draftHydrated) return;
+    if (draft.data) {
+      const saved = draft.data;
+      setBuildingType(saved.buildingType);
+      setPropertyForm(saved.propertyForm);
+      setStructuralFrame(saved.structuralFrame);
+      setBuildingCompletionDate(saved.buildingCompletionDate);
+      setTotalUnits(saved.totalUnits);
+      setSiteCategory(saved.siteCategory);
+      setInstallationSurface(saved.installationSurface);
+      setUsableAreaSqm(saved.usableAreaSqm);
+      setSiteAddressId(saved.siteAddressId);
+      setSiteRelationship(saved.siteRelationship);
+      setSiteDescription(saved.siteDescription);
+      setGridType(saved.gridType);
+      setBillIdentifier(saved.billIdentifier);
+    }
+    setDraftHydrated(true);
+  }, [draft, draftHydrated]);
+
+  const currentDraft = useMemo<SolarDraft>(
+    () => ({
+      buildingType,
+      propertyForm,
+      structuralFrame,
+      buildingCompletionDate,
+      totalUnits,
+      siteCategory,
+      installationSurface,
+      usableAreaSqm,
+      siteAddressId,
+      siteRelationship,
+      siteDescription,
+      gridType,
+      billIdentifier,
+    }),
+    [
+      buildingType,
+      propertyForm,
+      structuralFrame,
+      buildingCompletionDate,
+      totalUnits,
+      siteCategory,
+      installationSurface,
+      usableAreaSqm,
+      siteAddressId,
+      siteRelationship,
+      siteDescription,
+      gridType,
+      billIdentifier,
+    ]
+  );
+
+  useEffect(() => {
+    if (!draftHydrated || !profileId || submitting) return;
+    setDraftSaved(false);
+    const data = currentDraft;
+    const timer = setTimeout(() => {
+      const previous = pendingDraftSave.current;
+      const saving = (previous ?? Promise.resolve()).catch(() => {}).then(() => saveDraft(1, data));
+      pendingDraftSave.current = saving;
+      void saving.then(() => setDraftSaveError(false)).catch(() => setDraftSaveError(true));
+    }, 1200);
+    draftTimer.current = timer;
+    return () => clearTimeout(timer);
+  }, [draftHydrated, profileId, submitting, saveDraft, currentDraft]);
+
+  async function saveNow(): Promise<boolean> {
+    if (draftTimer.current) clearTimeout(draftTimer.current);
+    try {
+      await pendingDraftSave.current?.catch(() => {});
+      await saveDraft(1, currentDraft);
+      setDraftSaveError(false);
+      setDraftSaved(true);
+      return true;
+    } catch {
+      setDraftSaveError(true);
+      return false;
+    }
+  }
+
+  async function leaveForAddress() {
+    if (await saveNow()) void navigate({ to: '/settings/addresses' });
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!profileId || !agreementAccepted || submitting) return;
+    if (draftTimer.current) clearTimeout(draftTimer.current);
     setSubmitting(true);
     setSubmitError(false);
+    await pendingDraftSave.current?.catch(() => {});
     const base = {
       profileId,
       submissionKey: (submissionKey.current ??= crypto.randomUUID()),
@@ -146,7 +291,18 @@ export function SolarRequestPage() {
       {loading && <p role="status">{copy('loading')}</p>}
       {loadError && <p role="alert">{copy('loadError')}</p>}
       {!loading && !profileId && <p role="alert">{copy('profileRequired')}</p>}
-      {!loading && profileId && (
+      {profileId && draftLoading && <p role="status">{copy('draftLoading')}</p>}
+      {profileId && draftError && (
+        <div role="alert">
+          <p>{copy('draftLoadError')}</p>
+          <Button type="button" variant="outline" onClick={retryDraft}>
+            {copy('retry')}
+          </Button>
+        </div>
+      )}
+      {draftSaveError && <p role="alert">{copy('draftSaveError')}</p>}
+      {draftSaved && !draftSaveError && <p role="status">{copy('draftSaved')}</p>}
+      {!loading && profileId && draftHydrated && !draftError && (
         <form onSubmit={submit} className="space-y-6">
           <fieldset className="grid gap-3 sm:grid-cols-2">
             <legend className="mb-3 font-semibold">{copy('instruction')}</legend>
@@ -295,7 +451,14 @@ export function SolarRequestPage() {
                     </select>
                   </label>
                   {!addresses.length && (
-                    <Link className="text-sm underline" to="/settings/addresses">
+                    <Link
+                      className="text-sm underline"
+                      to="/settings/addresses"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        void leaveForAddress();
+                      }}
+                    >
                       {copy('noAddresses')}
                     </Link>
                   )}
@@ -383,6 +546,9 @@ export function SolarRequestPage() {
             {copy('agreement')}
           </label>
           {submitError && <p role="alert">{copy('submitError')}</p>}
+          <Button type="button" variant="outline" onClick={() => void saveNow()}>
+            {copy('saveDraft')}
+          </Button>
           <Button
             type="submit"
             disabled={

@@ -715,6 +715,13 @@
       "when": 1791331200084,
       "tag": "0181_saving_duplicate_policy",
       "breakpoints": true
+    },
+    {
+      "idx": 182,
+      "version": "7",
+      "when": 1791331200085,
+      "tag": "0182_solar_customer_drafts",
+      "breakpoints": true
     }
   ]
 }

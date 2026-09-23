@@ -6,6 +6,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -16,7 +17,7 @@ import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { SolarRequestService } from './solar-request.service.js';
-import { solarSubmission } from './solar-request.validation.js';
+import { solarDraftInput, solarSubmission } from './solar-request.validation.js';
 
 @ApiTags('Solar construction requests')
 @ApiBearerAuth()
@@ -24,6 +25,26 @@ import { solarSubmission } from './solar-request.validation.js';
 @UseGuards(SessionAuthGuard)
 export class SolarRequestController {
   constructor(private readonly service: SolarRequestService) {}
+
+  @Get('draft')
+  @RateLimit({ namespace: 'solar:draft-read:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Resume a profile-owned solar request form' })
+  getDraft(
+    @Query('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.service.getDraft(req.session, profileId);
+  }
+
+  @Put('draft')
+  @RateLimit({ namespace: 'solar:draft-write:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Save a profile-owned solar request form draft' })
+  @ApiZodBody(solarDraftInput)
+  saveDraft(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    const input = solarDraftInput.safeParse(body);
+    if (!input.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.saveDraft(req.session, input.data);
+  }
 
   @Post()
   @RateLimit({ namespace: 'solar:submit:user', limit: 60, windowMs: 60_000, scope: 'user' })

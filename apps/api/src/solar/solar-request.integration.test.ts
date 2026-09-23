@@ -67,6 +67,72 @@ afterAll(async () => {
   await http?.close();
 });
 
+it('saves and resumes a scoped solar draft without losing incomplete fields', async () => {
+  const path = `/api/solar/requests/draft?profileId=${profileId}`;
+  expect(await (await request(path, 'GET')).json()).toMatchObject({ currentStep: 1, data: null });
+  expect((await request(path, 'GET', undefined, otherHeaders)).status).toBe(404);
+  const data = {
+    buildingType: 'non_household',
+    propertyForm: 'apartment',
+    structuralFrame: 'steel',
+    buildingCompletionDate: '',
+    totalUnits: '',
+    siteCategory: 'industrial',
+    installationSurface: 'rooftop',
+    usableAreaSqm: '250',
+    siteAddressId: addressId,
+    siteRelationship: 'tenant',
+    siteDescription: 'Roof survey pending',
+    gridType: 'off_grid',
+    billIdentifier: '',
+  };
+  expect(
+    (
+      await request(
+        '/api/solar/requests/draft',
+        'PUT',
+        { profileId, currentStep: 1, data },
+        otherHeaders
+      )
+    ).status
+  ).toBe(404);
+  expect(
+    (
+      await request('/api/solar/requests/draft', 'PUT', {
+        profileId,
+        currentStep: 1,
+        data: { ...data, buildingType: 'invalid' },
+      })
+    ).status
+  ).toBe(400);
+  const saved = await request('/api/solar/requests/draft', 'PUT', {
+    profileId,
+    currentStep: 1,
+    data,
+  });
+  expect(saved.status, http.logs()).toBe(200);
+  expect(await saved.json()).toMatchObject({ currentStep: 1, data });
+  expect(
+    (await request('/api/solar/requests/draft', 'PUT', { profileId, currentStep: 1, data })).status
+  ).toBe(200);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT COUNT(*)::int AS count FROM audit_log WHERE event='solar.request.draft_saved'"
+      )
+    ).rows[0]?.count
+  ).toBe(1);
+  expect(await (await request(path, 'GET')).json()).toMatchObject({ data });
+  await http.pool.query(
+    "UPDATE solar_customer_drafts SET updated_at=NOW()-INTERVAL '8 days' WHERE profile_id=$1",
+    [profileId]
+  );
+  expect(await (await request(path, 'GET')).json()).toMatchObject({ data: null });
+  expect(
+    (await request('/api/solar/requests/draft', 'PUT', { profileId, currentStep: 1, data })).status
+  ).toBe(200);
+}, 60_000);
+
 it('submits both solar request types, captures agreement, and creates no contract or invoice', async () => {
   const buildingInput = {
     profileId,
@@ -89,6 +155,9 @@ it('submits both solar request types, captures agreement, and creates no contrac
   expect(buildingResponse.status, http.logs()).toBe(201);
   const building = (await buildingResponse.json()) as { requestId: string; status: string };
   expect(building.status).toBe('submitted');
+  expect(
+    await (await request(`/api/solar/requests/draft?profileId=${profileId}`, 'GET')).json()
+  ).toMatchObject({ data: null });
   const retry = await request('/api/solar/requests', 'POST', buildingInput);
   expect(retry.status, http.logs()).toBe(201);
   expect(await retry.json()).toMatchObject(building);

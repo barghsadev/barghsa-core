@@ -4,7 +4,7 @@ import { v7 as uuidv7 } from 'uuid';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { OrdersService } from '../orders/orders.service.js';
-import type { SolarSubmission } from './solar-request.validation.js';
+import type { SolarDraftInput, SolarSubmission } from './solar-request.validation.js';
 
 export const SOLAR_AGREEMENT_VERSION = 'solar-construction-request-v1';
 export const SOLAR_AGREEMENT_TEXT = 'شرایط ثبت قرارداد را می‌پذیرم.';
@@ -13,6 +13,77 @@ type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 @Injectable()
 export class SolarRequestService {
   constructor(private readonly orders: OrdersService) {}
+
+  async getDraft(actor: Actor, profileId: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      if (!(await this.orders.mayManageOrders(client, actor.userId, profileId, true)))
+        throw new NotFoundException('Profile not found');
+      await client.query(
+        "DELETE FROM solar_customer_drafts WHERE user_id=$1 AND profile_id=$2 AND updated_at < NOW()-INTERVAL '7 days'",
+        [actor.userId, profileId]
+      );
+      const row = (
+        await client.query<{ data: SolarDraftInput['data']; updated_at: Date }>(
+          'SELECT data,updated_at FROM solar_customer_drafts WHERE user_id=$1 AND profile_id=$2',
+          [actor.userId, profileId]
+        )
+      ).rows[0];
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return row
+        ? { currentStep: 1, data: row.data, updatedAt: row.updated_at.toISOString() }
+        : { currentStep: 1, data: null, updatedAt: null };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async saveDraft(actor: Actor, input: SolarDraftInput) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      if (!(await this.orders.mayManageOrders(client, actor.userId, input.profileId, true)))
+        throw new NotFoundException('Profile not found');
+      const saved = await client.query<{ data: SolarDraftInput['data']; updated_at: Date }>(
+        `INSERT INTO solar_customer_drafts(user_id,profile_id,data)
+           VALUES($1,$2,$3::jsonb)
+           ON CONFLICT(user_id,profile_id) DO UPDATE SET data=EXCLUDED.data,updated_at=NOW()
+             WHERE solar_customer_drafts.data IS DISTINCT FROM EXCLUDED.data
+           RETURNING data,updated_at`,
+        [actor.userId, input.profileId, JSON.stringify(input.data)]
+      );
+      if (saved.rows.length) {
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id)
+           VALUES(uuid_generate_v7(),$1,'solar.request.draft_saved',jsonb_build_object('profileId',$2::text),uuid_generate_v7())`,
+          [actor.userId, input.profileId]
+        );
+      }
+      const row =
+        saved.rows[0] ??
+        (
+          await client.query<{ data: SolarDraftInput['data']; updated_at: Date }>(
+            'SELECT data,updated_at FROM solar_customer_drafts WHERE user_id=$1 AND profile_id=$2',
+            [actor.userId, input.profileId]
+          )
+        ).rows[0]!;
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return { currentStep: 1, data: row.data, updatedAt: row.updated_at.toISOString() };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 
   async submit(actor: Actor, input: SolarSubmission, ip: string) {
     const client = await getDbPool().connect();
@@ -92,6 +163,10 @@ export class SolarRequestService {
           ip,
         ]
       );
+      await client.query('DELETE FROM solar_customer_drafts WHERE user_id=$1 AND profile_id=$2', [
+        actor.userId,
+        input.profileId,
+      ]);
       await client.query('COMMIT');
       return { requestId: id, status: 'submitted' as const };
     } catch (error) {
