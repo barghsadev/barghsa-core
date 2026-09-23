@@ -58,7 +58,11 @@ export function ElectricityOrdersPage() {
       };
       if (!Array.isArray(result.orders)) throw new Error('Invalid orders');
       if (!abort.signal.aborted) {
-        setOrders(result.orders);
+        setOrders((current) => {
+          if (!before) return result.orders;
+          const shown = new Set(current.map((order) => order.orderId));
+          return [...current, ...result.orders.filter((order) => !shown.has(order.orderId))];
+        });
         setNextBefore(result.nextBefore);
       }
     })()
