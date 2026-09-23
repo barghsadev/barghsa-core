@@ -259,8 +259,26 @@ export class SolarRequestService {
         !(await this.orders.mayManageOrders(client, actor.userId, request.profile_id as string))
       )
         throw new NotFoundException('Solar request not found');
+      const history = (
+        await client.query<{ event: string; created_at: Date }>(
+          `SELECT event,created_at FROM audit_log
+           WHERE event LIKE 'solar.%' AND metadata IS NOT NULL
+             AND metadata::jsonb->>'requestId'=$1
+             AND event IN (
+               'solar.request.submitted','solar.documents.submitted',
+               'solar.documents.additional_requested','solar.documents.approved_for_postal',
+               'solar.postal.shipped','solar.postal.received',
+               'solar.postal.incomplete','solar.postal.not_received',
+               'solar.final.review_started','solar.final.approve',
+               'solar.final.reject','solar.final.close-no-contract',
+               'solar.contract.created'
+             )
+           ORDER BY created_at,id`,
+          [id]
+        )
+      ).rows.map((row) => ({ event: row.event, at: row.created_at.toISOString() }));
       await client.query('COMMIT');
-      return { request };
+      return { request, history };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

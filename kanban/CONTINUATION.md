@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Solar customer history](batches/2026-09-24-solar-customer-history.md) adds an authorized, customer-safe event timeline to solar request detail. The API returns only whitelisted lifecycle events and timestamps; the page labels them in both languages. A request-scoped audit index supports the read.
+
 [Solar invoice return](batches/2026-09-24-solar-invoice-return.md) resolves the solar request from an authorized invoice's original contract and offers a bilingual return link on the invoice page, including corrected invoice views.
 
 [Solar invoice next action](batches/2026-09-24-solar-invoice-next-action.md) connects the issued solar invoice to the customer's next action on request list and detail. Unpaid invoices link to payment, payment review belongs to staff, and a paid published contract returns to customer action. Migrated HTTP and five-browser coverage verify the handoff.

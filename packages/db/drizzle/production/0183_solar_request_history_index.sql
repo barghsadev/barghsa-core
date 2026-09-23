@@ -1,0 +1,1 @@
+CREATE INDEX "audit_log_solar_request_history_idx" ON "audit_log" USING btree ((("metadata"::jsonb->>'requestId')),"created_at","id") WHERE "audit_log"."event" LIKE 'solar.%' AND "audit_log"."metadata" IS NOT NULL;

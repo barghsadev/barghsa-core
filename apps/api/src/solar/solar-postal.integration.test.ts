@@ -302,6 +302,18 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
       contract_published: false,
     },
   });
+  const detail = (await (await send('postal-buyer', `solar/requests/${id}`)).json()) as {
+    history: Array<{ event: string; at: string }>;
+  };
+  const events = detail.history.map((entry) => entry.event);
+  expect(events[0]).toBe('solar.request.submitted');
+  expect(events).toContain('solar.final.review_started');
+  expect(events).toContain('solar.final.approve');
+  expect(events.at(-1)).toBe('solar.contract.created');
+  expect(detail.history.every((entry) => Object.keys(entry).sort().join(',') === 'at,event')).toBe(
+    true
+  );
+  expect((await send('postal-other', `solar/requests/${id}`)).status).toBe(404);
   const listed = (await (
     await send('postal-buyer', `solar/requests?profileId=${profileId}`)
   ).json()) as { requests: Array<Record<string, unknown>> };

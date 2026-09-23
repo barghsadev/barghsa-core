@@ -722,6 +722,13 @@
       "when": 1791331200085,
       "tag": "0182_solar_customer_drafts",
       "breakpoints": true
+    },
+    {
+      "idx": 183,
+      "version": "7",
+      "when": 1791331200086,
+      "tag": "0183_solar_request_history_index",
+      "breakpoints": true
     }
   ]
 }

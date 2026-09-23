@@ -48,7 +48,16 @@ test('solar customer sees invoice payment, review, then published contract hando
     route.fulfill({ json: { requests: [request()], nextBefore: null } })
   );
   await page.route(`**/api/solar/requests/${requestId}`, (route) =>
-    route.fulfill({ json: { request: request() } })
+    route.fulfill({
+      json: {
+        request: request(),
+        history: [
+          { event: 'solar.request.submitted', at: '2026-09-23T10:00:00.000Z' },
+          { event: 'solar.final.approve', at: '2026-09-24T10:00:00.000Z' },
+          { event: 'solar.contract.created', at: '2026-09-24T11:00:00.000Z' },
+        ],
+      },
+    })
   );
 
   await page.goto('/solar/requests');
@@ -59,6 +68,14 @@ test('solar customer sees invoice payment, review, then published contract hando
   await row.click();
 
   const summary = page.getByRole('region', { name: 'Status and next action' });
+  const history = page.getByRole('region', { name: 'Request history' });
+  await expect(history.getByRole('listitem')).toHaveCount(3);
+  await expect(history).toContainText('Contract and invoice created');
+  await page.getByRole('button', { name: 'Switch language to Persian' }).click();
+  await expect(page.getByRole('region', { name: 'تاریخچه درخواست' })).toContainText(
+    'قرارداد و فاکتور ایجاد شد'
+  );
+  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await expect(
     summary.getByRole('link', { name: 'Review and pay the issued invoice.' })
   ).toHaveAttribute('href', `/invoices/${invoiceId}`);

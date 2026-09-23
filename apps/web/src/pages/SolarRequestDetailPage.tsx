@@ -42,6 +42,7 @@ export function SolarRequestDetailPage() {
   const locale = useLocale();
   const copy = (key: string) => tSolar(key, locale);
   const [request, setRequest] = useState<SolarRequest | null>(null);
+  const [history, setHistory] = useState<Array<{ event: string; at: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [documentsInfo, setDocumentsInfo] = useState<{
@@ -65,16 +66,27 @@ export function SolarRequestDetailPage() {
   );
   useEffect(() => {
     const controller = new AbortController();
+    setRequest(null);
+    setHistory([]);
+    setDocumentsInfo(null);
+    setLoading(true);
+    setError(false);
     void fetch(`/api/solar/requests/${encodeURIComponent(requestId)}`, {
       credentials: 'include',
       signal: controller.signal,
     })
       .then(async (response) => {
         if (!response.ok) throw new Error('request');
-        return response.json() as Promise<{ request: SolarRequest }>;
+        return response.json() as Promise<{
+          request: SolarRequest;
+          history?: Array<{ event: string; at: string }>;
+        }>;
       })
       .then((result) => {
-        if (!controller.signal.aborted) setRequest(result.request);
+        if (!controller.signal.aborted) {
+          setRequest(result.request);
+          setHistory(result.history ?? []);
+        }
       })
       .catch(() => {
         if (!controller.signal.aborted) setError(true);
@@ -146,7 +158,7 @@ export function SolarRequestDetailPage() {
       <h1 className="text-3xl font-semibold">{copy('details')}</h1>
       {loading && <p role="status">{copy('loading')}</p>}
       {error && <p role="alert">{copy('notFound')}</p>}
-      {request && (
+      {request && request.id === requestId && (
         <>
           <WorkflowStatusBanner
             locale={locale}
@@ -201,6 +213,25 @@ export function SolarRequestDetailPage() {
                   className={index === currentStage ? 'font-semibold text-primary' : ''}
                 >
                   {copy(stage)}
+                </li>
+              ))}
+            </ol>
+          </section>
+          <section className="space-y-3 rounded-xl border p-5" aria-label={copy('historyTitle')}>
+            <h2 className="text-xl font-semibold">{copy('historyTitle')}</h2>
+            <ol className="space-y-3">
+              {(history.length
+                ? history
+                : [{ event: 'solar.request.submitted', at: request.submitted_at }]
+              ).map((item, index) => (
+                <li key={`${item.at}-${index}`} className="border-s-2 border-primary/30 ps-3">
+                  <p>{copy(`history_${item.event}`)}</p>
+                  <time className="text-sm text-muted-foreground" dateTime={item.at}>
+                    {new Intl.DateTimeFormat(locale, {
+                      dateStyle: 'medium',
+                      timeStyle: 'short',
+                    }).format(new Date(item.at))}
+                  </time>
                 </li>
               ))}
             </ol>
