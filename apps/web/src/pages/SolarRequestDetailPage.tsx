@@ -5,8 +5,8 @@ import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { DocumentResults, type DocumentFilters } from '../components/DocumentsWorkspace.js';
 import { SolarPostalPanel } from '../components/SolarPostalPanel.js';
-import { WorkflowStatusBanner, type WorkflowOwner } from '../components/WorkflowStatusBanner.js';
-import { t } from '@barghsa/i18n/app';
+import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
+import { solarNextAction } from '../lib/solar-next-action.js';
 
 interface SolarRequest {
   id: string;
@@ -34,33 +34,6 @@ interface SolarRequest {
   agreement_snapshot: string;
   agreement_accepted_at: string;
   submitted_at: string;
-}
-
-function solarNextAction(
-  request: SolarRequest,
-  copy: (key: string) => string,
-  locale: 'fa' | 'en'
-): { text: string; owner: WorkflowOwner; href?: string } {
-  if (['submitted', 'uploading_documents', 'changes_requested'].includes(request.status))
-    return { text: copy('workflowNextUpload'), owner: 'customer', href: '#solar-documents' };
-  if (request.status === 'waiting_for_postal_submission')
-    return { text: copy('workflowNextPostal'), owner: 'customer', href: '#solar-postal' };
-  if (request.status === 'contract_created')
-    return request.contract_published && request.contract_id
-      ? {
-          text: copy('solarViewContract'),
-          owner: 'customer',
-          href: `/contracts?contractId=${encodeURIComponent(request.contract_id)}`,
-        }
-      : { text: copy('solarContractAwaitingPublication'), owner: 'staff' };
-  if (request.status === 'approved')
-    return { text: copy('solarContractAwaitingPublication'), owner: 'staff' };
-  if (['rejected', 'cancelled'].includes(request.status))
-    return { text: t('workflow.none', locale), owner: 'none' };
-  return {
-    text: copy(request.status === 'documents_under_review' ? 'verifyStage' : 'finalStage'),
-    owner: 'staff',
-  };
 }
 
 export function SolarRequestDetailPage() {
@@ -155,15 +128,15 @@ export function SolarRequestDetailPage() {
   }
   const stages = ['requestStage', 'uploadStage', 'verifyStage', 'postalStage', 'finalStage'];
   const currentStage = request
-    ? ['submitted', 'uploading_documents'].includes(request.status)
+    ? ['submitted', 'uploading_documents', 'changes_requested'].includes(request.status)
       ? 1
-      : ['documents_under_review', 'changes_requested'].includes(request.status)
+      : request.status === 'documents_under_review'
         ? 2
         : request.status === 'waiting_for_postal_submission'
           ? 3
           : 4
     : 1;
-  const action = request ? solarNextAction(request, copy, locale) : null;
+  const action = request ? solarNextAction(request, locale) : null;
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <a className="text-sm underline" href="/solar/requests">

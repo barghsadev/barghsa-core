@@ -121,8 +121,12 @@ export class SolarRequestService {
         throw new NotFoundException('Profile not found');
       const rows = (
         await client.query(
-          `SELECT id,status,building_type,grid_type,submitted_at FROM solar_construction_requests
-           WHERE profile_id=$1 ORDER BY submitted_at DESC,id DESC LIMIT 100`,
+          `SELECT r.id,r.status,r.building_type,r.grid_type,r.submitted_at,r.contract_id,
+               EXISTS(
+                 SELECT 1 FROM contract_publications cp WHERE cp.contract_id=r.contract_id
+               ) AS contract_published
+             FROM solar_construction_requests r
+             WHERE r.profile_id=$1 ORDER BY r.submitted_at DESC,r.id DESC LIMIT 100`,
           [profileId]
         )
       ).rows;

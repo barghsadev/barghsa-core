@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
+import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
+import { solarNextAction } from '../lib/solar-next-action.js';
 
 interface RequestRow {
   id: string;
@@ -9,6 +11,8 @@ interface RequestRow {
   building_type: string;
   grid_type: string;
   submitted_at: string;
+  contract_id: string | null;
+  contract_published: boolean;
 }
 
 export function SolarRequestsPage() {
@@ -59,28 +63,37 @@ export function SolarRequestsPage() {
       {error && <p role="alert">{copy('notFound')}</p>}
       {!loading && !error && !rows.length && <p>{copy('none')}</p>}
       <ul className="space-y-3">
-        {rows.map((row) => (
-          <li key={row.id}>
-            <Link
-              to="/solar/requests/$requestId"
-              params={{ requestId: row.id }}
-              className="block rounded-xl border p-4 hover:border-primary"
-            >
-              <span className="font-medium">
-                {copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building')}
-              </span>
-              <span className="ms-3 text-muted-foreground">
-                {copy(row.grid_type === 'off_grid' ? 'offGrid' : 'onGrid')}
-              </span>
-              <span className="mt-2 block text-sm">
-                {copy('status')}: {copy(`status_${row.status}`)}
-              </span>
-              <time className="text-sm text-muted-foreground" dateTime={row.submitted_at}>
-                {new Intl.DateTimeFormat(locale).format(new Date(row.submitted_at))}
-              </time>
-            </Link>
-          </li>
-        ))}
+        {rows.map((row) => {
+          const action = solarNextAction(row, locale);
+          return (
+            <li key={row.id}>
+              <Link
+                to="/solar/requests/$requestId"
+                params={{ requestId: row.id }}
+                className="block rounded-xl border p-4 hover:border-primary"
+              >
+                <span className="font-medium">
+                  {copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building')}
+                </span>
+                <span className="ms-3 text-muted-foreground">
+                  {copy(row.grid_type === 'off_grid' ? 'offGrid' : 'onGrid')}
+                </span>
+                <span className="mt-2 block text-sm">
+                  {copy('status')}: {copy(`status_${row.status}`)}
+                </span>
+                <span className="mt-2 block text-sm text-muted-foreground">
+                  {t('workflow.nextAction', locale)}: {action.text}
+                </span>
+                <span className="block text-sm text-muted-foreground">
+                  {t('workflow.owner', locale)}: {t(`workflow.owner.${action.owner}`, locale)}
+                </span>
+                <time className="text-sm text-muted-foreground" dateTime={row.submitted_at}>
+                  {new Intl.DateTimeFormat(locale).format(new Date(row.submitted_at))}
+                </time>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </main>
   );

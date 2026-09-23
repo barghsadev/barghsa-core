@@ -132,7 +132,14 @@ it('submits both solar request types, captures agreement, and creates no contrac
   ).toBe('Test solar site');
   const listResponse = await request(`/api/solar/requests?profileId=${profileId}`, 'GET');
   expect(listResponse.status, http.logs()).toBe(200);
-  expect(((await listResponse.json()) as { requests: unknown[] }).requests).toHaveLength(2);
+  const listed = (await listResponse.json()) as {
+    requests: Array<{ id: string; contract_id: string | null; contract_published: boolean }>;
+  };
+  expect(listed.requests).toHaveLength(2);
+  expect(listed.requests.find((row) => row.id === building.requestId)).toMatchObject({
+    contract_id: null,
+    contract_published: false,
+  });
   expect(
     (await request(`/api/solar/requests/${site.requestId}`, 'GET', undefined, otherHeaders)).status
   ).toBe(404);
