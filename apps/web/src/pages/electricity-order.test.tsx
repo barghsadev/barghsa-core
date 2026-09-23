@@ -79,6 +79,7 @@ let root: Root;
 let fetchMock: ReturnType<typeof vi.fn<typeof fetch>>;
 let orderReply: () => Promise<Response>;
 let previewReply: () => Promise<Response>;
+let billDataReply: () => Promise<Response>;
 let catalogue: unknown;
 let draft: { currentStep: number; data: Record<string, string> | null };
 
@@ -91,6 +92,8 @@ beforeEach(() => {
   draft = { currentStep: 1, data: null };
   orderReply = async () => response(saved, 201);
   previewReply = async () => response(quote);
+  billDataReply = async () =>
+    response({ available: false, reason: 'unconfigured', manualEntryAllowed: true });
   fetchMock = vi.fn<typeof fetch>(async (input, init) => {
     const url = String(input);
     if (url === '/api/profiles/verification-status')
@@ -114,8 +117,7 @@ beforeEach(() => {
       return response(draft);
     }
     if (url === `/api/wallet/${profileId}`) return response({ balance: '500000', currency: 'IRR' });
-    if (url.startsWith(`/api/electricity/bill-data/${profileId}`))
-      return response({ available: false, reason: 'unconfigured', manualEntryAllowed: true });
+    if (url.startsWith(`/api/electricity/bill-data/${profileId}`)) return billDataReply();
     if (url === '/api/electricity/preview/simple') return previewReply();
     if (url === '/api/electricity/orders/simple' && init?.method === 'POST') return orderReply();
     throw new Error(`Unexpected request: ${url}`);
@@ -205,6 +207,40 @@ it('shows manual entry, period dates and the server price before one submission'
     to: '/electricity/orders/$orderId',
     params: { orderId: saved.orderId },
   });
+});
+
+it('retries an unavailable estimate without clearing a manual quantity', async () => {
+  await mount();
+  await advance();
+  expect(container.textContent).toContain(t('electricity.order.manualQuantity', 'en'));
+  await fill('electricity-kwh', '10');
+  billDataReply = async () =>
+    response({
+      available: true,
+      suggestedKwh: '24',
+      dataSource: 'configured_bill_provider',
+      dataPeriod: {
+        start: '2026-09-20T00:00:00Z',
+        end: '2026-09-21T00:00:00Z',
+      },
+      dataTimestamp: '2026-09-20T23:00:00Z',
+      coverage: 0.75,
+      manualEntryAllowed: true,
+    });
+  const retry = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.retryBillData', 'en')
+  )!;
+  await act(async () => retry.click());
+  expect(container.querySelector<HTMLInputElement>('#electricity-kwh')?.value).toBe('10');
+  expect(container.textContent).toContain('Bill consumption data');
+  expect(container.textContent).toContain('75% data coverage');
+  expect(container.textContent).toContain('This is an estimate; you can change it.');
+  expect(container.textContent).not.toContain('configured_bill_provider');
+  expect(
+    fetchMock.mock.calls.filter(([url]) =>
+      String(url).startsWith(`/api/electricity/bill-data/${profileId}`)
+    )
+  ).toHaveLength(2);
 });
 
 it('shows the exact mandatory green limit conflict and blocks checkout', async () => {

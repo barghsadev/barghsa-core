@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Electricity estimate retry](batches/2026-09-24-electricity-estimate-retry.md) gives customers a direct retry after bill-data failure without clearing their quantity. It also labels the estimate's source, coverage and timestamp in the selected language.
+
 [Electricity bill-data provider recovery](batches/2026-09-24-electricity-bill-provider-recovery.md) adds fail-fast recovery to the optional consumption estimate while keeping manual quantity entry available. This covers the electricity adapter portion of the wider provider-resilience task.
 
 [Solar customer history](batches/2026-09-24-solar-customer-history.md) adds an authorized, customer-safe event timeline to solar request detail. The API returns only whitelisted lifecycle events and timestamps; the page labels them in both languages. A request-scoped audit index supports the read.

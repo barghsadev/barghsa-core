@@ -128,6 +128,14 @@ function periodDates(option: PeriodOption, locale: 'fa' | 'en') {
   return `${persian.format(start)} – ${persian.format(end)} · ${gregorian.format(start)} – ${gregorian.format(end)}`;
 }
 
+function estimateDate(value: string, locale: 'fa' | 'en') {
+  return new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR-u-ca-persian' : 'en-US', {
+    timeZone: 'Asia/Tehran',
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(value));
+}
+
 // ─── Page Component ────────────────────────────────────────────────────
 
 function ElectricityOrderPage() {
@@ -189,6 +197,7 @@ function ElectricityOrderPage() {
   const [period, setPeriod] = useState<SimplePeriod>('current_month');
   const [totalKwh, setTotalKwh] = useState('');
   const [billSuggestion, setBillSuggestion] = useState<BillSuggestion | null>(null);
+  const [billSuggestionRetry, setBillSuggestionRetry] = useState(0);
   const [giftCode, setGiftCode] = useState('');
   const [appliedGiftCode, setAppliedGiftCode] = useState('');
   const [quote, setQuote] = useState<PriceQuote | null>(null);
@@ -526,7 +535,7 @@ function ElectricityOrderPage() {
           });
       });
     return () => controller.abort();
-  }, [activeProfileId, period]);
+  }, [activeProfileId, period, billSuggestionRetry]);
 
   useEffect(() => {
     if (!activeProfileId) return;
@@ -1395,16 +1404,35 @@ function ElectricityOrderPage() {
                         {t('electricity.order.useEstimate', locale)}
                       </Button>
                       <p className="w-full text-xs text-muted-foreground">
-                        {billSuggestion.dataSource} · {billSuggestion.dataPeriod?.start} –{' '}
-                        {billSuggestion.dataPeriod?.end} ·{billSuggestion.dataTimestamp} ·
-                        {Math.round((billSuggestion.coverage ?? 0) * 100)}%{' '}
-                        {t('electricity.order.coverage', locale)}
+                        {t('electricity.order.billDataSource', locale)} ·{' '}
+                        {billSuggestion.dataPeriod &&
+                          `${estimateDate(billSuggestion.dataPeriod.start, locale)} – ${estimateDate(billSuggestion.dataPeriod.end, locale)}`}{' '}
+                        · {t('electricity.order.dataUpdated', locale)}:{' '}
+                        {billSuggestion.dataTimestamp &&
+                          estimateDate(billSuggestion.dataTimestamp, locale)}{' '}
+                        · {Math.round((billSuggestion.coverage ?? 0) * 100)}%{' '}
+                        {t('electricity.order.coverage', locale)}.{' '}
+                        {t('electricity.order.estimateDisclaimer', locale)}
                       </p>
                     </div>
                   ) : (
-                    <p className="text-xs text-muted-foreground">
-                      {t('electricity.order.manualQuantity', locale)}
-                    </p>
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                      <p role="status">
+                        {billSuggestion === null
+                          ? t('electricity.order.billDataLoading', locale)
+                          : t('electricity.order.manualQuantity', locale)}
+                      </p>
+                      {billSuggestion !== null && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setBillSuggestionRetry((value) => value + 1)}
+                        >
+                          {t('electricity.order.retryBillData', locale)}
+                        </Button>
+                      )}
+                    </div>
                   )}
                 </>
               )}
