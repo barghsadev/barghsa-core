@@ -1,9 +1,15 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
-import { SavingsPage } from '../routes/_app/savings.js';
+import { SavingsPage } from '../routes/_app/savings.index.js';
 import { SavingAgreementEditor } from './SavingAgreementEditor.js';
 
+vi.mock('@tanstack/react-router', () => ({
+  createFileRoute: () => () => ({}),
+  Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
+    <a href={to}>{children}</a>
+  ),
+}));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: (value: string) => `${value} IRR` }),
 }));

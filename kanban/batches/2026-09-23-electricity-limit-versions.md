@@ -6,4 +6,4 @@ Every insert or changed update to an electricity product's kWh limits now closes
 
 The same additive migration attaches the required `updated_at` trigger to the saving-draft table introduced in 0179. This resolves the database-foundations CI failure for the preceding draft batch. The preceding batch's unformatted web test was formatted as well; the downstream coverage job failure was caused by those two failed jobs.
 
-Validation: 80 related API catalogue and electricity tests, database foundations (5), migration baseline (2), all 970 web tests, 53 dictionary tests, API/web/database typechecks, production web build, database snapshot and OpenAPI checks, root lint, root format check, and backlog validation passed locally. CI is pending after the direct `main` push.
+Validation: 80 related API catalogue and electricity tests, database foundations (5), migration baseline (2), all 970 web tests, 53 dictionary tests, API/web/database typechecks, production web build, database snapshot and OpenAPI checks, root lint, root format check, and backlog validation passed locally. All four CI jobs passed in run `35906511094` after the direct `main` push.

@@ -19,7 +19,7 @@ import { defineConfig, devices } from '@playwright/test';
  * When PLAYWRIGHT_BASE_URL is set externally, webServer is disabled.
  */
 const EXTERNAL_URL = process.env['PLAYWRIGHT_BASE_URL'];
-const LOCAL_URL = 'http://localhost:5173';
+const LOCAL_URL = `http://localhost:${process.env['WEB_PORT'] || 3000}`;
 const resolvedBaseURL = EXTERNAL_URL ?? LOCAL_URL;
 
 export default defineConfig({

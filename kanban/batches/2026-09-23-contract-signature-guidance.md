@@ -6,4 +6,4 @@ The customer contract banner now uses the signature panel's current server respo
 
 The [workflow guidance checklist](../WORKFLOW-GUIDANCE-CHECKLIST.md) records the five review questions and current customer-detail coverage. Focused tests cover next-action selection and the panel-to-banner status handoff; the standard web checks cover the rest of the interface.
 
-Validation: 974 web tests, web typecheck and production build, targeted lint and formatting, and backlog validation passed locally. CI is pending after the direct `main` push.
+Validation: 974 web tests, web typecheck and production build, targeted lint and formatting, and backlog validation passed locally. All four CI jobs passed in run `35908531784` after the direct `main` push.
