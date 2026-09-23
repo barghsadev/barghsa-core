@@ -212,7 +212,8 @@ export class ConsultationRequestService {
         await client.query<Record<string, unknown>>(
           `SELECT r.id,r.profile_id,r.product_id,r.product_snapshot,r.status,r.staff_owner_id,r.staff_team,
           r.fee::text AS fee,r.scope,r.deliverables,r.expected_next_step,r.offer_valid_until,r.invoice_id,
-          r.accepted_at,i.state AS invoice_state,r.submitted_at,r.updated_at
+          r.accepted_at,i.state AS invoice_state,r.submitted_at,r.updated_at,
+          EXISTS(SELECT 1 FROM invoices paid WHERE paid.consultation_id=r.id::text AND paid.paid_amount>0) AS has_paid_invoice
           FROM consultation_requests r LEFT JOIN invoices i ON i.id=r.invoice_id WHERE r.id=$1`,
           [id]
         )
@@ -232,8 +233,24 @@ export class ConsultationRequestService {
           [id]
         )
       ).rows;
+      const adjustments = (
+        await client.query(
+          `SELECT id,adjustment_kind,total_amount::text AS amount,state
+           FROM invoices WHERE consultation_id=$1 AND adjustment_for_invoice_id IS NOT NULL
+           ORDER BY created_at,id`,
+          [id]
+        )
+      ).rows;
+      const refunds = (
+        await client.query(
+          `SELECT r.id,r.amount::text AS amount,r.state,r.destination
+           FROM refunds r JOIN invoices i ON i.id=r.invoice_id
+           WHERE i.consultation_id=$1 ORDER BY r.created_at,r.id`,
+          [id]
+        )
+      ).rows;
       await client.query('COMMIT');
-      return { request, history };
+      return { request, history, adjustments, refunds };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

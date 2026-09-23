@@ -12,7 +12,7 @@ beforeAll(async () => {
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions)
      VALUES('consultation-payment-staff','Consultation payment staff','Test',
-     '["orders:read","orders:write","invoices:write"]')`
+     '["orders:read","orders:write","invoices:write","admin:financial:edit"]')`
   );
   for (const [user, isStaff] of [
     ['consultation-payer', false],
@@ -45,7 +45,7 @@ beforeAll(async () => {
     )
   ).rows[0].id as string;
   await http.pool.query(
-    'INSERT INTO wallets(profile_id,posted_balance,reserved_balance) VALUES($1,1000000,0)',
+    'INSERT INTO wallets(profile_id,posted_balance,reserved_balance) VALUES($1,3000000,0)',
     [profileId]
   );
   productId = (
@@ -87,6 +87,23 @@ async function offer() {
   expect(offered.status, http.logs()).toBe(200);
   const invoiceId = ((await offered.json()) as { invoiceId: string }).invoiceId;
   return { requestId, invoiceId, root };
+}
+
+async function pay(invoiceId: string) {
+  const review = await fetch(`${http.base}/api/invoices/${invoiceId}/wallet-payment`, {
+    headers: headers['consultation-payer']!,
+  });
+  expect(review.status, http.logs()).toBe(200);
+  const context = (await review.json()) as {
+    remainingAmount: string;
+    review: { hash: string };
+  };
+  const paid = await post(`/api/invoices/${invoiceId}/wallet-payment`, 'consultation-payer', {
+    idempotencyKey: randomUUID(),
+    expectedRemainingAmount: context.remainingAmount,
+    expectedReviewHash: context.review.hash,
+  });
+  expect(paid.status, await paid.clone().text()).toBe(200);
 }
 
 it('settles an accepted offer with a real wallet payment, then allows staff completion', async () => {
@@ -150,6 +167,111 @@ it('settles an accepted offer with a real wallet payment, then allows staff comp
   });
   expect(completed.status, http.logs()).toBe(200);
   expect(await completed.json()).toMatchObject({ status: 'completed' });
+});
+
+it('charges or credits a paid consultation without changing the paid invoice', async () => {
+  const { requestId, invoiceId, root } = await offer();
+  expect(
+    (await post(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer', {})).status
+  ).toBe(200);
+  await pay(invoiceId);
+  const validUntil = new Date(Date.now() + 7 * 86_400_000).toISOString();
+  const chargeInput = {
+    idempotencyKey: randomUUID(),
+    fee: '600000',
+    reason: 'Additional review required',
+    validUntil,
+  };
+  const charge = await post(`${root}/paid-fee`, 'consultation-finance', chargeInput);
+  expect(charge.status, http.logs()).toBe(200);
+  const chargeBody = (await charge.json()) as {
+    invoiceId: string;
+    adjustmentInvoiceId: string;
+    status: string;
+  };
+  expect(chargeBody).toMatchObject({
+    status: 'offer_pending',
+    invoiceId: chargeBody.adjustmentInvoiceId,
+  });
+  expect((await post(`${root}/paid-fee`, 'consultation-finance', chargeInput)).status).toBe(200);
+  expect(
+    (
+      await post(`${root}/fee`, 'consultation-finance', {
+        idempotencyKey: randomUUID(),
+        fee: '700000',
+        scope: 'Feasibility study',
+        deliverables: 'Written report',
+        validUntil,
+        reason: 'Replace charge',
+      })
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await post(`${root}/paid-fee`, 'consultation-finance', {
+        ...chargeInput,
+        reason: 'Different reason',
+      })
+    ).status
+  ).toBe(409);
+  expect(
+    (await post(`/api/consultations/requests/${requestId}/decline`, 'consultation-payer', {}))
+      .status
+  ).toBe(409);
+  expect(
+    (await post(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer', {})).status
+  ).toBe(200);
+  await pay(chargeBody.invoiceId);
+  const creditInput = {
+    idempotencyKey: randomUUID(),
+    fee: '450000',
+    reason: 'Reduced review scope',
+    validUntil,
+  };
+  const credit = await post(`${root}/paid-fee`, 'consultation-finance', creditInput);
+  expect(credit.status, http.logs()).toBe(200);
+  const creditBody = (await credit.json()) as {
+    adjustmentInvoiceId: string;
+    refundIds: string[];
+    status: string;
+  };
+  expect(creditBody.status).toBe('offer_accepted');
+  expect(creditBody.refundIds.length).toBeGreaterThan(0);
+  expect((await post(`${root}/paid-fee`, 'consultation-finance', creditInput)).status).toBe(200);
+  const original = (
+    await http.pool.query<{ state: string; total_amount: string }>(
+      'SELECT state,total_amount::text FROM invoices WHERE id=$1',
+      [invoiceId]
+    )
+  ).rows[0];
+  expect(original).toMatchObject({ state: 'Paid', total_amount: '500000' });
+  const creditInvoice = (
+    await http.pool.query<{ adjustment_kind: string; adjustment_for_invoice_id: string }>(
+      'SELECT adjustment_kind,adjustment_for_invoice_id FROM invoices WHERE id=$1',
+      [creditBody.adjustmentInvoiceId]
+    )
+  ).rows[0];
+  expect(creditInvoice).toMatchObject({
+    adjustment_kind: 'credit',
+    adjustment_for_invoice_id: chargeBody.invoiceId,
+  });
+  const detail = await fetch(`${http.base}/api/consultations/requests/${requestId}`, {
+    headers: headers['consultation-payer']!,
+  });
+  expect(detail.status, http.logs()).toBe(200);
+  const body = (await detail.json()) as {
+    request: { fee: string; status: string };
+    refunds: Array<{ id: string; amount: string }>;
+  };
+  expect(body).toMatchObject({
+    request: { fee: '450000', status: 'offer_accepted' },
+  });
+  expect(body.refunds.map((refund) => refund.id).sort()).toEqual([...creditBody.refundIds].sort());
+  expect(body.refunds.reduce((sum, refund) => sum + BigInt(refund.amount), 0n)).toBe(150000n);
+  const completed = await post(`${root}/complete`, 'consultation-finance', {
+    reason: 'Report delivered',
+  });
+  expect(completed.status, http.logs()).toBe(200);
 });
 
 it('declines an offer and cancels its unpaid invoice', async () => {

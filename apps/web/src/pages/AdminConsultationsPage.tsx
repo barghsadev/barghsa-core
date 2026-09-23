@@ -21,6 +21,7 @@ interface Detail {
     deliverables: string | null;
     fee: string | null;
     invoice_id: string | null;
+    has_paid_invoice: boolean;
     offer_valid_until: string | null;
     expected_next_step: string | null;
   };
@@ -285,7 +286,8 @@ export function AdminConsultationsPage() {
                   {copy('nextStep')}: <span dir="auto">{current.expected_next_step}</span>
                 </p>
               )}
-              {(current.status === 'under_review' || current.status === 'offer_pending') && (
+              {(current.status === 'under_review' ||
+                (current.status === 'offer_pending' && !current.has_paid_invoice)) && (
                 <div className="space-y-3 rounded-lg border p-4">
                   <h3 className="font-semibold">{copy('feeOffer')}</h3>
                   <div className="grid gap-3 sm:grid-cols-2">
@@ -361,6 +363,66 @@ export function AdminConsultationsPage() {
                     }
                   >
                     {copy(current.invoice_id ? 'replaceFee' : 'issueFee')}
+                  </Button>
+                </div>
+              )}
+              {current.status === 'offer_pending' && current.has_paid_invoice && (
+                <p className="rounded-lg border p-4 text-sm">{copy('paidAdjustmentPending')}</p>
+              )}
+              {current.status === 'offer_accepted' && (
+                <div className="space-y-3 rounded-lg border p-4">
+                  <h3 className="font-semibold">{copy('adjustPaidFee')}</h3>
+                  <p className="text-sm text-muted-foreground">{copy('adjustPaidFeeHelp')}</p>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <label className="space-y-1 text-sm">
+                      <span>{copy('feeIrr')}</span>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[1-9][0-9]*"
+                        value={fee}
+                        onChange={(event) => setFee(event.target.value)}
+                        className="w-full rounded-md border bg-background p-2"
+                      />
+                    </label>
+                    <label className="space-y-1 text-sm">
+                      <span>{copy('offerValidUntil')}</span>
+                      <input
+                        type="datetime-local"
+                        value={validUntil}
+                        onChange={(event) => setValidUntil(event.target.value)}
+                        className="w-full rounded-md border bg-background p-2"
+                      />
+                    </label>
+                  </div>
+                  <label className="block space-y-1 text-sm">
+                    <span>{copy('adjustmentReason')}</span>
+                    <textarea
+                      value={offerReason}
+                      onChange={(event) => setOfferReason(event.target.value)}
+                      maxLength={2000}
+                      className="min-h-16 w-full rounded-md border bg-background p-2"
+                    />
+                  </label>
+                  <Button
+                    disabled={
+                      !/^[1-9][0-9]{0,18}$/.test(fee) ||
+                      fee === current.fee ||
+                      !offerReason.trim() ||
+                      !validUntil ||
+                      !Number.isFinite(new Date(validUntil).getTime()) ||
+                      new Date(validUntil) <= new Date()
+                    }
+                    onClick={() =>
+                      prepare('paid-fee', copy('adjustPaidFee'), {
+                        idempotencyKey: offerKey,
+                        fee,
+                        reason: offerReason.trim(),
+                        validUntil: new Date(validUntil).toISOString(),
+                      })
+                    }
+                  >
+                    {copy('adjustPaidFee')}
                   </Button>
                 </div>
               )}

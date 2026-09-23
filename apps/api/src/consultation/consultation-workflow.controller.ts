@@ -34,6 +34,14 @@ const feeOffer = z
     reason: z.string().trim().min(1).max(2000).optional(),
   })
   .strict();
+const paidFeeAdjustment = z
+  .object({
+    idempotencyKey: z.string().uuid(),
+    fee: z.string().regex(/^[1-9][0-9]{0,18}$/),
+    reason: z.string().trim().min(1).max(2000),
+    validUntil: z.iso.datetime({ offset: true }),
+  })
+  .strict();
 const empty = z.object({}).strict();
 const status = z.enum(CONSULTATION_STATUSES);
 function parse<S extends z.ZodType>(schema: S, body: unknown): z.output<S> {
@@ -127,6 +135,25 @@ export class StaffConsultationWorkflowController {
     @Req() req: AuthenticatedRequest
   ) {
     return this.workflow.setFee(req.session, id, parse(feeOffer, body), req.ip ?? '127.0.0.1');
+  }
+
+  @Post('requests/:id/paid-fee')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Adjust an accepted paid consultation fee with a charge or credit and refund request',
+  })
+  @ApiZodBody(paidFeeAdjustment)
+  adjustPaidFee(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.adjustPaidFee(
+      req.session,
+      id,
+      parse(paidFeeAdjustment, body),
+      req.ip ?? '127.0.0.1'
+    );
   }
 
   @Post('requests/:id/request-info')

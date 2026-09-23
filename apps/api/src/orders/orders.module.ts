@@ -58,9 +58,17 @@ import {
   CustomerConsultationWorkflowController,
 } from '../consultation/consultation-workflow.controller.js';
 import { ConsultationWorkflowService } from '../consultation/consultation-workflow.service.js';
+import { RefundModule } from '../refund/refund.module.js';
 
 @Module({
-  imports: [SessionModule, AdminModule, InvoiceModule, DocumentModule, ContractModule],
+  imports: [
+    SessionModule,
+    AdminModule,
+    InvoiceModule,
+    DocumentModule,
+    ContractModule,
+    RefundModule,
+  ],
   controllers: [
     OrdersController,
     ProductsController,

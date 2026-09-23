@@ -130,7 +130,8 @@ export class RefundService {
     input: RefundRequest,
     actor: Actor,
     ip: string,
-    destination: 'wallet' | 'external_bank' = 'wallet'
+    destination: 'wallet' | 'external_bank' = 'wallet',
+    transaction?: PoolClient
   ): Promise<RefundDto> {
     if (
       !/^\d{1,19}$/.test(input.amount) ||
@@ -144,66 +145,72 @@ export class RefundService {
     const fingerprint = createHash('sha256')
       .update(JSON.stringify([input.invoiceId, amount, actor.userId, reason]))
       .digest('hex');
-    return this.transaction(input.invoiceId, actor, async (client, invoice, archived) => {
-      await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [key]);
-      const existing = (
-        await client.query<RefundRow>('SELECT * FROM refunds WHERE idempotency_key=$1 FOR UPDATE', [
-          key,
-        ])
-      ).rows[0];
-      if (existing) {
-        const saved = (
-          await client.query<{ fingerprint: string }>(
-            "SELECT metadata::jsonb->>'fingerprint' AS fingerprint FROM audit_log WHERE event='refund.requested' AND metadata::jsonb->>'refundId'=$1 ORDER BY created_at,id LIMIT 1",
-            [existing.id]
+    return this.transaction(
+      input.invoiceId,
+      actor,
+      async (client, invoice, archived) => {
+        await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [key]);
+        const existing = (
+          await client.query<RefundRow>(
+            'SELECT * FROM refunds WHERE idempotency_key=$1 FOR UPDATE',
+            [key]
           )
         ).rows[0];
-        if (saved?.fingerprint !== fingerprint)
-          throw new ConflictException('Refund idempotency key belongs to a different request');
-        // A policy change can require a new review for an existing unpaid request.
-        if (
-          ['Requested', 'Approved'].includes(existing.state) &&
-          (await this.requiresApproval(client, amount)) &&
-          !(await this.latestApproval(client, existing))
-        ) {
-          assertWalletProfileWritable({ id: invoice.profile_id, archived });
-          await this.createApproval(client, existing, actor, ip, reason);
+        if (existing) {
+          const saved = (
+            await client.query<{ fingerprint: string }>(
+              "SELECT metadata::jsonb->>'fingerprint' AS fingerprint FROM audit_log WHERE event='refund.requested' AND metadata::jsonb->>'refundId'=$1 ORDER BY created_at,id LIMIT 1",
+              [existing.id]
+            )
+          ).rows[0];
+          if (saved?.fingerprint !== fingerprint)
+            throw new ConflictException('Refund idempotency key belongs to a different request');
+          // A policy change can require a new review for an existing unpaid request.
+          if (
+            ['Requested', 'Approved'].includes(existing.state) &&
+            (await this.requiresApproval(client, amount)) &&
+            !(await this.latestApproval(client, existing))
+          ) {
+            assertWalletProfileWritable({ id: invoice.profile_id, archived });
+            await this.createApproval(client, existing, actor, ip, reason);
+          }
+          return this.dto(client, existing);
         }
-        return this.dto(client, existing);
-      }
-      assertWalletProfileWritable({ id: invoice.profile_id, archived });
-      this.refundableInvoice(invoice);
-      const reserved = (
-        await client.query<{ amount: string }>(
-          "SELECT COALESCE(SUM(amount),0)::text AS amount FROM refunds WHERE invoice_id=$1 AND state NOT IN ('Completed','Rejected','Cancelled')",
-          [invoice.id]
+        assertWalletProfileWritable({ id: invoice.profile_id, archived });
+        this.refundableInvoice(invoice);
+        const reserved = (
+          await client.query<{ amount: string }>(
+            "SELECT COALESCE(SUM(amount),0)::text AS amount FROM refunds WHERE invoice_id=$1 AND state NOT IN ('Completed','Rejected','Cancelled')",
+            [invoice.id]
+          )
+        ).rows[0]!.amount;
+        if (
+          BigInt(amount) >
+          BigInt(invoice.paid_amount) - BigInt(invoice.refunded_amount) - BigInt(reserved)
         )
-      ).rows[0]!.amount;
-      if (
-        BigInt(amount) >
-        BigInt(invoice.paid_amount) - BigInt(invoice.refunded_amount) - BigInt(reserved)
-      )
-        throw new ConflictException('Refund exceeds the available paid balance');
-      const row = (
-        await client.query<RefundRow>(
-          'INSERT INTO refunds(invoice_id,profile_id,amount,destination,staff_id,idempotency_key) VALUES ($1,$2,$3,$6,$4,$5) RETURNING *',
-          [invoice.id, invoice.profile_id, amount, actor.userId, key, destination]
-        )
-      ).rows[0]!;
-      const activity = await loadCustomerInvoiceActivity(client, invoice.id, invoice.profile_id);
-      const paymentSources = activity.payments.filter((payment) =>
-        ['Completed', 'Confirmed'].includes(payment.state)
-      );
-      await this.audit(client, row, actor, ip, 'refund.requested', {
-        reason,
-        fingerprint,
-        paymentSources,
-        legacyPaymentSourcesUnavailable: paymentSources.length === 0,
-      });
-      if (await this.requiresApproval(client, amount))
-        await this.createApproval(client, row, actor, ip, reason);
-      return this.dto(client, row);
-    });
+          throw new ConflictException('Refund exceeds the available paid balance');
+        const row = (
+          await client.query<RefundRow>(
+            'INSERT INTO refunds(invoice_id,profile_id,amount,destination,staff_id,idempotency_key) VALUES ($1,$2,$3,$6,$4,$5) RETURNING *',
+            [invoice.id, invoice.profile_id, amount, actor.userId, key, destination]
+          )
+        ).rows[0]!;
+        const activity = await loadCustomerInvoiceActivity(client, invoice.id, invoice.profile_id);
+        const paymentSources = activity.payments.filter((payment) =>
+          ['Completed', 'Confirmed'].includes(payment.state)
+        );
+        await this.audit(client, row, actor, ip, 'refund.requested', {
+          reason,
+          fingerprint,
+          paymentSources,
+          legacyPaymentSourcesUnavailable: paymentSources.length === 0,
+        });
+        if (await this.requiresApproval(client, amount))
+          await this.createApproval(client, row, actor, ip, reason);
+        return this.dto(client, row);
+      },
+      transaction
+    );
   }
 
   async decide(
@@ -468,11 +475,12 @@ export class RefundService {
   private async transaction<T>(
     invoiceId: string,
     actor: Actor,
-    work: (client: PoolClient, invoice: InvoiceRow, archived: boolean) => Promise<T>
+    work: (client: PoolClient, invoice: InvoiceRow, archived: boolean) => Promise<T>,
+    transaction?: PoolClient
   ): Promise<T> {
-    const client = await getDbPool().connect();
+    const client = transaction ?? (await getDbPool().connect());
     try {
-      await client.query('BEGIN');
+      if (!transaction) await client.query('BEGIN');
       const owner = (
         await client.query<{ profile_id: string }>('SELECT profile_id FROM invoices WHERE id=$1', [
           invoiceId,
@@ -493,17 +501,17 @@ export class RefundService {
         throw new ConflictException('Invoice ownership changed');
       const result = await work(client, invoice, profile.archived);
       await requireSessionStepUp(client, actor);
-      await client.query('COMMIT');
+      if (!transaction) await client.query('COMMIT');
       return result;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
+      if (!transaction) await client.query('ROLLBACK').catch(() => {});
       if (['23514', '23505', '40001', '40P01'].includes((error as { code?: string }).code ?? ''))
         throw new ConflictException(
           'Refund conflicts with another financial change; review and retry'
         );
       throw error;
     } finally {
-      client.release();
+      if (!transaction) client.release();
     }
   }
 

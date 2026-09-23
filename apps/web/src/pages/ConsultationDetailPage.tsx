@@ -18,6 +18,7 @@ interface Detail {
     offer_valid_until: string | null;
     invoice_id: string | null;
     invoice_state: string | null;
+    has_paid_invoice: boolean;
     accepted_at: string | null;
   };
   history: Array<{
@@ -26,6 +27,13 @@ interface Detail {
     reason: string | null;
     created_at: string;
   }>;
+  adjustments: Array<{
+    id: string;
+    adjustment_kind: 'charge' | 'credit';
+    amount: string;
+    state: string;
+  }>;
+  refunds: Array<{ id: string; amount: string; state: string; destination: string }>;
 }
 
 export function ConsultationDetailPage() {
@@ -182,6 +190,27 @@ export function ConsultationDetailPage() {
               </p>
             )}
           </section>
+          {(detail.adjustments.length > 0 || detail.refunds.length > 0) && (
+            <section className="space-y-3 rounded-xl border bg-card p-5">
+              <h2 className="text-xl font-semibold">{copy('financialActivity')}</h2>
+              {detail.adjustments.map((item) => (
+                <p key={item.id}>
+                  {copy(
+                    item.adjustment_kind === 'credit' ? 'creditAdjustment' : 'chargeAdjustment'
+                  )}
+                  : {new Intl.NumberFormat(locale).format(BigInt(item.amount))} IRR
+                  {item.adjustment_kind === 'charge' && ` · ${copy(`invoice_state_${item.state}`)}`}
+                </p>
+              ))}
+              {detail.refunds.map((item) => (
+                <p key={item.id}>
+                  {copy('refundRequest')}:{' '}
+                  {new Intl.NumberFormat(locale).format(BigInt(item.amount))} IRR ·{' '}
+                  {copy(`refund_state_${item.state}`)}
+                </p>
+              ))}
+            </section>
+          )}
           {request.status === 'offer_pending' && (
             <section className="space-y-3 rounded-xl border bg-card p-5">
               {offerExpired && <p role="status">{copy('offerExpired')}</p>}
@@ -205,12 +234,13 @@ export function ConsultationDetailPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  disabled={sending || request.invoice_state === 'Paid'}
+                  disabled={sending || request.invoice_state === 'Paid' || request.has_paid_invoice}
                   onClick={() => void decide('decline')}
                 >
                   {copy('declineOffer')}
                 </Button>
               </div>
+              {request.has_paid_invoice && <p>{copy('paidDeclineHelp')}</p>}
               {actionError && (
                 <p role="alert" className="text-destructive">
                   {copy('actionError')}
