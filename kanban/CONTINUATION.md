@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Advanced electricity draft recovery](batches/2026-09-24-advanced-electricity-draft-recovery.md) keeps the advanced order wizard closed when a saved draft cannot load, offers a retry, and requires server confirmation before progressing to the next step. The bilingual browser journey passes all five projects.
+
 [Solar final-review handoff](batches/2026-09-24-solar-final-review-handoff.md) makes the canonical `final_review` state a real staff transition after postal receipt. Final decisions now require that handoff; the customer sees staff-owned review status and the postal work queue keeps the request visible until decision.
 
 [Solar final rejection](batches/2026-09-24-solar-final-rejection.md) adds the previously missing terminal `rejected` path after confirmed postal receipt. Staff must give a reason, customers see that reason and support route, and notification/audit evidence is recorded. Backend and staff browser coverage are included.

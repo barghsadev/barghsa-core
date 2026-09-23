@@ -34,6 +34,9 @@ let container: HTMLDivElement;
 let fetchMock: ReturnType<typeof vi.fn<typeof fetch>>;
 let step: number;
 let quantities: Record<string, string>;
+let bootstrapLoadFailures: number;
+let draftLoadFailures: number;
+let savedStepOverride: number | null;
 let quoteErrorDetails: Array<{
   code: string;
   systemKey?: string;
@@ -46,24 +49,44 @@ beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   step = 2;
   quantities = { thermal: '0', green: '10', free_market: '0', energy_saving: '0' };
+  bootstrapLoadFailures = 0;
+  draftLoadFailures = 0;
+  savedStepOverride = null;
   quoteErrorDetails = [
     { code: 'PRODUCT_MAX_KWH', systemKey: 'green', requiredKwh: '5', limitKwh: '4' },
   ];
   const startAt = new Date(Date.now() + 2 * 86_400_000).toISOString();
   const endAt = new Date(Date.now() + 10 * 86_400_000).toISOString();
-  fetchMock = vi.fn<typeof fetch>(async (input) => {
+  fetchMock = vi.fn<typeof fetch>(async (input, init) => {
     const url = String(input);
     if (url === '/api/profiles/verification-status')
       return reply({ activeProfileId: profileId, verificationRequired: true, isVerified: true });
-    if (url === '/api/products/electricity') return reply(catalogue);
+    if (url === '/api/products/electricity') {
+      if (bootstrapLoadFailures > 0) {
+        bootstrapLoadFailures -= 1;
+        return reply({ error: 'Unavailable' }, 503);
+      }
+      return reply(catalogue);
+    }
     if (url === '/api/electricity/periods/advanced')
       return reply({
         limits: { leadTimeDays: 0, maxContractDuration: 24 },
         mandatoryGreenEnabled: true,
       });
     if (url === `/api/profiles/${profileId}/addresses`) return reply({ addresses: [] });
-    if (url === `/api/electricity/drafts/advanced?profileId=${profileId}`)
+    if (url === `/api/electricity/drafts/advanced?profileId=${profileId}`) {
+      if (draftLoadFailures > 0) {
+        draftLoadFailures -= 1;
+        return reply({ error: 'Unavailable' }, 503);
+      }
       return reply({ currentStep: step, data: { startAt, endAt, quantities } });
+    }
+    if (url === '/api/electricity/drafts/advanced') {
+      const saved = JSON.parse((init?.body as string) ?? '{}') as {
+        currentStep: number;
+      };
+      return reply({ currentStep: savedStepOverride ?? saved.currentStep });
+    }
     if (url === '/api/electricity/preview/advanced')
       return reply(
         {
@@ -128,4 +151,51 @@ it('shows a support path when required electricity supply is unavailable', async
     'Ordering this product is temporarily unavailable.'
   );
   expect(container.querySelector('a[href="/support"]')?.textContent).toBe('Contact support');
+});
+
+it('keeps an unavailable draft closed until a retry restores the saved step', async () => {
+  draftLoadFailures = 1;
+  await mount();
+  expect(container.querySelector('[role="alert"]')?.textContent).toContain(
+    t('electricity.order.draftLoadFailed', 'en')
+  );
+  expect(container.querySelector('nav')).toBeNull();
+
+  const retry = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.retry', 'en')
+  );
+  await act(async () => retry?.click());
+  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain('2.');
+});
+
+it('retries initial order context before opening the wizard', async () => {
+  bootstrapLoadFailures = 1;
+  await mount();
+  expect(container.querySelector('nav')).toBeNull();
+  const retry = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.retry', 'en')
+  );
+  await act(async () => retry?.click());
+  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain('2.');
+});
+
+it('does not advance until the server confirms the saved step', async () => {
+  step = 1;
+  quantities = { thermal: '0', green: '0', free_market: '0', energy_saving: '0' };
+  savedStepOverride = 1;
+  await mount();
+
+  const next = () =>
+    [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === t('electricity.order.next', 'en')
+    );
+  await act(async () => next()?.click());
+  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain('1.');
+  expect(fetchMock.mock.calls.some(([url]) => url === '/api/electricity/drafts/advanced')).toBe(
+    true
+  );
+
+  savedStepOverride = null;
+  await act(async () => next()?.click());
+  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain('2.');
 });

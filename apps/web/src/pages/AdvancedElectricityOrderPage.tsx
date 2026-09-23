@@ -251,6 +251,9 @@ export function AdvancedElectricityOrderPage() {
   const [quote, setQuote] = useState<Quote | null>(null);
   const [quoteError, setQuoteError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [bootstrapAttempt, setBootstrapAttempt] = useState(0);
+  const [draftAttempt, setDraftAttempt] = useState(0);
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [step, setStep] = useState(1);
@@ -332,10 +335,13 @@ export function AdvancedElectricityOrderPage() {
         setOptions(limits);
       })
       .catch(() => {
-        if (!abort.signal.aborted) setLoading(false);
+        if (!abort.signal.aborted) {
+          setLoadError(true);
+          setLoading(false);
+        }
       });
     return () => abort.abort();
-  }, []);
+  }, [bootstrapAttempt]);
 
   useEffect(() => {
     if (!profileId) return;
@@ -354,7 +360,15 @@ export function AdvancedElectricityOrderPage() {
         if (!addressResponse.ok || !draftResponse.ok) throw new Error('Unavailable');
         const addressData: { addresses: Address[] } = await addressResponse.json();
         const draft: Draft = await draftResponse.json();
-        if (!Array.isArray(addressData.addresses) || !draft || abort.signal.aborted) return;
+        if (abort.signal.aborted) return;
+        if (
+          !Array.isArray(addressData.addresses) ||
+          !draft ||
+          !Number.isInteger(draft.currentStep) ||
+          draft.currentStep < 1 ||
+          draft.currentStep > 5
+        )
+          throw new Error('Invalid draft');
         setAddresses(addressData.addresses);
         setAddressId(
           draft.data?.addressId ??
@@ -370,14 +384,18 @@ export function AdvancedElectricityOrderPage() {
           setQuantities({ ...emptyQuantities, ...draft.data.quantities });
           setGiftCode(draft.data.giftCode ?? '');
         }
-        setStep(Math.max(1, Math.min(5, draft.currentStep || 1)));
+        setStep(draft.currentStep);
+        setLoadError(false);
         setLoading(false);
       })
       .catch(() => {
-        if (!abort.signal.aborted) setLoading(false);
+        if (!abort.signal.aborted) {
+          setLoadError(true);
+          setLoading(false);
+        }
       });
     return () => abort.abort();
-  }, [profileId]);
+  }, [profileId, draftAttempt]);
 
   useEffect(() => {
     setQuote(null);
@@ -435,6 +453,14 @@ export function AdvancedElectricityOrderPage() {
         }),
       });
       if (!response.ok) throw new Error('Draft failed');
+      const saved: unknown = await response.json();
+      if (
+        !saved ||
+        typeof saved !== 'object' ||
+        !('currentStep' in saved) ||
+        saved.currentStep !== (next ? Math.min(5, step + 1) : step)
+      )
+        throw new Error('Draft save was not confirmed');
       if (next) setStep((current) => Math.min(5, current + 1));
       else toast.success(t('electricity.order.draftSaved', locale));
     } catch {
@@ -479,8 +505,24 @@ export function AdvancedElectricityOrderPage() {
   }
 
   if (loading) return <p role="status">{t('electricity.order.draftLoading', locale)}</p>;
-  if (!profileId || !options)
-    return <div role="alert">{t('electricity.order.draftLoadFailed', locale)}</div>;
+  if (loadError || !profileId || !options)
+    return (
+      <div role="alert" className="space-y-3">
+        <p>{t('electricity.order.draftLoadFailed', locale)}</p>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            setLoading(true);
+            setLoadError(false);
+            if (profileId && options) setDraftAttempt((current) => current + 1);
+            else setBootstrapAttempt((current) => current + 1);
+          }}
+        >
+          {t('electricity.order.retry', locale)}
+        </Button>
+      </div>
+    );
   if (blocked) return <div role="alert">{t('electricity.order.verificationRequired', locale)}</div>;
   const steps = [
     t('electricity.advanced.stepDates', locale),

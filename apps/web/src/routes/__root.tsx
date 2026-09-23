@@ -129,7 +129,9 @@ function RootComponent() {
         )}
         <Outlet />
         <ApplicationToaster />
-        {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
+        {process.env.NODE_ENV === 'development' && !import.meta.env.VITE_E2E && (
+          <TanStackRouterDevtools />
+        )}
       </BrandThemeProvider>
     </UiDirectionProvider>
   );

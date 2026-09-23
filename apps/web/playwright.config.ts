@@ -72,8 +72,9 @@ export default defineConfig({
     ? undefined
     : {
         command: 'pnpm --filter @barghsa/web dev',
+        env: { VITE_E2E: '1' },
         url: LOCAL_URL,
-        reuseExistingServer: !process.env['CI'],
+        reuseExistingServer: false,
         timeout: 30_000,
       },
 });
