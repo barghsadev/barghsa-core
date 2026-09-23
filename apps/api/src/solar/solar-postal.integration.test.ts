@@ -217,6 +217,10 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     http.logs()
   ).toBe(200);
   expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/start-final-review`, 'POST')).status,
+    http.logs()
+  ).toBe(200);
+  expect(
     (await send('postal-reviewer', `admin/solar/requests/${id}/final-approve`, 'POST')).status,
     http.logs()
   ).toBe(200);
@@ -505,6 +509,10 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     ).status,
     http.logs()
   ).toBe(200);
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${requestId}/start-final-review`, 'POST'))
+      .status
+  ).toBe(409);
   const received = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/postal/confirm-received`,
@@ -518,6 +526,45 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
   expect(
     await (await send('postal-reviewer', 'admin/solar/postal-queue?lane=needs_staff')).json()
   ).toMatchObject({ requests: [{ id: requestId, request_status: 'postal_documents_received' }] });
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST'))
+      .status
+  ).toBe(409);
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${requestId}/final-reject`, 'POST', {
+        reason: 'Review has not begun',
+      })
+    ).status
+  ).toBe(409);
+  expect(
+    (await send('postal-buyer', `admin/solar/requests/${requestId}/start-final-review`, 'POST'))
+      .status
+  ).toBe(403);
+  const reviewStarted = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${requestId}/start-final-review`,
+    'POST'
+  );
+  expect(reviewStarted.status, http.logs()).toBe(200);
+  expect(await reviewStarted.json()).toMatchObject({ status: 'final_review' });
+  expect(await (await send('postal-buyer', `solar/requests/${requestId}`)).json()).toMatchObject({
+    request: { status: 'final_review' },
+  });
+  expect(
+    (
+      await http.pool.query(
+        "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='postal-buyer' AND localized_content::text LIKE '%Staff are reviewing your request.%'"
+      )
+    ).rows[0]!.count
+  ).toBeGreaterThanOrEqual(1);
+  expect(
+    await (await send('postal-reviewer', 'admin/solar/postal-queue?lane=needs_staff')).json()
+  ).toMatchObject({ requests: [{ id: requestId, request_status: 'final_review' }] });
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${requestId}/start-final-review`, 'POST'))
+      .status
+  ).toBe(409);
   expect(
     (await send('postal-buyer', `solar/requests/${requestId}/postal/shipment`, 'POST', shipment))
       .status
@@ -575,11 +622,11 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
   expect(
     (
       await http.pool.query(
-        "SELECT count(*)::int AS count FROM audit_log WHERE event IN ('solar.final.approve','solar.final.close-no-contract') AND metadata::jsonb->>'requestId'=$1",
+        "SELECT count(*)::int AS count FROM audit_log WHERE event IN ('solar.final.review_started','solar.final.approve','solar.final.close-no-contract') AND metadata::jsonb->>'requestId'=$1",
         [requestId]
       )
     ).rows[0]!.count
-  ).toBe(2);
+  ).toBe(3);
 }, 90_000);
 
 it('rejects a final solar request with a customer-visible reason after postal receipt', async () => {
@@ -627,6 +674,10 @@ it('rejects a final solar request with a customer-visible reason after postal re
   expect(
     (await send('postal-reviewer', `admin/solar/requests/${id}/postal/confirm-received`, 'POST'))
       .status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/start-final-review`, 'POST')).status,
     http.logs()
   ).toBe(200);
   expect(

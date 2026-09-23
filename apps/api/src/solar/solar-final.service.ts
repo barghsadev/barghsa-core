@@ -39,6 +39,74 @@ async function audit(
 
 @Injectable()
 export class SolarFinalService {
+  async beginReview(actor: Actor, requestId: string, ip: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'orders:write');
+      await requireSessionStepUp(client, actor);
+      const request = (
+        await client.query<{ profile_id: string; user_id: string; status: string }>(
+          `SELECT r.profile_id,r.status,p.user_id FROM solar_construction_requests r
+           JOIN profiles p ON p.id=r.profile_id WHERE r.id=$1 FOR UPDATE OF r`,
+          [requestId]
+        )
+      ).rows[0];
+      if (!request) throw new NotFoundException('Solar request not found');
+      if (request.status !== 'postal_documents_received')
+        throw new ConflictException('Postal originals must be received first');
+      if (
+        !(
+          await client.query(
+            "SELECT 1 FROM solar_construction_postal WHERE request_id=$1 AND status='received' FOR SHARE",
+            [requestId]
+          )
+        ).rows.length
+      )
+        throw new ConflictException('Postal receipt is not confirmed');
+      await client.query(
+        "UPDATE solar_construction_requests SET status='final_review',updated_at=NOW() WHERE id=$1",
+        [requestId]
+      );
+      await new NotificationsService().create(
+        {
+          userId: request.user_id,
+          profileId: request.profile_id,
+          type: 'general',
+          title: 'Solar request in final review',
+          localizedContent: {
+            fa: {
+              title: 'بررسی نهایی درخواست نیروگاه خورشیدی',
+              body: 'مدارک پستی دریافت شد و درخواست شما در بررسی نهایی کارشناسان است.',
+            },
+            en: {
+              title: 'Solar request in final review',
+              body: 'Your postal documents were received. Staff are reviewing your request.',
+            },
+          },
+        },
+        client
+      );
+      await audit(
+        client,
+        actor,
+        'solar.final.review_started',
+        requestId,
+        request.status,
+        'final_review',
+        null,
+        ip
+      );
+      await client.query('COMMIT');
+      return { status: 'final_review' };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async decide(
     actor: Actor,
     requestId: string,
@@ -70,9 +138,9 @@ export class SolarFinalService {
         )
       ).rows[0];
       if (!request) throw new NotFoundException('Solar request not found');
-      if (decision === 'approve' && request.status !== 'postal_documents_received')
-        throw new ConflictException('Postal originals must be received first');
-      if (decision === 'reject' && request.status !== 'postal_documents_received')
+      if (decision === 'approve' && request.status !== 'final_review')
+        throw new ConflictException('Final review must begin before approval');
+      if (decision === 'reject' && request.status !== 'final_review')
         throw new ConflictException('Request is not ready for final rejection');
       if (
         decision !== 'close-no-contract' &&
@@ -86,7 +154,7 @@ export class SolarFinalService {
         throw new ConflictException('Postal receipt is not confirmed');
       if (
         decision === 'close-no-contract' &&
-        !['postal_documents_received', 'approved'].includes(request.status)
+        !['final_review', 'approved'].includes(request.status)
       )
         throw new ConflictException('Request is not ready for final decision');
       const status =

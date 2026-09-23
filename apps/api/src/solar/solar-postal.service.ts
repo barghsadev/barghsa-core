@@ -228,9 +228,9 @@ export class SolarPostalService {
             await client.query<{ id: string; created_at: string }>(
               `SELECT r.id,r.created_at::text AS created_at FROM solar_construction_requests r
                JOIN solar_construction_postal p ON p.request_id=r.id
-               WHERE r.id=$1 AND r.status IN ('waiting_for_postal_submission','postal_documents_received','approved')
+               WHERE r.id=$1 AND r.status IN ('waiting_for_postal_submission','postal_documents_received','final_review','approved')
                  AND ($2::text='all'
-                   OR ($2='needs_staff' AND (p.status='shipped' OR r.status IN ('postal_documents_received','approved')))
+                   OR ($2='needs_staff' AND (p.status='shipped' OR r.status IN ('postal_documents_received','final_review','approved')))
                    OR ($2='waiting_customer' AND r.status='waiting_for_postal_submission' AND p.status<>'shipped'))`,
               [before, lane]
             )
@@ -246,10 +246,10 @@ export class SolarPostalService {
          JOIN profiles profile ON profile.id=r.profile_id
          JOIN users u ON u.user_id=profile.user_id
          LEFT JOIN legal_profiles lp ON lp.id=profile.id
-         WHERE r.status IN ('waiting_for_postal_submission','postal_documents_received','approved')
+         WHERE r.status IN ('waiting_for_postal_submission','postal_documents_received','final_review','approved')
            AND ($1::timestamptz IS NULL OR (r.created_at,r.id) < ($1::timestamptz,$2::uuid))
            AND ($3::text='all'
-             OR ($3='needs_staff' AND (p.status='shipped' OR r.status IN ('postal_documents_received','approved')))
+             OR ($3='needs_staff' AND (p.status='shipped' OR r.status IN ('postal_documents_received','final_review','approved')))
              OR ($3='waiting_customer' AND r.status='waiting_for_postal_submission' AND p.status<>'shipped'))
          ORDER BY r.created_at DESC,r.id DESC LIMIT 101`,
           [cursor?.created_at ?? null, before ?? null, lane]

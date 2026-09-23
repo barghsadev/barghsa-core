@@ -62,6 +62,13 @@ export class StaffSolarFinalController {
     return this.service.decide(req.session, id, 'approve', undefined, req.ip ?? '127.0.0.1');
   }
 
+  @Post('start-final-review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Begin final review after confirmed solar postal receipt' })
+  startReview(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+    return this.service.beginReview(req.session, id, req.ip ?? '127.0.0.1');
+  }
+
   @Post('final-reject')
   @HttpCode(200)
   @ApiOperation({ summary: 'Reject a solar request after confirmed postal receipt, with a reason' })

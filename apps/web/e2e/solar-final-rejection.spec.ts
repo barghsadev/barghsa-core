@@ -5,6 +5,7 @@ const profileId = '11111111-1111-4111-8111-111111111111';
 
 test('staff can reject a postal-reviewed solar request with a reason', async ({ page }) => {
   let rejected = false;
+  let finalReview = false;
   const decisions: Array<Record<string, unknown>> = [];
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/admin/solar/postal-queue?*', (route) =>
@@ -17,7 +18,7 @@ test('staff can reject a postal-reviewed solar request with a reason', async ({ 
                 id: requestId,
                 profile_id: profileId,
                 profile_name: 'Solar customer',
-                request_status: 'postal_documents_received',
+                request_status: finalReview ? 'final_review' : 'postal_documents_received',
                 postal_status: 'received',
                 courier: 'Parcel Co',
                 tracking_number: 'TRACK-123',
@@ -31,6 +32,10 @@ test('staff can reject a postal-reviewed solar request with a reason', async ({ 
       },
     })
   );
+  await page.route(`**/api/admin/solar/requests/${requestId}/start-final-review`, (route) => {
+    finalReview = true;
+    return route.fulfill({ json: { status: 'final_review' } });
+  });
   await page.route(`**/api/admin/solar/requests/${requestId}/final-reject`, (route) => {
     decisions.push(route.request().postDataJSON() as Record<string, unknown>);
     rejected = true;
@@ -40,6 +45,10 @@ test('staff can reject a postal-reviewed solar request with a reason', async ({ 
   await page.goto('/admin/solar-postal');
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await page.getByRole('button', { name: /Solar customer/ }).click();
+  await expect(page.getByRole('button', { name: 'Reject request' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Start final review' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
+  await expect(page.getByRole('button', { name: 'Reject request' })).toBeVisible();
   await page.getByRole('button', { name: 'Reject request' }).click();
   expect(decisions).toHaveLength(0);
   await page

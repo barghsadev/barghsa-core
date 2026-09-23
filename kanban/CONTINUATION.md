@@ -2,7 +2,9 @@
 
 ## Current manual batch — September 24, 2026
 
-[Solar final rejection](batches/2026-09-24-solar-final-rejection.md) adds the previously missing terminal `rejected` path after confirmed postal receipt. Staff must give a reason, customers see that reason and support route, and notification/audit evidence is recorded. Backend and staff browser coverage are included; the separate `final_review` state is still not implemented.
+[Solar final-review handoff](batches/2026-09-24-solar-final-review-handoff.md) makes the canonical `final_review` state a real staff transition after postal receipt. Final decisions now require that handoff; the customer sees staff-owned review status and the postal work queue keeps the request visible until decision.
+
+[Solar final rejection](batches/2026-09-24-solar-final-rejection.md) adds the previously missing terminal `rejected` path after confirmed postal receipt. Staff must give a reason, customers see that reason and support route, and notification/audit evidence is recorded. Backend and staff browser coverage are included.
 
 [Saving upgrade delivery guard](batches/2026-09-24-saving-upgrade-delivery-guard.md) closes another staff fulfillment dead end: product delivery is visibly blocked while an equipment-upgrade charge is pending, even after the original invoice is paid. A focused browser journey also checks the active-contract prerequisite for process completion.
 

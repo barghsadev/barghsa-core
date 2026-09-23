@@ -10870,6 +10870,35 @@
         ]
       }
     },
+    "/api/admin/solar/requests/{id}/start-final-review": {
+      "post": {
+        "operationId": "StaffSolarFinalController_startReview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Begin final review after confirmed solar postal receipt",
+        "tags": [
+          "Admin · Solar final decisions"
+        ]
+      }
+    },
     "/api/admin/staff": {
       "get": {
         "operationId": "AdminController_listStaff",
