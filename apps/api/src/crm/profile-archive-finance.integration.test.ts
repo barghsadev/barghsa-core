@@ -220,6 +220,11 @@ async function prepareOrder() {
       "INSERT INTO products(type,system_key,title,status,price) VALUES ('electricity','thermal','{\"en\":\"Thermal\"}','active',100000) RETURNING id"
     )
   ).rows[0].id;
+  await http.pool.query(
+    `INSERT INTO products(type,system_key,title,status,price)
+     VALUES ('electricity','green','{"en":"Green"}','active',100000)
+     ON CONFLICT (system_key) DO UPDATE SET status='active', price=100000`
+  );
   const provinceId = (
     await http.pool.query(
       "INSERT INTO provinces(name_fa,name_en) VALUES ('استان','Province') RETURNING id"

@@ -135,7 +135,7 @@ describe('OrdersService', () => {
       const settingsCall = mockClient.query.mock.calls.find((call) =>
         String(call[0]).includes('INSERT INTO electricity_orders')
       )!;
-      expect(JSON.parse(settingsCall[1][1])).toMatchObject({
+      expect(JSON.parse(settingsCall[1][2])).toMatchObject({
         schemaVersion: 1,
         sourceVersion: 0,
         green: { simple_order: { mandatory_green_enabled: true } },
