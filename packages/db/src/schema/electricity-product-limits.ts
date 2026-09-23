@@ -1,7 +1,8 @@
-import { uuid, bigint } from 'drizzle-orm/pg-core';
+import { uuid, bigint, check, pgTable, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { createTable } from '../base-table';
 import { products } from './products';
+import { uuidv7 } from '../types';
 
 /**
  * Electricity product limits table.
@@ -33,3 +34,32 @@ export const electricityProductLimits = createTable('electricity_product_limits'
     .notNull()
     .default(sql`0`),
 });
+
+/** Every change to the live limits closes one effective window and opens another. */
+export const electricityProductLimitVersions = pgTable(
+  'electricity_product_limit_versions',
+  {
+    id: uuidv7('id').primaryKey(),
+    productId: uuid('product_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'restrict' }),
+    minKwh: bigint('min_kwh', { mode: 'bigint' }).notNull(),
+    maxKwh: bigint('max_kwh', { mode: 'bigint' }).notNull(),
+    effectiveFrom: timestamp('effective_from', { withTimezone: true, mode: 'date' }).notNull(),
+    effectiveUntil: timestamp('effective_until', { withTimezone: true, mode: 'date' }),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex('electricity_limit_versions_open_key')
+      .on(table.productId)
+      .where(sql`${table.effectiveUntil} IS NULL`),
+    check(
+      'electricity_limit_versions_range',
+      sql`${table.effectiveUntil} IS NULL OR ${table.effectiveUntil} > ${table.effectiveFrom}`
+    ),
+    check(
+      'electricity_limit_versions_values',
+      sql`${table.minKwh} >= 0 AND (${table.maxKwh} = 0 OR ${table.maxKwh} >= ${table.minKwh})`
+    ),
+  ]
+);

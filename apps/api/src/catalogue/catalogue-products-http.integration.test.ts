@@ -409,7 +409,13 @@ it('allows an authorized staff member to restore both electricity limits to zero
   expect((await request(`/${id}`, 'PUT', { minKwh: '10', maxKwh: '100' })).status).toBe(200);
   const unlimited = await request(`/${id}`, 'PUT', { minKwh: '0', maxKwh: '0' });
   expect(unlimited.status, await unlimited.clone().text()).toBe(200);
-  expect(await unlimited.json()).toMatchObject({ electricityLimits: { minKwh: '0', maxKwh: '0' } });
+  expect(await unlimited.json()).toMatchObject({
+    electricityLimits: { minKwh: '0', maxKwh: '0' },
+    electricityLimitHistory: [
+      { minKwh: '0', maxKwh: '0', effectiveUntil: null },
+      { minKwh: '10', maxKwh: '100' },
+    ],
+  });
   expect(
     (
       await http.pool.query(
@@ -418,5 +424,30 @@ it('allows an authorized staff member to restore both electricity limits to zero
       )
     ).rows
   ).toEqual([{ min_kwh: '0', max_kwh: '0' }]);
+  const versions = (
+    await http.pool.query<{
+      min_kwh: string;
+      max_kwh: string;
+      effective_from: Date;
+      effective_until: Date | null;
+    }>(
+      `SELECT min_kwh,max_kwh,effective_from,effective_until
+       FROM electricity_product_limit_versions WHERE product_id=$1 ORDER BY effective_from`,
+      [id]
+    )
+  ).rows;
+  expect(versions).toHaveLength(2);
+  expect(versions[0]).toMatchObject({ min_kwh: '10', max_kwh: '100' });
+  expect(versions[1]).toMatchObject({ min_kwh: '0', max_kwh: '0', effective_until: null });
+  expect(versions[0]?.effective_until?.getTime()).toBe(versions[1]?.effective_from.getTime());
+  expect((await request(`/${id}`, 'PUT', { minKwh: '0', maxKwh: '0' })).status).toBe(200);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT id FROM electricity_product_limit_versions WHERE product_id=$1',
+        [id]
+      )
+    ).rows
+  ).toHaveLength(2);
   expect((await request(`/${id}`, 'PUT', { minKwh: '101', maxKwh: '100' })).status).toBe(400);
 });

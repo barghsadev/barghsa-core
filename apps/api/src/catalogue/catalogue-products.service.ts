@@ -115,9 +115,18 @@ export interface PriceVersionDto {
   createdAt: string;
 }
 
-/** Product detail: full record + versioned price history. */
+export interface ElectricityLimitVersionDto {
+  id: string;
+  minKwh: string;
+  maxKwh: string;
+  effectiveFrom: string;
+  effectiveUntil: string | null;
+}
+
+/** Product detail with versioned price and electricity-limit histories. */
 export interface ProductDetailDto extends ProductDto {
   priceHistory: PriceVersionDto[];
+  electricityLimitHistory: ElectricityLimitVersionDto[];
 }
 
 // ─── Mutation inputs ───────────────────────────────────────────────────────
@@ -206,6 +215,14 @@ interface LimitsRow {
   max_kwh: string;
 }
 
+interface LimitVersionRow {
+  id: string;
+  min_kwh: string;
+  max_kwh: string;
+  effective_from: Date;
+  effective_until: Date | null;
+}
+
 /** A product row plus its fetch-time aggregates (categories, limits). */
 interface ProductRowWithAggregates extends ProductRow {
   categories: ProductCategory[];
@@ -247,14 +264,16 @@ export class CatalogueProductsService {
     const product = await this.findProduct(pool, id);
     if (!product) throw this.productNotFound(id);
 
-    const [withAggregates, history] = await Promise.all([
+    const [withAggregates, history, limitHistory] = await Promise.all([
       this.loadAggregates(pool, [product]),
       this.loadPriceHistory(pool, id),
+      product.type === 'electricity' ? this.loadLimitHistory(pool, id) : Promise.resolve([]),
     ]);
 
     return {
       ...this.toDto(withAggregates[0]!),
       priceHistory: history.map((row) => this.toHistoryDto(row)),
+      electricityLimitHistory: limitHistory.map((row) => this.toLimitHistoryDto(row)),
     };
   }
 
@@ -766,6 +785,16 @@ export class CatalogueProductsService {
     return result.rows;
   }
 
+  private async loadLimitHistory(q: DbExecutor, productId: string): Promise<LimitVersionRow[]> {
+    const result = await q.query<LimitVersionRow>(
+      `SELECT id,min_kwh,max_kwh,effective_from,effective_until
+       FROM electricity_product_limit_versions WHERE product_id=$1
+       ORDER BY effective_from DESC`,
+      [productId]
+    );
+    return result.rows;
+  }
+
   private toDto(row: ProductRowWithAggregates): ProductDto {
     return {
       id: row.id,
@@ -790,6 +819,16 @@ export class CatalogueProductsService {
       effectiveUntil: row.effective_until ?? null,
       createdBy: row.created_by,
       createdAt: row.created_at,
+    };
+  }
+
+  private toLimitHistoryDto(row: LimitVersionRow): ElectricityLimitVersionDto {
+    return {
+      id: row.id,
+      minKwh: String(row.min_kwh),
+      maxKwh: String(row.max_kwh),
+      effectiveFrom: new Date(row.effective_from).toISOString(),
+      effectiveUntil: row.effective_until ? new Date(row.effective_until).toISOString() : null,
     };
   }
 
@@ -890,13 +929,15 @@ export class CatalogueProductsService {
   private async readDetail(q: DbExecutor, id: string): Promise<ProductDetailDto> {
     const product = await this.findProduct(q, id);
     if (!product) throw this.productNotFound(id);
-    const [withAggregates, history] = await Promise.all([
+    const [withAggregates, history, limitHistory] = await Promise.all([
       this.loadAggregates(q, [product]),
       this.loadPriceHistory(q, id),
+      product.type === 'electricity' ? this.loadLimitHistory(q, id) : Promise.resolve([]),
     ]);
     return {
       ...this.toDto(withAggregates[0]!),
       priceHistory: history.map((row) => this.toHistoryDto(row)),
+      electricityLimitHistory: limitHistory.map((row) => this.toLimitHistoryDto(row)),
     };
   }
 

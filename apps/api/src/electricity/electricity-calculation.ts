@@ -20,6 +20,8 @@ export interface ElectricityLine {
   systemKey: ElectricitySystemKey;
   quantityKwh: bigint;
   unitPriceIrR: bigint;
+  minKwh?: bigint;
+  maxKwh?: bigint;
   subtotalIrR: bigint;
   vatRateBasisPoints: number;
   vatSource: ElectricityProductInput['vatSource'];
@@ -282,6 +284,8 @@ export function validateOrderComposition(
       systemKey,
       quantityKwh: quantity,
       unitPriceIrR: product.unitPriceIrR,
+      minKwh: product.minKwh,
+      maxKwh: product.maxKwh,
       subtotalIrR,
       vatRateBasisPoints: product.vatRateBasisPoints,
       vatSource: product.vatSource,
@@ -421,18 +425,23 @@ export function electricitySubmissionSnapshot(
         : gift
           ? { type: gift.type, basisPoints: gift.basisPoints, maxCapIrR: gift.maxCapIrR.toString() }
           : null,
-    lines: totals.lines.map((line) => ({
-      productId: line.productId,
-      systemKey: line.systemKey,
-      quantityKwh: line.quantityKwh.toString(),
-      unitPriceIrR: line.unitPriceIrR.toString(),
-      subtotalIrR: line.subtotalIrR.toString(),
-      discountIrR: line.discountIrR.toString(),
-      netIrR: line.netIrR.toString(),
-      vatRateBasisPoints: line.vatRateBasisPoints,
-      vatSource: line.vatSource,
-      vatIrR: line.vatIrR.toString(),
-    })),
+    lines: totals.lines.map((line, index) => {
+      const source = composition.lines[index];
+      return {
+        productId: line.productId,
+        systemKey: line.systemKey,
+        quantityKwh: line.quantityKwh.toString(),
+        unitPriceIrR: line.unitPriceIrR.toString(),
+        ...(source?.minKwh !== undefined ? { minKwh: source.minKwh.toString() } : {}),
+        ...(source?.maxKwh !== undefined ? { maxKwh: source.maxKwh.toString() } : {}),
+        subtotalIrR: line.subtotalIrR.toString(),
+        discountIrR: line.discountIrR.toString(),
+        netIrR: line.netIrR.toString(),
+        vatRateBasisPoints: line.vatRateBasisPoints,
+        vatSource: line.vatSource,
+        vatIrR: line.vatIrR.toString(),
+      };
+    }),
     subtotalIrR: totals.subtotalIrR.toString(),
     discountIrR: totals.discountIrR.toString(),
     vatIrR: totals.vatIrR.toString(),

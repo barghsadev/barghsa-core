@@ -405,6 +405,28 @@ it('submits a four-product advanced bundle once with one contract and invoice', 
     totalIrR: preview.totalIrR,
     lines: preview.lines,
   });
+  expect(saved.pricing_snapshot.lines).toEqual(
+    expect.arrayContaining([expect.objectContaining({ minKwh: '0', maxKwh: '0' })])
+  );
+  const snapshotBeforeLimitChange = saved.pricing_snapshot;
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(
+      'INSERT INTO electricity_product_limits(product_id,min_kwh,max_kwh) VALUES($1,1,0)',
+      [saved.pricing_snapshot.lines[0].productId]
+    );
+    const afterLimitChange = (
+      await client.query<{ pricing_snapshot: unknown }>(
+        'SELECT pricing_snapshot FROM electricity_orders WHERE id=$1',
+        [first.orderId]
+      )
+    ).rows[0]!.pricing_snapshot;
+    expect(afterLimitChange).toEqual(snapshotBeforeLimitChange);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+  }
   expect(
     (await post('orders/advanced', { ...submission, quantities: { thermal: '11' } })).status
   ).toBe(409);

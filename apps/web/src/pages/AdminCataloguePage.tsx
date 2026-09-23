@@ -27,6 +27,13 @@ type Detail = Product & {
     effectiveFrom: string;
     effectiveUntil: string | null;
   }[];
+  electricityLimitHistory: {
+    id: string;
+    minKwh: string;
+    maxKwh: string;
+    effectiveFrom: string;
+    effectiveUntil: string | null;
+  }[];
 };
 type References = { greenModes: string[]; vatOverride: boolean };
 type Draft = {
@@ -669,6 +676,32 @@ export default function AdminCataloguePage() {
                               </li>
                             ))}
                           </ol>
+                          {detail.type === 'electricity' && (
+                            <div className="space-y-2 border-t pt-4">
+                              <h3 className="font-semibold">{label('limitHistory')}</h3>
+                              {!detail.electricityLimitHistory.length && (
+                                <p>{label('noLimitHistory')}</p>
+                              )}
+                              <ol className="divide-y">
+                                {detail.electricityLimitHistory.map((version) => (
+                                  <li key={version.id} className="space-y-1 py-3">
+                                    <p>
+                                      {label('minKwh')}: {version.minKwh} · {label('maxKwh')}:{' '}
+                                      {version.maxKwh}
+                                    </p>
+                                    <p>
+                                      {label('from')}: {dateText(version.effectiveFrom)}
+                                    </p>
+                                    {version.effectiveUntil && (
+                                      <p>
+                                        {label('until')}: {dateText(version.effectiveUntil)}
+                                      </p>
+                                    )}
+                                  </li>
+                                ))}
+                              </ol>
+                            </div>
+                          )}
                         </section>
                       )}
                     </>

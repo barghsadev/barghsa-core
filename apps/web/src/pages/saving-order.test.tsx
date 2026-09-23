@@ -115,7 +115,9 @@ it.each(['en', 'fa'] as const)(
       expect(container.textContent).toContain(
         locale === 'fa' ? 'اطلاعات واردشده باقی مانده است' : 'Your entries are still here'
       );
-      expect((container.querySelector('input[value="device-1"]') as HTMLInputElement).checked).toBe(true);
+      expect((container.querySelector('input[value="device-1"]') as HTMLInputElement).checked).toBe(
+        true
+      );
     } finally {
       await act(async () => root.unmount());
       container.remove();

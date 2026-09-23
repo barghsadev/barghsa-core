@@ -701,6 +701,13 @@
       "when": 1791331200082,
       "tag": "0179_saving_customer_drafts",
       "breakpoints": true
+    },
+    {
+      "idx": 180,
+      "version": "7",
+      "when": 1791331200083,
+      "tag": "0180_electricity_limit_versions",
+      "breakpoints": true
     }
   ]
 }

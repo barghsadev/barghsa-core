@@ -187,6 +187,8 @@ describe('exact electricity calculations', () => {
       productId: 'thermal-id',
       quantityKwh: '96',
       unitPriceIrR: '100',
+      minKwh: '0',
+      maxKwh: '0',
       vatRateBasisPoints: 900,
     });
     expect(() => JSON.stringify(snapshot)).not.toThrow();
