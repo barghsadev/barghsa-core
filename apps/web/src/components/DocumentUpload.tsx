@@ -42,6 +42,7 @@ export function DocumentUpload({
   profileId,
   replacement,
   association,
+  imageOnly = false,
   onClose,
   onUploaded,
 }: {
@@ -49,13 +50,14 @@ export function DocumentUpload({
   profileId: string;
   replacement: BusinessDocument | null;
   association?: ContractDocumentAssociation | OrderDocumentAssociation | SolarDocumentAssociation;
+  imageOnly?: boolean;
   onClose: () => void;
   onUploaded: (document: BusinessDocument) => void;
 }) {
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
   const [file, setFile] = useState<File | null>(null);
-  const [category, setCategory] = useState('document');
+  const [category, setCategory] = useState(imageOnly ? 'image' : 'document');
   const [action, setAction] = useState<TeamAction | null>(null);
   const [attempt, setAttempt] = useState<Attempt | null>(null);
   const [phase, setPhase] = useState<'idle' | 'uploading' | 'confirming' | 'failed'>('idle');
@@ -72,7 +74,12 @@ export function DocumentUpload({
 
   function submit(event: FormEvent) {
     event.preventDefault();
-    if (!file || !file.size || file.size > 50 * 1024 * 1024) {
+    if (
+      !file ||
+      !file.size ||
+      file.size > 50 * 1024 * 1024 ||
+      (imageOnly && !file.type.startsWith('image/'))
+    ) {
       setError(word('invalidFile'));
       return;
     }
@@ -173,7 +180,7 @@ export function DocumentUpload({
       ) : (
         <form onSubmit={submit} className="flex flex-col gap-4">
           <FieldGroup>
-            {!replacement && association?.businessRecordType !== 'contract' ? (
+            {!replacement && association?.businessRecordType !== 'contract' && !imageOnly ? (
               <Field>
                 <FieldLabel htmlFor="document-category">{word('category')}</FieldLabel>
                 <NativeSelect
@@ -193,9 +200,11 @@ export function DocumentUpload({
                 id="document-file"
                 type="file"
                 accept={
-                  association?.businessRecordType === 'order'
-                    ? '.pdf,.jpg,.jpeg,.png,.webp,.mp4,.webm,.mov,.mkv'
-                    : undefined
+                  imageOnly
+                    ? 'image/*'
+                    : association?.businessRecordType === 'order'
+                      ? '.pdf,.jpg,.jpeg,.png,.webp,.mp4,.webm,.mov,.mkv'
+                      : undefined
                 }
                 disabled={!!action}
                 onChange={(event) => setFile(event.target.files?.[0] ?? null)}

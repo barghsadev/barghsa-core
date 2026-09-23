@@ -169,13 +169,27 @@ export class DocumentService {
       ])
     ).rows[0];
     if (!record) throw new NotFoundException();
-    if (
-      input.businessRecordType === 'solar_request' &&
-      !['submitted', 'uploading_documents', 'documents_under_review', 'changes_requested'].includes(
-        record.status
-      )
-    )
-      throw new ConflictException('Solar request no longer accepts documents');
+    if (input.businessRecordType === 'solar_request') {
+      const documentStage = [
+        'submitted',
+        'uploading_documents',
+        'documents_under_review',
+        'changes_requested',
+      ].includes(record.status);
+      const postalImage =
+        record.status === 'waiting_for_postal_submission' &&
+        input.category === 'image' &&
+        !staff &&
+        !!(
+          await client.query(
+            `SELECT 1 FROM solar_construction_postal WHERE request_id=$1
+               AND status IN ('waiting_for_shipment','incomplete','not_received')`,
+            [input.businessRecordId]
+          )
+        ).rows.length;
+      if (!documentStage && !postalImage)
+        throw new ConflictException('Solar request no longer accepts documents');
+    }
     if (input.businessRecordType !== 'contract') return;
     if (record.current_version_id !== input.contractVersionId)
       throw new ConflictException('Select the current contract version');
@@ -219,6 +233,18 @@ export class DocumentService {
         if (savingOrder && ['completed', 'cancelled', 'rejected'].includes(savingOrder.status))
           throw new ConflictException('This saving order no longer accepts documents');
         if (input.supersedesDocumentId) {
+          if (input.businessRecordType === 'solar_request') {
+            const phase = (
+              await client.query<{ status: string }>(
+                'SELECT status FROM solar_construction_requests WHERE id=$1',
+                [input.businessRecordId]
+              )
+            ).rows[0]?.status;
+            if (phase === 'waiting_for_postal_submission')
+              throw new ConflictException(
+                'Upload a new postal receipt image instead of replacing a reviewed file'
+              );
+          }
           const prior = await load(client, input.supersedesDocumentId, profileId, staff, true);
           if (
             prior.document.businessRecordType !== input.businessRecordType ||
@@ -587,14 +613,32 @@ export class DocumentService {
               [context.businessRecordId]
             )
           ).rows[0];
-          if (
-            !solar ||
-            ![
+          const documentStage =
+            !!solar &&
+            [
               'submitted',
               'uploading_documents',
               'documents_under_review',
               'changes_requested',
-            ].includes(solar.status)
+            ].includes(solar.status);
+          const postalImage =
+            solar?.status === 'waiting_for_postal_submission' &&
+            initial.document.category === 'image' &&
+            !staff &&
+            !!(
+              await client.query(
+                `SELECT 1 FROM solar_construction_postal WHERE request_id=$1
+                   AND status IN ('waiting_for_shipment','incomplete','not_received')`,
+                [context.businessRecordId]
+              )
+            ).rows.length;
+          if (
+            !documentStage &&
+            !(
+              postalImage &&
+              action === 'remove' &&
+              ['Uploading', 'PendingScan', 'Available'].includes(initial.document.state)
+            )
           )
             throw new ConflictException('Solar request no longer accepts document changes');
           if (

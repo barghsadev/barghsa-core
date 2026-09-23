@@ -9077,6 +9077,126 @@
         ]
       }
     },
+    "/api/admin/solar/postal-guidance": {
+      "get": {
+        "operationId": "StaffSolarPostalController_guidance",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read editable postal guidance",
+        "tags": [
+          "Admin · Solar postal documents"
+        ]
+      },
+      "put": {
+        "operationId": "StaffSolarPostalController_setGuidance",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "contactDetails": {
+                    "maxLength": 1000,
+                    "type": "string"
+                  },
+                  "destinationAddress": {
+                    "maxLength": 2000,
+                    "type": "string"
+                  },
+                  "en": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "fa": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "originals": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "en": {
+                          "maxLength": 200,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "fa": {
+                          "maxLength": 200,
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "fa",
+                        "en"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 30,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "fa",
+                  "en",
+                  "destinationAddress",
+                  "contactDetails",
+                  "originals"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Edit postal address, contact and original-document guidance",
+        "tags": [
+          "Admin · Solar postal documents"
+        ]
+      }
+    },
+    "/api/admin/solar/postal-queue": {
+      "get": {
+        "operationId": "StaffSolarPostalController_queue",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List solar requests in the postal stage",
+        "tags": [
+          "Admin · Solar postal documents"
+        ]
+      }
+    },
     "/api/admin/solar/requests": {
       "get": {
         "operationId": "StaffSolarDocumentsController_queue",
@@ -9330,6 +9450,135 @@
         "summary": "Reject one solar document with a reason",
         "tags": [
           "Admin · Solar documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/postal/confirm-received": {
+      "post": {
+        "operationId": "StaffSolarPostalController_received",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Confirm receipt of postal originals",
+        "tags": [
+          "Admin · Solar postal documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/postal/mark-incomplete": {
+      "post": {
+        "operationId": "StaffSolarPostalController_incomplete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Mark postal originals incomplete with a reason",
+        "tags": [
+          "Admin · Solar postal documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/postal/mark-not-received": {
+      "post": {
+        "operationId": "StaffSolarPostalController_notReceived",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Mark postal originals not received with a reason",
+        "tags": [
+          "Admin · Solar postal documents"
         ]
       }
     },
@@ -18332,6 +18581,26 @@
         ]
       }
     },
+    "/api/solar/postal-guidance": {
+      "get": {
+        "operationId": "SolarPostalController_guidance",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read postal destination and original-document guidance",
+        "tags": [
+          "Solar postal documents"
+        ]
+      }
+    },
     "/api/solar/requests": {
       "get": {
         "operationId": "SolarRequestController_list",
@@ -18659,6 +18928,102 @@
         "summary": "Submit the document set for review, including an empty set",
         "tags": [
           "Solar documents"
+        ]
+      }
+    },
+    "/api/solar/requests/{id}/postal": {
+      "get": {
+        "operationId": "SolarPostalController_state",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read postal shipment state for a solar request",
+        "tags": [
+          "Solar postal documents"
+        ]
+      }
+    },
+    "/api/solar/requests/{id}/postal/shipment": {
+      "post": {
+        "operationId": "SolarPostalController_shipment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "courier": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "receiptImageId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "sendDate": {
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                    "type": "string"
+                  },
+                  "trackingNumber": {
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "courier",
+                  "trackingNumber",
+                  "sendDate"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Record customer courier, tracking, send date and optional receipt image",
+        "tags": [
+          "Solar postal documents"
         ]
       }
     },

@@ -4,6 +4,7 @@ import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { DocumentResults, type DocumentFilters } from '../components/DocumentsWorkspace.js';
+import { SolarPostalPanel } from '../components/SolarPostalPanel.js';
 
 interface SolarRequest {
   id: string;
@@ -224,6 +225,14 @@ export function SolarRequestDetailPage() {
               {documentSent && <p role="status">{copy('reviewSent')}</p>}
               {documentError && <p role="alert">{copy('documentError')}</p>}
             </section>
+          )}
+          {[
+            'waiting_for_postal_submission',
+            'postal_documents_received',
+            'final_review',
+            'contract_created',
+          ].includes(request.status) && (
+            <SolarPostalPanel requestId={requestId} profileId={request.profile_id} />
           )}
           <dl className="grid gap-3 rounded-xl border p-5 sm:grid-cols-2">
             <div>
