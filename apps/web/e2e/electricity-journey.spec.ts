@@ -1,9 +1,14 @@
 import { test, expect } from './coverage-fixture';
+import { t } from '@barghsa/i18n/app';
+import { electricityPaymentReview } from './electricity-payment-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const orderId = '66666666-6666-4666-8666-666666666666';
 const contractId = '77777777-7777-4777-8777-777777777777';
 const invoiceId = '88888888-8888-4888-8888-888888888888';
+const versionId = '99999999-9999-4999-8999-999999999999';
+const transactionId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+const submittedAt = '2026-09-23T10:00:00.000Z';
 const address = {
   id: '22222222-2222-4222-8222-222222222222',
   profileId,
@@ -36,7 +41,7 @@ const products = (['thermal', 'green', 'free_market', 'energy_saving'] as const)
 );
 
 for (const locale of ['en', 'fa'] as const) {
-  test(`advanced electricity journey shows a localized bundle and submits its reviewed quote (${locale})`, async ({
+  test(`advanced electricity journey follows a localized bundle through payment and contract tracking (${locale})`, async ({
     page,
   }) => {
     await page.clock.install({ time: new Date('2026-09-23T10:00:00.000Z') });
@@ -113,6 +118,8 @@ for (const locale of ['en', 'fa'] as const) {
       })
     );
     const drafts: Array<Record<string, unknown>> = [];
+    let reviewComplete = false;
+    let paid = false;
     await page.route('**/api/electricity/drafts/advanced?*', (route) =>
       route.fulfill({
         json: drafts.at(-1) ?? { currentStep: 1, data: null, updatedAt: null },
@@ -124,6 +131,18 @@ for (const locale of ['en', 'fa'] as const) {
     });
     const previews: Array<Record<string, unknown>> = [];
     let reviewedTotal = '0';
+    const paymentReview = () =>
+      electricityPaymentReview({
+        profileId,
+        orderId,
+        invoiceId,
+        contractId,
+        versionId,
+        transactionId,
+        amount: reviewedTotal,
+        availableBalance: '3000000',
+        submittedAt,
+      });
     await page.route('**/api/electricity/preview/advanced', (route) => {
       const body = route.request().postDataJSON() as Record<string, unknown>;
       previews.push(body);
@@ -163,7 +182,7 @@ for (const locale of ['en', 'fa'] as const) {
           averagePowerKw: '0.02',
           greenRuleApplies: thermal > 0,
           mandatoryGreenEnabled: true,
-          walletBalanceIrR: '500000',
+          walletBalanceIrR: '3000000',
           lines,
           subtotalIrR: String(total),
           discountIrR: '0',
@@ -186,22 +205,26 @@ for (const locale of ['en', 'fa'] as const) {
         json: {
           orderId,
           profileId,
-          commercialStatus: 'PENDING',
-          electricityStatus: 'awaiting_staff_review',
-          financialStatus: 'unpaid',
-          nextAction: 'await_review',
+          commercialStatus: reviewComplete ? 'CONFIRMED' : 'PENDING',
+          electricityStatus: reviewComplete ? 'approved' : 'awaiting_staff_review',
+          financialStatus: paid ? 'paid' : 'unpaid',
+          nextAction: paid ? 'accept_contract' : reviewComplete ? 'pay_invoice' : 'await_review',
           periodStart: previews.at(-1)?.startAt,
           periodEnd: previews.at(-1)?.endAt,
           totalKwh: '14',
           fullAddress: address.fullAddress,
           postalCode: address.postalCode,
           contractId,
-          contractState: 'AwaitingStaffReview',
-          versionId: '99999999-9999-4999-8999-999999999999',
+          contractState: paid
+            ? 'AwaitingCustomerAcceptance'
+            : reviewComplete
+              ? 'AwaitingPayment'
+              : 'AwaitingStaffReview',
+          versionId,
           invoiceId,
-          invoiceState: 'Unpaid',
+          invoiceState: paid ? 'Paid' : 'Unpaid',
           totalIrR: reviewedTotal,
-          paidIrR: '0',
+          paidIrR: paid ? reviewedTotal : '0',
           refundedIrR: '0',
           lines: [
             {
@@ -212,10 +235,129 @@ for (const locale of ['en', 'fa'] as const) {
               unitPriceIrR: '100000',
               lineTotalIrR: '1000000',
             },
+            {
+              productId: products[1]!.id,
+              systemKey: 'green',
+              title: products[1]!.title,
+              quantityKwh: '1',
+              unitPriceIrR: '200000',
+              lineTotalIrR: '200000',
+            },
+            {
+              productId: products[2]!.id,
+              systemKey: 'free_market',
+              title: products[2]!.title,
+              quantityKwh: '3',
+              unitPriceIrR: '300000',
+              lineTotalIrR: '900000',
+            },
           ],
           timeline: [],
         },
       })
+    );
+    await page.route(`**/api/invoices/${invoiceId}`, (route) => {
+      const invoice = {
+        invoiceId,
+        role: 'original',
+        state: paid ? 'Paid' : 'Unpaid',
+        totalAmount: reviewedTotal,
+        paidAmount: paid ? reviewedTotal : '0',
+        refundedAmount: '0',
+        accountingAmount: reviewedTotal,
+        adjustmentKind: null,
+        issuedAt: submittedAt,
+        payableFrom: submittedAt,
+        dueAt: '2026-09-30T10:00:00.000Z',
+        dueAtOverrideReason: null,
+        cancelledAt: null,
+        createdAt: submittedAt,
+        replacesInvoiceId: null,
+        adjustmentForInvoiceId: null,
+        explanation: null,
+        lines: [],
+      };
+      return route.fulfill({
+        json: {
+          viewedInvoiceId: invoiceId,
+          originalInvoiceId: invoiceId,
+          electricityOrderId: orderId,
+          consultationId: null,
+          invoice,
+          chain: [invoice],
+          payments: [],
+          bankReceipts: [],
+          refunds: [],
+        },
+      });
+    });
+    const payments: Array<Record<string, unknown>> = [];
+    await page.route(`**/api/invoices/${invoiceId}/wallet-payment`, (route) => {
+      if (route.request().method() === 'GET')
+        return route.fulfill({
+          json: {
+            invoiceId,
+            profileId,
+            remainingAmount: reviewedTotal,
+            availableBalance: '3000000',
+            canPay: !paid,
+            review: paymentReview(),
+          },
+        });
+      const body = route.request().postDataJSON() as Record<string, unknown>;
+      payments.push(body);
+      paid = true;
+      return route.fulfill({
+        json: {
+          ...body,
+          invoiceId,
+          profileId,
+          state: 'Paid',
+          amount: reviewedTotal,
+          walletTransactionId: transactionId,
+          reviewHash: paymentReview().hash,
+        },
+      });
+    });
+    const contractVersion = () => ({
+      id: versionId,
+      versionNumber: 1,
+      content: { text: 'Published advanced electricity terms', price: reviewedTotal },
+      changeDescription: 'Initial electricity contract',
+      createdAt: submittedAt,
+      createdBy: 'staff-reviewer',
+      acceptedAt: null,
+    });
+    await page.route('**/api/contracts?*', (route) =>
+      route.fulfill({
+        json: {
+          contracts: [
+            {
+              id: contractId,
+              serviceType: 'electricity',
+              state: 'AwaitingCustomerAcceptance',
+              versionId,
+              versionNumber: 1,
+            },
+          ],
+          nextBefore: null,
+        },
+      })
+    );
+    await page.route(`**/api/contracts/${contractId}`, (route) =>
+      route.fulfill({
+        json: {
+          id: contractId,
+          profileId,
+          serviceType: 'electricity',
+          state: 'AwaitingCustomerAcceptance',
+          version: contractVersion(),
+          canAccept: true,
+        },
+      })
+    );
+    await page.route(`**/api/contracts/${contractId}/versions`, (route) =>
+      route.fulfill({ json: { versions: [contractVersion()], nextBefore: null } })
     );
 
     await page.goto('/electricity');
@@ -303,6 +445,47 @@ for (const locale of ['en', 'fa'] as const) {
         postalCode: addedAddress.postalCode,
       },
     });
+    await expect(page.getByText(products[1]!.title[locale])).toBeVisible();
+    await expect(page.getByText(products[2]!.title[locale])).toBeVisible();
+
+    // Staff approval is verified in the API suite; resume the customer journey after it.
+    reviewComplete = true;
+    await page.reload();
+    await expect(page.getByRole('region', { name: t('workflow.summary', locale) })).toContainText(
+      t('electricity.order.nextAction.pay_invoice', locale)
+    );
+    await page
+      .getByRole('region', { name: t('workflow.summary', locale) })
+      .getByRole('link', { name: t('electricity.order.nextAction.pay_invoice', locale) })
+      .click();
+    const wallet = page.locator('#wallet-invoice-payment');
+    await wallet
+      .getByRole('button', {
+        name: locale === 'fa' ? 'بررسی پرداخت از کیف پول' : 'Review wallet payment',
+        exact: true,
+      })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(wallet.getByRole('status')).toContainText(transactionId);
+    expect(payments).toHaveLength(1);
+    expect(payments[0]).toMatchObject({
+      expectedRemainingAmount: reviewedTotal,
+      expectedReviewHash: paymentReview().hash,
+    });
+    await page
+      .getByRole('link', { name: t('invoices.details.backToElectricityOrder', locale) })
+      .click();
+    await expect(page.getByRole('region', { name: t('workflow.summary', locale) })).toContainText(
+      t('electricity.order.nextAction.accept_contract', locale)
+    );
+    await page
+      .getByRole('link', { name: t('electricity.order.nextAction.accept_contract', locale) })
+      .click();
+    await expect(page).toHaveURL(new RegExp(`/contracts\\?contractId=${contractId}$`));
+    await expect(page.getByText('Published advanced electricity terms')).toBeVisible();
   });
 }
 

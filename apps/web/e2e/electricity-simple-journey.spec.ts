@@ -1,6 +1,5 @@
-import { createHash } from 'node:crypto';
 import { test, expect } from './coverage-fixture';
-import type { WalletPaymentReviewData } from '@barghsa/shared/finance';
+import { electricityPaymentReview } from './electricity-payment-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const orderId = '22222222-2222-4222-8222-222222222222';
@@ -93,60 +92,17 @@ const quote = {
 };
 
 function paymentReview() {
-  const data: WalletPaymentReviewData = {
-    currency: 'IRR',
-    profile: { id: profileId, title: 'Buyer', type: 'LEGAL' },
-    invoice: {
-      id: invoiceId,
-      state: 'Unpaid',
-      orderId,
-      serviceType: 'electricity',
-      issuedAt: submittedAt,
-      payableFrom: submittedAt,
-      dueAt: '2026-09-30T10:00:00.000Z',
-      totalAmount: amount,
-      paidAmount: '0',
-      remainingAmount: amount,
-    },
-    lines: [
-      {
-        id: transactionId,
-        description: 'Electricity',
-        quantity: 1,
-        unitPrice: amount,
-        discount: '0',
-        subtotal: amount,
-        vatRate: 0,
-        vatAmount: '0',
-        taxable: false,
-      },
-    ],
-    totals: { subtotal: amount, discount: '0', vat: '0' },
-    payment: { source: 'wallet', availableBefore: '2000000', availableAfter: '800000' },
-    contracts: [
-      {
-        id: contractId,
-        versionId,
-        state: 'AwaitingPayment',
-        serviceType: 'electricity',
-        ruleRevision: 1,
-        signatureRequired: false,
-        paymentRequired: true,
-        initialInvoice: true,
-        serviceStartRequired: false,
-        serviceStartsAt: null,
-        serviceEndsAt: null,
-        cancellationRefund: 'full_wallet',
-      },
-    ],
-    cancellation: 'separate_review_required',
-  };
-  return {
-    schemaVersion: 1,
-    scope: { action: 'invoice.wallet-payment' as const, profileId, resourceId: invoiceId },
-    data,
-    hash: createHash('sha256').update(JSON.stringify(data)).digest('hex'),
-  };
+  return electricityPaymentReview({
+    profileId,
+    orderId,
+    invoiceId,
+    contractId,
+    versionId,
+    transactionId,
+    amount,
+    availableBalance: '2000000',
+    submittedAt,
+  });
 }
 
 test('simple electricity order moves from reviewed quote through wallet payment to contract tracking', async ({
