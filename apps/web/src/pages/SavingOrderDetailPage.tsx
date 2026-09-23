@@ -26,6 +26,7 @@ import {
 } from '../components/SavingHardwareUpgradeHistory.js';
 import { savingNextAction, type SavingActionContext } from '../lib/saving-next-action.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
+import { AcceptedSavingAgreement } from '../components/AcceptedSavingAgreement.js';
 
 interface Detail extends SavingActionContext {
   order_id: string;
@@ -48,6 +49,7 @@ interface Detail extends SavingActionContext {
   };
   verification_result: { status: string };
   agreement_snapshot: string;
+  agreement_updated: boolean;
   contract_version_id: string;
   stages: Array<{
     stage: string;
@@ -271,10 +273,11 @@ export function SavingOrderDetailPage() {
               <SavingOrderComments orderId={detail.id} />
             </CardContent>
           </Card>
-          <details className="rounded-md border p-4">
-            <summary className="cursor-pointer font-medium">{copy('agreement')}</summary>
-            <p className="mt-3 whitespace-pre-wrap text-sm">{detail.agreement_snapshot}</p>
-          </details>
+          <AcceptedSavingAgreement
+            snapshot={detail.agreement_snapshot}
+            updated={detail.agreement_updated}
+            locale={locale}
+          />
         </>
       )}
     </main>

@@ -483,6 +483,7 @@ export class SavingOrderService {
           verification_result: unknown;
           agreement_version_id: string;
           agreement_snapshot: string;
+          agreement_updated: boolean;
           submitted_at: Date;
           invoice_id: string;
           invoice_state: string;
@@ -495,16 +496,25 @@ export class SavingOrderService {
         }>(
           `SELECT s.id,s.profile_id,s.order_id,s.status,s.bill_identifier,s.address_snapshot,
                 s.saving_plan_id,s.hardware_product_id,h.title AS current_hardware_title,
-                s.installation_address_id,
-                s.pricing_snapshot,s.verification_result,s.agreement_version_id,s.agreement_snapshot,
-                s.submitted_at,s.financial_status,i.id AS invoice_id,i.state AS invoice_state,
+                  s.installation_address_id,
+                  s.pricing_snapshot,s.verification_result,s.agreement_version_id,
+                  CASE WHEN s.agreement_snapshot=accepted_agreement.body
+                    THEN accepted_agreement.title || E'\n' || s.agreement_snapshot
+                    ELSE s.agreement_snapshot END AS agreement_snapshot,
+                  EXISTS(SELECT 1 FROM saving_plan_agreement_versions current_agreement
+                    WHERE current_agreement.plan_id=s.saving_plan_id
+                      AND current_agreement.status='active'
+                      AND current_agreement.id<>s.agreement_version_id) AS agreement_updated,
+                  s.submitted_at,s.financial_status,i.id AS invoice_id,i.state AS invoice_state,
                 c.id AS contract_id,c.current_version_id AS contract_version_id,
                 c.state AS contract_state,
                 EXISTS(SELECT 1 FROM contract_cancellation_requests r
                   WHERE r.contract_id=c.id AND r.status='Pending') AS cancellation_pending,
                   COALESCE((${customerChangeEligibility}),false) AS can_edit
-           FROM saving_orders s
-           JOIN products h ON h.id=s.hardware_product_id
+             FROM saving_orders s
+             JOIN saving_plan_agreement_versions accepted_agreement
+               ON accepted_agreement.id=s.agreement_version_id
+             JOIN products h ON h.id=s.hardware_product_id
            LEFT JOIN invoices i ON i.order_id=s.order_id AND i.type='auto'
            LEFT JOIN contracts c ON c.order_id=s.order_id AND c.service_type='savings'
           WHERE s.id=$1`,
@@ -1025,7 +1035,7 @@ export class SavingOrderService {
           input.billIdentifier,
           input.installationAddressId,
           agreement.id,
-          agreement.body,
+          `${agreement.title}\n${agreement.body}`,
           JSON.stringify(address),
           JSON.stringify(quote),
           JSON.stringify(verification),

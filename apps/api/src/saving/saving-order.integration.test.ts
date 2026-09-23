@@ -228,6 +228,7 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     ...input,
     profileId: legalProfileId,
   });
+
   expect(legal.status, http.logs()).toBe(400);
   const quoteResponse = await request('/api/saving/orders/quote', 'POST', input);
   expect(quoteResponse.status, http.logs()).toBe(201);
@@ -312,6 +313,8 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     status: 'awaiting_staff_review',
     financial_status: 'unpaid',
     invoice_state: 'Unpaid',
+    agreement_snapshot: 'Test terms\nThe customer agrees to the plan.',
+    agreement_updated: false,
     cancellation_pending: false,
     contract_state: 'AwaitingStaffReview',
     stages: [
@@ -1491,6 +1494,120 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     ).rows[0]
   ).toMatchObject({ stock_count: 1, reserved_count: 0 });
 }, 150000);
+
+it('keeps the accepted agreement text and flags a newer published version', async () => {
+  const hardwareResponse = await request(
+    '/api/admin/catalogue/products',
+    'POST',
+    {
+      type: 'hardware',
+      title: { fa: 'دستگاه دوم', en: 'Second device' },
+      price: '100000',
+      status: 'active',
+    },
+    staffHeaders
+  );
+  expect(hardwareResponse.status, http.logs()).toBe(201);
+  const hardware = (await hardwareResponse.json()) as { id: string };
+  const planResponse = await request(
+    '/api/admin/catalogue/products',
+    'POST',
+    {
+      type: 'saving_plan',
+      title: { fa: 'طرح دوم', en: 'Second plan' },
+      price: '100000',
+      status: 'inactive',
+      hardwareIds: [hardware.id],
+    },
+    staffHeaders
+  );
+  expect(planResponse.status, http.logs()).toBe(201);
+  const plan = (await planResponse.json()) as { id: string };
+  const agreementPath = `/api/admin/catalogue/saving-plans/${plan.id}/agreements`;
+  const originalDraft = await request(
+    `${agreementPath}/draft`,
+    'POST',
+    { title: 'Accepted terms', body: 'Original body.' },
+    staffHeaders
+  );
+  expect(originalDraft.status, http.logs()).toBe(201);
+  const original = (await originalDraft.json()) as { id: string };
+  expect(
+    (await request(`${agreementPath}/${original.id}/activate`, 'POST', undefined, staffHeaders))
+      .status
+  ).toBe(201);
+  expect(
+    (
+      await request(
+        `/api/admin/catalogue/products/${plan.id}`,
+        'PUT',
+        { status: 'active' },
+        staffHeaders
+      )
+    ).status
+  ).toBe(200);
+  const orderInput = {
+    ...input,
+    savingPlanId: plan.id,
+    hardwareProductId: hardware.id,
+    agreementVersionId: original.id,
+    billIdentifier: '9876543210987',
+  };
+  const quoteResponse = await request('/api/saving/orders/quote', 'POST', orderInput);
+  expect(quoteResponse.status, http.logs()).toBe(201);
+  const quote = (await quoteResponse.json()) as { reviewDigest: string };
+  expect(
+    (
+      await request('/api/saving/orders/verify-bill', 'POST', {
+        profileId: input.profileId,
+        billIdentifier: orderInput.billIdentifier,
+      })
+    ).status
+  ).toBe(201);
+  const submitted = await request('/api/saving/orders', 'POST', {
+    ...orderInput,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: quote.reviewDigest,
+    agreementAccepted: true,
+    hardwareConfirmed: true,
+    submitForStaffReview: true,
+  });
+  expect(submitted.status, http.logs()).toBe(201);
+  const { savingOrderId } = (await submitted.json()) as { savingOrderId: string };
+  const detailPath = `/api/saving/orders/${savingOrderId}`;
+  expect(await (await request(detailPath, 'GET')).json()).toMatchObject({
+    agreement_snapshot: 'Accepted terms\nOriginal body.',
+    agreement_updated: false,
+  });
+  const stored = await http.pool.query<{ agreement_snapshot: string }>(
+    'SELECT agreement_snapshot FROM saving_orders WHERE id=$1',
+    [savingOrderId]
+  );
+  expect(stored.rows[0]?.agreement_snapshot).toBe('Accepted terms\nOriginal body.');
+  const newerDraft = await request(
+    `${agreementPath}/draft`,
+    'POST',
+    { title: 'New terms', body: 'New body.' },
+    staffHeaders
+  );
+  expect(newerDraft.status, http.logs()).toBe(201);
+  const newer = (await newerDraft.json()) as { id: string };
+  expect(
+    (await request(`${agreementPath}/${newer.id}/activate`, 'POST', undefined, staffHeaders)).status
+  ).toBe(201);
+  expect(await (await request(detailPath, 'GET')).json()).toMatchObject({
+    agreement_snapshot: 'Accepted terms\nOriginal body.',
+    agreement_updated: true,
+  });
+  await http.pool.query('UPDATE saving_orders SET agreement_snapshot=$2 WHERE id=$1', [
+    savingOrderId,
+    'Original body.',
+  ]);
+  expect(await (await request(detailPath, 'GET')).json()).toMatchObject({
+    agreement_snapshot: 'Accepted terms\nOriginal body.',
+    agreement_updated: true,
+  });
+});
 
 it('revises an unpaid order address and equipment with one invoice, a new contract version, and moved stock', async () => {
   const secondAddress = (

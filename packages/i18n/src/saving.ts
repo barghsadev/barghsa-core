@@ -16,6 +16,9 @@ const en: Record<string, string> = {
   equipment: 'Compatible equipment',
   equipmentPrice: 'Equipment price',
   agreement: 'Current agreement',
+  acceptedAgreement: 'Agreement accepted for this order',
+  agreementUpdatedNotice:
+    'The current plan agreement has changed. This order keeps the terms you accepted below.',
   noAgreement: 'An agreement has not been published yet.',
   unpriced: 'Price unavailable',
   inactive: 'Inactive',
@@ -197,6 +200,9 @@ const fa: Record<string, string> = {
   equipment: 'تجهیزات سازگار',
   equipmentPrice: 'قیمت تجهیزات',
   agreement: 'توافق‌نامه جاری',
+  acceptedAgreement: 'توافق‌نامه پذیرفته‌شده برای این سفارش',
+  agreementUpdatedNotice:
+    'توافق‌نامه جاری طرح تغییر کرده است. شرایطی که برای این سفارش پذیرفتید در ادامه حفظ شده است.',
   noAgreement: 'هنوز توافق‌نامه‌ای منتشر نشده است.',
   unpriced: 'قیمت موجود نیست',
   inactive: 'غیرفعال',
