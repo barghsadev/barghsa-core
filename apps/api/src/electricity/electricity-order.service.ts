@@ -203,9 +203,8 @@ export class ElectricityOrderService {
            FROM electricity_orders e
            JOIN electricity_contracts ec ON ec.order_id=e.id
            JOIN contracts c ON c.id=ec.contract_id
-           JOIN LATERAL (SELECT * FROM invoices i WHERE i.order_id=e.id
-             AND i.adjustment_for_invoice_id IS NULL AND i.replaces_invoice_id IS NULL
-             ORDER BY i.created_at DESC LIMIT 1) i ON true
+           JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
+           JOIN invoices i ON i.id=ar.initial_invoice_id
            WHERE e.profile_id=$1 AND e.submitted_at IS NOT NULL
              AND ($2::timestamptz IS NULL OR (e.submitted_at,e.id)<($2::timestamptz,$3::uuid))
            ORDER BY e.submitted_at DESC,e.id DESC LIMIT 51`,
@@ -314,10 +313,10 @@ export class ElectricityOrderService {
          FROM orders o JOIN electricity_orders e ON e.id=o.id
          JOIN electricity_contracts ec ON ec.order_id=o.id
          JOIN contracts c ON c.id=ec.contract_id
+         JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
          LEFT JOIN electricity_quantity_increase_requests ir
            ON ir.contract_id=c.id AND ir.status='effective'
-         JOIN invoices i ON i.order_id=o.id AND i.adjustment_for_invoice_id IS NULL
-           AND i.replaces_invoice_id IS NULL
+         JOIN invoices i ON i.id=ar.initial_invoice_id
          LEFT JOIN gift_codes gc ON gc.id=o.gift_code_id
          LEFT JOIN refund_obligations ro ON ro.order_id=o.id
          WHERE o.id=$1 ORDER BY i.created_at DESC LIMIT 1`,
@@ -490,8 +489,8 @@ export class ElectricityOrderService {
                FROM orders o JOIN electricity_orders e ON e.id=o.id
                JOIN electricity_contracts ec ON ec.order_id=o.id
                JOIN contracts c ON c.id=ec.contract_id
-               JOIN invoices i ON i.order_id=o.id AND i.adjustment_for_invoice_id IS NULL
-                 AND i.replaces_invoice_id IS NULL
+               JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
+               JOIN invoices i ON i.id=ar.initial_invoice_id
                WHERE o.id=$1 FOR UPDATE OF o,e,c,i`,
               [orderId]
             )
@@ -630,8 +629,8 @@ export class ElectricityOrderService {
                JOIN electricity_contracts ec ON ec.order_id=o.id
                JOIN contracts c ON c.id=ec.contract_id
                JOIN contract_versions v ON v.id=c.current_version_id
-               JOIN invoices i ON i.order_id=o.id AND i.adjustment_for_invoice_id IS NULL
-                 AND i.replaces_invoice_id IS NULL
+               JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
+               JOIN invoices i ON i.id=ar.initial_invoice_id
                WHERE o.id=$1 FOR UPDATE OF o,e,c,i`,
               [orderId]
             )

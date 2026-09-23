@@ -109,6 +109,201 @@ async function submittedOrder() {
   };
 }
 
+it('keeps review, payment and activation on a corrected unpaid invoice', async () => {
+  const order = await submittedOrder();
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES('reviewer','role-finance')"
+  );
+  const original = (
+    await http.pool.query<{ total_amount: string }>(
+      'SELECT total_amount::text FROM invoices WHERE id=$1',
+      [order.invoiceId]
+    )
+  ).rows[0]!;
+  const lines = (
+    await http.pool.query<{
+      description: string;
+      quantity: number;
+      unit_price: string;
+      vat_rate: number;
+      is_taxable: boolean;
+    }>(
+      `SELECT description,quantity,unit_price::text,vat_rate,is_taxable
+       FROM invoice_lines WHERE invoice_id=$1 ORDER BY position,id`,
+      [order.invoiceId]
+    )
+  ).rows.map((line) => ({
+    description: line.description,
+    quantity: line.quantity,
+    unitPrice: line.unit_price,
+    vatRate: line.vat_rate,
+    isTaxable: line.is_taxable,
+  }));
+  const changedAmount = await fetch(
+    `${http.base}/api/admin/invoices/${order.invoiceId}/corrections`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({
+        kind: 'replacement',
+        reason: 'Change the amount without a contract amendment',
+        idempotencyKey: randomUUID(),
+        lines: [{ ...lines[0]!, unitPrice: (BigInt(lines[0]!.unitPrice) + 1n).toString() }],
+      }),
+    }
+  );
+  expect(changedAmount.status, http.logs()).toBe(409);
+  expect(lines).toHaveLength(1);
+  expect(BigInt(lines[0]!.unitPrice) % 2n).toBe(0n);
+  const changedEconomics = await fetch(
+    `${http.base}/api/admin/invoices/${order.invoiceId}/corrections`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({
+        kind: 'replacement',
+        reason: 'Change quantity while keeping the same total',
+        idempotencyKey: randomUUID(),
+        lines: [
+          {
+            ...lines[0]!,
+            quantity: lines[0]!.quantity * 2,
+            unitPrice: (BigInt(lines[0]!.unitPrice) / 2n).toString(),
+          },
+        ],
+      }),
+    }
+  );
+  expect(changedEconomics.status, http.logs()).toBe(409);
+  const correction = await fetch(`${http.base}/api/admin/invoices/${order.invoiceId}/corrections`, {
+    method: 'POST',
+    headers: staffHeaders,
+    body: JSON.stringify({
+      kind: 'replacement',
+      reason: 'Correct invoice description before approval',
+      idempotencyKey: randomUUID(),
+      lines,
+    }),
+  });
+  expect(correction.status, http.logs()).toBe(201);
+  const replacement = (await correction.json()) as { invoiceId: string };
+  expect(replacement.invoiceId).not.toBe(order.invoiceId);
+  const relinkAudit = (
+    await http.pool.query<{ metadata: Record<string, string> }>(
+      `SELECT metadata::jsonb FROM audit_log
+       WHERE event='electricity.activation_invoice_replaced'
+         AND metadata::jsonb->>'orderId'=$1`,
+      [order.orderId]
+    )
+  ).rows;
+  expect(relinkAudit).toHaveLength(1);
+  expect(relinkAudit[0]!.metadata).toMatchObject({
+    contractId: order.contractId,
+    originalInvoiceId: order.invoiceId,
+    replacementInvoiceId: replacement.invoiceId,
+  });
+  expect(
+    (
+      await http.pool.query<{ initial_invoice_id: string }>(
+        `SELECT r.initial_invoice_id FROM contracts c
+         JOIN contract_activation_requirements r ON r.version_id=c.current_version_id
+         WHERE c.id=$1`,
+        [order.contractId]
+      )
+    ).rows[0]!.initial_invoice_id
+  ).toBe(replacement.invoiceId);
+  const customerDetail = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, {
+    headers,
+  });
+  expect(await customerDetail.json()).toMatchObject({
+    invoiceId: replacement.invoiceId,
+    invoiceState: 'Unpaid',
+    totalIrR: original.total_amount,
+    financialStatus: 'unpaid',
+  });
+  const customerList = await fetch(
+    `${http.base}/api/electricity/orders?profileId=${input.profileId}`,
+    { headers }
+  );
+  expect(await customerList.json()).toMatchObject({
+    orders: [expect.objectContaining({ orderId: order.orderId, totalIrR: original.total_amount })],
+  });
+  const staffDetail = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
+    headers: staffHeaders,
+  });
+  expect(await staffDetail.json()).toMatchObject({ invoiceId: replacement.invoiceId });
+
+  const versionId = (
+    await http.pool.query<{ current_version_id: string }>(
+      'SELECT current_version_id FROM contracts WHERE id=$1',
+      [order.contractId]
+    )
+  ).rows[0]!.current_version_id;
+  const approved = await staffPost(order.orderId, 'approve', {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+  });
+  expect(approved.status, http.logs()).toBe(200);
+  const publishedCorrection = await fetch(
+    `${http.base}/api/admin/invoices/${replacement.invoiceId}/corrections`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({
+        kind: 'replacement',
+        reason: 'Published contract cannot be rewritten',
+        idempotencyKey: randomUUID(),
+        lines,
+      }),
+    }
+  );
+  expect(publishedCorrection.status, http.logs()).toBe(409);
+  await http.pool.query(
+    `INSERT INTO wallets(profile_id,posted_balance,reserved_balance)
+     VALUES($1,$2,0) ON CONFLICT (profile_id)
+     DO UPDATE SET posted_balance=$2,reserved_balance=0`,
+    [input.profileId, original.total_amount]
+  );
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+  const paymentPath = `${http.base}/api/invoices/${replacement.invoiceId}/wallet-payment`;
+  const paymentReview = await fetch(paymentPath, { headers });
+  expect(paymentReview.status, http.logs()).toBe(200);
+  const review = (await paymentReview.json()) as { review: { hash: string } };
+  const payment = await fetch(paymentPath, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      idempotencyKey: randomUUID(),
+      expectedRemainingAmount: original.total_amount,
+      expectedReviewHash: review.review.hash,
+    }),
+  });
+  expect(payment.status, http.logs()).toBe(200);
+  const acceptanceReview = await fetch(
+    `${http.base}/api/contracts/${order.contractId}/acceptance-review?versionId=${versionId}`,
+    { headers }
+  );
+  expect(acceptanceReview.status, http.logs()).toBe(200);
+  const acceptance = (await acceptanceReview.json()) as { hash: string };
+  const accepted = await fetch(`${http.base}/api/contracts/${order.contractId}/accept`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      idempotencyKey: randomUUID(),
+      expectedVersionId: versionId,
+      expectedReviewHash: acceptance.hash,
+    }),
+  });
+  expect(accepted.status, http.logs()).toBe(200);
+  expect((await activateReadyContracts(http.pool)).activated).toBe(1);
+  const active = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
+  expect(await active.json()).toMatchObject({
+    invoiceId: replacement.invoiceId,
+    financialStatus: 'paid',
+    electricityStatus: 'active',
+  });
+});
+
 it('submits a four-product advanced bundle once with one contract and invoice', async () => {
   for (const [key, price] of [
     ['free_market', 300000],

@@ -631,6 +631,13 @@
       "when": 1791331200072,
       "tag": "0169_consultation_offer_acceptance",
       "breakpoints": true
+    },
+    {
+      "idx": 170,
+      "version": "7",
+      "when": 1791331200073,
+      "tag": "0170_electricity_invoice_replacement",
+      "breakpoints": true
     }
   ]
 }

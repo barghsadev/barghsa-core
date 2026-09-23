@@ -70,8 +70,7 @@ const reviewQuery = `SELECT o.id,o.profile_id,p.user_id AS customer_id,
   JOIN contracts c ON c.id=ec.contract_id
   JOIN contract_versions v ON v.id=c.current_version_id
   JOIN contract_activation_requirements ar ON ar.version_id=v.id
-  JOIN invoices i ON i.order_id=o.id AND i.adjustment_for_invoice_id IS NULL
-    AND i.replaces_invoice_id IS NULL
+  JOIN invoices i ON i.id=ar.initial_invoice_id
   `;
 
 function present(row: ReviewRow) {

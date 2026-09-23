@@ -152,6 +152,7 @@ interface LockedOriginalRow {
   paid_amount: string;
   refunded_amount: string;
   metadata: unknown;
+  adjustment_for_invoice_id: string | null;
 }
 
 /** True when `state` is an unpaid, cancellable state eligible for replace. */
@@ -238,7 +239,8 @@ export class CancelAndReplaceInvoiceService {
 
       const locked = (await client.query(
         `SELECT id, profile_id, order_id, contract_id, consultation_id, type,
-                state, total_amount, paid_amount, refunded_amount, metadata
+                state, total_amount, paid_amount, refunded_amount, metadata,
+                adjustment_for_invoice_id
            FROM invoices
           WHERE id = $1
           FOR UPDATE`,
@@ -293,6 +295,78 @@ export class CancelAndReplaceInvoiceService {
         throw new ConflictException(
           CANCEL_AND_REPLACE_ERRORS.STATE_NOT_REPLACEABLE(cmd.invoiceId, original.state)
         );
+      }
+
+      let electricityVersionId: string | null = null;
+      let electricityContractId: string | null = null;
+      if (original.order_id) {
+        const electricityOrder = await client.query(
+          'SELECT 1 FROM electricity_orders WHERE id=$1',
+          [original.order_id]
+        );
+        if (electricityOrder.rowCount) {
+          if (original.adjustment_for_invoice_id)
+            throw new ConflictException(
+              'Electricity adjustment invoices require a contract change'
+            );
+          if (calculation.totalAmount !== BigInt(original.total_amount))
+            throw new ConflictException(
+              'Electricity invoice total must match the submitted order; use a contract change'
+            );
+          const originalLines = (
+            await client.query<{
+              quantity: number;
+              unit_price: string;
+              vat_rate: number;
+              is_taxable: boolean;
+            }>(
+              `SELECT quantity,unit_price::text,vat_rate,is_taxable FROM invoice_lines
+               WHERE invoice_id=$1 ORDER BY position,id`,
+              [cmd.invoiceId]
+            )
+          ).rows;
+          if (
+            originalLines.length !== calculation.lines.length ||
+            originalLines.some((line, index) => {
+              const corrected = calculation.lines[index]!;
+              return (
+                line.quantity !== corrected.quantity ||
+                BigInt(line.unit_price) !== corrected.unitPrice ||
+                line.vat_rate !== corrected.vatRate ||
+                line.is_taxable !== (corrected.isTaxable ?? true)
+              );
+            })
+          )
+            throw new ConflictException(
+              'Electricity invoice financial lines must match the submitted order'
+            );
+          const contract = (
+            await client.query<{
+              contract_id: string;
+              version_id: string;
+              state: string;
+              initial_invoice_id: string | null;
+            }>(
+              `SELECT c.id AS contract_id,c.current_version_id AS version_id,
+                c.state,r.initial_invoice_id
+               FROM electricity_contracts ec JOIN contracts c ON c.id=ec.contract_id
+               JOIN contract_activation_requirements r ON r.version_id=c.current_version_id
+               WHERE ec.order_id=$1 AND c.profile_id=$2
+               FOR UPDATE OF c,r NOWAIT`,
+              [original.order_id, original.profile_id]
+            )
+          ).rows[0];
+          if (
+            !contract ||
+            !['AwaitingStaffReview', 'ChangesRequested'].includes(contract.state) ||
+            contract.initial_invoice_id !== cmd.invoiceId
+          )
+            throw new ConflictException(
+              'Electricity invoice correction requires the current unpublished order review'
+            );
+          electricityVersionId = contract.version_id;
+          electricityContractId = contract.contract_id;
+        }
       }
 
       const cancelTransition = await this.stateMachine.transition(
@@ -405,6 +479,32 @@ export class CancelAndReplaceInvoiceService {
         ...(cmd.correlationId !== undefined ? { correlationId: cmd.correlationId } : {}),
         ...(cmd.ip !== undefined ? { ip: cmd.ip } : {}),
       });
+
+      if (electricityVersionId) {
+        const relinked = await client.query(
+          `UPDATE contract_activation_requirements SET initial_invoice_id=$2
+           WHERE version_id=$3 AND initial_invoice_id=$1`,
+          [cmd.invoiceId, replacementId, electricityVersionId]
+        );
+        if (relinked.rowCount !== 1)
+          throw new ConflictException('Electricity contract invoice link changed');
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+           VALUES(uuid_generate_v7(),$1,'electricity.activation_invoice_replaced',$2::jsonb,uuid_generate_v7(),$3)`,
+          [
+            cmd.actorUserId,
+            JSON.stringify({
+              orderId: original.order_id,
+              contractId: electricityContractId,
+              versionId: electricityVersionId,
+              originalInvoiceId: cmd.invoiceId,
+              replacementInvoiceId: replacementId,
+              reason,
+            }),
+            cmd.ip ?? '127.0.0.1',
+          ]
+        );
+      }
 
       const originalMetadata = asMetadataObject(original.metadata);
       const nextOriginalMetadata = {
