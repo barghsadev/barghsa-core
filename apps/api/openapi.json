@@ -7201,6 +7201,15 @@
         "parameters": [
           {
             "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
             "name": "search",
             "required": false,
             "schema": {
@@ -7211,7 +7220,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Up to 50 active profile names and identifiers."
+            "description": "A page of up to 50 non-archived profiles."
           }
         },
         "security": [

@@ -154,24 +154,48 @@ export class ManualInvoiceService {
 
   async profileOptions(
     actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
-    search: string
-  ): Promise<{ items: Array<{ id: string; title: string; profileType: string }> }> {
+    search: string,
+    before?: string
+  ): Promise<{
+    items: Array<{ id: string; title: string; profileType: string }>;
+    nextBefore: string | null;
+  }> {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
       await requireCurrentSession(client, actor);
+      const cursor = before
+        ? (
+            await client.query<{ created_at: string }>(
+              `SELECT p.created_at::text AS created_at FROM profiles p
+               JOIN users u ON u.user_id=p.user_id
+               LEFT JOIN legal_profiles lp ON lp.id=p.id
+               WHERE p.id=$2 AND NOT p.archived
+                 AND strpos(lower(concat_ws(' ',p.title,p.first_name,p.last_name,lp.legal_name,u.username)),lower($1))>0`,
+              [search, before]
+            )
+          ).rows[0]
+        : null;
+      if (before && !cursor) throw new NotFoundException('Profile cursor not found');
       const result = await client.query<{ id: string; title: string; profileType: string }>(
-        `SELECT id, COALESCE(NULLIF(title, ''), NULLIF(concat_ws(' ', first_name, last_name), ''), '') AS title,
-                profile_type AS "profileType"
-         FROM profiles WHERE NOT archived
-           AND strpos(lower(concat_ws(' ', title, first_name, last_name)), lower($1)) > 0
-         ORDER BY created_at DESC, id LIMIT 50`,
-        [search]
+        `SELECT p.id,
+                COALESCE(NULLIF(lp.legal_name,''),NULLIF(trim(concat_ws(' ',p.first_name,p.last_name)),''),NULLIF(p.title,''),u.username) AS title,
+                p.profile_type AS "profileType"
+         FROM profiles p JOIN users u ON u.user_id=p.user_id
+         LEFT JOIN legal_profiles lp ON lp.id=p.id
+         WHERE NOT p.archived
+           AND strpos(lower(concat_ws(' ',p.title,p.first_name,p.last_name,lp.legal_name,u.username)),lower($1))>0
+           AND ($2::timestamptz IS NULL OR (p.created_at,p.id)<($2::timestamptz,$3::uuid))
+         ORDER BY p.created_at DESC,p.id DESC LIMIT 51`,
+        [search, cursor?.created_at ?? null, before ?? null]
       );
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return { items: result.rows };
+      return {
+        items: result.rows.slice(0, 50),
+        nextBefore: result.rows.length > 50 ? result.rows[49]!.id : null,
+      };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

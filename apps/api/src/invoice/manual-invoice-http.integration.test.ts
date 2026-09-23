@@ -9,6 +9,7 @@ type IssuedInvoice = Awaited<ReturnType<ManualInvoiceController['create']>>;
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const profileId = randomUUID();
 const archivedId = randomUUID();
+const legalId = randomUUID();
 const sessionId = randomUUID();
 const csrf = randomUUID();
 const headers: Record<string, string> = {
@@ -28,6 +29,16 @@ beforeAll(async () => {
   await http.pool.query(
     `INSERT INTO profiles(id,user_id,archived) VALUES ($1,'manual-customer',false),($2,'manual-customer',true)`,
     [profileId, archivedId]
+  );
+  await http.pool.query(
+    "INSERT INTO profiles(id,user_id,profile_type,archived) VALUES($1,'manual-customer','LEGAL',false)",
+    [legalId]
+  );
+  await http.pool.query(
+    `INSERT INTO legal_profiles(id,legal_name,national_identifier,registration_number,
+       representative_title,representative_relationship)
+     VALUES($1,'Acme Solar Ltd','12345678901','REG-1','Director','Authorized')`,
+    [legalId]
   );
   await http.pool.query("UPDATE profiles SET title='Invoice customer' WHERE id=ANY($1::uuid[])", [
     [profileId, archivedId],
@@ -79,9 +90,18 @@ it('offers only matching active profiles to current Finance staff', async () => 
   const url = `${http.base}/api/admin/invoices/manual/profiles?search=Invoice`;
   const response = await fetch(url, { headers });
   expect(response.status).toBe(200);
-  expect(((await response.json()) as { items: unknown[] }).items).toEqual([
-    { id: profileId, title: 'Invoice customer', profileType: 'INDIVIDUAL' },
-  ]);
+  expect(await response.json()).toEqual({
+    items: [{ id: profileId, title: 'Invoice customer', profileType: 'INDIVIDUAL' }],
+    nextBefore: null,
+  });
+  const legal = await fetch(`${http.base}/api/admin/invoices/manual/profiles?search=Acme`, {
+    headers,
+  });
+  expect(legal.status).toBe(200);
+  expect(await legal.json()).toEqual({
+    items: [{ id: legalId, title: 'Acme Solar Ltd', profileType: 'LEGAL' }],
+    nextBefore: null,
+  });
   expect((await fetch(url)).status).toBe(401);
   try {
     await http.pool.query("DELETE FROM user_roles WHERE user_id='manual-finance'");
@@ -91,6 +111,32 @@ it('offers only matching active profiles to current Finance staff', async () => 
       "INSERT INTO user_roles(user_id,role_id) VALUES ('manual-finance','role-finance') ON CONFLICT DO NOTHING"
     );
   }
+});
+
+it('pages matching profiles with a stable cursor and rejects invalid boundaries', async () => {
+  const inserted = await http.pool.query<{ id: string }>(
+    `INSERT INTO profiles(id,user_id,title,created_at)
+     SELECT gen_random_uuid(),'manual-customer','Pageable customer',NOW()+INTERVAL '5 minutes'
+     FROM generate_series(1,51) RETURNING id`
+  );
+  expect(inserted.rowCount).toBe(51);
+  const path = `${http.base}/api/admin/invoices/manual/profiles?search=Pageable`;
+  const first = await fetch(path, { headers });
+  expect(first.status).toBe(200);
+  const firstPage = (await first.json()) as {
+    items: Array<{ id: string }>;
+    nextBefore: string | null;
+  };
+  expect(firstPage.items).toHaveLength(50);
+  expect(firstPage.nextBefore).toBe(firstPage.items[49]!.id);
+  const next = await fetch(`${path}&before=${firstPage.nextBefore}`, { headers });
+  expect(next.status).toBe(200);
+  const secondPage = (await next.json()) as typeof firstPage;
+  expect(secondPage.items).toHaveLength(1);
+  expect(secondPage.nextBefore).toBeNull();
+  expect(firstPage.items.some((row) => row.id === secondPage.items[0]!.id)).toBe(false);
+  expect((await fetch(`${path}&before=bad`, { headers })).status).toBe(400);
+  expect((await fetch(`${path}&before=${randomUUID()}`, { headers })).status).toBe(404);
 });
 
 it('Finance issues exact amounts and one audit; concurrent identical retries return one invoice', async () => {

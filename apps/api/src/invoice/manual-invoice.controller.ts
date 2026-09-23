@@ -54,14 +54,21 @@ export class ManualInvoiceController {
   @Get('profiles')
   @ApiOperation({ summary: 'Find customer profiles eligible for a manual invoice' })
   @ApiQuery({ name: 'search', required: false, type: String, maxLength: 100 })
-  @ApiResponse({ status: 200, description: 'Up to 50 active profile names and identifiers.' })
-  async profiles(@Req() req: AuthenticatedRequest, @Query('search') search: unknown = '') {
+  @ApiQuery({ name: 'before', required: false, format: 'uuid' })
+  @ApiResponse({ status: 200, description: 'A page of up to 50 non-archived profiles.' })
+  async profiles(
+    @Req() req: AuthenticatedRequest,
+    @Query('search') search: unknown = '',
+    @Query('before') before?: string
+  ) {
     if (!hasStaffPermission(req, 'invoices:write'))
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
     const parsed = z.string().trim().max(100).safeParse(search);
     if (!parsed.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
-    return this.service.profileOptions(req.session, parsed.data);
+    if (before && !z.string().uuid().safeParse(before).success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    return this.service.profileOptions(req.session, parsed.data, before);
   }
 
   @Post()

@@ -167,6 +167,8 @@ export function ManualInvoiceForm({
     [query, setQuery] = useState('');
   const [revision, setRevision] = useState(0),
     [profiles, setProfiles] = useState<Profile[]>([]);
+  const [before, setBefore] = useState<string | null>(null);
+  const [nextBefore, setNextBefore] = useState<string | null>(null);
   const [profileId, setProfileId] = useState<string | null>(correction?.profileId ?? null);
   const [loading, setLoading] = useState(!correction),
     [ready, setReady] = useState(Boolean(correction));
@@ -212,29 +214,41 @@ export function ManualInvoiceForm({
     if (correction) return;
     const abort = new AbortController();
     setLoading(true);
-    setReady(false);
     setLookupError(null);
-    setProfileId(null);
-    void fetch(`/api/admin/invoices/manual/profiles?search=${encodeURIComponent(query)}`, {
+    if (!before) {
+      setReady(false);
+      setProfileId(null);
+    }
+    const params = new URLSearchParams({ search: query });
+    if (before) params.set('before', before);
+    void fetch(`/api/admin/invoices/manual/profiles?${params}`, {
       signal: abort.signal,
     })
       .then(async (response) => {
         if (!response.ok)
           throw new Error(response.status === 403 || response.status === 401 ? 'denied' : 'lookup');
-        const data = (await response.json()) as { items?: Profile[] };
+        const data = (await response.json()) as {
+          items?: Profile[];
+          nextBefore?: string | null;
+        };
         if (
           !Array.isArray(data.items) ||
           data.items.some((item) => typeof item.id !== 'string' || typeof item.title !== 'string')
         )
           throw new Error('lookup');
         if (!abort.signal.aborted) {
-          setProfiles(data.items);
+          setProfiles((current) => {
+            if (!before) return data.items!;
+            const shown = new Set(current.map((profile) => profile.id));
+            return [...current, ...data.items!.filter((profile) => !shown.has(profile.id))];
+          });
+          setNextBefore(data.nextBefore ?? null);
           setReady(true);
         }
       })
       .catch((cause: unknown) => {
         if (!abort.signal.aborted) {
-          setProfiles([]);
+          if (!before) setProfiles([]);
           setLookupError(cause instanceof Error ? cause.message : 'lookup');
         }
       })
@@ -242,7 +256,7 @@ export function ManualInvoiceForm({
         if (!abort.signal.aborted) setLoading(false);
       });
     return () => abort.abort();
-  }, [query, revision, correction]);
+  }, [query, revision, correction, before]);
 
   useEffect(() => {
     if (!locked) return;
@@ -500,6 +514,8 @@ export function ManualInvoiceForm({
           onSubmit={(event) => {
             event.preventDefault();
             if (!locked) {
+              setBefore(null);
+              setNextBefore(null);
               setQuery(search.trim());
               setRevision((value) => value + 1);
             }
@@ -557,6 +573,19 @@ export function ManualInvoiceForm({
               </NativeSelect>
               {ready && profiles.length === 0 && (
                 <p className="text-sm text-muted-foreground">{text('noProfiles')}</p>
+              )}
+              {nextBefore && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={locked || loading}
+                  onClick={() => {
+                    setBefore(nextBefore);
+                    setRevision((value) => value + 1);
+                  }}
+                >
+                  {text('moreProfiles')}
+                </Button>
               )}
             </Field>
           )}
