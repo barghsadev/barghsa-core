@@ -18,7 +18,8 @@ export class BusinessWorkCountsController {
       hasStaffPermission(req, 'contracts:read') || hasStaffPermission(req, 'contracts:write');
     const invoices = hasStaffPermission(req, 'invoices:read');
     const legal = hasStaffPermission(req, 'legal:read');
-    if (!orders && !contracts && !invoices && !legal)
+    const finance = hasStaffPermission(req, 'admin:financial:edit');
+    if (!orders && !contracts && !invoices && !legal && !finance)
       throw new ForbiddenException('Staff dashboard permission required');
     const client = await getDbPool().connect();
     try {
@@ -30,6 +31,8 @@ export class BusinessWorkCountsController {
           electricity_orders: number | null;
           solar_requests: number | null;
           document_reviews: number | null;
+          refund_obligations: number | null;
+          failed_refund_obligations: number | null;
         }>(
           `SELECT
            CASE WHEN $1::boolean THEN (SELECT count(*)::int FROM consultation_requests
@@ -43,8 +46,17 @@ export class BusinessWorkCountsController {
                AND (($1 AND business_record_type IN ('order','solar_request'))
                  OR ($2 AND business_record_type='contract')
                  OR ($3 AND business_record_type='invoice')
-                 OR ($4 AND business_record_type='standalone'))) END AS document_reviews`,
-          [orders, contracts, invoices, legal]
+                 OR ($4 AND business_record_type='standalone'))) END AS document_reviews,
+           CASE WHEN $5::boolean THEN (SELECT count(*)::int FROM refunds r
+             WHERE r.state<>'Completed' AND (
+               EXISTS(SELECT 1 FROM contract_refund_obligations co WHERE co.refund_id=r.id)
+               OR EXISTS(SELECT 1 FROM refund_obligations eo WHERE eo.refund_id=r.id))) END AS refund_obligations,
+           CASE WHEN $5::boolean THEN (SELECT count(*)::int FROM refunds r
+             LEFT JOIN refund_retry_jobs j ON j.refund_id=r.id
+             WHERE r.state<>'Completed' AND (r.state='Failed' OR j.exhausted_at IS NOT NULL)
+               AND (EXISTS(SELECT 1 FROM contract_refund_obligations co WHERE co.refund_id=r.id)
+                 OR EXISTS(SELECT 1 FROM refund_obligations eo WHERE eo.refund_id=r.id))) END AS failed_refund_obligations`,
+          [orders, contracts, invoices, legal, finance]
         )
       ).rows[0]!;
       await requireCurrentSession(client, req.session);
@@ -54,6 +66,8 @@ export class BusinessWorkCountsController {
         electricityOrders: counts.electricity_orders,
         solarRequests: counts.solar_requests,
         documentReviews: counts.document_reviews,
+        refundObligations: counts.refund_obligations,
+        failedRefundObligations: counts.failed_refund_obligations,
       };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});

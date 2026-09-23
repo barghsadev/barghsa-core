@@ -27,6 +27,10 @@ interface Obligation {
   orderId: string | null;
 }
 export function ContractRefundQueue() {
+  useEffect(() => {
+    if (window.location.hash === '#refund-obligations')
+      document.getElementById('refund-obligations')?.scrollIntoView();
+  }, []);
   const locale = useLocale(),
     word = (key: string) => contractText(key, locale);
   const [rows, setRows] = useState<Obligation[]>([]),
@@ -101,6 +105,7 @@ export function ContractRefundQueue() {
   if (denied) return null;
   return (
     <section
+      id="refund-obligations"
       className="flex flex-col gap-4 rounded-xl border bg-card p-5"
       aria-label={word('cancellationQueue')}
     >

@@ -9,6 +9,8 @@ interface Counts {
   electricityOrders: number | null;
   solarRequests: number | null;
   documentReviews: number | null;
+  refundObligations: number | null;
+  failedRefundObligations: number | null;
 }
 
 function validCount(value: unknown): value is number | null {
@@ -22,7 +24,13 @@ function parseCounts(value: unknown): Counts {
     !validCount(counts.consultations) ||
     !validCount(counts.electricityOrders) ||
     !validCount(counts.solarRequests) ||
-    !validCount(counts.documentReviews)
+    !validCount(counts.documentReviews) ||
+    !validCount(counts.refundObligations) ||
+    !validCount(counts.failedRefundObligations) ||
+    (counts.refundObligations === null) !== (counts.failedRefundObligations === null) ||
+    (counts.refundObligations !== null &&
+      counts.failedRefundObligations !== null &&
+      counts.failedRefundObligations > counts.refundObligations)
   )
     throw new Error('Invalid work counts');
   return counts as unknown as Counts;
@@ -88,7 +96,7 @@ export function AdminBusinessWorkCounts() {
         </p>
       )}
       {state === 'ready' && counts && (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
           {cards.map(({ key, route, label }) =>
             counts[key] === null ? null : (
               <Link
@@ -103,8 +111,37 @@ export function AdminBusinessWorkCounts() {
               </Link>
             )
           )}
+          {counts.refundObligations !== null && (
+            <a
+              href="/admin/contracts#refund-obligations"
+              className="rounded-xl border bg-card p-4 text-card-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              <span className="block text-2xl font-semibold">
+                {numbers.number(counts.refundObligations)}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                {t('dashboard.admin.work.refundObligations', locale)}
+              </span>
+            </a>
+          )}
         </div>
       )}
+      {state === 'ready' && counts?.failedRefundObligations ? (
+        <div
+          role="alert"
+          className="rounded-lg border border-destructive/40 bg-danger-soft p-4 text-destructive"
+        >
+          <a
+            href="/admin/contracts#refund-obligations"
+            className="underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            {t('dashboard.admin.work.failedRefundObligations', locale).replace(
+              '{count}',
+              numbers.number(counts.failedRefundObligations)
+            )}
+          </a>
+        </div>
+      ) : null}
     </section>
   );
 }

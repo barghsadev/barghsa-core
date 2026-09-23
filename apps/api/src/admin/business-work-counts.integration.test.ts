@@ -4,17 +4,21 @@ import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
+let profileId: string;
+let orderId: string;
 
 beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES
-     ('business-work-all','All business work','Test','["orders:read","contracts:read","invoices:read","legal:read"]'),
-     ('business-work-contracts','Contracts only','Test','["contracts:read"]')`
+     ('business-work-all','All business work','Test','["orders:read","contracts:read","invoices:read","legal:read","admin:financial:edit"]'),
+     ('business-work-contracts','Contracts only','Test','["contracts:read"]'),
+     ('business-work-finance','Finance only','Test','["admin:financial:edit"]')`
   );
   for (const [user, role, isStaff] of [
     ['work-admin', 'business-work-all', true],
     ['work-contracts', 'business-work-contracts', true],
+    ['work-finance', 'business-work-finance', true],
     ['work-customer', null, false],
   ] as const) {
     await http.pool.query(
@@ -32,7 +36,7 @@ beforeAll(async () => {
     );
     headers[user] = { Cookie: `barghsa_session=${session}`, 'X-CSRF-Token': csrf };
   }
-  const profileId = (
+  profileId = (
     await http.pool.query(
       "INSERT INTO profiles(user_id,profile_type,status,is_default) VALUES('work-customer','LEGAL','ACTIVE',true) RETURNING id"
     )
@@ -47,7 +51,7 @@ beforeAll(async () => {
      VALUES($1,$2,'{}'::jsonb,'work-customer',$3)`,
     [profileId, consultationProductId, randomUUID()]
   );
-  const orderId = randomUUID();
+  orderId = randomUUID();
   await http.pool.query(
     `INSERT INTO orders(id,user_id,profile_id,product_id,order_type,
       snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code)
@@ -83,6 +87,8 @@ it('returns live pending counts and hides categories outside staff permissions',
     electricityOrders: 1,
     solarRequests: 1,
     documentReviews: 0,
+    refundObligations: 0,
+    failedRefundObligations: 0,
   });
   const contracts = await fetch(path, { headers: headers['work-contracts']! });
   expect(contracts.status, http.logs()).toBe(200);
@@ -91,6 +97,51 @@ it('returns live pending counts and hides categories outside staff permissions',
     electricityOrders: 1,
     solarRequests: null,
     documentReviews: 0,
+    refundObligations: null,
+    failedRefundObligations: null,
+  });
+  const finance = await fetch(path, { headers: headers['work-finance']! });
+  expect(finance.status, http.logs()).toBe(200);
+  expect(await finance.json()).toEqual({
+    consultations: null,
+    electricityOrders: null,
+    solarRequests: null,
+    documentReviews: null,
+    refundObligations: 0,
+    failedRefundObligations: 0,
   });
   expect((await fetch(path, { headers: headers['work-customer']! })).status).toBe(403);
+});
+
+it('counts unresolved obligations and flags failed refunds for finance', async () => {
+  const invoiceId = randomUUID();
+  const refundId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO invoices(id,profile_id,order_id,state,total_amount,paid_amount)
+     VALUES($1,$2,$3,'Paid',100,100)`,
+    [invoiceId, profileId, orderId]
+  );
+  await http.pool.query(
+    `INSERT INTO refunds(id,invoice_id,profile_id,amount,state,destination,idempotency_key)
+     VALUES($1,$2,$3,100,'Requested','wallet',$4)`,
+    [refundId, invoiceId, profileId, randomUUID()]
+  );
+  await http.pool.query(
+    `INSERT INTO refund_obligations(order_id,invoice_id,profile_id,refund_id,
+      total_paid_amount,idempotency_key,authorized_by,reason)
+     VALUES($1,$2,$3,$4,100,$5,'work-admin','Order rejected after payment')`,
+    [orderId, invoiceId, profileId, refundId, randomUUID()]
+  );
+  const path = `${http.base}/api/admin/dashboard/business-work-counts`;
+  const initial = await (await fetch(path, { headers: headers['work-finance']! })).json();
+  expect(initial).toMatchObject({ refundObligations: 1, failedRefundObligations: 0 });
+  await http.pool.query("UPDATE refunds SET state='Approved' WHERE id=$1", [refundId]);
+  await http.pool.query("UPDATE refunds SET state='Processing' WHERE id=$1", [refundId]);
+  await http.pool.query("UPDATE refunds SET state='Failed' WHERE id=$1", [refundId]);
+  const failed = await (await fetch(path, { headers: headers['work-finance']! })).json();
+  expect(failed).toMatchObject({ refundObligations: 1, failedRefundObligations: 1 });
+  expect(await (await fetch(path, { headers: headers['work-contracts']! })).json()).toMatchObject({
+    refundObligations: null,
+    failedRefundObligations: null,
+  });
 });
