@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Customer dashboard live status](batches/2026-09-24-dashboard-live-status.md) replaces stale legacy counts with current contract, electricity and saving workflow states and gives customers direct routes to both order lists. The remaining list-filter detail is recorded in the batch note.
+
 [CI main-run concurrency](batches/2026-09-24-ci-main-concurrency.md) groups checks by workflow and branch so a new direct `main` push cancels an older redundant run while preserving every check on the newest cumulative commit.
 
 [Advanced electricity payment and contract journey](batches/2026-09-24-electricity-advanced-browser-journey.md) extends the existing bilingual advanced-order browser path from reviewed submission through wallet payment and the selected contract detail.

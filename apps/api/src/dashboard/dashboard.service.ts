@@ -90,14 +90,9 @@ export class DashboardService {
    * Selection is resolved against current membership. Each count also respects
    * the selected profile's applicable operational or financial permission.
    *
-   * The orders query returns both the active-contract and pending-order
-   * counts in a single `GROUP BY status` pass; `activeContracts` is derived
-   * from the `CONFIRMED` row and `pendingOrders` from the `PENDING` row.
-   *
-   * - **Active contracts:** orders with `status = 'CONFIRMED'` (electricity
-   *   subscription contracts).  Once a dedicated `contracts` table is
-   *   added, this query should switch to it.
-   * - **Pending orders:** orders with `status = 'PENDING'`.
+   * Active contracts use the contract lifecycle. Pending orders use each
+   * business workflow's current state, retaining legacy orders that have no
+   * electricity or saving record. The union prevents double counting.
    * - **Open tickets:** tickets with a non-terminal status (open,
    *   in_progress, waiting_customer, waiting_staff).
    * - **Unpaid invoices:** customer-payable invoices in state `'Unpaid'`
@@ -124,16 +119,33 @@ export class DashboardService {
 
     const allowed = (permission: AgentPermission) =>
       context?.is_owner === true || hasAnyRolePermission(context?.roles ?? [], permission);
-    const [ordersResult, ticketsResult, invoicesResult] = await Promise.all([
-      allowed('orders:view')
-        ? pool.query<{ status: string; cnt: number }>(
-            `SELECT status, COUNT(*)::int AS cnt
-         FROM orders
-         WHERE profile_id = $1 AND status IN ('CONFIRMED', 'PENDING')
-         GROUP BY status`,
+    const [contractsResult, ordersResult, ticketsResult, invoicesResult] = await Promise.all([
+      allowed('contracts:view')
+        ? pool.query<{ cnt: number }>(
+            `SELECT COUNT(*)::int AS cnt FROM contracts
+             WHERE profile_id=$1 AND state='Active'`,
             [profileId]
           )
-        : Promise.resolve({ rows: [] }),
+        : Promise.resolve({ rows: [{ cnt: 0 }] }),
+      allowed('orders:view')
+        ? pool.query<{ cnt: number }>(
+            `SELECT COUNT(*)::int AS cnt FROM (
+               SELECT o.id FROM orders o
+               WHERE o.profile_id=$1 AND o.status='PENDING'
+                 AND NOT EXISTS (SELECT 1 FROM electricity_orders e WHERE e.id=o.id)
+                 AND NOT EXISTS (SELECT 1 FROM saving_orders s WHERE s.order_id=o.id)
+               UNION
+               SELECT e.id FROM electricity_orders e
+               WHERE e.profile_id=$1
+                 AND e.status IN ('submitted','awaiting_staff_review','changes_requested','approved')
+               UNION
+               SELECT s.order_id FROM saving_orders s
+               WHERE s.profile_id=$1
+                 AND s.status IN ('submitted','awaiting_staff_review','approved','in_progress')
+             ) pending`,
+            [profileId]
+          )
+        : Promise.resolve({ rows: [{ cnt: 0 }] }),
       allowed('orders:view')
         ? pool.query<{ cnt: number }>(
             `SELECT COUNT(*)::int AS cnt
@@ -152,14 +164,9 @@ export class DashboardService {
         : Promise.resolve({ rows: [{ cnt: 0 }] }),
     ]);
 
-    const orderCounts: Record<string, number> = {};
-    for (const row of ordersResult.rows) {
-      orderCounts[row.status] = row.cnt;
-    }
-
     return {
-      activeContracts: orderCounts['CONFIRMED'] ?? 0,
-      pendingOrders: orderCounts['PENDING'] ?? 0,
+      activeContracts: contractsResult.rows[0]?.cnt ?? 0,
+      pendingOrders: ordersResult.rows[0]?.cnt ?? 0,
       openTickets: ticketsResult.rows[0]?.cnt ?? 0,
       unpaidInvoices: invoicesResult.rows[0]?.cnt ?? 0,
     };

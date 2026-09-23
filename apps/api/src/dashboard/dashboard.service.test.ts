@@ -1,7 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DashboardService } from './dashboard.service.js';
-
-// ─── Mock pool ──────────────────────────────────────────────────────────
 
 const mockQuery = vi.fn();
 
@@ -9,15 +7,11 @@ vi.mock('@barghsa/db', () => ({
   getDbPool: () => ({ query: mockQuery }),
 }));
 
-// ─── Helpers ─────────────────────────────────────────────────────────────
-
-function makeOrdersRow(status: string, cnt: number) {
-  return { status, cnt };
+function queryFor(fragment: string) {
+  return mockQuery.mock.calls.find((call) => (call[0] as string).includes(fragment));
 }
 
-// ─── Suite ───────────────────────────────────────────────────────────────
-
-describe('DashboardService', () => {
+describe('DashboardService quick status', () => {
   let service: DashboardService;
 
   beforeEach(() => {
@@ -25,146 +19,100 @@ describe('DashboardService', () => {
     service = new DashboardService({ getWallet: vi.fn() } as never);
   });
 
-  describe('getQuickStatusCounts', () => {
-    it('returns zeros when the user has no default profile', async () => {
-      // No profile found — first query returns empty
-      mockQuery.mockResolvedValueOnce({ rows: [] });
+  it('does not query business data without an active profile', async () => {
+    mockQuery.mockResolvedValue({ rows: [] });
+    await expect(service.getQuickStatusCounts('missing')).resolves.toEqual({
+      activeContracts: 0,
+      pendingOrders: 0,
+      openTickets: 0,
+      unpaidInvoices: 0,
+    });
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+  });
 
-      const result = await service.getQuickStatusCounts('user-no-profile');
-
-      expect(result).toEqual({
-        activeContracts: 0,
-        pendingOrders: 0,
-        openTickets: 0,
-        unpaidInvoices: 0,
-      });
-      // Only the profile-lookup query was made — no count queries
-      expect(mockQuery).toHaveBeenCalledTimes(1);
+  it('counts active contracts and pending workflow orders without duplicate legacy rows', async () => {
+    mockQuery.mockImplementation(async (query: string) => {
+      if (query.includes('FROM profiles p'))
+        return { rows: [{ id: 'profile-1', is_owner: true, roles: [] }] };
+      if (query.includes('FROM contracts')) return { rows: [{ cnt: 3 }] };
+      if (query.includes(') pending')) return { rows: [{ cnt: 4 }] };
+      if (query.includes('FROM tickets')) return { rows: [{ cnt: 1 }] };
+      if (query.includes('FROM invoices')) return { rows: [{ cnt: 2 }] };
+      throw new Error('Unexpected query');
+    });
+    await expect(service.getQuickStatusCounts('user-1')).resolves.toEqual({
+      activeContracts: 3,
+      pendingOrders: 4,
+      openTickets: 1,
+      unpaidInvoices: 2,
     });
 
-    it('returns zeros when all count queries are empty', async () => {
-      mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-1', is_owner: true, roles: [] }] }) // profile lookup
-        .mockResolvedValueOnce({ rows: [] }) // orders
-        .mockResolvedValueOnce({ rows: [] }) // tickets
-        .mockResolvedValueOnce({ rows: [] }); // invoices
+    const contractQuery = queryFor('FROM contracts');
+    expect(contractQuery?.[0]).toContain("state='Active'");
+    expect(contractQuery?.[1]).toEqual(['profile-1']);
+    const orderQuery = queryFor(') pending');
+    expect(orderQuery?.[0]).toContain('UNION');
+    expect(orderQuery?.[0]).toContain('FROM electricity_orders e');
+    expect(orderQuery?.[0]).toContain('FROM saving_orders s');
+    expect(orderQuery?.[0]).toContain('NOT EXISTS (SELECT 1 FROM electricity_orders e');
+    expect(orderQuery?.[0]).toContain('NOT EXISTS (SELECT 1 FROM saving_orders s');
+    expect(orderQuery?.[0]).toContain(
+      "e.status IN ('submitted','awaiting_staff_review','changes_requested','approved')"
+    );
+    expect(orderQuery?.[0]).toContain(
+      "s.status IN ('submitted','awaiting_staff_review','approved','in_progress')"
+    );
+    expect(orderQuery?.[1]).toEqual(['profile-1']);
+    expect(queryFor('FROM invoices')?.[0]).toContain("adjustment_kind IS DISTINCT FROM 'credit'");
+  });
 
-      const result = await service.getQuickStatusCounts('user-1');
-
-      expect(result).toEqual({
-        activeContracts: 0,
-        pendingOrders: 0,
-        openTickets: 0,
-        unpaidInvoices: 0,
-      });
+  it('keeps counts at zero when no matching records exist', async () => {
+    mockQuery.mockImplementation(async (query: string) =>
+      query.includes('FROM profiles p')
+        ? { rows: [{ id: 'profile-1', is_owner: true, roles: [] }] }
+        : { rows: [{ cnt: 0 }] }
+    );
+    await expect(service.getQuickStatusCounts('user-1')).resolves.toEqual({
+      activeContracts: 0,
+      pendingOrders: 0,
+      openTickets: 0,
+      unpaidInvoices: 0,
     });
+  });
 
-    it('returns correct counts for a user with data across modules', async () => {
-      mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-1', is_owner: true, roles: [] }] }) // profile lookup
-        .mockResolvedValueOnce({
-          // orders — grouped by status
-          rows: [makeOrdersRow('CONFIRMED', 3), makeOrdersRow('PENDING', 2)],
-        })
-        .mockResolvedValueOnce({ rows: [{ cnt: 1 }] }) // open tickets
-        .mockResolvedValueOnce({ rows: [{ cnt: 4 }] }); // unpaid invoices
-
-      const result = await service.getQuickStatusCounts('user-1');
-
-      expect(result).toEqual({
-        activeContracts: 3,
-        pendingOrders: 2,
-        openTickets: 1,
-        unpaidInvoices: 4,
-      });
+  it('does not query orders or invoices for a legal-only agent', async () => {
+    mockQuery.mockImplementation(async (query: string) => {
+      if (query.includes('FROM profiles p'))
+        return { rows: [{ id: 'profile-legal', is_owner: false, roles: ['Legal'] }] };
+      if (query.includes('FROM contracts')) return { rows: [{ cnt: 2 }] };
+      throw new Error('Unauthorized query');
     });
-
-    it('excludes orders with other statuses (DRAFT, CANCELLED)', async () => {
-      mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-1', is_owner: true, roles: [] }] }) // profile lookup
-        .mockResolvedValueOnce({
-          rows: [
-            // Only CONFIRMED and PENDING are counted
-            makeOrdersRow('CONFIRMED', 1),
-            makeOrdersRow('PENDING', 0),
-            // DRAFT and CANCELLED are filtered out by the SQL WHERE clause
-          ],
-        })
-        .mockResolvedValueOnce({ rows: [{ cnt: 0 }] })
-        .mockResolvedValueOnce({ rows: [{ cnt: 0 }] });
-
-      const result = await service.getQuickStatusCounts('user-1');
-
-      expect(result.activeContracts).toBe(1);
-      expect(result.pendingOrders).toBe(0);
+    await expect(service.getQuickStatusCounts('legal-user')).resolves.toEqual({
+      activeContracts: 2,
+      pendingOrders: 0,
+      openTickets: 0,
+      unpaidInvoices: 0,
     });
+    expect(mockQuery).toHaveBeenCalledTimes(2);
+  });
 
-    it('excludes tickets with terminal statuses (resolved, closed)', async () => {
-      mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-1', is_owner: true, roles: [] }] }) // profile lookup
-        .mockResolvedValueOnce({
-          rows: [makeOrdersRow('CONFIRMED', 0), makeOrdersRow('PENDING', 0)],
-        })
-        .mockResolvedValueOnce({ rows: [{ cnt: 0 }] }) // only open/in_progress/waiting are counted
-        .mockResolvedValueOnce({ rows: [{ cnt: 0 }] });
-
-      const result = await service.getQuickStatusCounts('user-1');
-
-      expect(result.openTickets).toBe(0);
+  it('scopes every aggregation to the selected profile', async () => {
+    mockQuery.mockImplementation(async (query: string, args: string[]) => {
+      if (query.includes('FROM profiles p'))
+        return { rows: [{ id: `profile-${args[0]}`, is_owner: true, roles: [] }] };
+      return { rows: [{ cnt: args[0] === 'profile-first' ? 5 : 0 }] };
     });
-
-    it('excludes invoices with non-unpaid states (Paid, Cancelled, Draft)', async () => {
-      mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-1', is_owner: true, roles: [] }] })
-        .mockResolvedValueOnce({
-          rows: [makeOrdersRow('CONFIRMED', 0), makeOrdersRow('PENDING', 0)],
-        })
-        .mockResolvedValueOnce({ rows: [{ cnt: 0 }] })
-        // Only Unpaid and Overdue invoices are counted
-        .mockResolvedValueOnce({ rows: [{ cnt: 2 }] });
-
-      const result = await service.getQuickStatusCounts('user-1');
-
-      expect(result.unpaidInvoices).toBe(2);
-
-      const invoiceQuery = mockQuery.mock.calls.find((call: unknown[]) =>
-        (call[0] as string).includes('FROM invoices')
-      );
-      expect(invoiceQuery?.[0]).toContain("adjustment_kind IS DISTINCT FROM 'credit'");
-    });
-
-    it('scopes counts to the correct profile (isolation test)', async () => {
-      // Two different users with different profiles
-      mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-user-a', is_owner: true, roles: [] }] })
-        .mockResolvedValueOnce({
-          rows: [makeOrdersRow('CONFIRMED', 5), makeOrdersRow('PENDING', 1)],
-        })
-        .mockResolvedValueOnce({ rows: [{ cnt: 2 }] })
-        .mockResolvedValueOnce({ rows: [{ cnt: 3 }] });
-
-      const resultA = await service.getQuickStatusCounts('user-a');
-      expect(resultA.activeContracts).toBe(5);
-
-      // Second call — different user, different profile
-      mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-user-b', is_owner: true, roles: [] }] })
-        .mockResolvedValueOnce({
-          rows: [makeOrdersRow('CONFIRMED', 0), makeOrdersRow('PENDING', 0)],
-        })
-        .mockResolvedValueOnce({ rows: [{ cnt: 0 }] })
-        .mockResolvedValueOnce({ rows: [{ cnt: 0 }] });
-
-      const resultB = await service.getQuickStatusCounts('user-b');
-      expect(resultB.activeContracts).toBe(0);
-
-      // Verify each call scoped to the right profile id
-      const profileQuery = mockQuery.mock.calls.filter((call: unknown[]) =>
-        (call[0] as string).includes('FROM profiles p')
-      );
-      expect(profileQuery).toHaveLength(2);
-      expect(profileQuery[0]?.[1]).toEqual(['user-a']);
-      expect(profileQuery[1]?.[1]).toEqual(['user-b']);
-    });
+    expect((await service.getQuickStatusCounts('first')).activeContracts).toBe(5);
+    expect((await service.getQuickStatusCounts('second')).activeContracts).toBe(0);
+    const businessCalls = mockQuery.mock.calls.filter(
+      (call) => !(call[0] as string).includes('FROM profiles p')
+    );
+    expect(businessCalls).toHaveLength(8);
+    expect(
+      businessCalls.slice(0, 4).every((call) => (call[1] as string[])[0] === 'profile-first')
+    ).toBe(true);
+    expect(
+      businessCalls.slice(4).every((call) => (call[1] as string[])[0] === 'profile-second')
+    ).toBe(true);
   });
 });
