@@ -8,6 +8,7 @@ const agreementVersionId = '55555555-5555-4555-8555-555555555555';
 const savingOrderId = '66666666-6666-4666-8666-666666666666';
 const parentOrderId = '77777777-7777-4777-8777-777777777777';
 const invoiceId = '88888888-8888-4888-8888-888888888888';
+const contractId = '99999999-9999-4999-8999-999999999999';
 const submittedAt = '2026-09-23T10:00:00.000Z';
 const stageNames = [
   'request_confirmation',
@@ -192,8 +193,8 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
         agreement_snapshot: 'Accepted terms\nThe customer accepts this plan.',
         agreement_updated: false,
         contract_version_id: null,
-        contract_id: null,
-        contract_state: 'AwaitingStaffReview',
+        contract_id: fulfillmentStarted ? contractId : null,
+        contract_state: fulfillmentStarted ? 'AwaitingCustomerAcceptance' : 'AwaitingStaffReview',
         invoice_id: invoiceId,
         invoice_state: 'Unpaid',
         cancellation_pending: false,
@@ -214,6 +215,40 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
         addressAmendments: [],
         hardwareAmendments: [],
         hardwareUpgrades: [],
+      },
+    })
+  );
+  const invoice = {
+    invoiceId,
+    role: 'original',
+    state: 'Unpaid',
+    totalAmount: '300000',
+    paidAmount: '0',
+    refundedAmount: '0',
+    accountingAmount: '300000',
+    adjustmentKind: null,
+    issuedAt: submittedAt,
+    payableFrom: submittedAt,
+    dueAt: '2026-09-30T10:00:00.000Z',
+    dueAtOverrideReason: null,
+    cancelledAt: null,
+    createdAt: submittedAt,
+    replacesInvoiceId: null,
+    adjustmentForInvoiceId: null,
+    explanation: null,
+    lines: [],
+  };
+  await page.route(`**/api/invoices/${invoiceId}`, (route) =>
+    route.fulfill({
+      json: {
+        viewedInvoiceId: invoiceId,
+        originalInvoiceId: invoiceId,
+        savingOrderId,
+        invoice,
+        chain: [invoice],
+        payments: [],
+        bankReceipts: [],
+        refunds: [],
       },
     })
   );
@@ -265,4 +300,11 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   await expect(page.getByRole('heading', { name: 'Home saving plan' })).toBeVisible();
   await page.getByRole('link', { name: 'Saving order' }).click();
   await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));
+  await page.getByRole('link', { name: 'View invoice and payment options' }).click();
+  await expect(page.getByRole('heading', { name: 'Invoice details' })).toBeVisible();
+  await page.getByRole('link', { name: 'Back to saving order' }).click();
+  await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));
+  await page.getByRole('link', { name: 'View contract' }).click();
+  await expect(page).toHaveURL(new RegExp(`/contracts\\?contractId=${contractId}$`));
+  await expect(page.getByRole('heading', { name: 'Contracts' })).toBeVisible();
 });

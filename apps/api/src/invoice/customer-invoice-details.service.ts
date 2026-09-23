@@ -79,6 +79,7 @@ export interface CustomerInvoiceDetailsDto extends CustomerInvoiceActivity {
   originalInvoiceId: string;
   consultationId?: string | null;
   electricityOrderId?: string | null;
+  savingOrderId?: string | null;
   invoice: CustomerInvoiceNodeDto;
   /** Original first, then linked replacements/adjustments chronologically. */
   chain: CustomerInvoiceNodeDto[];
@@ -451,12 +452,16 @@ export class CustomerInvoiceDetailsService {
         await client.query<{
           consultation_id: string | null;
           electricity_order_id: string | null;
+          saving_order_id: string | null;
         }>(
           `SELECT COALESCE(viewed.consultation_id,i.consultation_id) AS consultation_id,
              CASE WHEN EXISTS (
                SELECT 1 FROM electricity_orders e
                WHERE e.id=i.order_id AND e.profile_id=i.profile_id
-             ) THEN i.order_id ELSE NULL END AS electricity_order_id
+             ) THEN i.order_id ELSE NULL END AS electricity_order_id,
+             (SELECT s.id FROM saving_orders s
+              WHERE s.order_id=i.order_id AND s.profile_id=i.profile_id
+              LIMIT 1) AS saving_order_id
            FROM invoices i
            LEFT JOIN invoices viewed ON viewed.id=$3 AND viewed.profile_id=i.profile_id
            WHERE i.id=$1 AND i.profile_id=$2`,
@@ -467,6 +472,7 @@ export class CustomerInvoiceDetailsService {
         ...details,
         consultationId: origin?.consultation_id ?? null,
         electricityOrderId: origin?.electricity_order_id ?? null,
+        savingOrderId: origin?.saving_order_id ?? null,
         ...(await loadCustomerInvoiceActivity(client, invoiceId, profileId)),
       };
     });

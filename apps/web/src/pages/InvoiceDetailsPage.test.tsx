@@ -217,6 +217,26 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     }
   );
 
+  it.each(['en', 'fa'] as const)(
+    'links a saving invoice back to its order in %s',
+    async (locale) => {
+      document.documentElement.lang = locale;
+      const payload = replacementPayload();
+      payload.savingOrderId = 'saving-order-1';
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async () => ({ ok: true, status: 200, json: async () => payload }))
+      );
+      await act(async () => {
+        root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
+      });
+      const link = container.querySelector('a[href="/savings/orders/saving-order-1"]');
+      expect(link?.textContent).toBe(
+        locale === 'en' ? 'Back to saving order' : 'بازگشت به سفارش صرفه‌جویی'
+      );
+    }
+  );
+
   it('retries an initial load failure and displays empty history', async () => {
     let requests = 0;
     vi.stubGlobal(

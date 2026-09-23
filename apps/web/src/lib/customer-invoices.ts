@@ -74,6 +74,7 @@ export interface CustomerInvoiceDetails {
   originalInvoiceId: string;
   consultationId?: string | null;
   electricityOrderId?: string | null;
+  savingOrderId?: string | null;
   invoice: CustomerInvoiceNode;
   chain: CustomerInvoiceNode[];
   /** Optional during rolling deployment of the expanded details API. */

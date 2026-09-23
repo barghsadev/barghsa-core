@@ -218,6 +218,19 @@ export function SavingOrderDetailPage() {
             <CardContent className="space-y-2 pt-6">
               <h2 className="text-xl font-semibold">{copy('contract')}</h2>
               <p>{detail.contract_state ? copy(detail.contract_state) : copy('unavailable')}</p>
+              {detail.contract_id &&
+              detail.contract_state &&
+              ['AwaitingCustomerAcceptance', 'Accepted', 'Signed', 'Active', 'Completed'].includes(
+                detail.contract_state
+              ) ? (
+                <Link
+                  to="/contracts"
+                  search={{ contractId: detail.contract_id }}
+                  className="inline-block text-primary hover:underline"
+                >
+                  {copy('viewContract')}
+                </Link>
+              ) : null}
             </CardContent>
           </Card>
           {detail.contract_id && detail.contract_version_id && (

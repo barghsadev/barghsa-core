@@ -309,6 +309,9 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   expect(await retry.json()).toEqual(result);
   const detail = await request(`/api/saving/orders/${result.savingOrderId}`, 'GET');
   expect(detail.status, http.logs()).toBe(200);
+  const invoiceDetails = await request(`/api/invoices/${result.invoiceId}`, 'GET');
+  expect(invoiceDetails.status, http.logs()).toBe(200);
+  expect(await invoiceDetails.json()).toMatchObject({ savingOrderId: result.savingOrderId });
   expect(await detail.json()).toMatchObject({
     status: 'awaiting_staff_review',
     financial_status: 'unpaid',

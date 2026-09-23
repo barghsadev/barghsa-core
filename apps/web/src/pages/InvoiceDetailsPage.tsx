@@ -101,6 +101,15 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
           {t('invoices.details.backToElectricityOrder', locale)}
         </Link>
       )}
+      {details?.savingOrderId && (
+        <Link
+          className="text-sm text-primary underline"
+          to="/savings/orders/$orderId"
+          params={{ orderId: details.savingOrderId }}
+        >
+          {t('invoices.details.backToSavingOrder', locale)}
+        </Link>
+      )}
 
       <header className="flex items-center gap-2">
         <ReceiptIcon className="h-6 w-6 text-primary" aria-hidden="true" />
