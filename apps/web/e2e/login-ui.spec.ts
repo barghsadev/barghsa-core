@@ -8,12 +8,7 @@ for (const locale of ['fa', 'en'])
       'login fields, normalization and generic errors (' + locale + ', dark=' + darkMode + ')',
       async ({ page }, testInfo) => {
         await page.addInitScript((locale) => {
-          const apply = () => {
-            document.documentElement.lang = locale;
-            document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
-          };
-          if (document.documentElement) apply();
-          new MutationObserver(apply).observe(document, { childList: true });
+          localStorage.setItem('barghsa.locale', locale);
         }, locale);
         await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
         await mockPublicAuthCsrf(page);
@@ -100,6 +95,7 @@ for (const locale of ['fa', 'en'])
           Promise.all(node.getAnimations().map((animation) => animation.finished))
         );
         const scan = await new AxeBuilder({ page })
+          .exclude('[aria-label="Open TanStack Router Devtools"]')
           .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
           .analyze();
         expect(scan.violations).toEqual([]);
@@ -137,6 +133,7 @@ for (const locale of ['fa', 'en'])
               if (!present) continue;
               const endpoint = await new AxeBuilder({ page })
                 .include(selector)
+                .exclude('[aria-label="Open TanStack Router Devtools"]')
                 .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
                 .analyze();
               await testInfo.attach('gradient-' + stop, {

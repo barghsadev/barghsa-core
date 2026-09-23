@@ -316,7 +316,6 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
 
   fulfillmentStarted = true;
   await page.reload();
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await expect(page.getByRole('list', { name: 'Fulfillment' })).toContainText('Product delivery');
   await expect(page.locator('li[aria-current="step"]')).toContainText('Product delivery');
   await page.getByRole('link', { name: 'My saving orders' }).click();

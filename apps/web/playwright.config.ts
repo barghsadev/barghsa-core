@@ -38,6 +38,8 @@ export default defineConfig({
 
   use: {
     baseURL: resolvedBaseURL,
+    // Keep the market default deterministic; tests can override this to exercise browser detection.
+    locale: 'fa-IR',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },

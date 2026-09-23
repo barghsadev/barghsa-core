@@ -99,7 +99,6 @@ test('solar list opens intake and detail routes', async ({ page }) => {
   ).toBeVisible();
 
   await page.goto(`/solar/requests/${solarId}`);
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await expect(page.getByRole('heading', { name: 'Request details' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Status and next action' })).toBeVisible();
   await page.getByRole('link', { name: 'Back to requests' }).click();
@@ -220,7 +219,6 @@ test('consultation list opens its request detail route', async ({ page }) => {
     return route.fulfill({ status: 201, json: { requestId: consultationId } });
   });
   await page.goto('/consultations');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await page.getByRole('radio', { name: 'Site advice' }).check();
   await page
     .getByRole('checkbox', { name: 'I confirm this request is for the selected profile.' })

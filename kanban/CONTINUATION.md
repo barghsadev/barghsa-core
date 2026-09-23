@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Persistent language and direction](batches/2026-09-24-language-preference.md) closes the saved-language reload gap in `07-ui-ux-design.md#T-07.03.02.01`–`.02`. English and Persian selection survives later visits, and initial direction follows a saved or browser preference before React renders. Focused unit, bilingual journey, five-browser, type, lint, format, and build checks pass locally.
+
 [Solar customer browser journey](batches/2026-09-24-solar-browser-journey.md) covers the solar portion of `03-core-business.md#T-03.90.14`: draft resume, submission, file upload, document review handoff, postal guidance, and shipment entry. The focused journey passes all five browser projects. Its API is mocked in the browser; backend transition checks remain in the API suites.
 
 [Resumable solar intake](batches/2026-09-24-solar-intake-drafts.md) extends the shared form-draft requirement to the solar request journey. Customer site details survive a return from address settings or an interrupted session, while agreement acceptance remains explicit. Local focused tests and schema/contract checks pass; CI starts on the direct `main` push.

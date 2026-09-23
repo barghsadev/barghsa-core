@@ -201,7 +201,6 @@ test('solar customer resumes intake, uploads documents, and records postal shipm
   expect(draft?.data).toMatchObject({ propertyForm: 'villa', gridType: 'off_grid' });
 
   await page.reload();
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await expect(page.getByLabel('Property form')).toHaveValue('villa');
   await expect(page.getByLabel('Building completion date')).toHaveValue('2020-01-01');
   await expect(page.getByLabel('Off-grid')).toBeChecked();
@@ -239,7 +238,6 @@ test('solar customer resumes intake, uploads documents, and records postal shipm
   // Staff completes document review between the two customer visits.
   requestStatus = 'waiting_for_postal_submission';
   await page.reload();
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   const postal = page.getByRole('region', { name: 'Postal submission of documents' });
   await expect(postal.getByText('Mail the originals.')).toBeVisible();
   await postal.getByLabel('Courier').fill('Post office');
