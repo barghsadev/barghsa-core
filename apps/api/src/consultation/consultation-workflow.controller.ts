@@ -38,8 +38,14 @@ const paidFeeAdjustment = z
   .object({
     idempotencyKey: z.string().uuid(),
     fee: z.string().regex(/^[1-9][0-9]{0,18}$/),
-    reason: z.string().trim().min(1).max(2000),
+    reason: z.string().trim().min(1).max(1000),
     validUntil: z.iso.datetime({ offset: true }),
+  })
+  .strict();
+const paidClosure = z
+  .object({
+    idempotencyKey: z.string().uuid(),
+    reason: z.string().trim().min(1).max(1000),
   })
   .strict();
 const empty = z.object({}).strict();
@@ -152,6 +158,42 @@ export class StaffConsultationWorkflowController {
       req.session,
       id,
       parse(paidFeeAdjustment, body),
+      req.ip ?? '127.0.0.1'
+    );
+  }
+
+  @Post('requests/:id/paid-cancel')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Cancel a paid consultation and request wallet refunds' })
+  @ApiZodBody(paidClosure)
+  paidCancel(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.closePaid(
+      req.session,
+      id,
+      'cancel',
+      parse(paidClosure, body),
+      req.ip ?? '127.0.0.1'
+    );
+  }
+
+  @Post('requests/:id/paid-reject')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Reject a paid consultation and request wallet refunds' })
+  @ApiZodBody(paidClosure)
+  paidReject(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.closePaid(
+      req.session,
+      id,
+      'reject',
+      parse(paidClosure, body),
       req.ip ?? '127.0.0.1'
     );
   }

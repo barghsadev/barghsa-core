@@ -154,9 +154,11 @@ export function ConsultationDetailPage() {
                 {new Intl.DateTimeFormat(locale).format(new Date(request.submitted_at))}
               </time>
             </p>
-            <p>
-              {copy('nextStep')}: {request.expected_next_step ?? copy('staffReview')}
-            </p>
+            {!['completed', 'cancelled', 'rejected', 'offer_declined'].includes(request.status) && (
+              <p>
+                {copy('nextStep')}: {request.expected_next_step ?? copy('staffReview')}
+              </p>
+            )}
             {request.fee ? (
               <p>
                 {copy('fee')}: {new Intl.NumberFormat(locale).format(BigInt(request.fee))} IRR
@@ -193,6 +195,10 @@ export function ConsultationDetailPage() {
           {(detail.adjustments.length > 0 || detail.refunds.length > 0) && (
             <section className="space-y-3 rounded-xl border bg-card p-5">
               <h2 className="text-xl font-semibold">{copy('financialActivity')}</h2>
+              {['cancelled', 'rejected'].includes(request.status) &&
+                detail.refunds.some(
+                  (refund) => !['Completed', 'Rejected', 'Cancelled'].includes(refund.state)
+                ) && <p role="status">{copy('paidClosurePending')}</p>}
               {detail.adjustments.map((item) => (
                 <p key={item.id}>
                   {copy(

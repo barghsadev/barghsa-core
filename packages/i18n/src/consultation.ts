@@ -43,6 +43,10 @@ const en: Record<string, string> = {
   paidAdjustmentPending:
     'A revised paid fee is awaiting customer acceptance and payment. The previous paid invoice remains intact.',
   paidDeclineHelp: 'Contact staff to cancel an already-paid consultation and review its refund.',
+  paidClosureHelp:
+    'Closing this paid request creates credit notes and wallet refund requests. Finance must still approve and process the refunds.',
+  paidClosurePending:
+    'The consultation is closed. Its wallet refund is awaiting finance processing.',
   invoice_state_Unpaid: 'Awaiting payment',
   invoice_state_Overdue: 'Overdue',
   invoice_state_PartiallyFunded: 'Partially paid',
@@ -160,6 +164,9 @@ const fa: Record<string, string> = {
   paidAdjustmentPending:
     'اصلاح هزینه پرداخت‌شده در انتظار پذیرش و پرداخت مشتری است. صورتحساب پرداخت‌شده قبلی بدون تغییر باقی می‌ماند.',
   paidDeclineHelp: 'برای لغو مشاوره پرداخت‌شده و بررسی بازپرداخت آن با کارشناسان تماس بگیرید.',
+  paidClosureHelp:
+    'با بستن این درخواست پرداخت‌شده، بستانکاری و درخواست بازپرداخت به کیف پول ثبت می‌شود. تأیید و پردازش بازپرداخت همچنان بر عهده بخش مالی است.',
+  paidClosurePending: 'مشاوره بسته شده است. بازپرداخت به کیف پول در انتظار پردازش بخش مالی است.',
   invoice_state_Unpaid: 'در انتظار پرداخت',
   invoice_state_Overdue: 'سررسید گذشته',
   invoice_state_PartiallyFunded: 'پرداخت جزئی',

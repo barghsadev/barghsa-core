@@ -400,7 +400,7 @@ export function AdminConsultationsPage() {
                     <textarea
                       value={offerReason}
                       onChange={(event) => setOfferReason(event.target.value)}
-                      maxLength={2000}
+                      maxLength={1000}
                       className="min-h-16 w-full rounded-md border bg-background p-2"
                     />
                   </label>
@@ -473,8 +473,11 @@ export function AdminConsultationsPage() {
                   className="min-h-24 w-full rounded-md border bg-background p-2"
                   value={reason}
                   onChange={(event) => setReason(event.target.value)}
-                  maxLength={2000}
+                  maxLength={1000}
                 />
+                {current.has_paid_invoice && (
+                  <p className="text-sm text-muted-foreground">{copy('paidClosureHelp')}</p>
+                )}
                 <div className="flex flex-wrap gap-2">
                   {current.status === 'under_review' && (
                     <Button
@@ -504,14 +507,32 @@ export function AdminConsultationsPage() {
                       <Button
                         variant="outline"
                         disabled={!reason.trim()}
-                        onClick={() => prepare('reject', copy('reject'), { reason: reason.trim() })}
+                        onClick={() =>
+                          prepare(
+                            current.has_paid_invoice ? 'paid-reject' : 'reject',
+                            copy('reject'),
+                            {
+                              reason: reason.trim(),
+                              ...(current.has_paid_invoice ? { idempotencyKey: offerKey } : {}),
+                            }
+                          )
+                        }
                       >
                         {copy('reject')}
                       </Button>
                       <Button
                         variant="outline"
                         disabled={!reason.trim()}
-                        onClick={() => prepare('cancel', copy('cancel'), { reason: reason.trim() })}
+                        onClick={() =>
+                          prepare(
+                            current.has_paid_invoice ? 'paid-cancel' : 'cancel',
+                            copy('cancel'),
+                            {
+                              reason: reason.trim(),
+                              ...(current.has_paid_invoice ? { idempotencyKey: offerKey } : {}),
+                            }
+                          )
+                        }
                       >
                         {copy('cancel')}
                       </Button>

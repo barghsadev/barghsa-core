@@ -268,10 +268,84 @@ it('charges or credits a paid consultation without changing the paid invoice', a
   });
   expect(body.refunds.map((refund) => refund.id).sort()).toEqual([...creditBody.refundIds].sort());
   expect(body.refunds.reduce((sum, refund) => sum + BigInt(refund.amount), 0n)).toBe(150000n);
-  const completed = await post(`${root}/complete`, 'consultation-finance', {
-    reason: 'Report delivered',
+  const rejected = await post(`${root}/paid-reject`, 'consultation-finance', {
+    idempotencyKey: randomUUID(),
+    reason: 'Service cannot be provided',
   });
-  expect(completed.status, http.logs()).toBe(200);
+  expect(rejected.status, http.logs()).toBe(200);
+  const rejectedBody = (await rejected.json()) as { status: string; refundIds: string[] };
+  expect(rejectedBody.status).toBe('rejected');
+  expect(rejectedBody.refundIds.length).toBeGreaterThan(0);
+  const finalRefunds = (
+    await http.pool.query<{ amount: string }>(
+      'SELECT amount::text FROM refunds r JOIN invoices i ON i.id=r.invoice_id WHERE i.consultation_id=$1',
+      [requestId]
+    )
+  ).rows;
+  expect(finalRefunds.reduce((sum, refund) => sum + BigInt(refund.amount), 0n)).toBe(600000n);
+});
+
+it('cancels an unpaid revised charge and requests a refund for the prior paid consultation', async () => {
+  const { requestId, invoiceId, root } = await offer();
+  expect(
+    (await post(`/api/consultations/requests/${requestId}/accept`, 'consultation-payer', {})).status
+  ).toBe(200);
+  await pay(invoiceId);
+  const validUntil = new Date(Date.now() + 7 * 86_400_000).toISOString();
+  const revised = await post(`${root}/paid-fee`, 'consultation-finance', {
+    idempotencyKey: randomUUID(),
+    fee: '600000',
+    reason: 'Additional review',
+    validUntil,
+  });
+  expect(revised.status, http.logs()).toBe(200);
+  const revisedInvoiceId = ((await revised.json()) as { invoiceId: string }).invoiceId;
+  const input = { idempotencyKey: randomUUID(), reason: 'Customer cancelled the consultation' };
+  const closed = await post(`${root}/paid-cancel`, 'consultation-finance', input);
+  expect(closed.status, http.logs()).toBe(200);
+  const result = (await closed.json()) as {
+    status: string;
+    cancelledInvoiceId: string;
+    creditInvoiceIds: string[];
+    refundIds: string[];
+  };
+  expect(result).toMatchObject({ status: 'cancelled', cancelledInvoiceId: revisedInvoiceId });
+  expect(result.creditInvoiceIds).toHaveLength(1);
+  expect(result.refundIds).toHaveLength(1);
+  expect((await post(`${root}/paid-cancel`, 'consultation-finance', input)).status).toBe(200);
+  expect(
+    (
+      await post(`${root}/paid-cancel`, 'consultation-finance', {
+        ...input,
+        reason: 'Changed reason',
+      })
+    ).status
+  ).toBe(409);
+  expect(
+    (await http.pool.query('SELECT state FROM invoices WHERE id=$1', [revisedInvoiceId])).rows[0]
+  ).toMatchObject({ state: 'Cancelled' });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT state,total_amount::text AS total_amount FROM invoices WHERE id=$1',
+        [invoiceId]
+      )
+    ).rows[0]
+  ).toMatchObject({ state: 'Paid', total_amount: '500000' });
+  const refund = (
+    await http.pool.query('SELECT state,amount::text AS amount FROM refunds WHERE id=$1', [
+      result.refundIds[0],
+    ])
+  ).rows[0];
+  expect(refund).toMatchObject({ state: 'Requested', amount: '500000' });
+  const customer = await fetch(`${http.base}/api/consultations/requests/${requestId}`, {
+    headers: headers['consultation-payer']!,
+  });
+  expect(customer.status, http.logs()).toBe(200);
+  expect(await customer.json()).toMatchObject({
+    request: { status: 'cancelled' },
+    refunds: [{ id: result.refundIds[0] }],
+  });
 });
 
 it('declines an offer and cancels its unpaid invoice', async () => {

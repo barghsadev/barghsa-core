@@ -3414,6 +3414,62 @@
         ]
       }
     },
+    "/api/admin/consultations/requests/{id}/paid-cancel": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_paidCancel",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cancel a paid consultation and request wallet refunds",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
     "/api/admin/consultations/requests/{id}/paid-fee": {
       "post": {
         "operationId": "StaffConsultationWorkflowController_adjustPaidFee",
@@ -3443,7 +3499,7 @@
                     "type": "string"
                   },
                   "reason": {
-                    "maxLength": 2000,
+                    "maxLength": 1000,
                     "minLength": 1,
                     "type": "string"
                   },
@@ -3476,6 +3532,62 @@
           }
         ],
         "summary": "Adjust an accepted paid consultation fee with a charge or credit and refund request",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
+    "/api/admin/consultations/requests/{id}/paid-reject": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_paidReject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reject a paid consultation and request wallet refunds",
         "tags": [
           "Admin · Consultations"
         ]
