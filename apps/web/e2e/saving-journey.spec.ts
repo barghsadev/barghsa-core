@@ -6,6 +6,7 @@ const hardwareId = '33333333-3333-4333-8333-333333333333';
 const addressId = '44444444-4444-4444-8444-444444444444';
 const agreementVersionId = '55555555-5555-4555-8555-555555555555';
 const savingOrderId = '66666666-6666-4666-8666-666666666666';
+const olderOrderId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const parentOrderId = '77777777-7777-4777-8777-777777777777';
 const invoiceId = '88888888-8888-4888-8888-888888888888';
 const contractId = '99999999-9999-4999-8999-999999999999';
@@ -142,29 +143,52 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
     submissions.push(route.request().postDataJSON() as Record<string, unknown>);
     return route.fulfill({ status: 201, json: { savingOrderId } });
   });
-  await page.route(`**/api/saving/orders?profileId=${profileId}`, (route) =>
-    route.fulfill({
-      json: {
-        orders: [
-          {
-            id: savingOrderId,
-            status: fulfillmentStarted ? 'in_progress' : 'awaiting_staff_review',
-            financial_status: 'unpaid',
-            invoice_id: invoiceId,
-            invoice_state: 'Unpaid',
-            contract_id: null,
-            contract_state: 'AwaitingStaffReview',
-            cancellation_pending: false,
-            bill_identifier: '1234567890123',
-            submitted_at: submittedAt,
-            plan_title: { en: 'Home saving plan', fa: 'طرح صرفه‌جویی خانه' },
-            hardware_title: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' },
-            total_amount: '300000',
+  await page.route('**/api/saving/orders?*', (route) => {
+    const before = new URL(route.request().url()).searchParams.get('before');
+    return route.fulfill({
+      json: before
+        ? {
+            orders: [
+              {
+                id: olderOrderId,
+                status: 'awaiting_staff_review',
+                financial_status: 'unpaid',
+                invoice_id: null,
+                invoice_state: 'Unpaid',
+                contract_id: null,
+                contract_state: 'AwaitingStaffReview',
+                cancellation_pending: false,
+                bill_identifier: '9876543210123',
+                submitted_at: '2026-09-22T10:00:00.000Z',
+                plan_title: { en: 'Older saving plan', fa: 'طرح قدیمی' },
+                hardware_title: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' },
+                total_amount: '200000',
+              },
+            ],
+            nextBefore: null,
+          }
+        : {
+            orders: [
+              {
+                id: savingOrderId,
+                status: fulfillmentStarted ? 'in_progress' : 'awaiting_staff_review',
+                financial_status: 'unpaid',
+                invoice_id: invoiceId,
+                invoice_state: 'Unpaid',
+                contract_id: null,
+                contract_state: 'AwaitingStaffReview',
+                cancellation_pending: false,
+                bill_identifier: '1234567890123',
+                submitted_at: submittedAt,
+                plan_title: { en: 'Home saving plan', fa: 'طرح صرفه‌جویی خانه' },
+                hardware_title: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' },
+                total_amount: '300000',
+              },
+            ],
+            nextBefore: savingOrderId,
           },
-        ],
-      },
-    })
-  );
+    });
+  });
   await page.route(`**/api/saving/orders/${savingOrderId}`, (route) =>
     route.fulfill({
       json: {
@@ -298,7 +322,10 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   await page.getByRole('link', { name: 'My saving orders' }).click();
   await expect(page.getByRole('heading', { name: 'My saving orders' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Home saving plan' })).toBeVisible();
-  await page.getByRole('link', { name: 'Saving order' }).click();
+  await page.getByRole('button', { name: 'More orders' }).click();
+  await expect(page.getByRole('heading', { name: 'Home saving plan' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Older saving plan' })).toBeVisible();
+  await page.getByRole('link', { name: 'Saving order' }).first().click();
   await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));
   await page.getByRole('link', { name: 'View invoice and payment options' }).click();
   await expect(page.getByRole('heading', { name: 'Invoice details' })).toBeVisible();

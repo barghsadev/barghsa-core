@@ -425,13 +425,22 @@ export class SavingOrderService {
     }
   }
 
-  async list(actor: Actor, profileId: string) {
+  async list(actor: Actor, profileId: string, before?: string) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await this.orders.lockOrderActor(client, actor);
       if (!(await this.orders.mayManageOrders(client, actor.userId, profileId)))
         throw new NotFoundException('Profile not found');
+      const cursor = before
+        ? (
+            await client.query<{ submitted_at: Date; id: string }>(
+              'SELECT submitted_at,id FROM saving_orders WHERE id=$1 AND profile_id=$2',
+              [before, profileId]
+            )
+          ).rows[0]
+        : undefined;
+      if (before && !cursor) throw new NotFoundException('Order cursor not found');
       const rows = (
         await client.query(
           `SELECT s.id,s.order_id,s.bill_identifier,s.status,s.financial_status,s.submitted_at,
@@ -450,13 +459,15 @@ export class SavingOrderService {
            JOIN products h ON h.id=s.hardware_product_id
            LEFT JOIN invoices i ON i.order_id=s.order_id AND i.type='auto'
            LEFT JOIN contracts c ON c.order_id=s.order_id AND c.service_type='savings'
-          WHERE s.profile_id=$1 ORDER BY s.submitted_at DESC,s.id DESC LIMIT 100`,
-          [profileId]
+            WHERE s.profile_id=$1
+              AND ($2::timestamptz IS NULL OR (s.submitted_at,s.id)<($2::timestamptz,$3::uuid))
+            ORDER BY s.submitted_at DESC,s.id DESC LIMIT 101`,
+          [profileId, cursor?.submitted_at ?? null, cursor?.id ?? null]
         )
       ).rows;
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return { orders: rows };
+      return { orders: rows.slice(0, 100), nextBefore: rows.length > 100 ? rows[99]!.id : null };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

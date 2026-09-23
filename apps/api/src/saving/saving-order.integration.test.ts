@@ -332,7 +332,21 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   expect(list.status, http.logs()).toBe(200);
   expect(await list.json()).toMatchObject({
     orders: [{ id: result.savingOrderId, cancellation_pending: false, financial_status: 'unpaid' }],
+    nextBefore: null,
   });
+  const afterOrder = await request(
+    `/api/saving/orders?profileId=${input.profileId}&before=${result.savingOrderId}`,
+    'GET'
+  );
+  expect(afterOrder.status, http.logs()).toBe(200);
+  expect(await afterOrder.json()).toMatchObject({ orders: [], nextBefore: null });
+  expect(
+    (await request(`/api/saving/orders?profileId=${input.profileId}&before=invalid`, 'GET')).status
+  ).toBe(400);
+  expect(
+    (await request(`/api/saving/orders?profileId=${input.profileId}&before=${randomUUID()}`, 'GET'))
+      .status
+  ).toBe(404);
   const counts = await http.pool.query<{ orders: string; contracts: string; invoices: string }>(
     `SELECT (SELECT COUNT(*)::text FROM orders WHERE id=$1) AS orders,
             (SELECT COUNT(*)::text FROM contracts WHERE order_id=$1) AS contracts,

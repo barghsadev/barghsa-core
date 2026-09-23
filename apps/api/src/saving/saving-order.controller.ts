@@ -11,7 +11,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
@@ -132,11 +132,17 @@ export class SavingOrderController {
   @Get()
   @RateLimit({ namespace: 'saving:order-list:user', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'List saving orders for a customer profile' })
+  @ApiQuery({ name: 'before', required: false, format: 'uuid' })
   list(
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
+    @Query('before') before: string | undefined,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.service.list(req.session, profileId);
+    return this.service.list(
+      req.session,
+      profileId,
+      before === undefined ? undefined : parse(z.string().uuid(), before)
+    );
   }
 
   @Get(':id')
