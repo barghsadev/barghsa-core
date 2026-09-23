@@ -119,11 +119,25 @@ export function SavingsPage() {
                 ) : (
                   <p className="text-sm text-muted-foreground">{copy('noAgreement')}</p>
                 )}
+                {plan.available && (
+                  <a
+                    href="/savings/order"
+                    className="inline-flex min-h-10 items-center rounded-md bg-primary px-4 text-primary-foreground hover:bg-primary/90"
+                  >
+                    {copy('startOrder')}
+                  </a>
+                )}
               </CardContent>
             </Card>
           ))}
         </div>
       )}
+      <a
+        href="/savings/orders"
+        className="inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
+      >
+        {copy('orders')}
+      </a>
     </main>
   );
 }

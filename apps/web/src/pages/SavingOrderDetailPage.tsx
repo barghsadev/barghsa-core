@@ -1,0 +1,178 @@
+import { Link, useParams } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { Card, CardContent } from '@barghsa/ui';
+import { tSaving } from '@barghsa/i18n/saving';
+import { useLocale } from '../hooks/useLocale.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+
+interface Detail {
+  id: string;
+  status: string;
+  bill_identifier: string;
+  submitted_at: string;
+  address_snapshot: { full_address: string; postal_code: string };
+  pricing_snapshot: {
+    plan: { title: { fa: string; en: string } };
+    hardware: { title: { fa: string; en: string } };
+    subtotalIrR: string;
+    discountIrR: string;
+    vatIrR: string;
+    totalIrR: string;
+  };
+  verification_result: { status: string };
+  agreement_snapshot: string;
+  invoice_id: string;
+  invoice_state: string;
+  contract_id: string;
+  contract_state: string;
+  stages: Array<{ stage: string; status: string }>;
+}
+
+export function SavingOrderDetailPage() {
+  const { orderId } = useParams({ from: '/_app/savings/orders/$orderId' });
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const copy = (key: string) => tSaving(key, locale);
+  const [detail, setDetail] = useState<Detail | null>(null);
+  const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetch(`/api/saving/orders/${orderId}`, {
+      credentials: 'include',
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('order');
+        return response.json() as Promise<Detail>;
+      })
+      .then((result) => {
+        if (!controller.signal.aborted) {
+          setDetail(result);
+          setState('ready');
+        }
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setState('error');
+      });
+    return () => controller.abort();
+  }, [orderId]);
+  return (
+    <main
+      className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      <header className="space-y-2">
+        <Link to="/savings/orders" className="text-sm text-primary hover:underline">
+          {copy('orders')}
+        </Link>
+        <h1 className="text-3xl font-semibold">{copy('orderDetail')}</h1>
+      </header>
+      {state === 'loading' && <p role="status">{copy('loading')}</p>}
+      {state === 'error' && <p role="alert">{copy('error')}</p>}
+      {detail && (
+        <>
+          <Card>
+            <CardContent className="space-y-4 pt-6">
+              <div className="flex flex-wrap justify-between gap-3">
+                <h2 className="text-xl font-semibold">
+                  {detail.pricing_snapshot.plan.title[locale]}
+                </h2>
+                <span className="rounded-full bg-muted px-3 py-1 text-sm">
+                  {copy(
+                    detail.status === 'awaiting_staff_review'
+                      ? 'staffReview'
+                      : detail.status === 'in_progress'
+                        ? 'inProgress'
+                        : detail.status
+                  )}
+                </span>
+              </div>
+              <dl className="grid gap-3 text-sm md:grid-cols-2">
+                <div>
+                  <dt className="text-muted-foreground">{copy('stepHardware')}</dt>
+                  <dd>{detail.pricing_snapshot.hardware.title[locale]}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">{copy('billIdentifier')}</dt>
+                  <dd>
+                    <bdi>{detail.bill_identifier}</bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">{copy('stepAddress')}</dt>
+                  <dd>
+                    {detail.address_snapshot.full_address} ·{' '}
+                    <bdi>{detail.address_snapshot.postal_code}</bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">{copy('submittedAt')}</dt>
+                  <dd>
+                    <time dateTime={detail.submitted_at}>
+                      {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(
+                        new Date(detail.submitted_at)
+                      )}
+                    </time>
+                  </dd>
+                </div>
+              </dl>
+              {detail.verification_result.status !== 'verified' && (
+                <p className="text-sm text-muted-foreground">{copy('manualReview')}</p>
+              )}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="space-y-3 pt-6">
+              <h2 className="text-xl font-semibold">{copy('invoice')}</h2>
+              <p>
+                {copy('subtotal')}: <bdi>{numbers.money(detail.pricing_snapshot.subtotalIrR)}</bdi>
+              </p>
+              <p>
+                {copy('discount')}: <bdi>{numbers.money(detail.pricing_snapshot.discountIrR)}</bdi>
+              </p>
+              <p>
+                {copy('vat')}: <bdi>{numbers.money(detail.pricing_snapshot.vatIrR)}</bdi>
+              </p>
+              <p className="font-semibold">
+                {copy('total')}: <bdi>{numbers.money(detail.pricing_snapshot.totalIrR)}</bdi>
+              </p>
+              <p>{copy(detail.invoice_state)}</p>
+              {detail.invoice_id && (
+                <Link
+                  to="/invoices/$invoiceId"
+                  params={{ invoiceId: detail.invoice_id }}
+                  className="inline-block text-primary hover:underline"
+                >
+                  {copy('payment')}
+                </Link>
+              )}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="space-y-2 pt-6">
+              <h2 className="text-xl font-semibold">{copy('contract')}</h2>
+              <p>{copy(detail.contract_state)}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="space-y-3 pt-6">
+              <h2 className="text-xl font-semibold">{copy('fulfillment')}</h2>
+              <ol className="grid gap-2 md:grid-cols-5">
+                {detail.stages.map((stage) => (
+                  <li key={stage.stage} className="rounded-md border p-3 text-sm">
+                    <strong className="block">{copy(stage.stage)}</strong>
+                    <span>{copy(stage.status)}</span>
+                  </li>
+                ))}
+              </ol>
+            </CardContent>
+          </Card>
+          <details className="rounded-md border p-4">
+            <summary className="cursor-pointer font-medium">{copy('agreement')}</summary>
+            <p className="mt-3 whitespace-pre-wrap text-sm">{detail.agreement_snapshot}</p>
+          </details>
+        </>
+      )}
+    </main>
+  );
+}

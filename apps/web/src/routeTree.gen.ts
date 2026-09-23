@@ -77,6 +77,8 @@ import { Route as AppElectricityOrderRouteImport } from './routes/_app/electrici
 import { Route as AppElectricityOrdersRouteImport } from './routes/_app/electricity/orders'
 import { Route as AppInvoicesIndexRouteImport } from './routes/_app/invoices/index'
 import { Route as AppInvoicesInvoiceIdRouteImport } from './routes/_app/invoices/$invoiceId'
+import { Route as AppSavingsOrderRouteImport } from './routes/_app/savings.order'
+import { Route as AppSavingsOrdersRouteImport } from './routes/_app/savings.orders'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppSettingsAddressesRouteImport } from './routes/_app/settings/addresses'
 import { Route as AppSettingsProfileRouteImport } from './routes/_app/settings/profile'
@@ -91,6 +93,7 @@ import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onbo
 import { Route as OnboardingLegalProfileIdRouteImport } from './routes/onboarding/legal/$profileId'
 import { Route as AppElectricityOrdersIndexRouteImport } from './routes/_app/electricity/orders.index'
 import { Route as AppElectricityOrdersOrderIdRouteImport } from './routes/_app/electricity/orders.$orderId'
+import { Route as AppSavingsOrdersOrderIdRouteImport } from './routes/_app/savings.orders.$orderId'
 import { Route as AdminCrmProfilesProfileIdRouteImport } from './routes/admin/crm/profiles.$profileId'
 import { Route as AppCrmProfilesProfileIdRouteImport } from './routes/app/crm/profiles.$profileId'
 
@@ -436,6 +439,16 @@ const AppInvoicesInvoiceIdRoute = AppInvoicesInvoiceIdRouteImport.update({
   path: '/invoices/$invoiceId',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSavingsOrderRoute = AppSavingsOrderRouteImport.update({
+  id: '/order',
+  path: '/order',
+  getParentRoute: () => AppSavingsRoute,
+} as any)
+const AppSavingsOrdersRoute = AppSavingsOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AppSavingsRoute,
+} as any)
 const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
   id: '/settings/',
   path: '/settings/',
@@ -510,6 +523,11 @@ const AppElectricityOrdersOrderIdRoute =
     path: '/$orderId',
     getParentRoute: () => AppElectricityOrdersRoute,
   } as any)
+const AppSavingsOrdersOrderIdRoute = AppSavingsOrdersOrderIdRouteImport.update({
+  id: '/$orderId',
+  path: '/$orderId',
+  getParentRoute: () => AppSavingsOrdersRoute,
+} as any)
 const AdminCrmProfilesProfileIdRoute =
   AdminCrmProfilesProfileIdRouteImport.update({
     id: '/profiles/$profileId',
@@ -539,7 +557,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
   '/notifications': typeof AppNotificationsRoute
-  '/savings': typeof AppSavingsRoute
+  '/savings': typeof AppSavingsRouteWithChildren
   '/tickets': typeof AppTicketsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
@@ -588,6 +606,8 @@ export interface FileRoutesByFullPath {
   '/electricity/order': typeof AppElectricityOrderRoute
   '/electricity/orders': typeof AppElectricityOrdersRouteWithChildren
   '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
+  '/savings/order': typeof AppSavingsOrderRoute
+  '/savings/orders': typeof AppSavingsOrdersRouteWithChildren
   '/settings/addresses': typeof AppSettingsAddressesRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
@@ -603,6 +623,7 @@ export interface FileRoutesByFullPath {
   '/admin/crm/': typeof AdminCrmIndexRoute
   '/app/crm/': typeof AppCrmIndexRoute
   '/electricity/orders/$orderId': typeof AppElectricityOrdersOrderIdRoute
+  '/savings/orders/$orderId': typeof AppSavingsOrdersOrderIdRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
   '/electricity/orders/': typeof AppElectricityOrdersIndexRoute
@@ -621,7 +642,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
   '/notifications': typeof AppNotificationsRoute
-  '/savings': typeof AppSavingsRoute
+  '/savings': typeof AppSavingsRouteWithChildren
   '/tickets': typeof AppTicketsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
@@ -668,6 +689,8 @@ export interface FileRoutesByTo {
   '/electricity/advanced': typeof AppElectricityAdvancedRoute
   '/electricity/order': typeof AppElectricityOrderRoute
   '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
+  '/savings/order': typeof AppSavingsOrderRoute
+  '/savings/orders': typeof AppSavingsOrdersRouteWithChildren
   '/settings/addresses': typeof AppSettingsAddressesRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
@@ -683,6 +706,7 @@ export interface FileRoutesByTo {
   '/admin/crm': typeof AdminCrmIndexRoute
   '/app/crm': typeof AppCrmIndexRoute
   '/electricity/orders/$orderId': typeof AppElectricityOrdersOrderIdRoute
+  '/savings/orders/$orderId': typeof AppSavingsOrdersOrderIdRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
   '/electricity/orders': typeof AppElectricityOrdersIndexRoute
@@ -706,7 +730,7 @@ export interface FileRoutesById {
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/documents': typeof AppDocumentsRoute
   '/_app/notifications': typeof AppNotificationsRoute
-  '/_app/savings': typeof AppSavingsRoute
+  '/_app/savings': typeof AppSavingsRouteWithChildren
   '/_app/tickets': typeof AppTicketsRoute
   '/_app/videos': typeof AppVideosRoute
   '/_app/wallet': typeof AppWalletRoute
@@ -755,6 +779,8 @@ export interface FileRoutesById {
   '/_app/electricity/order': typeof AppElectricityOrderRoute
   '/_app/electricity/orders': typeof AppElectricityOrdersRouteWithChildren
   '/_app/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
+  '/_app/savings/order': typeof AppSavingsOrderRoute
+  '/_app/savings/orders': typeof AppSavingsOrdersRouteWithChildren
   '/_app/settings/addresses': typeof AppSettingsAddressesRoute
   '/_app/settings/profile': typeof AppSettingsProfileRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
@@ -770,6 +796,7 @@ export interface FileRoutesById {
   '/admin/crm/': typeof AdminCrmIndexRoute
   '/app/crm/': typeof AppCrmIndexRoute
   '/_app/electricity/orders/$orderId': typeof AppElectricityOrdersOrderIdRoute
+  '/_app/savings/orders/$orderId': typeof AppSavingsOrdersOrderIdRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
   '/_app/electricity/orders/': typeof AppElectricityOrdersIndexRoute
@@ -842,6 +869,8 @@ export interface FileRouteTypes {
     | '/electricity/order'
     | '/electricity/orders'
     | '/invoices/$invoiceId'
+    | '/savings/order'
+    | '/savings/orders'
     | '/settings/addresses'
     | '/settings/profile'
     | '/settings/security'
@@ -857,6 +886,7 @@ export interface FileRouteTypes {
     | '/admin/crm/'
     | '/app/crm/'
     | '/electricity/orders/$orderId'
+    | '/savings/orders/$orderId'
     | '/admin/crm/profiles/$profileId'
     | '/app/crm/profiles/$profileId'
     | '/electricity/orders/'
@@ -922,6 +952,8 @@ export interface FileRouteTypes {
     | '/electricity/advanced'
     | '/electricity/order'
     | '/invoices/$invoiceId'
+    | '/savings/order'
+    | '/savings/orders'
     | '/settings/addresses'
     | '/settings/profile'
     | '/settings/security'
@@ -937,6 +969,7 @@ export interface FileRouteTypes {
     | '/admin/crm'
     | '/app/crm'
     | '/electricity/orders/$orderId'
+    | '/savings/orders/$orderId'
     | '/admin/crm/profiles/$profileId'
     | '/app/crm/profiles/$profileId'
     | '/electricity/orders'
@@ -1008,6 +1041,8 @@ export interface FileRouteTypes {
     | '/_app/electricity/order'
     | '/_app/electricity/orders'
     | '/_app/invoices/$invoiceId'
+    | '/_app/savings/order'
+    | '/_app/savings/orders'
     | '/_app/settings/addresses'
     | '/_app/settings/profile'
     | '/_app/settings/security'
@@ -1023,6 +1058,7 @@ export interface FileRouteTypes {
     | '/admin/crm/'
     | '/app/crm/'
     | '/_app/electricity/orders/$orderId'
+    | '/_app/savings/orders/$orderId'
     | '/admin/crm/profiles/$profileId'
     | '/app/crm/profiles/$profileId'
     | '/_app/electricity/orders/'
@@ -1521,6 +1557,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInvoicesInvoiceIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/savings/order': {
+      id: '/_app/savings/order'
+      path: '/order'
+      fullPath: '/savings/order'
+      preLoaderRoute: typeof AppSavingsOrderRouteImport
+      parentRoute: typeof AppSavingsRoute
+    }
+    '/_app/savings/orders': {
+      id: '/_app/savings/orders'
+      path: '/orders'
+      fullPath: '/savings/orders'
+      preLoaderRoute: typeof AppSavingsOrdersRouteImport
+      parentRoute: typeof AppSavingsRoute
+    }
     '/_app/settings/': {
       id: '/_app/settings/'
       path: '/settings'
@@ -1619,6 +1669,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppElectricityOrdersOrderIdRouteImport
       parentRoute: typeof AppElectricityOrdersRoute
     }
+    '/_app/savings/orders/$orderId': {
+      id: '/_app/savings/orders/$orderId'
+      path: '/$orderId'
+      fullPath: '/savings/orders/$orderId'
+      preLoaderRoute: typeof AppSavingsOrdersOrderIdRouteImport
+      parentRoute: typeof AppSavingsOrdersRoute
+    }
     '/admin/crm/profiles/$profileId': {
       id: '/admin/crm/profiles/$profileId'
       path: '/profiles/$profileId'
@@ -1635,6 +1692,31 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AppSavingsOrdersRouteChildren {
+  AppSavingsOrdersOrderIdRoute: typeof AppSavingsOrdersOrderIdRoute
+}
+
+const AppSavingsOrdersRouteChildren: AppSavingsOrdersRouteChildren = {
+  AppSavingsOrdersOrderIdRoute: AppSavingsOrdersOrderIdRoute,
+}
+
+const AppSavingsOrdersRouteWithChildren =
+  AppSavingsOrdersRoute._addFileChildren(AppSavingsOrdersRouteChildren)
+
+interface AppSavingsRouteChildren {
+  AppSavingsOrderRoute: typeof AppSavingsOrderRoute
+  AppSavingsOrdersRoute: typeof AppSavingsOrdersRouteWithChildren
+}
+
+const AppSavingsRouteChildren: AppSavingsRouteChildren = {
+  AppSavingsOrderRoute: AppSavingsOrderRoute,
+  AppSavingsOrdersRoute: AppSavingsOrdersRouteWithChildren,
+}
+
+const AppSavingsRouteWithChildren = AppSavingsRoute._addFileChildren(
+  AppSavingsRouteChildren,
+)
 
 interface AppElectricityOrdersRouteChildren {
   AppElectricityOrdersOrderIdRoute: typeof AppElectricityOrdersOrderIdRoute
@@ -1657,7 +1739,7 @@ interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppDocumentsRoute: typeof AppDocumentsRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
-  AppSavingsRoute: typeof AppSavingsRoute
+  AppSavingsRoute: typeof AppSavingsRouteWithChildren
   AppTicketsRoute: typeof AppTicketsRoute
   AppVideosRoute: typeof AppVideosRoute
   AppWalletRoute: typeof AppWalletRoute
@@ -1684,7 +1766,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppDocumentsRoute: AppDocumentsRoute,
   AppNotificationsRoute: AppNotificationsRoute,
-  AppSavingsRoute: AppSavingsRoute,
+  AppSavingsRoute: AppSavingsRouteWithChildren,
   AppTicketsRoute: AppTicketsRoute,
   AppVideosRoute: AppVideosRoute,
   AppWalletRoute: AppWalletRoute,

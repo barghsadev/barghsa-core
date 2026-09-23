@@ -25,6 +25,9 @@ import {
   StaffElectricityPriceAdjustmentController,
 } from '../electricity/electricity-price-adjustment.controller.js';
 import { ElectricityPriceAdjustmentService } from '../electricity/electricity-price-adjustment.service.js';
+import { SavingOrderController } from '../saving/saving-order.controller.js';
+import { SavingOrderService } from '../saving/saving-order.service.js';
+import { BillVerificationProvider } from '../saving/bill-verification.provider.js';
 
 @Module({
   imports: [SessionModule, AdminModule, InvoiceModule],
@@ -37,6 +40,7 @@ import { ElectricityPriceAdjustmentService } from '../electricity/electricity-pr
     StaffElectricityIncreaseController,
     CustomerElectricityPriceAdjustmentController,
     StaffElectricityPriceAdjustmentController,
+    SavingOrderController,
   ],
   providers: [
     OrdersService,
@@ -48,6 +52,8 @@ import { ElectricityPriceAdjustmentService } from '../electricity/electricity-pr
     ElectricityStaffReviewService,
     ElectricityIncreaseService,
     ElectricityPriceAdjustmentService,
+    SavingOrderService,
+    BillVerificationProvider,
   ],
   exports: [OrdersService, ElectricityCalculationService],
 })
