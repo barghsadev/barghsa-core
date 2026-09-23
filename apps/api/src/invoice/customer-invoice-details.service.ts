@@ -78,6 +78,7 @@ export interface CustomerInvoiceDetailsDto extends CustomerInvoiceActivity {
   viewedInvoiceId: string;
   originalInvoiceId: string;
   consultationId?: string | null;
+  electricityOrderId?: string | null;
   invoice: CustomerInvoiceNodeDto;
   /** Original first, then linked replacements/adjustments chronologically. */
   chain: CustomerInvoiceNodeDto[];
@@ -446,16 +447,26 @@ export class CustomerInvoiceDetailsService {
         rows: family,
         linesByInvoiceId,
       });
-      const consultationId =
-        (
-          await client.query<{ consultation_id: string | null }>(
-            'SELECT consultation_id FROM invoices WHERE id=$1 AND profile_id=$2',
-            [invoiceId, profileId]
-          )
-        ).rows[0]?.consultation_id ?? null;
+      const origin = (
+        await client.query<{
+          consultation_id: string | null;
+          electricity_order_id: string | null;
+        }>(
+          `SELECT COALESCE(viewed.consultation_id,i.consultation_id) AS consultation_id,
+             CASE WHEN EXISTS (
+               SELECT 1 FROM electricity_orders e
+               WHERE e.id=i.order_id AND e.profile_id=i.profile_id
+             ) THEN i.order_id ELSE NULL END AS electricity_order_id
+           FROM invoices i
+           LEFT JOIN invoices viewed ON viewed.id=$3 AND viewed.profile_id=i.profile_id
+           WHERE i.id=$1 AND i.profile_id=$2`,
+          [original.id, profileId, invoiceId]
+        )
+      ).rows[0];
       return {
         ...details,
-        consultationId,
+        consultationId: origin?.consultation_id ?? null,
+        electricityOrderId: origin?.electricity_order_id ?? null,
         ...(await loadCustomerInvoiceActivity(client, invoiceId, profileId)),
       };
     });

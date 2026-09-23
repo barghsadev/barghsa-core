@@ -244,6 +244,13 @@ it('keeps review, payment and activation on a corrected unpaid invoice', async (
     expectedVersionId: versionId,
   });
   expect(approved.status, http.logs()).toBe(200);
+  const replacementDetails = await fetch(`${http.base}/api/invoices/${replacement.invoiceId}`, {
+    headers,
+  });
+  expect(replacementDetails.status, http.logs()).toBe(200);
+  expect(await replacementDetails.json()).toMatchObject({
+    electricityOrderId: order.orderId,
+  });
   const publishedCorrection = await fetch(
     `${http.base}/api/admin/invoices/${replacement.invoiceId}/corrections`,
     {
@@ -953,6 +960,9 @@ it('funds the linked invoice and activates only after customer acceptance', asyn
     expectedVersionId: versionId,
   });
   expect(approved.status, http.logs()).toBe(200);
+  const invoiceDetails = await fetch(`${http.base}/api/invoices/${order.invoiceId}`, { headers });
+  expect(invoiceDetails.status, http.logs()).toBe(200);
+  expect(await invoiceDetails.json()).toMatchObject({ electricityOrderId: order.orderId });
   expect((await activateReadyContracts(http.pool)).activated).toBe(0);
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
   const paymentPath = `${http.base}/api/invoices/${order.invoiceId}/wallet-payment`;

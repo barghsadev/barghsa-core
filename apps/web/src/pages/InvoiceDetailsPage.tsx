@@ -84,12 +84,22 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
         </Link>
       </nav>
       {details?.consultationId && (
-        <a
+        <Link
           className="text-sm text-primary underline"
-          href={`/consultations/${details.consultationId}`}
+          to="/consultations/$requestId"
+          params={{ requestId: details.consultationId }}
         >
           {tConsultation('backToRequest', locale)}
-        </a>
+        </Link>
+      )}
+      {details?.electricityOrderId && (
+        <Link
+          className="text-sm text-primary underline"
+          to="/electricity/orders/$orderId"
+          params={{ orderId: details.electricityOrderId }}
+        >
+          {t('invoices.details.backToElectricityOrder', locale)}
+        </Link>
       )}
 
       <header className="flex items-center gap-2">

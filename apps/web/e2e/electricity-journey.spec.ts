@@ -253,3 +253,109 @@ for (const locale of ['en', 'fa'] as const) {
     });
   });
 }
+
+test('paid electricity invoice returns to the order and its published contract', async ({
+  page,
+}) => {
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({ json: { userId: 'buyer', requiresTosAcceptance: false } })
+  );
+  await page.route('**/api/profiles', (route) =>
+    route.fulfill({
+      json: {
+        profiles: [{ id: profileId, profileType: 'LEGAL', title: 'Buyer' }],
+        activeProfileId: profileId,
+        hasDefault: true,
+      },
+    })
+  );
+  await page.route('**/api/profiles/verification-status', (route) =>
+    route.fulfill({
+      json: {
+        activeProfileId: profileId,
+        profileStatus: 'ACTIVE',
+        verificationRequired: true,
+        isVerified: true,
+      },
+    })
+  );
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+  const invoice = {
+    invoiceId,
+    role: 'original',
+    state: 'Paid',
+    totalAmount: '1000000',
+    paidAmount: '1000000',
+    refundedAmount: '0',
+    accountingAmount: '1000000',
+    adjustmentKind: null,
+    issuedAt: '2026-09-23T10:00:00.000Z',
+    payableFrom: '2026-09-23T10:00:00.000Z',
+    dueAt: '2026-09-30T10:00:00.000Z',
+    dueAtOverrideReason: null,
+    cancelledAt: null,
+    createdAt: '2026-09-23T10:00:00.000Z',
+    replacesInvoiceId: null,
+    adjustmentForInvoiceId: null,
+    explanation: null,
+    lines: [],
+  };
+  await page.route(`**/api/invoices/${invoiceId}`, (route) =>
+    route.fulfill({
+      json: {
+        viewedInvoiceId: invoiceId,
+        originalInvoiceId: invoiceId,
+        electricityOrderId: orderId,
+        consultationId: null,
+        invoice,
+        chain: [invoice],
+        payments: [],
+        bankReceipts: [],
+        refunds: [],
+      },
+    })
+  );
+  await page.route(`**/api/electricity/orders/${orderId}`, (route) =>
+    route.fulfill({
+      json: {
+        orderId,
+        profileId,
+        commercialStatus: 'CONFIRMED',
+        electricityStatus: 'approved',
+        financialStatus: 'paid',
+        nextAction: 'accept_contract',
+        periodStart: '2026-10-01T00:00:00.000Z',
+        periodEnd: '2026-10-08T00:00:00.000Z',
+        totalKwh: '10',
+        fullAddress: address.fullAddress,
+        postalCode: address.postalCode,
+        contractId,
+        contractState: 'AwaitingCustomerAcceptance',
+        versionId: '99999999-9999-4999-8999-999999999999',
+        invoiceId,
+        invoiceState: 'Paid',
+        totalIrR: '1000000',
+        paidIrR: '1000000',
+        refundedIrR: '0',
+        lines: [],
+        timeline: [],
+      },
+    })
+  );
+
+  await page.goto(`/invoices/${invoiceId}`);
+  await expect(page.getByRole('link', { name: 'بازگشت به سفارش برق' })).toBeVisible();
+  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  await expect(page.getByRole('heading', { name: 'Invoice details' })).toBeVisible();
+  await page.getByRole('link', { name: 'Back to electricity order' }).click();
+  await expect(page).toHaveURL(new RegExp(`/electricity/orders/${orderId}$`));
+  await expect(page.getByRole('region', { name: 'Status and next action' })).toContainText(
+    'Review and accept the published contract'
+  );
+  await expect(
+    page.getByRole('link', { name: 'Review and accept the published contract.' })
+  ).toHaveAttribute('href', `/contracts?contractId=${contractId}`);
+});

@@ -13,16 +13,23 @@ vi.mock('@tanstack/react-router', () => ({
   Link: ({
     children,
     to,
+    params,
     ...rest
   }: {
     children: ReactNode;
     to: string;
     params?: Record<string, string>;
-  }) => (
-    <a href={typeof to === 'string' ? to : '/invoices'} {...rest}>
-      {children}
-    </a>
-  ),
+  }) => {
+    const href = Object.entries(params ?? {}).reduce(
+      (path, [key, value]) => path.replace(`$${key}`, encodeURIComponent(value)),
+      to
+    );
+    return (
+      <a href={href} {...rest}>
+        {children}
+      </a>
+    );
+  },
 }));
 
 function node(overrides: Partial<CustomerInvoiceDetails['invoice']> & { invoiceId: string }) {
