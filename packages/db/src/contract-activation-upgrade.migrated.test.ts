@@ -63,12 +63,9 @@ it('upgrades existing Active contracts without rewriting or fabricating activati
     const before = (await pool.query('SELECT * FROM contracts WHERE id=$1', [id])).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: [
-        '0143_contract_system_activation',
-        '0144_contract_term_completion',
-        '0145_contract_cancellation',
-        '0146_customer_cancellation_requests',
-      ],
+      applied: journal.entries
+        .filter((entry: { idx: number }) => entry.idx >= 143)
+        .map((entry: { tag: string }) => entry.tag),
     });
     expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [id])).rows).toEqual(before);
     expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });

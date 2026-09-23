@@ -433,15 +433,9 @@ it('upgrades the actual 139 schema and reruns without fabricating documents or c
     ).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: [
-        '0140_document_lifecycle',
-        '0141_contract_signature_evidence',
-        '0142_contract_activation_requirements',
-        '0143_contract_system_activation',
-        '0144_contract_term_completion',
-        '0145_contract_cancellation',
-        '0146_customer_cancellation_requests',
-      ],
+      applied: journal.entries
+        .filter((entry: { idx: number }) => entry.idx >= 140)
+        .map((entry: { tag: string }) => entry.tag),
     });
     expect(
       (await pool.query("SELECT * FROM storage_records WHERE storage_key='legacy-evidence'")).rows

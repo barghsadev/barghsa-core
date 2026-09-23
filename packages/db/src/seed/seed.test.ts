@@ -38,7 +38,7 @@ describe('seed verification', () => {
     const allProducts = await ctx.db
       .select()
       .from(products)
-      .where(sql`system_key IS NOT NULL`)
+      .where(sql`type = 'electricity' AND system_key IS NOT NULL`)
       .orderBy(products.systemKey);
 
     expect(allProducts).toHaveLength(4);
@@ -72,7 +72,7 @@ describe('seed verification', () => {
 
     // Database still has exactly 4 system products.
     const countResult = await ctx.db.execute<{ count: number }>(
-      sql`SELECT count(*)::int AS count FROM products WHERE system_key IS NOT NULL`
+      sql`SELECT count(*)::int AS count FROM products WHERE type='electricity' AND system_key IS NOT NULL`
     );
     expect(countResult.rows[0]?.count).toBe(4);
   });
@@ -152,7 +152,7 @@ describe('seed verification', () => {
       const [systemProduct] = await ctx.db
         .select({ id: products.id, systemKey: products.systemKey })
         .from(products)
-        .where(sql`system_key IS NOT NULL`)
+        .where(sql`type = 'electricity' AND system_key IS NOT NULL`)
         .limit(1);
 
       expect(systemProduct).toBeDefined();
@@ -407,6 +407,7 @@ describe('notification template seeding', () => {
   it('runs the notification data migration without seeding products, geography or admins', async () => {
     const isolated = await createMigratedTestDb();
     try {
+      const existingProducts = await isolated.db.select().from(products);
       const { stdout } = await promisify(execFile)('pnpm', ['db:migrate:notification-templates'], {
         cwd: resolve(__dirname, '../..'),
         env: { ...process.env, PGDIRECT_URL: isolated.connectionString },
@@ -419,7 +420,7 @@ describe('notification template seeding', () => {
       expect((await isolated.db.select().from(notificationTemplates)).length).toBe(
         buildSeedTemplates().length
       );
-      expect(await isolated.db.select().from(products)).toEqual([]);
+      expect(await isolated.db.select().from(products)).toEqual(existingProducts);
       expect(await isolated.db.select().from(users)).toEqual([]);
       expect(
         (await isolated.pool.query('SELECT count(*)::int AS count FROM provinces')).rows[0]?.count
@@ -503,7 +504,7 @@ describe('seed concurrency and force boundaries', () => {
         expect(rows.reduce((sum, row) => sum + row.created, 0)).toBe(count);
         expect(rows.reduce((sum, row) => sum + row.skipped, 0)).toBe(count * 2);
       }
-      expect((await ctx.pool.query('SELECT count(*)::int AS n FROM products')).rows[0].n).toBe(4);
+      expect((await ctx.pool.query('SELECT count(*)::int AS n FROM products')).rows[0].n).toBe(6);
       expect((await ctx.pool.query('SELECT count(*)::int AS n FROM provinces')).rows[0].n).toBe(31);
     } finally {
       await ctx.close();
@@ -588,7 +589,7 @@ describe('seed concurrency and force boundaries', () => {
         ctx.pool.query("UPDATE products SET type='electricity' WHERE id=$1", [hardware])
       ).rejects.toMatchObject({ code: 'P0001' });
       await ctx.pool.query('DELETE FROM products WHERE id=$1', [hardware]);
-      expect((await ctx.pool.query('SELECT count(*)::int AS n FROM products')).rows[0].n).toBe(4);
+      expect((await ctx.pool.query('SELECT count(*)::int AS n FROM products')).rows[0].n).toBe(6);
     } finally {
       await ctx.close();
     }

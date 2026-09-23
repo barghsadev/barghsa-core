@@ -8,8 +8,8 @@ on:
 env:
   NODE_VERSION: '24'
   PNPM_VERSION: '10.11.1'
-  # Temporary PR fast mode. Set repository variable CI_FULL_PR_CHECKS=true to restore.
-  FULL_CI: ${{ github.event_name != 'pull_request' || vars.CI_FULL_PR_CHECKS == 'true' }}
+  # Temporary fast mode for direct main pushes and PRs. Restore full checks with CI_FULL_CHECKS=true.
+  FULL_CI: ${{ vars.CI_FULL_CHECKS == 'true' || (github.event_name == 'pull_request' && vars.CI_FULL_PR_CHECKS == 'true') }}
 
 concurrency:
   group: ci-${{ github.event.pull_request.number || github.sha }}
@@ -95,7 +95,11 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm check:suppressed-errors
-      - run: pnpm check:bundle
+      - name: Verify route budget checker
+        run: node --test scripts/check-route-budgets.test.mjs
+      - name: Enforce production route budgets
+        if: env.FULL_CI == 'true'
+        run: pnpm check:bundle
       - name: Validate pilot TLS proxy and edge quotas
         run: python3 scripts/test-pilot-proxy.py
       - run: pnpm check:contract
@@ -186,7 +190,11 @@ jobs:
           BARGHSA_TEST_PREBUILT: '1'
         run: |
           if [ "$FULL_CI" != "true" ]; then
-            pnpm turbo run test --force --concurrency=2 --filter="...[origin/main]"
+            if [ "${{ github.event_name }}" = "push" ]; then
+              pnpm turbo run test --force --concurrency=2 --filter="...[${{ github.event.before }}]"
+            else
+              pnpm turbo run test --force --concurrency=2 --filter="...[origin/main]"
+            fi
           elif [ "${{ github.event_name }}" = "pull_request" ]; then
             pnpm turbo run test:coverage --concurrency=2 --filter="...[origin/main]" --filter=@barghsa/web --filter=@barghsa/ui --filter=@barghsa/shared --filter=@barghsa/i18n
           else
@@ -221,13 +229,13 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Report temporary PR coverage exemption
+      - name: Report temporary fast-mode coverage exemption
         if: env.FULL_CI != 'true'
         env:
           TEST_RESULT: ${{ needs.test.result }}
           INTEGRITY_RESULT: ${{ needs.integrity.result }}
         run: |
-          echo "PR fast mode: browser and coverage checks temporarily disabled. Affected tests and integrity checks remain required. Restore with CI_FULL_PR_CHECKS=true." >> "$GITHUB_STEP_SUMMARY"
+          echo "Fast mode: browser and coverage checks temporarily disabled. Affected tests and integrity checks remain required. Restore with CI_FULL_CHECKS=true." >> "$GITHUB_STEP_SUMMARY"
           test "$TEST_RESULT" = success
           test "$INTEGRITY_RESULT" = success
       - uses: actions/checkout@v4

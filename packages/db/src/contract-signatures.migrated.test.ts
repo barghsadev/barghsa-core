@@ -325,14 +325,9 @@ it('upgrades 0140 without inventing evidence for historical signed flags and rer
     const before = (await pool.query('SELECT * FROM contracts WHERE id=$1', [contract])).rows;
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: [
-        '0141_contract_signature_evidence',
-        '0142_contract_activation_requirements',
-        '0143_contract_system_activation',
-        '0144_contract_term_completion',
-        '0145_contract_cancellation',
-        '0146_customer_cancellation_requests',
-      ],
+      applied: journal.entries
+        .filter((entry: { idx: number }) => entry.idx >= 141)
+        .map((entry: { tag: string }) => entry.tag),
     });
     expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [contract])).rows).toEqual(
       before

@@ -260,7 +260,9 @@ it('reconciles electricity orders completed before the status-sync migration', a
     ).toEqual({ status: 'active' });
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0171_electricity_term_completion'],
+      applied: journal.entries
+        .filter((entry: { idx: number }) => entry.idx >= 171)
+        .map((entry: { tag: string }) => entry.tag),
     });
     expect(
       (await pool.query('SELECT status FROM electricity_orders WHERE id=$1', [f.order])).rows[0]

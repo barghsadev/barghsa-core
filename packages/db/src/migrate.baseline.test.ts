@@ -380,7 +380,15 @@ describe('complete production schema baseline', () => {
       await expect(
         pool.query('UPDATE invoices SET accounting_amount=5 WHERE id=$1', [accountingInvoice.id])
       ).rejects.toMatchObject({ code: '428C9' });
-      expect((await pool.query('SELECT * FROM products ORDER BY id')).rows).toEqual(productsBefore);
+      expect(
+        (
+          await pool.query(
+            `SELECT id,type,system_key,title,description,price,status,created_at,updated_at
+             FROM products WHERE id = ANY($1::uuid[]) ORDER BY id`,
+            [productsBefore.map((product) => product.id)]
+          )
+        ).rows
+      ).toEqual(productsBefore);
       expect(
         (
           await pool.query(

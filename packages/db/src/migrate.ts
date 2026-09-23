@@ -1,5 +1,7 @@
 import { resolve } from 'node:path';
-import { readFileSync } from 'node:fs';
+import { readFileSync, mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
@@ -139,7 +141,29 @@ export async function runMigrations(options: MigrationOptions = {}): Promise<Mig
     const entries = journal(folder);
     const before = await getAppliedMigrations(client, schema);
     verifyHistory(entries, before, folder, false);
-    await migrate(drizzle(client), { migrationsFolder: folder, migrationsSchema: schema });
+    const db = drizzle(client);
+    const enumBoundary = entries.findIndex(
+      (entry) => entry.tag === '0152_electricity_rejected_contract'
+    );
+    const lastApplied = Number(before.at(-1)?.created_at ?? 0);
+    const throughEnum = entries
+      .slice(0, enumBoundary + 1)
+      .filter((entry) => entry.when > lastApplied);
+    if (enumBoundary >= 0 && throughEnum.length) {
+      // PostgreSQL must commit the Rejected enum value before 0153 uses it.
+      // Give Drizzle only the pending first group, then resume its full journal.
+      const stage = mkdtempSync(join(tmpdir(), 'barghsa-enum-migrations-'));
+      try {
+        mkdirSync(join(stage, 'meta'));
+        writeFileSync(join(stage, 'meta/_journal.json'), JSON.stringify({ entries: throughEnum }));
+        for (const entry of throughEnum)
+          symlinkSync(resolve(folder, `${entry.tag}.sql`), join(stage, `${entry.tag}.sql`));
+        await migrate(db, { migrationsFolder: stage, migrationsSchema: schema });
+      } finally {
+        rmSync(stage, { recursive: true, force: true });
+      }
+    }
+    await migrate(db, { migrationsFolder: folder, migrationsSchema: schema });
     const after = await getAppliedMigrations(client, schema);
     verifyHistory(entries, after, folder, true);
     const beforeIds = new Set(before.map((row) => row.id));
@@ -153,10 +177,14 @@ export async function runMigrations(options: MigrationOptions = {}): Promise<Mig
       });
     return { ok: true, applied };
   } catch (error) {
+    const cause = error instanceof Error ? error.cause : undefined;
     return {
       ok: false,
       applied: [],
-      error: error instanceof Error ? error.message : String(error),
+      error:
+        error instanceof Error
+          ? `${error.message}${cause instanceof Error ? `: ${cause.message}` : ''}`
+          : String(error),
     };
   } finally {
     // Destroy the checked-out connection to release its session lock even when

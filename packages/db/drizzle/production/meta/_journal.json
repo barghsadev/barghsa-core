@@ -652,6 +652,13 @@
       "when": 1791331200075,
       "tag": "0172_saving_order_cancellation",
       "breakpoints": true
+    },
+    {
+      "idx": 173,
+      "version": "7",
+      "when": 1791331200076,
+      "tag": "0173_new_domain_updated_at",
+      "breakpoints": true
     }
   ]
 }
