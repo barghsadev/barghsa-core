@@ -290,6 +290,9 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
       ])
     ).rows[0]
   ).toMatchObject({ state: 'Unpaid', total_amount: '100000', contract_id: result.contractId });
+  const invoice = await send('postal-buyer', `invoices/${result.invoiceIds[0]}`);
+  expect(invoice.status, http.logs()).toBe(200);
+  expect(await invoice.json()).toMatchObject({ solarRequestId: id });
   expect(await (await send('postal-buyer', `solar/requests/${id}`)).json()).toMatchObject({
     request: {
       status: 'contract_created',

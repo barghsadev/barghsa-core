@@ -110,6 +110,15 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
           {t('invoices.details.backToSavingOrder', locale)}
         </Link>
       )}
+      {details?.solarRequestId && (
+        <Link
+          className="text-sm text-primary underline"
+          to="/solar/requests/$requestId"
+          params={{ requestId: details.solarRequestId }}
+        >
+          {t('invoices.details.backToSolarRequest', locale)}
+        </Link>
+      )}
 
       <header className="flex items-center gap-2">
         <ReceiptIcon className="h-6 w-6 text-primary" aria-hidden="true" />

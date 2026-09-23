@@ -237,6 +237,26 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     }
   );
 
+  it.each(['en', 'fa'] as const)(
+    'links a solar invoice back to its request in %s',
+    async (locale) => {
+      document.documentElement.lang = locale;
+      const payload = replacementPayload();
+      payload.solarRequestId = 'solar-request-1';
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async () => ({ ok: true, status: 200, json: async () => payload }))
+      );
+      await act(async () => {
+        root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
+      });
+      const link = container.querySelector('a[href="/solar/requests/solar-request-1"]');
+      expect(link?.textContent).toBe(
+        locale === 'en' ? 'Back to solar request' : 'بازگشت به درخواست نیروگاه خورشیدی'
+      );
+    }
+  );
+
   it('retries an initial load failure and displays empty history', async () => {
     let requests = 0;
     vi.stubGlobal(

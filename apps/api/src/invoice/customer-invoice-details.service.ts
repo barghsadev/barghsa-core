@@ -80,6 +80,7 @@ export interface CustomerInvoiceDetailsDto extends CustomerInvoiceActivity {
   consultationId?: string | null;
   electricityOrderId?: string | null;
   savingOrderId?: string | null;
+  solarRequestId?: string | null;
   invoice: CustomerInvoiceNodeDto;
   /** Original first, then linked replacements/adjustments chronologically. */
   chain: CustomerInvoiceNodeDto[];
@@ -453,6 +454,7 @@ export class CustomerInvoiceDetailsService {
           consultation_id: string | null;
           electricity_order_id: string | null;
           saving_order_id: string | null;
+          solar_request_id: string | null;
         }>(
           `SELECT COALESCE(viewed.consultation_id,i.consultation_id) AS consultation_id,
              CASE WHEN EXISTS (
@@ -461,7 +463,10 @@ export class CustomerInvoiceDetailsService {
              ) THEN i.order_id ELSE NULL END AS electricity_order_id,
              (SELECT s.id FROM saving_orders s
               WHERE s.order_id=i.order_id AND s.profile_id=i.profile_id
-              LIMIT 1) AS saving_order_id
+              LIMIT 1) AS saving_order_id,
+             (SELECT s.id FROM solar_construction_requests s
+              WHERE s.contract_id::text=i.contract_id AND s.profile_id=i.profile_id
+              LIMIT 1) AS solar_request_id
            FROM invoices i
            LEFT JOIN invoices viewed ON viewed.id=$3 AND viewed.profile_id=i.profile_id
            WHERE i.id=$1 AND i.profile_id=$2`,
@@ -473,6 +478,7 @@ export class CustomerInvoiceDetailsService {
         consultationId: origin?.consultation_id ?? null,
         electricityOrderId: origin?.electricity_order_id ?? null,
         savingOrderId: origin?.saving_order_id ?? null,
+        solarRequestId: origin?.solar_request_id ?? null,
         ...(await loadCustomerInvoiceActivity(client, invoiceId, profileId)),
       };
     });
