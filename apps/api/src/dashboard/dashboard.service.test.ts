@@ -65,6 +65,8 @@ describe('DashboardService quick status', () => {
     );
     expect(orderQuery?.[1]).toEqual(['profile-1']);
     expect(queryFor('FROM invoices')?.[0]).toContain("adjustment_kind IS DISTINCT FROM 'credit'");
+    expect(queryFor('FROM tickets')?.[0]).toContain('user_id=$2');
+    expect(queryFor('FROM tickets')?.[1]).toEqual(['profile-1', 'user-1']);
   });
 
   it('keeps counts at zero when no matching records exist', async () => {
@@ -86,6 +88,7 @@ describe('DashboardService quick status', () => {
       if (query.includes('FROM profiles p'))
         return { rows: [{ id: 'profile-legal', is_owner: false, roles: ['Legal'] }] };
       if (query.includes('FROM contracts')) return { rows: [{ cnt: 2 }] };
+      if (query.includes('FROM tickets')) return { rows: [{ cnt: 0 }] };
       throw new Error('Unauthorized query');
     });
     await expect(service.getQuickStatusCounts('legal-user')).resolves.toEqual({
@@ -94,7 +97,7 @@ describe('DashboardService quick status', () => {
       openTickets: 0,
       unpaidInvoices: 0,
     });
-    expect(mockQuery).toHaveBeenCalledTimes(2);
+    expect(mockQuery).toHaveBeenCalledTimes(3);
   });
 
   it('scopes every aggregation to the selected profile', async () => {

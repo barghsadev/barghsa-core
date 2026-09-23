@@ -6,4 +6,4 @@ The active-contract dashboard count now uses only published active contracts, ma
 
 Validation: focused migrated HTTP integration cases for an activated contract and unpaid invoice corrections, 41 related API unit tests, 19 related web tests, API/web typechecks, changed-file lint/format, i18n tests, OpenAPI contract check, root build, and kanban validation passed locally. Verify the direct `main` CI result separately.
 
-Open-ticket navigation still needs a matching active-profile scope and aggregate open-status filter; it is kept as a separate batch because the current ticket list is user-scoped across profiles.
+The matching open-ticket navigation is tracked in [the next dashboard batch](2026-09-24-dashboard-open-tickets.md).

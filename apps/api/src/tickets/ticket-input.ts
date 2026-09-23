@@ -12,8 +12,17 @@ const listQuery = z.object({
   page: positiveInteger(100000).optional(),
   limit: positiveInteger(100).optional(),
   status: z
-    .enum(['open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed'])
+    .enum([
+      'active',
+      'open',
+      'in_progress',
+      'waiting_customer',
+      'waiting_staff',
+      'resolved',
+      'closed',
+    ])
     .optional(),
+  scope: z.literal('active').optional(),
   search: z.string().max(512).optional(),
   sortBy: z.enum(['created_at', 'updated_at', 'subject', 'status', 'priority']).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional(),
@@ -36,6 +45,7 @@ export function ticketListQuery(input: unknown) {
     ...(data.page === undefined ? {} : { page: data.page }),
     ...(data.limit === undefined ? {} : { limit: data.limit }),
     ...(data.status === undefined ? {} : { status: data.status }),
+    ...(data.scope === undefined ? {} : { scope: data.scope }),
     ...(data.search === undefined ? {} : { search: data.search }),
     ...(data.sortBy === undefined ? {} : { sortBy: data.sortBy }),
     ...(data.sortOrder === undefined ? {} : { sortOrder: data.sortOrder }),

@@ -73,6 +73,7 @@ export interface TicketCommentRow {
 
 export interface ListTicketsOptions {
   status?: string;
+  profileId?: string;
   search?: string;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
@@ -427,28 +428,38 @@ export class TicketsService {
     const params: unknown[] = [userId];
     let paramIndex = 2;
 
-    if (options.status) {
-      const validStatuses = [
-        'open',
-        'in_progress',
-        'waiting_customer',
-        'waiting_staff',
-        'resolved',
-        'closed',
-      ];
-      if (!validStatuses.includes(options.status)) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-            message: `Invalid status filter: ${options.status}. Allowed: ${validStatuses.join(', ')}`,
-          },
-          400
-        );
-      }
-      conditions.push(`t.status = $${paramIndex}`);
-      params.push(options.status);
+    if (options.profileId) {
+      conditions.push(`t.profile_id = $${paramIndex}`);
+      params.push(options.profileId);
       paramIndex++;
+    }
+
+    if (options.status) {
+      if (options.status === 'active') {
+        conditions.push("t.status IN ('open','in_progress','waiting_customer','waiting_staff')");
+      } else {
+        const validStatuses = [
+          'open',
+          'in_progress',
+          'waiting_customer',
+          'waiting_staff',
+          'resolved',
+          'closed',
+        ];
+        if (!validStatuses.includes(options.status)) {
+          throw new HttpException(
+            {
+              statusCode: 400,
+              error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+              message: `Invalid status filter: ${options.status}. Allowed: ${validStatuses.join(', ')}`,
+            },
+            400
+          );
+        }
+        conditions.push(`t.status = $${paramIndex}`);
+        params.push(options.status);
+        paramIndex++;
+      }
     }
 
     if (options.search?.trim()) {

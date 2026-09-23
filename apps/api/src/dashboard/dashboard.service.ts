@@ -40,7 +40,7 @@ export class DashboardService {
          FROM profiles p LEFT JOIN legal_profiles l ON l.id=p.id WHERE p.id=$1`,
         [context.id]
       ),
-      this.getCountsForContext(context),
+      this.getCountsForContext(context, userId),
       allowed('wallet:view') ? this.walletService.getWallet(context.id) : Promise.resolve(null),
       allowed('wallet:view') && allowed('invoices:view')
         ? pool.query<{ amount: string }>(
@@ -87,8 +87,9 @@ export class DashboardService {
   /**
    * Return the four quick-status counts for a given user's default profile.
    *
-   * Selection is resolved against current membership. Each count also respects
-   * the selected profile's applicable operational or financial permission.
+   * Selection is resolved against current membership. Contract, order, and
+   * invoice counts respect the selected profile's applicable permission;
+   * tickets are counted only for the signed-in user on that profile.
    *
    * Active contracts use the contract lifecycle. Pending orders use each
    * business workflow's current state, retaining legacy orders that have no
@@ -106,14 +107,17 @@ export class DashboardService {
       return { activeContracts: 0, pendingOrders: 0, openTickets: 0, unpaidInvoices: 0 };
     }
 
-    return this.getCountsForContext(context);
+    return this.getCountsForContext(context, userId);
   }
 
-  private async getCountsForContext(context: {
-    id: string;
-    is_owner: boolean;
-    roles: AgentRole[];
-  }): Promise<QuickStatusCounts> {
+  private async getCountsForContext(
+    context: {
+      id: string;
+      is_owner: boolean;
+      roles: AgentRole[];
+    },
+    userId: string
+  ): Promise<QuickStatusCounts> {
     const profileId = context.id;
     const pool = getDbPool();
 
@@ -147,14 +151,13 @@ export class DashboardService {
             [profileId]
           )
         : Promise.resolve({ rows: [{ cnt: 0 }] }),
-      allowed('orders:view')
-        ? pool.query<{ cnt: number }>(
-            `SELECT COUNT(*)::int AS cnt
+      pool.query<{ cnt: number }>(
+        `SELECT COUNT(*)::int AS cnt
          FROM tickets
-         WHERE profile_id = $1 AND status IN ('open', 'in_progress', 'waiting_customer', 'waiting_staff')`,
-            [profileId]
-          )
-        : Promise.resolve({ rows: [{ cnt: 0 }] }),
+         WHERE profile_id=$1 AND user_id=$2
+           AND status IN ('open', 'in_progress', 'waiting_customer', 'waiting_staff')`,
+        [profileId, userId]
+      ),
       allowed('invoices:view')
         ? pool.query<{ cnt: number }>(
             `SELECT COUNT(*)::int AS cnt

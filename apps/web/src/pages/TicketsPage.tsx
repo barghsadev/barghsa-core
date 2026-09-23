@@ -1,6 +1,6 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { useSearch } from '@tanstack/react-router';
+import { Link, useSearch } from '@tanstack/react-router';
 import { Button, Input, Label } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
@@ -106,7 +106,12 @@ export function StaffTicketsPage() {
 }
 function Tickets({ staff }: { staff: boolean }) {
   const time = useAccountTime();
-  const routeSearch = useSearch({ strict: false }) as { ticketId?: string };
+  const routeSearch = useSearch({ strict: false }) as {
+    ticketId?: string;
+    status?: 'active';
+    scope?: 'active';
+  };
+  const activeScoped = !staff && routeSearch.scope === 'active';
   const locale = useLocale(),
     prefix = staff ? '/api/staff/tickets' : '/api/tickets';
   const text = (key: string) => t(`tickets.${key}`, locale);
@@ -118,7 +123,7 @@ function Tickets({ staff }: { staff: boolean }) {
   const [queue, setQueue] = useState<Queue | null>(null),
     [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1),
-    [filter, setFilter] = useState(''),
+    [filter, setFilter] = useState(routeSearch.status === 'active' ? 'active' : ''),
     [search, setSearch] = useState(''),
     [term, setTerm] = useState('');
   const [sort, setSort] = useState('desc'),
@@ -159,6 +164,7 @@ function Tickets({ staff }: { staff: boolean }) {
         search: term,
         sortOrder: sort,
         ...(filter ? { status: filter } : {}),
+        ...(activeScoped ? { scope: 'active' } : {}),
       });
       const response = await fetch(`${prefix}?${query}`, { credentials: 'include' });
       if (!response.ok) throw new Error(response.status === 403 ? 'forbidden' : 'error');
@@ -171,7 +177,11 @@ function Tickets({ staff }: { staff: boolean }) {
     } finally {
       if (current === generation.current) setLoading(false);
     }
-  }, [prefix, page, term, sort, filter]);
+  }, [prefix, page, term, sort, filter, activeScoped]);
+  useEffect(() => {
+    setFilter(routeSearch.status === 'active' ? 'active' : '');
+    setPage(1);
+  }, [routeSearch.status]);
   useEffect(() => {
     void load();
     return () => {
@@ -384,6 +394,18 @@ function Tickets({ staff }: { staff: boolean }) {
           </Button>
         )}
       </header>
+      {activeScoped && (
+        <p className="text-sm text-muted-foreground">
+          {text('activeProfileScope')}{' '}
+          <Link
+            to="/tickets"
+            search={{ status: undefined, scope: undefined, ticketId: undefined }}
+            className="text-primary underline underline-offset-4"
+          >
+            {text('allMyTickets')}
+          </Link>
+        </p>
+      )}
       {staff && <p className="text-sm text-muted-foreground">{text('targetNote')}</p>}
       {error && (
         <p role="alert">{text(['conflict', 'forbidden'].includes(error) ? error : 'error')}</p>
@@ -577,6 +599,7 @@ function Tickets({ staff }: { staff: boolean }) {
             }}
           >
             <option value="">{text('all')}</option>
+            {!staff && <option value="active">{text('active')}</option>}
             {statuses.map((value) => (
               <option key={value} value={value}>
                 {text(value)}

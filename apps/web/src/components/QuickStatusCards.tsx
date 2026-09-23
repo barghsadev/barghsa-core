@@ -46,6 +46,7 @@ export function QuickStatusCards({
       icon: LifeBuoy,
       label: 'dashboard.overview.openTickets',
       href: '/tickets',
+      search: { status: 'active', scope: 'active' },
       count: openTickets,
     },
     {

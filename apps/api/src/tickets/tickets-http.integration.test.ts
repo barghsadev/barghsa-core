@@ -96,6 +96,46 @@ async function ticket(status = 'open') {
   );
   return id;
 }
+
+it('lists only the current user’s active-profile open tickets before pagination', async () => {
+  const actor = await freshActor(false);
+  const activeProfile = randomUUID(),
+    otherProfile = randomUUID();
+  await http.pool.query(
+    `INSERT INTO profiles(id,user_id,is_default) VALUES ($1,$3,true),($2,$3,false)`,
+    [activeProfile, otherProfile, actor.userId]
+  );
+  const ids = Array.from({ length: 5 }, () => randomUUID());
+  await http.pool.query(
+    `INSERT INTO tickets(id,user_id,profile_id,subject,body,status) VALUES
+      ($1,$6,$7,'Open','Details','open'),
+      ($2,$6,$7,'Waiting','Details','waiting_staff'),
+      ($3,$6,$7,'Resolved','Details','resolved'),
+      ($4,$6,$8,'Other profile','Details','open'),
+      ($5,'customer',$7,'Other user','Details','open')`,
+    [...ids, actor.userId, activeProfile, otherProfile]
+  );
+
+  const response = await fetch(
+    `${http.base}/api/tickets?status=active&scope=active&limit=1&page=1`,
+    { headers: actor.headers }
+  );
+  expect(response.status).toBe(200);
+  const result = (await response.json()) as {
+    total: number;
+    totalPages: number;
+    data: { id: string }[];
+  };
+  expect(result.total).toBe(2);
+  expect(result.totalPages).toBe(2);
+  expect(result.data).toHaveLength(1);
+  expect(ids.slice(0, 2)).toContain(result.data[0]!.id);
+
+  const invalid = await fetch(`${http.base}/api/tickets?scope=${otherProfile}`, {
+    headers: actor.headers,
+  });
+  expect(invalid.status).toBe(400);
+});
 function assign(id: string, assigneeId: unknown = 'staff', user = 'staff') {
   return fetch(`${http.base}/api/staff/tickets/${id}/assign`, {
     method: 'PUT',

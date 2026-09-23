@@ -22488,7 +22488,7 @@
             }
           },
           {
-            "description": "Filter by status",
+            "description": "Filter by status; active includes all non-terminal statuses",
             "in": "query",
             "name": "status",
             "required": false,
@@ -22518,6 +22518,15 @@
             "description": "Sort order (asc or desc)",
             "in": "query",
             "name": "sortOrder",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Set to active to limit to the accessible active profile",
+            "in": "query",
+            "name": "scope",
             "required": false,
             "schema": {
               "type": "string"

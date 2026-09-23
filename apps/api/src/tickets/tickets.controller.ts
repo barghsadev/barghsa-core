@@ -19,6 +19,8 @@ import { TicketsService } from './tickets.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { activeProfileSql } from '../profiles/profile-context.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 @ApiTags('Tickets')
 @Controller('api/tickets')
@@ -106,7 +108,16 @@ export class TicketsController {
     required: false,
     description: 'Items per page (default: 20, max: 100)',
   })
-  @ApiQuery({ name: 'status', required: false, description: 'Filter by status' })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    description: 'Filter by status; active includes all non-terminal statuses',
+  })
+  @ApiQuery({
+    name: 'scope',
+    required: false,
+    description: 'Set to active to limit to the accessible active profile',
+  })
   @ApiQuery({ name: 'search', required: false, description: 'Search in subject and body' })
   @ApiQuery({
     name: 'sortBy',
@@ -123,12 +134,38 @@ export class TicketsController {
     @Query('search') search?: string,
     @Query('sortBy') sortBy?: string,
     @Query('sortOrder') sortOrder?: 'asc' | 'desc',
+    @Query('scope') scope?: string,
     @Req() req?: AuthenticatedRequest
   ) {
-    const options = ticketListQuery({ page, limit, status, search, sortBy, sortOrder });
-    return this.ticketsService.readAs(req!.session, false, (client) =>
-      this.ticketsService.listTickets(req!.session.userId, options, client)
-    );
+    const { scope: validatedScope, ...options } = ticketListQuery({
+      page,
+      limit,
+      status,
+      search,
+      sortBy,
+      sortOrder,
+      scope,
+    });
+    return this.ticketsService.readAs(req!.session, false, async (client) => {
+      const profileId =
+        validatedScope === 'active'
+          ? (
+              await client.query<{ id: string }>(activeProfileSql('profile:view'), [
+                req!.session.userId,
+              ])
+            ).rows[0]?.id
+          : undefined;
+      if (validatedScope === 'active' && !profileId)
+        throw new HttpException(
+          { error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'No accessible active profile' },
+          404
+        );
+      return this.ticketsService.listTickets(
+        req!.session.userId,
+        { ...options, ...(profileId ? { profileId } : {}) },
+        client
+      );
+    });
   }
 
   /**

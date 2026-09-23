@@ -1,6 +1,8 @@
 import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
 export const Route = createFileRoute('/_app/tickets')({
   validateSearch: (search: Record<string, unknown>) => ({
+    status: search.status === 'active' ? ('active' as const) : undefined,
+    scope: search.scope === 'active' ? ('active' as const) : undefined,
     ticketId:
       typeof search.ticketId === 'string' && /^[a-f0-9-]{36}$/i.test(search.ticketId)
         ? search.ticketId

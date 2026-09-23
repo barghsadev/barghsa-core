@@ -13,13 +13,13 @@ vi.mock('@tanstack/react-router', () => ({
   }: {
     children: ReactNode;
     to: string;
-    search?: { status?: string; state?: string };
+    search?: { status?: string; state?: string; scope?: string };
     className?: string;
   }) => (
     <a
       href={
         search?.status
-          ? `${to}?status=${search.status}`
+          ? `${to}?status=${search.status}${search.scope ? `&scope=${search.scope}` : ''}`
           : search?.state
             ? `${to}?state=${search.state}`
             : to
@@ -69,7 +69,7 @@ it.each(['en', 'fa'] as const)(
       '/contracts?state=Active',
       '/electricity/orders?status=pending',
       '/savings/orders?status=pending',
-      '/tickets',
+      '/tickets?status=active&scope=active',
       '/invoices?status=unpaid',
     ]);
     expect(container.querySelector('[dir]')?.getAttribute('dir')).toBe(
