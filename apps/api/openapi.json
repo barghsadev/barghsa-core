@@ -10066,6 +10066,19 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "lane",
+            "required": false,
+            "schema": {
+              "enum": [
+                "all",
+                "needs_staff",
+                "waiting_customer"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {

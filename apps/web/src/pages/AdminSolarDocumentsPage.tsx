@@ -8,9 +8,11 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 interface RequestRow {
   id: string;
   profile_id: string;
+  profile_name: string;
   status: string;
   building_type: string;
   document_count: number;
+  created_at: string;
 }
 interface PendingDocumentRow {
   id: string;
@@ -34,7 +36,7 @@ interface DocumentRow {
   revision: number;
 }
 interface Detail {
-  request: RequestRow;
+  request: Pick<RequestRow, 'id' | 'profile_id' | 'status'>;
   documents: DocumentRow[];
   requestedDocuments: Array<{ id: string; description: string }>;
 }
@@ -278,8 +280,17 @@ export function AdminSolarDocumentsPage() {
                   setPreview(null);
                 }}
               >
-                {copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building')} ·{' '}
-                {row.status} · {row.document_count}
+                <span className="block font-medium">{row.profile_name}</span>
+                <span className="block text-sm text-muted-foreground">
+                  {copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building')} ·{' '}
+                  {copy(`status_${row.status}`)} · {row.document_count} ·{' '}
+                  {new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(
+                    new Date(row.created_at)
+                  )}
+                </span>
+                <span className="block text-xs text-muted-foreground">
+                  {copy('staffRequest')}: <bdi>{row.id}</bdi>
+                </span>
               </button>
             </li>
           ))}

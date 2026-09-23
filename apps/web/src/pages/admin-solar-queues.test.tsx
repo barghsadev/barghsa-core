@@ -45,13 +45,16 @@ for (const [name, Page, path] of [
                     ? {
                         id,
                         profile_id: 'profile-1',
+                        profile_name: 'Customer One',
                         status: id,
                         building_type: 'building_apartment',
                         document_count: 0,
+                        created_at: '2026-09-23T10:00:00Z',
                       }
                     : {
                         id,
                         profile_id: 'profile-1',
+                        profile_name: 'Customer One',
                         request_status: 'waiting_for_postal_submission',
                         postal_status: 'waiting_for_shipment',
                         courier: null,
@@ -59,6 +62,7 @@ for (const [name, Page, path] of [
                         send_date: null,
                         receipt_image_id: null,
                         staff_notes: null,
+                        created_at: '2026-09-23T10:00:00Z',
                       },
                 ],
                 nextBefore: more ? null : 'first-work',
@@ -81,7 +85,21 @@ for (const [name, Page, path] of [
       await act(async () => button?.click());
       expect(container.textContent).toContain('first-work');
       expect(container.textContent).toContain('older-work');
-      expect(calls).toContain(`${path}?before=first-work`);
+      expect(container.textContent).toContain('Customer One');
+      expect(calls).toContain(
+        name === 'postal'
+          ? `${path}?lane=needs_staff&before=first-work`
+          : `${path}?before=first-work`
+      );
+      if (name === 'postal') {
+        const select = container.querySelector<HTMLSelectElement>('#solar-postal-lane')!;
+        await act(async () => {
+          select.value = 'waiting_customer';
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+        expect(calls).toContain(`${path}?lane=waiting_customer`);
+        expect(container.textContent).not.toContain('older-work');
+      }
     } finally {
       await act(async () => root.unmount());
       container.remove();

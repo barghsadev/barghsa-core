@@ -15,6 +15,7 @@ interface Guidance {
 interface Row {
   id: string;
   profile_id: string;
+  profile_name: string;
   request_status: string;
   postal_status: string;
   courier: string | null;
@@ -22,12 +23,16 @@ interface Row {
   send_date: string | null;
   receipt_image_id: string | null;
   staff_notes: string | null;
+  created_at: string;
 }
+
+type PostalLane = 'needs_staff' | 'waiting_customer' | 'all';
 
 export function AdminSolarPostalPage() {
   const locale = useLocale();
   const copy = (key: string) => tSolar(key, locale);
   const [rows, setRows] = useState<Row[]>([]);
+  const [lane, setLane] = useState<PostalLane>('needs_staff');
   const [guidance, setGuidance] = useState<Guidance | null>(null);
   const [originalsFa, setOriginalsFa] = useState('');
   const [originalsEn, setOriginalsEn] = useState('');
@@ -48,13 +53,12 @@ export function AdminSolarPostalPage() {
   useEffect(() => {
     const controller = new AbortController();
     setQueueLoading(true);
-    void fetch(
-      `/api/admin/solar/postal-queue${before ? `?before=${encodeURIComponent(before)}` : ''}`,
-      {
-        credentials: 'include',
-        signal: controller.signal,
-      }
-    )
+    const query = new URLSearchParams({ lane });
+    if (before) query.set('before', before);
+    void fetch(`/api/admin/solar/postal-queue?${query}`, {
+      credentials: 'include',
+      signal: controller.signal,
+    })
       .then(async (response) => {
         if (!response.ok) throw new Error('queue');
         return response.json() as Promise<{ requests: Row[]; nextBefore: string | null }>;
@@ -75,7 +79,7 @@ export function AdminSolarPostalPage() {
         if (!controller.signal.aborted) setQueueLoading(false);
       });
     return () => controller.abort();
-  }, [before, revision]);
+  }, [before, lane, revision]);
   useEffect(() => {
     const controller = new AbortController();
     void fetch('/api/admin/solar/postal-guidance', {
@@ -156,7 +160,36 @@ export function AdminSolarPostalPage() {
       )}
       <section className="space-y-3 rounded-xl border p-5">
         <h2 className="text-xl font-semibold">{copy('postalStaffQueue')}</h2>
-        {!rows.length && !queueLoading && <p>{copy('postalStaffEmpty')}</p>}
+        <label className="block max-w-xs space-y-1" htmlFor="solar-postal-lane">
+          <span>{copy('postalLane')}</span>
+          <select
+            id="solar-postal-lane"
+            className="w-full rounded-md border bg-background p-2"
+            value={lane}
+            onChange={(event) => {
+              setRows([]);
+              setBefore(null);
+              setNextBefore(null);
+              setSelected(null);
+              setLane(event.target.value as PostalLane);
+            }}
+          >
+            <option value="needs_staff">{copy('postalLaneAction')}</option>
+            <option value="waiting_customer">{copy('postalLaneWaiting')}</option>
+            <option value="all">{copy('postalLaneAll')}</option>
+          </select>
+        </label>
+        {!rows.length && !queueLoading && (
+          <p>
+            {copy(
+              lane === 'waiting_customer'
+                ? 'postalStaffEmptyWaiting'
+                : lane === 'all'
+                  ? 'postalStaffEmptyAll'
+                  : 'postalStaffEmpty'
+            )}
+          </p>
+        )}
         <ul className="space-y-2">
           {rows.map((item) => (
             <li key={item.id}>
@@ -169,7 +202,16 @@ export function AdminSolarPostalPage() {
                   setReason('');
                 }}
               >
-                {item.id} · {copy(`postal_${item.postal_status}`)}
+                <span className="block font-medium">{item.profile_name}</span>
+                <span className="block text-sm text-muted-foreground">
+                  {copy(`postal_${item.postal_status}`)} ·{' '}
+                  {new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(
+                    new Date(item.created_at)
+                  )}
+                </span>
+                <span className="block text-xs text-muted-foreground">
+                  {copy('staffRequest')}: <bdi>{item.id}</bdi>
+                </span>
               </button>
             </li>
           ))}

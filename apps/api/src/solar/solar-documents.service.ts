@@ -222,13 +222,17 @@ export class SolarDocumentsService {
       const rows = (
         await client.query(
           `SELECT r.id,r.profile_id,r.status,r.building_type,r.created_at,
+           COALESCE(NULLIF(lp.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),''),u.username) AS profile_name,
            count(sd.id) FILTER (WHERE d.state NOT IN ('Removed','Superseded'))::int AS document_count
          FROM solar_construction_requests r
+         JOIN profiles p ON p.id=r.profile_id
+         JOIN users u ON u.user_id=p.user_id
+         LEFT JOIN legal_profiles lp ON lp.id=p.id
          LEFT JOIN solar_construction_documents sd ON sd.request_id=r.id
          LEFT JOIN documents d ON d.id=sd.document_id
          WHERE r.status IN ('submitted','uploading_documents','documents_under_review','changes_requested')
            AND ($1::timestamptz IS NULL OR (r.created_at,r.id) < ($1::timestamptz,$2::uuid))
-         GROUP BY r.id ORDER BY r.created_at DESC,r.id DESC LIMIT 101`,
+         GROUP BY r.id,p.id,u.user_id,lp.id ORDER BY r.created_at DESC,r.id DESC LIMIT 101`,
           [cursor?.created_at ?? null, before ?? null]
         )
       ).rows;

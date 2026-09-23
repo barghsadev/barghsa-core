@@ -17,7 +17,7 @@ import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
-import { SolarPostalService } from './solar-postal.service.js';
+import { SolarPostalService, type SolarPostalStaffLane } from './solar-postal.service.js';
 
 const guidance = z
   .object({
@@ -107,10 +107,17 @@ export class StaffSolarPostalController {
   @Get('postal-queue')
   @ApiOperation({ summary: 'List solar requests in the postal stage' })
   @ApiQuery({ name: 'before', required: false, format: 'uuid' })
-  queue(@Req() req: AuthenticatedRequest, @Query('before') before?: string) {
+  @ApiQuery({ name: 'lane', required: false, enum: ['all', 'needs_staff', 'waiting_customer'] })
+  queue(
+    @Req() req: AuthenticatedRequest,
+    @Query('before') before?: string,
+    @Query('lane') lane?: string
+  ) {
     if (before && !z.string().uuid().safeParse(before).success)
       throw new BadRequestException('Invalid solar postal cursor');
-    return this.service.staffQueue(req.session, before);
+    if (lane && !z.enum(['all', 'needs_staff', 'waiting_customer']).safeParse(lane).success)
+      throw new BadRequestException('Invalid solar postal lane');
+    return this.service.staffQueue(req.session, before, (lane ?? 'all') as SolarPostalStaffLane);
   }
 
   @Post('requests/:id/postal/confirm-received')

@@ -157,7 +157,10 @@ it('supports empty submission, editable guidance, per-file decisions, replacemen
   expect(await empty.json()).toMatchObject({ status: 'documents_under_review' });
   const queue = await send('solar-reviewer', 'admin/solar/requests');
   expect(queue.status, http.logs()).toBe(200);
-  expect(await queue.json()).toMatchObject({ requests: [{ id: requestId }], nextBefore: null });
+  expect(await queue.json()).toMatchObject({
+    requests: [{ id: requestId, profile_name: 'solar-buyer@example.test' }],
+    nextBefore: null,
+  });
   const afterRequest = await send('solar-reviewer', `admin/solar/requests?before=${requestId}`);
   expect(afterRequest.status, http.logs()).toBe(200);
   expect(await afterRequest.json()).toMatchObject({ requests: [], nextBefore: null });

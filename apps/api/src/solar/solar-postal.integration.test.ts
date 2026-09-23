@@ -419,9 +419,34 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
   const queue = await send('postal-reviewer', 'admin/solar/postal-queue');
   expect(queue.status, http.logs()).toBe(200);
   expect(await queue.json()).toMatchObject({
-    requests: [{ id: requestId, postal_status: 'shipped', receipt_image_id: receiptImageId }],
+    requests: [
+      {
+        id: requestId,
+        profile_name: 'postal-buyer@example.test',
+        postal_status: 'shipped',
+        receipt_image_id: receiptImageId,
+      },
+    ],
     nextBefore: null,
   });
+  const actionQueue = await send('postal-reviewer', 'admin/solar/postal-queue?lane=needs_staff');
+  expect(actionQueue.status, http.logs()).toBe(200);
+  expect(await actionQueue.json()).toMatchObject({ requests: [{ id: requestId }] });
+  const waitingQueue = await send(
+    'postal-reviewer',
+    'admin/solar/postal-queue?lane=waiting_customer'
+  );
+  expect(waitingQueue.status, http.logs()).toBe(200);
+  expect(await waitingQueue.json()).toMatchObject({ requests: [] });
+  expect((await send('postal-reviewer', 'admin/solar/postal-queue?lane=wrong')).status).toBe(400);
+  expect(
+    (
+      await send(
+        'postal-reviewer',
+        `admin/solar/postal-queue?lane=waiting_customer&before=${requestId}`
+      )
+    ).status
+  ).toBe(404);
   const afterRequest = await send(
     'postal-reviewer',
     `admin/solar/postal-queue?before=${requestId}`
@@ -445,6 +470,12 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     requestStatus: 'waiting_for_postal_submission',
     postal: { status: 'incomplete', staff_notes: 'Please send the signed original.' },
   });
+  const waitingAfterIssue = await send(
+    'postal-reviewer',
+    'admin/solar/postal-queue?lane=waiting_customer'
+  );
+  expect(waitingAfterIssue.status, http.logs()).toBe(200);
+  expect(await waitingAfterIssue.json()).toMatchObject({ requests: [{ id: requestId }] });
   expect(
     (
       await send('postal-buyer', `solar/requests/${requestId}/postal/shipment`, 'POST', {
@@ -485,6 +516,9 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
     requestStatus: 'postal_documents_received',
   });
   expect(
+    await (await send('postal-reviewer', 'admin/solar/postal-queue?lane=needs_staff')).json()
+  ).toMatchObject({ requests: [{ id: requestId, request_status: 'postal_documents_received' }] });
+  expect(
     (await send('postal-buyer', `solar/requests/${requestId}/postal/shipment`, 'POST', shipment))
       .status
   ).toBe(409);
@@ -502,6 +536,9 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
   );
   expect(approved.status, http.logs()).toBe(200);
   expect(await approved.json()).toMatchObject({ status: 'approved' });
+  expect(
+    await (await send('postal-reviewer', 'admin/solar/postal-queue?lane=needs_staff')).json()
+  ).toMatchObject({ requests: [{ id: requestId, request_status: 'approved' }] });
   expect(
     (
       await http.pool.query('SELECT contract_id FROM solar_construction_requests WHERE id=$1', [
