@@ -15233,6 +15233,78 @@
         ]
       }
     },
+    "/api/products/electricity": {
+      "get": {
+        "operationId": "ProductsController_getElectricityProducts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "description": {
+                        "nullable": true,
+                        "type": "object"
+                      },
+                      "id": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "limits": {
+                        "properties": {
+                          "maxKwh": {
+                            "type": "string"
+                          },
+                          "minKwh": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "orderable": {
+                        "type": "boolean"
+                      },
+                      "price": {
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "simpleOrderBlockReasons": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "simpleOrderable": {
+                        "type": "boolean"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "systemKey": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "nullable": true,
+                        "type": "object"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Four system electricity products in stable order; availability is rechecked at submission."
+          }
+        },
+        "summary": "List system electricity products with current prices and limits",
+        "tags": [
+          "Products"
+        ]
+      }
+    },
     "/api/profiles": {
       "get": {
         "operationId": "ProfilesController_listProfiles",

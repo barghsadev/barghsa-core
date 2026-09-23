@@ -54,6 +54,11 @@ beforeEach(async () => {
       `INSERT INTO products(type,system_key,title,status,price) VALUES ('electricity','thermal','{"en":"Thermal"}','active',100000) RETURNING id`
     )
   ).rows[0].id;
+  await http.pool.query(
+    `INSERT INTO products(type,system_key,title,status,price)
+     VALUES ('electricity','green','{"en":"Green"}','active',100000)
+     ON CONFLICT (system_key) DO UPDATE SET status='active', price=100000`
+  );
   const provinceId = (
     await http.pool.query(
       "INSERT INTO provinces(name_fa,name_en) VALUES ('استان','Province') RETURNING id"
@@ -86,8 +91,96 @@ async function create(actor = 'owner') {
   expect(response.status, http.logs()).toBe(201);
   return ((await response.json()) as { id: string }).id;
 }
+it('captures current rules for each new draft and protects submitted snapshots', async () => {
+  const catalogueResponse = await fetch(`${http.base}/api/products/electricity`);
+  expect(catalogueResponse.status, http.logs()).toBe(200);
+  const catalogue = (await catalogueResponse.json()) as Array<Record<string, unknown>>;
+  expect(catalogue.map((product) => product.systemKey)).toEqual([
+    'thermal',
+    'green',
+    'free_market',
+    'energy_saving',
+  ]);
+  expect(catalogue[0]).toMatchObject({
+    orderable: true,
+    simpleOrderable: true,
+    price: '100000',
+    limits: { minKwh: '0', maxKwh: '0' },
+  });
+
+  const first = await create();
+  const oldSnapshot = (
+    await http.pool.query('SELECT settings_snapshot FROM electricity_orders WHERE id=$1', [first])
+  ).rows[0].settings_snapshot;
+  const changedRules = {
+    simple_order: {
+      mandatory_green_enabled: true,
+      average_power_threshold_kw: 500,
+      mandatory_green_share_percent: 5,
+    },
+    advanced_order: {
+      mandatory_green_enabled: false,
+      average_power_threshold_kw: 1000,
+      mandatory_green_share_percent: 4,
+    },
+  };
+  await http.pool.query(
+    `INSERT INTO app_config(key,value,version) VALUES ($1,$2::jsonb,1)
+     ON CONFLICT (key) DO UPDATE SET value=$2::jsonb, version=app_config.version+1`,
+    ['electricity.green_mandatory_rules', JSON.stringify(changedRules)]
+  );
+  await http.pool.query(
+    `INSERT INTO app_config(key,value,version) VALUES ($1,$2::jsonb,1)
+     ON CONFLICT (key) DO UPDATE SET value=$2::jsonb, version=app_config.version+1`,
+    [
+      'electricity.contract_limits',
+      JSON.stringify({
+        max_quantity_increase_percent: 30,
+        max_contract_duration_months: 18,
+        lead_time_days: 7,
+      }),
+    ]
+  );
+  const second = await create();
+  const newSnapshot = (
+    await http.pool.query('SELECT settings_snapshot FROM electricity_orders WHERE id=$1', [second])
+  ).rows[0].settings_snapshot;
+  expect(oldSnapshot.green.simple_order.average_power_threshold_kw).toBe(1000);
+  expect(newSnapshot.green.simple_order.average_power_threshold_kw).toBe(500);
+  expect(newSnapshot.sourceVersion).toBe(1);
+  expect(oldSnapshot.contractLimits).toMatchObject({
+    max_quantity_increase_percent: 20,
+    max_contract_duration_months: 24,
+    lead_time_days: 0,
+  });
+  expect(newSnapshot.contractLimits).toMatchObject({
+    max_quantity_increase_percent: 30,
+    max_contract_duration_months: 18,
+    lead_time_days: 7,
+  });
+  expect(newSnapshot.contractLimitsVersion).toBe(1);
+
+  await http.pool.query("UPDATE electricity_orders SET status='submitted' WHERE id=$1", [first]);
+  await expect(
+    http.pool.query('UPDATE electricity_orders SET settings_snapshot=$2::jsonb WHERE id=$1', [
+      first,
+      JSON.stringify(newSnapshot),
+    ])
+  ).rejects.toThrow(/Submitted electricity settings snapshot is immutable/);
+  await expect(
+    http.pool.query("UPDATE electricity_orders SET status='draft' WHERE id=$1", [first])
+  ).rejects.toThrow(/cannot return to draft/);
+});
 it('allows the owner and Manager while excluding financial, legal and stale Owner memberships', async () => {
   const id = await create('manager');
+  const electricity = await http.pool.query(
+    'SELECT status, settings_snapshot FROM electricity_orders WHERE id=$1',
+    [id]
+  );
+  expect(electricity.rows[0]).toMatchObject({
+    status: 'draft',
+    settings_snapshot: { schemaVersion: 1, sourceVersion: 0 },
+  });
   for (const actor of ['owner', 'manager']) {
     expect((await request(actor, 'GET', `/${id}`)).status).toBe(200);
     expect(await (await request(actor, 'GET')).json()).toMatchObject({

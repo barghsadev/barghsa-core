@@ -16,10 +16,11 @@ export const Route = createFileRoute('/_app/electricity/order')({
 
 interface Product {
   id: string;
-  type: string;
+  systemKey: string;
   title: Record<string, string>;
   price: string | null;
   status: string;
+  simpleOrderable: boolean;
 }
 
 interface Address {
@@ -149,18 +150,22 @@ function ElectricityOrderPage() {
     setProducts([]);
     setSelectedProductId('');
     try {
-      const res = await fetch('/api/products');
+      const res = await fetch('/api/products/electricity');
       if (!res.ok) throw new Error('Products unavailable');
       const data: unknown = await res.json();
+      if (!Array.isArray(data)) throw new Error('Invalid products');
+      // The catalogue includes unavailable placeholders for the other three
+      // system products. Only thermal can be selected in the simple draft form.
+      const thermal = data.filter((product) => product?.systemKey === 'thermal');
       if (
-        !Array.isArray(data) ||
-        data.some(
+        thermal.some(
           (product) =>
             !product ||
             typeof product !== 'object' ||
             typeof product.id !== 'string' ||
-            typeof product.type !== 'string' ||
+            typeof product.systemKey !== 'string' ||
             typeof product.status !== 'string' ||
+            typeof product.simpleOrderable !== 'boolean' ||
             !product.title ||
             typeof product.title !== 'object' ||
             Array.isArray(product.title) ||
@@ -173,9 +178,7 @@ function ElectricityOrderPage() {
       )
         throw new Error('Invalid products');
       if (current !== productGeneration.current) return;
-      const items: Product[] = data.filter(
-        (product) => product.type === 'electricity' && product.status === 'active'
-      );
+      const items: Product[] = thermal.filter((product) => product.simpleOrderable);
       setProducts(items);
       setSelectedProductId(items[0]?.id ?? '');
     } catch {

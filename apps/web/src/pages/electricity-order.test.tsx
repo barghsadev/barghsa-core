@@ -17,9 +17,11 @@ const profileId = 'profile-1';
 const product = {
   id: 'product-1',
   type: 'electricity',
+  systemKey: 'thermal',
   status: 'active',
   title: { en: 'Grid electricity', fa: 'برق' },
   price: '250000',
+  simpleOrderable: true,
 };
 const address = {
   id: 'address-1',
@@ -60,7 +62,7 @@ beforeEach(() => {
       '/api/profiles/verification-status',
       { activeProfileId: profileId, verificationRequired: true, isVerified: true },
     ],
-    ['/api/products', [product]],
+    ['/api/products/electricity', [product]],
     [`/api/profiles/${profileId}/addresses`, { addresses: [address] }],
     ['/api/geography/provinces', [{ id: address.provinceId, nameFa: 'تهران', nameEn: 'Tehran' }]],
     [
@@ -188,6 +190,23 @@ it.each([
   }
 );
 
+it('does not offer a draft when current electricity rules block simple ordering', async () => {
+  replies.set('/api/products/electricity', [
+    { ...product, simpleOrderable: false },
+    {
+      id: null,
+      systemKey: 'green',
+      title: null,
+      price: null,
+      status: 'missing',
+      simpleOrderable: false,
+    },
+  ]);
+  await mount();
+  expect(submit().disabled).toBe(true);
+  expect(orderCalls()).toHaveLength(0);
+});
+
 it.each([null, 'saved', {}, { id: 'order-1' }].map((body) => ({ body })))(
   'rejects incomplete successful response $body and permits retry',
   async ({ body }) => {
@@ -231,9 +250,10 @@ it.each([
 );
 
 it.each([
-  { url: '/api/products', body: { products: [] } },
-  { url: '/api/products', body: [{ ...product, price: '1e3' }] },
-  { url: '/api/products', body: [{ ...product, title: [] }] },
+  { url: '/api/products/electricity', body: { products: [] } },
+  { url: '/api/products/electricity', body: [{ ...product, price: '1e3' }] },
+  { url: '/api/products/electricity', body: [{ ...product, title: [] }] },
+  { url: '/api/products/electricity', body: [{ ...product, simpleOrderable: 'yes' }] },
   { url: `/api/profiles/${profileId}/addresses`, body: { addresses: [null] } },
   { url: `/api/profiles/${profileId}/addresses`, body: { addresses: [{ id: 'broken' }] } },
 ])('blocks ordering with malformed catalogue/address response $body', async ({ url, body }) => {

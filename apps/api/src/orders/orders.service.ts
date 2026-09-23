@@ -7,6 +7,22 @@ import { GiftCodeService } from '../admin/gift-code.service.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import {
+  DEFAULT_GREEN_ELECTRICITY_CONFIG,
+  GREEN_ELECTRICITY_CONFIG_KEY,
+  GREEN_ELECTRICITY_SYSTEM_KEYS,
+  evaluateGreenRuleEnforcement,
+  greenElectricityConfigToStored,
+  toGreenElectricityConfig,
+  validateGreenElectricityConfig,
+} from '@barghsa/shared/finance';
+import {
+  CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY,
+  DEFAULT_CONTRACT_ELECTRICITY_LIMITS,
+  contractElectricityLimitsToStored,
+  toContractElectricityLimits,
+  validateContractElectricityLimits,
+} from '@barghsa/shared/admin';
 
 type OrderActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
@@ -231,8 +247,13 @@ export class OrdersService {
 
       // Validate the product exists, is active, and fetch its price +
       // type (the price is the order total for gift-code math).
-      const productResult = await client.query<{ id: string; type: string; price: string | null }>(
-        `SELECT id, type, effective_product_price(id) AS price FROM products WHERE id = $1 AND status = 'active' FOR SHARE`,
+      const productResult = await client.query<{
+        id: string;
+        type: string;
+        system_key: string | null;
+        price: string | null;
+      }>(
+        `SELECT id, type, system_key, effective_product_price(id) AS price FROM products WHERE id = $1 AND status = 'active' FOR SHARE`,
         [dto.productId]
       );
       if (productResult.rows.length === 0) {
@@ -245,7 +266,93 @@ export class OrdersService {
           404
         );
       }
-      const product = productResult.rows[0] as { id: string; type: string; price: string | null };
+      const product = productResult.rows[0]!;
+
+      let electricitySettingsSnapshot: Record<string, unknown> | null = null;
+      if (dto.orderType === 'electricity') {
+        if (
+          product.type !== 'electricity' ||
+          product.system_key !== 'thermal' ||
+          product.price === null ||
+          !/^\d+$/.test(product.price) ||
+          BigInt(product.price) <= 0n
+        ) {
+          throw new HttpException(
+            {
+              statusCode: 400,
+              error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+              message: 'Selected electricity product is not orderable',
+            },
+            400
+          );
+        }
+
+        const configResult = await client.query<{
+          key: string;
+          value: unknown;
+          version: number;
+        }>('SELECT key, value, version FROM app_config WHERE key = ANY($1::text[])', [
+          [GREEN_ELECTRICITY_CONFIG_KEY, CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY],
+        ]);
+        const greenRow = configResult.rows.find((row) => row.key === GREEN_ELECTRICITY_CONFIG_KEY);
+        const limitsRow = configResult.rows.find(
+          (row) => row.key === CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY
+        );
+        const persisted = greenRow?.value;
+        if (persisted != null && !validateGreenElectricityConfig(persisted).ok) {
+          throw new HttpException({ statusCode: 503, error: 'CONFIG:STORED_VALUE_INVALID' }, 503);
+        }
+        if (limitsRow && !validateContractElectricityLimits(limitsRow.value).ok) {
+          throw new HttpException({ statusCode: 503, error: 'CONFIG:STORED_VALUE_INVALID' }, 503);
+        }
+        const config =
+          persisted == null
+            ? DEFAULT_GREEN_ELECTRICITY_CONFIG
+            : toGreenElectricityConfig(persisted);
+        const contractLimits = limitsRow
+          ? toContractElectricityLimits(limitsRow.value)
+          : DEFAULT_CONTRACT_ELECTRICITY_LIMITS;
+        const greenResult = await client.query<{ status: string; price: string | null }>(
+          `SELECT status, effective_product_price(id) AS price FROM products
+              WHERE system_key = ANY($1::text[]) FOR SHARE`,
+          [GREEN_ELECTRICITY_SYSTEM_KEYS]
+        );
+        if (greenResult.rows.length > 1) {
+          throw new HttpException({ statusCode: 503, error: 'ELECTRICITY_PRODUCT_AMBIGUOUS' }, 503);
+        }
+        const green = greenResult.rows[0];
+        const safety = evaluateGreenRuleEnforcement(config, 'simpleOrder', {
+          exists: !!green,
+          status:
+            green?.status === 'active' ||
+            green?.status === 'inactive' ||
+            green?.status === 'archived'
+              ? green.status
+              : null,
+          // The safety check needs only a positive price, not its rounded Number value.
+          priceIrR:
+            green?.price && /^\d+$/.test(green.price) && BigInt(green.price) > 0n ? 1 : null,
+        });
+        if (safety.blocked) {
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: 'ELECTRICITY_GREEN_RULE_BLOCKED',
+              message: 'Mandatory green electricity is unavailable',
+              details: safety.reasons,
+            },
+            409
+          );
+        }
+        electricitySettingsSnapshot = {
+          schemaVersion: 1,
+          green: greenElectricityConfigToStored(config),
+          sourceVersion: greenRow?.version ?? 0,
+          contractLimits: contractElectricityLimitsToStored(contractLimits),
+          contractLimitsVersion: limitsRow?.version ?? 0,
+          capturedAt: new Date().toISOString(),
+        };
+      }
 
       await requireAddressGeography(
         client,
@@ -270,6 +377,14 @@ export class OrdersService {
         ]
       );
       const order = mapRow(result.rows[0] as Record<string, unknown>);
+
+      if (electricitySettingsSnapshot !== null) {
+        await client.query(
+          `INSERT INTO electricity_orders (id, mode, status, settings_snapshot)
+             VALUES ($1, 'simple', 'draft', $2::jsonb)`,
+          [order.id, JSON.stringify(electricitySettingsSnapshot)]
+        );
+      }
 
       // Redeem the gift code atomically (same tx as the order insert).
       let finalOrder = order;
@@ -415,6 +530,12 @@ export class OrdersService {
         [orderId]
       );
       const order = mapRow(updated.rows[0] as Record<string, unknown>);
+      if (order.orderType === 'electricity') {
+        await client.query(
+          "UPDATE electricity_orders SET status='cancelled', updated_at=NOW() WHERE id=$1 AND status='draft'",
+          [order.id]
+        );
+      }
       // Restore the gift-code slot (default pre-payment policy) — same
       // transaction: the release commits/rolls back with the cancel.
       if (order.giftCodeId !== null) {

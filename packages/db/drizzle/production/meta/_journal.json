@@ -470,6 +470,13 @@
       "when": 1791331200049,
       "tag": "0146_customer_cancellation_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 147,
+      "version": "7",
+      "when": 1791331200050,
+      "tag": "0147_electricity_order_drafts",
+      "breakpoints": true
     }
   ]
 }

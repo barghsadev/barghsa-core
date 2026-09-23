@@ -20,6 +20,7 @@ const mockGiftCodeService = {
   redeem: vi.fn(),
   releaseByOrder: vi.fn(),
 };
+let greenRows: Array<{ status: string; price: string | null }> = [];
 
 /** Queue of responses for the NEXT non-transaction-control client query. */
 const responses: unknown[] = [];
@@ -29,6 +30,7 @@ function queueResponse(response: unknown): void {
 }
 
 beforeEach(() => {
+  greenRows = [{ status: 'active', price: '300000' }];
   responses.length = 0;
   mockClient.query.mockReset();
   mockClient.query.mockImplementation(async (text: string) => {
@@ -46,6 +48,10 @@ beforeEach(() => {
       text.startsWith('SELECT key,value FROM app_config')
     )
       return { rows: [] };
+    if (text.startsWith('SELECT key, value, version FROM app_config')) return { rows: [] };
+    if (text.includes('WHERE system_key = ANY')) return { rows: greenRows };
+    if (text.includes('INSERT INTO electricity_orders')) return { rows: [] };
+    if (text.includes('UPDATE electricity_orders')) return { rows: [] };
     if (text.includes('FROM provinces p JOIN cities c')) return { rows: [{ id: 'city-1' }] };
     const next = responses.shift() ?? { rows: [], rowCount: 0 };
     return next;
@@ -99,7 +105,9 @@ describe('OrdersService', () => {
   describe('createOrder', () => {
     it('creates an order with address snapshot in one transaction', async () => {
       queueResponse({ rows: [{ id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL' }] }); // profile exists
-      queueResponse({ rows: [{ id: 'prod-1', type: 'electricity', price: '2000000' }] }); // product
+      queueResponse({
+        rows: [{ id: 'prod-1', type: 'electricity', system_key: 'thermal', price: '2000000' }],
+      }); // product
       queueResponse({ rows: [makeRow()] }); // insert order
 
       const result = await service.createOrder(orderActor, validDto);
@@ -124,6 +132,30 @@ describe('OrdersService', () => {
       expect(insertCall[1]).toContain('city-1');
       expect(insertCall[1]).toContain('123 Test St, Tehran');
       expect(insertCall[1]).toContain('1234567890');
+      const settingsCall = mockClient.query.mock.calls.find((call) =>
+        String(call[0]).includes('INSERT INTO electricity_orders')
+      )!;
+      expect(JSON.parse(settingsCall[1][1])).toMatchObject({
+        schemaVersion: 1,
+        sourceVersion: 0,
+        green: { simple_order: { mandatory_green_enabled: true } },
+      });
+    });
+
+    it('blocks a draft if mandatory green electricity becomes unavailable', async () => {
+      greenRows = [{ status: 'inactive', price: null }];
+      queueResponse({ rows: [{ id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL' }] });
+      queueResponse({
+        rows: [{ id: 'prod-1', type: 'electricity', system_key: 'thermal', price: '100000' }],
+      });
+
+      await expect(service.createOrder(orderActor, validDto)).rejects.toThrow(
+        /green electricity is unavailable/
+      );
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+      expect(
+        mockClient.query.mock.calls.some((call) => String(call[0]).includes('INSERT INTO orders'))
+      ).toBe(false);
     });
 
     it('rolls back and rethrows when a query fails', async () => {
@@ -141,7 +173,9 @@ describe('OrdersService', () => {
 
     it('redeems a gift code atomically and stores the discount on the order', async () => {
       queueResponse({ rows: [{ id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL' }] });
-      queueResponse({ rows: [{ id: 'prod-1', type: 'electricity', price: '2000000' }] });
+      queueResponse({
+        rows: [{ id: 'prod-1', type: 'electricity', system_key: 'thermal', price: '2000000' }],
+      });
       queueResponse({ rows: [makeRow()] }); // insert order
       // gift code service returns the redemption…
       mockGiftCodeService.redeem.mockResolvedValue({
@@ -180,12 +214,14 @@ describe('OrdersService', () => {
 
     it('rejects a gift code on a product without a price (no redemption)', async () => {
       queueResponse({ rows: [{ id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL' }] });
-      queueResponse({ rows: [{ id: 'prod-1', type: 'electricity', price: null }] });
+      queueResponse({
+        rows: [{ id: 'prod-1', type: 'electricity', system_key: 'thermal', price: null }],
+      });
       queueResponse({ rows: [makeRow()] }); // insert order
 
       await expect(
         service.createOrder(orderActor, { ...validDto, giftCode: 'sale10' })
-      ).rejects.toThrow(/without a price/);
+      ).rejects.toThrow(/not orderable/);
 
       expect(mockGiftCodeService.redeem).not.toHaveBeenCalled();
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
@@ -193,7 +229,9 @@ describe('OrdersService', () => {
 
     it('rolls back when redemption fails — failed orders never consume', async () => {
       queueResponse({ rows: [{ id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL' }] });
-      queueResponse({ rows: [{ id: 'prod-1', type: 'electricity', price: '100000' }] });
+      queueResponse({
+        rows: [{ id: 'prod-1', type: 'electricity', system_key: 'thermal', price: '100000' }],
+      });
       queueResponse({ rows: [makeRow()] }); // insert order
       mockGiftCodeService.redeem.mockRejectedValue(
         Object.assign(new Error('Gift code SALE10 usage limit reached'), { status: 400 })
@@ -286,6 +324,11 @@ describe('OrdersService', () => {
         queueResponse({ rows: [makeRow({ status: 'CANCELLED', gift_code_id: gift })] });
         mockGiftCodeService.releaseByOrder.mockResolvedValue({ released: 1 });
         expect((await service.cancelOrder(orderActor, 'ord-001'))?.status).toBe('CANCELLED');
+        expect(
+          mockClient.query.mock.calls.some((call) =>
+            String(call[0]).includes("UPDATE electricity_orders SET status='cancelled'")
+          )
+        ).toBe(true);
         expect(mockGiftCodeService.releaseByOrder).toHaveBeenCalledTimes(gift ? 1 : 0);
         expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
       });

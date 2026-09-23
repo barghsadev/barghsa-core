@@ -651,6 +651,7 @@ export * from './schema/refresh-tokens';
 export * from './schema/audit-log';
 export * from './schema/addresses';
 export * from './schema/orders';
+export * from './schema/electricity-orders';
 export * from './schema/gift-codes';
 export * from './schema/contract-templates';
 export * from './schema/geography';
