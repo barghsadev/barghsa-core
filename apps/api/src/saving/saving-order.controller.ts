@@ -132,7 +132,7 @@ export class SavingOrderController {
   @Get()
   @RateLimit({ namespace: 'saving:order-list:user', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'List saving orders for a customer profile' })
-  @ApiQuery({ name: 'before', required: false, format: 'uuid' })
+  @ApiQuery({ name: 'before', required: false, format: 'uuid', type: String })
   list(
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
     @Query('before') before: string | undefined,

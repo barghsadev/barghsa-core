@@ -19501,6 +19501,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -20201,6 +20210,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -20880,7 +20898,17 @@
     "/api/staff/electricity/orders": {
       "get": {
         "operationId": "ElectricityStaffReviewController_queue",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Review work queue."
@@ -21191,7 +21219,30 @@
     "/api/staff/saving/orders": {
       "get": {
         "operationId": "SavingFulfillmentController_queue",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "lane",
+            "required": false,
+            "schema": {
+              "enum": [
+                "all",
+                "review",
+                "fulfillment"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""

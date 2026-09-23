@@ -10,7 +10,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -39,11 +40,15 @@ export class SolarRequestController {
   @Get()
   @RateLimit({ namespace: 'solar:list:user', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'List solar construction requests for a profile' })
+  @ApiQuery({ name: 'before', required: false, format: 'uuid' })
   list(
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Query('before') before?: string
   ) {
-    return this.service.list(req.session, profileId);
+    if (before && !z.string().uuid().safeParse(before).success)
+      throw new HttpException({ error: 'VALIDATION:INVALID_CURSOR' }, 400);
+    return this.service.list(req.session, profileId, before);
   }
 
   @Get(':id')

@@ -19,10 +19,15 @@ export function SolarRequestsPage() {
   const locale = useLocale();
   const copy = (key: string) => tSolar(key, locale);
   const [rows, setRows] = useState<RequestRow[]>([]);
+  const [before, setBefore] = useState<string | null>(null);
+  const [nextBefore, setNextBefore] = useState<string | null>(null);
+  const [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   useEffect(() => {
     const controller = new AbortController();
+    setLoading(true);
+    setError(false);
     void (async () => {
       try {
         const profileResponse = await fetch('/api/profiles', {
@@ -31,17 +36,30 @@ export function SolarRequestsPage() {
         });
         if (!profileResponse.ok) throw new Error('profile');
         const profile = (await profileResponse.json()) as { activeProfileId: string | null };
-        if (!profile.activeProfileId) return;
-        const response = await fetch(
-          `/api/solar/requests?profileId=${encodeURIComponent(profile.activeProfileId)}`,
-          {
-            credentials: 'include',
-            signal: controller.signal,
-          }
-        );
+        if (!profile.activeProfileId) {
+          setRows([]);
+          setNextBefore(null);
+          return;
+        }
+        const params = new URLSearchParams({ profileId: profile.activeProfileId });
+        if (before) params.set('before', before);
+        const response = await fetch(`/api/solar/requests?${params}`, {
+          credentials: 'include',
+          signal: controller.signal,
+        });
         if (!response.ok) throw new Error('requests');
-        const result = (await response.json()) as { requests: RequestRow[] };
-        if (!controller.signal.aborted) setRows(result.requests);
+        const result = (await response.json()) as {
+          requests: RequestRow[];
+          nextBefore: string | null;
+        };
+        if (!controller.signal.aborted) {
+          setRows((current) => {
+            if (!before) return result.requests;
+            const shown = new Set(current.map((request) => request.id));
+            return [...current, ...result.requests.filter((request) => !shown.has(request.id))];
+          });
+          setNextBefore(result.nextBefore);
+        }
       } catch {
         if (!controller.signal.aborted) setError(true);
       } finally {
@@ -49,7 +67,7 @@ export function SolarRequestsPage() {
       }
     })();
     return () => controller.abort();
-  }, []);
+  }, [before, revision]);
   return (
     <main className="mx-auto max-w-3xl space-y-5 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('myRequests')}</h1>
@@ -61,6 +79,15 @@ export function SolarRequestsPage() {
       </Link>
       {loading && <p role="status">{copy('loading')}</p>}
       {error && <p role="alert">{copy('notFound')}</p>}
+      {error && (
+        <button
+          type="button"
+          className="text-primary underline"
+          onClick={() => setRevision((n) => n + 1)}
+        >
+          {copy('retry')}
+        </button>
+      )}
       {!loading && !error && !rows.length && <p>{copy('none')}</p>}
       <ul className="space-y-3">
         {rows.map((row) => {
@@ -95,6 +122,16 @@ export function SolarRequestsPage() {
           );
         })}
       </ul>
+      {nextBefore && !error && (
+        <button
+          type="button"
+          className="rounded-md border px-4 py-2 text-sm disabled:opacity-50"
+          disabled={loading}
+          onClick={() => setBefore(nextBefore)}
+        >
+          {copy('moreRequests')}
+        </button>
+      )}
     </main>
   );
 }

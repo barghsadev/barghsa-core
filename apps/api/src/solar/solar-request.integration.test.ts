@@ -134,8 +134,27 @@ it('submits both solar request types, captures agreement, and creates no contrac
   expect(listResponse.status, http.logs()).toBe(200);
   const listed = (await listResponse.json()) as {
     requests: Array<{ id: string; contract_id: string | null; contract_published: boolean }>;
+    nextBefore: string | null;
   };
   expect(listed.requests).toHaveLength(2);
+  expect(listed.nextBefore).toBeNull();
+  const olderResponse = await request(
+    `/api/solar/requests?profileId=${profileId}&before=${listed.requests[0]!.id}`,
+    'GET'
+  );
+  expect(olderResponse.status, http.logs()).toBe(200);
+  expect(
+    ((await olderResponse.json()) as { requests: Array<{ id: string }> }).requests.map(
+      (row) => row.id
+    )
+  ).toEqual([listed.requests[1]!.id]);
+  expect(
+    (await request(`/api/solar/requests?profileId=${profileId}&before=bad`, 'GET')).status
+  ).toBe(400);
+  expect(
+    (await request(`/api/solar/requests?profileId=${profileId}&before=${randomUUID()}`, 'GET'))
+      .status
+  ).toBe(404);
   expect(listed.requests.find((row) => row.id === building.requestId)).toMatchObject({
     contract_id: null,
     contract_published: false,

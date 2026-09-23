@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams } from '@tanstack/react-router';
+import { Link, useParams } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -139,9 +139,9 @@ export function SolarRequestDetailPage() {
   const action = request ? solarNextAction(request, locale) : null;
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <a className="text-sm underline" href="/solar/requests">
+      <Link className="text-sm underline" to="/solar/requests">
         {copy('back')}
-      </a>
+      </Link>
       <h1 className="text-3xl font-semibold">{copy('details')}</h1>
       {loading && <p role="status">{copy('loading')}</p>}
       {error && <p role="alert">{copy('notFound')}</p>}
@@ -169,22 +169,24 @@ export function SolarRequestDetailPage() {
             {request.contract_id && (
               <div className="flex flex-wrap gap-4 text-sm">
                 {request.contract_published ? (
-                  <a
+                  <Link
                     className="underline"
-                    href={`/contracts?contractId=${encodeURIComponent(request.contract_id)}`}
+                    to="/contracts"
+                    search={{ contractId: request.contract_id }}
                   >
                     {copy('solarViewContract')}
-                  </a>
+                  </Link>
                 ) : (
                   <span>{copy('solarContractAwaitingPublication')}</span>
                 )}
                 {request.initial_invoice_id && (
-                  <a
+                  <Link
                     className="underline"
-                    href={`/invoices/${encodeURIComponent(request.initial_invoice_id)}`}
+                    to="/invoices/$invoiceId"
+                    params={{ invoiceId: request.initial_invoice_id }}
                   >
                     {copy('solarViewInvoice')}
-                  </a>
+                  </Link>
                 )}
               </div>
             )}

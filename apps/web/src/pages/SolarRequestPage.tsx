@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
@@ -295,9 +295,9 @@ export function SolarRequestPage() {
                     </select>
                   </label>
                   {!addresses.length && (
-                    <a className="text-sm underline" href="/settings/addresses">
+                    <Link className="text-sm underline" to="/settings/addresses">
                       {copy('noAddresses')}
-                    </a>
+                    </Link>
                   )}
                   <label className="block space-y-1">
                     <span>{copy('relationship')}</span>

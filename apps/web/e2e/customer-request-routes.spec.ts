@@ -2,6 +2,7 @@ import { test, expect } from './coverage-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const solarId = '22222222-2222-4222-8222-222222222222';
+const olderSolarId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const consultationId = '33333333-3333-4333-8333-333333333333';
 const solarRequest = {
   id: solarId,
@@ -61,21 +62,23 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('solar list opens intake and detail routes', async ({ page }) => {
-  await page.route('**/api/solar/requests?*', (route) =>
-    route.fulfill({
+  await page.route('**/api/solar/requests?*', (route) => {
+    const before = new URL(route.request().url()).searchParams.get('before');
+    return route.fulfill({
       json: {
         requests: [
           {
-            id: solarId,
+            id: before ? olderSolarId : solarId,
             status: 'submitted',
             building_type: 'building_apartment',
             grid_type: 'on_grid',
-            submitted_at: '2026-09-23T10:00:00.000Z',
+            submitted_at: before ? '2026-09-22T10:00:00.000Z' : '2026-09-23T10:00:00.000Z',
           },
         ],
+        nextBefore: before ? null : solarId,
       },
-    })
-  );
+    });
+  });
   await page.route(`**/api/solar/requests/${solarId}`, (route) =>
     route.fulfill({
       json: {
@@ -86,6 +89,9 @@ test('solar list opens intake and detail routes', async ({ page }) => {
   await page.goto('/solar/requests');
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await expect(page.getByRole('heading', { name: 'My solar requests' })).toBeVisible();
+  await page.getByRole('button', { name: 'More requests' }).click();
+  await expect(page.locator(`a[href="/solar/requests/${solarId}"]`)).toBeVisible();
+  await expect(page.locator(`a[href="/solar/requests/${olderSolarId}"]`)).toBeVisible();
   await page.getByRole('link', { name: 'Submit request' }).click();
   await expect(
     page.getByRole('heading', { name: 'Solar power station construction request' })
@@ -95,6 +101,8 @@ test('solar list opens intake and detail routes', async ({ page }) => {
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await expect(page.getByRole('heading', { name: 'Request details' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Status and next action' })).toBeVisible();
+  await page.getByRole('link', { name: 'Back to requests' }).click();
+  await expect(page.getByRole('heading', { name: 'My solar requests' })).toBeVisible();
 });
 
 test('solar list shows document and contract next actions, with the current document stage', async ({

@@ -151,6 +151,8 @@ const en: Record<string, string> = {
   acceptedAt: 'Terms accepted at',
   acceptedVersion: 'Terms version',
   back: 'Back to requests',
+  moreRequests: 'More requests',
+  retry: 'Try again',
   loading: 'Loading…',
   notFound: 'Request could not be loaded.',
 };
@@ -306,6 +308,8 @@ const fa: Record<string, string> = {
   acceptedAt: 'زمان پذیرش شرایط',
   acceptedVersion: 'نسخه شرایط',
   back: 'بازگشت به درخواست‌ها',
+  moreRequests: 'درخواست‌های بیشتر',
+  retry: 'تلاش دوباره',
   loading: 'در حال بارگذاری…',
   notFound: 'درخواست بارگذاری نشد.',
 };
