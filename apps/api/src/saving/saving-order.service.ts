@@ -369,6 +369,7 @@ export class SavingOrderService {
       await client.query('BEGIN');
       await this.orders.lockOrderActor(client, actor);
       await this.authorize(client, actor, input.profileId);
+      if (input.giftCode) await this.giftCodes.enforceValidationLimit(actor.userId);
       const result = await this.quoteInTransaction(client, input, new Date());
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
@@ -942,6 +943,7 @@ export class SavingOrderService {
       await this.authorize(client, actor, input.profileId);
       await this.orders.lockProfileSubmissions(client, input.profileId);
       await this.orders.enforceProfileSubmissionLimit(client, input.profileId);
+      if (input.giftCode) await this.giftCodes.enforceValidationLimit(actor.userId);
       // Acquire product locks before the quote's shared locks. Concurrent
       // submissions must not both upgrade a hardware share lock to a write lock.
       await client.query('SELECT id FROM products WHERE id=$1 FOR UPDATE', [input.savingPlanId]);

@@ -142,7 +142,7 @@ export class SavingOrderController {
   }
 
   @Post('quote')
-  @RateLimit({ namespace: 'saving:quote:user', limit: 30, windowMs: 60_000 })
+  @RateLimit({ namespace: 'saving:quote:user', limit: 60, windowMs: 60_000, scope: 'user' })
   @ApiOperation({ summary: 'Authoritative saving plan, hardware, discount and VAT quote' })
   @ApiZodBody(quoteInput)
   quote(@Body() body: unknown, @Req() req: AuthenticatedRequest) {

@@ -113,7 +113,8 @@ async function loadService(pool: { query: ReturnType<typeof vi.fn> }) {
   vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }));
   const { GiftCodeService: Svc } = await import('./gift-code.service.js');
   const correlationIdProvider = { getCorrelationId: () => 'corr-gift-test-1' };
-  return new Svc(correlationIdProvider as never) as ServiceType;
+  const rateLimits = { enforceSecurityRateLimit: vi.fn() };
+  return new Svc(correlationIdProvider as never, rateLimits as never) as ServiceType;
 }
 
 let service: ServiceType;

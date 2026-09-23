@@ -278,7 +278,7 @@ export class ElectricityOrderController {
 
   @Post('preview/simple')
   @HttpCode(200)
-  @RateLimit({ namespace: 'electricity:preview:user', limit: 60, windowMs: 60_000 })
+  @RateLimit({ namespace: 'electricity:preview:user', limit: 60, windowMs: 60_000, scope: 'user' })
   @ApiOperation({ summary: 'Quote a simple electricity order using current authoritative prices' })
   @ApiZodBody(simpleInput)
   @ApiResponse({ status: 200, description: 'Current period, lines, discount, VAT and total.' })
@@ -304,7 +304,7 @@ export class ElectricityOrderController {
 
   @Post('preview/advanced')
   @HttpCode(200)
-  @RateLimit({ namespace: 'electricity:preview:user', limit: 60, windowMs: 60_000 })
+  @RateLimit({ namespace: 'electricity:preview:user', limit: 60, windowMs: 60_000, scope: 'user' })
   @ApiOperation({
     summary: 'Quote an advanced four-product electricity bundle and custom delivery period',
   })

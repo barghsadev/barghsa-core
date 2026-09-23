@@ -905,6 +905,7 @@ export class ElectricityOrderService {
     try {
       await client.query('BEGIN');
       await this.authorize(client, actor, input.profileId);
+      if (input.giftCode) await this.giftCodes.enforceValidationLimit(actor.userId);
       const quoted = await this.quote(client, input, new Date());
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
@@ -988,6 +989,7 @@ export class ElectricityOrderService {
       await this.authorize(client, actor, input.profileId, true);
       await this.orders.lockProfileSubmissions(client, input.profileId);
       await this.orders.enforceProfileSubmissionLimit(client, input.profileId);
+      if (input.giftCode) await this.giftCodes.enforceValidationLimit(actor.userId);
       await requireAddressGeography(client, input.address.provinceId, input.address.cityId);
       const now = new Date();
       const quoted = await this.quote(client, input, now);

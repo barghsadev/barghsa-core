@@ -19,6 +19,7 @@ import {
   type GiftCodeStatus,
 } from '@barghsa/shared/promotions';
 import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
+import { RateLimitService } from '../rate-limit/rate-limit.service.js';
 
 /**
  * Gift code management service (S-09.12, T-09.12.03) — API slice.
@@ -186,8 +187,18 @@ export class GiftCodeService {
 
   constructor(
     @Inject(CorrelationIdProvider)
-    private readonly correlationIdProvider: CorrelationIdProvider
+    private readonly correlationIdProvider: CorrelationIdProvider,
+    private readonly rateLimits: RateLimitService
   ) {}
+
+  /** Count code-bearing quote and submission attempts across both order journeys. */
+  async enforceValidationLimit(userId: string): Promise<void> {
+    await this.rateLimits.enforceSecurityRateLimit(
+      `gift-code:validate:user:${userId}`,
+      12,
+      300_000
+    );
+  }
 
   // ─── Admin reads ───────────────────────────────────────────────────────
 

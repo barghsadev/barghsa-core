@@ -2090,3 +2090,26 @@ it('credits a cheaper paid hardware swap and preserves the revised price basis f
       .rows[0]?.state
   ).toBe('Cancelled');
 }, 60000);
+
+it('limits gift-code guesses across saving and electricity quotes without blocking ordinary quotes', async () => {
+  await http.pool.query(
+    "DELETE FROM rate_limit_windows WHERE key IN ('gift-code:validate:user:saving-order-buyer','saving:quote:user:saving-order-buyer')"
+  );
+  for (let index = 0; index < 12; index++) {
+    const guessed = await request('/api/saving/orders/quote', 'POST', {
+      ...input,
+      giftCode: `INVALID-${index}`,
+    });
+    expect(guessed.status, http.logs()).toBe(400);
+  }
+  const blocked = await request('/api/electricity/preview/simple', 'POST', {
+    profileId: legalProfileId,
+    period: 'next_week',
+    totalKwh: '10',
+    giftCode: 'INVALID-NEXT',
+  });
+  expect(blocked.status, http.logs()).toBe(429);
+  expect(await blocked.json()).toMatchObject({ error: { code: 'RATE_LIMIT:EXCEEDED' } });
+  const ordinary = await request('/api/saving/orders/quote', 'POST', input);
+  expect(ordinary.status, http.logs()).toBe(201);
+}, 60000);
