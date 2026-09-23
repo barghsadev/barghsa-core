@@ -133,6 +133,27 @@ function panel(staff = false, versionId = VERSION) {
     />
   );
 }
+it('publishes the current signature action for customer guidance', async () => {
+  const onStatus = vi.fn();
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (raw: string) =>
+      raw.includes('/signature?') ? response(view()) : response({ documents: [], nextBefore: null })
+    )
+  );
+  await render(
+    <ContractSignaturePanel
+      id={ID}
+      versionId={VERSION}
+      profileId={PROFILE}
+      staff={false}
+      onChanged={changed}
+      onStatus={onStatus}
+    />
+  );
+  expect(onStatus).toHaveBeenCalledWith(expect.objectContaining({ canRecord: true }));
+  expect(container.querySelector('#contract-signature')).not.toBeNull();
+});
 for (const locale of ['en', 'fa'] as const)
   it(`${locale}: captures exact request, version and copy only after acknowledgement`, async () => {
     harness.locale = locale;

@@ -46,12 +46,14 @@ export function ContractSignaturePanel({
   profileId,
   staff,
   onChanged,
+  onStatus,
 }: {
   id: string;
   versionId: string;
   profileId: string;
   staff: boolean;
   onChanged: () => void;
+  onStatus?: (data: ContractSignatureData | null) => void;
 }) {
   const locale = useLocale(),
     time = useAccountTime();
@@ -72,6 +74,7 @@ export function ContractSignaturePanel({
     const abort = new AbortController();
     setController(abort);
     setData(null);
+    onStatus?.(null);
     setDocuments([]);
     setNext(null);
     setBusy(false);
@@ -94,15 +97,19 @@ export function ContractSignaturePanel({
             : { documents: [], nextBefore: null };
         if (!abort.signal.aborted) {
           setData(view);
+          onStatus?.(view);
           setDocuments(page.documents);
           setNext(page.nextBefore);
         }
       })
       .catch(() => {
-        if (!abort.signal.aborted) setError(true);
+        if (!abort.signal.aborted) {
+          setError(true);
+          onStatus?.(null);
+        }
       });
     return () => abort.abort();
-  }, [id, versionId, profileId, staff, reload]);
+  }, [id, versionId, profileId, staff, reload, onStatus]);
   async function more() {
     if (!next || !controller || busy) return;
     setBusy(true);
@@ -151,6 +158,7 @@ export function ContractSignaturePanel({
   );
   return (
     <section
+      id="contract-signature"
       className="flex flex-col gap-4 rounded-lg border p-4"
       aria-label={word('signatureTitle')}
     >

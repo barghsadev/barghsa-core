@@ -15,7 +15,12 @@ import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { documentRequest } from '../lib/documents.js';
-import { contractBase, type ContractDetailData, type ContractVersion } from '../lib/contracts.js';
+import {
+  contractBase,
+  type ContractDetailData,
+  type ContractSignatureData,
+  type ContractVersion,
+} from '../lib/contracts.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { ContractActivationPanel } from './ContractActivationPanel.js';
 import { ContractSignaturePanel } from './ContractSignaturePanel.js';
@@ -25,6 +30,7 @@ import { DocumentResults, type DocumentFilters } from './DocumentsWorkspace.js';
 import { DocumentUpload, type ContractDocumentAssociation } from './DocumentUpload.js';
 import { WorkflowStatusBanner } from './WorkflowStatusBanner.js';
 import { t } from '@barghsa/i18n/app';
+import { customerContractNextAction } from '../lib/contract-guidance.js';
 
 type VersionPage = { versions: ContractVersion[]; nextBefore: number | null };
 export function ContractDetail({
@@ -45,6 +51,7 @@ export function ContractDetail({
     contract: ContractDetailData;
     version: ContractVersion;
   } | null>(null);
+  const [signatureStatus, setSignatureStatus] = useState<ContractSignatureData | null>(null);
   const [versions, setVersions] = useState<ContractVersion[]>([]);
   const [next, setNext] = useState<number | null>(null);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -61,6 +68,7 @@ export function ContractDetail({
     const controller = new AbortController();
     active.current = controller;
     setData(null);
+    setSignatureStatus(null);
     setVersions([]);
     setNext(null);
     setError(false);
@@ -146,6 +154,7 @@ export function ContractDetail({
   }
   const currentId = data?.contract.currentVersionId ?? data?.contract.version?.id;
   const isCurrent = data?.version.id === currentId;
+  const nextAction = data ? customerContractNextAction(data.contract, signatureStatus) : null;
   return (
     <section
       className="flex flex-col gap-5 rounded-xl border bg-card p-5"
@@ -175,22 +184,20 @@ export function ContractDetail({
             <WorkflowStatusBanner
               locale={locale}
               status={word(data.contract.state)}
-              happened={data.version.changeDescription}
+              happened={
+                signatureStatus?.signature
+                  ? word('signatureRecorded')
+                  : signatureStatus?.request
+                    ? `${word('signatureRequest')} ${signatureStatus.request.requestNumber.toLocaleString(locale)}`
+                    : data.version.changeDescription
+              }
               nextAction={
-                data.contract.canAccept
-                  ? word('accept')
-                  : ['Active', 'Completed', 'Cancelled'].includes(data.contract.state)
-                    ? t('workflow.none', locale)
-                    : t('workflow.contract.awaitStaff', locale)
+                nextAction!.key.startsWith('workflow.')
+                  ? t(nextAction!.key, locale)
+                  : word(nextAction!.key)
               }
-              owner={
-                data.contract.canAccept
-                  ? 'customer'
-                  : ['Active', 'Completed', 'Cancelled'].includes(data.contract.state)
-                    ? 'none'
-                    : 'staff'
-              }
-              actionHref={data.contract.canAccept ? '#contract-accept' : null}
+              owner={nextAction!.owner}
+              actionHref={nextAction!.href}
             />
           ) : (
             <StatusBadge label={word(data.contract.state)} />
@@ -329,6 +336,7 @@ export function ContractDetail({
             versionId={data.version.id}
             profileId={data.contract.profileId}
             staff={staff}
+            onStatus={setSignatureStatus}
             onChanged={() => {
               setReload((value) => value + 1);
               onChanged();
