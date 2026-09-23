@@ -82,7 +82,7 @@ beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!, endpoint);
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions)
-     VALUES('postal-review-staff','Postal reviewer','Test reviewer','["orders:read","orders:write","admin:catalogue:edit"]')`
+     VALUES('postal-review-staff','Postal reviewer','Test reviewer','["orders:read","orders:write","contracts:write","admin:catalogue:edit"]')`
   );
   for (const [user, staff] of [
     ['postal-buyer', false],
@@ -153,6 +153,17 @@ afterAll(async () => {
 }, 30_000);
 
 it('handles guidance, receipt upload, shipment issues, resubmission and staff receipt', async () => {
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST'))
+      .status
+  ).toBe(409);
+  expect(
+    (
+      await send('postal-buyer', `admin/solar/requests/${requestId}/close-no-contract`, 'POST', {
+        reason: 'No',
+      })
+    ).status
+  ).toBe(403);
   const guidance = {
     fa: 'اصل سند را پست کنید.',
     en: 'Post the original deed.',
@@ -289,4 +300,52 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
       )
     ).rows[0]!.count
   ).toBeGreaterThanOrEqual(3);
+  const approved = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${requestId}/final-approve`,
+    'POST'
+  );
+  expect(approved.status, http.logs()).toBe(200);
+  expect(await approved.json()).toMatchObject({ status: 'approved' });
+  expect(
+    (
+      await http.pool.query(
+        "SELECT count(*)::int AS count FROM contracts WHERE profile_id=$1 AND service_type='solar'",
+        [profileId]
+      )
+    ).rows[0]!.count
+  ).toBe(0);
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST'))
+      .status
+  ).toBe(409);
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${requestId}/close-no-contract`, 'POST', {
+        reason: '',
+      })
+    ).status
+  ).toBe(400);
+  const closed = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${requestId}/close-no-contract`,
+    'POST',
+    { reason: 'Site cannot proceed.' }
+  );
+  expect(closed.status, http.logs()).toBe(200);
+  expect(await closed.json()).toMatchObject({ status: 'cancelled' });
+  expect(await (await send('postal-buyer', `solar/requests/${requestId}`)).json()).toMatchObject({
+    request: {
+      status: 'cancelled',
+      status_reason: 'Site cannot proceed.',
+      support_path: '/tickets',
+    },
+  });
+  expect(
+    (
+      await http.pool.query(
+        "SELECT count(*)::int AS count FROM audit_log WHERE event IN ('solar.final.approve','solar.final.close-no-contract')"
+      )
+    ).rows[0]!.count
+  ).toBe(2);
 }, 90_000);

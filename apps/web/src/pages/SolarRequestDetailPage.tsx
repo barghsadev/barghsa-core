@@ -10,6 +10,8 @@ interface SolarRequest {
   id: string;
   profile_id: string;
   status: string;
+  status_reason: string | null;
+  support_path: string | null;
   building_type: string;
   grid_type: string;
   bill_identifier: string | null;
@@ -141,14 +143,19 @@ export function SolarRequestDetailPage() {
         <>
           <div className="rounded-xl border p-5">
             <p>
-              {copy('status')}:{' '}
-              <strong>{request.status === 'submitted' ? copy('submitted') : request.status}</strong>
+              {copy('status')}: <strong>{copy(`status_${request.status}`)}</strong>
             </p>
             <p>
               {copy('currentStage')}: <strong>{copy(stages[currentStage]!)}</strong>
             </p>
             {request.status === 'submitted' && (
               <p className="text-sm text-muted-foreground">{copy('noContract')}</p>
+            )}
+            {request.status_reason && <p role="alert">{request.status_reason}</p>}
+            {request.support_path && (
+              <a className="underline" href={request.support_path}>
+                {copy('solarSupport')}
+              </a>
             )}
           </div>
           <section className="space-y-3 rounded-xl border p-5">

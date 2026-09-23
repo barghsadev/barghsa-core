@@ -48,6 +48,8 @@ import {
   StaffSolarPostalController,
 } from '../solar/solar-postal.controller.js';
 import { SolarPostalService } from '../solar/solar-postal.service.js';
+import { StaffSolarFinalController } from '../solar/solar-final.controller.js';
+import { SolarFinalService } from '../solar/solar-final.service.js';
 
 @Module({
   imports: [SessionModule, AdminModule, InvoiceModule, DocumentModule],
@@ -69,6 +71,7 @@ import { SolarPostalService } from '../solar/solar-postal.service.js';
     StaffSolarDocumentsController,
     SolarPostalController,
     StaffSolarPostalController,
+    StaffSolarFinalController,
   ],
   providers: [
     OrdersService,
@@ -87,6 +90,7 @@ import { SolarPostalService } from '../solar/solar-postal.service.js';
     SolarRequestService,
     SolarDocumentsService,
     SolarPostalService,
+    SolarFinalService,
   ],
   exports: [OrdersService, ElectricityCalculationService],
 })

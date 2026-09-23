@@ -221,6 +221,56 @@ export function AdminSolarPostalPage() {
               </div>
             </>
           )}
+          {['postal_documents_received', 'approved'].includes(row.request_status) && (
+            <div className="space-y-3">
+              <label className="block">
+                {copy('reason')}
+                <textarea
+                  className="mt-1 w-full rounded-md border p-2"
+                  maxLength={1000}
+                  value={reason}
+                  onChange={(event) => setReason(event.target.value)}
+                />
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {row.request_status === 'postal_documents_received' && (
+                  <button
+                    type="button"
+                    className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
+                    onClick={() =>
+                      setAction({
+                        title: copy('solarFinalApprove'),
+                        description: row.id,
+                        path: `/api/admin/solar/requests/${row.id}/final-approve`,
+                        method: 'POST',
+                      })
+                    }
+                  >
+                    {copy('solarFinalApprove')}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="rounded-md border px-4 py-2"
+                  onClick={() => {
+                    if (!reason.trim()) {
+                      setError(true);
+                      return;
+                    }
+                    setAction({
+                      title: copy('solarCloseNoContract'),
+                      description: row.id,
+                      path: `/api/admin/solar/requests/${row.id}/close-no-contract`,
+                      method: 'POST',
+                      body: { reason: reason.trim() },
+                    });
+                  }}
+                >
+                  {copy('solarCloseNoContract')}
+                </button>
+              </div>
+            </div>
+          )}
         </section>
       )}
       {guidance && (

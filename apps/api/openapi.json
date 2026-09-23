@@ -9217,6 +9217,56 @@
         ]
       }
     },
+    "/api/admin/solar/requests/{id}/close-no-contract": {
+      "post": {
+        "operationId": "StaffSolarFinalController_close",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Close a solar request without a contract, with a reason",
+        "tags": [
+          "Admin · Solar final decisions"
+        ]
+      }
+    },
     "/api/admin/solar/requests/{id}/documents": {
       "get": {
         "operationId": "StaffSolarDocumentsController_documents",
@@ -9450,6 +9500,35 @@
         "summary": "Reject one solar document with a reason",
         "tags": [
           "Admin · Solar documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/final-approve": {
+      "post": {
+        "operationId": "StaffSolarFinalController_approve",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve a solar request after confirmed postal receipt",
+        "tags": [
+          "Admin · Solar final decisions"
         ]
       }
     },

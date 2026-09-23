@@ -71,7 +71,7 @@ export function SolarRequestsPage() {
                 {copy(row.grid_type === 'off_grid' ? 'offGrid' : 'onGrid')}
               </span>
               <span className="mt-2 block text-sm">
-                {copy('status')}: {row.status === 'submitted' ? copy('submitted') : row.status}
+                {copy('status')}: {copy(`status_${row.status}`)}
               </span>
               <time className="text-sm text-muted-foreground" dateTime={row.submitted_at}>
                 {new Intl.DateTimeFormat(locale).format(new Date(row.submitted_at))}

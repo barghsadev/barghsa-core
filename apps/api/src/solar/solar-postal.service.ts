@@ -227,7 +227,7 @@ export class SolarPostalService {
           `SELECT r.id,r.profile_id,r.status AS request_status,p.status AS postal_status,
           p.courier,p.tracking_number,p.send_date,p.receipt_image_id,p.staff_notes,r.created_at
          FROM solar_construction_requests r JOIN solar_construction_postal p ON p.request_id=r.id
-         WHERE r.status IN ('waiting_for_postal_submission','postal_documents_received')
+         WHERE r.status IN ('waiting_for_postal_submission','postal_documents_received','approved')
          ORDER BY r.created_at DESC LIMIT 100`
         )
       ).rows;
