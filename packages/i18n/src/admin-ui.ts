@@ -3,6 +3,46 @@ import type { I18nDictionary, Locale } from './index.js';
 import { t as sharedText } from './crm.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'admin.electricityPrice.title': 'تعدیل قیمت برق',
+  'admin.electricityPrice.description':
+    'پیشنهاد قیمت آینده را برای مشتری منتشر کنید، سپس فاکتور افزایش یا بستانکاری را صادر کنید.',
+  'admin.electricityPrice.contractId': 'شناسه قرارداد برق',
+  'admin.electricityPrice.open': 'باز کردن قرارداد',
+  'admin.electricityPrice.refresh': 'تازه‌سازی',
+  'admin.electricityPrice.loading': 'در حال دریافت قرارداد…',
+  'admin.electricityPrice.load': 'دریافت قرارداد یا تغییرات قیمت ممکن نشد.',
+  'admin.electricityPrice.save': 'ثبت پیشنهاد ممکن نشد. اطلاعات و تاریخ را بررسی کنید.',
+  'admin.electricityPrice.forbidden': 'دسترسی لازم یا تأیید هویت دوباره وجود ندارد.',
+  'admin.electricityPrice.termEnds': 'پایان دوره تحویل',
+  'admin.electricityPrice.newProposal': 'پیشنهاد جدید',
+  'admin.electricityPrice.percentage': 'درصد تغییر قیمت',
+  'admin.electricityPrice.percentageHelp':
+    'برای کاهش قیمت از عدد منفی استفاده کنید. دقت تا دو رقم اعشار است.',
+  'admin.electricityPrice.effective': 'شروع اثرگذاری',
+  'admin.electricityPrice.reason': 'دلیل',
+  'admin.electricityPrice.basis': 'مبنای قراردادی',
+  'admin.electricityPrice.publish': 'انتشار برای مشتری',
+  'admin.electricityPrice.resolveProposal':
+    'پیشنهاد باز را نهایی یا لغو کنید تا بتوانید پیشنهاد دیگری منتشر کنید.',
+  'admin.electricityPrice.waitForIncrease': 'ابتدا درخواست افزایش مقدار برق را تعیین تکلیف کنید.',
+  'admin.electricityPrice.notEligible':
+    'این قرارداد در حال حاضر دوره آینده واجد شرایط برای تغییر قیمت ندارد.',
+  'admin.electricityPrice.adjustment': 'تغییر قیمت',
+  'admin.electricityPrice.status.proposed': 'منتشرشده',
+  'admin.electricityPrice.status.finalized': 'نهایی‌شده',
+  'admin.electricityPrice.status.cancelled': 'لغوشده',
+  'admin.electricityPrice.oldFuture': 'بهای قبلی بخش آینده',
+  'admin.electricityPrice.newFuture': 'بهای جدید بخش آینده',
+  'admin.electricityPrice.amount': 'تغییر خالص',
+  'admin.electricityPrice.invoice': 'فاکتور تعدیل',
+  'admin.electricityPrice.finalize': 'نهایی‌سازی و صدور تعدیل',
+  'admin.electricityPrice.finalizePermission': 'برای صدور تعدیل، مجوز قرارداد و فاکتور لازم است.',
+  'admin.electricityPrice.finalizeConfirm':
+    'جزئیات منتشرشده و مبلغ را بررسی کنید. این اقدام فاکتور افزایش یا بستانکاری صادر می‌کند.',
+  'admin.electricityPrice.cancel': 'لغو پیشنهاد',
+  'admin.electricityPrice.cancelConfirm': 'پیشنهاد برای مشتری لغو می‌شود و فاکتوری صادر نمی‌شود.',
+  'admin.electricityPrice.conflict':
+    'قرارداد یا مبنای قیمت تغییر کرده است. اطلاعات را تازه‌سازی کنید.',
   'admin.electricityIncreases.title': 'درخواست‌های افزایش برق',
   'admin.electricityIncreases.description': 'درخواست‌های افزایش مقدار قرارداد فعال را بررسی کنید.',
   'admin.electricityIncreases.refresh': 'تازه‌سازی',
@@ -1037,6 +1077,49 @@ export const fa: I18nDictionary = {
   'admin.approvals.walletReceipts': 'نمایش رسیدهای کیف پول',
 };
 export const en: I18nDictionary = {
+  'admin.electricityPrice.title': 'Electricity price adjustments',
+  'admin.electricityPrice.description':
+    'Publish a future price proposal for the customer, then issue the charge or credit.',
+  'admin.electricityPrice.contractId': 'Electricity contract ID',
+  'admin.electricityPrice.open': 'Open contract',
+  'admin.electricityPrice.refresh': 'Refresh',
+  'admin.electricityPrice.loading': 'Loading contract…',
+  'admin.electricityPrice.load': 'Could not load this contract or its price history.',
+  'admin.electricityPrice.save': 'Could not publish the proposal. Check the details and date.',
+  'admin.electricityPrice.forbidden':
+    'Required permission or recent identity verification is missing.',
+  'admin.electricityPrice.termEnds': 'Delivery period ends',
+  'admin.electricityPrice.newProposal': 'New proposal',
+  'admin.electricityPrice.percentage': 'Price change percentage',
+  'admin.electricityPrice.percentageHelp':
+    'Use a negative number for a decrease. Up to two decimal places.',
+  'admin.electricityPrice.effective': 'Effective from',
+  'admin.electricityPrice.reason': 'Reason',
+  'admin.electricityPrice.basis': 'Contractual basis',
+  'admin.electricityPrice.publish': 'Publish for customer',
+  'admin.electricityPrice.resolveProposal':
+    'Finalize or cancel the open proposal before publishing another.',
+  'admin.electricityPrice.waitForIncrease': 'Resolve the open electricity quantity increase first.',
+  'admin.electricityPrice.notEligible':
+    'This contract has no eligible future delivery period for a price change.',
+  'admin.electricityPrice.adjustment': 'Price change',
+  'admin.electricityPrice.status.proposed': 'Published',
+  'admin.electricityPrice.status.finalized': 'Finalized',
+  'admin.electricityPrice.status.cancelled': 'Cancelled',
+  'admin.electricityPrice.oldFuture': 'Previous future-period price',
+  'admin.electricityPrice.newFuture': 'New future-period price',
+  'admin.electricityPrice.amount': 'Net change',
+  'admin.electricityPrice.invoice': 'Adjustment invoice',
+  'admin.electricityPrice.finalize': 'Finalize and issue adjustment',
+  'admin.electricityPrice.finalizePermission':
+    'Finalization requires contract and invoice permissions.',
+  'admin.electricityPrice.finalizeConfirm':
+    'Check the disclosed terms and amount. This issues a charge invoice or credit note.',
+  'admin.electricityPrice.cancel': 'Cancel proposal',
+  'admin.electricityPrice.cancelConfirm':
+    'The customer will see the cancelled proposal. No invoice will be issued.',
+  'admin.electricityPrice.conflict':
+    'The contract or price basis changed. Refresh and review it again.',
   'admin.electricityIncreases.title': 'Electricity increase requests',
   'admin.electricityIncreases.description':
     'Review requests to increase an active contract’s quantity.',

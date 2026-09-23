@@ -102,6 +102,7 @@ export function quoteIncreaseAdjustment(input: {
   periodEnd: Date;
   effectiveFrom: Date;
   now: Date;
+  priceComponents?: Array<{ invoiceId: string; amountIrR: bigint; effectiveFrom: Date }>;
 }) {
   const eligibleStart = new Date(
     Math.max(input.periodStart.getTime(), input.effectiveFrom.getTime(), input.now.getTime())
@@ -119,10 +120,33 @@ export function quoteIncreaseAdjustment(input: {
   const numerator =
     input.originalInvoiceIrR * (input.requestedKwh - input.originalKwh) * remainingMs;
   const denominator = input.originalKwh * periodMs;
-  const amount = (numerator + denominator / 2n) / denominator;
+  const originalAmount = (numerator + denominator / 2n) / denominator;
+  const priceAdjustments = (input.priceComponents ?? []).map((component) => {
+    const start = BigInt(
+      input.periodEnd.getTime() -
+        Math.max(eligibleStart.getTime(), component.effectiveFrom.getTime())
+    );
+    const componentPeriod = BigInt(input.periodEnd.getTime() - component.effectiveFrom.getTime());
+    if (componentPeriod <= 0n || component.amountIrR === 0n)
+      throw new ConflictException('Invalid finalized price basis');
+    const usedMs = start > 0n ? start : 0n;
+    const numerator = component.amountIrR * (input.requestedKwh - input.originalKwh) * usedMs;
+    const denominator = input.originalKwh * componentPeriod;
+    const absolute = numerator < 0n ? -numerator : numerator;
+    const rounded = (absolute + denominator / 2n) / denominator;
+    return {
+      invoiceId: component.invoiceId,
+      amountIrR: component.amountIrR.toString(),
+      effectiveFrom: component.effectiveFrom.toISOString(),
+      increaseShareIrR: (numerator < 0n ? -rounded : rounded).toString(),
+    };
+  });
+  const amount =
+    originalAmount +
+    priceAdjustments.reduce((sum, component) => sum + BigInt(component.increaseShareIrR), 0n);
   if (amount <= 0n || amount > 9_223_372_036_854_775_807n)
     throw new ConflictException('Adjustment amount is outside the payable range');
-  return { amount, eligibleStart, remainingMs, periodMs };
+  return { amount, eligibleStart, remainingMs, periodMs, priceAdjustments };
 }
 
 /** Hold a reviewed quote stable until the next five-minute delivery boundary. */
@@ -173,6 +197,36 @@ export class ElectricityIncreaseService {
       throw new ConflictException('Original electricity invoice is not fully paid');
     return row;
   }
+  private async finalizedPriceComponents(client: PoolClient, contractId: string) {
+    const rows = (
+      await client.query<{
+        status: string;
+        adjustment_invoice_id: string | null;
+        adjustment_amount: string;
+        effective_from: Date;
+        invoice_state: string | null;
+      }>(
+        `SELECT a.status,a.adjustment_invoice_id,a.adjustment_amount::text,a.effective_from,
+       i.state AS invoice_state FROM electricity_price_adjustments a
+       LEFT JOIN invoices i ON i.id=a.adjustment_invoice_id
+       WHERE a.contract_id=$1 ORDER BY a.created_at,a.id`,
+        [contractId]
+      )
+    ).rows;
+    if (rows.some((row) => row.status === 'proposed'))
+      throw new ConflictException('Resolve the open price proposal before signing an increase');
+    return rows
+      .filter((row) => row.status === 'finalized')
+      .map((row) => {
+        if (!row.adjustment_invoice_id || row.invoice_state === 'Cancelled')
+          throw new ConflictException('Finalized price basis is unavailable');
+        return {
+          invoiceId: row.adjustment_invoice_id,
+          amountIrR: BigInt(row.adjustment_amount),
+          effectiveFrom: row.effective_from,
+        };
+      });
+  }
   private async contract(client: PoolClient, id: string, profileId: string, lock: boolean) {
     const row = (
       await client.query<IncreaseContract>(
@@ -208,6 +262,14 @@ export class ElectricityIncreaseService {
       const contract = await this.contract(client, id, profileId, false);
       const maxPercentage = await this.maxPercent(client);
       const request = await this.request(client, id);
+      const openPriceProposal =
+        (
+          await client.query<{ open: boolean }>(
+            `SELECT EXISTS(SELECT 1 FROM electricity_price_adjustments
+         WHERE contract_id=$1 AND status='proposed') AS open`,
+            [id]
+          )
+        ).rows[0]?.open ?? false;
       let quote: { adjustmentIrR: string; eligibleFrom: Date } | null = null;
       if (request?.status === 'awaiting_signature' && contract.period_end > new Date()) {
         const pricingInstant = nextIncreasePricingInstant(new Date());
@@ -221,6 +283,7 @@ export class ElectricityIncreaseService {
             periodEnd: contract.period_end,
             effectiveFrom: request.effectiveFrom,
             now: pricingInstant,
+            priceComponents: await this.finalizedPriceComponents(client, id),
           });
           quote = { adjustmentIrR: result.amount.toString(), eligibleFrom: result.eligibleStart };
         }
@@ -236,6 +299,7 @@ export class ElectricityIncreaseService {
         canRequest:
           mayRequest &&
           !request &&
+          !openPriceProposal &&
           maxPercentage > 0 &&
           contract.state === 'Active' &&
           contract.electricity_status === 'active' &&
@@ -269,6 +333,16 @@ export class ElectricityIncreaseService {
               throw new ConflictException('Contract is no longer eligible for an increase');
             if (await this.request(client, id))
               throw new ConflictException('This contract already has an increase request');
+            if (
+              (
+                await client.query<{ open: boolean }>(
+                  `SELECT EXISTS(SELECT 1 FROM electricity_price_adjustments
+               WHERE contract_id=$1 AND status='proposed') AS open`,
+                  [id]
+                )
+              ).rows[0]?.open
+            )
+              throw new ConflictException('Resolve the open price proposal first');
             const maxPercentage = await this.maxPercent(client);
             const original = BigInt(contract.original_kwh);
             const requested = BigInt(input.requestedKwh);
@@ -427,7 +501,7 @@ export class ElectricityIncreaseService {
               earliestEffectiveFrom: effectiveFrom.toISOString(),
               periodEnd: request.period_end.toISOString(),
               pricingRule:
-                'Original paid invoice net unit value, prorated over the remaining eligible period at signature',
+                'Paid original invoice and finalized price adjustments, prorated for the added quantity over each remaining eligible period at signature',
               activationRule:
                 'Quantity increases only after customer signature and full adjustment payment, no earlier than the effective date',
             };
@@ -520,6 +594,7 @@ export class ElectricityIncreaseService {
                 periodEnd: request.period_end,
                 effectiveFrom: request.effective_from,
                 now: nextIncreasePricingInstant(now),
+                priceComponents: await this.finalizedPriceComponents(client, id),
               });
               if (quote.amount.toString() !== input.expectedAdjustmentIrR)
                 throw new ConflictException('Adjustment changed; review the current amount');
@@ -535,6 +610,7 @@ export class ElectricityIncreaseService {
                 periodEnd: request.period_end.toISOString(),
                 remainingMs: quote.remainingMs.toString(),
                 periodMs: quote.periodMs.toString(),
+                priceAdjustments: quote.priceAdjustments,
                 rounding: 'half-up-to-nearest-IRR',
                 adjustmentIrR: quote.amount.toString(),
               };

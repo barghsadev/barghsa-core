@@ -70,4 +70,27 @@ describe('electricity increase adjustment quote', () => {
       })
     ).toThrow('No eligible future delivery remains');
   });
+
+  it('includes finalized price credits when pricing a later quantity increase', () => {
+    const quote = quoteIncreaseAdjustment({
+      originalInvoiceIrR: 1_000_000n,
+      originalKwh: 10n,
+      requestedKwh: 12n,
+      periodStart,
+      periodEnd,
+      effectiveFrom: periodStart,
+      now: new Date('2026-10-08T12:00:00Z'),
+      priceComponents: [
+        {
+          invoiceId: 'credit-1',
+          amountIrR: -50_000n,
+          effectiveFrom: new Date('2026-10-06T00:00:00Z'),
+        },
+      ],
+    });
+    expect(quote.amount).toBe(45_000n);
+    expect(quote.priceAdjustments).toMatchObject([
+      { invoiceId: 'credit-1', increaseShareIrR: '-5000' },
+    ]);
+  });
 });

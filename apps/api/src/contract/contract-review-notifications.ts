@@ -2,6 +2,18 @@ import type { PoolClient } from 'pg';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 const messages = {
+  electricity_price_proposed: {
+    fa: 'تغییر قیمت برق برای دوره آینده پیشنهاد شد. مبنا، دلیل و محاسبه را پیش از نهایی‌شدن در جزئیات سفارش ببینید.',
+    en: 'A future electricity price change was proposed. Review its basis, reason and calculation in your order before finalization.',
+  },
+  electricity_price_finalized: {
+    fa: 'تغییر قیمت برق نهایی شد. فاکتور تعدیل یا بستانکاری مرتبط را در جزئیات سفارش ببینید.',
+    en: 'Your electricity price change was finalized. See the linked adjustment invoice or credit in your order.',
+  },
+  electricity_price_cancelled: {
+    fa: 'پیشنهاد تغییر قیمت برق لغو شد. فاکتور تعدیلی صادر نشد.',
+    en: 'The proposed electricity price change was cancelled. No adjustment invoice was issued.',
+  },
   electricity_increase_requested: {
     fa: 'درخواست افزایش مقدار برق برای بررسی کارکنان ثبت شد.',
     en: 'An electricity quantity increase request is awaiting staff review.',

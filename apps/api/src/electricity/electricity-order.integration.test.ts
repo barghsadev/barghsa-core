@@ -1234,6 +1234,44 @@ it.each([
         [`electricity-increase-effective:${result.requestId}`]
       );
       expect(effectiveNotices.rows[0]?.count).toBe(1);
+      if (decision === 'approve_future') {
+        const period = (
+          await http.pool.query<{ period_start: Date; period_end: Date }>(
+            'SELECT period_start,period_end FROM electricity_orders WHERE id=$1',
+            [order.orderId]
+          )
+        ).rows[0]!;
+        const priceStart = new Date(
+          (period.period_start.getTime() + period.period_end.getTime()) / 2
+        );
+        const proposal = await fetch(
+          `${http.base}/api/staff/electricity/contracts/${order.contractId}/price-adjustments`,
+          {
+            method: 'POST',
+            headers: staffHeaders,
+            body: JSON.stringify({
+              expectedVersionId: versionId,
+              effectiveFrom: priceStart.toISOString(),
+              percentageBps: '1000',
+              reason: 'Future tariff change',
+              contractualBasis: 'Clause 7',
+              idempotencyKey: randomUUID(),
+            }),
+          }
+        );
+        expect(proposal.status, http.logs()).toBe(201);
+        expect(await proposal.json()).toMatchObject({
+          adjustmentAmountIrR: '60000',
+          calculation: {
+            quote: {
+              components: [
+                expect.objectContaining({ source: 'original_invoice', changeIrR: '50000' }),
+                expect.objectContaining({ source: 'quantity_increase', changeIrR: '10000' }),
+              ],
+            },
+          },
+        });
+      }
       return;
     }
     const rejected = await fetch(
@@ -1577,3 +1615,278 @@ it('expires old drafts using the configured retention period', async () => {
   );
   expect(await (await get()).json()).toMatchObject({ currentStep: 2, data: body.data });
 });
+
+it.each(['charge', 'credit'] as const)(
+  'discloses a future staff price %s before issuing its linked adjustment',
+  async (kind) => {
+    const order = await submittedOrder();
+    const contract = (
+      await http.pool.query<{
+        current_version_id: string;
+      }>('SELECT current_version_id FROM contracts WHERE id=$1', [order.contractId])
+    ).rows[0]!;
+    const period = (
+      await http.pool.query<{ period_start: Date; period_end: Date }>(
+        'SELECT period_start,period_end FROM electricity_orders WHERE id=$1',
+        [order.orderId]
+      )
+    ).rows[0]!;
+    const effectiveFrom = new Date(
+      (period.period_start.getTime() + period.period_end.getTime()) / 2
+    );
+    expect(
+      (
+        await staffPost(order.orderId, 'approve', {
+          expectedVersionId: contract.current_version_id,
+          idempotencyKey: randomUUID(),
+        })
+      ).status,
+      http.logs()
+    ).toBe(200);
+    await http.pool.query(
+      `INSERT INTO wallets(profile_id,posted_balance,reserved_balance)
+      VALUES($1,1500000,0) ON CONFLICT(profile_id)
+      DO UPDATE SET posted_balance=1500000,reserved_balance=0`,
+      [input.profileId]
+    );
+    await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+    const originalPaymentPath = `${http.base}/api/invoices/${order.invoiceId}/wallet-payment`;
+    const originalPaymentReview = await fetch(originalPaymentPath, { headers });
+    expect(originalPaymentReview.status, http.logs()).toBe(200);
+    const reviewHash = ((await originalPaymentReview.json()) as { review: { hash: string } }).review
+      .hash;
+    expect(
+      (
+        await fetch(originalPaymentPath, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            idempotencyKey: randomUUID(),
+            expectedRemainingAmount: '1000000',
+            expectedReviewHash: reviewHash,
+          }),
+        })
+      ).status,
+      http.logs()
+    ).toBe(200);
+    const acceptancePath = `${http.base}/api/contracts/${order.contractId}`;
+    const acceptanceReview = await fetch(
+      `${acceptancePath}/acceptance-review?versionId=${contract.current_version_id}`,
+      { headers }
+    );
+    expect(acceptanceReview.status, http.logs()).toBe(200);
+    const acceptanceHash = ((await acceptanceReview.json()) as { hash: string }).hash;
+    expect(
+      (
+        await fetch(`${acceptancePath}/accept`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            idempotencyKey: randomUUID(),
+            expectedVersionId: contract.current_version_id,
+            expectedReviewHash: acceptanceHash,
+          }),
+        })
+      ).status,
+      http.logs()
+    ).toBe(200);
+    expect((await activateReadyContracts(http.pool)).activated).toBe(1);
+
+    const staffPath = `${http.base}/api/staff/electricity/contracts/${order.contractId}/price-adjustments`;
+    const customerPath = `${http.base}/api/electricity/contracts/${order.contractId}/price-adjustments`;
+    const percentageBps = kind === 'charge' ? '1000' : '-1000';
+    const proposalBody = {
+      expectedVersionId: contract.current_version_id,
+      effectiveFrom: effectiveFrom.toISOString(),
+      percentageBps,
+      reason: 'Published future tariff correction',
+      contractualBasis: 'Clause 7 of signed electricity contract',
+      idempotencyKey: randomUUID(),
+    };
+    const propose = () =>
+      fetch(staffPath, {
+        method: 'POST',
+        headers: staffHeaders,
+        body: JSON.stringify(proposalBody),
+      });
+    const proposedResponse = await propose();
+    expect(proposedResponse.status, http.logs()).toBe(201);
+    const proposed = (await proposedResponse.json()) as {
+      adjustmentId: string;
+      calculationSha256: string;
+      adjustmentAmountIrR: string;
+    };
+    expect(proposed.adjustmentAmountIrR).toBe(kind === 'charge' ? '50000' : '-50000');
+    expect(((await (await propose()).json()) as { adjustmentId: string }).adjustmentId).toBe(
+      proposed.adjustmentId
+    );
+    const disclosedResponse = await fetch(customerPath, { headers });
+    expect(disclosedResponse.status, http.logs()).toBe(200);
+    expect(await disclosedResponse.json()).toMatchObject({
+      adjustments: [
+        {
+          adjustmentId: proposed.adjustmentId,
+          status: 'proposed',
+          reason: proposalBody.reason,
+          contractualBasis: proposalBody.contractualBasis,
+          adjustmentInvoiceId: null,
+          calculation: { quote: { amountIrR: proposed.adjustmentAmountIrR } },
+        },
+      ],
+    });
+    const finalizePath = `${http.base}/api/staff/electricity/price-adjustments/${proposed.adjustmentId}/finalize`;
+    const finalizeBody = {
+      expectedCalculationSha256: proposed.calculationSha256,
+      idempotencyKey: randomUUID(),
+    };
+    expect(
+      (
+        await fetch(finalizePath, {
+          method: 'POST',
+          headers: staffHeaders,
+          body: JSON.stringify(finalizeBody),
+        })
+      ).status
+    ).toBe(403);
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES('reviewer','role-finance')"
+    );
+    expect(
+      (
+        await fetch(finalizePath, {
+          method: 'POST',
+          headers: staffHeaders,
+          body: JSON.stringify({ ...finalizeBody, expectedCalculationSha256: '0'.repeat(64) }),
+        })
+      ).status
+    ).toBe(409);
+    const finalizedResponse = await fetch(finalizePath, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify(finalizeBody),
+    });
+    expect(finalizedResponse.status, http.logs()).toBe(201);
+    const finalized = (await finalizedResponse.json()) as {
+      adjustmentInvoiceId: string;
+      status: string;
+    };
+    expect(finalized.status).toBe('finalized');
+    expect(
+      (
+        (await (
+          await fetch(finalizePath, {
+            method: 'POST',
+            headers: staffHeaders,
+            body: JSON.stringify(finalizeBody),
+          })
+        ).json()) as { adjustmentInvoiceId: string }
+      ).adjustmentInvoiceId
+    ).toBe(finalized.adjustmentInvoiceId);
+    const invoice = (
+      await http.pool.query<{
+        state: string;
+        adjustment_kind: string;
+        total_amount: string;
+        payable_from: Date | null;
+        adjustment_for_invoice_id: string;
+      }>(
+        `SELECT state,adjustment_kind,total_amount,payable_from,adjustment_for_invoice_id
+        FROM invoices WHERE id=$1`,
+        [finalized.adjustmentInvoiceId]
+      )
+    ).rows[0]!;
+    expect(invoice).toMatchObject({
+      state: 'Unpaid',
+      adjustment_kind: kind,
+      total_amount: '50000',
+      adjustment_for_invoice_id: order.invoiceId,
+    });
+    if (kind === 'credit') expect(invoice.payable_from).toBeNull();
+    const original = (
+      await http.pool.query<{ state: string; total_amount: string }>(
+        'SELECT state,total_amount FROM invoices WHERE id=$1',
+        [order.invoiceId]
+      )
+    ).rows[0]!;
+    expect(original).toMatchObject({ state: 'Paid', total_amount: '1000000' });
+    expect(await (await fetch(customerPath, { headers })).json()).toMatchObject({
+      adjustments: [
+        {
+          adjustmentId: proposed.adjustmentId,
+          status: 'finalized',
+          adjustmentInvoiceId: finalized.adjustmentInvoiceId,
+        },
+      ],
+    });
+    await expect(
+      http.pool.query("UPDATE electricity_price_adjustments SET reason='rewritten' WHERE id=$1", [
+        proposed.adjustmentId,
+      ])
+    ).rejects.toMatchObject({ code: '23514' });
+    const secondProposal = await fetch(staffPath, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({
+        ...proposalBody,
+        idempotencyKey: randomUUID(),
+        reason: 'Superseded second proposal',
+      }),
+    });
+    expect(secondProposal.status, http.logs()).toBe(201);
+    const secondId = ((await secondProposal.json()) as { adjustmentId: string }).adjustmentId;
+    const cancelled = await fetch(
+      `${http.base}/api/staff/electricity/price-adjustments/${secondId}/cancel`,
+      {
+        method: 'POST',
+        headers: staffHeaders,
+        body: JSON.stringify({ idempotencyKey: randomUUID() }),
+      }
+    );
+    expect(cancelled.status, http.logs()).toBe(201);
+    expect((await cancelled.json()) as { status: string }).toMatchObject({ status: 'cancelled' });
+    expect(await (await fetch(customerPath, { headers })).json()).toMatchObject({
+      adjustments: [
+        expect.objectContaining({ adjustmentId: secondId, status: 'cancelled' }),
+        expect.objectContaining({ adjustmentId: proposed.adjustmentId, status: 'finalized' }),
+      ],
+    });
+    await http.pool.query(
+      `INSERT INTO app_config(key,value,version) VALUES('electricity.contract_limits',$1::jsonb,1)
+       ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,version=app_config.version+1`,
+      [
+        JSON.stringify({
+          max_quantity_increase_percent: 20,
+          max_contract_duration_months: 24,
+          lead_time_days: 0,
+        }),
+      ]
+    );
+    const increasePath = `${http.base}/api/electricity/contracts/${order.contractId}/increase`;
+    const increaseResponse = await fetch(increasePath, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        requestedKwh: '12',
+        expectedVersionId: contract.current_version_id,
+        idempotencyKey: randomUUID(),
+      }),
+    });
+    expect(increaseResponse.status, http.logs()).toBe(201);
+    const increaseId = ((await increaseResponse.json()) as { requestId: string }).requestId;
+    const increaseApproval = await fetch(
+      `${http.base}/api/staff/electricity/increase-requests/${increaseId}/approve`,
+      {
+        method: 'POST',
+        headers: staffHeaders,
+        body: JSON.stringify({ idempotencyKey: randomUUID() }),
+      }
+    );
+    expect(increaseApproval.status, http.logs()).toBe(201);
+    const increaseQuote = await fetch(increasePath, { headers });
+    expect(increaseQuote.status, http.logs()).toBe(200);
+    expect((await increaseQuote.json()) as { quote: { adjustmentIrR: string } }).toMatchObject({
+      quote: { adjustmentIrR: kind === 'charge' ? '210000' : '190000' },
+    });
+  },
+  40000
+);

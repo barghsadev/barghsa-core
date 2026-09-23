@@ -44,6 +44,7 @@ import { Route as AdminCrmRouteImport } from './routes/admin/crm'
 import { Route as AdminDocumentsRouteImport } from './routes/admin/documents'
 import { Route as AdminElectricityIncreasesRouteImport } from './routes/admin/electricity-increases'
 import { Route as AdminElectricityOrdersRouteImport } from './routes/admin/electricity-orders'
+import { Route as AdminElectricityPriceAdjustmentsRouteImport } from './routes/admin/electricity-price-adjustments'
 import { Route as AdminElectricityRulesRouteImport } from './routes/admin/electricity-rules'
 import { Route as AdminFailedJobsRouteImport } from './routes/admin/failed-jobs'
 import { Route as AdminFailedNotificationsRouteImport } from './routes/admin/failed-notifications'
@@ -268,6 +269,12 @@ const AdminElectricityOrdersRoute = AdminElectricityOrdersRouteImport.update({
   path: '/electricity-orders',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminElectricityPriceAdjustmentsRoute =
+  AdminElectricityPriceAdjustmentsRouteImport.update({
+    id: '/electricity-price-adjustments',
+    path: '/electricity-price-adjustments',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminElectricityRulesRoute = AdminElectricityRulesRouteImport.update({
   id: '/electricity-rules',
   path: '/electricity-rules',
@@ -549,6 +556,7 @@ export interface FileRoutesByFullPath {
   '/admin/documents': typeof AdminDocumentsRoute
   '/admin/electricity-increases': typeof AdminElectricityIncreasesRoute
   '/admin/electricity-orders': typeof AdminElectricityOrdersRoute
+  '/admin/electricity-price-adjustments': typeof AdminElectricityPriceAdjustmentsRoute
   '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
@@ -629,6 +637,7 @@ export interface FileRoutesByTo {
   '/admin/documents': typeof AdminDocumentsRoute
   '/admin/electricity-increases': typeof AdminElectricityIncreasesRoute
   '/admin/electricity-orders': typeof AdminElectricityOrdersRoute
+  '/admin/electricity-price-adjustments': typeof AdminElectricityPriceAdjustmentsRoute
   '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
@@ -714,6 +723,7 @@ export interface FileRoutesById {
   '/admin/documents': typeof AdminDocumentsRoute
   '/admin/electricity-increases': typeof AdminElectricityIncreasesRoute
   '/admin/electricity-orders': typeof AdminElectricityOrdersRoute
+  '/admin/electricity-price-adjustments': typeof AdminElectricityPriceAdjustmentsRoute
   '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
@@ -800,6 +810,7 @@ export interface FileRouteTypes {
     | '/admin/documents'
     | '/admin/electricity-increases'
     | '/admin/electricity-orders'
+    | '/admin/electricity-price-adjustments'
     | '/admin/electricity-rules'
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
@@ -880,6 +891,7 @@ export interface FileRouteTypes {
     | '/admin/documents'
     | '/admin/electricity-increases'
     | '/admin/electricity-orders'
+    | '/admin/electricity-price-adjustments'
     | '/admin/electricity-rules'
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
@@ -964,6 +976,7 @@ export interface FileRouteTypes {
     | '/admin/documents'
     | '/admin/electricity-increases'
     | '/admin/electricity-orders'
+    | '/admin/electricity-price-adjustments'
     | '/admin/electricity-rules'
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
@@ -1275,6 +1288,13 @@ declare module '@tanstack/react-router' {
       path: '/electricity-orders'
       fullPath: '/admin/electricity-orders'
       preLoaderRoute: typeof AdminElectricityOrdersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/electricity-price-adjustments': {
+      id: '/admin/electricity-price-adjustments'
+      path: '/electricity-price-adjustments'
+      fullPath: '/admin/electricity-price-adjustments'
+      preLoaderRoute: typeof AdminElectricityPriceAdjustmentsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/electricity-rules': {
@@ -1715,6 +1735,7 @@ interface AdminRouteChildren {
   AdminDocumentsRoute: typeof AdminDocumentsRoute
   AdminElectricityIncreasesRoute: typeof AdminElectricityIncreasesRoute
   AdminElectricityOrdersRoute: typeof AdminElectricityOrdersRoute
+  AdminElectricityPriceAdjustmentsRoute: typeof AdminElectricityPriceAdjustmentsRoute
   AdminElectricityRulesRoute: typeof AdminElectricityRulesRoute
   AdminFailedJobsRoute: typeof AdminFailedJobsRoute
   AdminFailedNotificationsRoute: typeof AdminFailedNotificationsRoute
@@ -1754,6 +1775,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDocumentsRoute: AdminDocumentsRoute,
   AdminElectricityIncreasesRoute: AdminElectricityIncreasesRoute,
   AdminElectricityOrdersRoute: AdminElectricityOrdersRoute,
+  AdminElectricityPriceAdjustmentsRoute: AdminElectricityPriceAdjustmentsRoute,
   AdminElectricityRulesRoute: AdminElectricityRulesRoute,
   AdminFailedJobsRoute: AdminFailedJobsRoute,
   AdminFailedNotificationsRoute: AdminFailedNotificationsRoute,

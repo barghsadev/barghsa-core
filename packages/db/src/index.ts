@@ -653,6 +653,7 @@ export * from './schema/addresses';
 export * from './schema/orders';
 export * from './schema/electricity-orders';
 export * from './schema/electricity-quantity-increase-requests';
+export * from './schema/electricity-price-adjustments';
 export * from './schema/gift-codes';
 export * from './schema/contract-templates';
 export * from './schema/geography';

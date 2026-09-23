@@ -16,6 +16,7 @@ import {
   StatusBadge,
 } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
+import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { documentRequest } from '../lib/documents.js';
@@ -211,6 +212,14 @@ function ContractResults({
                 </Button>
                 {item.changeDescription ? (
                   <p className="text-sm text-muted-foreground">{item.changeDescription}</p>
+                ) : null}
+                {staff && item.serviceType === 'electricity' ? (
+                  <a
+                    className="text-sm text-primary underline"
+                    href={`/admin/electricity-price-adjustments?contractId=${encodeURIComponent(item.id)}`}
+                  >
+                    {adminText('admin.electricityPrice.title', locale)}
+                  </a>
                 ) : null}
               </div>
               <StatusBadge label={word(item.state)} />

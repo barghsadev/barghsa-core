@@ -63,6 +63,11 @@ export default function AdminLayout() {
           label: t('admin.electricityIncreases.title', locale),
           icon: Zap,
         },
+        {
+          to: '/admin/electricity-price-adjustments',
+          label: t('admin.electricityPrice.title', locale),
+          icon: Zap,
+        },
         { to: '/admin/documents', label: documentText('staffTitle', locale), icon: FileText },
         {
           to: '/admin/reconciliation',

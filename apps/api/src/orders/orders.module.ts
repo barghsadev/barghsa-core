@@ -20,6 +20,11 @@ import {
   StaffElectricityIncreaseController,
 } from '../electricity/electricity-increase.controller.js';
 import { ElectricityIncreaseService } from '../electricity/electricity-increase.service.js';
+import {
+  CustomerElectricityPriceAdjustmentController,
+  StaffElectricityPriceAdjustmentController,
+} from '../electricity/electricity-price-adjustment.controller.js';
+import { ElectricityPriceAdjustmentService } from '../electricity/electricity-price-adjustment.service.js';
 
 @Module({
   imports: [SessionModule, AdminModule, InvoiceModule],
@@ -30,6 +35,8 @@ import { ElectricityIncreaseService } from '../electricity/electricity-increase.
     ElectricityStaffReviewController,
     CustomerElectricityIncreaseController,
     StaffElectricityIncreaseController,
+    CustomerElectricityPriceAdjustmentController,
+    StaffElectricityPriceAdjustmentController,
   ],
   providers: [
     OrdersService,
@@ -40,6 +47,7 @@ import { ElectricityIncreaseService } from '../electricity/electricity-increase.
     ElectricityDraftService,
     ElectricityStaffReviewService,
     ElectricityIncreaseService,
+    ElectricityPriceAdjustmentService,
   ],
   exports: [OrdersService, ElectricityCalculationService],
 })

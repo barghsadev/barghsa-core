@@ -5,6 +5,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { ElectricityIncreasePanel } from './ElectricityIncreasePanel.js';
+import { ElectricityPriceAdjustmentsPanel } from './ElectricityPriceAdjustmentsPanel.js';
 
 interface ElectricityOrderDetail {
   orderId: string;
@@ -377,6 +378,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           {detail.contractState === 'Active' ? (
             <ElectricityIncreasePanel contractId={detail.contractId} versionId={detail.versionId} />
           ) : null}
+          <ElectricityPriceAdjustmentsPanel contractId={detail.contractId} />
           <Card>
             <CardContent className="pt-6">
               <h2 className="font-semibold">{t('electricity.order.nextAction', locale)}</h2>

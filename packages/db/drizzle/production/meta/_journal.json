@@ -554,6 +554,13 @@
       "when": 1791331200061,
       "tag": "0158_electricity_increase_expiry",
       "breakpoints": true
+    },
+    {
+      "idx": 159,
+      "version": "7",
+      "when": 1791331200062,
+      "tag": "0159_electricity_price_adjustments",
+      "breakpoints": true
     }
   ]
 }
