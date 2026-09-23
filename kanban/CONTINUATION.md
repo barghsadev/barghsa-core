@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Simple electricity browser journey](batches/2026-09-24-electricity-simple-browser-journey.md) covers the simple-order portion of `03-core-business.md#T-03.90.14`: catalogue, period and quantity, reviewed thermal/green quote, staff review handoff, linked wallet payment, and contract tracking. The focused journey passes all five browser projects. The browser API is controlled; backend transitions remain covered in integration suites.
+
 [Persistent language and direction](batches/2026-09-24-language-preference.md) closes the saved-language reload gap in `07-ui-ux-design.md#T-07.03.02.01`–`.02`. English and Persian selection survives later visits, and initial direction follows a saved or browser preference before React renders. Focused unit, bilingual journey, five-browser, type, lint, format, and build checks pass locally.
 
 [Solar customer browser journey](batches/2026-09-24-solar-browser-journey.md) covers the solar portion of `03-core-business.md#T-03.90.14`: draft resume, submission, file upload, document review handoff, postal guidance, and shipment entry. The focused journey passes all five browser projects. Its API is mocked in the browser; backend transition checks remain in the API suites.
