@@ -20,9 +20,10 @@ export async function persistElectricitySubmissionSnapshot(
   composition: Extract<CompositionResult, { ok: true }>,
   totals: ReturnType<typeof calculateElectricityTotals>,
   gift: ElectricityGiftDiscount | undefined,
+  submittedBy: string,
   submittedAt: Date
 ): Promise<Record<string, unknown>> {
-  if (!orderId || !Number.isFinite(submittedAt.getTime())) {
+  if (!orderId || !submittedBy || !Number.isFinite(submittedAt.getTime())) {
     throw new RangeError('Order and submission time are required');
   }
   const duration = calculateDuration(period.start, period.end);
@@ -45,10 +46,21 @@ export async function persistElectricitySubmissionSnapshot(
   const result = await client.query(
     `UPDATE electricity_orders
         SET status='submitted', period_start=$2, period_end=$3, submitted_at=$4,
-            pricing_snapshot=$5::jsonb, updated_at=NOW()
+            pricing_snapshot=$5::jsonb, total_kwh=$6, average_power_kw=$7,
+            green_rule_applied=$8, submitted_by=$9, updated_at=NOW()
       WHERE id=$1 AND status='draft' AND pricing_snapshot IS NULL
       RETURNING id`,
-    [orderId, period.start, period.end, submittedAt, JSON.stringify(snapshot)]
+    [
+      orderId,
+      period.start,
+      period.end,
+      submittedAt,
+      JSON.stringify(snapshot),
+      composition.totalKwh.toString(),
+      composition.averagePowerKw,
+      composition.greenRuleApplies,
+      submittedBy,
+    ]
   );
   if (result.rows.length !== 1) throw new Error('Electricity draft is unavailable for submission');
   return snapshot;

@@ -23,6 +23,7 @@ import {
   toContractElectricityLimits,
   validateContractElectricityLimits,
 } from '@barghsa/shared/admin';
+import type { GreenElectricityConfig } from '@barghsa/shared/finance';
 
 type OrderActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
@@ -94,7 +95,7 @@ export class OrdersService {
     private readonly giftCodeService: GiftCodeService
   ) {}
 
-  private async mayManageOrders(
+  async mayManageOrders(
     client: PoolClient,
     userId: string,
     profileId: string,
@@ -137,7 +138,7 @@ export class OrdersService {
     return true;
   }
 
-  private async lockOrderActor(client: PoolClient, actor: OrderActor): Promise<void> {
+  async lockOrderActor(client: PoolClient, actor: OrderActor): Promise<void> {
     const account = (
       await client.query('SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
         actor.userId,
@@ -146,6 +147,44 @@ export class OrdersService {
     if (!account || account.disabled_at)
       throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
     await requireCurrentSession(client, actor);
+  }
+
+  async loadElectricitySettings(client: PoolClient): Promise<{
+    config: GreenElectricityConfig;
+    snapshot: Record<string, unknown>;
+  }> {
+    // Lock the table to cover absent keys as well as concurrent updates.
+    await client.query('LOCK TABLE app_config IN SHARE MODE');
+    const rows = (
+      await client.query<{ key: string; value: unknown; version: number }>(
+        'SELECT key, value, version FROM app_config WHERE key = ANY($1::text[])',
+        [[GREEN_ELECTRICITY_CONFIG_KEY, CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY]]
+      )
+    ).rows;
+    const greenRow = rows.find((row) => row.key === GREEN_ELECTRICITY_CONFIG_KEY);
+    const limitsRow = rows.find((row) => row.key === CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY);
+    if (
+      (greenRow && !validateGreenElectricityConfig(greenRow.value).ok) ||
+      (limitsRow && !validateContractElectricityLimits(limitsRow.value).ok)
+    )
+      throw new HttpException({ error: 'CONFIG:STORED_VALUE_INVALID' }, 503);
+    const config = greenRow
+      ? toGreenElectricityConfig(greenRow.value)
+      : DEFAULT_GREEN_ELECTRICITY_CONFIG;
+    const limits = limitsRow
+      ? toContractElectricityLimits(limitsRow.value)
+      : DEFAULT_CONTRACT_ELECTRICITY_LIMITS;
+    return {
+      config,
+      snapshot: {
+        schemaVersion: 1,
+        green: greenElectricityConfigToStored(config),
+        sourceVersion: greenRow?.version ?? 0,
+        contractLimits: contractElectricityLimitsToStored(limits),
+        contractLimitsVersion: limitsRow?.version ?? 0,
+        capturedAt: new Date().toISOString(),
+      },
+    };
   }
 
   /**
@@ -287,31 +326,7 @@ export class OrdersService {
           );
         }
 
-        const configResult = await client.query<{
-          key: string;
-          value: unknown;
-          version: number;
-        }>('SELECT key, value, version FROM app_config WHERE key = ANY($1::text[])', [
-          [GREEN_ELECTRICITY_CONFIG_KEY, CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY],
-        ]);
-        const greenRow = configResult.rows.find((row) => row.key === GREEN_ELECTRICITY_CONFIG_KEY);
-        const limitsRow = configResult.rows.find(
-          (row) => row.key === CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY
-        );
-        const persisted = greenRow?.value;
-        if (persisted != null && !validateGreenElectricityConfig(persisted).ok) {
-          throw new HttpException({ statusCode: 503, error: 'CONFIG:STORED_VALUE_INVALID' }, 503);
-        }
-        if (limitsRow && !validateContractElectricityLimits(limitsRow.value).ok) {
-          throw new HttpException({ statusCode: 503, error: 'CONFIG:STORED_VALUE_INVALID' }, 503);
-        }
-        const config =
-          persisted == null
-            ? DEFAULT_GREEN_ELECTRICITY_CONFIG
-            : toGreenElectricityConfig(persisted);
-        const contractLimits = limitsRow
-          ? toContractElectricityLimits(limitsRow.value)
-          : DEFAULT_CONTRACT_ELECTRICITY_LIMITS;
+        const { config, snapshot } = await this.loadElectricitySettings(client);
         const greenResult = await client.query<{ status: string; price: string | null }>(
           `SELECT status, effective_product_price(id) AS price FROM products
               WHERE system_key = ANY($1::text[]) FOR SHARE`,
@@ -344,14 +359,7 @@ export class OrdersService {
             409
           );
         }
-        electricitySettingsSnapshot = {
-          schemaVersion: 1,
-          green: greenElectricityConfigToStored(config),
-          sourceVersion: greenRow?.version ?? 0,
-          contractLimits: contractElectricityLimitsToStored(contractLimits),
-          contractLimitsVersion: limitsRow?.version ?? 0,
-          capturedAt: new Date().toISOString(),
-        };
+        electricitySettingsSnapshot = snapshot;
       }
 
       await requireAddressGeography(
@@ -380,9 +388,9 @@ export class OrdersService {
 
       if (electricitySettingsSnapshot !== null) {
         await client.query(
-          `INSERT INTO electricity_orders (id, mode, status, settings_snapshot)
-             VALUES ($1, 'simple', 'draft', $2::jsonb)`,
-          [order.id, JSON.stringify(electricitySettingsSnapshot)]
+          `INSERT INTO electricity_orders (id, profile_id, mode, status, settings_snapshot)
+             VALUES ($1, $2, 'simple', 'draft', $3::jsonb)`,
+          [order.id, dto.profileId, JSON.stringify(electricitySettingsSnapshot)]
         );
       }
 

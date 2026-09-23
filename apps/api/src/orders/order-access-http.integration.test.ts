@@ -166,7 +166,9 @@ it('captures current rules for each new draft and protects submitted snapshots',
 
   await http.pool.query(
     `UPDATE electricity_orders SET status='submitted', period_start=$2,
-     period_end=$3, submitted_at=$4, pricing_snapshot=$5::jsonb WHERE id=$1`,
+     period_end=$3, submitted_at=$4, pricing_snapshot=$5::jsonb,
+     total_kwh=1, average_power_kw=1, green_rule_applied=false,
+     submitted_by='owner' WHERE id=$1`,
     [
       first,
       new Date('2026-09-23T00:00:00Z'),
@@ -213,6 +215,7 @@ it('persists the calculated submission snapshot once with the exact period', asy
       composition,
       totals,
       undefined,
+      'owner',
       new Date('2026-09-22T12:00:00Z')
     );
     expect(snapshot).toMatchObject({ totalKwh: '10', totalIrR: '1000000' });
@@ -235,6 +238,7 @@ it('persists the calculated submission snapshot once with the exact period', asy
         composition,
         totals,
         undefined,
+        'owner',
         new Date()
       )
     ).rejects.toThrow(/unavailable for submission/);

@@ -1,6 +1,25 @@
-import { check, index, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import {
+  bigint as pgBigint,
+  boolean,
+  check,
+  index,
+  jsonb,
+  numeric,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { orders } from './orders';
+import { profiles } from './profiles';
+import { products } from './products';
+import { users } from './users';
+import { contracts } from './contracts';
+import { invoices } from './invoices';
+import { uuidv7 } from '../types';
 
 /** Electricity-specific draft data. Confirmation will add the period and priced lines. */
 export const electricityOrders = pgTable(
@@ -9,6 +28,9 @@ export const electricityOrders = pgTable(
     id: uuid('id')
       .primaryKey()
       .references(() => orders.id, { onDelete: 'restrict' }),
+    profileId: uuid('profile_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'restrict' }),
     mode: text('mode', { enum: ['simple', 'advanced'] })
       .notNull()
       .default('simple'),
@@ -42,6 +64,10 @@ export const electricityOrders = pgTable(
     periodEnd: timestamp('period_end', { withTimezone: true, mode: 'date' }),
     submittedAt: timestamp('submitted_at', { withTimezone: true, mode: 'date' }),
     pricingSnapshot: jsonb('pricing_snapshot').$type<Record<string, unknown>>(),
+    totalKwh: pgBigint('total_kwh', { mode: 'bigint' }),
+    averagePowerKw: numeric('average_power_kw', { precision: 30, scale: 9 }),
+    greenRuleApplied: boolean('green_rule_applied'),
+    submittedBy: text('submitted_by').references(() => users.userId, { onDelete: 'restrict' }),
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
@@ -69,3 +95,88 @@ export const electricityOrders = pgTable(
 
 export type ElectricityOrder = typeof electricityOrders.$inferSelect;
 export type NewElectricityOrder = typeof electricityOrders.$inferInsert;
+
+/** Frozen order composition; a zero-quantity product has no line. */
+export const electricityOrderLines = pgTable(
+  'electricity_order_lines',
+  {
+    id: uuidv7('id').primaryKey(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => electricityOrders.id, { onDelete: 'restrict' }),
+    productId: uuid('product_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'restrict' }),
+    quantityKwh: pgBigint('quantity_kwh', { mode: 'bigint' }).notNull(),
+    unitPrice: pgBigint('unit_price', { mode: 'bigint' }).notNull(),
+    lineTotal: pgBigint('line_total', { mode: 'bigint' }).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex('electricity_order_lines_product_unique').on(table.orderId, table.productId),
+    index('electricity_order_lines_order_idx').on(table.orderId),
+    check('electricity_order_lines_quantity_positive', sql`${table.quantityKwh} > 0`),
+    check(
+      'electricity_order_lines_money_nonnegative',
+      sql`${table.unitPrice} > 0 AND ${table.lineTotal} >= 0`
+    ),
+  ]
+);
+
+/** One contract relation for each submitted electricity order. */
+export const electricityContracts = pgTable(
+  'electricity_contracts',
+  {
+    id: uuidv7('id').primaryKey(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => electricityOrders.id, { onDelete: 'restrict' }),
+    contractId: uuid('contract_id')
+      .notNull()
+      .references(() => contracts.id, { onDelete: 'restrict' }),
+    status: text('status', { enum: ['draft', 'active', 'completed', 'cancelled'] })
+      .notNull()
+      .default('draft'),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex('electricity_contracts_order_unique').on(table.orderId),
+    uniqueIndex('electricity_contracts_contract_unique').on(table.contractId),
+    check(
+      'electricity_contracts_status',
+      sql`${table.status} IN ('draft', 'active', 'completed', 'cancelled')`
+    ),
+  ]
+);
+
+/** Completed idempotency results; a retry reads the original immutable response. */
+export const electricityOrderSubmissions = pgTable(
+  'electricity_order_submissions',
+  {
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    idempotencyKey: uuid('idempotency_key').notNull(),
+    requestHash: text('request_hash').notNull(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => electricityOrders.id, { onDelete: 'restrict' }),
+    contractId: uuid('contract_id')
+      .notNull()
+      .references(() => contracts.id, { onDelete: 'restrict' }),
+    invoiceId: uuid('invoice_id')
+      .notNull()
+      .references(() => invoices.id, { onDelete: 'restrict' }),
+    response: jsonb('response')
+      .$type<{ orderId: string; contractId: string; invoiceId: string }>()
+      .notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.userId, table.idempotencyKey],
+      name: 'electricity_order_submissions_pk',
+    }),
+  ]
+);

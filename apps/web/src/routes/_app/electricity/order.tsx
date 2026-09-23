@@ -21,6 +21,7 @@ interface Product {
   price: string | null;
   status: string;
   simpleOrderable: boolean;
+  limits: { minKwh: string; maxKwh: string };
 }
 
 interface Address {
@@ -46,6 +47,71 @@ interface City {
   provinceId: string;
   nameFa: string;
   nameEn: string;
+}
+
+type SimplePeriod =
+  'current_month' | 'next_month' | 'current_week' | 'next_week' | 'week_after_next';
+interface PeriodOption {
+  key: SimplePeriod;
+  start: string;
+  end: string;
+}
+interface PriceQuote {
+  reviewDigest: string;
+  periodStart: string;
+  periodEnd: string;
+  durationHours: string;
+  totalKwh: string;
+  averagePowerKw: string;
+  greenRuleApplies: boolean;
+  lines: Array<{
+    systemKey: string;
+    quantityKwh: string;
+    unitPriceIrR: string;
+    subtotalIrR: string;
+    discountIrR: string;
+    vatIrR: string;
+  }>;
+  subtotalIrR: string;
+  discountIrR: string;
+  vatIrR: string;
+  totalIrR: string;
+}
+interface BillSuggestion {
+  available: boolean;
+  suggestedKwh?: string;
+  dataSource?: string;
+  dataPeriod?: { start: string; end: string };
+  dataTimestamp?: string;
+  coverage?: number;
+  reason?: string;
+  manualEntryAllowed: boolean;
+}
+
+const periodLabels: Record<SimplePeriod, string> = {
+  current_month: 'electricity.order.period.currentMonth',
+  next_month: 'electricity.order.period.nextMonth',
+  current_week: 'electricity.order.period.currentWeek',
+  next_week: 'electricity.order.period.nextWeek',
+  week_after_next: 'electricity.order.period.weekAfterNext',
+};
+
+function periodDates(option: PeriodOption, locale: 'fa' | 'en') {
+  const start = new Date(option.start);
+  const end = new Date(new Date(option.end).getTime() - 1);
+  const persian = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+    timeZone: 'Asia/Tehran',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  const gregorian = new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR-u-ca-gregory' : 'en-US', {
+    timeZone: 'Asia/Tehran',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+  return `${persian.format(start)} – ${persian.format(end)} · ${gregorian.format(start)} – ${gregorian.format(end)}`;
 }
 
 // ─── Page Component ────────────────────────────────────────────────────
@@ -97,7 +163,23 @@ function ElectricityOrderPage() {
   // Order submission
   const [submitting, setSubmitting] = useState(false);
   const orderSaveInFlight = useRef(false);
-  const [orderCreated, setOrderCreated] = useState(false);
+  const [orderCreated, setOrderCreated] = useState<{
+    orderId: string;
+    contractId: string;
+    invoiceId: string;
+  } | null>(null);
+  const [periodOptions, setPeriodOptions] = useState<PeriodOption[]>([]);
+  const [loadingPeriods, setLoadingPeriods] = useState(true);
+  const [period, setPeriod] = useState<SimplePeriod>('current_month');
+  const [totalKwh, setTotalKwh] = useState('');
+  const [billSuggestion, setBillSuggestion] = useState<BillSuggestion | null>(null);
+  const [giftCode, setGiftCode] = useState('');
+  const [appliedGiftCode, setAppliedGiftCode] = useState('');
+  const [quote, setQuote] = useState<PriceQuote | null>(null);
+  const [quoteError, setQuoteError] = useState(false);
+  const [quoting, setQuoting] = useState(false);
+  const [quoteVersion, setQuoteVersion] = useState(0);
+  const submissionKey = useRef<{ fingerprint: string; key: string } | null>(null);
 
   // ── Fetch verification status ───────────────────────────────────────
 
@@ -155,7 +237,7 @@ function ElectricityOrderPage() {
       const data: unknown = await res.json();
       if (!Array.isArray(data)) throw new Error('Invalid products');
       // The catalogue includes unavailable placeholders for the other three
-      // system products. Only thermal can be selected in the simple draft form.
+      // system products. Only thermal can be selected in simple ordering.
       const thermal = data.filter((product) => product?.systemKey === 'thermal');
       if (
         thermal.some(
@@ -166,6 +248,9 @@ function ElectricityOrderPage() {
             typeof product.systemKey !== 'string' ||
             typeof product.status !== 'string' ||
             typeof product.simpleOrderable !== 'boolean' ||
+            !product.limits ||
+            !/^\d+$/.test(product.limits.minKwh) ||
+            !/^\d+$/.test(product.limits.maxKwh) ||
             !product.title ||
             typeof product.title !== 'object' ||
             Array.isArray(product.title) ||
@@ -336,6 +421,119 @@ function ElectricityOrderPage() {
     }
   }, [addresses, fetchCities]);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetch('/api/electricity/periods/simple', {
+      credentials: 'include',
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Periods unavailable');
+        const data: unknown = await response.json();
+        if (
+          !data ||
+          typeof data !== 'object' ||
+          !('periods' in data) ||
+          !Array.isArray(data.periods)
+        )
+          throw new Error('Invalid periods');
+        if (!controller.signal.aborted) {
+          setPeriodOptions(data.periods as PeriodOption[]);
+          setLoadingPeriods(false);
+        }
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          setPeriodOptions([]);
+          setLoadingPeriods(false);
+        }
+      });
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    if (!activeProfileId) return;
+    const controller = new AbortController();
+    setBillSuggestion(null);
+    void fetch(`/api/electricity/bill-data/${activeProfileId}?period=${period}`, {
+      credentials: 'include',
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Bill data unavailable');
+        return response.json() as Promise<BillSuggestion>;
+      })
+      .then((data) => {
+        if (!controller.signal.aborted) setBillSuggestion(data);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted)
+          setBillSuggestion({
+            available: false,
+            reason: 'provider_error',
+            manualEntryAllowed: true,
+          });
+      });
+    return () => controller.abort();
+  }, [activeProfileId, period]);
+
+  useEffect(() => {
+    const selected = products.find((item) => item.id === selectedProductId);
+    const validQuantity =
+      /^[1-9]\d*$/.test(totalKwh) &&
+      !!selected &&
+      (selected.limits.minKwh === '0' || BigInt(totalKwh) >= BigInt(selected.limits.minKwh)) &&
+      (selected.limits.maxKwh === '0' || BigInt(totalKwh) <= BigInt(selected.limits.maxKwh));
+    if (!activeProfileId || !validQuantity) {
+      setQuote(null);
+      setQuoting(false);
+      return;
+    }
+    const controller = new AbortController();
+    setQuote(null);
+    setQuoteError(false);
+    setQuoting(true);
+    const timer = window.setTimeout(() => {
+      void fetch('/api/electricity/preview/simple', {
+        method: 'POST',
+        credentials: 'include',
+        signal: controller.signal,
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+          profileId: activeProfileId,
+          period,
+          totalKwh,
+          ...(appliedGiftCode ? { giftCode: appliedGiftCode } : {}),
+        }),
+      })
+        .then(async (response) => {
+          if (!response.ok) throw new Error('Quote unavailable');
+          return response.json() as Promise<PriceQuote>;
+        })
+        .then((data) => {
+          if (!controller.signal.aborted) setQuote(data);
+        })
+        .catch(() => {
+          if (!controller.signal.aborted) setQuoteError(true);
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setQuoting(false);
+        });
+    }, 250);
+    return () => {
+      controller.abort();
+      window.clearTimeout(timer);
+    };
+  }, [
+    activeProfileId,
+    selectedProductId,
+    products,
+    period,
+    totalKwh,
+    appliedGiftCode,
+    quoteVersion,
+  ]);
+
   // ── Helpers ─────────────────────────────────────────────────────────
 
   const getProvinceName = (provinceId: string): string => {
@@ -358,6 +556,15 @@ function ElectricityOrderPage() {
     product ? product.title[locale] || product.title.en || product.title.fa || product.id : '';
 
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId);
+  const selectedProduct = products.find((item) => item.id === selectedProductId);
+  const quantityError =
+    totalKwh !== '' &&
+    (!/^[1-9]\d*$/.test(totalKwh) ||
+      (!!selectedProduct &&
+        ((selectedProduct.limits.minKwh !== '0' &&
+          BigInt(totalKwh) < BigInt(selectedProduct.limits.minKwh)) ||
+          (selectedProduct.limits.maxKwh !== '0' &&
+            BigInt(totalKwh) > BigInt(selectedProduct.limits.maxKwh)))));
 
   // ── Save new address ─────────────────────────────────────────────────
 
@@ -477,14 +684,31 @@ function ElectricityOrderPage() {
       toast.error(t('electricity.order.error.noProfile', locale));
       return;
     }
+    if (!quote || quoting || quoteError) {
+      toast.error(t('electricity.order.previewUnavailable', locale));
+      return;
+    }
 
     orderSaveInFlight.current = true;
     setSubmitting(true);
     const generation = verificationGeneration.current;
+    const fingerprint = JSON.stringify({
+      activeProfileId,
+      period,
+      totalKwh,
+      appliedGiftCode,
+      selectedAddressId,
+    });
+    if (submissionKey.current?.fingerprint !== fingerprint) {
+      submissionKey.current = { fingerprint, key: crypto.randomUUID() };
+    }
     const input = {
       profileId: activeProfileId,
-      productId: selectedProductId,
-      orderType: 'electricity',
+      period,
+      totalKwh,
+      idempotencyKey: submissionKey.current.key,
+      expectedQuoteDigest: quote.reviewDigest,
+      ...(appliedGiftCode ? { giftCode: appliedGiftCode } : {}),
       address: {
         provinceId: selectedAddress.provinceId,
         cityId: selectedAddress.cityId,
@@ -493,13 +717,14 @@ function ElectricityOrderPage() {
       },
     };
     try {
-      const res = await fetch('/api/orders', {
+      const res = await fetch('/api/electricity/orders/simple', {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(input),
       });
 
       if (!res.ok) {
+        if (res.status === 409) setQuoteVersion((version) => version + 1);
         const errBody = await res.json().catch(() => ({}));
         const message = (errBody as { message?: string }).message;
         toast.error(message || t('electricity.order.error.create', locale));
@@ -511,28 +736,19 @@ function ElectricityOrderPage() {
       if (
         !result ||
         typeof result !== 'object' ||
-        !('id' in result) ||
-        typeof result.id !== 'string' ||
-        !result.id.trim() ||
-        !('profileId' in result) ||
-        result.profileId !== input.profileId ||
-        !('productId' in result) ||
-        result.productId !== input.productId ||
-        !('orderType' in result) ||
-        result.orderType !== input.orderType ||
-        !('status' in result) ||
-        result.status !== 'DRAFT' ||
-        !('snapshotProvinceId' in result) ||
-        result.snapshotProvinceId !== input.address.provinceId ||
-        !('snapshotCityId' in result) ||
-        result.snapshotCityId !== input.address.cityId ||
-        !('snapshotFullAddress' in result) ||
-        result.snapshotFullAddress !== input.address.fullAddress ||
-        !('snapshotPostalCode' in result) ||
-        result.snapshotPostalCode !== input.address.postalCode
+        !('orderId' in result) ||
+        typeof result.orderId !== 'string' ||
+        !('contractId' in result) ||
+        typeof result.contractId !== 'string' ||
+        !('invoiceId' in result) ||
+        typeof result.invoiceId !== 'string'
       )
         throw new Error('Invalid saved order');
-      setOrderCreated(true);
+      setOrderCreated({
+        orderId: result.orderId,
+        contractId: result.contractId,
+        invoiceId: result.invoiceId,
+      });
       toast.success(t('electricity.order.success.create', locale));
     } catch {
       toast.error(t('electricity.order.error.create', locale));
@@ -555,6 +771,12 @@ function ElectricityOrderPage() {
     verificationError,
     loadingAddresses,
     addressError,
+    period,
+    totalKwh,
+    appliedGiftCode,
+    quote,
+    quoting,
+    quoteError,
   ]);
 
   // ── Render: Loading ─────────────────────────────────────────────────
@@ -632,6 +854,20 @@ function ElectricityOrderPage() {
           <p className="mb-6 text-muted-foreground">
             {t('electricity.order.success.description', locale)}
           </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <span>
+              {t('electricity.order.success.order', locale)}: {orderCreated.orderId}
+            </span>
+            <a href="/contracts" className="text-primary underline underline-offset-4">
+              {t('electricity.order.success.contract', locale)}: {orderCreated.contractId}
+            </a>
+            <a
+              href={`/invoices/${orderCreated.invoiceId}`}
+              className="text-primary underline underline-offset-4"
+            >
+              {t('electricity.order.success.invoice', locale)}
+            </a>
+          </div>
         </div>
       </div>
     );
@@ -700,6 +936,153 @@ function ElectricityOrderPage() {
               ))}
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardContent className="space-y-5 pt-6">
+          <h2 className="text-lg font-semibold">{t('electricity.order.period.title', locale)}</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="electricity-period-type" className="mb-1 block text-sm font-medium">
+                {t('electricity.order.period.type', locale)}
+              </label>
+              <select
+                id="electricity-period-type"
+                value={period.includes('month') ? 'monthly' : 'weekly'}
+                disabled={submitting}
+                onChange={(event) =>
+                  setPeriod(event.target.value === 'monthly' ? 'current_month' : 'current_week')
+                }
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              >
+                <option value="monthly">{t('electricity.order.period.monthly', locale)}</option>
+                <option value="weekly">{t('electricity.order.period.weekly', locale)}</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="electricity-period" className="mb-1 block text-sm font-medium">
+                {t('electricity.order.period.selection', locale)}
+              </label>
+              <select
+                id="electricity-period"
+                value={period}
+                disabled={submitting || periodOptions.length === 0}
+                onChange={(event) => setPeriod(event.target.value as SimplePeriod)}
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              >
+                {periodOptions
+                  .filter((option) =>
+                    period.includes('month')
+                      ? option.key.includes('month')
+                      : option.key.includes('week')
+                  )
+                  .map((option) => (
+                    <option key={option.key} value={option.key}>
+                      {t(periodLabels[option.key], locale)} ·{' '}
+                      {new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+                        timeZone: 'Asia/Tehran',
+                        month: 'long',
+                        year: 'numeric',
+                      }).format(new Date(option.start))}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </div>
+          {periodOptions.find((option) => option.key === period) ? (
+            <p className="text-sm text-muted-foreground">
+              {periodDates(
+                periodOptions.find((option) => option.key === period)!,
+                locale
+              )}
+            </p>
+          ) : (
+            <p role="status" className="text-sm text-muted-foreground">
+              {t(
+                loadingPeriods
+                  ? 'electricity.order.period.loading'
+                  : 'electricity.order.period.unavailable',
+                locale
+              )}
+            </p>
+          )}
+          <div>
+            <label htmlFor="electricity-kwh" className="mb-1 block text-sm font-medium">
+              {t('electricity.order.quantity', locale)}
+            </label>
+            <input
+              id="electricity-kwh"
+              type="text"
+              inputMode="numeric"
+              pattern="[1-9][0-9]*"
+              value={totalKwh}
+              disabled={submitting}
+              onChange={(event) => setTotalKwh(event.target.value)}
+              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              aria-describedby="electricity-kwh-hint"
+              aria-invalid={quantityError}
+            />
+            <p id="electricity-kwh-hint" className="mt-1 text-xs text-muted-foreground">
+              {t('electricity.order.quantityHint', locale)}{' '}
+              {selectedProduct &&
+                `${selectedProduct.limits.minKwh}–${selectedProduct.limits.maxKwh === '0' ? '∞' : selectedProduct.limits.maxKwh} kWh`}
+            </p>
+            {quantityError && (
+              <p role="alert" className="mt-1 text-sm text-destructive">
+                {t('electricity.order.quantityInvalid', locale)}
+              </p>
+            )}
+          </div>
+          {billSuggestion?.available && billSuggestion.suggestedKwh ? (
+            <div className="flex flex-wrap items-center gap-3 text-sm">
+              <p>
+                {t('electricity.order.estimate', locale)}:{' '}
+                {numbers.number(BigInt(billSuggestion.suggestedKwh))} kWh
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setTotalKwh(billSuggestion.suggestedKwh!)}
+              >
+                {t('electricity.order.useEstimate', locale)}
+              </Button>
+              <p className="w-full text-xs text-muted-foreground">
+                {billSuggestion.dataSource} · {billSuggestion.dataPeriod?.start} –{' '}
+                {billSuggestion.dataPeriod?.end} ·{billSuggestion.dataTimestamp} ·
+                {Math.round((billSuggestion.coverage ?? 0) * 100)}%{' '}
+                {t('electricity.order.coverage', locale)}
+              </p>
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              {t('electricity.order.manualQuantity', locale)}
+            </p>
+          )}
+          <div>
+            <label htmlFor="electricity-gift" className="mb-1 block text-sm font-medium">
+              {t('electricity.order.giftCode', locale)}
+            </label>
+            <div className="flex gap-2">
+              <input
+                id="electricity-gift"
+                type="text"
+                value={giftCode}
+                disabled={submitting}
+                onChange={(event) => setGiftCode(event.target.value)}
+                className="min-w-0 flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                disabled={submitting}
+                onClick={() => setAppliedGiftCode(giftCode.trim())}
+              >
+                {t('electricity.order.applyGift', locale)}
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -964,6 +1347,64 @@ function ElectricityOrderPage() {
           <h2 className="mb-4 text-lg font-semibold">{t('electricity.order.review', locale)}</h2>
 
           <div className="space-y-3 text-sm">
+            {quoting ? (
+              <p role="status">{t('electricity.order.previewLoading', locale)}</p>
+            ) : quoteError ? (
+              <p role="alert">{t('electricity.order.previewUnavailable', locale)}</p>
+            ) : quote ? (
+              <div className="space-y-2 border-b pb-4">
+                <p>
+                  {t('electricity.order.period.selection', locale)}:{' '}
+                  {periodDates(
+                    {
+                      key: period,
+                      start: quote.periodStart,
+                      end: quote.periodEnd,
+                    },
+                    locale
+                  )}
+                </p>
+                <p>
+                  {t('electricity.order.averagePower', locale)}: {quote.averagePowerKw} kW
+                </p>
+                {quote.greenRuleApplies && (
+                  <p className="font-medium text-amber-800">
+                    {t('electricity.order.mandatoryGreen', locale)}
+                  </p>
+                )}
+                {quote.lines.map((line) => (
+                  <div key={line.systemKey} className="flex flex-wrap justify-between gap-2">
+                    <span>
+                      {line.systemKey === 'thermal'
+                        ? t('electricity.order.thermal', locale)
+                        : t('electricity.order.green', locale)}{' '}
+                      · {line.quantityKwh} kWh × {numbers.money(line.unitPriceIrR)}
+                    </span>
+                    <span>
+                      {numbers.money(line.subtotalIrR)}
+                      {(line.discountIrR !== '0' || line.vatIrR !== '0') && (
+                        <small className="block text-muted-foreground">
+                          −{numbers.money(line.discountIrR)} · +{numbers.money(line.vatIrR)}{' '}
+                          {t('electricity.order.vat', locale)}
+                        </small>
+                      )}
+                    </span>
+                  </div>
+                ))}
+                <div className="flex justify-between">
+                  <span>{t('electricity.order.discount', locale)}</span>
+                  <span>{numbers.money(quote.discountIrR)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>{t('electricity.order.vat', locale)}</span>
+                  <span>{numbers.money(quote.vatIrR)}</span>
+                </div>
+                <div className="flex justify-between text-base font-semibold">
+                  <span>{t('electricity.order.total', locale)}</span>
+                  <span>{numbers.money(quote.totalIrR)}</span>
+                </div>
+              </div>
+            ) : null}
             {/* Selected product */}
             <div className="flex justify-between">
               <span className="text-muted-foreground">
@@ -999,7 +1440,10 @@ function ElectricityOrderPage() {
           loadingAddresses ||
           addressError ||
           !selectedProductId ||
-          !selectedAddressId
+          !selectedAddressId ||
+          !quote ||
+          quoting ||
+          periodOptions.length === 0
         }
         className="w-full gap-2"
         size="lg"

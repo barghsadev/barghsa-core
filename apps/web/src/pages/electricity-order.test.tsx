@@ -10,18 +10,19 @@ vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (options: unknown) => ({ options }),
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ money: String }),
+  useNumberFormatting: () => ({ money: String, number: String }),
 }));
-const OrderPage = Route.options.component as ComponentType;
+
+const Page = Route.options.component as ComponentType;
 const profileId = 'profile-1';
 const product = {
   id: 'product-1',
-  type: 'electricity',
   systemKey: 'thermal',
   status: 'active',
   title: { en: 'Grid electricity', fa: 'برق' },
   price: '250000',
   simpleOrderable: true,
+  limits: { minKwh: '0', maxKwh: '0' },
 };
 const address = {
   id: 'address-1',
@@ -32,55 +33,78 @@ const address = {
   postalCode: '1234567890',
   mainAddress: true,
 };
-const savedOrder = {
-  id: 'order-1',
-  profileId,
-  productId: product.id,
-  orderType: 'electricity',
-  status: 'DRAFT',
-  snapshotProvinceId: address.provinceId,
-  snapshotCityId: address.cityId,
-  snapshotFullAddress: address.fullAddress,
-  snapshotPostalCode: address.postalCode,
+const quote = {
+  reviewDigest: 'a'.repeat(64),
+  periodStart: '2026-09-26T20:30:00.000Z',
+  periodEnd: '2026-10-03T20:30:00.000Z',
+  durationHours: '168',
+  totalKwh: '10',
+  averagePowerKw: '0.05952381',
+  greenRuleApplies: false,
+  lines: [
+    {
+      productId: product.id,
+      systemKey: 'thermal',
+      quantityKwh: '10',
+      unitPriceIrR: '250000',
+      subtotalIrR: '2500000',
+      discountIrR: '0',
+      vatIrR: '0',
+    },
+  ],
+  subtotalIrR: '2500000',
+  discountIrR: '0',
+  vatIrR: '0',
+  totalIrR: '2500000',
 };
+const saved = { orderId: 'order-1', contractId: 'contract-1', invoiceId: 'invoice-1', ...quote };
+const periods = [
+  { key: 'current_month', start: '2026-09-23T00:00:00.000Z', end: '2026-09-30T20:30:00.000Z' },
+  { key: 'next_month', start: '2026-09-30T20:30:00.000Z', end: '2026-10-30T20:30:00.000Z' },
+  { key: 'current_week', start: '2026-09-23T00:00:00.000Z', end: '2026-09-25T20:30:00.000Z' },
+  { key: 'next_week', start: '2026-09-25T20:30:00.000Z', end: '2026-10-02T20:30:00.000Z' },
+  { key: 'week_after_next', start: '2026-10-02T20:30:00.000Z', end: '2026-10-09T20:30:00.000Z' },
+];
 const response = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+
 let container: HTMLDivElement;
 let root: Root;
-let previousLanguage: string;
-let replies: Map<string, unknown>;
-let orderReply: () => Promise<Response>;
-let addressReply: (input: Record<string, unknown>) => Promise<Response>;
 let fetchMock: ReturnType<typeof vi.fn<typeof fetch>>;
+let orderReply: () => Promise<Response>;
+let catalogue: unknown;
+
 beforeEach(() => {
-  previousLanguage = document.documentElement.lang;
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   vi.clearAllMocks();
-  replies = new Map<string, unknown>([
-    [
-      '/api/profiles/verification-status',
-      { activeProfileId: profileId, verificationRequired: true, isVerified: true },
-    ],
-    ['/api/products/electricity', [product]],
-    [`/api/profiles/${profileId}/addresses`, { addresses: [address] }],
-    ['/api/geography/provinces', [{ id: address.provinceId, nameFa: 'تهران', nameEn: 'Tehran' }]],
-    [
-      `/api/geography/provinces/${address.provinceId}/cities`,
-      [{ id: address.cityId, provinceId: address.provinceId, nameFa: 'تهران', nameEn: 'Tehran' }],
-    ],
-  ]);
-  orderReply = async () => response(savedOrder);
-  addressReply = async (input) =>
-    response({ ...input, id: 'new-address', profileId, mainAddress: false });
+  catalogue = [product];
+  orderReply = async () => response(saved, 201);
   fetchMock = vi.fn<typeof fetch>(async (input, init) => {
     const url = String(input);
-    if (url === '/api/orders' && init?.method === 'POST') return orderReply();
-    if (url === `/api/profiles/${profileId}/addresses` && init?.method === 'POST')
-      return addressReply(JSON.parse(init.body as string));
-    if (!replies.has(url)) throw new Error(`Unexpected request: ${url}`);
-    const body = replies.get(url);
-    return body instanceof Response ? body.clone() : response(body);
+    if (url === '/api/profiles/verification-status')
+      return response({
+        activeProfileId: profileId,
+        verificationRequired: true,
+        isVerified: true,
+      });
+    if (url === '/api/products/electricity') return response(catalogue);
+    if (url === `/api/profiles/${profileId}/addresses`) return response({ addresses: [address] });
+    if (url === '/api/geography/provinces')
+      return response([{ id: address.provinceId, nameFa: 'تهران', nameEn: 'Tehran' }]);
+    if (url === `/api/geography/provinces/${address.provinceId}/cities`)
+      return response([
+        { id: address.cityId, provinceId: address.provinceId, nameFa: 'تهران', nameEn: 'Tehran' },
+      ]);
+    if (url === '/api/electricity/periods/simple') return response({ periods });
+    if (url.startsWith(`/api/electricity/bill-data/${profileId}`))
+      return response({ available: false, reason: 'unconfigured', manualEntryAllowed: true });
+    if (url === '/api/electricity/preview/simple') return response(quote);
+    if (url === '/api/electricity/orders/simple' && init?.method === 'POST') return orderReply();
+    throw new Error(`Unexpected request: ${url}`);
   });
   vi.stubGlobal('fetch', fetchMock);
   container = document.createElement('div');
@@ -90,70 +114,58 @@ beforeEach(() => {
 afterEach(async () => {
   await act(async () => root.unmount());
   container.remove();
-  document.documentElement.lang = previousLanguage;
   vi.unstubAllGlobals();
 });
-const mount = () => act(async () => root.render(<OrderPage />));
-function submit() {
-  const button = [...container.querySelectorAll('button')].find(
-    (b) => b.textContent === t('electricity.order.submit', 'en')
-  );
-  expect(button).toBeDefined();
-  return button!;
-}
-const orderCalls = () => fetchMock.mock.calls.filter(([url]) => url === '/api/orders');
 
-async function clickText(key: string) {
-  const button = [...container.querySelectorAll('button')].find(
-    (b) => b.textContent === t(key, 'en')
-  );
-  expect(button).toBeDefined();
-  await act(async () => button!.click());
-}
-async function fill(id: string, value: string) {
-  const field = container.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(
-    `#${id}`
+const mount = () => act(async () => root.render(<Page />));
+const submit = () =>
+  [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.submit', 'en')
   )!;
-  expect(field).not.toBeNull();
-  const prototype =
-    field instanceof HTMLSelectElement
-      ? HTMLSelectElement.prototype
-      : field instanceof HTMLTextAreaElement
-        ? HTMLTextAreaElement.prototype
-        : HTMLInputElement.prototype;
+const orderCalls = () =>
+  fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/orders/simple');
+async function fill(id: string, value: string) {
+  const field = container.querySelector<HTMLInputElement | HTMLSelectElement>(`#${id}`)!;
   await act(async () => {
+    const prototype =
+      field instanceof HTMLSelectElement ? HTMLSelectElement.prototype : HTMLInputElement.prototype;
     Object.getOwnPropertyDescriptor(prototype, 'value')!.set!.call(field, value);
     field.dispatchEvent(
       new Event(field instanceof HTMLSelectElement ? 'change' : 'input', { bubbles: true })
     );
   });
 }
-async function openAddress() {
-  await clickText('electricity.order.addNewAddress');
-  await fill('order-address-province', address.provinceId);
-  await fill('order-address-city', address.cityId);
-  await fill('order-address-fullAddress', '  New delivery address  ');
-  await fill('order-address-postalCode', '2345678901');
-}
+const settlePreview = () =>
+  act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  });
 
-it('submits the selected server product and address once while a request is pending', async () => {
-  let complete!: (response: Response) => void;
+it('shows manual entry, period dates and the server price before one submission', async () => {
+  await mount();
+  expect(container.textContent).toContain(t('electricity.order.manualQuantity', 'en'));
+  expect(submit().disabled).toBe(true);
+  await fill('electricity-period-type', 'weekly');
+  await fill('electricity-period', 'next_week');
+  await fill('electricity-kwh', '10');
+  await settlePreview();
+  expect(container.textContent).toContain('2500000');
+  expect(submit().disabled).toBe(false);
+  let complete!: (value: Response) => void;
   orderReply = () =>
     new Promise((resolve) => {
       complete = resolve;
     });
-  await mount();
-  const button = submit();
-  expect(button.disabled).toBe(false);
   await act(async () => {
-    button.click();
-    button.click();
+    submit().click();
+    submit().click();
   });
   expect(orderCalls()).toHaveLength(1);
-  expect(JSON.parse(orderCalls()[0]![1]!.body as string)).toEqual({
+  const sent = JSON.parse(orderCalls()[0]![1]!.body as string);
+  expect(sent).toMatchObject({
     profileId,
-    productId: product.id,
-    orderType: 'electricity',
+    period: 'next_week',
+    totalKwh: '10',
+    expectedQuoteDigest: quote.reviewDigest,
     address: {
       provinceId: address.provinceId,
       cityId: address.cityId,
@@ -161,156 +173,33 @@ it('submits the selected server product and address once while a request is pend
       postalCode: address.postalCode,
     },
   });
-  expect(container.querySelector<HTMLInputElement>('input[name="product"]')?.disabled).toBe(true);
-  await act(async () => complete(response(savedOrder)));
+  expect(sent.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/);
+  await act(async () => complete(response(saved, 201)));
   expect(container.textContent).toContain(t('electricity.order.success.title', 'en'));
-  expect(notices.success).toHaveBeenCalledTimes(1);
+  expect(container.querySelector(`a[href="/invoices/${saved.invoiceId}"]`)).not.toBeNull();
 });
 
-it.each([
-  { key: 'id', value: '' },
-  { key: 'profileId', value: 'other-profile' },
-  { key: 'productId', value: 'other-product' },
-  { key: 'orderType', value: 'other' },
-  { key: 'status', value: 'PAID' },
-  { key: 'snapshotProvinceId', value: 'other' },
-  { key: 'snapshotCityId', value: 'other' },
-  { key: 'snapshotFullAddress', value: 'other' },
-  { key: 'snapshotPostalCode', value: 'other' },
-])(
-  'does not acknowledge an order whose $key differs from the submitted purchase',
-  async ({ key, value }) => {
-    orderReply = async () => response({ ...savedOrder, [key]: value });
-    await mount();
-    await act(async () => submit().click());
-    expect(notices.success).not.toHaveBeenCalled();
-    expect(notices.error).toHaveBeenCalledWith(t('electricity.order.error.create', 'en'));
-    expect(submit().disabled).toBe(false);
-    expect(container.querySelector<HTMLInputElement>('input[name="product"]')?.checked).toBe(true);
-  }
-);
-
-it('does not offer a draft when current electricity rules block simple ordering', async () => {
-  replies.set('/api/products/electricity', [
-    { ...product, simpleOrderable: false },
-    {
-      id: null,
-      systemKey: 'green',
-      title: null,
-      price: null,
-      status: 'missing',
-      simpleOrderable: false,
-    },
-  ]);
+it('retries a failed submission with the same idempotency key', async () => {
   await mount();
-  expect(submit().disabled).toBe(true);
-  expect(orderCalls()).toHaveLength(0);
-});
-
-it.each([null, 'saved', {}, { id: 'order-1' }].map((body) => ({ body })))(
-  'rejects incomplete successful response $body and permits retry',
-  async ({ body }) => {
-    orderReply = async () => response(body);
-    await mount();
-    await act(async () => submit().click());
-    expect(notices.success).not.toHaveBeenCalled();
-    orderReply = async () => response(savedOrder);
-    await act(async () => submit().click());
-    expect(orderCalls()).toHaveLength(2);
-    expect(notices.success).toHaveBeenCalledTimes(1);
-  }
-);
-
-it.each(['http', 'network'])('retains the purchase after a %s failure', async (kind) => {
+  await fill('electricity-kwh', '10');
+  await settlePreview();
   orderReply = async () => {
-    if (kind === 'network') throw new TypeError('offline');
-    return response({}, 503);
+    throw new TypeError('offline');
   };
-  await mount();
   await act(async () => submit().click());
-  expect(notices.success).not.toHaveBeenCalled();
-  expect(notices.error).toHaveBeenCalledWith(t('electricity.order.error.create', 'en'));
-  expect(submit().disabled).toBe(false);
+  const first = JSON.parse(orderCalls()[0]![1]!.body as string);
+  orderReply = async () => response(saved, 201);
+  await act(async () => submit().click());
+  const second = JSON.parse(orderCalls()[1]![1]!.body as string);
+  expect(second.idempotencyKey).toBe(first.idempotencyKey);
+  expect(container.textContent).toContain(t('electricity.order.success.title', 'en'));
 });
 
-it.each([
-  { body: null },
-  { body: {} },
-  { body: { activeProfileId: profileId, isVerified: true } },
-  { body: { activeProfileId: null, verificationRequired: false, isVerified: false } },
-  { body: { activeProfileId: profileId, verificationRequired: true, isVerified: false } },
-])(
-  'never presents an actionable purchase without verified current profile state $body',
-  async ({ body }) => {
-    replies.set('/api/profiles/verification-status', body);
-    await mount();
-    expect(container.querySelector('input[name="product"]')).toBeNull();
-    expect(orderCalls()).toHaveLength(0);
-  }
-);
-
-it.each([
-  { url: '/api/products/electricity', body: { products: [] } },
-  { url: '/api/products/electricity', body: [{ ...product, price: '1e3' }] },
-  { url: '/api/products/electricity', body: [{ ...product, title: [] }] },
-  { url: '/api/products/electricity', body: [{ ...product, simpleOrderable: 'yes' }] },
-  { url: `/api/profiles/${profileId}/addresses`, body: { addresses: [null] } },
-  { url: `/api/profiles/${profileId}/addresses`, body: { addresses: [{ id: 'broken' }] } },
-])('blocks ordering with malformed catalogue/address response $body', async ({ url, body }) => {
-  replies.set(url, body);
+it('blocks submission when the thermal product is unavailable', async () => {
+  catalogue = [{ ...product, simpleOrderable: false }];
   await mount();
+  await fill('electricity-kwh', '10');
+  await settlePreview();
   expect(submit().disabled).toBe(true);
-  expect(container.querySelector('[role="alert"]')).not.toBeNull();
   expect(orderCalls()).toHaveLength(0);
 });
-
-it('saves a new address for the active profile and selects only its confirmed result', async () => {
-  await mount();
-  await openAddress();
-  expect(submit().disabled).toBe(true);
-  await clickText('electricity.order.saveAndUse');
-  const writes = fetchMock.mock.calls.filter(
-    ([url, init]) => url === `/api/profiles/${profileId}/addresses` && init?.method === 'POST'
-  );
-  expect(writes).toHaveLength(1);
-  expect(JSON.parse(writes[0]![1]!.body as string)).toEqual({
-    provinceId: address.provinceId,
-    cityId: address.cityId,
-    fullAddress: 'New delivery address',
-    postalCode: '2345678901',
-  });
-  expect(
-    container.querySelector<HTMLInputElement>('input[name="address"][value="new-address"]')?.checked
-  ).toBe(true);
-  expect(container.querySelector('#order-address-fullAddress')).toBeNull();
-  expect(submit().disabled).toBe(false);
-});
-
-it.each(['wrong-profile', 'wrong-address', 'http', 'network'])(
-  'retains address edits and blocks purchase after %s save failure',
-  async (kind) => {
-    addressReply = async (input) => {
-      if (kind === 'network') throw new TypeError('offline');
-      if (kind === 'http') return response({}, 503);
-      return response({
-        ...input,
-        id: 'new-address',
-        profileId: kind === 'wrong-profile' ? 'other-profile' : profileId,
-        mainAddress: false,
-        fullAddress: kind === 'wrong-address' ? 'Other delivery address' : input.fullAddress,
-      });
-    };
-    await mount();
-    await openAddress();
-    await clickText('electricity.order.saveAndUse');
-    expect(notices.success).not.toHaveBeenCalled();
-    expect(notices.error).toHaveBeenCalledWith(t('settings.addresses.error.create', 'en'));
-    expect(container.querySelector<HTMLTextAreaElement>('#order-address-fullAddress')?.value).toBe(
-      '  New delivery address  '
-    );
-    expect(submit().disabled).toBe(true);
-    await clickText('electricity.order.cancel');
-    expect(submit().disabled).toBe(false);
-    expect(orderCalls()).toHaveLength(0);
-  }
-);

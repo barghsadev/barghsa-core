@@ -14042,6 +14042,211 @@
         ]
       }
     },
+    "/api/electricity/bill-data/{profileId}": {
+      "get": {
+        "operationId": "ElectricityOrderController_getBillData",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "period",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estimate or a non-blocking unavailable reason."
+          }
+        },
+        "summary": "Historical hourly bill-data estimate, with manual-entry fallback",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
+    "/api/electricity/orders/simple": {
+      "post": {
+        "operationId": "ElectricityOrderController_submit",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "address": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "cityId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "fullAddress": {
+                        "maxLength": 500,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "postalCode": {
+                        "type": "string"
+                      },
+                      "provinceId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "provinceId",
+                      "cityId",
+                      "fullAddress",
+                      "postalCode"
+                    ],
+                    "type": "object"
+                  },
+                  "expectedQuoteDigest": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
+                  "giftCode": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "period": {
+                    "enum": [
+                      "current_month",
+                      "next_month",
+                      "current_week",
+                      "next_week",
+                      "week_after_next"
+                    ],
+                    "type": "string"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "totalKwh": {
+                    "maxLength": 19,
+                    "pattern": "^[1-9]\\d*$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "period",
+                  "totalKwh",
+                  "idempotencyKey",
+                  "expectedQuoteDigest",
+                  "address"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Submitted order, contract, invoice and frozen quote."
+          }
+        },
+        "summary": "Submit a simple electricity order with contract and invoice atomically",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
+    "/api/electricity/periods/simple": {
+      "get": {
+        "operationId": "ElectricityOrderController_periods",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Five selectable period ranges in Iran time."
+          }
+        },
+        "summary": "Available server-calculated Jalali month and week periods",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
+    "/api/electricity/preview/simple": {
+      "post": {
+        "operationId": "ElectricityOrderController_preview",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "giftCode": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "period": {
+                    "enum": [
+                      "current_month",
+                      "next_month",
+                      "current_week",
+                      "next_week",
+                      "week_after_next"
+                    ],
+                    "type": "string"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "totalKwh": {
+                    "maxLength": 19,
+                    "pattern": "^[1-9]\\d*$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "period",
+                  "totalKwh"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Current period, lines, discount, VAT and total."
+          }
+        },
+        "summary": "Quote a simple electricity order using current authoritative prices",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
     "/api/geography/company-types": {
       "get": {
         "operationId": "GeographyController_getCompanyTypes",
