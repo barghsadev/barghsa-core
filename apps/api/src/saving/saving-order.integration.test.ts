@@ -30,7 +30,7 @@ beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions)
-     VALUES('saving-order-admin','Saving order','Test role','["admin:catalogue:edit","admin:financial:edit","contracts:read","contracts:write"]')`
+     VALUES('saving-order-admin','Saving order','Test role','["admin:catalogue:edit","admin:financial:edit","contracts:read","contracts:write","invoices:write"]')`
   );
   for (const [user, staff] of [
     ['saving-order-buyer', false],
@@ -1465,4 +1465,294 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
   expect(approval.status, http.logs()).toBe(200);
   expect((await request(`${path}/change-quote`, 'POST', addressChange)).status).toBe(409);
   expect(await (await request(path, 'GET')).json()).toMatchObject({ can_edit: false });
+}, 60000);
+
+it('credits a cheaper paid hardware swap and preserves the revised price basis for another swap', async () => {
+  await http.pool.query("DELETE FROM rate_limit_windows WHERE key LIKE 'saving:submit:user:%'");
+  const createHardware = async (englishTitle: string) => {
+    const created = await request(
+      '/api/admin/catalogue/products',
+      'POST',
+      {
+        type: 'hardware',
+        title: { fa: englishTitle, en: englishTitle },
+        description: { fa: 'تجهیز', en: 'Equipment' },
+        price: '150000',
+        status: 'active',
+      },
+      staffHeaders
+    );
+    expect(created.status, http.logs()).toBe(201);
+    const id = ((await created.json()) as { id: string }).id;
+    await http.pool.query('INSERT INTO saving_plan_hardware(plan_id,hardware_id) VALUES($1,$2)', [
+      input.savingPlanId,
+      id,
+    ]);
+    expect(
+      (
+        await request(
+          `/api/admin/catalogue/hardware/${id}/inventory`,
+          'PUT',
+          { stockTracking: true, stockCount: 2, reservationMinutes: 30 },
+          staffHeaders
+        )
+      ).status
+    ).toBe(200);
+    return id;
+  };
+  const cheaperId = await createHardware('Cheaper device');
+  const twinId = await createHardware('Equivalent cheaper device');
+  expect(
+    (
+      await request(
+        `/api/admin/catalogue/hardware/${input.hardwareProductId}/inventory`,
+        'PUT',
+        { stockTracking: true, stockCount: 5, reservationMinutes: 30 },
+        staffHeaders
+      )
+    ).status
+  ).toBe(200);
+  const orderInput = { ...input, billIdentifier: '1234567890139' };
+  const quoteResponse = await request('/api/saving/orders/quote', 'POST', orderInput);
+  expect(quoteResponse.status, http.logs()).toBe(201);
+  const quote = (await quoteResponse.json()) as { reviewDigest: string; totalIrR: string };
+  const submitted = await request('/api/saving/orders', 'POST', {
+    ...orderInput,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: quote.reviewDigest,
+    agreementAccepted: true,
+    hardwareConfirmed: true,
+    submitForStaffReview: true,
+  });
+  expect(submitted.status, http.logs()).toBe(201);
+  const order = (await submitted.json()) as {
+    savingOrderId: string;
+    invoiceId: string;
+    contractId: string;
+  };
+  const staffPath = `/api/staff/saving/orders/${order.savingOrderId}`;
+  const versionId = (
+    (await (await request(staffPath, 'GET', undefined, staffHeaders)).json()) as {
+      versionId: string;
+    }
+  ).versionId;
+  expect(
+    (
+      await request(
+        `${staffPath}/approve`,
+        'POST',
+        { idempotencyKey: randomUUID(), expectedVersionId: versionId },
+        staffHeaders
+      )
+    ).status
+  ).toBe(200);
+  await http.pool.query(
+    `INSERT INTO wallets(profile_id,posted_balance,reserved_balance)
+     VALUES($1,1000000,0) ON CONFLICT(profile_id)
+     DO UPDATE SET posted_balance=1000000,reserved_balance=0`,
+    [input.profileId]
+  );
+  const walletPath = `/api/invoices/${order.invoiceId}/wallet-payment`;
+  const review = await request(walletPath, 'GET');
+  expect(review.status, http.logs()).toBe(200);
+  const walletHash = ((await review.json()) as { review: { hash: string } }).review.hash;
+  expect(
+    (
+      await request(walletPath, 'POST', {
+        idempotencyKey: randomUUID(),
+        expectedRemainingAmount: quote.totalIrR,
+        expectedReviewHash: walletHash,
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  const before = (
+    await http.pool.query<{
+      invoice_snapshot: string;
+      contract_content: string;
+      pricing_snapshot: string;
+      old_stock: number;
+    }>(
+      `SELECT i.invoice_calculation_snapshot::text AS invoice_snapshot,
+        v.content::text AS contract_content,s.pricing_snapshot::text AS pricing_snapshot,
+        p.stock_count AS old_stock
+       FROM saving_orders s JOIN invoices i ON i.order_id=s.order_id AND i.type='auto'
+       JOIN contracts c ON c.order_id=s.order_id
+       JOIN contract_versions v ON v.id=c.current_version_id
+       JOIN products p ON p.id=s.hardware_product_id WHERE s.id=$1`,
+      [order.savingOrderId]
+    )
+  ).rows[0]!;
+  const stalePreview = await request(
+    `/api/admin/contracts/${order.contractId}/cancellation-preview`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(stalePreview.status, http.logs()).toBe(200);
+  const staleFingerprint = ((await stalePreview.json()) as { fingerprint: string }).fingerprint;
+  const stalePrepare = await request(
+    `/api/admin/contracts/${order.contractId}/cancellations`,
+    'POST',
+    {
+      expectedVersionId: versionId,
+      expectedFingerprint: staleFingerprint,
+      reason: 'Prepared before the device credit',
+      refundDecision: { mode: 'full_wallet' },
+      idempotencyKey: randomUUID(),
+    },
+    staffHeaders
+  );
+  expect(stalePrepare.status, http.logs()).toBe(201);
+  const staleIntentId = ((await stalePrepare.json()) as { id: string }).id;
+  const staffDetail = (await (await request(staffPath, 'GET', undefined, staffHeaders)).json()) as {
+    hardwareOptions: Array<{ id: string; priceDeltaIrR: string }>;
+  };
+  const cheaperOption = staffDetail.hardwareOptions.find((option) => option.id === cheaperId);
+  expect(cheaperOption).toBeDefined();
+  expect(BigInt(cheaperOption!.priceDeltaIrR) < 0n).toBe(true);
+  const amendPath = `${staffPath}/amend-hardware`;
+  const creditInput = {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+    expectedHardwareId: input.hardwareProductId,
+    hardwareProductId: cheaperId,
+    reason: 'Customer accepted a lower-priced device',
+  };
+  const credited = await request(amendPath, 'POST', creditInput, staffHeaders);
+  expect(credited.status, http.logs()).toBe(201);
+  const result = (await credited.json()) as {
+    amendmentId: string;
+    adjustmentInvoiceId: string;
+    priceDeltaIrR: string;
+  };
+  expect(result.adjustmentInvoiceId).toBeTruthy();
+  expect(result.priceDeltaIrR).toBe(cheaperOption!.priceDeltaIrR);
+  expect(await (await request(amendPath, 'POST', creditInput, staffHeaders)).json()).toEqual(
+    result
+  );
+  expect(
+    (
+      await http.pool.query<{
+        state: string;
+        adjustment_kind: string;
+        payable_from: Date | null;
+        accounting_amount: string;
+      }>(
+        `SELECT state,adjustment_kind,payable_from,accounting_amount::text
+         FROM invoices WHERE id=$1`,
+        [result.adjustmentInvoiceId]
+      )
+    ).rows[0]
+  ).toMatchObject({
+    state: 'Unpaid',
+    adjustment_kind: 'credit',
+    payable_from: null,
+    accounting_amount: result.priceDeltaIrR,
+  });
+  expect(
+    (
+      await http.pool.query<{ status: string; hardware_product_id: string }>(
+        'SELECT status,hardware_product_id FROM saving_inventory_reservations WHERE order_id=$1',
+        [order.savingOrderId]
+      )
+    ).rows[0]
+  ).toMatchObject({ status: 'allocated', hardware_product_id: cheaperId });
+  const after = (
+    await http.pool.query<typeof before>(
+      `SELECT i.invoice_calculation_snapshot::text AS invoice_snapshot,
+        v.content::text AS contract_content,s.pricing_snapshot::text AS pricing_snapshot,
+        p.stock_count AS old_stock
+       FROM saving_orders s JOIN invoices i ON i.order_id=s.order_id AND i.type='auto'
+       JOIN contracts c ON c.order_id=s.order_id
+       JOIN contract_versions v ON v.id=c.current_version_id
+       JOIN products p ON p.id=$2 WHERE s.id=$1`,
+      [order.savingOrderId, input.hardwareProductId]
+    )
+  ).rows[0]!;
+  expect(after).toMatchObject({
+    invoice_snapshot: before.invoice_snapshot,
+    contract_content: before.contract_content,
+    pricing_snapshot: before.pricing_snapshot,
+    old_stock: before.old_stock + 1,
+  });
+  expect(
+    await (await request(`/api/saving/orders/${order.savingOrderId}`, 'GET')).json()
+  ).toMatchObject({
+    hardware_product_id: cheaperId,
+    current_hardware_title: { en: 'Cheaper device' },
+    hardwareAmendments: [
+      {
+        id: result.amendmentId,
+        priceDeltaIrR: result.priceDeltaIrR,
+        adjustmentInvoiceId: result.adjustmentInvoiceId,
+      },
+    ],
+  });
+  expect(
+    (
+      await request(
+        `/api/admin/contracts/${order.contractId}/cancellations/execute`,
+        'POST',
+        { intentId: staleIntentId, idempotencyKey: randomUUID() },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
+  const zeroSwap = await request(
+    amendPath,
+    'POST',
+    {
+      idempotencyKey: randomUUID(),
+      expectedVersionId: versionId,
+      expectedHardwareId: cheaperId,
+      hardwareProductId: twinId,
+      reason: 'The equivalent device is available sooner',
+    },
+    staffHeaders
+  );
+  expect(zeroSwap.status, http.logs()).toBe(201);
+  expect(await zeroSwap.json()).toMatchObject({ priceDeltaIrR: '0', adjustmentInvoiceId: null });
+  expect(
+    (
+      await http.pool.query<{ count: string }>(
+        'SELECT COUNT(*)::text AS count FROM invoices WHERE order_id=(SELECT order_id FROM saving_orders WHERE id=$1)',
+        [order.savingOrderId]
+      )
+    ).rows[0]?.count
+  ).toBe('2');
+  const previewResponse = await request(
+    `/api/admin/contracts/${order.contractId}/cancellation-preview`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(previewResponse.status, http.logs()).toBe(200);
+  const preview = (await previewResponse.json()) as { fingerprint: string };
+  const prepared = await request(
+    `/api/admin/contracts/${order.contractId}/cancellations`,
+    'POST',
+    {
+      expectedVersionId: versionId,
+      expectedFingerprint: preview.fingerprint,
+      reason: 'Customer cancelled after the device credit',
+      refundDecision: { mode: 'full_wallet' },
+      idempotencyKey: randomUUID(),
+    },
+    staffHeaders
+  );
+  expect(prepared.status, http.logs()).toBe(201);
+  const intentId = ((await prepared.json()) as { id: string }).id;
+  const cancelled = await request(
+    `/api/admin/contracts/${order.contractId}/cancellations/execute`,
+    'POST',
+    { intentId, idempotencyKey: randomUUID() },
+    staffHeaders
+  );
+  expect(cancelled.status, http.logs()).toBe(201);
+  expect(await cancelled.json()).toMatchObject({ refunds: [{ amount: quote.totalIrR }] });
+  expect(
+    (await http.pool.query('SELECT state FROM invoices WHERE id=$1', [result.adjustmentInvoiceId]))
+      .rows[0]?.state
+  ).toBe('Cancelled');
 }, 60000);

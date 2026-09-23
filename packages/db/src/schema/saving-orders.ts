@@ -294,6 +294,9 @@ export const savingHardwareAmendments = pgTable(
     originalInvoiceId: uuid('original_invoice_id')
       .notNull()
       .references(() => invoices.id, { onDelete: 'restrict' }),
+    adjustmentInvoiceId: uuid('adjustment_invoice_id').references(() => invoices.id, {
+      onDelete: 'restrict',
+    }),
     priceDeltaIrR: irrAmount('price_delta_irr')
       .notNull()
       .default(sql`'0'`),
@@ -314,7 +317,11 @@ export const savingHardwareAmendments = pgTable(
       'saving_hardware_amendments_reason',
       sql`length(trim(${table.reason})) BETWEEN 1 AND 1000`
     ),
-    check('saving_hardware_amendments_zero_delta', sql`${table.priceDeltaIrR}=0`),
+    check('saving_hardware_amendments_nonpositive_delta', sql`${table.priceDeltaIrR}<=0`),
+    check(
+      'saving_hardware_amendments_adjustment_link',
+      sql`(${table.priceDeltaIrR}=0 AND ${table.adjustmentInvoiceId} IS NULL) OR (${table.priceDeltaIrR}<0 AND ${table.adjustmentInvoiceId} IS NOT NULL)`
+    ),
   ]
 );
 

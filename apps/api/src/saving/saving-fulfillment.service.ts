@@ -9,11 +9,13 @@ import {
   staffContractMutation,
 } from '../contract/contract-transactions.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
+import { CreateAdjustmentInvoiceService } from '../invoice/create-adjustment-invoice.service.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { savingOrderRevisions } from './saving-order-revisions.js';
 import { savingAddressAmendments } from './saving-address-amendments.js';
 import { savingHardwareAmendments } from './saving-hardware-amendments.js';
+import { calculateSavingTotals } from './saving-calculation.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 export const SAVING_STAGES = [
@@ -85,7 +87,8 @@ const reviewQuery = `SELECT s.id,s.order_id,s.profile_id,s.saving_plan_id,s.hard
 export class SavingFulfillmentService {
   constructor(
     private readonly invoices: InvoiceStateMachineService,
-    private readonly giftCodes: GiftCodeService
+    private readonly giftCodes: GiftCodeService,
+    private readonly invoiceAdjustments: CreateAdjustmentInvoiceService
   ) {}
 
   async queue() {
@@ -99,7 +102,7 @@ export class SavingFulfillmentService {
     return { orders: rows.map((row) => this.present(row)) };
   }
 
-  async detail(id: string) {
+  async detail(id: string, allowHardwareCredit = false) {
     const client = await getDbPool().connect();
     try {
       const row = (await client.query<ReviewRow>(`${reviewQuery} WHERE s.id=$1`, [id])).rows[0];
@@ -150,7 +153,7 @@ export class SavingFulfillmentService {
               'process_completion',
             ].includes(stage.stage) && stage.status !== 'pending'
         );
-      const hardwareOptions = await this.hardwareOptions(client, row);
+      const hardwareOptions = await this.hardwareOptions(client, row, allowHardwareCredit);
       const canAmendHardware =
         ['approved', 'in_progress'].includes(row.status) &&
         row.financial_status === 'paid' &&
@@ -219,19 +222,61 @@ export class SavingFulfillmentService {
     };
   }
 
-  private paidHardwareLine(row: ReviewRow) {
+  private async hardwarePricing(client: PoolClient, row: ReviewRow) {
     const snapshot = row.pricing_snapshot as {
+      plan?: { title?: { fa: string; en: string } };
       lines?: Array<{ type?: string; amountIrR?: string; vatRateBps?: number }>;
+      discountIrR?: string;
+      totalIrR?: string;
     };
-    const line = snapshot?.lines?.find((entry) => entry.type === 'hardware_price');
-    return line && /^\d+$/.test(line.amountIrR ?? '') && Number.isInteger(line.vatRateBps)
-      ? { amountIrR: line.amountIrR!, vatRateBps: line.vatRateBps! }
-      : null;
+    const plan = snapshot?.lines?.find((entry) => entry.type === 'plan_price');
+    const paidHardware = snapshot?.lines?.find((entry) => entry.type === 'hardware_price');
+    if (
+      !plan ||
+      !paidHardware ||
+      !snapshot.plan?.title ||
+      !/^\d+$/.test(plan.amountIrR ?? '') ||
+      !/^\d+$/.test(paidHardware.amountIrR ?? '') ||
+      !/^\d+$/.test(snapshot.discountIrR ?? '') ||
+      !/^\d+$/.test(snapshot.totalIrR ?? '') ||
+      !Number.isInteger(plan.vatRateBps) ||
+      !Number.isInteger(paidHardware.vatRateBps)
+    )
+      return null;
+    const latest = (
+      await client.query<{
+        hardware_id: string;
+        hardware_snapshot: { priceIrR?: string; vatRateBps?: number; totalIrR?: string };
+      }>(
+        `SELECT hardware_id,hardware_snapshot FROM saving_hardware_amendments
+          WHERE order_id=$1 ORDER BY created_at DESC,id DESC LIMIT 1`,
+        [row.id]
+      )
+    ).rows[0];
+    if (latest && latest.hardware_id !== row.hardware_product_id) return null;
+    const current = latest?.hardware_snapshot;
+    if (current && (!/^\d+$/.test(current.priceIrR ?? '') || !Number.isInteger(current.vatRateBps)))
+      return null;
+    return {
+      plan: {
+        type: 'plan_price' as const,
+        productId: row.saving_plan_id,
+        title: snapshot.plan.title,
+        amountIrR: BigInt(plan.amountIrR!),
+        vatRateBps: plan.vatRateBps!,
+      },
+      current: {
+        priceIrR: current?.priceIrR ?? paidHardware.amountIrR!,
+        vatRateBps: current?.vatRateBps ?? paidHardware.vatRateBps!,
+      },
+      discountIrR: BigInt(snapshot.discountIrR!),
+      currentTotalIrR: BigInt(current?.totalIrR ?? snapshot.totalIrR!),
+    };
   }
 
-  private async hardwareOptions(client: PoolClient, row: ReviewRow) {
-    const paidLine = this.paidHardwareLine(row);
-    if (!paidLine) return [];
+  private async hardwareOptions(client: PoolClient, row: ReviewRow, allowCredit = false) {
+    const basis = await this.hardwarePricing(client, row);
+    if (!basis) return [];
     const options = (
       await client.query<{
         id: string;
@@ -254,12 +299,38 @@ export class SavingFulfillmentService {
         [row.saving_plan_id, row.hardware_product_id]
       )
     ).rows;
-    return options
-      .filter(
-        (option) =>
-          option.price === paidLine.amountIrR && option.vat_rate_bps === paidLine.vatRateBps
-      )
-      .map((option) => ({ id: option.id, title: option.title }));
+    return options.flatMap((option) => {
+      if (!option.price || !/^\d+$/.test(option.price)) return [];
+      try {
+        const totals = calculateSavingTotals(
+          [
+            basis.plan,
+            {
+              type: 'hardware_price',
+              productId: option.id,
+              title: option.title,
+              amountIrR: BigInt(option.price),
+              vatRateBps: option.vat_rate_bps,
+            },
+          ],
+          basis.discountIrR
+        );
+        const delta = totals.totalIrR - basis.currentTotalIrR;
+        if (delta > 0n || (delta < 0n && !allowCredit)) return [];
+        return [
+          {
+            id: option.id,
+            title: option.title,
+            priceIrR: option.price,
+            vatRateBps: option.vat_rate_bps,
+            totalIrR: totals.totalIrR.toString(),
+            priceDeltaIrR: delta.toString(),
+          },
+        ];
+      } catch {
+        return [];
+      }
+    });
   }
 
   private async lockRow(client: PoolClient, id: string): Promise<ReviewRow> {
@@ -665,31 +736,34 @@ export class SavingFulfillmentService {
     ).rows[0];
     if (!target) throw new NotFoundException('Saving order not found');
     try {
-      return await staffContractMutation(target.profile_id, actor, (client, archived) =>
-        contractIdempotency(
-          client,
-          'saving_hardware_amendment',
-          { ...input, orderId: id },
-          actor,
-          async () => {
-            if (archived) throw new ConflictException('Profile is archived');
-            const row = await this.lockRow(client, id);
-            if (
-              !['approved', 'in_progress'].includes(row.status) ||
-              row.financial_status !== 'paid' ||
-              row.invoice_state !== 'Paid' ||
-              BigInt(row.paid_amount) !== BigInt(row.total_amount) ||
-              BigInt(row.pending_refund_amount) !== 0n ||
-              !['AwaitingCustomerAcceptance', 'Active'].includes(row.contract_state) ||
-              row.version_id !== input.expectedVersionId ||
-              row.hardware_product_id !== input.expectedHardwareId
-            )
-              throw new ConflictException('Saving order is not eligible for hardware amendment');
-            if (row.hardware_product_id === input.hardwareProductId)
-              throw new ConflictException('Choose a different device');
-            const blocked = (
-              await client.query<{ blocked: boolean }>(
-                `SELECT EXISTS(
+      return await staffContractMutation(
+        target.profile_id,
+        actor,
+        (client, archived) =>
+          contractIdempotency(
+            client,
+            'saving_hardware_amendment',
+            { ...input, orderId: id },
+            actor,
+            async () => {
+              if (archived) throw new ConflictException('Profile is archived');
+              const row = await this.lockRow(client, id);
+              if (
+                !['approved', 'in_progress'].includes(row.status) ||
+                row.financial_status !== 'paid' ||
+                row.invoice_state !== 'Paid' ||
+                BigInt(row.paid_amount) !== BigInt(row.total_amount) ||
+                BigInt(row.pending_refund_amount) !== 0n ||
+                !['AwaitingCustomerAcceptance', 'Active'].includes(row.contract_state) ||
+                row.version_id !== input.expectedVersionId ||
+                row.hardware_product_id !== input.expectedHardwareId
+              )
+                throw new ConflictException('Saving order is not eligible for hardware amendment');
+              if (row.hardware_product_id === input.hardwareProductId)
+                throw new ConflictException('Choose a different device');
+              const blocked = (
+                await client.query<{ blocked: boolean }>(
+                  `SELECT EXISTS(
                   SELECT 1 FROM contract_cancellation_requests r
                    WHERE r.contract_id=$1 AND r.status='Pending'
                   UNION ALL
@@ -701,82 +775,111 @@ export class SavingFulfillmentService {
                   SELECT 1 FROM saving_fulfillment_stages f WHERE f.order_id=$2
                     AND f.stage='product_delivery' AND f.status='in_progress'
                 ) AS blocked`,
-                [row.contract_id, id]
-              )
-            ).rows[0]?.blocked;
-            if (blocked)
-              throw new ConflictException('Delivery, installation or cancellation prevents a swap');
-            const paidLine = this.paidHardwareLine(row);
-            const hardware = (await this.hardwareOptions(client, row)).find(
-              (option) => option.id === input.hardwareProductId
-            );
-            if (!paidLine || !hardware)
-              throw new ConflictException(
-                'Choose active hardware with the same paid price and tax'
+                  [row.contract_id, id]
+                )
+              ).rows[0]?.blocked;
+              if (blocked)
+                throw new ConflictException(
+                  'Delivery, installation or cancellation prevents a swap'
+                );
+              const basis = await this.hardwarePricing(client, row);
+              const hardware = (await this.hardwareOptions(client, row, true)).find(
+                (option) => option.id === input.hardwareProductId
               );
-            const amendmentId = uuidv7();
-            await client.query(
-              `INSERT INTO saving_hardware_amendments(
+              if (!basis || !hardware)
+                throw new ConflictException(
+                  'Choose active hardware with a payable price no higher than the current device'
+                );
+              const priceDeltaIrR = BigInt(hardware.priceDeltaIrR);
+              const amendmentId = uuidv7();
+              const adjustment =
+                priceDeltaIrR < 0n
+                  ? await this.invoiceAdjustments.createAdjustmentInvoice(
+                      {
+                        originalInvoiceId: row.invoice_id,
+                        amount: priceDeltaIrR,
+                        reason: input.reason,
+                        actorUserId: actor.userId,
+                        actorSession: actor,
+                        idempotencyKey: input.idempotencyKey,
+                        ip,
+                      },
+                      client
+                    )
+                  : null;
+              await client.query(
+                `INSERT INTO saving_hardware_amendments(
                  id,order_id,contract_id,contract_version_id,actor_user_id,
                  previous_hardware_id,hardware_id,previous_snapshot,hardware_snapshot,
-                 original_invoice_id,price_delta_irr,reason)
-               VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9::jsonb,$10,0,$11)`,
-              [
-                amendmentId,
-                id,
+                 original_invoice_id,adjustment_invoice_id,price_delta_irr,reason)
+               VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9::jsonb,$10,$11,$12,$13)`,
+                [
+                  amendmentId,
+                  id,
+                  row.contract_id,
+                  row.version_id,
+                  actor.userId,
+                  row.hardware_product_id,
+                  hardware.id,
+                  JSON.stringify({
+                    title: row.hardware_title,
+                    priceIrR: basis.current.priceIrR,
+                    vatRateBps: basis.current.vatRateBps,
+                    totalIrR: basis.currentTotalIrR.toString(),
+                  }),
+                  JSON.stringify({
+                    title: hardware.title,
+                    priceIrR: hardware.priceIrR,
+                    vatRateBps: hardware.vatRateBps,
+                    totalIrR: hardware.totalIrR,
+                  }),
+                  row.invoice_id,
+                  adjustment?.adjustmentInvoiceId ?? null,
+                  hardware.priceDeltaIrR,
+                  input.reason,
+                ]
+              );
+              await client.query(
+                'UPDATE saving_orders SET hardware_product_id=$2,updated_at=NOW() WHERE id=$1',
+                [id, hardware.id]
+              );
+              await auditContract(
+                client,
                 row.contract_id,
                 row.version_id,
-                actor.userId,
-                row.hardware_product_id,
-                hardware.id,
-                JSON.stringify({
-                  title: row.hardware_title,
-                  priceIrR: paidLine.amountIrR,
-                  vatRateBps: paidLine.vatRateBps,
-                }),
-                JSON.stringify({
-                  title: hardware.title,
-                  priceIrR: paidLine.amountIrR,
-                  vatRateBps: paidLine.vatRateBps,
-                }),
-                row.invoice_id,
-                input.reason,
-              ]
-            );
-            await client.query(
-              'UPDATE saving_orders SET hardware_product_id=$2,updated_at=NOW() WHERE id=$1',
-              [id, hardware.id]
-            );
-            await auditContract(
-              client,
-              row.contract_id,
-              row.version_id,
-              'saving.hardware_amended',
-              actor,
-              ip,
-              {
-                savingOrderId: id,
+                'saving.hardware_amended',
+                actor,
+                ip,
+                {
+                  savingOrderId: id,
+                  amendmentId,
+                  reason: input.reason,
+                  previousHardwareId: row.hardware_product_id,
+                  hardwareProductId: hardware.id,
+                  priceDeltaIrR: hardware.priceDeltaIrR,
+                  adjustmentInvoiceId: adjustment?.adjustmentInvoiceId ?? null,
+                }
+              );
+              await this.notify(
+                client,
+                row,
+                priceDeltaIrR < 0n
+                  ? 'تجهیز سفارش صرفه‌جویی شما تعویض شد و بستانکاری مرتبط صادر شد. اصلاحیه را بررسی کنید.'
+                  : 'تجهیز سفارش صرفه‌جویی شما بدون تغییر مبلغ توسط کارشناس تعویض شد. اصلاحیه را بررسی کنید.',
+                priceDeltaIrR < 0n
+                  ? 'Staff changed your power-saving equipment and issued a linked credit note. Review the amendment.'
+                  : 'Staff changed your power-saving equipment without changing the amount. Review the amendment.'
+              );
+              return {
                 amendmentId,
-                reason: input.reason,
-                previousHardwareId: row.hardware_product_id,
+                savingOrderId: id,
                 hardwareProductId: hardware.id,
-                priceDeltaIrR: '0',
-              }
-            );
-            await this.notify(
-              client,
-              row,
-              'تجهیز سفارش صرفه‌جویی شما بدون تغییر مبلغ توسط کارشناس تعویض شد. اصلاحیه را بررسی کنید.',
-              'Staff changed your power-saving equipment without changing the amount. Review the amendment.'
-            );
-            return {
-              amendmentId,
-              savingOrderId: id,
-              hardwareProductId: hardware.id,
-              priceDeltaIrR: '0',
-            };
-          }
-        )
+                priceDeltaIrR: hardware.priceDeltaIrR,
+                adjustmentInvoiceId: adjustment?.adjustmentInvoiceId ?? null,
+              };
+            }
+          ),
+        { financialReview: true }
       );
     } catch (error) {
       if (

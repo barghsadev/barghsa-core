@@ -21251,7 +21251,7 @@
             "description": ""
           }
         },
-        "summary": "Swap equally priced hardware on a paid order before delivery",
+        "summary": "Swap equal or lower-priced hardware on a paid order before delivery",
         "tags": [
           "Staff · Saving orders"
         ]

@@ -69,7 +69,11 @@ interface Detail extends Order {
   addressAmendments: SavingAddressAmendment[];
   hardwareAmendments: SavingHardwareAmendment[];
   addressOptions: Array<{ id: string; fullAddress: string; postalCode: string }>;
-  hardwareOptions: Array<{ id: string; title: { fa: string; en: string } }>;
+  hardwareOptions: Array<{
+    id: string;
+    title: { fa: string; en: string };
+    priceDeltaIrR: string;
+  }>;
   canAmendAddress: boolean;
   canAmendHardware: boolean;
 }
@@ -359,6 +363,9 @@ export default function AdminSavingOrdersPage() {
                     {detail.hardwareOptions.map((hardware) => (
                       <option key={hardware.id} value={hardware.id}>
                         {hardware.title[locale]}
+                        {BigInt(hardware.priceDeltaIrR) < 0n
+                          ? ` · ${copy('hardwareCreditIssued')}: ${money.money((-BigInt(hardware.priceDeltaIrR)).toString())}`
+                          : ''}
                       </option>
                     ))}
                   </select>

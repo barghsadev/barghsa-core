@@ -1,12 +1,15 @@
 import { Card, CardContent } from '@barghsa/ui';
+import { Link } from '@tanstack/react-router';
 import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 
 export interface SavingHardwareAmendment {
   id: string;
   changedAt: string;
   reason: string;
   priceDeltaIrR: string;
+  adjustmentInvoiceId: string | null;
   previousTitle: { fa: string; en: string };
   hardwareTitle: { fa: string; en: string };
 }
@@ -17,6 +20,7 @@ export function SavingHardwareAmendmentHistory({
   amendments: SavingHardwareAmendment[];
 }) {
   const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
   if (amendments.length === 0) return null;
   return (
@@ -39,7 +43,21 @@ export function SavingHardwareAmendmentHistory({
                 <span className="sr-only">{copy('afterChange')}: </span>
                 {amendment.hardwareTitle[locale]}
               </p>
-              <p className="text-muted-foreground">{copy('hardwareNoPriceChange')}</p>
+              {amendment.adjustmentInvoiceId ? (
+                <p className="text-muted-foreground">
+                  {copy('hardwareCreditIssued')}:{' '}
+                  <bdi>{numbers.money((-BigInt(amendment.priceDeltaIrR)).toString())}</bdi>{' '}
+                  <Link
+                    to="/invoices/$invoiceId"
+                    params={{ invoiceId: amendment.adjustmentInvoiceId }}
+                    className="text-primary underline"
+                  >
+                    {copy('invoice')}
+                  </Link>
+                </p>
+              ) : (
+                <p className="text-muted-foreground">{copy('hardwareNoPriceChange')}</p>
+              )}
               <p className="mt-2 whitespace-pre-wrap">
                 <span className="text-muted-foreground">{copy('staffAmendReason')}: </span>
                 {amendment.reason}

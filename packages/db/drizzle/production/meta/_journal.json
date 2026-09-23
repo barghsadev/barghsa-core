@@ -680,6 +680,13 @@
       "when": 1791331200079,
       "tag": "0176_saving_hardware_amendments",
       "breakpoints": true
+    },
+    {
+      "idx": 177,
+      "version": "7",
+      "when": 1791331200080,
+      "tag": "0177_saving_hardware_credits",
+      "breakpoints": true
     }
   ]
 }

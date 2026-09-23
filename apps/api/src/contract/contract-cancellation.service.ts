@@ -357,6 +357,20 @@ export class ContractCancellationService {
                 },
               });
           }
+          for (const credit of snapshot.hardwareCredits) {
+            if (credit.state === 'Unpaid')
+              await this.invoices.transition(credit.id, 'Unpaid', 'Cancelled', {
+                actorUserId: actor.userId,
+                reason: `Contract cancellation: ${intent.reason}`,
+                ip,
+                client,
+                financials: {
+                  paidAmount: 0n,
+                  refundedAmount: 0n,
+                  totalAmount: BigInt(credit.totalAmount),
+                },
+              });
+          }
           if (intent.customer_request_id) {
             await auditContract(
               client,

@@ -138,9 +138,10 @@ const en: Record<string, string> = {
     'For a paid order before installation begins. The paid invoice and published contract remain as issued; the amendment records the correction.',
   staffAmendHardware: 'Swap hardware',
   staffAmendHardwareHelp:
-    'For a paid order before delivery. Only equally priced hardware with the same tax is available. Stock moves with the amendment; the paid invoice and published contract remain as issued.',
+    'For a paid order before delivery. An equal-price swap leaves the amount unchanged; a cheaper device issues a linked credit note. The original paid invoice and published contract remain as issued.',
   hardwareAmendments: 'Hardware amendments',
   hardwareNoPriceChange: 'No change to the paid amount',
+  hardwareCreditIssued: 'Credit note issued',
   staffAmendReason: 'Amendment reason',
   staffComplete: 'Complete stage',
   staffSkip: 'Skip optional handover',
@@ -307,9 +308,10 @@ const fa: Record<string, string> = {
     'برای سفارش پرداخت‌شده، پیش از آغاز نصب. فاکتور پرداخت‌شده و قرارداد منتشرشده بدون تغییر می‌مانند و اصلاحیه ثبت می‌شود.',
   staffAmendHardware: 'تعویض تجهیزات',
   staffAmendHardwareHelp:
-    'برای سفارش پرداخت‌شده، پیش از تحویل. فقط تجهیزات هم‌قیمت با مالیات یکسان قابل انتخاب است. موجودی همراه اصلاحیه جابه‌جا می‌شود و فاکتور و قرارداد منتشرشده بدون تغییر می‌مانند.',
+    'برای سفارش پرداخت‌شده، پیش از تحویل. تعویض هم‌قیمت مبلغ را تغییر نمی‌دهد و تجهیز ارزان‌تر بستانکاری مرتبط ایجاد می‌کند. فاکتور پرداخت‌شده و قرارداد منتشرشده بدون تغییر می‌مانند.',
   hardwareAmendments: 'اصلاحیه‌های تجهیزات',
   hardwareNoPriceChange: 'مبلغ پرداخت‌شده تغییر نمی‌کند',
+  hardwareCreditIssued: 'سند بستانکاری صادر شد',
   staffAmendReason: 'دلیل اصلاحیه',
   staffComplete: 'تکمیل مرحله',
   staffSkip: 'رد شدن از تحویل اختیاری',

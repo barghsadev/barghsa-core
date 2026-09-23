@@ -22,6 +22,12 @@ export interface CancellationSnapshotRow {
   pending_payments: boolean;
   saving_terminal?: boolean;
   invoices: CancellationInvoice[];
+  hardware_credits?: Array<{
+    id: string;
+    state: string;
+    totalAmount: string;
+    paidAmount: string;
+  }>;
 }
 
 /** A single statement gives the preview one consistent database snapshot. The
@@ -47,7 +53,12 @@ export async function readCancellationSnapshot(client: Pool | PoolClient, id: st
           FROM refunds r WHERE r.invoice_id=i.id AND r.state NOT IN ('Completed','Rejected','Cancelled')),'[]'::jsonb)
       ) ORDER BY i.id) FROM invoices i WHERE i.profile_id=c.profile_id
         AND i.adjustment_kind IS DISTINCT FROM 'credit'
-        AND (i.contract_id=c.id::text OR (c.order_id IS NOT NULL AND i.order_id=c.order_id AND i.contract_id IS NULL))), '[]'::jsonb) AS invoices
+        AND (i.contract_id=c.id::text OR (c.order_id IS NOT NULL AND i.order_id=c.order_id AND i.contract_id IS NULL))), '[]'::jsonb) AS invoices,
+      COALESCE((SELECT jsonb_agg(jsonb_build_object(
+        'id',i.id,'state',i.state,'totalAmount',i.total_amount::text,
+        'paidAmount',i.paid_amount::text) ORDER BY i.id)
+        FROM saving_hardware_amendments a JOIN invoices i ON i.id=a.adjustment_invoice_id
+        WHERE a.contract_id=c.id), '[]'::jsonb) AS hardware_credits
     FROM contracts c JOIN profiles p ON p.id=c.profile_id WHERE c.id=$1`,
       [id]
     )
@@ -57,6 +68,9 @@ export async function readCancellationSnapshot(client: Pool | PoolClient, id: st
 }
 
 export function cancellationSnapshot(row: CancellationSnapshotRow) {
+  const hardwareCredits = [...(row.hardware_credits ?? [])].sort((a, b) =>
+    a.id.localeCompare(b.id)
+  );
   const invoices = [...row.invoices]
     .sort((a, b) => a.id.localeCompare(b.id))
     .map((invoice) => {
@@ -92,6 +106,7 @@ export function cancellationSnapshot(row: CancellationSnapshotRow) {
     pendingPayments: row.pending_payments,
     savingTerminal: row.saving_terminal ?? false,
     invoices,
+    hardwareCredits,
   };
   const blockers = [
     ...(row.association_conflict ? ['invoice_identity_conflict'] : []),
@@ -103,6 +118,11 @@ export function cancellationSnapshot(row: CancellationSnapshotRow) {
     ...(invoices.some((invoice) => invoice.pendingRefunds.length) ? ['refund_in_progress'] : []),
     ...(invoices.some((invoice) => invoice.state === 'PaymentUnderReview')
       ? ['payment_under_review']
+      : []),
+    ...(hardwareCredits.some(
+      (credit) => credit.paidAmount !== '0' || !['Unpaid', 'Cancelled'].includes(credit.state)
+    )
+      ? ['hardware_credit_requires_reconciliation']
       : []),
   ];
   return {

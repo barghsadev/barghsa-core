@@ -87,7 +87,7 @@ export class SavingFulfillmentController {
   @ApiOperation({ summary: 'Saving order review detail and fulfillment history' })
   detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
     this.permission(req, false);
-    return this.service.detail(id);
+    return this.service.detail(id, hasStaffPermission(req, 'invoices:write'));
   }
 
   @Post(':id/approve')
@@ -156,7 +156,7 @@ export class SavingFulfillmentController {
   @HttpCode(201)
   @RequiresStepUp()
   @RateLimit({ namespace: 'saving:staff-amend-hardware:user', limit: 20, windowMs: 60_000 })
-  @ApiOperation({ summary: 'Swap equally priced hardware on a paid order before delivery' })
+  @ApiOperation({ summary: 'Swap equal or lower-priced hardware on a paid order before delivery' })
   @ApiZodBody(hardwareAmendment)
   amendHardware(
     @Param('id', new ParseUUIDPipe()) id: string,
