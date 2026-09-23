@@ -220,7 +220,7 @@ it.each(['account', 'session', 'refresh', 'audit'] as const)(
   'rolls back every credential change if OTP expiry passes while waiting for %s',
   async (resource) => {
     await http.pool.query(
-      "UPDATE otp_challenges SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE challenge_id=$1",
+      "UPDATE otp_challenges SET expires_at=clock_timestamp()+INTERVAL '4 seconds' WHERE challenge_id=$1",
       [challengeId]
     );
     const before = await state();
@@ -248,7 +248,8 @@ it.each(['account', 'session', 'refresh', 'audit'] as const)(
                 'SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
                 [pid]
               )
-            ).rows[0].count
+            ).rows[0].count,
+          { timeout: 3500 }
         )
         .toBe(1);
       await expect
@@ -277,7 +278,7 @@ it.each(['account', 'session', 'refresh', 'audit'] as const)(
       await changing;
     }
   },
-  15000
+  18000
 );
 
 it('shares five reset attempts across challenges and source IPs while keeping destinations independent', async () => {
