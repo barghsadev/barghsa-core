@@ -4,6 +4,7 @@ import { Button, Card, CardContent } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { toast } from 'sonner';
 import { FormWizard } from '../components/FormWizard.js';
+import { WalletFundingPrompt } from '../components/WalletFundingPrompt.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -696,6 +697,9 @@ export function AdvancedElectricityOrderPage() {
                     {t('electricity.order.walletBalance', locale)}:{' '}
                     {numbers.money(quote.walletBalanceIrR)}
                   </p>
+                  {step === 5 && (
+                    <WalletFundingPrompt balance={quote.walletBalanceIrR} total={quote.totalIrR} />
+                  )}
                   {step === 5 && (
                     <>
                       <p>

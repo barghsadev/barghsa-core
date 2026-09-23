@@ -8,6 +8,7 @@ import { Button, Card, CardContent, Dialog, DialogContent, DialogTitle } from '@
 import { withCsrf } from '../../../lib/csrf.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { FormWizard } from '../../../components/FormWizard.js';
+import { WalletFundingPrompt } from '../../../components/WalletFundingPrompt.js';
 
 export const Route = createFileRoute('/_app/electricity/order')({
   component: ElectricityOrderPage,
@@ -1829,6 +1830,9 @@ function ElectricityOrderPage() {
                           : numbers.money(walletBalance)}
                       </span>
                     </div>
+                    {quote && (
+                      <WalletFundingPrompt balance={walletBalance} total={quote.totalIrR} />
+                    )}
                     <div className="space-y-2 border-t pt-4 text-muted-foreground">
                       <h3 className="font-medium text-foreground">
                         {t('electricity.order.contractPreview', locale)}

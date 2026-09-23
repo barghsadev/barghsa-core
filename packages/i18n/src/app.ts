@@ -1015,6 +1015,10 @@ export const fa: I18nDictionary = {
   'dashboard.overview.lowBalanceWarning':
     'موجودی کیف پول شما برای پرداخت صورتحساب‌های جاری کافی نیست',
   'wallet.page.title': 'کیف پول',
+  'wallet.funding.shortfall': 'مبلغ موردنیاز برای شارژ کیف پول',
+  'wallet.funding.unknown': 'موجودی کیف پول در دسترس نیست. پیش از پرداخت آن را بررسی کنید.',
+  'wallet.funding.methods': 'شارژ آنلاین یا ثبت رسید واریز بانکی در کیف پول در دسترس است.',
+  'wallet.funding.open': 'رفتن به کیف پول',
   'wallet.page.subtitle':
     'موجودی پروفایل فعال را افزایش دهید. شارژ آنلاین پس از تأیید درگاه و رسید بانکی پس از تأیید مالی اعمال می‌شود.',
   'wallet.page.currentBalance': 'موجودی قابل استفاده',
@@ -2141,6 +2145,11 @@ export const en: I18nDictionary = {
   'dashboard.overview.supportTicket': 'Support Ticket',
   'dashboard.overview.profileBadge': 'Profile: {name}',
   'wallet.page.title': 'Wallet',
+  'wallet.funding.shortfall': 'Wallet top-up needed',
+  'wallet.funding.unknown': 'Wallet balance is unavailable. Check it before payment.',
+  'wallet.funding.methods':
+    'Online top-up and bank receipt submission are available in your wallet.',
+  'wallet.funding.open': 'Open wallet',
   'wallet.page.subtitle':
     'Top up the active profile wallet. Online payments credit after the provider confirms; bank receipts stay pending until finance confirms.',
   'wallet.page.currentBalance': 'Available balance',

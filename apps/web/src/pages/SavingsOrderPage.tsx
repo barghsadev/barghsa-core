@@ -6,6 +6,7 @@ import { withCsrf } from '../lib/csrf.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { WalletFundingPrompt } from '../components/WalletFundingPrompt.js';
 
 interface Product {
   id: string;
@@ -784,6 +785,7 @@ export function SavingsOrderPage() {
                     {copy('walletBalance')}:{' '}
                     {walletBalance === null ? '—' : numbers.money(walletBalance)}
                   </p>
+                  {quote && <WalletFundingPrompt balance={walletBalance} total={quote.totalIrR} />}
                   <label className="flex gap-2">
                     <input
                       type="checkbox"
