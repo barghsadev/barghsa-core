@@ -12,6 +12,16 @@ interface RequestRow {
   building_type: string;
   document_count: number;
 }
+interface PendingDocumentRow {
+  id: string;
+  request_id: string;
+  document_id: string;
+  file_name: string;
+  uploaded_by: string;
+  uploaded_by_name: string;
+  uploaded_at: string;
+  staff_status: string;
+}
 interface DocumentRow {
   id: string;
   document_id: string;
@@ -38,6 +48,7 @@ export function AdminSolarDocumentsPage() {
   const locale = useLocale();
   const copy = (key: string) => tSolar(key, locale);
   const [requests, setRequests] = useState<RequestRow[]>([]);
+  const [pendingDocuments, setPendingDocuments] = useState<PendingDocumentRow[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [guidance, setGuidance] = useState<Guidance | null>(null);
@@ -52,11 +63,46 @@ export function AdminSolarDocumentsPage() {
   const [before, setBefore] = useState<string | null>(null);
   const [nextBefore, setNextBefore] = useState<string | null>(null);
   const [queueLoading, setQueueLoading] = useState(true);
+  const [beforeDocument, setBeforeDocument] = useState<string | null>(null);
+  const [nextBeforeDocument, setNextBeforeDocument] = useState<string | null>(null);
+  const [documentsLoading, setDocumentsLoading] = useState(true);
   const [error, setError] = useState(false);
   const refresh = () => {
     setBefore(null);
+    setBeforeDocument(null);
     setRevision((value) => value + 1);
   };
+  useEffect(() => {
+    const controller = new AbortController();
+    setDocumentsLoading(true);
+    void fetch(
+      `/api/admin/solar/document-review-queue${beforeDocument ? `?before=${encodeURIComponent(beforeDocument)}` : ''}`,
+      { credentials: 'include', signal: controller.signal }
+    )
+      .then(async (response) => {
+        if (!response.ok) throw new Error('document queue');
+        return response.json() as Promise<{
+          documents: PendingDocumentRow[];
+          nextBefore: string | null;
+        }>;
+      })
+      .then((result) => {
+        if (controller.signal.aborted) return;
+        setPendingDocuments((current) => {
+          if (!beforeDocument) return result.documents;
+          const shown = new Set(current.map((document) => document.id));
+          return [...current, ...result.documents.filter((document) => !shown.has(document.id))];
+        });
+        setNextBeforeDocument(result.nextBefore);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setDocumentsLoading(false);
+      });
+    return () => controller.abort();
+  }, [beforeDocument, revision]);
   useEffect(() => {
     const controller = new AbortController();
     setError(false);
@@ -177,6 +223,47 @@ export function AdminSolarDocumentsPage() {
     <main className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('staffTitle')}</h1>
       {error && <p role="alert">{copy('documentError')}</p>}
+      <section className="space-y-3 rounded-xl border p-5">
+        <h2 className="text-xl font-semibold">{copy('staffPendingFiles')}</h2>
+        {!pendingDocuments.length && !documentsLoading && <p>{copy('staffNoPendingFiles')}</p>}
+        <ul className="space-y-2">
+          {pendingDocuments.map((document) => (
+            <li key={document.id}>
+              <button
+                type="button"
+                className="w-full rounded-md border p-3 text-start"
+                onClick={() => {
+                  if (selected !== document.request_id) setDetail(null);
+                  setSelected(document.request_id);
+                  setPreview(document.document_id);
+                }}
+              >
+                <span className="block font-medium">{document.file_name}</span>
+                <span className="block text-sm text-muted-foreground">
+                  {copy('staffUploader')}: {document.uploaded_by_name} ·{' '}
+                  {new Intl.DateTimeFormat(locale, {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  }).format(new Date(document.uploaded_at))}{' '}
+                  · {copy('staffPending')}
+                </span>
+                <span className="block text-xs text-muted-foreground">
+                  {copy('staffRequest')}: <bdi>{document.request_id}</bdi>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+        {nextBeforeDocument && (
+          <Button
+            variant="outline"
+            disabled={documentsLoading}
+            onClick={() => setBeforeDocument(nextBeforeDocument)}
+          >
+            {copy('moreFiles')}
+          </Button>
+        )}
+      </section>
       <section className="space-y-3 rounded-xl border p-5">
         <h2 className="text-xl font-semibold">{copy('staffQueue')}</h2>
         {!requests.length && !queueLoading && <p>{copy('staffEmpty')}</p>}

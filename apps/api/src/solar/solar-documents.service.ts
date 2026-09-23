@@ -242,6 +242,48 @@ export class SolarDocumentsService {
     }
   }
 
+  async staffDocumentQueue(actor: Actor, before?: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'orders:read');
+      await requireCurrentSession(client, actor);
+      const cursor = before
+        ? (
+            await client.query<{ id: string; uploaded_at: string }>(
+              'SELECT id,uploaded_at::text AS uploaded_at FROM solar_construction_documents WHERE id=$1',
+              [before]
+            )
+          ).rows[0]
+        : null;
+      if (before && !cursor) throw new NotFoundException('Solar document cursor not found');
+      const rows = (
+        await client.query(
+          `SELECT sd.id,sd.request_id,sd.document_id,sd.file_name,sd.uploaded_by,
+                  u.username AS uploaded_by_name,
+                  sd.uploaded_at,sd.staff_status,r.status AS request_status
+           FROM solar_construction_documents sd
+           JOIN solar_construction_requests r ON r.id=sd.request_id
+           JOIN documents d ON d.id=sd.document_id
+           JOIN users u ON u.user_id=sd.uploaded_by
+           WHERE r.status IN ('documents_under_review','changes_requested')
+             AND sd.staff_status='pending'
+             AND d.state IN ('Available','SubmittedForReview')
+             AND ($1::timestamptz IS NULL OR (sd.uploaded_at,sd.id) < ($1::timestamptz,$2::uuid))
+           ORDER BY sd.uploaded_at DESC,sd.id DESC LIMIT 101`,
+          [cursor?.uploaded_at ?? null, before ?? null]
+        )
+      ).rows;
+      await client.query('COMMIT');
+      return { documents: rows.slice(0, 100), nextBefore: rows.length > 100 ? rows[99]!.id : null };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async staffDocuments(actor: Actor, requestId: string) {
     const client = await getDbPool().connect();
     try {

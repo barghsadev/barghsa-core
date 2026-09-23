@@ -193,9 +193,35 @@ it('supports empty submission, editable guidance, per-file decisions, replacemen
   const staffList = await send('solar-reviewer', `admin/solar/requests/${requestId}/documents`);
   expect(staffList.status, http.logs()).toBe(200);
   const listed = (await staffList.json()) as {
-    documents: Array<{ document_id: string; state: string; revision: number }>;
+    documents: Array<{ id: string; document_id: string; state: string; revision: number }>;
   };
   expect(listed.documents).toMatchObject([{ document_id: first.id, state: 'SubmittedForReview' }]);
+  const pendingQueue = await send('solar-reviewer', 'admin/solar/document-review-queue');
+  expect(pendingQueue.status, http.logs()).toBe(200);
+  expect(await pendingQueue.json()).toMatchObject({
+    documents: [
+      {
+        id: listed.documents[0]!.id,
+        document_id: first.id,
+        uploaded_by: 'solar-buyer',
+        uploaded_by_name: 'solar-buyer@example.test',
+      },
+    ],
+    nextBefore: null,
+  });
+  const afterDocument = await send(
+    'solar-reviewer',
+    `admin/solar/document-review-queue?before=${listed.documents[0]!.id}`
+  );
+  expect(afterDocument.status, http.logs()).toBe(200);
+  expect(await afterDocument.json()).toMatchObject({ documents: [], nextBefore: null });
+  expect(
+    (await send('solar-reviewer', 'admin/solar/document-review-queue?before=bad')).status
+  ).toBe(400);
+  expect(
+    (await send('solar-reviewer', `admin/solar/document-review-queue?before=${randomUUID()}`))
+      .status
+  ).toBe(404);
   const rejected = await send(
     'solar-reviewer',
     `admin/solar/requests/${requestId}/documents/${first.id}/reject`,
@@ -206,6 +232,11 @@ it('supports empty submission, editable guidance, per-file decisions, replacemen
     }
   );
   expect(rejected.status, http.logs()).toBe(200);
+  expect(
+    await (await send('solar-reviewer', 'admin/solar/document-review-queue')).json()
+  ).toMatchObject({
+    documents: [],
+  });
   const review = await send('solar-reviewer', `admin/solar/requests/${requestId}/documents`);
   expect(
     ((await review.json()) as { documents: Array<{ staff_status: string }> }).documents[0]!

@@ -109,6 +109,15 @@ export class StaffSolarDocumentsController {
     return this.service.staffQueue(req.session, before);
   }
 
+  @Get('document-review-queue')
+  @ApiOperation({ summary: 'List individual solar documents awaiting staff review' })
+  @ApiQuery({ name: 'before', required: false, format: 'uuid' })
+  documentQueue(@Req() req: AuthenticatedRequest, @Query('before') before?: string) {
+    if (before && !z.string().uuid().safeParse(before).success)
+      throw new BadRequestException('Invalid solar document cursor');
+    return this.service.staffDocumentQueue(req.session, before);
+  }
+
   @Get('requests/:id/documents')
   @ApiOperation({ summary: 'Read individual solar documents and their review statuses' })
   documents(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {

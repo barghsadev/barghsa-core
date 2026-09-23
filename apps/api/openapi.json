@@ -9924,6 +9924,36 @@
         ]
       }
     },
+    "/api/admin/solar/document-review-queue": {
+      "get": {
+        "operationId": "StaffSolarDocumentsController_documentQueue",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List individual solar documents awaiting staff review",
+        "tags": [
+          "Admin · Solar documents"
+        ]
+      }
+    },
     "/api/admin/solar/postal-guidance": {
       "get": {
         "operationId": "StaffSolarPostalController_guidance",
