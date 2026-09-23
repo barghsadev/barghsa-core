@@ -5,6 +5,26 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'electricity.increase.title': 'درخواست افزایش مقدار برق',
+  'electricity.increase.loading': 'در حال دریافت وضعیت درخواست…',
+  'electricity.increase.retry': 'تلاش دوباره',
+  'electricity.increase.requested': 'مقدار درخواستی',
+  'electricity.increase.reason': 'دلیل تصمیم',
+  'electricity.increase.status.pending': 'در انتظار بررسی کارکنان',
+  'electricity.increase.status.rejected': 'درخواست رد شد',
+  'electricity.increase.status.approved': 'درخواست تأیید شد',
+  'electricity.increase.status.awaiting_signature': 'در انتظار امضای الحاقیه',
+  'electricity.increase.status.awaiting_payment': 'در انتظار پرداخت تعدیل',
+  'electricity.increase.status.effective': 'افزایش اعمال شد',
+  'electricity.increase.status.expired': 'درخواست منقضی شد',
+  'electricity.increase.limit': 'حداکثر مقدار مجاز',
+  'electricity.increase.quantity': 'مقدار کل جدید (کیلووات‌ساعت)',
+  'electricity.increase.future':
+    'درخواست فقط برای بخش آینده دوره تحویل بررسی می‌شود. مبلغ گذشته تغییر نمی‌کند.',
+  'electricity.increase.stepup': 'برای ثبت درخواست، تأیید امنیتی لازم است.',
+  'electricity.increase.security': 'تنظیمات امنیتی',
+  'electricity.increase.failed': 'ثبت درخواست انجام نشد. مقدار و وضعیت قرارداد را بررسی کنید.',
+  'electricity.increase.submit': 'ثبت درخواست افزایش',
   'electricity.orders.title': 'سفارش‌های برق',
   'electricity.orders.description': 'پیشرفت سفارش‌ها، پرداخت و گام بعدی را دنبال کنید.',
   'electricity.orders.new': 'سفارش جدید',
@@ -1055,6 +1075,27 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'electricity.increase.title': 'Request more electricity',
+  'electricity.increase.loading': 'Loading request status…',
+  'electricity.increase.retry': 'Try again',
+  'electricity.increase.requested': 'Requested total',
+  'electricity.increase.reason': 'Decision reason',
+  'electricity.increase.status.pending': 'Awaiting staff review',
+  'electricity.increase.status.rejected': 'Request declined',
+  'electricity.increase.status.approved': 'Request approved',
+  'electricity.increase.status.awaiting_signature': 'Awaiting amendment signature',
+  'electricity.increase.status.awaiting_payment': 'Awaiting adjustment payment',
+  'electricity.increase.status.effective': 'Increase effective',
+  'electricity.increase.status.expired': 'Request expired',
+  'electricity.increase.limit': 'Maximum allowed total',
+  'electricity.increase.quantity': 'New total quantity (kWh)',
+  'electricity.increase.future':
+    'The request applies only to future delivery. Past charges stay unchanged.',
+  'electricity.increase.stepup': 'Security confirmation is required to submit this request.',
+  'electricity.increase.security': 'Security settings',
+  'electricity.increase.failed':
+    'Could not submit the request. Check the amount and contract status.',
+  'electricity.increase.submit': 'Submit increase request',
   'electricity.orders.title': 'Electricity orders',
   'electricity.orders.description': 'Track order progress, payment, and the next step.',
   'electricity.orders.new': 'New order',

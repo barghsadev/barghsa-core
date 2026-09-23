@@ -793,6 +793,157 @@ it('funds the linked invoice and activates only after customer acceptance', asyn
   expect(parent.status).toBe('CONFIRMED');
 });
 
+it('accepts one bounded future increase request and lets staff reject it with an audit trail', async () => {
+  const order = await submittedOrder();
+  const versionId = (
+    await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+      order.contractId,
+    ])
+  ).rows[0].current_version_id as string;
+  await http.pool.query(
+    `INSERT INTO wallets(profile_id,posted_balance,reserved_balance)
+    VALUES($1,1500000,0) ON CONFLICT(profile_id) DO UPDATE SET posted_balance=1500000,reserved_balance=0`,
+    [input.profileId]
+  );
+  expect(
+    (
+      await staffPost(order.orderId, 'approve', {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: versionId,
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+  const walletPath = `${http.base}/api/invoices/${order.invoiceId}/wallet-payment`;
+  const walletReview = await fetch(walletPath, { headers });
+  expect(walletReview.status, http.logs()).toBe(200);
+  const walletHash = ((await walletReview.json()) as { review: { hash: string } }).review.hash;
+  const payment = await fetch(walletPath, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      idempotencyKey: randomUUID(),
+      expectedRemainingAmount: '1000000',
+      expectedReviewHash: walletHash,
+    }),
+  });
+  expect(payment.status, http.logs()).toBe(200);
+  const acceptanceReview = await fetch(
+    `${http.base}/api/contracts/${order.contractId}/acceptance-review?versionId=${versionId}`,
+    { headers }
+  );
+  expect(acceptanceReview.status, http.logs()).toBe(200);
+  const acceptanceHash = ((await acceptanceReview.json()) as { hash: string }).hash;
+  expect(
+    (
+      await fetch(`${http.base}/api/contracts/${order.contractId}/accept`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          idempotencyKey: randomUUID(),
+          expectedVersionId: versionId,
+          expectedReviewHash: acceptanceHash,
+        }),
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  expect((await activateReadyContracts(http.pool)).activated).toBe(1);
+
+  const path = `${http.base}/api/electricity/contracts/${order.contractId}/increase`;
+  const initial = await fetch(path, { headers });
+  expect(initial.status, http.logs()).toBe(200);
+  expect(await initial.json()).toMatchObject({
+    canRequest: false,
+    maxPercentage: 0,
+    request: null,
+  });
+  await http.pool.query(
+    `INSERT INTO app_config(key,value,version)
+    VALUES('electricity.contract_limits',$1::jsonb,1)
+    ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,version=app_config.version+1`,
+    [
+      JSON.stringify({
+        max_quantity_increase_percent: 20,
+        max_contract_duration_months: 24,
+        lead_time_days: 0,
+      }),
+    ]
+  );
+  expect(await (await fetch(path, { headers })).json()).toMatchObject({
+    canRequest: true,
+    maxPercentage: 20,
+  });
+  const request = {
+    requestedKwh: '12',
+    expectedVersionId: versionId,
+    idempotencyKey: randomUUID(),
+  };
+  const overLimit = await fetch(path, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ ...request, requestedKwh: '13' }),
+  });
+  expect(overLimit.status, http.logs()).toBe(409);
+  const submitted = await fetch(path, { method: 'POST', headers, body: JSON.stringify(request) });
+  expect(submitted.status, http.logs()).toBe(201);
+  const result = (await submitted.json()) as { requestId: string };
+  expect(
+    (await fetch(path, { method: 'POST', headers, body: JSON.stringify(request) })).status,
+    http.logs()
+  ).toBe(201);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT count(*)::int AS count FROM electricity_quantity_increase_requests WHERE contract_id=$1',
+        [order.contractId]
+      )
+    ).rows[0].count
+  ).toBe(1);
+  const staffQueue = await fetch(`${http.base}/api/staff/electricity/increase-requests`, {
+    headers: staffHeaders,
+  });
+  expect(staffQueue.status, http.logs()).toBe(200);
+  expect(
+    (await fetch(`${http.base}/api/staff/electricity/increase-requests`, { headers })).status
+  ).toBe(403);
+  expect((await fetch(path, { headers: staffHeaders })).status).toBe(404);
+  expect((await staffQueue.json()) as { requests: Array<{ requestId: string }> }).toMatchObject({
+    requests: [expect.objectContaining({ requestId: result.requestId })],
+  });
+  const rejected = await fetch(
+    `${http.base}/api/staff/electricity/increase-requests/${result.requestId}/reject`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ idempotencyKey: randomUUID(), reason: 'Outside approved capacity' }),
+    }
+  );
+  expect(rejected.status, http.logs()).toBe(201);
+  expect(await (await fetch(path, { headers })).json()).toMatchObject({
+    canRequest: false,
+    request: { status: 'rejected', reviewReason: 'Outside approved capacity' },
+  });
+  expect(
+    (
+      await fetch(path, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ ...request, idempotencyKey: randomUUID() }),
+      })
+    ).status,
+    http.logs()
+  ).toBe(409);
+  const events = (
+    await http.pool.query(
+      "SELECT event FROM audit_log WHERE metadata::jsonb->>'requestId'=$1 ORDER BY created_at",
+      [result.requestId]
+    )
+  ).rows.map((row: { event: string }) => row.event);
+  expect(events).toEqual(['electricity.increase_requested', 'electricity.increase_rejected']);
+});
+
 it('tracks an approved contract cancellation and its existing mandatory refund', async () => {
   const order = await submittedOrder();
   const versionId = (

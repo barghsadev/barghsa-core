@@ -3,6 +3,30 @@ import type { I18nDictionary, Locale } from './index.js';
 import { t as sharedText } from './crm.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'admin.electricityIncreases.title': 'درخواست‌های افزایش برق',
+  'admin.electricityIncreases.description': 'درخواست‌های افزایش مقدار قرارداد فعال را بررسی کنید.',
+  'admin.electricityIncreases.refresh': 'تازه‌سازی',
+  'admin.electricityIncreases.loading': 'در حال دریافت درخواست‌ها…',
+  'admin.electricityIncreases.error': 'دریافت درخواست‌ها انجام نشد.',
+  'admin.electricityIncreases.forbidden': 'اجازه مشاهده درخواست‌های افزایش را ندارید.',
+  'admin.electricityIncreases.empty': 'درخواست افزایشی در انتظار بررسی نیست.',
+  'admin.electricityIncreases.request': 'درخواست افزایش',
+  'admin.electricityIncreases.contract': 'قرارداد',
+  'admin.electricityIncreases.order': 'سفارش',
+  'admin.electricityIncreases.quantity': 'مقدار قبلی و درخواستی',
+  'admin.electricityIncreases.change': 'درصد افزایش',
+  'admin.electricityIncreases.effective': 'شروع دوره واجد شرایط',
+  'admin.electricityIncreases.end': 'پایان دوره',
+  'admin.electricityIncreases.status': 'وضعیت قرارداد',
+  'admin.electricityIncreases.state.Active': 'فعال',
+  'admin.electricityIncreases.state.Completed': 'تکمیل‌شده',
+  'admin.electricityIncreases.state.Cancelled': 'لغوشده',
+  'admin.electricityIncreases.state.other': 'نیازمند بررسی',
+  'admin.electricityIncreases.reason': 'دلیل رد',
+  'admin.electricityIncreases.reject': 'رد درخواست',
+  'admin.electricityIncreases.confirm': 'درخواست با این دلیل رد و به مشتری اطلاع داده شود؟',
+  'admin.electricityIncreases.conflict': 'درخواست تغییر کرده است. صف را تازه‌سازی کنید.',
+  'admin.electricityIncreases.more': 'درخواست‌های بیشتر',
   'admin.electricityOrders.title': 'بررسی سفارش‌های برق',
   'admin.electricityOrders.description': 'سفارش‌های منتظر بررسی را بر اساس سن و اولویت بررسی کنید.',
   'admin.electricityOrders.refresh': 'تازه‌سازی',
@@ -288,9 +312,9 @@ export const fa: I18nDictionary = {
   'admin.contractLimits.save': 'ذخیره محدودیت‌ها',
   'admin.contractLimits.saved': 'محدودیت‌ها ذخیره شد.',
   'admin.contractLimits.scope':
-    'تغییرات فقط برای پیش‌نویس‌های جدید است. قراردادهای موجود و سفارش‌های تأییدشده شرایط خود را نگه می‌دارند.',
+    'مدت و فاصله شروع برای پیش‌نویس‌های جدید است. سقف افزایش مقدار برای درخواست‌های جدید قراردادهای فعال اعمال می‌شود.',
   'admin.contractLimits.confirm':
-    'این محدودیت‌ها برای پیش‌نویس‌های جدید ذخیره می‌شود. قراردادهای موجود و سفارش‌های تأییدشده تغییر نمی‌کنند.',
+    'مدت و فاصله شروع برای پیش‌نویس‌های جدید و سقف افزایش مقدار برای درخواست‌های جدید ذخیره شود؟',
   'admin.contractLimits.maxQuantityIncreasePercent': 'حداکثر افزایش مقدار (درصد)',
   'admin.contractLimits.maxQuantityIncreasePercentHelp':
     'عدد صحیح از ۰ تا ۱۰۰۰ وارد کنید. صفر به معنی ممنوعیت افزایش مقدار است.',
@@ -989,6 +1013,32 @@ export const fa: I18nDictionary = {
   'admin.approvals.walletReceipts': 'نمایش رسیدهای کیف پول',
 };
 export const en: I18nDictionary = {
+  'admin.electricityIncreases.title': 'Electricity increase requests',
+  'admin.electricityIncreases.description':
+    'Review requests to increase an active contract’s quantity.',
+  'admin.electricityIncreases.refresh': 'Refresh',
+  'admin.electricityIncreases.loading': 'Loading requests…',
+  'admin.electricityIncreases.error': 'Could not load requests.',
+  'admin.electricityIncreases.forbidden': 'You cannot view increase requests.',
+  'admin.electricityIncreases.empty': 'No increase requests await review.',
+  'admin.electricityIncreases.request': 'Increase request',
+  'admin.electricityIncreases.contract': 'Contract',
+  'admin.electricityIncreases.order': 'Order',
+  'admin.electricityIncreases.quantity': 'Original and requested quantity',
+  'admin.electricityIncreases.change': 'Increase',
+  'admin.electricityIncreases.effective': 'Eligible period starts',
+  'admin.electricityIncreases.end': 'Period ends',
+  'admin.electricityIncreases.status': 'Contract status',
+  'admin.electricityIncreases.state.Active': 'Active',
+  'admin.electricityIncreases.state.Completed': 'Completed',
+  'admin.electricityIncreases.state.Cancelled': 'Cancelled',
+  'admin.electricityIncreases.state.other': 'Needs review',
+  'admin.electricityIncreases.reason': 'Reason for declining',
+  'admin.electricityIncreases.reject': 'Decline request',
+  'admin.electricityIncreases.confirm':
+    'Decline this request with the reason and notify the customer?',
+  'admin.electricityIncreases.conflict': 'The request changed. Refresh the queue.',
+  'admin.electricityIncreases.more': 'More requests',
   'admin.electricityOrders.title': 'Electricity order review',
   'admin.electricityOrders.description': 'Review pending orders by age and priority.',
   'admin.electricityOrders.refresh': 'Refresh',
@@ -1275,9 +1325,9 @@ export const en: I18nDictionary = {
   'admin.contractLimits.save': 'Save limits',
   'admin.contractLimits.saved': 'Limits saved.',
   'admin.contractLimits.scope':
-    'Changes apply to new drafts only. Existing contracts and confirmed orders retain their terms.',
+    'Duration and lead time apply to new drafts. The increase cap applies to new requests on active contracts.',
   'admin.contractLimits.confirm':
-    'Save these limits for new drafts. Existing contracts and confirmed orders will not be changed.',
+    'Save duration and lead time for new drafts, and the increase cap for new requests?',
   'admin.contractLimits.maxQuantityIncreasePercent': 'Maximum quantity increase (%)',
   'admin.contractLimits.maxQuantityIncreasePercentHelp':
     'Enter an integer from 0 to 1000. Zero prevents quantity increases.',

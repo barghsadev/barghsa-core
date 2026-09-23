@@ -14123,6 +14123,97 @@
         ]
       }
     },
+    "/api/electricity/contracts/{id}/increase": {
+      "get": {
+        "operationId": "CustomerElectricityIncreaseController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read quantity increase eligibility and the one request for an electricity contract",
+        "tags": [
+          "Electricity contract changes"
+        ]
+      },
+      "post": {
+        "operationId": "CustomerElectricityIncreaseController_submit",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "requestedKwh": {
+                    "maxLength": 19,
+                    "pattern": "^[1-9]\\d*$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "requestedKwh",
+                  "expectedVersionId",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Request a one-time future electricity quantity increase",
+        "tags": [
+          "Electricity contract changes"
+        ]
+      }
+    },
     "/api/electricity/drafts/advanced": {
       "get": {
         "operationId": "ElectricityOrderController_getAdvancedDraft",
@@ -17148,6 +17239,91 @@
         "summary": "Get active brand configuration (public)",
         "tags": [
           "Public"
+        ]
+      }
+    },
+    "/api/staff/electricity/increase-requests": {
+      "get": {
+        "operationId": "StaffElectricityIncreaseController_queue",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "before",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List pending electricity quantity increase requests",
+        "tags": [
+          "Staff · Electricity contract changes"
+        ]
+      }
+    },
+    "/api/staff/electricity/increase-requests/{requestId}/reject": {
+      "post": {
+        "operationId": "StaffElectricityIncreaseController_reject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reject a pending increase request with an explanation",
+        "tags": [
+          "Staff · Electricity contract changes"
         ]
       }
     },

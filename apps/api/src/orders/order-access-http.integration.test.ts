@@ -153,7 +153,7 @@ it('captures current rules for each new draft and protects submitted snapshots',
   expect(newSnapshot.green.simple_order.average_power_threshold_kw).toBe(500);
   expect(newSnapshot.sourceVersion).toBe(1);
   expect(oldSnapshot.contractLimits).toMatchObject({
-    max_quantity_increase_percent: 20,
+    max_quantity_increase_percent: 0,
     max_contract_duration_months: 24,
     lead_time_days: 0,
   });

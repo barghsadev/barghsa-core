@@ -1,0 +1,173 @@
+import { useEffect, useState, type FormEvent } from 'react';
+import { t } from '@barghsa/i18n/app';
+import { Button, Card, CardContent } from '@barghsa/ui';
+import { useLocale } from '../hooks/useLocale.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { withCsrf } from '../lib/csrf.js';
+
+interface IncreaseRequest {
+  requestedKwh: string;
+  status: string;
+  reviewReason: string | null;
+  createdAt: string;
+}
+interface IncreaseState {
+  request: IncreaseRequest | null;
+  maxPercentage: number;
+  originalKwh: string;
+  canRequest: boolean;
+}
+
+export function ElectricityIncreasePanel({
+  contractId,
+  versionId,
+}: {
+  contractId: string;
+  versionId: string;
+}) {
+  const locale = useLocale();
+  const numbers = useNumberFormatting(locale);
+  const [data, setData] = useState<IncreaseState | null>(null);
+  const [quantity, setQuantity] = useState('');
+  const [retry, setRetry] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<'load' | 'stepup' | 'save' | null>(null);
+  const [key, setKey] = useState(() => crypto.randomUUID());
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setData(null);
+    setLoading(true);
+    setError(null);
+    void fetch(`/api/electricity/contracts/${encodeURIComponent(contractId)}/increase`, {
+      credentials: 'include',
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Increase unavailable');
+        return response.json() as Promise<IncreaseState>;
+      })
+      .then((value) => {
+        if (!controller.signal.aborted) setData(value);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setError('load');
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [contractId, retry]);
+
+  const maximum = data
+    ? (() => {
+        const limit =
+          BigInt(data.originalKwh) + (BigInt(data.originalKwh) * BigInt(data.maxPercentage)) / 100n;
+        return (limit < 9_223_372_036_854_775_807n ? limit : 9_223_372_036_854_775_807n).toString();
+      })()
+    : '';
+  const valid =
+    data &&
+    /^\d+$/.test(quantity) &&
+    BigInt(quantity) > BigInt(data.originalKwh) &&
+    BigInt(quantity) <= BigInt(maximum);
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!valid || saving) return;
+    setSaving(true);
+    setError(null);
+    try {
+      const response = await fetch(
+        `/api/electricity/contracts/${encodeURIComponent(contractId)}/increase`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({
+            requestedKwh: quantity,
+            expectedVersionId: versionId,
+            idempotencyKey: key,
+          }),
+        }
+      );
+      if (response.status === 403) {
+        setError('stepup');
+        return;
+      }
+      if (!response.ok) throw new Error('Increase request failed');
+      setKey(crypto.randomUUID());
+      setRetry((value) => value + 1);
+    } catch {
+      setError('save');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (!loading && !error && data && !data.canRequest && !data.request) return null;
+  return (
+    <Card>
+      <CardContent className="space-y-3 pt-6 text-sm">
+        <h2 className="font-semibold">{t('electricity.increase.title', locale)}</h2>
+        {loading ? <p role="status">{t('electricity.increase.loading', locale)}</p> : null}
+        {error === 'load' ? (
+          <Button variant="outline" onClick={() => setRetry((value) => value + 1)}>
+            {t('electricity.increase.retry', locale)}
+          </Button>
+        ) : null}
+        {data?.request ? (
+          <div className="space-y-2">
+            <p>
+              {t('electricity.increase.requested', locale)}:{' '}
+              {numbers.irrDigits(data.request.requestedKwh)} kWh
+            </p>
+            <p>{t(`electricity.increase.status.${data.request.status}`, locale)}</p>
+            {data.request.reviewReason ? (
+              <p>
+                {t('electricity.increase.reason', locale)}: {data.request.reviewReason}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+        {data?.canRequest ? (
+          <form onSubmit={(event) => void submit(event)} className="space-y-3">
+            <p>
+              {t('electricity.increase.limit', locale)}: {numbers.irrDigits(maximum)} kWh
+            </p>
+            <label className="block" htmlFor="electricity-increase-kwh">
+              {t('electricity.increase.quantity', locale)}
+            </label>
+            <input
+              id="electricity-increase-kwh"
+              type="number"
+              min={(BigInt(data.originalKwh) + 1n).toString()}
+              max={maximum}
+              step="1"
+              required
+              value={quantity}
+              onChange={(event) => setQuantity(event.target.value)}
+              className="w-full rounded-md border bg-background p-2"
+            />
+            <p className="text-muted-foreground">{t('electricity.increase.future', locale)}</p>
+            {error === 'stepup' ? (
+              <p role="alert">
+                {t('electricity.increase.stepup', locale)}{' '}
+                <a className="underline" href="/settings/security">
+                  {t('electricity.increase.security', locale)}
+                </a>
+              </p>
+            ) : null}
+            {error === 'save' ? (
+              <p role="alert">{t('electricity.increase.failed', locale)}</p>
+            ) : null}
+            <Button type="submit" disabled={!valid || saving}>
+              {t('electricity.increase.submit', locale)}
+            </Button>
+          </form>
+        ) : null}
+      </CardContent>
+    </Card>
+  );
+}

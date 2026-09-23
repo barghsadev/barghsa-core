@@ -4,6 +4,7 @@ import { Button, Card, CardContent } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
+import { ElectricityIncreasePanel } from './ElectricityIncreasePanel.js';
 
 interface ElectricityOrderDetail {
   orderId: string;
@@ -366,6 +367,9 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               ) : null}
             </CardContent>
           </Card>
+          {detail.contractState === 'Active' ? (
+            <ElectricityIncreasePanel contractId={detail.contractId} versionId={detail.versionId} />
+          ) : null}
           <Card>
             <CardContent className="pt-6">
               <h2 className="font-semibold">{t('electricity.order.nextAction', locale)}</h2>

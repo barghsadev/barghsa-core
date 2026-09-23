@@ -1,0 +1,7 @@
+# Electricity quantity increase: intake and review queue
+
+Canonical scope: `03-core-business.md#T-03.08.01.01` through `.04`, plus the rejection path in `.06`. This batch uses the active electricity contract and its original order quantity. A customer with signing authority can make one request for an eligible future delivery period, within the current admin-configured percentage. The default cap is zero, so requests are disabled until an administrator enables them. The transaction freezes the original and requested quantities, policy cap, effective start, contract version and actor. A unique contract constraint and idempotency key prevent duplicate requests. Staff can see pending requests and reject with a reason; both submission and rejection are audited and notified.
+
+The existing paid invoice and delivered period are never rewritten. Approval, amendment document, customer signature, adjustment invoice, and effective quantity transition remain the next batch (`T-03.08.01.05`, `.07`, `.08`). Staff price adjustment (`T-03.08.02.*`) follows that workflow. Pending requests remain visible to staff until the approval path is built; they are not presented as approved or effective.
+
+Validation: migrated-database API integration for disabled/enabled cap, above-cap rejection, exact cap, idempotency, customer/staff access, queue, rejection and audit; quantity arithmetic unit tests; migration snapshot; customer/staff frontend typechecks and production build; relevant UI and dictionary tests; targeted lint and formatting; backlog consistency.

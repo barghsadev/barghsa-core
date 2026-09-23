@@ -84,7 +84,7 @@ describe('ContractElectricityLimitsService.get (T-09.12.06)', () => {
 
     const result = await service.get();
     expect(result).toEqual({
-      maxQuantityIncreasePercent: 20,
+      maxQuantityIncreasePercent: 0,
       maxContractDuration: 24,
       leadTimeDays: 0,
     });

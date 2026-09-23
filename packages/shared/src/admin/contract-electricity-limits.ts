@@ -14,15 +14,13 @@
  *     order's start date and "today" (start cannot be sooner than
  *     today + lead time; 0 means the start can be today).
  *
- * Defaults (technical note): `maxQuantityIncreasePercent` default is
- * configurable — the product spec does not pin a number, so a documented
- * 20% is served until an admin overrides it; `maxContractDuration`
+ * Defaults: quantity increases are disabled until an admin sets a positive
+ * limit; `maxContractDuration`
  * defaults to 24 Jalali months; `leadTimeDays` defaults to 0.
  *
- * Changes affect **new drafts only** — existing contracts and already
- * confirmed orders are never re-validated or retroactively constrained.
- * Enforcement happens at draft time in the ordering flow (T-03.06.01.02,
- * T-04.6.01.01); this module is the configuration contract they read.
+ * Duration and lead time affect new drafts. The quantity-increase cap is
+ * checked when a customer requests an increase to an active contract;
+ * already-submitted requests retain the cap captured at submission.
  *
  * @module admin
  */
@@ -47,13 +45,11 @@ export interface ContractElectricityLimits {
 }
 
 /**
- * Default configuration (T-09.12.06): quantity increase capped at 20%
- * (spec says the default is configurable without pinning a number —
- * 20% is the documented served default until an admin overrides it),
- * contract duration 24 Jalali months, lead time 0 days.
+ * Default configuration: quantity increases disabled, contract duration 24
+ * Jalali months, lead time 0 days (T-03.08.01.01).
  */
 export const DEFAULT_CONTRACT_ELECTRICITY_LIMITS: ContractElectricityLimits = {
-  maxQuantityIncreasePercent: 20,
+  maxQuantityIncreasePercent: 0,
   maxContractDuration: 24,
   leadTimeDays: 0,
 };

@@ -2,6 +2,14 @@ import type { PoolClient } from 'pg';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 const messages = {
+  electricity_increase_requested: {
+    fa: 'درخواست افزایش مقدار برق برای بررسی کارکنان ثبت شد.',
+    en: 'An electricity quantity increase request is awaiting staff review.',
+  },
+  electricity_increase_rejected: {
+    fa: 'درخواست افزایش مقدار برق رد شد. دلیل را در جزئیات سفارش بررسی کنید.',
+    en: 'Your electricity quantity increase request was declined. See the order for the reason.',
+  },
   cancellation_requested: {
     fa: 'درخواست لغو قرارداد برای بررسی کارکنان ثبت شد.',
     en: 'A contract cancellation request is awaiting staff review.',
@@ -62,6 +70,7 @@ export async function notifyContractReview(
       'signature_requested',
       'signed_copy_recorded',
       'cancellation_requested',
+      'electricity_increase_requested',
     ].includes(event)
   ) {
     const staff = await client.query<{ user_id: string; is_admin: boolean; permissions: unknown }>(

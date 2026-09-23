@@ -32,11 +32,11 @@ import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
  * `electricity.contract_limits` (same storage family as the mandatory
  * green-electricity rules and wallet top-up limits). When no value is
  * persisted, the documented defaults are served:
- * `{ maxQuantityIncreasePercent: 20, maxContractDuration: 24, leadTimeDays: 0 }`.
+ * `{ maxQuantityIncreasePercent: 0, maxContractDuration: 24, leadTimeDays: 0 }`.
  *
- * Changes affect **new drafts only** — the ordering flow reads the config
- * when a draft is created/validated; existing contracts and already
- * confirmed orders are never re-validated or retroactively constrained.
+ * Duration and lead time affect new drafts only. The quantity-increase cap
+ * applies to new requests against active contracts; submitted requests
+ * retain their captured cap.
  *
  * Every mutation runs in ONE transaction on a locked row and records an
  * `audit_log` `change_recorded` event (matching the upload-policy /

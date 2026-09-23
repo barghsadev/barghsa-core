@@ -16,7 +16,7 @@ import {
 describe('contract electricity limits defaults (T-09.12.06)', () => {
   it('exposes the documented default config', () => {
     expect(DEFAULT_CONTRACT_ELECTRICITY_LIMITS).toEqual({
-      maxQuantityIncreasePercent: 20,
+      maxQuantityIncreasePercent: 0,
       maxContractDuration: 24,
       leadTimeDays: 0,
     });
