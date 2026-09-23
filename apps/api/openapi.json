@@ -14123,6 +14123,155 @@
         ]
       }
     },
+    "/api/electricity/drafts/advanced": {
+      "get": {
+        "operationId": "ElectricityOrderController_getAdvancedDraft",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Resume the current advanced electricity order draft",
+        "tags": [
+          "Electricity"
+        ]
+      },
+      "put": {
+        "operationId": "ElectricityOrderController_saveAdvancedDraft",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "currentStep": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          1
+                        ],
+                        "type": "number"
+                      },
+                      {
+                        "enum": [
+                          2
+                        ],
+                        "type": "number"
+                      },
+                      {
+                        "enum": [
+                          3
+                        ],
+                        "type": "number"
+                      },
+                      {
+                        "enum": [
+                          4
+                        ],
+                        "type": "number"
+                      },
+                      {
+                        "enum": [
+                          5
+                        ],
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "addressId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "endAt": {
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                        "type": "string"
+                      },
+                      "giftCode": {
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "quantities": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "energy_saving": {
+                            "maxLength": 19,
+                            "pattern": "^\\d+$",
+                            "type": "string"
+                          },
+                          "free_market": {
+                            "maxLength": 19,
+                            "pattern": "^\\d+$",
+                            "type": "string"
+                          },
+                          "green": {
+                            "maxLength": 19,
+                            "pattern": "^\\d+$",
+                            "type": "string"
+                          },
+                          "thermal": {
+                            "maxLength": 19,
+                            "pattern": "^\\d+$",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "startAt": {
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "quantities"
+                    ],
+                    "type": "object"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "currentStep",
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Save an advanced electricity order draft",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
     "/api/electricity/drafts/simple": {
       "get": {
         "operationId": "ElectricityOrderController_getDraft",
@@ -14274,6 +14423,128 @@
           }
         },
         "summary": "Profile-scoped electricity orders with commercial and financial progress",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
+    "/api/electricity/orders/advanced": {
+      "post": {
+        "operationId": "ElectricityOrderController_submitAdvanced",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "address": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "cityId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "fullAddress": {
+                        "maxLength": 500,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "postalCode": {
+                        "type": "string"
+                      },
+                      "provinceId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "provinceId",
+                      "cityId",
+                      "fullAddress",
+                      "postalCode"
+                    ],
+                    "type": "object"
+                  },
+                  "endAt": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  },
+                  "expectedQuoteDigest": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
+                  "giftCode": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "quantities": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "energy_saving": {
+                        "maxLength": 19,
+                        "pattern": "^\\d+$",
+                        "type": "string"
+                      },
+                      "free_market": {
+                        "maxLength": 19,
+                        "pattern": "^\\d+$",
+                        "type": "string"
+                      },
+                      "green": {
+                        "maxLength": 19,
+                        "pattern": "^\\d+$",
+                        "type": "string"
+                      },
+                      "thermal": {
+                        "maxLength": 19,
+                        "pattern": "^\\d+$",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "startAt": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "startAt",
+                  "endAt",
+                  "quantities",
+                  "idempotencyKey",
+                  "expectedQuoteDigest",
+                  "address"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Order, contract, invoice and frozen quote."
+          }
+        },
+        "summary": "Submit an advanced bundle with contract and invoice atomically",
         "tags": [
           "Electricity"
         ]
@@ -14527,6 +14798,21 @@
         ]
       }
     },
+    "/api/electricity/periods/advanced": {
+      "get": {
+        "operationId": "ElectricityOrderController_advancedPeriods",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Current advanced delivery limits and mandatory-green setting",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
     "/api/electricity/periods/simple": {
       "get": {
         "operationId": "ElectricityOrderController_periods",
@@ -14537,6 +14823,86 @@
           }
         },
         "summary": "Available server-calculated Jalali month and week periods",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
+    "/api/electricity/preview/advanced": {
+      "post": {
+        "operationId": "ElectricityOrderController_previewAdvanced",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "endAt": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  },
+                  "giftCode": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "quantities": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "energy_saving": {
+                        "maxLength": 19,
+                        "pattern": "^\\d+$",
+                        "type": "string"
+                      },
+                      "free_market": {
+                        "maxLength": 19,
+                        "pattern": "^\\d+$",
+                        "type": "string"
+                      },
+                      "green": {
+                        "maxLength": 19,
+                        "pattern": "^\\d+$",
+                        "type": "string"
+                      },
+                      "thermal": {
+                        "maxLength": 19,
+                        "pattern": "^\\d+$",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "startAt": {
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "startAt",
+                  "endAt",
+                  "quantities"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Authoritative energy, price, green rule and wallet preview."
+          }
+        },
+        "summary": "Quote an advanced four-product electricity bundle and custom delivery period",
         "tags": [
           "Electricity"
         ]

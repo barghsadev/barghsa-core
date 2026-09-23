@@ -109,6 +109,164 @@ async function submittedOrder() {
   };
 }
 
+it('submits a four-product advanced bundle once with one contract and invoice', async () => {
+  for (const [key, price] of [
+    ['free_market', 300000],
+    ['energy_saving', 400000],
+  ] as const) {
+    await http.pool.query(
+      `INSERT INTO products(type,system_key,title,status,price)
+       VALUES('electricity',$1,$2::jsonb,'active',$3)
+       ON CONFLICT(system_key) DO UPDATE SET status='active',price=EXCLUDED.price`,
+      [key, JSON.stringify({ en: key }), price]
+    );
+  }
+  const startAt = new Date(Date.now() + 2 * 86_400_000).toISOString();
+  const endAt = new Date(Date.now() + 9 * 86_400_000).toISOString();
+  const request = {
+    profileId: input.profileId,
+    startAt,
+    endAt,
+    quantities: { thermal: '10', green: '2', free_market: '3', energy_saving: '4' },
+  };
+  const previewResponse = await post('preview/advanced', request);
+  expect(previewResponse.status, http.logs()).toBe(200);
+  const preview = (await previewResponse.json()) as {
+    reviewDigest: string;
+    totalKwh: string;
+    lines: Array<{ systemKey: string }>;
+    walletBalanceIrR: string;
+  };
+  expect(preview.totalKwh).toBe('19');
+  expect(preview.lines.map((line) => line.systemKey)).toEqual([
+    'thermal',
+    'green',
+    'free_market',
+    'energy_saving',
+  ]);
+  expect(preview.walletBalanceIrR).toBe('0');
+  const shiftedStart = await post('preview/advanced', {
+    ...request,
+    startAt: new Date(new Date(startAt).getTime() + 3_600_000).toISOString(),
+  });
+  expect(shiftedStart.status, http.logs()).toBe(200);
+  expect(((await shiftedStart.json()) as { reviewDigest: string }).reviewDigest).not.toBe(
+    preview.reviewDigest
+  );
+  const submission = {
+    ...request,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: preview.reviewDigest,
+    address: input.address,
+  };
+  const responses = await Promise.all([
+    post('orders/advanced', submission),
+    post('orders/advanced', submission),
+  ]);
+  expect(
+    responses.map((response) => response.status),
+    http.logs()
+  ).toEqual([201, 201]);
+  const first = (await responses[0]!.json()) as {
+    orderId: string;
+    contractId: string;
+    invoiceId: string;
+  };
+  const repeated = (await responses[1]!.json()) as typeof first;
+  expect(first).toEqual(repeated);
+  const saved = (
+    await http.pool.query(
+      `SELECT e.mode,e.period_start,e.period_end,
+      (SELECT count(*)::int FROM electricity_order_lines WHERE order_id=e.id) AS line_count,
+      (SELECT count(*)::int FROM invoices WHERE order_id=e.id) AS invoice_count,
+      (SELECT count(*)::int FROM contracts WHERE order_id=e.id) AS contract_count
+     FROM electricity_orders e WHERE e.id=$1`,
+      [first.orderId]
+    )
+  ).rows[0];
+  expect(saved.mode).toBe('advanced');
+  expect(saved.period_start.toISOString()).toBe(startAt);
+  expect(saved.period_end.toISOString()).toBe(endAt);
+  expect(saved).toMatchObject({ line_count: 4, invoice_count: 1, contract_count: 1 });
+  expect(
+    (await post('orders/advanced', { ...submission, quantities: { thermal: '11' } })).status
+  ).toBe(409);
+  const stale = await post('preview/advanced', request);
+  expect(stale.status).toBe(200);
+  const staleDigest = ((await stale.json()) as { reviewDigest: string }).reviewDigest;
+  await http.pool.query("UPDATE products SET price=500000 WHERE system_key='thermal'");
+  expect(
+    (
+      await post('orders/advanced', {
+        ...submission,
+        idempotencyKey: randomUUID(),
+        expectedQuoteDigest: staleDigest,
+      })
+    ).status
+  ).toBe(409);
+});
+
+it('derives mandatory green only from advanced thermal quantity', async () => {
+  await http.pool.query(
+    `INSERT INTO app_config(key,value,version) VALUES('electricity.green_mandatory_rules',$1::jsonb,1)`,
+    [
+      JSON.stringify({
+        simple_order: {
+          mandatory_green_enabled: true,
+          average_power_threshold_kw: 1000,
+          mandatory_green_share_percent: 4,
+        },
+        advanced_order: {
+          mandatory_green_enabled: true,
+          average_power_threshold_kw: 0,
+          mandatory_green_share_percent: 20,
+        },
+      }),
+    ]
+  );
+  await http.pool.query(
+    `INSERT INTO products(type,system_key,title,status,price)
+     VALUES('electricity','free_market','{"en":"Free market"}','active',300000)
+     ON CONFLICT(system_key) DO UPDATE SET status='active',price=300000`
+  );
+  const request = {
+    profileId: input.profileId,
+    startAt: new Date(Date.now() + 2 * 86_400_000).toISOString(),
+    endAt: new Date(Date.now() + 9 * 86_400_000).toISOString(),
+    quantities: { thermal: '8', free_market: '3', green: '0' },
+  };
+  const response = await post('preview/advanced', request);
+  expect(response.status, http.logs()).toBe(200);
+  const preview = (await response.json()) as {
+    mandatoryGreenEnabled: boolean;
+    lines: Array<{ systemKey: string; quantityKwh: string }>;
+  };
+  expect(preview.mandatoryGreenEnabled).toBe(true);
+  expect(preview.lines.map((line) => [line.systemKey, line.quantityKwh])).toEqual([
+    ['thermal', '8'],
+    ['green', '2'],
+    ['free_market', '3'],
+  ]);
+  expect(
+    (
+      await post('preview/advanced', {
+        ...request,
+        quantities: { ...request.quantities, green: '1' },
+      })
+    ).status
+  ).toBe(400);
+  const freeMarket = await post('preview/advanced', {
+    ...request,
+    quantities: { thermal: '0', free_market: '3', green: '0' },
+  });
+  expect(freeMarket.status, http.logs()).toBe(200);
+  expect(
+    ((await freeMarket.json()) as { lines: Array<{ systemKey: string }> }).lines.map(
+      (line) => line.systemKey
+    )
+  ).toEqual(['free_market']);
+});
+
 const staffPost = (id: string, decision: string, body: unknown) =>
   fetch(`${http.base}/api/staff/electricity/orders/${id}/${decision}`, {
     method: 'POST',

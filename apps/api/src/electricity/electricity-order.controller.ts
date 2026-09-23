@@ -48,6 +48,44 @@ const submitInput = simpleInput
       .strict(),
   })
   .strict();
+const advancedInput = z
+  .object({
+    profileId: z.string().uuid(),
+    startAt: z.string().datetime({ offset: true }),
+    endAt: z.string().datetime({ offset: true }),
+    quantities: z
+      .object({
+        thermal: z.string().regex(/^\d+$/).max(19).optional(),
+        green: z.string().regex(/^\d+$/).max(19).optional(),
+        free_market: z.string().regex(/^\d+$/).max(19).optional(),
+        energy_saving: z.string().regex(/^\d+$/).max(19).optional(),
+      })
+      .strict(),
+    giftCode: z.string().trim().min(1).max(100).optional(),
+  })
+  .strict();
+const advancedSubmitInput = advancedInput
+  .extend({
+    idempotencyKey: z.string().uuid(),
+    expectedQuoteDigest: z.string().regex(/^[a-f0-9]{64}$/),
+    address: submitInput.shape.address,
+  })
+  .strict();
+const advancedDraftInput = z
+  .object({
+    profileId: z.string().uuid(),
+    currentStep: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]),
+    data: z
+      .object({
+        startAt: z.string().datetime({ offset: true }).optional(),
+        endAt: z.string().datetime({ offset: true }).optional(),
+        quantities: advancedInput.shape.quantities,
+        giftCode: z.string().trim().min(1).max(100).optional(),
+        addressId: z.string().uuid().optional(),
+      })
+      .strict(),
+  })
+  .strict();
 const draftInput = z
   .object({
     profileId: z.string().uuid(),
@@ -106,6 +144,33 @@ export class ElectricityOrderController {
   @ApiResponse({ status: 200, description: 'Five selectable period ranges in Iran time.' })
   periods() {
     return { periods: simplePeriodOptions(new Date()) };
+  }
+
+  @Get('periods/advanced')
+  @RateLimit({ namespace: 'electricity:periods:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Current advanced delivery limits and mandatory-green setting' })
+  advancedPeriods(@Req() req: AuthenticatedRequest) {
+    return this.service.advancedOptions(req.session);
+  }
+
+  @Get('drafts/advanced')
+  @RateLimit({ namespace: 'electricity:draft-read:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Resume the current advanced electricity order draft' })
+  getAdvancedDraft(
+    @Query('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.drafts.get(req.session, profileId, 'advanced');
+  }
+
+  @Put('drafts/advanced')
+  @RateLimit({ namespace: 'electricity:draft-write:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Save an advanced electricity order draft' })
+  @ApiZodBody(advancedDraftInput)
+  saveAdvancedDraft(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    const parsed = advancedDraftInput.safeParse(body);
+    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.drafts.save(req.session, parsed.data, 'advanced');
   }
 
   @Get('drafts/simple')
@@ -233,6 +298,35 @@ export class ElectricityOrderController {
   @ApiResponse({ status: 201, description: 'Submitted order, contract, invoice and frozen quote.' })
   async submit(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
     const parsed = submitInput.safeParse(body);
+    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.submit(req.session, parsed.data, req.ip ?? 'unknown');
+  }
+
+  @Post('preview/advanced')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'electricity:preview:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'Quote an advanced four-product electricity bundle and custom delivery period',
+  })
+  @ApiZodBody(advancedInput)
+  @ApiResponse({
+    status: 200,
+    description: 'Authoritative energy, price, green rule and wallet preview.',
+  })
+  previewAdvanced(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    const parsed = advancedInput.safeParse(body);
+    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.preview(req.session, parsed.data);
+  }
+
+  @Post('orders/advanced')
+  @HttpCode(201)
+  @RateLimit({ namespace: 'electricity:submit:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Submit an advanced bundle with contract and invoice atomically' })
+  @ApiZodBody(advancedSubmitInput)
+  @ApiResponse({ status: 201, description: 'Order, contract, invoice and frozen quote.' })
+  submitAdvanced(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    const parsed = advancedSubmitInput.safeParse(body);
     if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
     return this.service.submit(req.session, parsed.data, req.ip ?? 'unknown');
   }

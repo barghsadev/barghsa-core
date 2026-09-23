@@ -142,13 +142,12 @@ describe('exact electricity calculations', () => {
         products
       )
     ).toMatchObject({ ok: false, errors: [{ code: 'GREEN_NOT_EDITABLE' }] });
-    expect(
-      validateOrderComposition(
-        { mode: 'advanced', period, quantities: { free_market: 100n } },
-        settings,
-        products
-      )
-    ).toMatchObject({ ok: false, errors: [{ code: 'GREEN_PERCENTAGE_UNSATISFIABLE' }] });
+    const noThermal = validateOrderComposition(
+      { mode: 'advanced', period, quantities: { free_market: 100n } },
+      settings,
+      products
+    );
+    expect(noThermal).toMatchObject({ ok: true, requiredGreenKwh: 0n });
     const disabled = {
       ...settings,
       advancedOrder: { ...settings.advancedOrder, mandatoryGreenEnabled: false },

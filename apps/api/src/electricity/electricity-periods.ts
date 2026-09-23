@@ -1,4 +1,6 @@
 /** Half-open electricity delivery period in the official Iran time zone. */
+import type { ContractElectricityLimits } from '@barghsa/shared/admin';
+
 export interface ElectricityPeriod {
   start: Date;
   end: Date;
@@ -17,6 +19,16 @@ const persian = new Intl.DateTimeFormat('en-US-u-ca-persian', {
   year: 'numeric',
   month: 'numeric',
   day: 'numeric',
+});
+const persianDateTime = new Intl.DateTimeFormat('en-US-u-ca-persian', {
+  timeZone: 'Asia/Tehran',
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hourCycle: 'h23',
 });
 
 function parts(formatter: Intl.DateTimeFormat, date: Date): CivilDate {
@@ -67,6 +79,48 @@ function assertNow(now: Date): void {
   if (!(now instanceof Date) || !Number.isFinite(now.getTime())) {
     throw new RangeError('A valid current instant is required');
   }
+}
+
+/** Validate a customer-selected half-open period against live admin limits. */
+export function validateAdvancedPeriod(
+  start: Date,
+  end: Date,
+  now: Date,
+  limits: Pick<ContractElectricityLimits, 'leadTimeDays' | 'maxContractDuration'>
+): ElectricityPeriod {
+  assertNow(now);
+  if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime()) || end <= start) {
+    throw new RangeError('Delivery end must be after the start');
+  }
+  const earliest = startOfTehranDay(addDays(parts(gregorian, now), limits.leadTimeDays));
+  if (start < now || start < earliest)
+    throw new RangeError('Delivery start is before the allowed date');
+  const from = parts(persian, start);
+  const to = parts(persian, end);
+  const months = (to.year - from.year) * 12 + to.month - from.month;
+  if (months > limits.maxContractDuration) {
+    throw new RangeError('Delivery exceeds the maximum Jalali duration');
+  }
+  if (months === limits.maxContractDuration) {
+    const local = (date: Date) =>
+      Object.fromEntries(
+        persianDateTime
+          .formatToParts(date)
+          .filter((part) => part.type !== 'literal')
+          .map((part) => [part.type, Number(part.value)])
+      );
+    const a = local(start),
+      b = local(end);
+    const time = (p: Record<string, number>) =>
+      ((p.day ?? 0) * 24 + (p.hour ?? 0)) * 3600 + (p.minute ?? 0) * 60 + (p.second ?? 0);
+    if (
+      time(b) > time(a) ||
+      (time(b) === time(a) && end.getUTCMilliseconds() > start.getUTCMilliseconds())
+    ) {
+      throw new RangeError('Delivery exceeds the maximum Jalali duration');
+    }
+  }
+  return { start, end };
 }
 
 function followingJalaliMonthStart(now: Date): Date {

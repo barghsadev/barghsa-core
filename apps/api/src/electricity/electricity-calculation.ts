@@ -213,7 +213,7 @@ export function validateOrderComposition(
     enabled: config.mandatoryGreenEnabled,
     thresholdKw: config.averagePowerThresholdKw,
     minGreenPercentage: config.mandatoryGreenSharePercent,
-    totalKwh: baseTotal,
+    totalKwh: input.mode === 'advanced' ? (quantities.thermal ?? 0n) : baseTotal,
     durationMs: duration.milliseconds,
   });
   let requiredGreenKwh = 0n;

@@ -24,6 +24,7 @@ import {
   validateContractElectricityLimits,
 } from '@barghsa/shared/admin';
 import type { GreenElectricityConfig } from '@barghsa/shared/finance';
+import type { ContractElectricityLimits } from '@barghsa/shared/admin';
 
 type OrderActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
@@ -151,6 +152,7 @@ export class OrdersService {
 
   async loadElectricitySettings(client: PoolClient): Promise<{
     config: GreenElectricityConfig;
+    limits: ContractElectricityLimits;
     snapshot: Record<string, unknown>;
   }> {
     // Lock the table to cover absent keys as well as concurrent updates.
@@ -176,6 +178,7 @@ export class OrdersService {
       : DEFAULT_CONTRACT_ELECTRICITY_LIMITS;
     return {
       config,
+      limits,
       snapshot: {
         schemaVersion: 1,
         green: greenElectricityConfigToStored(config),

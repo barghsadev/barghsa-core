@@ -5,6 +5,7 @@ import {
   getCurrentWeekRange,
   getNextWeekRange,
   getWeekAfterNextRange,
+  validateAdvancedPeriod,
 } from './electricity-periods.js';
 
 describe('Iran electricity periods', () => {
@@ -52,5 +53,25 @@ describe('Iran electricity periods', () => {
 
   it('rejects invalid current instants', () => {
     expect(() => getCurrentWeekRange(new Date(NaN))).toThrow(RangeError);
+  });
+
+  it('enforces lead days and a Jalali-month maximum on custom hours', () => {
+    const now = new Date('2026-03-20T12:00:00Z');
+    const limits = { leadTimeDays: 1, maxContractDuration: 24 };
+    expect(() =>
+      validateAdvancedPeriod(
+        new Date('2026-03-20T14:30:00Z'),
+        new Date('2026-04-20T20:30:00Z'),
+        now,
+        limits
+      )
+    ).toThrow('allowed date');
+    const start = new Date('2026-03-21T09:30:00Z');
+    const end = new Date('2028-03-20T09:30:00Z');
+    expect(validateAdvancedPeriod(start, end, now, limits)).toEqual({ start, end });
+    expect(() =>
+      validateAdvancedPeriod(start, new Date(end.getTime() + 60_000), now, limits)
+    ).toThrow('maximum Jalali duration');
+    expect(() => validateAdvancedPeriod(start, start, now, limits)).toThrow('after the start');
   });
 });

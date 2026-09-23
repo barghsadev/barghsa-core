@@ -113,6 +113,9 @@ function ElectricityIndexPage() {
         >
           {t('electricity.orders.title', locale)}
         </Link>
+        <Link to="/electricity/advanced" className={buttonVariants({ variant: 'outline' })}>
+          {t('electricity.catalogue.advancedOrder', locale)}
+        </Link>
       </header>
       <div className="grid gap-4 md:grid-cols-2">
         {products.map((product) => {

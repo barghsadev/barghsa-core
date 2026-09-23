@@ -18,6 +18,7 @@ import { GiftCodeService } from '../admin/gift-code.service.js';
 import { DueAtCalculationService } from '../invoice/due-at.service.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { ElectricityCalculationService } from './electricity-calculation.service.js';
+import type { ElectricitySystemKey } from './electricity-calculation.js';
 import {
   calculateElectricityTotals,
   type ElectricityGiftDiscount,
@@ -35,6 +36,7 @@ import {
   getCurrentWeekRange,
   getNextWeekRange,
   getWeekAfterNextRange,
+  validateAdvancedPeriod,
   type ElectricityPeriod,
 } from './electricity-periods.js';
 
@@ -52,6 +54,20 @@ export interface SimpleSubmissionInput extends SimpleOrderInput {
   expectedQuoteDigest: string;
   address: { provinceId: string; cityId: string; fullAddress: string; postalCode: string };
 }
+export interface AdvancedOrderInput {
+  profileId: string;
+  startAt: string;
+  endAt: string;
+  quantities: Partial<Record<ElectricitySystemKey, string | undefined>>;
+  giftCode?: string | undefined;
+}
+export interface AdvancedSubmissionInput extends AdvancedOrderInput {
+  idempotencyKey: string;
+  expectedQuoteDigest: string;
+  address: SimpleSubmissionInput['address'];
+}
+type OrderInput = SimpleOrderInput | AdvancedOrderInput;
+type SubmissionInput = SimpleSubmissionInput | AdvancedSubmissionInput;
 export interface ElectricityAddressCorrection {
   idempotencyKey: string;
   expectedVersionId: string;
@@ -84,19 +100,28 @@ export function simplePeriodOptions(now: Date) {
   });
 }
 
-function hashRequest(input: SimpleSubmissionInput): string {
-  return createHash('sha256')
-    .update(
-      JSON.stringify({
-        profileId: input.profileId,
-        period: input.period,
-        totalKwh: input.totalKwh,
-        giftCode: input.giftCode ? normalizeGiftCode(input.giftCode) : null,
-        address: input.address,
-        expectedQuoteDigest: input.expectedQuoteDigest,
-      })
-    )
-    .digest('hex');
+function hashRequest(input: SubmissionInput): string {
+  const request =
+    'startAt' in input
+      ? {
+          profileId: input.profileId,
+          mode: 'advanced',
+          startAt: input.startAt,
+          endAt: input.endAt,
+          quantities: input.quantities,
+          giftCode: input.giftCode ? normalizeGiftCode(input.giftCode) : null,
+          address: input.address,
+          expectedQuoteDigest: input.expectedQuoteDigest,
+        }
+      : {
+          profileId: input.profileId,
+          period: input.period,
+          totalKwh: input.totalKwh,
+          giftCode: input.giftCode ? normalizeGiftCode(input.giftCode) : null,
+          address: input.address,
+          expectedQuoteDigest: input.expectedQuoteDigest,
+        };
+  return createHash('sha256').update(JSON.stringify(request)).digest('hex');
 }
 
 /** All business writes share the caller's transaction; no external side effect can split the order. */
@@ -109,6 +134,29 @@ export class ElectricityOrderService {
     private readonly dueDates: DueAtCalculationService,
     private readonly invoiceStates: InvoiceStateMachineService
   ) {}
+
+  async advancedOptions(actor: Actor) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      const { config, limits } = await this.orders.loadElectricitySettings(client);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return {
+        limits: {
+          leadTimeDays: limits.leadTimeDays,
+          maxContractDuration: limits.maxContractDuration,
+        },
+        mandatoryGreenEnabled: config.advancedOrder.mandatoryGreenEnabled,
+      };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 
   async list(actor: Actor, profileId: string, before?: string) {
     const client = await getDbPool().connect();
@@ -689,7 +737,7 @@ export class ElectricityOrderService {
 
   private async giftTerms(
     client: PoolClient,
-    input: SimpleOrderInput,
+    input: Pick<OrderInput, 'profileId' | 'giftCode'>,
     subtotal: bigint,
     now: Date
   ): Promise<{
@@ -762,18 +810,39 @@ export class ElectricityOrderService {
     return { gift, id: row.id };
   }
 
-  private async quote(client: PoolClient, input: SimpleOrderInput, now: Date) {
-    if (!/^\d+$/.test(input.totalKwh) || BigInt(input.totalKwh) <= 0n) {
+  private async quote(client: PoolClient, input: OrderInput, now: Date) {
+    const advanced = 'startAt' in input;
+    if (!advanced && (!/^\d+$/.test(input.totalKwh) || BigInt(input.totalKwh) <= 0n)) {
       throw new BadRequestException('Total kWh must be a positive integer');
     }
-    const period = selectedPeriod(input.period, now);
-    const { config, snapshot: settings } = await this.orders.loadElectricitySettings(client);
+    const {
+      config,
+      limits,
+      snapshot: settings,
+    } = await this.orders.loadElectricitySettings(client);
+    let period: ElectricityPeriod;
+    try {
+      period = advanced
+        ? validateAdvancedPeriod(new Date(input.startAt), new Date(input.endAt), now, limits)
+        : selectedPeriod(input.period, now);
+    } catch (error) {
+      throw new BadRequestException(
+        error instanceof Error ? error.message : 'Invalid delivery period'
+      );
+    }
+    const quantities: Partial<Record<ElectricitySystemKey, bigint>> | undefined = advanced
+      ? Object.fromEntries(
+          Object.entries(input.quantities)
+            .filter((entry): entry is [string, string] => entry[1] !== undefined)
+            .map(([key, value]) => [key, BigInt(value)])
+        )
+      : undefined;
     const initial = await this.calculator.calculate(
       client,
       {
-        mode: 'simple',
+        mode: advanced ? 'advanced' : 'simple',
         period,
-        totalKwh: BigInt(input.totalKwh),
+        ...(!advanced ? { totalKwh: BigInt(input.totalKwh) } : { quantities: quantities! }),
       },
       config,
       undefined,
@@ -784,7 +853,7 @@ export class ElectricityOrderService {
         error: 'ELECTRICITY_QUOTE_INVALID',
         details: initial.errors,
       });
-    if (!initial.composition.lines.some((line) => line.systemKey === 'thermal')) {
+    if (!advanced && !initial.composition.lines.some((line) => line.systemKey === 'thermal')) {
       throw new BadRequestException('Simple ordering requires a positive thermal quantity');
     }
     const terms = await this.giftTerms(client, input, initial.totals.subtotalIrR, now);
@@ -794,10 +863,35 @@ export class ElectricityOrderService {
     if (totals.lines.some((line) => line.quantityKwh > 2_147_483_647n)) {
       throw new BadRequestException('Invoice line quantity exceeds the supported range');
     }
-    return { period, composition: initial.composition, totals, settings, terms };
+    const wallet = advanced
+      ? (
+          await client.query<{ available_balance: string }>(
+            'SELECT (posted_balance-reserved_balance)::text AS available_balance FROM wallets WHERE profile_id=$1',
+            [input.profileId]
+          )
+        ).rows[0]
+      : undefined;
+    return {
+      mode: advanced ? ('advanced' as const) : ('simple' as const),
+      period,
+      composition: initial.composition,
+      totals,
+      settings,
+      terms,
+      ...(advanced
+        ? {
+            walletBalanceIrR: wallet?.available_balance ?? '0',
+            mandatoryGreenEnabled: config.advancedOrder.mandatoryGreenEnabled,
+            limits: {
+              maxContractDuration: limits.maxContractDuration,
+              leadTimeDays: limits.leadTimeDays,
+            },
+          }
+        : {}),
+    };
   }
 
-  async preview(actor: Actor, input: SimpleOrderInput) {
+  async preview(actor: Actor, input: OrderInput) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -838,6 +932,9 @@ export class ElectricityOrderService {
       totalIrR: quoted.totals.totalIrR.toString(),
     };
     const reviewPayload = {
+      ...(quoted.mode === 'advanced'
+        ? { periodStart: view.periodStart, durationHours: view.durationHours }
+        : {}),
       periodEnd: view.periodEnd,
       greenRuleApplies: view.greenRuleApplies,
       lines: view.lines,
@@ -848,11 +945,18 @@ export class ElectricityOrderService {
     };
     return {
       ...view,
+      ...('walletBalanceIrR' in quoted
+        ? {
+            walletBalanceIrR: quoted.walletBalanceIrR,
+            mandatoryGreenEnabled: quoted.mandatoryGreenEnabled,
+            limits: quoted.limits,
+          }
+        : {}),
       reviewDigest: createHash('sha256').update(JSON.stringify(reviewPayload)).digest('hex'),
     };
   }
 
-  async submit(actor: Actor, input: SimpleSubmissionInput, ip = 'unknown') {
+  async submit(actor: Actor, input: SubmissionInput, ip = 'unknown') {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -881,8 +985,10 @@ export class ElectricityOrderService {
           'Electricity quote changed; review the current price before submitting'
         );
       }
-      const primary = quoted.composition.lines.find((line) => line.systemKey === 'thermal');
-      if (!primary) throw new BadRequestException('Thermal electricity line is required');
+      const primary =
+        quoted.composition.lines.find((line) => line.systemKey === 'thermal') ??
+        quoted.composition.lines[0];
+      if (!primary) throw new BadRequestException('At least one electricity line is required');
       const orderId = uuidv7();
       await client.query(
         `INSERT INTO orders(id,user_id,profile_id,product_id,order_type,status,
@@ -901,8 +1007,13 @@ export class ElectricityOrderService {
       );
       await client.query(
         `INSERT INTO electricity_orders(id,profile_id,mode,status,settings_snapshot)
-         VALUES($1,$2,'simple','draft',$3::jsonb)`,
-        [orderId, input.profileId, JSON.stringify(quoted.settings)]
+         VALUES($1,$2,$3,'draft',$4::jsonb)`,
+        [
+          orderId,
+          input.profileId,
+          'startAt' in input ? 'advanced' : 'simple',
+          JSON.stringify(quoted.settings),
+        ]
       );
       let giftId: string | null = null;
       if (input.giftCode && quoted.terms) {
@@ -1026,8 +1137,8 @@ export class ElectricityOrderService {
         ]
       );
       await client.query(
-        "DELETE FROM electricity_customer_drafts WHERE user_id=$1 AND profile_id=$2 AND mode='simple'",
-        [actor.userId, input.profileId]
+        'DELETE FROM electricity_customer_drafts WHERE user_id=$1 AND profile_id=$2 AND mode=$3',
+        [actor.userId, input.profileId, 'startAt' in input ? 'advanced' : 'simple']
       );
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');

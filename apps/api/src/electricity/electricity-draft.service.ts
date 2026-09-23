@@ -18,12 +18,25 @@ export interface SaveSimpleDraft {
   currentStep: 1 | 2 | 3 | 4 | 5;
   data: SimpleDraftData;
 }
+export interface SaveAdvancedDraft {
+  profileId: string;
+  currentStep: 1 | 2 | 3 | 4 | 5;
+  data: {
+    startAt?: string | undefined;
+    endAt?: string | undefined;
+    quantities: Partial<
+      Record<'thermal' | 'green' | 'free_market' | 'energy_saving', string | undefined>
+    >;
+    giftCode?: string | undefined;
+    addressId?: string | undefined;
+  };
+}
 
 @Injectable()
 export class ElectricityDraftService {
   constructor(private readonly orders: OrdersService) {}
 
-  async get(actor: Actor, profileId: string) {
+  async get(actor: Actor, profileId: string, mode: 'simple' | 'advanced' = 'simple') {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -55,15 +68,15 @@ export class ElectricityDraftService {
       const ttlDays = configured ?? 7;
       await client.query(
         `DELETE FROM electricity_customer_drafts
-          WHERE user_id=$1 AND profile_id=$2 AND mode='simple'
+          WHERE user_id=$1 AND profile_id=$2 AND mode=$4
           AND updated_at < NOW() - ($3::integer * INTERVAL '1 day')`,
-        [actor.userId, profileId, ttlDays]
+        [actor.userId, profileId, ttlDays, mode]
       );
       const draft = (
         await client.query<{ current_step: number; data: SimpleDraftData; updated_at: Date }>(
           `SELECT current_step,data,updated_at FROM electricity_customer_drafts
-          WHERE user_id=$1 AND profile_id=$2 AND mode='simple'`,
-          [actor.userId, profileId]
+          WHERE user_id=$1 AND profile_id=$2 AND mode=$3`,
+          [actor.userId, profileId, mode]
         )
       ).rows[0];
       await requireCurrentSession(client, actor);
@@ -83,7 +96,11 @@ export class ElectricityDraftService {
     }
   }
 
-  async save(actor: Actor, input: SaveSimpleDraft) {
+  async save(
+    actor: Actor,
+    input: SaveSimpleDraft | SaveAdvancedDraft,
+    mode: 'simple' | 'advanced' = 'simple'
+  ) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -101,11 +118,11 @@ export class ElectricityDraftService {
       const row = (
         await client.query<{ current_step: number; data: SimpleDraftData; updated_at: Date }>(
           `INSERT INTO electricity_customer_drafts(user_id,profile_id,mode,current_step,data)
-         VALUES($1,$2,'simple',$3,$4::jsonb)
+         VALUES($1,$2,$3,$4,$5::jsonb)
          ON CONFLICT(user_id,profile_id,mode) DO UPDATE
            SET current_step=EXCLUDED.current_step,data=EXCLUDED.data,updated_at=NOW()
          RETURNING current_step,data,updated_at`,
-          [actor.userId, input.profileId, input.currentStep, JSON.stringify(input.data)]
+          [actor.userId, input.profileId, mode, input.currentStep, JSON.stringify(input.data)]
         )
       ).rows[0]!;
       await requireCurrentSession(client, actor);
