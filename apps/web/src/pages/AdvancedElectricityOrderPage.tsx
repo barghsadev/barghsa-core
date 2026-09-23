@@ -9,6 +9,10 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { formatJalaliDateTime, parseJalaliDateTime } from '../lib/jalali-date-time.js';
+import {
+  ElectricityQuotePreviewError,
+  electricityQuoteError,
+} from '../lib/electricity-quote-error.js';
 
 type Key = 'thermal' | 'green' | 'free_market' | 'energy_saving';
 const keys: Key[] = ['thermal', 'green', 'free_market', 'energy_saving'];
@@ -389,13 +393,18 @@ export function AdvancedElectricityOrderPage() {
         body: JSON.stringify(previewInput),
       })
         .then(async (response) => {
-          if (!response.ok) throw new Error('Quote unavailable');
+          if (!response.ok)
+            throw new ElectricityQuotePreviewError(await electricityQuoteError(response, locale));
           const value = (await response.json()) as Quote;
           if (!abort.signal.aborted) setQuote(value);
         })
-        .catch(() => {
+        .catch((error: unknown) => {
           if (!abort.signal.aborted)
-            setQuoteError(t('electricity.order.previewUnavailable', locale));
+            setQuoteError(
+              error instanceof ElectricityQuotePreviewError
+                ? error.message
+                : t('electricity.order.previewUnavailable', locale)
+            );
         });
     }, 300);
     return () => {

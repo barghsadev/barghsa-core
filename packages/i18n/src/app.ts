@@ -786,6 +786,10 @@ export const fa: I18nDictionary = {
   'electricity.order.applyGift': 'اعمال کد',
   'electricity.order.previewLoading': 'در حال محاسبه قیمت…',
   'electricity.order.previewUnavailable': 'محاسبه قیمت انجام نشد. مقدار و کد هدیه را بررسی کنید.',
+  'electricity.order.productMaxConflict':
+    'سفارش به {required} کیلووات‌ساعت {product} نیاز دارد، اما سقف این محصول {limit} کیلووات‌ساعت است. مقدار سفارش را اصلاح کنید.',
+  'electricity.order.productMinConflict':
+    'حداقل مقدار {product} برابر {minimum} کیلووات‌ساعت است. مقدار سفارش را اصلاح کنید.',
   'electricity.order.averagePower': 'توان میانگین',
   'electricity.order.mandatoryGreen': 'سهم برق سبز طبق قانون به سفارش افزوده شده است.',
   'electricity.order.thermal': 'برق حرارتی',
@@ -1924,6 +1928,10 @@ export const en: I18nDictionary = {
   'electricity.order.previewLoading': 'Calculating price…',
   'electricity.order.previewUnavailable':
     'Price calculation failed. Check the quantity and gift code.',
+  'electricity.order.productMaxConflict':
+    'This order requires {required} kWh of {product}, but the product maximum is {limit} kWh. Adjust the order quantity.',
+  'electricity.order.productMinConflict':
+    'The minimum for {product} is {minimum} kWh. Adjust the order quantity.',
   'electricity.order.averagePower': 'Average power',
   'electricity.order.mandatoryGreen': 'The mandatory green share has been added to this order.',
   'electricity.order.thermal': 'Thermal electricity',

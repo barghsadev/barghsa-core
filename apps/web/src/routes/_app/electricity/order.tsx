@@ -9,6 +9,10 @@ import { withCsrf } from '../../../lib/csrf.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { FormWizard } from '../../../components/FormWizard.js';
 import { WalletFundingPrompt } from '../../../components/WalletFundingPrompt.js';
+import {
+  ElectricityQuotePreviewError,
+  electricityQuoteError,
+} from '../../../lib/electricity-quote-error.js';
 
 export const Route = createFileRoute('/_app/electricity/order')({
   component: ElectricityOrderPage,
@@ -187,7 +191,7 @@ function ElectricityOrderPage() {
   const [giftCode, setGiftCode] = useState('');
   const [appliedGiftCode, setAppliedGiftCode] = useState('');
   const [quote, setQuote] = useState<PriceQuote | null>(null);
-  const [quoteError, setQuoteError] = useState(false);
+  const [quoteError, setQuoteError] = useState('');
   const [quoting, setQuoting] = useState(false);
   const [quoteVersion, setQuoteVersion] = useState(0);
   const submissionKey = useRef<{ fingerprint: string; key: string } | null>(null);
@@ -634,12 +638,13 @@ function ElectricityOrderPage() {
       (selected.limits.maxKwh === '0' || BigInt(totalKwh) <= BigInt(selected.limits.maxKwh));
     if (!activeProfileId || !validQuantity) {
       setQuote(null);
+      setQuoteError('');
       setQuoting(false);
       return;
     }
     const controller = new AbortController();
     setQuote(null);
-    setQuoteError(false);
+    setQuoteError('');
     setQuoting(true);
     const timer = window.setTimeout(() => {
       void fetch('/api/electricity/preview/simple', {
@@ -655,14 +660,20 @@ function ElectricityOrderPage() {
         }),
       })
         .then(async (response) => {
-          if (!response.ok) throw new Error('Quote unavailable');
+          if (!response.ok)
+            throw new ElectricityQuotePreviewError(await electricityQuoteError(response, locale));
           return response.json() as Promise<PriceQuote>;
         })
         .then((data) => {
           if (!controller.signal.aborted) setQuote(data);
         })
-        .catch(() => {
-          if (!controller.signal.aborted) setQuoteError(true);
+        .catch((error: unknown) => {
+          if (!controller.signal.aborted)
+            setQuoteError(
+              error instanceof ElectricityQuotePreviewError
+                ? error.message
+                : t('electricity.order.previewUnavailable', locale)
+            );
         })
         .finally(() => {
           if (!controller.signal.aborted) setQuoting(false);
@@ -680,6 +691,7 @@ function ElectricityOrderPage() {
     totalKwh,
     appliedGiftCode,
     quoteVersion,
+    locale,
   ]);
 
   // ── Helpers ─────────────────────────────────────────────────────────
@@ -1161,7 +1173,7 @@ function ElectricityOrderPage() {
           draftLoading ||
           (step === 1 && (!selectedProduct || periodOptions.length === 0)) ||
           (step === 2 && (!totalKwh || quantityError)) ||
-          (step >= 3 && (!quote || quoting || quoteError)) ||
+          (step >= 3 && (!quote || quoting || !!quoteError)) ||
           (step === 4 && giftCode.trim() !== appliedGiftCode)
         }
         submitDisabled={
@@ -1713,7 +1725,7 @@ function ElectricityOrderPage() {
                 {quoting ? (
                   <p role="status">{t('electricity.order.previewLoading', locale)}</p>
                 ) : quoteError ? (
-                  <p role="alert">{t('electricity.order.previewUnavailable', locale)}</p>
+                  <p role="alert">{quoteError}</p>
                 ) : quote ? (
                   <div className="space-y-2 border-b pb-4">
                     <p className="flex flex-wrap items-center gap-2">

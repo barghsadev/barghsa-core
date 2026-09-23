@@ -78,6 +78,7 @@ let container: HTMLDivElement;
 let root: Root;
 let fetchMock: ReturnType<typeof vi.fn<typeof fetch>>;
 let orderReply: () => Promise<Response>;
+let previewReply: () => Promise<Response>;
 let catalogue: unknown;
 let draft: { currentStep: number; data: Record<string, string> | null };
 
@@ -89,6 +90,7 @@ beforeEach(() => {
   catalogue = [product];
   draft = { currentStep: 1, data: null };
   orderReply = async () => response(saved, 201);
+  previewReply = async () => response(quote);
   fetchMock = vi.fn<typeof fetch>(async (input, init) => {
     const url = String(input);
     if (url === '/api/profiles/verification-status')
@@ -114,7 +116,7 @@ beforeEach(() => {
     if (url === `/api/wallet/${profileId}`) return response({ balance: '500000', currency: 'IRR' });
     if (url.startsWith(`/api/electricity/bill-data/${profileId}`))
       return response({ available: false, reason: 'unconfigured', manualEntryAllowed: true });
-    if (url === '/api/electricity/preview/simple') return response(quote);
+    if (url === '/api/electricity/preview/simple') return previewReply();
     if (url === '/api/electricity/orders/simple' && init?.method === 'POST') return orderReply();
     throw new Error(`Unexpected request: ${url}`);
   });
@@ -203,6 +205,27 @@ it('shows manual entry, period dates and the server price before one submission'
     to: '/electricity/orders/$orderId',
     params: { orderId: saved.orderId },
   });
+});
+
+it('shows the exact mandatory green limit conflict and blocks checkout', async () => {
+  previewReply = async () =>
+    response(
+      {
+        error: 'ELECTRICITY_QUOTE_INVALID',
+        details: [{ code: 'PRODUCT_MAX_KWH', systemKey: 'green', requiredKwh: '5', limitKwh: '4' }],
+      },
+      400
+    );
+  await mount();
+  await advance();
+  await fill('electricity-kwh', '100');
+  await settlePreview();
+  await advance();
+  expect(container.querySelector('[role="alert"]')?.textContent).toContain(
+    'This order requires 5 kWh of Green electricity, but the product maximum is 4 kWh.'
+  );
+  expect(next().disabled).toBe(true);
+  expect(orderCalls()).toHaveLength(0);
 });
 
 it('retries a failed submission with the same idempotency key', async () => {
