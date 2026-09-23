@@ -1,6 +1,10 @@
 import { beforeEach, afterEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { DEFAULT_GREEN_ELECTRICITY_CONFIG } from '@barghsa/shared/finance';
+import { ElectricityCalculationService } from '../electricity/electricity-calculation.service.js';
+import { persistElectricitySubmissionSnapshot } from '../electricity/electricity-submission-snapshot.js';
+import { VatCalculationRepository } from '../invoice/vat-calculation.repository.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let profileId: string;
 let body: Record<string, unknown>;
@@ -160,16 +164,83 @@ it('captures current rules for each new draft and protects submitted snapshots',
   });
   expect(newSnapshot.contractLimitsVersion).toBe(1);
 
-  await http.pool.query("UPDATE electricity_orders SET status='submitted' WHERE id=$1", [first]);
+  await http.pool.query(
+    `UPDATE electricity_orders SET status='submitted', period_start=$2,
+     period_end=$3, submitted_at=$4, pricing_snapshot=$5::jsonb WHERE id=$1`,
+    [
+      first,
+      new Date('2026-09-23T00:00:00Z'),
+      new Date('2026-09-24T00:00:00Z'),
+      new Date('2026-09-22T12:00:00Z'),
+      JSON.stringify({ schemaVersion: 1 }),
+    ]
+  );
   await expect(
     http.pool.query('UPDATE electricity_orders SET settings_snapshot=$2::jsonb WHERE id=$1', [
       first,
       JSON.stringify(newSnapshot),
     ])
-  ).rejects.toThrow(/Submitted electricity settings snapshot is immutable/);
+  ).rejects.toThrow(/Submitted electricity snapshot is immutable/);
+  await expect(
+    http.pool.query("UPDATE electricity_orders SET pricing_snapshot='{}'::jsonb WHERE id=$1", [
+      first,
+    ])
+  ).rejects.toThrow(/Submitted electricity snapshot is immutable/);
   await expect(
     http.pool.query("UPDATE electricity_orders SET status='draft' WHERE id=$1", [first])
   ).rejects.toThrow(/cannot return to draft/);
+});
+it('persists the calculated submission snapshot once with the exact period', async () => {
+  const id = await create();
+  const period = { start: new Date('2026-09-23T00:00:00Z'), end: new Date('2026-09-23T01:00:00Z') };
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    const calculation = await new ElectricityCalculationService(
+      new VatCalculationRepository()
+    ).calculate(
+      client,
+      { mode: 'simple', period, totalKwh: 10n },
+      DEFAULT_GREEN_ELECTRICITY_CONFIG
+    );
+    expect(calculation.ok).toBe(true);
+    if (!calculation.ok) throw new Error('Expected a valid electricity calculation');
+    const { composition, totals } = calculation;
+    const snapshot = await persistElectricitySubmissionSnapshot(
+      client,
+      id,
+      period,
+      composition,
+      totals,
+      undefined,
+      new Date('2026-09-22T12:00:00Z')
+    );
+    expect(snapshot).toMatchObject({ totalKwh: '10', totalIrR: '1000000' });
+    await client.query('COMMIT');
+    const saved = (
+      await client.query(
+        'SELECT status, period_start, period_end, pricing_snapshot FROM electricity_orders WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    expect(saved.status).toBe('submitted');
+    expect(saved.period_start).toEqual(period.start);
+    expect(saved.period_end).toEqual(period.end);
+    expect(saved.pricing_snapshot).toEqual(snapshot);
+    await expect(
+      persistElectricitySubmissionSnapshot(
+        client,
+        id,
+        period,
+        composition,
+        totals,
+        undefined,
+        new Date()
+      )
+    ).rejects.toThrow(/unavailable for submission/);
+  } finally {
+    client.release();
+  }
 });
 it('allows the owner and Manager while excluding financial, legal and stale Owner memberships', async () => {
   const id = await create('manager');

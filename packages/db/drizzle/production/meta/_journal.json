@@ -477,6 +477,13 @@
       "when": 1791331200050,
       "tag": "0147_electricity_order_drafts",
       "breakpoints": true
+    },
+    {
+      "idx": 148,
+      "version": "7",
+      "when": 1791331200051,
+      "tag": "0148_electricity_submission_snapshots",
+      "breakpoints": true
     }
   ]
 }

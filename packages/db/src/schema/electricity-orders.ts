@@ -37,6 +37,11 @@ export const electricityOrders = pgTable(
         capturedAt: string;
       }>()
       .notNull(),
+    /** Set together with the submitted pricing snapshot, never while still a draft. */
+    periodStart: timestamp('period_start', { withTimezone: true, mode: 'date' }),
+    periodEnd: timestamp('period_end', { withTimezone: true, mode: 'date' }),
+    submittedAt: timestamp('submitted_at', { withTimezone: true, mode: 'date' }),
+    pricingSnapshot: jsonb('pricing_snapshot').$type<Record<string, unknown>>(),
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
@@ -50,6 +55,14 @@ export const electricityOrders = pgTable(
     check(
       'electricity_orders_settings_snapshot_object',
       sql`jsonb_typeof(${table.settingsSnapshot}) = 'object'`
+    ),
+    check(
+      'electricity_orders_period_range',
+      sql`${table.periodStart} IS NULL OR ${table.periodEnd} > ${table.periodStart}`
+    ),
+    check(
+      'electricity_orders_pricing_snapshot_object',
+      sql`${table.pricingSnapshot} IS NULL OR jsonb_typeof(${table.pricingSnapshot}) = 'object'`
     ),
   ]
 );
