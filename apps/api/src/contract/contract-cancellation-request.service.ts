@@ -30,10 +30,16 @@ export const rejectCancellationRequestSchema = z
   .strict();
 const selection = `SELECT r.id,r.contract_id AS "contractId",r.version_id AS "versionId",r.reason,
  r.preferred_destination AS "preferredDestination",
- CASE WHEN r.status='Pending' AND c.state IN ('Cancelled','Completed') THEN 'Closed' ELSE r.status END AS status,
+ CASE WHEN r.status='Pending' AND (c.state IN ('Cancelled','Completed','Rejected')
+   OR s.status IN ('completed','rejected','cancelled')) THEN 'Closed' ELSE r.status END AS status,
  r.resolution_reason AS "resolutionReason",r.created_at AS "createdAt",r.resolved_at AS "resolvedAt",
- c.state AS "contractState",r.version_id<>c.current_version_id AS stale
- FROM contract_cancellation_requests r JOIN contracts c ON c.id=r.contract_id`;
+ c.state AS "contractState",c.service_type AS "serviceType",r.version_id<>c.current_version_id AS stale,
+ s.id AS "savingOrderId",s.bill_identifier AS "billIdentifier",p.title AS "planTitle",
+ u.username AS "customerName"
+ FROM contract_cancellation_requests r JOIN contracts c ON c.id=r.contract_id
+ LEFT JOIN saving_orders s ON s.order_id=c.order_id AND c.service_type='savings'
+ LEFT JOIN products p ON p.id=s.saving_plan_id
+ JOIN profiles profile ON profile.id=c.profile_id JOIN users u ON u.user_id=profile.user_id`;
 function conflict(error: unknown): never {
   if (
     ['23505', '23514', '55P03', '40P01', '40001'].includes((error as { code?: string }).code ?? '')
@@ -43,11 +49,23 @@ function conflict(error: unknown): never {
 }
 @Injectable()
 export class ContractCancellationRequestService {
-  private async published(client: PoolClient, id: string, profile: string, lock = false) {
+  private async requestable(client: PoolClient, id: string, profile: string, lock = false) {
     const row = (
-      await client.query<{ current_version_id: string; state: string; current_published: boolean }>(
-        `SELECT c.current_version_id,c.state,EXISTS(SELECT 1 FROM contract_publications p WHERE p.version_id=c.current_version_id) AS current_published
-       FROM contracts c WHERE c.id=$1 AND c.profile_id=$2 AND EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id) ${lock ? 'FOR UPDATE OF c NOWAIT' : ''}`,
+      await client.query<{
+        current_version_id: string;
+        state: string;
+        current_requestable: boolean;
+      }>(
+        `SELECT c.current_version_id,c.state,
+         (EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id AND p.version_id=c.current_version_id)
+           OR (c.service_type='savings' AND c.state='AwaitingStaffReview'
+             AND EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id)))
+           AND NOT EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id
+             AND s.status IN ('completed','rejected','cancelled')) AS current_requestable
+       FROM contracts c WHERE c.id=$1 AND c.profile_id=$2 AND (
+         EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id)
+         OR (c.service_type='savings' AND EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id)))
+       ${lock ? 'FOR UPDATE OF c NOWAIT' : ''}`,
         [id, profile]
       )
     ).rows[0];
@@ -66,7 +84,7 @@ export class ContractCancellationRequestService {
   }
   customer(id: string, actor: ContractActor) {
     return customerContractAccess(actor, false, async (client, profile) => {
-      const contract = await this.published(client, id, profile);
+      const contract = await this.requestable(client, id, profile);
       const request = await this.latest(client, id);
       const authorized =
         (await client.query<{ id: string }>(activeProfileSql('contracts:sign'), [actor.userId]))
@@ -75,8 +93,8 @@ export class ContractCancellationRequestService {
         request,
         canRequest:
           authorized &&
-          contract.current_published &&
-          !['Cancelled', 'Completed'].includes(contract.state) &&
+          contract.current_requestable &&
+          !['Cancelled', 'Completed', 'Rejected'].includes(contract.state) &&
           request?.status !== 'Pending',
       };
     });
@@ -89,7 +107,7 @@ export class ContractCancellationRequestService {
   ) {
     try {
       return await customerContractAccess(actor, true, async (client, profile) => {
-        const contract = await this.published(client, id, profile, true);
+        const contract = await this.requestable(client, id, profile, true);
         const requestId = await contractIdempotency(
           client,
           'contract_cancellation_request',
@@ -98,12 +116,10 @@ export class ContractCancellationRequestService {
           async () => {
             if (
               contract.current_version_id !== input.expectedVersionId ||
-              !contract.current_published ||
-              ['Cancelled', 'Completed'].includes(contract.state)
+              !contract.current_requestable ||
+              ['Cancelled', 'Completed', 'Rejected'].includes(contract.state)
             )
-              throw new ConflictException(
-                'The current published contract cannot receive this request'
-              );
+              throw new ConflictException('The current contract cannot receive this request');
             const requestId = uuidv7();
             await client.query(
               'INSERT INTO contract_cancellation_requests(id,contract_id,version_id,requested_by,reason,preferred_destination) VALUES($1,$2,$3,$4,$5,$6)',
@@ -140,12 +156,15 @@ export class ContractCancellationRequestService {
       throw new NotFoundException();
     return { request: await this.latest(getDbPool(), id) };
   }
-  async queue(before?: string) {
+  async queue(before?: string, serviceType?: 'savings') {
     const rows = (
       await getDbPool().query(
         selection +
-          ` WHERE r.status='Pending' AND c.state NOT IN ('Cancelled','Completed') AND ($1::uuid IS NULL OR r.id<$1) ORDER BY r.id DESC LIMIT 51`,
-        [before ?? null]
+          ` WHERE r.status='Pending' AND c.state NOT IN ('Cancelled','Completed','Rejected')
+            AND (s.status IS NULL OR s.status NOT IN ('completed','rejected','cancelled'))
+            AND ($1::uuid IS NULL OR r.id<$1) AND ($2::text IS NULL OR c.service_type::text=$2)
+            ORDER BY r.id DESC LIMIT 51`,
+        [before ?? null, serviceType ?? null]
       )
     ).rows;
     return { requests: rows.slice(0, 50), nextBefore: rows.length > 50 ? rows[49]!.id : null };

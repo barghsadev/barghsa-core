@@ -90,9 +90,17 @@ export class StaffCancellationRequestController {
     type: String,
     description: 'Exclusive request UUID cursor; at most 50 records.',
   })
-  queue(@Req() req: AuthenticatedRequest, @Query('before') before?: string) {
+  @ApiQuery({ name: 'service', required: false, enum: ['savings'] })
+  queue(
+    @Req() req: AuthenticatedRequest,
+    @Query('before') before?: string,
+    @Query('service') service?: string
+  ) {
     authorize(req);
-    return this.service.queue(before === undefined ? undefined : parse(contractUuid, before));
+    return this.service.queue(
+      before === undefined ? undefined : parse(contractUuid, before),
+      service === undefined ? undefined : parse(z.literal('savings'), service)
+    );
   }
   @Get('contracts/:id/cancellation-requests')
   @ApiParam({ name: 'id', format: 'uuid' })

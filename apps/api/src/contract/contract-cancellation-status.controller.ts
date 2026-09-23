@@ -31,7 +31,8 @@ export class StaffContractCancellationStatusController {
       ...status,
       canCancel:
         hasStaffPermission(req, 'contracts:write') &&
-        !['Completed', 'Cancelled'].includes(status.state),
+        !['Completed', 'Cancelled', 'Rejected'].includes(status.state) &&
+        !status.savingTerminal,
       canChooseRefund: hasStaffPermission(req, 'admin:financial:edit'),
     };
   }
@@ -44,7 +45,8 @@ export class CustomerContractCancellationStatusController {
   @Get(':id/cancellation-status')
   @ApiParam({ name: 'id', format: 'uuid' })
   @ApiOperation({
-    summary: 'Read cancellation refund outcomes for a published contract on the authorized profile',
+    summary:
+      'Read cancellation refund outcomes for an available contract on the authorized profile',
   })
   get(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     const parsed = idValue(id);

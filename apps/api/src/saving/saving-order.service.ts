@@ -402,12 +402,14 @@ export class SavingOrderService {
           invoice_id: string;
           invoice_state: string;
           contract_id: string;
+          contract_version_id: string;
           contract_state: string;
         }>(
           `SELECT s.id,s.profile_id,s.order_id,s.status,s.bill_identifier,s.address_snapshot,
                 s.pricing_snapshot,s.verification_result,s.agreement_version_id,s.agreement_snapshot,
                 s.submitted_at,i.id AS invoice_id,i.state AS invoice_state,
-                c.id AS contract_id,c.state AS contract_state
+                c.id AS contract_id,c.current_version_id AS contract_version_id,
+                c.state AS contract_state
            FROM saving_orders s
            LEFT JOIN invoices i ON i.order_id=s.order_id AND i.type='auto'
            LEFT JOIN contracts c ON c.order_id=s.order_id AND c.service_type='savings'

@@ -6,7 +6,13 @@ import { documentRequest, DocumentRequestError } from '../lib/documents.js';
 import { ContractDetail } from './ContractDetail.js';
 import type { CancellationRequest } from './ContractCancellationRequestPanel.js';
 
-export function ContractCancellationRequestQueue() {
+export function ContractCancellationRequestQueue({
+  service,
+  onOpenSavingOrder,
+}: {
+  service?: 'savings';
+  onOpenSavingOrder?: (id: string) => void;
+} = {}) {
   const locale = useLocale(),
     word = (key: string) => contractText(key, locale);
   const [rows, setRows] = useState<CancellationRequest[]>([]),
@@ -21,8 +27,12 @@ export function ContractCancellationRequestQueue() {
     const controller = new AbortController();
     setLoading(true);
     setError(false);
+    const query = new URLSearchParams({
+      ...(cursor ? { before: cursor } : {}),
+      ...(service ? { service } : {}),
+    }).toString();
     void documentRequest<{ requests: CancellationRequest[]; nextBefore: string | null }>(
-      `/api/admin/contract-cancellation-requests${cursor ? '?before=' + encodeURIComponent(cursor) : ''}`,
+      `/api/admin/contract-cancellation-requests${query ? '?' + query : ''}`,
       { signal: controller.signal }
     )
       .then((page) => {
@@ -43,7 +53,7 @@ export function ContractCancellationRequestQueue() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [cursor, reload]);
+  }, [cursor, reload, service]);
   function refresh() {
     setCursor(null);
     setReload((n) => n + 1);
@@ -82,6 +92,11 @@ export function ContractCancellationRequestQueue() {
       <ul className="divide-y">
         {rows.map((row) => (
           <li key={row.id} className="flex flex-col gap-2 py-3">
+            {row.savingOrderId ? (
+              <p className="text-sm font-medium">
+                {row.customerName} · {row.planTitle?.[locale]} · <bdi>{row.billIdentifier}</bdi>
+              </p>
+            ) : null}
             <p className="break-all text-xs text-muted-foreground">
               {word('cancellationQueueContract')}: <bdi>{row.contractId}</bdi>
             </p>
@@ -94,7 +109,10 @@ export function ContractCancellationRequestQueue() {
             <Button
               variant="outline"
               className="self-start"
-              onClick={() => setSelected(row.contractId)}
+              onClick={() => {
+                setSelected(row.contractId);
+                if (row.savingOrderId) onOpenSavingOrder?.(row.savingOrderId);
+              }}
             >
               {word('cancellationRequestOpen')}
             </Button>

@@ -6,6 +6,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { SavingOrderComments } from '../components/SavingOrderComments.js';
 import { SavingOrderDocuments } from '../components/SavingOrderDocuments.js';
+import { ContractCancellationRequestQueue } from '../components/ContractCancellationRequestQueue.js';
 
 type StageName =
   | 'request_confirmation'
@@ -165,6 +166,14 @@ export default function AdminSavingOrdersPage() {
       {state === 'loading' && <p role="status">{copy('staffLoading')}</p>}
       {state === 'error' && <p role="alert">{copy('staffError')}</p>}
       {state === 'forbidden' && <p role="alert">{copy('staffForbidden')}</p>}
+      <ContractCancellationRequestQueue
+        service="savings"
+        onOpenSavingOrder={(id) => {
+          setSelected(id);
+          setNote('');
+          setHandover('');
+        }}
+      />
       {state === 'ready' && !orders.length && <p>{copy('staffEmpty')}</p>}
       <div className="grid gap-5 xl:grid-cols-[minmax(16rem,1fr)_minmax(24rem,2fr)]">
         <div className="space-y-2" aria-label={copy('staffQueue')}>

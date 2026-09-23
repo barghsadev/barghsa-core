@@ -6,6 +6,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { SavingOrderComments } from '../components/SavingOrderComments.js';
 import { SavingOrderDocuments } from '../components/SavingOrderDocuments.js';
+import { ContractCancellationPanel } from '../components/ContractCancellationPanel.js';
 
 interface Detail {
   id: string;
@@ -28,6 +29,7 @@ interface Detail {
   invoice_id: string;
   invoice_state: string;
   contract_id: string;
+  contract_version_id: string;
   contract_state: string;
   stages: Array<{
     stage: string;
@@ -45,6 +47,7 @@ export function SavingOrderDetailPage() {
   const copy = (key: string) => tSaving(key, locale);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [revision, setRevision] = useState(0);
   useEffect(() => {
     const controller = new AbortController();
     void fetch(`/api/saving/orders/${orderId}`, {
@@ -65,7 +68,7 @@ export function SavingOrderDetailPage() {
         if (!controller.signal.aborted) setState('error');
       });
     return () => controller.abort();
-  }, [orderId]);
+  }, [orderId, revision]);
   return (
     <main
       className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
@@ -164,6 +167,14 @@ export function SavingOrderDetailPage() {
               <p>{copy(detail.contract_state)}</p>
             </CardContent>
           </Card>
+          {detail.contract_id && detail.contract_version_id && (
+            <ContractCancellationPanel
+              id={detail.contract_id}
+              versionId={detail.contract_version_id}
+              staff={false}
+              onChanged={() => setRevision((value) => value + 1)}
+            />
+          )}
           <Card>
             <CardContent className="space-y-3 pt-6">
               <h2 className="text-xl font-semibold">{copy('fulfillment')}</h2>

@@ -3914,6 +3914,17 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "service",
+            "required": false,
+            "schema": {
+              "enum": [
+                "savings"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -14566,7 +14577,7 @@
             "bearer": []
           }
         ],
-        "summary": "Read cancellation refund outcomes for a published contract on the authorized profile",
+        "summary": "Read cancellation refund outcomes for an available contract on the authorized profile",
         "tags": [
           "Contracts"
         ]

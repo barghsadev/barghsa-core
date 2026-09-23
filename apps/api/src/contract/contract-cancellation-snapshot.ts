@@ -20,6 +20,7 @@ export interface CancellationSnapshotRow {
   association_conflict: boolean;
   ambiguous_order_invoices: boolean;
   pending_payments: boolean;
+  saving_terminal?: boolean;
   invoices: CancellationInvoice[];
 }
 
@@ -31,6 +32,8 @@ export async function readCancellationSnapshot(client: Pool | PoolClient, id: st
       `
     SELECT c.id,c.profile_id,c.current_version_id,c.service_type,c.state,p.archived,
       contract_has_pending_payments(c.id) AS pending_payments,
+      EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id
+        AND s.status IN ('completed','rejected','cancelled')) AS saving_terminal,
       EXISTS(SELECT 1 FROM invoices i WHERE i.contract_id=c.id::text AND i.profile_id<>c.profile_id) AS association_conflict,
       (c.order_id IS NOT NULL
         AND EXISTS(SELECT 1 FROM contracts other WHERE other.order_id=c.order_id AND other.id<>c.id AND other.state NOT IN ('Completed','Cancelled','Rejected'))
@@ -87,6 +90,7 @@ export function cancellationSnapshot(row: CancellationSnapshotRow) {
     associationConflict: row.association_conflict,
     ambiguousOrderInvoices: row.ambiguous_order_invoices,
     pendingPayments: row.pending_payments,
+    savingTerminal: row.saving_terminal ?? false,
     invoices,
   };
   const blockers = [
@@ -94,6 +98,7 @@ export function cancellationSnapshot(row: CancellationSnapshotRow) {
     ...(row.ambiguous_order_invoices ? ['ambiguous_order_invoices'] : []),
     ...(row.archived ? ['profile_archived'] : []),
     ...(row.pending_payments ? ['payment_in_progress'] : []),
+    ...(row.saving_terminal ? ['saving_order_terminal'] : []),
     ...(['Completed', 'Cancelled', 'Rejected'].includes(row.state) ? ['terminal_contract'] : []),
     ...(invoices.some((invoice) => invoice.pendingRefunds.length) ? ['refund_in_progress'] : []),
     ...(invoices.some((invoice) => invoice.state === 'PaymentUnderReview')

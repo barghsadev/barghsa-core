@@ -21,12 +21,15 @@ export async function readCancellationStatus(
       cancelled_at: Date | null;
       recorded: boolean;
       pending_payments: boolean;
+      saving_terminal: boolean;
       unbound_refunds: boolean;
       refunds: RefundStatus[];
     }>(
       `SELECT c.id,c.state,c.cancelled_at,
-   EXISTS(SELECT 1 FROM contract_cancellations x WHERE x.contract_id=c.id) AS recorded,
-   contract_has_pending_payments(c.id) AS pending_payments,
+  EXISTS(SELECT 1 FROM contract_cancellations x WHERE x.contract_id=c.id) AS recorded,
+  contract_has_pending_payments(c.id) AS pending_payments,
+  EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id
+    AND s.status IN ('completed','rejected','cancelled')) AS saving_terminal,
    EXISTS(SELECT 1 FROM invoices i JOIN refunds r ON r.invoice_id=i.id
      WHERE i.profile_id=c.profile_id AND (i.contract_id=c.id::text OR (c.order_id IS NOT NULL AND i.order_id=c.order_id AND i.contract_id IS NULL))
        AND r.state NOT IN ('Completed','Rejected','Cancelled')
@@ -35,7 +38,10 @@ export async function readCancellationStatus(
        'destination',r.destination,'state',r.state,'transactionState',t.state) ORDER BY r.id)
      FROM contract_refund_obligations o JOIN refunds r ON r.id=o.refund_id
      LEFT JOIN refund_transactions t ON t.refund_id=r.id WHERE o.contract_id=c.id),'[]'::jsonb) AS refunds
-  FROM contracts c WHERE c.id=$1 AND ($2::uuid IS NULL OR (c.profile_id=$2 AND EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id)))`,
+  FROM contracts c WHERE c.id=$1 AND ($2::uuid IS NULL OR (c.profile_id=$2 AND (
+    EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id)
+    OR (c.service_type='savings'
+      AND EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id)))))`,
       [id, profileId ?? null]
     )
   ).rows[0];
@@ -57,6 +63,7 @@ export async function readCancellationStatus(
   return {
     contractId: row.id,
     state: row.state,
+    savingTerminal: row.saving_terminal,
     cancelledAt: row.cancelled_at?.toISOString() ?? null,
     financialStatus,
     financiallyClosed: financialStatus === 'closed',

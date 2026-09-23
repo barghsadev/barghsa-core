@@ -26,6 +26,10 @@ export interface CancellationRequest {
   resolutionReason: string | null;
   contractState: string;
   stale: boolean;
+  savingOrderId?: string | null;
+  billIdentifier?: string | null;
+  planTitle?: { fa?: string; en?: string } | null;
+  customerName?: string;
 }
 export function ContractCancellationRequestPanel({
   id,

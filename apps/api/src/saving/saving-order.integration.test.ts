@@ -30,7 +30,7 @@ beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions)
-     VALUES('saving-order-admin','Saving order','Test role','["admin:catalogue:edit","contracts:read","contracts:write"]')`
+     VALUES('saving-order-admin','Saving order','Test role','["admin:catalogue:edit","admin:financial:edit","contracts:read","contracts:write"]')`
   );
   for (const [user, staff] of [
     ['saving-order-buyer', false],
@@ -544,6 +544,29 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   expect(completed.status, http.logs()).toBe(200);
   expect(await completed.json()).toMatchObject({ status: 'completed', nextStage: null });
   expect(
+    await (await request(`/api/contracts/${result.contractId}/cancellation-requests`, 'GET')).json()
+  ).toMatchObject({ canRequest: false });
+  const completedCancellationPreview = await request(
+    `/api/admin/contracts/${result.contractId}/cancellation-preview`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(completedCancellationPreview.status, http.logs()).toBe(200);
+  expect(await completedCancellationPreview.json()).toMatchObject({
+    blockers: expect.arrayContaining(['saving_order_terminal']),
+  });
+  expect(
+    await (
+      await request(
+        `/api/admin/contracts/${result.contractId}/cancellation-status`,
+        'GET',
+        undefined,
+        staffHeaders
+      )
+    ).json()
+  ).toMatchObject({ canCancel: false, savingTerminal: true });
+  expect(
     (await request(stagePath('process_completion'), 'POST', stageInput(), staffHeaders)).status
   ).toBe(409);
   const customerProgress = await request(`/api/saving/orders/${result.savingOrderId}`, 'GET');
@@ -677,6 +700,170 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       )
     ).rows[0]
   ).toMatchObject({ stock_count: 1, reserved_count: 0 });
+  const cancellationInput = { ...input, billIdentifier: '1234567890128' };
+  const cancellationQuoteResponse = await request(
+    '/api/saving/orders/quote',
+    'POST',
+    cancellationInput
+  );
+  expect(cancellationQuoteResponse.status, http.logs()).toBe(201);
+  const cancellationQuote = (await cancellationQuoteResponse.json()) as {
+    reviewDigest: string;
+    totalIrR: string;
+  };
+  const cancellationSubmission = await request('/api/saving/orders', 'POST', {
+    ...cancellationInput,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: cancellationQuote.reviewDigest,
+    agreementAccepted: true,
+    hardwareConfirmed: true,
+    submitForStaffReview: true,
+  });
+  expect(cancellationSubmission.status, http.logs()).toBe(201);
+  const cancellationOrder = (await cancellationSubmission.json()) as {
+    savingOrderId: string;
+    orderId: string;
+    contractId: string;
+    invoiceId: string;
+  };
+  const cancellationDetail = await request(
+    `/api/saving/orders/${cancellationOrder.savingOrderId}`,
+    'GET'
+  );
+  expect(cancellationDetail.status, http.logs()).toBe(200);
+  const cancellationVersion = ((await cancellationDetail.json()) as { contract_version_id: string })
+    .contract_version_id;
+  const cancellationRequestPath = `/api/contracts/${cancellationOrder.contractId}/cancellation-requests`;
+  const submitCancellationRequest = () =>
+    request(cancellationRequestPath, 'POST', {
+      expectedVersionId: cancellationVersion,
+      reason: 'Please cancel this saving order',
+      preferredDestination: 'wallet',
+      idempotencyKey: randomUUID(),
+    });
+  expect(await (await request(cancellationRequestPath, 'GET')).json()).toMatchObject({
+    canRequest: true,
+  });
+  const firstCancellationRequest = await submitCancellationRequest();
+  expect(firstCancellationRequest.status, http.logs()).toBe(201);
+  const firstRequestId = ((await firstCancellationRequest.json()) as { id: string }).id;
+  const cancellationQueue = await request(
+    '/api/admin/contract-cancellation-requests?service=savings',
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(cancellationQueue.status, http.logs()).toBe(200);
+  expect(await cancellationQueue.json()).toMatchObject({
+    requests: expect.arrayContaining([
+      expect.objectContaining({
+        id: firstRequestId,
+        savingOrderId: cancellationOrder.savingOrderId,
+        billIdentifier: cancellationInput.billIdentifier,
+      }),
+    ]),
+  });
+  const rejectedCancellation = await request(
+    `/api/admin/contract-cancellation-requests/${firstRequestId}/reject`,
+    'POST',
+    { reason: 'Please verify the installation address first', idempotencyKey: randomUUID() },
+    staffHeaders
+  );
+  expect(rejectedCancellation.status, http.logs()).toBe(201);
+  expect(await rejectedCancellation.json()).toMatchObject({ status: 'Rejected' });
+  expect(await (await request(cancellationRequestPath, 'GET')).json()).toMatchObject({
+    canRequest: true,
+    request: { status: 'Rejected' },
+  });
+  const cancellationPaymentPath = `/api/invoices/${cancellationOrder.invoiceId}/wallet-payment`;
+  const cancellationPaymentReview = await request(cancellationPaymentPath, 'GET');
+  expect(cancellationPaymentReview.status, http.logs()).toBe(200);
+  const cancellationPaymentHash = (
+    (await cancellationPaymentReview.json()) as { review: { hash: string } }
+  ).review.hash;
+  expect(
+    (
+      await request(cancellationPaymentPath, 'POST', {
+        idempotencyKey: randomUUID(),
+        expectedRemainingAmount: cancellationQuote.totalIrR,
+        expectedReviewHash: cancellationPaymentHash,
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  const secondCancellationRequest = await submitCancellationRequest();
+  expect(secondCancellationRequest.status, http.logs()).toBe(201);
+  const secondRequestId = ((await secondCancellationRequest.json()) as { id: string }).id;
+  const cancellationPreviewResponse = await request(
+    `/api/admin/contracts/${cancellationOrder.contractId}/cancellation-preview`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(cancellationPreviewResponse.status, http.logs()).toBe(200);
+  const cancellationFingerprint = (
+    (await cancellationPreviewResponse.json()) as { fingerprint: string }
+  ).fingerprint;
+  const preparedCancellation = await request(
+    `/api/admin/contracts/${cancellationOrder.contractId}/cancellations`,
+    'POST',
+    {
+      expectedVersionId: cancellationVersion,
+      expectedFingerprint: cancellationFingerprint,
+      reason: 'Approved customer cancellation',
+      customerRequestId: secondRequestId,
+      refundDecision: { mode: 'full_wallet' },
+      idempotencyKey: randomUUID(),
+    },
+    staffHeaders
+  );
+  expect(preparedCancellation.status, http.logs()).toBe(201);
+  const cancellationIntentId = ((await preparedCancellation.json()) as { id: string }).id;
+  const executedCancellation = await request(
+    `/api/admin/contracts/${cancellationOrder.contractId}/cancellations/execute`,
+    'POST',
+    { intentId: cancellationIntentId, idempotencyKey: randomUUID() },
+    staffHeaders
+  );
+  expect(executedCancellation.status, http.logs()).toBe(201);
+  const cancellationResult = (await executedCancellation.json()) as {
+    refunds: Array<{ id: string; amount: string }>;
+  };
+  expect(cancellationResult.refunds).toMatchObject([{ amount: cancellationQuote.totalIrR }]);
+  expect(
+    (
+      await http.pool.query(
+        `SELECT s.status,s.financial_status,o.status AS order_status,c.state AS contract_state
+         FROM saving_orders s JOIN orders o ON o.id=s.order_id
+         JOIN contracts c ON c.order_id=o.id WHERE s.id=$1`,
+        [cancellationOrder.savingOrderId]
+      )
+    ).rows[0]
+  ).toMatchObject({
+    status: 'cancelled',
+    financial_status: 'refund_pending',
+    order_status: 'CANCELLED',
+    contract_state: 'Cancelled',
+  });
+  expect(await (await request(cancellationRequestPath, 'GET')).json()).toMatchObject({
+    canRequest: false,
+    request: { status: 'Fulfilled' },
+  });
+  expect(await runWalletRefund(http.pool, cancellationResult.refunds[0]!.id)).toBe('completed');
+  expect(
+    (
+      await http.pool.query('SELECT financial_status FROM saving_orders WHERE id=$1', [
+        cancellationOrder.savingOrderId,
+      ])
+    ).rows[0]?.financial_status
+  ).toBe('refunded');
+  expect(
+    (
+      await http.pool.query('SELECT stock_count,reserved_count FROM products WHERE id=$1', [
+        input.hardwareProductId,
+      ])
+    ).rows[0]
+  ).toMatchObject({ stock_count: 1, reserved_count: 0 });
   const expiryInput = { ...input, billIdentifier: '1234567890127' };
   const expiryQuoteResponse = await request('/api/saving/orders/quote', 'POST', expiryInput);
   expect(expiryQuoteResponse.status, http.logs()).toBe(201);
@@ -729,4 +916,4 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       )
     ).rows[0]
   ).toMatchObject({ stock_count: 0, reserved_count: 0 });
-}, 90000);
+}, 150000);
