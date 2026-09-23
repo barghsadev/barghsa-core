@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Solar customer browser journey](batches/2026-09-24-solar-browser-journey.md) covers the solar portion of `03-core-business.md#T-03.90.14`: draft resume, submission, file upload, document review handoff, postal guidance, and shipment entry. The focused journey passes all five browser projects. Its API is mocked in the browser; backend transition checks remain in the API suites.
+
 [Resumable solar intake](batches/2026-09-24-solar-intake-drafts.md) extends the shared form-draft requirement to the solar request journey. Customer site details survive a return from address settings or an interrupted session, while agreement acceptance remains explicit. Local focused tests and schema/contract checks pass; CI starts on the direct `main` push.
 
 [Saving-order duplicate policy](batches/2026-09-24-saving-duplicate-policy.md) implements `03-core-business.md#T-03.09.02.05`: staff can block or allow duplicate active orders per plan, with an audit trail, concurrency-safe submission, and explicit customer acknowledgement when allowed. Local integration, UI, build, schema snapshot, contract, type, lint, format, and backlog checks pass. This supersedes the fixed duplicate-rule limitation in the original saving-order intake note. The batch reached `main` at `473a0fe3`; [CI run 35922862264](https://github.com/barghsadev/barghsa-core/actions/runs/35922862264) is tracked on GitHub.
