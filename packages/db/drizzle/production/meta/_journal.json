@@ -729,6 +729,13 @@
       "when": 1791331200086,
       "tag": "0183_solar_request_history_index",
       "breakpoints": true
+    },
+    {
+      "idx": 184,
+      "version": "7",
+      "when": 1791331200087,
+      "tag": "0184_electricity_order_comments",
+      "breakpoints": true
     }
   ]
 }

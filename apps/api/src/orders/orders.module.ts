@@ -17,6 +17,11 @@ import { ElectricityDraftService } from '../electricity/electricity-draft.servic
 import { ElectricityStaffReviewController } from '../electricity/electricity-staff-review.controller.js';
 import { ElectricityStaffReviewService } from '../electricity/electricity-staff-review.service.js';
 import {
+  ElectricityCommentsController,
+  StaffElectricityCommentsController,
+} from '../electricity/electricity-comments.controller.js';
+import { ElectricityCommentsService } from '../electricity/electricity-comments.service.js';
+import {
   CustomerElectricityIncreaseController,
   StaffElectricityIncreaseController,
 } from '../electricity/electricity-increase.controller.js';
@@ -75,6 +80,8 @@ import { RefundModule } from '../refund/refund.module.js';
     ProductsController,
     ElectricityOrderController,
     ElectricityStaffReviewController,
+    ElectricityCommentsController,
+    StaffElectricityCommentsController,
     CustomerElectricityIncreaseController,
     StaffElectricityIncreaseController,
     CustomerElectricityPriceAdjustmentController,
@@ -101,6 +108,7 @@ import { RefundModule } from '../refund/refund.module.js';
     HttpBillDataProvider,
     ElectricityDraftService,
     ElectricityStaffReviewService,
+    ElectricityCommentsService,
     ElectricityIncreaseService,
     ElectricityPriceAdjustmentService,
     SavingOrderService,

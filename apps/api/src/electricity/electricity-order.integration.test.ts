@@ -109,6 +109,141 @@ async function submittedOrder() {
   };
 }
 
+it('keeps electricity order conversations public or staff-only and reachable after review', async () => {
+  const order = await submittedOrder();
+  const customerPath = `${http.base}/api/electricity/orders/${order.orderId}/comments`;
+  const staffPath = `${http.base}/api/staff/electricity/orders/${order.orderId}/comments`;
+  const customerInput = { idempotencyKey: randomUUID(), body: 'Please confirm the delivery date.' };
+  const customerReply = await fetch(customerPath, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(customerInput),
+  });
+  expect(customerReply.status, http.logs()).toBe(200);
+  const customerComment = (await customerReply.json()) as { id: string };
+  const retry = await fetch(customerPath, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(customerInput),
+  });
+  expect(retry.status, http.logs()).toBe(200);
+  expect(((await retry.json()) as { id: string }).id).toBe(customerComment.id);
+  expect((await fetch(customerPath, { headers: staffHeaders })).status).toBe(404);
+  expect(
+    (
+      await fetch(customerPath, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          ...customerInput,
+          idempotencyKey: randomUUID(),
+          visibility: 'internal',
+        }),
+      })
+    ).status
+  ).toBe(400);
+
+  const internalReply = await fetch(staffPath, {
+    method: 'POST',
+    headers: staffHeaders,
+    body: JSON.stringify({
+      idempotencyKey: randomUUID(),
+      body: 'Check account before replying.',
+      visibility: 'internal',
+    }),
+  });
+  expect(internalReply.status, http.logs()).toBe(200);
+  const internalComment = (await internalReply.json()) as { id: string };
+  const publicReply = await fetch(staffPath, {
+    method: 'POST',
+    headers: staffHeaders,
+    body: JSON.stringify({
+      idempotencyKey: randomUUID(),
+      body: 'We are checking the delivery date.',
+      visibility: 'public',
+    }),
+  });
+  expect(publicReply.status, http.logs()).toBe(200);
+
+  const customerList = await fetch(customerPath, { headers });
+  expect(customerList.status, http.logs()).toBe(200);
+  expect(
+    ((await customerList.json()) as { comments: { body: string }[] }).comments.map(
+      (item) => item.body
+    )
+  ).toEqual([customerInput.body, 'We are checking the delivery date.']);
+  expect((await fetch(`${customerPath}?before=${internalComment.id}`, { headers })).status).toBe(
+    404
+  );
+  const staffList = await fetch(staffPath, { headers: staffHeaders });
+  expect(staffList.status, http.logs()).toBe(200);
+  expect(
+    ((await staffList.json()) as { comments: { visibility: string }[] }).comments.map(
+      (item) => item.visibility
+    )
+  ).toEqual(['public', 'internal', 'public']);
+  expect(
+    (
+      await http.pool.query(
+        `SELECT COUNT(*)::int AS total FROM in_app_notifications
+     WHERE recipient_user_id='buyer' AND link_route=$1`,
+        [`/electricity/orders/${order.orderId}`]
+      )
+    ).rows[0].total
+  ).toBe(1);
+
+  const detail = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
+    headers: staffHeaders,
+  });
+  const versionId = ((await detail.json()) as { versionId: string }).versionId;
+  expect(
+    (
+      await staffPost(order.orderId, 'approve', {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: versionId,
+      })
+    ).status
+  ).toBe(200);
+  const reviewQueue = await fetch(`${http.base}/api/staff/electricity/orders`, {
+    headers: staffHeaders,
+  });
+  expect(((await reviewQueue.json()) as { orders: unknown[] }).orders).toHaveLength(0);
+  const conversations = await fetch(`${http.base}/api/staff/electricity/orders/conversations`, {
+    headers: staffHeaders,
+  });
+  expect(conversations.status, http.logs()).toBe(200);
+  expect(
+    ((await conversations.json()) as { orders: { orderId: string }[] }).orders[0]?.orderId
+  ).toBe(order.orderId);
+  await expect(
+    http.pool.query('UPDATE electricity_order_comments SET body=$1 WHERE id=$2', [
+      'Changed',
+      customerComment.id,
+    ])
+  ).rejects.toMatchObject({ code: '23514' });
+});
+
+it('paginates older electricity order comments without losing the visible page', async () => {
+  const order = await submittedOrder();
+  await http.pool.query(
+    `INSERT INTO electricity_order_comments(id,order_id,author_user_id,visibility,body)
+     SELECT uuid_generate_v7(),$1,'buyer','public','Message ' || n FROM generate_series(1,51) AS n`,
+    [order.orderId]
+  );
+  const path = `${http.base}/api/electricity/orders/${order.orderId}/comments`;
+  const first = await fetch(path, { headers });
+  expect(first.status, http.logs()).toBe(200);
+  const page = (await first.json()) as { comments: { id: string }[]; nextBefore: string | null };
+  expect(page.comments).toHaveLength(50);
+  expect(page.nextBefore).not.toBeNull();
+  const older = await fetch(`${path}?before=${page.nextBefore}`, { headers });
+  expect(older.status, http.logs()).toBe(200);
+  const earlier = (await older.json()) as { comments: { id: string }[]; nextBefore: string | null };
+  expect(earlier.comments).toHaveLength(1);
+  expect(earlier.nextBefore).toBeNull();
+  expect(new Set([...page.comments, ...earlier.comments].map((item) => item.id)).size).toBe(51);
+});
+
 it('keeps review, payment and activation on a corrected unpaid invoice', async () => {
   const order = await submittedOrder();
   await http.pool.query(

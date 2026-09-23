@@ -8,6 +8,7 @@ import { withCsrf } from '../lib/csrf.js';
 import { ElectricityIncreasePanel } from './ElectricityIncreasePanel.js';
 import { ElectricityPriceAdjustmentsPanel } from './ElectricityPriceAdjustmentsPanel.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
+import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
 
 interface ElectricityOrderDetail {
   orderId: string;
@@ -422,6 +423,11 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             <ElectricityIncreasePanel contractId={detail.contractId} versionId={detail.versionId} />
           ) : null}
           <ElectricityPriceAdjustmentsPanel contractId={detail.contractId} />
+          <Card>
+            <CardContent className="pt-6">
+              <ElectricityOrderComments orderId={orderId} />
+            </CardContent>
+          </Card>
           <Card>
             <CardContent className="space-y-3 pt-6 text-sm">
               <h2 className="font-semibold">{t('electricity.order.detail.timeline', locale)}</h2>

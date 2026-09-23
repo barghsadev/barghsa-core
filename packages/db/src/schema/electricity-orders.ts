@@ -98,6 +98,32 @@ export const electricityOrders = pgTable(
 export type ElectricityOrder = typeof electricityOrders.$inferSelect;
 export type NewElectricityOrder = typeof electricityOrders.$inferInsert;
 
+/** Public replies and staff-only notes on submitted electricity orders. */
+export const electricityOrderComments = pgTable(
+  'electricity_order_comments',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => electricityOrders.id, { onDelete: 'restrict' }),
+    authorUserId: text('author_user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    visibility: text('visibility', { enum: ['public', 'internal'] }).notNull(),
+    body: text('body').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('electricity_order_comments_order_idx').on(table.orderId, table.createdAt, table.id),
+    index('electricity_order_comments_recent_idx').on(table.createdAt.desc(), table.id.desc()),
+    check(
+      'electricity_order_comments_visibility',
+      sql`${table.visibility} IN ('public','internal')`
+    ),
+    check('electricity_order_comments_body', sql`length(trim(${table.body})) BETWEEN 1 AND 10000`),
+  ]
+);
+
 /** Frozen order composition; a zero-quantity product has no line. */
 export const electricityOrderLines = pgTable(
   'electricity_order_lines',

@@ -57,6 +57,17 @@ export class ElectricityStaffReviewController {
     return this.service.queue(after);
   }
 
+  @Get('conversations')
+  @RateLimit({ namespace: 'electricity:staff-conversations:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Recent electricity orders with customer or staff comments' })
+  @ApiQuery({ name: 'after', required: false, format: 'uuid' })
+  conversations(@Req() req: AuthenticatedRequest, @Query('after') after?: string) {
+    this.requirePermission(req, false);
+    if (after && !z.string().uuid().safeParse(after).success)
+      throw new HttpException({ error: 'VALIDATION:INVALID_CURSOR' }, 400);
+    return this.service.conversations(after);
+  }
+
   @Get(':id')
   @RateLimit({ namespace: 'electricity:staff-detail:user', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'Electricity order, contract and price snapshot for staff review' })

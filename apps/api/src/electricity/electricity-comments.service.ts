@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
@@ -10,8 +10,8 @@ import { requireCurrentSession, requireSessionStepUp } from '../session/session-
 import type { ValidatedSession } from '../session/session.service.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
+type Visibility = 'public' | 'internal';
 interface OrderRow {
-  id: string;
   profile_id: string;
   customer_id: string;
 }
@@ -21,15 +21,17 @@ interface CommentRow {
   author_user_id: string;
   author_name: string;
   author_is_staff: boolean;
+  visibility: Visibility;
   body: string;
   created_at: Date;
 }
+
 const commentQuery = `SELECT c.id,c.order_id,c.author_user_id,u.username AS author_name,
-  u.is_staff AS author_is_staff,c.body,c.created_at
-  FROM saving_order_comments c JOIN users u ON u.user_id=c.author_user_id`;
+  u.is_staff AS author_is_staff,c.visibility,c.body,c.created_at
+  FROM electricity_order_comments c JOIN users u ON u.user_id=c.author_user_id`;
 
 @Injectable()
-export class SavingCommentsService {
+export class ElectricityCommentsService {
   constructor(private readonly orders: OrdersService) {}
 
   private async access<T>(
@@ -43,19 +45,26 @@ export class SavingCommentsService {
     try {
       await client.query('BEGIN');
       if (staff) {
-        await requireStaffMutationPermission(
-          client,
-          actor.userId,
-          write ? 'contracts:write' : 'contracts:read'
-        );
+        if (write) {
+          await requireStaffMutationPermission(client, actor.userId, 'contracts:write');
+        } else {
+          try {
+            await requireStaffMutationPermission(client, actor.userId, 'contracts:read');
+          } catch (error) {
+            if (!(error instanceof HttpException) || error.getStatus() !== 403) throw error;
+            await requireStaffMutationPermission(client, actor.userId, 'contracts:write');
+          }
+        }
         if (write) await requireSessionStepUp(client, actor);
         else await requireCurrentSession(client, actor);
-      } else if (write) await this.orders.lockOrderActor(client, actor);
-      else await requireCurrentSession(client, actor);
+      } else {
+        await this.orders.lockOrderActor(client, actor);
+      }
       const order = (
         await client.query<OrderRow>(
-          `SELECT s.id,s.profile_id,p.user_id AS customer_id FROM saving_orders s
-         JOIN profiles p ON p.id=s.profile_id WHERE s.id=$1`,
+          `SELECT e.profile_id,p.user_id AS customer_id FROM electricity_orders e
+           JOIN profiles p ON p.id=e.profile_id
+           WHERE e.id=$1 AND e.submitted_at IS NOT NULL FOR SHARE OF e,p`,
           [id]
         )
       ).rows[0];
@@ -63,7 +72,7 @@ export class SavingCommentsService {
         !order ||
         (!staff && !(await this.orders.mayManageOrders(client, actor.userId, order.profile_id)))
       )
-        throw new NotFoundException('Saving order not found');
+        throw new NotFoundException('Electricity order not found');
       const result = await work(client, order);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
@@ -83,6 +92,7 @@ export class SavingCommentsService {
       authorUserId: row.author_user_id,
       authorName: row.author_name,
       authorRole: row.author_is_staff ? 'staff' : 'customer',
+      visibility: row.visibility,
       body: row.body,
       createdAt: row.created_at.toISOString(),
     };
@@ -93,18 +103,19 @@ export class SavingCommentsService {
       const cursor = before
         ? (
             await client.query<{ created_at: string }>(
-              'SELECT created_at::text AS created_at FROM saving_order_comments WHERE id=$1 AND order_id=$2',
-              [before, id]
+              `SELECT created_at::text AS created_at FROM electricity_order_comments
+               WHERE id=$1 AND order_id=$2 AND ($3::boolean OR visibility='public')`,
+              [before, id, staff]
             )
           ).rows[0]
         : null;
       if (before && !cursor) throw new NotFoundException('Comment cursor not found');
       const rows = (
         await client.query<CommentRow>(
-          `${commentQuery} WHERE c.order_id=$1 AND ($2::timestamptz IS NULL OR
-          (c.created_at,c.id)<($2::timestamptz,$3::uuid))
-         ORDER BY c.created_at DESC,c.id DESC LIMIT 51`,
-          [id, cursor?.created_at ?? null, before ?? null]
+          `${commentQuery} WHERE c.order_id=$1 AND ($2::boolean OR c.visibility='public')
+           AND ($3::timestamptz IS NULL OR (c.created_at,c.id)<($3::timestamptz,$4::uuid))
+           ORDER BY c.created_at DESC,c.id DESC LIMIT 51`,
+          [id, staff, cursor?.created_at ?? null, before ?? null]
         )
       ).rows;
       return {
@@ -121,47 +132,53 @@ export class SavingCommentsService {
     id: string,
     actor: Actor,
     staff: boolean,
-    input: { idempotencyKey: string; body: string },
+    input: { idempotencyKey: string; body: string; visibility: Visibility },
     ip: string
   ) {
     return this.access(id, actor, staff, true, (client, order) =>
-      idempotentMutation(client, 'saving_order_comment', { ...input, id }, actor, async () => {
+      idempotentMutation(client, 'electricity_order_comment', { ...input, id }, actor, async () => {
         const row = (
           await client.query<CommentRow>(
             `WITH inserted AS (
-            INSERT INTO saving_order_comments(id,order_id,author_user_id,body)
-            VALUES($1,$2,$3,$4) RETURNING *
-          ) SELECT c.id,c.order_id,c.author_user_id,u.username AS author_name,
-            u.is_staff AS author_is_staff,c.body,c.created_at
-            FROM inserted c JOIN users u ON u.user_id=c.author_user_id`,
-            [uuidv7(), id, actor.userId, input.body.trim()]
+              INSERT INTO electricity_order_comments(id,order_id,author_user_id,visibility,body)
+              VALUES($1,$2,$3,$4,$5) RETURNING *
+            ) SELECT c.id,c.order_id,c.author_user_id,u.username AS author_name,
+              u.is_staff AS author_is_staff,c.visibility,c.body,c.created_at
+              FROM inserted c JOIN users u ON u.user_id=c.author_user_id`,
+            [uuidv7(), id, actor.userId, input.visibility, input.body.trim()]
           )
         ).rows[0]!;
         await client.query(
           `INSERT INTO audit_log(id,user_id,event,metadata)
-           VALUES($1,$2,'saving.order_comment_added',$3::jsonb)`,
+           VALUES($1,$2,'electricity.order_comment_added',$3::jsonb)`,
           [
             uuidv7(),
             actor.userId,
-            JSON.stringify({ savingOrderId: id, commentId: row.id, staff, ip }),
+            JSON.stringify({
+              electricityOrderId: id,
+              commentId: row.id,
+              staff,
+              visibility: row.visibility,
+              ip,
+            }),
           ]
         );
-        if (staff && order.customer_id !== actor.userId)
+        if (staff && input.visibility === 'public' && order.customer_id !== actor.userId)
           await new NotificationsService().create(
             {
               userId: order.customer_id,
               profileId: order.profile_id,
               type: 'general',
-              title: 'Saving order reply',
-              link: `/savings/orders/${id}`,
+              title: 'Electricity order reply',
+              link: `/electricity/orders/${id}`,
               localizedContent: {
                 fa: {
-                  title: 'پاسخ به سفارش صرفه‌جویی',
-                  body: 'کارشناس به سفارش صرفه‌جویی شما پاسخ داد.',
+                  title: 'پاسخ به سفارش برق',
+                  body: 'کارشناس به سفارش برق شما پاسخ داد.',
                 },
                 en: {
-                  title: 'Saving order reply',
-                  body: 'A staff member replied to your power-saving order.',
+                  title: 'Electricity order reply',
+                  body: 'A staff member replied to your electricity order.',
                 },
               },
             },

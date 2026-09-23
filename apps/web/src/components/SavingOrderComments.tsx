@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Textarea } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
+import { t } from '@barghsa/i18n/app';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 
@@ -8,6 +9,7 @@ interface Comment {
   id: string;
   authorName: string;
   authorRole: 'staff' | 'customer';
+  visibility?: 'public' | 'internal';
   body: string;
   createdAt: string;
 }
@@ -15,21 +17,25 @@ interface Page {
   comments: Comment[];
   nextBefore: string | null;
 }
-export function SavingOrderComments({
+function OrderComments({
   orderId,
   staff = false,
+  kind,
 }: {
   orderId: string;
   staff?: boolean;
+  kind: 'saving' | 'electricity';
 }) {
   const locale = useLocale();
-  const copy = (key: string) => tSaving(key, locale);
+  const copy = (key: string) =>
+    kind === 'saving' ? tSaving(key, locale) : t(`electricity.comments.${key}`, locale);
   const base = staff
-    ? `/api/staff/saving/orders/${encodeURIComponent(orderId)}/comments`
-    : `/api/saving/orders/${encodeURIComponent(orderId)}/comments`;
+    ? `/api/staff/${kind}/orders/${encodeURIComponent(orderId)}/comments`
+    : `/api/${kind}/orders/${encodeURIComponent(orderId)}/comments`;
   const [comments, setComments] = useState<Comment[]>([]);
   const [before, setBefore] = useState<string | null>(null);
   const [note, setNote] = useState('');
+  const [visibility, setVisibility] = useState<'public' | 'internal' | ''>('');
   const [action, setAction] = useState<TeamAction | null>(null);
   const [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -46,7 +52,9 @@ export function SavingOrderComments({
     })
       .then(async (response) => {
         if (!response.ok) throw new Error('comments');
-        return response.json() as Promise<Page>;
+        const page = (await response.json()) as Page;
+        if (!Array.isArray(page.comments)) throw new Error('comments');
+        return page;
       })
       .then((page) => {
         if (controller.signal.aborted) return;
@@ -63,13 +71,17 @@ export function SavingOrderComments({
   }, [base, cursor, revision]);
 
   function send() {
-    if (!note.trim()) return;
+    if (!note.trim() || (kind === 'electricity' && staff && !visibility)) return;
     setAction({
       title: copy('sendComment'),
       description: copy('confirmComment'),
       path: base,
       method: 'POST',
-      body: { idempotencyKey: crypto.randomUUID(), body: note.trim() },
+      body: {
+        idempotencyKey: crypto.randomUUID(),
+        body: note.trim(),
+        ...(kind === 'electricity' && staff ? { visibility } : {}),
+      },
       conflictMessage: copy('staffConflict'),
       forbiddenMessage: copy('staffForbidden'),
     });
@@ -94,6 +106,9 @@ export function SavingOrderComments({
             <div className="flex flex-wrap justify-between gap-2 text-sm">
               <strong>
                 {comment.authorName} · {copy(comment.authorRole)}
+                {kind === 'electricity' && comment.visibility === 'internal'
+                  ? ` · ${copy('internal')}`
+                  : null}
               </strong>
               <time dateTime={comment.createdAt} className="text-muted-foreground">
                 {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
@@ -107,16 +122,33 @@ export function SavingOrderComments({
         ))}
       </ol>
       <div className="space-y-2">
-        <label htmlFor={`saving-comment-${staff ? 'staff' : 'customer'}`} className="font-medium">
+        <label htmlFor={`${kind}-comment-${staff ? 'staff' : 'customer'}`} className="font-medium">
           {copy('writeComment')}
         </label>
         <Textarea
-          id={`saving-comment-${staff ? 'staff' : 'customer'}`}
+          id={`${kind}-comment-${staff ? 'staff' : 'customer'}`}
           value={note}
           maxLength={10000}
           onChange={(event) => setNote(event.target.value)}
         />
-        <Button disabled={!note.trim()} onClick={send}>
+        {kind === 'electricity' && staff ? (
+          <label className="flex items-center gap-2 text-sm">
+            <span>{copy('visibility')}</span>
+            <select
+              className="rounded border border-input bg-background p-2"
+              value={visibility}
+              onChange={(event) => setVisibility(event.target.value as 'public' | 'internal' | '')}
+            >
+              <option value="">{copy('chooseVisibility')}</option>
+              <option value="public">{copy('public')}</option>
+              <option value="internal">{copy('internal')}</option>
+            </select>
+          </label>
+        ) : null}
+        <Button
+          disabled={!note.trim() || (kind === 'electricity' && staff && !visibility)}
+          onClick={send}
+        >
           {copy('sendComment')}
         </Button>
       </div>
@@ -126,6 +158,7 @@ export function SavingOrderComments({
           onClose={() => setAction(null)}
           onSuccess={async () => {
             setNote('');
+            setVisibility('');
             setCursor(null);
             setRevision((n) => n + 1);
           }}
@@ -133,4 +166,12 @@ export function SavingOrderComments({
       )}
     </section>
   );
+}
+
+export function SavingOrderComments(props: { orderId: string; staff?: boolean }) {
+  return <OrderComments {...props} kind="saving" />;
+}
+
+export function ElectricityOrderComments(props: { orderId: string; staff?: boolean }) {
+  return <OrderComments {...props} kind="electricity" />;
 }

@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Electricity order conversations](batches/2026-09-24-electricity-order-conversations.md) adds customer/staff comments, private staff notes and a post-review conversation queue. It also fixes microsecond cursor pagination for electricity and saving comments.
+
 [Dashboard open-ticket list](batches/2026-09-24-dashboard-open-tickets.md) completes the dashboard status-card navigation. It counts the signed-in user's non-terminal tickets on the active profile and opens a matching pre-paginated ticket list with a return to all tickets.
 
 [Dashboard contract and invoice filters](batches/2026-09-24-dashboard-contract-invoice-filters.md) makes the active-contract and unpaid-invoice cards open matching profile-scoped lists.

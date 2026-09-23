@@ -4,6 +4,7 @@ import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
 
 interface ReviewOrder {
   orderId: string;
@@ -24,6 +25,7 @@ interface ReviewOrder {
   paidIrR: string;
   ageHours?: number;
   priority?: string;
+  latestCommentAt?: string;
 }
 
 type Decision = 'approve' | 'request-changes' | 'reject';
@@ -57,6 +59,7 @@ export default function AdminElectricityOrdersPage() {
   const [after, setAfter] = useState<string | null>(null);
   const [nextAfter, setNextAfter] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [queueView, setQueueView] = useState<'review' | 'conversations'>('review');
   const [detail, setDetail] = useState<ReviewOrder | null>(null);
   const [reason, setReason] = useState('');
   const [action, setAction] = useState<TeamAction | null>(null);
@@ -79,8 +82,8 @@ export default function AdminElectricityOrdersPage() {
     setError(false);
     setDenied(false);
     const url = after
-      ? `/api/staff/electricity/orders?after=${encodeURIComponent(after)}`
-      : '/api/staff/electricity/orders';
+      ? `/api/staff/electricity/orders${queueView === 'conversations' ? '/conversations' : ''}?after=${encodeURIComponent(after)}`
+      : `/api/staff/electricity/orders${queueView === 'conversations' ? '/conversations' : ''}`;
     void fetch(url, {
       credentials: 'include',
       signal: controller.signal,
@@ -115,7 +118,7 @@ export default function AdminElectricityOrdersPage() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [after, revision]);
+  }, [after, revision, queueView]);
 
   useEffect(() => {
     if (!selectedId) {
@@ -169,12 +172,37 @@ export default function AdminElectricityOrdersPage() {
           {copy('refresh')}
         </Button>
       </header>
+      <nav className="flex gap-2" aria-label={copy('views')}>
+        <Button
+          variant={queueView === 'review' ? 'secondary' : 'outline'}
+          onClick={() => {
+            setQueueView('review');
+            refreshQueue();
+          }}
+        >
+          {copy('reviewView')}
+        </Button>
+        <Button
+          variant={queueView === 'conversations' ? 'secondary' : 'outline'}
+          onClick={() => {
+            setQueueView('conversations');
+            refreshQueue();
+          }}
+        >
+          {copy('conversationView')}
+        </Button>
+      </nav>
       {loading ? <p role="status">{copy('loading')}</p> : null}
       {denied ? <p role="alert">{copy('forbidden')}</p> : null}
       {error ? <p role="alert">{copy('error')}</p> : null}
-      {!loading && !denied && !error && orders.length === 0 ? <p>{copy('empty')}</p> : null}
+      {!loading && !denied && !error && orders.length === 0 ? (
+        <p>{copy(queueView === 'conversations' ? 'emptyConversations' : 'empty')}</p>
+      ) : null}
       <div className="grid gap-5 xl:grid-cols-[minmax(16rem,1fr)_minmax(24rem,2fr)]">
-        <div className="space-y-3" aria-label={copy('queue')}>
+        <div
+          className="space-y-3"
+          aria-label={copy(queueView === 'conversations' ? 'conversationView' : 'queue')}
+        >
           {orders.map((order) => (
             <Button
               key={order.orderId}
@@ -189,8 +217,9 @@ export default function AdminElectricityOrdersPage() {
                 <strong className="block">{order.customerName}</strong>
                 <span className="block text-xs">{order.orderId}</span>
                 <span className="block text-xs">
-                  {copy(`priority.${order.priority ?? 'normal'}`)} ·{' '}
-                  {numbers.number(order.ageHours ?? 0)} {copy('hours')}
+                  {queueView === 'conversations' && order.latestCommentAt
+                    ? new Date(order.latestCommentAt).toLocaleString(locale)
+                    : `${copy(`priority.${order.priority ?? 'normal'}`)} · ${numbers.number(order.ageHours ?? 0)} ${copy('hours')}`}
                 </span>
               </span>
             </Button>
@@ -293,6 +322,7 @@ export default function AdminElectricityOrdersPage() {
                   {JSON.stringify(detail.contractSnapshot, null, 2)}
                 </pre>
               </details>
+              <ElectricityOrderComments key={detail.orderId} orderId={detail.orderId} staff />
               {detail.commercialStatus === 'awaiting_staff_review' ? (
                 <div className="space-y-3 border-t pt-4">
                   <div className="space-y-1">

@@ -412,6 +412,25 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       )
     ).rowCount
   ).toBe(1);
+  await http.pool.query(
+    `INSERT INTO saving_order_comments(id,order_id,author_user_id,body)
+     SELECT uuid_generate_v7(),$1,'saving-order-buyer','Follow-up ' || n
+     FROM generate_series(1,49) AS n`,
+    [result.savingOrderId]
+  );
+  const recentComments = await request(commentsPath, 'GET');
+  const recentPage = (await recentComments.json()) as {
+    comments: { id: string }[];
+    nextBefore: string | null;
+  };
+  expect(recentPage.comments).toHaveLength(50);
+  expect(recentPage.nextBefore).not.toBeNull();
+  const earlierComments = await request(`${commentsPath}?before=${recentPage.nextBefore}`, 'GET');
+  const earlierPage = (await earlierComments.json()) as { comments: { id: string }[] };
+  expect(earlierPage.comments).toHaveLength(1);
+  expect(
+    new Set([...recentPage.comments, ...earlierPage.comments].map((item) => item.id)).size
+  ).toBe(51);
   await expect(
     http.pool.query('UPDATE saving_order_comments SET body=$1 WHERE order_id=$2', [
       'silently changed',

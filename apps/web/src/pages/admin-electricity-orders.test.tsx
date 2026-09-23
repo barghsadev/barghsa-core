@@ -44,14 +44,33 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     async (url: string) =>
       new Response(
         JSON.stringify(
-          url.endsWith('/order-1')
-            ? order
-            : url.includes('?after=')
-              ? {
-                  orders: [{ ...order, orderId: 'order-2', customerName: 'Later Buyer' }],
-                  nextAfter: null,
-                }
-              : { orders: [order], nextAfter: 'order-1' }
+          url.includes('/comments')
+            ? {
+                comments: [
+                  {
+                    id: 'comment-1',
+                    authorName: 'Electricity Buyer',
+                    authorRole: 'customer',
+                    visibility: 'public',
+                    body: 'Please confirm delivery.',
+                    createdAt: '2026-09-23T00:00:00Z',
+                  },
+                ],
+                nextBefore: null,
+              }
+            : url.endsWith('/order-1')
+              ? order
+              : url.includes('/conversations')
+                ? {
+                    orders: [{ ...order, latestCommentAt: '2026-09-23T00:00:00Z' }],
+                    nextAfter: null,
+                  }
+                : url.includes('?after=')
+                  ? {
+                      orders: [{ ...order, orderId: 'order-2', customerName: 'Later Buyer' }],
+                      nextAfter: null,
+                    }
+                  : { orders: [order], nextAfter: 'order-1' }
         ),
         { headers: { 'Content-Type': 'application/json' } }
       )
@@ -87,6 +106,27 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     );
     expect(container.textContent).toContain('Electricity Buyer');
     expect(container.textContent).toContain('Later Buyer');
+    const conversations = [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === 'Order conversations'
+    );
+    expect(conversations).toBeDefined();
+    await act(async () => conversations!.click());
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/staff/electricity/orders/conversations',
+      expect.any(Object)
+    );
+    const conversationOrder = [...container.querySelectorAll('button')].find((button) =>
+      button.textContent?.includes('Electricity Buyer')
+    );
+    await act(async () => conversationOrder!.click());
+    expect(container.textContent).toContain('Please confirm delivery.');
+    expect(container.textContent).toContain('Visible to');
+    expect(container.querySelector('select')?.value).toBe('');
+    expect(
+      [...container.querySelectorAll('button')].find(
+        (button) => button.textContent === 'Send message'
+      )?.disabled
+    ).toBe(true);
   } finally {
     await act(async () => root.unmount());
     container.remove();

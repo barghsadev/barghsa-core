@@ -17336,6 +17336,87 @@
         ]
       }
     },
+    "/api/electricity/orders/{orderId}/comments": {
+      "get": {
+        "operationId": "ElectricityCommentsController_list",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "List customer-visible electricity order comments",
+        "tags": [
+          "Electricity order comments"
+        ]
+      },
+      "post": {
+        "operationId": "ElectricityCommentsController_add",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "maxLength": 10000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Add an append-only comment to an electricity order",
+        "tags": [
+          "Electricity order comments"
+        ]
+      }
+    },
     "/api/electricity/orders/{orderId}/resubmit-address": {
       "post": {
         "operationId": "ElectricityOrderController_resubmitAddress",
@@ -21388,6 +21469,31 @@
         ]
       }
     },
+    "/api/staff/electricity/orders/conversations": {
+      "get": {
+        "operationId": "ElectricityStaffReviewController_conversations",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Recent electricity orders with customer or staff comments",
+        "tags": [
+          "Staff · Electricity orders"
+        ]
+      }
+    },
     "/api/staff/electricity/orders/{id}": {
       "get": {
         "operationId": "ElectricityStaffReviewController_detail",
@@ -21574,6 +21680,95 @@
         "summary": "Request changes to an electricity order with a reason",
         "tags": [
           "Staff · Electricity orders"
+        ]
+      }
+    },
+    "/api/staff/electricity/orders/{orderId}/comments": {
+      "get": {
+        "operationId": "StaffElectricityCommentsController_list",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "List public replies and internal electricity order notes",
+        "tags": [
+          "Staff · Electricity order comments"
+        ]
+      },
+      "post": {
+        "operationId": "StaffElectricityCommentsController_add",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "maxLength": 10000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "visibility": {
+                    "enum": [
+                      "public",
+                      "internal"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "body",
+                  "visibility"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Add a public reply or internal note to an electricity order",
+        "tags": [
+          "Staff · Electricity order comments"
         ]
       }
     },

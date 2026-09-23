@@ -170,6 +170,45 @@ export class ElectricityStaffReviewService {
     };
   }
 
+  /** Keep replied-to orders reachable after they leave the review queue. */
+  async conversations(after?: string) {
+    const cursor = after
+      ? (
+          await getDbPool().query<{ created_at: string; id: string }>(
+            `SELECT created_at::text AS created_at,id FROM electricity_order_comments WHERE id=$1`,
+            [after]
+          )
+        ).rows[0]
+      : undefined;
+    if (after && !cursor) throw new NotFoundException('Comment cursor not found');
+    const recent = (
+      await getDbPool().query<{ order_id: string; id: string; created_at: Date }>(
+        `SELECT order_id,id,created_at FROM (
+           SELECT DISTINCT ON (order_id) order_id,id,created_at
+           FROM electricity_order_comments ORDER BY order_id,created_at DESC,id DESC
+         ) latest
+         WHERE ($1::timestamptz IS NULL OR (created_at,id)<($1::timestamptz,$2::uuid))
+         ORDER BY created_at DESC,id DESC LIMIT 51`,
+        [cursor?.created_at ?? null, cursor?.id ?? null]
+      )
+    ).rows;
+    const page = recent.slice(0, 50);
+    if (!page.length) return { orders: [], nextAfter: null };
+    const rows = (
+      await getDbPool().query<ReviewRow>(`${reviewQuery} WHERE o.id=ANY($1::uuid[])`, [
+        page.map((row) => row.order_id),
+      ])
+    ).rows;
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    return {
+      orders: page.flatMap((comment) => {
+        const row = byId.get(comment.order_id);
+        return row ? [{ ...present(row), latestCommentAt: comment.created_at.toISOString() }] : [];
+      }),
+      nextAfter: recent.length > 50 ? page[49]!.id : null,
+    };
+  }
+
   async detail(id: string) {
     const row = (await getDbPool().query<ReviewRow>(`${reviewQuery} WHERE o.id=$1`, [id])).rows[0];
     if (!row) throw new NotFoundException('Electricity order not found');
