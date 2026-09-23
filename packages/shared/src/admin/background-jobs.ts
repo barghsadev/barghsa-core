@@ -41,6 +41,7 @@ export function isBackgroundJobStatus(raw: unknown): raw is BackgroundJobStatus 
 export const BACKGROUND_JOB_TYPES = [
   { key: 'contract_completion', label: 'Contract term completion' },
   { key: 'contract_activation', label: 'Contract activation' },
+  { key: 'electricity_increase_activation', label: 'Electricity increase activation' },
   { key: 'refund_retry', label: 'Wallet refund retries' },
   { key: 'ai_model_test', label: 'AI model connection tests' },
   { key: 'storage_cleanup', label: 'Storage deletion requests' },

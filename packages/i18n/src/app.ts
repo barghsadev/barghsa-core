@@ -18,11 +18,20 @@ export const fa: I18nDictionary = {
     'مبلغ تعدیل پس از امضا بر پایه ارزش خالص فاکتور پرداخت‌شده اولیه و نسبت دوره تحویل باقی‌مانده محاسبه می‌شود.',
   'electricity.increase.activationRule':
     'افزایش مقدار فقط پس از امضای شما و پرداخت کامل فاکتور تعدیل و زودتر نبودن از تاریخ شروع اعمال می‌شود.',
+  'electricity.increase.adjustment': 'مبلغ فاکتور تعدیل در زمان امضا',
+  'electricity.increase.agree': 'الحاقیه، مبلغ تعدیل و شرایط اعمال افزایش را بررسی و قبول می‌کنم.',
+  'electricity.increase.sign': 'امضای الحاقیه و صدور فاکتور',
+  'electricity.increase.payInvoice': 'مشاهده یا پرداخت فاکتور تعدیل',
+  'electricity.increase.signFailed':
+    'امضای الحاقیه انجام نشد. مبلغ و وضعیت قرارداد را دوباره بررسی کنید.',
+  'electricity.increase.currentQuantity': 'مقدار فعلی قرارداد پس از الحاقیه',
   'electricity.increase.status.pending': 'در انتظار بررسی کارکنان',
   'electricity.increase.status.rejected': 'درخواست رد شد',
   'electricity.increase.status.approved': 'درخواست تأیید شد',
   'electricity.increase.status.awaiting_signature': 'در انتظار امضای الحاقیه',
   'electricity.increase.status.awaiting_payment': 'در انتظار پرداخت تعدیل',
+  'electricity.increase.status.awaiting_effective_date':
+    'پرداخت کامل شد؛ در انتظار تاریخ شروع الحاقیه',
   'electricity.increase.status.effective': 'افزایش اعمال شد',
   'electricity.increase.status.expired': 'درخواست منقضی شد',
   'electricity.increase.limit': 'حداکثر مقدار مجاز',
@@ -1096,11 +1105,21 @@ export const en: I18nDictionary = {
     'The adjustment is calculated after signature from the original paid invoice’s net value and the remaining eligible delivery period.',
   'electricity.increase.activationRule':
     'The increase takes effect only after your signature and full adjustment payment, no earlier than its start date.',
+  'electricity.increase.adjustment': 'Adjustment invoice amount at signature',
+  'electricity.increase.agree':
+    'I have reviewed and accept the amendment, adjustment amount, and activation terms.',
+  'electricity.increase.sign': 'Sign amendment and issue invoice',
+  'electricity.increase.payInvoice': 'View or pay adjustment invoice',
+  'electricity.increase.signFailed':
+    'Could not sign the amendment. Review the amount and contract status again.',
+  'electricity.increase.currentQuantity': 'Current contractual quantity after amendment',
   'electricity.increase.status.pending': 'Awaiting staff review',
   'electricity.increase.status.rejected': 'Request declined',
   'electricity.increase.status.approved': 'Request approved',
   'electricity.increase.status.awaiting_signature': 'Awaiting amendment signature',
   'electricity.increase.status.awaiting_payment': 'Awaiting adjustment payment',
+  'electricity.increase.status.awaiting_effective_date':
+    'Payment complete; awaiting amendment start date',
   'electricity.increase.status.effective': 'Increase effective',
   'electricity.increase.status.expired': 'Request expired',
   'electricity.increase.limit': 'Maximum allowed total',

@@ -16,6 +16,7 @@ interface ElectricityOrderDetail {
   periodStart: string;
   periodEnd: string;
   totalKwh: string;
+  effectiveTotalKwh?: string;
   fullAddress: string;
   postalCode: string;
   contractId: string;
@@ -276,6 +277,12 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                 <span>{t('electricity.order.quantity', locale)}</span>
                 <span>{detail.totalKwh} kWh</span>
               </p>
+              {detail.effectiveTotalKwh && detail.effectiveTotalKwh !== detail.totalKwh ? (
+                <p className="flex justify-between gap-3 font-medium">
+                  <span>{t('electricity.increase.currentQuantity', locale)}</span>
+                  <span>{numbers.irrDigits(detail.effectiveTotalKwh)} kWh</span>
+                </p>
+              ) : null}
               <p className="flex justify-between gap-3">
                 <span>{t('electricity.order.total', locale)}</span>
                 <strong>{numbers.money(detail.totalIrR)}</strong>

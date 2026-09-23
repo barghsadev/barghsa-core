@@ -11,6 +11,9 @@ interface IncreaseRequest {
   reviewReason: string | null;
   createdAt: string;
   amendmentSha256: string | null;
+  adjustmentInvoiceId: string | null;
+  adjustmentAmount: string | null;
+  effectiveAt: string | null;
   amendmentDocument: {
     originalKwh: string;
     requestedKwh: string;
@@ -26,6 +29,7 @@ interface IncreaseState {
   maxPercentage: number;
   originalKwh: string;
   canRequest: boolean;
+  quote: { adjustmentIrR: string; eligibleFrom: string } | null;
 }
 
 export function ElectricityIncreasePanel({
@@ -44,6 +48,8 @@ export function ElectricityIncreasePanel({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<'load' | 'stepup' | 'save' | null>(null);
   const [key, setKey] = useState(() => crypto.randomUUID());
+  const [signKey, setSignKey] = useState(() => crypto.randomUUID());
+  const [agreed, setAgreed] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -116,6 +122,39 @@ export function ElectricityIncreasePanel({
     }
   }
 
+  async function sign() {
+    if (!data?.request?.amendmentSha256 || !data.quote || !agreed || saving) return;
+    setSaving(true);
+    setError(null);
+    try {
+      const response = await fetch(
+        `/api/electricity/contracts/${encodeURIComponent(contractId)}/increase/sign`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({
+            expectedAmendmentSha256: data.request.amendmentSha256,
+            expectedAdjustmentIrR: data.quote.adjustmentIrR,
+            idempotencyKey: signKey,
+          }),
+        }
+      );
+      if (response.status === 403) {
+        setError('stepup');
+        return;
+      }
+      if (!response.ok) throw new Error('Signature unavailable');
+      setSignKey(crypto.randomUUID());
+      setAgreed(false);
+      setRetry((value) => value + 1);
+    } catch {
+      setError('save');
+    } finally {
+      setSaving(false);
+    }
+  }
+
   if (!loading && !error && data && !data.canRequest && !data.request) return null;
   return (
     <Card>
@@ -165,6 +204,55 @@ export function ElectricityIncreasePanel({
                   SHA-256: {data.request.amendmentSha256}
                 </p>
               </section>
+            ) : null}
+            {data.request.status === 'awaiting_signature' && data.quote ? (
+              <div className="space-y-3">
+                <p>
+                  {t('electricity.increase.adjustment', locale)}:{' '}
+                  {numbers.irrDigits(data.quote.adjustmentIrR)} IRR
+                </p>
+                <label className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    checked={agreed}
+                    onChange={(event) => setAgreed(event.target.checked)}
+                  />
+                  <span>{t('electricity.increase.agree', locale)}</span>
+                </label>
+                <Button type="button" disabled={!agreed || saving} onClick={() => void sign()}>
+                  {t('electricity.increase.sign', locale)}
+                </Button>
+              </div>
+            ) : null}
+            {data.request.adjustmentInvoiceId ? (
+              <p>
+                <a
+                  className="text-primary underline"
+                  href={`/invoices/${encodeURIComponent(data.request.adjustmentInvoiceId)}`}
+                >
+                  {t('electricity.increase.payInvoice', locale)}
+                </a>
+              </p>
+            ) : null}
+            {error === 'stepup' ? (
+              <p role="alert">
+                {t('electricity.increase.stepup', locale)}{' '}
+                <a className="underline" href="/settings/security">
+                  {t('electricity.increase.security', locale)}
+                </a>
+              </p>
+            ) : null}
+            {error === 'save' ? (
+              <p role="alert">
+                {t('electricity.increase.signFailed', locale)}{' '}
+                <button
+                  type="button"
+                  className="underline"
+                  onClick={() => setRetry((value) => value + 1)}
+                >
+                  {t('electricity.increase.retry', locale)}
+                </button>
+              </p>
             ) : null}
           </div>
         ) : null}

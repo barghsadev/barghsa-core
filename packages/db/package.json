@@ -17,7 +17,8 @@
     "./wallet-credit": "./dist/wallet-credit.js",
     "./refund-processing": "./dist/refund-processing.js",
     "./contract-activation": "./dist/contract-activation.js",
-    "./contract-completion": "./dist/contract-completion.js"
+    "./contract-completion": "./dist/contract-completion.js",
+    "./electricity-increase-activation": "./dist/electricity-increase-activation.js"
   },
   "scripts": {
     "build": "tsc -b",

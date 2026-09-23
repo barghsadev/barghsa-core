@@ -1,0 +1,11 @@
+# Electricity increase signature, adjustment and activation
+
+Canonical scope: the signature, financial adjustment and effective-state portion of `03-core-business.md#T-03.08.01.07` and `.08`. The customer reviews the immutable amendment and a live, original-invoice-based quote, confirms the hash and amount with step-up, and signs once. In the same transaction the API records signature evidence and a pricing snapshot, issues a linked charge adjustment invoice and audits/notifies the customer. The signed terms and invoice binding are database guarded. Existing paid invoice and order snapshots are not rewritten.
+
+The increase stays at its original contractual quantity until the adjustment invoice is fully paid and the earliest eligible date arrives. Payment invokes an atomic database transition when that date has arrived; the worker reconciles prepaid amendments every 30 seconds when their future date arrives. The transition writes its effective time, audit and customer notification. Order detail now distinguishes original ordered quantity from current effective contractual quantity. A payment attempted after the delivery period ends is rejected before funds are booked.
+
+The default paid-invoice proportional pricing rule uses the added quantity and remaining eligible term at signature. Zero or overflowing amounts cannot be signed. Delayed payment does not rewrite the signed price snapshot. Staff price adjustments remain separate. An unpaid amendment after the delivery period requires a later expiry/cancellation reconciliation; it cannot become effective or take a late payment through the guarded invoice transition.
+
+Validation: migrated HTTP journey for quote, hash and amount mismatch, signed amendment, linked invoice, unpaid gate, wallet payment, future-date activation, audit and effective order quantity; pure pricing tests; worker runner tests; UI signing test; typechecks/builds; lint; OpenAPI; database snapshot and backlog consistency.
+
+The broader route-budget check still reports five over-budget routes (Login, Register, Registration verification, Password recovery and Electricity ordering). The changed amendment/order-detail routes build and their related tests pass; the route-budget result remains an independent follow-up.

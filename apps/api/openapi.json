@@ -4801,6 +4801,7 @@
               "enum": [
                 "contract_completion",
                 "contract_activation",
+                "electricity_increase_activation",
                 "refund_retry",
                 "ai_model_test",
                 "storage_cleanup",
@@ -14209,6 +14210,66 @@
           }
         ],
         "summary": "Request a one-time future electricity quantity increase",
+        "tags": [
+          "Electricity contract changes"
+        ]
+      }
+    },
+    "/api/electricity/contracts/{id}/increase/sign": {
+      "post": {
+        "operationId": "CustomerElectricityIncreaseController_sign",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedAdjustmentIrR": {
+                    "pattern": "^[1-9]\\d*$",
+                    "type": "string"
+                  },
+                  "expectedAmendmentSha256": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedAmendmentSha256",
+                  "expectedAdjustmentIrR",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Sign the approved increase amendment and issue its adjustment invoice",
         "tags": [
           "Electricity contract changes"
         ]

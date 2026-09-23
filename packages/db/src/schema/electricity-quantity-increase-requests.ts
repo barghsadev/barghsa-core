@@ -14,6 +14,7 @@ import {
 import { timestamptz, uuidv7 } from '../types';
 import { contractVersions, contracts } from './contracts';
 import { electricityOrders } from './electricity-orders';
+import { invoices } from './invoices';
 import { profiles } from './profiles';
 import { users } from './users';
 
@@ -57,10 +58,19 @@ export const electricityQuantityIncreaseRequests = pgTable(
     reviewedAt: timestamptz('reviewed_at'),
     amendmentDocument: jsonb('amendment_document').$type<Record<string, unknown>>(),
     amendmentSha256: text('amendment_sha256'),
+    signatureEvidence: jsonb('signature_evidence').$type<Record<string, unknown>>(),
+    signedAt: timestamptz('signed_at'),
+    pricingSnapshot: jsonb('pricing_snapshot').$type<Record<string, unknown>>(),
+    adjustmentAmount: bigint('adjustment_amount', { mode: 'bigint' }),
+    adjustmentInvoiceId: uuid('adjustment_invoice_id').references(() => invoices.id, {
+      onDelete: 'restrict',
+    }),
+    effectiveAt: timestamptz('effective_at'),
     createdAt: timestamptz('created_at').defaultNow().notNull(),
   },
   (t) => [
     uniqueIndex('electricity_quantity_increase_requests_contract_id_key').on(t.contractId),
+    uniqueIndex('electricity_quantity_increase_invoice_id_key').on(t.adjustmentInvoiceId),
     foreignKey({
       name: 'electricity_quantity_increase_version_fk',
       columns: [t.contractId, t.versionId],
@@ -91,6 +101,10 @@ export const electricityQuantityIncreaseRequests = pgTable(
     check(
       'electricity_quantity_increase_amendment_check',
       sql`(${t.amendmentDocument} IS NULL AND ${t.amendmentSha256} IS NULL AND ${t.status} IN ('pending','rejected')) OR (${t.amendmentDocument} IS NOT NULL AND ${t.amendmentSha256} ~ '^[0-9a-f]{64}$' AND ${t.status} NOT IN ('pending','rejected'))`
+    ),
+    check(
+      'electricity_quantity_increase_signature_check',
+      sql`(${t.status} IN ('pending','rejected','awaiting_signature') AND ${t.signatureEvidence} IS NULL AND ${t.signedAt} IS NULL AND ${t.pricingSnapshot} IS NULL AND ${t.adjustmentAmount} IS NULL AND ${t.adjustmentInvoiceId} IS NULL AND ${t.effectiveAt} IS NULL) OR (${t.status} IN ('awaiting_payment','effective') AND ${t.signatureEvidence} IS NOT NULL AND ${t.signedAt} IS NOT NULL AND ${t.pricingSnapshot} IS NOT NULL AND ${t.adjustmentAmount}>0 AND ${t.adjustmentInvoiceId} IS NOT NULL)`
     ),
   ]
 );

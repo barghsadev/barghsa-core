@@ -17,6 +17,10 @@ import {
 } from '../contract/contract-transactions.js';
 import { notifyContractReview } from '../contract/contract-review-notifications.js';
 import { activeProfileSql } from '../profiles/profile-context.js';
+import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
+import { DueAtCalculationService } from '../invoice/due-at.service.js';
+import { calculateManualInvoice } from '../invoice/manual-invoice.calculation.js';
+import { buildManualInvoiceCalculationSnapshot } from '../invoice/invoice-calculation-snapshot.js';
 
 export const requestIncreaseSchema = z
   .object({
@@ -40,6 +44,13 @@ export const approveIncreaseSchema = z
     idempotencyKey: z.string().uuid(),
   })
   .strict();
+export const signIncreaseSchema = z
+  .object({
+    expectedAmendmentSha256: z.string().regex(/^[0-9a-f]{64}$/),
+    expectedAdjustmentIrR: z.string().regex(/^[1-9]\d*$/),
+    idempotencyKey: z.string().uuid(),
+  })
+  .strict();
 
 interface IncreaseContract {
   id: string;
@@ -56,12 +67,19 @@ const requestSelect = `SELECT r.id AS "requestId",r.contract_id AS "contractId",
  r.order_id AS "orderId",r.profile_id AS "profileId",r.version_id AS "versionId",
  r.original_kwh::text AS "originalKwh",r.requested_kwh::text AS "requestedKwh",
  r.max_percentage AS "maxPercentage",r.effective_from AS "effectiveFrom",
- r.period_end AS "periodEnd",r.status,r.review_reason AS "reviewReason",
+ r.period_end AS "periodEnd",
+ CASE WHEN r.status='awaiting_payment' AND ai.state='Paid'
+      THEN 'awaiting_effective_date' ELSE r.status END AS status,
+ r.review_reason AS "reviewReason",
  r.created_at AS "createdAt",r.reviewed_at AS "reviewedAt",
  r.reviewed_by AS "reviewedBy",r.requested_by AS "requestedBy",
  r.amendment_document AS "amendmentDocument",r.amendment_sha256 AS "amendmentSha256",
+ r.signature_evidence AS "signatureEvidence",r.signed_at AS "signedAt",
+ r.pricing_snapshot AS "pricingSnapshot",r.adjustment_amount::text AS "adjustmentAmount",
+ r.adjustment_invoice_id AS "adjustmentInvoiceId",r.effective_at AS "effectiveAt",
  c.state AS "contractState" FROM electricity_quantity_increase_requests r
- JOIN contracts c ON c.id=r.contract_id`;
+ JOIN contracts c ON c.id=r.contract_id
+ LEFT JOIN invoices ai ON ai.id=r.adjustment_invoice_id`;
 
 /** The cap is calculated with bigint so large metered quantities never lose precision. */
 export function validateIncreaseQuantity(original: bigint, requested: bigint, maxPercent: number) {
@@ -71,6 +89,37 @@ export function validateIncreaseQuantity(original: bigint, requested: bigint, ma
     requested <= 9_223_372_036_854_775_807n &&
     requested <= original + (original * BigInt(maxPercent)) / 100n
   );
+}
+
+export function quoteIncreaseAdjustment(input: {
+  originalInvoiceIrR: bigint;
+  originalKwh: bigint;
+  requestedKwh: bigint;
+  periodStart: Date;
+  periodEnd: Date;
+  effectiveFrom: Date;
+  now: Date;
+}) {
+  const eligibleStart = new Date(
+    Math.max(input.periodStart.getTime(), input.effectiveFrom.getTime(), input.now.getTime())
+  );
+  const remainingMs = BigInt(input.periodEnd.getTime() - eligibleStart.getTime());
+  const periodMs = BigInt(input.periodEnd.getTime() - input.periodStart.getTime());
+  if (
+    input.originalInvoiceIrR <= 0n ||
+    input.originalKwh <= 0n ||
+    input.requestedKwh <= input.originalKwh ||
+    periodMs <= 0n ||
+    remainingMs <= 0n
+  )
+    throw new ConflictException('No eligible future delivery remains');
+  const numerator =
+    input.originalInvoiceIrR * (input.requestedKwh - input.originalKwh) * remainingMs;
+  const denominator = input.originalKwh * periodMs;
+  const amount = (numerator + denominator / 2n) / denominator;
+  if (amount <= 0n || amount > 9_223_372_036_854_775_807n)
+    throw new ConflictException('Adjustment amount is outside the payable range');
+  return { amount, eligibleStart, remainingMs, periodMs };
 }
 
 function translateConcurrentChange(error: unknown): never {
@@ -83,6 +132,37 @@ function translateConcurrentChange(error: unknown): never {
 
 @Injectable()
 export class ElectricityIncreaseService {
+  constructor(
+    private readonly invoiceStates: InvoiceStateMachineService,
+    private readonly dueDates: DueAtCalculationService
+  ) {}
+
+  private async originalInvoice(client: PoolClient, versionId: string, lock = false) {
+    const row = (
+      await client.query<{
+        id: string;
+        state: string;
+        total_amount: string;
+        paid_amount: string;
+        refunded_amount: string;
+        metadata: Record<string, unknown> | null;
+      }>(
+        `SELECT i.id,i.state,i.total_amount::text,i.paid_amount::text,
+        i.refunded_amount::text,i.metadata FROM contract_activation_requirements r
+        JOIN invoices i ON i.id=r.initial_invoice_id
+        WHERE r.version_id=$1 ${lock ? 'FOR UPDATE OF i NOWAIT' : ''}`,
+        [versionId]
+      )
+    ).rows[0];
+    if (
+      !row ||
+      row.state !== 'Paid' ||
+      BigInt(row.paid_amount) < BigInt(row.total_amount) ||
+      BigInt(row.refunded_amount) !== 0n
+    )
+      throw new ConflictException('Original electricity invoice is not fully paid');
+    return row;
+  }
   private async contract(client: PoolClient, id: string, profileId: string, lock: boolean) {
     const row = (
       await client.query<IncreaseContract>(
@@ -118,11 +198,26 @@ export class ElectricityIncreaseService {
       const contract = await this.contract(client, id, profileId, false);
       const maxPercentage = await this.maxPercent(client);
       const request = await this.request(client, id);
+      let quote: { adjustmentIrR: string; eligibleFrom: Date } | null = null;
+      if (request?.status === 'awaiting_signature' && contract.period_end > new Date()) {
+        const invoice = await this.originalInvoice(client, contract.version_id);
+        const result = quoteIncreaseAdjustment({
+          originalInvoiceIrR: BigInt(invoice.total_amount),
+          originalKwh: BigInt(request.originalKwh),
+          requestedKwh: BigInt(request.requestedKwh),
+          periodStart: contract.period_start,
+          periodEnd: contract.period_end,
+          effectiveFrom: request.effectiveFrom,
+          now: new Date(),
+        });
+        quote = { adjustmentIrR: result.amount.toString(), eligibleFrom: result.eligibleStart };
+      }
       const mayRequest =
         (await client.query<{ id: string }>(activeProfileSql('contracts:sign'), [actor.userId]))
           .rows[0]?.id === profileId;
       return {
         request,
+        quote,
         maxPercentage,
         originalKwh: contract.original_kwh,
         canRequest:
@@ -292,7 +387,11 @@ export class ElectricityIncreaseService {
               : request.effective_from > now
                 ? request.effective_from
                 : now;
-            if (effectiveFrom < now || effectiveFrom >= request.period_end)
+            if (
+              effectiveFrom < now ||
+              effectiveFrom < contract.period_start ||
+              effectiveFrom >= request.period_end
+            )
               throw new ConflictException(
                 'Effective date must be in the remaining delivery period'
               );
@@ -346,6 +445,191 @@ export class ElectricityIncreaseService {
         );
         return (await client.query(requestSelect + ' WHERE r.id=$1', [id])).rows[0];
       });
+    } catch (error) {
+      translateConcurrentChange(error);
+    }
+  }
+
+  async sign(
+    id: string,
+    input: z.infer<typeof signIncreaseSchema>,
+    actor: ContractActor,
+    ip: string
+  ) {
+    try {
+      return await customerContractAccess(
+        actor,
+        true,
+        async (client, profileId) => {
+          const contract = await this.contract(client, id, profileId, true);
+          const requestId = await contractIdempotency(
+            client,
+            'electricity_quantity_increase_sign',
+            { ...input, contractId: id },
+            actor,
+            async () => {
+              const request = (
+                await client.query<{
+                  id: string;
+                  status: string;
+                  version_id: string;
+                  original_kwh: string;
+                  requested_kwh: string;
+                  effective_from: Date;
+                  period_end: Date;
+                  amendment_sha256: string;
+                }>(
+                  `SELECT id,status,version_id,original_kwh::text,requested_kwh::text,
+                  effective_from,period_end,amendment_sha256
+                  FROM electricity_quantity_increase_requests
+                  WHERE contract_id=$1 FOR UPDATE NOWAIT`,
+                  [id]
+                )
+              ).rows[0];
+              const now = new Date();
+              if (
+                !request ||
+                request.status !== 'awaiting_signature' ||
+                contract.state !== 'Active' ||
+                contract.electricity_status !== 'active' ||
+                contract.version_id !== request.version_id ||
+                request.period_end <= now
+              )
+                throw new ConflictException('Amendment is no longer eligible for signature');
+              if (request.amendment_sha256 !== input.expectedAmendmentSha256)
+                throw new ConflictException('Amendment changed; review it again');
+              const originalInvoice = await this.originalInvoice(client, request.version_id, true);
+              const quote = quoteIncreaseAdjustment({
+                originalInvoiceIrR: BigInt(originalInvoice.total_amount),
+                originalKwh: BigInt(request.original_kwh),
+                requestedKwh: BigInt(request.requested_kwh),
+                periodStart: contract.period_start,
+                periodEnd: request.period_end,
+                effectiveFrom: request.effective_from,
+                now,
+              });
+              if (quote.amount.toString() !== input.expectedAdjustmentIrR)
+                throw new ConflictException('Adjustment changed; review the current amount');
+              const pricingSnapshot = {
+                schemaVersion: 1,
+                amendmentSha256: request.amendment_sha256,
+                originalInvoiceId: originalInvoice.id,
+                originalInvoiceIrR: originalInvoice.total_amount,
+                originalKwh: request.original_kwh,
+                requestedKwh: request.requested_kwh,
+                eligibleFrom: quote.eligibleStart.toISOString(),
+                periodStart: contract.period_start.toISOString(),
+                periodEnd: request.period_end.toISOString(),
+                remainingMs: quote.remainingMs.toString(),
+                periodMs: quote.periodMs.toString(),
+                rounding: 'half-up-to-nearest-IRR',
+                adjustmentIrR: quote.amount.toString(),
+              };
+              const due = await this.dueDates.resolve(client, {
+                serviceType: 'electricity',
+                issuedAt: now,
+              });
+              const invoiceId = uuidv7();
+              const line = {
+                description: `Electricity quantity increase ${request.id}`,
+                quantity: 1,
+                unitPrice: quote.amount,
+                vatRate: 0,
+                isTaxable: false,
+              };
+              const calculation = calculateManualInvoice([line]);
+              await client.query(
+                `INSERT INTO invoices(id,profile_id,order_id,contract_id,type,state,total_amount,
+                due_at,metadata,invoice_calculation_snapshot,adjustment_kind,adjustment_for_invoice_id)
+                VALUES($1,$2,$3,$4,'manual','Draft',$5,$6,$7::jsonb,$8::jsonb,'charge',$9)`,
+                [
+                  invoiceId,
+                  profileId,
+                  contract.order_id,
+                  id,
+                  quote.amount.toString(),
+                  due.dueAt < request.period_end ? due.dueAt : request.period_end,
+                  JSON.stringify({
+                    source: 'electricity_quantity_increase',
+                    increaseRequestId: request.id,
+                    generatedBy: actor.userId,
+                    adjustmentForInvoiceId: originalInvoice.id,
+                    pricing: pricingSnapshot,
+                    due,
+                  }),
+                  JSON.stringify(buildManualInvoiceCalculationSnapshot([line], calculation)),
+                  originalInvoice.id,
+                ]
+              );
+              await client.query(
+                `INSERT INTO invoice_lines(id,invoice_id,description,quantity,unit_price,line_total,
+                vat_rate,vat_amount,is_taxable,position)
+                VALUES($1,$2,$3,1,$4,$4,0,0,false,0)`,
+                [uuidv7(), invoiceId, line.description, quote.amount.toString()]
+              );
+              await this.invoiceStates.transition(invoiceId, 'Draft', 'Unpaid', {
+                actorUserId: actor.userId,
+                reason: 'Signed electricity quantity increase amendment',
+                now,
+                ip,
+                client,
+              });
+              const oldMetadata = originalInvoice.metadata ?? {};
+              const adjustedIds = Array.isArray(oldMetadata.adjustedByInvoiceIds)
+                ? oldMetadata.adjustedByInvoiceIds.filter(
+                    (value): value is string => typeof value === 'string'
+                  )
+                : [];
+              await client.query(
+                'UPDATE invoices SET metadata=$2::jsonb,updated_at=$3 WHERE id=$1',
+                [
+                  originalInvoice.id,
+                  JSON.stringify({
+                    ...oldMetadata,
+                    adjustedByInvoiceIds: [...adjustedIds, invoiceId],
+                  }),
+                  now,
+                ]
+              );
+              await client.query(
+                `UPDATE electricity_quantity_increase_requests
+                SET status='awaiting_payment',signed_at=$2,signature_evidence=$3::jsonb,
+                pricing_snapshot=$4::jsonb,adjustment_amount=$5,adjustment_invoice_id=$6
+                WHERE id=$1`,
+                [
+                  request.id,
+                  now,
+                  JSON.stringify({
+                    schemaVersion: 1,
+                    amendmentSha256: request.amendment_sha256,
+                    signedBy: actor.userId,
+                    sessionId: actor.sessionId,
+                    signedAt: now.toISOString(),
+                    ip,
+                    adjustmentIrR: quote.amount.toString(),
+                  }),
+                  JSON.stringify(pricingSnapshot),
+                  quote.amount.toString(),
+                  invoiceId,
+                ]
+              );
+              await auditContract(
+                client,
+                id,
+                request.version_id,
+                'electricity.increase_signed',
+                actor,
+                ip,
+                { requestId: request.id, invoiceId, adjustmentIrR: quote.amount.toString() }
+              );
+              await notifyContractReview(client, id, 'electricity_increase_signed');
+              return request.id;
+            }
+          );
+          return (await client.query(requestSelect + ' WHERE r.id=$1', [requestId])).rows[0];
+        },
+        { financialReview: true }
+      );
     } catch (error) {
       translateConcurrentChange(error);
     }

@@ -14,6 +14,10 @@ const messages = {
     fa: 'درخواست افزایش مقدار برق تأیید شد. الحاقیه را در جزئیات سفارش بررسی کنید.',
     en: 'Your electricity quantity increase was approved. Review the amendment in your order details.',
   },
+  electricity_increase_signed: {
+    fa: 'الحاقیه افزایش برق امضا شد. فاکتور تعدیل را برای اعمال افزایش پرداخت کنید.',
+    en: 'Your electricity increase amendment was signed. Pay the adjustment invoice to activate it.',
+  },
   cancellation_requested: {
     fa: 'درخواست لغو قرارداد برای بررسی کارکنان ثبت شد.',
     en: 'A contract cancellation request is awaiting staff review.',

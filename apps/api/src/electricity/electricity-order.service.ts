@@ -270,6 +270,7 @@ export class ElectricityOrderService {
           period_start: Date;
           period_end: Date;
           total_kwh: string;
+          effective_total_kwh: string;
           pricing_snapshot: Record<string, unknown>;
           settings_snapshot: Record<string, unknown>;
           green_rule_applied: boolean;
@@ -294,7 +295,8 @@ export class ElectricityOrderService {
         }>(
           `SELECT o.id,o.profile_id,o.status AS commercial_status,
            e.status AS electricity_status,e.mode,e.period_start,e.period_end,
-           e.total_kwh,e.pricing_snapshot,e.settings_snapshot,e.green_rule_applied,
+           e.total_kwh,COALESCE(ir.requested_kwh,e.total_kwh)::text AS effective_total_kwh,
+           e.pricing_snapshot,e.settings_snapshot,e.green_rule_applied,
            e.submitted_at,o.gift_code_id,gc.code AS gift_code,o.gift_discount_amount,
            o.snapshot_full_address AS full_address,
            o.snapshot_postal_code AS postal_code,
@@ -307,6 +309,8 @@ export class ElectricityOrderService {
          FROM orders o JOIN electricity_orders e ON e.id=o.id
          JOIN electricity_contracts ec ON ec.order_id=o.id
          JOIN contracts c ON c.id=ec.contract_id
+         LEFT JOIN electricity_quantity_increase_requests ir
+           ON ir.contract_id=c.id AND ir.status='effective'
          JOIN invoices i ON i.order_id=o.id AND i.adjustment_for_invoice_id IS NULL
            AND i.replaces_invoice_id IS NULL
          LEFT JOIN gift_codes gc ON gc.id=o.gift_code_id
@@ -383,6 +387,7 @@ export class ElectricityOrderService {
         periodStart: detail.period_start.toISOString(),
         periodEnd: detail.period_end.toISOString(),
         totalKwh: detail.total_kwh,
+        effectiveTotalKwh: detail.effective_total_kwh,
         pricingSnapshot: detail.pricing_snapshot,
         settingsSnapshot: detail.settings_snapshot,
         greenRuleApplied: detail.green_rule_applied,

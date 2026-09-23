@@ -21,6 +21,7 @@ import {
   approveIncreaseSchema,
   rejectIncreaseSchema,
   requestIncreaseSchema,
+  signIncreaseSchema,
 } from './electricity-increase.service.js';
 
 const idSchema = z.string().uuid();
@@ -56,6 +57,22 @@ export class CustomerElectricityIncreaseController {
     return this.service.submit(
       parse(idSchema, id),
       parse(requestIncreaseSchema, body),
+      req.session,
+      req.ip ?? '127.0.0.1'
+    );
+  }
+
+  @Post('sign')
+  @RequiresStepUp()
+  @RateLimit({ namespace: 'electricity:increase-sign:user', limit: 10, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'Sign the approved increase amendment and issue its adjustment invoice',
+  })
+  @ApiZodBody(signIncreaseSchema)
+  sign(@Param('id') id: string, @Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    return this.service.sign(
+      parse(idSchema, id),
+      parse(signIncreaseSchema, body),
       req.session,
       req.ip ?? '127.0.0.1'
     );

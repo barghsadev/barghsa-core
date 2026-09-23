@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, it } from 'vitest';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { activateReadyContracts } from '@barghsa/db/contract-activation';
 import { retryDueWalletRefunds, runWalletRefund } from '@barghsa/db/refund-processing';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -793,9 +793,13 @@ it('funds the linked invoice and activates only after customer acceptance', asyn
   expect(parent.status).toBe('CONFIRMED');
 });
 
-it.each(['reject', 'approve'] as const)(
+it.each(['reject', 'approve_future', 'approve_current'] as const)(
   'accepts one bounded future increase request and lets staff %s it with an audit trail',
   async (decision) => {
+    if (decision === 'approve_current') {
+      input.period = 'current_week';
+      await refreshQuote();
+    }
     const order = await submittedOrder();
     const versionId = (
       await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
@@ -914,7 +918,7 @@ it.each(['reject', 'approve'] as const)(
     expect((await staffQueue.json()) as { requests: Array<{ requestId: string }> }).toMatchObject({
       requests: [expect.objectContaining({ requestId: result.requestId })],
     });
-    if (decision === 'approve') {
+    if (decision !== 'reject') {
       const approval = { idempotencyKey: randomUUID() };
       const approvePath = `${http.base}/api/staff/electricity/increase-requests/${result.requestId}/approve`;
       const approved = await fetch(approvePath, {
@@ -938,6 +942,16 @@ it.each(['reject', 'approve'] as const)(
           contractId: order.contractId,
         },
       });
+      const canonicalDocument = JSON.stringify(
+        Object.fromEntries(
+          Object.entries(amendment.amendmentDocument).sort(([left], [right]) =>
+            left.localeCompare(right)
+          )
+        )
+      );
+      expect(createHash('sha256').update(canonicalDocument).digest('hex')).toBe(
+        amendment.amendmentSha256
+      );
       expect(await (await fetch(path, { headers })).json()).toMatchObject({
         canRequest: false,
         request: { status: 'awaiting_signature', amendmentSha256: amendment.amendmentSha256 },
@@ -966,13 +980,173 @@ it.each(['reject', 'approve'] as const)(
           [result.requestId]
         )
       ).rejects.toMatchObject({ code: '23514' });
+      const review = (await (await fetch(path, { headers })).json()) as {
+        quote: { adjustmentIrR: string };
+      };
+      if (decision === 'approve_future') expect(review.quote.adjustmentIrR).toBe('200000');
+      else expect(BigInt(review.quote.adjustmentIrR)).toBeGreaterThan(0n);
+      const signature = {
+        expectedAmendmentSha256: amendment.amendmentSha256,
+        expectedAdjustmentIrR: review.quote.adjustmentIrR,
+        idempotencyKey: randomUUID(),
+      };
+      const signPath = `${path}/sign`;
+      expect(
+        (
+          await fetch(signPath, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+              ...signature,
+              expectedAmendmentSha256: '0'.repeat(64),
+            }),
+          })
+        ).status
+      ).toBe(409);
+      expect(
+        (
+          await fetch(signPath, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ ...signature, expectedAdjustmentIrR: '1' }),
+          })
+        ).status
+      ).toBe(409);
+      const signed = await fetch(signPath, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(signature),
+      });
+      expect(signed.status, http.logs()).toBe(201);
+      const signedRequest = (await signed.json()) as {
+        status: string;
+        adjustmentInvoiceId: string;
+        adjustmentAmount: string;
+      };
+      expect(signedRequest).toMatchObject({
+        status: 'awaiting_payment',
+        adjustmentAmount: review.quote.adjustmentIrR,
+        adjustmentInvoiceId: expect.any(String),
+      });
+      const evidence = (
+        await http.pool.query(
+          'SELECT signature_evidence,pricing_snapshot,signed_at FROM electricity_quantity_increase_requests WHERE id=$1',
+          [result.requestId]
+        )
+      ).rows[0];
+      expect(evidence).toMatchObject({
+        signature_evidence: {
+          signedBy: 'buyer',
+          amendmentSha256: amendment.amendmentSha256,
+          adjustmentIrR: review.quote.adjustmentIrR,
+        },
+        pricing_snapshot: {
+          originalInvoiceId: order.invoiceId,
+          adjustmentIrR: review.quote.adjustmentIrR,
+        },
+        signed_at: expect.any(Date),
+      });
+      expect(
+        (
+          await fetch(signPath, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(signature),
+          })
+        ).status
+      ).toBe(201);
+      expect(
+        (
+          await fetch(signPath, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ ...signature, idempotencyKey: randomUUID() }),
+          })
+        ).status
+      ).toBe(409);
+      const adjustment = (
+        await http.pool.query(
+          'SELECT state,total_amount,adjustment_for_invoice_id FROM invoices WHERE id=$1',
+          [signedRequest.adjustmentInvoiceId]
+        )
+      ).rows[0];
+      expect(adjustment).toMatchObject({
+        state: 'Unpaid',
+        total_amount: review.quote.adjustmentIrR,
+        adjustment_for_invoice_id: order.invoiceId,
+      });
+      await expect(
+        http.pool.query(
+          "UPDATE electricity_quantity_increase_requests SET status='effective',effective_at=now() WHERE id=$1",
+          [result.requestId]
+        )
+      ).rejects.toMatchObject({ code: '23514' });
+      expect(
+        (
+          (await (
+            await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers })
+          ).json()) as { effectiveTotalKwh: string }
+        ).effectiveTotalKwh
+      ).toBe('10');
+      const adjustmentWalletPath = `${http.base}/api/invoices/${signedRequest.adjustmentInvoiceId}/wallet-payment`;
+      const adjustmentReview = await fetch(adjustmentWalletPath, { headers });
+      expect(adjustmentReview.status, http.logs()).toBe(200);
+      const hash = ((await adjustmentReview.json()) as { review: { hash: string } }).review.hash;
+      const adjustmentPayment = await fetch(adjustmentWalletPath, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          idempotencyKey: randomUUID(),
+          expectedRemainingAmount: review.quote.adjustmentIrR,
+          expectedReviewHash: hash,
+        }),
+      });
+      expect(adjustmentPayment.status, http.logs()).toBe(200);
+      if (decision === 'approve_future') {
+        expect(await (await fetch(path, { headers })).json()).toMatchObject({
+          request: {
+            status: 'awaiting_effective_date',
+            adjustmentInvoiceId: signedRequest.adjustmentInvoiceId,
+          },
+        });
+        const activation = await http.pool.query<{ activated: boolean }>(
+          'SELECT finalize_paid_electricity_increase($1,$2) AS activated',
+          [
+            result.requestId,
+            new Date(
+              new Date(amendment.amendmentDocument.earliestEffectiveFrom!).getTime() + 60_000
+            ),
+          ]
+        );
+        expect(activation.rows[0]?.activated).toBe(true);
+      }
+      expect(await (await fetch(path, { headers })).json()).toMatchObject({
+        request: { status: 'effective', adjustmentInvoiceId: signedRequest.adjustmentInvoiceId },
+      });
+      expect(
+        (
+          (await (
+            await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers })
+          ).json()) as { effectiveTotalKwh: string }
+        ).effectiveTotalKwh
+      ).toBe('12');
       const events = (
         await http.pool.query(
           "SELECT event FROM audit_log WHERE metadata::jsonb->>'requestId'=$1 ORDER BY created_at",
           [result.requestId]
         )
       ).rows.map((row: { event: string }) => row.event);
-      expect(events).toEqual(['electricity.increase_requested', 'electricity.increase_approved']);
+      expect(events).toEqual([
+        'electricity.increase_requested',
+        'electricity.increase_approved',
+        'electricity.increase_signed',
+        'electricity.increase_effective',
+      ]);
+      const effectiveNotices = await http.pool.query<{ count: number }>(
+        'SELECT count(*)::int AS count FROM in_app_notifications WHERE delivery_key=$1',
+        [`electricity-increase-effective:${result.requestId}`]
+      );
+      expect(effectiveNotices.rows[0]?.count).toBe(1);
       return;
     }
     const rejected = await fetch(

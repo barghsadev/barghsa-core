@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { validateIncreaseQuantity } from './electricity-increase.service.js';
+import {
+  quoteIncreaseAdjustment,
+  validateIncreaseQuantity,
+} from './electricity-increase.service.js';
 
 describe('electricity quantity increase limit', () => {
   it('is disabled at zero and rejects unchanged or lower quantities', () => {
@@ -24,5 +27,38 @@ describe('electricity quantity increase limit', () => {
     expect(
       validateIncreaseQuantity(9_000_000_000_000_000_000n, 9_999_999_999_999_999_999n, 20)
     ).toBe(false);
+  });
+});
+
+describe('electricity increase adjustment quote', () => {
+  const periodStart = new Date('2026-10-01T00:00:00Z');
+  const periodEnd = new Date('2026-10-11T00:00:00Z');
+
+  it('prices only the additional future share of the original paid invoice', () => {
+    const quote = quoteIncreaseAdjustment({
+      originalInvoiceIrR: 1_000_000n,
+      originalKwh: 10n,
+      requestedKwh: 12n,
+      periodStart,
+      periodEnd,
+      effectiveFrom: new Date('2026-10-06T00:00:00Z'),
+      now: new Date('2026-10-02T00:00:00Z'),
+    });
+    expect(quote.amount).toBe(100_000n);
+    expect(quote.eligibleStart.toISOString()).toBe('2026-10-06T00:00:00.000Z');
+  });
+
+  it('never prices an elapsed delivery period', () => {
+    expect(() =>
+      quoteIncreaseAdjustment({
+        originalInvoiceIrR: 1_000_000n,
+        originalKwh: 10n,
+        requestedKwh: 12n,
+        periodStart,
+        periodEnd,
+        effectiveFrom: periodStart,
+        now: periodEnd,
+      })
+    ).toThrow('No eligible future delivery remains');
   });
 });

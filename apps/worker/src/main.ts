@@ -6,6 +6,10 @@ import {
   runContractActivation,
   CONTRACT_ACTIVATION_INTERVAL_MS,
 } from './contracts/activation-runner.js';
+import {
+  runElectricityIncreaseActivation,
+  ELECTRICITY_INCREASE_INTERVAL_MS,
+} from './contracts/electricity-increase-runner.js';
 import { runRefundRetries, REFUND_RETRY_INTERVAL_MS } from './refunds/retry-runner.js';
 import { runAiModelTest } from './ai-models/test-runner.js';
 import { cleanupStorageObjects, cleanupStorageProvider } from './storage/cleanup.js';
@@ -145,6 +149,9 @@ async function main(): Promise<void> {
   pollers.every(async () => {
     await runContractCompletion();
   }, CONTRACT_COMPLETION_INTERVAL_MS);
+  pollers.every(async () => {
+    await runElectricityIncreaseActivation();
+  }, ELECTRICITY_INCREASE_INTERVAL_MS);
 
   /* ------------------------------------------------------------------ */
   /*  Graceful shutdown handler                                          */
