@@ -4,9 +4,13 @@ import { Card, CardContent } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { SavingOrderComments } from '../components/SavingOrderComments.js';
+import { SavingOrderDocuments } from '../components/SavingOrderDocuments.js';
 
 interface Detail {
   id: string;
+  order_id: string;
+  profile_id: string;
   status: string;
   bill_identifier: string;
   submitted_at: string;
@@ -191,6 +195,16 @@ export function SavingOrderDetailPage() {
                   </li>
                 ))}
               </ol>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <SavingOrderDocuments orderId={detail.order_id} profileId={detail.profile_id} />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <SavingOrderComments orderId={detail.id} />
             </CardContent>
           </Card>
           <details className="rounded-md border p-4">

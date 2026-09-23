@@ -191,3 +191,22 @@ export const savingOrderSubmissions = pgTable(
     uniqueIndex('saving_order_submission_user_key').on(table.userId, table.idempotencyKey),
   ]
 );
+
+export const savingOrderComments = pgTable(
+  'saving_order_comments',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => savingOrders.id, { onDelete: 'restrict' }),
+    authorUserId: text('author_user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    body: text('body').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('saving_order_comments_order_idx').on(table.orderId, table.createdAt, table.id),
+    check('saving_order_comments_body', sql`length(trim(${table.body})) BETWEEN 1 AND 10000`),
+  ]
+);

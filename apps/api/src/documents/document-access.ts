@@ -28,20 +28,50 @@ export function staffDocumentPermission(kind: BusinessType, write: boolean) {
   return `${area}:${write ? 'write' : 'read'}`;
 }
 
+async function requireStaffDocumentPermission(
+  client: PoolClient,
+  actor: DocumentActor,
+  kind: BusinessType,
+  write: boolean,
+  businessRecordId?: string
+) {
+  try {
+    await requireStaffMutationPermission(
+      client,
+      actor.userId,
+      staffDocumentPermission(kind, write)
+    );
+  } catch (error) {
+    if (
+      kind !== 'order' ||
+      !businessRecordId ||
+      !(error instanceof HttpException) ||
+      error.getStatus() !== 403
+    )
+      throw error;
+    const saving = await client.query('SELECT 1 FROM saving_orders WHERE order_id=$1', [
+      businessRecordId,
+    ]);
+    if (!saving.rowCount) throw error;
+    await requireStaffMutationPermission(
+      client,
+      actor.userId,
+      write ? 'contracts:write' : 'contracts:read'
+    );
+  }
+}
+
 /** Staff queues span profiles, but remain limited to the actor's current business capability. */
 export async function staffDocumentRead<T>(
   actor: DocumentActor,
   kind: BusinessType,
-  work: (client: PoolClient) => Promise<T>
+  work: (client: PoolClient) => Promise<T>,
+  businessRecordId?: string
 ) {
   const client = await getDbPool().connect();
   try {
     await client.query('BEGIN');
-    await requireStaffMutationPermission(
-      client,
-      actor.userId,
-      staffDocumentPermission(kind, false)
-    );
+    await requireStaffDocumentPermission(client, actor, kind, false, businessRecordId);
     await requireCurrentSession(client, actor);
     const result = await work(client);
     await requireCurrentSession(client, actor);
@@ -62,7 +92,8 @@ export async function documentAccess<T>(
   write: boolean,
   staff: boolean,
   requestedProfile: string | undefined,
-  work: (client: PoolClient, profileId: string) => Promise<T>
+  work: (client: PoolClient, profileId: string) => Promise<T>,
+  businessRecordId?: string
 ) {
   const client = await getDbPool().connect();
   try {
@@ -82,11 +113,7 @@ export async function documentAccess<T>(
     ).rows[0];
     if (!profile || (profile.archived && (!staff || write))) throw new NotFoundException();
     if (staff) {
-      await requireStaffMutationPermission(
-        client,
-        actor.userId,
-        staffDocumentPermission(kind, write)
-      );
+      await requireStaffDocumentPermission(client, actor, kind, write, businessRecordId);
     } else {
       const account = (
         await client.query(

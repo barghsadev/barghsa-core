@@ -28,6 +28,10 @@ export interface ContractDocumentAssociation {
   contractVersionId: string;
   contractRole: 'original' | 'signed' | 'amendment';
 }
+export interface OrderDocumentAssociation {
+  businessRecordType: 'order';
+  businessRecordId: string;
+}
 type Attempt = { upload: Upload; file: File; uploaded: boolean; confirmKey: string };
 export function DocumentUpload({
   staff,
@@ -40,7 +44,7 @@ export function DocumentUpload({
   staff: boolean;
   profileId: string;
   replacement: BusinessDocument | null;
-  association?: ContractDocumentAssociation;
+  association?: ContractDocumentAssociation | OrderDocumentAssociation;
   onClose: () => void;
   onUploaded: (document: BusinessDocument) => void;
 }) {
@@ -96,7 +100,9 @@ export function DocumentUpload({
       method: 'POST',
       body: {
         ...context,
-        category: replacement?.category ?? (association ? 'contract' : category),
+        category:
+          replacement?.category ??
+          (association?.businessRecordType === 'contract' ? 'contract' : category),
         fileName: file.name,
         fileSize: file.size,
         contentType: file.type || 'application/octet-stream',
@@ -163,7 +169,7 @@ export function DocumentUpload({
       ) : (
         <form onSubmit={submit} className="flex flex-col gap-4">
           <FieldGroup>
-            {!replacement && !association ? (
+            {!replacement && association?.businessRecordType !== 'contract' ? (
               <Field>
                 <FieldLabel htmlFor="document-category">{word('category')}</FieldLabel>
                 <NativeSelect
@@ -173,6 +179,7 @@ export function DocumentUpload({
                 >
                   <option value="document">{word('document')}</option>
                   <option value="image">{word('image')}</option>
+                  <option value="video">{word('video')}</option>
                 </NativeSelect>
               </Field>
             ) : null}
@@ -181,6 +188,11 @@ export function DocumentUpload({
               <Input
                 id="document-file"
                 type="file"
+                accept={
+                  association?.businessRecordType === 'order'
+                    ? '.pdf,.jpg,.jpeg,.png,.webp,.mp4,.webm,.mov,.mkv'
+                    : undefined
+                }
                 disabled={!!action}
                 onChange={(event) => setFile(event.target.files?.[0] ?? null)}
               />

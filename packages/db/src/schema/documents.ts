@@ -98,7 +98,7 @@ export const documents = pgTable(
     check('documents_positive_size', sql`${t.sizeBytes} > 0 AND ${t.sizeBytes} <= 52428800`),
     check('documents_positive_revision', sql`${t.revision} > 0`),
     check('documents_name', sql`length(trim(${t.originalName})) BETWEEN 1 AND 255`),
-    check('documents_category', sql`${t.category} IN ('document','image','contract')`),
+    check('documents_category', sql`${t.category} IN ('document','image','video','contract')`),
     check('documents_checksum', sql`${t.checksum} IS NULL OR ${t.checksum} ~ '^[a-f0-9]{64}$'`),
     check(
       'documents_rejection_reason',

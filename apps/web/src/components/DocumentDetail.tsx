@@ -31,6 +31,7 @@ export function DocumentDetail({
   onChanged,
   onReplace,
   onPrevious,
+  savingPreSubmissionOnly = false,
 }: {
   id: string;
   staff: boolean;
@@ -38,6 +39,7 @@ export function DocumentDetail({
   onChanged: () => void;
   onReplace: (document: BusinessDocument) => void;
   onPrevious: (id: string) => void;
+  savingPreSubmissionOnly?: boolean;
 }) {
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
@@ -114,7 +116,12 @@ export function DocumentDetail({
     if (document.state === 'Available') actions.push('submit');
     if (staff && document.state === 'SubmittedForReview')
       actions.push('approve', 'reject', 'request-changes');
-    if (['Uploading', 'PendingScan', 'Superseded', 'Quarantined'].includes(document.state))
+    if (
+      savingPreSubmissionOnly
+        ? document.uploadedByType === 'customer' &&
+          ['Uploading', 'PendingScan', 'Available'].includes(document.state)
+        : ['Uploading', 'PendingScan', 'Superseded', 'Quarantined'].includes(document.state)
+    )
       actions.push('remove');
     if (staff && !['Removed', 'Quarantined'].includes(document.state)) actions.push('quarantine');
   }
@@ -194,7 +201,10 @@ export function DocumentDetail({
                 {word('predecessor')}
               </Button>
             ) : null}
-            {canChange && ['Available', 'Approved', 'Rejected'].includes(document.state) ? (
+            {canChange &&
+            (savingPreSubmissionOnly
+              ? document.state === 'Available' && document.uploadedByType === 'customer'
+              : ['Available', 'Approved', 'Rejected'].includes(document.state)) ? (
               <Button variant="outline" onClick={() => onReplace(document)}>
                 {word('replace')}
               </Button>

@@ -4,6 +4,8 @@ import { tSaving } from '@barghsa/i18n/saving';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { SavingOrderComments } from '../components/SavingOrderComments.js';
+import { SavingOrderDocuments } from '../components/SavingOrderDocuments.js';
 
 type StageName =
   | 'request_confirmation'
@@ -13,6 +15,8 @@ type StageName =
   | 'process_completion';
 interface Order {
   id: string;
+  orderId: string;
+  profileId: string;
   customerName: string;
   status: string;
   submittedAt: string;
@@ -319,6 +323,8 @@ export default function AdminSavingOrdersPage() {
                   </ol>
                 )}
               </div>
+              <SavingOrderDocuments orderId={detail.orderId} profileId={detail.profileId} staff />
+              <SavingOrderComments key={detail.id} orderId={detail.id} staff />
             </CardContent>
           </Card>
         )}

@@ -17795,6 +17795,79 @@
         ]
       }
     },
+    "/api/saving/orders/{orderId}/comments": {
+      "get": {
+        "operationId": "SavingCommentsController_list",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "List customer-visible saving order comments",
+        "tags": [
+          "Saving order comments"
+        ]
+      },
+      "post": {
+        "operationId": "SavingCommentsController_add",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "maxLength": 10000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Add an append-only comment to a saving order",
+        "tags": [
+          "Saving order comments"
+        ]
+      }
+    },
     "/api/saving/plans": {
       "get": {
         "operationId": "CustomerSavingCatalogueController_browse",
@@ -18610,6 +18683,79 @@
         "summary": "Complete a saving fulfillment stage or skip optional equipment handover",
         "tags": [
           "Staff · Saving orders"
+        ]
+      }
+    },
+    "/api/staff/saving/orders/{orderId}/comments": {
+      "get": {
+        "operationId": "StaffSavingCommentsController_list",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "List saving order comments for staff",
+        "tags": [
+          "Staff · Saving order comments"
+        ]
+      },
+      "post": {
+        "operationId": "StaffSavingCommentsController_add",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "maxLength": 10000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Add a staff reply and notify the saving order customer",
+        "tags": [
+          "Staff · Saving order comments"
         ]
       }
     },

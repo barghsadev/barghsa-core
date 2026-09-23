@@ -23,7 +23,7 @@ export interface BusinessDocument {
   businessRecordId: string | null;
   contractVersionId: string | null;
   contractRole: 'original' | 'signed' | 'amendment' | 'superseded' | null;
-  category: 'document' | 'image' | 'contract';
+  category: 'document' | 'image' | 'video' | 'contract';
   state: DocumentState;
   originalName: string;
   detectedMime: string | null;

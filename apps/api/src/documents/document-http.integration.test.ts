@@ -211,6 +211,114 @@ it('uploads real bytes, reviews a document, preserves replacement history and re
   expect(await (await fetch(archive.url)).text()).toBe(pdf.toString());
 });
 
+it('lets a saving customer replace or soft-delete only their available order files', async () => {
+  const f = await owner();
+  const products = await http.pool.query<{ id: string; type: string }>(
+    `INSERT INTO products(type,title,price,status)
+     VALUES ('saving_plan','{"fa":"طرح","en":"Plan"}',100000,'active'),
+            ('hardware','{"fa":"دستگاه","en":"Device"}',100000,'active')
+     RETURNING id,type`
+  );
+  const plan = products.rows.find((row) => row.type === 'saving_plan')!.id;
+  const hardware = products.rows.find((row) => row.type === 'hardware')!.id;
+  const agreement = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO saving_plan_agreement_versions(plan_id,title,body,created_by)
+     VALUES($1,'Terms','Agreement','document-legal') RETURNING id`,
+      [plan]
+    )
+  ).rows[0]!.id;
+  const province = (
+    await http.pool.query<{ id: string }>(
+      "INSERT INTO provinces(name_fa,name_en) VALUES('استان آزمایشی','Test Province') RETURNING id"
+    )
+  ).rows[0]!.id;
+  const city = (
+    await http.pool.query<{ id: string }>(
+      "INSERT INTO cities(province_id,name_fa,name_en) VALUES($1,'شهر آزمایشی','Test City') RETURNING id",
+      [province]
+    )
+  ).rows[0]!.id;
+  const address = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code)
+     VALUES($1,$2,$3,'Test address','1234567890') RETURNING id`,
+      [f.profile, province, city]
+    )
+  ).rows[0]!.id;
+  const order = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO orders(user_id,profile_id,product_id,order_type,status,
+       snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code)
+     VALUES($1,$2,$3,'savings','PENDING',$4,$5,'Test address','1234567890') RETURNING id`,
+      [f.user, f.profile, plan, province, city]
+    )
+  ).rows[0]!.id;
+  await http.pool.query(
+    `INSERT INTO saving_orders(order_id,profile_id,saving_plan_id,hardware_product_id,
+       bill_identifier,installation_address_id,agreement_version_id,agreement_snapshot,
+       address_snapshot,pricing_snapshot,verification_result,status)
+     VALUES($1,$2,$3,$4,'1234567890123',$5,$6,'Agreement','{}','{}','{}','in_progress')`,
+    [order, f.profile, plan, hardware, address, agreement]
+  );
+
+  const context = { profileId: f.profile, businessRecordType: 'order', businessRecordId: order };
+  const first = await confirm(await create(f.user, context), f.user);
+  const other = await confirm(await create(f.user, context), f.user);
+  const video = Buffer.from([0, 0, 0, 16, 102, 116, 121, 112, 105, 115, 111, 109, 0, 0, 0, 0]);
+  const videoUpload = await create(f.user, {
+    ...context,
+    category: 'video',
+    fileName: 'handover.mp4',
+    contentType: 'video/mp4',
+    fileSize: video.length,
+  });
+  const videoPut = await fetch(videoUpload.upload.presignedUrl, {
+    method: 'PUT',
+    headers: { ...videoUpload.upload.headers, 'Content-Type': 'video/mp4' },
+    body: video,
+  });
+  expect(videoPut.status, await videoPut.text()).toBe(200);
+  const videoConfirm = await send(
+    `documents/${videoUpload.document.id}/confirm`,
+    f.user,
+    'POST',
+    command(1)
+  );
+  expect(videoConfirm.status, (await videoConfirm.clone().text()) + http.logs()).toBe(200);
+  expect(await videoConfirm.json()).toMatchObject({ category: 'video', state: 'Available' });
+  const staffList = await send(
+    `admin/documents?businessRecordType=order&businessRecordId=${order}&profileId=${f.profile}`,
+    'document-legal'
+  );
+  expect(staffList.status, (await staffList.clone().text()) + http.logs()).toBe(200);
+  expect((await send('admin/documents?businessRecordType=order', 'document-legal')).status).toBe(
+    403
+  );
+  const staffUpload = await create('document-legal', context, true);
+  expect((await confirm(staffUpload, 'document-legal', true)).state).toBe('Available');
+  expect(first.state).toBe('Available');
+  expect(other.state).toBe('Available');
+  const replacement = await confirm(
+    await create(f.user, {
+      ...context,
+      supersedesDocumentId: first.id,
+    }),
+    f.user
+  );
+  expect(replacement.supersedesDocumentId).toBe(first.id);
+  expect((await send(`documents/${first.id}`, f.user)).status).toBe(200);
+  const removed = await act(other, 'remove', f.user);
+  expect(removed.state).toBe('Removed');
+  expect((await send(`documents/${other.id}`, f.user)).status).toBe(404);
+  expect((await send(`admin/documents/${other.id}`, 'document-operations')).status).toBe(200);
+  const submitted = await act(replacement, 'submit', f.user);
+  expect(
+    (await send(`documents/${submitted.id}/remove`, f.user, 'POST', command(submitted.revision)))
+      .status
+  ).toBe(409);
+});
+
 it('requires a rejection reason, permits changes and resubmission, and blocks stale actions', async () => {
   const f = await owner();
   let document = await confirm(await create(f.user), f.user);

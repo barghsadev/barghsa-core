@@ -254,6 +254,54 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     [result.orderId]
   );
   expect(counts.rows[0]).toMatchObject({ orders: '1', contracts: '1', invoices: '1' });
+  const commentsPath = `/api/saving/orders/${result.savingOrderId}/comments`;
+  const staffCommentsPath = `/api/staff/saving/orders/${result.savingOrderId}/comments`;
+  const customerComment = { idempotencyKey: randomUUID(), body: 'Please call before delivery.' };
+  const postedCustomer = await request(commentsPath, 'POST', customerComment);
+  expect(postedCustomer.status, http.logs()).toBe(200);
+  expect(await postedCustomer.json()).toMatchObject({
+    body: customerComment.body,
+    authorRole: 'customer',
+  });
+  const customerRetry = await request(commentsPath, 'POST', customerComment);
+  expect(customerRetry.status, http.logs()).toBe(200);
+  const postedStaff = await request(
+    staffCommentsPath,
+    'POST',
+    { idempotencyKey: randomUUID(), body: 'We will call before delivery.' },
+    staffHeaders
+  );
+  expect(postedStaff.status, http.logs()).toBe(200);
+  expect(await postedStaff.json()).toMatchObject({ authorRole: 'staff' });
+  const comments = await request(commentsPath, 'GET');
+  expect(comments.status, http.logs()).toBe(200);
+  expect(await comments.json()).toMatchObject({
+    comments: [
+      { body: customerComment.body, authorRole: 'customer' },
+      { body: 'We will call before delivery.', authorRole: 'staff' },
+    ],
+    nextBefore: null,
+  });
+  const persistedComments = await http.pool.query<{ total: string }>(
+    'SELECT COUNT(*)::text AS total FROM saving_order_comments WHERE order_id=$1',
+    [result.savingOrderId]
+  );
+  expect(persistedComments.rows[0]?.total).toBe('2');
+  expect(
+    (
+      await http.pool.query(
+        `SELECT 1 FROM in_app_notifications WHERE recipient_user_id='saving-order-buyer'
+       AND link_route=$1 AND localized_content->'en'->>'body' LIKE '%replied%'`,
+        [`/savings/orders/${result.savingOrderId}`]
+      )
+    ).rowCount
+  ).toBe(1);
+  await expect(
+    http.pool.query('UPDATE saving_order_comments SET body=$1 WHERE order_id=$2', [
+      'silently changed',
+      result.savingOrderId,
+    ])
+  ).rejects.toMatchObject({ code: '23514' });
   const duplicate = await request('/api/saving/orders', 'POST', {
     ...submission,
     idempotencyKey: randomUUID(),

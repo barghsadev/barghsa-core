@@ -17,7 +17,7 @@ import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { DocumentDetail } from './DocumentDetail.js';
-import { DocumentUpload } from './DocumentUpload.js';
+import { DocumentUpload, type OrderDocumentAssociation } from './DocumentUpload.js';
 import {
   documentBase,
   documentKinds,
@@ -146,7 +146,7 @@ function Workspace({ staff }: { staff: boolean }) {
               onChange={(event) => change('category', event.target.value)}
             >
               <option value="">{word('allCategories')}</option>
-              {['document', 'image', 'contract'].map((category) => (
+              {['document', 'image', 'video', 'contract'].map((category) => (
                 <option key={category} value={category}>
                   {word(category)}
                 </option>
@@ -215,10 +215,12 @@ export function DocumentResults({
   staff,
   filters,
   profileId,
+  association,
 }: {
   staff: boolean;
   filters: DocumentFilters;
   profileId: string;
+  association?: OrderDocumentAssociation;
 }) {
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
@@ -279,7 +281,7 @@ export function DocumentResults({
         <Button variant="outline" onClick={reload} disabled={loading}>
           {word('refresh')}
         </Button>
-        {filters.kind === 'standalone' && profileId ? (
+        {(filters.kind === 'standalone' || association) && profileId ? (
           <Button
             onClick={() => {
               setUpload({ replacement: null });
@@ -300,6 +302,7 @@ export function DocumentResults({
           staff={staff}
           profileId={profileId}
           replacement={upload.replacement}
+          {...(association ? { association } : {})}
           onClose={() => setUpload(null)}
           onUploaded={(document) => {
             setUpload(null);
@@ -317,6 +320,7 @@ export function DocumentResults({
           onClose={() => setSelected(null)}
           onPrevious={setSelected}
           onChanged={reload}
+          savingPreSubmissionOnly={!!association && !staff}
           onReplace={(document) => {
             setSelected(null);
             setUpload({ replacement: document });

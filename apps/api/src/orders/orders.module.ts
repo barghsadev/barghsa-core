@@ -30,6 +30,11 @@ import { SavingOrderService } from '../saving/saving-order.service.js';
 import { BillVerificationProvider } from '../saving/bill-verification.provider.js';
 import { SavingFulfillmentController } from '../saving/saving-fulfillment.controller.js';
 import { SavingFulfillmentService } from '../saving/saving-fulfillment.service.js';
+import {
+  SavingCommentsController,
+  StaffSavingCommentsController,
+} from '../saving/saving-comments.controller.js';
+import { SavingCommentsService } from '../saving/saving-comments.service.js';
 
 @Module({
   imports: [SessionModule, AdminModule, InvoiceModule],
@@ -44,6 +49,8 @@ import { SavingFulfillmentService } from '../saving/saving-fulfillment.service.j
     StaffElectricityPriceAdjustmentController,
     SavingOrderController,
     SavingFulfillmentController,
+    SavingCommentsController,
+    StaffSavingCommentsController,
   ],
   providers: [
     OrdersService,
@@ -58,6 +65,7 @@ import { SavingFulfillmentService } from '../saving/saving-fulfillment.service.j
     SavingOrderService,
     BillVerificationProvider,
     SavingFulfillmentService,
+    SavingCommentsService,
   ],
   exports: [OrdersService, ElectricityCalculationService],
 })

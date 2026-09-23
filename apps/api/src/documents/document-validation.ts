@@ -9,7 +9,7 @@ export const DocumentCreateSchema = z
     businessRecordId: z.string().uuid().optional(),
     contractVersionId: z.string().uuid().optional(),
     contractRole: z.enum(['original', 'signed', 'amendment']).optional(),
-    category: z.enum(['document', 'image', 'contract']).default('document'),
+    category: z.enum(['document', 'image', 'video', 'contract']).default('document'),
     fileName: z.string().trim().min(1).max(255),
     contentType: z.string().min(1).max(128),
     fileSize: z
@@ -58,7 +58,7 @@ export const DocumentListSchema = z
     contractVersionId: z.string().uuid().optional(),
     businessRecordType: BusinessTypeSchema.default('standalone'),
     q: z.string().trim().max(128).optional(),
-    category: z.enum(['document', 'image', 'contract']).optional(),
+    category: z.enum(['document', 'image', 'video', 'contract']).optional(),
     profileId: z.string().uuid().optional(),
     businessRecordId: z.string().uuid().optional(),
     state: z

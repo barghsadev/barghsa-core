@@ -137,12 +137,16 @@ export class DocumentService {
   private async context(id: string) {
     const row = (
       await createDbClient(getDbPool())
-        .select({ profileId: documents.profileId, kind: documents.businessRecordType })
+        .select({
+          profileId: documents.profileId,
+          kind: documents.businessRecordType,
+          businessRecordId: documents.businessRecordId,
+        })
         .from(documents)
         .where(eq(documents.id, id))
     )[0];
     if (!row || row.kind === 'solar_request') throw new NotFoundException();
-    return { profileId: row.profileId, kind: row.kind };
+    return { profileId: row.profileId, kind: row.kind, businessRecordId: row.businessRecordId };
   }
 
   private async business(
@@ -193,6 +197,17 @@ export class DocumentService {
       input.profileId,
       async (client, profileId) => {
         await this.business(client, input, profileId, staff);
+        const savingOrder =
+          input.businessRecordType === 'order'
+            ? (
+                await client.query<{ status: string }>(
+                  'SELECT status FROM saving_orders WHERE order_id=$1 FOR SHARE',
+                  [input.businessRecordId]
+                )
+              ).rows[0]
+            : null;
+        if (savingOrder && ['completed', 'cancelled', 'rejected'].includes(savingOrder.status))
+          throw new ConflictException('This saving order no longer accepts documents');
         if (input.supersedesDocumentId) {
           const prior = await load(client, input.supersedesDocumentId, profileId, staff, true);
           if (
@@ -200,6 +215,13 @@ export class DocumentService {
             prior.document.businessRecordId !== (input.businessRecordId ?? null)
           )
             throw new NotFoundException();
+          if (
+            savingOrder &&
+            !staff &&
+            (prior.document.uploadedBy !== request.session.userId ||
+              prior.document.state !== 'Available')
+          )
+            throw new ConflictException('Only your unsubmitted saving document may be replaced');
           if (!['Available', 'Approved', 'Rejected'].includes(prior.document.state))
             throw new ConflictException('Document cannot be replaced in this state');
           if (
@@ -261,7 +283,8 @@ export class DocumentService {
         if (Date.parse(result.expiresAt) <= Date.now())
           throw new ConflictException('Upload link expired; start a new upload');
         return result;
-      }
+      },
+      input.businessRecordId
     );
   }
 
@@ -302,8 +325,11 @@ export class DocumentService {
       };
     };
     return staff
-      ? staffDocumentRead(actor, input.businessRecordType, (client) =>
-          read(client, input.profileId)
+      ? staffDocumentRead(
+          actor,
+          input.businessRecordType,
+          (client) => read(client, input.profileId),
+          input.businessRecordId
         )
       : documentAccess(actor, input.businessRecordType, false, false, input.profileId, read);
   }
@@ -329,7 +355,8 @@ export class DocumentService {
             !staff && event.state === 'Quarantined' ? { ...event, reason: null } : event
           ),
         };
-      }
+      },
+      context.businessRecordId ?? undefined
     );
   }
 
@@ -349,7 +376,8 @@ export class DocumentService {
         )
           throw new ConflictException('Document is not available for download');
         return { url: await this.storage.download(row.document.storageKey), expiresIn: 300 };
-      }
+      },
+      context.businessRecordId ?? undefined
     );
   }
 
@@ -419,7 +447,8 @@ export class DocumentService {
           await recordEvent(client, changed, 'Uploading', actor, ip);
           return { revision: changed.revision };
         });
-      }
+      },
+      context.businessRecordId ?? undefined
     );
     return documentAccess(
       actor,
@@ -476,7 +505,8 @@ export class DocumentService {
           }
           return dto({ ...row, document: changed });
         });
-      }
+      },
+      context.businessRecordId ?? undefined
     );
   }
 
@@ -503,6 +533,21 @@ export class DocumentService {
         const initial = await load(client, id, profileId, staff);
         if (!staff && context.kind === 'contract' && initial.contractRole !== 'signed')
           throw new ConflictException('Customers may change only signed-copy uploads');
+        const savingDocument =
+          context.kind === 'order' && initial.document.businessRecordId
+            ? !!(
+                await client.query('SELECT 1 FROM saving_orders WHERE order_id=$1', [
+                  initial.document.businessRecordId,
+                ])
+              ).rows.length
+            : false;
+        if (
+          savingDocument &&
+          !staff &&
+          (initial.document.uploadedBy !== actor.userId ||
+            !['Available', 'Uploading', 'PendingScan'].includes(initial.document.state))
+        )
+          throw new ConflictException('Only your unsubmitted saving document may be changed');
         return idempotentMutation(
           client,
           `document_${action}`,
@@ -525,7 +570,9 @@ export class DocumentService {
               action === 'submit'
                 ? ['Available']
                 : action === 'remove'
-                  ? ['Uploading', 'PendingScan', 'Superseded', 'Quarantined']
+                  ? savingDocument && !staff
+                    ? ['Uploading', 'PendingScan', 'Available']
+                    : ['Uploading', 'PendingScan', 'Superseded', 'Quarantined']
                   : action === 'quarantine'
                     ? [
                         'Uploading',
@@ -557,7 +604,8 @@ export class DocumentService {
             return dto({ ...row, document: changed });
           }
         );
-      }
+      },
+      context.businessRecordId ?? undefined
     );
   }
 }
