@@ -42,6 +42,11 @@
       "import": "./dist/saving.js",
       "default": "./dist/saving.js"
     },
+    "./solar": {
+      "types": "./dist/solar.d.ts",
+      "import": "./dist/solar.js",
+      "default": "./dist/solar.js"
+    },
     "./timezone": {
       "types": "./dist/timezone.d.ts",
       "import": "./dist/timezone.js",

@@ -17966,6 +17966,256 @@
         ]
       }
     },
+    "/api/solar/requests": {
+      "get": {
+        "operationId": "SolarRequestController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List solar construction requests for a profile",
+        "tags": [
+          "Solar construction requests"
+        ]
+      },
+      "post": {
+        "operationId": "SolarRequestController_submit",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "agreementAccepted": {
+                        "enum": [
+                          true
+                        ],
+                        "type": "boolean"
+                      },
+                      "billIdentifier": {
+                        "pattern": "^[0-9]{6,13}$",
+                        "type": "string"
+                      },
+                      "buildingCompletionDate": {
+                        "format": "date",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                        "type": "string"
+                      },
+                      "buildingType": {
+                        "enum": [
+                          "building_apartment"
+                        ],
+                        "type": "string"
+                      },
+                      "gridType": {
+                        "enum": [
+                          "on_grid",
+                          "off_grid"
+                        ],
+                        "type": "string"
+                      },
+                      "profileId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "propertyForm": {
+                        "enum": [
+                          "apartment",
+                          "villa"
+                        ],
+                        "type": "string"
+                      },
+                      "structuralFrame": {
+                        "enum": [
+                          "concrete",
+                          "steel",
+                          "other"
+                        ],
+                        "type": "string"
+                      },
+                      "submissionKey": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "totalUnits": {
+                        "maximum": 100000,
+                        "minimum": 1,
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "profileId",
+                      "submissionKey",
+                      "gridType",
+                      "agreementAccepted",
+                      "buildingType",
+                      "propertyForm",
+                      "structuralFrame",
+                      "buildingCompletionDate"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "agreementAccepted": {
+                        "enum": [
+                          true
+                        ],
+                        "type": "boolean"
+                      },
+                      "billIdentifier": {
+                        "pattern": "^[0-9]{6,13}$",
+                        "type": "string"
+                      },
+                      "buildingType": {
+                        "enum": [
+                          "non_household"
+                        ],
+                        "type": "string"
+                      },
+                      "gridType": {
+                        "enum": [
+                          "on_grid",
+                          "off_grid"
+                        ],
+                        "type": "string"
+                      },
+                      "installationSurface": {
+                        "enum": [
+                          "land",
+                          "rooftop",
+                          "both"
+                        ],
+                        "type": "string"
+                      },
+                      "profileId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "siteAddressId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "siteCategory": {
+                        "enum": [
+                          "agricultural",
+                          "industrial"
+                        ],
+                        "type": "string"
+                      },
+                      "siteDescription": {
+                        "maxLength": 2000,
+                        "type": "string"
+                      },
+                      "siteRelationship": {
+                        "enum": [
+                          "owner",
+                          "tenant",
+                          "authorized_operator"
+                        ],
+                        "type": "string"
+                      },
+                      "submissionKey": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "usableAreaSqm": {
+                        "exclusiveMinimum": true,
+                        "maximum": 1000000,
+                        "minimum": 0,
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "profileId",
+                      "submissionKey",
+                      "gridType",
+                      "agreementAccepted",
+                      "buildingType",
+                      "siteCategory",
+                      "installationSurface",
+                      "usableAreaSqm",
+                      "siteAddressId",
+                      "siteRelationship"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit a solar construction request without creating a contract or invoice",
+        "tags": [
+          "Solar construction requests"
+        ]
+      }
+    },
+    "/api/solar/requests/{id}": {
+      "get": {
+        "operationId": "SolarRequestController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read a solar construction request and its current stage",
+        "tags": [
+          "Solar construction requests"
+        ]
+      }
+    },
     "/api/staff/electricity/contracts/{id}/price-adjustments": {
       "get": {
         "operationId": "StaffElectricityPriceAdjustmentController_get",

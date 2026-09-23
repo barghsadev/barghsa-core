@@ -596,6 +596,13 @@
       "when": 1791331200067,
       "tag": "0164_saving_inventory",
       "breakpoints": true
+    },
+    {
+      "idx": 165,
+      "version": "7",
+      "when": 1791331200068,
+      "tag": "0165_solar_construction_intake",
+      "breakpoints": true
     }
   ]
 }

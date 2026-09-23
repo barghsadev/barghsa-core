@@ -35,6 +35,8 @@ import {
   StaffSavingCommentsController,
 } from '../saving/saving-comments.controller.js';
 import { SavingCommentsService } from '../saving/saving-comments.service.js';
+import { SolarRequestController } from '../solar/solar-request.controller.js';
+import { SolarRequestService } from '../solar/solar-request.service.js';
 
 @Module({
   imports: [SessionModule, AdminModule, InvoiceModule],
@@ -51,6 +53,7 @@ import { SavingCommentsService } from '../saving/saving-comments.service.js';
     SavingFulfillmentController,
     SavingCommentsController,
     StaffSavingCommentsController,
+    SolarRequestController,
   ],
   providers: [
     OrdersService,
@@ -66,6 +69,7 @@ import { SavingCommentsService } from '../saving/saving-comments.service.js';
     BillVerificationProvider,
     SavingFulfillmentService,
     SavingCommentsService,
+    SolarRequestService,
   ],
   exports: [OrdersService, ElectricityCalculationService],
 })

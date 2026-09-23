@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Zap,
   Sprout,
+  Sun,
   Wallet,
   ReceiptText,
   LifeBuoy,
@@ -14,6 +15,7 @@ import {
 } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { documentText } from '@barghsa/i18n/documents';
+import { tSolar } from '@barghsa/i18n/solar';
 import { shellText } from '@barghsa/i18n/shell';
 import { useLocale } from '../hooks/useLocale.js';
 import { ProfileSwitcher } from '../components/ProfileSwitcher.js';
@@ -38,6 +40,7 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
       items: [
         { to: '/electricity', label: t('dashboard.nav.electricity', locale), icon: Zap },
         { to: '/savings', label: t('dashboard.nav.savings', locale), icon: Sprout },
+        { to: '/solar/requests', label: tSolar('myRequests', locale), icon: Sun },
         { to: '/wallet', label: t('dashboard.nav.wallet', locale), icon: Wallet },
         { to: '/invoices', label: t('dashboard.nav.invoices', locale), icon: ReceiptText },
         { to: '/contracts', label: contractText('title', locale), icon: FileText },
