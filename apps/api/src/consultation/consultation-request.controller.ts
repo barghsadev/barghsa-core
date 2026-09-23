@@ -10,7 +10,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
@@ -53,11 +53,15 @@ export class ConsultationRequestController {
 
   @Get('requests')
   @ApiOperation({ summary: 'List consultation requests for a profile' })
+  @ApiQuery({ name: 'before', required: false, format: 'uuid', type: String })
   list(
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
-    @Req() req: AuthenticatedRequest
+    @Req() req: AuthenticatedRequest,
+    @Query('before') before?: string
   ) {
-    return this.service.list(req.session, profileId);
+    if (before && !z.string().uuid().safeParse(before).success)
+      throw new HttpException({ error: 'VALIDATION:INVALID_CURSOR' }, 400);
+    return this.service.list(req.session, profileId, before);
   }
 
   @Get('requests/:id')

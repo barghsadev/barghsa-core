@@ -100,8 +100,8 @@ export class SavingFulfillmentService {
   async queue(lane: 'all' | 'review' | 'fulfillment' = 'all', after?: string) {
     const cursor = after
       ? (
-          await getDbPool().query<{ id: string; submitted_at: Date; status: string }>(
-            `SELECT id,submitted_at,status FROM saving_orders
+          await getDbPool().query<{ id: string; submitted_at: string; status: string }>(
+            `SELECT id,submitted_at::text AS submitted_at,status FROM saving_orders
              WHERE id=$1 AND status IN ('awaiting_staff_review','approved','in_progress')`,
             [after]
           )

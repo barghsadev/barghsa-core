@@ -139,8 +139,8 @@ export class ElectricityStaffReviewService {
   async queue(after?: string) {
     const cursor = after
       ? (
-          await getDbPool().query<{ submitted_at: Date; id: string }>(
-            'SELECT submitted_at,id FROM electricity_orders WHERE id=$1 AND submitted_at IS NOT NULL',
+          await getDbPool().query<{ submitted_at: string; id: string }>(
+            'SELECT submitted_at::text AS submitted_at,id FROM electricity_orders WHERE id=$1 AND submitted_at IS NOT NULL',
             [after]
           )
         ).rows[0]

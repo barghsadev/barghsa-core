@@ -3085,32 +3085,67 @@
           {
             "in": "query",
             "name": "status",
-            "required": true,
+            "required": false,
             "schema": {
+              "enum": [
+                "submitted",
+                "under_review",
+                "awaiting_customer_info",
+                "offer_pending",
+                "offer_accepted",
+                "offer_declined",
+                "completed",
+                "rejected",
+                "cancelled"
+              ],
               "type": "string"
             }
           },
           {
             "in": "query",
             "name": "assignment",
-            "required": true,
+            "required": false,
             "schema": {
+              "enum": [
+                "all",
+                "mine",
+                "unassigned"
+              ],
               "type": "string"
             }
           },
           {
             "in": "query",
             "name": "priority",
-            "required": true,
+            "required": false,
             "schema": {
+              "enum": [
+                "all",
+                "high",
+                "normal"
+              ],
               "type": "string"
             }
           },
           {
             "in": "query",
             "name": "minAgeDays",
-            "required": true,
+            "required": false,
             "schema": {
+              "enum": [
+                "0",
+                "1",
+                "7"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "format": "uuid",
               "type": "string"
             }
           }
@@ -14019,6 +14054,15 @@
             "name": "profileId",
             "required": true,
             "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
               "type": "string"
             }
           }

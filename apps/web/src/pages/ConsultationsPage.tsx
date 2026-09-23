@@ -35,6 +35,11 @@ export function ConsultationsPage() {
   const [profile, setProfile] = useState<SwitcherProfile | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [requests, setRequests] = useState<RequestRow[]>([]);
+  const [before, setBefore] = useState<string | null>(null);
+  const [nextBefore, setNextBefore] = useState<string | null>(null);
+  const [requestsLoading, setRequestsLoading] = useState(true);
+  const [requestsError, setRequestsError] = useState(false);
+  const [requestRevision, setRequestRevision] = useState(0);
   const [selectedProductId, setSelectedProductId] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -58,24 +63,15 @@ export function ConsultationsPage() {
         };
         const active = data.profiles.find((item) => item.id === data.activeProfileId) ?? null;
         if (!active) return;
-        const query = `profileId=${encodeURIComponent(active.id)}`;
-        const [productResponse, requestResponse] = await Promise.all([
-          fetch(`/api/consultations/products?${query}`, {
-            credentials: 'include',
-            signal: controller.signal,
-          }),
-          fetch(`/api/consultations/requests?${query}`, {
-            credentials: 'include',
-            signal: controller.signal,
-          }),
-        ]);
-        if (!productResponse.ok || !requestResponse.ok) throw new Error('consultations');
+        const productResponse = await fetch(
+          `/api/consultations/products?profileId=${encodeURIComponent(active.id)}`,
+          { credentials: 'include', signal: controller.signal }
+        );
+        if (!productResponse.ok) throw new Error('consultations');
         const productData = (await productResponse.json()) as { products: Product[] };
-        const requestData = (await requestResponse.json()) as { requests: RequestRow[] };
         if (controller.signal.aborted) return;
         setProfile(active);
         setProducts(productData.products);
-        setRequests(requestData.requests);
       } catch {
         if (!controller.signal.aborted) setLoadError(true);
       } finally {
@@ -84,6 +80,40 @@ export function ConsultationsPage() {
     })();
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    if (!profile) return;
+    const controller = new AbortController();
+    setRequestsLoading(true);
+    setRequestsError(false);
+    const query = new URLSearchParams({ profileId: profile.id });
+    if (before) query.set('before', before);
+    void fetch(`/api/consultations/requests?${query}`, {
+      credentials: 'include',
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('requests');
+        return response.json() as Promise<{ requests: RequestRow[]; nextBefore: string | null }>;
+      })
+      .then((result) => {
+        if (!controller.signal.aborted) {
+          setRequests((current) => {
+            if (!before) return result.requests;
+            const shown = new Set(current.map((request) => request.id));
+            return [...current, ...result.requests.filter((request) => !shown.has(request.id))];
+          });
+          setNextBefore(result.nextBefore);
+        }
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setRequestsError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setRequestsLoading(false);
+      });
+    return () => controller.abort();
+  }, [profile, before, requestRevision]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -194,7 +224,16 @@ export function ConsultationsPage() {
             <h2 id="consultation-requests-title" className="text-xl font-semibold">
               {copy('myRequests')}
             </h2>
-            {!requests.length && <p className="text-muted-foreground">{copy('emptyRequests')}</p>}
+            {requestsLoading && <p role="status">{copy('loading')}</p>}
+            {requestsError && <p role="alert">{copy('loadError')}</p>}
+            {requestsError && (
+              <Button variant="outline" onClick={() => setRequestRevision((value) => value + 1)}>
+                {copy('retry')}
+              </Button>
+            )}
+            {!requests.length && !requestsLoading && !requestsError && (
+              <p className="text-muted-foreground">{copy('emptyRequests')}</p>
+            )}
             <ul className="space-y-3">
               {requests.map((request) => {
                 const action = consultationNextAction(request, request.refund_pending, locale);
@@ -234,6 +273,15 @@ export function ConsultationsPage() {
                 );
               })}
             </ul>
+            {nextBefore && !requestsError && (
+              <Button
+                variant="outline"
+                disabled={requestsLoading}
+                onClick={() => setBefore(nextBefore)}
+              >
+                {copy('moreRequests')}
+              </Button>
+            )}
           </section>
         </>
       )}

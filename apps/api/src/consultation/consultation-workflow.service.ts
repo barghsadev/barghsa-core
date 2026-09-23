@@ -77,13 +77,30 @@ export class ConsultationWorkflowService {
     status?: ConsultationStatus,
     assignment: 'all' | 'mine' | 'unassigned' = 'all',
     priority: 'all' | 'high' | 'normal' = 'all',
-    minAgeDays = 0
+    minAgeDays = 0,
+    after?: string
   ) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireCurrentSession(client, actor);
       await requireStaffMutationPermission(client, actor.userId, 'orders:read');
+      const cursor = after
+        ? (
+            await client.query<{ submitted_at: string; status: ConsultationStatus }>(
+              'SELECT submitted_at::text AS submitted_at,status FROM consultation_requests WHERE id=$1',
+              [after]
+            )
+          ).rows[0]
+        : null;
+      if (after && !cursor) throw new NotFoundException('Consultation queue cursor not found');
+      const cursorRank = cursor
+        ? cursor.status === 'submitted'
+          ? 0
+          : cursor.status === 'awaiting_customer_info'
+            ? 2
+            : 1
+        : null;
       const requests = (
         await client.query(
           `SELECT r.id,r.profile_id,r.status,r.product_snapshot,r.staff_owner_id,r.staff_team,
@@ -98,14 +115,29 @@ export class ConsultationWorkflowService {
                 OR ($2='unassigned' AND r.staff_owner_id IS NULL AND r.staff_team IS NULL))
            AND ($4::text='all' OR ($4='high' AND r.submitted_at<NOW()-INTERVAL '2 days')
                 OR ($4='normal' AND r.submitted_at>=NOW()-INTERVAL '2 days'))
-           AND ($5::int=0 OR r.submitted_at<=NOW()-($5::int * INTERVAL '1 day'))
-         ORDER BY CASE r.status WHEN 'submitted' THEN 0 WHEN 'awaiting_customer_info' THEN 2 ELSE 1 END,
-           r.submitted_at,r.id LIMIT 100`,
-          [status ?? null, assignment, actor.userId, priority, minAgeDays]
+             AND ($5::int=0 OR r.submitted_at<=NOW()-($5::int * INTERVAL '1 day'))
+             AND ($6::uuid IS NULL OR
+               (CASE r.status WHEN 'submitted' THEN 0 WHEN 'awaiting_customer_info' THEN 2 ELSE 1 END,
+                r.submitted_at,r.id) > ($7::int,$8::timestamptz,$6::uuid))
+           ORDER BY CASE r.status WHEN 'submitted' THEN 0 WHEN 'awaiting_customer_info' THEN 2 ELSE 1 END,
+             r.submitted_at,r.id LIMIT 101`,
+          [
+            status ?? null,
+            assignment,
+            actor.userId,
+            priority,
+            minAgeDays,
+            after ?? null,
+            cursorRank,
+            cursor?.submitted_at ?? null,
+          ]
         )
       ).rows;
       await client.query('COMMIT');
-      return { requests };
+      return {
+        requests: requests.slice(0, 100),
+        nextAfter: requests.length > 100 ? requests[99]!.id : null,
+      };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

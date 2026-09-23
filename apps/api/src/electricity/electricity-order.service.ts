@@ -172,8 +172,8 @@ export class ElectricityOrderService {
         throw new NotFoundException('Profile not found');
       const cursor = before
         ? (
-            await client.query<{ submitted_at: Date; id: string }>(
-              'SELECT submitted_at,id FROM electricity_orders WHERE id=$1 AND profile_id=$2',
+            await client.query<{ submitted_at: string; id: string }>(
+              'SELECT submitted_at::text AS submitted_at,id FROM electricity_orders WHERE id=$1 AND profile_id=$2',
               [before, profileId]
             )
           ).rows[0]

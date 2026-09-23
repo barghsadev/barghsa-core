@@ -89,6 +89,21 @@ it('moves a consultation through staff assignment, customer information, and a r
   expect((await queue.json()) as { requests: Array<{ id: string }> }).toMatchObject({
     requests: [{ id: requestId }],
   });
+  const later = await fetch(
+    `${http.base}/api/admin/consultations/requests?status=submitted&assignment=unassigned&priority=normal&minAgeDays=0&after=${requestId}`,
+    { headers: headers.reviewer! }
+  );
+  expect(later.status, http.logs()).toBe(200);
+  expect(
+    ((await later.json()) as { requests: Array<{ id: string }> }).requests.map((row) => row.id)
+  ).not.toContain(requestId);
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/consultations/requests?after=bad`, {
+        headers: headers.reviewer!,
+      })
+    ).status
+  ).toBe(400);
   const assigned = await post(`${root}/assign`, 'reviewer', { assignTo: 'self' });
   expect(assigned.status, http.logs()).toBe(200);
   expect(await assigned.json()).toMatchObject({ status: 'under_review', staffOwnerId: 'reviewer' });

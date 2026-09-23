@@ -121,8 +121,8 @@ export class SolarRequestService {
         throw new NotFoundException('Profile not found');
       const cursor = before
         ? (
-            await client.query<{ id: string; submitted_at: Date }>(
-              'SELECT id,submitted_at FROM solar_construction_requests WHERE id=$1 AND profile_id=$2',
+            await client.query<{ id: string; submitted_at: string }>(
+              'SELECT id,submitted_at::text AS submitted_at FROM solar_construction_requests WHERE id=$1 AND profile_id=$2',
               [before, profileId]
             )
           ).rows[0]

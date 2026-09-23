@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useParams } from '@tanstack/react-router';
+import { Link, useNavigate, useParams } from '@tanstack/react-router';
 import { Button, Label } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { useLocale } from '../hooks/useLocale.js';
@@ -42,6 +42,7 @@ interface Detail {
 
 export function ConsultationDetailPage() {
   const { requestId } = useParams({ from: '/_app/consultations/$requestId' });
+  const navigate = useNavigate();
   const locale = useLocale();
   const copy = (key: string) => tConsultation(key, locale);
   const [detail, setDetail] = useState<Detail | null>(null);
@@ -118,7 +119,7 @@ export function ConsultationDetailPage() {
       if (!response.ok) throw new Error(decision);
       const result = (await response.json()) as { paymentRequired?: boolean; invoiceId?: string };
       if (decision === 'accept' && result.paymentRequired && result.invoiceId) {
-        window.location.assign(`/invoices/${result.invoiceId}`);
+        await navigate({ to: '/invoices/$invoiceId', params: { invoiceId: result.invoiceId } });
         return;
       }
       setRevision((value) => value + 1);
@@ -143,9 +144,9 @@ export function ConsultationDetailPage() {
   const latestEvent = detail?.history.at(-1);
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <a href="/consultations" className="text-sm text-primary underline">
+      <Link to="/consultations" className="text-sm text-primary underline">
         {copy('back')}
-      </a>
+      </Link>
       <h1 className="text-3xl font-semibold">{copy('details')}</h1>
       {loading && <p role="status">{copy('loading')}</p>}
       {error && <p role="alert">{copy('loadError')}</p>}
@@ -208,9 +209,13 @@ export function ConsultationDetailPage() {
             )}
             {request.invoice_id && request.accepted_at && (
               <p>
-                <a className="text-primary underline" href={`/invoices/${request.invoice_id}`}>
+                <Link
+                  className="text-primary underline"
+                  to="/invoices/$invoiceId"
+                  params={{ invoiceId: request.invoice_id }}
+                >
                   {copy('viewInvoice')}
-                </a>
+                </Link>
               </p>
             )}
           </section>

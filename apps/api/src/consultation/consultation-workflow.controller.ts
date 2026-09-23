@@ -11,7 +11,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -71,12 +71,18 @@ export class StaffConsultationWorkflowController {
 
   @Get('requests')
   @ApiOperation({ summary: 'List consultation work by status and assignment' })
+  @ApiQuery({ name: 'status', required: false, enum: CONSULTATION_STATUSES })
+  @ApiQuery({ name: 'assignment', required: false, enum: ['all', 'mine', 'unassigned'] })
+  @ApiQuery({ name: 'priority', required: false, enum: ['all', 'high', 'normal'] })
+  @ApiQuery({ name: 'minAgeDays', required: false, enum: ['0', '1', '7'] })
+  @ApiQuery({ name: 'after', required: false, format: 'uuid', type: String })
   queue(
     @Req() req: AuthenticatedRequest,
     @Query('status') rawStatus?: string,
     @Query('assignment') rawAssignment?: string,
     @Query('priority') rawPriority?: string,
-    @Query('minAgeDays') rawAge?: string
+    @Query('minAgeDays') rawAge?: string,
+    @Query('after') rawAfter?: string
   ) {
     const parsedStatus = rawStatus ? status.safeParse(rawStatus) : null;
     const parsedAssignment = z
@@ -88,7 +94,8 @@ export class StaffConsultationWorkflowController {
       (parsedStatus && !parsedStatus.success) ||
       !parsedAssignment.success ||
       !parsedPriority.success ||
-      !parsedAge.success
+      !parsedAge.success ||
+      (rawAfter !== undefined && !z.string().uuid().safeParse(rawAfter).success)
     )
       throw new BadRequestException('Invalid consultation filter');
     return this.workflow.queue(
@@ -96,7 +103,8 @@ export class StaffConsultationWorkflowController {
       parsedStatus?.data,
       parsedAssignment.data,
       parsedPriority.data,
-      Number(parsedAge.data)
+      Number(parsedAge.data),
+      rawAfter
     );
   }
 

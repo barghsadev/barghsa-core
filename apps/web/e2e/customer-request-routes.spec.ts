@@ -4,6 +4,7 @@ const profileId = '11111111-1111-4111-8111-111111111111';
 const solarId = '22222222-2222-4222-8222-222222222222';
 const olderSolarId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const consultationId = '33333333-3333-4333-8333-333333333333';
+const olderConsultationId = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const solarRequest = {
   id: solarId,
   profile_id: profileId,
@@ -161,21 +162,23 @@ test('consultation list opens its request detail route', async ({ page }) => {
       },
     })
   );
-  await page.route('**/api/consultations/requests?*', (route) =>
-    route.fulfill({
+  await page.route('**/api/consultations/requests?*', (route) => {
+    const before = new URL(route.request().url()).searchParams.get('before');
+    return route.fulfill({
       json: {
         requests: [
           {
-            id: consultationId,
+            id: before ? olderConsultationId : consultationId,
             status: 'submitted',
             product_snapshot: { title: { en: 'Site advice', fa: 'مشاوره مکان' } },
-            submitted_at: '2026-09-23T10:00:00.000Z',
+            submitted_at: before ? '2026-09-22T10:00:00.000Z' : '2026-09-23T10:00:00.000Z',
             expected_next_step: null,
           },
         ],
+        nextBefore: before ? null : consultationId,
       },
-    })
-  );
+    });
+  });
   await page.route(`**/api/consultations/requests/${consultationId}`, (route) =>
     route.fulfill({
       json: {
@@ -203,9 +206,14 @@ test('consultation list opens its request detail route', async ({ page }) => {
   await page.goto('/consultations');
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await expect(page.getByRole('heading', { name: 'Consultations' })).toBeVisible();
-  await page.getByRole('link', { name: /Site advice/ }).click();
+  await page.getByRole('button', { name: 'More requests' }).click();
+  await expect(page.locator(`a[href="/consultations/${consultationId}"]`)).toBeVisible();
+  await expect(page.locator(`a[href="/consultations/${olderConsultationId}"]`)).toBeVisible();
+  await page.locator(`a[href="/consultations/${consultationId}"]`).click();
   await expect(page.getByRole('heading', { name: 'Consultation details' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Status and next action' })).toBeVisible();
+  await page.getByRole('link', { name: 'Back to consultations' }).click();
+  await expect(page.getByRole('heading', { name: 'Consultations' })).toBeVisible();
 
   await page.route('**/api/consultations/requests', (route) => {
     submissions.push(route.request().postDataJSON() as Record<string, unknown>);
@@ -279,4 +287,61 @@ test('consultation list and detail show assigned staff and the payment action', 
   await expect(page.getByText('Staff owner:')).toBeVisible();
   await expect(page.getByText('reviewer@consultation.test')).toBeVisible();
   await expect(page.getByText('Engineering')).toBeVisible();
+  await page.evaluate(() => {
+    (window as Window & { __consultationNavigation?: string }).__consultationNavigation = 'kept';
+  });
+  await page.getByRole('link', { name: 'View invoice' }).click();
+  await expect(page).toHaveURL(new RegExp(`/invoices/${offer.invoice_id}$`));
+  expect(
+    await page.evaluate(
+      () => (window as Window & { __consultationNavigation?: string }).__consultationNavigation
+    )
+  ).toBe('kept');
+});
+
+test('accepting a consultation offer opens its invoice without reloading the app', async ({
+  page,
+}) => {
+  const invoiceId = '55555555-5555-4555-8555-555555555555';
+  await page.route(`**/api/consultations/requests/${consultationId}`, (route) =>
+    route.fulfill({
+      json: {
+        request: {
+          id: consultationId,
+          status: 'offer_pending',
+          product_snapshot: { title: { en: 'Site advice', fa: 'مشاوره مکان' } },
+          submitted_at: '2026-09-23T10:00:00.000Z',
+          staff_owner_username: 'reviewer@consultation.test',
+          staff_team: null,
+          fee: '500000',
+          scope: 'Site review',
+          deliverables: 'Report',
+          expected_next_step: 'Accept the offer',
+          offer_valid_until: '2099-01-01T00:00:00.000Z',
+          invoice_id: invoiceId,
+          invoice_state: 'Unpaid',
+          has_paid_invoice: false,
+          accepted_at: null,
+        },
+        history: [],
+        adjustments: [],
+        refunds: [],
+      },
+    })
+  );
+  await page.route(`**/api/consultations/requests/${consultationId}/accept`, (route) =>
+    route.fulfill({ json: { paymentRequired: true, invoiceId } })
+  );
+  await page.goto(`/consultations/${consultationId}`);
+  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  await page.evaluate(() => {
+    (window as Window & { __consultationNavigation?: string }).__consultationNavigation = 'kept';
+  });
+  await page.getByRole('button', { name: 'Accept offer and pay' }).click();
+  await expect(page).toHaveURL(new RegExp(`/invoices/${invoiceId}$`));
+  expect(
+    await page.evaluate(
+      () => (window as Window & { __consultationNavigation?: string }).__consultationNavigation
+    )
+  ).toBe('kept');
 });

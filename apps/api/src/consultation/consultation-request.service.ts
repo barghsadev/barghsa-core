@@ -169,13 +169,22 @@ export class ConsultationRequestService {
     }
   }
 
-  async list(actor: Actor, profileId: string) {
+  async list(actor: Actor, profileId: string, before?: string) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireCurrentSession(client, actor);
       if (!(await this.orders.mayManageOrders(client, actor.userId, profileId)))
         throw new NotFoundException('Profile not found');
+      const cursor = before
+        ? (
+            await client.query<{ id: string; submitted_at: string }>(
+              'SELECT id,submitted_at::text AS submitted_at FROM consultation_requests WHERE id=$1 AND profile_id=$2',
+              [before, profileId]
+            )
+          ).rows[0]
+        : null;
+      if (before && !cursor) throw new NotFoundException('Consultation cursor not found');
       const rows = (
         await client.query(
           `SELECT r.id,r.status,r.product_snapshot,r.submitted_at,r.staff_owner_id,
@@ -188,14 +197,18 @@ export class ConsultationRequestService {
               ) AS refund_pending
            FROM consultation_requests r
            LEFT JOIN users u ON u.user_id=r.staff_owner_id
-           LEFT JOIN invoices i ON i.id=r.invoice_id
-           WHERE r.profile_id=$1
-           ORDER BY r.submitted_at DESC,r.id DESC LIMIT 100`,
-          [profileId]
+             LEFT JOIN invoices i ON i.id=r.invoice_id
+             WHERE r.profile_id=$1
+               AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) < ($2::timestamptz,$3::uuid))
+             ORDER BY r.submitted_at DESC,r.id DESC LIMIT 101`,
+          [profileId, cursor?.submitted_at ?? null, before ?? null]
         )
       ).rows;
       await client.query('COMMIT');
-      return { requests: rows };
+      return {
+        requests: rows.slice(0, 100),
+        nextBefore: rows.length > 100 ? rows[99]!.id : null,
+      };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

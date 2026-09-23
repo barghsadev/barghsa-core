@@ -85,8 +85,36 @@ it('lists seeded products by profile, submits without invoicing, and isolates hi
     { headers: headers.individual! }
   );
   expect(list.status, http.logs()).toBe(200);
-  const listed = (await list.json()) as { requests: Array<{ id: string; status: string }> };
+  const listed = (await list.json()) as {
+    requests: Array<{ id: string; status: string }>;
+    nextBefore: string | null;
+  };
   expect(listed.requests).toMatchObject([{ id: created.requestId, status: 'submitted' }]);
+  expect(listed.nextBefore).toBeNull();
+  const after = await fetch(
+    `${http.base}/api/consultations/requests?profileId=${profiles.individual}&before=${created.requestId}`,
+    { headers: headers.individual! }
+  );
+  expect(after.status, http.logs()).toBe(200);
+  expect((await after.json()) as { requests: unknown[] }).toMatchObject({ requests: [] });
+  expect(
+    (
+      await fetch(
+        `${http.base}/api/consultations/requests?profileId=${profiles.individual}&before=bad`,
+        {
+          headers: headers.individual!,
+        }
+      )
+    ).status
+  ).toBe(400);
+  expect(
+    (
+      await fetch(
+        `${http.base}/api/consultations/requests?profileId=${profiles.individual}&before=${randomUUID()}`,
+        { headers: headers.individual! }
+      )
+    ).status
+  ).toBe(404);
   const detail = await fetch(`${http.base}/api/consultations/requests/${created.requestId}`, {
     headers: headers.individual!,
   });

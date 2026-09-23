@@ -840,6 +840,16 @@ it('lists only the customer profile orders and cancels an unpublished order once
       }),
     ])
   );
+  const olderPage = await fetch(
+    `${http.base}/api/electricity/orders?profileId=${input.profileId}&before=${order.orderId}`,
+    { headers }
+  );
+  expect(olderPage.status, http.logs()).toBe(200);
+  expect(
+    ((await olderPage.json()) as { orders: Array<{ orderId: string }> }).orders.map(
+      (row) => row.orderId
+    )
+  ).not.toContain(order.orderId);
   const before = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
   const detail = (await before.json()) as {
     versionId: string;

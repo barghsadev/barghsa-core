@@ -57,6 +57,9 @@ export function AdminConsultationsPage() {
   const locale = useLocale();
   const copy = (key: string) => tConsultation(key, locale);
   const [rows, setRows] = useState<RequestRow[]>([]);
+  const [after, setAfter] = useState<string | null>(null);
+  const [nextAfter, setNextAfter] = useState<string | null>(null);
+  const [queueLoading, setQueueLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [status, setStatus] = useState('');
@@ -75,7 +78,16 @@ export function AdminConsultationsPage() {
   const [revision, setRevision] = useState(0);
   const [error, setError] = useState(false);
   const [action, setAction] = useState<TeamAction | null>(null);
-  const refresh = () => setRevision((value) => value + 1);
+  function resetQueue(clearSelection = false) {
+    setRows([]);
+    setAfter(null);
+    setNextAfter(null);
+    if (clearSelection) setSelectedId(null);
+  }
+  function refresh() {
+    resetQueue();
+    setRevision((value) => value + 1);
+  }
 
   useEffect(() => {
     const controller = new AbortController();
@@ -99,24 +111,36 @@ export function AdminConsultationsPage() {
   useEffect(() => {
     const controller = new AbortController();
     setError(false);
+    setQueueLoading(true);
     const query = new URLSearchParams({ assignment, priority, minAgeDays });
     if (status) query.set('status', status);
+    if (after) query.set('after', after);
     void fetch(`/api/admin/consultations/requests?${query}`, {
       credentials: 'include',
       signal: controller.signal,
     })
       .then(async (response) => {
         if (!response.ok) throw new Error('queue');
-        return (await response.json()) as { requests: RequestRow[] };
+        return (await response.json()) as { requests: RequestRow[]; nextAfter: string | null };
       })
       .then((result) => {
-        if (!controller.signal.aborted) setRows(result.requests);
+        if (!controller.signal.aborted) {
+          setRows((current) => {
+            if (!after) return result.requests;
+            const shown = new Set(current.map((request) => request.id));
+            return [...current, ...result.requests.filter((request) => !shown.has(request.id))];
+          });
+          setNextAfter(result.nextAfter);
+        }
       })
       .catch(() => {
         if (!controller.signal.aborted) setError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setQueueLoading(false);
       });
     return () => controller.abort();
-  }, [status, assignment, priority, minAgeDays, revision]);
+  }, [status, assignment, priority, minAgeDays, after, revision]);
 
   useEffect(() => {
     if (!selectedId) {
@@ -178,7 +202,10 @@ export function AdminConsultationsPage() {
           <select
             className="w-full rounded-md border bg-background p-2"
             value={status}
-            onChange={(event) => setStatus(event.target.value)}
+            onChange={(event) => {
+              resetQueue(true);
+              setStatus(event.target.value);
+            }}
           >
             <option value="">{copy('openRequests')}</option>
             {statuses.map((item) => (
@@ -193,7 +220,10 @@ export function AdminConsultationsPage() {
           <select
             className="w-full rounded-md border bg-background p-2"
             value={assignment}
-            onChange={(event) => setAssignment(event.target.value)}
+            onChange={(event) => {
+              resetQueue(true);
+              setAssignment(event.target.value);
+            }}
           >
             <option value="all">{copy('all')}</option>
             <option value="mine">{copy('mine')}</option>
@@ -205,7 +235,10 @@ export function AdminConsultationsPage() {
           <select
             className="w-full rounded-md border bg-background p-2"
             value={priority}
-            onChange={(event) => setPriority(event.target.value)}
+            onChange={(event) => {
+              resetQueue(true);
+              setPriority(event.target.value);
+            }}
           >
             <option value="all">{copy('all')}</option>
             <option value="high">{copy('high')}</option>
@@ -217,7 +250,10 @@ export function AdminConsultationsPage() {
           <select
             className="w-full rounded-md border bg-background p-2"
             value={minAgeDays}
-            onChange={(event) => setMinAgeDays(event.target.value)}
+            onChange={(event) => {
+              resetQueue(true);
+              setMinAgeDays(event.target.value);
+            }}
           >
             <option value="0">{copy('all')}</option>
             <option value="1">{copy('oneDay')}</option>
@@ -230,9 +266,12 @@ export function AdminConsultationsPage() {
           {copy('loadError')}
         </p>
       )}
+      {queueLoading && <p role="status">{copy('loading')}</p>}
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <section aria-label={copy('staffTitle')} className="space-y-2">
-          {!rows.length && !error && <p className="text-muted-foreground">{copy('noWork')}</p>}
+          {!rows.length && !error && !queueLoading && (
+            <p className="text-muted-foreground">{copy('noWork')}</p>
+          )}
           {rows.map((row) => (
             <button
               key={row.id}
@@ -258,6 +297,11 @@ export function AdminConsultationsPage() {
               </span>
             </button>
           ))}
+          {nextAfter && !error && (
+            <Button variant="outline" disabled={queueLoading} onClick={() => setAfter(nextAfter)}>
+              {copy('moreWork')}
+            </Button>
+          )}
         </section>
         <section className="space-y-4 rounded-xl border bg-card p-5" aria-label={copy('details')}>
           {!current && <p className="text-muted-foreground">{copy('selectRequest')}</p>}
