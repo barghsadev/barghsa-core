@@ -1,7 +1,7 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
-import { ElectricityOrdersPage } from './orders.js';
+import { ElectricityOrdersPage } from './orders.index.js';
 
 vi.mock('../../../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, irrDigits: String }),

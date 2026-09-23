@@ -134,7 +134,18 @@ it('submits a four-product advanced bundle once with one contract and invoice', 
   const preview = (await previewResponse.json()) as {
     reviewDigest: string;
     totalKwh: string;
-    lines: Array<{ systemKey: string }>;
+    subtotalIrR: string;
+    discountIrR: string;
+    vatIrR: string;
+    totalIrR: string;
+    lines: Array<{
+      systemKey: string;
+      quantityKwh: string;
+      unitPriceIrR: string;
+      subtotalIrR: string;
+      discountIrR: string;
+      vatIrR: string;
+    }>;
     walletBalanceIrR: string;
   };
   expect(preview.totalKwh).toBe('19');
@@ -176,11 +187,11 @@ it('submits a four-product advanced bundle once with one contract and invoice', 
   expect(first).toEqual(repeated);
   const saved = (
     await http.pool.query(
-      `SELECT e.mode,e.period_start,e.period_end,
+      `SELECT e.mode,e.period_start,e.period_end,e.pricing_snapshot,i.total_amount,
       (SELECT count(*)::int FROM electricity_order_lines WHERE order_id=e.id) AS line_count,
       (SELECT count(*)::int FROM invoices WHERE order_id=e.id) AS invoice_count,
       (SELECT count(*)::int FROM contracts WHERE order_id=e.id) AS contract_count
-     FROM electricity_orders e WHERE e.id=$1`,
+     FROM electricity_orders e JOIN invoices i ON i.order_id=e.id WHERE e.id=$1`,
       [first.orderId]
     )
   ).rows[0];
@@ -188,6 +199,17 @@ it('submits a four-product advanced bundle once with one contract and invoice', 
   expect(saved.period_start.toISOString()).toBe(startAt);
   expect(saved.period_end.toISOString()).toBe(endAt);
   expect(saved).toMatchObject({ line_count: 4, invoice_count: 1, contract_count: 1 });
+  expect(saved.total_amount).toBe(preview.totalIrR);
+  expect(saved.pricing_snapshot).toMatchObject({
+    periodStart: startAt,
+    periodEnd: endAt,
+    totalKwh: preview.totalKwh,
+    subtotalIrR: preview.subtotalIrR,
+    discountIrR: preview.discountIrR,
+    vatIrR: preview.vatIrR,
+    totalIrR: preview.totalIrR,
+    lines: preview.lines,
+  });
   expect(
     (await post('orders/advanced', { ...submission, quantities: { thermal: '11' } })).status
   ).toBe(409);
@@ -204,6 +226,46 @@ it('submits a four-product advanced bundle once with one contract and invoice', 
       })
     ).status
   ).toBe(409);
+});
+
+it('invalidates an advanced review when the green rule changes before submission', async () => {
+  const request = {
+    profileId: input.profileId,
+    startAt: new Date(Date.now() + 2 * 86_400_000).toISOString(),
+    endAt: new Date(Date.now() + 9 * 86_400_000).toISOString(),
+    quantities: { thermal: '8', green: '0' },
+  };
+  const previewResponse = await post('preview/advanced', request);
+  expect(previewResponse.status, http.logs()).toBe(200);
+  const reviewed = (await previewResponse.json()) as { reviewDigest: string };
+  await http.pool.query(
+    `INSERT INTO app_config(key,value,version) VALUES('electricity.green_mandatory_rules',$1::jsonb,1)`,
+    [
+      JSON.stringify({
+        simple_order: {
+          mandatory_green_enabled: true,
+          average_power_threshold_kw: 1000,
+          mandatory_green_share_percent: 4,
+        },
+        advanced_order: {
+          mandatory_green_enabled: true,
+          average_power_threshold_kw: 0,
+          mandatory_green_share_percent: 20,
+        },
+      }),
+    ]
+  );
+  const submission = {
+    ...request,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: reviewed.reviewDigest,
+    address: input.address,
+  };
+  expect((await post('orders/advanced', submission)).status).toBe(409);
+  expect(
+    (await http.pool.query('SELECT count(*)::int AS count FROM electricity_order_submissions'))
+      .rows[0].count
+  ).toBe(0);
 });
 
 it('derives mandatory green only from advanced thermal quantity', async () => {
