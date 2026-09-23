@@ -84,12 +84,19 @@ interface Detail extends Order {
 }
 
 function stagePrerequisites(stage: StageName, order: Detail) {
-  const reasons: Array<'staffPaymentRequired' | 'staffActiveContractRequired'> = [];
+  const reasons: Array<
+    'staffPaymentRequired' | 'staffActiveContractRequired' | 'staffUpgradePaymentRequired'
+  > = [];
   if (
     (stage === 'product_delivery' || stage === 'process_completion') &&
     order.invoiceState !== 'Paid'
   )
     reasons.push('staffPaymentRequired');
+  if (
+    stage === 'product_delivery' &&
+    order.hardwareUpgrades?.some((upgrade) => upgrade.status === 'awaiting_payment')
+  )
+    reasons.push('staffUpgradePaymentRequired');
   if (stage === 'process_completion' && !['Active', 'Completed'].includes(order.contractState))
     reasons.push('staffActiveContractRequired');
   return reasons;

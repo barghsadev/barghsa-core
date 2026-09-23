@@ -170,6 +170,7 @@ const en: Record<string, string> = {
   staffAmendReason: 'Amendment reason',
   staffComplete: 'Complete stage',
   staffPaymentRequired: 'Invoice payment is required before this stage can be completed.',
+  staffUpgradePaymentRequired: 'Resolve the pending equipment upgrade charge before delivery.',
   staffActiveContractRequired: 'An active contract is required before process completion.',
   staffSkip: 'Skip optional handover',
   staffConfirm: 'Record this change and notify the customer?',
@@ -367,6 +368,8 @@ const fa: Record<string, string> = {
   staffAmendReason: 'دلیل اصلاحیه',
   staffComplete: 'تکمیل مرحله',
   staffPaymentRequired: 'برای تکمیل این مرحله، پرداخت فاکتور الزامی است.',
+  staffUpgradePaymentRequired:
+    'پیش از تحویل، هزینه ارتقای تجهیزات در انتظار پرداخت را تعیین‌تکلیف کنید.',
   staffActiveContractRequired: 'برای تکمیل فرایند، قرارداد باید فعال باشد.',
   staffSkip: 'رد شدن از تحویل اختیاری',
   staffConfirm: 'این تغییر ثبت و به مشتری اطلاع داده شود؟',

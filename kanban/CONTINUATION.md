@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Saving upgrade delivery guard](batches/2026-09-24-saving-upgrade-delivery-guard.md) closes another staff fulfillment dead end: product delivery is visibly blocked while an equipment-upgrade charge is pending, even after the original invoice is paid. A focused browser journey also checks the active-contract prerequisite for process completion.
+
 [Saving fulfillment prerequisites](batches/2026-09-24-saving-fulfillment-prerequisites.md) makes the existing paid-invoice and active-contract guards visible in staff stage controls. Blocked completion actions explain the unmet prerequisite in both languages; the saving browser journey covers the unpaid delivery state.
 
 [Saving staff handoff browser journey](batches/2026-09-24-saving-staff-browser-journey.md) extends `03-core-business.md#T-03.90.14` from saving-order submission through staff approval, the automatic request-confirmation handoff, and the customer's updated progress view. It asserts the staff approval payload; browser API responses are controlled, while backend transitions are covered separately.
