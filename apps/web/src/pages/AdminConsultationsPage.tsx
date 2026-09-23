@@ -20,6 +20,8 @@ interface Detail {
     scope: string | null;
     deliverables: string | null;
     fee: string | null;
+    invoice_id: string | null;
+    offer_valid_until: string | null;
     expected_next_step: string | null;
   };
   history: Array<{
@@ -42,6 +44,13 @@ const statuses = [
   'cancelled',
 ] as const;
 
+function localDateTime(value: string | null): string {
+  if (!value) return '';
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return '';
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 16);
+}
+
 export function AdminConsultationsPage() {
   const locale = useLocale();
   const copy = (key: string) => tConsultation(key, locale);
@@ -55,6 +64,12 @@ export function AdminConsultationsPage() {
   const [team, setTeam] = useState('');
   const [teams, setTeams] = useState<string[]>([]);
   const [reason, setReason] = useState('');
+  const [fee, setFee] = useState('');
+  const [scope, setScope] = useState('');
+  const [deliverables, setDeliverables] = useState('');
+  const [validUntil, setValidUntil] = useState('');
+  const [offerReason, setOfferReason] = useState('');
+  const [offerKey, setOfferKey] = useState(() => crypto.randomUUID());
   const [revision, setRevision] = useState(0);
   const [error, setError] = useState(false);
   const [action, setAction] = useState<TeamAction | null>(null);
@@ -116,7 +131,14 @@ export function AdminConsultationsPage() {
         return (await response.json()) as Detail;
       })
       .then((result) => {
-        if (!controller.signal.aborted) setDetail(result);
+        if (!controller.signal.aborted) {
+          setDetail(result);
+          setFee(result.request.fee ?? '');
+          setScope(result.request.scope ?? '');
+          setDeliverables(result.request.deliverables ?? '');
+          setValidUntil(localDateTime(result.request.offer_valid_until));
+          setOfferReason('');
+        }
       })
       .catch(() => {
         if (!controller.signal.aborted) setError(true);
@@ -217,6 +239,7 @@ export function AdminConsultationsPage() {
                 setSelectedId(row.id);
                 setDetail(null);
                 setReason('');
+                setOfferKey(crypto.randomUUID());
               }}
               aria-pressed={selectedId === row.id}
               className={`w-full rounded-xl border bg-card p-4 text-start hover:border-primary ${selectedId === row.id ? 'border-primary ring-1 ring-primary' : ''}`}
@@ -261,6 +284,85 @@ export function AdminConsultationsPage() {
                 <p>
                   {copy('nextStep')}: <span dir="auto">{current.expected_next_step}</span>
                 </p>
+              )}
+              {(current.status === 'under_review' || current.status === 'offer_pending') && (
+                <div className="space-y-3 rounded-lg border p-4">
+                  <h3 className="font-semibold">{copy('feeOffer')}</h3>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <label className="space-y-1 text-sm">
+                      <span>{copy('feeIrr')}</span>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[1-9][0-9]*"
+                        value={fee}
+                        onChange={(event) => setFee(event.target.value)}
+                        className="w-full rounded-md border bg-background p-2"
+                      />
+                    </label>
+                    <label className="space-y-1 text-sm">
+                      <span>{copy('offerValidUntil')}</span>
+                      <input
+                        type="datetime-local"
+                        value={validUntil}
+                        onChange={(event) => setValidUntil(event.target.value)}
+                        className="w-full rounded-md border bg-background p-2"
+                      />
+                    </label>
+                  </div>
+                  <label className="block space-y-1 text-sm">
+                    <span>{copy('scope')}</span>
+                    <textarea
+                      value={scope}
+                      onChange={(event) => setScope(event.target.value)}
+                      maxLength={4000}
+                      className="min-h-20 w-full rounded-md border bg-background p-2"
+                    />
+                  </label>
+                  <label className="block space-y-1 text-sm">
+                    <span>{copy('deliverables')}</span>
+                    <textarea
+                      value={deliverables}
+                      onChange={(event) => setDeliverables(event.target.value)}
+                      maxLength={4000}
+                      className="min-h-20 w-full rounded-md border bg-background p-2"
+                    />
+                  </label>
+                  {current.invoice_id && (
+                    <label className="block space-y-1 text-sm">
+                      <span>{copy('replaceReason')}</span>
+                      <textarea
+                        value={offerReason}
+                        onChange={(event) => setOfferReason(event.target.value)}
+                        maxLength={2000}
+                        className="min-h-16 w-full rounded-md border bg-background p-2"
+                      />
+                    </label>
+                  )}
+                  <Button
+                    disabled={
+                      !/^[1-9][0-9]{0,18}$/.test(fee) ||
+                      !scope.trim() ||
+                      !deliverables.trim() ||
+                      !validUntil ||
+                      !Number.isFinite(new Date(validUntil).getTime()) ||
+                      new Date(validUntil) <= new Date() ||
+                      (!!current.invoice_id && !offerReason.trim())
+                    }
+                    onClick={() =>
+                      prepare('fee', copy('issueFee'), {
+                        idempotencyKey: offerKey,
+                        fee,
+                        scope: scope.trim(),
+                        deliverables: deliverables.trim(),
+                        validUntil: new Date(validUntil).toISOString(),
+                        ...(current.invoice_id ? { reason: offerReason.trim() } : {}),
+                      })
+                    }
+                  >
+                    {copy(current.invoice_id ? 'replaceFee' : 'issueFee')}
+                  </Button>
+                </div>
               )}
               <div className="flex flex-wrap gap-2">
                 <Button
@@ -376,6 +478,7 @@ export function AdminConsultationsPage() {
           onClose={() => setAction(null)}
           onSuccess={async () => {
             setReason('');
+            setOfferKey(crypto.randomUUID());
             refresh();
           }}
         />

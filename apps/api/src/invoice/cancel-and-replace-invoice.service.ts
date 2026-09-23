@@ -56,6 +56,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import type { PoolClient } from 'pg';
 import { duePeriodTypeForManual } from '@barghsa/shared/finance';
 import { v7 as uuidv7 } from 'uuid';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
@@ -95,6 +96,8 @@ export const CANCEL_AND_REPLACE_ERRORS = {
 
 /** Command to cancel one unpaid invoice and issue a linked replacement. */
 export interface CancelAndReplaceInvoiceCommand {
+  /** Join a caller-owned transaction when replacement is part of a wider workflow. */
+  transactionClient?: PoolClient;
   /** Invoice to cancel (must have no confirmed payment). */
   invoiceId: string;
   /** Required customer/staff-visible reason (audited). */
@@ -221,10 +224,10 @@ export class CancelAndReplaceInvoiceService {
       throw new BadRequestException('dueAt cannot be in the past');
     }
 
-    const pool = getDbPool();
-    const client = await pool.connect();
+    const ownedTransaction = !cmd.transactionClient;
+    const client = cmd.transactionClient ?? (await getDbPool().connect());
     try {
-      await client.query('BEGIN');
+      if (ownedTransaction) await client.query('BEGIN');
       const profileId = await lockInvoiceProfile(client, 'invoice', cmd.invoiceId);
       await requireStaffMutationPermission(client, cmd.actorUserId, 'invoices:write');
       if (cmd.actorSession) {
@@ -265,7 +268,7 @@ export class CancelAndReplaceInvoiceService {
         const issueTransition = await correctionTransition(client, replay.id, 'Issue');
         const cancelTransition = await correctionTransition(client, cmd.invoiceId, 'Cancel');
         if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
-        await client.query('COMMIT');
+        if (ownedTransaction) await client.query('COMMIT');
         return {
           ...excerpt,
           originalInvoiceId: cmd.invoiceId,
@@ -419,7 +422,7 @@ export class CancelAndReplaceInvoiceService {
       const excerpt = await this.loadReplacementExcerpt(client, replacementId);
 
       if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
-      await client.query('COMMIT');
+      if (ownedTransaction) await client.query('COMMIT');
       return {
         originalInvoiceId: cmd.invoiceId,
         originalState: 'Cancelled',
@@ -441,7 +444,7 @@ export class CancelAndReplaceInvoiceService {
         issueTransition,
       };
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
+      if (ownedTransaction) await client.query('ROLLBACK').catch(() => {});
       if (
         error instanceof BadRequestException ||
         error instanceof NotFoundException ||
@@ -452,7 +455,7 @@ export class CancelAndReplaceInvoiceService {
       this.logger.error(`Cancel-and-replace failed: ${String(error)}`);
       throw error;
     } finally {
-      client.release();
+      if (ownedTransaction) client.release();
     }
   }
 

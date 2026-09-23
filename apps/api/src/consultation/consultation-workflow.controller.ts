@@ -23,6 +23,16 @@ const assignment = z.discriminatedUnion('assignTo', [
   z.object({ assignTo: z.literal('team'), team: z.string().trim().min(1).max(80) }).strict(),
 ]);
 const reason = z.object({ reason: z.string().trim().min(1).max(2000) }).strict();
+const feeOffer = z
+  .object({
+    idempotencyKey: z.string().uuid(),
+    fee: z.string().regex(/^[1-9][0-9]{0,18}$/),
+    scope: z.string().trim().min(1).max(4000),
+    deliverables: z.string().trim().min(1).max(4000),
+    validUntil: z.iso.datetime({ offset: true }),
+    reason: z.string().trim().min(1).max(2000).optional(),
+  })
+  .strict();
 const empty = z.object({}).strict();
 const status = z.enum(CONSULTATION_STATUSES);
 function parse<S extends z.ZodType>(schema: S, body: unknown): z.output<S> {
@@ -104,6 +114,18 @@ export class StaffConsultationWorkflowController {
   ) {
     parse(empty, body);
     return this.workflow.staffAction(req.session, id, 'review', undefined, req.ip ?? '127.0.0.1');
+  }
+
+  @Post('requests/:id/fee')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Issue or replace a consultation fee offer and invoice' })
+  @ApiZodBody(feeOffer)
+  setFee(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.setFee(req.session, id, parse(feeOffer, body), req.ip ?? '127.0.0.1');
   }
 
   @Post('requests/:id/request-info')

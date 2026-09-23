@@ -16,6 +16,7 @@ interface Detail {
     deliverables: string | null;
     expected_next_step: string | null;
     offer_valid_until: string | null;
+    invoice_id: string | null;
   };
   history: Array<{
     status: string;
@@ -135,6 +136,13 @@ export function ConsultationDetailPage() {
                 <time dateTime={request.offer_valid_until}>
                   {new Intl.DateTimeFormat(locale).format(new Date(request.offer_valid_until))}
                 </time>
+              </p>
+            )}
+            {request.invoice_id && (
+              <p>
+                <a className="text-primary underline" href={`/invoices/${request.invoice_id}`}>
+                  {copy('viewInvoice')}
+                </a>
               </p>
             )}
           </section>
