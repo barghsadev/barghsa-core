@@ -4,11 +4,12 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { t } from '@barghsa/i18n/app';
 import { AdvancedElectricityOrderPage } from './AdvancedElectricityOrderPage.js';
 
+const navigateMock = vi.hoisted(() => vi.fn(async () => {}));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
     <a href={to}>{children}</a>
   ),
-  useNavigate: () => vi.fn(async () => {}),
+  useNavigate: () => navigateMock,
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, irrDigits: String }),
@@ -47,6 +48,7 @@ let quoteErrorDetails: Array<{
 beforeEach(() => {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  navigateMock.mockClear();
   step = 2;
   quantities = { thermal: '0', green: '10', free_market: '0', energy_saving: '0' };
   bootstrapLoadFailures = 0;
@@ -198,4 +200,24 @@ it('does not advance until the server confirms the saved step', async () => {
   savedStepOverride = null;
   await act(async () => next()?.click());
   expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain('2.');
+});
+
+it('saves the review step before opening address settings', async () => {
+  step = 5;
+  savedStepOverride = 4;
+  await mount();
+
+  const addAddress = () =>
+    [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === t('electricity.order.addAddress', 'en')
+    );
+  await act(async () => addAddress()?.click());
+  expect(navigateMock).not.toHaveBeenCalled();
+
+  savedStepOverride = null;
+  await act(async () => addAddress()?.click());
+  expect(navigateMock).toHaveBeenCalledWith({
+    to: '/settings/addresses',
+    search: { returnTo: '/electricity/advanced' },
+  });
 });

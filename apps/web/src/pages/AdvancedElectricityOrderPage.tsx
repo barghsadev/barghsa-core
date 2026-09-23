@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { toast } from 'sonner';
@@ -433,7 +433,7 @@ export function AdvancedElectricityOrderPage() {
   }, [profileId, blocked, validPeriod, quantitiesValid, options, previewInput, locale]);
 
   async function saveDraft(next: boolean) {
-    if (!profileId) return;
+    if (!profileId) return false;
     setSaving(true);
     try {
       const response = await fetch('/api/electricity/drafts/advanced', {
@@ -463,11 +463,18 @@ export function AdvancedElectricityOrderPage() {
         throw new Error('Draft save was not confirmed');
       if (next) setStep((current) => Math.min(5, current + 1));
       else toast.success(t('electricity.order.draftSaved', locale));
+      return true;
     } catch {
       toast.error(t('electricity.order.draftSaveFailed', locale));
+      return false;
     } finally {
       setSaving(false);
     }
+  }
+
+  async function openAddresses() {
+    if (!(await saveDraft(false))) return;
+    await navigate({ to: '/settings/addresses', search: { returnTo: '/electricity/advanced' } });
   }
 
   async function submit() {
@@ -682,9 +689,15 @@ export function AdvancedElectricityOrderPage() {
                   </span>
                 </label>
               ))}
-              <Link to="/settings/addresses" className="text-sm text-primary underline">
+              <Button
+                type="button"
+                variant="link"
+                className="px-0 text-sm"
+                disabled={saving}
+                onClick={() => void openAddresses()}
+              >
                 {t('electricity.order.addAddress', locale)}
-              </Link>
+              </Button>
             </CardContent>
           </Card>
         )}

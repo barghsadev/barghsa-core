@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { t } from '@barghsa/i18n/app';
 import { addressesText } from '@barghsa/i18n/addresses';
@@ -26,6 +26,9 @@ import { withCsrf } from '../../../lib/csrf.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 
 export const Route = createFileRoute('/_app/settings/addresses')({
+  validateSearch: (search: Record<string, unknown>) => ({
+    returnTo: search.returnTo === '/electricity/advanced' ? '/electricity/advanced' : undefined,
+  }),
   component: SettingsAddressesPage,
 });
 
@@ -64,6 +67,7 @@ interface City {
 
 function SettingsAddressesPage() {
   const locale = useLocale();
+  const { returnTo } = Route.useSearch();
 
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [provinces, setProvinces] = useState<Province[]>([]);
@@ -374,6 +378,14 @@ function SettingsAddressesPage() {
       <p className="text-sm text-muted-foreground mb-6">
         {t('settings.addresses.description', locale)}
       </p>
+      {returnTo && (
+        <Link
+          to={returnTo}
+          className="mb-6 inline-block text-sm text-primary underline underline-offset-4"
+        >
+          {t('settings.addresses.returnToAdvancedOrder', locale)}
+        </Link>
+      )}
 
       {/* Loading */}
       {loading && (

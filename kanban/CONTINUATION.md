@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Advanced electricity address return](batches/2026-09-24-advanced-electricity-address-return.md) saves the review step before a customer opens address settings, then returns them to the restored order with an updated address list. The bilingual browser journey covers this round trip in all five projects.
+
 [Advanced electricity draft recovery](batches/2026-09-24-advanced-electricity-draft-recovery.md) keeps the advanced order wizard closed when a saved draft cannot load, offers a retry, and requires server confirmation before progressing to the next step. The bilingual browser journey passes all five projects.
 
 [Solar final-review handoff](batches/2026-09-24-solar-final-review-handoff.md) makes the canonical `final_review` state a real staff transition after postal receipt. Final decisions now require that handoff; the customer sees staff-owned review status and the postal work queue keeps the request visible until decision.

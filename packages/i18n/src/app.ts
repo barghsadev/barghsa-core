@@ -664,6 +664,7 @@ export const fa: I18nDictionary = {
   'settings.addresses.description':
     'آدرس‌های خود را مدیریت کنید. آدرس اصلی با نشان ویژه مشخص می‌شود.',
   'settings.addresses.add': 'افزودن آدرس',
+  'settings.addresses.returnToAdvancedOrder': 'بازگشت به سفارش پیشرفته برق',
   'settings.addresses.edit': 'ویرایش',
   'settings.addresses.delete': 'حذف',
   'settings.addresses.setMain': 'انتخاب به عنوان اصلی',
@@ -1822,6 +1823,7 @@ export const en: I18nDictionary = {
   'settings.addresses.description':
     'Manage your addresses. The main address is marked with a special badge.',
   'settings.addresses.add': 'Add Address',
+  'settings.addresses.returnToAdvancedOrder': 'Return to advanced electricity order',
   'settings.addresses.edit': 'Edit',
   'settings.addresses.delete': 'Delete',
   'settings.addresses.setMain': 'Set as Main',

@@ -13,6 +13,13 @@ const address = {
   postalCode: '1234567890',
   mainAddress: true,
 };
+const addedAddress = {
+  ...address,
+  id: '99999999-9999-4999-8999-999999999999',
+  fullAddress: 'New Power Street',
+  postalCode: '9876543210',
+  mainAddress: false,
+};
 const products = (['thermal', 'green', 'free_market', 'energy_saving'] as const).map(
   (systemKey, index) => ({
     id: `${index + 5}5555555-5555-4555-8555-555555555555`,
@@ -80,19 +87,37 @@ for (const locale of ['en', 'fa'] as const) {
         },
       })
     );
-    await page.route(`**/api/profiles/${profileId}/addresses`, (route) =>
-      route.fulfill({ json: { addresses: [address] } })
-    );
-    await page.route('**/api/electricity/drafts/advanced?*', (route) =>
+    const savedAddresses = [address];
+    await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
+      if (route.request().method() === 'POST') {
+        savedAddresses.push(addedAddress);
+        return route.fulfill({ status: 201, json: addedAddress });
+      }
+      return route.fulfill({ json: { addresses: savedAddresses } });
+    });
+    await page.route('**/api/geography/provinces', (route) =>
       route.fulfill({
-        json: {
-          currentStep: 1,
-          data: null,
-          updatedAt: null,
-        },
+        json: [{ id: address.provinceId, nameFa: 'تهران', nameEn: 'Tehran' }],
+      })
+    );
+    await page.route(`**/api/geography/provinces/${address.provinceId}/cities`, (route) =>
+      route.fulfill({
+        json: [
+          {
+            id: address.cityId,
+            provinceId: address.provinceId,
+            nameFa: 'تهران',
+            nameEn: 'Tehran',
+          },
+        ],
       })
     );
     const drafts: Array<Record<string, unknown>> = [];
+    await page.route('**/api/electricity/drafts/advanced?*', (route) =>
+      route.fulfill({
+        json: drafts.at(-1) ?? { currentStep: 1, data: null, updatedAt: null },
+      })
+    );
     await page.route('**/api/electricity/drafts/advanced', (route) => {
       drafts.push(route.request().postDataJSON());
       return route.fulfill({ json: { ...drafts.at(-1), updatedAt: '2026-09-23T10:00:00.000Z' } });
@@ -233,11 +258,38 @@ for (const locale of ['en', 'fa'] as const) {
     await next.click();
     await expect(wizard).toContainText(address.fullAddress);
     await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
+      })
+      .click();
+    await expect(page).toHaveURL(/\/settings\/addresses\?/);
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'افزودن آدرس' : 'Add Address' })
+      .click();
+    await page.locator('#addresses-field-1').selectOption(address.provinceId);
+    await page.locator('#addresses-field-2').selectOption(address.cityId);
+    await page.locator('#addresses-field-3').fill(addedAddress.fullAddress);
+    await page.locator('#addresses-field-4').fill(addedAddress.postalCode);
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'ذخیره' : 'Save', exact: true })
+      .click();
+    await expect(page.getByText(addedAddress.fullAddress)).toBeVisible();
+    await page
+      .getByRole('link', {
+        name:
+          locale === 'fa' ? 'بازگشت به سفارش پیشرفته برق' : 'Return to advanced electricity order',
+      })
+      .click();
+    await expect(page).toHaveURL(/\/electricity\/advanced$/);
+    await expect(wizard).toContainText(addedAddress.fullAddress);
+    await page.locator('input[name="advanced-address"]').nth(1).check();
+    await page
       .getByRole('button', { name: locale === 'fa' ? 'ثبت سفارش' : 'Submit Order', exact: true })
       .click();
     await expect(page).toHaveURL(/\/electricity\/orders\/66666666-/);
     await expect(page.locator(`a[href="/invoices/${invoiceId}"]`)).toBeVisible();
-    expect(drafts).toHaveLength(4);
+    expect(drafts).toHaveLength(5);
+    expect(drafts.at(-1)?.currentStep).toBe(5);
     expect(submissions).toHaveLength(1);
     expect(submissions[0]).toMatchObject({
       profileId,
@@ -245,10 +297,10 @@ for (const locale of ['en', 'fa'] as const) {
       quantities: { thermal: '10', green: '0', free_market: '3', energy_saving: '0' },
       giftCode: 'POWER',
       address: {
-        provinceId: address.provinceId,
-        cityId: address.cityId,
-        fullAddress: address.fullAddress,
-        postalCode: address.postalCode,
+        provinceId: addedAddress.provinceId,
+        cityId: addedAddress.cityId,
+        fullAddress: addedAddress.fullAddress,
+        postalCode: addedAddress.postalCode,
       },
     });
   });
