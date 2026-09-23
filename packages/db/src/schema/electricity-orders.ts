@@ -211,14 +211,14 @@ export const electricityCustomerDrafts = pgTable(
   ]
 );
 
-/** A paid rejected electricity order owns a durable, idempotent refund obligation. */
+/** A paid rejected order owns a durable, idempotent refund obligation. */
 export const refundObligations = pgTable(
   'refund_obligations',
   {
     id: uuidv7('id').primaryKey(),
     orderId: uuid('order_id')
       .notNull()
-      .references(() => electricityOrders.id, { onDelete: 'restrict' }),
+      .references(() => orders.id, { onDelete: 'restrict' }),
     contractId: uuid('contract_id').references(() => contracts.id, { onDelete: 'restrict' }),
     invoiceId: uuid('invoice_id')
       .notNull()

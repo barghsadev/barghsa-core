@@ -52,7 +52,7 @@ export async function readContractRefundAuthorization(
     )
   ).rows[0];
   if (!obligation) {
-    const electricity = (
+    const order = (
       await client.query<{
         contract_id: string;
         order_id: string;
@@ -60,9 +60,12 @@ export async function readContractRefundAuthorization(
         valid: boolean;
       }>(
         `SELECT o.contract_id,o.order_id,o.authorized_by,
-          (e.status IN ('rejected','cancelled') AND p.state IN ('Rejected','Cancelled')
-           AND c.status='cancelled' AND parent.status='CANCELLED'
-           AND e.profile_id=$3 AND parent.profile_id=$3 AND p.profile_id=$3
+          (((parent.order_type='electricity' AND e.status IN ('rejected','cancelled')
+             AND c.status='cancelled' AND e.profile_id=$3)
+            OR (parent.order_type='savings' AND s.status='rejected'
+             AND p.service_type='savings' AND s.profile_id=$3))
+           AND p.state IN ('Rejected','Cancelled') AND parent.status='CANCELLED'
+           AND parent.profile_id=$3 AND p.profile_id=$3
            AND i.order_id=o.order_id AND i.id=$2 AND i.profile_id=$3
            AND o.invoice_id=$2 AND o.profile_id=$3 AND o.contract_id=p.id
            AND o.status IN ('processing','failed','completed')
@@ -71,25 +74,26 @@ export async function readContractRefundAuthorization(
            AND o.total_paid_amount-o.completed_refund_amount=$5::bigint) AS valid
          FROM refund_obligations o
          JOIN refunds r ON r.id=o.refund_id
-         JOIN electricity_orders e ON e.id=o.order_id
          JOIN orders parent ON parent.id=o.order_id
-         JOIN electricity_contracts c ON c.order_id=o.order_id AND c.contract_id=o.contract_id
+         LEFT JOIN electricity_orders e ON e.id=o.order_id
+         LEFT JOIN electricity_contracts c ON c.order_id=o.order_id AND c.contract_id=o.contract_id
+         LEFT JOIN saving_orders s ON s.order_id=o.order_id
          JOIN contracts p ON p.id=o.contract_id
          JOIN invoices i ON i.id=o.invoice_id
          WHERE o.refund_id=$1`,
         [row.id, row.invoice_id, row.profile_id, row.staff_id, row.amount]
       )
     ).rows[0];
-    if (!electricity) return undefined;
-    if (!electricity.valid)
+    if (!order) return undefined;
+    if (!order.valid)
       throw new RefundProcessingError(
-        'invalid_electricity_obligation',
-        'Electricity refund evidence does not match the refund'
+        'invalid_order_obligation',
+        'Order refund evidence does not match the refund'
       );
     return {
-      contractId: electricity.contract_id,
-      orderId: electricity.order_id,
-      authorizedBy: electricity.authorized_by,
+      contractId: order.contract_id,
+      orderId: order.order_id,
+      authorizedBy: order.authorized_by,
       actorType: 'system' as const,
     };
   }

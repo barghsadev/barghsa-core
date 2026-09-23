@@ -419,10 +419,11 @@ export class SavingOrderService {
         throw new NotFoundException('Saving order not found');
       const stages = (
         await client.query(
-          `SELECT stage,status,started_at,completed_at FROM saving_fulfillment_stages
+          `SELECT stage,status,started_at,completed_at,explanation,handover_description FROM saving_fulfillment_stages
           WHERE order_id=$1 ORDER BY CASE stage
-            WHEN 'review' THEN 1 WHEN 'procurement' THEN 2 WHEN 'dispatch' THEN 3
-            WHEN 'installation' THEN 4 ELSE 5 END`,
+            WHEN 'request_confirmation' THEN 1 WHEN 'product_delivery' THEN 2
+            WHEN 'installation_and_document_upload' THEN 3
+            WHEN 'equipment_handover' THEN 4 ELSE 5 END`,
           [savingOrderId]
         )
       ).rows;
@@ -557,7 +558,13 @@ export class SavingOrderService {
           'INSERT INTO saving_order_lines(id,order_id,description,amount,type) VALUES($1,$2,$3,$4,$5)',
           [uuidv7(), savingId, line.description, line.amount.toString(), line.type]
         );
-      for (const stage of ['review', 'procurement', 'dispatch', 'installation', 'completion'])
+      for (const stage of [
+        'request_confirmation',
+        'product_delivery',
+        'installation_and_document_upload',
+        'equipment_handover',
+        'process_completion',
+      ])
         await client.query(
           'INSERT INTO saving_fulfillment_stages(id,order_id,stage) VALUES($1,$2,$3)',
           [uuidv7(), savingId, stage]

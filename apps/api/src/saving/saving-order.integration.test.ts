@@ -1,5 +1,7 @@
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { activateReadyContracts } from '@barghsa/db/contract-activation';
+import { runWalletRefund } from '@barghsa/db/refund-processing';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -27,7 +29,7 @@ beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions)
-     VALUES('saving-order-admin','Saving order','Test role','["admin:catalogue:edit"]')`
+     VALUES('saving-order-admin','Saving order','Test role','["admin:catalogue:edit","contracts:read","contracts:write"]')`
   );
   for (const [user, staff] of [
     ['saving-order-buyer', false],
@@ -235,11 +237,11 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     invoice_state: 'Unpaid',
     contract_state: 'AwaitingStaffReview',
     stages: [
-      { stage: 'review' },
-      { stage: 'procurement' },
-      { stage: 'dispatch' },
-      { stage: 'installation' },
-      { stage: 'completion' },
+      { stage: 'request_confirmation' },
+      { stage: 'product_delivery' },
+      { stage: 'installation_and_document_upload' },
+      { stage: 'equipment_handover' },
+      { stage: 'process_completion' },
     ],
   });
   const list = await request(`/api/saving/orders?profileId=${input.profileId}`, 'GET');
@@ -289,7 +291,7 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     submitForStaffReview: true,
   });
   expect(discounted.status, http.logs()).toBe(201);
-  const discountedOrder = (await discounted.json()) as { orderId: string };
+  const discountedOrder = (await discounted.json()) as { orderId: string; savingOrderId: string };
   expect(
     (
       await http.pool.query<{ discount_amount: string }>(
@@ -298,4 +300,234 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
       )
     ).rows[0]?.discount_amount
   ).toBe('30000');
-}, 60000);
+
+  const staffQueue = await request('/api/staff/saving/orders', 'GET', undefined, staffHeaders);
+  expect(staffQueue.status, http.logs()).toBe(200);
+  expect(
+    ((await staffQueue.json()) as { orders: Array<{ id: string }> }).orders.map((order) => order.id)
+  ).toContain(result.savingOrderId);
+  const staffDetailResponse = await request(
+    `/api/staff/saving/orders/${result.savingOrderId}`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(staffDetailResponse.status, http.logs()).toBe(200);
+  const staffDetail = (await staffDetailResponse.json()) as { versionId: string };
+  const approval = { idempotencyKey: randomUUID(), expectedVersionId: staffDetail.versionId };
+  const approvePath = `/api/staff/saving/orders/${result.savingOrderId}/approve`;
+  const approved = await request(approvePath, 'POST', approval, staffHeaders);
+  expect(approved.status, http.logs()).toBe(200);
+  expect(await approved.json()).toMatchObject({ status: 'approved' });
+  const approvalRetry = await request(approvePath, 'POST', approval, staffHeaders);
+  expect(approvalRetry.status, http.logs()).toBe(200);
+  expect(await approvalRetry.json()).toMatchObject({ status: 'approved' });
+  expect(
+    (
+      await request(
+        approvePath,
+        'POST',
+        { ...approval, idempotencyKey: randomUUID() },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
+  const stagePath = (stage: string, action = 'complete') =>
+    `/api/staff/saving/orders/${result.savingOrderId}/stages/${stage}/${action}`;
+  const stageInput = () => ({
+    idempotencyKey: randomUUID(),
+    expectedStatus: 'in_progress',
+    explanation: 'Staff verified progress',
+  });
+  expect(
+    (await request(stagePath('product_delivery'), 'POST', stageInput(), staffHeaders)).status
+  ).toBe(409);
+  await http.pool.query(
+    `INSERT INTO wallets(profile_id,posted_balance,reserved_balance)
+     VALUES($1,1000000,0) ON CONFLICT(profile_id)
+     DO UPDATE SET posted_balance=1000000,reserved_balance=0`,
+    [input.profileId]
+  );
+  const paymentPath = `/api/invoices/${result.invoiceId}/wallet-payment`;
+  const walletReviewResponse = await request(paymentPath, 'GET');
+  expect(walletReviewResponse.status, http.logs()).toBe(200);
+  const walletHash = ((await walletReviewResponse.json()) as { review: { hash: string } }).review
+    .hash;
+  const paid = await request(paymentPath, 'POST', {
+    idempotencyKey: randomUUID(),
+    expectedRemainingAmount: quote.totalIrR,
+    expectedReviewHash: walletHash,
+  });
+  expect(paid.status, http.logs()).toBe(200);
+  const delivered = await request(
+    stagePath('product_delivery'),
+    'POST',
+    stageInput(),
+    staffHeaders
+  );
+  expect(delivered.status, http.logs()).toBe(200);
+  expect(await delivered.json()).toMatchObject({
+    status: 'in_progress',
+    nextStage: 'installation_and_document_upload',
+  });
+  expect(
+    (await request(stagePath('equipment_handover', 'skip'), 'POST', stageInput(), staffHeaders))
+      .status
+  ).toBe(409);
+  const installed = await request(
+    stagePath('installation_and_document_upload'),
+    'POST',
+    stageInput(),
+    staffHeaders
+  );
+  expect(installed.status, http.logs()).toBe(200);
+  const skipped = await request(
+    stagePath('equipment_handover', 'skip'),
+    'POST',
+    stageInput(),
+    staffHeaders
+  );
+  expect(skipped.status, http.logs()).toBe(200);
+  expect(
+    (await request(stagePath('process_completion'), 'POST', stageInput(), staffHeaders)).status
+  ).toBe(409);
+  const acceptanceReview = await request(
+    `/api/contracts/${result.contractId}/acceptance-review?versionId=${staffDetail.versionId}`,
+    'GET'
+  );
+  expect(acceptanceReview.status, http.logs()).toBe(200);
+  const acceptanceHash = ((await acceptanceReview.json()) as { hash: string }).hash;
+  const accepted = await request(`/api/contracts/${result.contractId}/accept`, 'POST', {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: staffDetail.versionId,
+    expectedReviewHash: acceptanceHash,
+  });
+  expect(accepted.status, http.logs()).toBe(200);
+  expect((await activateReadyContracts(http.pool)).activated).toBe(1);
+  const completed = await request(
+    stagePath('process_completion'),
+    'POST',
+    stageInput(),
+    staffHeaders
+  );
+  expect(completed.status, http.logs()).toBe(200);
+  expect(await completed.json()).toMatchObject({ status: 'completed', nextStage: null });
+  expect(
+    (await request(stagePath('process_completion'), 'POST', stageInput(), staffHeaders)).status
+  ).toBe(409);
+  const customerProgress = await request(`/api/saving/orders/${result.savingOrderId}`, 'GET');
+  expect(customerProgress.status, http.logs()).toBe(200);
+  expect(await customerProgress.json()).toMatchObject({
+    status: 'completed',
+    stages: [
+      { status: 'completed' },
+      { status: 'completed' },
+      { status: 'completed' },
+      { status: 'skipped' },
+      { status: 'completed' },
+    ],
+  });
+  const history = await request(
+    `/api/staff/saving/orders/${result.savingOrderId}`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(history.status, http.logs()).toBe(200);
+  expect(((await history.json()) as { events: unknown[] }).events).toHaveLength(9);
+
+  const rejectedDetail = await request(
+    `/api/staff/saving/orders/${discountedOrder.savingOrderId}`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(rejectedDetail.status, http.logs()).toBe(200);
+  const rejectedVersion = ((await rejectedDetail.json()) as { versionId: string }).versionId;
+  const rejected = await request(
+    `/api/staff/saving/orders/${discountedOrder.savingOrderId}/reject`,
+    'POST',
+    {
+      idempotencyKey: randomUUID(),
+      expectedVersionId: rejectedVersion,
+      reason: 'Device unavailable',
+    },
+    staffHeaders
+  );
+  expect(rejected.status, http.logs()).toBe(200);
+  expect(await rejected.json()).toMatchObject({ status: 'rejected' });
+  const rejectedState = await http.pool.query<{ invoice_state: string }>(
+    'SELECT state AS invoice_state FROM invoices WHERE order_id=$1',
+    [discountedOrder.orderId]
+  );
+  expect(rejectedState.rows[0]?.invoice_state).toBe('Cancelled');
+
+  const paidInput = { ...input, billIdentifier: '1234567890125' };
+  const paidQuoteResponse = await request('/api/saving/orders/quote', 'POST', paidInput);
+  expect(paidQuoteResponse.status, http.logs()).toBe(201);
+  const paidQuote = (await paidQuoteResponse.json()) as { reviewDigest: string; totalIrR: string };
+  const paidSubmission = await request('/api/saving/orders', 'POST', {
+    ...paidInput,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: paidQuote.reviewDigest,
+    agreementAccepted: true,
+    hardwareConfirmed: true,
+    submitForStaffReview: true,
+  });
+  expect(paidSubmission.status, http.logs()).toBe(201);
+  const paidOrder = (await paidSubmission.json()) as {
+    savingOrderId: string;
+    orderId: string;
+    invoiceId: string;
+  };
+  const paidReviewPath = `/api/invoices/${paidOrder.invoiceId}/wallet-payment`;
+  const paidWalletReview = await request(paidReviewPath, 'GET');
+  expect(paidWalletReview.status, http.logs()).toBe(200);
+  const paidHash = ((await paidWalletReview.json()) as { review: { hash: string } }).review.hash;
+  expect(
+    (
+      await request(paidReviewPath, 'POST', {
+        idempotencyKey: randomUUID(),
+        expectedRemainingAmount: paidQuote.totalIrR,
+        expectedReviewHash: paidHash,
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  const paidStaffDetail = await request(
+    `/api/staff/saving/orders/${paidOrder.savingOrderId}`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(paidStaffDetail.status, http.logs()).toBe(200);
+  const paidVersion = ((await paidStaffDetail.json()) as { versionId: string }).versionId;
+  const paidRejected = await request(
+    `/api/staff/saving/orders/${paidOrder.savingOrderId}/reject`,
+    'POST',
+    { idempotencyKey: randomUUID(), expectedVersionId: paidVersion, reason: 'Device unavailable' },
+    staffHeaders
+  );
+  expect(paidRejected.status, http.logs()).toBe(200);
+  expect(await paidRejected.json()).toMatchObject({
+    status: 'rejected',
+    refundId: expect.any(String),
+  });
+  const obligation = await http.pool.query<{ id: string; status: string; amount: string }>(
+    `SELECT r.id,r.state AS status,r.amount::text AS amount FROM refund_obligations o
+     JOIN refunds r ON r.id=o.refund_id WHERE o.order_id=$1`,
+    [paidOrder.orderId]
+  );
+  expect(obligation.rows[0]).toMatchObject({ status: 'Processing', amount: paidQuote.totalIrR });
+  expect(await runWalletRefund(http.pool, obligation.rows[0]!.id)).toBe('completed');
+  const refundedState = await http.pool.query<{ financial_status: string }>(
+    'SELECT financial_status FROM saving_orders WHERE id=$1',
+    [paidOrder.savingOrderId]
+  );
+  expect(refundedState.rows[0]?.financial_status).toBe('refunded');
+  const refundNotice = await http.pool.query<{ link_route: string }>(
+    'SELECT link_route FROM in_app_notifications WHERE delivery_key=$1',
+    [`refund:${obligation.rows[0]!.id}:Completed`]
+  );
+  expect(refundNotice.rows[0]?.link_route).toBe(`/savings/orders/${paidOrder.savingOrderId}`);
+}, 90000);

@@ -21,20 +21,28 @@ export async function notifyRefundOutcome(
   if (!owner) throw new Error('Refund profile owner is missing');
   const faAmount = new Intl.NumberFormat('fa').format(BigInt(refund.amount));
   const enAmount = new Intl.NumberFormat('en').format(BigInt(refund.amount));
-  const electricity =
+  const order =
     refund.state === 'Completed'
       ? (
-          await client.query<{ order_id: string; reason: string; authorized_by: string }>(
-            'SELECT order_id,reason,authorized_by FROM refund_obligations WHERE refund_id=$1',
+          await client.query<{
+            order_id: string;
+            order_type: string;
+            saving_order_id: string | null;
+            reason: string;
+            authorized_by: string;
+          }>(
+            `SELECT o.order_id,p.order_type,s.id AS saving_order_id,o.reason,o.authorized_by
+             FROM refund_obligations o JOIN orders p ON p.id=o.order_id
+             LEFT JOIN saving_orders s ON s.order_id=o.order_id WHERE o.refund_id=$1`,
             [refund.id]
           )
         ).rows[0]
       : undefined;
   const completedAt = new Date();
-  const electricitySuffix = electricity
+  const orderSuffix = order
     ? {
-        fa: ` دلیل: ${electricity.reason}. بازپرداخت خودکار پس از تصمیم ${electricity.authorized_by} در ${new Intl.DateTimeFormat('fa-IR', { dateStyle: 'medium', timeStyle: 'short' }).format(completedAt)} ثبت شد.`,
-        en: ` Reason: ${electricity.reason}. Automatic refund after ${electricity.authorized_by}'s decision, posted ${new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(completedAt)}.`,
+        fa: ` دلیل: ${order.reason}. بازپرداخت خودکار پس از تصمیم ${order.authorized_by} در ${new Intl.DateTimeFormat('fa-IR', { dateStyle: 'medium', timeStyle: 'short' }).format(completedAt)} ثبت شد.`,
+        en: ` Reason: ${order.reason}. Automatic refund after ${order.authorized_by}'s decision, posted ${new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(completedAt)}.`,
       }
     : null;
   const rejected = refund.state === 'Rejected';
@@ -51,7 +59,7 @@ export async function notifyRefundOutcome(
         : rejected
           ? `درخواست بازپرداخت ${faAmount} ریال رد شد. برای جزئیات، صورتحساب را بررسی کنید یا با پشتیبانی تماس بگیرید.`
           : refund.destination === 'wallet'
-            ? `${faAmount} ریال به کیف پول شما بازگردانده شد. جزئیات در صورتحساب موجود است.${electricitySuffix?.fa ?? ''}`
+            ? `${faAmount} ریال به کیف پول شما بازگردانده شد. جزئیات در صورتحساب موجود است.${orderSuffix?.fa ?? ''}`
             : `بازپرداخت بانکی ${faAmount} ریال تأیید شد. جزئیات در صورتحساب موجود است.`,
     },
     en: {
@@ -65,7 +73,7 @@ export async function notifyRefundOutcome(
         : rejected
           ? `Your refund request for ${enAmount} IRR was rejected. View the invoice or contact support for details.`
           : refund.destination === 'wallet'
-            ? `${enAmount} IRR has been returned to your wallet. View the invoice for details.${electricitySuffix?.en ?? ''}`
+            ? `${enAmount} IRR has been returned to your wallet. View the invoice for details.${orderSuffix?.en ?? ''}`
             : `Your bank refund of ${enAmount} IRR has been confirmed. View the invoice for details.`,
     },
   };
@@ -78,9 +86,11 @@ export async function notifyRefundOutcome(
       owner.user_id,
       refund.profile_id,
       JSON.stringify(localizedContent),
-      electricity
-        ? `/electricity/orders/${electricity.order_id}`
-        : `/invoices/${refund.invoice_id}`,
+      order?.order_type === 'electricity'
+        ? `/electricity/orders/${order.order_id}`
+        : order?.order_type === 'savings' && order.saving_order_id
+          ? `/savings/orders/${order.saving_order_id}`
+          : `/invoices/${refund.invoice_id}`,
       `refund:${refund.id}:${refund.state}`,
     ]
   );

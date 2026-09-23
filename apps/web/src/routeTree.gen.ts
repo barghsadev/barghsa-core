@@ -57,6 +57,7 @@ import { Route as AdminPoliciesRouteImport } from './routes/admin/policies'
 import { Route as AdminProvidersRouteImport } from './routes/admin/providers'
 import { Route as AdminReconciliationRouteImport } from './routes/admin/reconciliation'
 import { Route as AdminRolesRouteImport } from './routes/admin/roles'
+import { Route as AdminSavingOrdersRouteImport } from './routes/admin/saving-orders'
 import { Route as AdminServiceTargetsRouteImport } from './routes/admin/service-targets'
 import { Route as AdminStaffTeamsRouteImport } from './routes/admin/staff-teams'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
@@ -339,6 +340,11 @@ const AdminRolesRoute = AdminRolesRouteImport.update({
   path: '/roles',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSavingOrdersRoute = AdminSavingOrdersRouteImport.update({
+  id: '/saving-orders',
+  path: '/saving-orders',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminServiceTargetsRoute = AdminServiceTargetsRouteImport.update({
   id: '/service-targets',
   path: '/service-targets',
@@ -587,6 +593,7 @@ export interface FileRoutesByFullPath {
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/reconciliation': typeof AdminReconciliationRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/saving-orders': typeof AdminSavingOrdersRoute
   '/admin/service-targets': typeof AdminServiceTargetsRoute
   '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
@@ -671,6 +678,7 @@ export interface FileRoutesByTo {
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/reconciliation': typeof AdminReconciliationRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/saving-orders': typeof AdminSavingOrdersRoute
   '/admin/service-targets': typeof AdminServiceTargetsRoute
   '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
@@ -760,6 +768,7 @@ export interface FileRoutesById {
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/reconciliation': typeof AdminReconciliationRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/saving-orders': typeof AdminSavingOrdersRoute
   '/admin/service-targets': typeof AdminServiceTargetsRoute
   '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
@@ -850,6 +859,7 @@ export interface FileRouteTypes {
     | '/admin/providers'
     | '/admin/reconciliation'
     | '/admin/roles'
+    | '/admin/saving-orders'
     | '/admin/service-targets'
     | '/admin/staff-teams'
     | '/admin/storage'
@@ -934,6 +944,7 @@ export interface FileRouteTypes {
     | '/admin/providers'
     | '/admin/reconciliation'
     | '/admin/roles'
+    | '/admin/saving-orders'
     | '/admin/service-targets'
     | '/admin/staff-teams'
     | '/admin/storage'
@@ -1022,6 +1033,7 @@ export interface FileRouteTypes {
     | '/admin/providers'
     | '/admin/reconciliation'
     | '/admin/roles'
+    | '/admin/saving-orders'
     | '/admin/service-targets'
     | '/admin/staff-teams'
     | '/admin/storage'
@@ -1415,6 +1427,13 @@ declare module '@tanstack/react-router' {
       path: '/roles'
       fullPath: '/admin/roles'
       preLoaderRoute: typeof AdminRolesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/saving-orders': {
+      id: '/admin/saving-orders'
+      path: '/saving-orders'
+      fullPath: '/admin/saving-orders'
+      preLoaderRoute: typeof AdminSavingOrdersRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/service-targets': {
@@ -1830,6 +1849,7 @@ interface AdminRouteChildren {
   AdminProvidersRoute: typeof AdminProvidersRoute
   AdminReconciliationRoute: typeof AdminReconciliationRoute
   AdminRolesRoute: typeof AdminRolesRoute
+  AdminSavingOrdersRoute: typeof AdminSavingOrdersRoute
   AdminServiceTargetsRoute: typeof AdminServiceTargetsRoute
   AdminStaffTeamsRoute: typeof AdminStaffTeamsRoute
   AdminStorageRoute: typeof AdminStorageRoute
@@ -1870,6 +1890,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminProvidersRoute: AdminProvidersRoute,
   AdminReconciliationRoute: AdminReconciliationRoute,
   AdminRolesRoute: AdminRolesRoute,
+  AdminSavingOrdersRoute: AdminSavingOrdersRoute,
   AdminServiceTargetsRoute: AdminServiceTargetsRoute,
   AdminStaffTeamsRoute: AdminStaffTeamsRoute,
   AdminStorageRoute: AdminStorageRoute,

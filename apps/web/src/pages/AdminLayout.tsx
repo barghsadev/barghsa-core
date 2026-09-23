@@ -37,6 +37,7 @@ import {
 import { t } from '@barghsa/i18n/admin-ui';
 import { documentText } from '@barghsa/i18n/documents';
 import { shellText } from '@barghsa/i18n/shell';
+import { tSaving } from '@barghsa/i18n/saving';
 import { TosBanner } from '../components/TosBanner.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { AppShell, type NavigationGroup } from '../components/AppShell.js';
@@ -57,6 +58,11 @@ export default function AdminLayout() {
           to: '/admin/electricity-orders',
           label: t('admin.electricityOrders.title', locale),
           icon: Zap,
+        },
+        {
+          to: '/admin/saving-orders',
+          label: tSaving('staffTitle', locale),
+          icon: Package,
         },
         {
           to: '/admin/electricity-increases',

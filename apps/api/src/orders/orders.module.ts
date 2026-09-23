@@ -28,6 +28,8 @@ import { ElectricityPriceAdjustmentService } from '../electricity/electricity-pr
 import { SavingOrderController } from '../saving/saving-order.controller.js';
 import { SavingOrderService } from '../saving/saving-order.service.js';
 import { BillVerificationProvider } from '../saving/bill-verification.provider.js';
+import { SavingFulfillmentController } from '../saving/saving-fulfillment.controller.js';
+import { SavingFulfillmentService } from '../saving/saving-fulfillment.service.js';
 
 @Module({
   imports: [SessionModule, AdminModule, InvoiceModule],
@@ -41,6 +43,7 @@ import { BillVerificationProvider } from '../saving/bill-verification.provider.j
     CustomerElectricityPriceAdjustmentController,
     StaffElectricityPriceAdjustmentController,
     SavingOrderController,
+    SavingFulfillmentController,
   ],
   providers: [
     OrdersService,
@@ -54,6 +57,7 @@ import { BillVerificationProvider } from '../saving/bill-verification.provider.j
     ElectricityPriceAdjustmentService,
     SavingOrderService,
     BillVerificationProvider,
+    SavingFulfillmentService,
   ],
   exports: [OrdersService, ElectricityCalculationService],
 })

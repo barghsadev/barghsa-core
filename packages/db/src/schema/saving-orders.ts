@@ -109,20 +109,65 @@ export const savingFulfillmentStages = pgTable(
     status: text('status').notNull().default('pending'),
     startedAt: timestamp('started_at', { withTimezone: true }),
     completedAt: timestamp('completed_at', { withTimezone: true }),
+    completedBy: text('completed_by').references(() => users.userId, { onDelete: 'restrict' }),
+    explanation: text('explanation'),
+    handoverDescription: text('handover_description'),
   },
   (table) => [
     uniqueIndex('saving_fulfillment_order_stage_key').on(table.orderId, table.stage),
     check(
       'saving_fulfillment_stage',
-      sql`${table.stage} IN ('review','procurement','dispatch','installation','completion')`
+      sql`${table.stage} IN ('request_confirmation','product_delivery','installation_and_document_upload','equipment_handover','process_completion')`
     ),
     check(
       'saving_fulfillment_status',
-      sql`${table.status} IN ('pending','in_progress','completed')`
+      sql`${table.status} IN ('pending','in_progress','completed','skipped')`
     ),
     check(
       'saving_fulfillment_completion',
-      sql`${table.status}<>'completed' OR ${table.completedAt} IS NOT NULL`
+      sql`${table.status} NOT IN ('completed','skipped') OR (${table.completedAt} IS NOT NULL AND ${table.completedBy} IS NOT NULL)`
+    ),
+    check(
+      'saving_fulfillment_handover',
+      sql`${table.stage}='equipment_handover' OR ${table.status}<>'skipped'`
+    ),
+  ]
+);
+
+export const savingFulfillmentEvents = pgTable(
+  'saving_fulfillment_events',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => savingOrders.id, { onDelete: 'restrict' }),
+    stage: text('stage').notNull(),
+    fromStatus: text('from_status').notNull(),
+    toStatus: text('to_status').notNull(),
+    actorUserId: text('actor_user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    explanation: text('explanation').notNull(),
+    handoverDescription: text('handover_description'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('saving_fulfillment_events_order_idx').on(table.orderId, table.createdAt, table.id),
+    check(
+      'saving_fulfillment_events_stage',
+      sql`${table.stage} IN ('request_confirmation','product_delivery','installation_and_document_upload','equipment_handover','process_completion')`
+    ),
+    check(
+      'saving_fulfillment_events_from_status',
+      sql`${table.fromStatus} IN ('pending','in_progress','completed','skipped')`
+    ),
+    check(
+      'saving_fulfillment_events_to_status',
+      sql`${table.toStatus} IN ('in_progress','completed','skipped')`
+    ),
+    check(
+      'saving_fulfillment_events_explanation',
+      sql`length(trim(${table.explanation})) BETWEEN 1 AND 1000`
     ),
   ]
 );

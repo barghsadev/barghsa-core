@@ -25,7 +25,13 @@ interface Detail {
   invoice_state: string;
   contract_id: string;
   contract_state: string;
-  stages: Array<{ stage: string; status: string }>;
+  stages: Array<{
+    stage: string;
+    status: string;
+    completed_at: string | null;
+    explanation: string | null;
+    handover_description: string | null;
+  }>;
 }
 
 export function SavingOrderDetailPage() {
@@ -157,11 +163,31 @@ export function SavingOrderDetailPage() {
           <Card>
             <CardContent className="space-y-3 pt-6">
               <h2 className="text-xl font-semibold">{copy('fulfillment')}</h2>
-              <ol className="grid gap-2 md:grid-cols-5">
-                {detail.stages.map((stage) => (
-                  <li key={stage.stage} className="rounded-md border p-3 text-sm">
+              <ol className="grid gap-2 md:grid-cols-5" aria-label={copy('fulfillment')}>
+                {detail.stages.map((stage, index) => (
+                  <li
+                    key={stage.stage}
+                    aria-current={stage.status === 'in_progress' ? 'step' : undefined}
+                    className={`rounded-md border p-3 text-sm ${stage.status === 'in_progress' ? 'border-primary bg-primary/5' : stage.status === 'completed' ? 'border-green-600/50 bg-green-600/5' : ''}`}
+                  >
+                    <span className="mb-2 block text-xs text-muted-foreground">
+                      {numbers.number(index + 1)} / {numbers.number(detail.stages.length)}
+                    </span>
                     <strong className="block">{copy(stage.stage)}</strong>
                     <span>{copy(stage.status)}</span>
+                    {stage.completed_at && (
+                      <time
+                        className="mt-1 block text-xs text-muted-foreground"
+                        dateTime={stage.completed_at}
+                      >
+                        {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(
+                          new Date(stage.completed_at)
+                        )}
+                      </time>
+                    )}
+                    {stage.handover_description && (
+                      <p className="mt-2 text-xs">{stage.handover_description}</p>
+                    )}
                   </li>
                 ))}
               </ol>

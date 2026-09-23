@@ -48,6 +48,7 @@ export function ElectricityPriceAdjustmentsPanel({ contractId }: { contractId: s
         return response.json() as Promise<{ adjustments: PriceAdjustment[] }>;
       })
       .then((result) => {
+        if (!Array.isArray(result.adjustments)) throw new Error('Invalid price history');
         if (!controller.signal.aborted) setAdjustments(result.adjustments);
       })
       .catch(() => {
