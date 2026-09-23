@@ -33,7 +33,7 @@ export async function readCancellationSnapshot(client: Pool | PoolClient, id: st
       contract_has_pending_payments(c.id) AS pending_payments,
       EXISTS(SELECT 1 FROM invoices i WHERE i.contract_id=c.id::text AND i.profile_id<>c.profile_id) AS association_conflict,
       (c.order_id IS NOT NULL
-        AND EXISTS(SELECT 1 FROM contracts other WHERE other.order_id=c.order_id AND other.id<>c.id AND other.state NOT IN ('Completed','Cancelled'))
+        AND EXISTS(SELECT 1 FROM contracts other WHERE other.order_id=c.order_id AND other.id<>c.id AND other.state NOT IN ('Completed','Cancelled','Rejected'))
         AND EXISTS(SELECT 1 FROM invoices i WHERE i.order_id=c.order_id AND i.profile_id=c.profile_id AND i.contract_id IS NULL
           AND (i.paid_amount>i.refunded_amount OR i.state NOT IN ('Cancelled','Refunded')))) AS ambiguous_order_invoices,
       COALESCE((SELECT jsonb_agg(jsonb_build_object(
@@ -94,7 +94,7 @@ export function cancellationSnapshot(row: CancellationSnapshotRow) {
     ...(row.ambiguous_order_invoices ? ['ambiguous_order_invoices'] : []),
     ...(row.archived ? ['profile_archived'] : []),
     ...(row.pending_payments ? ['payment_in_progress'] : []),
-    ...(['Completed', 'Cancelled'].includes(row.state) ? ['terminal_contract'] : []),
+    ...(['Completed', 'Cancelled', 'Rejected'].includes(row.state) ? ['terminal_contract'] : []),
     ...(invoices.some((invoice) => invoice.pendingRefunds.length) ? ['refund_in_progress'] : []),
     ...(invoices.some((invoice) => invoice.state === 'PaymentUnderReview')
       ? ['payment_under_review']

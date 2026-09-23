@@ -18,12 +18,16 @@ it('loads an order confirmation with its invoice and contract references', async
           profileId: 'profile-1',
           commercialStatus: 'PENDING',
           electricityStatus: 'awaiting_staff_review',
+          financialStatus: 'unpaid',
+          nextAction: 'await_review',
           periodStart: '2026-09-23T00:00:00Z',
           periodEnd: '2026-09-30T00:00:00Z',
           totalKwh: '10',
           fullAddress: 'Electricity Street',
+          postalCode: '1234567890',
           contractId: 'contract-1',
           contractState: 'AwaitingStaffReview',
+          versionId: 'version-1',
           invoiceId: 'invoice-1',
           invoiceState: 'Unpaid',
           totalIrR: '2500000',
@@ -40,6 +44,8 @@ it('loads an order confirmation with its invoice and contract references', async
     expect(request).toHaveBeenCalledWith('/api/electricity/orders/order-1', expect.any(Object));
     expect(container.textContent).toContain('2500000');
     expect(container.textContent).toContain('Awaiting staff review');
+    expect(container.textContent).toContain('Commercial status');
+    expect(container.textContent).toContain('Financial status');
     expect(container.querySelector('a[href="/contracts"]')).not.toBeNull();
     expect(container.querySelector('a[href="/invoices/invoice-1"]')).not.toBeNull();
   } finally {

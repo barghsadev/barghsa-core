@@ -73,6 +73,15 @@ const draftInput = z
       .strict(),
   })
   .strict();
+const addressCorrectionInput = z
+  .object({
+    idempotencyKey: z.string().uuid(),
+    expectedVersionId: z.string().uuid(),
+    fullAddress: z.string().trim().min(1).max(500),
+    postalCode: z.string().trim().refine(validatePostalCode),
+    responseNote: z.string().trim().min(1).max(1000),
+  })
+  .strict();
 
 @ApiTags('Electricity')
 @Controller('api/electricity')
@@ -138,6 +147,27 @@ export class ElectricityOrderController {
   @ApiResponse({ status: 200, description: 'Order, contract and invoice detail.' })
   detail(@Param('orderId', new ParseUUIDPipe()) orderId: string, @Req() req: AuthenticatedRequest) {
     return this.service.detail(req.session, orderId);
+  }
+
+  @Post('orders/:orderId/resubmit-address')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'electricity:address-correction:user', limit: 10, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Resubmit a corrected delivery address after staff request' })
+  @ApiZodBody(addressCorrectionInput)
+  @ApiResponse({ status: 200, description: 'New preliminary contract version queued for review.' })
+  resubmitAddress(
+    @Param('orderId', new ParseUUIDPipe()) orderId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const parsed = addressCorrectionInput.safeParse(body);
+    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.resubmitAddressCorrection(
+      req.session,
+      orderId,
+      parsed.data,
+      req.ip ?? 'unknown'
+    );
   }
 
   @Post('preview/simple')

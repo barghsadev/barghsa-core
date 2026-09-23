@@ -31,6 +31,7 @@ export const contractState = pgEnum('contract_state', [
   'Signed',
   'Active',
   'Completed',
+  'Rejected',
   'Cancelled',
 ]);
 export const contracts = pgTable(

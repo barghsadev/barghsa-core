@@ -20,6 +20,7 @@ import { products } from './products';
 import { users } from './users';
 import { contracts } from './contracts';
 import { invoices } from './invoices';
+import { refunds } from './refunds';
 import { uuidv7 } from '../types';
 
 /** Electricity-specific draft data. Confirmation will add the period and priced lines. */
@@ -207,5 +208,55 @@ export const electricityCustomerDrafts = pgTable(
     ),
     check('electricity_customer_drafts_step', sql`${table.currentStep} BETWEEN 1 AND 5`),
     check('electricity_customer_drafts_data_object', sql`jsonb_typeof(${table.data}) = 'object'`),
+  ]
+);
+
+/** A paid rejected electricity order owns a durable, idempotent refund obligation. */
+export const refundObligations = pgTable(
+  'refund_obligations',
+  {
+    id: uuidv7('id').primaryKey(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => electricityOrders.id, { onDelete: 'restrict' }),
+    contractId: uuid('contract_id').references(() => contracts.id, { onDelete: 'restrict' }),
+    invoiceId: uuid('invoice_id')
+      .notNull()
+      .references(() => invoices.id, { onDelete: 'restrict' }),
+    profileId: uuid('profile_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'restrict' }),
+    refundId: uuid('refund_id')
+      .notNull()
+      .references(() => refunds.id, { onDelete: 'restrict' }),
+    totalPaidAmount: pgBigint('total_paid_amount', { mode: 'bigint' }).notNull(),
+    completedRefundAmount: pgBigint('completed_refund_amount', { mode: 'bigint' })
+      .notNull()
+      .default(sql`0::bigint`),
+    status: text('status', { enum: ['pending', 'processing', 'completed', 'failed'] })
+      .notNull()
+      .default('pending'),
+    idempotencyKey: text('idempotency_key').notNull(),
+    authorizedBy: text('authorized_by')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    reason: text('reason').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex('refund_obligations_order_unique').on(table.orderId),
+    uniqueIndex('refund_obligations_refund_unique').on(table.refundId),
+    uniqueIndex('refund_obligations_idempotency_unique').on(table.idempotencyKey),
+    index('refund_obligations_status_idx').on(table.status, table.createdAt),
+    check(
+      'refund_obligations_status_check',
+      sql`${table.status} IN ('pending','processing','completed','failed')`
+    ),
+    check(
+      'refund_obligations_amount_check',
+      sql`${table.totalPaidAmount} > 0 AND ${table.completedRefundAmount} >= 0 AND ${table.completedRefundAmount} <= ${table.totalPaidAmount}`
+    ),
+    check('refund_obligations_reason_check', sql`length(trim(${table.reason})) > 0`),
   ]
 );

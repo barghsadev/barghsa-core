@@ -76,6 +76,7 @@ export const contractListSchema = z
         'Signed',
         'Active',
         'Completed',
+        'Rejected',
         'Cancelled',
       ])
       .optional(),

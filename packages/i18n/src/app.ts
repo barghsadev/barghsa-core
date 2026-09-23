@@ -5,6 +5,14 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'electricity.order.correction.title': 'اصلاح و ارسال دوباره سفارش',
+  'electricity.order.correction.description':
+    'نشانی تحویل را اصلاح کنید و پاسخ خود را بنویسید. قیمت و مقدار ثبت‌شده تغییر نمی‌کند.',
+  'electricity.order.correction.postalCode': 'کد پستی',
+  'electricity.order.correction.responseNote': 'پاسخ به درخواست اصلاح',
+  'electricity.order.correction.error':
+    'ارسال دوباره انجام نشد. اطلاعات را بررسی و دوباره تلاش کنید.',
+  'electricity.order.correction.submit': 'ارسال دوباره برای بررسی',
   'wallet.history.title': 'تاریخچه تراکنش‌ها',
   'wallet.history.type': 'نوع',
   'wallet.history.state': 'وضعیت',
@@ -681,6 +689,26 @@ export const fa: I18nDictionary = {
   'electricity.order.detailLoading': 'در حال بارگذاری سفارش…',
   'electricity.order.detailFailed': 'جزئیات سفارش بارگذاری نشد. دوباره تلاش کنید.',
   'electricity.order.detailStatus': 'وضعیت سفارش',
+  'electricity.order.commercialStatus': 'وضعیت تجاری',
+  'electricity.order.financialStatus': 'وضعیت مالی',
+  'electricity.order.nextAction': 'اقدام بعدی',
+  'electricity.order.financial.unpaid': 'پرداخت‌نشده',
+  'electricity.order.financial.payment_under_review': 'پرداخت در حال بررسی',
+  'electricity.order.financial.partially_funded': 'بخشی از مبلغ پرداخت شده',
+  'electricity.order.financial.paid': 'پرداخت‌شده',
+  'electricity.order.financial.refund_pending': 'بازپرداخت در انتظار پردازش',
+  'electricity.order.financial.partially_refunded': 'بخشی از مبلغ بازپرداخت شده',
+  'electricity.order.financial.refunded': 'بازپرداخت کامل',
+  'electricity.order.nextAction.await_review': 'سفارش در انتظار بررسی کارشناسان است.',
+  'electricity.order.nextAction.resubmit_changes':
+    'اصلاحات درخواست‌شده را بررسی و سفارش را دوباره ارسال کنید.',
+  'electricity.order.nextAction.pay_invoice': 'فاکتور را بررسی و مبلغ آن را پرداخت کنید.',
+  'electricity.order.nextAction.accept_contract': 'قرارداد منتشرشده را بررسی و تأیید کنید.',
+  'electricity.order.nextAction.await_refund':
+    'بازپرداخت در حال پردازش است؛ وضعیت فاکتور را پیگیری کنید.',
+  'electricity.order.nextAction.await_delivery': 'سفارش فعال است؛ دوره تحویل را پیگیری کنید.',
+  'electricity.order.nextAction.continue_order': 'ثبت سفارش را تکمیل کنید.',
+  'electricity.order.nextAction.none': 'در حال حاضر اقدامی لازم نیست.',
   'electricity.order.status.awaiting_staff_review': 'در انتظار بررسی کارشناسان',
   'electricity.order.status.draft': 'پیش‌نویس',
   'electricity.order.status.submitted': 'ثبت‌شده',
@@ -953,6 +981,13 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'electricity.order.correction.title': 'Correct and resubmit order',
+  'electricity.order.correction.description':
+    'Correct the delivery address and add your response. The saved price and quantity stay the same.',
+  'electricity.order.correction.postalCode': 'Postal code',
+  'electricity.order.correction.responseNote': 'Response to requested changes',
+  'electricity.order.correction.error': 'Could not resubmit. Check the details and try again.',
+  'electricity.order.correction.submit': 'Resubmit for review',
   'wallet.history.title': 'Transaction history',
   'wallet.history.type': 'Type',
   'wallet.history.state': 'Status',
@@ -1630,6 +1665,26 @@ export const en: I18nDictionary = {
   'electricity.order.detailLoading': 'Loading order…',
   'electricity.order.detailFailed': 'Could not load order details. Please retry.',
   'electricity.order.detailStatus': 'Order status',
+  'electricity.order.commercialStatus': 'Commercial status',
+  'electricity.order.financialStatus': 'Financial status',
+  'electricity.order.nextAction': 'Next action',
+  'electricity.order.financial.unpaid': 'Unpaid',
+  'electricity.order.financial.payment_under_review': 'Payment under review',
+  'electricity.order.financial.partially_funded': 'Partially funded',
+  'electricity.order.financial.paid': 'Paid',
+  'electricity.order.financial.refund_pending': 'Refund pending',
+  'electricity.order.financial.partially_refunded': 'Partially refunded',
+  'electricity.order.financial.refunded': 'Refunded',
+  'electricity.order.nextAction.await_review': 'Staff are reviewing your order.',
+  'electricity.order.nextAction.resubmit_changes':
+    'Review the requested changes and resubmit your order.',
+  'electricity.order.nextAction.pay_invoice': 'Review and pay the linked invoice.',
+  'electricity.order.nextAction.accept_contract': 'Review and accept the published contract.',
+  'electricity.order.nextAction.await_refund':
+    'Your refund is being processed. Track it on the invoice.',
+  'electricity.order.nextAction.await_delivery': 'Your order is active. Track its delivery period.',
+  'electricity.order.nextAction.continue_order': 'Complete your order submission.',
+  'electricity.order.nextAction.none': 'No action is needed right now.',
   'electricity.order.status.awaiting_staff_review': 'Awaiting staff review',
   'electricity.order.status.draft': 'Draft',
   'electricity.order.status.submitted': 'Submitted',

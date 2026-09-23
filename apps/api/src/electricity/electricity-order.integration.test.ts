@@ -4,6 +4,7 @@ import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>;
+let staffHeaders: Record<string, string>;
 let input: Record<string, unknown>;
 
 beforeEach(async () => {
@@ -20,6 +21,23 @@ beforeEach(async () => {
   headers = {
     Cookie: `barghsa_session=${session}`,
     'X-CSRF-Token': csrf,
+    'Content-Type': 'application/json',
+  };
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES('reviewer','reviewer@electricity.test','test-only',true)"
+  );
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES('reviewer','role-legal-contracts')"
+  );
+  const staffSession = randomUUID(),
+    staffCsrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES($1,'reviewer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())",
+    [staffSession, staffCsrf, randomUUID()]
+  );
+  staffHeaders = {
+    Cookie: `barghsa_session=${staffSession}`,
+    'X-CSRF-Token': staffCsrf,
     'Content-Type': 'application/json',
   };
   const profileId = (
@@ -79,6 +97,205 @@ async function refreshQuote() {
   input.expectedQuoteDigest = ((await response.json()) as { reviewDigest: string }).reviewDigest;
 }
 
+async function submittedOrder() {
+  const response = await post('orders/simple', input);
+  expect(response.status, http.logs()).toBe(201);
+  return (await response.json()) as {
+    orderId: string;
+    contractId: string;
+    invoiceId: string;
+  };
+}
+
+const staffPost = (id: string, decision: string, body: unknown) =>
+  fetch(`${http.base}/api/staff/electricity/orders/${id}/${decision}`, {
+    method: 'POST',
+    headers: staffHeaders,
+    body: JSON.stringify(body),
+  });
+
+it('queues the exact order for staff and approves it once with customer notification', async () => {
+  const order = await submittedOrder();
+  const queueResponse = await fetch(`${http.base}/api/staff/electricity/orders`, {
+    headers: staffHeaders,
+  });
+  expect(queueResponse.status, http.logs()).toBe(200);
+  expect((await fetch(`${http.base}/api/staff/electricity/orders`, { headers })).status).toBe(403);
+  const queue = (await queueResponse.json()) as { orders: Array<{ orderId: string }> };
+  expect(queue.orders.map((entry) => entry.orderId)).toContain(order.orderId);
+  const detailResponse = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
+    headers: staffHeaders,
+  });
+  expect(detailResponse.status, http.logs()).toBe(200);
+  const detail = (await detailResponse.json()) as { versionId: string; contractSnapshot: unknown };
+  expect(detail.contractSnapshot).toBeTruthy();
+  const body = { idempotencyKey: randomUUID(), expectedVersionId: detail.versionId };
+  const approved = await staffPost(order.orderId, 'approve', body);
+  expect(approved.status, http.logs()).toBe(200);
+  expect(await approved.json()).toMatchObject({ orderId: order.orderId, status: 'approved' });
+  const repeat = await staffPost(order.orderId, 'approve', body);
+  expect(repeat.status, http.logs()).toBe(200);
+  const saved = (
+    await http.pool.query(
+      `SELECT e.status,c.state,COUNT(cp.version_id)::int AS publication_count
+       FROM electricity_orders e JOIN electricity_contracts ec ON ec.order_id=e.id
+       JOIN contracts c ON c.id=ec.contract_id
+       LEFT JOIN contract_publications cp ON cp.contract_id=c.id
+       WHERE e.id=$1 GROUP BY e.status,c.state`,
+      [order.orderId]
+    )
+  ).rows[0];
+  expect(saved).toMatchObject({
+    status: 'approved',
+    state: 'AwaitingCustomerAcceptance',
+    publication_count: 1,
+  });
+  const notices = (
+    await http.pool.query(
+      "SELECT COUNT(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='buyer'"
+    )
+  ).rows[0].count;
+  expect(notices).toBeGreaterThan(0);
+});
+
+it('requires a reason and leaves an unpaid rejected order financially closed', async () => {
+  const order = await submittedOrder();
+  const versionId = (
+    await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+      order.contractId,
+    ])
+  ).rows[0].current_version_id;
+  const missingReason = await staffPost(order.orderId, 'reject', {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+  });
+  expect(missingReason.status).toBe(400);
+  const rejected = await staffPost(order.orderId, 'reject', {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+    reason: 'Cannot deliver at this address',
+  });
+  expect(rejected.status, http.logs()).toBe(200);
+  const states = (
+    await http.pool.query(
+      `SELECT e.status,o.status AS order_status,c.state AS contract_state,i.state AS invoice_state
+       FROM electricity_orders e JOIN orders o ON o.id=e.id
+       JOIN electricity_contracts ec ON ec.order_id=e.id JOIN contracts c ON c.id=ec.contract_id
+       JOIN invoices i ON i.order_id=o.id WHERE e.id=$1`,
+      [order.orderId]
+    )
+  ).rows[0];
+  expect(states).toMatchObject({
+    status: 'rejected',
+    order_status: 'CANCELLED',
+    contract_state: 'Rejected',
+    invoice_state: 'Cancelled',
+  });
+});
+
+it('requests changes with a reason and returns the order to the customer', async () => {
+  const order = await submittedOrder();
+  const versionId = (
+    await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+      order.contractId,
+    ])
+  ).rows[0].current_version_id;
+  const response = await staffPost(order.orderId, 'request-changes', {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+    reason: 'Please correct the delivery address',
+  });
+  expect(response.status, http.logs()).toBe(200);
+  expect(await response.json()).toMatchObject({ status: 'changes_requested' });
+  const detail = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
+  expect(await detail.json()).toMatchObject({
+    electricityStatus: 'changes_requested',
+    nextAction: 'resubmit_changes',
+  });
+  const corrected = {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+    fullAddress: 'Corrected Electricity Street',
+    postalCode: '1234567890',
+    responseNote: 'I corrected the delivery address',
+  };
+  const resubmit = () =>
+    fetch(`${http.base}/api/electricity/orders/${order.orderId}/resubmit-address`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(corrected),
+    });
+  const first = await resubmit();
+  expect(first.status, http.logs()).toBe(200);
+  const result = (await first.json()) as { versionId: string; status: string };
+  expect(result).toMatchObject({ status: 'awaiting_staff_review' });
+  expect(result.versionId).not.toBe(versionId);
+  expect((await resubmit()).status).toBe(200);
+  const amended = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
+  expect(await amended.json()).toMatchObject({
+    electricityStatus: 'awaiting_staff_review',
+    fullAddress: 'Corrected Electricity Street',
+    versionId: result.versionId,
+  });
+  const queue = await fetch(`${http.base}/api/staff/electricity/orders`, { headers: staffHeaders });
+  const queueBody = (await queue.json()) as {
+    orders: Array<{ orderId: string; versionId: string }>;
+  };
+  expect(queueBody.orders).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ orderId: order.orderId, versionId: result.versionId }),
+    ])
+  );
+  const stale = await staffPost(order.orderId, 'approve', {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+  });
+  expect(stale.status).toBe(409);
+});
+
+it('creates a mandatory refund obligation when a paid order is rejected', async () => {
+  const order = await submittedOrder();
+  await http.pool.query(
+    "UPDATE invoices SET paid_amount=500000,state='PartiallyFunded' WHERE id=$1",
+    [order.invoiceId]
+  );
+  const versionId = (
+    await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+      order.contractId,
+    ])
+  ).rows[0].current_version_id;
+  const response = await staffPost(order.orderId, 'reject', {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+    reason: 'Cannot deliver at this address',
+  });
+  expect(response.status, http.logs()).toBe(200);
+  const obligation = (
+    await http.pool.query('SELECT * FROM refund_obligations WHERE order_id=$1', [order.orderId])
+  ).rows[0];
+  expect(obligation).toMatchObject({
+    invoice_id: order.invoiceId,
+    status: 'pending',
+    total_paid_amount: '500000',
+    completed_refund_amount: '0',
+  });
+  const refund = (
+    await http.pool.query('SELECT * FROM refunds WHERE id=$1', [obligation.refund_id])
+  ).rows[0];
+  expect(refund).toMatchObject({ amount: '500000', state: 'Requested', destination: 'wallet' });
+  const customerDetail = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, {
+    headers,
+  });
+  expect(await customerDetail.json()).toMatchObject({
+    electricityStatus: 'rejected',
+    financialStatus: 'refund_pending',
+    nextAction: 'await_refund',
+  });
+  await expect(
+    http.pool.query('UPDATE invoices SET paid_amount=600000 WHERE id=$1', [order.invoiceId])
+  ).rejects.toThrow('Rejected electricity orders cannot receive new payments');
+});
+
 it('previews and atomically submits an order, contract, lines and payable invoice once', async () => {
   const preview = await post('preview/simple', {
     profileId: input.profileId,
@@ -105,6 +322,8 @@ it('previews and atomically submits an order, contract, lines and payable invoic
     invoiceId: result.invoiceId,
     totalIrR: '1000000',
     electricityStatus: 'awaiting_staff_review',
+    financialStatus: 'unpaid',
+    nextAction: 'await_review',
   });
   await http.pool.query(
     "INSERT INTO users(user_id,username,password_hash) VALUES('other-buyer','other@electricity.test','test-only')"

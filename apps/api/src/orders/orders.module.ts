@@ -13,10 +13,17 @@ import {
   HttpBillDataProvider,
 } from '../electricity/electricity-bill-data.service.js';
 import { ElectricityDraftService } from '../electricity/electricity-draft.service.js';
+import { ElectricityStaffReviewController } from '../electricity/electricity-staff-review.controller.js';
+import { ElectricityStaffReviewService } from '../electricity/electricity-staff-review.service.js';
 
 @Module({
   imports: [SessionModule, AdminModule, InvoiceModule],
-  controllers: [OrdersController, ProductsController, ElectricityOrderController],
+  controllers: [
+    OrdersController,
+    ProductsController,
+    ElectricityOrderController,
+    ElectricityStaffReviewController,
+  ],
   providers: [
     OrdersService,
     ElectricityCalculationService,
@@ -24,6 +31,7 @@ import { ElectricityDraftService } from '../electricity/electricity-draft.servic
     ElectricityBillDataService,
     HttpBillDataProvider,
     ElectricityDraftService,
+    ElectricityStaffReviewService,
   ],
   exports: [OrdersService, ElectricityCalculationService],
 })

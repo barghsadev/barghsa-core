@@ -53,6 +53,11 @@ export default function AdminLayout() {
       items: [
         { to: '/admin/tickets', label: t('tickets.staffTitle', locale), icon: LifeBuoy },
         { to: '/admin/contracts', label: contractText('staffTitle', locale), icon: FileText },
+        {
+          to: '/admin/electricity-orders',
+          label: t('admin.electricityOrders.title', locale),
+          icon: Zap,
+        },
         { to: '/admin/documents', label: documentText('staffTitle', locale), icon: FileText },
         {
           to: '/admin/reconciliation',

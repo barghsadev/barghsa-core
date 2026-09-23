@@ -11,6 +11,7 @@ import { v7 as uuidv7 } from 'uuid';
 import type { PoolClient } from 'pg';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
+import { idempotentMutation } from '../database/idempotency.js';
 import { requireAddressGeography } from '../profiles/address-geography.js';
 import { OrdersService } from '../orders/orders.service.js';
 import { GiftCodeService } from '../admin/gift-code.service.js';
@@ -22,6 +23,11 @@ import {
   type ElectricityGiftDiscount,
 } from './electricity-calculation.js';
 import { persistElectricitySubmissionSnapshot } from './electricity-submission-snapshot.js';
+import {
+  electricityFinancialStatus,
+  electricityNextAction,
+  type ElectricityCommercialStatus,
+} from './electricity-order-status.js';
 import {
   getCurrentJalaliMonthRange,
   getNextJalaliMonthRange,
@@ -44,6 +50,13 @@ export interface SimpleSubmissionInput extends SimpleOrderInput {
   idempotencyKey: string;
   expectedQuoteDigest: string;
   address: { provinceId: string; cityId: string; fullAddress: string; postalCode: string };
+}
+export interface ElectricityAddressCorrection {
+  idempotencyKey: string;
+  expectedVersionId: string;
+  fullAddress: string;
+  postalCode: string;
+  responseNote: string;
 }
 
 export function selectedPeriod(selection: SimplePeriod, now: Date): ElectricityPeriod {
@@ -122,17 +135,26 @@ export class ElectricityOrderService {
           total_kwh: string;
           pricing_snapshot: Record<string, unknown>;
           full_address: string;
+          postal_code: string;
           contract_id: string;
           contract_state: string;
+          version_id: string;
           invoice_id: string;
           invoice_state: string;
           total_amount: string;
+          paid_amount: string;
+          refunded_amount: string;
+          pending_refund_amount: string;
         }>(
           `SELECT o.id,o.profile_id,o.status AS commercial_status,
            e.status AS electricity_status,e.mode,e.period_start,e.period_end,
            e.total_kwh,e.pricing_snapshot,o.snapshot_full_address AS full_address,
-           ec.contract_id,c.state AS contract_state,i.id AS invoice_id,
-           i.state AS invoice_state,i.total_amount
+           o.snapshot_postal_code AS postal_code,
+           ec.contract_id,c.state AS contract_state,c.current_version_id AS version_id,
+           i.id AS invoice_id,
+           i.state AS invoice_state,i.total_amount,i.paid_amount,i.refunded_amount,
+           COALESCE((SELECT SUM(r.amount)::text FROM refunds r WHERE r.invoice_id=i.id
+             AND r.state NOT IN ('Completed','Rejected','Cancelled')), '0') AS pending_refund_amount
          FROM orders o JOIN electricity_orders e ON e.id=o.id
          JOIN electricity_contracts ec ON ec.order_id=o.id
          JOIN contracts c ON c.id=ec.contract_id
@@ -144,23 +166,152 @@ export class ElectricityOrderService {
       if (!detail) throw new NotFoundException('Electricity order not found');
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
+      const financialStatus = electricityFinancialStatus({
+        invoiceState: detail.invoice_state,
+        totalAmount: detail.total_amount,
+        paidAmount: detail.paid_amount,
+        refundedAmount: detail.refunded_amount,
+        pendingRefundAmount: detail.pending_refund_amount,
+      });
       return {
         orderId: detail.id,
         profileId: detail.profile_id,
         commercialStatus: detail.commercial_status,
         electricityStatus: detail.electricity_status,
+        financialStatus,
+        nextAction: electricityNextAction(
+          detail.electricity_status as ElectricityCommercialStatus,
+          financialStatus,
+          'customer'
+        ),
         mode: detail.mode,
         periodStart: detail.period_start.toISOString(),
         periodEnd: detail.period_end.toISOString(),
         totalKwh: detail.total_kwh,
         pricingSnapshot: detail.pricing_snapshot,
         fullAddress: detail.full_address,
+        postalCode: detail.postal_code,
         contractId: detail.contract_id,
         contractState: detail.contract_state,
+        versionId: detail.version_id,
         invoiceId: detail.invoice_id,
         invoiceState: detail.invoice_state,
         totalIrR: detail.total_amount,
       };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async resubmitAddressCorrection(
+    actor: Actor,
+    orderId: string,
+    input: ElectricityAddressCorrection,
+    ip: string
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      const result = await idempotentMutation(
+        client,
+        'electricity_order_address_correction',
+        { ...input, orderId },
+        actor,
+        async () => {
+          const row = (
+            await client.query<{
+              profile_id: string;
+              status: string;
+              contract_id: string;
+              contract_state: string;
+              version_id: string;
+              version_number: number;
+              content: Record<string, unknown>;
+            }>(
+              `SELECT o.profile_id,e.status,ec.contract_id,c.state AS contract_state,
+                 c.current_version_id AS version_id,v.version_number,v.content
+               FROM orders o JOIN electricity_orders e ON e.id=o.id
+               JOIN electricity_contracts ec ON ec.order_id=o.id
+               JOIN contracts c ON c.id=ec.contract_id
+               JOIN contract_versions v ON v.id=c.current_version_id
+               WHERE o.id=$1 FOR UPDATE OF o,e,c`,
+              [orderId]
+            )
+          ).rows[0];
+          if (!row) throw new NotFoundException('Order not found');
+          await this.authorize(client, actor, row.profile_id, true);
+          if (
+            row.status !== 'changes_requested' ||
+            row.contract_state !== 'ChangesRequested' ||
+            row.version_id !== input.expectedVersionId
+          )
+            throw new ConflictException('Order has changed; reload before resubmitting');
+          const versionId = uuidv7();
+          await client.query(
+            `UPDATE orders SET snapshot_full_address=$2,snapshot_postal_code=$3,updated_at=NOW()
+             WHERE id=$1`,
+            [orderId, input.fullAddress.trim(), input.postalCode.trim()]
+          );
+          await client.query(
+            `INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by)
+             VALUES($1,$2,$3,$4::jsonb,$5,$6)`,
+            [
+              versionId,
+              row.contract_id,
+              row.version_number + 1,
+              JSON.stringify({
+                ...row.content,
+                delivery: {
+                  fullAddress: input.fullAddress.trim(),
+                  postalCode: input.postalCode.trim(),
+                },
+                customerResponse: input.responseNote.trim(),
+              }),
+              'Customer corrected delivery address and resubmitted',
+              actor.userId,
+            ]
+          );
+          await client.query(
+            "UPDATE contracts SET current_version_id=$2,state='AwaitingStaffReview',submitted_at=NOW() WHERE id=$1",
+            [row.contract_id, versionId]
+          );
+          await client.query(
+            "UPDATE electricity_orders SET status='submitted',updated_at=NOW() WHERE id=$1",
+            [orderId]
+          );
+          await client.query(
+            "UPDATE electricity_orders SET status='awaiting_staff_review',updated_at=NOW() WHERE id=$1",
+            [orderId]
+          );
+          await client.query(
+            `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+             VALUES(uuid_generate_v7(),$1,'electricity.order_resubmitted',$2::jsonb,uuid_generate_v7(),$3)`,
+            [
+              actor.userId,
+              JSON.stringify({
+                orderId,
+                contractId: row.contract_id,
+                versionId,
+                responseNote: input.responseNote.trim(),
+              }),
+              ip,
+            ]
+          );
+          return {
+            orderId,
+            contractId: row.contract_id,
+            versionId,
+            status: 'awaiting_staff_review',
+          };
+        }
+      );
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

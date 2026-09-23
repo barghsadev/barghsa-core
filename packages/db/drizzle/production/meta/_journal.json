@@ -498,6 +498,20 @@
       "when": 1791331200053,
       "tag": "0150_electricity_customer_drafts",
       "breakpoints": true
+    },
+    {
+      "idx": 151,
+      "version": "7",
+      "when": 1791331200054,
+      "tag": "0151_electricity_review_refunds",
+      "breakpoints": true
+    },
+    {
+      "idx": 152,
+      "version": "7",
+      "when": 1791331200055,
+      "tag": "0152_electricity_rejected_contract",
+      "breakpoints": true
     }
   ]
 }
