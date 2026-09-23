@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { ValidatedSession } from '../session/session.service.js';
 import { OrdersService } from '../orders/orders.service.js';
+import { CircuitBreaker, CircuitOpenError } from '../verification/circuit-breaker.js';
 import { calculateDuration } from './electricity-calculation.js';
 import {
   getCurrentJalaliMonthRange,
@@ -24,6 +25,12 @@ export interface BillDataProvider {
 /** The deployment supplies a trusted origin and token; an absent provider leaves manual entry available. */
 export class HttpBillDataProvider implements BillDataProvider {
   readonly source = 'configured_bill_provider';
+  private readonly breaker = new CircuitBreaker({
+    failureThreshold: 3,
+    resetTimeoutMs: 30_000,
+    halfOpenMaxProbes: 1,
+  });
+
   async getHourlyConsumption(profileId: string): Promise<HourlyBillReading[]> {
     const base = process.env.ELECTRICITY_BILL_DATA_URL;
     const token = process.env.ELECTRICITY_BILL_DATA_TOKEN;
@@ -32,26 +39,28 @@ export class HttpBillDataProvider implements BillDataProvider {
     if (process.env.NODE_ENV === 'production' && url.protocol !== 'https:') {
       throw new Error('unconfigured');
     }
-    const response = await fetch(url, {
-      headers: { authorization: `Bearer ${token}`, accept: 'application/json' },
-      signal: AbortSignal.timeout(3_000),
+    return this.breaker.call(async () => {
+      const response = await fetch(url, {
+        headers: { authorization: `Bearer ${token}`, accept: 'application/json' },
+        signal: AbortSignal.timeout(3_000),
+      });
+      if (response.status === 401 || response.status === 403) throw new Error('auth_error');
+      if (!response.ok) throw new Error('provider_error');
+      const payload: unknown = await response.json();
+      if (!Array.isArray(payload)) throw new Error('invalid_data');
+      return payload
+        .filter(
+          (item): item is HourlyBillReading =>
+            typeof item === 'object' &&
+            item !== null &&
+            typeof item.hour === 'string' &&
+            Number.isFinite(Date.parse(item.hour)) &&
+            typeof item.kwh === 'number' &&
+            Number.isFinite(item.kwh) &&
+            item.kwh >= 0
+        )
+        .slice(-8_760);
     });
-    if (response.status === 401 || response.status === 403) throw new Error('auth_error');
-    if (!response.ok) throw new Error('provider_error');
-    const payload: unknown = await response.json();
-    if (!Array.isArray(payload)) throw new Error('invalid_data');
-    return payload
-      .filter(
-        (item): item is HourlyBillReading =>
-          typeof item === 'object' &&
-          item !== null &&
-          typeof item.hour === 'string' &&
-          Number.isFinite(Date.parse(item.hour)) &&
-          typeof item.kwh === 'number' &&
-          Number.isFinite(item.kwh) &&
-          item.kwh >= 0
-      )
-      .slice(-8_760);
   }
 }
 
@@ -129,11 +138,13 @@ export class ElectricityBillDataService {
         : { available: false, hourlyKwh: [], reason: 'no_data', manualEntryAllowed: true };
     } catch (error) {
       const reason =
-        error instanceof Error && ['unconfigured', 'auth_error'].includes(error.message)
-          ? error.message
-          : error instanceof Error && error.name === 'TimeoutError'
-            ? 'timeout'
-            : 'provider_error';
+        error instanceof CircuitOpenError
+          ? 'circuit_open'
+          : error instanceof Error && ['unconfigured', 'auth_error'].includes(error.message)
+            ? error.message
+            : error instanceof Error && error.name === 'TimeoutError'
+              ? 'timeout'
+              : 'provider_error';
       return { available: false, hourlyKwh: [], reason, manualEntryAllowed: true };
     }
   }
