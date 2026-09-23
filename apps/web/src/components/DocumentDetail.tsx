@@ -32,6 +32,8 @@ export function DocumentDetail({
   onReplace,
   onPrevious,
   savingPreSubmissionOnly = false,
+  solarCustomer = false,
+  allowReplacement = true,
 }: {
   id: string;
   staff: boolean;
@@ -40,6 +42,8 @@ export function DocumentDetail({
   onReplace: (document: BusinessDocument) => void;
   onPrevious: (id: string) => void;
   savingPreSubmissionOnly?: boolean;
+  solarCustomer?: boolean;
+  allowReplacement?: boolean;
 }) {
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
@@ -114,13 +118,27 @@ export function DocumentDetail({
   const actions: DocumentAction[] = [];
   if (document && canChange) {
     if (document.state === 'Available') actions.push('submit');
-    if (staff && document.state === 'SubmittedForReview')
+    if (
+      staff &&
+      (document.state === 'SubmittedForReview' ||
+        (document.businessRecordType === 'solar_request' && document.state === 'Available'))
+    )
       actions.push('approve', 'reject', 'request-changes');
     if (
-      savingPreSubmissionOnly
+      solarCustomer
         ? document.uploadedByType === 'customer' &&
-          ['Uploading', 'PendingScan', 'Available'].includes(document.state)
-        : ['Uploading', 'PendingScan', 'Superseded', 'Quarantined'].includes(document.state)
+          [
+            'Uploading',
+            'PendingScan',
+            'Available',
+            'SubmittedForReview',
+            'Approved',
+            'Rejected',
+          ].includes(document.state)
+        : savingPreSubmissionOnly
+          ? document.uploadedByType === 'customer' &&
+            ['Uploading', 'PendingScan', 'Available'].includes(document.state)
+          : ['Uploading', 'PendingScan', 'Superseded', 'Quarantined'].includes(document.state)
     )
       actions.push('remove');
     if (staff && !['Removed', 'Quarantined'].includes(document.state)) actions.push('quarantine');
@@ -201,10 +219,14 @@ export function DocumentDetail({
                 {word('predecessor')}
               </Button>
             ) : null}
-            {canChange &&
-            (savingPreSubmissionOnly
-              ? document.state === 'Available' && document.uploadedByType === 'customer'
-              : ['Available', 'Approved', 'Rejected'].includes(document.state)) ? (
+            {allowReplacement &&
+            canChange &&
+            (solarCustomer
+              ? document.uploadedByType === 'customer' &&
+                ['Available', 'SubmittedForReview', 'Approved', 'Rejected'].includes(document.state)
+              : savingPreSubmissionOnly
+                ? document.state === 'Available' && document.uploadedByType === 'customer'
+                : ['Available', 'Approved', 'Rejected'].includes(document.state)) ? (
               <Button variant="outline" onClick={() => onReplace(document)}>
                 {word('replace')}
               </Button>

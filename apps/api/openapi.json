@@ -8987,6 +8987,352 @@
         ]
       }
     },
+    "/api/admin/solar/document-guidance": {
+      "get": {
+        "operationId": "StaffSolarDocumentsController_guidance",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read editable solar document guidance",
+        "tags": [
+          "Admin · Solar documents"
+        ]
+      },
+      "put": {
+        "operationId": "StaffSolarDocumentsController_setGuidance",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "en": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "fa": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "suggestions": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "en": {
+                          "maxLength": 200,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "fa": {
+                          "maxLength": 200,
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "fa",
+                        "en"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 30,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "fa",
+                  "en",
+                  "suggestions"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Edit solar document guidance and suggestions",
+        "tags": [
+          "Admin · Solar documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests": {
+      "get": {
+        "operationId": "StaffSolarDocumentsController_queue",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List solar requests awaiting document work",
+        "tags": [
+          "Admin · Solar documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/documents": {
+      "get": {
+        "operationId": "StaffSolarDocumentsController_documents",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read individual solar documents and their review statuses",
+        "tags": [
+          "Admin · Solar documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/documents/advance": {
+      "post": {
+        "operationId": "StaffSolarDocumentsController_advance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Advance a sufficient solar document set to postal submission",
+        "tags": [
+          "Admin · Solar documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/documents/request-additional": {
+      "post": {
+        "operationId": "StaffSolarDocumentsController_requestAdditional",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "description": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "description"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Request an additional or replacement solar document",
+        "tags": [
+          "Admin · Solar documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/documents/{docId}/approve": {
+      "post": {
+        "operationId": "StaffSolarDocumentsController_approve",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "docId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedRevision": {
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedRevision"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve one solar document",
+        "tags": [
+          "Admin · Solar documents"
+        ]
+      }
+    },
+    "/api/admin/solar/requests/{id}/documents/{docId}/reject": {
+      "post": {
+        "operationId": "StaffSolarDocumentsController_reject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "docId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedRevision": {
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expectedRevision"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reject one solar document with a reason",
+        "tags": [
+          "Admin · Solar documents"
+        ]
+      }
+    },
     "/api/admin/staff": {
       "get": {
         "operationId": "AdminController_listStaff",
@@ -17966,6 +18312,26 @@
         ]
       }
     },
+    "/api/solar/document-guidance": {
+      "get": {
+        "operationId": "SolarDocumentsController_guidance",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read solar document guidance and suggested file list",
+        "tags": [
+          "Solar documents"
+        ]
+      }
+    },
     "/api/solar/requests": {
       "get": {
         "operationId": "SolarRequestController_list",
@@ -18213,6 +18579,86 @@
         "summary": "Read a solar construction request and its current stage",
         "tags": [
           "Solar construction requests"
+        ]
+      }
+    },
+    "/api/solar/requests/{id}/documents": {
+      "get": {
+        "operationId": "SolarDocumentsController_state",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read customer solar document guidance and staff requests",
+        "tags": [
+          "Solar documents"
+        ]
+      }
+    },
+    "/api/solar/requests/{id}/documents/complete": {
+      "post": {
+        "operationId": "SolarDocumentsController_complete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "allDocumentsUploaded": {
+                    "enum": [
+                      true
+                    ],
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "allDocumentsUploaded"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit the document set for review, including an empty set",
+        "tags": [
+          "Solar documents"
         ]
       }
     },

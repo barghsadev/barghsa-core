@@ -145,7 +145,7 @@ export class DocumentService {
         .from(documents)
         .where(eq(documents.id, id))
     )[0];
-    if (!row || row.kind === 'solar_request') throw new NotFoundException();
+    if (!row) throw new NotFoundException();
     return { profileId: row.profileId, kind: row.kind, businessRecordId: row.businessRecordId };
   }
 
@@ -156,9 +156,12 @@ export class DocumentService {
     staff: boolean
   ) {
     if (input.businessRecordType === 'standalone') return;
-    const table = { contract: 'contracts', invoice: 'invoices', order: 'orders' }[
-      input.businessRecordType
-    ];
+    const table = {
+      contract: 'contracts',
+      invoice: 'invoices',
+      order: 'orders',
+      solar_request: 'solar_construction_requests',
+    }[input.businessRecordType];
     const record = (
       await client.query(`SELECT * FROM ${table} WHERE id=$1 AND profile_id=$2 FOR SHARE`, [
         input.businessRecordId,
@@ -166,6 +169,13 @@ export class DocumentService {
       ])
     ).rows[0];
     if (!record) throw new NotFoundException();
+    if (
+      input.businessRecordType === 'solar_request' &&
+      !['submitted', 'uploading_documents', 'documents_under_review', 'changes_requested'].includes(
+        record.status
+      )
+    )
+      throw new ConflictException('Solar request no longer accepts documents');
     if (input.businessRecordType !== 'contract') return;
     if (record.current_version_id !== input.contractVersionId)
       throw new ConflictException('Select the current contract version');
@@ -222,7 +232,20 @@ export class DocumentService {
               prior.document.state !== 'Available')
           )
             throw new ConflictException('Only your unsubmitted saving document may be replaced');
-          if (!['Available', 'Approved', 'Rejected'].includes(prior.document.state))
+          if (
+            input.businessRecordType === 'solar_request' &&
+            !staff &&
+            (prior.document.uploadedBy !== request.session.userId ||
+              prior.document.uploadedByType !== 'customer')
+          )
+            throw new ConflictException('Only your solar document may be replaced');
+          if (
+            !['Available', 'Approved', 'Rejected'].includes(prior.document.state) &&
+            !(
+              input.businessRecordType === 'solar_request' &&
+              prior.document.state === 'SubmittedForReview'
+            )
+          )
             throw new ConflictException('Document cannot be replaced in this state');
           if (
             input.businessRecordType === 'contract' &&
@@ -272,6 +295,13 @@ export class DocumentService {
                 documentId: document.id,
                 role: input.contractRole!,
               });
+            if (input.businessRecordType === 'solar_request')
+              await client.query(
+                `INSERT INTO solar_construction_documents
+                 (request_id,document_id,file_name,uploaded_by)
+                 VALUES($1,$2,$3,$4)`,
+                [input.businessRecordId, document.id, input.fileName, request.session.userId]
+              );
             await recordEvent(client, document, null, request.session, ip);
             return {
               document: dto(await load(client, document.id, profileId, staff)),
@@ -468,7 +498,15 @@ export class DocumentService {
           const previous = row.document.supersedesDocumentId
             ? await load(client, row.document.supersedesDocumentId, profileId, staff, true)
             : null;
-          if (previous && !['Available', 'Approved', 'Rejected'].includes(previous.document.state))
+          if (
+            previous &&
+            ![
+              'Available',
+              'Approved',
+              'Rejected',
+              ...(context.kind === 'solar_request' ? ['SubmittedForReview'] : []),
+            ].includes(previous.document.state)
+          )
             throw new ConflictException(
               'Another replacement already changed the previous document'
             );
@@ -541,6 +579,38 @@ export class DocumentService {
                 ])
               ).rows.length
             : false;
+        const solarDocument = context.kind === 'solar_request';
+        if (solarDocument) {
+          const solar = (
+            await client.query<{ status: string }>(
+              'SELECT status FROM solar_construction_requests WHERE id=$1 FOR SHARE',
+              [context.businessRecordId]
+            )
+          ).rows[0];
+          if (
+            !solar ||
+            ![
+              'submitted',
+              'uploading_documents',
+              'documents_under_review',
+              'changes_requested',
+            ].includes(solar.status)
+          )
+            throw new ConflictException('Solar request no longer accepts document changes');
+          if (
+            staff &&
+            ['approve', 'reject', 'request-changes'].includes(action) &&
+            !['documents_under_review', 'changes_requested'].includes(solar.status)
+          )
+            throw new ConflictException('Solar documents have not been submitted for review');
+        }
+        if (
+          solarDocument &&
+          !staff &&
+          (initial.document.uploadedBy !== actor.userId ||
+            initial.document.uploadedByType !== 'customer')
+        )
+          throw new ConflictException('Only your solar document may be changed');
         if (
           savingDocument &&
           !staff &&
@@ -570,8 +640,17 @@ export class DocumentService {
               action === 'submit'
                 ? ['Available']
                 : action === 'remove'
-                  ? savingDocument && !staff
-                    ? ['Uploading', 'PendingScan', 'Available']
+                  ? (savingDocument || solarDocument) && !staff
+                    ? solarDocument
+                      ? [
+                          'Uploading',
+                          'PendingScan',
+                          'Available',
+                          'SubmittedForReview',
+                          'Approved',
+                          'Rejected',
+                        ]
+                      : ['Uploading', 'PendingScan', 'Available']
                     : ['Uploading', 'PendingScan', 'Superseded', 'Quarantined']
                   : action === 'quarantine'
                     ? [
@@ -583,7 +662,11 @@ export class DocumentService {
                         'Rejected',
                         'Superseded',
                       ]
-                    : ['SubmittedForReview'];
+                    : solarDocument &&
+                        staff &&
+                        ['approve', 'reject', 'request-changes'].includes(action)
+                      ? ['SubmittedForReview', 'Available']
+                      : ['SubmittedForReview'];
             if (!allowed.includes(row.document.state))
               throw new ConflictException('Action is not permitted in this document state');
             const changed = (
@@ -599,6 +682,17 @@ export class DocumentService {
                 .returning()
             )[0]!;
             await recordEvent(client, changed, row.document.state, actor, ip, input.reason);
+            if (solarDocument && staff && ['approve', 'reject'].includes(action))
+              await client.query(
+                `UPDATE solar_construction_documents SET staff_status=$2,staff_reason=$3,
+                 staff_reviewed_by=$4,staff_reviewed_at=NOW() WHERE document_id=$1`,
+                [
+                  id,
+                  action === 'approve' ? 'approved' : 'rejected',
+                  action === 'reject' ? input.reason : null,
+                  actor.userId,
+                ]
+              );
             if (action !== 'remove')
               await notifyDocumentReview(client, changed, action, input.reason);
             return dto({ ...row, document: changed });

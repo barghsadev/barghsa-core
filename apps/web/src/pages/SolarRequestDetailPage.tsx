@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
+import { withCsrf } from '../lib/csrf.js';
+import { DocumentResults, type DocumentFilters } from '../components/DocumentsWorkspace.js';
 
 interface SolarRequest {
   id: string;
+  profile_id: string;
   status: string;
   building_type: string;
   grid_type: string;
@@ -32,6 +35,25 @@ export function SolarRequestDetailPage() {
   const [request, setRequest] = useState<SolarRequest | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [documentsInfo, setDocumentsInfo] = useState<{
+    guidance: { fa: string; en: string; suggestions: Array<{ fa: string; en: string }> };
+    requestedDocuments: Array<{ id: string; description: string }>;
+  } | null>(null);
+  const [allUploaded, setAllUploaded] = useState(false);
+  const [documentError, setDocumentError] = useState(false);
+  const [documentSent, setDocumentSent] = useState(false);
+  const [sendingDocuments, setSendingDocuments] = useState(false);
+  const filters = useMemo<DocumentFilters>(
+    () => ({
+      kind: 'solar_request',
+      state: '',
+      category: '',
+      query: '',
+      profileId: '',
+      businessRecordId: requestId,
+    }),
+    [requestId]
+  );
   useEffect(() => {
     const controller = new AbortController();
     void fetch(`/api/solar/requests/${encodeURIComponent(requestId)}`, {
@@ -53,6 +75,49 @@ export function SolarRequestDetailPage() {
       });
     return () => controller.abort();
   }, [requestId]);
+  useEffect(() => {
+    if (!request) return;
+    const controller = new AbortController();
+    void fetch(`/api/solar/requests/${encodeURIComponent(requestId)}/documents`, {
+      credentials: 'include',
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('documents');
+        return response.json() as Promise<NonNullable<typeof documentsInfo>>;
+      })
+      .then((value) => {
+        if (!controller.signal.aborted) setDocumentsInfo(value);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setDocumentError(true);
+      });
+    return () => controller.abort();
+  }, [requestId, request?.id]);
+
+  async function completeDocuments() {
+    if (!allUploaded || sendingDocuments) return;
+    setSendingDocuments(true);
+    setDocumentError(false);
+    try {
+      const response = await fetch(
+        `/api/solar/requests/${encodeURIComponent(requestId)}/documents/complete`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ allDocumentsUploaded: true }),
+        }
+      );
+      if (!response.ok) throw new Error('documents');
+      setRequest((current) => (current ? { ...current, status: 'documents_under_review' } : null));
+      setDocumentSent(true);
+    } catch {
+      setDocumentError(true);
+    } finally {
+      setSendingDocuments(false);
+    }
+  }
   const stages = ['requestStage', 'uploadStage', 'verifyStage', 'postalStage', 'finalStage'];
   const currentStage = request
     ? ['submitted', 'uploading_documents'].includes(request.status)
@@ -98,6 +163,68 @@ export function SolarRequestDetailPage() {
               ))}
             </ol>
           </section>
+          {[
+            'submitted',
+            'uploading_documents',
+            'documents_under_review',
+            'changes_requested',
+          ].includes(request.status) && (
+            <section
+              className="space-y-4 rounded-xl border p-5"
+              aria-label={copy('documentGuidance')}
+            >
+              <h2 className="text-xl font-semibold">{copy('documentGuidance')}</h2>
+              {documentsInfo && (
+                <>
+                  <p>{documentsInfo.guidance[locale]}</p>
+                  {!!documentsInfo.guidance.suggestions.length && (
+                    <>
+                      <h3 className="font-medium">{copy('suggestedDocuments')}</h3>
+                      <ul className="list-inside list-disc">
+                        {documentsInfo.guidance.suggestions.map((item, index) => (
+                          <li key={index}>{item[locale]}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                  {!!documentsInfo.requestedDocuments.length && (
+                    <>
+                      <h3 className="font-medium">{copy('requestedDocuments')}</h3>
+                      <ul className="list-inside list-disc">
+                        {documentsInfo.requestedDocuments.map((item) => (
+                          <li key={item.id}>{item.description}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </>
+              )}
+              <DocumentResults
+                staff={false}
+                filters={filters}
+                profileId={request.profile_id}
+                association={{ businessRecordType: 'solar_request', businessRecordId: requestId }}
+              />
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={allUploaded}
+                  onChange={(e) => setAllUploaded(e.target.checked)}
+                />
+                {copy('allUploaded')}
+              </label>
+              <button
+                type="button"
+                className="rounded-md bg-primary px-4 py-2 text-primary-foreground disabled:opacity-50"
+                disabled={!allUploaded || sendingDocuments}
+                onClick={() => void completeDocuments()}
+              >
+                {copy('sendReview')}
+              </button>
+              {documentSent && <p role="status">{copy('reviewSent')}</p>}
+              {documentError && <p role="alert">{copy('documentError')}</p>}
+            </section>
+          )}
           <dl className="grid gap-3 rounded-xl border p-5 sm:grid-cols-2">
             <div>
               <dt>{copy('instruction')}</dt>

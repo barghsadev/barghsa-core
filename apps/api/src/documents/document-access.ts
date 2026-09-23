@@ -13,7 +13,7 @@ export type DocumentActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csr
 export function customerDocumentPermission(kind: BusinessType, write: boolean): AgentPermission {
   if (kind === 'contract') return write ? 'contracts:sign' : 'contracts:view';
   if (kind === 'invoice') return write ? 'bank-receipts:submit' : 'invoices:view';
-  if (kind === 'order') return write ? 'orders:create' : 'orders:view';
+  if (kind === 'order' || kind === 'solar_request') return write ? 'orders:create' : 'orders:view';
   return write ? 'documents:write' : 'documents:view';
 }
 export function staffDocumentPermission(kind: BusinessType, write: boolean) {
@@ -22,7 +22,7 @@ export function staffDocumentPermission(kind: BusinessType, write: boolean) {
       ? 'contracts'
       : kind === 'invoice'
         ? 'invoices'
-        : kind === 'order'
+        : kind === 'order' || kind === 'solar_request'
           ? 'orders'
           : 'legal';
   return `${area}:${write ? 'write' : 'read'}`;

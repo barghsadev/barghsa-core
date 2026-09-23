@@ -9,5 +9,6 @@ import { DocumentStorageService } from './document-storage.service.js';
   imports: [SessionModule, UploadModule],
   controllers: [DocumentController, StaffDocumentController],
   providers: [DocumentService, DocumentStorageService],
+  exports: [DocumentService],
 })
 export class DocumentModule {}

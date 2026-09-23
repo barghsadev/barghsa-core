@@ -17,7 +17,11 @@ import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { DocumentDetail } from './DocumentDetail.js';
-import { DocumentUpload, type OrderDocumentAssociation } from './DocumentUpload.js';
+import {
+  DocumentUpload,
+  type OrderDocumentAssociation,
+  type SolarDocumentAssociation,
+} from './DocumentUpload.js';
 import {
   documentBase,
   documentKinds,
@@ -220,7 +224,7 @@ export function DocumentResults({
   staff: boolean;
   filters: DocumentFilters;
   profileId: string;
-  association?: OrderDocumentAssociation;
+  association?: OrderDocumentAssociation | SolarDocumentAssociation;
 }) {
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
@@ -320,7 +324,8 @@ export function DocumentResults({
           onClose={() => setSelected(null)}
           onPrevious={setSelected}
           onChanged={reload}
-          savingPreSubmissionOnly={!!association && !staff}
+          savingPreSubmissionOnly={association?.businessRecordType === 'order' && !staff}
+          solarCustomer={association?.businessRecordType === 'solar_request' && !staff}
           onReplace={(document) => {
             setSelected(null);
             setUpload({ replacement: document });

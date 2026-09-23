@@ -1,6 +1,12 @@
 import { z } from 'zod';
 
-export const BusinessTypeSchema = z.enum(['contract', 'invoice', 'order', 'standalone']);
+export const BusinessTypeSchema = z.enum([
+  'contract',
+  'invoice',
+  'order',
+  'solar_request',
+  'standalone',
+]);
 export type BusinessType = z.infer<typeof BusinessTypeSchema>;
 export const DocumentCreateSchema = z
   .object({

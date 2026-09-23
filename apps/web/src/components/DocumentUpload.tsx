@@ -32,6 +32,10 @@ export interface OrderDocumentAssociation {
   businessRecordType: 'order';
   businessRecordId: string;
 }
+export interface SolarDocumentAssociation {
+  businessRecordType: 'solar_request';
+  businessRecordId: string;
+}
 type Attempt = { upload: Upload; file: File; uploaded: boolean; confirmKey: string };
 export function DocumentUpload({
   staff,
@@ -44,7 +48,7 @@ export function DocumentUpload({
   staff: boolean;
   profileId: string;
   replacement: BusinessDocument | null;
-  association?: ContractDocumentAssociation | OrderDocumentAssociation;
+  association?: ContractDocumentAssociation | OrderDocumentAssociation | SolarDocumentAssociation;
   onClose: () => void;
   onUploaded: (document: BusinessDocument) => void;
 }) {

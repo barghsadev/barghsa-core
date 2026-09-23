@@ -1,6 +1,12 @@
 import { withCsrf } from './csrf.js';
 
-export const documentKinds = ['standalone', 'contract', 'invoice', 'order'] as const;
+export const documentKinds = [
+  'standalone',
+  'contract',
+  'invoice',
+  'order',
+  'solar_request',
+] as const;
 export type DocumentKind = (typeof documentKinds)[number];
 export const documentStates = [
   'Uploading',

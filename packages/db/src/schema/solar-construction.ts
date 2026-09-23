@@ -176,3 +176,25 @@ export const solarConstructionPostal = pgTable(
     ),
   ]
 );
+
+export const solarDocumentRequests = pgTable(
+  'solar_document_requests',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    requestId: uuid('request_id')
+      .notNull()
+      .references(() => solarConstructionRequests.id, { onDelete: 'restrict' }),
+    description: text('description').notNull(),
+    requestedBy: text('requested_by')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index('solar_document_requests_request_idx').on(t.requestId, t.createdAt, t.id),
+    check(
+      'solar_document_requests_description',
+      sql`length(trim(${t.description})) BETWEEN 1 AND 2000`
+    ),
+  ]
+);

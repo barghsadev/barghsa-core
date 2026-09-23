@@ -37,9 +37,15 @@ import {
 import { SavingCommentsService } from '../saving/saving-comments.service.js';
 import { SolarRequestController } from '../solar/solar-request.controller.js';
 import { SolarRequestService } from '../solar/solar-request.service.js';
+import {
+  SolarDocumentsController,
+  StaffSolarDocumentsController,
+} from '../solar/solar-documents.controller.js';
+import { SolarDocumentsService } from '../solar/solar-documents.service.js';
+import { DocumentModule } from '../documents/document.module.js';
 
 @Module({
-  imports: [SessionModule, AdminModule, InvoiceModule],
+  imports: [SessionModule, AdminModule, InvoiceModule, DocumentModule],
   controllers: [
     OrdersController,
     ProductsController,
@@ -54,6 +60,8 @@ import { SolarRequestService } from '../solar/solar-request.service.js';
     SavingCommentsController,
     StaffSavingCommentsController,
     SolarRequestController,
+    SolarDocumentsController,
+    StaffSolarDocumentsController,
   ],
   providers: [
     OrdersService,
@@ -70,6 +78,7 @@ import { SolarRequestService } from '../solar/solar-request.service.js';
     SavingFulfillmentService,
     SavingCommentsService,
     SolarRequestService,
+    SolarDocumentsService,
   ],
   exports: [OrdersService, ElectricityCalculationService],
 })

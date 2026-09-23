@@ -33,11 +33,13 @@ import {
   UsersRound,
   Wallet,
   Zap,
+  Sun,
 } from 'lucide-react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { documentText } from '@barghsa/i18n/documents';
 import { shellText } from '@barghsa/i18n/shell';
 import { tSaving } from '@barghsa/i18n/saving';
+import { tSolar } from '@barghsa/i18n/solar';
 import { TosBanner } from '../components/TosBanner.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { AppShell, type NavigationGroup } from '../components/AppShell.js';
@@ -64,6 +66,7 @@ export default function AdminLayout() {
           label: tSaving('staffTitle', locale),
           icon: Package,
         },
+        { to: '/admin/solar-requests', label: tSolar('staffTitle', locale), icon: Sun },
         {
           to: '/admin/electricity-increases',
           label: t('admin.electricityIncreases.title', locale),
