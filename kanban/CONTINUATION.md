@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Saving fulfillment prerequisites](batches/2026-09-24-saving-fulfillment-prerequisites.md) makes the existing paid-invoice and active-contract guards visible in staff stage controls. Blocked completion actions explain the unmet prerequisite in both languages; the saving browser journey covers the unpaid delivery state.
+
 [Saving staff handoff browser journey](batches/2026-09-24-saving-staff-browser-journey.md) extends `03-core-business.md#T-03.90.14` from saving-order submission through staff approval, the automatic request-confirmation handoff, and the customer's updated progress view. It asserts the staff approval payload; browser API responses are controlled, while backend transitions are covered separately.
 
 [Simple electricity browser journey](batches/2026-09-24-electricity-simple-browser-journey.md) covers the simple-order portion of `03-core-business.md#T-03.90.14`: catalogue, period and quantity, reviewed thermal/green quote, staff review handoff, linked wallet payment, and contract tracking. The focused journey passes all five browser projects. The browser API is controlled; backend transitions remain covered in integration suites.

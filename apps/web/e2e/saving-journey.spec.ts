@@ -391,6 +391,11 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   await page.getByRole('button', { name: 'Fulfillment', exact: true }).click();
   await page.getByRole('button', { name: /Buyer.*Home saving plan/ }).click();
   await expect(page.getByText('Product delivery', { exact: true })).toBeVisible();
+  await expect(
+    page.getByText('Invoice payment is required before this stage can be completed.')
+  ).toBeVisible();
+  await page.getByRole('textbox', { name: 'Reason or progress note' }).fill('Ready to deliver');
+  await expect(page.getByRole('button', { name: 'Complete stage' })).toBeDisabled();
   expect(staffActions).toMatchObject([
     { path: 'approve', body: { expectedVersionId: agreementVersionId } },
   ]);

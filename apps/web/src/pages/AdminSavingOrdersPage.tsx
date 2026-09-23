@@ -83,6 +83,18 @@ interface Detail extends Order {
   canAmendHardware: boolean;
 }
 
+function stagePrerequisites(stage: StageName, order: Detail) {
+  const reasons: Array<'staffPaymentRequired' | 'staffActiveContractRequired'> = [];
+  if (
+    (stage === 'product_delivery' || stage === 'process_completion') &&
+    order.invoiceState !== 'Paid'
+  )
+    reasons.push('staffPaymentRequired');
+  if (stage === 'process_completion' && !['Active', 'Completed'].includes(order.contractState))
+    reasons.push('staffActiveContractRequired');
+  return reasons;
+}
+
 export default function AdminSavingOrdersPage() {
   const locale = useLocale();
   const money = useNumberFormatting(locale);
@@ -207,6 +219,7 @@ export default function AdminSavingOrdersPage() {
     if (
       !detail ||
       !note.trim() ||
+      stagePrerequisites(stage, detail).length > 0 ||
       (stage === 'equipment_handover' && choice === 'complete' && !handover.trim())
     )
       return;
@@ -510,43 +523,52 @@ export default function AdminSavingOrdersPage() {
                 </div>
               )}
               <ol className="space-y-2">
-                {detail.stages.map((stage) => (
-                  <li key={stage.stage} className="rounded-md border p-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span>
-                        <strong>{copy(stage.stage)}</strong> · {copy(stage.status)}
-                      </span>
-                      {stage.status === 'in_progress' && (
-                        <span className="flex gap-2">
-                          <Button
-                            size="sm"
-                            disabled={
-                              !note.trim() ||
-                              (stage.stage === 'equipment_handover' && !handover.trim())
-                            }
-                            onClick={() => advance(stage.stage, 'complete')}
-                          >
-                            {copy('staffComplete')}
-                          </Button>
-                          {stage.stage === 'equipment_handover' && (
+                {detail.stages.map((stage) => {
+                  const prerequisites = stagePrerequisites(stage.stage, detail);
+                  return (
+                    <li key={stage.stage} className="rounded-md border p-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span>
+                          <strong>{copy(stage.stage)}</strong> · {copy(stage.status)}
+                        </span>
+                        {stage.status === 'in_progress' && (
+                          <span className="flex gap-2">
                             <Button
                               size="sm"
-                              variant="outline"
-                              disabled={!note.trim()}
-                              onClick={() => advance(stage.stage, 'skip')}
+                              disabled={
+                                !note.trim() ||
+                                prerequisites.length > 0 ||
+                                (stage.stage === 'equipment_handover' && !handover.trim())
+                              }
+                              onClick={() => advance(stage.stage, 'complete')}
                             >
-                              {copy('staffSkip')}
+                              {copy('staffComplete')}
                             </Button>
-                          )}
-                        </span>
+                            {stage.stage === 'equipment_handover' && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                disabled={!note.trim()}
+                                onClick={() => advance(stage.stage, 'skip')}
+                              >
+                                {copy('staffSkip')}
+                              </Button>
+                            )}
+                          </span>
+                        )}
+                      </div>
+                      {stage.explanation && <p className="mt-2 text-sm">{stage.explanation}</p>}
+                      {stage.status === 'in_progress' && prerequisites.length > 0 && (
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          {prerequisites.map((reason) => copy(reason)).join(' ')}
+                        </p>
                       )}
-                    </div>
-                    {stage.explanation && <p className="mt-2 text-sm">{stage.explanation}</p>}
-                    {stage.handover_description && (
-                      <p className="mt-2 text-sm">{stage.handover_description}</p>
-                    )}
-                  </li>
-                ))}
+                      {stage.handover_description && (
+                        <p className="mt-2 text-sm">{stage.handover_description}</p>
+                      )}
+                    </li>
+                  );
+                })}
               </ol>
               <div>
                 <h3 className="font-semibold">{copy('staffHistory')}</h3>
