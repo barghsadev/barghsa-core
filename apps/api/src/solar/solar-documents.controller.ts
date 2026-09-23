@@ -8,10 +8,11 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
@@ -101,8 +102,11 @@ export class StaffSolarDocumentsController {
 
   @Get('requests')
   @ApiOperation({ summary: 'List solar requests awaiting document work' })
-  queue(@Req() req: AuthenticatedRequest) {
-    return this.service.staffQueue(req.session);
+  @ApiQuery({ name: 'before', required: false, format: 'uuid' })
+  queue(@Req() req: AuthenticatedRequest, @Query('before') before?: string) {
+    if (before && !z.string().uuid().safeParse(before).success)
+      throw new BadRequestException('Invalid solar request cursor');
+    return this.service.staffQueue(req.session, before);
   }
 
   @Get('requests/:id/documents')

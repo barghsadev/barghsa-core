@@ -203,12 +203,22 @@ export class SolarDocumentsService {
     }
   }
 
-  async staffQueue(actor: Actor) {
+  async staffQueue(actor: Actor, before?: string) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor.userId, 'orders:read');
       await requireCurrentSession(client, actor);
+      const cursor = before
+        ? (
+            await client.query<{ id: string; created_at: string }>(
+              `SELECT id,created_at::text AS created_at FROM solar_construction_requests
+               WHERE id=$1 AND status IN ('submitted','uploading_documents','documents_under_review','changes_requested')`,
+              [before]
+            )
+          ).rows[0]
+        : null;
+      if (before && !cursor) throw new NotFoundException('Solar request cursor not found');
       const rows = (
         await client.query(
           `SELECT r.id,r.profile_id,r.status,r.building_type,r.created_at,
@@ -217,11 +227,13 @@ export class SolarDocumentsService {
          LEFT JOIN solar_construction_documents sd ON sd.request_id=r.id
          LEFT JOIN documents d ON d.id=sd.document_id
          WHERE r.status IN ('submitted','uploading_documents','documents_under_review','changes_requested')
-         GROUP BY r.id ORDER BY r.created_at DESC LIMIT 100`
+           AND ($1::timestamptz IS NULL OR (r.created_at,r.id) < ($1::timestamptz,$2::uuid))
+         GROUP BY r.id ORDER BY r.created_at DESC,r.id DESC LIMIT 101`,
+          [cursor?.created_at ?? null, before ?? null]
         )
       ).rows;
       await client.query('COMMIT');
-      return { requests: rows };
+      return { requests: rows.slice(0, 100), nextBefore: rows.length > 100 ? rows[99]!.id : null };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

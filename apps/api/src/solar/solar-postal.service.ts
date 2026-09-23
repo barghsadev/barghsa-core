@@ -216,23 +216,36 @@ export class SolarPostalService {
     }
   }
 
-  async staffQueue(actor: Actor) {
+  async staffQueue(actor: Actor, before?: string) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor.userId, 'orders:read');
       await requireCurrentSession(client, actor);
+      const cursor = before
+        ? (
+            await client.query<{ id: string; created_at: string }>(
+              `SELECT r.id,r.created_at::text AS created_at FROM solar_construction_requests r
+               JOIN solar_construction_postal p ON p.request_id=r.id
+               WHERE r.id=$1 AND r.status IN ('waiting_for_postal_submission','postal_documents_received','approved')`,
+              [before]
+            )
+          ).rows[0]
+        : null;
+      if (before && !cursor) throw new NotFoundException('Solar postal cursor not found');
       const rows = (
         await client.query(
           `SELECT r.id,r.profile_id,r.status AS request_status,p.status AS postal_status,
           p.courier,p.tracking_number,p.send_date,p.receipt_image_id,p.staff_notes,r.created_at
          FROM solar_construction_requests r JOIN solar_construction_postal p ON p.request_id=r.id
          WHERE r.status IN ('waiting_for_postal_submission','postal_documents_received','approved')
-         ORDER BY r.created_at DESC LIMIT 100`
+           AND ($1::timestamptz IS NULL OR (r.created_at,r.id) < ($1::timestamptz,$2::uuid))
+         ORDER BY r.created_at DESC,r.id DESC LIMIT 101`,
+          [cursor?.created_at ?? null, before ?? null]
         )
       ).rows;
       await client.query('COMMIT');
-      return { requests: rows };
+      return { requests: rows.slice(0, 100), nextBefore: rows.length > 100 ? rows[99]!.id : null };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

@@ -155,6 +155,16 @@ it('supports empty submission, editable guidance, per-file decisions, replacemen
   );
   expect(empty.status, http.logs()).toBe(200);
   expect(await empty.json()).toMatchObject({ status: 'documents_under_review' });
+  const queue = await send('solar-reviewer', 'admin/solar/requests');
+  expect(queue.status, http.logs()).toBe(200);
+  expect(await queue.json()).toMatchObject({ requests: [{ id: requestId }], nextBefore: null });
+  const afterRequest = await send('solar-reviewer', `admin/solar/requests?before=${requestId}`);
+  expect(afterRequest.status, http.logs()).toBe(200);
+  expect(await afterRequest.json()).toMatchObject({ requests: [], nextBefore: null });
+  expect((await send('solar-reviewer', 'admin/solar/requests?before=bad')).status).toBe(400);
+  expect((await send('solar-reviewer', `admin/solar/requests?before=${randomUUID()}`)).status).toBe(
+    404
+  );
   const ask = await send(
     'solar-reviewer',
     `admin/solar/requests/${requestId}/documents/request-additional`,
@@ -267,4 +277,36 @@ it('supports empty submission, editable guidance, per-file decisions, replacemen
       )
     ).rows[0]!.count
   ).toBeGreaterThanOrEqual(4);
+}, 90_000);
+
+it('pages more than 100 document requests without repeating tied timestamps', async () => {
+  const inserted = await http.pool.query<{ id: string }>(
+    `INSERT INTO solar_construction_requests
+       (id,profile_id,submitted_by,submission_key,status,building_type,grid_type,
+        property_form,structural_frame,building_completion_date,agreement_accepted,
+        agreement_version,agreement_snapshot,agreement_accepted_at,created_at)
+     SELECT gen_random_uuid(),profile_id,submitted_by,gen_random_uuid(),
+            'documents_under_review',building_type,grid_type,property_form,
+            structural_frame,building_completion_date,agreement_accepted,
+            agreement_version,agreement_snapshot,agreement_accepted_at,
+            NOW()+INTERVAL '1 minute'
+     FROM solar_construction_requests CROSS JOIN generate_series(1,101)
+     WHERE id=$1 RETURNING id`,
+    [requestId]
+  );
+  expect(inserted.rowCount).toBe(101);
+  const first = await send('solar-reviewer', 'admin/solar/requests');
+  expect(first.status, http.logs()).toBe(200);
+  const firstPage = (await first.json()) as {
+    requests: Array<{ id: string }>;
+    nextBefore: string | null;
+  };
+  expect(firstPage.requests).toHaveLength(100);
+  expect(firstPage.nextBefore).toBe(firstPage.requests[99]!.id);
+  const next = await send('solar-reviewer', `admin/solar/requests?before=${firstPage.nextBefore}`);
+  expect(next.status, http.logs()).toBe(200);
+  const secondPage = (await next.json()) as typeof firstPage;
+  expect(secondPage.requests).toHaveLength(1);
+  expect(secondPage.nextBefore).toBeNull();
+  expect(firstPage.requests.some((row) => row.id === secondPage.requests[0]!.id)).toBe(false);
 }, 90_000);

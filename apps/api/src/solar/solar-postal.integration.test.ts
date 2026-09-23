@@ -420,7 +420,18 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
   expect(queue.status, http.logs()).toBe(200);
   expect(await queue.json()).toMatchObject({
     requests: [{ id: requestId, postal_status: 'shipped', receipt_image_id: receiptImageId }],
+    nextBefore: null,
   });
+  const afterRequest = await send(
+    'postal-reviewer',
+    `admin/solar/postal-queue?before=${requestId}`
+  );
+  expect(afterRequest.status, http.logs()).toBe(200);
+  expect(await afterRequest.json()).toMatchObject({ requests: [], nextBefore: null });
+  expect((await send('postal-reviewer', 'admin/solar/postal-queue?before=bad')).status).toBe(400);
+  expect(
+    (await send('postal-reviewer', `admin/solar/postal-queue?before=${randomUUID()}`)).status
+  ).toBe(404);
   const incomplete = await send(
     'postal-reviewer',
     `admin/solar/requests/${requestId}/postal/mark-incomplete`,
@@ -532,4 +543,44 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
       )
     ).rows[0]!.count
   ).toBe(2);
+}, 90_000);
+
+it('pages more than 100 postal requests without repeating tied timestamps', async () => {
+  const inserted = await http.pool.query<{ id: string }>(
+    `INSERT INTO solar_construction_requests
+       (id,profile_id,submitted_by,submission_key,status,building_type,grid_type,
+        property_form,structural_frame,building_completion_date,agreement_accepted,
+        agreement_version,agreement_snapshot,agreement_accepted_at,created_at)
+     SELECT gen_random_uuid(),profile_id,submitted_by,gen_random_uuid(),
+            'waiting_for_postal_submission',building_type,grid_type,property_form,
+            structural_frame,building_completion_date,agreement_accepted,
+            agreement_version,agreement_snapshot,agreement_accepted_at,
+            NOW()+INTERVAL '1 minute'
+     FROM solar_construction_requests CROSS JOIN generate_series(1,101)
+     WHERE id=$1 RETURNING id`,
+    [requestId]
+  );
+  expect(inserted.rowCount).toBe(101);
+  await http.pool.query(
+    `INSERT INTO solar_construction_postal(id,request_id)
+     SELECT gen_random_uuid(),unnest($1::uuid[])`,
+    [inserted.rows.map((row) => row.id)]
+  );
+  const first = await send('postal-reviewer', 'admin/solar/postal-queue');
+  expect(first.status, http.logs()).toBe(200);
+  const firstPage = (await first.json()) as {
+    requests: Array<{ id: string }>;
+    nextBefore: string | null;
+  };
+  expect(firstPage.requests).toHaveLength(100);
+  expect(firstPage.nextBefore).toBe(firstPage.requests[99]!.id);
+  const next = await send(
+    'postal-reviewer',
+    `admin/solar/postal-queue?before=${firstPage.nextBefore}`
+  );
+  expect(next.status, http.logs()).toBe(200);
+  const secondPage = (await next.json()) as typeof firstPage;
+  expect(secondPage.requests).toHaveLength(1);
+  expect(secondPage.nextBefore).toBeNull();
+  expect(firstPage.requests.some((row) => row.id === secondPage.requests[0]!.id)).toBe(false);
 }, 90_000);

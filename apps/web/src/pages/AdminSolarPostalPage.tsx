@@ -37,25 +37,45 @@ export function AdminSolarPostalPage() {
   const [action, setAction] = useState<TeamAction | null>(null);
   const [error, setError] = useState(false);
   const [revision, setRevision] = useState(0);
+  const [before, setBefore] = useState<string | null>(null);
+  const [nextBefore, setNextBefore] = useState<string | null>(null);
+  const [queueLoading, setQueueLoading] = useState(true);
   const [createdContractId, setCreatedContractId] = useState<string | null>(null);
+  const refresh = () => {
+    setBefore(null);
+    setRevision((value) => value + 1);
+  };
   useEffect(() => {
     const controller = new AbortController();
-    void fetch('/api/admin/solar/postal-queue', {
-      credentials: 'include',
-      signal: controller.signal,
-    })
+    setQueueLoading(true);
+    void fetch(
+      `/api/admin/solar/postal-queue${before ? `?before=${encodeURIComponent(before)}` : ''}`,
+      {
+        credentials: 'include',
+        signal: controller.signal,
+      }
+    )
       .then(async (response) => {
         if (!response.ok) throw new Error('queue');
-        return response.json() as Promise<{ requests: Row[] }>;
+        return response.json() as Promise<{ requests: Row[]; nextBefore: string | null }>;
       })
       .then((value) => {
-        if (!controller.signal.aborted) setRows(value.requests);
+        if (controller.signal.aborted) return;
+        setRows((current) => {
+          if (!before) return value.requests;
+          const shown = new Set(current.map((request) => request.id));
+          return [...current, ...value.requests.filter((request) => !shown.has(request.id))];
+        });
+        setNextBefore(value.nextBefore);
       })
       .catch(() => {
         if (!controller.signal.aborted) setError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setQueueLoading(false);
       });
     return () => controller.abort();
-  }, [revision]);
+  }, [before, revision]);
   useEffect(() => {
     const controller = new AbortController();
     void fetch('/api/admin/solar/postal-guidance', {
@@ -136,7 +156,7 @@ export function AdminSolarPostalPage() {
       )}
       <section className="space-y-3 rounded-xl border p-5">
         <h2 className="text-xl font-semibold">{copy('postalStaffQueue')}</h2>
-        {!rows.length && <p>{copy('postalStaffEmpty')}</p>}
+        {!rows.length && !queueLoading && <p>{copy('postalStaffEmpty')}</p>}
         <ul className="space-y-2">
           {rows.map((item) => (
             <li key={item.id}>
@@ -154,6 +174,16 @@ export function AdminSolarPostalPage() {
             </li>
           ))}
         </ul>
+        {nextBefore && (
+          <button
+            type="button"
+            className="rounded-md border px-4 py-2"
+            disabled={queueLoading}
+            onClick={() => setBefore(nextBefore)}
+          >
+            {copy('moreRequests')}
+          </button>
+        )}
       </section>
       {row && (
         <section className="space-y-3 rounded-xl border p-5">
@@ -195,7 +225,7 @@ export function AdminSolarPostalPage() {
               id={preview}
               staff
               onClose={() => setPreview(null)}
-              onChanged={() => setRevision((value) => value + 1)}
+              onChanged={refresh}
               onPrevious={setPreview}
               onReplace={() => {}}
               allowReplacement={false}
@@ -292,7 +322,7 @@ export function AdminSolarPostalPage() {
               onCreated={(contractId) => {
                 setCreatedContractId(contractId);
                 setSelected(null);
-                setRevision((value) => value + 1);
+                refresh();
               }}
             />
           )}
@@ -338,7 +368,7 @@ export function AdminSolarPostalPage() {
           onClose={() => setAction(null)}
           onSuccess={async () => {
             setError(false);
-            setRevision((value) => value + 1);
+            refresh();
             setReason('');
           }}
         />

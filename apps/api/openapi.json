@@ -10027,7 +10027,17 @@
     "/api/admin/solar/postal-queue": {
       "get": {
         "operationId": "StaffSolarPostalController_queue",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -10047,7 +10057,17 @@
     "/api/admin/solar/requests": {
       "get": {
         "operationId": "StaffSolarDocumentsController_queue",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""

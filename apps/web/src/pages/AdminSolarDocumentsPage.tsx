@@ -49,24 +49,46 @@ export function AdminSolarDocumentsPage() {
   const [preview, setPreview] = useState<string | null>(null);
   const [action, setAction] = useState<TeamAction | null>(null);
   const [revision, setRevision] = useState(0);
+  const [before, setBefore] = useState<string | null>(null);
+  const [nextBefore, setNextBefore] = useState<string | null>(null);
+  const [queueLoading, setQueueLoading] = useState(true);
   const [error, setError] = useState(false);
-  const refresh = () => setRevision((value) => value + 1);
+  const refresh = () => {
+    setBefore(null);
+    setRevision((value) => value + 1);
+  };
   useEffect(() => {
     const controller = new AbortController();
     setError(false);
-    void fetch('/api/admin/solar/requests', { credentials: 'include', signal: controller.signal })
+    setQueueLoading(true);
+    void fetch(
+      `/api/admin/solar/requests${before ? `?before=${encodeURIComponent(before)}` : ''}`,
+      {
+        credentials: 'include',
+        signal: controller.signal,
+      }
+    )
       .then(async (response) => {
         if (!response.ok) throw new Error('queue');
-        return response.json() as Promise<{ requests: RequestRow[] }>;
+        return response.json() as Promise<{ requests: RequestRow[]; nextBefore: string | null }>;
       })
       .then((result) => {
-        if (!controller.signal.aborted) setRequests(result.requests);
+        if (controller.signal.aborted) return;
+        setRequests((current) => {
+          if (!before) return result.requests;
+          const shown = new Set(current.map((request) => request.id));
+          return [...current, ...result.requests.filter((request) => !shown.has(request.id))];
+        });
+        setNextBefore(result.nextBefore);
       })
       .catch(() => {
         if (!controller.signal.aborted) setError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setQueueLoading(false);
       });
     return () => controller.abort();
-  }, [revision]);
+  }, [before, revision]);
   useEffect(() => {
     if (!selected) {
       setDetail(null);
@@ -157,7 +179,7 @@ export function AdminSolarDocumentsPage() {
       {error && <p role="alert">{copy('documentError')}</p>}
       <section className="space-y-3 rounded-xl border p-5">
         <h2 className="text-xl font-semibold">{copy('staffQueue')}</h2>
-        {!requests.length && <p>{copy('staffEmpty')}</p>}
+        {!requests.length && !queueLoading && <p>{copy('staffEmpty')}</p>}
         <ul className="space-y-2">
           {requests.map((row) => (
             <li key={row.id}>
@@ -175,6 +197,11 @@ export function AdminSolarDocumentsPage() {
             </li>
           ))}
         </ul>
+        {nextBefore && (
+          <Button variant="outline" disabled={queueLoading} onClick={() => setBefore(nextBefore)}>
+            {copy('moreRequests')}
+          </Button>
+        )}
       </section>
       {detail && selected && (
         <section className="space-y-4 rounded-xl border p-5">
