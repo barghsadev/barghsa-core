@@ -4,15 +4,13 @@ import { Card, CardContent } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { savingNextAction, type SavingActionContext } from '../lib/saving-next-action.js';
 
-interface SavingOrderRow {
-  id: string;
+interface SavingOrderRow extends SavingActionContext {
   bill_identifier: string;
-  status: string;
   submitted_at: string;
   plan_title: { fa: string; en: string };
   hardware_title: { fa: string; en: string };
-  invoice_state: string;
   total_amount: string;
 }
 
@@ -63,45 +61,61 @@ export function SavingOrdersPage() {
       {state === 'error' && <p role="alert">{copy('error')}</p>}
       {state === 'ready' && orders.length === 0 && <p>{copy('noOrders')}</p>}
       <div className="space-y-3">
-        {orders.map((order) => (
-          <Card key={order.id}>
-            <CardContent className="space-y-2 pt-6">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <h2 className="font-semibold">{order.plan_title[locale]}</h2>
-                  <p className="text-sm text-muted-foreground">{order.hardware_title[locale]}</p>
+        {orders.map((order) => {
+          const action = savingNextAction(order);
+          return (
+            <Card key={order.id}>
+              <CardContent className="space-y-2 pt-6">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <h2 className="font-semibold">{order.plan_title[locale]}</h2>
+                    <p className="text-sm text-muted-foreground">{order.hardware_title[locale]}</p>
+                  </div>
+                  <span className="rounded-full bg-muted px-3 py-1 text-xs">
+                    {copy(
+                      order.status === 'awaiting_staff_review'
+                        ? 'staffReview'
+                        : order.status === 'in_progress'
+                          ? 'inProgress'
+                          : order.status
+                    )}
+                  </span>
                 </div>
-                <span className="rounded-full bg-muted px-3 py-1 text-xs">
-                  {copy(
-                    order.status === 'awaiting_staff_review'
-                      ? 'staffReview'
-                      : order.status === 'in_progress'
-                        ? 'inProgress'
-                        : order.status
+                <p className="text-sm">
+                  <bdi>{order.bill_identifier}</bdi> ·{' '}
+                  <time dateTime={order.submitted_at}>
+                    {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(
+                      new Date(order.submitted_at)
+                    )}
+                  </time>
+                </p>
+                <p className="font-medium">
+                  <bdi>{numbers.money(order.total_amount)}</bdi>
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {copy('financialStatus')}: {copy('financial.' + order.financial_status)}
+                </p>
+                <p className="text-sm">
+                  {copy('nextAction')}:{' '}
+                  {action.href ? (
+                    <a className="font-medium text-primary hover:underline" href={action.href}>
+                      {copy('action.' + action.kind)}
+                    </a>
+                  ) : (
+                    <span>{copy('action.' + action.kind)}</span>
                   )}
-                </span>
-              </div>
-              <p className="text-sm">
-                <bdi>{order.bill_identifier}</bdi> ·{' '}
-                <time dateTime={order.submitted_at}>
-                  {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(
-                    new Date(order.submitted_at)
-                  )}
-                </time>
-              </p>
-              <p className="font-medium">
-                <bdi>{numbers.money(order.total_amount)}</bdi>
-              </p>
-              <Link
-                to="/savings/orders/$orderId"
-                params={{ orderId: order.id }}
-                className="inline-block text-sm font-medium text-primary hover:underline"
-              >
-                {copy('orderDetail')}
-              </Link>
-            </CardContent>
-          </Card>
-        ))}
+                </p>
+                <Link
+                  to="/savings/orders/$orderId"
+                  params={{ orderId: order.id }}
+                  className="inline-block text-sm font-medium text-primary hover:underline"
+                >
+                  {copy('orderDetail')}
+                </Link>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </main>
   );

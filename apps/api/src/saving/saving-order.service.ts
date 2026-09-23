@@ -357,10 +357,12 @@ export class SavingOrderService {
         throw new NotFoundException('Profile not found');
       const rows = (
         await client.query(
-          `SELECT s.id,s.order_id,s.bill_identifier,s.status,s.submitted_at,
+          `SELECT s.id,s.order_id,s.bill_identifier,s.status,s.financial_status,s.submitted_at,
                 p.title AS plan_title,h.title AS hardware_title,
                 i.id AS invoice_id,i.state AS invoice_state,i.total_amount::text AS total_amount,
-                c.id AS contract_id,c.state AS contract_state
+                c.id AS contract_id,c.state AS contract_state,
+                EXISTS(SELECT 1 FROM contract_cancellation_requests r
+                  WHERE r.contract_id=c.id AND r.status='Pending') AS cancellation_pending
            FROM saving_orders s
            JOIN products p ON p.id=s.saving_plan_id
            JOIN products h ON h.id=s.hardware_product_id
@@ -392,6 +394,7 @@ export class SavingOrderService {
           profile_id: string;
           order_id: string;
           status: string;
+          financial_status: string;
           bill_identifier: string;
           address_snapshot: unknown;
           pricing_snapshot: unknown;
@@ -407,9 +410,11 @@ export class SavingOrderService {
         }>(
           `SELECT s.id,s.profile_id,s.order_id,s.status,s.bill_identifier,s.address_snapshot,
                 s.pricing_snapshot,s.verification_result,s.agreement_version_id,s.agreement_snapshot,
-                s.submitted_at,i.id AS invoice_id,i.state AS invoice_state,
+                s.submitted_at,s.financial_status,i.id AS invoice_id,i.state AS invoice_state,
                 c.id AS contract_id,c.current_version_id AS contract_version_id,
-                c.state AS contract_state
+                c.state AS contract_state,
+                EXISTS(SELECT 1 FROM contract_cancellation_requests r
+                  WHERE r.contract_id=c.id AND r.status='Pending') AS cancellation_pending
            FROM saving_orders s
            LEFT JOIN invoices i ON i.order_id=s.order_id AND i.type='auto'
            LEFT JOIN contracts c ON c.order_id=s.order_id AND c.service_type='savings'

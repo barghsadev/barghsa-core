@@ -255,7 +255,9 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   expect(detail.status, http.logs()).toBe(200);
   expect(await detail.json()).toMatchObject({
     status: 'awaiting_staff_review',
+    financial_status: 'unpaid',
     invoice_state: 'Unpaid',
+    cancellation_pending: false,
     contract_state: 'AwaitingStaffReview',
     stages: [
       { stage: 'request_confirmation' },
@@ -267,7 +269,9 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   });
   const list = await request(`/api/saving/orders?profileId=${input.profileId}`, 'GET');
   expect(list.status, http.logs()).toBe(200);
-  expect(await list.json()).toMatchObject({ orders: [{ id: result.savingOrderId }] });
+  expect(await list.json()).toMatchObject({
+    orders: [{ id: result.savingOrderId, cancellation_pending: false, financial_status: 'unpaid' }],
+  });
   const counts = await http.pool.query<{ orders: string; contracts: string; invoices: string }>(
     `SELECT (SELECT COUNT(*)::text FROM orders WHERE id=$1) AS orders,
             (SELECT COUNT(*)::text FROM contracts WHERE order_id=$1) AS contracts,
@@ -747,6 +751,9 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   const firstCancellationRequest = await submitCancellationRequest();
   expect(firstCancellationRequest.status, http.logs()).toBe(201);
   const firstRequestId = ((await firstCancellationRequest.json()) as { id: string }).id;
+  expect(
+    await (await request(`/api/saving/orders/${cancellationOrder.savingOrderId}`, 'GET')).json()
+  ).toMatchObject({ cancellation_pending: true });
   const cancellationQueue = await request(
     '/api/admin/contract-cancellation-requests?service=savings',
     'GET',

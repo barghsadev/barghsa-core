@@ -7,12 +7,11 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { SavingOrderComments } from '../components/SavingOrderComments.js';
 import { SavingOrderDocuments } from '../components/SavingOrderDocuments.js';
 import { ContractCancellationPanel } from '../components/ContractCancellationPanel.js';
+import { savingNextAction, type SavingActionContext } from '../lib/saving-next-action.js';
 
-interface Detail {
-  id: string;
+interface Detail extends SavingActionContext {
   order_id: string;
   profile_id: string;
-  status: string;
   bill_identifier: string;
   submitted_at: string;
   address_snapshot: { full_address: string; postal_code: string };
@@ -26,11 +25,7 @@ interface Detail {
   };
   verification_result: { status: string };
   agreement_snapshot: string;
-  invoice_id: string;
-  invoice_state: string;
-  contract_id: string;
   contract_version_id: string;
-  contract_state: string;
   stages: Array<{
     stage: string;
     status: string;
@@ -69,6 +64,7 @@ export function SavingOrderDetailPage() {
       });
     return () => controller.abort();
   }, [orderId, revision]);
+  const action = detail ? savingNextAction(detail) : null;
   return (
     <main
       className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
@@ -135,6 +131,18 @@ export function SavingOrderDetailPage() {
             </CardContent>
           </Card>
           <Card>
+            <CardContent className="space-y-2 pt-6">
+              <h2 className="text-lg font-semibold">{copy('nextAction')}</h2>
+              {action?.href ? (
+                <a href={action.href} className="font-medium text-primary hover:underline">
+                  {copy('action.' + action.kind)}
+                </a>
+              ) : (
+                <p>{copy('action.' + action?.kind)}</p>
+              )}
+            </CardContent>
+          </Card>
+          <Card>
             <CardContent className="space-y-3 pt-6">
               <h2 className="text-xl font-semibold">{copy('invoice')}</h2>
               <p>
@@ -149,7 +157,10 @@ export function SavingOrderDetailPage() {
               <p className="font-semibold">
                 {copy('total')}: <bdi>{numbers.money(detail.pricing_snapshot.totalIrR)}</bdi>
               </p>
-              <p>{copy(detail.invoice_state)}</p>
+              <p>{detail.invoice_state ? copy(detail.invoice_state) : copy('unavailable')}</p>
+              <p className="text-sm text-muted-foreground">
+                {copy('financialStatus')}: {copy('financial.' + detail.financial_status)}
+              </p>
               {detail.invoice_id && (
                 <Link
                   to="/invoices/$invoiceId"
@@ -164,16 +175,18 @@ export function SavingOrderDetailPage() {
           <Card>
             <CardContent className="space-y-2 pt-6">
               <h2 className="text-xl font-semibold">{copy('contract')}</h2>
-              <p>{copy(detail.contract_state)}</p>
+              <p>{detail.contract_state ? copy(detail.contract_state) : copy('unavailable')}</p>
             </CardContent>
           </Card>
           {detail.contract_id && detail.contract_version_id && (
-            <ContractCancellationPanel
-              id={detail.contract_id}
-              versionId={detail.contract_version_id}
-              staff={false}
-              onChanged={() => setRevision((value) => value + 1)}
-            />
+            <div id="saving-cancellation">
+              <ContractCancellationPanel
+                id={detail.contract_id}
+                versionId={detail.contract_version_id}
+                staff={false}
+                onChanged={() => setRevision((value) => value + 1)}
+              />
+            </div>
           )}
           <Card>
             <CardContent className="space-y-3 pt-6">
