@@ -81,6 +81,8 @@ export function electricityNextAction(
   if (commercial === 'changes_requested')
     return audience === 'staff' ? 'await_customer_changes' : 'resubmit_changes';
   if (commercial === 'approved') {
+    if (financial === 'payment_under_review' && audience === 'customer')
+      return 'await_payment_review';
     if (financial !== 'paid') return audience === 'staff' ? 'await_payment' : 'pay_invoice';
     if (contractState === 'Accepted' || contractState === 'Signed') return 'await_activation';
     return audience === 'staff' ? 'await_contract_acceptance' : 'accept_contract';

@@ -848,6 +848,8 @@ export const fa: I18nDictionary = {
   'electricity.order.nextAction.resubmit_changes':
     'اصلاحات درخواست‌شده را بررسی و سفارش را دوباره ارسال کنید.',
   'electricity.order.nextAction.pay_invoice': 'فاکتور را بررسی و مبلغ آن را پرداخت کنید.',
+  'electricity.order.nextAction.await_payment_review':
+    'پرداخت شما در حال بررسی است. وضعیت را در فاکتور پیگیری کنید.',
   'electricity.order.nextAction.accept_contract': 'قرارداد منتشرشده را بررسی و تأیید کنید.',
   'electricity.order.nextAction.await_refund':
     'بازپرداخت در حال پردازش است؛ وضعیت فاکتور را پیگیری کنید.',
@@ -1984,6 +1986,8 @@ export const en: I18nDictionary = {
   'electricity.order.nextAction.resubmit_changes':
     'Review the requested changes and resubmit your order.',
   'electricity.order.nextAction.pay_invoice': 'Review and pay the linked invoice.',
+  'electricity.order.nextAction.await_payment_review':
+    'Your payment is under review. Track its status on the invoice.',
   'electricity.order.nextAction.accept_contract': 'Review and accept the published contract.',
   'electricity.order.nextAction.await_refund':
     'Your refund is being processed. Track it on the invoice.',

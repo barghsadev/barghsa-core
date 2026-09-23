@@ -48,6 +48,9 @@ it('shows the next actor without confusing commercial and financial progress', (
   expect(electricityNextAction('awaiting_staff_review', 'unpaid', 'staff')).toBe('review_order');
   expect(electricityNextAction('awaiting_staff_review', 'unpaid', 'customer')).toBe('await_review');
   expect(electricityNextAction('approved', 'unpaid', 'customer')).toBe('pay_invoice');
+  expect(electricityNextAction('approved', 'payment_under_review', 'customer')).toBe(
+    'await_payment_review'
+  );
   expect(electricityNextAction('approved', 'paid', 'customer')).toBe('accept_contract');
   expect(electricityNextAction('approved', 'paid', 'customer', 'Accepted')).toBe(
     'await_activation'

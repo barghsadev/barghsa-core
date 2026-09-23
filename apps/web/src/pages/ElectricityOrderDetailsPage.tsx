@@ -80,6 +80,7 @@ const financialKeys: Record<string, string> = {
 };
 const actionKeys: Record<string, string> = {
   await_review: 'electricity.order.nextAction.await_review',
+  await_payment_review: 'electricity.order.nextAction.await_payment_review',
   resubmit_changes: 'electricity.order.nextAction.resubmit_changes',
   pay_invoice: 'electricity.order.nextAction.pay_invoice',
   accept_contract: 'electricity.order.nextAction.accept_contract',
@@ -114,6 +115,8 @@ const refundKeys: Record<string, string> = {
 function nextActionHref(detail: ElectricityOrderDetail): string | null {
   switch (detail.nextAction) {
     case 'pay_invoice':
+    case 'await_payment_review':
+    case 'await_refund':
       return `/invoices/${encodeURIComponent(detail.invoiceId)}`;
     case 'accept_contract':
       return `/contracts?contractId=${encodeURIComponent(detail.contractId)}`;
