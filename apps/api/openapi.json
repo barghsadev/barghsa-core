@@ -10691,6 +10691,56 @@
         ]
       }
     },
+    "/api/admin/solar/requests/{id}/final-reject": {
+      "post": {
+        "operationId": "StaffSolarFinalController_reject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reject a solar request after confirmed postal receipt, with a reason",
+        "tags": [
+          "Admin · Solar final decisions"
+        ]
+      }
+    },
     "/api/admin/solar/requests/{id}/postal/confirm-received": {
       "post": {
         "operationId": "StaffSolarPostalController_received",

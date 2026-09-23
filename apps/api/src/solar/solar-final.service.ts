@@ -1,4 +1,9 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
@@ -37,17 +42,20 @@ export class SolarFinalService {
   async decide(
     actor: Actor,
     requestId: string,
-    decision: 'approve' | 'close-no-contract',
+    decision: 'approve' | 'reject' | 'close-no-contract',
     reason: string | undefined,
     ip: string
   ) {
+    const decisionReason = reason?.trim();
+    if (decision !== 'approve' && !decisionReason)
+      throw new BadRequestException('Reason is required');
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(
         client,
         actor.userId,
-        decision === 'approve' ? 'orders:write' : 'contracts:write'
+        decision === 'close-no-contract' ? 'contracts:write' : 'orders:write'
       );
       await requireSessionStepUp(client, actor);
       const request = (
@@ -64,8 +72,10 @@ export class SolarFinalService {
       if (!request) throw new NotFoundException('Solar request not found');
       if (decision === 'approve' && request.status !== 'postal_documents_received')
         throw new ConflictException('Postal originals must be received first');
+      if (decision === 'reject' && request.status !== 'postal_documents_received')
+        throw new ConflictException('Request is not ready for final rejection');
       if (
-        decision === 'approve' &&
+        decision !== 'close-no-contract' &&
         !(
           await client.query(
             "SELECT 1 FROM solar_construction_postal WHERE request_id=$1 AND status='received' FOR SHARE",
@@ -79,14 +89,15 @@ export class SolarFinalService {
         !['postal_documents_received', 'approved'].includes(request.status)
       )
         throw new ConflictException('Request is not ready for final decision');
-      const status = decision === 'approve' ? 'approved' : 'cancelled';
+      const status =
+        decision === 'approve' ? 'approved' : decision === 'reject' ? 'rejected' : 'cancelled';
       await client.query(
         `UPDATE solar_construction_requests SET status=$2,status_reason=$3,support_path=$4,
          updated_at=NOW() WHERE id=$1`,
         [
           requestId,
           status,
-          decision === 'approve' ? null : reason,
+          decision === 'approve' ? null : decisionReason,
           decision === 'approve' ? null : '/tickets',
         ]
       );
@@ -95,21 +106,30 @@ export class SolarFinalService {
           userId: request.user_id,
           profileId: request.profile_id,
           type: 'general',
-          title: decision === 'approve' ? 'Solar request approved' : 'Solar request closed',
+          title:
+            decision === 'approve'
+              ? 'Solar request approved'
+              : decision === 'reject'
+                ? 'Solar request rejected'
+                : 'Solar request closed',
           localizedContent: {
             fa: {
               title: 'درخواست نیروگاه خورشیدی',
               body:
                 decision === 'approve'
                   ? 'درخواست شما تأیید شد و قرارداد توسط کارشناس آماده می‌شود.'
-                  : `درخواست بدون قرارداد بسته شد: ${reason}`,
+                  : decision === 'reject'
+                    ? `درخواست شما رد شد. دلیل: ${decisionReason}`
+                    : `درخواست بدون قرارداد بسته شد: ${decisionReason}`,
             },
             en: {
               title: 'Solar request',
               body:
                 decision === 'approve'
                   ? 'Your request was approved. Staff will prepare the contract.'
-                  : `The request was closed without a contract: ${reason}`,
+                  : decision === 'reject'
+                    ? `Your request was rejected. Reason: ${decisionReason}`
+                    : `The request was closed without a contract: ${decisionReason}`,
             },
           },
         },
@@ -122,7 +142,7 @@ export class SolarFinalService {
         requestId,
         request.status,
         status,
-        reason ?? null,
+        decisionReason ?? null,
         ip
       );
       await client.query('COMMIT');

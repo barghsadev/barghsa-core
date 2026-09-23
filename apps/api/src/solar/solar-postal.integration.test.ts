@@ -582,6 +582,109 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
   ).toBe(2);
 }, 90_000);
 
+it('rejects a final solar request with a customer-visible reason after postal receipt', async () => {
+  const created = await send('postal-buyer', 'solar/requests', 'POST', {
+    profileId,
+    submissionKey: randomUUID(),
+    buildingType: 'building_apartment',
+    propertyForm: 'villa',
+    structuralFrame: 'concrete',
+    buildingCompletionDate: '2020-01-01',
+    gridType: 'off_grid',
+    agreementAccepted: true,
+  });
+  expect(created.status, http.logs()).toBe(201);
+  const id = ((await created.json()) as { requestId: string }).requestId;
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/final-reject`, 'POST', {
+        reason: 'The project cannot proceed.',
+      })
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await send('postal-buyer', `solar/requests/${id}/documents/complete`, 'POST', {
+        allDocumentsUploaded: true,
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/documents/advance`, 'POST')).status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (
+      await send('postal-buyer', `solar/requests/${id}/postal/shipment`, 'POST', {
+        courier: 'Parcel Co',
+        trackingNumber: 'REJECT-123',
+        sendDate: '2026-09-23',
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/postal/confirm-received`, 'POST'))
+      .status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/final-reject`, 'POST', {
+        reason: '',
+      })
+    ).status
+  ).toBe(400);
+  expect(
+    (
+      await send('postal-other', `admin/solar/requests/${id}/final-reject`, 'POST', {
+        reason: 'Unauthorized',
+      })
+    ).status
+  ).toBe(403);
+  const rejected = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${id}/final-reject`,
+    'POST',
+    {
+      reason: '  The project cannot proceed.  ',
+    }
+  );
+  expect(rejected.status, http.logs()).toBe(200);
+  expect(await rejected.json()).toMatchObject({ status: 'rejected' });
+  expect(await (await send('postal-buyer', `solar/requests/${id}`)).json()).toMatchObject({
+    request: {
+      status: 'rejected',
+      status_reason: 'The project cannot proceed.',
+      support_path: '/tickets',
+      contract_id: null,
+    },
+  });
+  expect(
+    (
+      await http.pool.query(
+        "SELECT count(*)::int AS count FROM audit_log WHERE event='solar.final.reject' AND metadata::jsonb->>'requestId'=$1",
+        [id]
+      )
+    ).rows[0]!.count
+  ).toBe(1);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT count(*)::int AS count FROM in_app_notifications WHERE recipient_user_id='postal-buyer' AND localized_content::text LIKE '%The project cannot proceed.%'"
+      )
+    ).rows[0]!.count
+  ).toBeGreaterThanOrEqual(1);
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/final-reject`, 'POST', {
+        reason: 'The project cannot proceed.',
+      })
+    ).status
+  ).toBe(409);
+}, 90_000);
+
 it('pages more than 100 postal requests without repeating tied timestamps', async () => {
   const inserted = await http.pool.query<{ id: string }>(
     `INSERT INTO solar_construction_requests

@@ -62,6 +62,26 @@ export class StaffSolarFinalController {
     return this.service.decide(req.session, id, 'approve', undefined, req.ip ?? '127.0.0.1');
   }
 
+  @Post('final-reject')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Reject a solar request after confirmed postal receipt, with a reason' })
+  @ApiZodBody(close)
+  reject(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const parsed = close.safeParse(body);
+    if (!parsed.success) throw new BadRequestException('Reason is required');
+    return this.service.decide(
+      req.session,
+      id,
+      'reject',
+      parsed.data.reason,
+      req.ip ?? '127.0.0.1'
+    );
+  }
+
   @Post('close-no-contract')
   @HttpCode(200)
   @ApiOperation({ summary: 'Close a solar request without a contract, with a reason' })

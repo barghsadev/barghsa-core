@@ -319,20 +319,41 @@ export function AdminSolarPostalPage() {
               </label>
               <div className="flex flex-wrap gap-2">
                 {row.request_status === 'postal_documents_received' && (
-                  <button
-                    type="button"
-                    className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
-                    onClick={() =>
-                      setAction({
-                        title: copy('solarFinalApprove'),
-                        description: row.id,
-                        path: `/api/admin/solar/requests/${row.id}/final-approve`,
-                        method: 'POST',
-                      })
-                    }
-                  >
-                    {copy('solarFinalApprove')}
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
+                      onClick={() =>
+                        setAction({
+                          title: copy('solarFinalApprove'),
+                          description: row.id,
+                          path: `/api/admin/solar/requests/${row.id}/final-approve`,
+                          method: 'POST',
+                        })
+                      }
+                    >
+                      {copy('solarFinalApprove')}
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded-md border border-destructive px-4 py-2 text-destructive"
+                      onClick={() => {
+                        if (!reason.trim()) {
+                          setError(true);
+                          return;
+                        }
+                        setAction({
+                          title: copy('solarFinalReject'),
+                          description: reason.trim(),
+                          path: `/api/admin/solar/requests/${row.id}/final-reject`,
+                          method: 'POST',
+                          body: { reason: reason.trim() },
+                        });
+                      }}
+                    >
+                      {copy('solarFinalReject')}
+                    </button>
+                  </>
                 )}
                 <button
                   type="button"
@@ -344,7 +365,7 @@ export function AdminSolarPostalPage() {
                     }
                     setAction({
                       title: copy('solarCloseNoContract'),
-                      description: row.id,
+                      description: reason.trim(),
                       path: `/api/admin/solar/requests/${row.id}/close-no-contract`,
                       method: 'POST',
                       body: { reason: reason.trim() },
