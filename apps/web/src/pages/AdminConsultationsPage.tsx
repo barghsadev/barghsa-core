@@ -22,6 +22,7 @@ interface Detail {
     fee: string | null;
     invoice_id: string | null;
     has_paid_invoice: boolean;
+    uncovered_credit: string;
     offer_valid_until: string | null;
     expected_next_step: string | null;
   };
@@ -478,6 +479,12 @@ export function AdminConsultationsPage() {
                 {current.has_paid_invoice && (
                   <p className="text-sm text-muted-foreground">{copy('paidClosureHelp')}</p>
                 )}
+                {BigInt(current.uncovered_credit) > 0n && (
+                  <p role="status" className="text-sm text-destructive">
+                    {copy('uncoveredCredit')}:{' '}
+                    {new Intl.NumberFormat(locale).format(BigInt(current.uncovered_credit))} IRR
+                  </p>
+                )}
                 <div className="flex flex-wrap gap-2">
                   {current.status === 'under_review' && (
                     <Button
@@ -537,6 +544,20 @@ export function AdminConsultationsPage() {
                         {copy('cancel')}
                       </Button>
                     </>
+                  )}
+                  {BigInt(current.uncovered_credit) > 0n && (
+                    <Button
+                      variant="outline"
+                      disabled={!reason.trim()}
+                      onClick={() =>
+                        prepare('refund-recovery', copy('recoverRefund'), {
+                          idempotencyKey: offerKey,
+                          reason: reason.trim(),
+                        })
+                      }
+                    >
+                      {copy('recoverRefund')}
+                    </Button>
                   )}
                 </div>
               </div>

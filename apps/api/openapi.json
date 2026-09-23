@@ -3593,6 +3593,62 @@
         ]
       }
     },
+    "/api/admin/consultations/requests/{id}/refund-recovery": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_refundRecovery",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Request an uncovered consultation credit refund without issuing another credit",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
     "/api/admin/consultations/requests/{id}/reject": {
       "post": {
         "operationId": "StaffConsultationWorkflowController_reject",

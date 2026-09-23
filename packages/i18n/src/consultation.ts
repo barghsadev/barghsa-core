@@ -47,6 +47,8 @@ const en: Record<string, string> = {
     'Closing this paid request creates credit notes and wallet refund requests. Finance must still approve and process the refunds.',
   paidClosurePending:
     'The consultation is closed. Its wallet refund is awaiting finance processing.',
+  uncoveredCredit: 'Credit awaiting a new refund request',
+  recoverRefund: 'Request refund again',
   invoice_state_Unpaid: 'Awaiting payment',
   invoice_state_Overdue: 'Overdue',
   invoice_state_PartiallyFunded: 'Partially paid',
@@ -167,6 +169,8 @@ const fa: Record<string, string> = {
   paidClosureHelp:
     'با بستن این درخواست پرداخت‌شده، بستانکاری و درخواست بازپرداخت به کیف پول ثبت می‌شود. تأیید و پردازش بازپرداخت همچنان بر عهده بخش مالی است.',
   paidClosurePending: 'مشاوره بسته شده است. بازپرداخت به کیف پول در انتظار پردازش بخش مالی است.',
+  uncoveredCredit: 'بستانکاری در انتظار درخواست بازپرداخت جدید',
+  recoverRefund: 'درخواست دوباره بازپرداخت',
   invoice_state_Unpaid: 'در انتظار پرداخت',
   invoice_state_Overdue: 'سررسید گذشته',
   invoice_state_PartiallyFunded: 'پرداخت جزئی',

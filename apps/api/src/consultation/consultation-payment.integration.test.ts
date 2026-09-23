@@ -283,6 +283,51 @@ it('charges or credits a paid consultation without changing the paid invoice', a
     )
   ).rows;
   expect(finalRefunds.reduce((sum, refund) => sum + BigInt(refund.amount), 0n)).toBe(600000n);
+  const rejectedRefundId = creditBody.refundIds[0]!;
+  const rejectedRefundAmount = (
+    await http.pool.query<{ amount: string }>('SELECT amount::text FROM refunds WHERE id=$1', [
+      rejectedRefundId,
+    ])
+  ).rows[0]!.amount;
+  const rejectedRefund = await post(
+    `/api/admin/wallet-refunds/${rejectedRefundId}/reject`,
+    'consultation-finance',
+    { reason: 'Refund details require correction' }
+  );
+  expect(rejectedRefund.status, http.logs()).toBe(200);
+  const staffDetail = await fetch(`${http.base}${root}`, {
+    headers: headers['consultation-finance']!,
+  });
+  expect(staffDetail.status, http.logs()).toBe(200);
+  expect(await staffDetail.json()).toMatchObject({
+    request: { uncovered_credit: rejectedRefundAmount },
+  });
+  const creditCount = (
+    await http.pool.query<{ count: number }>(
+      "SELECT count(*)::int AS count FROM invoices WHERE consultation_id=$1 AND adjustment_kind='credit'",
+      [requestId]
+    )
+  ).rows[0]!.count;
+  const recoveryInput = { idempotencyKey: randomUUID(), reason: 'Corrected refund request' };
+  const recovery = await post(`${root}/refund-recovery`, 'consultation-finance', recoveryInput);
+  expect(recovery.status, http.logs()).toBe(200);
+  const recovered = (await recovery.json()) as { refundIds: string[] };
+  expect(recovered.refundIds).toHaveLength(1);
+  expect(
+    (await post(`${root}/refund-recovery`, 'consultation-finance', recoveryInput)).status
+  ).toBe(200);
+  expect(
+    (
+      await http.pool.query<{ count: number }>(
+        "SELECT count(*)::int AS count FROM invoices WHERE consultation_id=$1 AND adjustment_kind='credit'",
+        [requestId]
+      )
+    ).rows[0]!.count
+  ).toBe(creditCount);
+  const recoveredDetail = await fetch(`${http.base}${root}`, {
+    headers: headers['consultation-finance']!,
+  });
+  expect(await recoveredDetail.json()).toMatchObject({ request: { uncovered_credit: '0' } });
 });
 
 it('cancels an unpaid revised charge and requests a refund for the prior paid consultation', async () => {

@@ -137,6 +137,7 @@ export class ConsultationWorkflowService {
             [id]
           )
         ).rows[0]?.paid ?? false;
+      request.uncovered_credit = (await this.uncoveredCredit(client, id)).toString();
       const history = (
         await client.query(
           `SELECT e.status,e.actor_user_id,
@@ -447,7 +448,7 @@ export class ConsultationWorkflowService {
         }
         if (request.status !== 'offer_accepted' || !request.invoice_id || !request.fee)
           throw new ConflictException('Only an accepted paid consultation can be adjusted');
-        await this.assertNoRejectedRefund(client, id);
+        await this.assertCreditsCovered(client, id);
         const current = (
           await client.query<{
             state: string;
@@ -592,7 +593,7 @@ export class ConsultationWorkflowService {
         const status: ConsultationStatus = action === 'cancel' ? 'cancelled' : 'rejected';
         if (!canTransitionConsultation(request.status, status, 'staff'))
           throw new ConflictException('Consultation status changed; refresh before acting');
-        await this.assertNoRejectedRefund(client, id);
+        await this.assertCreditsCovered(client, id);
         const paidInvoices = (
           await client.query<{
             id: string;
@@ -701,6 +702,100 @@ export class ConsultationWorkflowService {
         );
         await this.event(client, id, status, actor.userId, input.reason);
         await this.notify(client, request, status);
+        return result;
+      },
+      true
+    );
+  }
+
+  async recoverRefund(
+    actor: Actor,
+    id: string,
+    input: { idempotencyKey: string; reason: string },
+    ip: string
+  ) {
+    return this.staffMutation(
+      actor,
+      id,
+      ip,
+      'refund_recovered',
+      async (client, request) => {
+        const prior = (
+          await client.query<{ metadata: { reason: string; result: unknown } }>(
+            `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='consultation.refund.recovered'
+             AND metadata::jsonb->>'requestId'=$1 AND metadata::jsonb->>'idempotencyKey'=$2 LIMIT 1`,
+            [id, input.idempotencyKey]
+          )
+        ).rows[0];
+        if (prior) {
+          if (prior.metadata.reason !== input.reason)
+            throw new ConflictException('Refund recovery key was already used');
+          return prior.metadata.result;
+        }
+        let remaining = await this.uncoveredCredit(client, id);
+        if (remaining <= 0n) throw new ConflictException('No consultation credit needs a refund');
+        const paidInvoices = (
+          await client.query<{ id: string; state: string; available: string }>(
+            `SELECT i.id,i.state,(i.paid_amount-i.refunded_amount-
+              COALESCE((SELECT SUM(r.amount) FROM refunds r WHERE r.invoice_id=i.id
+                AND r.state NOT IN ('Completed','Rejected','Cancelled')),0))::text AS available
+             FROM invoices i WHERE i.consultation_id=$1 AND i.paid_amount>0
+               AND i.adjustment_kind IS DISTINCT FROM 'credit'
+             ORDER BY i.created_at DESC,i.id DESC`,
+            [id]
+          )
+        ).rows;
+        const available = paidInvoices.reduce(
+          (sum, invoice) =>
+            sum +
+            (['Paid', 'PartiallyRefunded'].includes(invoice.state) && BigInt(invoice.available) > 0n
+              ? BigInt(invoice.available)
+              : 0n),
+          0n
+        );
+        if (available < remaining)
+          throw new ConflictException('Refund recovery exceeds available paid balance');
+        const refundIds: string[] = [];
+        for (const invoice of paidInvoices) {
+          if (remaining === 0n) break;
+          if (!['Paid', 'PartiallyRefunded'].includes(invoice.state)) continue;
+          const balance = BigInt(invoice.available);
+          if (balance <= 0n) continue;
+          const amount = remaining < balance ? remaining : balance;
+          const refund = await this.refunds.request(
+            {
+              invoiceId: invoice.id,
+              amount: amount.toString(),
+              idempotencyKey: `${input.idempotencyKey}:${invoice.id}`,
+              reason: input.reason,
+            },
+            actor,
+            ip,
+            'wallet',
+            client
+          );
+          refundIds.push(refund.id);
+          remaining -= amount;
+        }
+        const result = { requestId: id, status: request.status, refundIds };
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+           VALUES($1,$2,'consultation.refund.recovered',$3::jsonb,$4,$5)`,
+          [
+            uuidv7(),
+            actor.userId,
+            JSON.stringify({
+              requestId: id,
+              idempotencyKey: input.idempotencyKey,
+              reason: input.reason,
+              result,
+            }),
+            uuidv7(),
+            ip,
+          ]
+        );
+        await this.event(client, id, request.status, actor.userId, input.reason);
+        await this.notify(client, request, request.status);
         return result;
       },
       true
@@ -980,18 +1075,43 @@ export class ConsultationWorkflowService {
     return request;
   }
 
-  private async assertNoRejectedRefund(client: PoolClient, id: string) {
-    const failed = (
-      await client.query<{ failed: boolean }>(
-        `SELECT EXISTS(SELECT 1 FROM refunds r JOIN invoices i ON i.id=r.invoice_id
-         WHERE i.consultation_id=$1 AND r.state IN ('Rejected','Cancelled')) AS failed`,
+  private async assertCreditsCovered(client: PoolClient, id: string) {
+    if ((await this.uncoveredCredit(client, id)) > 0n)
+      throw new ConflictException(
+        'Resolve the uncovered consultation credit before another financial change'
+      );
+  }
+
+  private async uncoveredCredit(client: PoolClient, id: string): Promise<bigint> {
+    const row = (
+      await client.query<{ credited: string; obligated: string }>(
+        `WITH actions AS (
+           SELECT event,metadata::jsonb AS data FROM audit_log
+           WHERE event IN ('consultation.fee.adjusted','consultation.paid.closed',
+             'consultation.refund.recovered')
+             AND metadata::jsonb->>'requestId'=$1
+         ), credit_ids AS (
+           SELECT data #>> '{result,adjustmentInvoiceId}' AS id FROM actions
+             WHERE event='consultation.fee.adjusted'
+           UNION
+           SELECT jsonb_array_elements_text(COALESCE(data #> '{result,creditInvoiceIds}','[]'::jsonb))
+             FROM actions WHERE event='consultation.paid.closed'
+         ), refund_ids AS (
+           SELECT DISTINCT id FROM (
+             SELECT jsonb_array_elements_text(COALESCE(data #> '{result,refundIds}','[]'::jsonb)) AS id
+             FROM actions
+           ) listed
+         )
+         SELECT
+           COALESCE((SELECT SUM(i.total_amount) FROM invoices i JOIN credit_ids c ON c.id=i.id::text
+             WHERE i.adjustment_kind='credit'),0)::text AS credited,
+           COALESCE((SELECT SUM(r.amount) FROM refunds r JOIN refund_ids linked ON linked.id=r.id::text
+             WHERE r.state NOT IN ('Rejected','Cancelled')),0)::text AS obligated`,
         [id]
       )
-    ).rows[0]?.failed;
-    if (failed)
-      throw new ConflictException(
-        'Resolve the rejected consultation refund before another financial change'
-      );
+    ).rows[0]!;
+    const missing = BigInt(row.credited) - BigInt(row.obligated);
+    return missing > 0n ? missing : 0n;
   }
 
   private async event(

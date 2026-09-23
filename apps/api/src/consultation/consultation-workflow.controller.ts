@@ -198,6 +198,25 @@ export class StaffConsultationWorkflowController {
     );
   }
 
+  @Post('requests/:id/refund-recovery')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Request an uncovered consultation credit refund without issuing another credit',
+  })
+  @ApiZodBody(paidClosure)
+  refundRecovery(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.recoverRefund(
+      req.session,
+      id,
+      parse(paidClosure, body),
+      req.ip ?? '127.0.0.1'
+    );
+  }
+
   @Post('requests/:id/request-info')
   @HttpCode(200)
   @ApiOperation({ summary: 'Request more information from the consultation customer' })
