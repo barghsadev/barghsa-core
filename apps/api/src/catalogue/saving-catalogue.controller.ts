@@ -1,4 +1,14 @@
-import { Body, Controller, Get, HttpException, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
@@ -9,6 +19,7 @@ import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { SavingCatalogueService } from './saving-catalogue.service.js';
 
 const idSchema = z.string().uuid();
+const duplicatePolicySchema = z.object({ preventActiveDuplicates: z.boolean() }).strict();
 export const draftSavingAgreementSchema = z
   .object({
     title: z.string().trim().min(1).max(300),
@@ -53,6 +64,25 @@ export class AdminSavingCatalogueController {
   configuration(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
     this.authorize(req);
     return this.service.admin(parse(idSchema, id));
+  }
+
+  @Put(':id/duplicate-policy')
+  @RequiresStepUp()
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiOperation({ summary: 'Set active saving-order duplicate policy for a plan' })
+  @ApiZodBody(duplicatePolicySchema)
+  duplicatePolicy(
+    @Param('id') id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.authorize(req);
+    return this.service.setDuplicatePolicy(
+      parse(idSchema, id),
+      parse(duplicatePolicySchema, body).preventActiveDuplicates,
+      req.session,
+      req.ip ?? '127.0.0.1'
+    );
   }
 
   @Post(':id/agreements/draft')

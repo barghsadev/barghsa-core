@@ -66,6 +66,15 @@ const en: Record<string, string> = {
   noLimitHistory: 'No limit versions yet.',
   planHardware: 'Compatible hardware',
   planHardwareHelp: 'Select at least one hardware product for this saving plan.',
+  duplicatePolicy: 'Active order duplicates',
+  duplicatePolicyHelp:
+    'Applies to new orders with the same bill identifier and plan. Existing orders stay unchanged.',
+  duplicatesBlocked: 'New duplicates are blocked.',
+  duplicatesAllowed:
+    'New duplicates are allowed after the customer acknowledges the existing order.',
+  allowDuplicates: 'Allow new duplicates',
+  blockDuplicates: 'Block new duplicates',
+  confirmDuplicatePolicy: 'Change the duplicate-order rule for this plan?',
   agreement: 'Plan agreement',
   agreementHelp:
     'Save a draft, then activate it separately. Published text remains in the history.',
@@ -166,6 +175,14 @@ const fa: Record<string, string> = {
   noLimitHistory: 'هنوز نسخه‌ای از محدودیت‌ها ثبت نشده است.',
   planHardware: 'تجهیزات سازگار',
   planHardwareHelp: 'دست‌کم یک محصول تجهیزات برای این طرح انتخاب کنید.',
+  duplicatePolicy: 'سفارش‌های فعال تکراری',
+  duplicatePolicyHelp:
+    'برای سفارش‌های جدید با شناسه قبض و طرح یکسان اعمال می‌شود. سفارش‌های موجود تغییر نمی‌کنند.',
+  duplicatesBlocked: 'سفارش تکراری جدید مسدود است.',
+  duplicatesAllowed: 'سفارش تکراری جدید پس از تأیید مشتری مجاز است.',
+  allowDuplicates: 'مجاز کردن سفارش تکراری',
+  blockDuplicates: 'مسدود کردن سفارش تکراری',
+  confirmDuplicatePolicy: 'قاعده سفارش تکراری این طرح تغییر کند؟',
   agreement: 'توافق‌نامه طرح',
   agreementHelp:
     'ابتدا پیش‌نویس را ذخیره و سپس جداگانه فعال کنید. متن منتشرشده در تاریخچه می‌ماند.',

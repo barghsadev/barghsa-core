@@ -45,6 +45,10 @@ const en: Record<string, string> = {
   openExisting: 'Open existing order',
   duplicateSupport:
     'An active order exists for this bill and plan. Contact support if you need help.',
+  duplicateAllowedNotice:
+    'An active order exists for this bill and plan. You may continue with a separate order or contact support.',
+  acknowledgeDuplicate: 'I understand this creates another order for the same bill and plan.',
+  duplicateCheckError: 'Could not check for an existing order. Retry to continue.',
   chooseAddress: 'Choose an installation address',
   newAddress: 'Add an address',
   province: 'Province',
@@ -236,6 +240,10 @@ const fa: Record<string, string> = {
   openExisting: 'مشاهده سفارش موجود',
   duplicateSupport:
     'برای این شناسه قبض و طرح، سفارش فعالی وجود دارد. در صورت نیاز با پشتیبانی تماس بگیرید.',
+  duplicateAllowedNotice:
+    'برای این شناسه قبض و طرح، سفارش فعالی وجود دارد. می‌توانید سفارش جداگانه‌ای ثبت کنید یا با پشتیبانی تماس بگیرید.',
+  acknowledgeDuplicate: 'می‌دانم که سفارش دیگری برای همین شناسه قبض و طرح ثبت می‌شود.',
+  duplicateCheckError: 'بررسی سفارش موجود انجام نشد. برای ادامه دوباره تلاش کنید.',
   chooseAddress: 'نشانی نصب را انتخاب کنید',
   newAddress: 'افزودن نشانی',
   province: 'استان',

@@ -245,7 +245,11 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     billIdentifier: input.billIdentifier,
   });
   expect(beforeDuplicate.status, http.logs()).toBe(201);
-  expect(await beforeDuplicate.json()).toEqual({ duplicate: false, existingOrderId: null });
+  expect(await beforeDuplicate.json()).toEqual({
+    duplicate: false,
+    preventActiveDuplicates: true,
+    existingOrderId: null,
+  });
   const verification = await request('/api/saving/orders/verify-bill', 'POST', {
     profileId: input.profileId,
     billIdentifier: input.billIdentifier,
@@ -302,6 +306,7 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   expect(afterDuplicate.status, http.logs()).toBe(201);
   expect(await afterDuplicate.json()).toEqual({
     duplicate: true,
+    preventActiveDuplicates: true,
     existingOrderId: result.savingOrderId,
   });
   const retry = await request('/api/saving/orders', 'POST', submission);
@@ -2322,6 +2327,87 @@ it('credits a cheaper paid hardware swap and preserves the revised price basis f
     (await http.pool.query('SELECT state FROM invoices WHERE id=$1', [result.adjustmentInvoiceId]))
       .rows[0]?.state
   ).toBe('Cancelled');
+}, 60000);
+
+it('lets staff change the duplicate rule while requiring customer acknowledgement', async () => {
+  const policyPath = `/api/admin/catalogue/saving-plans/${input.savingPlanId}/duplicate-policy`;
+  const configurationPath = `/api/admin/catalogue/saving-plans/${input.savingPlanId}/configuration`;
+  expect((await request(policyPath, 'PUT', { preventActiveDuplicates: false })).status).toBe(403);
+  expect(
+    (await request(policyPath, 'PUT', { preventActiveDuplicates: 'false' }, staffHeaders)).status
+  ).toBe(400);
+  const changed = await request(
+    policyPath,
+    'PUT',
+    { preventActiveDuplicates: false },
+    staffHeaders
+  );
+  expect(changed.status, http.logs()).toBe(200);
+  expect(await changed.json()).toEqual({ preventActiveDuplicates: false });
+  expect(
+    await (await request(configurationPath, 'GET', undefined, staffHeaders)).json()
+  ).toMatchObject({
+    preventActiveDuplicates: false,
+  });
+
+  const orderInput = { ...input, billIdentifier: '1234567890555' };
+  const quote = await request('/api/saving/orders/quote', 'POST', orderInput);
+  expect(quote.status, http.logs()).toBe(201);
+  const reviewDigest = ((await quote.json()) as { reviewDigest: string }).reviewDigest;
+  const submission = {
+    ...orderInput,
+    expectedQuoteDigest: reviewDigest,
+    agreementAccepted: true,
+    hardwareConfirmed: true,
+    submitForStaffReview: true,
+  };
+  const first = await request('/api/saving/orders', 'POST', {
+    ...submission,
+    idempotencyKey: randomUUID(),
+  });
+  expect(first.status, http.logs()).toBe(201);
+  const duplicate = await request('/api/saving/orders/duplicate', 'POST', {
+    profileId: input.profileId,
+    savingPlanId: input.savingPlanId,
+    billIdentifier: orderInput.billIdentifier,
+  });
+  expect(await duplicate.json()).toMatchObject({ duplicate: true, preventActiveDuplicates: false });
+  const unacknowledged = await request('/api/saving/orders', 'POST', {
+    ...submission,
+    idempotencyKey: randomUUID(),
+  });
+  expect(unacknowledged.status, http.logs()).toBe(409);
+  const second = await request('/api/saving/orders', 'POST', {
+    ...submission,
+    duplicateAcknowledged: true,
+    idempotencyKey: randomUUID(),
+  });
+  expect(second.status, http.logs()).toBe(201);
+  expect(
+    (
+      await http.pool.query(
+        `SELECT COUNT(*)::int AS count FROM saving_orders
+       WHERE saving_plan_id=$1 AND bill_identifier=$2 AND status='awaiting_staff_review'`,
+        [input.savingPlanId, orderInput.billIdentifier]
+      )
+    ).rows[0]?.count
+  ).toBe(2);
+  expect(
+    (await request(policyPath, 'PUT', { preventActiveDuplicates: true }, staffHeaders)).status
+  ).toBe(200);
+  const third = await request('/api/saving/orders', 'POST', {
+    ...submission,
+    duplicateAcknowledged: true,
+    idempotencyKey: randomUUID(),
+  });
+  expect(third.status, http.logs()).toBe(409);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT COUNT(*)::int AS count FROM audit_log WHERE event='saving_plan_duplicate_policy_changed'"
+      )
+    ).rows[0]?.count
+  ).toBe(2);
 }, 60000);
 
 it('limits gift-code guesses across saving and electricity quotes without blocking ordinary quotes', async () => {

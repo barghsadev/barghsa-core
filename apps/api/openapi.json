@@ -1344,6 +1344,55 @@
         ]
       }
     },
+    "/api/admin/catalogue/saving-plans/{id}/duplicate-policy": {
+      "put": {
+        "operationId": "AdminSavingCatalogueController_duplicatePolicy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "preventActiveDuplicates": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "preventActiveDuplicates"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Set active saving-order duplicate policy for a plan",
+        "tags": [
+          "Admin · Saving plans"
+        ]
+      }
+    },
     "/api/admin/config/assignment-rules": {
       "get": {
         "operationId": "AdminController_getStaffAssignmentRules",
@@ -19666,6 +19715,12 @@
                   "billIdentifier": {
                     "pattern": "^[0-9]{6,13}$",
                     "type": "string"
+                  },
+                  "duplicateAcknowledged": {
+                    "enum": [
+                      true
+                    ],
+                    "type": "boolean"
                   },
                   "expectedQuoteDigest": {
                     "pattern": "^[a-f0-9]{64}$",

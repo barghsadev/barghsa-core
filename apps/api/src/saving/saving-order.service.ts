@@ -38,6 +38,7 @@ export interface SavingSubmissionInput extends SavingOrderInput {
   agreementAccepted: true;
   hardwareConfirmed: true;
   submitForStaffReview: true;
+  duplicateAcknowledged?: true | undefined;
 }
 export interface SavingChangeInput {
   hardwareProductId: string;
@@ -133,6 +134,7 @@ function requestHash(input: SavingSubmissionInput): string {
         agreementVersionId: input.agreementVersionId,
         giftCode: input.giftCode ? normalizeGiftCode(input.giftCode) : null,
         expectedQuoteDigest: input.expectedQuoteDigest,
+        duplicateAcknowledged: input.duplicateAcknowledged ?? false,
       })
     )
     .digest('hex');
@@ -404,6 +406,13 @@ export class SavingOrderService {
       await client.query('BEGIN');
       await this.orders.lockOrderActor(client, actor);
       await this.authorize(client, actor, profileId);
+      const policy = (
+        await client.query<{ prevent_active_saving_duplicates: boolean }>(
+          "SELECT prevent_active_saving_duplicates FROM products WHERE id=$1 AND type='saving_plan'",
+          [savingPlanId]
+        )
+      ).rows[0];
+      if (!policy) throw new NotFoundException('Saving plan not found');
       const existing = (
         await client.query<{ id: string; profile_id: string }>(
           `SELECT id,profile_id FROM saving_orders WHERE bill_identifier=$1 AND saving_plan_id=$2
@@ -415,6 +424,7 @@ export class SavingOrderService {
       await client.query('COMMIT');
       return {
         duplicate: !!existing,
+        preventActiveDuplicates: policy.prevent_active_saving_duplicates,
         existingOrderId: existing?.profile_id === profileId ? existing.id : null,
       };
     } catch (error) {
@@ -971,7 +981,13 @@ export class SavingOrderService {
       if (input.giftCode) await this.giftCodes.enforceValidationLimit(actor.userId);
       // Acquire product locks before the quote's shared locks. Concurrent
       // submissions must not both upgrade a hardware share lock to a write lock.
-      await client.query('SELECT id FROM products WHERE id=$1 FOR UPDATE', [input.savingPlanId]);
+      const planPolicy = (
+        await client.query<{ prevent_active_saving_duplicates: boolean }>(
+          'SELECT prevent_active_saving_duplicates FROM products WHERE id=$1 FOR UPDATE',
+          [input.savingPlanId]
+        )
+      ).rows[0];
+      if (!planPolicy) throw new NotFoundException('Saving plan not found');
       await client.query('SELECT id FROM products WHERE id=$1 FOR UPDATE', [
         input.hardwareProductId,
       ]);
@@ -990,8 +1006,12 @@ export class SavingOrderService {
           [input.billIdentifier, input.savingPlanId]
         )
       ).rows[0];
-      if (duplicate)
+      if (duplicate && planPolicy.prevent_active_saving_duplicates)
         throw new ConflictException(`Active saving order already exists: ${duplicate.id}`);
+      if (duplicate && !input.duplicateAcknowledged)
+        throw new ConflictException(
+          'Acknowledge the existing active saving order before continuing'
+        );
       const orderId = uuidv7(),
         savingId = uuidv7(),
         contractId = uuidv7(),

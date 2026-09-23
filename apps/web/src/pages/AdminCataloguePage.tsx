@@ -71,6 +71,7 @@ export default function AdminCataloguePage() {
   const [type, setType] = useState<ProductType>('consultation'),
     [rows, setRows] = useState<Product[]>([]);
   const [hardwareOptions, setHardwareOptions] = useState<Product[]>([]);
+  const [preventActiveDuplicates, setPreventActiveDuplicates] = useState(true);
   const [editor, setEditor] = useState<string | null>(null),
     [detail, setDetail] = useState<Detail | null>(null),
     [draft, setDraft] = useState<Draft | null>(null);
@@ -137,8 +138,12 @@ export default function AdminCataloguePage() {
         if (type === 'saving_plan') setHardwareOptions(data[paths.length] as Product[]);
         const savingConfig =
           type === 'saving_plan' && editor && editor !== 'new'
-            ? (data[paths.length + 1] as { hardwareIds: string[] })
+            ? (data[paths.length + 1] as {
+                hardwareIds: string[];
+                preventActiveDuplicates: boolean;
+              })
             : null;
+        setPreventActiveDuplicates(savingConfig?.preventActiveDuplicates ?? true);
         const product = editor && editor !== 'new' ? (data[1] as Detail) : null;
         setDetail(product);
         if (product) setReferences(data[2] as References);
@@ -549,6 +554,37 @@ export default function AdminCataloguePage() {
                         </section>
                       )}
                       {detail && type === 'saving_plan' && (
+                        <section
+                          className="rounded-md border p-4"
+                          aria-label={label('duplicatePolicy')}
+                        >
+                          <h2 className="font-semibold">{label('duplicatePolicy')}</h2>
+                          <p className="my-2 text-sm text-muted-foreground">
+                            {label('duplicatePolicyHelp')}
+                          </p>
+                          <p className="mb-3 text-sm">
+                            {label(
+                              preventActiveDuplicates ? 'duplicatesBlocked' : 'duplicatesAllowed'
+                            )}
+                          </p>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() =>
+                              propose(
+                                `/api/admin/catalogue/saving-plans/${detail.id}/duplicate-policy`,
+                                'PUT',
+                                label('duplicatePolicy'),
+                                label('confirmDuplicatePolicy'),
+                                { preventActiveDuplicates: !preventActiveDuplicates }
+                              )
+                            }
+                          >
+                            {label(preventActiveDuplicates ? 'allowDuplicates' : 'blockDuplicates')}
+                          </Button>
+                        </section>
+                      )}
+                      {detail && type === 'saving_plan' && (
                         <SavingAgreementEditor
                           planId={detail.id}
                           onChanged={() => choose(detail.id)}
@@ -740,7 +776,7 @@ export default function AdminCataloguePage() {
           onClose={() => setAction(null)}
           onSuccess={async () => {
             setSaved(true);
-            choose(null);
+            choose(action.path.endsWith('/duplicate-policy') ? editor : null);
           }}
         />
       )}

@@ -65,6 +65,10 @@ export const products = createTable('products', {
 
   /** Product lifecycle status: active, inactive, archived. Default: inactive. */
   status: productStatusEnum('status').notNull().default('inactive'),
+  /** Only meaningful for saving plans; defaults to protecting existing orders. */
+  preventActiveSavingDuplicates: boolean('prevent_active_saving_duplicates')
+    .notNull()
+    .default(true),
   stockTracking: boolean('stock_tracking').notNull().default(false),
   stockCount: integer('stock_count').notNull().default(0),
   reservedCount: integer('reserved_count').notNull().default(0),

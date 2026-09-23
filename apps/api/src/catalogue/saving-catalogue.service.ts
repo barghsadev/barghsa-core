@@ -9,6 +9,7 @@ import type { ValidatedSession } from '../session/session.service.js';
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 interface PlanRow {
   id: string;
+  prevent_active_saving_duplicates: boolean;
   title: { fa: string; en: string };
   description: { fa: string; en: string } | null;
   price: string | null;
@@ -32,10 +33,11 @@ export interface AgreementRow {
 
 @Injectable()
 export class SavingCatalogueService {
-  private async plan(client: PoolClient, id: string, lock = false) {
+  private async plan(client: PoolClient, id: string, lock: boolean | 'wait' = false) {
     const result = await client.query<PlanRow>(
-      `SELECT id,title,description,effective_product_price(id)::text AS price,status
-       FROM products WHERE id=$1 AND type='saving_plan' ${lock ? 'FOR UPDATE NOWAIT' : ''}`,
+      `SELECT id,title,description,effective_product_price(id)::text AS price,status,
+              prevent_active_saving_duplicates
+       FROM products WHERE id=$1 AND type='saving_plan' ${lock === 'wait' ? 'FOR UPDATE' : lock ? 'FOR UPDATE NOWAIT' : ''}`,
       [id]
     );
     if (!result.rows[0]) throw new NotFoundException('Saving plan not found');
@@ -121,14 +123,18 @@ export class SavingCatalogueService {
   async admin(planId: string) {
     const client = await getDbPool().connect();
     try {
-      await this.plan(client, planId);
+      const plan = await this.plan(client, planId);
       const hardware = (
         await client.query<{ hardware_id: string }>(
           'SELECT hardware_id FROM saving_plan_hardware WHERE plan_id=$1 ORDER BY hardware_id',
           [planId]
         )
       ).rows.map((row) => row.hardware_id);
-      return { hardwareIds: hardware, agreements: await this.agreements(client, planId) };
+      return {
+        hardwareIds: hardware,
+        preventActiveDuplicates: plan.prevent_active_saving_duplicates,
+        agreements: await this.agreements(client, planId),
+      };
     } finally {
       client.release();
     }
@@ -158,6 +164,34 @@ export class SavingCatalogueService {
        VALUES($1,$2,$3,$4::jsonb,$5,$6,NOW())`,
       [uuidv7(), actor.userId, event, JSON.stringify({ planId }), uuidv7(), ip]
     );
+  }
+
+  setDuplicatePolicy(planId: string, preventActiveDuplicates: boolean, actor: Actor, ip: string) {
+    return this.mutate(actor, async (client) => {
+      const plan = await this.plan(client, planId, 'wait');
+      if (plan.prevent_active_saving_duplicates !== preventActiveDuplicates) {
+        await client.query(
+          'UPDATE products SET prevent_active_saving_duplicates=$2,updated_at=NOW() WHERE id=$1',
+          [planId, preventActiveDuplicates]
+        );
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+           VALUES($1,$2,'saving_plan_duplicate_policy_changed',$3::jsonb,$4,$5,NOW())`,
+          [
+            uuidv7(),
+            actor.userId,
+            JSON.stringify({
+              planId,
+              before: plan.prevent_active_saving_duplicates,
+              after: preventActiveDuplicates,
+            }),
+            uuidv7(),
+            ip,
+          ]
+        );
+      }
+      return { preventActiveDuplicates };
+    });
   }
 
   saveDraft(planId: string, input: { title: string; body: string }, actor: Actor, ip: string) {

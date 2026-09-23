@@ -102,10 +102,13 @@ export function SavingsOrderPage() {
   );
   const [duplicate, setDuplicate] = useState<{
     duplicate: boolean;
+    preventActiveDuplicates: boolean;
     existingOrderId: string | null;
   } | null>(null);
+  const [duplicateAcknowledged, setDuplicateAcknowledged] = useState(false);
   const [duplicateChecking, setDuplicateChecking] = useState(false);
   const [duplicateError, setDuplicateError] = useState(false);
+  const [duplicateRevision, setDuplicateRevision] = useState(0);
   const [addressId, setAddressId] = useState('');
   const [addingAddress, setAddingAddress] = useState(false);
   const [provinces, setProvinces] = useState<Geography[]>([]);
@@ -348,9 +351,14 @@ export function SavingsOrderPage() {
   ]);
 
   useEffect(() => {
+    if (step !== 3) {
+      setDuplicateChecking(false);
+      return;
+    }
     setDuplicate(null);
+    setDuplicateAcknowledged(false);
     setDuplicateError(false);
-    if (step !== 3 || !profileId || !planId || !/^[0-9]{6,13}$/.test(billIdentifier)) {
+    if (!profileId || !planId || !/^[0-9]{6,13}$/.test(billIdentifier)) {
       setDuplicateChecking(false);
       return;
     }
@@ -366,7 +374,11 @@ export function SavingsOrderPage() {
       })
         .then(async (response) => {
           if (!response.ok) throw new Error('duplicate');
-          return response.json() as Promise<{ duplicate: boolean; existingOrderId: string | null }>;
+          return response.json() as Promise<{
+            duplicate: boolean;
+            preventActiveDuplicates: boolean;
+            existingOrderId: string | null;
+          }>;
         })
         .then((result) => {
           if (!controller.signal.aborted) setDuplicate(result);
@@ -382,7 +394,7 @@ export function SavingsOrderPage() {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [step, profileId, planId, billIdentifier]);
+  }, [step, profileId, planId, billIdentifier, duplicateRevision]);
 
   useEffect(() => {
     if (step !== 6 || !profileId) return;
@@ -410,7 +422,9 @@ export function SavingsOrderPage() {
         : step === 3
           ? /^[0-9]{6,13}$/.test(billIdentifier) &&
             !duplicateChecking &&
-            (duplicateError || duplicate?.duplicate === false)
+            !duplicateError &&
+            (duplicate?.duplicate === false ||
+              (duplicate?.preventActiveDuplicates === false && duplicateAcknowledged))
           : step === 4
             ? !!addressId
             : step === 5
@@ -432,6 +446,7 @@ export function SavingsOrderPage() {
         ...(appliedGiftCode ? { giftCode: appliedGiftCode } : {}),
         idempotencyKey: submissionKey.current,
         expectedQuoteDigest: quote.reviewDigest,
+        ...(duplicateAcknowledged ? { duplicateAcknowledged: true } : {}),
         agreementAccepted: true,
         hardwareConfirmed: true,
         submitForStaffReview: true,
@@ -590,6 +605,18 @@ export function SavingsOrderPage() {
                   {billIdentifier && !/^[0-9]{6,13}$/.test(billIdentifier) && (
                     <p className="text-sm text-destructive">{copy('invalidBill')}</p>
                   )}
+                  {duplicateError && (
+                    <div role="alert" className="space-y-2 text-sm text-destructive">
+                      <p>{copy('duplicateCheckError')}</p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setDuplicateRevision((value) => value + 1)}
+                      >
+                        {copy('retry')}
+                      </Button>
+                    </div>
+                  )}
                   <Button
                     variant="outline"
                     disabled={!/^[0-9]{6,13}$/.test(billIdentifier) || verification === 'checking'}
@@ -605,7 +632,13 @@ export function SavingsOrderPage() {
                       className="rounded-md border border-destructive/30 p-3 text-sm"
                     >
                       <p>
-                        {copy(duplicate.existingOrderId ? 'duplicateOrder' : 'duplicateSupport')}
+                        {copy(
+                          !duplicate.preventActiveDuplicates
+                            ? 'duplicateAllowedNotice'
+                            : duplicate.existingOrderId
+                              ? 'duplicateOrder'
+                              : 'duplicateSupport'
+                        )}
                       </p>
                       {duplicate.existingOrderId && (
                         <Link
@@ -615,6 +648,16 @@ export function SavingsOrderPage() {
                         >
                           {copy('openExisting')}
                         </Link>
+                      )}
+                      {!duplicate.preventActiveDuplicates && (
+                        <label className="mt-3 flex items-start gap-2">
+                          <input
+                            type="checkbox"
+                            checked={duplicateAcknowledged}
+                            onChange={(event) => setDuplicateAcknowledged(event.target.checked)}
+                          />
+                          {copy('acknowledgeDuplicate')}
+                        </label>
                       )}
                     </div>
                   )}

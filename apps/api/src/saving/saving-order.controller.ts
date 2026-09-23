@@ -37,6 +37,7 @@ const submissionInput = quoteInput
     agreementAccepted: z.literal(true),
     hardwareConfirmed: z.literal(true),
     submitForStaffReview: z.literal(true),
+    duplicateAcknowledged: z.literal(true).optional(),
   })
   .strict();
 const changeInput = z

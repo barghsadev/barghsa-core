@@ -83,7 +83,7 @@ export const savingOrders = pgTable(
   (table) => [
     uniqueIndex('saving_orders_order_key').on(table.orderId),
     index('saving_orders_profile_submitted_idx').on(table.profileId, table.submittedAt),
-    uniqueIndex('saving_orders_active_bill_plan_key')
+    index('saving_orders_active_bill_plan_idx')
       .on(table.billIdentifier, table.savingPlanId)
       .where(
         sql`${table.status} IN ('submitted','awaiting_staff_review','approved','in_progress')`
