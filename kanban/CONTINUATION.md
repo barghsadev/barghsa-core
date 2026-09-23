@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Saving staff handoff browser journey](batches/2026-09-24-saving-staff-browser-journey.md) extends `03-core-business.md#T-03.90.14` from saving-order submission through staff approval, the automatic request-confirmation handoff, and the customer's updated progress view. It asserts the staff approval payload; browser API responses are controlled, while backend transitions are covered separately.
+
 [Simple electricity browser journey](batches/2026-09-24-electricity-simple-browser-journey.md) covers the simple-order portion of `03-core-business.md#T-03.90.14`: catalogue, period and quantity, reviewed thermal/green quote, staff review handoff, linked wallet payment, and contract tracking. The focused journey passes all five browser projects. The browser API is controlled; backend transitions remain covered in integration suites.
 
 [Persistent language and direction](batches/2026-09-24-language-preference.md) closes the saved-language reload gap in `07-ui-ux-design.md#T-07.03.02.01`–`.02`. English and Persian selection survives later visits, and initial direction follows a saved or browser preference before React renders. Focused unit, bilingual journey, five-browser, type, lint, format, and build checks pass locally.

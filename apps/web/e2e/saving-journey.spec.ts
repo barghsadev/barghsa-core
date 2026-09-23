@@ -22,9 +22,12 @@ const stageNames = [
 test('customer saves a saving order, submits the reviewed quote, and tracks fulfillment', async ({
   page,
 }) => {
+  test.setTimeout(60_000);
   const drafts: Array<Record<string, unknown>> = [];
   const submissions: Array<Record<string, unknown>> = [];
-  let fulfillmentStarted = false;
+  const staffActions: Array<{ path: string; body: Record<string, unknown> }> = [];
+  let approved = false;
+  let stageIndex = -1;
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
@@ -171,7 +174,7 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
             orders: [
               {
                 id: savingOrderId,
-                status: fulfillmentStarted ? 'in_progress' : 'awaiting_staff_review',
+                status: approved ? 'approved' : 'awaiting_staff_review',
                 financial_status: 'unpaid',
                 invoice_id: invoiceId,
                 invoice_state: 'Unpaid',
@@ -200,7 +203,7 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
         current_hardware_title: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' },
         installation_address_id: addressId,
         can_edit: false,
-        status: fulfillmentStarted ? 'in_progress' : 'awaiting_staff_review',
+        status: approved ? 'approved' : 'awaiting_staff_review',
         financial_status: 'unpaid',
         bill_identifier: '1234567890123',
         submitted_at: submittedAt,
@@ -217,21 +220,21 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
         agreement_snapshot: 'Accepted terms\nThe customer accepts this plan.',
         agreement_updated: false,
         contract_version_id: null,
-        contract_id: fulfillmentStarted ? contractId : null,
-        contract_state: fulfillmentStarted ? 'AwaitingCustomerAcceptance' : 'AwaitingStaffReview',
+        contract_id: approved ? contractId : null,
+        contract_state: approved ? 'AwaitingCustomerAcceptance' : 'AwaitingStaffReview',
         invoice_id: invoiceId,
         invoice_state: 'Unpaid',
         cancellation_pending: false,
         stages: stageNames.map((stage, index) => ({
           stage,
-          status: fulfillmentStarted
-            ? index === 0
+          status: approved
+            ? index < stageIndex
               ? 'completed'
-              : index === 1
+              : index === stageIndex
                 ? 'in_progress'
                 : 'pending'
             : 'pending',
-          completed_at: fulfillmentStarted && index === 0 ? submittedAt : null,
+          completed_at: approved && index < stageIndex ? submittedAt : null,
           explanation: null,
           handover_description: null,
         })),
@@ -242,6 +245,73 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
       },
     })
   );
+  const staffOrder = () => ({
+    id: savingOrderId,
+    orderId: parentOrderId,
+    profileId,
+    customerName: 'Buyer',
+    status: approved ? 'approved' : 'awaiting_staff_review',
+    financialStatus: 'unpaid',
+    submittedAt,
+    billIdentifier: '1234567890123',
+    addressSnapshot: { full_address: 'Saving Street' },
+    installationAddressId: addressId,
+    hardwareProductId: hardwareId,
+    hardwareTitle: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' },
+    pricingSnapshot: { plan: { title: { en: 'Home saving plan', fa: 'طرح صرفه‌جویی خانه' } } },
+    versionId: agreementVersionId,
+    invoiceState: 'Unpaid',
+    contractState: approved ? 'AwaitingCustomerAcceptance' : 'AwaitingStaffReview',
+    totalIrR: '300000',
+    paidIrR: '0',
+  });
+  await page.route('**/api/staff/saving/orders?*', (route) => {
+    const lane = new URL(route.request().url()).searchParams.get('lane');
+    return route.fulfill({
+      json: {
+        orders: lane === (approved ? 'fulfillment' : 'review') ? [staffOrder()] : [],
+        nextAfter: null,
+      },
+    });
+  });
+  await page.route(`**/api/staff/saving/orders/${savingOrderId}`, (route) =>
+    route.fulfill({
+      json: {
+        ...staffOrder(),
+        stages: stageNames.map((stage, index) => ({
+          stage,
+          status: approved
+            ? index < stageIndex
+              ? 'completed'
+              : index === stageIndex
+                ? 'in_progress'
+                : 'pending'
+            : 'pending',
+          completed_at: index < stageIndex ? submittedAt : null,
+          explanation: null,
+          handover_description: null,
+        })),
+        events: [],
+        revisions: [],
+        addressAmendments: [],
+        hardwareAmendments: [],
+        hardwareUpgrades: [],
+        addressOptions: [],
+        hardwareOptions: [],
+        canAmendAddress: false,
+        canAmendHardware: false,
+      },
+    })
+  );
+  await page.route(`**/api/staff/saving/orders/${savingOrderId}/approve`, (route) => {
+    staffActions.push({
+      path: 'approve',
+      body: route.request().postDataJSON() as Record<string, unknown>,
+    });
+    approved = true;
+    stageIndex = 1;
+    return route.fulfill({ json: { status: 'approved' } });
+  });
   const invoice = {
     invoiceId,
     role: 'original',
@@ -314,8 +384,17 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
     submitForStaffReview: true,
   });
 
-  fulfillmentStarted = true;
-  await page.reload();
+  await page.goto('/admin/saving-orders');
+  await page.getByRole('button', { name: /Buyer.*Home saving plan/ }).click();
+  await page.getByRole('button', { name: 'Approve request' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
+  await page.getByRole('button', { name: 'Fulfillment', exact: true }).click();
+  await page.getByRole('button', { name: /Buyer.*Home saving plan/ }).click();
+  await expect(page.getByText('Product delivery', { exact: true })).toBeVisible();
+  expect(staffActions).toMatchObject([
+    { path: 'approve', body: { expectedVersionId: agreementVersionId } },
+  ]);
+  await page.goto(`/savings/orders/${savingOrderId}`);
   await expect(page.getByRole('list', { name: 'Fulfillment' })).toContainText('Product delivery');
   await expect(page.locator('li[aria-current="step"]')).toContainText('Product delivery');
   await page.getByRole('link', { name: 'My saving orders' }).click();
