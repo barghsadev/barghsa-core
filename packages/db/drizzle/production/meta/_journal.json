@@ -512,6 +512,13 @@
       "when": 1791331200055,
       "tag": "0152_electricity_rejected_contract",
       "breakpoints": true
+    },
+    {
+      "idx": 153,
+      "version": "7",
+      "when": 1791331200056,
+      "tag": "0153_electricity_activation_link",
+      "breakpoints": true
     }
   ]
 }

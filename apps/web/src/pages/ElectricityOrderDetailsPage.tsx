@@ -23,6 +23,8 @@ interface ElectricityOrderDetail {
   invoiceId: string;
   invoiceState: string;
   totalIrR: string;
+  paidIrR: string;
+  refundedIrR: string;
 }
 
 const statusKeys: Record<string, string> = {
@@ -52,6 +54,7 @@ const actionKeys: Record<string, string> = {
   accept_contract: 'electricity.order.nextAction.accept_contract',
   await_refund: 'electricity.order.nextAction.await_refund',
   await_delivery: 'electricity.order.nextAction.await_delivery',
+  await_activation: 'electricity.order.nextAction.await_activation',
   continue_order: 'electricity.order.nextAction.continue_order',
   none: 'electricity.order.nextAction.none',
 };
@@ -89,7 +92,9 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           value.orderId !== orderId ||
           !value.contractId ||
           !value.invoiceId ||
-          !/^\d+$/.test(value.totalIrR)
+          !/^\d+$/.test(value.totalIrR) ||
+          !/^\d+$/.test(value.paidIrR) ||
+          !/^\d+$/.test(value.refundedIrR)
         )
           throw new Error('Invalid order detail');
         setDetail(value);
@@ -185,6 +190,20 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                 <strong>{numbers.money(detail.totalIrR)}</strong>
               </p>
               <p className="flex justify-between gap-3">
+                <span>{t('electricity.order.paidAmount', locale)}</span>
+                <span>{numbers.money(detail.paidIrR)}</span>
+              </p>
+              <p className="flex justify-between gap-3">
+                <span>{t('electricity.order.refundedAmount', locale)}</span>
+                <span>{numbers.money(detail.refundedIrR)}</span>
+              </p>
+              <p className="flex justify-between gap-3">
+                <span>{t('electricity.order.remainingAmount', locale)}</span>
+                <span>
+                  {numbers.money((BigInt(detail.totalIrR) - BigInt(detail.paidIrR)).toString())}
+                </span>
+              </p>
+              <p className="flex justify-between gap-3">
                 <span>{t('electricity.order.deliveryAddress', locale)}</span>
                 <span>{detail.fullAddress}</span>
               </p>
@@ -269,23 +288,36 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             </Card>
           ) : null}
           <div className="flex flex-wrap gap-3">
-            <a
-              href="/contracts"
-              className="rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4"
-            >
-              {t('electricity.order.success.contract', locale)}: {detail.contractId}
-            </a>
+            {['AwaitingCustomerAcceptance', 'Accepted', 'Signed', 'Active', 'Completed'].includes(
+              detail.contractState
+            ) ? (
+              <a
+                href="/contracts"
+                className="rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4"
+              >
+                {t('electricity.order.success.contract', locale)}: {detail.contractId}
+              </a>
+            ) : (
+              <span className="rounded-md border px-4 py-2 text-sm text-muted-foreground">
+                {t('electricity.order.contractPending', locale)}: {detail.contractId}
+              </span>
+            )}
             <a
               href={`/invoices/${detail.invoiceId}`}
               className="rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4"
             >
-              {t('electricity.order.success.invoice', locale)}: {detail.invoiceId}
+              {t('electricity.order.financialReviewLink', locale)}: {detail.invoiceId}
             </a>
           </div>
-          <div className="space-y-1 text-sm text-muted-foreground">
-            <p>{t('electricity.order.paymentOptions', locale)}</p>
-            <p>{t('electricity.order.paymentAfterSubmit', locale)}</p>
-          </div>
+          {!['rejected', 'cancelled', 'changes_requested'].includes(detail.electricityStatus) &&
+          ['unpaid', 'partially_funded', 'payment_under_review'].includes(
+            detail.financialStatus
+          ) ? (
+            <div className="space-y-1 text-sm text-muted-foreground">
+              <p>{t('electricity.order.paymentOptions', locale)}</p>
+              <p>{t('electricity.order.paymentAfterSubmit', locale)}</p>
+            </div>
+          ) : null}
         </>
       )}
     </main>

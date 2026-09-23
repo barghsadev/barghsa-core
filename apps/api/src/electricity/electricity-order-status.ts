@@ -71,7 +71,8 @@ export function electricityFinancialStatus(input: {
 export function electricityNextAction(
   commercial: ElectricityCommercialStatus,
   financial: ElectricityFinancialStatus,
-  audience: 'customer' | 'staff'
+  audience: 'customer' | 'staff',
+  contractState?: string
 ) {
   if (financial === 'refund_pending' || financial === 'partially_refunded')
     return audience === 'staff' ? 'process_refund' : 'await_refund';
@@ -81,6 +82,7 @@ export function electricityNextAction(
     return audience === 'staff' ? 'await_customer_changes' : 'resubmit_changes';
   if (commercial === 'approved') {
     if (financial !== 'paid') return audience === 'staff' ? 'await_payment' : 'pay_invoice';
+    if (contractState === 'Accepted' || contractState === 'Signed') return 'await_activation';
     return audience === 'staff' ? 'await_contract_acceptance' : 'accept_contract';
   }
   if (commercial === 'active') return 'await_delivery';

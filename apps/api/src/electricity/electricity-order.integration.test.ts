@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { activateReadyContracts } from '@barghsa/db/contract-activation';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -42,7 +43,7 @@ beforeEach(async () => {
   };
   const profileId = (
     await http.pool.query(
-      "INSERT INTO profiles(user_id,profile_type,status) VALUES('buyer','LEGAL','ACTIVE') RETURNING id"
+      "INSERT INTO profiles(user_id,profile_type,status,is_default) VALUES('buyer','LEGAL','ACTIVE',true) RETURNING id"
     )
   ).rows[0].id;
   await http.pool.query(
@@ -237,6 +238,15 @@ it('requests changes with a reason and returns the order to the customer', async
     fullAddress: 'Corrected Electricity Street',
     versionId: result.versionId,
   });
+  const amendedRequirements = (
+    await http.pool.query(
+      'SELECT initial_invoice_id,service_starts_at,service_ends_at FROM contract_activation_requirements WHERE version_id=$1',
+      [result.versionId]
+    )
+  ).rows[0];
+  expect(amendedRequirements.initial_invoice_id).toBe(order.invoiceId);
+  expect(amendedRequirements.service_starts_at).not.toBeNull();
+  expect(amendedRequirements.service_ends_at).not.toBeNull();
   const queue = await fetch(`${http.base}/api/staff/electricity/orders`, { headers: staffHeaders });
   const queueBody = (await queue.json()) as {
     orders: Array<{ orderId: string; versionId: string }>;
@@ -293,7 +303,81 @@ it('creates a mandatory refund obligation when a paid order is rejected', async 
   });
   await expect(
     http.pool.query('UPDATE invoices SET paid_amount=600000 WHERE id=$1', [order.invoiceId])
-  ).rejects.toThrow('Rejected electricity orders cannot receive new payments');
+  ).rejects.toThrow('Electricity order is unavailable for payment');
+});
+
+it('funds the linked invoice and activates only after customer acceptance', async () => {
+  const order = await submittedOrder();
+  const versionId = (
+    await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+      order.contractId,
+    ])
+  ).rows[0].current_version_id as string;
+  await http.pool.query(
+    `INSERT INTO wallets(profile_id,posted_balance,reserved_balance)
+     VALUES($1,1500000,0) ON CONFLICT (profile_id)
+     DO UPDATE SET posted_balance=1500000,reserved_balance=0`,
+    [input.profileId]
+  );
+  const approved = await staffPost(order.orderId, 'approve', {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+  });
+  expect(approved.status, http.logs()).toBe(200);
+  expect((await activateReadyContracts(http.pool)).activated).toBe(0);
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+  const paymentPath = `${http.base}/api/invoices/${order.invoiceId}/wallet-payment`;
+  const walletReviewResponse = await fetch(paymentPath, { headers });
+  expect(walletReviewResponse.status, http.logs()).toBe(200);
+  const walletReview = (await walletReviewResponse.json()) as { review: { hash: string } };
+  const payment = await fetch(paymentPath, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      idempotencyKey: randomUUID(),
+      expectedRemainingAmount: '1000000',
+      expectedReviewHash: walletReview.review.hash,
+    }),
+  });
+  expect(payment.status, http.logs()).toBe(200);
+  expect((await activateReadyContracts(http.pool)).activated).toBe(0);
+  const acceptanceReview = await fetch(
+    `${http.base}/api/contracts/${order.contractId}/acceptance-review?versionId=${versionId}`,
+    { headers }
+  );
+  expect(acceptanceReview.status, http.logs()).toBe(200);
+  const acceptance = (await acceptanceReview.json()) as { hash: string };
+  const accepted = await fetch(`${http.base}/api/contracts/${order.contractId}/accept`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      idempotencyKey: randomUUID(),
+      expectedVersionId: versionId,
+      expectedReviewHash: acceptance.hash,
+    }),
+  });
+  expect(accepted.status, http.logs()).toBe(200);
+  const beforeActivation = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, {
+    headers,
+  });
+  expect(await beforeActivation.json()).toMatchObject({
+    electricityStatus: 'approved',
+    financialStatus: 'paid',
+    nextAction: 'await_activation',
+    paidIrR: '1000000',
+  });
+  expect((await activateReadyContracts(http.pool)).activated).toBe(1);
+  const detail = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, {
+    headers,
+  });
+  expect(await detail.json()).toMatchObject({
+    electricityStatus: 'active',
+    financialStatus: 'paid',
+    contractState: 'Active',
+  });
+  const parent = (await http.pool.query('SELECT status FROM orders WHERE id=$1', [order.orderId]))
+    .rows[0];
+  expect(parent.status).toBe('CONFIRMED');
 });
 
 it('previews and atomically submits an order, contract, lines and payable invoice once', async () => {
@@ -364,6 +448,20 @@ it('previews and atomically submits an order, contract, lines and payable invoic
     total_amount: '1000000',
     line_count: 1,
   });
+  const requirements = (
+    await http.pool.query(
+      `SELECT r.initial_invoice_id,r.service_starts_at,r.service_ends_at,r.payment_required
+       FROM contracts c JOIN contract_activation_requirements r ON r.version_id=c.current_version_id
+       WHERE c.id=$1`,
+      [result.contractId]
+    )
+  ).rows[0];
+  expect(requirements).toMatchObject({
+    initial_invoice_id: result.invoiceId,
+    payment_required: true,
+  });
+  expect(requirements.service_starts_at).not.toBeNull();
+  expect(requirements.service_ends_at).not.toBeNull();
   const count = (
     await http.pool.query(
       'SELECT COUNT(*)::int AS count FROM electricity_order_submissions WHERE user_id=$1',

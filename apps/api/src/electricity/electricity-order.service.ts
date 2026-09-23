@@ -182,7 +182,8 @@ export class ElectricityOrderService {
         nextAction: electricityNextAction(
           detail.electricity_status as ElectricityCommercialStatus,
           financialStatus,
-          'customer'
+          'customer',
+          detail.contract_state
         ),
         mode: detail.mode,
         periodStart: detail.period_start.toISOString(),
@@ -197,6 +198,8 @@ export class ElectricityOrderService {
         invoiceId: detail.invoice_id,
         invoiceState: detail.invoice_state,
         totalIrR: detail.total_amount,
+        paidIrR: detail.paid_amount,
+        refundedIrR: detail.refunded_amount,
       };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -231,14 +234,23 @@ export class ElectricityOrderService {
               version_id: string;
               version_number: number;
               content: Record<string, unknown>;
+              invoice_id: string;
+              invoice_state: string;
+              paid_amount: string;
+              period_start: Date;
+              period_end: Date;
             }>(
               `SELECT o.profile_id,e.status,ec.contract_id,c.state AS contract_state,
-                 c.current_version_id AS version_id,v.version_number,v.content
+                 c.current_version_id AS version_id,v.version_number,v.content,
+                 i.id AS invoice_id,i.state AS invoice_state,i.paid_amount,
+                 e.period_start,e.period_end
                FROM orders o JOIN electricity_orders e ON e.id=o.id
                JOIN electricity_contracts ec ON ec.order_id=o.id
                JOIN contracts c ON c.id=ec.contract_id
                JOIN contract_versions v ON v.id=c.current_version_id
-               WHERE o.id=$1 FOR UPDATE OF o,e,c`,
+               JOIN invoices i ON i.order_id=o.id AND i.adjustment_for_invoice_id IS NULL
+                 AND i.replaces_invoice_id IS NULL
+               WHERE o.id=$1 FOR UPDATE OF o,e,c,i`,
               [orderId]
             )
           ).rows[0];
@@ -250,6 +262,8 @@ export class ElectricityOrderService {
             row.version_id !== input.expectedVersionId
           )
             throw new ConflictException('Order has changed; reload before resubmitting');
+          if (BigInt(row.paid_amount) > 0n || row.invoice_state === 'PaymentUnderReview')
+            throw new ConflictException('Resolve payment activity before amending the order');
           const versionId = uuidv7();
           await client.query(
             `UPDATE orders SET snapshot_full_address=$2,snapshot_postal_code=$3,updated_at=NOW()
@@ -279,6 +293,14 @@ export class ElectricityOrderService {
             "UPDATE contracts SET current_version_id=$2,state='AwaitingStaffReview',submitted_at=NOW() WHERE id=$1",
             [row.contract_id, versionId]
           );
+          const requirements = await client.query(
+            `UPDATE contract_activation_requirements
+             SET initial_invoice_id=$2,service_starts_at=$3,service_ends_at=$4
+             WHERE version_id=$1 AND contract_id=$5`,
+            [versionId, row.invoice_id, row.period_start, row.period_end, row.contract_id]
+          );
+          if (requirements.rowCount !== 1)
+            throw new ConflictException('Contract activation requirements are unavailable');
           await client.query(
             "UPDATE electricity_orders SET status='submitted',updated_at=NOW() WHERE id=$1",
             [orderId]
@@ -644,6 +666,14 @@ export class ElectricityOrderService {
         lines: quoted.totals.lines,
         totalIrR: quoted.totals.totalIrR,
       });
+      const requirements = await client.query(
+        `UPDATE contract_activation_requirements
+         SET initial_invoice_id=$2,service_starts_at=$3,service_ends_at=$4
+         WHERE version_id=$1 AND contract_id=$5`,
+        [versionId, invoiceId, quoted.period.start, quoted.period.end, contractId]
+      );
+      if (requirements.rowCount !== 1)
+        throw new ConflictException('Contract activation requirements are unavailable');
       await client.query(
         "UPDATE electricity_orders SET status='awaiting_staff_review' WHERE id=$1",
         [orderId]

@@ -48,5 +48,8 @@ it('shows the next actor without confusing commercial and financial progress', (
   expect(electricityNextAction('awaiting_staff_review', 'unpaid', 'customer')).toBe('await_review');
   expect(electricityNextAction('approved', 'unpaid', 'customer')).toBe('pay_invoice');
   expect(electricityNextAction('approved', 'paid', 'customer')).toBe('accept_contract');
+  expect(electricityNextAction('approved', 'paid', 'customer', 'Accepted')).toBe(
+    'await_activation'
+  );
   expect(electricityNextAction('rejected', 'refund_pending', 'customer')).toBe('await_refund');
 });

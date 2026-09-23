@@ -6,6 +6,13 @@ export interface I18nDictionary {
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
   'electricity.order.correction.title': 'اصلاح و ارسال دوباره سفارش',
+  'electricity.order.paidAmount': 'پرداخت‌شده',
+  'electricity.order.refundedAmount': 'بازپرداخت‌شده',
+  'electricity.order.remainingAmount': 'مانده پرداخت',
+  'electricity.order.financialReviewLink': 'بررسی مالی و پرداخت فاکتور',
+  'electricity.order.contractPending': 'پیش‌نویس قرارداد در انتظار انتشار',
+  'electricity.order.nextAction.await_activation':
+    'پرداخت و پذیرش قرارداد ثبت شده‌اند؛ فعال‌سازی در انتظار تکمیل پیش‌نیازهای قرارداد است.',
   'electricity.order.correction.description':
     'نشانی تحویل را اصلاح کنید و پاسخ خود را بنویسید. قیمت و مقدار ثبت‌شده تغییر نمی‌کند.',
   'electricity.order.correction.postalCode': 'کد پستی',
@@ -982,6 +989,13 @@ export const fa: I18nDictionary = {
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
   'electricity.order.correction.title': 'Correct and resubmit order',
+  'electricity.order.paidAmount': 'Paid',
+  'electricity.order.refundedAmount': 'Refunded',
+  'electricity.order.remainingAmount': 'Amount remaining',
+  'electricity.order.financialReviewLink': 'Invoice financial review and payment',
+  'electricity.order.contractPending': 'Contract draft awaiting publication',
+  'electricity.order.nextAction.await_activation':
+    'Payment and acceptance are recorded. Activation is waiting for the contract prerequisites.',
   'electricity.order.correction.description':
     'Correct the delivery address and add your response. The saved price and quantity stay the same.',
   'electricity.order.correction.postalCode': 'Postal code',

@@ -31,6 +31,8 @@ it('loads an order confirmation with its invoice and contract references', async
           invoiceId: 'invoice-1',
           invoiceState: 'Unpaid',
           totalIrR: '2500000',
+          paidIrR: '0',
+          refundedIrR: '0',
         }),
         { headers: { 'Content-Type': 'application/json' } }
       )
@@ -46,7 +48,8 @@ it('loads an order confirmation with its invoice and contract references', async
     expect(container.textContent).toContain('Awaiting staff review');
     expect(container.textContent).toContain('Commercial status');
     expect(container.textContent).toContain('Financial status');
-    expect(container.querySelector('a[href="/contracts"]')).not.toBeNull();
+    expect(container.textContent).toContain('Contract draft awaiting publication');
+    expect(container.querySelector('a[href="/contracts"]')).toBeNull();
     expect(container.querySelector('a[href="/invoices/invoice-1"]')).not.toBeNull();
   } finally {
     await act(async () => root.unmount());

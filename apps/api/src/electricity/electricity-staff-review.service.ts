@@ -46,6 +46,7 @@ interface ReviewRow {
   version_id: string;
   contract_snapshot: Record<string, unknown>;
   invoice_id: string;
+  activation_invoice_id: string | null;
   invoice_state: string;
   total_amount: string;
   paid_amount: string;
@@ -59,7 +60,8 @@ const reviewQuery = `SELECT o.id,o.profile_id,p.user_id AS customer_id,
   o.snapshot_full_address AS full_address,o.snapshot_postal_code AS postal_code,
   o.gift_code_id,ec.contract_id,c.state AS contract_state,
   c.current_version_id AS version_id,v.content AS contract_snapshot,
-  i.id AS invoice_id,i.state AS invoice_state,i.total_amount,i.paid_amount,i.refunded_amount,
+  i.id AS invoice_id,ar.initial_invoice_id AS activation_invoice_id,
+  i.state AS invoice_state,i.total_amount,i.paid_amount,i.refunded_amount,
   COALESCE((SELECT SUM(r.amount)::text FROM refunds r WHERE r.invoice_id=i.id
     AND r.state NOT IN ('Completed','Rejected','Cancelled')), '0') AS pending_refund_amount
   FROM orders o JOIN electricity_orders e ON e.id=o.id
@@ -67,6 +69,7 @@ const reviewQuery = `SELECT o.id,o.profile_id,p.user_id AS customer_id,
   JOIN electricity_contracts ec ON ec.order_id=o.id
   JOIN contracts c ON c.id=ec.contract_id
   JOIN contract_versions v ON v.id=c.current_version_id
+  JOIN contract_activation_requirements ar ON ar.version_id=v.id
   JOIN invoices i ON i.order_id=o.id AND i.adjustment_for_invoice_id IS NULL
     AND i.replaces_invoice_id IS NULL
   `;
@@ -86,7 +89,12 @@ function present(row: ReviewRow) {
     customerName: row.customer_name,
     commercialStatus: row.commercial_status,
     financialStatus,
-    nextAction: electricityNextAction(row.commercial_status, financialStatus, 'staff'),
+    nextAction: electricityNextAction(
+      row.commercial_status,
+      financialStatus,
+      'staff',
+      row.contract_state
+    ),
     submittedAt: row.submitted_at.toISOString(),
     periodStart: row.period_start.toISOString(),
     periodEnd: row.period_end.toISOString(),
@@ -183,6 +191,7 @@ export class ElectricityStaffReviewService {
           if (
             row.version_id !== input.expectedVersionId ||
             row.contract_state !== 'AwaitingStaffReview' ||
+            row.activation_invoice_id !== row.invoice_id ||
             !canTransitionElectricityOrder(
               row.commercial_status,
               action === 'approve'
