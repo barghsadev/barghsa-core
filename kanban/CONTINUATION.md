@@ -2,7 +2,7 @@
 
 ## Current manual batch — September 23, 2026
 
-The nine electricity browsing, ordering, payment, review, tracking and journey-test batches are on `main` through `4c9d172a`. The next electricity-contract-change work is [quantity increase intake and review](batches/2026-09-23-electricity-increase-intake.md). It implements the disabled-by-default cap, one-time customer request, staff queue and reasoned rejection. Approval, amendment/signature/adjustment invoice and staff price changes remain. The task queue is canonical for order and requirements, not a completion ledger; the older September 20–21 status below is historical context. The user requested manual batches pushed directly to `main`, without PRs or restarting the scheduler.
+The electricity browsing, ordering, payment, review, tracking and journey-test batches are on `main`, followed by [quantity increase intake and review](batches/2026-09-23-electricity-increase-intake.md) at `16e5b534`. The current [approval and amendment batch](batches/2026-09-23-electricity-increase-approval.md) adds staff approval, a durable digital amendment and customer visibility. Signature, adjustment invoice, effective quantity transition and staff price changes remain. The task queue is canonical for order and requirements, not a completion ledger; the older September 20–21 status below is historical context. The user requested manual batches pushed directly to `main`, without PRs or restarting the scheduler.
 
 ## Current checkpoint: PR #333 merged
 

@@ -10,6 +10,16 @@ interface IncreaseRequest {
   status: string;
   reviewReason: string | null;
   createdAt: string;
+  amendmentSha256: string | null;
+  amendmentDocument: {
+    originalKwh: string;
+    requestedKwh: string;
+    incrementalKwh: string;
+    earliestEffectiveFrom: string;
+    periodEnd: string;
+    pricingRule: string;
+    activationRule: string;
+  } | null;
 }
 interface IncreaseState {
   request: IncreaseRequest | null;
@@ -128,6 +138,33 @@ export function ElectricityIncreasePanel({
               <p>
                 {t('electricity.increase.reason', locale)}: {data.request.reviewReason}
               </p>
+            ) : null}
+            {data.request.amendmentDocument ? (
+              <section
+                className="rounded-md border p-3"
+                aria-label={t('electricity.increase.amendment', locale)}
+              >
+                <h3 className="font-semibold">{t('electricity.increase.amendment', locale)}</h3>
+                <p>
+                  {t('electricity.increase.increment', locale)}:{' '}
+                  {numbers.irrDigits(data.request.amendmentDocument.incrementalKwh)} kWh
+                </p>
+                <p>
+                  {t('electricity.increase.earliest', locale)}:{' '}
+                  {new Date(data.request.amendmentDocument.earliestEffectiveFrom).toLocaleString(
+                    locale
+                  )}
+                </p>
+                <p>
+                  {t('electricity.increase.end', locale)}:{' '}
+                  {new Date(data.request.amendmentDocument.periodEnd).toLocaleString(locale)}
+                </p>
+                <p>{t('electricity.increase.priceRule', locale)}</p>
+                <p>{t('electricity.increase.activationRule', locale)}</p>
+                <p className="break-all text-xs text-muted-foreground">
+                  SHA-256: {data.request.amendmentSha256}
+                </p>
+              </section>
             ) : null}
           </div>
         ) : null}

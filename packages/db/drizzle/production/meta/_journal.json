@@ -533,6 +533,13 @@
       "when": 1791331200058,
       "tag": "0155_electricity_quantity_increase_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 156,
+      "version": "7",
+      "when": 1791331200059,
+      "tag": "0156_electricity_increase_amendment",
+      "breakpoints": true
     }
   ]
 }

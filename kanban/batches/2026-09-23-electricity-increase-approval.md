@@ -1,0 +1,7 @@
+# Electricity increase approval and amendment
+
+Canonical scope: `03-core-business.md#T-03.08.01.05` and the approval/document/notification portion of `.08`. Staff with `contracts:write` and step-up can approve a pending request with an optional future effective date. Approval rechecks the active contract, signed version, remaining period and current quantity cap, then freezes a versioned digital amendment document and its SHA-256 digest. It records the reviewer and timestamp, writes an audit event and notifies the customer. The customer sees the amendment terms on the order detail page. A database guard prevents editing approved terms or deleting request history; idempotent retry returns the same amendment.
+
+The document states that the incremental amount will be calculated from the original paid invoice and the remaining eligible delivery period when the customer signs. It does not activate the increased quantity. Customer signature, linked adjustment invoice, payment-gated activation and the remaining `.07`/`.08` fields are the next batch. No active-contract version or existing paid invoice is rewritten.
+
+Validation: migrated-database HTTP integration for both approval and rejection, duplicate approval, customer visibility, immutable amendment and audit; UI amendment test; API/web typechecks and production builds; root lint; OpenAPI contract; database snapshot; format and backlog checks.

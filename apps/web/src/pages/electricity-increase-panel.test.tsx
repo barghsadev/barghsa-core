@@ -78,3 +78,49 @@ it('shows the one submitted request without offering a second submission', async
     container.remove();
   }
 });
+
+it('shows approved amendment terms before the customer signs', async () => {
+  document.documentElement.lang = 'en';
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            request: {
+              requestedKwh: '120',
+              status: 'awaiting_signature',
+              reviewReason: null,
+              amendmentSha256: 'a'.repeat(64),
+              amendmentDocument: {
+                originalKwh: '100',
+                requestedKwh: '120',
+                incrementalKwh: '20',
+                earliestEffectiveFrom: '2026-09-24T00:00:00Z',
+                periodEnd: '2026-10-24T00:00:00Z',
+              },
+            },
+            maxPercentage: 20,
+            originalKwh: '100',
+            canRequest: false,
+          })
+        )
+    )
+  );
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () =>
+      root.render(<ElectricityIncreasePanel contractId="contract-1" versionId="version-1" />)
+    );
+    expect(container.textContent).toContain('Quantity increase amendment');
+    expect(container.textContent).toContain('Additional quantity: 20 kWh');
+    expect(container.textContent).toContain('SHA-256: ' + 'a'.repeat(64));
+    expect(container.querySelector('input')).toBeNull();
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+  }
+});

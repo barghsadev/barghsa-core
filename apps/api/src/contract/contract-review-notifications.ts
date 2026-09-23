@@ -10,6 +10,10 @@ const messages = {
     fa: 'درخواست افزایش مقدار برق رد شد. دلیل را در جزئیات سفارش بررسی کنید.',
     en: 'Your electricity quantity increase request was declined. See the order for the reason.',
   },
+  electricity_increase_approved: {
+    fa: 'درخواست افزایش مقدار برق تأیید شد. الحاقیه را در جزئیات سفارش بررسی کنید.',
+    en: 'Your electricity quantity increase was approved. Review the amendment in your order details.',
+  },
   cancellation_requested: {
     fa: 'درخواست لغو قرارداد برای بررسی کارکنان ثبت شد.',
     en: 'A contract cancellation request is awaiting staff review.',

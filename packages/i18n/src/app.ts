@@ -10,6 +10,14 @@ export const fa: I18nDictionary = {
   'electricity.increase.retry': 'تلاش دوباره',
   'electricity.increase.requested': 'مقدار درخواستی',
   'electricity.increase.reason': 'دلیل تصمیم',
+  'electricity.increase.amendment': 'الحاقیه افزایش مقدار',
+  'electricity.increase.increment': 'مقدار افزوده',
+  'electricity.increase.earliest': 'زودترین شروع',
+  'electricity.increase.end': 'پایان دوره',
+  'electricity.increase.priceRule':
+    'مبلغ تعدیل پس از امضا بر پایه ارزش خالص فاکتور پرداخت‌شده اولیه و نسبت دوره تحویل باقی‌مانده محاسبه می‌شود.',
+  'electricity.increase.activationRule':
+    'افزایش مقدار فقط پس از امضای شما و پرداخت کامل فاکتور تعدیل و زودتر نبودن از تاریخ شروع اعمال می‌شود.',
   'electricity.increase.status.pending': 'در انتظار بررسی کارکنان',
   'electricity.increase.status.rejected': 'درخواست رد شد',
   'electricity.increase.status.approved': 'درخواست تأیید شد',
@@ -1080,6 +1088,14 @@ export const en: I18nDictionary = {
   'electricity.increase.retry': 'Try again',
   'electricity.increase.requested': 'Requested total',
   'electricity.increase.reason': 'Decision reason',
+  'electricity.increase.amendment': 'Quantity increase amendment',
+  'electricity.increase.increment': 'Additional quantity',
+  'electricity.increase.earliest': 'Earliest start',
+  'electricity.increase.end': 'Delivery period ends',
+  'electricity.increase.priceRule':
+    'The adjustment is calculated after signature from the original paid invoice’s net value and the remaining eligible delivery period.',
+  'electricity.increase.activationRule':
+    'The increase takes effect only after your signature and full adjustment payment, no earlier than its start date.',
   'electricity.increase.status.pending': 'Awaiting staff review',
   'electricity.increase.status.rejected': 'Request declined',
   'electricity.increase.status.approved': 'Request approved',

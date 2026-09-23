@@ -27,6 +27,7 @@ export default function AdminElectricityIncreasesPage() {
   const [before, setBefore] = useState<string | null>(null);
   const [revision, setRevision] = useState(0);
   const [reason, setReason] = useState<Record<string, string>>({});
+  const [effectiveDate, setEffectiveDate] = useState<Record<string, string>>({});
   const [action, setAction] = useState<TeamAction | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -128,6 +129,47 @@ export default function AdminElectricityIncreasesPage() {
                   `state.${['Active', 'Completed', 'Cancelled'].includes(request.contractState) ? request.contractState : 'other'}`
                 )}
               </p>
+              <div className="space-y-2">
+                <Label htmlFor={`increase-effective-${request.requestId}`}>
+                  {copy('approveDate')}
+                </Label>
+                <Input
+                  id={`increase-effective-${request.requestId}`}
+                  type="datetime-local"
+                  value={effectiveDate[request.requestId] ?? ''}
+                  onChange={(event) =>
+                    setEffectiveDate((current) => ({
+                      ...current,
+                      [request.requestId]: event.target.value,
+                    }))
+                  }
+                />
+                <p className="text-muted-foreground">{copy('approveDateHelp')}</p>
+                <Button
+                  onClick={() =>
+                    setAction({
+                      title: copy('approve'),
+                      description: copy('approveConfirm'),
+                      path: `/api/staff/electricity/increase-requests/${request.requestId}/approve`,
+                      method: 'POST',
+                      body: {
+                        ...(effectiveDate[request.requestId]
+                          ? {
+                              effectiveFrom: new Date(
+                                effectiveDate[request.requestId]!
+                              ).toISOString(),
+                            }
+                          : {}),
+                        idempotencyKey: crypto.randomUUID(),
+                      },
+                      conflictMessage: copy('conflict'),
+                      forbiddenMessage: copy('forbidden'),
+                    })
+                  }
+                >
+                  {copy('approve')}
+                </Button>
+              </div>
               <div className="space-y-2">
                 <Label htmlFor={`increase-reason-${request.requestId}`}>{copy('reason')}</Label>
                 <Input

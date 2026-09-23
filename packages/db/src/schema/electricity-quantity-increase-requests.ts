@@ -5,6 +5,7 @@ import {
   foreignKey,
   index,
   integer,
+  jsonb,
   pgTable,
   text,
   uniqueIndex,
@@ -54,6 +55,8 @@ export const electricityQuantityIncreaseRequests = pgTable(
     reviewedBy: text('reviewed_by').references(() => users.userId, { onDelete: 'restrict' }),
     reviewReason: text('review_reason'),
     reviewedAt: timestamptz('reviewed_at'),
+    amendmentDocument: jsonb('amendment_document').$type<Record<string, unknown>>(),
+    amendmentSha256: text('amendment_sha256'),
     createdAt: timestamptz('created_at').defaultNow().notNull(),
   },
   (t) => [
@@ -84,6 +87,10 @@ export const electricityQuantityIncreaseRequests = pgTable(
     check(
       'electricity_quantity_increase_review_check',
       sql`(${t.status}='pending' AND ${t.reviewedBy} IS NULL AND ${t.reviewReason} IS NULL AND ${t.reviewedAt} IS NULL) OR (${t.status}<>'pending' AND ${t.reviewedBy} IS NOT NULL AND ${t.reviewedAt} IS NOT NULL)`
+    ),
+    check(
+      'electricity_quantity_increase_amendment_check',
+      sql`(${t.amendmentDocument} IS NULL AND ${t.amendmentSha256} IS NULL AND ${t.status} IN ('pending','rejected')) OR (${t.amendmentDocument} IS NOT NULL AND ${t.amendmentSha256} ~ '^[0-9a-f]{64}$' AND ${t.status} NOT IN ('pending','rejected'))`
     ),
   ]
 );

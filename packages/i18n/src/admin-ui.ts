@@ -23,6 +23,12 @@ export const fa: I18nDictionary = {
   'admin.electricityIncreases.state.Cancelled': 'لغوشده',
   'admin.electricityIncreases.state.other': 'نیازمند بررسی',
   'admin.electricityIncreases.reason': 'دلیل رد',
+  'admin.electricityIncreases.approveDate': 'تاریخ شروع پیشنهادی (اختیاری)',
+  'admin.electricityIncreases.approveDateHelp':
+    'خالی بگذارید تا از زمان تأیید محاسبه شود. فقط تحویل آینده واجد شرایط است.',
+  'admin.electricityIncreases.approve': 'تأیید و صدور الحاقیه',
+  'admin.electricityIncreases.approveConfirm':
+    'الحاقیه با شرایط ثبت‌شده صادر و برای مشتری نمایش داده شود؟',
   'admin.electricityIncreases.reject': 'رد درخواست',
   'admin.electricityIncreases.confirm': 'درخواست با این دلیل رد و به مشتری اطلاع داده شود؟',
   'admin.electricityIncreases.conflict': 'درخواست تغییر کرده است. صف را تازه‌سازی کنید.',
@@ -1034,6 +1040,12 @@ export const en: I18nDictionary = {
   'admin.electricityIncreases.state.Cancelled': 'Cancelled',
   'admin.electricityIncreases.state.other': 'Needs review',
   'admin.electricityIncreases.reason': 'Reason for declining',
+  'admin.electricityIncreases.approveDate': 'Proposed start date (optional)',
+  'admin.electricityIncreases.approveDateHelp':
+    'Leave blank to use approval time. Only future delivery is eligible.',
+  'admin.electricityIncreases.approve': 'Approve and issue amendment',
+  'admin.electricityIncreases.approveConfirm':
+    'Issue the amendment with these terms and show it to the customer?',
   'admin.electricityIncreases.reject': 'Decline request',
   'admin.electricityIncreases.confirm':
     'Decline this request with the reason and notify the customer?',

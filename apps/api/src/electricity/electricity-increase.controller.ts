@@ -18,6 +18,7 @@ import { hasStaffPermission } from '../session/staff-permissions.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import {
   ElectricityIncreaseService,
+  approveIncreaseSchema,
   rejectIncreaseSchema,
   requestIncreaseSchema,
 } from './electricity-increase.service.js';
@@ -74,6 +75,26 @@ export class StaffElectricityIncreaseController {
     if (!hasStaffPermission(req, 'contracts:read') && !hasStaffPermission(req, 'contracts:write'))
       throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
     return this.service.queue(before === undefined ? undefined : parse(idSchema, before));
+  }
+
+  @Post(':requestId/approve')
+  @RequiresStepUp()
+  @RateLimit({ namespace: 'electricity:increase-review:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Approve a pending increase and issue its immutable digital amendment' })
+  @ApiZodBody(approveIncreaseSchema)
+  approve(
+    @Param('requestId') requestId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    if (!hasStaffPermission(req, 'contracts:write'))
+      throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
+    return this.service.approve(
+      parse(idSchema, requestId),
+      parse(approveIncreaseSchema, body),
+      req.session,
+      req.ip ?? '127.0.0.1'
+    );
   }
 
   @Post(':requestId/reject')

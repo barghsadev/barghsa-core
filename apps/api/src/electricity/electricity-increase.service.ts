@@ -1,4 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { createHash } from 'node:crypto';
 import { getDbPool } from '@barghsa/db';
 import {
   CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY,
@@ -33,6 +34,12 @@ export const rejectIncreaseSchema = z
     idempotencyKey: z.string().uuid(),
   })
   .strict();
+export const approveIncreaseSchema = z
+  .object({
+    effectiveFrom: z.string().datetime({ offset: true }).optional(),
+    idempotencyKey: z.string().uuid(),
+  })
+  .strict();
 
 interface IncreaseContract {
   id: string;
@@ -51,6 +58,8 @@ const requestSelect = `SELECT r.id AS "requestId",r.contract_id AS "contractId",
  r.max_percentage AS "maxPercentage",r.effective_from AS "effectiveFrom",
  r.period_end AS "periodEnd",r.status,r.review_reason AS "reviewReason",
  r.created_at AS "createdAt",r.reviewed_at AS "reviewedAt",
+ r.reviewed_by AS "reviewedBy",r.requested_by AS "requestedBy",
+ r.amendment_document AS "amendmentDocument",r.amendment_sha256 AS "amendmentSha256",
  c.state AS "contractState" FROM electricity_quantity_increase_requests r
  JOIN contracts c ON c.id=r.contract_id`;
 
@@ -220,6 +229,126 @@ export class ElectricityIncreaseService {
       requests: rows.slice(0, 50),
       nextBefore: rows.length > 50 ? rows[49]!.requestId : null,
     };
+  }
+
+  async approve(
+    requestId: string,
+    input: z.infer<typeof approveIncreaseSchema>,
+    actor: ContractActor,
+    ip: string
+  ) {
+    const owner = (
+      await getDbPool().query<{ contract_id: string; profile_id: string }>(
+        'SELECT contract_id,profile_id FROM electricity_quantity_increase_requests WHERE id=$1',
+        [requestId]
+      )
+    ).rows[0];
+    if (!owner) throw new NotFoundException('Increase request not found');
+    try {
+      return await staffContractMutation(owner.profile_id, actor, async (client, archived) => {
+        if (archived) throw new ConflictException('Profile is archived');
+        const contract = await this.contract(client, owner.contract_id, owner.profile_id, true);
+        const id = await contractIdempotency(
+          client,
+          'electricity_quantity_increase_approve',
+          { ...input, requestId },
+          actor,
+          async () => {
+            const request = (
+              await client.query<{
+                status: string;
+                version_id: string;
+                order_id: string;
+                original_kwh: string;
+                requested_kwh: string;
+                max_percentage: number;
+                effective_from: Date;
+                period_end: Date;
+                requested_by: string;
+              }>(
+                `SELECT status,version_id,order_id,original_kwh::text,requested_kwh::text,
+                max_percentage,effective_from,period_end,requested_by
+                FROM electricity_quantity_increase_requests WHERE id=$1 FOR UPDATE NOWAIT`,
+                [requestId]
+              )
+            ).rows[0];
+            const now = new Date();
+            if (
+              !request ||
+              request.status !== 'pending' ||
+              contract.state !== 'Active' ||
+              contract.electricity_status !== 'active' ||
+              contract.version_id !== request.version_id ||
+              request.period_end <= now
+            )
+              throw new ConflictException('Request is no longer eligible for approval');
+            const original = BigInt(request.original_kwh);
+            const requested = BigInt(request.requested_kwh);
+            const currentCap = await this.maxPercent(client);
+            if (!validateIncreaseQuantity(original, requested, currentCap))
+              throw new ConflictException('Current policy no longer permits this increase');
+            const effectiveFrom = input.effectiveFrom
+              ? new Date(input.effectiveFrom)
+              : request.effective_from > now
+                ? request.effective_from
+                : now;
+            if (effectiveFrom < now || effectiveFrom >= request.period_end)
+              throw new ConflictException(
+                'Effective date must be in the remaining delivery period'
+              );
+            const amendment = {
+              schemaVersion: 1,
+              kind: 'electricity_quantity_increase',
+              requestId,
+              contractId: owner.contract_id,
+              orderId: request.order_id,
+              contractVersionId: request.version_id,
+              requestedBy: request.requested_by,
+              approvedBy: actor.userId,
+              approvedAt: now.toISOString(),
+              originalKwh: request.original_kwh,
+              requestedKwh: request.requested_kwh,
+              incrementalKwh: (requested - original).toString(),
+              increaseBasisPoints: (((requested - original) * 10_000n) / original).toString(),
+              maxPercentageAtRequest: request.max_percentage,
+              maxPercentageAtApproval: currentCap,
+              earliestEffectiveFrom: effectiveFrom.toISOString(),
+              periodEnd: request.period_end.toISOString(),
+              pricingRule:
+                'Original paid invoice net unit value, prorated over the remaining eligible period at signature',
+              activationRule:
+                'Quantity increases only after customer signature and full adjustment payment, no earlier than the effective date',
+            };
+            const serialized = JSON.stringify(
+              Object.fromEntries(
+                Object.entries(amendment).sort(([left], [right]) => left.localeCompare(right))
+              )
+            );
+            const digest = createHash('sha256').update(serialized).digest('hex');
+            await client.query(
+              `UPDATE electricity_quantity_increase_requests SET status='awaiting_signature',
+              reviewed_by=$2,reviewed_at=$3,effective_from=$4,
+              amendment_document=$5::jsonb,amendment_sha256=$6 WHERE id=$1`,
+              [requestId, actor.userId, now, effectiveFrom, serialized, digest]
+            );
+            await auditContract(
+              client,
+              owner.contract_id,
+              request.version_id,
+              'electricity.increase_approved',
+              actor,
+              ip,
+              { requestId, amendmentSha256: digest, effectiveFrom: effectiveFrom.toISOString() }
+            );
+            await notifyContractReview(client, owner.contract_id, 'electricity_increase_approved');
+            return requestId;
+          }
+        );
+        return (await client.query(requestSelect + ' WHERE r.id=$1', [id])).rows[0];
+      });
+    } catch (error) {
+      translateConcurrentChange(error);
+    }
   }
 
   async reject(
