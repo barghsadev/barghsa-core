@@ -5,6 +5,7 @@ import { t } from '@barghsa/i18n/app';
 import { toast } from 'sonner';
 import { FormWizard } from '../components/FormWizard.js';
 import { WalletFundingPrompt } from '../components/WalletFundingPrompt.js';
+import { ElectricityQuoteErrorNotice } from '../components/ElectricityQuoteErrorNotice.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -618,11 +619,7 @@ export function AdvancedElectricityOrderPage() {
                   </div>
                 );
               })}
-              {quoteError && (
-                <p role="alert" className="text-sm text-destructive">
-                  {quoteError}
-                </p>
-              )}
+              {quoteError && <ElectricityQuoteErrorNotice message={quoteError} />}
             </CardContent>
           </Card>
         )}
@@ -663,11 +660,7 @@ export function AdvancedElectricityOrderPage() {
                   />
                 </label>
               )}
-              {quoteError && (
-                <p role="alert" className="text-sm text-destructive">
-                  {quoteError}
-                </p>
-              )}
+              {quoteError && <ElectricityQuoteErrorNotice message={quoteError} />}
               {!quote ? (
                 !quoteError && (
                   <p role={validPeriod && quantitiesValid ? 'status' : 'alert'}>

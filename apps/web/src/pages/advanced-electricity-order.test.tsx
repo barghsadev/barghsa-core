@@ -34,12 +34,21 @@ let container: HTMLDivElement;
 let fetchMock: ReturnType<typeof vi.fn<typeof fetch>>;
 let step: number;
 let quantities: Record<string, string>;
+let quoteErrorDetails: Array<{
+  code: string;
+  systemKey?: string;
+  requiredKwh?: string;
+  limitKwh?: string;
+}>;
 
 beforeEach(() => {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   step = 2;
   quantities = { thermal: '0', green: '10', free_market: '0', energy_saving: '0' };
+  quoteErrorDetails = [
+    { code: 'PRODUCT_MAX_KWH', systemKey: 'green', requiredKwh: '5', limitKwh: '4' },
+  ];
   const startAt = new Date(Date.now() + 2 * 86_400_000).toISOString();
   const endAt = new Date(Date.now() + 10 * 86_400_000).toISOString();
   fetchMock = vi.fn<typeof fetch>(async (input) => {
@@ -59,9 +68,7 @@ beforeEach(() => {
       return reply(
         {
           error: 'ELECTRICITY_QUOTE_INVALID',
-          details: [
-            { code: 'PRODUCT_MAX_KWH', systemKey: 'green', requiredKwh: '5', limitKwh: '4' },
-          ],
+          details: quoteErrorDetails,
         },
         400
       );
@@ -109,4 +116,16 @@ it('shows a quote conflict without a permanent loading message', async () => {
     'requires 5 kWh of Green electricity, but the product maximum is 4 kWh'
   );
   expect(container.textContent).not.toContain('Calculating price');
+});
+
+it('shows a support path when required electricity supply is unavailable', async () => {
+  step = 3;
+  quantities = { thermal: '100', green: '0', free_market: '0', energy_saving: '0' };
+  quoteErrorDetails = [{ code: 'PRODUCT_UNAVAILABLE', systemKey: 'thermal' }];
+  await mount();
+  await settlePreview();
+  expect(container.querySelector('[role="alert"]')?.textContent).toContain(
+    'Ordering this product is temporarily unavailable.'
+  );
+  expect(container.querySelector('a[href="/support"]')?.textContent).toBe('Contact support');
 });

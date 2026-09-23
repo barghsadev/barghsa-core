@@ -786,6 +786,8 @@ export const fa: I18nDictionary = {
   'electricity.order.applyGift': 'اعمال کد',
   'electricity.order.previewLoading': 'در حال محاسبه قیمت…',
   'electricity.order.previewUnavailable': 'محاسبه قیمت انجام نشد. مقدار و کد هدیه را بررسی کنید.',
+  'electricity.order.supplyUnavailable': 'سفارش این محصول موقتاً در دسترس نیست.',
+  'electricity.order.contactSupport': 'تماس با پشتیبانی',
   'electricity.order.productMaxConflict':
     'سفارش به {required} کیلووات‌ساعت {product} نیاز دارد، اما سقف این محصول {limit} کیلووات‌ساعت است. مقدار سفارش را اصلاح کنید.',
   'electricity.order.productMinConflict':
@@ -1930,6 +1932,8 @@ export const en: I18nDictionary = {
   'electricity.order.previewLoading': 'Calculating price…',
   'electricity.order.previewUnavailable':
     'Price calculation failed. Check the quantity and gift code.',
+  'electricity.order.supplyUnavailable': 'Ordering this product is temporarily unavailable.',
+  'electricity.order.contactSupport': 'Contact support',
   'electricity.order.productMaxConflict':
     'This order requires {required} kWh of {product}, but the product maximum is {limit} kWh. Adjust the order quantity.',
   'electricity.order.productMinConflict':

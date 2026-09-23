@@ -33,3 +33,16 @@ it('explains a minimum and falls back for unexpected errors', async () => {
     'Price calculation failed'
   );
 });
+
+it('identifies unavailable required products and mandatory green supply', async () => {
+  for (const detail of [
+    { code: 'PRODUCT_UNAVAILABLE', systemKey: 'thermal' },
+    { code: 'GREEN_RULE_UNAVAILABLE' },
+  ]) {
+    const body = { error: 'ELECTRICITY_QUOTE_INVALID', details: [detail] };
+    expect(await electricityQuoteError(response(body), 'en')).toBe(
+      'Ordering this product is temporarily unavailable.'
+    );
+    expect(await electricityQuoteError(response(body), 'fa')).toContain('موقتاً');
+  }
+});

@@ -19,6 +19,20 @@ export async function electricityQuoteError(response: Response, locale: Locale):
     return fallback;
   if (body.error !== 'ELECTRICITY_QUOTE_INVALID' || !Array.isArray(body.details)) return fallback;
 
+  if (
+    body.details.some((detail: unknown) => {
+      if (!detail || typeof detail !== 'object') return false;
+      const value = detail as Record<string, unknown>;
+      return (
+        value.code === 'GREEN_RULE_UNAVAILABLE' ||
+        (value.code === 'PRODUCT_UNAVAILABLE' &&
+          typeof value.systemKey === 'string' &&
+          productKeys.has(value.systemKey))
+      );
+    })
+  )
+    return t('electricity.order.supplyUnavailable', locale);
+
   for (const detail of body.details) {
     if (!detail || typeof detail !== 'object' || !productKeys.has(detail.systemKey)) continue;
     const product = t(`electricity.catalogue.${detail.systemKey}`, locale);

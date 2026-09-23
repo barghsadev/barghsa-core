@@ -9,6 +9,7 @@ import { withCsrf } from '../../../lib/csrf.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { FormWizard } from '../../../components/FormWizard.js';
 import { WalletFundingPrompt } from '../../../components/WalletFundingPrompt.js';
+import { ElectricityQuoteErrorNotice } from '../../../components/ElectricityQuoteErrorNotice.js';
 import {
   ElectricityQuotePreviewError,
   electricityQuoteError,
@@ -1725,7 +1726,7 @@ function ElectricityOrderPage() {
                 {quoting ? (
                   <p role="status">{t('electricity.order.previewLoading', locale)}</p>
                 ) : quoteError ? (
-                  <p role="alert">{quoteError}</p>
+                  <ElectricityQuoteErrorNotice message={quoteError} />
                 ) : quote ? (
                   <div className="space-y-2 border-b pb-4">
                     <p className="flex flex-wrap items-center gap-2">
