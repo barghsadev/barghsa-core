@@ -673,6 +673,13 @@
       "when": 1791331200078,
       "tag": "0175_saving_address_amendments",
       "breakpoints": true
+    },
+    {
+      "idx": 176,
+      "version": "7",
+      "when": 1791331200079,
+      "tag": "0176_saving_hardware_amendments",
+      "breakpoints": true
     }
   ]
 }

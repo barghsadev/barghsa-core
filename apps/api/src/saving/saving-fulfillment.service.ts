@@ -13,6 +13,7 @@ import { NotificationsService } from '../notifications/notifications.service.js'
 import type { ValidatedSession } from '../session/session.service.js';
 import { savingOrderRevisions } from './saving-order-revisions.js';
 import { savingAddressAmendments } from './saving-address-amendments.js';
+import { savingHardwareAmendments } from './saving-hardware-amendments.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 export const SAVING_STAGES = [
@@ -29,6 +30,9 @@ interface ReviewRow {
   id: string;
   order_id: string;
   profile_id: string;
+  saving_plan_id: string;
+  hardware_product_id: string;
+  hardware_title: { fa: string; en: string };
   customer_id: string;
   customer_name: string;
   status: string;
@@ -57,7 +61,8 @@ interface StageRow {
   stage: SavingStage;
   status: 'pending' | 'in_progress' | 'completed' | 'skipped';
 }
-const reviewQuery = `SELECT s.id,s.order_id,s.profile_id,p.user_id AS customer_id,
+const reviewQuery = `SELECT s.id,s.order_id,s.profile_id,s.saving_plan_id,s.hardware_product_id,
+  h.title AS hardware_title,p.user_id AS customer_id,
   u.username AS customer_name,s.status,s.financial_status,s.submitted_at,
   s.bill_identifier,s.address_snapshot,s.installation_address_id,s.pricing_snapshot,s.verification_result,
   s.agreement_snapshot,o.gift_code_id,c.id AS contract_id,c.state AS contract_state,
@@ -69,6 +74,7 @@ const reviewQuery = `SELECT s.id,s.order_id,s.profile_id,p.user_id AS customer_i
   COALESCE((SELECT SUM(r.amount)::text FROM refunds r WHERE r.invoice_id=i.id
     AND r.state NOT IN ('Completed','Rejected','Cancelled')), '0') AS pending_refund_amount
   FROM saving_orders s JOIN orders o ON o.id=s.order_id
+  JOIN products h ON h.id=s.hardware_product_id
   JOIN profiles p ON p.id=s.profile_id JOIN users u ON u.user_id=p.user_id
   JOIN contracts c ON c.order_id=o.id AND c.service_type='savings'
   JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
@@ -116,6 +122,7 @@ export class SavingFulfillmentService {
       ).rows;
       const revisions = await savingOrderRevisions(client, id);
       const addressAmendments = await savingAddressAmendments(client, id);
+      const hardwareAmendments = await savingHardwareAmendments(client, id);
       const addressOptions = (
         await client.query(
           `SELECT id,full_address AS "fullAddress",postal_code AS "postalCode"
@@ -143,14 +150,38 @@ export class SavingFulfillmentService {
               'process_completion',
             ].includes(stage.stage) && stage.status !== 'pending'
         );
+      const hardwareOptions = await this.hardwareOptions(client, row);
+      const canAmendHardware =
+        ['approved', 'in_progress'].includes(row.status) &&
+        row.financial_status === 'paid' &&
+        row.invoice_state === 'Paid' &&
+        BigInt(row.paid_amount) === BigInt(row.total_amount) &&
+        BigInt(row.pending_refund_amount) === 0n &&
+        ['AwaitingCustomerAcceptance', 'Active'].includes(row.contract_state) &&
+        !row.cancellation_pending &&
+        stages.some(
+          (stage: StageRow) => stage.stage === 'product_delivery' && stage.status === 'in_progress'
+        ) &&
+        !stages.some(
+          (stage: StageRow) =>
+            [
+              'installation_and_document_upload',
+              'equipment_handover',
+              'process_completion',
+            ].includes(stage.stage) && stage.status !== 'pending'
+        ) &&
+        hardwareOptions.length > 0;
       return {
         ...this.present(row),
         stages,
         events,
         revisions,
         addressAmendments,
+        hardwareAmendments,
         addressOptions,
+        hardwareOptions,
         canAmendAddress,
+        canAmendHardware,
       };
     } finally {
       client.release();
@@ -162,6 +193,9 @@ export class SavingFulfillmentService {
       id: row.id,
       orderId: row.order_id,
       profileId: row.profile_id,
+      savingPlanId: row.saving_plan_id,
+      hardwareProductId: row.hardware_product_id,
+      hardwareTitle: row.hardware_title,
       customerId: row.customer_id,
       customerName: row.customer_name,
       status: row.status,
@@ -183,6 +217,49 @@ export class SavingFulfillmentService {
       refundedIrR: row.refunded_amount,
       pendingRefundIrR: row.pending_refund_amount,
     };
+  }
+
+  private paidHardwareLine(row: ReviewRow) {
+    const snapshot = row.pricing_snapshot as {
+      lines?: Array<{ type?: string; amountIrR?: string; vatRateBps?: number }>;
+    };
+    const line = snapshot?.lines?.find((entry) => entry.type === 'hardware_price');
+    return line && /^\d+$/.test(line.amountIrR ?? '') && Number.isInteger(line.vatRateBps)
+      ? { amountIrR: line.amountIrR!, vatRateBps: line.vatRateBps! }
+      : null;
+  }
+
+  private async hardwareOptions(client: PoolClient, row: ReviewRow) {
+    const paidLine = this.paidHardwareLine(row);
+    if (!paidLine) return [];
+    const options = (
+      await client.query<{
+        id: string;
+        title: { fa: string; en: string };
+        price: string | null;
+        vat_rate_bps: number;
+      }>(
+        `SELECT h.id,h.title,effective_product_price(h.id)::text AS price,
+          COALESCE(
+            (SELECT vc.rate FROM product_vat_overrides pvo
+              JOIN vat_configurations vc ON vc.id=pvo.vat_config_id
+              WHERE pvo.product_id=h.id AND pvo.effective_from<=NOW()
+                AND (pvo.effective_until IS NULL OR pvo.effective_until>NOW())
+              ORDER BY pvo.effective_from DESC LIMIT 1),
+            (SELECT rate FROM vat_configurations WHERE category='hardware'
+              AND effective_from<=NOW() AND (effective_until IS NULL OR effective_until>NOW())
+              ORDER BY effective_from DESC LIMIT 1),0)::int AS vat_rate_bps
+         FROM saving_plan_hardware sph JOIN products h ON h.id=sph.hardware_id
+         WHERE sph.plan_id=$1 AND h.status='active' AND h.id<>$2`,
+        [row.saving_plan_id, row.hardware_product_id]
+      )
+    ).rows;
+    return options
+      .filter(
+        (option) =>
+          option.price === paidLine.amountIrR && option.vat_rate_bps === paidLine.vatRateBps
+      )
+      .map((option) => ({ id: option.id, title: option.title }));
   }
 
   private async lockRow(client: PoolClient, id: string): Promise<ReviewRow> {
@@ -566,6 +643,149 @@ export class SavingFulfillmentService {
         }
       )
     );
+  }
+
+  async amendHardware(
+    id: string,
+    input: {
+      idempotencyKey: string;
+      expectedVersionId: string;
+      expectedHardwareId: string;
+      hardwareProductId: string;
+      reason: string;
+    },
+    actor: Actor,
+    ip: string
+  ) {
+    const target = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM saving_orders WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!target) throw new NotFoundException('Saving order not found');
+    try {
+      return await staffContractMutation(target.profile_id, actor, (client, archived) =>
+        contractIdempotency(
+          client,
+          'saving_hardware_amendment',
+          { ...input, orderId: id },
+          actor,
+          async () => {
+            if (archived) throw new ConflictException('Profile is archived');
+            const row = await this.lockRow(client, id);
+            if (
+              !['approved', 'in_progress'].includes(row.status) ||
+              row.financial_status !== 'paid' ||
+              row.invoice_state !== 'Paid' ||
+              BigInt(row.paid_amount) !== BigInt(row.total_amount) ||
+              BigInt(row.pending_refund_amount) !== 0n ||
+              !['AwaitingCustomerAcceptance', 'Active'].includes(row.contract_state) ||
+              row.version_id !== input.expectedVersionId ||
+              row.hardware_product_id !== input.expectedHardwareId
+            )
+              throw new ConflictException('Saving order is not eligible for hardware amendment');
+            if (row.hardware_product_id === input.hardwareProductId)
+              throw new ConflictException('Choose a different device');
+            const blocked = (
+              await client.query<{ blocked: boolean }>(
+                `SELECT EXISTS(
+                  SELECT 1 FROM contract_cancellation_requests r
+                   WHERE r.contract_id=$1 AND r.status='Pending'
+                  UNION ALL
+                  SELECT 1 FROM saving_fulfillment_stages f
+                   WHERE f.order_id=$2 AND f.stage IN
+                     ('installation_and_document_upload','equipment_handover','process_completion')
+                     AND f.status<>'pending'
+                ) OR NOT EXISTS(
+                  SELECT 1 FROM saving_fulfillment_stages f WHERE f.order_id=$2
+                    AND f.stage='product_delivery' AND f.status='in_progress'
+                ) AS blocked`,
+                [row.contract_id, id]
+              )
+            ).rows[0]?.blocked;
+            if (blocked)
+              throw new ConflictException('Delivery, installation or cancellation prevents a swap');
+            const paidLine = this.paidHardwareLine(row);
+            const hardware = (await this.hardwareOptions(client, row)).find(
+              (option) => option.id === input.hardwareProductId
+            );
+            if (!paidLine || !hardware)
+              throw new ConflictException(
+                'Choose active hardware with the same paid price and tax'
+              );
+            const amendmentId = uuidv7();
+            await client.query(
+              `INSERT INTO saving_hardware_amendments(
+                 id,order_id,contract_id,contract_version_id,actor_user_id,
+                 previous_hardware_id,hardware_id,previous_snapshot,hardware_snapshot,
+                 original_invoice_id,price_delta_irr,reason)
+               VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9::jsonb,$10,0,$11)`,
+              [
+                amendmentId,
+                id,
+                row.contract_id,
+                row.version_id,
+                actor.userId,
+                row.hardware_product_id,
+                hardware.id,
+                JSON.stringify({
+                  title: row.hardware_title,
+                  priceIrR: paidLine.amountIrR,
+                  vatRateBps: paidLine.vatRateBps,
+                }),
+                JSON.stringify({
+                  title: hardware.title,
+                  priceIrR: paidLine.amountIrR,
+                  vatRateBps: paidLine.vatRateBps,
+                }),
+                row.invoice_id,
+                input.reason,
+              ]
+            );
+            await client.query(
+              'UPDATE saving_orders SET hardware_product_id=$2,updated_at=NOW() WHERE id=$1',
+              [id, hardware.id]
+            );
+            await auditContract(
+              client,
+              row.contract_id,
+              row.version_id,
+              'saving.hardware_amended',
+              actor,
+              ip,
+              {
+                savingOrderId: id,
+                amendmentId,
+                reason: input.reason,
+                previousHardwareId: row.hardware_product_id,
+                hardwareProductId: hardware.id,
+                priceDeltaIrR: '0',
+              }
+            );
+            await this.notify(
+              client,
+              row,
+              'تجهیز سفارش صرفه‌جویی شما بدون تغییر مبلغ توسط کارشناس تعویض شد. اصلاحیه را بررسی کنید.',
+              'Staff changed your power-saving equipment without changing the amount. Review the amendment.'
+            );
+            return {
+              amendmentId,
+              savingOrderId: id,
+              hardwareProductId: hardware.id,
+              priceDeltaIrR: '0',
+            };
+          }
+        )
+      );
+    } catch (error) {
+      if (
+        (error as { code?: string; message?: string }).code === '23514' &&
+        (error as Error).message.includes('Saving hardware is out of stock')
+      )
+        throw new ConflictException('Selected saving hardware is out of stock');
+      throw error;
+    }
   }
 
   async advance(

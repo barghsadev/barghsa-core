@@ -494,6 +494,190 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     expectedReviewHash: walletHash,
   });
   expect(paid.status, http.logs()).toBe(200);
+  const equalHardwareResponse = await request(
+    '/api/admin/catalogue/products',
+    'POST',
+    {
+      type: 'hardware',
+      title: { fa: 'دستگاه جایگزین', en: 'Replacement device' },
+      description: { fa: 'تجهیز جایگزین', en: 'Replacement equipment' },
+      price: '200000',
+      status: 'active',
+    },
+    staffHeaders
+  );
+  expect(equalHardwareResponse.status, http.logs()).toBe(201);
+  const equalHardwareId = ((await equalHardwareResponse.json()) as { id: string }).id;
+  const costlyHardwareResponse = await request(
+    '/api/admin/catalogue/products',
+    'POST',
+    {
+      type: 'hardware',
+      title: { fa: 'دستگاه گران‌تر', en: 'Costlier device' },
+      description: { fa: 'تجهیز گران‌تر', en: 'Costlier equipment' },
+      price: '250000',
+      status: 'active',
+    },
+    staffHeaders
+  );
+  expect(costlyHardwareResponse.status, http.logs()).toBe(201);
+  const costlyHardwareId = ((await costlyHardwareResponse.json()) as { id: string }).id;
+  await http.pool.query('INSERT INTO saving_plan_hardware(plan_id,hardware_id) VALUES($1,$2)', [
+    input.savingPlanId,
+    equalHardwareId,
+  ]);
+  await http.pool.query('INSERT INTO saving_plan_hardware(plan_id,hardware_id) VALUES($1,$2)', [
+    input.savingPlanId,
+    costlyHardwareId,
+  ]);
+  expect(
+    (
+      await request(
+        `/api/admin/catalogue/hardware/${equalHardwareId}/inventory`,
+        'PUT',
+        { stockTracking: true, stockCount: 2, reservationMinutes: 30 },
+        staffHeaders
+      )
+    ).status,
+    http.logs()
+  ).toBe(200);
+  const originalStock = (
+    await http.pool.query<{ stock_count: number }>('SELECT stock_count FROM products WHERE id=$1', [
+      input.hardwareProductId,
+    ])
+  ).rows[0]!.stock_count;
+  const hardwarePath = `/api/staff/saving/orders/${result.savingOrderId}/amend-hardware`;
+  const hardwareInput = {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: staffDetail.versionId,
+    expectedHardwareId: input.hardwareProductId,
+    hardwareProductId: equalHardwareId,
+    reason: 'Customer requested an equal-price device before delivery',
+  };
+  expect(
+    await (
+      await request(
+        `/api/staff/saving/orders/${result.savingOrderId}`,
+        'GET',
+        undefined,
+        staffHeaders
+      )
+    ).json()
+  ).toMatchObject({ canAmendHardware: true, hardwareOptions: [{ id: equalHardwareId }] });
+  expect((await request(hardwarePath, 'POST', hardwareInput)).status).toBe(403);
+  expect(
+    (
+      await request(
+        hardwarePath,
+        'POST',
+        { ...hardwareInput, hardwareProductId: costlyHardwareId },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await request(
+        hardwarePath,
+        'POST',
+        { ...hardwareInput, expectedVersionId: randomUUID() },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await request(
+        `/api/admin/catalogue/hardware/${equalHardwareId}/inventory`,
+        'PUT',
+        { stockTracking: true, stockCount: 0, reservationMinutes: 30 },
+        staffHeaders
+      )
+    ).status
+  ).toBe(200);
+  expect((await request(hardwarePath, 'POST', hardwareInput, staffHeaders)).status).toBe(409);
+  expect(
+    (
+      await request(
+        `/api/admin/catalogue/hardware/${equalHardwareId}/inventory`,
+        'PUT',
+        { stockTracking: true, stockCount: 2, reservationMinutes: 30 },
+        staffHeaders
+      )
+    ).status
+  ).toBe(200);
+  const hardwareAmended = await request(hardwarePath, 'POST', hardwareInput, staffHeaders);
+  expect(hardwareAmended.status, http.logs()).toBe(201);
+  const hardwareAmendment = (await hardwareAmended.json()) as { amendmentId: string };
+  expect((await request(hardwarePath, 'POST', hardwareInput, staffHeaders)).status).toBe(201);
+  expect(
+    (
+      await request(
+        hardwarePath,
+        'POST',
+        { ...hardwareInput, idempotencyKey: randomUUID() },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await http.pool.query<{ stock_count: number }>(
+        'SELECT stock_count FROM products WHERE id=$1',
+        [input.hardwareProductId]
+      )
+    ).rows[0]?.stock_count
+  ).toBe(originalStock + 1);
+  expect(
+    (
+      await http.pool.query<{ stock_count: number }>(
+        'SELECT stock_count FROM products WHERE id=$1',
+        [equalHardwareId]
+      )
+    ).rows[0]?.stock_count
+  ).toBe(1);
+  expect(
+    (
+      await http.pool.query<{ status: string; hardware_product_id: string }>(
+        'SELECT status,hardware_product_id FROM saving_inventory_reservations WHERE order_id=$1',
+        [result.savingOrderId]
+      )
+    ).rows[0]
+  ).toMatchObject({ status: 'allocated', hardware_product_id: equalHardwareId });
+  expect(
+    await (await request(`/api/saving/orders/${result.savingOrderId}`, 'GET')).json()
+  ).toMatchObject({
+    hardware_product_id: equalHardwareId,
+    current_hardware_title: { en: 'Replacement device' },
+    pricing_snapshot: { hardware: { title: { en: 'Device' } } },
+    hardwareAmendments: [{ id: hardwareAmendment.amendmentId, priceDeltaIrR: '0' }],
+  });
+  await expect(
+    http.pool.query('DELETE FROM saving_hardware_amendments WHERE id=$1', [
+      hardwareAmendment.amendmentId,
+    ])
+  ).rejects.toMatchObject({ code: '23514' });
+  const reverseHardware = await request(
+    hardwarePath,
+    'POST',
+    {
+      idempotencyKey: randomUUID(),
+      expectedVersionId: staffDetail.versionId,
+      expectedHardwareId: equalHardwareId,
+      hardwareProductId: input.hardwareProductId,
+      reason: 'Customer chose the original device before delivery',
+    },
+    staffHeaders
+  );
+  expect(reverseHardware.status, http.logs()).toBe(201);
+  expect(
+    (
+      await http.pool.query<{ stock_count: number }>(
+        'SELECT stock_count FROM products WHERE id=$1',
+        [input.hardwareProductId]
+      )
+    ).rows[0]?.stock_count
+  ).toBe(originalStock);
   const amendedAddressId = (
     await http.pool.query<{ id: string }>(
       `INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address)
@@ -611,7 +795,17 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
         staffHeaders
       )
     ).json()
-  ).toMatchObject({ canAmendAddress: false });
+  ).toMatchObject({ canAmendAddress: false, canAmendHardware: false });
+  expect(
+    (
+      await request(
+        hardwarePath,
+        'POST',
+        { ...hardwareInput, idempotencyKey: randomUUID() },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
   expect(
     (
       await request(

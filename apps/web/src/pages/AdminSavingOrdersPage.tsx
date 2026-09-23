@@ -14,6 +14,10 @@ import {
   SavingAddressAmendmentHistory,
   type SavingAddressAmendment,
 } from '../components/SavingAddressAmendmentHistory.js';
+import {
+  SavingHardwareAmendmentHistory,
+  type SavingHardwareAmendment,
+} from '../components/SavingHardwareAmendmentHistory.js';
 import { ContractCancellationRequestQueue } from '../components/ContractCancellationRequestQueue.js';
 
 type StageName =
@@ -33,6 +37,8 @@ interface Order {
   billIdentifier: string;
   addressSnapshot: { full_address?: string };
   installationAddressId: string;
+  hardwareProductId: string;
+  hardwareTitle: { fa: string; en: string };
   pricingSnapshot: { plan?: { title?: { fa: string; en: string } } };
   versionId: string;
   invoiceState: string;
@@ -61,8 +67,11 @@ interface Detail extends Order {
   events: StageEvent[];
   revisions: SavingOrderRevision[];
   addressAmendments: SavingAddressAmendment[];
+  hardwareAmendments: SavingHardwareAmendment[];
   addressOptions: Array<{ id: string; fullAddress: string; postalCode: string }>;
+  hardwareOptions: Array<{ id: string; title: { fa: string; en: string } }>;
   canAmendAddress: boolean;
+  canAmendHardware: boolean;
 }
 
 export default function AdminSavingOrdersPage() {
@@ -76,6 +85,8 @@ export default function AdminSavingOrdersPage() {
   const [handover, setHandover] = useState('');
   const [amendAddressId, setAmendAddressId] = useState('');
   const [amendReason, setAmendReason] = useState('');
+  const [amendHardwareId, setAmendHardwareId] = useState('');
+  const [amendHardwareReason, setAmendHardwareReason] = useState('');
   const [action, setAction] = useState<TeamAction | null>(null);
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'forbidden'>('loading');
@@ -123,6 +134,7 @@ export default function AdminSavingOrdersPage() {
         if (!controller.signal.aborted) {
           setDetail(value);
           setAmendAddressId(value.installationAddressId);
+          setAmendHardwareId(value.hardwareOptions[0]?.id ?? '');
         }
       })
       .catch(() => {
@@ -184,6 +196,25 @@ export default function AdminSavingOrdersPage() {
         expectedAddressId: detail.installationAddressId,
         addressId: amendAddressId,
         reason: amendReason.trim(),
+      },
+      conflictMessage: copy('staffConflict'),
+      forbiddenMessage: copy('staffForbidden'),
+    });
+  }
+
+  function amendHardware() {
+    if (!detail || !amendHardwareReason.trim() || !amendHardwareId) return;
+    setAction({
+      title: copy('staffAmendHardware'),
+      description: copy('staffConfirm'),
+      method: 'POST',
+      path: `/api/staff/saving/orders/${detail.id}/amend-hardware`,
+      body: {
+        idempotencyKey: crypto.randomUUID(),
+        expectedVersionId: detail.versionId,
+        expectedHardwareId: detail.hardwareProductId,
+        hardwareProductId: amendHardwareId,
+        reason: amendHardwareReason.trim(),
       },
       conflictMessage: copy('staffConflict'),
       forbiddenMessage: copy('staffForbidden'),
@@ -260,6 +291,10 @@ export default function AdminSavingOrdersPage() {
                   <dd>{detail.addressSnapshot.full_address}</dd>
                 </div>
                 <div>
+                  <dt>{copy('stepHardware')}</dt>
+                  <dd>{detail.hardwareTitle[locale]}</dd>
+                </div>
+                <div>
                   <dt>{copy('staffInvoice')}</dt>
                   <dd>
                     {copy(detail.invoiceState)} · {copy('staffTotal')}{' '}
@@ -274,6 +309,7 @@ export default function AdminSavingOrdersPage() {
               </dl>
               <SavingOrderRevisionHistory revisions={detail.revisions ?? []} />
               <SavingAddressAmendmentHistory amendments={detail.addressAmendments ?? []} />
+              <SavingHardwareAmendmentHistory amendments={detail.hardwareAmendments ?? []} />
               {detail.canAmendAddress && (
                 <div className="space-y-3 rounded-md border p-4">
                   <h3 className="font-semibold">{copy('staffAmendAddress')}</h3>
@@ -306,6 +342,39 @@ export default function AdminSavingOrdersPage() {
                     onClick={amendAddress}
                   >
                     {copy('staffAmendAddress')}
+                  </Button>
+                </div>
+              )}
+              {detail.canAmendHardware && (
+                <div className="space-y-3 rounded-md border p-4">
+                  <h3 className="font-semibold">{copy('staffAmendHardware')}</h3>
+                  <p className="text-sm text-muted-foreground">{copy('staffAmendHardwareHelp')}</p>
+                  <Label htmlFor="saving-amend-hardware">{copy('stepHardware')}</Label>
+                  <select
+                    id="saving-amend-hardware"
+                    className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                    value={amendHardwareId}
+                    onChange={(event) => setAmendHardwareId(event.target.value)}
+                  >
+                    {detail.hardwareOptions.map((hardware) => (
+                      <option key={hardware.id} value={hardware.id}>
+                        {hardware.title[locale]}
+                      </option>
+                    ))}
+                  </select>
+                  <Label htmlFor="saving-amend-hardware-reason">{copy('staffAmendReason')}</Label>
+                  <Input
+                    id="saving-amend-hardware-reason"
+                    value={amendHardwareReason}
+                    maxLength={1000}
+                    onChange={(event) => setAmendHardwareReason(event.target.value)}
+                  />
+                  <Button
+                    variant="outline"
+                    disabled={!amendHardwareReason.trim() || !amendHardwareId}
+                    onClick={amendHardware}
+                  >
+                    {copy('staffAmendHardware')}
                   </Button>
                 </div>
               )}
@@ -421,6 +490,7 @@ export default function AdminSavingOrdersPage() {
             setNote('');
             setHandover('');
             setAmendReason('');
+            setAmendHardwareReason('');
             setRevision((n) => n + 1);
           }}
         />

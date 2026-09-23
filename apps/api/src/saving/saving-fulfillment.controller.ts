@@ -45,6 +45,15 @@ const addressAmendment = z
     reason: z.string().trim().min(1).max(1000),
   })
   .strict();
+const hardwareAmendment = z
+  .object({
+    idempotencyKey: z.string().uuid(),
+    expectedVersionId: z.string().uuid(),
+    expectedHardwareId: z.string().uuid(),
+    hardwareProductId: z.string().uuid(),
+    reason: z.string().trim().min(1).max(1000),
+  })
+  .strict();
 function parse<T>(schema: z.ZodType<T>, value: unknown): T {
   const result = schema.safeParse(value);
   if (!result.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
@@ -138,6 +147,26 @@ export class SavingFulfillmentController {
     return this.service.amendAddress(
       id,
       parse(addressAmendment, body),
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
+  @Post(':id/amend-hardware')
+  @HttpCode(201)
+  @RequiresStepUp()
+  @RateLimit({ namespace: 'saving:staff-amend-hardware:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Swap equally priced hardware on a paid order before delivery' })
+  @ApiZodBody(hardwareAmendment)
+  amendHardware(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    return this.service.amendHardware(
+      id,
+      parse(hardwareAmendment, body),
       req.session,
       req.ip ?? 'unknown'
     );

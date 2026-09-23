@@ -15,6 +15,10 @@ import {
   SavingAddressAmendmentHistory,
   type SavingAddressAmendment,
 } from '../components/SavingAddressAmendmentHistory.js';
+import {
+  SavingHardwareAmendmentHistory,
+  type SavingHardwareAmendment,
+} from '../components/SavingHardwareAmendmentHistory.js';
 import { ContractCancellationPanel } from '../components/ContractCancellationPanel.js';
 import { savingNextAction, type SavingActionContext } from '../lib/saving-next-action.js';
 
@@ -23,6 +27,7 @@ interface Detail extends SavingActionContext {
   profile_id: string;
   saving_plan_id: string;
   hardware_product_id: string;
+  current_hardware_title: { fa: string; en: string };
   installation_address_id: string;
   can_edit: boolean;
   bill_identifier: string;
@@ -48,6 +53,7 @@ interface Detail extends SavingActionContext {
   }>;
   revisions: SavingOrderRevision[];
   addressAmendments: SavingAddressAmendment[];
+  hardwareAmendments: SavingHardwareAmendment[];
 }
 
 export function SavingOrderDetailPage() {
@@ -114,7 +120,7 @@ export function SavingOrderDetailPage() {
               <dl className="grid gap-3 text-sm md:grid-cols-2">
                 <div>
                   <dt className="text-muted-foreground">{copy('stepHardware')}</dt>
-                  <dd>{detail.pricing_snapshot.hardware.title[locale]}</dd>
+                  <dd>{detail.current_hardware_title[locale]}</dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">{copy('billIdentifier')}</dt>
@@ -200,6 +206,7 @@ export function SavingOrderDetailPage() {
           </Card>
           <SavingOrderRevisionHistory revisions={detail.revisions ?? []} />
           <SavingAddressAmendmentHistory amendments={detail.addressAmendments ?? []} />
+          <SavingHardwareAmendmentHistory amendments={detail.hardwareAmendments ?? []} />
           <Card>
             <CardContent className="space-y-2 pt-6">
               <h2 className="text-xl font-semibold">{copy('contract')}</h2>

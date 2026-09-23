@@ -19,6 +19,7 @@ import { calculateSavingTotals, type SavingPriceLine } from './saving-calculatio
 import { BillVerificationProvider } from './bill-verification.provider.js';
 import { savingOrderRevisions } from './saving-order-revisions.js';
 import { savingAddressAmendments } from './saving-address-amendments.js';
+import { savingHardwareAmendments } from './saving-hardware-amendments.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 export interface SavingOrderInput {
@@ -453,11 +454,13 @@ export class SavingOrderService {
           contract_id: string;
           contract_version_id: string;
           contract_state: string;
+          current_hardware_title: { fa: string; en: string };
           cancellation_pending: boolean;
           can_edit: boolean;
         }>(
           `SELECT s.id,s.profile_id,s.order_id,s.status,s.bill_identifier,s.address_snapshot,
-                s.saving_plan_id,s.hardware_product_id,s.installation_address_id,
+                s.saving_plan_id,s.hardware_product_id,h.title AS current_hardware_title,
+                s.installation_address_id,
                 s.pricing_snapshot,s.verification_result,s.agreement_version_id,s.agreement_snapshot,
                 s.submitted_at,s.financial_status,i.id AS invoice_id,i.state AS invoice_state,
                 c.id AS contract_id,c.current_version_id AS contract_version_id,
@@ -473,6 +476,7 @@ export class SavingOrderService {
                   AND NOT EXISTS(SELECT 1 FROM saving_fulfillment_stages f WHERE f.order_id=s.id AND f.status<>'pending')
                 ) AS can_edit
            FROM saving_orders s
+           JOIN products h ON h.id=s.hardware_product_id
            LEFT JOIN invoices i ON i.order_id=s.order_id AND i.type='auto'
            LEFT JOIN contracts c ON c.order_id=s.order_id AND c.service_type='savings'
           WHERE s.id=$1`,
@@ -493,9 +497,10 @@ export class SavingOrderService {
       ).rows;
       const revisions = await savingOrderRevisions(client, savingOrderId);
       const addressAmendments = await savingAddressAmendments(client, savingOrderId);
+      const hardwareAmendments = await savingHardwareAmendments(client, savingOrderId);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return { ...row, stages, revisions, addressAmendments };
+      return { ...row, stages, revisions, addressAmendments, hardwareAmendments };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

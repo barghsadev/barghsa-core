@@ -19,6 +19,7 @@ import { products } from './products';
 import { profiles } from './profiles';
 import { savingPlanAgreementVersions } from './saving-plan-catalogue';
 import { users } from './users';
+import { invoices } from './invoices';
 
 export const savingOrders = pgTable(
   'saving_orders',
@@ -263,6 +264,57 @@ export const savingAddressAmendments = pgTable(
       'saving_address_amendments_reason',
       sql`length(trim(${table.reason})) BETWEEN 1 AND 1000`
     ),
+  ]
+);
+
+export const savingHardwareAmendments = pgTable(
+  'saving_hardware_amendments',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => savingOrders.id, { onDelete: 'restrict' }),
+    contractId: uuid('contract_id')
+      .notNull()
+      .references(() => contracts.id, { onDelete: 'restrict' }),
+    contractVersionId: uuid('contract_version_id')
+      .notNull()
+      .references(() => contractVersions.id, { onDelete: 'restrict' }),
+    actorUserId: text('actor_user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    previousHardwareId: uuid('previous_hardware_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'restrict' }),
+    hardwareId: uuid('hardware_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'restrict' }),
+    previousSnapshot: jsonb('previous_snapshot').notNull(),
+    hardwareSnapshot: jsonb('hardware_snapshot').notNull(),
+    originalInvoiceId: uuid('original_invoice_id')
+      .notNull()
+      .references(() => invoices.id, { onDelete: 'restrict' }),
+    priceDeltaIrR: irrAmount('price_delta_irr')
+      .notNull()
+      .default(sql`'0'`),
+    reason: text('reason').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index('saving_hardware_amendments_order_idx').on(table.orderId, table.createdAt, table.id),
+    check(
+      'saving_hardware_amendments_distinct',
+      sql`${table.previousHardwareId}<>${table.hardwareId}`
+    ),
+    check(
+      'saving_hardware_amendments_snapshots',
+      sql`jsonb_typeof(${table.previousSnapshot})='object' AND jsonb_typeof(${table.hardwareSnapshot})='object'`
+    ),
+    check(
+      'saving_hardware_amendments_reason',
+      sql`length(trim(${table.reason})) BETWEEN 1 AND 1000`
+    ),
+    check('saving_hardware_amendments_zero_delta', sql`${table.priceDeltaIrR}=0`),
   ]
 );
 
