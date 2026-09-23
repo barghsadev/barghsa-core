@@ -107,6 +107,12 @@ function ElectricityIndexPage() {
           {t('electricity.catalogue.title', locale)}
         </h1>
         <p className="text-muted-foreground">{t('electricity.catalogue.description', locale)}</p>
+        <Link
+          to="/electricity/orders"
+          className="w-fit text-sm text-primary underline underline-offset-4"
+        >
+          {t('electricity.orders.title', locale)}
+        </Link>
       </header>
       <div className="grid gap-4 md:grid-cols-2">
         {products.map((product) => {

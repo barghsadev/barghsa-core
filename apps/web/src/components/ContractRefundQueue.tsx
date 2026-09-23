@@ -10,6 +10,7 @@ import {
   StatusBadge,
 } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
+import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { documentRequest, DocumentRequestError } from '../lib/documents.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
@@ -23,6 +24,7 @@ interface Obligation {
   bankReference: string | null;
   nextAttemptAt: string | null;
   exhausted: boolean;
+  orderId: string | null;
 }
 export function ContractRefundQueue() {
   const locale = useLocale(),
@@ -132,6 +134,11 @@ export function ContractRefundQueue() {
             <p className="break-all text-xs text-muted-foreground">
               {word('cancellationQueueContract')}: <bdi>{row.contractId}</bdi>
             </p>
+            {row.orderId ? (
+              <p className="break-all text-xs text-muted-foreground">
+                {t('electricity.order.success.order', locale)}: <bdi>{row.orderId}</bdi>
+              </p>
+            ) : null}
             <p className="break-all text-xs text-muted-foreground">
               {word('cancellationInvoice')}: <bdi>{row.invoiceId}</bdi>
             </p>

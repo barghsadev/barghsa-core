@@ -102,11 +102,19 @@ export class RefundService {
         bankReference: string | null;
         nextAttemptAt: Date | null;
         exhausted: boolean;
+        orderId: string | null;
       }>(
-        `SELECT r.id,o.contract_id AS "contractId",r.invoice_id AS "invoiceId",r.amount::text,r.destination,r.state,
-       r.bank_reference AS "bankReference",j.next_attempt_at AS "nextAttemptAt",(j.exhausted_at IS NOT NULL) AS exhausted
-      FROM contract_refund_obligations o JOIN refunds r ON r.id=o.refund_id LEFT JOIN refund_retry_jobs j ON j.refund_id=r.id
-      WHERE r.state<>'Completed' AND ($1::uuid IS NULL OR r.id<$1) ORDER BY r.id DESC LIMIT 51`,
+        `SELECT r.id,COALESCE(co.contract_id,eo.contract_id) AS "contractId",
+          eo.order_id AS "orderId",r.invoice_id AS "invoiceId",r.amount::text,
+          r.destination,r.state,r.bank_reference AS "bankReference",
+          j.next_attempt_at AS "nextAttemptAt",(j.exhausted_at IS NOT NULL) AS exhausted
+      FROM refunds r
+      LEFT JOIN contract_refund_obligations co ON co.refund_id=r.id
+      LEFT JOIN refund_obligations eo ON eo.refund_id=r.id
+      LEFT JOIN refund_retry_jobs j ON j.refund_id=r.id
+      WHERE (co.refund_id IS NOT NULL OR eo.refund_id IS NOT NULL)
+        AND r.state<>'Completed' AND ($1::uuid IS NULL OR r.id<$1)
+      ORDER BY r.id DESC LIMIT 51`,
         [before ?? null]
       )
     ).rows;

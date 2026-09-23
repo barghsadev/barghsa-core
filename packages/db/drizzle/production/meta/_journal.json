@@ -519,6 +519,13 @@
       "when": 1791331200056,
       "tag": "0153_electricity_activation_link",
       "breakpoints": true
+    },
+    {
+      "idx": 154,
+      "version": "7",
+      "when": 1791331200057,
+      "tag": "0154_electricity_refund_processing",
+      "breakpoints": true
     }
   ]
 }

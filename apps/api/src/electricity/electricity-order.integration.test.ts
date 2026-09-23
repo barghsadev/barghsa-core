@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { activateReadyContracts } from '@barghsa/db/contract-activation';
+import { retryDueWalletRefunds, runWalletRefund } from '@barghsa/db/refund-processing';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -285,14 +286,20 @@ it('creates a mandatory refund obligation when a paid order is rejected', async 
   ).rows[0];
   expect(obligation).toMatchObject({
     invoice_id: order.invoiceId,
-    status: 'pending',
+    status: 'processing',
     total_paid_amount: '500000',
     completed_refund_amount: '0',
   });
   const refund = (
     await http.pool.query('SELECT * FROM refunds WHERE id=$1', [obligation.refund_id])
   ).rows[0];
-  expect(refund).toMatchObject({ amount: '500000', state: 'Requested', destination: 'wallet' });
+  expect(refund).toMatchObject({ amount: '500000', state: 'Processing', destination: 'wallet' });
+  await expect(
+    http.pool.query(
+      "UPDATE refund_obligations SET status='completed',completed_refund_amount=total_paid_amount WHERE id=$1",
+      [obligation.id]
+    )
+  ).rejects.toThrow('Electricity refund obligation state must match its refund');
   const customerDetail = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, {
     headers,
   });
@@ -304,6 +311,191 @@ it('creates a mandatory refund obligation when a paid order is rejected', async 
   await expect(
     http.pool.query('UPDATE invoices SET paid_amount=600000 WHERE id=$1', [order.invoiceId])
   ).rejects.toThrow('Electricity order is unavailable for payment');
+  expect(await retryDueWalletRefunds(http.pool)).toContain('completed');
+  expect(await runWalletRefund(http.pool, refund.id)).toBe('deferred');
+  const finished = (
+    await http.pool.query('SELECT * FROM refund_obligations WHERE id=$1', [obligation.id])
+  ).rows[0];
+  expect(finished).toMatchObject({ status: 'completed', completed_refund_amount: '500000' });
+  expect(
+    (
+      await http.pool.query('SELECT state,refunded_amount FROM invoices WHERE id=$1', [
+        order.invoiceId,
+      ])
+    ).rows[0]
+  ).toEqual({ state: 'Refunded', refunded_amount: '500000' });
+  const wallet = (
+    await http.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1', [
+      input.profileId,
+    ])
+  ).rows[0];
+  expect(wallet.posted_balance).toBe('500000');
+  const credit = (
+    await http.pool.query('SELECT metadata FROM wallet_transactions WHERE idempotency_key=$1', [
+      `refund-wallet-credit:${refund.id}`,
+    ])
+  ).rows[0];
+  expect(credit.metadata).toMatchObject({
+    refundId: refund.id,
+    invoiceId: order.invoiceId,
+    contractId: order.contractId,
+    orderId: order.orderId,
+    paymentSourcesUnavailable: true,
+  });
+  await expect(
+    http.pool.query("UPDATE refunds SET state='Cancelled' WHERE id=$1", [refund.id])
+  ).rejects.toThrow();
+});
+
+it('lists only the customer profile orders and cancels an unpublished order once', async () => {
+  const order = await submittedOrder();
+  const response = await fetch(`${http.base}/api/electricity/orders?profileId=${input.profileId}`, {
+    headers,
+  });
+  expect(response.status, http.logs()).toBe(200);
+  const listing = (await response.json()) as {
+    orders: Array<{ orderId: string; financialStatus: string; nextAction: string }>;
+  };
+  expect(listing.orders).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        orderId: order.orderId,
+        financialStatus: 'unpaid',
+        nextAction: 'await_review',
+      }),
+    ])
+  );
+  const before = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
+  const detail = (await before.json()) as {
+    versionId: string;
+    lines: Array<{ systemKey: string; quantityKwh: string }>;
+    timeline: Array<{ event: string }>;
+  };
+  expect(detail.lines).toEqual(
+    expect.arrayContaining([expect.objectContaining({ systemKey: 'thermal', quantityKwh: '10' })])
+  );
+  const request = {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: detail.versionId,
+    reason: 'Delivery is no longer needed',
+  };
+  const cancel = () => post(`orders/${order.orderId}/cancel`, request);
+  const first = await cancel();
+  expect(first.status, http.logs()).toBe(200);
+  expect(await first.json()).toMatchObject({ status: 'cancelled', refundId: null });
+  expect((await cancel()).status).toBe(200);
+  const after = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
+  expect(await after.json()).toMatchObject({
+    electricityStatus: 'cancelled',
+    financialStatus: 'unpaid',
+    financiallyClosed: true,
+    timeline: expect.arrayContaining([
+      expect.objectContaining({ event: 'electricity.order_cancelled', reason: request.reason }),
+    ]),
+  });
+  expect(
+    (await http.pool.query('SELECT state FROM invoices WHERE id=$1', [order.invoiceId])).rows[0]
+      .state
+  ).toBe('Cancelled');
+  expect(
+    (
+      await staffPost(order.orderId, 'approve', {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: detail.versionId,
+      })
+    ).status
+  ).toBe(409);
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES('outsider','outsider@electricity.test','test-only')"
+  );
+  const outsideSession = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES($1,'outsider',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+    [outsideSession, randomUUID(), randomUUID()]
+  );
+  expect(
+    (
+      await fetch(`${http.base}/api/electricity/orders?profileId=${input.profileId}`, {
+        headers: { Cookie: `barghsa_session=${outsideSession}` },
+      })
+    ).status
+  ).toBe(404);
+});
+
+it('keeps a paid cancellation open through failed retries until finance restores its wallet credit', async () => {
+  const order = await submittedOrder();
+  await http.pool.query(
+    "UPDATE invoices SET paid_amount=500000,state='PartiallyFunded' WHERE id=$1",
+    [order.invoiceId]
+  );
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='buyer'");
+  const versionId = (
+    await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+      order.contractId,
+    ])
+  ).rows[0].current_version_id;
+  const cancelled = await post(`orders/${order.orderId}/cancel`, {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: versionId,
+    reason: 'Delivery is no longer needed',
+  });
+  expect(cancelled.status, http.logs()).toBe(200);
+  const refundId = ((await cancelled.json()) as { refundId: string }).refundId;
+  expect(refundId).toBeTruthy();
+  await http.pool.query('UPDATE profiles SET archived=true WHERE id=$1', [input.profileId]);
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const outcome = await runWalletRefund(http.pool, refundId);
+    expect(outcome).toBe(attempt === 4 ? 'exhausted' : 'failed');
+    if (attempt < 4)
+      await http.pool.query(
+        'UPDATE refund_retry_jobs SET next_attempt_at=NOW() WHERE refund_id=$1',
+        [refundId]
+      );
+  }
+  const pending = (
+    await http.pool.query(
+      'SELECT status,completed_refund_amount FROM refund_obligations WHERE refund_id=$1',
+      [refundId]
+    )
+  ).rows[0];
+  expect(pending).toMatchObject({ status: 'failed', completed_refund_amount: '0' });
+  await http.pool.query('UPDATE profiles SET archived=false WHERE id=$1', [input.profileId]);
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES('reviewer','role-finance')"
+  );
+  const queueResponse = await fetch(`${http.base}/api/admin/wallet-refunds/contract-obligations`, {
+    headers: staffHeaders,
+  });
+  expect(queueResponse.status, http.logs()).toBe(200);
+  const queue = (await queueResponse.json()) as {
+    obligations: Array<{ id: string; orderId: string; exhausted: boolean }>;
+  };
+  expect(queue.obligations).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ id: refundId, orderId: order.orderId, exhausted: true }),
+    ])
+  );
+  const retried = await fetch(`${http.base}/api/admin/wallet-refunds/${refundId}/process`, {
+    method: 'POST',
+    headers: staffHeaders,
+    body: '{}',
+  });
+  expect(retried.status, http.logs()).toBe(200);
+  expect(await retried.json()).toMatchObject({ state: 'Completed' });
+  const final = (
+    await http.pool.query(
+      'SELECT status,completed_refund_amount FROM refund_obligations WHERE refund_id=$1',
+      [refundId]
+    )
+  ).rows[0];
+  expect(final).toMatchObject({ status: 'completed', completed_refund_amount: '500000' });
+  expect(
+    (
+      await http.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1', [
+        input.profileId,
+      ])
+    ).rows[0].posted_balance
+  ).toBe('500000');
 });
 
 it('funds the linked invoice and activates only after customer acceptance', async () => {
@@ -374,10 +566,88 @@ it('funds the linked invoice and activates only after customer acceptance', asyn
     electricityStatus: 'active',
     financialStatus: 'paid',
     contractState: 'Active',
+    timeline: expect.arrayContaining([expect.objectContaining({ event: 'contract.activated' })]),
   });
   const parent = (await http.pool.query('SELECT status FROM orders WHERE id=$1', [order.orderId]))
     .rows[0];
   expect(parent.status).toBe('CONFIRMED');
+});
+
+it('tracks an approved contract cancellation and its existing mandatory refund', async () => {
+  const order = await submittedOrder();
+  const versionId = (
+    await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+      order.contractId,
+    ])
+  ).rows[0].current_version_id as string;
+  expect(
+    (
+      await staffPost(order.orderId, 'approve', {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: versionId,
+      })
+    ).status
+  ).toBe(200);
+  await http.pool.query(
+    "UPDATE invoices SET paid_amount=500000,state='PartiallyFunded' WHERE id=$1",
+    [order.invoiceId]
+  );
+  const previewResponse = await fetch(
+    `${http.base}/api/admin/contracts/${order.contractId}/cancellation-preview`,
+    { headers: staffHeaders }
+  );
+  expect(previewResponse.status, http.logs()).toBe(200);
+  const preview = (await previewResponse.json()) as { fingerprint: string };
+  const prepared = await fetch(
+    `${http.base}/api/admin/contracts/${order.contractId}/cancellations`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({
+        expectedVersionId: versionId,
+        expectedFingerprint: preview.fingerprint,
+        reason: 'Delivery stopped',
+        refundDecision: { mode: 'full_wallet' },
+        idempotencyKey: randomUUID(),
+      }),
+    }
+  );
+  expect(prepared.status, http.logs()).toBe(201);
+  const intent = (await prepared.json()) as { id: string };
+  const executed = await fetch(
+    `${http.base}/api/admin/contracts/${order.contractId}/cancellations/execute`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ intentId: intent.id, idempotencyKey: randomUUID() }),
+    }
+  );
+  expect(executed.status, http.logs()).toBe(201);
+  const detailResponse = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, {
+    headers,
+  });
+  expect(await detailResponse.json()).toMatchObject({
+    electricityStatus: 'cancelled',
+    financialStatus: 'refund_pending',
+    nextAction: 'await_refund',
+    timeline: expect.arrayContaining([expect.objectContaining({ event: 'contract.cancelled' })]),
+  });
+  expect(
+    (await http.pool.query('SELECT status FROM orders WHERE id=$1', [order.orderId])).rows[0].status
+  ).toBe('CANCELLED');
+  const refund = (
+    await http.pool.query(
+      'SELECT refund_id FROM contract_refund_obligations WHERE contract_id=$1',
+      [order.contractId]
+    )
+  ).rows[0];
+  expect(await runWalletRefund(http.pool, refund.refund_id)).toBe('completed');
+  const finished = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
+  expect(await finished.json()).toMatchObject({
+    electricityStatus: 'cancelled',
+    financialStatus: 'refunded',
+    financiallyClosed: true,
+  });
 });
 
 it('previews and atomically submits an order, contract, lines and payable invoice once', async () => {

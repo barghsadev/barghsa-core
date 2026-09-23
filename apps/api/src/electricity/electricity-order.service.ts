@@ -10,7 +10,7 @@ import { normalizeGiftCode } from '@barghsa/shared/promotions';
 import { v7 as uuidv7 } from 'uuid';
 import type { PoolClient } from 'pg';
 import type { ValidatedSession } from '../session/session.service.js';
-import { requireCurrentSession } from '../session/session-step-up.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { idempotentMutation } from '../database/idempotency.js';
 import { requireAddressGeography } from '../profiles/address-geography.js';
 import { OrdersService } from '../orders/orders.service.js';
@@ -23,6 +23,7 @@ import {
   type ElectricityGiftDiscount,
 } from './electricity-calculation.js';
 import { persistElectricitySubmissionSnapshot } from './electricity-submission-snapshot.js';
+import { createElectricityRefundObligation } from './electricity-refund-obligation.js';
 import {
   electricityFinancialStatus,
   electricityNextAction,
@@ -109,6 +110,94 @@ export class ElectricityOrderService {
     private readonly invoiceStates: InvoiceStateMachineService
   ) {}
 
+  async list(actor: Actor, profileId: string, before?: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      if (!(await this.orders.mayManageOrders(client, actor.userId, profileId)))
+        throw new NotFoundException('Profile not found');
+      const cursor = before
+        ? (
+            await client.query<{ submitted_at: Date; id: string }>(
+              'SELECT submitted_at,id FROM electricity_orders WHERE id=$1 AND profile_id=$2',
+              [before, profileId]
+            )
+          ).rows[0]
+        : undefined;
+      if (before && !cursor) throw new NotFoundException('Order cursor not found');
+      const rows = (
+        await client.query<{
+          id: string;
+          mode: string;
+          status: ElectricityCommercialStatus;
+          submitted_at: Date;
+          period_start: Date;
+          period_end: Date;
+          total_kwh: string;
+          contract_state: string;
+          invoice_state: string;
+          total_amount: string;
+          paid_amount: string;
+          refunded_amount: string;
+          pending_refund_amount: string;
+        }>(
+          `SELECT e.id,e.mode,e.status,e.submitted_at,e.period_start,e.period_end,
+            e.total_kwh,c.state AS contract_state,i.state AS invoice_state,
+            i.total_amount,i.paid_amount,i.refunded_amount,
+            COALESCE((SELECT SUM(r.amount)::text FROM refunds r WHERE r.invoice_id=i.id
+              AND r.state NOT IN ('Completed','Rejected','Cancelled')),'0') AS pending_refund_amount
+           FROM electricity_orders e
+           JOIN electricity_contracts ec ON ec.order_id=e.id
+           JOIN contracts c ON c.id=ec.contract_id
+           JOIN LATERAL (SELECT * FROM invoices i WHERE i.order_id=e.id
+             AND i.adjustment_for_invoice_id IS NULL AND i.replaces_invoice_id IS NULL
+             ORDER BY i.created_at DESC LIMIT 1) i ON true
+           WHERE e.profile_id=$1 AND e.submitted_at IS NOT NULL
+             AND ($2::timestamptz IS NULL OR (e.submitted_at,e.id)<($2::timestamptz,$3::uuid))
+           ORDER BY e.submitted_at DESC,e.id DESC LIMIT 51`,
+          [profileId, cursor?.submitted_at ?? null, cursor?.id ?? null]
+        )
+      ).rows;
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return {
+        orders: rows.slice(0, 50).map((row) => {
+          const financialStatus = electricityFinancialStatus({
+            invoiceState: row.invoice_state,
+            totalAmount: row.total_amount,
+            paidAmount: row.paid_amount,
+            refundedAmount: row.refunded_amount,
+            pendingRefundAmount: row.pending_refund_amount,
+          });
+          return {
+            orderId: row.id,
+            mode: row.mode,
+            electricityStatus: row.status,
+            financialStatus,
+            nextAction: electricityNextAction(
+              row.status,
+              financialStatus,
+              'customer',
+              row.contract_state
+            ),
+            submittedAt: row.submitted_at.toISOString(),
+            periodStart: row.period_start.toISOString(),
+            periodEnd: row.period_end.toISOString(),
+            totalKwh: row.total_kwh,
+            totalIrR: row.total_amount,
+          };
+        }),
+        nextBefore: rows.length > 50 ? rows[49]!.id : null,
+      };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async detail(actor: Actor, orderId: string) {
     const client = await getDbPool().connect();
     try {
@@ -134,6 +223,12 @@ export class ElectricityOrderService {
           period_end: Date;
           total_kwh: string;
           pricing_snapshot: Record<string, unknown>;
+          settings_snapshot: Record<string, unknown>;
+          green_rule_applied: boolean;
+          submitted_at: Date;
+          gift_code_id: string | null;
+          gift_code: string | null;
+          gift_discount_amount: string | null;
           full_address: string;
           postal_code: string;
           contract_id: string;
@@ -145,25 +240,76 @@ export class ElectricityOrderService {
           paid_amount: string;
           refunded_amount: string;
           pending_refund_amount: string;
+          refund_status: string | null;
+          refund_reason: string | null;
+          refund_id: string | null;
         }>(
           `SELECT o.id,o.profile_id,o.status AS commercial_status,
            e.status AS electricity_status,e.mode,e.period_start,e.period_end,
-           e.total_kwh,e.pricing_snapshot,o.snapshot_full_address AS full_address,
+           e.total_kwh,e.pricing_snapshot,e.settings_snapshot,e.green_rule_applied,
+           e.submitted_at,o.gift_code_id,gc.code AS gift_code,o.gift_discount_amount,
+           o.snapshot_full_address AS full_address,
            o.snapshot_postal_code AS postal_code,
            ec.contract_id,c.state AS contract_state,c.current_version_id AS version_id,
            i.id AS invoice_id,
            i.state AS invoice_state,i.total_amount,i.paid_amount,i.refunded_amount,
            COALESCE((SELECT SUM(r.amount)::text FROM refunds r WHERE r.invoice_id=i.id
-             AND r.state NOT IN ('Completed','Rejected','Cancelled')), '0') AS pending_refund_amount
+             AND r.state NOT IN ('Completed','Rejected','Cancelled')), '0') AS pending_refund_amount,
+           ro.status AS refund_status,ro.reason AS refund_reason,ro.refund_id
          FROM orders o JOIN electricity_orders e ON e.id=o.id
          JOIN electricity_contracts ec ON ec.order_id=o.id
          JOIN contracts c ON c.id=ec.contract_id
-         JOIN invoices i ON i.order_id=o.id
+         JOIN invoices i ON i.order_id=o.id AND i.adjustment_for_invoice_id IS NULL
+           AND i.replaces_invoice_id IS NULL
+         LEFT JOIN gift_codes gc ON gc.id=o.gift_code_id
+         LEFT JOIN refund_obligations ro ON ro.order_id=o.id
          WHERE o.id=$1 ORDER BY i.created_at DESC LIMIT 1`,
           [orderId]
         )
       ).rows[0];
       if (!detail) throw new NotFoundException('Electricity order not found');
+      const lines = (
+        await client.query<{
+          product_id: string;
+          system_key: string | null;
+          title: Record<string, string> | null;
+          quantity_kwh: string;
+          unit_price: string;
+          line_total: string;
+        }>(
+          `SELECT l.product_id,p.system_key,p.title,l.quantity_kwh,l.unit_price,l.line_total
+           FROM electricity_order_lines l JOIN products p ON p.id=l.product_id
+           WHERE l.order_id=$1 ORDER BY p.system_key,l.id`,
+          [orderId]
+        )
+      ).rows;
+      const activity = (
+        await client.query<{
+          id: string;
+          event: string;
+          user_id: string | null;
+          created_at: Date;
+          metadata: Record<string, unknown>;
+        }>(
+          `SELECT id,event,user_id,created_at,metadata::jsonb AS metadata FROM audit_log
+           WHERE (metadata::jsonb->>'orderId'=$1 AND event LIKE 'electricity.%')
+              OR ($2::uuid IS NOT NULL AND metadata::jsonb->>'refundId'=$2::text
+                AND event IN ('refund.processing','refund.completed','refund.failed','refund.retry_exhausted'))
+              OR (metadata::jsonb->>'contractId'=$3::text AND event='contract.cancelled')
+           ORDER BY created_at ASC,id ASC LIMIT 100`,
+          [orderId, detail.refund_id, detail.contract_id]
+        )
+      ).rows;
+      const lifecycle = (
+        await client.query<{ version_id: string; event: string; at: Date }>(
+          `SELECT version_id,'contract.activated' AS event,activated_at AS at
+           FROM contract_activations WHERE contract_id=$1
+           UNION ALL
+           SELECT version_id,'contract.completed' AS event,completed_at AS at
+           FROM contract_completions WHERE contract_id=$1`,
+          [detail.contract_id]
+        )
+      ).rows;
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       const financialStatus = electricityFinancialStatus({
@@ -190,6 +336,39 @@ export class ElectricityOrderService {
         periodEnd: detail.period_end.toISOString(),
         totalKwh: detail.total_kwh,
         pricingSnapshot: detail.pricing_snapshot,
+        settingsSnapshot: detail.settings_snapshot,
+        greenRuleApplied: detail.green_rule_applied,
+        submittedAt: detail.submitted_at.toISOString(),
+        giftCodeId: detail.gift_code_id,
+        giftCode: detail.gift_code,
+        giftDiscountIrR: detail.gift_discount_amount ?? '0',
+        lines: lines.map((line) => ({
+          productId: line.product_id,
+          systemKey: line.system_key,
+          title: line.title,
+          quantityKwh: line.quantity_kwh,
+          unitPriceIrR: line.unit_price,
+          lineTotalIrR: line.line_total,
+        })),
+        timeline: [
+          ...activity.map((item) => ({
+            id: item.id,
+            event: item.event,
+            at: item.created_at.toISOString(),
+            actor: item.user_id,
+            reason: typeof item.metadata.reason === 'string' ? item.metadata.reason : null,
+            comment:
+              typeof item.metadata.responseNote === 'string' ? item.metadata.responseNote : null,
+          })),
+          ...lifecycle.map((item) => ({
+            id: `${item.version_id}:${item.event}`,
+            event: item.event,
+            at: item.at.toISOString(),
+            actor: null,
+            reason: null,
+            comment: null,
+          })),
+        ].sort((a, b) => a.at.localeCompare(b.at) || a.id.localeCompare(b.id)),
         fullAddress: detail.full_address,
         postalCode: detail.postal_code,
         contractId: detail.contract_id,
@@ -200,7 +379,152 @@ export class ElectricityOrderService {
         totalIrR: detail.total_amount,
         paidIrR: detail.paid_amount,
         refundedIrR: detail.refunded_amount,
+        refundStatus: detail.refund_status,
+        refundReason: detail.refund_reason,
+        financiallyClosed: ['rejected', 'cancelled'].includes(detail.electricity_status)
+          ? BigInt(detail.paid_amount) === BigInt(detail.refunded_amount) &&
+            detail.pending_refund_amount === '0' &&
+            (detail.refund_status === null || detail.refund_status === 'completed')
+          : false,
       };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async cancel(
+    actor: Actor,
+    orderId: string,
+    input: { idempotencyKey: string; expectedVersionId: string; reason: string },
+    ip: string
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      const result = await idempotentMutation(
+        client,
+        'electricity_order_cancel',
+        { ...input, orderId },
+        actor,
+        async () => {
+          const row = (
+            await client.query<{
+              profile_id: string;
+              status: ElectricityCommercialStatus;
+              contract_id: string;
+              contract_state: string;
+              version_id: string;
+              invoice_id: string;
+              invoice_state: string;
+              paid_amount: string;
+              refunded_amount: string;
+              total_amount: string;
+              gift_code_id: string | null;
+            }>(
+              `SELECT o.profile_id,e.status,ec.contract_id,c.state AS contract_state,
+                c.current_version_id AS version_id,i.id AS invoice_id,
+                i.state AS invoice_state,i.paid_amount,i.refunded_amount,
+                i.total_amount,o.gift_code_id
+               FROM orders o JOIN electricity_orders e ON e.id=o.id
+               JOIN electricity_contracts ec ON ec.order_id=o.id
+               JOIN contracts c ON c.id=ec.contract_id
+               JOIN invoices i ON i.order_id=o.id AND i.adjustment_for_invoice_id IS NULL
+                 AND i.replaces_invoice_id IS NULL
+               WHERE o.id=$1 FOR UPDATE OF o,e,c,i`,
+              [orderId]
+            )
+          ).rows[0];
+          if (!row) throw new NotFoundException('Order not found');
+          await this.authorize(client, actor, row.profile_id, true);
+          if (
+            row.version_id !== input.expectedVersionId ||
+            !['awaiting_staff_review', 'changes_requested'].includes(row.status) ||
+            !['AwaitingStaffReview', 'ChangesRequested'].includes(row.contract_state)
+          )
+            throw new ConflictException('Order changed; reload before cancelling');
+          if (row.invoice_state === 'PaymentUnderReview')
+            throw new ConflictException('Resolve pending payment review before cancellation');
+          const pendingPayment = (
+            await client.query<{ pending: boolean }>(
+              'SELECT contract_has_pending_payments($1) AS pending',
+              [row.contract_id]
+            )
+          ).rows[0]?.pending;
+          if (pendingPayment)
+            throw new ConflictException('Resolve pending payment before cancellation');
+          const reason = input.reason.trim();
+          if (BigInt(row.paid_amount) > BigInt(row.refunded_amount))
+            await requireSessionStepUp(client, actor);
+          const refundId = await createElectricityRefundObligation(client, {
+            orderId,
+            contractId: row.contract_id,
+            invoiceId: row.invoice_id,
+            profileId: row.profile_id,
+            paidAmount: row.paid_amount,
+            refundedAmount: row.refunded_amount,
+            authorizedBy: actor.userId,
+            reason,
+          });
+          if (!refundId && ['Draft', 'Unpaid', 'Overdue'].includes(row.invoice_state)) {
+            await this.invoiceStates.transition(
+              row.invoice_id,
+              row.invoice_state as 'Draft' | 'Unpaid' | 'Overdue',
+              'Cancelled',
+              {
+                actorUserId: actor.userId,
+                reason,
+                ip,
+                client,
+                financials: {
+                  paidAmount: 0n,
+                  refundedAmount: 0n,
+                  totalAmount: BigInt(row.total_amount),
+                },
+              }
+            );
+          }
+          await client.query("UPDATE contracts SET state='Rejected' WHERE id=$1", [
+            row.contract_id,
+          ]);
+          await client.query(
+            "UPDATE electricity_contracts SET status='cancelled',updated_at=NOW() WHERE order_id=$1",
+            [orderId]
+          );
+          await client.query("UPDATE orders SET status='CANCELLED',updated_at=NOW() WHERE id=$1", [
+            orderId,
+          ]);
+          await client.query(
+            "UPDATE electricity_orders SET status='cancelled',updated_at=NOW() WHERE id=$1",
+            [orderId]
+          );
+          if (BigInt(row.paid_amount) === 0n && row.gift_code_id)
+            await this.giftCodes.releaseByOrder(orderId, client, { actorUserId: actor.userId, ip });
+          await client.query(
+            `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+             VALUES(uuid_generate_v7(),$1,'electricity.order_cancelled',$2::jsonb,uuid_generate_v7(),$3)`,
+            [
+              actor.userId,
+              JSON.stringify({
+                orderId,
+                contractId: row.contract_id,
+                invoiceId: row.invoice_id,
+                versionId: row.version_id,
+                reason,
+                refundId,
+              }),
+              ip,
+            ]
+          );
+          return { orderId, status: 'cancelled', refundId };
+        }
+      );
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

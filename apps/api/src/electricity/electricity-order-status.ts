@@ -17,7 +17,7 @@ const transitions: Record<ElectricityCommercialStatus, readonly ElectricityComme
   awaiting_staff_review: ['changes_requested', 'approved', 'rejected', 'cancelled'],
   changes_requested: ['submitted', 'rejected', 'cancelled'],
   approved: ['active', 'rejected', 'cancelled'],
-  active: ['completed'],
+  active: ['completed', 'cancelled'],
   completed: [],
   rejected: [],
   cancelled: [],

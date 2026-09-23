@@ -21,6 +21,22 @@ export async function notifyRefundOutcome(
   if (!owner) throw new Error('Refund profile owner is missing');
   const faAmount = new Intl.NumberFormat('fa').format(BigInt(refund.amount));
   const enAmount = new Intl.NumberFormat('en').format(BigInt(refund.amount));
+  const electricity =
+    refund.state === 'Completed'
+      ? (
+          await client.query<{ order_id: string; reason: string; authorized_by: string }>(
+            'SELECT order_id,reason,authorized_by FROM refund_obligations WHERE refund_id=$1',
+            [refund.id]
+          )
+        ).rows[0]
+      : undefined;
+  const completedAt = new Date();
+  const electricitySuffix = electricity
+    ? {
+        fa: ` دلیل: ${electricity.reason}. بازپرداخت خودکار پس از تصمیم ${electricity.authorized_by} در ${new Intl.DateTimeFormat('fa-IR', { dateStyle: 'medium', timeStyle: 'short' }).format(completedAt)} ثبت شد.`,
+        en: ` Reason: ${electricity.reason}. Automatic refund after ${electricity.authorized_by}'s decision, posted ${new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(completedAt)}.`,
+      }
+    : null;
   const rejected = refund.state === 'Rejected';
   const failed = refund.state === 'Failed';
   const localizedContent = {
@@ -35,7 +51,7 @@ export async function notifyRefundOutcome(
         : rejected
           ? `درخواست بازپرداخت ${faAmount} ریال رد شد. برای جزئیات، صورتحساب را بررسی کنید یا با پشتیبانی تماس بگیرید.`
           : refund.destination === 'wallet'
-            ? `${faAmount} ریال به کیف پول شما بازگردانده شد. جزئیات در صورتحساب موجود است.`
+            ? `${faAmount} ریال به کیف پول شما بازگردانده شد. جزئیات در صورتحساب موجود است.${electricitySuffix?.fa ?? ''}`
             : `بازپرداخت بانکی ${faAmount} ریال تأیید شد. جزئیات در صورتحساب موجود است.`,
     },
     en: {
@@ -49,7 +65,7 @@ export async function notifyRefundOutcome(
         : rejected
           ? `Your refund request for ${enAmount} IRR was rejected. View the invoice or contact support for details.`
           : refund.destination === 'wallet'
-            ? `${enAmount} IRR has been returned to your wallet. View the invoice for details.`
+            ? `${enAmount} IRR has been returned to your wallet. View the invoice for details.${electricitySuffix?.en ?? ''}`
             : `Your bank refund of ${enAmount} IRR has been confirmed. View the invoice for details.`,
     },
   };
@@ -62,7 +78,9 @@ export async function notifyRefundOutcome(
       owner.user_id,
       refund.profile_id,
       JSON.stringify(localizedContent),
-      `/invoices/${refund.invoice_id}`,
+      electricity
+        ? `/electricity/orders/${electricity.order_id}`
+        : `/invoices/${refund.invoice_id}`,
       `refund:${refund.id}:${refund.state}`,
     ]
   );

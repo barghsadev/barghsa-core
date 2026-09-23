@@ -4,7 +4,7 @@ import { expect, it, vi } from 'vitest';
 import { ElectricityOrderDetailsPage } from './ElectricityOrderDetailsPage.js';
 
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ money: String }),
+  useNumberFormatting: () => ({ money: String, irrDigits: String }),
 }));
 
 it('loads an order confirmation with its invoice and contract references', async () => {
@@ -33,6 +33,26 @@ it('loads an order confirmation with its invoice and contract references', async
           totalIrR: '2500000',
           paidIrR: '0',
           refundedIrR: '0',
+          lines: [
+            {
+              productId: 'thermal-1',
+              systemKey: 'thermal',
+              title: { en: 'Thermal' },
+              quantityKwh: '10',
+              unitPriceIrR: '250000',
+              lineTotalIrR: '2500000',
+            },
+          ],
+          timeline: [
+            {
+              id: 'event-1',
+              event: 'electricity.order_submitted',
+              at: '2026-09-23T00:00:00Z',
+              actor: 'buyer',
+              reason: null,
+              comment: null,
+            },
+          ],
         }),
         { headers: { 'Content-Type': 'application/json' } }
       )
@@ -49,6 +69,9 @@ it('loads an order confirmation with its invoice and contract references', async
     expect(container.textContent).toContain('Commercial status');
     expect(container.textContent).toContain('Financial status');
     expect(container.textContent).toContain('Contract draft awaiting publication');
+    expect(container.textContent).toContain('Energy mix and price');
+    expect(container.textContent).toContain('Order submitted');
+    expect(container.querySelector('a[href="/tickets"]')).not.toBeNull();
     expect(container.querySelector('a[href="/contracts"]')).toBeNull();
     expect(container.querySelector('a[href="/invoices/invoice-1"]')).not.toBeNull();
   } finally {

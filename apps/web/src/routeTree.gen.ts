@@ -71,6 +71,7 @@ import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
 import { Route as AppElectricityIndexRouteImport } from './routes/_app/electricity/index'
 import { Route as AppElectricityOrderRouteImport } from './routes/_app/electricity/order'
+import { Route as AppElectricityOrdersRouteImport } from './routes/_app/electricity/orders'
 import { Route as AppInvoicesIndexRouteImport } from './routes/_app/invoices/index'
 import { Route as AppInvoicesInvoiceIdRouteImport } from './routes/_app/invoices/$invoiceId'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
@@ -399,6 +400,11 @@ const AppElectricityOrderRoute = AppElectricityOrderRouteImport.update({
   path: '/electricity/order',
   getParentRoute: () => AppRoute,
 } as any)
+const AppElectricityOrdersRoute = AppElectricityOrdersRouteImport.update({
+  id: '/electricity/orders',
+  path: '/electricity/orders',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppInvoicesIndexRoute = AppInvoicesIndexRouteImport.update({
   id: '/invoices/',
   path: '/invoices/',
@@ -473,9 +479,9 @@ const OnboardingLegalProfileIdRoute =
   } as any)
 const AppElectricityOrdersOrderIdRoute =
   AppElectricityOrdersOrderIdRouteImport.update({
-    id: '/electricity/orders/$orderId',
-    path: '/electricity/orders/$orderId',
-    getParentRoute: () => AppRoute,
+    id: '/$orderId',
+    path: '/$orderId',
+    getParentRoute: () => AppElectricityOrdersRoute,
   } as any)
 const AdminCrmProfilesProfileIdRoute =
   AdminCrmProfilesProfileIdRouteImport.update({
@@ -550,6 +556,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/': typeof OnboardingIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/electricity/order': typeof AppElectricityOrderRoute
+  '/electricity/orders': typeof AppElectricityOrdersRouteWithChildren
   '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/settings/addresses': typeof AppSettingsAddressesRoute
   '/settings/profile': typeof AppSettingsProfileRoute
@@ -626,6 +633,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingIndexRoute
   '/register': typeof RegisterIndexRoute
   '/electricity/order': typeof AppElectricityOrderRoute
+  '/electricity/orders': typeof AppElectricityOrdersRouteWithChildren
   '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/settings/addresses': typeof AppSettingsAddressesRoute
   '/settings/profile': typeof AppSettingsProfileRoute
@@ -708,6 +716,7 @@ export interface FileRoutesById {
   '/onboarding/': typeof OnboardingIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/_app/electricity/order': typeof AppElectricityOrderRoute
+  '/_app/electricity/orders': typeof AppElectricityOrdersRouteWithChildren
   '/_app/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/_app/settings/addresses': typeof AppSettingsAddressesRoute
   '/_app/settings/profile': typeof AppSettingsProfileRoute
@@ -790,6 +799,7 @@ export interface FileRouteTypes {
     | '/onboarding/'
     | '/register/'
     | '/electricity/order'
+    | '/electricity/orders'
     | '/invoices/$invoiceId'
     | '/settings/addresses'
     | '/settings/profile'
@@ -866,6 +876,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/register'
     | '/electricity/order'
+    | '/electricity/orders'
     | '/invoices/$invoiceId'
     | '/settings/addresses'
     | '/settings/profile'
@@ -947,6 +958,7 @@ export interface FileRouteTypes {
     | '/onboarding/'
     | '/register/'
     | '/_app/electricity/order'
+    | '/_app/electricity/orders'
     | '/_app/invoices/$invoiceId'
     | '/_app/settings/addresses'
     | '/_app/settings/profile'
@@ -1418,6 +1430,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppElectricityOrderRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/electricity/orders': {
+      id: '/_app/electricity/orders'
+      path: '/electricity/orders'
+      fullPath: '/electricity/orders'
+      preLoaderRoute: typeof AppElectricityOrdersRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/invoices/': {
       id: '/_app/invoices/'
       path: '/invoices'
@@ -1518,10 +1537,10 @@ declare module '@tanstack/react-router' {
     }
     '/_app/electricity/orders/$orderId': {
       id: '/_app/electricity/orders/$orderId'
-      path: '/electricity/orders/$orderId'
+      path: '/$orderId'
       fullPath: '/electricity/orders/$orderId'
       preLoaderRoute: typeof AppElectricityOrdersOrderIdRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppElectricityOrdersRoute
     }
     '/admin/crm/profiles/$profileId': {
       id: '/admin/crm/profiles/$profileId'
@@ -1540,6 +1559,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppElectricityOrdersRouteChildren {
+  AppElectricityOrdersOrderIdRoute: typeof AppElectricityOrdersOrderIdRoute
+}
+
+const AppElectricityOrdersRouteChildren: AppElectricityOrdersRouteChildren = {
+  AppElectricityOrdersOrderIdRoute: AppElectricityOrdersOrderIdRoute,
+}
+
+const AppElectricityOrdersRouteWithChildren =
+  AppElectricityOrdersRoute._addFileChildren(AppElectricityOrdersRouteChildren)
+
 interface AppRouteChildren {
   AppAiRoute: typeof AppAiRoute
   AppAppRoute: typeof AppAppRoute
@@ -1553,6 +1583,7 @@ interface AppRouteChildren {
   AppVideosRoute: typeof AppVideosRoute
   AppWalletRoute: typeof AppWalletRoute
   AppElectricityOrderRoute: typeof AppElectricityOrderRoute
+  AppElectricityOrdersRoute: typeof AppElectricityOrdersRouteWithChildren
   AppInvoicesInvoiceIdRoute: typeof AppInvoicesInvoiceIdRoute
   AppSettingsAddressesRoute: typeof AppSettingsAddressesRoute
   AppSettingsProfileRoute: typeof AppSettingsProfileRoute
@@ -1563,7 +1594,6 @@ interface AppRouteChildren {
   AppElectricityIndexRoute: typeof AppElectricityIndexRoute
   AppInvoicesIndexRoute: typeof AppInvoicesIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
-  AppElectricityOrdersOrderIdRoute: typeof AppElectricityOrdersOrderIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -1579,6 +1609,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppVideosRoute: AppVideosRoute,
   AppWalletRoute: AppWalletRoute,
   AppElectricityOrderRoute: AppElectricityOrderRoute,
+  AppElectricityOrdersRoute: AppElectricityOrdersRouteWithChildren,
   AppInvoicesInvoiceIdRoute: AppInvoicesInvoiceIdRoute,
   AppSettingsAddressesRoute: AppSettingsAddressesRoute,
   AppSettingsProfileRoute: AppSettingsProfileRoute,
@@ -1589,7 +1620,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppElectricityIndexRoute: AppElectricityIndexRoute,
   AppInvoicesIndexRoute: AppInvoicesIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
-  AppElectricityOrdersOrderIdRoute: AppElectricityOrdersOrderIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

@@ -11,6 +11,7 @@ it('permits review decisions and blocks terminal commercial transitions', () => 
   expect(canTransitionElectricityOrder('changes_requested', 'submitted')).toBe(true);
   expect(canTransitionElectricityOrder('approved', 'active')).toBe(true);
   expect(canTransitionElectricityOrder('active', 'completed')).toBe(true);
+  expect(canTransitionElectricityOrder('active', 'cancelled')).toBe(true);
   expect(canTransitionElectricityOrder('rejected', 'active')).toBe(false);
   expect(canTransitionElectricityOrder('completed', 'cancelled')).toBe(false);
 });

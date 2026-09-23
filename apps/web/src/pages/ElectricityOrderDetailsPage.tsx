@@ -25,6 +25,34 @@ interface ElectricityOrderDetail {
   totalIrR: string;
   paidIrR: string;
   refundedIrR: string;
+  giftCode?: string | null;
+  pricingSnapshot?: {
+    subtotalIrR?: string;
+    discountIrR?: string;
+    vatIrR?: string;
+    requiredGreenKwh?: string;
+  };
+  greenRuleApplied?: boolean;
+  giftDiscountIrR?: string;
+  lines?: Array<{
+    productId: string;
+    systemKey: string | null;
+    title: Record<string, string> | null;
+    quantityKwh: string;
+    unitPriceIrR: string;
+    lineTotalIrR: string;
+  }>;
+  timeline?: Array<{
+    id: string;
+    event: string;
+    at: string;
+    actor: string | null;
+    reason: string | null;
+    comment: string | null;
+  }>;
+  refundStatus?: string | null;
+  refundReason?: string | null;
+  financiallyClosed?: boolean;
 }
 
 const statusKeys: Record<string, string> = {
@@ -58,6 +86,27 @@ const actionKeys: Record<string, string> = {
   continue_order: 'electricity.order.nextAction.continue_order',
   none: 'electricity.order.nextAction.none',
 };
+const timelineKeys: Record<string, string> = {
+  'electricity.order_submitted': 'electricity.order.timeline.submitted',
+  'electricity.order_review.approve': 'electricity.order.timeline.approved',
+  'electricity.order_review.request-changes': 'electricity.order.timeline.changes',
+  'electricity.order_review.reject': 'electricity.order.timeline.rejected',
+  'electricity.order_resubmitted': 'electricity.order.timeline.resubmitted',
+  'electricity.order_cancelled': 'electricity.order.timeline.cancelled',
+  'refund.processing': 'electricity.order.timeline.refundProcessing',
+  'refund.completed': 'electricity.order.timeline.refundCompleted',
+  'refund.failed': 'electricity.order.timeline.refundFailed',
+  'refund.retry_exhausted': 'electricity.order.timeline.refundFailed',
+  'contract.activated': 'electricity.order.timeline.activated',
+  'contract.completed': 'electricity.order.timeline.completed',
+  'contract.cancelled': 'electricity.order.timeline.cancelled',
+};
+const refundKeys: Record<string, string> = {
+  pending: 'electricity.order.refund.pending',
+  processing: 'electricity.order.refund.processing',
+  failed: 'electricity.order.refund.failed',
+  completed: 'electricity.order.refund.completed',
+};
 
 export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const locale = useLocale();
@@ -72,6 +121,10 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const [correctionKey, setCorrectionKey] = useState(() => crypto.randomUUID());
   const [savingCorrection, setSavingCorrection] = useState(false);
   const [correctionError, setCorrectionError] = useState(false);
+  const [cancelReason, setCancelReason] = useState('');
+  const [cancelKey, setCancelKey] = useState(() => crypto.randomUUID());
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState<'stepup' | 'generic' | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -142,15 +195,52 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     }
   }
 
+  async function cancelOrder(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!detail || cancelling || !cancelReason.trim()) return;
+    if (!window.confirm(t('electricity.order.detail.cancelConfirm', locale))) return;
+    setCancelling(true);
+    setCancelError(null);
+    try {
+      const response = await fetch(
+        `/api/electricity/orders/${encodeURIComponent(orderId)}/cancel`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({
+            idempotencyKey: cancelKey,
+            expectedVersionId: detail.versionId,
+            reason: cancelReason.trim(),
+          }),
+        }
+      );
+      if (response.status === 403) {
+        setCancelError('stepup');
+        return;
+      }
+      if (!response.ok) throw new Error('Cancellation failed');
+      setCancelKey(crypto.randomUUID());
+      setRetry((value) => value + 1);
+    } catch {
+      setCancelError('generic');
+    } finally {
+      setCancelling(false);
+    }
+  }
+
   return (
     <main
       className="container mx-auto max-w-2xl space-y-6 px-4 py-8"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <header>
-        <h1 className="text-2xl font-bold">{t('electricity.order.success.title', locale)}</h1>
+        <a href="/electricity/orders" className="text-sm text-primary underline underline-offset-4">
+          {t('electricity.order.detail.back', locale)}
+        </a>
+        <h1 className="text-2xl font-bold">{t('electricity.order.detail.title', locale)}</h1>
         <p className="mt-2 text-muted-foreground">
-          {t('electricity.order.success.description', locale)}
+          {t('electricity.order.detail.description', locale)}
         </p>
       </header>
       {loading ? (
@@ -228,6 +318,55 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             </CardContent>
           </Card>
           <Card>
+            <CardContent className="space-y-3 pt-6 text-sm">
+              <h2 className="font-semibold">{t('electricity.order.detail.lines', locale)}</h2>
+              {detail.lines?.map((line) => (
+                <div
+                  key={line.productId}
+                  className="flex flex-wrap items-center justify-between gap-2 border-t pt-2"
+                >
+                  <span>
+                    {line.title?.[locale] ?? line.title?.en ?? line.systemKey} ·{' '}
+                    {numbers.irrDigits(line.quantityKwh)} kWh
+                  </span>
+                  <span>
+                    {t('electricity.order.detail.unitPrice', locale)}{' '}
+                    {numbers.money(line.unitPriceIrR)} · {numbers.money(line.lineTotalIrR)}
+                  </span>
+                </div>
+              ))}
+              {detail.greenRuleApplied ? (
+                <p>{t('electricity.order.detail.greenRule', locale)}</p>
+              ) : null}
+              {detail.pricingSnapshot?.requiredGreenKwh &&
+              BigInt(detail.pricingSnapshot.requiredGreenKwh) > 0n ? (
+                <p>
+                  {t('electricity.order.detail.greenKwh', locale)}:{' '}
+                  {numbers.irrDigits(detail.pricingSnapshot.requiredGreenKwh)} kWh
+                </p>
+              ) : null}
+              {detail.pricingSnapshot?.subtotalIrR ? (
+                <p>
+                  {t('electricity.order.detail.subtotal', locale)}:{' '}
+                  {numbers.money(detail.pricingSnapshot.subtotalIrR)}
+                </p>
+              ) : null}
+              {detail.giftDiscountIrR && BigInt(detail.giftDiscountIrR) > 0n ? (
+                <p>
+                  {t('electricity.order.detail.giftDiscount', locale)}
+                  {detail.giftCode ? ` (${detail.giftCode})` : ''}:{' '}
+                  {numbers.money(detail.giftDiscountIrR)}
+                </p>
+              ) : null}
+              {detail.pricingSnapshot?.vatIrR ? (
+                <p>
+                  {t('electricity.order.vat', locale)}:{' '}
+                  {numbers.money(detail.pricingSnapshot.vatIrR)}
+                </p>
+              ) : null}
+            </CardContent>
+          </Card>
+          <Card>
             <CardContent className="pt-6">
               <h2 className="font-semibold">{t('electricity.order.nextAction', locale)}</h2>
               <p className="mt-2 text-sm text-muted-foreground">
@@ -235,6 +374,92 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               </p>
             </CardContent>
           </Card>
+          <Card>
+            <CardContent className="space-y-3 pt-6 text-sm">
+              <h2 className="font-semibold">{t('electricity.order.detail.timeline', locale)}</h2>
+              {detail.timeline?.length ? (
+                <ol className="space-y-3 border-s ps-4">
+                  {detail.timeline.map((event) => (
+                    <li key={event.id}>
+                      <time className="text-muted-foreground">
+                        {new Date(event.at).toLocaleString(locale)}
+                      </time>
+                      <p>
+                        {t(
+                          timelineKeys[event.event] ?? 'electricity.order.timeline.updated',
+                          locale
+                        )}
+                      </p>
+                      {event.reason ? <p>{event.reason}</p> : null}
+                      {event.comment ? <p>{event.comment}</p> : null}
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p>{t('electricity.order.detail.noTimeline', locale)}</p>
+              )}
+              {detail.refundStatus ? (
+                <p>
+                  {t('electricity.order.detail.refund', locale)}:{' '}
+                  {t(refundKeys[detail.refundStatus] ?? 'electricity.order.refund.pending', locale)}{' '}
+                  · {detail.refundReason}
+                </p>
+              ) : null}
+              {['rejected', 'cancelled'].includes(detail.electricityStatus) ? (
+                <p>
+                  {t(
+                    detail.financiallyClosed
+                      ? 'electricity.order.detail.financiallyClosed'
+                      : 'electricity.order.detail.refundPending',
+                    locale
+                  )}
+                </p>
+              ) : null}
+              <a href="/tickets" className="text-primary underline underline-offset-4">
+                {t('electricity.order.detail.help', locale)}
+              </a>
+            </CardContent>
+          </Card>
+          {['awaiting_staff_review', 'changes_requested'].includes(detail.electricityStatus) ? (
+            <Card>
+              <CardContent className="pt-6">
+                <form onSubmit={(event) => void cancelOrder(event)} className="space-y-3">
+                  <label className="block text-sm">
+                    {t('electricity.order.detail.cancelReason', locale)}
+                    <textarea
+                      className="mt-1 w-full rounded-md border bg-background p-2"
+                      required
+                      maxLength={1000}
+                      value={cancelReason}
+                      onChange={(event) => setCancelReason(event.target.value)}
+                    />
+                  </label>
+                  {cancelError ? (
+                    <p role="alert" className="text-destructive">
+                      {t(
+                        cancelError === 'stepup'
+                          ? 'electricity.order.detail.cancelStepUp'
+                          : 'electricity.order.detail.cancelFailed',
+                        locale
+                      )}
+                      {cancelError === 'stepup' ? (
+                        <a href="/settings/security" className="ms-2 underline">
+                          {t('electricity.order.detail.security', locale)}
+                        </a>
+                      ) : null}
+                    </p>
+                  ) : null}
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    disabled={cancelling || !cancelReason.trim()}
+                  >
+                    {t('electricity.order.detail.cancel', locale)}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          ) : null}
           {detail.electricityStatus === 'changes_requested' ? (
             <Card>
               <CardContent className="pt-6">

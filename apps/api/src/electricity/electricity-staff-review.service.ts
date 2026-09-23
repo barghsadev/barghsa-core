@@ -1,7 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { PoolClient } from 'pg';
-import { v7 as uuidv7 } from 'uuid';
 import type { ValidatedSession } from '../session/session.service.js';
 import {
   staffContractMutation,
@@ -11,6 +10,7 @@ import {
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { GiftCodeService } from '../admin/gift-code.service.js';
+import { createElectricityRefundObligation } from './electricity-refund-obligation.js';
 import {
   canTransitionElectricityOrder,
   electricityFinancialStatus,
@@ -232,46 +232,21 @@ export class ElectricityStaffReviewService {
               row.contract_id,
             ]);
           } else {
-            const pending = BigInt(row.pending_refund_amount);
-            if (pending > 0n)
-              throw new ConflictException('Resolve existing refund before rejection');
             const paid = BigInt(row.paid_amount),
               refunded = BigInt(row.refunded_amount);
-            if (paid < refunded) throw new ConflictException('Invoice refund totals are invalid');
             if (paid > refunded) {
-              refundId = uuidv7();
-              const obligationId = uuidv7();
-              const amount = (paid - refunded).toString();
-              await client.query(
-                `INSERT INTO refunds(id,invoice_id,profile_id,amount,destination,idempotency_key)
-                 VALUES($1,$2,$3,$4,'wallet',$5)`,
-                [
-                  refundId,
-                  row.invoice_id,
-                  row.profile_id,
-                  amount,
-                  `electricity-reject:${id}:${row.invoice_id}`,
-                ]
-              );
-              await client.query(
-                `INSERT INTO refund_obligations(id,order_id,contract_id,invoice_id,profile_id,
-                   refund_id,total_paid_amount,completed_refund_amount,idempotency_key,
-                   authorized_by,reason)
-                 VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
-                [
-                  obligationId,
-                  id,
-                  row.contract_id,
-                  row.invoice_id,
-                  row.profile_id,
-                  refundId,
-                  paid.toString(),
-                  refunded.toString(),
-                  `electricity-reject:${id}`,
-                  actor.userId,
-                  reason,
-                ]
-              );
+              refundId = await createElectricityRefundObligation(client, {
+                orderId: id,
+                contractId: row.contract_id,
+                invoiceId: row.invoice_id,
+                profileId: row.profile_id,
+                paidAmount: row.paid_amount,
+                refundedAmount: row.refunded_amount,
+                authorizedBy: actor.userId,
+                reason,
+              });
+            } else if (BigInt(row.pending_refund_amount) > 0n) {
+              throw new ConflictException('Resolve existing refund before rejection');
             } else if (['Draft', 'Unpaid', 'Overdue'].includes(row.invoice_state)) {
               await this.invoices.transition(
                 row.invoice_id,

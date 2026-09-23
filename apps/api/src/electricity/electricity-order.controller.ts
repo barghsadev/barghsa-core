@@ -82,6 +82,13 @@ const addressCorrectionInput = z
     responseNote: z.string().trim().min(1).max(1000),
   })
   .strict();
+const cancelInput = z
+  .object({
+    idempotencyKey: z.string().uuid(),
+    expectedVersionId: z.string().uuid(),
+    reason: z.string().trim().min(1).max(1000),
+  })
+  .strict();
 
 @ApiTags('Electricity')
 @Controller('api/electricity')
@@ -149,6 +156,22 @@ export class ElectricityOrderController {
     return this.service.detail(req.session, orderId);
   }
 
+  @Get('orders')
+  @RateLimit({ namespace: 'electricity:order-list:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'Profile-scoped electricity orders with commercial and financial progress',
+  })
+  @ApiResponse({ status: 200, description: 'Newest electricity orders and next-page cursor.' })
+  list(
+    @Query('profileId', new ParseUUIDPipe()) profileId: string,
+    @Query('before') before: string | undefined,
+    @Req() req: AuthenticatedRequest
+  ) {
+    if (before && !z.string().uuid().safeParse(before).success)
+      throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.list(req.session, profileId, before);
+  }
+
   @Post('orders/:orderId/resubmit-address')
   @HttpCode(200)
   @RateLimit({ namespace: 'electricity:address-correction:user', limit: 10, windowMs: 60_000 })
@@ -168,6 +191,24 @@ export class ElectricityOrderController {
       parsed.data,
       req.ip ?? 'unknown'
     );
+  }
+
+  @Post('orders/:orderId/cancel')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'electricity:order-cancel:user', limit: 10, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'Cancel an unpublished electricity order and queue any mandatory refund',
+  })
+  @ApiZodBody(cancelInput)
+  @ApiResponse({ status: 200, description: 'Cancelled order and mandatory refund reference.' })
+  cancel(
+    @Param('orderId', new ParseUUIDPipe()) orderId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const parsed = cancelInput.safeParse(body);
+    if (!parsed.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.cancel(req.session, orderId, parsed.data, req.ip ?? 'unknown');
   }
 
   @Post('preview/simple')

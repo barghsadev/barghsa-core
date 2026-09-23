@@ -14255,6 +14255,30 @@
         ]
       }
     },
+    "/api/electricity/orders": {
+      "get": {
+        "operationId": "ElectricityOrderController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Newest electricity orders and next-page cursor."
+          }
+        },
+        "summary": "Profile-scoped electricity orders with commercial and financial progress",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
     "/api/electricity/orders/simple": {
       "post": {
         "operationId": "ElectricityOrderController_submit",
@@ -14374,6 +14398,63 @@
           }
         },
         "summary": "Customer electricity order confirmation and current references",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
+    "/api/electricity/orders/{orderId}/cancel": {
+      "post": {
+        "operationId": "ElectricityOrderController_cancel",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersionId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "idempotencyKey",
+                  "expectedVersionId",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Cancelled order and mandatory refund reference."
+          }
+        },
+        "summary": "Cancel an unpublished electricity order and queue any mandatory refund",
         "tags": [
           "Electricity"
         ]

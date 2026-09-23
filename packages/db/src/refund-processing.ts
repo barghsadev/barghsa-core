@@ -51,7 +51,48 @@ export async function readContractRefundAuthorization(
       [row.id, row.invoice_id, row.profile_id, row.staff_id, row.amount, row.destination]
     )
   ).rows[0];
-  if (!obligation) return undefined;
+  if (!obligation) {
+    const electricity = (
+      await client.query<{
+        contract_id: string;
+        order_id: string;
+        authorized_by: string;
+        valid: boolean;
+      }>(
+        `SELECT o.contract_id,o.order_id,o.authorized_by,
+          (e.status IN ('rejected','cancelled') AND p.state IN ('Rejected','Cancelled')
+           AND c.status='cancelled' AND parent.status='CANCELLED'
+           AND e.profile_id=$3 AND parent.profile_id=$3 AND p.profile_id=$3
+           AND i.order_id=o.order_id AND i.id=$2 AND i.profile_id=$3
+           AND o.invoice_id=$2 AND o.profile_id=$3 AND o.contract_id=p.id
+           AND o.status IN ('processing','failed','completed')
+           AND r.invoice_id=$2 AND r.profile_id=$3 AND r.amount=$5::bigint
+           AND r.destination='wallet' AND r.staff_id IS NULL AND $4::text IS NULL
+           AND o.total_paid_amount-o.completed_refund_amount=$5::bigint) AS valid
+         FROM refund_obligations o
+         JOIN refunds r ON r.id=o.refund_id
+         JOIN electricity_orders e ON e.id=o.order_id
+         JOIN orders parent ON parent.id=o.order_id
+         JOIN electricity_contracts c ON c.order_id=o.order_id AND c.contract_id=o.contract_id
+         JOIN contracts p ON p.id=o.contract_id
+         JOIN invoices i ON i.id=o.invoice_id
+         WHERE o.refund_id=$1`,
+        [row.id, row.invoice_id, row.profile_id, row.staff_id, row.amount]
+      )
+    ).rows[0];
+    if (!electricity) return undefined;
+    if (!electricity.valid)
+      throw new RefundProcessingError(
+        'invalid_electricity_obligation',
+        'Electricity refund evidence does not match the refund'
+      );
+    return {
+      contractId: electricity.contract_id,
+      orderId: electricity.order_id,
+      authorizedBy: electricity.authorized_by,
+      actorType: 'system' as const,
+    };
+  }
   if (!obligation.valid)
     throw new RefundProcessingError(
       'invalid_contract_obligation',
@@ -360,6 +401,27 @@ export async function runWalletRefund(
         'INSERT INTO wallets(profile_id) VALUES($1) ON CONFLICT(profile_id) DO NOTHING',
         [row.profile_id]
       );
+      const paymentAllocations =
+        obligation && 'orderId' in obligation
+          ? (
+              await client.query<{ id: string; source: string; amount: string }>(
+                `SELECT id,source,amount FROM (
+                SELECT w.id,'wallet' AS source,(-w.amount)::text AS amount
+                FROM wallet_transactions w WHERE w.wallet_id=$2 AND w.ref_id=$1
+                  AND w.type='payment' AND w.state='Completed' AND w.amount<0
+                UNION ALL
+                SELECT b.id,'bank_receipt' AS source,
+                  (b.amount-COALESCE(c.amount,0))::text AS amount
+                FROM bank_receipts b LEFT JOIN wallet_transactions c
+                  ON c.wallet_id=b.profile_id
+                  AND c.idempotency_key='invoice-bank-receipt-overpayment-credit:'||b.id::text
+                WHERE b.invoice_id=$1::uuid AND b.profile_id=$2
+                  AND b.state='Confirmed'
+              ) allocations ORDER BY source,id`,
+                [row.invoice_id, row.profile_id]
+              )
+            ).rows
+          : undefined;
       await postWalletCredit(
         client,
         profile,
@@ -369,7 +431,17 @@ export async function runWalletRefund(
           type: 'refund',
           refId: row.id,
           description: 'Invoice wallet refund',
-          metadata: { refundId: row.id, invoiceId: row.invoice_id, ...obligation },
+          metadata: {
+            refundId: row.id,
+            invoiceId: row.invoice_id,
+            ...obligation,
+            ...(paymentAllocations
+              ? {
+                  paymentAllocations,
+                  paymentSourcesUnavailable: paymentAllocations.length === 0,
+                }
+              : {}),
+          },
         },
         `refund-wallet-credit:${row.id}`
       );
