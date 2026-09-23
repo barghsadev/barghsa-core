@@ -5,6 +5,8 @@ import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { DocumentResults, type DocumentFilters } from '../components/DocumentsWorkspace.js';
 import { SolarPostalPanel } from '../components/SolarPostalPanel.js';
+import { WorkflowStatusBanner, type WorkflowOwner } from '../components/WorkflowStatusBanner.js';
+import { t } from '@barghsa/i18n/app';
 
 interface SolarRequest {
   id: string;
@@ -32,6 +34,33 @@ interface SolarRequest {
   agreement_snapshot: string;
   agreement_accepted_at: string;
   submitted_at: string;
+}
+
+function solarNextAction(
+  request: SolarRequest,
+  copy: (key: string) => string,
+  locale: 'fa' | 'en'
+): { text: string; owner: WorkflowOwner; href?: string } {
+  if (['submitted', 'uploading_documents', 'changes_requested'].includes(request.status))
+    return { text: copy('workflowNextUpload'), owner: 'customer', href: '#solar-documents' };
+  if (request.status === 'waiting_for_postal_submission')
+    return { text: copy('workflowNextPostal'), owner: 'customer', href: '#solar-postal' };
+  if (request.status === 'contract_created')
+    return request.contract_published && request.contract_id
+      ? {
+          text: copy('solarViewContract'),
+          owner: 'customer',
+          href: `/contracts?contractId=${encodeURIComponent(request.contract_id)}`,
+        }
+      : { text: copy('solarContractAwaitingPublication'), owner: 'staff' };
+  if (request.status === 'approved')
+    return { text: copy('solarContractAwaitingPublication'), owner: 'staff' };
+  if (['rejected', 'cancelled'].includes(request.status))
+    return { text: t('workflow.none', locale), owner: 'none' };
+  return {
+    text: copy(request.status === 'documents_under_review' ? 'verifyStage' : 'finalStage'),
+    owner: 'staff',
+  };
 }
 
 export function SolarRequestDetailPage() {
@@ -134,6 +163,7 @@ export function SolarRequestDetailPage() {
           ? 3
           : 4
     : 1;
+  const action = request ? solarNextAction(request, copy, locale) : null;
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <a className="text-sm underline" href="/solar/requests">
@@ -144,21 +174,24 @@ export function SolarRequestDetailPage() {
       {error && <p role="alert">{copy('notFound')}</p>}
       {request && (
         <>
+          <WorkflowStatusBanner
+            locale={locale}
+            status={copy(`status_${request.status}`)}
+            happened={
+              request.status_reason ??
+              `${copy('submitted')}: ${new Intl.DateTimeFormat(locale).format(new Date(request.submitted_at))}`
+            }
+            nextAction={action!.text}
+            owner={action!.owner}
+            actionHref={action?.href}
+            supportHref={request.support_path ?? '/tickets'}
+          />
           <div className="rounded-xl border p-5">
-            <p>
-              {copy('status')}: <strong>{copy(`status_${request.status}`)}</strong>
-            </p>
             <p>
               {copy('currentStage')}: <strong>{copy(stages[currentStage]!)}</strong>
             </p>
             {request.status === 'submitted' && (
               <p className="text-sm text-muted-foreground">{copy('noContract')}</p>
-            )}
-            {request.status_reason && <p role="alert">{request.status_reason}</p>}
-            {request.support_path && (
-              <a className="underline" href={request.support_path}>
-                {copy('solarSupport')}
-              </a>
             )}
             {request.contract_id && (
               <div className="flex flex-wrap gap-4 text-sm">
@@ -203,6 +236,7 @@ export function SolarRequestDetailPage() {
             'changes_requested',
           ].includes(request.status) && (
             <section
+              id="solar-documents"
               className="space-y-4 rounded-xl border p-5"
               aria-label={copy('documentGuidance')}
             >
@@ -264,7 +298,9 @@ export function SolarRequestDetailPage() {
             'final_review',
             'contract_created',
           ].includes(request.status) && (
-            <SolarPostalPanel requestId={requestId} profileId={request.profile_id} />
+            <div id="solar-postal">
+              <SolarPostalPanel requestId={requestId} profileId={request.profile_id} />
+            </div>
           )}
           <dl className="grid gap-3 rounded-xl border p-5 sm:grid-cols-2">
             <div>

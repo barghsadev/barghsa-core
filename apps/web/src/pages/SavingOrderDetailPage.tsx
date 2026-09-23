@@ -25,6 +25,7 @@ import {
   type SavingHardwareUpgrade,
 } from '../components/SavingHardwareUpgradeHistory.js';
 import { savingNextAction, type SavingActionContext } from '../lib/saving-next-action.js';
+import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 
 interface Detail extends SavingActionContext {
   order_id: string;
@@ -91,6 +92,13 @@ export function SavingOrderDetailPage() {
     return () => controller.abort();
   }, [orderId, revision]);
   const action = detail ? savingNextAction(detail) : null;
+  const latestCompletedStage = detail?.stages.filter((stage) => stage.completed_at).at(-1);
+  const actionOwner =
+    action?.kind === 'none'
+      ? 'none'
+      : ['acceptContract', 'payInvoice', 'payUpgrade'].includes(action?.kind ?? '')
+        ? 'customer'
+        : 'staff';
   return (
     <main
       className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
@@ -106,22 +114,25 @@ export function SavingOrderDetailPage() {
       {state === 'error' && <p role="alert">{copy('error')}</p>}
       {detail && (
         <>
+          <WorkflowStatusBanner
+            locale={locale}
+            status={copy(
+              detail.status === 'awaiting_staff_review'
+                ? 'staffReview'
+                : detail.status === 'in_progress'
+                  ? 'inProgress'
+                  : detail.status
+            )}
+            happened={latestCompletedStage ? copy(latestCompletedStage.stage) : copy('submitted')}
+            nextAction={copy('action.' + action?.kind)}
+            owner={actionOwner}
+            actionHref={action?.href}
+          />
           <Card>
             <CardContent className="space-y-4 pt-6">
-              <div className="flex flex-wrap justify-between gap-3">
-                <h2 className="text-xl font-semibold">
-                  {detail.pricing_snapshot.plan.title[locale]}
-                </h2>
-                <span className="rounded-full bg-muted px-3 py-1 text-sm">
-                  {copy(
-                    detail.status === 'awaiting_staff_review'
-                      ? 'staffReview'
-                      : detail.status === 'in_progress'
-                        ? 'inProgress'
-                        : detail.status
-                  )}
-                </span>
-              </div>
+              <h2 className="text-xl font-semibold">
+                {detail.pricing_snapshot.plan.title[locale]}
+              </h2>
               <dl className="grid gap-3 text-sm md:grid-cols-2">
                 <div>
                   <dt className="text-muted-foreground">{copy('stepHardware')}</dt>
@@ -167,18 +178,6 @@ export function SavingOrderDetailPage() {
               onChanged={() => setRevision((value) => value + 1)}
             />
           )}
-          <Card>
-            <CardContent className="space-y-2 pt-6">
-              <h2 className="text-lg font-semibold">{copy('nextAction')}</h2>
-              {action?.href ? (
-                <a href={action.href} className="font-medium text-primary hover:underline">
-                  {copy('action.' + action.kind)}
-                </a>
-              ) : (
-                <p>{copy('action.' + action?.kind)}</p>
-              )}
-            </CardContent>
-          </Card>
           <Card>
             <CardContent className="space-y-3 pt-6">
               <h2 className="text-xl font-semibold">{copy('invoice')}</h2>

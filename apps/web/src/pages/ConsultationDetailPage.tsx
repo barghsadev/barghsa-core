@@ -4,6 +4,8 @@ import { Button, Label } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
+import { WorkflowStatusBanner, type WorkflowOwner } from '../components/WorkflowStatusBanner.js';
+import { t } from '@barghsa/i18n/app';
 
 interface Detail {
   request: {
@@ -34,6 +36,40 @@ interface Detail {
     state: string;
   }>;
   refunds: Array<{ id: string; amount: string; state: string; destination: string }>;
+}
+
+function consultationNextAction(
+  request: Detail['request'],
+  offerExpired: boolean,
+  refundPending: boolean,
+  copy: (key: string) => string,
+  locale: 'fa' | 'en'
+): { text: string; owner: WorkflowOwner; href?: string } {
+  if (request.status === 'awaiting_customer_info')
+    return { text: copy('provideInfo'), owner: 'customer', href: '#consultation-information-form' };
+  if (request.status === 'offer_pending') {
+    if (offerExpired) return { text: copy('offerExpired'), owner: 'customer', href: '/tickets' };
+    if (request.invoice_state === 'PaymentUnderReview')
+      return { text: copy('paymentUnderReview'), owner: 'staff' };
+    if (request.accepted_at && request.invoice_id && request.invoice_state !== 'Paid')
+      return {
+        text: copy('acceptedAwaitingPayment'),
+        owner: 'customer',
+        href: `/invoices/${encodeURIComponent(request.invoice_id)}`,
+      };
+    return { text: copy('reviewOffer'), owner: 'customer', href: '#consultation-offer' };
+  }
+  if (request.status === 'offer_accepted' && request.invoice_id && request.invoice_state !== 'Paid')
+    return {
+      text: copy('acceptedAwaitingPayment'),
+      owner: 'customer',
+      href: `/invoices/${encodeURIComponent(request.invoice_id)}`,
+    };
+  if (['completed', 'cancelled', 'rejected', 'offer_declined'].includes(request.status))
+    return refundPending
+      ? { text: copy('paidClosurePending'), owner: 'staff' }
+      : { text: t('workflow.none', locale), owner: 'none' };
+  return { text: request.expected_next_step ?? copy('staffReview'), owner: 'staff' };
 }
 
 export function ConsultationDetailPage() {
@@ -131,6 +167,14 @@ export function ConsultationDetailPage() {
     new Date(request.offer_valid_until) <= new Date() &&
     request.invoice_state !== 'Paid' &&
     !request.accepted_at;
+  const refundPending =
+    detail?.refunds.some(
+      (refund) => !['Completed', 'Rejected', 'Cancelled'].includes(refund.state)
+    ) ?? false;
+  const action = request
+    ? consultationNextAction(request, offerExpired, refundPending, copy, locale)
+    : null;
+  const latestEvent = detail?.history.at(-1);
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <a href="/consultations" className="text-sm text-primary underline">
@@ -141,24 +185,27 @@ export function ConsultationDetailPage() {
       {error && <p role="alert">{copy('loadError')}</p>}
       {request && (
         <>
+          <WorkflowStatusBanner
+            locale={locale}
+            status={copy(`status_${request.status}`)}
+            happened={
+              latestEvent?.reason ??
+              `${copy(`status_${latestEvent?.status ?? request.status}`)} · ${new Intl.DateTimeFormat(locale).format(new Date(latestEvent?.created_at ?? request.submitted_at))}`
+            }
+            nextAction={action!.text}
+            owner={action!.owner}
+            actionHref={action?.href}
+          />
           <section className="space-y-3 rounded-xl border bg-card p-5">
             <h2 className="text-xl font-semibold" dir="auto">
               {request.product_snapshot.title[locale]}
             </h2>
-            <p>
-              {copy('status')}: <strong>{copy(`status_${request.status}`)}</strong>
-            </p>
             <p>
               {copy('submittedAt')}:{' '}
               <time dateTime={request.submitted_at}>
                 {new Intl.DateTimeFormat(locale).format(new Date(request.submitted_at))}
               </time>
             </p>
-            {!['completed', 'cancelled', 'rejected', 'offer_declined'].includes(request.status) && (
-              <p>
-                {copy('nextStep')}: {request.expected_next_step ?? copy('staffReview')}
-              </p>
-            )}
             {request.fee ? (
               <p>
                 {copy('fee')}: {new Intl.NumberFormat(locale).format(BigInt(request.fee))} IRR
@@ -218,7 +265,7 @@ export function ConsultationDetailPage() {
             </section>
           )}
           {request.status === 'offer_pending' && (
-            <section className="space-y-3 rounded-xl border bg-card p-5">
+            <section id="consultation-offer" className="space-y-3 rounded-xl border bg-card p-5">
               {offerExpired && <p role="status">{copy('offerExpired')}</p>}
               {request.invoice_state === 'PaymentUnderReview' ? (
                 <p>{copy('paymentUnderReview')}</p>
@@ -255,7 +302,11 @@ export function ConsultationDetailPage() {
             </section>
           )}
           {request.status === 'awaiting_customer_info' && (
-            <form onSubmit={provideInfo} className="space-y-3 rounded-xl border bg-card p-5">
+            <form
+              id="consultation-information-form"
+              onSubmit={provideInfo}
+              className="space-y-3 rounded-xl border bg-card p-5"
+            >
               <Label htmlFor="consultation-information">{copy('information')}</Label>
               <textarea
                 id="consultation-information"

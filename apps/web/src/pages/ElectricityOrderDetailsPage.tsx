@@ -6,6 +6,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { ElectricityIncreasePanel } from './ElectricityIncreasePanel.js';
 import { ElectricityPriceAdjustmentsPanel } from './ElectricityPriceAdjustmentsPanel.js';
+import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 
 interface ElectricityOrderDetail {
   orderId: string;
@@ -251,6 +252,15 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   }
 
   const nextActionLink = detail ? nextActionHref(detail) : null;
+  const latestEvent = detail?.timeline?.at(-1);
+  const actionOwner =
+    detail?.nextAction === 'none'
+      ? 'none'
+      : ['pay_invoice', 'accept_contract', 'resubmit_changes', 'continue_order'].includes(
+            detail?.nextAction ?? ''
+          )
+        ? 'customer'
+        : 'staff';
   return (
     <main
       className="container mx-auto max-w-2xl space-y-6 px-4 py-8"
@@ -276,6 +286,25 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
         </div>
       ) : (
         <>
+          <WorkflowStatusBanner
+            locale={locale}
+            status={t(
+              statusKeys[detail.electricityStatus] ?? 'electricity.order.status.unknown',
+              locale
+            )}
+            happened={t(
+              timelineKeys[latestEvent?.event ?? ''] ??
+                statusKeys[detail.electricityStatus] ??
+                'electricity.order.timeline.updated',
+              locale
+            )}
+            nextAction={t(
+              actionKeys[detail.nextAction] ?? 'electricity.order.nextAction.none',
+              locale
+            )}
+            owner={actionOwner}
+            actionHref={nextActionLink}
+          />
           <Card>
             <CardContent className="space-y-3 pt-6 text-sm">
               <p className="flex justify-between gap-3">
@@ -324,15 +353,6 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               <p className="flex justify-between gap-3">
                 <span>{t('electricity.order.deliveryAddress', locale)}</span>
                 <span>{detail.fullAddress}</span>
-              </p>
-              <p className="flex justify-between gap-3">
-                <span>{t('electricity.order.commercialStatus', locale)}</span>
-                <span>
-                  {t(
-                    statusKeys[detail.electricityStatus] ?? 'electricity.order.status.unknown',
-                    locale
-                  )}
-                </span>
               </p>
               <p className="flex justify-between gap-3">
                 <span>{t('electricity.order.financialStatus', locale)}</span>
@@ -398,23 +418,6 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             <ElectricityIncreasePanel contractId={detail.contractId} versionId={detail.versionId} />
           ) : null}
           <ElectricityPriceAdjustmentsPanel contractId={detail.contractId} />
-          <Card>
-            <CardContent className="pt-6">
-              <h2 className="font-semibold">{t('electricity.order.nextAction', locale)}</h2>
-              {nextActionLink ? (
-                <a
-                  className="mt-2 inline-block text-primary underline underline-offset-4"
-                  href={nextActionLink}
-                >
-                  {t(actionKeys[detail.nextAction] ?? 'electricity.order.nextAction.none', locale)}
-                </a>
-              ) : (
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {t(actionKeys[detail.nextAction] ?? 'electricity.order.nextAction.none', locale)}
-                </p>
-              )}
-            </CardContent>
-          </Card>
           <Card>
             <CardContent className="space-y-3 pt-6 text-sm">
               <h2 className="font-semibold">{t('electricity.order.detail.timeline', locale)}</h2>

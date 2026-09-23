@@ -66,7 +66,8 @@ it('loads an order confirmation with its invoice and contract references', async
     expect(request).toHaveBeenCalledWith('/api/electricity/orders/order-1', expect.any(Object));
     expect(container.textContent).toContain('2500000');
     expect(container.textContent).toContain('Awaiting staff review');
-    expect(container.textContent).toContain('Commercial status');
+    expect(container.textContent).toContain('Current status');
+    expect(container.textContent).toContain('Who acts next');
     expect(container.textContent).toContain('Financial status');
     expect(container.textContent).toContain('Contract draft awaiting publication');
     expect(container.textContent).toContain('Energy mix and price');

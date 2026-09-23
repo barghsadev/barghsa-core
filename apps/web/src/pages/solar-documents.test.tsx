@@ -25,6 +25,7 @@ it('allows an empty solar document set to be sent for review', async () => {
             agreement_version: 'v1',
             agreement_snapshot: 'terms',
             agreement_accepted_at: new Date().toISOString(),
+            submitted_at: new Date().toISOString(),
           },
         })
       );

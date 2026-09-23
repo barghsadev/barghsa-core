@@ -23,6 +23,8 @@ import { ContractTerms } from './ContractTerms.js';
 import { ContractDraftEditor } from './ContractDraftEditor.js';
 import { DocumentResults, type DocumentFilters } from './DocumentsWorkspace.js';
 import { DocumentUpload, type ContractDocumentAssociation } from './DocumentUpload.js';
+import { WorkflowStatusBanner } from './WorkflowStatusBanner.js';
+import { t } from '@barghsa/i18n/app';
 
 type VersionPage = { versions: ContractVersion[]; nextBefore: number | null };
 export function ContractDetail({
@@ -169,7 +171,30 @@ export function ContractDetail({
       ) : (
         <>
           {time.notice}
-          <StatusBadge label={word(data.contract.state)} />
+          {!staff && isCurrent ? (
+            <WorkflowStatusBanner
+              locale={locale}
+              status={word(data.contract.state)}
+              happened={data.version.changeDescription}
+              nextAction={
+                data.contract.canAccept
+                  ? word('accept')
+                  : ['Active', 'Completed', 'Cancelled'].includes(data.contract.state)
+                    ? t('workflow.none', locale)
+                    : t('workflow.contract.awaitStaff', locale)
+              }
+              owner={
+                data.contract.canAccept
+                  ? 'customer'
+                  : ['Active', 'Completed', 'Cancelled'].includes(data.contract.state)
+                    ? 'none'
+                    : 'staff'
+              }
+              actionHref={data.contract.canAccept ? '#contract-accept' : null}
+            />
+          ) : (
+            <StatusBadge label={word(data.contract.state)} />
+          )}
           <div>
             <h3 className="font-semibold">
               {word('version')} {data.version.versionNumber.toLocaleString(locale)}
@@ -202,7 +227,7 @@ export function ContractDetail({
           ) : null}
           <p className="text-sm text-muted-foreground">{word('acceptNotice')}</p>
           {!staff && isCurrent && data.contract.canAccept ? (
-            <div className="flex flex-col gap-3">
+            <div id="contract-accept" className="flex flex-col gap-3">
               <label className="flex items-start gap-2">
                 <input
                   type="checkbox"

@@ -5,6 +5,18 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'workflow.summary': 'خلاصه وضعیت و اقدام بعدی',
+  'workflow.status': 'وضعیت کنونی',
+  'workflow.happened': 'چه اتفاقی افتاده است',
+  'workflow.nextAction': 'اقدام بعدی',
+  'workflow.owner': 'مسئول اقدام',
+  'workflow.owner.customer': 'شما',
+  'workflow.owner.staff': 'تیم ما',
+  'workflow.owner.none': 'اقدامی لازم نیست',
+  'workflow.help': 'نیاز به کمک دارید؟',
+  'workflow.support': 'تماس با پشتیبانی',
+  'workflow.none': 'اقدام دیگری لازم نیست.',
+  'workflow.contract.awaitStaff': 'تیم ما گام بعدی قرارداد را پیگیری می‌کند.',
   'electricity.priceAdjustment.title': 'تغییرات قیمت برق',
   'electricity.priceAdjustment.loading': 'در حال دریافت تغییرات قیمت…',
   'electricity.priceAdjustment.error': 'دریافت تغییرات قیمت ممکن نشد.',
@@ -1147,6 +1159,18 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'workflow.summary': 'Status and next action',
+  'workflow.status': 'Current status',
+  'workflow.happened': 'What happened',
+  'workflow.nextAction': 'Next action',
+  'workflow.owner': 'Who acts next',
+  'workflow.owner.customer': 'You',
+  'workflow.owner.staff': 'Our team',
+  'workflow.owner.none': 'No action needed',
+  'workflow.help': 'Need help?',
+  'workflow.support': 'Contact support',
+  'workflow.none': 'No further action is needed.',
+  'workflow.contract.awaitStaff': 'Our team is handling the next contract step.',
   'electricity.priceAdjustment.title': 'Electricity price changes',
   'electricity.priceAdjustment.loading': 'Loading price changes…',
   'electricity.priceAdjustment.error': 'Could not load price changes.',
