@@ -77,6 +77,7 @@ export interface CustomerInvoiceNodeDto {
 export interface CustomerInvoiceDetailsDto extends CustomerInvoiceActivity {
   viewedInvoiceId: string;
   originalInvoiceId: string;
+  consultationId?: string | null;
   invoice: CustomerInvoiceNodeDto;
   /** Original first, then linked replacements/adjustments chronologically. */
   chain: CustomerInvoiceNodeDto[];
@@ -445,7 +446,18 @@ export class CustomerInvoiceDetailsService {
         rows: family,
         linesByInvoiceId,
       });
-      return { ...details, ...(await loadCustomerInvoiceActivity(client, invoiceId, profileId)) };
+      const consultationId =
+        (
+          await client.query<{ consultation_id: string | null }>(
+            'SELECT consultation_id FROM invoices WHERE id=$1 AND profile_id=$2',
+            [invoiceId, profileId]
+          )
+        ).rows[0]?.consultation_id ?? null;
+      return {
+        ...details,
+        consultationId,
+        ...(await loadCustomerInvoiceActivity(client, invoiceId, profileId)),
+      };
     });
   }
 

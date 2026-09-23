@@ -35,6 +35,7 @@ import {
 } from './invoice-state.model.js';
 import { InvoiceAuditRepository, type TransactionClient } from './invoice-audit.repository.js';
 import { isCustomerPaymentTransition } from '@barghsa/shared/finance';
+import { settlePaidConsultation } from '../consultation/consultation-payment.js';
 
 /** Result returned by every transition method. */
 export interface TransitionResult {
@@ -128,7 +129,7 @@ export class InvoiceStateMachineService {
 
       // Lock the invoice row and verify its current state
       const lockResult = (await client.query(
-        `SELECT id, state, adjustment_kind, total_amount, paid_amount, refunded_amount
+        `SELECT id, state, adjustment_kind, total_amount, paid_amount, refunded_amount, consultation_id
          FROM invoices WHERE id = $1 FOR UPDATE`,
         [invoiceId]
       )) as {
@@ -139,6 +140,7 @@ export class InvoiceStateMachineService {
           total_amount: string;
           paid_amount: string;
           refunded_amount: string;
+          consultation_id?: string | null;
         }>;
       };
       if (lockResult.rows.length === 0) {
@@ -226,6 +228,10 @@ export class InvoiceStateMachineService {
         },
         now
       );
+
+      const consultationId = lockResult.rows[0]!.consultation_id;
+      if (to === 'Paid' && consultationId)
+        await settlePaidConsultation(client, consultationId, invoiceId, opts.actorUserId);
 
       if (ownsClient) await client.query('COMMIT');
 

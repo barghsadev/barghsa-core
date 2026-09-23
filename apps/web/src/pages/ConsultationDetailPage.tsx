@@ -17,6 +17,8 @@ interface Detail {
     expected_next_step: string | null;
     offer_valid_until: string | null;
     invoice_id: string | null;
+    invoice_state: string | null;
+    accepted_at: string | null;
   };
   history: Array<{
     status: string;
@@ -86,7 +88,41 @@ export function ConsultationDetailPage() {
     }
   }
 
+  async function decide(decision: 'accept' | 'decline') {
+    if (sending) return;
+    if (decision === 'decline' && !window.confirm(copy('confirmDecline'))) return;
+    setSending(true);
+    setActionError(false);
+    try {
+      const response = await fetch(
+        `/api/consultations/requests/${encodeURIComponent(requestId)}/${decision}`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({}),
+        }
+      );
+      if (!response.ok) throw new Error(decision);
+      const result = (await response.json()) as { paymentRequired?: boolean; invoiceId?: string };
+      if (decision === 'accept' && result.paymentRequired && result.invoiceId) {
+        window.location.assign(`/invoices/${result.invoiceId}`);
+        return;
+      }
+      setRevision((value) => value + 1);
+    } catch {
+      setActionError(true);
+    } finally {
+      setSending(false);
+    }
+  }
+
   const request = detail?.request;
+  const offerExpired =
+    !!request?.offer_valid_until &&
+    new Date(request.offer_valid_until) <= new Date() &&
+    request.invoice_state !== 'Paid' &&
+    !request.accepted_at;
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <a href="/consultations" className="text-sm text-primary underline">
@@ -138,7 +174,7 @@ export function ConsultationDetailPage() {
                 </time>
               </p>
             )}
-            {request.invoice_id && (
+            {request.invoice_id && request.accepted_at && (
               <p>
                 <a className="text-primary underline" href={`/invoices/${request.invoice_id}`}>
                   {copy('viewInvoice')}
@@ -146,6 +182,42 @@ export function ConsultationDetailPage() {
               </p>
             )}
           </section>
+          {request.status === 'offer_pending' && (
+            <section className="space-y-3 rounded-xl border bg-card p-5">
+              {offerExpired && <p role="status">{copy('offerExpired')}</p>}
+              {request.invoice_state === 'PaymentUnderReview' ? (
+                <p>{copy('paymentUnderReview')}</p>
+              ) : request.accepted_at && request.invoice_state !== 'Paid' ? (
+                <p>{copy('acceptedAwaitingPayment')}</p>
+              ) : (
+                <p>{copy('reviewOffer')}</p>
+              )}
+              <div className="flex flex-wrap gap-2">
+                {(!request.accepted_at || request.invoice_state === 'Paid') && (
+                  <Button
+                    type="button"
+                    disabled={sending || offerExpired}
+                    onClick={() => void decide('accept')}
+                  >
+                    {copy(request.invoice_state === 'Paid' ? 'confirmAcceptance' : 'acceptOffer')}
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={sending || request.invoice_state === 'Paid'}
+                  onClick={() => void decide('decline')}
+                >
+                  {copy('declineOffer')}
+                </Button>
+              </div>
+              {actionError && (
+                <p role="alert" className="text-destructive">
+                  {copy('actionError')}
+                </p>
+              )}
+            </section>
+          )}
           {request.status === 'awaiting_customer_info' && (
             <form onSubmit={provideInfo} className="space-y-3 rounded-xl border bg-card p-5">
               <Label htmlFor="consultation-information">{copy('information')}</Label>

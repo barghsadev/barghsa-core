@@ -1,0 +1,7 @@
+# Consultation acceptance and payment batch
+
+Canonical scope: `03-core-business.md#T-03.03.01.02`, `03-core-business.md#T-03.03.02.03`, `03-core-business.md#T-03.03.02.05`, and completion support in `03-core-business.md#T-03.03.03.02`. A paid-invoice fee adjustment or refund remains a separate financial workflow.
+
+Customers can accept a valid consultation offer, then pay its linked invoice through the existing wallet or bank-receipt paths. The accepted offer remains pending until the invoice reaches `Paid`; the invoice transition then atomically records `offer_accepted`, history, audit evidence, and an in-app notification. If payment occurred first, acceptance settles the request immediately. Staff can complete only a paid, accepted consultation. Customers can also decline an offer, which cancels its unpaid invoice in the same transaction; a pending or paid payment requires financial review instead. A revised offer resets prior acceptance. The customer pages expose accept, decline, invoice payment, and a return link to the request, with Persian and English text.
+
+Validation: HTTP integration covered accept → wallet payment → automatic status change → staff completion, decline with invoice cancellation, payment before acceptance, and replacement after acceptance. Existing invoice state-machine and wallet-payment tests passed. Root build, typecheck, lint, format, migration snapshot, backlog, and OpenAPI contract checks passed.

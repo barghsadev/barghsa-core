@@ -210,9 +210,10 @@ export class ConsultationRequestService {
       await requireCurrentSession(client, actor);
       const request = (
         await client.query<Record<string, unknown>>(
-          `SELECT id,profile_id,product_id,product_snapshot,status,staff_owner_id,staff_team,
-          fee::text AS fee,scope,deliverables,expected_next_step,offer_valid_until,invoice_id,
-          submitted_at,updated_at FROM consultation_requests WHERE id=$1`,
+          `SELECT r.id,r.profile_id,r.product_id,r.product_snapshot,r.status,r.staff_owner_id,r.staff_team,
+          r.fee::text AS fee,r.scope,r.deliverables,r.expected_next_step,r.offer_valid_until,r.invoice_id,
+          r.accepted_at,i.state AS invoice_state,r.submitted_at,r.updated_at
+          FROM consultation_requests r LEFT JOIN invoices i ON i.id=r.invoice_id WHERE r.id=$1`,
           [id]
         )
       ).rows[0];

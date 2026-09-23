@@ -192,6 +192,8 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
   const replayed = await post(`${root}/fee`, 'reviewer', firstOffer);
   expect(replayed.status, http.logs()).toBe(200);
   expect(await replayed.json()).toMatchObject({ invoiceId: firstId });
+  const acceptance = await post(`/api/consultations/requests/${requestId}/accept`, 'customer', {});
+  expect(acceptance.status, http.logs()).toBe(200);
   const firstInvoice = (
     await http.pool.query(
       'SELECT consultation_id,profile_id,state,total_amount FROM invoices WHERE id=$1',
@@ -238,9 +240,17 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
     invoice_id: secondId,
     fee: '600000',
   });
+  expect(
+    (
+      await http.pool.query('SELECT accepted_at FROM consultation_requests WHERE id=$1', [
+        requestId,
+      ])
+    ).rows[0]?.accepted_at
+  ).toBeNull();
   expect(body.history.map((event) => event.status)).toEqual([
     'submitted',
     'under_review',
+    'offer_pending',
     'offer_pending',
     'under_review',
     'offer_pending',

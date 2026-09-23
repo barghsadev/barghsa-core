@@ -72,6 +72,7 @@ export interface InvoiceRefundActivity {
 export interface CustomerInvoiceDetails {
   viewedInvoiceId: string;
   originalInvoiceId: string;
+  consultationId?: string | null;
   invoice: CustomerInvoiceNode;
   chain: CustomerInvoiceNode[];
   /** Optional during rolling deployment of the expanded details API. */

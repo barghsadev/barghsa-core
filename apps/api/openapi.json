@@ -3286,6 +3286,56 @@
         ]
       }
     },
+    "/api/admin/consultations/requests/{id}/complete": {
+      "post": {
+        "operationId": "StaffConsultationWorkflowController_complete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Mark a paid and accepted consultation completed",
+        "tags": [
+          "Admin · Consultations"
+        ]
+      }
+    },
     "/api/admin/consultations/requests/{id}/fee": {
       "post": {
         "operationId": "StaffConsultationWorkflowController_setFee",
@@ -13798,6 +13848,94 @@
           }
         ],
         "summary": "Read a consultation request and status history",
+        "tags": [
+          "Consultation requests"
+        ]
+      }
+    },
+    "/api/consultations/requests/{id}/accept": {
+      "post": {
+        "operationId": "CustomerConsultationWorkflowController_accept",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Accept a consultation offer and proceed to its invoice payment",
+        "tags": [
+          "Consultation requests"
+        ]
+      }
+    },
+    "/api/consultations/requests/{id}/decline": {
+      "post": {
+        "operationId": "CustomerConsultationWorkflowController_decline",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Decline a consultation offer and cancel its unpaid invoice",
         "tags": [
           "Consultation requests"
         ]

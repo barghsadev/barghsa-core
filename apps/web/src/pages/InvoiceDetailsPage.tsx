@@ -8,6 +8,7 @@ import { t } from '@barghsa/i18n/app';
 import { canCustomerSubmitInvoiceBankReceipt } from '@barghsa/shared/finance';
 import { ArrowRightIcon, Loader2Icon, ReceiptIcon } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
+import { tConsultation } from '@barghsa/i18n/consultation';
 import {
   InvoiceRequestError,
   fetchInvoiceDetails,
@@ -82,6 +83,14 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
           {t('invoices.details.back', locale)}
         </Link>
       </nav>
+      {details?.consultationId && (
+        <a
+          className="text-sm text-primary underline"
+          href={`/consultations/${details.consultationId}`}
+        >
+          {tConsultation('backToRequest', locale)}
+        </a>
+      )}
 
       <header className="flex items-center gap-2">
         <ReceiptIcon className="h-6 w-6 text-primary" aria-hidden="true" />

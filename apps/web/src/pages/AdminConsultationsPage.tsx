@@ -425,6 +425,16 @@ export function AdminConsultationsPage() {
                       {copy('requestInfo')}
                     </Button>
                   )}
+                  {current.status === 'offer_accepted' && (
+                    <Button
+                      disabled={!reason.trim()}
+                      onClick={() =>
+                        prepare('complete', copy('complete'), { reason: reason.trim() })
+                      }
+                    >
+                      {copy('complete')}
+                    </Button>
+                  )}
                   {!['completed', 'rejected', 'cancelled', 'offer_declined'].includes(
                     current.status
                   ) && (

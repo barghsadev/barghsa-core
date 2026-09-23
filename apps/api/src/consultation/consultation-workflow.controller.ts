@@ -23,6 +23,7 @@ const assignment = z.discriminatedUnion('assignTo', [
   z.object({ assignTo: z.literal('team'), team: z.string().trim().min(1).max(80) }).strict(),
 ]);
 const reason = z.object({ reason: z.string().trim().min(1).max(2000) }).strict();
+const optionalReason = z.object({ reason: z.string().trim().min(1).max(2000).optional() }).strict();
 const feeOffer = z
   .object({
     idempotencyKey: z.string().uuid(),
@@ -181,6 +182,24 @@ export class StaffConsultationWorkflowController {
       req.ip ?? '127.0.0.1'
     );
   }
+
+  @Post('requests/:id/complete')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Mark a paid and accepted consultation completed' })
+  @ApiZodBody(reason)
+  complete(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.workflow.staffAction(
+      req.session,
+      id,
+      'complete',
+      parse(reason, body).reason,
+      req.ip ?? '127.0.0.1'
+    );
+  }
 }
 
 @ApiTags('Consultation requests')
@@ -205,6 +224,44 @@ export class CustomerConsultationWorkflowController {
       req.session,
       id,
       parse(reason, body).reason,
+      req.ip ?? '127.0.0.1'
+    );
+  }
+
+  @Post('requests/:id/accept')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Accept a consultation offer and proceed to its invoice payment' })
+  @ApiZodBody(empty)
+  accept(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    parse(empty, body);
+    return this.workflow.customerDecision(
+      req.session,
+      id,
+      'accept',
+      undefined,
+      req.ip ?? '127.0.0.1'
+    );
+  }
+
+  @Post('requests/:id/decline')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Decline a consultation offer and cancel its unpaid invoice' })
+  @ApiZodBody(optionalReason)
+  decline(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const parsed = parse(optionalReason, body);
+    return this.workflow.customerDecision(
+      req.session,
+      id,
+      'decline',
+      parsed.reason,
       req.ip ?? '127.0.0.1'
     );
   }

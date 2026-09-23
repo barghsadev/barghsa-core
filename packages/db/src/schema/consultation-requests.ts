@@ -52,6 +52,8 @@ export const consultationRequests = pgTable(
     deliverables: text('deliverables'),
     expectedNextStep: text('expected_next_step'),
     offerValidUntil: timestamp('offer_valid_until', { withTimezone: true }),
+    acceptedAt: timestamp('accepted_at', { withTimezone: true }),
+    acceptedBy: text('accepted_by').references(() => users.userId, { onDelete: 'restrict' }),
     invoiceId: uuid('invoice_id').references(() => invoices.id, { onDelete: 'restrict' }),
     submittedAt: timestamp('submitted_at', { withTimezone: true }).notNull().defaultNow(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

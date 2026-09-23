@@ -1,0 +1,3 @@
+ALTER TABLE "consultation_requests" ADD COLUMN "accepted_at" timestamp with time zone;--> statement-breakpoint
+ALTER TABLE "consultation_requests" ADD COLUMN "accepted_by" text;--> statement-breakpoint
+ALTER TABLE "consultation_requests" ADD CONSTRAINT "consultation_requests_accepted_by_users_user_id_fk" FOREIGN KEY ("accepted_by") REFERENCES "public"."users"("user_id") ON DELETE restrict ON UPDATE no action;

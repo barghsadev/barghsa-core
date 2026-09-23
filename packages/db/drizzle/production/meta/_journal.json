@@ -624,6 +624,13 @@
       "when": 1791331200071,
       "tag": "0168_consultation_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 169,
+      "version": "7",
+      "when": 1791331200072,
+      "tag": "0169_consultation_offer_acceptance",
+      "breakpoints": true
     }
   ]
 }
