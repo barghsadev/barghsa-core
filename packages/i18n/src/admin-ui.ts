@@ -420,6 +420,19 @@ export const fa: I18nDictionary = {
   'admin.green.draftTtlDays': 'روز (۱ تا ۳۶۵)',
   'admin.green.draftTtlSave': 'ذخیره مدت نگهداری',
   'admin.green.draftTtlConfirm': 'مدت نگهداری پیش‌نویس سفارش‌های ساده برق تغییر می‌کند.',
+  'admin.green.templateTitle': 'قالب قرارداد اولیه برق',
+  'admin.green.templateDescription':
+    'نسخه انتخاب‌شده در قراردادهای اولیه سفارش‌های جدید ثبت می‌شود.',
+  'admin.green.templateLabel': 'نسخه قالب',
+  'admin.green.templateNone': 'بدون قالب',
+  'admin.green.templateVersion': 'نسخه',
+  'admin.green.templateInactive': 'غیرفعال',
+  'admin.green.templateUnsupported': 'متغیر پشتیبانی‌نشده',
+  'admin.green.templatePlaceholders':
+    'متغیرهای مجاز: {{date}}، {{customerName}} و {{amount}} (ریال).',
+  'admin.green.templateSave': 'ذخیره قالب قرارداد',
+  'admin.green.templateConfirm':
+    'این قالب برای قراردادهای اولیه سفارش‌های جدید برق استفاده می‌شود.',
   'admin.reconciliation.title': 'مغایرت‌های مالی',
   'admin.reconciliation.description': 'مغایرت‌های گزارش‌شده را بررسی و نتیجه رسیدگی را ثبت کنید.',
   'admin.reconciliation.status': 'وضعیت',
@@ -1499,6 +1512,18 @@ export const en: I18nDictionary = {
   'admin.green.draftTtlDays': 'Days (1–365)',
   'admin.green.draftTtlSave': 'Save retention period',
   'admin.green.draftTtlConfirm': 'Change how long simple electricity order drafts are retained.',
+  'admin.green.templateTitle': 'Preliminary electricity contract template',
+  'admin.green.templateDescription':
+    'The selected version is saved in new order contract snapshots.',
+  'admin.green.templateLabel': 'Template version',
+  'admin.green.templateNone': 'No template',
+  'admin.green.templateVersion': 'version',
+  'admin.green.templateInactive': 'inactive',
+  'admin.green.templateUnsupported': 'unsupported placeholder',
+  'admin.green.templatePlaceholders':
+    'Supported placeholders: {{date}}, {{customerName}}, and {{amount}} (IRR).',
+  'admin.green.templateSave': 'Save contract template',
+  'admin.green.templateConfirm': 'Use this template for new preliminary electricity contracts.',
   'admin.reconciliation.title': 'Reconciliation exceptions',
   'admin.reconciliation.description':
     'Review reported mismatches and record each investigation outcome.',

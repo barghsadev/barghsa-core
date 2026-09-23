@@ -73,6 +73,7 @@ import {
 } from '@barghsa/shared/admin';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { ConfigCacheService } from '../config-cache/config-cache.service.js';
+import { z } from 'zod';
 
 /**
  * Supported activation methods for new staff users.
@@ -1572,6 +1573,125 @@ export class AdminService {
       throw new HttpException({ error: 'CONFIG:STORED_VALUE_INVALID' }, 503);
     }
     return { days };
+  }
+
+  async getElectricityContractTemplate() {
+    const pool = getDbPool();
+    const row = (
+      await pool.query<{ value: unknown }>(
+        "SELECT value FROM app_config WHERE key='electricity.contract_template_version_id'"
+      )
+    ).rows[0];
+    const selectedVersionId = row?.value ?? null;
+    if (
+      selectedVersionId !== null &&
+      (typeof selectedVersionId !== 'string' ||
+        !z.string().uuid().safeParse(selectedVersionId).success)
+    ) {
+      throw new HttpException({ error: 'CONFIG:STORED_VALUE_INVALID' }, 503);
+    }
+    const options = (
+      await pool.query<{
+        id: string;
+        name: string;
+        version_number: number;
+        status: string;
+        placeholders: string[];
+      }>(
+        `SELECT v.id,t.name,v.version_number,t.status,v.placeholders
+         FROM contract_template_versions v JOIN contract_templates t ON t.id=v.template_id
+         WHERE t.status='active' OR v.id=$1::uuid
+         ORDER BY t.name,v.version_number DESC`,
+        [selectedVersionId]
+      )
+    ).rows.map((version) => ({
+      id: version.id,
+      name: version.name,
+      versionNumber: version.version_number,
+      active: version.status === 'active',
+      supported: version.placeholders.every((name) =>
+        ['date', 'customerName', 'amount'].includes(name)
+      ),
+    }));
+    if (selectedVersionId && !options.some((option) => option.id === selectedVersionId)) {
+      throw new HttpException({ error: 'CONFIG:STORED_VALUE_INVALID' }, 503);
+    }
+    return { selectedVersionId, options };
+  }
+
+  async setElectricityContractTemplate(
+    versionId: string | null,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:catalogue:edit');
+      await requireSessionStepUp(client, actor);
+      await client.query("SELECT pg_advisory_xact_lock(hashtext('electricity-contract-template'))");
+      if (versionId !== null) {
+        const version = (
+          await client.query<{ placeholders: string[] }>(
+            `SELECT v.placeholders FROM contract_template_versions v
+             JOIN contract_templates t ON t.id=v.template_id
+             WHERE v.id=$1 AND t.status='active' FOR SHARE OF v,t`,
+            [versionId]
+          )
+        ).rows[0];
+        if (
+          !version ||
+          !version.placeholders.every((name) => ['date', 'customerName', 'amount'].includes(name))
+        ) {
+          throw new BadRequestException(
+            'Choose an active text template using only date, customerName, and amount placeholders'
+          );
+        }
+      }
+      const previous = (
+        await client.query<{ value: unknown; version: number }>(
+          "SELECT value,version FROM app_config WHERE key='electricity.contract_template_version_id' FOR UPDATE"
+        )
+      ).rows[0];
+      const version = (
+        await client.query<{ version: number }>(
+          `INSERT INTO app_config(key,value,version,updated_at)
+           VALUES('electricity.contract_template_version_id',$1::jsonb,1,NOW())
+           ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,
+             version=app_config.version+1,updated_at=NOW()
+           RETURNING version`,
+          [JSON.stringify(versionId)]
+        )
+      ).rows[0]!.version;
+      await client.query(
+        "UPDATE config_version SET version=version+1,updated_at=NOW() WHERE id='global'"
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES($1,$2,'config_change',$3::jsonb,$4,$5,NOW())`,
+        [
+          uuidv7(),
+          actor.userId,
+          JSON.stringify({
+            key: 'electricity.contract_template_version_id',
+            previousValue: previous?.value ?? null,
+            previousVersion: previous?.version ?? 0,
+            newValue: versionId,
+            version,
+          }),
+          uuidv7(),
+          ip,
+        ]
+      );
+      await requireSessionStepUp(client, actor);
+      await client.query('COMMIT');
+      return this.getElectricityContractTemplate();
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   async setElectricityOrderDraftTtl(

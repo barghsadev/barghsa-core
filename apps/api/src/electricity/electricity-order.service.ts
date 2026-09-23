@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import {
   BadRequestException,
   ConflictException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,6 +10,7 @@ import { getDbPool } from '@barghsa/db';
 import { normalizeGiftCode } from '@barghsa/shared/promotions';
 import { v7 as uuidv7 } from 'uuid';
 import type { PoolClient } from 'pg';
+import type { StorageProvider } from '@barghsa/shared/storage';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { idempotentMutation } from '../database/idempotency.js';
@@ -25,6 +27,8 @@ import {
 } from './electricity-calculation.js';
 import { persistElectricitySubmissionSnapshot } from './electricity-submission-snapshot.js';
 import { createElectricityRefundObligation } from './electricity-refund-obligation.js';
+import { STORAGE_PROVIDER } from '../storage/index.js';
+import { electricityContractTemplateSnapshot } from './electricity-contract-template.js';
 import {
   electricityFinancialStatus,
   electricityNextAction,
@@ -132,7 +136,8 @@ export class ElectricityOrderService {
     private readonly calculator: ElectricityCalculationService,
     private readonly giftCodes: GiftCodeService,
     private readonly dueDates: DueAtCalculationService,
-    private readonly invoiceStates: InvoiceStateMachineService
+    private readonly invoiceStates: InvoiceStateMachineService,
+    @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider | null
   ) {}
 
   async advancedOptions(actor: Actor) {
@@ -1072,6 +1077,13 @@ export class ElectricityOrderService {
       }
       const contractId = uuidv7(),
         versionId = uuidv7();
+      const template = await electricityContractTemplateSnapshot(
+        client,
+        this.storage,
+        input.profileId,
+        quoted.totals.totalIrR,
+        now
+      );
       await client.query(
         `INSERT INTO contracts(id,profile_id,order_id,service_type,state,current_version_id)
          VALUES($1,$2,$3,'electricity','Draft',$4)`,
@@ -1083,7 +1095,12 @@ export class ElectricityOrderService {
         [
           versionId,
           contractId,
-          JSON.stringify({ orderId, pricing: snapshot, settings: quoted.settings }),
+          JSON.stringify({
+            orderId,
+            pricing: snapshot,
+            settings: quoted.settings,
+            ...(template ? { template } : {}),
+          }),
           actor.userId,
         ]
       );

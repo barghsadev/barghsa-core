@@ -51,10 +51,62 @@ const configKey = 'electricity.green_mandatory_rules';
 beforeEach(async () => {
   await http.pool.query('DELETE FROM app_config WHERE key=$1', [configKey]);
   await http.pool.query("DELETE FROM app_config WHERE key='electricity.order_draft_ttl_days'");
+  await http.pool.query(
+    "DELETE FROM app_config WHERE key='electricity.contract_template_version_id'"
+  );
   await http.pool.query("DELETE FROM audit_log WHERE event='config_change'");
   await http.pool.query(
     "INSERT INTO products(system_key,title,price,status) VALUES ('green','{\"en\":\"Green test\"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active',price=1000"
   );
+});
+
+it('selects an active contract template version for new electricity orders and audits the setting', async () => {
+  const url = `${http.base}/api/admin/config/electricity-contract-template`;
+  expect((await fetch(url, { headers: headers.other! })).status).toBe(403);
+  expect(await (await fetch(url, { headers: headers.operator! })).json()).toEqual({
+    selectedVersionId: null,
+    options: [],
+  });
+  const templateId = (
+    await http.pool.query(
+      "INSERT INTO contract_templates(name,created_by) VALUES('Electricity agreement','operator') RETURNING id"
+    )
+  ).rows[0].id as string;
+  const versionId = (
+    await http.pool.query(
+      `INSERT INTO contract_template_versions(template_id,version_number,storage_key,file_name,
+        placeholders,created_by) VALUES($1,1,$2,'agreement.txt',ARRAY['customerName']::text[],'operator') RETURNING id`,
+      [templateId, `contract-templates/${randomUUID()}.txt`]
+    )
+  ).rows[0].id as string;
+  const unsupportedVersionId = (
+    await http.pool.query(
+      `INSERT INTO contract_template_versions(template_id,version_number,storage_key,file_name,
+        placeholders,created_by) VALUES($1,2,$2,'unknown.txt',ARRAY['unknown']::text[],'operator') RETURNING id`,
+      [templateId, `contract-templates/${randomUUID()}.txt`]
+    )
+  ).rows[0].id as string;
+  const put = (versionId: string | null) =>
+    fetch(url, {
+      method: 'PUT',
+      headers: headers.operator!,
+      body: JSON.stringify({ versionId }),
+    });
+  expect((await put(unsupportedVersionId)).status).toBe(400);
+  const selected = await put(versionId);
+  expect(selected.status, http.logs()).toBe(200);
+  expect(await selected.json()).toMatchObject({ selectedVersionId: versionId });
+  expect(await (await fetch(url, { headers: headers.operator! })).json()).toMatchObject({
+    selectedVersionId: versionId,
+    options: expect.arrayContaining([expect.objectContaining({ id: versionId, supported: true })]),
+  });
+  const audit = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='config_change' AND metadata::jsonb->>'key'='electricity.contract_template_version_id'"
+    )
+  ).rows;
+  expect(audit).toHaveLength(1);
+  expect(audit[0].metadata).toMatchObject({ newValue: versionId, version: 1 });
 });
 
 it('allows authorized staff to configure audited electricity draft retention', async () => {

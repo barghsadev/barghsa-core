@@ -9,6 +9,16 @@ interface Safety {
   simpleOrder: { blocked: boolean; reasons: string[] };
   advancedOrder: { blocked: boolean; reasons: string[] };
 }
+interface ContractTemplateSetting {
+  selectedVersionId: string | null;
+  options: Array<{
+    id: string;
+    name: string;
+    versionNumber: number;
+    active: boolean;
+    supported: boolean;
+  }>;
+}
 const modes: GreenElectricityOrderMode[] = ['simpleOrder', 'advancedOrder'];
 export default function AdminElectricityRulesPage() {
   const locale = useLocale();
@@ -16,7 +26,9 @@ export default function AdminElectricityRulesPage() {
   const label = (key: string) => t(`admin.green.${key}`, locale);
   const [config, setConfig] = useState<GreenElectricityConfig | null>(null),
     [safety, setSafety] = useState<Safety | null>(null),
-    [draftTtlDays, setDraftTtlDays] = useState<number | null>(null);
+    [draftTtlDays, setDraftTtlDays] = useState<number | null>(null),
+    [templateSetting, setTemplateSetting] = useState<ContractTemplateSetting | null>(null),
+    [selectedTemplateVersionId, setSelectedTemplateVersionId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true),
     [error, setError] = useState(false),
     [denied, setDenied] = useState(false),
@@ -31,6 +43,7 @@ export default function AdminElectricityRulesPage() {
     setConfig(null);
     setSafety(null);
     setDraftTtlDays(null);
+    setTemplateSetting(null);
     void (async () => {
       try {
         const responses = await Promise.all([
@@ -39,6 +52,7 @@ export default function AdminElectricityRulesPage() {
             signal: controller.signal,
           }),
           fetch('/api/admin/config/electricity-order-draft-ttl', { signal: controller.signal }),
+          fetch('/api/admin/config/electricity-contract-template', { signal: controller.signal }),
         ]);
         if (controller.signal.aborted) return;
         if (responses.some((r) => r.status === 403)) {
@@ -46,13 +60,15 @@ export default function AdminElectricityRulesPage() {
           return;
         }
         if (responses.some((r) => !r.ok)) throw new Error('Unavailable');
-        const [rules, status, ttl] = await Promise.all(responses.map((r) => r.json()));
+        const [rules, status, ttl, templates] = await Promise.all(responses.map((r) => r.json()));
         if (!controller.signal.aborted) {
           setConfig(rules);
           setSafety(status);
           if (!Number.isInteger(ttl?.days) || ttl.days < 1 || ttl.days > 365)
             throw new Error('Invalid draft retention');
           setDraftTtlDays(ttl.days);
+          setTemplateSetting(templates);
+          setSelectedTemplateVersionId(templates.selectedVersionId);
         }
       } catch {
         if (!controller.signal.aborted) setError(true);
@@ -224,6 +240,50 @@ export default function AdminElectricityRulesPage() {
               </div>
               <Button type="submit">{label('draftTtlSave')}</Button>
             </form>
+            {templateSetting && (
+              <form
+                className="space-y-3 rounded-lg border bg-card p-5"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  setAction({
+                    title: label('templateTitle'),
+                    description: label('templateConfirm'),
+                    path: '/api/admin/config/electricity-contract-template',
+                    method: 'PUT',
+                    body: { versionId: selectedTemplateVersionId },
+                    forbiddenMessage: label('forbidden'),
+                  });
+                }}
+              >
+                <h2 className="text-lg font-semibold">{label('templateTitle')}</h2>
+                <p className="text-sm text-muted-foreground">{label('templateDescription')}</p>
+                <div className="max-w-lg space-y-1">
+                  <Label htmlFor="electricity-contract-template">{label('templateLabel')}</Label>
+                  <select
+                    id="electricity-contract-template"
+                    className="w-full rounded-md border bg-background px-3 py-2 text-foreground"
+                    value={selectedTemplateVersionId ?? ''}
+                    onChange={(event) => setSelectedTemplateVersionId(event.target.value || null)}
+                  >
+                    <option value="">{label('templateNone')}</option>
+                    {templateSetting.options.map((option) => (
+                      <option
+                        key={option.id}
+                        value={option.id}
+                        disabled={!option.active || !option.supported}
+                      >
+                        {option.name} · {label('templateVersion')}{' '}
+                        {numbers.number(option.versionNumber)}
+                        {!option.active ? ` · ${label('templateInactive')}` : ''}
+                        {!option.supported ? ` · ${label('templateUnsupported')}` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <p className="text-sm text-muted-foreground">{label('templatePlaceholders')}</p>
+                <Button type="submit">{label('templateSave')}</Button>
+              </form>
+            )}
           </>
         )
       )}

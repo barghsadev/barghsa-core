@@ -2171,6 +2171,39 @@ export class AdminController {
     );
   }
 
+  @Get('config/electricity-contract-template')
+  @ApiOperation({
+    summary: 'Get the selected preliminary electricity contract template and available versions',
+  })
+  async getElectricityContractTemplate(@Req() req: AuthenticatedRequest) {
+    this.assertElectricitySettingsPermission(req);
+    return this.adminService.getElectricityContractTemplate();
+  }
+
+  @Put('config/electricity-contract-template')
+  @ApiOperation({
+    summary: 'Select a versioned template for new preliminary electricity contracts',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['versionId'],
+      additionalProperties: false,
+      properties: { versionId: { type: 'string', format: 'uuid', nullable: true } },
+    },
+  })
+  async setElectricityContractTemplate(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertElectricitySettingsPermission(req);
+    const parsed = z.object({ versionId: z.string().uuid().nullable() }).strict().safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    return this.adminService.setElectricityContractTemplate(
+      parsed.data.versionId,
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
   /**
    * GET /api/admin/config/green-electricity-rules
    *

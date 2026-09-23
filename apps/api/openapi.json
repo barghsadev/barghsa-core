@@ -1826,6 +1826,55 @@
         ]
       }
     },
+    "/api/admin/config/electricity-contract-template": {
+      "get": {
+        "operationId": "AdminController_getElectricityContractTemplate",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get the selected preliminary electricity contract template and available versions",
+        "tags": [
+          "Admin"
+        ]
+      },
+      "put": {
+        "operationId": "AdminController_setElectricityContractTemplate",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "versionId": {
+                    "format": "uuid",
+                    "nullable": true,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "versionId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Select a versioned template for new preliminary electricity contracts",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/config/electricity-order-draft-ttl": {
       "get": {
         "operationId": "AdminController_getElectricityOrderDraftTtl",
