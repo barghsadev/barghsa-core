@@ -42,7 +42,7 @@ export class ConsultationRequestController {
   }
 
   @Post('requests')
-  @RateLimit({ namespace: 'consultation:submit:user', limit: 5, windowMs: 60_000 })
+  @RateLimit({ namespace: 'consultation:submit:user', limit: 60, windowMs: 60_000, scope: 'user' })
   @ApiOperation({ summary: 'Submit a consultation request without creating an invoice' })
   @ApiZodBody(submission)
   submit(@Body() body: unknown, @Req() req: AuthenticatedRequest) {

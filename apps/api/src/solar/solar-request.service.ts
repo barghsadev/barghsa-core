@@ -21,6 +21,7 @@ export class SolarRequestService {
       await requireCurrentSession(client, actor);
       if (!(await this.orders.mayManageOrders(client, actor.userId, input.profileId, true)))
         throw new NotFoundException('Profile not found');
+      await this.orders.lockProfileSubmissions(client, input.profileId);
       const existing = (
         await client.query<{ id: string; profile_id: string }>(
           'SELECT id,profile_id FROM solar_construction_requests WHERE submitted_by=$1 AND submission_key=$2',
@@ -33,6 +34,7 @@ export class SolarRequestService {
         await client.query('COMMIT');
         return { requestId: existing.id, status: 'submitted' as const };
       }
+      await this.orders.enforceProfileSubmissionLimit(client, input.profileId);
       if (input.buildingType === 'non_household') {
         const address = (
           await client.query<{ id: string }>(

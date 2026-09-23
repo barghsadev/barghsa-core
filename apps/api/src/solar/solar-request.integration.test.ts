@@ -153,4 +153,72 @@ it('submits both solar request types, captures agreement, and creates no contrac
       )
     ).rows[0]!.count
   ).toBe(2);
+
+  const products = await request(`/api/consultations/products?profileId=${profileId}`, 'GET');
+  expect(products.status, http.logs()).toBe(200);
+  const productId = ((await products.json()) as { products: Array<{ id: string }> }).products[0]!
+    .id;
+  const consultation = await request('/api/consultations/requests', 'POST', {
+    profileId,
+    productId,
+    submissionKey: randomUUID(),
+  });
+  expect(consultation.status, http.logs()).toBe(201);
+  const extra = await request('/api/solar/requests', 'POST', {
+    ...buildingInput,
+    submissionKey: randomUUID(),
+  });
+  expect(extra.status, http.logs()).toBe(201);
+  const fifth = await request('/api/solar/requests', 'POST', {
+    ...buildingInput,
+    submissionKey: randomUUID(),
+  });
+  expect(fifth.status, http.logs()).toBe(201);
+  const limited = await request('/api/solar/requests', 'POST', {
+    ...buildingInput,
+    submissionKey: randomUUID(),
+  });
+  expect(limited.status, http.logs()).toBe(429);
+  expect(await limited.json()).toMatchObject({ error: { code: 'RATE_LIMIT:EXCEEDED' } });
+  const replayAtLimit = await request('/api/solar/requests', 'POST', buildingInput);
+  expect(replayAtLimit.status, http.logs()).toBe(201);
+  expect(await replayAtLimit.json()).toEqual(building);
+
+  const otherProfile = (
+    await http.pool.query<{ id: string }>(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES('solar-customer','LEGAL','ACTIVE') RETURNING id"
+    )
+  ).rows[0]!.id;
+  await http.pool.query(
+    "INSERT INTO profile_agents(profile_id,user_id,role) VALUES($1,'solar-other','Manager')",
+    [otherProfile]
+  );
+  const independent = await request('/api/solar/requests', 'POST', {
+    ...buildingInput,
+    profileId: otherProfile,
+    submissionKey: randomUUID(),
+  });
+  expect(independent.status, http.logs()).toBe(201);
+  for (let index = 0; index < 3; index++) {
+    const next = await request('/api/consultations/requests', 'POST', {
+      profileId: otherProfile,
+      productId,
+      submissionKey: randomUUID(),
+    });
+    expect(next.status, http.logs()).toBe(201);
+  }
+  const simultaneous = await Promise.all([
+    request('/api/solar/requests', 'POST', {
+      ...buildingInput,
+      profileId: otherProfile,
+      submissionKey: randomUUID(),
+    }),
+    request(
+      '/api/solar/requests',
+      'POST',
+      { ...buildingInput, profileId: otherProfile, submissionKey: randomUUID() },
+      otherHeaders
+    ),
+  ]);
+  expect(simultaneous.map((response) => response.status).sort(), http.logs()).toEqual([201, 429]);
 }, 60_000);

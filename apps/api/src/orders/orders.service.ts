@@ -150,6 +150,33 @@ export class OrdersService {
     await requireCurrentSession(client, actor);
   }
 
+  /** Serialize submissions by all agents of the same profile until commit. */
+  async lockProfileSubmissions(client: PoolClient, profileId: string): Promise<void> {
+    await client.query("SELECT pg_advisory_xact_lock(hashtext('submission-quota:' || $1))", [
+      profileId,
+    ]);
+  }
+
+  /** Call after locking the profile and checking whether this is an idempotent retry. */
+  async enforceProfileSubmissionLimit(client: PoolClient, profileId: string): Promise<void> {
+    const result = await client.query<{ count: string }>(
+      `SELECT (
+         (SELECT count(*) FROM orders o JOIN electricity_orders e ON e.id=o.id
+          WHERE o.profile_id=$1 AND o.order_type='electricity'
+            AND e.submitted_at>=clock_timestamp()-INTERVAL '1 minute') +
+         (SELECT count(*) FROM saving_orders
+          WHERE profile_id=$1 AND submitted_at>=clock_timestamp()-INTERVAL '1 minute') +
+         (SELECT count(*) FROM solar_construction_requests
+          WHERE profile_id=$1 AND submitted_at>=clock_timestamp()-INTERVAL '1 minute') +
+         (SELECT count(*) FROM consultation_requests
+          WHERE profile_id=$1 AND submitted_at>=clock_timestamp()-INTERVAL '1 minute')
+       )::text AS count`,
+      [profileId]
+    );
+    if (Number(result.rows[0]?.count ?? 0) >= 5)
+      throw new HttpException({ error: ErrorCodes.RATE_LIMIT_EXCEEDED.code }, 429);
+  }
+
   async loadElectricitySettings(client: PoolClient): Promise<{
     config: GreenElectricityConfig;
     limits: ContractElectricityLimits;

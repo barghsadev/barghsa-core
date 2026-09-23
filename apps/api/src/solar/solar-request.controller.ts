@@ -25,7 +25,7 @@ export class SolarRequestController {
   constructor(private readonly service: SolarRequestService) {}
 
   @Post()
-  @RateLimit({ namespace: 'solar:submit:user', limit: 10, windowMs: 60_000 })
+  @RateLimit({ namespace: 'solar:submit:user', limit: 60, windowMs: 60_000, scope: 'user' })
   @ApiOperation({
     summary: 'Submit a solar construction request without creating a contract or invoice',
   })

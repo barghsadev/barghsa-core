@@ -150,7 +150,7 @@ export class SavingOrderController {
   }
 
   @Post()
-  @RateLimit({ namespace: 'saving:submit:user', limit: 10, windowMs: 60_000 })
+  @RateLimit({ namespace: 'saving:submit:user', limit: 60, windowMs: 60_000, scope: 'user' })
   @ApiOperation({ summary: 'Atomically submit saving order, contract and unpaid invoice' })
   @ApiZodBody(submissionInput)
   submit(@Body() body: unknown, @Req() req: AuthenticatedRequest) {

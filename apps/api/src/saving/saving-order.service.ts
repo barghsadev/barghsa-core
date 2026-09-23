@@ -940,6 +940,8 @@ export class SavingOrderService {
         return previous.response;
       }
       await this.authorize(client, actor, input.profileId);
+      await this.orders.lockProfileSubmissions(client, input.profileId);
+      await this.orders.enforceProfileSubmissionLimit(client, input.profileId);
       // Acquire product locks before the quote's shared locks. Concurrent
       // submissions must not both upgrade a hardware share lock to a write lock.
       await client.query('SELECT id FROM products WHERE id=$1 FOR UPDATE', [input.savingPlanId]);

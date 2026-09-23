@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { activateReadyContracts } from '@barghsa/db/contract-activation';
 import { runWalletRefund } from '@barghsa/db/refund-processing';
@@ -184,6 +184,11 @@ beforeAll(async () => {
 afterAll(async () => {
   await http?.close();
 }, 15000);
+
+beforeEach(async () => {
+  // These scenarios share a profile but represent separate customer sessions.
+  await http.pool.query("UPDATE saving_orders SET submitted_at=NOW()-INTERVAL '2 minutes'");
+});
 
 it('quotes net VAT, rejects legal profiles, and atomically submits once', async () => {
   const legal = await request('/api/saving/orders/quote', 'POST', {

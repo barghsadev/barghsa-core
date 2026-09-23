@@ -290,7 +290,7 @@ export class ElectricityOrderController {
 
   @Post('orders/simple')
   @HttpCode(201)
-  @RateLimit({ namespace: 'electricity:submit:user', limit: 20, windowMs: 60_000 })
+  @RateLimit({ namespace: 'electricity:submit:user', limit: 60, windowMs: 60_000, scope: 'user' })
   @ApiOperation({
     summary: 'Submit a simple electricity order with contract and invoice atomically',
   })
@@ -321,7 +321,7 @@ export class ElectricityOrderController {
 
   @Post('orders/advanced')
   @HttpCode(201)
-  @RateLimit({ namespace: 'electricity:submit:user', limit: 20, windowMs: 60_000 })
+  @RateLimit({ namespace: 'electricity:submit:user', limit: 60, windowMs: 60_000, scope: 'user' })
   @ApiOperation({ summary: 'Submit an advanced bundle with contract and invoice atomically' })
   @ApiZodBody(advancedSubmitInput)
   @ApiResponse({ status: 201, description: 'Order, contract, invoice and frozen quote.' })

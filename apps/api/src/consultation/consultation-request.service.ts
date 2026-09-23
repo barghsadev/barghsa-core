@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, HttpException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { v7 as uuidv7 } from 'uuid';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -72,12 +72,9 @@ export class ConsultationRequestService {
     try {
       await client.query('BEGIN');
       await this.orders.lockOrderActor(client, actor);
-      // Serialize submissions for the profile, including submissions by different legal agents.
-      await client.query("SELECT pg_advisory_xact_lock(hashtext('consultation:' || $1))", [
-        input.profileId,
-      ]);
       if (!(await this.orders.mayManageOrders(client, actor.userId, input.profileId, true)))
         throw new NotFoundException('Profile not found');
+      await this.orders.lockProfileSubmissions(client, input.profileId);
       const previous = (
         await client.query<{ id: string; profile_id: string; product_id: string }>(
           'SELECT id,profile_id,product_id FROM consultation_requests WHERE submitted_by=$1 AND submission_key=$2',
@@ -90,6 +87,7 @@ export class ConsultationRequestService {
         await client.query('COMMIT');
         return { requestId: previous.id, status: 'submitted' as const };
       }
+      await this.orders.enforceProfileSubmissionLimit(client, input.profileId);
       const profile = (
         await client.query<{ profile_type: string; user_id: string }>(
           'SELECT profile_type,user_id FROM profiles WHERE id=$1',
@@ -104,13 +102,6 @@ export class ConsultationRequestService {
       if (!product) throw new BadRequestException('Choose an active consultation product');
       if (product.legal_only && profile.profile_type !== 'LEGAL')
         throw new BadRequestException('This consultation requires a legal-entity profile');
-      const recent = (
-        await client.query<{ count: string }>(
-          "SELECT count(*)::text AS count FROM consultation_requests WHERE profile_id=$1 AND submitted_at>=NOW()-INTERVAL '1 minute'",
-          [input.profileId]
-        )
-      ).rows[0]!;
-      if (Number(recent.count) >= 5) throw new HttpException('Too many consultation requests', 429);
       const requestId = uuidv7();
       await client.query(
         `INSERT INTO consultation_requests(id,profile_id,product_id,product_snapshot,

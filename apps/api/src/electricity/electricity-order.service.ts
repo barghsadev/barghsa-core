@@ -986,6 +986,8 @@ export class ElectricityOrderService {
         return previous.response;
       }
       await this.authorize(client, actor, input.profileId, true);
+      await this.orders.lockProfileSubmissions(client, input.profileId);
+      await this.orders.enforceProfileSubmissionLimit(client, input.profileId);
       await requireAddressGeography(client, input.address.provinceId, input.address.cityId);
       const now = new Date();
       const quoted = await this.quote(client, input, now);
