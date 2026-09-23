@@ -6,4 +6,4 @@ The solar request list and consultation page were parent routes that did not ren
 
 Two Chromium cases cover solar list → intake, direct solar detail with its status banner, consultation list → detail with its status banner, and a new consultation submission → detail. Controlled API responses isolate routing and rendering; backend state transitions remain covered by their HTTP integration suites. These checks do not complete the full cross-product journey task `T-03.90.14`.
 
-Validation: two Chromium browser cases, all 977 web tests, web typecheck and production build, targeted lint and formatting, and backlog validation passed locally. CI is pending after the direct `main` push.
+Validation: two Chromium browser cases, all 977 web tests, web typecheck and production build, targeted lint and formatting, and backlog validation passed locally. CI passed on `main` in [run 35911316605](https://github.com/barghsadev/barghsa-core/actions/runs/35911316605).

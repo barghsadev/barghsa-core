@@ -178,3 +178,56 @@ test('consultation list opens its request detail route', async ({ page }) => {
     submissionKey: expect.any(String),
   });
 });
+
+test('consultation list and detail show assigned staff and the payment action', async ({
+  page,
+}) => {
+  const offer = {
+    id: consultationId,
+    status: 'offer_pending',
+    product_snapshot: { title: { en: 'Site advice', fa: 'مشاوره مکان' } },
+    submitted_at: '2026-09-23T10:00:00.000Z',
+    staff_owner_username: 'reviewer@consultation.test',
+    staff_team: 'Engineering',
+    expected_next_step: 'Pay the invoice',
+    invoice_id: '55555555-5555-4555-8555-555555555555',
+    invoice_state: 'Unpaid',
+    accepted_at: '2026-09-23T11:00:00.000Z',
+    offer_valid_until: '2099-01-01T00:00:00.000Z',
+    refund_pending: false,
+  };
+  await page.route('**/api/consultations/products?*', (route) =>
+    route.fulfill({ json: { products: [] } })
+  );
+  await page.route('**/api/consultations/requests?*', (route) =>
+    route.fulfill({ json: { requests: [offer] } })
+  );
+  await page.route(`**/api/consultations/requests/${consultationId}`, (route) =>
+    route.fulfill({
+      json: {
+        request: {
+          ...offer,
+          fee: '500000',
+          scope: 'Site review',
+          deliverables: 'Report',
+          has_paid_invoice: false,
+        },
+        history: [],
+        adjustments: [],
+        refunds: [],
+      },
+    })
+  );
+
+  await page.goto('/consultations');
+  const requestLink = page.getByRole('link', { name: /مشاوره مکان/ });
+  await expect(requestLink).toContainText('کارشناس مسئول: reviewer@consultation.test');
+  await expect(requestLink).toContainText('شما این پیشنهاد را پذیرفته‌اید');
+  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  const englishRequestLink = page.getByRole('link', { name: /Site advice/ });
+  await expect(englishRequestLink).toContainText('You accepted this offer. Pay the invoice');
+  await englishRequestLink.click();
+  await expect(page.getByText('Staff owner:')).toBeVisible();
+  await expect(page.getByText('reviewer@consultation.test')).toBeVisible();
+  await expect(page.getByText('Engineering')).toBeVisible();
+});

@@ -178,9 +178,19 @@ export class ConsultationRequestService {
         throw new NotFoundException('Profile not found');
       const rows = (
         await client.query(
-          `SELECT id,status,product_snapshot,submitted_at,staff_owner_id,expected_next_step
-         FROM consultation_requests WHERE profile_id=$1
-         ORDER BY submitted_at DESC,id DESC LIMIT 100`,
+          `SELECT r.id,r.status,r.product_snapshot,r.submitted_at,r.staff_owner_id,
+              u.username AS staff_owner_username,r.staff_team,r.expected_next_step,
+              r.invoice_id,i.state AS invoice_state,r.accepted_at,r.offer_valid_until,
+              EXISTS(
+                SELECT 1 FROM refunds refund JOIN invoices paid ON paid.id=refund.invoice_id
+                WHERE paid.consultation_id=r.id::text
+                  AND refund.state NOT IN ('Completed','Rejected','Cancelled')
+              ) AS refund_pending
+           FROM consultation_requests r
+           LEFT JOIN users u ON u.user_id=r.staff_owner_id
+           LEFT JOIN invoices i ON i.id=r.invoice_id
+           WHERE r.profile_id=$1
+           ORDER BY r.submitted_at DESC,r.id DESC LIMIT 100`,
           [profileId]
         )
       ).rows;
@@ -201,11 +211,14 @@ export class ConsultationRequestService {
       await requireCurrentSession(client, actor);
       const request = (
         await client.query<Record<string, unknown>>(
-          `SELECT r.id,r.profile_id,r.product_id,r.product_snapshot,r.status,r.staff_owner_id,r.staff_team,
+          `SELECT r.id,r.profile_id,r.product_id,r.product_snapshot,r.status,r.staff_owner_id,
+            u.username AS staff_owner_username,r.staff_team,
           r.fee::text AS fee,r.scope,r.deliverables,r.expected_next_step,r.offer_valid_until,r.invoice_id,
           r.accepted_at,i.state AS invoice_state,r.submitted_at,r.updated_at,
           EXISTS(SELECT 1 FROM invoices paid WHERE paid.consultation_id=r.id::text AND paid.paid_amount>0) AS has_paid_invoice
-          FROM consultation_requests r LEFT JOIN invoices i ON i.id=r.invoice_id WHERE r.id=$1`,
+            FROM consultation_requests r
+            LEFT JOIN users u ON u.user_id=r.staff_owner_id
+            LEFT JOIN invoices i ON i.id=r.invoice_id WHERE r.id=$1`,
           [id]
         )
       ).rows[0];

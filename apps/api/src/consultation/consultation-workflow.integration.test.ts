@@ -92,6 +92,22 @@ it('moves a consultation through staff assignment, customer information, and a r
   const assigned = await post(`${root}/assign`, 'reviewer', { assignTo: 'self' });
   expect(assigned.status, http.logs()).toBe(200);
   expect(await assigned.json()).toMatchObject({ status: 'under_review', staffOwnerId: 'reviewer' });
+  const customerList = await fetch(
+    `${http.base}/api/consultations/requests?profileId=${profileId}`,
+    { headers: headers.customer! }
+  );
+  expect(customerList.status, http.logs()).toBe(200);
+  expect(await customerList.json()).toMatchObject({
+    requests: [
+      {
+        id: requestId,
+        staff_owner_username: 'reviewer@consultation-flow.test',
+        staff_team: null,
+        invoice_state: null,
+        refund_pending: false,
+      },
+    ],
+  });
   expect((await post(`${root}/review`, 'reviewer', {})).status).toBe(409);
   const requested = await post(`${root}/request-info`, 'reviewer', {
     reason: 'Please provide the planned station capacity.',
@@ -115,7 +131,10 @@ it('moves a consultation through staff assignment, customer information, and a r
     request: { status: string };
     history: Array<{ status: string; actor_type: string; reason: string | null }>;
   };
-  expect(body.request.status).toBe('rejected');
+  expect(body.request).toMatchObject({
+    status: 'rejected',
+    staff_owner_username: 'reviewer@consultation-flow.test',
+  });
   expect(body.history.map((event) => event.status)).toEqual([
     'submitted',
     'under_review',
@@ -157,6 +176,13 @@ it('moves a consultation through staff assignment, customer information, and a r
     status: 'submitted',
     staffTeam: 'Consultation team',
     staffOwnerId: null,
+  });
+  const teamDetail = await fetch(`${http.base}/api/consultations/requests/${secondId}`, {
+    headers: headers.customer!,
+  });
+  expect(teamDetail.status, http.logs()).toBe(200);
+  expect(await teamDetail.json()).toMatchObject({
+    request: { staff_owner_username: null, staff_team: 'Consultation team' },
   });
   const unassigned = await fetch(
     `${http.base}/api/admin/consultations/requests?assignment=unassigned`,
@@ -239,6 +265,20 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
     status: 'offer_pending',
     invoice_id: secondId,
     fee: '600000',
+  });
+  const offerList = await fetch(`${http.base}/api/consultations/requests?profileId=${profileId}`, {
+    headers: headers.customer!,
+  });
+  expect(offerList.status, http.logs()).toBe(200);
+  const offerRows = (await offerList.json()) as {
+    requests: Array<Record<string, unknown>>;
+  };
+  expect(offerRows.requests.find((row) => row.id === requestId)).toMatchObject({
+    invoice_id: secondId,
+    invoice_state: 'Unpaid',
+    offer_valid_until: validUntil,
+    accepted_at: null,
+    refund_pending: false,
   });
   expect(
     (

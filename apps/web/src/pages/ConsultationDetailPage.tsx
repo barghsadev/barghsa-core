@@ -4,8 +4,8 @@ import { Button, Label } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
-import { WorkflowStatusBanner, type WorkflowOwner } from '../components/WorkflowStatusBanner.js';
-import { t } from '@barghsa/i18n/app';
+import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
+import { consultationNextAction } from '../lib/consultation-next-action.js';
 
 interface Detail {
   request: {
@@ -13,6 +13,8 @@ interface Detail {
     status: string;
     product_snapshot: { title: { fa: string; en: string } };
     submitted_at: string;
+    staff_owner_username: string | null;
+    staff_team: string | null;
     fee: string | null;
     scope: string | null;
     deliverables: string | null;
@@ -36,40 +38,6 @@ interface Detail {
     state: string;
   }>;
   refunds: Array<{ id: string; amount: string; state: string; destination: string }>;
-}
-
-function consultationNextAction(
-  request: Detail['request'],
-  offerExpired: boolean,
-  refundPending: boolean,
-  copy: (key: string) => string,
-  locale: 'fa' | 'en'
-): { text: string; owner: WorkflowOwner; href?: string } {
-  if (request.status === 'awaiting_customer_info')
-    return { text: copy('provideInfo'), owner: 'customer', href: '#consultation-information-form' };
-  if (request.status === 'offer_pending') {
-    if (offerExpired) return { text: copy('offerExpired'), owner: 'customer', href: '/tickets' };
-    if (request.invoice_state === 'PaymentUnderReview')
-      return { text: copy('paymentUnderReview'), owner: 'staff' };
-    if (request.accepted_at && request.invoice_id && request.invoice_state !== 'Paid')
-      return {
-        text: copy('acceptedAwaitingPayment'),
-        owner: 'customer',
-        href: `/invoices/${encodeURIComponent(request.invoice_id)}`,
-      };
-    return { text: copy('reviewOffer'), owner: 'customer', href: '#consultation-offer' };
-  }
-  if (request.status === 'offer_accepted' && request.invoice_id && request.invoice_state !== 'Paid')
-    return {
-      text: copy('acceptedAwaitingPayment'),
-      owner: 'customer',
-      href: `/invoices/${encodeURIComponent(request.invoice_id)}`,
-    };
-  if (['completed', 'cancelled', 'rejected', 'offer_declined'].includes(request.status))
-    return refundPending
-      ? { text: copy('paidClosurePending'), owner: 'staff' }
-      : { text: t('workflow.none', locale), owner: 'none' };
-  return { text: request.expected_next_step ?? copy('staffReview'), owner: 'staff' };
 }
 
 export function ConsultationDetailPage() {
@@ -171,9 +139,7 @@ export function ConsultationDetailPage() {
     detail?.refunds.some(
       (refund) => !['Completed', 'Rejected', 'Cancelled'].includes(refund.state)
     ) ?? false;
-  const action = request
-    ? consultationNextAction(request, offerExpired, refundPending, copy, locale)
-    : null;
+  const action = request ? consultationNextAction(request, refundPending, locale) : null;
   const latestEvent = detail?.history.at(-1);
   return (
     <main className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -206,6 +172,15 @@ export function ConsultationDetailPage() {
                 {new Intl.DateTimeFormat(locale).format(new Date(request.submitted_at))}
               </time>
             </p>
+            <p>
+              {copy('owner')}:{' '}
+              <span dir="auto">{request.staff_owner_username ?? copy('unassigned')}</span>
+            </p>
+            {request.staff_team && (
+              <p>
+                {copy('team')}: <span dir="auto">{request.staff_team}</span>
+              </p>
+            )}
             {request.fee ? (
               <p>
                 {copy('fee')}: {new Intl.NumberFormat(locale).format(BigInt(request.fee))} IRR

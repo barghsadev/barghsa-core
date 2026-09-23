@@ -4,6 +4,7 @@ import { Button } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
+import { consultationNextAction } from '../lib/consultation-next-action.js';
 import type { SwitcherProfile } from '../components/ProfileSwitcher.js';
 
 interface Product {
@@ -17,7 +18,14 @@ interface RequestRow {
   status: string;
   product_snapshot: { title: { fa: string; en: string } };
   submitted_at: string;
+  staff_owner_username: string | null;
+  staff_team: string | null;
   expected_next_step: string | null;
+  invoice_id: string | null;
+  invoice_state: string | null;
+  accepted_at: string | null;
+  offer_valid_until: string | null;
+  refund_pending: boolean;
 }
 
 export function ConsultationsPage() {
@@ -188,31 +196,43 @@ export function ConsultationsPage() {
             </h2>
             {!requests.length && <p className="text-muted-foreground">{copy('emptyRequests')}</p>}
             <ul className="space-y-3">
-              {requests.map((request) => (
-                <li key={request.id}>
-                  <Link
-                    to="/consultations/$requestId"
-                    params={{ requestId: request.id }}
-                    className="block rounded-xl border bg-card p-4 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
-                  >
-                    <span className="block font-semibold" dir="auto">
-                      {request.product_snapshot.title[locale]}
-                    </span>
-                    <span className="mt-2 block text-sm">
-                      {copy('status')}: {copy(`status_${request.status}`)}
-                    </span>
-                    <span className="block text-sm text-muted-foreground">
-                      {copy('nextStep')}: {request.expected_next_step ?? copy('staffReview')}
-                    </span>
-                    <time
-                      className="mt-2 block text-xs text-muted-foreground"
-                      dateTime={request.submitted_at}
+              {requests.map((request) => {
+                const action = consultationNextAction(request, request.refund_pending, locale);
+                return (
+                  <li key={request.id}>
+                    <Link
+                      to="/consultations/$requestId"
+                      params={{ requestId: request.id }}
+                      className="block rounded-xl border bg-card p-4 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
                     >
-                      {new Intl.DateTimeFormat(locale).format(new Date(request.submitted_at))}
-                    </time>
-                  </Link>
-                </li>
-              ))}
+                      <span className="block font-semibold" dir="auto">
+                        {request.product_snapshot.title[locale]}
+                      </span>
+                      <span className="mt-2 block text-sm">
+                        {copy('status')}: {copy(`status_${request.status}`)}
+                      </span>
+                      <span className="block text-sm text-muted-foreground">
+                        {copy('nextStep')}: {action.text}
+                      </span>
+                      <span className="block text-sm text-muted-foreground">
+                        {copy('owner')}:{' '}
+                        <span dir="auto">{request.staff_owner_username ?? copy('unassigned')}</span>
+                      </span>
+                      {request.staff_team && (
+                        <span className="block text-sm text-muted-foreground">
+                          {copy('team')}: <span dir="auto">{request.staff_team}</span>
+                        </span>
+                      )}
+                      <time
+                        className="mt-2 block text-xs text-muted-foreground"
+                        dateTime={request.submitted_at}
+                      >
+                        {new Intl.DateTimeFormat(locale).format(new Date(request.submitted_at))}
+                      </time>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </section>
         </>
