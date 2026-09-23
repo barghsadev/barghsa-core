@@ -6,6 +6,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -16,6 +17,7 @@ import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { SavingOrderService } from './saving-order.service.js';
+import { SavingCustomerDraftService } from './saving-customer-draft.service.js';
 
 const quoteInput = z
   .object({
@@ -56,6 +58,28 @@ const verifyInput = z
   })
   .strict();
 const duplicateInput = verifyInput.extend({ savingPlanId: z.string().uuid() }).strict();
+const draftInput = z
+  .object({
+    profileId: z.string().uuid(),
+    currentStep: z.number().int().min(1).max(6),
+    data: z
+      .object({
+        planId: z.string().max(36),
+        hardwareId: z.string().max(36),
+        billIdentifier: z.string().max(13),
+        addressId: z.string().max(36),
+        giftCode: z.string().max(100),
+      })
+      .strict(),
+  })
+  .strict()
+  .refine(
+    ({ currentStep, data }) =>
+      (currentStep < 2 || z.string().uuid().safeParse(data.planId).success) &&
+      (currentStep < 3 || z.string().uuid().safeParse(data.hardwareId).success) &&
+      (currentStep < 4 || /^[0-9]{6,13}$/.test(data.billIdentifier)) &&
+      (currentStep < 5 || z.string().uuid().safeParse(data.addressId).success)
+  );
 
 function parse<T>(schema: z.ZodType<T>, body: unknown): T {
   const result = schema.safeParse(body);
@@ -68,7 +92,28 @@ function parse<T>(schema: z.ZodType<T>, body: unknown): T {
 @Controller('api/saving/orders')
 @UseGuards(SessionAuthGuard)
 export class SavingOrderController {
-  constructor(private readonly service: SavingOrderService) {}
+  constructor(
+    private readonly service: SavingOrderService,
+    private readonly drafts: SavingCustomerDraftService
+  ) {}
+
+  @Get('draft')
+  @RateLimit({ namespace: 'saving:draft-read:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Resume an individual saving order form across sessions' })
+  getDraft(
+    @Query('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.drafts.get(req.session, profileId);
+  }
+
+  @Put('draft')
+  @RateLimit({ namespace: 'saving:draft-write:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Save completed saving order form steps' })
+  @ApiZodBody(draftInput)
+  saveDraft(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    return this.drafts.save(req.session, parse(draftInput, body));
+  }
 
   @Post('duplicate')
   @RateLimit({ namespace: 'saving:duplicate:user', limit: 30, windowMs: 60_000 })

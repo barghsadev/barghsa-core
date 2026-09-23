@@ -24,9 +24,24 @@ it.each(['en', 'fa'] as const)(
   async (locale) => {
     document.documentElement.lang = locale;
     vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+    let failNextSave = false;
     vi.stubGlobal(
       'fetch',
-      vi.fn(async (url: string) => {
+      vi.fn(async (url: string, options?: RequestInit) => {
+        if (url === '/api/saving/orders/draft?profileId=profile-1') {
+          if (options?.method === 'PUT' && failNextSave) return new Response(null, { status: 503 });
+          return new Response(
+            JSON.stringify(
+              options?.method === 'PUT'
+                ? {
+                    currentStep: 2,
+                    data: JSON.parse(options.body as string).data,
+                    updatedAt: new Date().toISOString(),
+                  }
+                : { currentStep: 1, data: null, updatedAt: null }
+            )
+          );
+        }
         if (url === '/api/profiles')
           return new Response(
             JSON.stringify({
@@ -78,6 +93,10 @@ it.each(['en', 'fa'] as const)(
       );
       expect(next?.disabled).toBe(false);
       await act(async () => next?.click());
+      expect(fetch).toHaveBeenCalledWith(
+        '/api/saving/orders/draft?profileId=profile-1',
+        expect.objectContaining({ method: 'PUT' })
+      );
       expect(container.textContent).toContain(locale === 'fa' ? 'دستگاه' : 'Device');
       expect(container.textContent).toContain(
         locale === 'fa'
@@ -87,6 +106,16 @@ it.each(['en', 'fa'] as const)(
       expect(container.textContent).toContain(
         locale === 'fa' ? 'انتخاب این دستگاه را تأیید می‌کنم' : 'I confirm this equipment choice'
       );
+      await act(async () => {
+        (container.querySelector('input[value="device-1"]') as HTMLInputElement).click();
+        (container.querySelector('input[type="checkbox"]') as HTMLInputElement).click();
+      });
+      failNextSave = true;
+      await act(async () => next?.click());
+      expect(container.textContent).toContain(
+        locale === 'fa' ? 'اطلاعات واردشده باقی مانده است' : 'Your entries are still here'
+      );
+      expect((container.querySelector('input[value="device-1"]') as HTMLInputElement).checked).toBe(true);
     } finally {
       await act(async () => root.unmount());
       container.remove();

@@ -6,6 +6,7 @@ import { withCsrf } from '../lib/csrf.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useFormDraft, type DraftSchema } from '../hooks/useFormDraft.js';
 import { WalletFundingPrompt } from '../components/WalletFundingPrompt.js';
 
 interface Product {
@@ -53,8 +54,21 @@ interface Draft {
   billIdentifier: string;
   addressId: string;
   giftCode: string;
-  step: number;
 }
+
+const draftSchema: DraftSchema<Draft> = {
+  safeParse(value) {
+    if (!value || typeof value !== 'object') return { success: false };
+    const data = value as Record<string, unknown>;
+    if (
+      ['planId', 'hardwareId', 'billIdentifier', 'addressId', 'giftCode'].some(
+        (key) => typeof data[key] !== 'string'
+      )
+    )
+      return { success: false };
+    return { success: true, data: data as unknown as Draft };
+  },
+};
 
 async function postJson<T>(url: string, body: unknown): Promise<T> {
   const response = await fetch(url, {
@@ -113,6 +127,19 @@ export function SavingsOrderPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const submissionKey = useRef<string | null>(null);
+  const hydratedProfile = useRef<string | null>(null);
+  const [savingDraft, setSavingDraft] = useState(false);
+  const [draftSaveError, setDraftSaveError] = useState(false);
+  const draftKey = profileId
+    ? `/api/saving/orders/draft?profileId=${encodeURIComponent(profileId)}`
+    : null;
+  const {
+    draft,
+    loading: draftLoading,
+    error: draftError,
+    save: saveDraft,
+    retry: retryDraft,
+  } = useFormDraft(draftKey, draftSchema);
   const selectedPlan = useMemo(() => plans.find((plan) => plan.id === planId), [plans, planId]);
   const selectedHardware = selectedPlan?.hardware.find((item) => item.id === hardwareId);
   const steps = [
@@ -144,22 +171,6 @@ export function SavingsOrderPage() {
           active && (active.profileType ?? active.type) === 'INDIVIDUAL' ? active.id : null
         );
         setPlans(catalogue.plans);
-        if (active && (active.profileType ?? active.type) === 'INDIVIDUAL') {
-          const saved = sessionStorage.getItem(`saving-order:${active.id}`);
-          if (saved) {
-            try {
-              const draft = JSON.parse(saved) as Draft;
-              setPlanId(draft.planId);
-              setHardwareId(draft.hardwareId);
-              setBillIdentifier(draft.billIdentifier);
-              setAddressId(draft.addressId);
-              setGiftCode(draft.giftCode);
-              setStep(Math.min(5, Math.max(1, draft.step)));
-            } catch {
-              sessionStorage.removeItem(`saving-order:${active.id}`);
-            }
-          }
-        }
       } catch {
         if (!controller.signal.aborted) setLoadError(true);
       } finally {
@@ -195,19 +206,31 @@ export function SavingsOrderPage() {
   }, [profileId]);
 
   useEffect(() => {
-    if (!profileId || loading) return;
-    sessionStorage.setItem(
-      `saving-order:${profileId}`,
-      JSON.stringify({
-        planId,
-        hardwareId,
-        billIdentifier,
-        addressId,
-        giftCode,
-        step,
-      } satisfies Draft)
-    );
-  }, [profileId, loading, planId, hardwareId, billIdentifier, addressId, giftCode, step]);
+    if (!profileId || !draft || hydratedProfile.current === profileId) return;
+    hydratedProfile.current = profileId;
+    if (!draft.data) return;
+    setPlanId(draft.data.planId);
+    setHardwareId(draft.data.hardwareId);
+    setBillIdentifier(draft.data.billIdentifier);
+    setAddressId(draft.data.addressId);
+    setGiftCode(draft.data.giftCode);
+    // Agreement acceptance must be made again after a resumed session.
+    setStep(Math.min(5, Math.max(1, draft.currentStep)));
+  }, [profileId, draft]);
+
+  async function advanceStep() {
+    if (!profileId || !canNext || savingDraft) return;
+    setSavingDraft(true);
+    setDraftSaveError(false);
+    try {
+      await saveDraft(step + 1, { planId, hardwareId, billIdentifier, addressId, giftCode });
+      setStep((value) => value + 1);
+    } catch {
+      setDraftSaveError(true);
+    } finally {
+      setSavingDraft(false);
+    }
+  }
 
   useEffect(() => {
     if (!addingAddress) return;
@@ -413,7 +436,6 @@ export function SavingsOrderPage() {
         hardwareConfirmed: true,
         submitForStaffReview: true,
       });
-      sessionStorage.removeItem(`saving-order:${profileId}`);
       void navigate({ to: '/savings/orders/$orderId', params: { orderId: result.savingOrderId } });
     } catch (error) {
       if (error instanceof Error && error.message.includes('(409)')) {
@@ -443,8 +465,17 @@ export function SavingsOrderPage() {
           {copy('error')}
         </p>
       )}
+      {draftError && profileId && (
+        <div role="alert" className="space-y-2 text-destructive">
+          <p>{copy('draftLoadError')}</p>
+          <Button variant="outline" onClick={retryDraft}>
+            {copy('retry')}
+          </Button>
+        </div>
+      )}
+      {draftLoading && profileId && <p role="status">{copy('loading')}</p>}
       {!loading && !profileId && <p role="alert">{copy('profileRequired')}</p>}
-      {!loading && profileId && (
+      {!loading && profileId && draft && !draftLoading && !draftError && (
         <>
           <nav aria-label={copy('orderTitle')}>
             <ol className="grid grid-cols-3 gap-2 text-xs md:grid-cols-6">
@@ -802,6 +833,11 @@ export function SavingsOrderPage() {
                 </section>
               )}
               <div className="flex justify-between gap-3 border-t pt-4">
+                {draftSaveError && (
+                  <p role="alert" className="text-destructive">
+                    {copy('draftSaveError')}
+                  </p>
+                )}
                 <Button
                   variant="outline"
                   disabled={step === 1 || submitting}
@@ -810,7 +846,7 @@ export function SavingsOrderPage() {
                   {copy('back')}
                 </Button>
                 {step < 6 ? (
-                  <Button disabled={!canNext} onClick={() => setStep((value) => value + 1)}>
+                  <Button disabled={!canNext || savingDraft} onClick={() => void advanceStep()}>
                     {copy('next')}
                   </Button>
                 ) : (

@@ -28,6 +28,7 @@ import {
 import { ElectricityPriceAdjustmentService } from '../electricity/electricity-price-adjustment.service.js';
 import { SavingOrderController } from '../saving/saving-order.controller.js';
 import { SavingOrderService } from '../saving/saving-order.service.js';
+import { SavingCustomerDraftService } from '../saving/saving-customer-draft.service.js';
 import { BillVerificationProvider } from '../saving/bill-verification.provider.js';
 import { SavingFulfillmentController } from '../saving/saving-fulfillment.controller.js';
 import { SavingFulfillmentService } from '../saving/saving-fulfillment.service.js';
@@ -103,6 +104,7 @@ import { RefundModule } from '../refund/refund.module.js';
     ElectricityIncreaseService,
     ElectricityPriceAdjustmentService,
     SavingOrderService,
+    SavingCustomerDraftService,
     BillVerificationProvider,
     SavingFulfillmentService,
     SavingCommentsService,

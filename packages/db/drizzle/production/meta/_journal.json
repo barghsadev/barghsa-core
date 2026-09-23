@@ -694,6 +694,13 @@
       "when": 1791331200081,
       "tag": "0178_saving_hardware_upgrades",
       "breakpoints": true
+    },
+    {
+      "idx": 179,
+      "version": "7",
+      "when": 1791331200082,
+      "tag": "0179_saving_customer_drafts",
+      "breakpoints": true
     }
   ]
 }

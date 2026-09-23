@@ -190,6 +190,39 @@ beforeEach(async () => {
   await http.pool.query("UPDATE saving_orders SET submitted_at=NOW()-INTERVAL '2 minutes'");
 });
 
+it('resumes a profile-owned saving form draft and rejects invalid or expired progress', async () => {
+  const path = `/api/saving/orders/draft?profileId=${input.profileId}`;
+  const empty = await request(path, 'GET');
+  expect(empty.status, http.logs()).toBe(200);
+  expect(await empty.json()).toMatchObject({ currentStep: 1, data: null });
+  const data = {
+    planId: input.savingPlanId,
+    hardwareId: input.hardwareProductId,
+    billIdentifier: input.billIdentifier,
+    addressId: input.installationAddressId,
+    giftCode: '',
+  };
+  const saved = await request(path, 'PUT', { profileId: input.profileId, currentStep: 5, data });
+  expect(saved.status, http.logs()).toBe(200);
+  expect(await saved.json()).toMatchObject({ currentStep: 5, data });
+  const resumed = await request(path, 'GET');
+  expect(await resumed.json()).toMatchObject({ currentStep: 5, data });
+  const invalid = await request(path, 'PUT', {
+    profileId: input.profileId,
+    currentStep: 5,
+    data: { ...data, addressId: 'wrong' },
+  });
+  expect(invalid.status, http.logs()).toBe(400);
+  const legal = await request(`/api/saving/orders/draft?profileId=${legalProfileId}`, 'GET');
+  expect(legal.status, http.logs()).toBe(404);
+  await http.pool.query(
+    "UPDATE saving_customer_drafts SET updated_at=NOW()-INTERVAL '8 days' WHERE profile_id=$1",
+    [input.profileId]
+  );
+  const expired = await request(path, 'GET');
+  expect(await expired.json()).toMatchObject({ currentStep: 1, data: null });
+});
+
 it('quotes net VAT, rejects legal profiles, and atomically submits once', async () => {
   const legal = await request('/api/saving/orders/quote', 'POST', {
     ...input,
@@ -235,8 +268,25 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     hardwareConfirmed: true,
     submitForStaffReview: true,
   };
+  const draftBeforeSubmit = await request('/api/saving/orders/draft', 'PUT', {
+    profileId: input.profileId,
+    currentStep: 6,
+    data: {
+      planId: input.savingPlanId,
+      hardwareId: input.hardwareProductId,
+      billIdentifier: input.billIdentifier,
+      addressId: input.installationAddressId,
+      giftCode: '',
+    },
+  });
+  expect(draftBeforeSubmit.status, http.logs()).toBe(200);
   const first = await request('/api/saving/orders', 'POST', submission);
   expect(first.status, http.logs()).toBe(201);
+  const clearedDraft = await request(
+    `/api/saving/orders/draft?profileId=${input.profileId}`,
+    'GET'
+  );
+  expect(await clearedDraft.json()).toMatchObject({ currentStep: 1, data: null });
   const result = (await first.json()) as {
     savingOrderId: string;
     orderId: string;

@@ -3,6 +3,7 @@ import {
   boolean,
   check,
   index,
+  integer,
   jsonb,
   pgTable,
   text,
@@ -21,6 +22,32 @@ import { profiles } from './profiles';
 import { savingPlanAgreementVersions } from './saving-plan-catalogue';
 import { users } from './users';
 import { invoices } from './invoices';
+
+/** Resumable customer wizard progress; removed when the order is submitted. */
+export const savingCustomerDrafts = pgTable(
+  'saving_customer_drafts',
+  {
+    id: uuidv7('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    profileId: uuid('profile_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'restrict' }),
+    currentStep: integer('current_step').notNull().default(1),
+    data: jsonb('data').$type<Record<string, unknown>>().notNull().default({}),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex('saving_customer_drafts_owner_unique').on(table.userId, table.profileId),
+    check('saving_customer_drafts_step', sql`${table.currentStep} BETWEEN 1 AND 6`),
+    check(
+      'saving_customer_drafts_data',
+      sql`jsonb_typeof(${table.data}) = 'object' AND octet_length(${table.data}::text) <= 8192`
+    ),
+  ]
+);
 
 export const savingOrders = pgTable(
   'saving_orders',
