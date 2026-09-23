@@ -70,8 +70,36 @@ interface ChangeContext {
   contract_state: string;
   current_version_id: string;
   version_number: number;
-  blocked: boolean;
+  can_edit: boolean;
 }
+
+// Both the customer detail and mutation use this predicate. An approved order
+// can return to review only before payment or any delivery stage advances.
+const customerChangeEligibility = `
+  s.financial_status='unpaid' AND i.state='Unpaid'
+  AND i.paid_amount=0 AND i.refunded_amount=0
+  AND NOT EXISTS(SELECT 1 FROM contract_cancellation_requests r
+    WHERE r.contract_id=c.id AND r.status='Pending')
+  AND NOT EXISTS(SELECT 1 FROM bank_receipts b WHERE b.invoice_id=i.id)
+  AND NOT contract_has_pending_payments(c.id)
+  AND (
+    (s.status='awaiting_staff_review' AND c.state='AwaitingStaffReview'
+      AND NOT EXISTS(SELECT 1 FROM contract_publications p
+        WHERE p.version_id=c.current_version_id)
+      AND NOT EXISTS(SELECT 1 FROM saving_fulfillment_stages f
+        WHERE f.order_id=s.id AND f.status<>'pending'))
+    OR
+    (s.status='approved' AND c.state IN ('AwaitingCustomerAcceptance','Accepted')
+      AND EXISTS(SELECT 1 FROM contract_publications p
+        WHERE p.contract_id=c.id AND p.version_id=c.current_version_id)
+      AND EXISTS(SELECT 1 FROM saving_fulfillment_stages f
+        WHERE f.order_id=s.id AND f.stage='request_confirmation' AND f.status='completed')
+      AND EXISTS(SELECT 1 FROM saving_fulfillment_stages f
+        WHERE f.order_id=s.id AND f.stage='product_delivery' AND f.status='in_progress')
+      AND NOT EXISTS(SELECT 1 FROM saving_fulfillment_stages f
+        WHERE f.order_id=s.id AND f.stage NOT IN ('request_confirmation','product_delivery')
+          AND f.status<>'pending'))
+  )`;
 interface ProductRow {
   id: string;
   title: { fa: string; en: string };
@@ -467,14 +495,7 @@ export class SavingOrderService {
                 c.state AS contract_state,
                 EXISTS(SELECT 1 FROM contract_cancellation_requests r
                   WHERE r.contract_id=c.id AND r.status='Pending') AS cancellation_pending,
-                (s.status='awaiting_staff_review' AND s.financial_status='unpaid'
-                  AND i.state='Unpaid' AND i.paid_amount=0 AND i.refunded_amount=0
-                  AND c.state='AwaitingStaffReview'
-                  AND NOT EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id)
-                  AND NOT EXISTS(SELECT 1 FROM contract_cancellation_requests r WHERE r.contract_id=c.id AND r.status='Pending')
-                  AND NOT EXISTS(SELECT 1 FROM bank_receipts b WHERE b.invoice_id=i.id)
-                  AND NOT EXISTS(SELECT 1 FROM saving_fulfillment_stages f WHERE f.order_id=s.id AND f.status<>'pending')
-                ) AS can_edit
+                  COALESCE((${customerChangeEligibility}),false) AS can_edit
            FROM saving_orders s
            JOIN products h ON h.id=s.hardware_product_id
            LEFT JOIN invoices i ON i.order_id=s.order_id AND i.type='auto'
@@ -524,10 +545,7 @@ export class SavingOrderService {
                 i.id AS invoice_id,i.state AS invoice_state,i.paid_amount::text,i.refunded_amount::text,
                 c.id AS contract_id,c.state AS contract_state,c.current_version_id,
                 v.version_number,
-                (EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id)
-                  OR EXISTS(SELECT 1 FROM contract_cancellation_requests r WHERE r.contract_id=c.id AND r.status='Pending')
-                  OR EXISTS(SELECT 1 FROM bank_receipts b WHERE b.invoice_id=i.id)
-                  OR EXISTS(SELECT 1 FROM saving_fulfillment_stages f WHERE f.order_id=s.id AND f.status<>'pending')) AS blocked
+                  (${customerChangeEligibility}) AS can_edit
            FROM saving_orders s
            JOIN orders o ON o.id=s.order_id
            JOIN invoices i ON i.order_id=o.id AND i.type='auto'
@@ -540,15 +558,7 @@ export class SavingOrderService {
     ).rows[0];
     if (!row || !(await this.orders.mayManageOrders(client, actor.userId, row.profile_id, true)))
       throw new NotFoundException('Saving order not found');
-    if (
-      row.status !== 'awaiting_staff_review' ||
-      row.financial_status !== 'unpaid' ||
-      row.invoice_state !== 'Unpaid' ||
-      BigInt(row.paid_amount) !== 0n ||
-      BigInt(row.refunded_amount) !== 0n ||
-      row.contract_state !== 'AwaitingStaffReview' ||
-      row.blocked
-    )
+    if (!row.can_edit)
       throw new ConflictException('This order can no longer be changed by the customer');
     return row;
   }
@@ -665,6 +675,64 @@ export class SavingOrderService {
         quote: context.pricing_snapshot,
         contractVersionId: context.current_version_id,
       };
+      if (
+        context.status === 'approved' ||
+        input.hardwareProductId !== context.hardware_product_id
+      ) {
+        const hardware = (
+          await client.query<{ stock_tracking: boolean; reservation_minutes: number }>(
+            'SELECT stock_tracking,reservation_minutes FROM products WHERE id=$1',
+            [context.hardware_product_id]
+          )
+        ).rows[0];
+        const reservation = (
+          await client.query<{
+            id: string;
+            hardware_product_id: string;
+            status: string;
+          }>(
+            'SELECT id,hardware_product_id,status FROM saving_inventory_reservations WHERE order_id=$1 FOR UPDATE',
+            [savingOrderId]
+          )
+        ).rows[0];
+        if (
+          !hardware ||
+          (context.status === 'approved' &&
+            hardware.stock_tracking &&
+            (!reservation ||
+              reservation.status !== 'allocated' ||
+              reservation.hardware_product_id !== context.hardware_product_id)) ||
+          (reservation?.status === 'allocated' &&
+            (!hardware.stock_tracking ||
+              reservation.hardware_product_id !== context.hardware_product_id))
+        )
+          throw new ConflictException('Saving hardware allocation changed; reload the order');
+        if (
+          input.hardwareProductId !== context.hardware_product_id &&
+          reservation?.status === 'allocated'
+        ) {
+          await client.query(
+            'UPDATE products SET stock_count=stock_count+1,reserved_count=reserved_count+1 WHERE id=$1',
+            [context.hardware_product_id]
+          );
+          await client.query(
+            `UPDATE saving_inventory_reservations SET status='reserved',allocated_at=NULL,
+                 released_at=NULL,expires_at=clock_timestamp()+make_interval(mins=>$2)
+               WHERE id=$1`,
+            [reservation.id, hardware.reservation_minutes]
+          );
+          await client.query("SELECT audit_saving_inventory($1,$2,'reserved')", [
+            savingOrderId,
+            reservation.id,
+          ]);
+        }
+      }
+      if (context.status === 'approved') {
+        await client.query(
+          "UPDATE saving_orders SET status='awaiting_staff_review',updated_at=NOW() WHERE id=$1",
+          [savingOrderId]
+        );
+      }
       await client.query(
         `UPDATE orders SET snapshot_province_id=$2,snapshot_city_id=$3,
            snapshot_full_address=$4,snapshot_postal_code=$5 WHERE id=$1`,
@@ -678,7 +746,8 @@ export class SavingOrderService {
       );
       await client.query(
         `UPDATE saving_orders SET hardware_product_id=$2,installation_address_id=$3,
-           address_snapshot=$4::jsonb,pricing_snapshot=$5::jsonb WHERE id=$1`,
+           address_snapshot=$4::jsonb,pricing_snapshot=$5::jsonb,
+           status='awaiting_staff_review',updated_at=NOW() WHERE id=$1`,
         [
           savingOrderId,
           input.hardwareProductId,
@@ -687,6 +756,17 @@ export class SavingOrderService {
           JSON.stringify(quote),
         ]
       );
+      if (context.status === 'approved') {
+        await client.query("UPDATE orders SET status='PENDING',updated_at=NOW() WHERE id=$1", [
+          context.order_id,
+        ]);
+        await client.query(
+          `UPDATE saving_fulfillment_stages SET status='pending',started_at=NULL,
+             completed_at=NULL,completed_by=NULL,explanation=NULL,updated_at=NOW()
+           WHERE order_id=$1 AND stage IN ('request_confirmation','product_delivery')`,
+          [savingOrderId]
+        );
+      }
       for (const line of [
         ['plan_price', quote.plan.title.fa, totals.lines[0]!.amountIrR],
         ['hardware_price', quote.hardware.title.fa, totals.lines[1]!.amountIrR],
@@ -764,7 +844,8 @@ export class SavingOrderService {
       if (requirement?.initial_invoice_id !== context.invoice_id)
         throw new ConflictException('Contract invoice binding changed');
       await client.query(
-        "UPDATE contracts SET current_version_id=$2,state='AwaitingStaffReview' WHERE id=$1",
+        `UPDATE contracts SET current_version_id=$2,state='AwaitingStaffReview',
+           accepted_at=NULL WHERE id=$1`,
         [context.contract_id, versionId]
       );
       const response = {
@@ -805,6 +886,7 @@ export class SavingOrderService {
               quote,
               contractVersionId: versionId,
             },
+            reopenedAfterApproval: context.status === 'approved',
           }),
           uuidv7(),
           ip,

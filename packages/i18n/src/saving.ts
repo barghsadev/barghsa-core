@@ -72,7 +72,7 @@ const en: Record<string, string> = {
   beforeChange: 'Before',
   afterChange: 'After',
   changeOrderHelp:
-    'Available until staff review or payment begins. Your invoice will be recalculated before you confirm.',
+    'Available before payment and delivery. Your invoice is recalculated, and staff must approve the revised order.',
   previewChange: 'Review new price',
   confirmChange: 'Confirm changes',
   changingOrder: 'Saving changes…',
@@ -242,7 +242,7 @@ const fa: Record<string, string> = {
   beforeChange: 'پیش از تغییر',
   afterChange: 'پس از تغییر',
   changeOrderHelp:
-    'تا پیش از آغاز بررسی کارشناس یا پرداخت می‌توانید سفارش را تغییر دهید. پیش از تأیید، مبلغ فاکتور دوباره محاسبه می‌شود.',
+    'تا پیش از پرداخت و تحویل می‌توانید سفارش را تغییر دهید. مبلغ فاکتور دوباره محاسبه می‌شود و سفارش اصلاح‌شده باید به تأیید کارشناس برسد.',
   previewChange: 'بررسی قیمت جدید',
   confirmChange: 'تأیید تغییرات',
   changingOrder: 'در حال ثبت تغییرات…',

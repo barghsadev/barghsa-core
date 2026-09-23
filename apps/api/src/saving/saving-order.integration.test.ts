@@ -1463,8 +1463,145 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
     staffHeaders
   );
   expect(approval.status, http.logs()).toBe(200);
-  expect((await request(`${path}/change-quote`, 'POST', addressChange)).status).toBe(409);
+  const acceptancePreview = await request(
+    `/api/contracts/${order.contractId}/acceptance-review?versionId=${currentVersion}`,
+    'GET'
+  );
+  expect(acceptancePreview.status, http.logs()).toBe(200);
+  const acceptanceHash = ((await acceptancePreview.json()) as { hash: string }).hash;
+  const accepted = await request(`/api/contracts/${order.contractId}/accept`, 'POST', {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: currentVersion,
+    expectedReviewHash: acceptanceHash,
+  });
+  expect(accepted.status, http.logs()).toBe(200);
+  expect(await (await request(path, 'GET')).json()).toMatchObject({ can_edit: true });
+  const approvedQuoteResponse = await request(`${path}/change-quote`, 'POST', {
+    hardwareProductId: alternateId,
+    installationAddressId: input.installationAddressId,
+  });
+  expect(approvedQuoteResponse.status, http.logs()).toBe(201);
+  const approvedQuote = (await approvedQuoteResponse.json()) as { reviewDigest: string };
+  const reopened = await request(`${path}/change`, 'POST', {
+    hardwareProductId: alternateId,
+    installationAddressId: input.installationAddressId,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: approvedQuote.reviewDigest,
+  });
+  expect(reopened.status, http.logs()).toBe(201);
+  expect(await (await request(path, 'GET')).json()).toMatchObject({
+    can_edit: true,
+    status: 'awaiting_staff_review',
+  });
+  expect(
+    (
+      await http.pool.query<{
+        status: string;
+        stock_count: number;
+        reserved_count: number;
+      }>(
+        `SELECT r.status,p.stock_count,p.reserved_count
+         FROM saving_inventory_reservations r JOIN products p ON p.id=r.hardware_product_id
+         WHERE r.order_id=$1`,
+        [order.savingOrderId]
+      )
+    ).rows[0]
+  ).toMatchObject({ status: 'allocated', stock_count: 1, reserved_count: 0 });
+  const secondApprovedQuoteResponse = await request(`${path}/change-quote`, 'POST', {
+    hardwareProductId: firstHardwareId,
+    installationAddressId: secondAddress,
+  });
+  expect(secondApprovedQuoteResponse.status, http.logs()).toBe(201);
+  const secondApprovedQuote = (await secondApprovedQuoteResponse.json()) as {
+    reviewDigest: string;
+  };
+  const secondReopened = await request(`${path}/change`, 'POST', {
+    hardwareProductId: firstHardwareId,
+    installationAddressId: secondAddress,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: secondApprovedQuote.reviewDigest,
+  });
+  expect(secondReopened.status, http.logs()).toBe(201);
+  const reopenedVersion = ((await secondReopened.json()) as { contractVersionId: string })
+    .contractVersionId;
+  expect(await (await request(path, 'GET')).json()).toMatchObject({
+    can_edit: true,
+    status: 'awaiting_staff_review',
+    invoice_id: order.invoiceId,
+    contract_version_id: reopenedVersion,
+    pricing_snapshot: { totalIrR: '278100' },
+  });
+  const reopenedState = await http.pool.query<{
+    status: string;
+    contract_state: string;
+    accepted_at: Date | null;
+    invoice_total: string;
+    publications: string;
+    first_reserved: number;
+    alternate_stock: number;
+    alternate_reserved: number;
+  }>(
+    `SELECT o.status,c.state AS contract_state,c.accepted_at,i.total_amount::text AS invoice_total,
+      (SELECT COUNT(*)::text FROM contract_publications WHERE contract_id=c.id) AS publications,
+      (SELECT reserved_count FROM products WHERE id=$2) AS first_reserved,
+      (SELECT stock_count FROM products WHERE id=$3) AS alternate_stock,
+      (SELECT reserved_count FROM products WHERE id=$3) AS alternate_reserved
+     FROM saving_orders s JOIN orders o ON o.id=s.order_id
+     JOIN contracts c ON c.order_id=o.id JOIN invoices i ON i.order_id=o.id
+     WHERE s.id=$1`,
+    [order.savingOrderId, firstHardwareId, alternateId]
+  );
+  expect(reopenedState.rows[0]).toMatchObject({
+    status: 'PENDING',
+    contract_state: 'AwaitingStaffReview',
+    accepted_at: null,
+    invoice_total: '278100',
+    publications: '1',
+    first_reserved: 1,
+    alternate_stock: 2,
+    alternate_reserved: 0,
+  });
+  const reapproval = await request(
+    `/api/staff/saving/orders/${order.savingOrderId}/approve`,
+    'POST',
+    { idempotencyKey: randomUUID(), expectedVersionId: reopenedVersion },
+    staffHeaders
+  );
+  expect(reapproval.status, http.logs()).toBe(200);
+  expect(await (await request(path, 'GET')).json()).toMatchObject({ can_edit: true });
+  expect(
+    (
+      await http.pool.query<{
+        state: string;
+        accepted_at: Date | null;
+        publications: string;
+        current_acceptances: string;
+        historical_acceptances: string;
+      }>(
+        `SELECT c.state,c.accepted_at,
+          (SELECT COUNT(*)::text FROM contract_publications WHERE contract_id=c.id) AS publications,
+          (SELECT COUNT(*)::text FROM contract_acceptances
+            WHERE version_id=c.current_version_id) AS current_acceptances,
+          (SELECT COUNT(*)::text FROM contract_acceptances
+            WHERE contract_id=c.id) AS historical_acceptances
+         FROM contracts c WHERE c.id=$1`,
+        [order.contractId]
+      )
+    ).rows[0]
+  ).toMatchObject({
+    state: 'AwaitingCustomerAcceptance',
+    accepted_at: null,
+    publications: '2',
+    current_acceptances: '0',
+    historical_acceptances: '1',
+  });
+  await http.pool.query(
+    `INSERT INTO bank_receipts(invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key)
+     VALUES($1,$2,10,'2026-09-23','saving-change-payment',$3)`,
+    [order.invoiceId, input.profileId, randomUUID()]
+  );
   expect(await (await request(path, 'GET')).json()).toMatchObject({ can_edit: false });
+  expect((await request(`${path}/change-quote`, 'POST', addressChange)).status).toBe(409);
 }, 60000);
 
 it('credits a cheaper paid hardware swap and preserves the revised price basis for another swap', async () => {
