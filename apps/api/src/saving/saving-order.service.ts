@@ -461,6 +461,12 @@ export class SavingOrderService {
         return previous.response;
       }
       await this.authorize(client, actor, input.profileId);
+      // Acquire product locks before the quote's shared locks. Concurrent
+      // submissions must not both upgrade a hardware share lock to a write lock.
+      await client.query('SELECT id FROM products WHERE id=$1 FOR UPDATE', [input.savingPlanId]);
+      await client.query('SELECT id FROM products WHERE id=$1 FOR UPDATE', [
+        input.hardwareProductId,
+      ]);
       const now = new Date();
       const { quote, totals, agreement, address, gift } = await this.quoteInTransaction(
         client,
@@ -688,6 +694,11 @@ export class SavingOrderService {
       await client.query('ROLLBACK').catch(() => {});
       if ((error as { code?: string }).code === '23505')
         throw new ConflictException('An active saving order already exists for this bill and plan');
+      if (
+        (error as { code?: string; message?: string }).code === '23514' &&
+        (error as Error).message.includes('Saving hardware is out of stock')
+      )
+        throw new ConflictException('Selected saving hardware is out of stock');
       throw error;
     } finally {
       client.release();

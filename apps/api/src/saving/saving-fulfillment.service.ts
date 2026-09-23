@@ -242,145 +242,154 @@ export class SavingFulfillmentService {
       )
     ).rows[0];
     if (!profile) throw new NotFoundException('Saving order not found');
-    return staffContractMutation(profile.profile_id, actor, (client, archived) =>
-      contractIdempotency(
-        client,
-        'saving_staff_review',
-        { ...input, orderId: id, action },
-        actor,
-        async () => {
-          if (archived) throw new ConflictException('Profile is archived');
-          const row = await this.lockRow(client, id);
-          if (
-            row.status !== 'awaiting_staff_review' ||
-            row.version_id !== input.expectedVersionId ||
-            row.contract_state !== 'AwaitingStaffReview' ||
-            row.activation_invoice_id !== row.invoice_id
-          )
-            throw new ConflictException('Saving order review changed; reload before deciding');
-          const reason = input.reason?.trim() ?? '';
-          if (action === 'reject' && !reason)
-            throw new ConflictException('Rejection requires a reason');
-          if (action === 'reject' && row.invoice_state === 'PaymentUnderReview')
-            throw new ConflictException('Resolve pending payment review before rejection');
-          let refundId: string | null = null;
-          if (action === 'approve') {
-            await client.query(
-              'INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,$3)',
-              [row.contract_id, row.version_id, actor.userId]
-            );
-            await client.query(
-              "UPDATE contracts SET state='AwaitingCustomerAcceptance' WHERE id=$1",
-              [row.contract_id]
-            );
-            await client.query(
-              "UPDATE orders SET status='CONFIRMED',updated_at=NOW() WHERE id=$1",
-              [row.order_id]
-            );
-            await client.query(
-              "UPDATE saving_orders SET status='approved',updated_at=NOW() WHERE id=$1",
-              [id]
-            );
-            await client.query(
-              `UPDATE saving_fulfillment_stages SET status='completed',started_at=NOW(),
-                completed_at=NOW(),completed_by=$2,explanation='Staff approved request',updated_at=NOW()
-                WHERE order_id=$1 AND stage='request_confirmation' AND status='pending'`,
-              [id, actor.userId]
-            );
-            await this.event(
-              client,
-              row,
-              'request_confirmation',
-              'pending',
-              'completed',
-              actor,
-              'Staff approved request'
-            );
-            await client.query(
-              `UPDATE saving_fulfillment_stages SET status='in_progress',started_at=NOW(),updated_at=NOW()
-                WHERE order_id=$1 AND stage='product_delivery' AND status='pending'`,
-              [id]
-            );
-            await this.event(
-              client,
-              row,
-              'product_delivery',
-              'pending',
-              'in_progress',
-              actor,
-              'Request approved'
-            );
-            await this.notify(
-              client,
-              row,
-              'سفارش صرفه‌جویی شما تأیید شد. قرارداد و فاکتور را بررسی کنید.',
-              'Your power-saving order was approved. Review the contract and invoice.'
-            );
-          } else {
-            refundId = await this.createRefund(client, row, actor, reason);
-            if (refundId) {
+    try {
+      return await staffContractMutation(profile.profile_id, actor, (client, archived) =>
+        contractIdempotency(
+          client,
+          'saving_staff_review',
+          { ...input, orderId: id, action },
+          actor,
+          async () => {
+            if (archived) throw new ConflictException('Profile is archived');
+            const row = await this.lockRow(client, id);
+            if (
+              row.status !== 'awaiting_staff_review' ||
+              row.version_id !== input.expectedVersionId ||
+              row.contract_state !== 'AwaitingStaffReview' ||
+              row.activation_invoice_id !== row.invoice_id
+            )
+              throw new ConflictException('Saving order review changed; reload before deciding');
+            const reason = input.reason?.trim() ?? '';
+            if (action === 'reject' && !reason)
+              throw new ConflictException('Rejection requires a reason');
+            if (action === 'reject' && row.invoice_state === 'PaymentUnderReview')
+              throw new ConflictException('Resolve pending payment review before rejection');
+            let refundId: string | null = null;
+            if (action === 'approve') {
               await client.query(
-                "UPDATE saving_orders SET financial_status='refund_pending' WHERE id=$1",
+                'INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,$3)',
+                [row.contract_id, row.version_id, actor.userId]
+              );
+              await client.query(
+                "UPDATE contracts SET state='AwaitingCustomerAcceptance' WHERE id=$1",
+                [row.contract_id]
+              );
+              await client.query(
+                "UPDATE orders SET status='CONFIRMED',updated_at=NOW() WHERE id=$1",
+                [row.order_id]
+              );
+              await client.query(
+                "UPDATE saving_orders SET status='approved',updated_at=NOW() WHERE id=$1",
                 [id]
               );
-            } else if (['Draft', 'Unpaid', 'Overdue'].includes(row.invoice_state)) {
-              await this.invoices.transition(
-                row.invoice_id,
-                row.invoice_state as 'Draft' | 'Unpaid' | 'Overdue',
-                'Cancelled',
-                {
+              await client.query(
+                `UPDATE saving_fulfillment_stages SET status='completed',started_at=NOW(),
+                completed_at=NOW(),completed_by=$2,explanation='Staff approved request',updated_at=NOW()
+                WHERE order_id=$1 AND stage='request_confirmation' AND status='pending'`,
+                [id, actor.userId]
+              );
+              await this.event(
+                client,
+                row,
+                'request_confirmation',
+                'pending',
+                'completed',
+                actor,
+                'Staff approved request'
+              );
+              await client.query(
+                `UPDATE saving_fulfillment_stages SET status='in_progress',started_at=NOW(),updated_at=NOW()
+                WHERE order_id=$1 AND stage='product_delivery' AND status='pending'`,
+                [id]
+              );
+              await this.event(
+                client,
+                row,
+                'product_delivery',
+                'pending',
+                'in_progress',
+                actor,
+                'Request approved'
+              );
+              await this.notify(
+                client,
+                row,
+                'سفارش صرفه‌جویی شما تأیید شد. قرارداد و فاکتور را بررسی کنید.',
+                'Your power-saving order was approved. Review the contract and invoice.'
+              );
+            } else {
+              refundId = await this.createRefund(client, row, actor, reason);
+              if (refundId) {
+                await client.query(
+                  "UPDATE saving_orders SET financial_status='refund_pending' WHERE id=$1",
+                  [id]
+                );
+              } else if (['Draft', 'Unpaid', 'Overdue'].includes(row.invoice_state)) {
+                await this.invoices.transition(
+                  row.invoice_id,
+                  row.invoice_state as 'Draft' | 'Unpaid' | 'Overdue',
+                  'Cancelled',
+                  {
+                    actorUserId: actor.userId,
+                    reason,
+                    ip,
+                    client,
+                    financials: {
+                      paidAmount: 0n,
+                      refundedAmount: 0n,
+                      totalAmount: BigInt(row.total_amount),
+                    },
+                  }
+                );
+              }
+              await client.query("UPDATE contracts SET state='Rejected' WHERE id=$1", [
+                row.contract_id,
+              ]);
+              await client.query(
+                "UPDATE orders SET status='CANCELLED',updated_at=NOW() WHERE id=$1",
+                [row.order_id]
+              );
+              await client.query(
+                "UPDATE saving_orders SET status='rejected',updated_at=NOW() WHERE id=$1",
+                [id]
+              );
+              if (BigInt(row.paid_amount) === 0n && row.gift_code_id)
+                await this.giftCodes.releaseByOrder(row.order_id, client, {
                   actorUserId: actor.userId,
-                  reason,
                   ip,
-                  client,
-                  financials: {
-                    paidAmount: 0n,
-                    refundedAmount: 0n,
-                    totalAmount: BigInt(row.total_amount),
-                  },
-                }
+                });
+              await this.notify(
+                client,
+                row,
+                `سفارش صرفه‌جویی شما رد شد. دلیل: ${reason}`,
+                `Your power-saving order was rejected. Reason: ${reason}`
               );
             }
-            await client.query("UPDATE contracts SET state='Rejected' WHERE id=$1", [
-              row.contract_id,
-            ]);
-            await client.query(
-              "UPDATE orders SET status='CANCELLED',updated_at=NOW() WHERE id=$1",
-              [row.order_id]
-            );
-            await client.query(
-              "UPDATE saving_orders SET status='rejected',updated_at=NOW() WHERE id=$1",
-              [id]
-            );
-            if (BigInt(row.paid_amount) === 0n && row.gift_code_id)
-              await this.giftCodes.releaseByOrder(row.order_id, client, {
-                actorUserId: actor.userId,
-                ip,
-              });
-            await this.notify(
+            await auditContract(
               client,
-              row,
-              `سفارش صرفه‌جویی شما رد شد. دلیل: ${reason}`,
-              `Your power-saving order was rejected. Reason: ${reason}`
+              row.contract_id,
+              row.version_id,
+              `saving.order_review.${action}`,
+              actor,
+              ip,
+              { savingOrderId: id, reason, refundId }
             );
+            return {
+              savingOrderId: id,
+              status: action === 'approve' ? 'approved' : 'rejected',
+              refundId,
+            };
           }
-          await auditContract(
-            client,
-            row.contract_id,
-            row.version_id,
-            `saving.order_review.${action}`,
-            actor,
-            ip,
-            { savingOrderId: id, reason, refundId }
-          );
-          return {
-            savingOrderId: id,
-            status: action === 'approve' ? 'approved' : 'rejected',
-            refundId,
-          };
-        }
+        )
+      );
+    } catch (error) {
+      if (
+        (error as { code?: string; message?: string }).code === '23514' &&
+        (error as Error).message.includes('Saving hardware is out of stock')
       )
-    );
+        throw new ConflictException('Selected saving hardware is out of stock');
+      throw error;
+    }
   }
 
   async advance(

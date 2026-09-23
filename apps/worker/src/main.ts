@@ -46,6 +46,11 @@ import {
 } from './wallet/online-topup-expiry-scanner.js';
 import { recordJobFailure, recordJobSuccess } from './jobs/job-recorder.js';
 import {
+  runSavingInventoryExpiry,
+  SAVING_INVENTORY_EXPIRY_INTERVAL_MS,
+  SAVING_INVENTORY_EXPIRY_JOB_TYPE,
+} from './saving/inventory-expiry.js';
+import {
   expireInvitations,
   INVITATION_EXPIRY_INTERVAL_MS,
   INVITATION_EXPIRY_JOB_TYPE,
@@ -152,6 +157,20 @@ async function main(): Promise<void> {
   pollers.every(async () => {
     await runElectricityIncreaseActivation();
   }, ELECTRICITY_INCREASE_INTERVAL_MS);
+  pollers.every(async () => {
+    if (draining) return;
+    try {
+      await runSavingInventoryExpiry();
+      await recordJobSuccess(SAVING_INVENTORY_EXPIRY_JOB_TYPE);
+    } catch (error) {
+      logger.error(`Saving inventory expiry failed: ${(error as Error)?.message ?? String(error)}`);
+      await recordJobFailure({
+        jobType: SAVING_INVENTORY_EXPIRY_JOB_TYPE,
+        error: (error as Error)?.message ?? String(error),
+        errorCategory: 'transient',
+      });
+    }
+  }, SAVING_INVENTORY_EXPIRY_INTERVAL_MS);
 
   /* ------------------------------------------------------------------ */
   /*  Graceful shutdown handler                                          */

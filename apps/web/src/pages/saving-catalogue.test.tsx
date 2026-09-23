@@ -70,6 +70,11 @@ it.each(['en', 'fa'] as const)(
       await act(async () => root.render(<SavingsPage />));
       expect(container.textContent).toContain(locale === 'fa' ? 'خانه کم‌مصرف' : 'Efficient home');
       expect(container.textContent).toContain(locale === 'fa' ? 'کنترلگر' : 'Controller');
+      expect(container.textContent).toContain(
+        locale === 'fa'
+          ? 'موجودی پس از تأیید کارشناس مشخص می‌شود.'
+          : 'Availability is subject to staff confirmation.'
+      );
       expect(container.textContent).toContain('Accepted text');
       expect(container.textContent).toContain(locale === 'fa' ? 'طرح آینده' : 'Later plan');
       expect(container.textContent).toContain(locale === 'fa' ? 'در دسترس نیست' : 'Unavailable');

@@ -16,6 +16,8 @@ interface PlanRow {
 }
 interface HardwareRow extends PlanRow {
   plan_id: string;
+  stock_tracking: boolean;
+  available_count: number;
 }
 export interface AgreementRow {
   id: string;
@@ -64,7 +66,8 @@ export class SavingCatalogueService {
       const ids = plans.map((plan) => plan.id);
       const hardware = (
         await client.query<HardwareRow>(
-          `SELECT h.plan_id,p.id,p.title,p.description,effective_product_price(p.id)::text AS price,p.status
+          `SELECT h.plan_id,p.id,p.title,p.description,effective_product_price(p.id)::text AS price,p.status,
+             p.stock_tracking,(p.stock_count-p.reserved_count) AS available_count
            FROM saving_plan_hardware h JOIN products p ON p.id=h.hardware_id
            WHERE h.plan_id=ANY($1::uuid[]) AND p.status<>'archived'
            ORDER BY p.title->>'fa',p.id`,
@@ -101,7 +104,11 @@ export class SavingCatalogueService {
               BigInt(plan.price) > 0n &&
               !!agreement &&
               options.some(
-                (option) => option.status === 'active' && option.price && BigInt(option.price) > 0n
+                (option) =>
+                  option.status === 'active' &&
+                  option.price &&
+                  BigInt(option.price) > 0n &&
+                  (!option.stock_tracking || option.available_count > 0)
               ),
           };
         }),

@@ -949,6 +949,83 @@
         ]
       }
     },
+    "/api/admin/catalogue/hardware/{id}/inventory": {
+      "get": {
+        "operationId": "SavingInventoryController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read hardware stock and reservation configuration",
+        "tags": [
+          "Admin · Saving inventory"
+        ]
+      },
+      "put": {
+        "operationId": "SavingInventoryController_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reservationMinutes": {
+                    "maximum": 10080,
+                    "minimum": 5,
+                    "type": "integer"
+                  },
+                  "stockCount": {
+                    "maximum": 1000000,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "stockTracking": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "stockTracking",
+                  "stockCount",
+                  "reservationMinutes"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Set optional stock tracking, on-hand count and reservation period",
+        "tags": [
+          "Admin · Saving inventory"
+        ]
+      }
+    },
     "/api/admin/catalogue/products": {
       "get": {
         "operationId": "CatalogueProductsController_list",
@@ -4940,7 +5017,8 @@
                 "invoice_reminder_sender",
                 "wallet_reconciliation_scan",
                 "online_topup_expiry_scan",
-                "invitation_expiry_scan"
+                "invitation_expiry_scan",
+                "saving_inventory_expiry"
               ],
               "type": "string"
             }

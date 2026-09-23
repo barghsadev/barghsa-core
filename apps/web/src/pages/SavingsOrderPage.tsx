@@ -13,6 +13,8 @@ interface Product {
   description: { fa: string; en: string } | null;
   price: string | null;
   status: string;
+  stock_tracking?: boolean;
+  available_count?: number;
 }
 interface Plan extends Product {
   hardware: Product[];
@@ -377,7 +379,10 @@ export function SavingsOrderPage() {
     step === 1
       ? !!selectedPlan?.available
       : step === 2
-        ? !!selectedHardware && selectedHardware.status === 'active' && hardwareConfirmed
+        ? !!selectedHardware &&
+          selectedHardware.status === 'active' &&
+          (!selectedHardware.stock_tracking || (selectedHardware.available_count ?? 0) > 0) &&
+          hardwareConfirmed
         : step === 3
           ? /^[0-9]{6,13}$/.test(billIdentifier) &&
             !duplicateChecking &&
@@ -499,7 +504,10 @@ export function SavingsOrderPage() {
                         name="hardware"
                         value={item.id}
                         checked={hardwareId === item.id}
-                        disabled={item.status !== 'active'}
+                        disabled={
+                          item.status !== 'active' ||
+                          (!!item.stock_tracking && (item.available_count ?? 0) < 1)
+                        }
                         onChange={() => {
                           setHardwareId(item.id);
                           setHardwareConfirmed(false);
@@ -509,6 +517,13 @@ export function SavingsOrderPage() {
                         <span className="block font-medium">{title(item)}</span>
                         <span className="block text-sm">{item.description?.[locale]}</span>
                         <bdi>{item.price ? numbers.money(item.price) : copy('unpriced')}</bdi>
+                        <span className="block text-sm text-muted-foreground">
+                          {item.stock_tracking
+                            ? (item.available_count ?? 0) > 0
+                              ? copy('inStock')
+                              : copy('outOfStock')
+                            : copy('subjectToConfirmation')}
+                        </span>
                       </span>
                     </label>
                   ))}

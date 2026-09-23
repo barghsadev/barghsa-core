@@ -89,6 +89,14 @@ const en: Record<string, string> = {
   invalidDate: 'Choose a valid date and time in the displayed timezone.',
   invalidWindow: 'The new price date must follow the latest recorded version.',
   conflict: 'The product or its price history changed. Refresh and try again.',
+  inventory: 'Inventory',
+  trackStock: 'Track stock for this hardware',
+  stockCount: 'On-hand units (including reservations)',
+  reservedCount: 'Reserved units',
+  reservationMinutes: 'Reservation period (minutes)',
+  saveInventory: 'Save inventory settings',
+  confirmInventory: 'Update stock tracking and reservation settings?',
+  inventoryConflict: 'Stock cannot be lower than open reservations. Refresh and try again.',
 };
 const fa: Record<string, string> = {
   title: 'فهرست محصولات',
@@ -179,6 +187,14 @@ const fa: Record<string, string> = {
   invalidDate: 'تاریخ و ساعت معتبر در منطقه زمانی نمایش‌داده‌شده انتخاب کنید.',
   invalidWindow: 'تاریخ قیمت جدید باید پس از آخرین نسخه ثبت‌شده باشد.',
   conflict: 'محصول یا تاریخچه قیمت تغییر کرده است. تازه‌سازی کنید.',
+  inventory: 'موجودی انبار',
+  trackStock: 'پیگیری موجودی این تجهیز',
+  stockCount: 'تعداد موجود (شامل رزروشده)',
+  reservedCount: 'تعداد رزروشده',
+  reservationMinutes: 'مدت رزرو (دقیقه)',
+  saveInventory: 'ذخیره تنظیمات موجودی',
+  confirmInventory: 'موجودی و تنظیمات رزرو به‌روزرسانی شود؟',
+  inventoryConflict: 'موجودی نمی‌تواند کمتر از رزروهای باز باشد. تازه‌سازی کنید.',
 };
 export function tCatalogue(key: string, locale: 'fa' | 'en'): string {
   return lookup(locale === 'fa' ? fa : en, key) ?? key;

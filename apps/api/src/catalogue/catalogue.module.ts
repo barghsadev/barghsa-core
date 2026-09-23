@@ -7,6 +7,7 @@ import {
   CustomerSavingCatalogueController,
 } from './saving-catalogue.controller.js';
 import { SavingCatalogueService } from './saving-catalogue.service.js';
+import { SavingInventoryController } from './saving-inventory.controller.js';
 
 /**
  * Admin product catalogue module (S-09.12, T-09.12.01) — API slice.
@@ -22,6 +23,7 @@ import { SavingCatalogueService } from './saving-catalogue.service.js';
     CatalogueProductsController,
     AdminSavingCatalogueController,
     CustomerSavingCatalogueController,
+    SavingInventoryController,
   ],
   providers: [CatalogueProductsService, SavingCatalogueService],
   exports: [CatalogueProductsService],

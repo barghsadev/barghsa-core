@@ -80,6 +80,11 @@ it.each(['en', 'fa'] as const)(
       await act(async () => next?.click());
       expect(container.textContent).toContain(locale === 'fa' ? 'دستگاه' : 'Device');
       expect(container.textContent).toContain(
+        locale === 'fa'
+          ? 'موجودی پس از تأیید کارشناس مشخص می‌شود.'
+          : 'Availability is subject to staff confirmation.'
+      );
+      expect(container.textContent).toContain(
         locale === 'fa' ? 'انتخاب این دستگاه را تأیید می‌کنم' : 'I confirm this equipment choice'
       );
     } finally {

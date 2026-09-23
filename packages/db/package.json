@@ -18,7 +18,8 @@
     "./refund-processing": "./dist/refund-processing.js",
     "./contract-activation": "./dist/contract-activation.js",
     "./contract-completion": "./dist/contract-completion.js",
-    "./electricity-increase-activation": "./dist/electricity-increase-activation.js"
+    "./electricity-increase-activation": "./dist/electricity-increase-activation.js",
+    "./saving-inventory": "./dist/saving-inventory.js"
   },
   "scripts": {
     "build": "tsc -b",

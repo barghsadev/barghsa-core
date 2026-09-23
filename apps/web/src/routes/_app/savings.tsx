@@ -11,6 +11,8 @@ interface Product {
   description: { fa: string; en: string } | null;
   price: string | null;
   status: string;
+  stock_tracking?: boolean;
+  available_count?: number;
 }
 interface SavingPlan extends Product {
   hardware: Product[];
@@ -105,6 +107,13 @@ export function SavingsPage() {
                         {item.status !== 'active' && (
                           <p className="text-xs text-muted-foreground">{copy('inactive')}</p>
                         )}
+                        <p className="text-xs text-muted-foreground">
+                          {item.stock_tracking
+                            ? (item.available_count ?? 0) > 0
+                              ? copy('inStock')
+                              : copy('outOfStock')
+                            : copy('subjectToConfirmation')}
+                        </p>
                       </li>
                     ))}
                   </ul>

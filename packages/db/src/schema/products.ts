@@ -1,4 +1,4 @@
-import { jsonb, text } from 'drizzle-orm/pg-core';
+import { boolean, integer, jsonb, text } from 'drizzle-orm/pg-core';
 import { createTable } from '../base-table';
 import { pgEnum, irrAmount } from '../types';
 
@@ -65,4 +65,8 @@ export const products = createTable('products', {
 
   /** Product lifecycle status: active, inactive, archived. Default: inactive. */
   status: productStatusEnum('status').notNull().default('inactive'),
+  stockTracking: boolean('stock_tracking').notNull().default(false),
+  stockCount: integer('stock_count').notNull().default(0),
+  reservedCount: integer('reserved_count').notNull().default(0),
+  reservationMinutes: integer('reservation_minutes').notNull().default(1440),
 });

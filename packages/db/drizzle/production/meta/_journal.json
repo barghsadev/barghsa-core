@@ -589,6 +589,13 @@
       "when": 1791331200066,
       "tag": "0163_saving_documents_comments",
       "breakpoints": true
+    },
+    {
+      "idx": 164,
+      "version": "7",
+      "when": 1791331200067,
+      "tag": "0164_saving_inventory",
+      "breakpoints": true
     }
   ]
 }

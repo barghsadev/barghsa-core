@@ -6,6 +6,7 @@ import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { SavingAgreementEditor } from './SavingAgreementEditor.js';
+import { SavingInventoryPanel } from '../components/SavingInventoryPanel.js';
 const types = ['consultation', 'electricity', 'hardware', 'saving_plan'] as const;
 type ProductType = (typeof types)[number];
 type Product = {
@@ -545,6 +546,9 @@ export default function AdminCataloguePage() {
                           planId={detail.id}
                           onChanged={() => choose(detail.id)}
                         />
+                      )}
+                      {detail && type === 'hardware' && (
+                        <SavingInventoryPanel hardwareId={detail.id} />
                       )}
                       {detail && (
                         <section

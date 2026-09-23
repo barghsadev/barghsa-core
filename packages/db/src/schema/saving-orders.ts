@@ -210,3 +210,29 @@ export const savingOrderComments = pgTable(
     check('saving_order_comments_body', sql`length(trim(${table.body})) BETWEEN 1 AND 10000`),
   ]
 );
+
+export const savingInventoryReservations = pgTable(
+  'saving_inventory_reservations',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => savingOrders.id, { onDelete: 'restrict' }),
+    hardwareProductId: uuid('hardware_product_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'restrict' }),
+    status: text('status').notNull().default('reserved'),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    allocatedAt: timestamp('allocated_at', { withTimezone: true }),
+    releasedAt: timestamp('released_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('saving_inventory_reservation_order_key').on(table.orderId),
+    index('saving_inventory_reservation_expiry_idx').on(table.status, table.expiresAt),
+    check(
+      'saving_inventory_reservation_status',
+      sql`${table.status} IN ('reserved','allocated','expired','released')`
+    ),
+  ]
+);

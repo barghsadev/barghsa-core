@@ -2,6 +2,7 @@ import { afterAll, beforeAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { activateReadyContracts } from '@barghsa/db/contract-activation';
 import { runWalletRefund } from '@barghsa/db/refund-processing';
+import { expireSavingInventory } from '@barghsa/db/saving-inventory';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -101,6 +102,26 @@ beforeAll(async () => {
   );
   expect(hardwareResponse.status, http.logs()).toBe(201);
   const hardware = (await hardwareResponse.json()) as { id: string };
+  const inventory = await request(
+    `/api/admin/catalogue/hardware/${hardware.id}/inventory`,
+    'PUT',
+    { stockTracking: true, stockCount: 2, reservationMinutes: 30 },
+    staffHeaders
+  );
+  expect(inventory.status, http.logs()).toBe(200);
+  expect(await inventory.json()).toMatchObject({
+    stockTracking: true,
+    stockCount: 2,
+    reservedCount: 0,
+  });
+  const inventoryRead = await request(
+    `/api/admin/catalogue/hardware/${hardware.id}/inventory`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(inventoryRead.status, http.logs()).toBe(200);
+  expect(await inventoryRead.json()).toMatchObject({ reservationMinutes: 30 });
   const planResponse = await request(
     '/api/admin/catalogue/products',
     'POST',
@@ -342,6 +363,60 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   const discountedOrder = (await discounted.json()) as { orderId: string; savingOrderId: string };
   expect(
     (
+      await http.pool.query<{ reserved_count: number }>(
+        'SELECT reserved_count FROM products WHERE id=$1',
+        [input.hardwareProductId]
+      )
+    ).rows[0]?.reserved_count
+  ).toBe(2);
+  const inventoryPath = `/api/admin/catalogue/hardware/${input.hardwareProductId}/inventory`;
+  expect(
+    (
+      await request(
+        inventoryPath,
+        'PUT',
+        {
+          stockTracking: true,
+          stockCount: 1,
+          reservationMinutes: 30,
+        },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await request(
+        inventoryPath,
+        'PUT',
+        {
+          stockTracking: false,
+          stockCount: 2,
+          reservationMinutes: 30,
+        },
+        staffHeaders
+      )
+    ).status
+  ).toBe(409);
+  const noStockInput = { ...input, billIdentifier: '1234567890126' };
+  const noStockQuote = await request('/api/saving/orders/quote', 'POST', noStockInput);
+  expect(noStockQuote.status, http.logs()).toBe(201);
+  const noStockDigest = ((await noStockQuote.json()) as { reviewDigest: string }).reviewDigest;
+  expect(
+    (
+      await request('/api/saving/orders', 'POST', {
+        ...noStockInput,
+        idempotencyKey: randomUUID(),
+        expectedQuoteDigest: noStockDigest,
+        agreementAccepted: true,
+        hardwareConfirmed: true,
+        submitForStaffReview: true,
+      })
+    ).status,
+    http.logs()
+  ).toBe(409);
+  expect(
+    (
       await http.pool.query<{ discount_amount: string }>(
         'SELECT discount_amount::text FROM gift_code_redemptions WHERE order_id=$1',
         [discountedOrder.orderId]
@@ -367,6 +442,14 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   const approved = await request(approvePath, 'POST', approval, staffHeaders);
   expect(approved.status, http.logs()).toBe(200);
   expect(await approved.json()).toMatchObject({ status: 'approved' });
+  expect(
+    (
+      await http.pool.query<{ stock_count: number; reserved_count: number }>(
+        'SELECT stock_count,reserved_count FROM products WHERE id=$1',
+        [input.hardwareProductId]
+      )
+    ).rows[0]
+  ).toMatchObject({ stock_count: 1, reserved_count: 1 });
   const approvalRetry = await request(approvePath, 'POST', approval, staffHeaders);
   expect(approvalRetry.status, http.logs()).toBe(200);
   expect(await approvalRetry.json()).toMatchObject({ status: 'approved' });
@@ -504,6 +587,14 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   );
   expect(rejected.status, http.logs()).toBe(200);
   expect(await rejected.json()).toMatchObject({ status: 'rejected' });
+  expect(
+    (
+      await http.pool.query<{ reserved_count: number }>(
+        'SELECT reserved_count FROM products WHERE id=$1',
+        [input.hardwareProductId]
+      )
+    ).rows[0]?.reserved_count
+  ).toBe(0);
   const rejectedState = await http.pool.query<{ invoice_state: string }>(
     'SELECT state AS invoice_state FROM invoices WHERE order_id=$1',
     [discountedOrder.orderId]
@@ -578,4 +669,64 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     [`refund:${obligation.rows[0]!.id}:Completed`]
   );
   expect(refundNotice.rows[0]?.link_route).toBe(`/savings/orders/${paidOrder.savingOrderId}`);
+  expect(
+    (
+      await http.pool.query<{ stock_count: number; reserved_count: number }>(
+        'SELECT stock_count,reserved_count FROM products WHERE id=$1',
+        [input.hardwareProductId]
+      )
+    ).rows[0]
+  ).toMatchObject({ stock_count: 1, reserved_count: 0 });
+  const expiryInput = { ...input, billIdentifier: '1234567890127' };
+  const expiryQuoteResponse = await request('/api/saving/orders/quote', 'POST', expiryInput);
+  expect(expiryQuoteResponse.status, http.logs()).toBe(201);
+  const expiryDigest = ((await expiryQuoteResponse.json()) as { reviewDigest: string })
+    .reviewDigest;
+  const expirySubmission = await request('/api/saving/orders', 'POST', {
+    ...expiryInput,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: expiryDigest,
+    agreementAccepted: true,
+    hardwareConfirmed: true,
+    submitForStaffReview: true,
+  });
+  expect(expirySubmission.status, http.logs()).toBe(201);
+  const expiryOrder = (await expirySubmission.json()) as { savingOrderId: string };
+  await http.pool.query(
+    "UPDATE saving_inventory_reservations SET expires_at=NOW()-INTERVAL '1 minute' WHERE order_id=$1",
+    [expiryOrder.savingOrderId]
+  );
+  expect(await expireSavingInventory(http.pool)).toMatchObject({ expired: 1 });
+  expect(await expireSavingInventory(http.pool)).toMatchObject({ expired: 0 });
+  expect(
+    (
+      await http.pool.query<{ reserved_count: number }>(
+        'SELECT reserved_count FROM products WHERE id=$1',
+        [input.hardwareProductId]
+      )
+    ).rows[0]?.reserved_count
+  ).toBe(0);
+  const expiryDetail = await request(
+    `/api/staff/saving/orders/${expiryOrder.savingOrderId}`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(expiryDetail.status, http.logs()).toBe(200);
+  const expiryVersion = ((await expiryDetail.json()) as { versionId: string }).versionId;
+  const expiryApproval = await request(
+    `/api/staff/saving/orders/${expiryOrder.savingOrderId}/approve`,
+    'POST',
+    { idempotencyKey: randomUUID(), expectedVersionId: expiryVersion },
+    staffHeaders
+  );
+  expect(expiryApproval.status, http.logs()).toBe(200);
+  expect(
+    (
+      await http.pool.query<{ stock_count: number; reserved_count: number }>(
+        'SELECT stock_count,reserved_count FROM products WHERE id=$1',
+        [input.hardwareProductId]
+      )
+    ).rows[0]
+  ).toMatchObject({ stock_count: 0, reserved_count: 0 });
 }, 90000);
