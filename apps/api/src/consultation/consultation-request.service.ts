@@ -4,6 +4,7 @@ import { v7 as uuidv7 } from 'uuid';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { OrdersService } from '../orders/orders.service.js';
+import { NotificationsService } from '../notifications/notifications.service.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 interface ProductRow {
@@ -90,8 +91,8 @@ export class ConsultationRequestService {
         return { requestId: previous.id, status: 'submitted' as const };
       }
       const profile = (
-        await client.query<{ profile_type: string }>(
-          'SELECT profile_type FROM profiles WHERE id=$1',
+        await client.query<{ profile_type: string; user_id: string }>(
+          'SELECT profile_type,user_id FROM profiles WHERE id=$1',
           [input.profileId]
         )
       ).rows[0]!;
@@ -133,6 +134,28 @@ export class ConsultationRequestService {
          VALUES($1,$2,'submitted',$3)`,
         [uuidv7(), requestId, actor.userId]
       );
+      for (const userId of new Set([profile.user_id, actor.userId])) {
+        await new NotificationsService().create(
+          {
+            userId,
+            profileId: input.profileId,
+            type: 'general',
+            title: 'Consultation request submitted',
+            localizedContent: {
+              fa: {
+                title: 'درخواست مشاوره ثبت شد',
+                body: 'درخواست مشاوره برای بررسی کارشناسان ثبت شد.',
+              },
+              en: {
+                title: 'Consultation request submitted',
+                body: 'Your consultation request has been sent for staff review.',
+              },
+            },
+            link: `/consultations/${requestId}`,
+          },
+          client
+        );
+      }
       await client.query(
         `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
          VALUES($1,$2,'consultation.request.submitted',$3::jsonb,$4,$5)`,

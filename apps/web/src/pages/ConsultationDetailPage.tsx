@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useParams } from '@tanstack/react-router';
+import { Button, Label } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { useLocale } from '../hooks/useLocale.js';
+import { withCsrf } from '../lib/csrf.js';
 
 interface Detail {
   request: {
@@ -30,6 +32,11 @@ export function ConsultationDetailPage() {
   const [detail, setDetail] = useState<Detail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [information, setInformation] = useState('');
+  const [sending, setSending] = useState(false);
+  const [actionError, setActionError] = useState(false);
+  const [infoSent, setInfoSent] = useState(false);
+  const [revision, setRevision] = useState(0);
   useEffect(() => {
     const controller = new AbortController();
     void fetch(`/api/consultations/requests/${encodeURIComponent(requestId)}`, {
@@ -50,7 +57,33 @@ export function ConsultationDetailPage() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [requestId]);
+  }, [requestId, revision]);
+
+  async function provideInfo(event: FormEvent) {
+    event.preventDefault();
+    if (!information.trim() || sending) return;
+    setSending(true);
+    setActionError(false);
+    try {
+      const response = await fetch(
+        `/api/consultations/requests/${encodeURIComponent(requestId)}/provide-info`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ reason: information.trim() }),
+        }
+      );
+      if (!response.ok) throw new Error('provide-info');
+      setInformation('');
+      setInfoSent(true);
+      setRevision((value) => value + 1);
+    } catch {
+      setActionError(true);
+    } finally {
+      setSending(false);
+    }
+  }
 
   const request = detail?.request;
   return (
@@ -105,6 +138,28 @@ export function ConsultationDetailPage() {
               </p>
             )}
           </section>
+          {request.status === 'awaiting_customer_info' && (
+            <form onSubmit={provideInfo} className="space-y-3 rounded-xl border bg-card p-5">
+              <Label htmlFor="consultation-information">{copy('information')}</Label>
+              <textarea
+                id="consultation-information"
+                value={information}
+                onChange={(event) => setInformation(event.target.value)}
+                maxLength={2000}
+                required
+                className="min-h-28 w-full rounded-md border bg-background p-3"
+              />
+              {actionError && (
+                <p role="alert" className="text-destructive">
+                  {copy('actionError')}
+                </p>
+              )}
+              <Button type="submit" disabled={sending || !information.trim()}>
+                {copy('provideInfo')}
+              </Button>
+            </form>
+          )}
+          {infoSent && <p role="status">{copy('infoSent')}</p>}
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">{copy('history')}</h2>
             <ol className="space-y-3 border-s-2 ps-4">

@@ -53,6 +53,11 @@ import { StaffSolarFinalController } from '../solar/solar-final.controller.js';
 import { SolarFinalService } from '../solar/solar-final.service.js';
 import { ConsultationRequestController } from '../consultation/consultation-request.controller.js';
 import { ConsultationRequestService } from '../consultation/consultation-request.service.js';
+import {
+  StaffConsultationWorkflowController,
+  CustomerConsultationWorkflowController,
+} from '../consultation/consultation-workflow.controller.js';
+import { ConsultationWorkflowService } from '../consultation/consultation-workflow.service.js';
 
 @Module({
   imports: [SessionModule, AdminModule, InvoiceModule, DocumentModule, ContractModule],
@@ -76,6 +81,8 @@ import { ConsultationRequestService } from '../consultation/consultation-request
     StaffSolarPostalController,
     StaffSolarFinalController,
     ConsultationRequestController,
+    StaffConsultationWorkflowController,
+    CustomerConsultationWorkflowController,
   ],
   providers: [
     OrdersService,
@@ -96,6 +103,7 @@ import { ConsultationRequestService } from '../consultation/consultation-request
     SolarPostalService,
     SolarFinalService,
     ConsultationRequestService,
+    ConsultationWorkflowService,
   ],
   exports: [OrdersService, ElectricityCalculationService],
 })

@@ -34,12 +34,14 @@ import {
   Wallet,
   Zap,
   Sun,
+  MessagesSquare,
 } from 'lucide-react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { documentText } from '@barghsa/i18n/documents';
 import { shellText } from '@barghsa/i18n/shell';
 import { tSaving } from '@barghsa/i18n/saving';
 import { tSolar } from '@barghsa/i18n/solar';
+import { tConsultation } from '@barghsa/i18n/consultation';
 import { TosBanner } from '../components/TosBanner.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { AppShell, type NavigationGroup } from '../components/AppShell.js';
@@ -67,6 +69,11 @@ export default function AdminLayout() {
           icon: Package,
         },
         { to: '/admin/solar-requests', label: tSolar('staffTitle', locale), icon: Sun },
+        {
+          to: '/admin/consultations',
+          label: tConsultation('staffTitle', locale),
+          icon: MessagesSquare,
+        },
         { to: '/admin/solar-postal', label: tSolar('postalStaffTitle', locale), icon: Package },
         {
           to: '/admin/electricity-increases',

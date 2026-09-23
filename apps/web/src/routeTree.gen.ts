@@ -38,6 +38,7 @@ import { Route as AdminAiModelsRouteImport } from './routes/admin/ai-models'
 import { Route as AdminApprovalRequestsRouteImport } from './routes/admin/approval-requests'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminCatalogueRouteImport } from './routes/admin/catalogue'
+import { Route as AdminConsultationsRouteImport } from './routes/admin/consultations'
 import { Route as AdminContractLimitsRouteImport } from './routes/admin/contract-limits'
 import { Route as AdminContractTemplatesRouteImport } from './routes/admin/contract-templates'
 import { Route as AdminContractsRouteImport } from './routes/admin/contracts'
@@ -247,6 +248,11 @@ const AdminBrandingRoute = AdminBrandingRouteImport.update({
 const AdminCatalogueRoute = AdminCatalogueRouteImport.update({
   id: '/catalogue',
   path: '/catalogue',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminConsultationsRoute = AdminConsultationsRouteImport.update({
+  id: '/consultations',
+  path: '/consultations',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminContractLimitsRoute = AdminContractLimitsRouteImport.update({
@@ -618,6 +624,7 @@ export interface FileRoutesByFullPath {
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/catalogue': typeof AdminCatalogueRoute
+  '/admin/consultations': typeof AdminConsultationsRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
   '/admin/contract-templates': typeof AdminContractTemplatesRoute
   '/admin/contracts': typeof AdminContractsRoute
@@ -711,6 +718,7 @@ export interface FileRoutesByTo {
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/catalogue': typeof AdminCatalogueRoute
+  '/admin/consultations': typeof AdminConsultationsRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
   '/admin/contract-templates': typeof AdminContractTemplatesRoute
   '/admin/contracts': typeof AdminContractsRoute
@@ -807,6 +815,7 @@ export interface FileRoutesById {
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/catalogue': typeof AdminCatalogueRoute
+  '/admin/consultations': typeof AdminConsultationsRoute
   '/admin/contract-limits': typeof AdminContractLimitsRoute
   '/admin/contract-templates': typeof AdminContractTemplatesRoute
   '/admin/contracts': typeof AdminContractsRoute
@@ -905,6 +914,7 @@ export interface FileRouteTypes {
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/catalogue'
+    | '/admin/consultations'
     | '/admin/contract-limits'
     | '/admin/contract-templates'
     | '/admin/contracts'
@@ -998,6 +1008,7 @@ export interface FileRouteTypes {
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/catalogue'
+    | '/admin/consultations'
     | '/admin/contract-limits'
     | '/admin/contract-templates'
     | '/admin/contracts'
@@ -1093,6 +1104,7 @@ export interface FileRouteTypes {
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/catalogue'
+    | '/admin/consultations'
     | '/admin/contract-limits'
     | '/admin/contract-templates'
     | '/admin/contracts'
@@ -1380,6 +1392,13 @@ declare module '@tanstack/react-router' {
       path: '/catalogue'
       fullPath: '/admin/catalogue'
       preLoaderRoute: typeof AdminCatalogueRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/consultations': {
+      id: '/admin/consultations'
+      path: '/consultations'
+      fullPath: '/admin/consultations'
+      preLoaderRoute: typeof AdminConsultationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/contract-limits': {
@@ -1992,6 +2011,7 @@ interface AdminRouteChildren {
   AdminApprovalRequestsRoute: typeof AdminApprovalRequestsRoute
   AdminBrandingRoute: typeof AdminBrandingRoute
   AdminCatalogueRoute: typeof AdminCatalogueRoute
+  AdminConsultationsRoute: typeof AdminConsultationsRoute
   AdminContractLimitsRoute: typeof AdminContractLimitsRoute
   AdminContractTemplatesRoute: typeof AdminContractTemplatesRoute
   AdminContractsRoute: typeof AdminContractsRoute
@@ -2035,6 +2055,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminApprovalRequestsRoute: AdminApprovalRequestsRoute,
   AdminBrandingRoute: AdminBrandingRoute,
   AdminCatalogueRoute: AdminCatalogueRoute,
+  AdminConsultationsRoute: AdminConsultationsRoute,
   AdminContractLimitsRoute: AdminContractLimitsRoute,
   AdminContractTemplatesRoute: AdminContractTemplatesRoute,
   AdminContractsRoute: AdminContractsRoute,
