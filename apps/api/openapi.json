@@ -5063,6 +5063,26 @@
         ]
       }
     },
+    "/api/admin/dashboard/business-work-counts": {
+      "get": {
+        "operationId": "BusinessWorkCountsController_counts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Count open business work visible to the current staff permissions",
+        "tags": [
+          "Admin · Dashboard"
+        ]
+      }
+    },
     "/api/admin/documents": {
       "get": {
         "operationId": "StaffDocumentController_list",

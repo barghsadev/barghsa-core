@@ -7,6 +7,7 @@ import { Link } from '@tanstack/react-router';
 import { AlertTriangle, ShieldCheck } from 'lucide-react';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
+import { AdminBusinessWorkCounts } from '../components/AdminBusinessWorkCounts.js';
 
 interface PendingVerificationProfile {
   id: string;
@@ -185,6 +186,8 @@ export default function AdminDashboard() {
     <div dir={isRtl ? 'rtl' : 'ltr'}>
       <h1 className="text-2xl font-bold mb-4">{t('dashboard.admin.title', locale)}</h1>
       <p className="text-muted-foreground mb-6">{t('dashboard.admin.description', locale)}</p>
+
+      <AdminBusinessWorkCounts />
 
       {chargebacksError ? (
         <p className="mb-6 text-sm text-destructive" role="status">

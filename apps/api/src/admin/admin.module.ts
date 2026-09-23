@@ -40,6 +40,7 @@ import { InvoiceBankReceiptConfirmationService } from '../invoice/invoice-bank-r
 import { ChargebackAlertController } from './chargeback-alert.controller.js';
 import { ServiceDuePeriodController } from './service-due-period.controller.js';
 import { ServiceDuePeriodService } from './service-due-period.service.js';
+import { BusinessWorkCountsController } from './business-work-counts.controller.js';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { ServiceDuePeriodService } from './service-due-period.service.js';
     InvoiceBankReceiptConfirmationController,
     ChargebackAlertController,
     ServiceDuePeriodController,
+    BusinessWorkCountsController,
   ],
   providers: [
     VerifiedAttachmentsService,

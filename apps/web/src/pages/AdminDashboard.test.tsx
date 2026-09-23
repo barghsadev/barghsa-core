@@ -55,6 +55,9 @@ describe('AdminDashboard chargeback warning (T-04.2.04.03)', () => {
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
         const url = String(input);
+        if (url.endsWith('/api/admin/dashboard/business-work-counts')) {
+          return { ok: false, status: 403 };
+        }
         if (url.endsWith('/api/crm/dashboard/pending-verification')) {
           return { ok: true, json: async () => ({ count: 0, profiles: [] }) };
         }
@@ -112,6 +115,9 @@ describe('AdminDashboard chargeback warning (T-04.2.04.03)', () => {
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
         const url = String(input);
+        if (url.endsWith('/api/admin/dashboard/business-work-counts')) {
+          return { ok: false, status: 403 };
+        }
         if (url.endsWith('/api/crm/dashboard/pending-verification')) {
           return { ok: true, json: async () => ({ count: 0, profiles: [] }) };
         }
@@ -155,6 +161,9 @@ describe('AdminDashboard chargeback warning (T-04.2.04.03)', () => {
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
         const url = String(input);
+        if (url.endsWith('/api/admin/dashboard/business-work-counts')) {
+          return { ok: false, status: 403 };
+        }
         if (url.endsWith('/api/crm/dashboard/pending-verification')) {
           return { ok: true, json: async () => ({ count: 0, profiles: [] }) };
         }
