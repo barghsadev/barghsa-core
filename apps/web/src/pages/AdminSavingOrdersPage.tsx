@@ -88,6 +88,9 @@ export default function AdminSavingOrdersPage() {
   const money = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [lane, setLane] = useState<'review' | 'fulfillment'>('review');
+  const [after, setAfter] = useState<string | null>(null);
+  const [nextAfter, setNextAfter] = useState<string | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [note, setNote] = useState('');
@@ -100,21 +103,52 @@ export default function AdminSavingOrdersPage() {
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'forbidden'>('loading');
 
+  function refreshQueue() {
+    setOrders([]);
+    setAfter(null);
+    setNextAfter(null);
+    setRevision((value) => value + 1);
+  }
+
+  function changeLane(value: 'review' | 'fulfillment') {
+    if (value === lane) return;
+    setLane(value);
+    setOrders([]);
+    setAfter(null);
+    setNextAfter(null);
+    setSelected(null);
+  }
+
   useEffect(() => {
     const controller = new AbortController();
     setState('loading');
-    void fetch('/api/staff/saving/orders', { credentials: 'include', signal: controller.signal })
+    const params = new URLSearchParams({ lane });
+    if (after) params.set('after', after);
+    void fetch(`/api/staff/saving/orders?${params}`, {
+      credentials: 'include',
+      signal: controller.signal,
+    })
       .then(async (response) => {
         if (response.status === 403) {
-          setState('forbidden');
+          if (!controller.signal.aborted) {
+            setOrders([]);
+            setNextAfter(null);
+            setSelected(null);
+            setState('forbidden');
+          }
           return null;
         }
         if (!response.ok) throw new Error('queue');
-        return response.json() as Promise<{ orders: Order[] }>;
+        return response.json() as Promise<{ orders: Order[]; nextAfter: string | null }>;
       })
       .then((value) => {
         if (!controller.signal.aborted && value) {
-          setOrders(value.orders);
+          setOrders((current) => {
+            if (!after) return value.orders;
+            const shown = new Set(current.map((order) => order.id));
+            return [...current, ...value.orders.filter((order) => !shown.has(order.id))];
+          });
+          setNextAfter(value.nextAfter);
           setState('ready');
         }
       })
@@ -122,7 +156,7 @@ export default function AdminSavingOrdersPage() {
         if (!controller.signal.aborted) setState('error');
       });
     return () => controller.abort();
-  }, [revision]);
+  }, [after, lane, revision]);
 
   useEffect(() => {
     if (!selected) {
@@ -254,10 +288,26 @@ export default function AdminSavingOrdersPage() {
           <h1 className="text-2xl font-semibold">{copy('staffTitle')}</h1>
           <p className="text-muted-foreground">{copy('staffDescription')}</p>
         </div>
-        <Button variant="outline" onClick={() => setRevision((n) => n + 1)}>
+        <Button variant="outline" onClick={refreshQueue}>
           {copy('staffRefresh')}
         </Button>
       </header>
+      <div className="flex flex-wrap gap-2" aria-label={copy('staffQueue')}>
+        <Button
+          variant={lane === 'review' ? 'secondary' : 'outline'}
+          aria-pressed={lane === 'review'}
+          onClick={() => changeLane('review')}
+        >
+          {copy('staffReviewLane')}
+        </Button>
+        <Button
+          variant={lane === 'fulfillment' ? 'secondary' : 'outline'}
+          aria-pressed={lane === 'fulfillment'}
+          onClick={() => changeLane('fulfillment')}
+        >
+          {copy('staffFulfillmentLane')}
+        </Button>
+      </div>
       {state === 'loading' && <p role="status">{copy('staffLoading')}</p>}
       {state === 'error' && <p role="alert">{copy('staffError')}</p>}
       {state === 'forbidden' && <p role="alert">{copy('staffForbidden')}</p>}
@@ -269,7 +319,9 @@ export default function AdminSavingOrdersPage() {
           setHandover('');
         }}
       />
-      {state === 'ready' && !orders.length && <p>{copy('staffEmpty')}</p>}
+      {state === 'ready' && !orders.length && (
+        <p>{copy(lane === 'review' ? 'staffReviewEmpty' : 'staffFulfillmentEmpty')}</p>
+      )}
       <div className="grid gap-5 xl:grid-cols-[minmax(16rem,1fr)_minmax(24rem,2fr)]">
         <div className="space-y-2" aria-label={copy('staffQueue')}>
           {orders.map((order) => (
@@ -294,6 +346,16 @@ export default function AdminSavingOrdersPage() {
               </span>
             </Button>
           ))}
+          {nextAfter && (
+            <Button
+              variant="outline"
+              className="w-full"
+              disabled={state !== 'ready'}
+              onClick={() => setAfter(nextAfter)}
+            >
+              {copy('staffMoreOrders')}
+            </Button>
+          )}
         </div>
         {selected && !detail && <p role="status">{copy('staffLoading')}</p>}
         {detail && (
@@ -526,7 +588,7 @@ export default function AdminSavingOrdersPage() {
             setHandover('');
             setAmendReason('');
             setAmendHardwareReason('');
-            setRevision((n) => n + 1);
+            refreshQueue();
           }}
         />
       )}

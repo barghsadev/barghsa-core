@@ -508,6 +508,43 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   expect(
     ((await staffQueue.json()) as { orders: Array<{ id: string }> }).orders.map((order) => order.id)
   ).toContain(result.savingOrderId);
+  const reviewQueue = await request(
+    '/api/staff/saving/orders?lane=review',
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(reviewQueue.status, http.logs()).toBe(200);
+  expect(
+    (
+      (await reviewQueue.json()) as { orders: Array<{ id: string }>; nextAfter: string | null }
+    ).orders.map((order) => order.id)
+  ).toContain(result.savingOrderId);
+  const reviewAfter = await request(
+    `/api/staff/saving/orders?lane=review&after=${result.savingOrderId}`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(reviewAfter.status, http.logs()).toBe(200);
+  expect(
+    ((await reviewAfter.json()) as { orders: Array<{ id: string }> }).orders.map(
+      (order) => order.id
+    )
+  ).not.toContain(result.savingOrderId);
+  expect(
+    (
+      await request(
+        `/api/staff/saving/orders?lane=fulfillment&after=${result.savingOrderId}`,
+        'GET',
+        undefined,
+        staffHeaders
+      )
+    ).status
+  ).toBe(404);
+  expect(
+    (await request('/api/staff/saving/orders?after=bad', 'GET', undefined, staffHeaders)).status
+  ).toBe(400);
   const staffDetailResponse = await request(
     `/api/staff/saving/orders/${result.savingOrderId}`,
     'GET',
@@ -521,6 +558,18 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   const approved = await request(approvePath, 'POST', approval, staffHeaders);
   expect(approved.status, http.logs()).toBe(200);
   expect(await approved.json()).toMatchObject({ status: 'approved' });
+  const fulfillmentQueue = await request(
+    '/api/staff/saving/orders?lane=fulfillment',
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(fulfillmentQueue.status, http.logs()).toBe(200);
+  expect(
+    ((await fulfillmentQueue.json()) as { orders: Array<{ id: string }> }).orders.map(
+      (order) => order.id
+    )
+  ).toContain(result.savingOrderId);
   expect(
     (
       await http.pool.query<{ stock_count: number; reserved_count: number }>(

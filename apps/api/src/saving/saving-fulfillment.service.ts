@@ -97,15 +97,45 @@ export class SavingFulfillmentService {
     private readonly invoiceAdjustments: CreateAdjustmentInvoiceService
   ) {}
 
-  async queue() {
+  async queue(lane: 'all' | 'review' | 'fulfillment' = 'all', after?: string) {
+    const cursor = after
+      ? (
+          await getDbPool().query<{ id: string; submitted_at: Date; status: string }>(
+            `SELECT id,submitted_at,status FROM saving_orders
+             WHERE id=$1 AND status IN ('awaiting_staff_review','approved','in_progress')`,
+            [after]
+          )
+        ).rows[0]
+      : null;
+    if (
+      after &&
+      (!cursor ||
+        (lane === 'review' && cursor.status !== 'awaiting_staff_review') ||
+        (lane === 'fulfillment' && cursor.status === 'awaiting_staff_review'))
+    )
+      throw new NotFoundException('Saving order queue cursor not found');
     const rows = (
       await getDbPool().query<ReviewRow>(
         `${reviewQuery} WHERE s.status IN ('awaiting_staff_review','approved','in_progress')
+       AND ($1::text='all' OR ($1='review' AND s.status='awaiting_staff_review')
+         OR ($1='fulfillment' AND s.status IN ('approved','in_progress')))
+       AND ($2::uuid IS NULL OR
+         (CASE WHEN s.status='awaiting_staff_review' THEN 0 ELSE 1 END,s.submitted_at,s.id) >
+         ($3::integer,$4::timestamptz,$2::uuid))
        ORDER BY CASE WHEN s.status='awaiting_staff_review' THEN 0 ELSE 1 END,
-         s.submitted_at ASC,s.id ASC LIMIT 100`
+         s.submitted_at ASC,s.id ASC LIMIT 101`,
+        [
+          lane,
+          after ?? null,
+          cursor ? (cursor.status === 'awaiting_staff_review' ? 0 : 1) : null,
+          cursor?.submitted_at ?? null,
+        ]
       )
     ).rows;
-    return { orders: rows.map((row) => this.present(row)) };
+    return {
+      orders: rows.slice(0, 100).map((row) => this.present(row)),
+      nextAfter: rows.length > 100 ? rows[99]!.id : null,
+    };
   }
 
   async detail(id: string, allowHardwarePriceAdjustment = false) {

@@ -7,10 +7,11 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
@@ -84,9 +85,18 @@ export class SavingFulfillmentController {
   @Get()
   @RateLimit({ namespace: 'saving:staff-queue:user', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'Saving order review and fulfillment queue' })
-  queue(@Req() req: AuthenticatedRequest) {
+  @ApiQuery({ name: 'lane', required: false, enum: ['all', 'review', 'fulfillment'] })
+  @ApiQuery({ name: 'after', required: false, format: 'uuid' })
+  queue(
+    @Req() req: AuthenticatedRequest,
+    @Query('lane') lane?: string,
+    @Query('after') after?: string
+  ) {
     this.permission(req, false);
-    return this.service.queue();
+    return this.service.queue(
+      lane ? parse(z.enum(['all', 'review', 'fulfillment']), lane) : 'all',
+      after ? parse(z.string().uuid(), after) : undefined
+    );
   }
 
   @Get(':id')
