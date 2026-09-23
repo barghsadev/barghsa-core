@@ -1086,7 +1086,10 @@ function ElectricityOrderPage() {
             <span>
               {t('electricity.order.success.order', locale)}: {orderCreated.orderId}
             </span>
-            <a href="/contracts" className="text-primary underline underline-offset-4">
+            <a
+              href={`/contracts?contractId=${encodeURIComponent(orderCreated.contractId)}`}
+              className="text-primary underline underline-offset-4"
+            >
               {t('electricity.order.success.contract', locale)}: {orderCreated.contractId}
             </a>
             <a

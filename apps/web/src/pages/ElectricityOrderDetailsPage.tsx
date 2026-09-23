@@ -111,6 +111,21 @@ const refundKeys: Record<string, string> = {
   completed: 'electricity.order.refund.completed',
 };
 
+function nextActionHref(detail: ElectricityOrderDetail): string | null {
+  switch (detail.nextAction) {
+    case 'pay_invoice':
+      return `/invoices/${encodeURIComponent(detail.invoiceId)}`;
+    case 'accept_contract':
+      return `/contracts?contractId=${encodeURIComponent(detail.contractId)}`;
+    case 'resubmit_changes':
+      return '#electricity-order-correction';
+    case 'continue_order':
+      return '/electricity/order';
+    default:
+      return null;
+  }
+}
+
 export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -232,6 +247,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
     }
   }
 
+  const nextActionLink = detail ? nextActionHref(detail) : null;
   return (
     <main
       className="container mx-auto max-w-2xl space-y-6 px-4 py-8"
@@ -382,9 +398,18 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           <Card>
             <CardContent className="pt-6">
               <h2 className="font-semibold">{t('electricity.order.nextAction', locale)}</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {t(actionKeys[detail.nextAction] ?? 'electricity.order.nextAction.none', locale)}
-              </p>
+              {nextActionLink ? (
+                <a
+                  className="mt-2 inline-block text-primary underline underline-offset-4"
+                  href={nextActionLink}
+                >
+                  {t(actionKeys[detail.nextAction] ?? 'electricity.order.nextAction.none', locale)}
+                </a>
+              ) : (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {t(actionKeys[detail.nextAction] ?? 'electricity.order.nextAction.none', locale)}
+                </p>
+              )}
             </CardContent>
           </Card>
           <Card>
@@ -474,7 +499,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             </Card>
           ) : null}
           {detail.electricityStatus === 'changes_requested' ? (
-            <Card>
+            <Card id="electricity-order-correction">
               <CardContent className="pt-6">
                 <h2 className="font-semibold">{t('electricity.order.correction.title', locale)}</h2>
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -530,7 +555,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               detail.contractState
             ) ? (
               <a
-                href="/contracts"
+                href={`/contracts?contractId=${encodeURIComponent(detail.contractId)}`}
                 className="rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4"
               >
                 {t('electricity.order.success.contract', locale)}: {detail.contractId}

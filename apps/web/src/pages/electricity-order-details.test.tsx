@@ -80,3 +80,85 @@ it('loads an order confirmation with its invoice and contract references', async
     vi.unstubAllGlobals();
   }
 });
+
+it.each([
+  {
+    action: 'pay_invoice',
+    status: 'approved',
+    contractState: 'AwaitingCustomerAcceptance',
+    href: '/invoices/invoice-1',
+  },
+  {
+    action: 'accept_contract',
+    status: 'approved',
+    contractState: 'AwaitingCustomerAcceptance',
+    href: '/contracts?contractId=contract-1',
+  },
+  {
+    action: 'resubmit_changes',
+    status: 'changes_requested',
+    contractState: 'ChangesRequested',
+    href: '#electricity-order-correction',
+  },
+])(
+  'links the $action callout to the relevant next step',
+  async ({ action, status, contractState, href }) => {
+    document.documentElement.lang = 'en';
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async () =>
+          new Response(
+            JSON.stringify({
+              orderId: 'order-1',
+              profileId: 'profile-1',
+              electricityStatus: status,
+              financialStatus: action === 'accept_contract' ? 'paid' : 'unpaid',
+              nextAction: action,
+              periodStart: '2026-09-23T00:00:00Z',
+              periodEnd: '2026-09-30T00:00:00Z',
+              totalKwh: '10',
+              fullAddress: 'Electricity Street',
+              postalCode: '1234567890',
+              contractId: 'contract-1',
+              contractState,
+              versionId: 'version-1',
+              invoiceId: 'invoice-1',
+              invoiceState: 'Unpaid',
+              totalIrR: '2500000',
+              paidIrR: '0',
+              refundedIrR: '0',
+            }),
+            { headers: { 'Content-Type': 'application/json' } }
+          )
+      )
+    );
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    try {
+      await act(async () => root.render(<ElectricityOrderDetailsPage orderId="order-1" />));
+      const actionLink = Array.from(container.querySelectorAll('a')).find((link) =>
+        link.textContent?.includes(
+          action === 'pay_invoice'
+            ? 'Review and pay'
+            : action === 'accept_contract'
+              ? 'Review and accept'
+              : 'resubmit your order'
+        )
+      );
+      expect(actionLink?.getAttribute('href')).toBe(href);
+      if (action === 'resubmit_changes')
+        expect(container.querySelector('#electricity-order-correction')).not.toBeNull();
+      else
+        expect(
+          container.querySelector('a[href="/contracts?contractId=contract-1"]')
+        ).not.toBeNull();
+    } finally {
+      await act(async () => root.unmount());
+      container.remove();
+      vi.unstubAllGlobals();
+    }
+  }
+);
