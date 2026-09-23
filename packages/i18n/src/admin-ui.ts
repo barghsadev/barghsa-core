@@ -274,6 +274,12 @@ export const fa: I18nDictionary = {
   'admin.green.activationFailed':
     'مقادیر و محصول برق سبز را بررسی کنید. قاعده فعال به محصول فعال با قیمت مثبت و معتبر نیاز دارد. قاعده را غیرفعال یا محصول را اصلاح و سپس تازه‌سازی کنید.',
   'admin.green.corrupt': 'قواعد ذخیره‌شده پیش از خواندن به اصلاح نیاز دارند.',
+  'admin.green.draftTtlTitle': 'مدت نگهداری پیش‌نویس سفارش برق',
+  'admin.green.draftTtlDescription':
+    'پیش‌نویس‌هایی که در این مدت به‌روز نشده‌اند هنگام مراجعه بعدی حذف می‌شوند.',
+  'admin.green.draftTtlDays': 'روز (۱ تا ۳۶۵)',
+  'admin.green.draftTtlSave': 'ذخیره مدت نگهداری',
+  'admin.green.draftTtlConfirm': 'مدت نگهداری پیش‌نویس سفارش‌های ساده برق تغییر می‌کند.',
   'admin.reconciliation.title': 'مغایرت‌های مالی',
   'admin.reconciliation.description': 'مغایرت‌های گزارش‌شده را بررسی و نتیجه رسیدگی را ثبت کنید.',
   'admin.reconciliation.status': 'وضعیت',
@@ -1202,6 +1208,12 @@ export const en: I18nDictionary = {
   'admin.green.activationFailed':
     'Check the values and the green product. An enabled rule requires an active product with a positive effective price. Disable the rule or correct the product, then refresh.',
   'admin.green.corrupt': 'Stored rules need repair before they can be read.',
+  'admin.green.draftTtlTitle': 'Electricity order draft retention',
+  'admin.green.draftTtlDescription':
+    'Drafts not updated within this period expire when they are next opened.',
+  'admin.green.draftTtlDays': 'Days (1–365)',
+  'admin.green.draftTtlSave': 'Save retention period',
+  'admin.green.draftTtlConfirm': 'Change how long simple electricity order drafts are retained.',
   'admin.reconciliation.title': 'Reconciliation exceptions',
   'admin.reconciliation.description':
     'Review reported mismatches and record each investigation outcome.',

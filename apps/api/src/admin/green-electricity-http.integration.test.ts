@@ -50,10 +50,41 @@ const input = {
 const configKey = 'electricity.green_mandatory_rules';
 beforeEach(async () => {
   await http.pool.query('DELETE FROM app_config WHERE key=$1', [configKey]);
+  await http.pool.query("DELETE FROM app_config WHERE key='electricity.order_draft_ttl_days'");
   await http.pool.query("DELETE FROM audit_log WHERE event='config_change'");
   await http.pool.query(
     "INSERT INTO products(system_key,title,price,status) VALUES ('green','{\"en\":\"Green test\"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active',price=1000"
   );
+});
+
+it('allows authorized staff to configure audited electricity draft retention', async () => {
+  const url = `${http.base}/api/admin/config/electricity-order-draft-ttl`;
+  expect((await fetch(url, { headers: headers.other! })).status).toBe(403);
+  expect(await (await fetch(url, { headers: headers.operator! })).json()).toEqual({ days: 7 });
+  expect(
+    (
+      await fetch(url, {
+        method: 'PUT',
+        headers: headers.operator!,
+        body: JSON.stringify({ days: 0 }),
+      })
+    ).status
+  ).toBe(400);
+  const updated = await fetch(url, {
+    method: 'PUT',
+    headers: headers.operator!,
+    body: JSON.stringify({ days: 14 }),
+  });
+  expect(updated.status, http.logs()).toBe(200);
+  expect(await updated.json()).toEqual({ days: 14 });
+  expect(await (await fetch(url, { headers: headers.operator! })).json()).toEqual({ days: 14 });
+  const audit = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='config_change' AND metadata::jsonb->>'key'='electricity.order_draft_ttl_days'"
+    )
+  ).rows;
+  expect(audit).toHaveLength(1);
+  expect(audit[0].metadata).toMatchObject({ previousVersion: 0, newValue: 14, version: 1 });
 });
 function save(body: unknown = input, user = 'operator') {
   return fetch(`${http.base}/api/admin/config/green-electricity-rules`, {

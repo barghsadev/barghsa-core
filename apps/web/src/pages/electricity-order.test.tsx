@@ -5,9 +5,12 @@ import { t } from '@barghsa/i18n/app';
 import { Route } from '../routes/_app/electricity/order.js';
 
 const notices = vi.hoisted(() => ({ error: vi.fn(), success: vi.fn() }));
+const navigate = vi.hoisted(() => vi.fn(async () => {}));
 vi.mock('sonner', () => ({ toast: notices }));
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (options: unknown) => ({ options }),
+  useBlocker: () => ({ status: 'idle' }),
+  useNavigate: () => navigate,
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, number: String }),
@@ -76,12 +79,15 @@ let root: Root;
 let fetchMock: ReturnType<typeof vi.fn<typeof fetch>>;
 let orderReply: () => Promise<Response>;
 let catalogue: unknown;
+let draft: { currentStep: number; data: Record<string, string> | null };
 
 beforeEach(() => {
   document.documentElement.lang = 'en';
+  window.history.replaceState({}, '', '/electricity/order');
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   vi.clearAllMocks();
   catalogue = [product];
+  draft = { currentStep: 1, data: null };
   orderReply = async () => response(saved, 201);
   fetchMock = vi.fn<typeof fetch>(async (input, init) => {
     const url = String(input);
@@ -100,6 +106,12 @@ beforeEach(() => {
         { id: address.cityId, provinceId: address.provinceId, nameFa: 'تهران', nameEn: 'Tehran' },
       ]);
     if (url === '/api/electricity/periods/simple') return response({ periods });
+    if (url === `/api/electricity/drafts/simple?profileId=${profileId}`) return response(draft);
+    if (url === '/api/electricity/drafts/simple' && init?.method === 'PUT') {
+      draft = JSON.parse(init.body as string);
+      return response(draft);
+    }
+    if (url === `/api/wallet/${profileId}`) return response({ balance: '500000', currency: 'IRR' });
     if (url.startsWith(`/api/electricity/bill-data/${profileId}`))
       return response({ available: false, reason: 'unconfigured', manualEntryAllowed: true });
     if (url === '/api/electricity/preview/simple') return response(quote);
@@ -122,6 +134,11 @@ const submit = () =>
   [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.submit', 'en')
   )!;
+const next = () =>
+  [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.next', 'en')
+  )!;
+const advance = () => act(async () => next().click());
 const orderCalls = () =>
   fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/orders/simple');
 async function fill(id: string, value: string) {
@@ -142,13 +159,18 @@ const settlePreview = () =>
 
 it('shows manual entry, period dates and the server price before one submission', async () => {
   await mount();
-  expect(container.textContent).toContain(t('electricity.order.manualQuantity', 'en'));
-  expect(submit().disabled).toBe(true);
+  expect(container.textContent).toContain(t('electricity.order.step1', 'en'));
   await fill('electricity-period-type', 'weekly');
   await fill('electricity-period', 'next_week');
+  await advance();
+  expect(container.textContent).toContain(t('electricity.order.manualQuantity', 'en'));
   await fill('electricity-kwh', '10');
   await settlePreview();
+  await advance();
   expect(container.textContent).toContain('2500000');
+  await advance();
+  expect(container.textContent).toContain(t('electricity.order.giftCode', 'en'));
+  await advance();
   expect(submit().disabled).toBe(false);
   let complete!: (value: Response) => void;
   orderReply = () =>
@@ -177,12 +199,20 @@ it('shows manual entry, period dates and the server price before one submission'
   await act(async () => complete(response(saved, 201)));
   expect(container.textContent).toContain(t('electricity.order.success.title', 'en'));
   expect(container.querySelector(`a[href="/invoices/${saved.invoiceId}"]`)).not.toBeNull();
+  expect(navigate).toHaveBeenCalledWith({
+    to: '/electricity/orders/$orderId',
+    params: { orderId: saved.orderId },
+  });
 });
 
 it('retries a failed submission with the same idempotency key', async () => {
   await mount();
+  await advance();
   await fill('electricity-kwh', '10');
   await settlePreview();
+  await advance();
+  await advance();
+  await advance();
   orderReply = async () => {
     throw new TypeError('offline');
   };
@@ -198,8 +228,37 @@ it('retries a failed submission with the same idempotency key', async () => {
 it('blocks submission when the thermal product is unavailable', async () => {
   catalogue = [{ ...product, simpleOrderable: false }];
   await mount();
-  await fill('electricity-kwh', '10');
-  await settlePreview();
-  expect(submit().disabled).toBe(true);
+  expect(next().disabled).toBe(true);
   expect(orderCalls()).toHaveLength(0);
+});
+
+it('resumes saved period and quantity after remounting the page', async () => {
+  await mount();
+  await fill('electricity-period-type', 'weekly');
+  await fill('electricity-period', 'next_week');
+  await advance();
+  await fill('electricity-kwh', '10');
+  await advance();
+  expect(draft).toMatchObject({ currentStep: 3, data: { period: 'next_week', totalKwh: '10' } });
+  expect(new URLSearchParams(window.location.search).get('step')).toBe('3');
+  await act(async () => root.render(<Page key="resumed" />));
+  expect(container.textContent).toContain(t('electricity.order.step3', 'en'));
+  await settlePreview();
+  expect(container.textContent).toContain('2500000');
+});
+
+it('saves an unfinished first step and restores it from a direct URL', async () => {
+  await mount();
+  await fill('electricity-period-type', 'weekly');
+  await fill('electricity-period', 'next_week');
+  const save = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.saveDraft', 'en')
+  )!;
+  await act(async () => save.click());
+  expect(draft).toMatchObject({ currentStep: 1, data: { period: 'next_week' } });
+  window.history.replaceState({}, '', '?step=1');
+  await act(async () => root.render(<Page key="direct-link" />));
+  expect(container.querySelector<HTMLSelectElement>('#electricity-period')?.value).toBe(
+    'next_week'
+  );
 });

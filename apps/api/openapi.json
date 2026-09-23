@@ -1623,6 +1623,55 @@
         ]
       }
     },
+    "/api/admin/config/electricity-order-draft-ttl": {
+      "get": {
+        "operationId": "AdminController_getElectricityOrderDraftTtl",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Draft retention period (default 7 days)."
+          }
+        },
+        "summary": "Get simple electricity order draft retention in days",
+        "tags": [
+          "Admin"
+        ]
+      },
+      "put": {
+        "operationId": "AdminController_setElectricityOrderDraftTtl",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "days": {
+                    "maximum": 365,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "days"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Updated draft retention period."
+          }
+        },
+        "summary": "Set simple electricity order draft retention in days",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/config/escalation-policy": {
       "get": {
         "operationId": "AdminController_getEscalationPolicy",
@@ -14074,6 +14123,138 @@
         ]
       }
     },
+    "/api/electricity/drafts/simple": {
+      "get": {
+        "operationId": "ElectricityOrderController_getDraft",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Saved inputs and current step, or an empty draft."
+          }
+        },
+        "summary": "Resume the current customer simple-order draft",
+        "tags": [
+          "Electricity"
+        ]
+      },
+      "put": {
+        "operationId": "ElectricityOrderController_saveDraft",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "currentStep": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          1
+                        ],
+                        "type": "number"
+                      },
+                      {
+                        "enum": [
+                          2
+                        ],
+                        "type": "number"
+                      },
+                      {
+                        "enum": [
+                          3
+                        ],
+                        "type": "number"
+                      },
+                      {
+                        "enum": [
+                          4
+                        ],
+                        "type": "number"
+                      },
+                      {
+                        "enum": [
+                          5
+                        ],
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "addressId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "giftCode": {
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "giftCodeInput": {
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "period": {
+                        "enum": [
+                          "current_month",
+                          "next_month",
+                          "current_week",
+                          "next_week",
+                          "week_after_next"
+                        ],
+                        "type": "string"
+                      },
+                      "totalKwh": {
+                        "maxLength": 19,
+                        "pattern": "^[1-9]\\d*$",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "period"
+                    ],
+                    "type": "object"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "currentStep",
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Saved draft and current step."
+          }
+        },
+        "summary": "Save completed simple-order steps for safe resumption",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
     "/api/electricity/orders/simple": {
       "post": {
         "operationId": "ElectricityOrderController_submit",
@@ -14169,6 +14350,30 @@
           }
         },
         "summary": "Submit a simple electricity order with contract and invoice atomically",
+        "tags": [
+          "Electricity"
+        ]
+      }
+    },
+    "/api/electricity/orders/{orderId}": {
+      "get": {
+        "operationId": "ElectricityOrderController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order, contract and invoice detail."
+          }
+        },
+        "summary": "Customer electricity order confirmation and current references",
         "tags": [
           "Electricity"
         ]

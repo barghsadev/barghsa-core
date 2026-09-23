@@ -3,6 +3,7 @@ import {
   boolean,
   check,
   index,
+  integer,
   jsonb,
   numeric,
   pgTable,
@@ -178,5 +179,33 @@ export const electricityOrderSubmissions = pgTable(
       columns: [table.userId, table.idempotencyKey],
       name: 'electricity_order_submissions_pk',
     }),
+  ]
+);
+
+/** Server-owned customer progress; deleted in the same transaction as final submission. */
+export const electricityCustomerDrafts = pgTable(
+  'electricity_customer_drafts',
+  {
+    id: uuidv7('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    profileId: uuid('profile_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'restrict' }),
+    mode: text('mode', { enum: ['simple', 'advanced'] }).notNull(),
+    currentStep: integer('current_step').notNull().default(1),
+    data: jsonb('data').$type<Record<string, unknown>>().notNull().default({}),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex('electricity_customer_drafts_owner_unique').on(
+      table.userId,
+      table.profileId,
+      table.mode
+    ),
+    check('electricity_customer_drafts_step', sql`${table.currentStep} BETWEEN 1 AND 5`),
+    check('electricity_customer_drafts_data_object', sql`jsonb_typeof(${table.data}) = 'object'`),
   ]
 );

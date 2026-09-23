@@ -7,6 +7,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -20,6 +21,7 @@ import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.
 import { ElectricityOrderService } from './electricity-order.service.js';
 import { simplePeriodOptions } from './electricity-order.service.js';
 import { ElectricityBillDataService } from './electricity-bill-data.service.js';
+import { ElectricityDraftService } from './electricity-draft.service.js';
 
 const simpleInput = z
   .object({
@@ -46,6 +48,31 @@ const submitInput = simpleInput
       .strict(),
   })
   .strict();
+const draftInput = z
+  .object({
+    profileId: z.string().uuid(),
+    currentStep: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]),
+    data: z
+      .object({
+        period: z.enum([
+          'current_month',
+          'next_month',
+          'current_week',
+          'next_week',
+          'week_after_next',
+        ]),
+        totalKwh: z
+          .string()
+          .regex(/^[1-9]\d*$/)
+          .max(19)
+          .optional(),
+        giftCode: z.string().trim().min(1).max(100).optional(),
+        giftCodeInput: z.string().max(100).optional(),
+        addressId: z.string().uuid().optional(),
+      })
+      .strict(),
+  })
+  .strict();
 
 @ApiTags('Electricity')
 @Controller('api/electricity')
@@ -53,7 +80,8 @@ const submitInput = simpleInput
 export class ElectricityOrderController {
   constructor(
     private readonly service: ElectricityOrderService,
-    private readonly billData: ElectricityBillDataService
+    private readonly billData: ElectricityBillDataService,
+    private readonly drafts: ElectricityDraftService
   ) {}
 
   @Get('periods/simple')
@@ -62,6 +90,30 @@ export class ElectricityOrderController {
   @ApiResponse({ status: 200, description: 'Five selectable period ranges in Iran time.' })
   periods() {
     return { periods: simplePeriodOptions(new Date()) };
+  }
+
+  @Get('drafts/simple')
+  @RateLimit({ namespace: 'electricity:draft-read:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Resume the current customer simple-order draft' })
+  @ApiResponse({ status: 200, description: 'Saved inputs and current step, or an empty draft.' })
+  getDraft(
+    @Query('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.drafts.get(req.session, profileId);
+  }
+
+  @Put('drafts/simple')
+  @RateLimit({ namespace: 'electricity:draft-write:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Save completed simple-order steps for safe resumption' })
+  @ApiZodBody(draftInput)
+  @ApiResponse({ status: 200, description: 'Saved draft and current step.' })
+  saveDraft(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    const parsed = draftInput.safeParse(body);
+    if (!parsed.success || (parsed.data.currentStep >= 3 && !parsed.data.data.totalKwh)) {
+      throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    }
+    return this.drafts.save(req.session, parsed.data);
   }
 
   @Get('bill-data/:profileId')
@@ -78,6 +130,14 @@ export class ElectricityOrderController {
       .safeParse(period);
     if (!selected.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
     return this.billData.get(req.session, profileId, selected.data);
+  }
+
+  @Get('orders/:orderId')
+  @RateLimit({ namespace: 'electricity:order-detail:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Customer electricity order confirmation and current references' })
+  @ApiResponse({ status: 200, description: 'Order, contract and invoice detail.' })
+  detail(@Param('orderId', new ParseUUIDPipe()) orderId: string, @Req() req: AuthenticatedRequest) {
+    return this.service.detail(req.session, orderId);
   }
 
   @Post('preview/simple')

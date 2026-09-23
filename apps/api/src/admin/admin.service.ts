@@ -1560,6 +1560,77 @@ export class AdminService {
     return toGreenElectricityConfig(persisted);
   }
 
+  async getElectricityOrderDraftTtl(): Promise<{ days: number }> {
+    const row = (
+      await getDbPool().query<{ value: unknown }>(
+        "SELECT value FROM app_config WHERE key='electricity.order_draft_ttl_days'"
+      )
+    ).rows[0];
+    if (!row) return { days: 7 };
+    const days = row.value;
+    if (typeof days !== 'number' || !Number.isInteger(days) || days < 1 || days > 365) {
+      throw new HttpException({ error: 'CONFIG:STORED_VALUE_INVALID' }, 503);
+    }
+    return { days };
+  }
+
+  async setElectricityOrderDraftTtl(
+    days: number,
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    ip: string
+  ): Promise<{ days: number }> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:catalogue:edit');
+      await requireSessionStepUp(client, actor);
+      await client.query("SELECT pg_advisory_xact_lock(hashtext('electricity-order-draft-ttl'))");
+      const previous = (
+        await client.query<{ value: unknown; version: number }>(
+          "SELECT value,version FROM app_config WHERE key='electricity.order_draft_ttl_days' FOR UPDATE"
+        )
+      ).rows[0];
+      const version = (
+        await client.query<{ version: number }>(
+          `INSERT INTO app_config(key,value,version,updated_at)
+         VALUES('electricity.order_draft_ttl_days',$1::jsonb,1,NOW())
+         ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,
+           version=app_config.version+1,updated_at=NOW()
+         RETURNING version`,
+          [JSON.stringify(days)]
+        )
+      ).rows[0]!.version;
+      await client.query(
+        "UPDATE config_version SET version=version+1,updated_at=NOW() WHERE id='global'"
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES($1,$2,'config_change',$3::jsonb,$4,$5,NOW())`,
+        [
+          uuidv7(),
+          actor.userId,
+          JSON.stringify({
+            key: 'electricity.order_draft_ttl_days',
+            previousValue: previous?.value ?? null,
+            previousVersion: previous?.version ?? 0,
+            newValue: days,
+            version,
+          }),
+          uuidv7(),
+          ip,
+        ]
+      );
+      await requireSessionStepUp(client, actor);
+      await client.query('COMMIT');
+      return { days };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   /**
    * Persist new admin-configurable mandatory green-electricity rules.
    *

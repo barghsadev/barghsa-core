@@ -96,6 +96,79 @@ export class ElectricityOrderService {
     private readonly invoiceStates: InvoiceStateMachineService
   ) {}
 
+  async detail(actor: Actor, orderId: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      const order = (
+        await client.query<{ profile_id: string }>(
+          'SELECT profile_id FROM orders WHERE id=$1 FOR SHARE',
+          [orderId]
+        )
+      ).rows[0];
+      if (!order || !(await this.orders.mayManageOrders(client, actor.userId, order.profile_id))) {
+        throw new NotFoundException('Order not found');
+      }
+      const detail = (
+        await client.query<{
+          id: string;
+          profile_id: string;
+          commercial_status: string;
+          electricity_status: string;
+          mode: string;
+          period_start: Date;
+          period_end: Date;
+          total_kwh: string;
+          pricing_snapshot: Record<string, unknown>;
+          full_address: string;
+          contract_id: string;
+          contract_state: string;
+          invoice_id: string;
+          invoice_state: string;
+          total_amount: string;
+        }>(
+          `SELECT o.id,o.profile_id,o.status AS commercial_status,
+           e.status AS electricity_status,e.mode,e.period_start,e.period_end,
+           e.total_kwh,e.pricing_snapshot,o.snapshot_full_address AS full_address,
+           ec.contract_id,c.state AS contract_state,i.id AS invoice_id,
+           i.state AS invoice_state,i.total_amount
+         FROM orders o JOIN electricity_orders e ON e.id=o.id
+         JOIN electricity_contracts ec ON ec.order_id=o.id
+         JOIN contracts c ON c.id=ec.contract_id
+         JOIN invoices i ON i.order_id=o.id
+         WHERE o.id=$1 ORDER BY i.created_at DESC LIMIT 1`,
+          [orderId]
+        )
+      ).rows[0];
+      if (!detail) throw new NotFoundException('Electricity order not found');
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return {
+        orderId: detail.id,
+        profileId: detail.profile_id,
+        commercialStatus: detail.commercial_status,
+        electricityStatus: detail.electricity_status,
+        mode: detail.mode,
+        periodStart: detail.period_start.toISOString(),
+        periodEnd: detail.period_end.toISOString(),
+        totalKwh: detail.total_kwh,
+        pricingSnapshot: detail.pricing_snapshot,
+        fullAddress: detail.full_address,
+        contractId: detail.contract_id,
+        contractState: detail.contract_state,
+        invoiceId: detail.invoice_id,
+        invoiceState: detail.invoice_state,
+        totalIrR: detail.total_amount,
+      };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   private async authorize(
     client: PoolClient,
     actor: Actor,
@@ -446,6 +519,10 @@ export class ElectricityOrderService {
           JSON.stringify({ orderId, profileId: input.profileId, status: 'PENDING' }),
           ip,
         ]
+      );
+      await client.query(
+        "DELETE FROM electricity_customer_drafts WHERE user_id=$1 AND profile_id=$2 AND mode='simple'",
+        [actor.userId, input.profileId]
       );
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');

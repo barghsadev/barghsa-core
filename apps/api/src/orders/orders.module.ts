@@ -12,6 +12,7 @@ import {
   ElectricityBillDataService,
   HttpBillDataProvider,
 } from '../electricity/electricity-bill-data.service.js';
+import { ElectricityDraftService } from '../electricity/electricity-draft.service.js';
 
 @Module({
   imports: [SessionModule, AdminModule, InvoiceModule],
@@ -22,6 +23,7 @@ import {
     ElectricityOrderService,
     ElectricityBillDataService,
     HttpBillDataProvider,
+    ElectricityDraftService,
   ],
   exports: [OrdersService, ElectricityCalculationService],
 })

@@ -84,6 +84,7 @@ import { Route as AdminCrmCorrectionsRouteImport } from './routes/admin/crm/corr
 import { Route as AppCrmIndexRouteImport } from './routes/app/crm/index'
 import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
 import { Route as OnboardingLegalProfileIdRouteImport } from './routes/onboarding/legal/$profileId'
+import { Route as AppElectricityOrdersOrderIdRouteImport } from './routes/_app/electricity/orders.$orderId'
 import { Route as AdminCrmProfilesProfileIdRouteImport } from './routes/admin/crm/profiles.$profileId'
 import { Route as AppCrmProfilesProfileIdRouteImport } from './routes/app/crm/profiles.$profileId'
 
@@ -464,6 +465,12 @@ const OnboardingLegalProfileIdRoute =
     path: '/legal/$profileId',
     getParentRoute: () => OnboardingRoute,
   } as any)
+const AppElectricityOrdersOrderIdRoute =
+  AppElectricityOrdersOrderIdRouteImport.update({
+    id: '/electricity/orders/$orderId',
+    path: '/electricity/orders/$orderId',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AdminCrmProfilesProfileIdRoute =
   AdminCrmProfilesProfileIdRouteImport.update({
     id: '/profiles/$profileId',
@@ -551,6 +558,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AppSettingsIndexRoute
   '/admin/crm/': typeof AdminCrmIndexRoute
   '/app/crm/': typeof AppCrmIndexRoute
+  '/electricity/orders/$orderId': typeof AppElectricityOrdersOrderIdRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
 }
@@ -625,6 +633,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AppSettingsIndexRoute
   '/admin/crm': typeof AdminCrmIndexRoute
   '/app/crm': typeof AppCrmIndexRoute
+  '/electricity/orders/$orderId': typeof AppElectricityOrdersOrderIdRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
 }
@@ -705,6 +714,7 @@ export interface FileRoutesById {
   '/_app/settings/': typeof AppSettingsIndexRoute
   '/admin/crm/': typeof AdminCrmIndexRoute
   '/app/crm/': typeof AppCrmIndexRoute
+  '/_app/electricity/orders/$orderId': typeof AppElectricityOrdersOrderIdRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
 }
@@ -785,6 +795,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/admin/crm/'
     | '/app/crm/'
+    | '/electricity/orders/$orderId'
     | '/admin/crm/profiles/$profileId'
     | '/app/crm/profiles/$profileId'
   fileRoutesByTo: FileRoutesByTo
@@ -859,6 +870,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/admin/crm'
     | '/app/crm'
+    | '/electricity/orders/$orderId'
     | '/admin/crm/profiles/$profileId'
     | '/app/crm/profiles/$profileId'
   id:
@@ -938,6 +950,7 @@ export interface FileRouteTypes {
     | '/_app/settings/'
     | '/admin/crm/'
     | '/app/crm/'
+    | '/_app/electricity/orders/$orderId'
     | '/admin/crm/profiles/$profileId'
     | '/app/crm/profiles/$profileId'
   fileRoutesById: FileRoutesById
@@ -1484,6 +1497,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingLegalProfileIdRouteImport
       parentRoute: typeof OnboardingRoute
     }
+    '/_app/electricity/orders/$orderId': {
+      id: '/_app/electricity/orders/$orderId'
+      path: '/electricity/orders/$orderId'
+      fullPath: '/electricity/orders/$orderId'
+      preLoaderRoute: typeof AppElectricityOrdersOrderIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/admin/crm/profiles/$profileId': {
       id: '/admin/crm/profiles/$profileId'
       path: '/profiles/$profileId'
@@ -1524,6 +1544,7 @@ interface AppRouteChildren {
   AppElectricityIndexRoute: typeof AppElectricityIndexRoute
   AppInvoicesIndexRoute: typeof AppInvoicesIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
+  AppElectricityOrdersOrderIdRoute: typeof AppElectricityOrdersOrderIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -1549,6 +1570,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppElectricityIndexRoute: AppElectricityIndexRoute,
   AppInvoicesIndexRoute: AppInvoicesIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
+  AppElectricityOrdersOrderIdRoute: AppElectricityOrdersOrderIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

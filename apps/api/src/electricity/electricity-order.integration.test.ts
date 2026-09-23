@@ -97,6 +97,30 @@ it('previews and atomically submits an order, contract, lines and payable invoic
     totalIrR: string;
   };
   expect(result.totalIrR).toBe('1000000');
+  const detail = await fetch(`${http.base}/api/electricity/orders/${result.orderId}`, { headers });
+  expect(detail.status, http.logs()).toBe(200);
+  expect(await detail.json()).toMatchObject({
+    orderId: result.orderId,
+    contractId: result.contractId,
+    invoiceId: result.invoiceId,
+    totalIrR: '1000000',
+    electricityStatus: 'awaiting_staff_review',
+  });
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES('other-buyer','other@electricity.test','test-only')"
+  );
+  const otherSession = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES($1,'other-buyer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+    [otherSession, randomUUID(), randomUUID()]
+  );
+  expect(
+    (
+      await fetch(`${http.base}/api/electricity/orders/${result.orderId}`, {
+        headers: { Cookie: `barghsa_session=${otherSession}` },
+      })
+    ).status
+  ).toBe(404);
   const repeat = await post('orders/simple', input);
   expect(repeat.status, http.logs()).toBe(201);
   expect(await repeat.json()).toEqual(result);
@@ -219,4 +243,54 @@ it('rejects a reviewed quote after its authoritative price changes', async () =>
     await http.pool.query('SELECT COUNT(*)::int AS n FROM orders WHERE user_id=$1', ['buyer'])
   ).rows[0].n;
   expect(count).toBe(0);
+});
+
+it('resumes completed steps and removes the draft atomically on submission', async () => {
+  const path = `${http.base}/api/electricity/drafts/simple`;
+  const get = () => fetch(`${path}?profileId=${input.profileId}`, { headers });
+  const put = (currentStep: number, totalKwh?: string) =>
+    fetch(path, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        profileId: input.profileId,
+        currentStep,
+        data: { period: 'next_week', ...(totalKwh ? { totalKwh } : {}) },
+      }),
+    });
+  expect(await (await get()).json()).toMatchObject({ currentStep: 1, data: null });
+  expect((await put(2)).status).toBe(200);
+  expect((await put(3, '10')).status).toBe(200);
+  expect((await put(3, 'invalid')).status).toBe(400);
+  expect(await (await get()).json()).toMatchObject({
+    currentStep: 3,
+    data: { period: 'next_week', totalKwh: '10' },
+  });
+  expect((await post('orders/simple', input)).status).toBe(201);
+  expect(await (await get()).json()).toMatchObject({ currentStep: 1, data: null });
+});
+
+it('expires old drafts using the configured retention period', async () => {
+  const path = `${http.base}/api/electricity/drafts/simple`;
+  const body = { profileId: input.profileId, currentStep: 2, data: { period: 'next_week' } };
+  expect((await fetch(path, { method: 'PUT', headers, body: JSON.stringify(body) })).status).toBe(
+    200
+  );
+  await http.pool.query(
+    "UPDATE electricity_customer_drafts SET updated_at=NOW()-INTERVAL '8 days' WHERE profile_id=$1",
+    [input.profileId]
+  );
+  const get = () => fetch(`${path}?profileId=${input.profileId}`, { headers });
+  expect(await (await get()).json()).toMatchObject({ currentStep: 1, data: null });
+  await http.pool.query(
+    "INSERT INTO app_config(key,value) VALUES('electricity.order_draft_ttl_days','14')"
+  );
+  expect((await fetch(path, { method: 'PUT', headers, body: JSON.stringify(body) })).status).toBe(
+    200
+  );
+  await http.pool.query(
+    "UPDATE electricity_customer_drafts SET updated_at=NOW()-INTERVAL '8 days' WHERE profile_id=$1",
+    [input.profileId]
+  );
+  expect(await (await get()).json()).toMatchObject({ currentStep: 2, data: body.data });
 });

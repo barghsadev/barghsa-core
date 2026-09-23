@@ -491,6 +491,13 @@
       "when": 1791331200052,
       "tag": "0149_electricity_submission_records",
       "breakpoints": true
+    },
+    {
+      "idx": 150,
+      "version": "7",
+      "when": 1791331200053,
+      "tag": "0150_electricity_customer_drafts",
+      "breakpoints": true
     }
   ]
 }

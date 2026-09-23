@@ -2130,6 +2130,47 @@ export class AdminController {
     }
   }
 
+  @Get('config/electricity-order-draft-ttl')
+  @ApiOperation({ summary: 'Get simple electricity order draft retention in days' })
+  @ApiResponse({ status: 200, description: 'Draft retention period (default 7 days).' })
+  async getElectricityOrderDraftTtl(@Req() req: AuthenticatedRequest) {
+    this.assertElectricitySettingsPermission(req);
+    return this.adminService.getElectricityOrderDraftTtl();
+  }
+
+  @Put('config/electricity-order-draft-ttl')
+  @ApiOperation({ summary: 'Set simple electricity order draft retention in days' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['days'],
+      additionalProperties: false,
+      properties: { days: { type: 'integer', minimum: 1, maximum: 365 } },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Updated draft retention period.' })
+  async setElectricityOrderDraftTtl(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertElectricitySettingsPermission(req);
+    if (
+      !body ||
+      typeof body !== 'object' ||
+      Array.isArray(body) ||
+      Object.keys(body).length !== 1 ||
+      !('days' in body) ||
+      typeof body.days !== 'number' ||
+      !Number.isInteger(body.days) ||
+      body.days < 1 ||
+      body.days > 365
+    ) {
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    }
+    return this.adminService.setElectricityOrderDraftTtl(
+      body.days,
+      req.session,
+      req.ip ?? 'unknown'
+    );
+  }
+
   /**
    * GET /api/admin/config/green-electricity-rules
    *

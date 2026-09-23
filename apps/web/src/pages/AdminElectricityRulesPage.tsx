@@ -15,7 +15,8 @@ export default function AdminElectricityRulesPage() {
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.green.${key}`, locale);
   const [config, setConfig] = useState<GreenElectricityConfig | null>(null),
-    [safety, setSafety] = useState<Safety | null>(null);
+    [safety, setSafety] = useState<Safety | null>(null),
+    [draftTtlDays, setDraftTtlDays] = useState<number | null>(null);
   const [loading, setLoading] = useState(true),
     [error, setError] = useState(false),
     [denied, setDenied] = useState(false),
@@ -29,6 +30,7 @@ export default function AdminElectricityRulesPage() {
     setDenied(false);
     setConfig(null);
     setSafety(null);
+    setDraftTtlDays(null);
     void (async () => {
       try {
         const responses = await Promise.all([
@@ -36,6 +38,7 @@ export default function AdminElectricityRulesPage() {
           fetch('/api/admin/config/green-electricity-rules/safety-status', {
             signal: controller.signal,
           }),
+          fetch('/api/admin/config/electricity-order-draft-ttl', { signal: controller.signal }),
         ]);
         if (controller.signal.aborted) return;
         if (responses.some((r) => r.status === 403)) {
@@ -43,10 +46,13 @@ export default function AdminElectricityRulesPage() {
           return;
         }
         if (responses.some((r) => !r.ok)) throw new Error('Unavailable');
-        const [rules, status] = await Promise.all(responses.map((r) => r.json()));
+        const [rules, status, ttl] = await Promise.all(responses.map((r) => r.json()));
         if (!controller.signal.aborted) {
           setConfig(rules);
           setSafety(status);
+          if (!Number.isInteger(ttl?.days) || ttl.days < 1 || ttl.days > 365)
+            throw new Error('Invalid draft retention');
+          setDraftTtlDays(ttl.days);
         }
       } catch {
         if (!controller.signal.aborted) setError(true);
@@ -177,6 +183,46 @@ export default function AdminElectricityRulesPage() {
                 ))}
               </div>
               <Button type="submit">{label('save')}</Button>
+            </form>
+            <form
+              className="space-y-3 rounded-lg border bg-card p-5"
+              onSubmit={(event) => {
+                event.preventDefault();
+                if (
+                  draftTtlDays === null ||
+                  !Number.isInteger(draftTtlDays) ||
+                  draftTtlDays < 1 ||
+                  draftTtlDays > 365
+                )
+                  return;
+                setAction({
+                  title: label('draftTtlTitle'),
+                  description: label('draftTtlConfirm'),
+                  path: '/api/admin/config/electricity-order-draft-ttl',
+                  method: 'PUT',
+                  body: { days: draftTtlDays },
+                  forbiddenMessage: label('forbidden'),
+                });
+              }}
+            >
+              <h2 className="text-lg font-semibold">{label('draftTtlTitle')}</h2>
+              <p className="text-sm text-muted-foreground">{label('draftTtlDescription')}</p>
+              <div className="max-w-xs space-y-1">
+                <Label htmlFor="electricity-draft-ttl">{label('draftTtlDays')}</Label>
+                <Input
+                  id="electricity-draft-ttl"
+                  type="number"
+                  min={1}
+                  max={365}
+                  step={1}
+                  required
+                  value={draftTtlDays ?? ''}
+                  onChange={(event) =>
+                    setDraftTtlDays(event.target.value === '' ? NaN : Number(event.target.value))
+                  }
+                />
+              </div>
+              <Button type="submit">{label('draftTtlSave')}</Button>
             </form>
           </>
         )
