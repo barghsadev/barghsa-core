@@ -65,6 +65,7 @@ export const CreateProductSchema = z
     price: irrPriceSchema.nullable().optional(),
     status: statusSchema.optional(),
     categories: z.array(categorySchema).max(10, 'At most 10 categories').optional(),
+    hardwareIds: z.array(z.string().uuid()).min(1).max(100).optional(),
   })
   .strict();
 
@@ -76,6 +77,7 @@ export const UpdateProductSchema = z
     categories: z.array(categorySchema).max(10, 'At most 10 categories').optional(),
     minKwh: kwhSchema.optional(),
     maxKwh: kwhSchema.optional(),
+    hardwareIds: z.array(z.string().uuid()).min(1).max(100).optional(),
   })
   .strict()
   .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
@@ -227,6 +229,7 @@ export class CatalogueProductsController {
       price: d.price ?? null,
       status: d.status ?? 'inactive',
       categories: (d.categories ?? []) as ProductCategory[],
+      ...(d.hardwareIds !== undefined ? { hardwareIds: d.hardwareIds } : {}),
       actorUserId: req.session.userId,
       session: req.session,
       ip: requestIp(req),
@@ -272,6 +275,7 @@ export class CatalogueProductsController {
         : {}),
       ...(d.status !== undefined ? { status: d.status } : {}),
       ...(d.categories !== undefined ? { categories: d.categories as ProductCategory[] } : {}),
+      ...(d.hardwareIds !== undefined ? { hardwareIds: d.hardwareIds } : {}),
       ...(d.minKwh !== undefined ? { minKwh: d.minKwh } : {}),
       ...(d.maxKwh !== undefined ? { maxKwh: d.maxKwh } : {}),
       actorUserId: req.session.userId,

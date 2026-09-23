@@ -1,0 +1,7 @@
+# Power-saving catalogue and agreement batch
+
+Canonical scope: `03-core-business.md#T-03.01.04.01`, `.02`, and `.04` through `.06` where plan-to-hardware associations and agreement versions were still absent, plus customer plan browsing from `03-core-business.md#T-03.09.02.01`. Order-aware archive rules, the saving order schema, bill verification, checkout, invoice and fulfillment tasks remain later batches.
+
+Saving plans now require at least one compatible hardware product when staff create them. The admin catalogue editor can assign or replace hardware and create an agreement draft; a separate, step-up-protected action activates that exact draft and preserves the prior published agreement. Database guards enforce product types, one active and one draft version per plan, and immutable published text. A plan can become active only with a positive plan price, an active agreement, and at least one active, priced hardware option. Customer browsing shows localized plan and hardware descriptions and prices, inactive plans as unavailable, and the current published agreement without exposing drafts.
+
+Validation passed: four focused API suites (67 tests), including a migrated HTTP journey for plan creation, hardware validation, draft disclosure, activation, immutable agreement history, permissions and step-up; two web suites (5 tests), including bilingual customer browsing and the staff publish action; API and web typechecks and builds; i18n tests (53); changed-file lint; database snapshot, OpenAPI contract and backlog checks.

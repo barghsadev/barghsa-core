@@ -561,6 +561,13 @@
       "when": 1791331200062,
       "tag": "0159_electricity_price_adjustments",
       "breakpoints": true
+    },
+    {
+      "idx": 160,
+      "version": "7",
+      "when": 1791331200063,
+      "tag": "0160_saving_plan_catalogue",
+      "breakpoints": true
     }
   ]
 }

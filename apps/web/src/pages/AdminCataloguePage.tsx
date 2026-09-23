@@ -5,6 +5,7 @@ import { tCatalogue } from '@barghsa/i18n/catalogue';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { SavingAgreementEditor } from './SavingAgreementEditor.js';
 const types = ['consultation', 'electricity', 'hardware', 'saving_plan'] as const;
 type ProductType = (typeof types)[number];
 type Product = {
@@ -34,6 +35,7 @@ type Draft = {
   descriptionEn: string;
   price: string;
   categories: string[];
+  hardwareIds: string[];
   configureLimits: boolean;
   minKwh: string;
   maxKwh: string;
@@ -60,6 +62,7 @@ export default function AdminCataloguePage() {
   const label = (key: string) => tCatalogue(key, locale);
   const [type, setType] = useState<ProductType>('consultation'),
     [rows, setRows] = useState<Product[]>([]);
+  const [hardwareOptions, setHardwareOptions] = useState<Product[]>([]);
   const [editor, setEditor] = useState<string | null>(null),
     [detail, setDetail] = useState<Detail | null>(null),
     [draft, setDraft] = useState<Draft | null>(null);
@@ -89,6 +92,7 @@ export default function AdminCataloguePage() {
     const abort = new AbortController();
     setState('loading');
     setRows([]);
+    setHardwareOptions([]);
     setDraft(null);
     setDetail(null);
     setReferences(null);
@@ -102,8 +106,17 @@ export default function AdminCataloguePage() {
             ? [`${base}/${editor}`, `${base}/${editor}/rule-references`]
             : []),
         ];
+        const extraPaths =
+          type === 'saving_plan'
+            ? [
+                `${base}?type=hardware`,
+                ...(editor && editor !== 'new'
+                  ? [`/api/admin/catalogue/saving-plans/${editor}/configuration`]
+                  : []),
+              ]
+            : [];
         const responses = await Promise.all(
-          paths.map((path) => fetch(path, { signal: abort.signal }))
+          [...paths, ...extraPaths].map((path) => fetch(path, { signal: abort.signal }))
         );
         if (responses.some((response) => response.status === 403)) {
           if (!abort.signal.aborted) setState('denied');
@@ -113,6 +126,11 @@ export default function AdminCataloguePage() {
         const data = await Promise.all(responses.map((response) => response.json()));
         if (abort.signal.aborted) return;
         setRows(data[0] as Product[]);
+        if (type === 'saving_plan') setHardwareOptions(data[paths.length] as Product[]);
+        const savingConfig =
+          type === 'saving_plan' && editor && editor !== 'new'
+            ? (data[paths.length + 1] as { hardwareIds: string[] })
+            : null;
         const product = editor && editor !== 'new' ? (data[1] as Detail) : null;
         setDetail(product);
         if (product) setReferences(data[2] as References);
@@ -124,6 +142,7 @@ export default function AdminCataloguePage() {
             descriptionEn: product?.description?.en ?? '',
             price: '',
             categories: product?.categories ?? [],
+            hardwareIds: savingConfig?.hardwareIds ?? [],
             configureLimits: !!product?.electricityLimits,
             minKwh: product?.electricityLimits?.minKwh ?? '0',
             maxKwh: product?.electricityLimits?.maxKwh ?? '0',
@@ -177,6 +196,7 @@ export default function AdminCataloguePage() {
       title: { fa: draft.titleFa.trim(), en: draft.titleEn.trim() },
       description: { fa: draft.descriptionFa, en: draft.descriptionEn },
       categories: draft.categories,
+      ...(type === 'saving_plan' ? { hardwareIds: draft.hardwareIds } : {}),
       ...(editor === 'new'
         ? { type, price: draft.price || null, status: 'inactive' }
         : type === 'electricity' && draft.configureLimits
@@ -380,6 +400,35 @@ export default function AdminCataloguePage() {
                             </div>
                           </fieldset>
                         )}
+                        {type === 'saving_plan' && (
+                          <fieldset className="rounded-md border p-4">
+                            <legend className="px-1 font-semibold">{label('planHardware')}</legend>
+                            <p className="mb-3 text-sm text-muted-foreground">
+                              {label('planHardwareHelp')}
+                            </p>
+                            <div className="flex flex-col gap-3">
+                              {hardwareOptions
+                                .filter((item) => item.status !== 'archived')
+                                .map((item) => (
+                                  <label key={item.id} className="flex items-center gap-2">
+                                    <input
+                                      type="checkbox"
+                                      checked={draft.hardwareIds.includes(item.id)}
+                                      onChange={(event) =>
+                                        setDraft({
+                                          ...draft,
+                                          hardwareIds: event.target.checked
+                                            ? [...draft.hardwareIds, item.id]
+                                            : draft.hardwareIds.filter((id) => id !== item.id),
+                                        })
+                                      }
+                                    />
+                                    {title(item)} · {money(item.price)}
+                                  </label>
+                                ))}
+                            </div>
+                          </fieldset>
+                        )}
                         {type === 'electricity' && (
                           <fieldset className="rounded-md border p-4">
                             <legend className="px-1 font-semibold">{label('limits')}</legend>
@@ -423,7 +472,11 @@ export default function AdminCataloguePage() {
                         <div className="flex gap-2">
                           <Button
                             type="submit"
-                            disabled={!draft.titleFa.trim() || !draft.titleEn.trim()}
+                            disabled={
+                              !draft.titleFa.trim() ||
+                              !draft.titleEn.trim() ||
+                              (type === 'saving_plan' && draft.hardwareIds.length === 0)
+                            }
                           >
                             {label('save')}
                           </Button>
@@ -486,6 +539,12 @@ export default function AdminCataloguePage() {
                             )}
                           </div>
                         </section>
+                      )}
+                      {detail && type === 'saving_plan' && (
+                        <SavingAgreementEditor
+                          planId={detail.id}
+                          onChanged={() => choose(detail.id)}
+                        />
                       )}
                       {detail && (
                         <section

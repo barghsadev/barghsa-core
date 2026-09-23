@@ -130,6 +130,7 @@ export interface CreateProductInput {
   price: string | null;
   status: 'active' | 'inactive';
   categories: ProductCategory[];
+  hardwareIds?: string[];
   actorUserId: string;
   session: MutationSession;
   ip: string;
@@ -141,6 +142,7 @@ export interface UpdateProductInput {
   status?: 'active' | 'inactive';
   /** Full-set replace semantics (like the AI agent link sets). */
   categories?: ProductCategory[];
+  hardwareIds?: string[];
   /** Omit to leave untouched; electricity products only. */
   minKwh?: string;
   maxKwh?: string;
@@ -317,6 +319,10 @@ export class CatalogueProductsService {
       input = { ...input, categories: [...new Set(input.categories)] };
       const id = uuidv7();
       this.assertCategorySetForType(input.type, input.categories);
+      if (input.type === 'saving_plan' && !input.hardwareIds?.length)
+        throw new HttpException({ error: 'CATALOGUE_HARDWARE_REQUIRED' }, 400);
+      if (input.hardwareIds !== undefined)
+        await this.assertHardwareSet(q, input.type, input.hardwareIds);
 
       const now = new Date();
       await q.query(
@@ -336,6 +342,9 @@ export class CatalogueProductsService {
       if (input.categories.length > 0) {
         await this.insertCategories(q, id, input.categories);
       }
+      if (input.hardwareIds !== undefined) await this.replaceHardware(q, id, input.hardwareIds);
+      if (input.type === 'saving_plan' && input.status === 'active')
+        throw new HttpException({ error: 'CATALOGUE_AGREEMENT_REQUIRED' }, 409);
 
       // Initial price seeds the first versioned price record.
       if (input.price !== null) {
@@ -385,6 +394,8 @@ export class CatalogueProductsService {
         input = { ...input, categories: [...new Set(input.categories)] };
         this.assertCategorySetForType(current.type, input.categories!);
       }
+      if (input.hardwareIds !== undefined)
+        await this.assertHardwareSet(q, current.type, input.hardwareIds);
 
       // Load current aggregate values so the no-op diff is exact.
       const [aggregates, currentLimits] = await Promise.all([
@@ -392,6 +403,7 @@ export class CatalogueProductsService {
         this.findLimits(q, id),
       ]);
       const currentCategories = aggregates[0]!.categories;
+      const currentHardware = input.hardwareIds === undefined ? [] : await this.hardwareIds(q, id);
 
       const titleChanged =
         input.title !== undefined &&
@@ -415,6 +427,10 @@ export class CatalogueProductsService {
         input.categories !== undefined &&
         JSON.stringify([...input.categories].sort()) !==
           JSON.stringify([...currentCategories].sort());
+      const hardwareChanged =
+        input.hardwareIds !== undefined &&
+        JSON.stringify([...input.hardwareIds].sort()) !==
+          JSON.stringify([...currentHardware].sort());
 
       // Electricity consumption limits only apply to electricity products.
       if (
@@ -468,7 +484,8 @@ export class CatalogueProductsService {
         input.status === undefined &&
         input.categories === undefined &&
         input.minKwh === undefined &&
-        input.maxKwh === undefined
+        input.maxKwh === undefined &&
+        input.hardwareIds === undefined
       ) {
         throw new HttpException(
           {
@@ -486,7 +503,8 @@ export class CatalogueProductsService {
         !descriptionChanged &&
         !statusChanged &&
         !limitsChanged &&
-        !categoriesChanged
+        !categoriesChanged &&
+        !hardwareChanged
       ) {
         return this.readDetail(q, id);
       }
@@ -524,6 +542,13 @@ export class CatalogueProductsService {
           await this.insertCategories(q, id, input.categories);
         }
       }
+      if (hardwareChanged) await this.replaceHardware(q, id, input.hardwareIds!);
+      if (
+        current.type === 'saving_plan' &&
+        (input.status ?? current.status) === 'active' &&
+        (hardwareChanged || current.status !== 'active')
+      )
+        await this.assertSavingPlanReady(q, id, current.price);
 
       if (current.type === 'electricity' && mergedLimits !== null) {
         await this.upsertElectricityLimits(q, id, mergedLimits.minKwh, mergedLimits.maxKwh);
@@ -551,6 +576,7 @@ export class CatalogueProductsService {
               }
             : {}),
           ...(categoriesChanged ? { categories: input.categories } : {}),
+          ...(hardwareChanged ? { hardwareIds: input.hardwareIds } : {}),
         }
       );
       this.logger.log(`Catalogue product updated: id=${id}, actor=${input.actorUserId}`);
@@ -886,6 +912,47 @@ export class CatalogueProductsService {
         [uuidv7(), productId, category, new Date()]
       );
     }
+  }
+
+  private async hardwareIds(q: DbExecutor, planId: string): Promise<string[]> {
+    const result = await q.query<{ hardware_id: string }>(
+      'SELECT hardware_id FROM saving_plan_hardware WHERE plan_id=$1 ORDER BY hardware_id',
+      [planId]
+    );
+    return result.rows.map((row) => row.hardware_id);
+  }
+
+  private async assertHardwareSet(q: DbExecutor, type: ProductType, ids: string[]): Promise<void> {
+    if (type !== 'saving_plan' || ids.length === 0 || new Set(ids).size !== ids.length)
+      throw new HttpException({ error: 'CATALOGUE_HARDWARE_REQUIRED' }, 400);
+    const result = await q.query<{ id: string }>(
+      "SELECT id FROM products WHERE id=ANY($1::uuid[]) AND type='hardware' AND status<>'archived' FOR SHARE",
+      [ids]
+    );
+    if (result.rows.length !== ids.length)
+      throw new HttpException({ error: 'CATALOGUE_HARDWARE_INVALID' }, 400);
+  }
+
+  private async replaceHardware(q: DbExecutor, planId: string, ids: string[]): Promise<void> {
+    await q.query('DELETE FROM saving_plan_hardware WHERE plan_id=$1', [planId]);
+    for (const hardwareId of ids)
+      await q.query('INSERT INTO saving_plan_hardware(plan_id,hardware_id) VALUES($1,$2)', [
+        planId,
+        hardwareId,
+      ]);
+  }
+
+  private async assertSavingPlanReady(q: DbExecutor, planId: string, price: string | null) {
+    if (!price || BigInt(price) <= 0n)
+      throw new HttpException({ error: 'CATALOGUE_PRICE_REQUIRED' }, 409);
+    const result = await q.query<{ ready: boolean }>(
+      `SELECT EXISTS(SELECT 1 FROM saving_plan_agreement_versions WHERE plan_id=$1 AND status='active')
+          AND EXISTS(SELECT 1 FROM saving_plan_hardware h JOIN products p ON p.id=h.hardware_id
+            WHERE h.plan_id=$1 AND p.status='active' AND effective_product_price(p.id)>0) AS ready`,
+      [planId]
+    );
+    if (!result.rows[0]?.ready)
+      throw new HttpException({ error: 'CATALOGUE_PLAN_INCOMPLETE' }, 409);
   }
 
   private async upsertElectricityLimits(

@@ -2,6 +2,11 @@ import { Module } from '@nestjs/common';
 import { SessionModule } from '../session/index.js';
 import { CatalogueProductsController } from './catalogue-products.controller.js';
 import { CatalogueProductsService } from './catalogue-products.service.js';
+import {
+  AdminSavingCatalogueController,
+  CustomerSavingCatalogueController,
+} from './saving-catalogue.controller.js';
+import { SavingCatalogueService } from './saving-catalogue.service.js';
 
 /**
  * Admin product catalogue module (S-09.12, T-09.12.01) — API slice.
@@ -13,8 +18,12 @@ import { CatalogueProductsService } from './catalogue-products.service.js';
  */
 @Module({
   imports: [SessionModule],
-  controllers: [CatalogueProductsController],
-  providers: [CatalogueProductsService],
+  controllers: [
+    CatalogueProductsController,
+    AdminSavingCatalogueController,
+    CustomerSavingCatalogueController,
+  ],
+  providers: [CatalogueProductsService, SavingCatalogueService],
   exports: [CatalogueProductsService],
 })
 export class CatalogueModule {}

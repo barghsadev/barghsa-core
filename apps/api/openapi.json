@@ -1141,6 +1141,132 @@
         ]
       }
     },
+    "/api/admin/catalogue/saving-plans/{id}/agreements/draft": {
+      "post": {
+        "operationId": "AdminSavingCatalogueController_draft",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "maxLength": 50000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "title": {
+                    "maxLength": 300,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Save a new draft of a saving-plan agreement",
+        "tags": [
+          "Admin · Saving plans"
+        ]
+      }
+    },
+    "/api/admin/catalogue/saving-plans/{id}/agreements/{versionId}/activate": {
+      "post": {
+        "operationId": "AdminSavingCatalogueController_activate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "versionId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Activate an agreement draft and supersede the old version",
+        "tags": [
+          "Admin · Saving plans"
+        ]
+      }
+    },
+    "/api/admin/catalogue/saving-plans/{id}/configuration": {
+      "get": {
+        "operationId": "AdminSavingCatalogueController_configuration",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read assigned hardware and saving-plan agreement versions",
+        "tags": [
+          "Admin · Saving plans"
+        ]
+      }
+    },
     "/api/admin/config/assignment-rules": {
       "get": {
         "operationId": "AdminController_getStaffAssignmentRules",
@@ -17330,6 +17456,26 @@
         "summary": "Get active brand configuration (public)",
         "tags": [
           "Public"
+        ]
+      }
+    },
+    "/api/saving/plans": {
+      "get": {
+        "operationId": "CustomerSavingCatalogueController_browse",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Browse saving plans, compatible hardware, and active agreements",
+        "tags": [
+          "Saving plans"
         ]
       }
     },

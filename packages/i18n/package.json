@@ -37,6 +37,11 @@
       "import": "./dist/catalogue.js",
       "default": "./dist/catalogue.js"
     },
+    "./saving": {
+      "types": "./dist/saving.d.ts",
+      "import": "./dist/saving.js",
+      "default": "./dist/saving.js"
+    },
     "./timezone": {
       "types": "./dist/timezone.d.ts",
       "import": "./dist/timezone.js",
