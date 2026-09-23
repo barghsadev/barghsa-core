@@ -13218,6 +13218,144 @@
         ]
       }
     },
+    "/api/consultations/products": {
+      "get": {
+        "operationId": "ConsultationRequestController_products",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List active consultation products available to a profile",
+        "tags": [
+          "Consultation requests"
+        ]
+      }
+    },
+    "/api/consultations/requests": {
+      "get": {
+        "operationId": "ConsultationRequestController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List consultation requests for a profile",
+        "tags": [
+          "Consultation requests"
+        ]
+      },
+      "post": {
+        "operationId": "ConsultationRequestController_submit",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "productId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "submissionKey": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileId",
+                  "productId",
+                  "submissionKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit a consultation request without creating an invoice",
+        "tags": [
+          "Consultation requests"
+        ]
+      }
+    },
+    "/api/consultations/requests/{id}": {
+      "get": {
+        "operationId": "ConsultationRequestController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read a consultation request and status history",
+        "tags": [
+          "Consultation requests"
+        ]
+      }
+    },
     "/api/contracts": {
       "get": {
         "operationId": "CustomerContractController_list",

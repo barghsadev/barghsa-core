@@ -47,6 +47,11 @@
       "import": "./dist/solar.js",
       "default": "./dist/solar.js"
     },
+    "./consultation": {
+      "types": "./dist/consultation.d.ts",
+      "import": "./dist/consultation.js",
+      "default": "./dist/consultation.js"
+    },
     "./timezone": {
       "types": "./dist/timezone.d.ts",
       "import": "./dist/timezone.js",

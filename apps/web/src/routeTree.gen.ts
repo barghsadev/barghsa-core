@@ -22,6 +22,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AppAiRouteImport } from './routes/_app/ai'
 import { Route as AppAppRouteImport } from './routes/_app/app'
 import { Route as AppChartsRouteImport } from './routes/_app/charts'
+import { Route as AppConsultationsRouteImport } from './routes/_app/consultations'
 import { Route as AppContractsRouteImport } from './routes/_app/contracts'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
@@ -74,6 +75,7 @@ import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding/complete'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
+import { Route as AppConsultationsRequestIdRouteImport } from './routes/_app/consultations.$requestId'
 import { Route as AppElectricityIndexRouteImport } from './routes/_app/electricity/index'
 import { Route as AppElectricityAdvancedRouteImport } from './routes/_app/electricity/advanced'
 import { Route as AppElectricityOrderRouteImport } from './routes/_app/electricity/order'
@@ -165,6 +167,11 @@ const AppAppRoute = AppAppRouteImport.update({
 const AppChartsRoute = AppChartsRouteImport.update({
   id: '/charts',
   path: '/charts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConsultationsRoute = AppConsultationsRouteImport.update({
+  id: '/consultations',
+  path: '/consultations',
   getParentRoute: () => AppRoute,
 } as any)
 const AppContractsRoute = AppContractsRouteImport.update({
@@ -430,6 +437,12 @@ const RegisterVerifyRoute = RegisterVerifyRouteImport.update({
   path: '/verify',
   getParentRoute: () => RegisterRoute,
 } as any)
+const AppConsultationsRequestIdRoute =
+  AppConsultationsRequestIdRouteImport.update({
+    id: '/$requestId',
+    path: '/$requestId',
+    getParentRoute: () => AppConsultationsRoute,
+  } as any)
 const AppElectricityIndexRoute = AppElectricityIndexRouteImport.update({
   id: '/electricity/',
   path: '/electricity/',
@@ -590,6 +603,7 @@ export interface FileRoutesByFullPath {
   '/ai': typeof AppAiRoute
   '/app': typeof AppAppRoute
   '/charts': typeof AppChartsRoute
+  '/consultations': typeof AppConsultationsRouteWithChildren
   '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
@@ -642,6 +656,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/consultations/$requestId': typeof AppConsultationsRequestIdRoute
   '/electricity/advanced': typeof AppElectricityAdvancedRoute
   '/electricity/order': typeof AppElectricityOrderRoute
   '/electricity/orders': typeof AppElectricityOrdersRouteWithChildren
@@ -681,6 +696,7 @@ export interface FileRoutesByTo {
   '/ai': typeof AppAiRoute
   '/app': typeof AppAppRoute
   '/charts': typeof AppChartsRoute
+  '/consultations': typeof AppConsultationsRouteWithChildren
   '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
@@ -732,6 +748,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/onboarding': typeof OnboardingIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/consultations/$requestId': typeof AppConsultationsRequestIdRoute
   '/electricity/advanced': typeof AppElectricityAdvancedRoute
   '/electricity/order': typeof AppElectricityOrderRoute
   '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
@@ -775,6 +792,7 @@ export interface FileRoutesById {
   '/_app/ai': typeof AppAiRoute
   '/_app/app': typeof AppAppRoute
   '/_app/charts': typeof AppChartsRoute
+  '/_app/consultations': typeof AppConsultationsRouteWithChildren
   '/_app/contracts': typeof AppContractsRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/documents': typeof AppDocumentsRoute
@@ -827,6 +845,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/onboarding/': typeof OnboardingIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/_app/consultations/$requestId': typeof AppConsultationsRequestIdRoute
   '/_app/electricity/advanced': typeof AppElectricityAdvancedRoute
   '/_app/electricity/order': typeof AppElectricityOrderRoute
   '/_app/electricity/orders': typeof AppElectricityOrdersRouteWithChildren
@@ -871,6 +890,7 @@ export interface FileRouteTypes {
     | '/ai'
     | '/app'
     | '/charts'
+    | '/consultations'
     | '/contracts'
     | '/dashboard'
     | '/documents'
@@ -923,6 +943,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/onboarding/'
     | '/register/'
+    | '/consultations/$requestId'
     | '/electricity/advanced'
     | '/electricity/order'
     | '/electricity/orders'
@@ -962,6 +983,7 @@ export interface FileRouteTypes {
     | '/ai'
     | '/app'
     | '/charts'
+    | '/consultations'
     | '/contracts'
     | '/dashboard'
     | '/documents'
@@ -1013,6 +1035,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/onboarding'
     | '/register'
+    | '/consultations/$requestId'
     | '/electricity/advanced'
     | '/electricity/order'
     | '/invoices/$invoiceId'
@@ -1055,6 +1078,7 @@ export interface FileRouteTypes {
     | '/_app/ai'
     | '/_app/app'
     | '/_app/charts'
+    | '/_app/consultations'
     | '/_app/contracts'
     | '/_app/dashboard'
     | '/_app/documents'
@@ -1107,6 +1131,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/onboarding/'
     | '/register/'
+    | '/_app/consultations/$requestId'
     | '/_app/electricity/advanced'
     | '/_app/electricity/order'
     | '/_app/electricity/orders'
@@ -1243,6 +1268,13 @@ declare module '@tanstack/react-router' {
       path: '/charts'
       fullPath: '/charts'
       preLoaderRoute: typeof AppChartsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/consultations': {
+      id: '/_app/consultations'
+      path: '/consultations'
+      fullPath: '/consultations'
+      preLoaderRoute: typeof AppConsultationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/contracts': {
@@ -1609,6 +1641,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterVerifyRouteImport
       parentRoute: typeof RegisterRoute
     }
+    '/_app/consultations/$requestId': {
+      id: '/_app/consultations/$requestId'
+      path: '/$requestId'
+      fullPath: '/consultations/$requestId'
+      preLoaderRoute: typeof AppConsultationsRequestIdRouteImport
+      parentRoute: typeof AppConsultationsRoute
+    }
     '/_app/electricity/': {
       id: '/_app/electricity/'
       path: '/electricity'
@@ -1808,6 +1847,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppConsultationsRouteChildren {
+  AppConsultationsRequestIdRoute: typeof AppConsultationsRequestIdRoute
+}
+
+const AppConsultationsRouteChildren: AppConsultationsRouteChildren = {
+  AppConsultationsRequestIdRoute: AppConsultationsRequestIdRoute,
+}
+
+const AppConsultationsRouteWithChildren =
+  AppConsultationsRoute._addFileChildren(AppConsultationsRouteChildren)
+
 interface AppSavingsOrdersRouteChildren {
   AppSavingsOrdersOrderIdRoute: typeof AppSavingsOrdersOrderIdRoute
 }
@@ -1863,6 +1913,7 @@ interface AppRouteChildren {
   AppAiRoute: typeof AppAiRoute
   AppAppRoute: typeof AppAppRoute
   AppChartsRoute: typeof AppChartsRoute
+  AppConsultationsRoute: typeof AppConsultationsRouteWithChildren
   AppContractsRoute: typeof AppContractsRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppDocumentsRoute: typeof AppDocumentsRoute
@@ -1891,6 +1942,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAiRoute: AppAiRoute,
   AppAppRoute: AppAppRoute,
   AppChartsRoute: AppChartsRoute,
+  AppConsultationsRoute: AppConsultationsRouteWithChildren,
   AppContractsRoute: AppContractsRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppDocumentsRoute: AppDocumentsRoute,
