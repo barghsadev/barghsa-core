@@ -1,0 +1,9 @@
+# Saving order changes before staff review
+
+Canonical scope: the customer change flow before staff review in `03-core-business.md#T-03.09.04.05`. Changes after staff approval, including postpayment staff amendments, remain open.
+
+Customers can change compatible equipment or select another installation address while their saving order is awaiting staff review and its invoice is unpaid. The order detail page loads the available choices, shows an authoritative revised quote, and requires confirmation. It links to address management for adding a new address. The API rejects stale quotes, reused idempotency keys with a different payload, unauthorized profiles, orders with payment or receipt activity, cancellation requests, fulfillment progress, or a published contract.
+
+One transaction updates the order and installation snapshots, saving price lines, the original unpaid invoice and its lines, and the stock reservation. It creates a new immutable contract version and a separate immutable revision record, and writes before/after details to the audit log. The invoice ID stays stable for existing payment and staff links. An already redeemed gift code keeps its original absolute discount, even when that code is later disabled; VAT is recalculated on the new net prices. Staff approval uses the newest contract version.
+
+Validation: saving order HTTP integration tests cover address and hardware revisions, a stale quote, idempotent retry, retained gift discount after code deactivation, invoice and contract consistency, stock movement, immutable revision history, and approval after a revision. The customer component test covers selection, quote preview, and confirmation. Production build, typecheck, lint, formatting, OpenAPI contract, Drizzle snapshot, backlog validation, and migration runner tests pass.

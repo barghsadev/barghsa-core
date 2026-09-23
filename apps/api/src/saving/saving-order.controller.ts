@@ -37,6 +37,18 @@ const submissionInput = quoteInput
     submitForStaffReview: z.literal(true),
   })
   .strict();
+const changeInput = z
+  .object({
+    hardwareProductId: z.string().uuid(),
+    installationAddressId: z.string().uuid(),
+  })
+  .strict();
+const changeSubmissionInput = changeInput
+  .extend({
+    idempotencyKey: z.string().uuid(),
+    expectedQuoteDigest: z.string().regex(/^[a-f0-9]{64}$/),
+  })
+  .strict();
 const verifyInput = z
   .object({
     profileId: z.string().uuid(),
@@ -87,6 +99,37 @@ export class SavingOrderController {
   @ApiOperation({ summary: 'Read saving order, invoice, contract and fulfillment progress' })
   detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
     return this.service.detail(req.session, id);
+  }
+
+  @Post(':id/change-quote')
+  @RateLimit({ namespace: 'saving:change-quote:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Quote an unpaid saving order equipment or address change' })
+  @ApiZodBody(changeInput)
+  quoteChange(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.service.quoteChange(req.session, id, parse(changeInput, body));
+  }
+
+  @Post(':id/change')
+  @RateLimit({ namespace: 'saving:change:user', limit: 10, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'Atomically revise an unpaid saving order, invoice, contract and inventory',
+  })
+  @ApiZodBody(changeSubmissionInput)
+  change(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.service.change(
+      req.session,
+      id,
+      parse(changeSubmissionInput, body),
+      req.ip ?? '127.0.0.1'
+    );
   }
 
   @Post('verify-bill')

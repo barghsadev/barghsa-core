@@ -6,12 +6,17 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { SavingOrderComments } from '../components/SavingOrderComments.js';
 import { SavingOrderDocuments } from '../components/SavingOrderDocuments.js';
+import { SavingOrderChangePanel } from '../components/SavingOrderChangePanel.js';
 import { ContractCancellationPanel } from '../components/ContractCancellationPanel.js';
 import { savingNextAction, type SavingActionContext } from '../lib/saving-next-action.js';
 
 interface Detail extends SavingActionContext {
   order_id: string;
   profile_id: string;
+  saving_plan_id: string;
+  hardware_product_id: string;
+  installation_address_id: string;
+  can_edit: boolean;
   bill_identifier: string;
   submitted_at: string;
   address_snapshot: { full_address: string; postal_code: string };
@@ -130,6 +135,17 @@ export function SavingOrderDetailPage() {
               )}
             </CardContent>
           </Card>
+          {detail.can_edit && (
+            <SavingOrderChangePanel
+              key={detail.contract_version_id}
+              orderId={detail.id}
+              profileId={detail.profile_id}
+              planId={detail.saving_plan_id}
+              currentHardwareId={detail.hardware_product_id}
+              currentAddressId={detail.installation_address_id}
+              onChanged={() => setRevision((value) => value + 1)}
+            />
+          )}
           <Card>
             <CardContent className="space-y-2 pt-6">
               <h2 className="text-lg font-semibold">{copy('nextAction')}</h2>

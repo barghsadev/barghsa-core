@@ -14,6 +14,7 @@ import { baseColumns } from '../base-table';
 import { irrAmount, uuidv7 } from '../types';
 import { addresses } from './addresses';
 import { orders } from './orders';
+import { contractVersions } from './contracts';
 import { products } from './products';
 import { profiles } from './profiles';
 import { savingPlanAgreementVersions } from './saving-plan-catalogue';
@@ -189,6 +190,35 @@ export const savingOrderSubmissions = pgTable(
   },
   (table) => [
     uniqueIndex('saving_order_submission_user_key').on(table.userId, table.idempotencyKey),
+  ]
+);
+
+export const savingOrderRevisions = pgTable(
+  'saving_order_revisions',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => savingOrders.id, { onDelete: 'restrict' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    idempotencyKey: uuid('idempotency_key').notNull(),
+    requestHash: text('request_hash').notNull(),
+    previousVersionId: uuid('previous_version_id')
+      .notNull()
+      .references(() => contractVersions.id, { onDelete: 'restrict' }),
+    versionId: uuid('version_id')
+      .notNull()
+      .references(() => contractVersions.id, { onDelete: 'restrict' }),
+    previousSnapshot: jsonb('previous_snapshot').notNull(),
+    response: jsonb('response').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('saving_order_revisions_user_key').on(table.userId, table.idempotencyKey),
+    index('saving_order_revisions_order_idx').on(table.orderId, table.createdAt),
+    check('saving_order_revisions_snapshot', sql`jsonb_typeof(${table.previousSnapshot})='object'`),
   ]
 );
 

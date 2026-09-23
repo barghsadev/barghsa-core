@@ -924,3 +924,201 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     ).rows[0]
   ).toMatchObject({ stock_count: 0, reserved_count: 0 });
 }, 150000);
+
+it('revises an unpaid order address and equipment with one invoice, a new contract version, and moved stock', async () => {
+  const secondAddress = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address)
+       SELECT profile_id,province_id,city_id,'Second installation address','9876543210',false
+       FROM addresses WHERE id=$1 RETURNING id`,
+      [input.installationAddressId]
+    )
+  ).rows[0]!.id;
+  const firstHardwareResponse = await request(
+    '/api/admin/catalogue/products',
+    'POST',
+    {
+      type: 'hardware',
+      title: { fa: 'دستگاه اولیه', en: 'Initial device' },
+      description: { fa: 'تجهیز اولیه', en: 'Initial equipment' },
+      price: '200000',
+      status: 'active',
+    },
+    staffHeaders
+  );
+  expect(firstHardwareResponse.status, http.logs()).toBe(201);
+  const firstHardwareId = ((await firstHardwareResponse.json()) as { id: string }).id;
+  expect(
+    (
+      await request(
+        `/api/admin/catalogue/hardware/${firstHardwareId}/inventory`,
+        'PUT',
+        { stockTracking: true, stockCount: 2, reservationMinutes: 30 },
+        staffHeaders
+      )
+    ).status,
+    http.logs()
+  ).toBe(200);
+  const alternateResponse = await request(
+    '/api/admin/catalogue/products',
+    'POST',
+    {
+      type: 'hardware',
+      title: { fa: 'دستگاه دوم', en: 'Second device' },
+      description: { fa: 'تجهیز دوم', en: 'Second equipment' },
+      price: '300000',
+      status: 'active',
+    },
+    staffHeaders
+  );
+  expect(alternateResponse.status, http.logs()).toBe(201);
+  const alternateId = ((await alternateResponse.json()) as { id: string }).id;
+  expect(
+    (
+      await request(
+        `/api/admin/catalogue/hardware/${alternateId}/inventory`,
+        'PUT',
+        { stockTracking: true, stockCount: 2, reservationMinutes: 30 },
+        staffHeaders
+      )
+    ).status,
+    http.logs()
+  ).toBe(200);
+  await http.pool.query('INSERT INTO saving_plan_hardware(plan_id,hardware_id) VALUES($1,$2)', [
+    input.savingPlanId,
+    alternateId,
+  ]);
+  await http.pool.query('INSERT INTO saving_plan_hardware(plan_id,hardware_id) VALUES($1,$2)', [
+    input.savingPlanId,
+    firstHardwareId,
+  ]);
+  const orderInput = {
+    ...input,
+    hardwareProductId: firstHardwareId,
+    billIdentifier: '1234567890991',
+    giftCode: 'SAVING30',
+  };
+  const initialQuote = await request('/api/saving/orders/quote', 'POST', orderInput);
+  expect(initialQuote.status, http.logs()).toBe(201);
+  const initialDigest = ((await initialQuote.json()) as { reviewDigest: string }).reviewDigest;
+  const submitted = await request('/api/saving/orders', 'POST', {
+    ...orderInput,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: initialDigest,
+    agreementAccepted: true,
+    hardwareConfirmed: true,
+    submitForStaffReview: true,
+  });
+  expect(submitted.status, http.logs()).toBe(201);
+  const order = (await submitted.json()) as {
+    savingOrderId: string;
+    invoiceId: string;
+    contractId: string;
+  };
+  await http.pool.query("UPDATE gift_codes SET status='inactive' WHERE code='SAVING30'");
+  const path = `/api/saving/orders/${order.savingOrderId}`;
+  const detailBefore = await request(path, 'GET');
+  expect(await detailBefore.json()).toMatchObject({ can_edit: true });
+  const addressChange = {
+    hardwareProductId: firstHardwareId,
+    installationAddressId: secondAddress,
+  };
+  const addressQuoteResponse = await request(`${path}/change-quote`, 'POST', addressChange);
+  expect(addressQuoteResponse.status, http.logs()).toBe(201);
+  const addressQuote = (await addressQuoteResponse.json()) as {
+    reviewDigest: string;
+    totalIrR: string;
+    discountIrR: string;
+  };
+  expect(addressQuote).toMatchObject({ totalIrR: '278100', discountIrR: '30000' });
+  const stale = await request(`${path}/change`, 'POST', {
+    ...addressChange,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: '0'.repeat(64),
+  });
+  expect(stale.status, http.logs()).toBe(409);
+  const addressSubmission = {
+    ...addressChange,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: addressQuote.reviewDigest,
+  };
+  const addressResult = await request(`${path}/change`, 'POST', addressSubmission);
+  expect(addressResult.status, http.logs()).toBe(201);
+  const firstRevision = await addressResult.json();
+  const retry = await request(`${path}/change`, 'POST', addressSubmission);
+  expect(retry.status, http.logs()).toBe(201);
+  expect(await retry.json()).toEqual(firstRevision);
+  const equipmentChange = { hardwareProductId: alternateId, installationAddressId: secondAddress };
+  const equipmentQuoteResponse = await request(`${path}/change-quote`, 'POST', equipmentChange);
+  expect(equipmentQuoteResponse.status, http.logs()).toBe(201);
+  const equipmentQuote = (await equipmentQuoteResponse.json()) as {
+    reviewDigest: string;
+    totalIrR: string;
+    discountIrR: string;
+  };
+  expect(equipmentQuote).toMatchObject({ totalIrR: '378325', discountIrR: '30000' });
+  const equipmentResult = await request(`${path}/change`, 'POST', {
+    ...equipmentChange,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: equipmentQuote.reviewDigest,
+  });
+  expect(equipmentResult.status, http.logs()).toBe(201);
+  const persisted = await http.pool.query<{
+    hardware_product_id: string;
+    installation_address_id: string;
+    total_amount: string;
+    versions: string;
+    revisions: string;
+    invoices: string;
+    old_reserved: number;
+    new_reserved: number;
+  }>(
+    `SELECT s.hardware_product_id,s.installation_address_id,i.total_amount::text,
+      (SELECT COUNT(*)::text FROM contract_versions WHERE contract_id=$2) AS versions,
+      (SELECT COUNT(*)::text FROM saving_order_revisions WHERE order_id=s.id) AS revisions,
+      (SELECT COUNT(*)::text FROM invoices WHERE order_id=s.order_id) AS invoices,
+      (SELECT reserved_count FROM products WHERE id=$3) AS old_reserved,
+      (SELECT reserved_count FROM products WHERE id=$4) AS new_reserved
+     FROM saving_orders s JOIN invoices i ON i.order_id=s.order_id WHERE s.id=$1`,
+    [order.savingOrderId, order.contractId, firstHardwareId, alternateId]
+  );
+  expect(persisted.rows[0]).toMatchObject({
+    hardware_product_id: alternateId,
+    installation_address_id: secondAddress,
+    total_amount: '378325',
+    versions: '3',
+    revisions: '2',
+    invoices: '1',
+    old_reserved: 0,
+    new_reserved: 1,
+  });
+  await expect(
+    http.pool.query("UPDATE saving_order_revisions SET request_hash='tampered' WHERE order_id=$1", [
+      order.savingOrderId,
+    ])
+  ).rejects.toMatchObject({ code: '23514' });
+  const detailAfter = await request(path, 'GET');
+  expect(await detailAfter.json()).toMatchObject({
+    can_edit: true,
+    invoice_id: order.invoiceId,
+    pricing_snapshot: { totalIrR: '378325', discountIrR: '30000' },
+    address_snapshot: { full_address: 'Second installation address' },
+  });
+  const staffDetail = await request(
+    `/api/staff/saving/orders/${order.savingOrderId}`,
+    'GET',
+    undefined,
+    staffHeaders
+  );
+  expect(staffDetail.status, http.logs()).toBe(200);
+  const currentVersion = ((await staffDetail.json()) as { versionId: string }).versionId;
+  const approval = await request(
+    `/api/staff/saving/orders/${order.savingOrderId}/approve`,
+    'POST',
+    { idempotencyKey: randomUUID(), expectedVersionId: currentVersion },
+    staffHeaders
+  );
+  expect(approval.status, http.logs()).toBe(200);
+  expect((await request(`${path}/change-quote`, 'POST', addressChange)).status).toBe(409);
+  expect(await (await request(path, 'GET')).json()).toMatchObject({ can_edit: false });
+}, 60000);

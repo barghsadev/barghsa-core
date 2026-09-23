@@ -35,6 +35,40 @@ export interface SavingSubmissionInput extends SavingOrderInput {
   hardwareConfirmed: true;
   submitForStaffReview: true;
 }
+export interface SavingChangeInput {
+  hardwareProductId: string;
+  installationAddressId: string;
+}
+export interface SavingChangeSubmissionInput extends SavingChangeInput {
+  idempotencyKey: string;
+  expectedQuoteDigest: string;
+}
+interface ChangeContext {
+  id: string;
+  order_id: string;
+  profile_id: string;
+  saving_plan_id: string;
+  hardware_product_id: string;
+  installation_address_id: string;
+  bill_identifier: string;
+  agreement_version_id: string;
+  status: string;
+  financial_status: string;
+  pricing_snapshot: unknown;
+  address_snapshot: unknown;
+  agreement_snapshot: string;
+  gift_code_id: string | null;
+  gift_discount_amount: string;
+  invoice_id: string;
+  invoice_state: string;
+  paid_amount: string;
+  refunded_amount: string;
+  contract_id: string;
+  contract_state: string;
+  current_version_id: string;
+  version_number: number;
+  blocked: boolean;
+}
 interface ProductRow {
   id: string;
   title: { fa: string; en: string };
@@ -165,7 +199,12 @@ export class SavingOrderService {
     };
   }
 
-  private async quoteInTransaction(client: PoolClient, input: SavingOrderInput, now: Date) {
+  private async quoteInTransaction(
+    client: PoolClient,
+    input: SavingOrderInput,
+    now: Date,
+    existing?: { discount: bigint; giftCodeId: string | null; versionId: string }
+  ) {
     const products = (
       await client.query<ProductRow>(
         `SELECT id,title,effective_product_price(id)::text AS price,status
@@ -199,7 +238,7 @@ export class SavingOrderService {
         [input.agreementVersionId, input.savingPlanId]
       )
     ).rows[0];
-    if (!agreement || agreement.status !== 'active')
+    if (!agreement || (!existing && agreement.status !== 'active'))
       throw new ConflictException('Saving agreement changed; review it again');
     const address = (
       await client.query<AddressRow>(
@@ -251,7 +290,11 @@ export class SavingOrderService {
       },
     ];
     const subtotal = lines[0].amountIrR + lines[1].amountIrR;
-    const gift = await this.giftDiscount(client, input, subtotal, now);
+    const gift = existing
+      ? { id: existing.giftCodeId, amount: existing.discount }
+      : await this.giftDiscount(client, input, subtotal, now);
+    if (gift.amount > subtotal)
+      throw new ConflictException('The existing gift discount exceeds the new subtotal');
     const totals = calculateSavingTotals(lines, gift.amount);
     const publicQuote = {
       plan: { id: plan.id, title: plan.title },
@@ -274,6 +317,7 @@ export class SavingOrderService {
       vatIrR: totals.vatIrR.toString(),
       totalIrR: totals.totalIrR.toString(),
       giftCodeId: gift.id,
+      ...(existing ? { baseVersionId: existing.versionId } : {}),
     };
     return {
       quote: {
@@ -407,14 +451,25 @@ export class SavingOrderService {
           contract_id: string;
           contract_version_id: string;
           contract_state: string;
+          cancellation_pending: boolean;
+          can_edit: boolean;
         }>(
           `SELECT s.id,s.profile_id,s.order_id,s.status,s.bill_identifier,s.address_snapshot,
+                s.saving_plan_id,s.hardware_product_id,s.installation_address_id,
                 s.pricing_snapshot,s.verification_result,s.agreement_version_id,s.agreement_snapshot,
                 s.submitted_at,s.financial_status,i.id AS invoice_id,i.state AS invoice_state,
                 c.id AS contract_id,c.current_version_id AS contract_version_id,
                 c.state AS contract_state,
                 EXISTS(SELECT 1 FROM contract_cancellation_requests r
-                  WHERE r.contract_id=c.id AND r.status='Pending') AS cancellation_pending
+                  WHERE r.contract_id=c.id AND r.status='Pending') AS cancellation_pending,
+                (s.status='awaiting_staff_review' AND s.financial_status='unpaid'
+                  AND i.state='Unpaid' AND i.paid_amount=0 AND i.refunded_amount=0
+                  AND c.state='AwaitingStaffReview'
+                  AND NOT EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id)
+                  AND NOT EXISTS(SELECT 1 FROM contract_cancellation_requests r WHERE r.contract_id=c.id AND r.status='Pending')
+                  AND NOT EXISTS(SELECT 1 FROM bank_receipts b WHERE b.invoice_id=i.id)
+                  AND NOT EXISTS(SELECT 1 FROM saving_fulfillment_stages f WHERE f.order_id=s.id AND f.status<>'pending')
+                ) AS can_edit
            FROM saving_orders s
            LEFT JOIN invoices i ON i.order_id=s.order_id AND i.type='auto'
            LEFT JOIN contracts c ON c.order_id=s.order_id AND c.service_type='savings'
@@ -439,6 +494,325 @@ export class SavingOrderService {
       return { ...row, stages };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  private async changeContext(
+    client: PoolClient,
+    actor: Actor,
+    savingOrderId: string,
+    lock: boolean
+  ): Promise<ChangeContext> {
+    const row = (
+      await client.query<ChangeContext>(
+        `SELECT s.id,s.order_id,s.profile_id,s.saving_plan_id,s.hardware_product_id,
+                s.installation_address_id,s.bill_identifier,s.agreement_version_id,
+                s.status,s.financial_status,s.pricing_snapshot,s.address_snapshot,s.agreement_snapshot,
+                o.gift_code_id,COALESCE(o.gift_discount_amount,0)::text AS gift_discount_amount,
+                i.id AS invoice_id,i.state AS invoice_state,i.paid_amount::text,i.refunded_amount::text,
+                c.id AS contract_id,c.state AS contract_state,c.current_version_id,
+                v.version_number,
+                (EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id)
+                  OR EXISTS(SELECT 1 FROM contract_cancellation_requests r WHERE r.contract_id=c.id AND r.status='Pending')
+                  OR EXISTS(SELECT 1 FROM bank_receipts b WHERE b.invoice_id=i.id)
+                  OR EXISTS(SELECT 1 FROM saving_fulfillment_stages f WHERE f.order_id=s.id AND f.status<>'pending')) AS blocked
+           FROM saving_orders s
+           JOIN orders o ON o.id=s.order_id
+           JOIN invoices i ON i.order_id=o.id AND i.type='auto'
+             AND i.replaces_invoice_id IS NULL AND i.adjustment_for_invoice_id IS NULL
+           JOIN contracts c ON c.order_id=o.id AND c.service_type='savings'
+           JOIN contract_versions v ON v.id=c.current_version_id
+          WHERE s.id=$1 ${lock ? 'FOR UPDATE OF s,i,c NOWAIT' : ''}`,
+        [savingOrderId]
+      )
+    ).rows[0];
+    if (!row || !(await this.orders.mayManageOrders(client, actor.userId, row.profile_id, true)))
+      throw new NotFoundException('Saving order not found');
+    if (
+      row.status !== 'awaiting_staff_review' ||
+      row.financial_status !== 'unpaid' ||
+      row.invoice_state !== 'Unpaid' ||
+      BigInt(row.paid_amount) !== 0n ||
+      BigInt(row.refunded_amount) !== 0n ||
+      row.contract_state !== 'AwaitingStaffReview' ||
+      row.blocked
+    )
+      throw new ConflictException('This order can no longer be changed by the customer');
+    return row;
+  }
+
+  private async changedQuote(client: PoolClient, context: ChangeContext, input: SavingChangeInput) {
+    if (
+      context.hardware_product_id === input.hardwareProductId &&
+      context.installation_address_id === input.installationAddressId
+    )
+      throw new BadRequestException('Choose a different device or installation address');
+    return this.quoteInTransaction(
+      client,
+      {
+        profileId: context.profile_id,
+        savingPlanId: context.saving_plan_id,
+        hardwareProductId: input.hardwareProductId,
+        billIdentifier: context.bill_identifier,
+        installationAddressId: input.installationAddressId,
+        agreementVersionId: context.agreement_version_id,
+      },
+      new Date(),
+      {
+        discount: BigInt(context.gift_discount_amount),
+        giftCodeId: context.gift_code_id,
+        versionId: context.current_version_id,
+      }
+    );
+  }
+
+  async quoteChange(actor: Actor, savingOrderId: string, input: SavingChangeInput) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      const context = await this.changeContext(client, actor, savingOrderId, false);
+      const { quote } = await this.changedQuote(client, context, input);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return quote;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async change(
+    actor: Actor,
+    savingOrderId: string,
+    input: SavingChangeSubmissionInput,
+    ip = 'unknown'
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      const requestHash = createHash('sha256')
+        .update(JSON.stringify({ savingOrderId, ...input }))
+        .digest('hex');
+      const previous = (
+        await client.query<{ request_hash: string; response: unknown; profile_id: string }>(
+          `SELECT r.request_hash,r.response,s.profile_id FROM saving_order_revisions r
+           JOIN saving_orders s ON s.id=r.order_id
+           WHERE r.user_id=$1 AND r.idempotency_key=$2`,
+          [actor.userId, input.idempotencyKey]
+        )
+      ).rows[0];
+      if (previous) {
+        if (!(await this.orders.mayManageOrders(client, actor.userId, previous.profile_id, true)))
+          throw new NotFoundException('Saving order not found');
+        if (previous.request_hash !== requestHash)
+          throw new ConflictException('Idempotency key was used for another change');
+        await requireCurrentSession(client, actor);
+        await client.query('COMMIT');
+        return previous.response;
+      }
+      // Payment paths lock the invoice before syncing saving order state.
+      // Take that lock first and fail promptly when a payment is in flight.
+      const target = (
+        await client.query<{ profile_id: string }>(
+          'SELECT profile_id FROM saving_orders WHERE id=$1',
+          [savingOrderId]
+        )
+      ).rows[0];
+      if (
+        !target ||
+        !(await this.orders.mayManageOrders(client, actor.userId, target.profile_id, true))
+      )
+        throw new NotFoundException('Saving order not found');
+      await client.query(
+        `SELECT i.id FROM saving_orders s JOIN invoices i ON i.order_id=s.order_id
+           AND i.type='auto' AND i.replaces_invoice_id IS NULL
+           AND i.adjustment_for_invoice_id IS NULL
+         WHERE s.id=$1 FOR UPDATE OF i NOWAIT`,
+        [savingOrderId]
+      );
+      const context = await this.changeContext(client, actor, savingOrderId, true);
+      await client.query('SELECT id FROM products WHERE id=$1 FOR UPDATE', [
+        context.saving_plan_id,
+      ]);
+      await client.query('SELECT id FROM products WHERE id IN ($1,$2) ORDER BY id FOR UPDATE', [
+        context.hardware_product_id,
+        input.hardwareProductId,
+      ]);
+      const { quote, totals, agreement, address } = await this.changedQuote(client, context, input);
+      if (quote.reviewDigest !== input.expectedQuoteDigest)
+        throw new ConflictException('Saving quote changed; review the current price and address');
+      const versionId = uuidv7();
+      const prior = {
+        hardwareProductId: context.hardware_product_id,
+        installationAddressId: context.installation_address_id,
+        address: context.address_snapshot,
+        quote: context.pricing_snapshot,
+        contractVersionId: context.current_version_id,
+      };
+      await client.query(
+        `UPDATE orders SET snapshot_province_id=$2,snapshot_city_id=$3,
+           snapshot_full_address=$4,snapshot_postal_code=$5 WHERE id=$1`,
+        [
+          context.order_id,
+          address.province_id,
+          address.city_id,
+          address.full_address,
+          address.postal_code,
+        ]
+      );
+      await client.query(
+        `UPDATE saving_orders SET hardware_product_id=$2,installation_address_id=$3,
+           address_snapshot=$4::jsonb,pricing_snapshot=$5::jsonb WHERE id=$1`,
+        [
+          savingOrderId,
+          input.hardwareProductId,
+          input.installationAddressId,
+          JSON.stringify(address),
+          JSON.stringify(quote),
+        ]
+      );
+      for (const line of [
+        ['plan_price', quote.plan.title.fa, totals.lines[0]!.amountIrR],
+        ['hardware_price', quote.hardware.title.fa, totals.lines[1]!.amountIrR],
+        ['discount', 'تخفیف', -totals.discountIrR],
+        ['vat', 'مالیات بر ارزش افزوده', totals.vatIrR],
+      ] as const) {
+        const updated = await client.query(
+          'UPDATE saving_order_lines SET description=$3,amount=$4 WHERE order_id=$1 AND type=$2',
+          [savingOrderId, line[0], line[1], line[2].toString()]
+        );
+        if (updated.rowCount !== 1)
+          throw new ConflictException('Saving order lines are incomplete');
+      }
+      await client.query(
+        `UPDATE invoices SET total_amount=$2,invoice_calculation_snapshot=$3::jsonb WHERE id=$1`,
+        [context.invoice_id, totals.totalIrR.toString(), JSON.stringify(quote)]
+      );
+      await client.query('DELETE FROM invoice_lines WHERE invoice_id=$1', [context.invoice_id]);
+      await client.query('DELETE FROM invoice_items WHERE invoice_id=$1', [context.invoice_id]);
+      for (const [index, line] of totals.lines.entries()) {
+        await client.query(
+          `INSERT INTO invoice_lines(id,invoice_id,description,quantity,unit_price,line_total,
+             vat_rate,vat_amount,is_taxable,position)
+           VALUES($1,$2,$3,1,$4,$5,$6,$7,$8,$9)`,
+          [
+            uuidv7(),
+            context.invoice_id,
+            line.title.fa,
+            line.amountIrR.toString(),
+            line.netIrR.toString(),
+            line.vatRateBps,
+            line.vatIrR.toString(),
+            line.vatRateBps > 0,
+            index,
+          ]
+        );
+        await client.query(
+          `INSERT INTO invoice_items(id,invoice_id,product_id,product_title,quantity,unit_price,vat_rate)
+           VALUES($1,$2,$3,$4::jsonb,1,$5,$6)`,
+          [
+            uuidv7(),
+            context.invoice_id,
+            line.productId,
+            JSON.stringify(line.title),
+            line.amountIrR.toString(),
+            line.vatRateBps,
+          ]
+        );
+      }
+      await client.query("UPDATE contracts SET state='ChangesRequested' WHERE id=$1", [
+        context.contract_id,
+      ]);
+      await client.query(
+        `INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by)
+         VALUES($1,$2,$3,$4::jsonb,'Customer changed equipment or installation address',$5)`,
+        [
+          versionId,
+          context.contract_id,
+          context.version_number + 1,
+          JSON.stringify({
+            savingOrderId,
+            quote,
+            agreement: { versionId: agreement.id, title: agreement.title, body: agreement.body },
+            address,
+          }),
+          actor.userId,
+        ]
+      );
+      const requirement = (
+        await client.query<{ initial_invoice_id: string | null }>(
+          'SELECT initial_invoice_id FROM contract_activation_requirements WHERE version_id=$1',
+          [versionId]
+        )
+      ).rows[0];
+      if (requirement?.initial_invoice_id !== context.invoice_id)
+        throw new ConflictException('Contract invoice binding changed');
+      await client.query(
+        "UPDATE contracts SET current_version_id=$2,state='AwaitingStaffReview' WHERE id=$1",
+        [context.contract_id, versionId]
+      );
+      const response = {
+        savingOrderId,
+        contractVersionId: versionId,
+        invoiceId: context.invoice_id,
+        ...quote,
+      };
+      await client.query(
+        `INSERT INTO saving_order_revisions(id,order_id,user_id,idempotency_key,request_hash,
+          previous_version_id,version_id,previous_snapshot,response)
+         VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9::jsonb)`,
+        [
+          uuidv7(),
+          savingOrderId,
+          actor.userId,
+          input.idempotencyKey,
+          requestHash,
+          context.current_version_id,
+          versionId,
+          JSON.stringify(prior),
+          JSON.stringify(response),
+        ]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+         VALUES($1,$2,'saving.order.changed',$3::jsonb,$4,$5)`,
+        [
+          uuidv7(),
+          actor.userId,
+          JSON.stringify({
+            savingOrderId,
+            invoiceId: context.invoice_id,
+            from: prior,
+            to: {
+              hardwareProductId: input.hardwareProductId,
+              installationAddressId: input.installationAddressId,
+              quote,
+              contractVersionId: versionId,
+            },
+          }),
+          uuidv7(),
+          ip,
+        ]
+      );
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return response;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      if ((error as { code?: string }).code === '55P03')
+        throw new ConflictException('Saving order is being changed; retry with a new quote');
+      if (
+        (error as { code?: string; message?: string }).code === '23514' &&
+        (error as Error).message.includes('Saving hardware is out of stock')
+      )
+        throw new ConflictException('Selected saving hardware is out of stock');
       throw error;
     } finally {
       client.release();
