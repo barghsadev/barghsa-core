@@ -637,6 +637,18 @@ describe('CustomerInvoiceDetailsService', () => {
     const listSql = mockPool.query.mock.calls[1]![0] as string;
     expect(listSql).toContain(CUSTOMER_VISIBLE_STATE_SQL);
   });
+
+  it('uses the dashboard payable-invoice rule for the unpaid view', async () => {
+    mockPool.query.mockResolvedValueOnce({ rows: [{ id: PROFILE_ID }] }).mockResolvedValueOnce({
+      rows: [row({ id: ORIGINAL_ID, state: 'Unpaid' })],
+    });
+    const list = await service.listForUser(USER_ID, undefined, true);
+    expect(list.invoices).toHaveLength(1);
+    const [sql, params] = mockPool.query.mock.calls[1]! as [string, unknown[]];
+    expect(sql).toContain("state IN ('Unpaid', 'Overdue')");
+    expect(sql).toContain("adjustment_kind IS DISTINCT FROM 'credit'");
+    expect(params).toEqual([PROFILE_ID, true]);
+  });
 });
 
 describe('legacy invoice data and incomplete correction histories', () => {

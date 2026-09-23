@@ -14513,6 +14513,17 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "enum": [
+                "Active"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -17799,7 +17810,19 @@
       "get": {
         "description": "Returns non-draft invoices on the caller's active profile, newest first.",
         "operationId": "CustomerInvoiceController_list",
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "enum": [
+                "unpaid"
+              ],
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Invoice list for the active profile."

@@ -49,6 +49,7 @@ describe('DashboardService quick status', () => {
 
     const contractQuery = queryFor('FROM contracts');
     expect(contractQuery?.[0]).toContain("state='Active'");
+    expect(contractQuery?.[0]).toContain('FROM contract_publications p');
     expect(contractQuery?.[1]).toEqual(['profile-1']);
     const orderQuery = queryFor(') pending');
     expect(orderQuery?.[0]).toContain('UNION');

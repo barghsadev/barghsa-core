@@ -168,6 +168,16 @@ function api(current = detail()) {
     });
   });
 }
+it('opens the customer contract list with the active-state filter', async () => {
+  const fetcher = api();
+  vi.stubGlobal('fetch', fetcher);
+  await render(<ContractsPage activeOnly />);
+  expect(
+    fetcher.mock.calls.some(
+      ([raw]) => new URL(raw, 'https://app.test').searchParams.get('state') === 'Active'
+    )
+  ).toBe(true);
+});
 it.each(['en', 'fa'] as const)(
   'renders published terms and exact acceptance in %s',
   async (locale) => {

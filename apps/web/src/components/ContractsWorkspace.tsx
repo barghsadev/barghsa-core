@@ -1,6 +1,7 @@
 import { ContractRefundQueue } from './ContractRefundQueue.js';
 import { ContractCancellationRequestQueue } from './ContractCancellationRequestQueue.js';
 import { useEffect, useState, type FormEvent } from 'react';
+import { Link } from '@tanstack/react-router';
 import {
   Alert,
   AlertDescription,
@@ -25,15 +26,33 @@ import { ContractActivationRules } from './ContractActivationRules.js';
 import { ContractDetail } from './ContractDetail.js';
 import { ContractDraftEditor } from './ContractDraftEditor.js';
 
-export function ContractsWorkspace({ staff = false }: { staff?: boolean }) {
+export function ContractsWorkspace({
+  staff = false,
+  initialState,
+}: {
+  staff?: boolean;
+  initialState?: 'Active' | undefined;
+}) {
   const revision = useProfileContextRevision();
-  return <Workspace key={`${staff}:${revision}`} staff={staff} />;
+  return (
+    <Workspace
+      key={`${staff}:${revision}:${initialState ?? 'all'}`}
+      staff={staff}
+      initialState={initialState}
+    />
+  );
 }
-function Workspace({ staff }: { staff: boolean }) {
+function Workspace({
+  staff,
+  initialState,
+}: {
+  staff: boolean;
+  initialState?: 'Active' | undefined;
+}) {
   const locale = useLocale();
   const word = (key: string) => contractText(key, locale);
   const [filters, setFilters] = useState({ profileId: '', state: '', serviceType: '' });
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialState ? 'state=Active' : '');
   const [generation, setGeneration] = useState(0);
   const [invalid, setInvalid] = useState(false);
   const [createdId, setCreatedId] = useState<string | null>(null);
@@ -59,6 +78,26 @@ function Workspace({ staff }: { staff: boolean }) {
         title={word(staff ? 'staffTitle' : 'title')}
         description={word(staff ? 'staffDescription' : 'description')}
       />
+      {!staff ? (
+        <nav className="flex gap-4 text-sm" aria-label={word('title')}>
+          <Link
+            to="/contracts"
+            search={{ state: undefined }}
+            className="text-primary underline underline-offset-4"
+            aria-current={initialState ? undefined : 'page'}
+          >
+            {word('all')}
+          </Link>
+          <Link
+            to="/contracts"
+            search={{ state: 'Active' }}
+            className="text-primary underline underline-offset-4"
+            aria-current={initialState ? 'page' : undefined}
+          >
+            {word('Active')}
+          </Link>
+        </nav>
+      ) : null}
       {staff ? (
         <form onSubmit={apply} className="flex flex-col gap-4 rounded-xl border bg-card p-5">
           <FieldGroup className="grid gap-4 sm:grid-cols-3">

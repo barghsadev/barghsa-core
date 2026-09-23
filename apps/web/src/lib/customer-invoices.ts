@@ -129,8 +129,8 @@ export async function fetchInvoiceDetails(invoiceId: string): Promise<CustomerIn
   return readJson<CustomerInvoiceDetails>(res);
 }
 
-export async function fetchInvoiceList(): Promise<CustomerInvoiceList> {
-  const res = await fetch('/api/invoices', {
+export async function fetchInvoiceList(unpaidOnly = false): Promise<CustomerInvoiceList> {
+  const res = await fetch(unpaidOnly ? '/api/invoices?status=unpaid' : '/api/invoices', {
     credentials: 'include',
     headers: { Accept: 'application/json' },
   });

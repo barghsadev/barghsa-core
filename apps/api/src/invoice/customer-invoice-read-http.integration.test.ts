@@ -152,6 +152,16 @@ it('isolates profiles and excludes draft corrections while showing linked charge
     explanation: 'Usage credit',
     accountingAmount: '-100',
   });
+  const unpaid = await fetch(`${http.base}/api/invoices?status=unpaid`, { headers: f.headers });
+  expect(unpaid.status, http.logs()).toBe(200);
+  expect(
+    ((await unpaid.json()) as { invoices: Array<{ invoiceId: string }> }).invoices
+      .map((invoice) => invoice.invoiceId)
+      .sort()
+  ).toEqual([f.invoice, charge].sort());
+  expect(
+    (await fetch(`${http.base}/api/invoices?status=paid`, { headers: f.headers })).status
+  ).toBe(400);
   expect((await read(f, true, draft)).status).toBe(404);
 });
 it('permits current Finance agents and denies removed membership, stale Owner, archived profiles and activation-pending accounts', async () => {

@@ -18,7 +18,7 @@ import {
  * Lists the active profile's invoices so the customer can open a details
  * page that shows the original plus linked corrections/replacements.
  */
-export function InvoicesPage() {
+export function InvoicesPage({ unpaidOnly = false }: { unpaidOnly?: boolean }) {
   const time = useAccountTime();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -28,7 +28,7 @@ export function InvoicesPage() {
 
   useEffect(() => {
     let cancelled = false;
-    fetchInvoiceList()
+    fetchInvoiceList(unpaidOnly)
       .then((page) => {
         if (!cancelled) setItems(page.invoices);
       })
@@ -38,7 +38,7 @@ export function InvoicesPage() {
     return () => {
       cancelled = true;
     };
-  }, [locale]);
+  }, [locale, unpaidOnly]);
 
   return (
     <div className="mx-auto max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -50,6 +50,24 @@ export function InvoicesPage() {
           <p className="mt-1 text-sm text-muted-foreground">{t('invoices.description', locale)}</p>
         </div>
       </header>
+      <nav className="flex gap-4 text-sm" aria-label={t('invoices.title', locale)}>
+        <Link
+          to="/invoices"
+          search={{ status: undefined }}
+          className="text-primary underline underline-offset-4"
+          aria-current={unpaidOnly ? undefined : 'page'}
+        >
+          {t('invoices.filter.all', locale)}
+        </Link>
+        <Link
+          to="/invoices"
+          search={{ status: 'unpaid' }}
+          className="text-primary underline underline-offset-4"
+          aria-current={unpaidOnly ? 'page' : undefined}
+        >
+          {t('invoices.filter.unpaid', locale)}
+        </Link>
+      </nav>
 
       {error ? (
         <p className="text-destructive" role="alert">
@@ -62,7 +80,7 @@ export function InvoicesPage() {
         </p>
       ) : items.length === 0 ? (
         <p className="rounded-lg border border-dashed border-input bg-card text-card-foreground p-8 text-center text-sm text-muted-foreground">
-          {t('invoices.empty', locale)}
+          {t(unpaidOnly ? 'invoices.filter.unpaidEmpty' : 'invoices.empty', locale)}
         </p>
       ) : (
         <ul className="space-y-3">

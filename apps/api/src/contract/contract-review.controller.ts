@@ -115,10 +115,16 @@ export class CustomerContractController {
     type: String,
     description: 'Exclusive contract UUID cursor; at most 100 records.',
   })
-  list(@Req() req: AuthenticatedRequest, @Query('before') before?: string) {
+  @ApiQuery({ name: 'state', required: false, enum: ['Active'] })
+  list(
+    @Req() req: AuthenticatedRequest,
+    @Query('before') before?: string,
+    @Query('state') state?: string
+  ) {
     return this.service.list(
       req.session,
-      before === undefined ? undefined : parse(contractUuid, before)
+      before === undefined ? undefined : parse(contractUuid, before),
+      parse(z.literal('Active').optional(), state)
     );
   }
   @Get(':id')

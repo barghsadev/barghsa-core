@@ -125,7 +125,7 @@ export class ContractReviewService {
       )
     );
   }
-  async list(actor: ContractActor, before?: string) {
+  async list(actor: ContractActor, before?: string, state?: 'Active') {
     return customerContractAccess(actor, false, async (client, profileId) => {
       const rows = (
         await client.query<{
@@ -141,8 +141,9 @@ export class ContractReviewService {
       FROM contracts c JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
       LEFT JOIN contract_acceptances a ON a.version_id=v.id
       WHERE c.profile_id=$1 AND ($2::uuid IS NULL OR c.id<$2)
+        AND (NOT $3::boolean OR c.state='Active')
       ORDER BY c.id DESC,v.version_number DESC LIMIT 101`,
-          [profileId, before ?? null]
+          [profileId, before ?? null, state === 'Active']
         )
       ).rows;
       return {

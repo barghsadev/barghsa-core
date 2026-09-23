@@ -67,8 +67,16 @@ describe('CustomerInvoiceController (T-04.1.05.04)', () => {
   it('lists invoices for the authenticated user', async () => {
     const { controller, service } = makeController();
     const result = await controller.list(req);
-    expect(service.listForUser).toHaveBeenCalledWith('user-1', req.session);
+    expect(service.listForUser).toHaveBeenCalledWith('user-1', req.session, false);
     expect(result.invoices).toHaveLength(1);
+  });
+
+  it('validates and forwards the unpaid-only invoice filter', async () => {
+    const { controller, service } = makeController();
+    await controller.list(req, 'unpaid');
+    expect(service.listForUser).toHaveBeenCalledWith('user-1', req.session, true);
+    await expect(controller.list(req, 'paid')).rejects.toMatchObject({ status: 400 });
+    expect(service.listForUser).toHaveBeenCalledTimes(1);
   });
 });
 

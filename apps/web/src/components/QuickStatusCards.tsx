@@ -32,6 +32,7 @@ export function QuickStatusCards({
       icon: FileCheck2,
       label: 'dashboard.overview.contractStatus',
       href: '/contracts',
+      search: { state: 'Active' },
       count: activeContracts,
     },
     {
@@ -52,6 +53,7 @@ export function QuickStatusCards({
       icon: ReceiptText,
       label: 'dashboard.overview.pendingInvoices',
       href: '/invoices',
+      search: { status: 'unpaid' },
       count: unpaidInvoices,
     },
   ];
@@ -60,7 +62,7 @@ export function QuickStatusCards({
       className="grid h-full grid-cols-1 gap-4 sm:grid-cols-2"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      {cards.map(({ key, icon: Icon, label, href, count }) => {
+      {cards.map(({ key, icon: Icon, label, href, search, count }) => {
         const content = (
           <>
             <div className="flex items-center justify-between gap-3">
@@ -94,7 +96,7 @@ export function QuickStatusCards({
         const className =
           'group flex flex-col gap-5 rounded-xl border bg-card p-5 text-card-foreground shadow-sm transition-shadow hover:border-input hover:shadow-md';
         return href ? (
-          <Link key={key} to={href} className={className}>
+          <Link key={key} to={href} search={search} className={className}>
             {content}
           </Link>
         ) : (

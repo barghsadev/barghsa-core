@@ -21,10 +21,18 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -90,10 +98,16 @@ export class CustomerInvoiceController {
     description: "Returns non-draft invoices on the caller's active profile, newest first.",
   })
   @ApiResponse({ status: 200, description: 'Invoice list for the active profile.' })
+  @ApiQuery({ name: 'status', required: false, enum: ['unpaid'] })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'No active profile' })
-  async list(@Req() req: AuthenticatedRequest): Promise<CustomerInvoiceListDto> {
-    return this.service.listForUser(req.session.userId, req.session);
+  async list(
+    @Req() req: AuthenticatedRequest,
+    @Query('status') status?: string
+  ): Promise<CustomerInvoiceListDto> {
+    if (status !== undefined && status !== 'unpaid')
+      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid invoice status filter');
+    return this.service.listForUser(req.session.userId, req.session, status === 'unpaid');
   }
 
   @Get(':invoiceId')

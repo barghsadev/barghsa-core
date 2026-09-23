@@ -30,6 +30,7 @@ import { activeProfileSql } from '../profiles/profile-context.js';
 import { HttpException, Injectable } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { UNPAID_CUSTOMER_INVOICE_PREDICATE } from '@barghsa/shared/finance';
 import {
   isAdjustmentKind,
   readDueAtOverrideSnapshot,
@@ -416,12 +417,18 @@ export class CustomerInvoiceDetailsService {
     return result.rows[0]?.id ?? null;
   }
 
-  async listForUser(userId: string, actor?: InvoiceReadActor): Promise<CustomerInvoiceListDto> {
+  async listForUser(
+    userId: string,
+    actor?: InvoiceReadActor,
+    unpaidOnly = false
+  ): Promise<CustomerInvoiceListDto> {
     return this.authorizedRead(userId, actor, async (profileId, client) => {
       const result = await client.query<InvoiceFamilyRow>(
         `SELECT ${INVOICE_SELECT} FROM invoices WHERE profile_id = $1
-         AND ${CUSTOMER_VISIBLE_STATE_SQL} ORDER BY created_at DESC`,
-        [profileId]
+         AND ${CUSTOMER_VISIBLE_STATE_SQL}
+         AND (NOT $2::boolean OR (${UNPAID_CUSTOMER_INVOICE_PREDICATE}))
+         ORDER BY created_at DESC`,
+        [profileId, unpaidOnly]
       );
       return { invoices: result.rows.map(toListItem) };
     });

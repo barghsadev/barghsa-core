@@ -123,7 +123,8 @@ export class DashboardService {
       allowed('contracts:view')
         ? pool.query<{ cnt: number }>(
             `SELECT COUNT(*)::int AS cnt FROM contracts
-             WHERE profile_id=$1 AND state='Active'`,
+             WHERE profile_id=$1 AND state='Active'
+               AND EXISTS (SELECT 1 FROM contract_publications p WHERE p.contract_id=contracts.id)`,
             [profileId]
           )
         : Promise.resolve({ rows: [{ cnt: 0 }] }),

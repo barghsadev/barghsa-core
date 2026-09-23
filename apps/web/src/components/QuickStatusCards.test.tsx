@@ -13,10 +13,19 @@ vi.mock('@tanstack/react-router', () => ({
   }: {
     children: ReactNode;
     to: string;
-    search?: { status?: string };
+    search?: { status?: string; state?: string };
     className?: string;
   }) => (
-    <a href={search?.status ? `${to}?status=${search.status}` : to} className={className}>
+    <a
+      href={
+        search?.status
+          ? `${to}?status=${search.status}`
+          : search?.state
+            ? `${to}?state=${search.state}`
+            : to
+      }
+      className={className}
+    >
       {children}
     </a>
   ),
@@ -57,11 +66,11 @@ it.each(['en', 'fa'] as const)(
     const container = await renderCards(locale);
     const paths = [...container.querySelectorAll('a')].map((link) => link.getAttribute('href'));
     expect(paths).toEqual([
-      '/contracts',
+      '/contracts?state=Active',
       '/electricity/orders?status=pending',
       '/savings/orders?status=pending',
       '/tickets',
-      '/invoices',
+      '/invoices?status=unpaid',
     ]);
     expect(container.querySelector('[dir]')?.getAttribute('dir')).toBe(
       locale === 'fa' ? 'rtl' : 'ltr'

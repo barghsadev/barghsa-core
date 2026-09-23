@@ -44,7 +44,7 @@ async function send(path: string, method = 'GET', body?: unknown, user = 'review
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
 }
-async function fixture() {
+async function fixture(serviceType: 'electricity' | 'savings' = 'electricity') {
   const owner = await login(randomUUID()),
     profile = randomUUID();
   await http.pool.query(
@@ -53,7 +53,7 @@ async function fixture() {
   );
   const response = await send('admin/contracts', 'POST', {
     profileId: profile,
-    serviceType: 'electricity',
+    serviceType,
     content: { price: '9007199254740993' },
     changeDescription: 'Initial',
     idempotencyKey: randomUUID(),
@@ -71,6 +71,26 @@ async function publish(f: Awaited<ReturnType<typeof fixture>>) {
 async function customer(f: Awaited<ReturnType<typeof fixture>>, suffix = '', user = f.owner) {
   return send('contracts/' + f.row.id + suffix, 'GET', undefined, user);
 }
+it('lists an activated contract in the active-only customer view', async () => {
+  const f = await fixture('savings');
+  await publish(f);
+  const accepted = await send(
+    'contracts/' + f.row.id + '/accept',
+    'POST',
+    command(f.row.currentVersionId),
+    f.owner
+  );
+  expect(accepted.status).toBe(200);
+  await http.pool.query('INSERT INTO contract_activations(contract_id,version_id) VALUES($1,$2)', [
+    f.row.id,
+    f.row.currentVersionId,
+  ]);
+  const response = await send('contracts?state=Active', 'GET', undefined, f.owner);
+  expect(response.status).toBe(200);
+  expect(
+    ((await response.json()) as { contracts: Array<{ id: string }> }).contracts.map((row) => row.id)
+  ).toContain(f.row.id);
+});
 it('keeps drafts private and publishes only the exact reviewed version', async () => {
   const f = await fixture();
   expect((await customer(f)).status).toBe(404);
@@ -98,6 +118,10 @@ it('keeps drafts private and publishes only the exact reviewed version', async (
     contracts: Array<{ id: string }>;
   };
   expect(list.contracts.map((r) => r.id)).toEqual([f.row.id]);
+  const activeList = await send('contracts?state=Active', 'GET', undefined, f.owner);
+  expect(activeList.status).toBe(200);
+  expect(await activeList.json()).toEqual({ contracts: [], nextBefore: null });
+  expect((await send('contracts?state=Draft', 'GET', undefined, f.owner)).status).toBe(400);
   expect(
     (
       await send('admin/contracts/' + f.row.id, 'PATCH', {

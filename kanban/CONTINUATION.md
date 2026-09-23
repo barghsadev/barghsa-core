@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Dashboard contract and invoice filters](batches/2026-09-24-dashboard-contract-invoice-filters.md) makes the active-contract and unpaid-invoice cards open matching profile-scoped lists. The open-ticket card still needs a matching list scope and status aggregate.
+
 [Dashboard pending-order lists](batches/2026-09-24-dashboard-filtered-orders.md) completes filtered navigation from the dashboard count to electricity and saving orders. Both APIs filter before pagination, and both customer pages support the pending view in Persian and English.
 
 [Customer dashboard live status](batches/2026-09-24-dashboard-live-status.md) replaces stale legacy counts with current contract, electricity and saving workflow states and gives customers direct routes to both order lists.
