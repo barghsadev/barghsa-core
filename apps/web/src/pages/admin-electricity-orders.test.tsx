@@ -42,9 +42,19 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
   };
   const fetchMock = vi.fn(
     async (url: string) =>
-      new Response(JSON.stringify(url.endsWith('/order-1') ? order : { orders: [order] }), {
-        headers: { 'Content-Type': 'application/json' },
-      })
+      new Response(
+        JSON.stringify(
+          url.endsWith('/order-1')
+            ? order
+            : url.includes('?after=')
+              ? {
+                  orders: [{ ...order, orderId: 'order-2', customerName: 'Later Buyer' }],
+                  nextAfter: null,
+                }
+              : { orders: [order], nextAfter: 'order-1' }
+        ),
+        { headers: { 'Content-Type': 'application/json' } }
+      )
   );
   vi.stubGlobal('fetch', fetchMock);
   const container = document.createElement('div');
@@ -66,6 +76,17 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     expect(container.textContent).toContain('Approve order');
     expect(container.textContent).toContain('Request changes');
     expect(container.textContent).toContain('Reject order');
+    const more = [...container.querySelectorAll('button')].find(
+      (button) => button.textContent === 'More orders'
+    );
+    expect(more).toBeDefined();
+    await act(async () => more!.click());
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/staff/electricity/orders?after=order-1',
+      expect.any(Object)
+    );
+    expect(container.textContent).toContain('Electricity Buyer');
+    expect(container.textContent).toContain('Later Buyer');
   } finally {
     await act(async () => root.unmount());
     container.remove();

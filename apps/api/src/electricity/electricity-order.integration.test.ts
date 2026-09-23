@@ -562,13 +562,36 @@ const staffPost = (id: string, decision: string, body: unknown) =>
 
 it('queues the exact order for staff and approves it once with customer notification', async () => {
   const order = await submittedOrder();
+  input.idempotencyKey = randomUUID();
+  const laterOrder = await submittedOrder();
   const queueResponse = await fetch(`${http.base}/api/staff/electricity/orders`, {
     headers: staffHeaders,
   });
   expect(queueResponse.status, http.logs()).toBe(200);
   expect((await fetch(`${http.base}/api/staff/electricity/orders`, { headers })).status).toBe(403);
-  const queue = (await queueResponse.json()) as { orders: Array<{ orderId: string }> };
+  const queue = (await queueResponse.json()) as {
+    orders: Array<{ orderId: string }>;
+    nextAfter: string | null;
+  };
   expect(queue.orders.map((entry) => entry.orderId)).toContain(order.orderId);
+  expect(queue.orders.map((entry) => entry.orderId)).toContain(laterOrder.orderId);
+  expect(queue.nextAfter).toBeNull();
+  const laterPage = await fetch(
+    `${http.base}/api/staff/electricity/orders?after=${order.orderId}`,
+    { headers: staffHeaders }
+  );
+  expect(laterPage.status, http.logs()).toBe(200);
+  expect(await laterPage.json()).toMatchObject({
+    orders: [expect.objectContaining({ orderId: laterOrder.orderId })],
+    nextAfter: null,
+  });
+  expect(
+    (
+      await fetch(`${http.base}/api/staff/electricity/orders?after=invalid`, {
+        headers: staffHeaders,
+      })
+    ).status
+  ).toBe(400);
   const detailResponse = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
     headers: staffHeaders,
   });
@@ -579,6 +602,14 @@ it('queues the exact order for staff and approves it once with customer notifica
   const approved = await staffPost(order.orderId, 'approve', body);
   expect(approved.status, http.logs()).toBe(200);
   expect(await approved.json()).toMatchObject({ orderId: order.orderId, status: 'approved' });
+  const afterApproval = await fetch(
+    `${http.base}/api/staff/electricity/orders?after=${order.orderId}`,
+    { headers: staffHeaders }
+  );
+  expect(afterApproval.status, http.logs()).toBe(200);
+  expect(await afterApproval.json()).toMatchObject({
+    orders: [expect.objectContaining({ orderId: laterOrder.orderId })],
+  });
   const repeat = await staffPost(order.orderId, 'approve', body);
   expect(repeat.status, http.logs()).toBe(200);
   const saved = (

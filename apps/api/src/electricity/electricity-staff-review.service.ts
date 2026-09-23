@@ -136,16 +136,27 @@ export class ElectricityStaffReviewService {
     private readonly giftCodes: GiftCodeService
   ) {}
 
-  async queue() {
+  async queue(after?: string) {
+    const cursor = after
+      ? (
+          await getDbPool().query<{ submitted_at: Date; id: string }>(
+            'SELECT submitted_at,id FROM electricity_orders WHERE id=$1 AND submitted_at IS NOT NULL',
+            [after]
+          )
+        ).rows[0]
+      : undefined;
+    if (after && !cursor) throw new NotFoundException('Order cursor not found');
     const rows = (
       await getDbPool().query<ReviewRow>(
         `${reviewQuery} WHERE e.status='awaiting_staff_review'
-         ORDER BY e.submitted_at ASC,o.id ASC LIMIT 50`
+         AND ($1::timestamptz IS NULL OR (e.submitted_at,o.id)>($1::timestamptz,$2::uuid))
+         ORDER BY e.submitted_at ASC,o.id ASC LIMIT 51`,
+        [cursor?.submitted_at ?? null, cursor?.id ?? null]
       )
     ).rows;
     const now = Date.now();
     return {
-      orders: rows.map((row) => ({
+      orders: rows.slice(0, 50).map((row) => ({
         ...present(row),
         ageHours: Math.max(0, Math.floor((now - row.submitted_at.getTime()) / 3_600_000)),
         priority:
@@ -155,6 +166,7 @@ export class ElectricityStaffReviewService {
               ? 'high'
               : 'normal',
       })),
+      nextAfter: rows.length > 50 ? rows[49]!.id : null,
     };
   }
 

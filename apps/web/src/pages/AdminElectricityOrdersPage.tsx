@@ -54,6 +54,8 @@ export default function AdminElectricityOrdersPage() {
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => t(`admin.electricityOrders.${key}`, locale);
   const [orders, setOrders] = useState<ReviewOrder[]>([]);
+  const [after, setAfter] = useState<string | null>(null);
+  const [nextAfter, setNextAfter] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<ReviewOrder | null>(null);
   const [reason, setReason] = useState('');
@@ -63,25 +65,48 @@ export default function AdminElectricityOrdersPage() {
   const [error, setError] = useState(false);
   const [denied, setDenied] = useState(false);
 
+  function refreshQueue() {
+    setOrders([]);
+    setAfter(null);
+    setNextAfter(null);
+    setSelectedId(null);
+    setRevision((value) => value + 1);
+  }
+
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
     setError(false);
     setDenied(false);
-    void fetch('/api/staff/electricity/orders', {
+    const url = after
+      ? `/api/staff/electricity/orders?after=${encodeURIComponent(after)}`
+      : '/api/staff/electricity/orders';
+    void fetch(url, {
       credentials: 'include',
       signal: controller.signal,
     })
       .then(async (response) => {
         if (response.status === 403) {
-          setDenied(true);
+          if (!controller.signal.aborted) {
+            setDenied(true);
+            setOrders([]);
+            setNextAfter(null);
+            setSelectedId(null);
+          }
           return null;
         }
         if (!response.ok) throw new Error('Queue unavailable');
-        return response.json() as Promise<{ orders: ReviewOrder[] }>;
+        return response.json() as Promise<{ orders: ReviewOrder[]; nextAfter: string | null }>;
       })
       .then((value) => {
-        if (!controller.signal.aborted && value) setOrders(value.orders);
+        if (!controller.signal.aborted && value) {
+          setOrders((current) => {
+            if (!after) return value.orders;
+            const shown = new Set(current.map((order) => order.orderId));
+            return [...current, ...value.orders.filter((order) => !shown.has(order.orderId))];
+          });
+          setNextAfter(value.nextAfter);
+        }
       })
       .catch(() => {
         if (!controller.signal.aborted) setError(true);
@@ -90,7 +115,7 @@ export default function AdminElectricityOrdersPage() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [revision]);
+  }, [after, revision]);
 
   useEffect(() => {
     if (!selectedId) {
@@ -140,7 +165,7 @@ export default function AdminElectricityOrdersPage() {
           <h1 className="text-2xl font-semibold">{copy('title')}</h1>
           <p className="text-muted-foreground">{copy('description')}</p>
         </div>
-        <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
+        <Button variant="outline" onClick={refreshQueue}>
           {copy('refresh')}
         </Button>
       </header>
@@ -170,6 +195,11 @@ export default function AdminElectricityOrdersPage() {
               </span>
             </Button>
           ))}
+          {nextAfter && !error ? (
+            <Button variant="outline" disabled={loading} onClick={() => setAfter(nextAfter)}>
+              {copy('more')}
+            </Button>
+          ) : null}
         </div>
         {selectedId && !detail ? <p role="status">{copy('loadingDetail')}</p> : null}
         {detail ? (
@@ -302,9 +332,8 @@ export default function AdminElectricityOrdersPage() {
           action={action}
           onClose={() => setAction(null)}
           onSuccess={async () => {
-            setSelectedId(null);
             setReason('');
-            setRevision((value) => value + 1);
+            refreshQueue();
           }}
         />
       ) : null}

@@ -7,10 +7,11 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
@@ -47,10 +48,13 @@ export class ElectricityStaffReviewController {
   @Get()
   @RateLimit({ namespace: 'electricity:staff-queue:user', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'Oldest pending electricity orders for staff review' })
+  @ApiQuery({ name: 'after', required: false, format: 'uuid' })
   @ApiResponse({ status: 200, description: 'Review work queue.' })
-  queue(@Req() req: AuthenticatedRequest) {
+  queue(@Req() req: AuthenticatedRequest, @Query('after') after?: string) {
     this.requirePermission(req, false);
-    return this.service.queue();
+    if (after && !z.string().uuid().safeParse(after).success)
+      throw new HttpException({ error: 'VALIDATION:INVALID_CURSOR' }, 400);
+    return this.service.queue(after);
   }
 
   @Get(':id')
