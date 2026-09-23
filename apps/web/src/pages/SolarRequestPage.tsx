@@ -152,7 +152,7 @@ export function SolarRequestPage() {
       setSiteCategory(saved.siteCategory);
       setInstallationSurface(saved.installationSurface);
       setUsableAreaSqm(saved.usableAreaSqm);
-      setSiteAddressId(saved.siteAddressId);
+      if (saved.siteAddressId) setSiteAddressId(saved.siteAddressId);
       setSiteRelationship(saved.siteRelationship);
       setSiteDescription(saved.siteDescription);
       setGridType(saved.gridType);
@@ -223,7 +223,8 @@ export function SolarRequestPage() {
   }
 
   async function leaveForAddress() {
-    if (await saveNow()) void navigate({ to: '/settings/addresses' });
+    if (await saveNow())
+      void navigate({ to: '/settings/addresses', search: { returnTo: '/solar/requests/new' } });
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {

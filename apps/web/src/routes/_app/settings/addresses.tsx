@@ -27,7 +27,10 @@ import { useLocale } from '../../../hooks/useLocale.js';
 
 export const Route = createFileRoute('/_app/settings/addresses')({
   validateSearch: (search: Record<string, unknown>) => ({
-    returnTo: search.returnTo === '/electricity/advanced' ? '/electricity/advanced' : undefined,
+    returnTo:
+      search.returnTo === '/electricity/advanced' || search.returnTo === '/solar/requests/new'
+        ? search.returnTo
+        : undefined,
   }),
   component: SettingsAddressesPage,
 });
@@ -383,7 +386,12 @@ function SettingsAddressesPage() {
           to={returnTo}
           className="mb-6 inline-block text-sm text-primary underline underline-offset-4"
         >
-          {t('settings.addresses.returnToAdvancedOrder', locale)}
+          {t(
+            returnTo === '/solar/requests/new'
+              ? 'settings.addresses.returnToSolarRequest'
+              : 'settings.addresses.returnToAdvancedOrder',
+            locale
+          )}
         </Link>
       )}
 

@@ -249,3 +249,102 @@ test('solar customer resumes intake, uploads documents, and records postal shipm
   ).toBeVisible();
   expect(shipment).toMatchObject({ courier: 'Post office', trackingNumber: 'TRACK-123' });
 });
+
+test('solar intake returns from address setup with its saved site details', async ({ page }) => {
+  const siteAddress = {
+    id: '99999999-9999-4999-8999-999999999999',
+    profileId,
+    provinceId: '33333333-3333-4333-8333-333333333333',
+    cityId: '44444444-4444-4444-8444-444444444444',
+    fullAddress: 'Solar Field Road',
+    postalCode: '9876543210',
+    mainAddress: true,
+  };
+  const addresses: Array<typeof siteAddress> = [];
+  let draft: Record<string, unknown> | null = null;
+  let submission: Record<string, unknown> | null = null;
+
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({ json: { userId: 'buyer', requiresTosAcceptance: false } })
+  );
+  await page.route('**/api/profiles', (route) =>
+    route.fulfill({
+      json: {
+        profiles: [{ id: profileId, profileType: 'INDIVIDUAL', title: 'Buyer' }],
+        activeProfileId: profileId,
+        hasDefault: true,
+      },
+    })
+  );
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+  await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
+    if (route.request().method() === 'POST') {
+      addresses.push(siteAddress);
+      return route.fulfill({ status: 201, json: siteAddress });
+    }
+    return route.fulfill({ json: { addresses } });
+  });
+  await page.route('**/api/geography/provinces', (route) =>
+    route.fulfill({ json: [{ id: siteAddress.provinceId, nameFa: 'تهران', nameEn: 'Tehran' }] })
+  );
+  await page.route(`**/api/geography/provinces/${siteAddress.provinceId}/cities`, (route) =>
+    route.fulfill({
+      json: [
+        {
+          id: siteAddress.cityId,
+          provinceId: siteAddress.provinceId,
+          nameFa: 'تهران',
+          nameEn: 'Tehran',
+        },
+      ],
+    })
+  );
+  await page.route('**/api/solar/requests/draft?*', (route) => {
+    if (route.request().method() === 'PUT') {
+      draft = route.request().postDataJSON() as Record<string, unknown>;
+      return route.fulfill({ json: { ...draft, updatedAt: submittedAt } });
+    }
+    return route.fulfill({
+      json: { currentStep: 1, data: draft?.data ?? null, updatedAt: draft ? submittedAt : null },
+    });
+  });
+  await page.route('**/api/solar/requests', (route) => {
+    submission = route.request().postDataJSON() as Record<string, unknown>;
+    return route.fulfill({ status: 201, json: { requestId } });
+  });
+
+  await page.goto('/solar/requests/new');
+  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  await page.locator('input[value="non_household"]').check();
+  await page.locator('#solar-area').fill('250');
+  await page.getByLabel('Off-grid').check();
+  await page
+    .getByRole('link', { name: 'Add a site address in profile settings before submitting.' })
+    .click();
+  await expect(page).toHaveURL(/\/settings\/addresses\?/);
+  expect(draft?.data).toMatchObject({ buildingType: 'non_household', usableAreaSqm: '250' });
+
+  await page.getByRole('button', { name: 'Add Address' }).click();
+  await page.locator('#addresses-field-1').selectOption(siteAddress.provinceId);
+  await page.locator('#addresses-field-2').selectOption(siteAddress.cityId);
+  await page.locator('#addresses-field-3').fill(siteAddress.fullAddress);
+  await page.locator('#addresses-field-4').fill(siteAddress.postalCode);
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(page.getByText(siteAddress.fullAddress)).toBeVisible();
+  await page.getByRole('link', { name: 'Return to solar construction request' }).click();
+  await expect(page).toHaveURL(/\/solar\/requests\/new$/);
+  await expect(page.locator('#solar-area')).toHaveValue('250');
+  await expect(page.getByLabel('Site address')).toHaveValue(siteAddress.id);
+  await page.getByLabel('I accept the contract registration terms.').check();
+  await page.getByRole('button', { name: 'Submit request' }).click();
+  await expect(page).toHaveURL(new RegExp(`/solar/requests/${requestId}$`));
+  expect(submission).toMatchObject({
+    buildingType: 'non_household',
+    usableAreaSqm: 250,
+    siteAddressId: siteAddress.id,
+    gridType: 'off_grid',
+  });
+});
