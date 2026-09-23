@@ -3,6 +3,7 @@ import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { SolarContractForm } from '../components/SolarContractForm.js';
 
 interface Guidance {
   fa: string;
@@ -36,6 +37,7 @@ export function AdminSolarPostalPage() {
   const [action, setAction] = useState<TeamAction | null>(null);
   const [error, setError] = useState(false);
   const [revision, setRevision] = useState(0);
+  const [createdContractId, setCreatedContractId] = useState<string | null>(null);
   useEffect(() => {
     const controller = new AbortController();
     void fetch('/api/admin/solar/postal-queue', {
@@ -121,6 +123,17 @@ export function AdminSolarPostalPage() {
     <main className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('postalStaffTitle')}</h1>
       {error && <p role="alert">{copy('postalError')}</p>}
+      {createdContractId && (
+        <p role="status">
+          {copy('solarContractCreated')}{' '}
+          <a
+            className="underline"
+            href={`/admin/contracts?contractId=${encodeURIComponent(createdContractId)}`}
+          >
+            {copy('solarViewContract')}
+          </a>
+        </p>
+      )}
       <section className="space-y-3 rounded-xl border p-5">
         <h2 className="text-xl font-semibold">{copy('postalStaffQueue')}</h2>
         {!rows.length && <p>{copy('postalStaffEmpty')}</p>}
@@ -270,6 +283,18 @@ export function AdminSolarPostalPage() {
                 </button>
               </div>
             </div>
+          )}
+          {row.request_status === 'approved' && (
+            <SolarContractForm
+              key={row.id}
+              requestId={row.id}
+              profileId={row.profile_id}
+              onCreated={(contractId) => {
+                setCreatedContractId(contractId);
+                setSelected(null);
+                setRevision((value) => value + 1);
+              }}
+            />
           )}
         </section>
       )}

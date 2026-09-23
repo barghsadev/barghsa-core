@@ -47,6 +47,7 @@ import {
 } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import { getDbPool } from '@barghsa/db';
+import type { PoolClient } from 'pg';
 import { duePeriodTypeForManual } from '@barghsa/shared/finance';
 import { v7 as uuidv7 } from 'uuid';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
@@ -63,6 +64,8 @@ import { DueAtCalculationService } from './due-at.service.js';
 
 /** Command to create and issue one manual invoice. */
 export interface CreateManualInvoiceCommand {
+  /** Join an existing caller-owned transaction; the caller commits or rolls it back. */
+  transactionClient?: PoolClient;
   /** Customer profile the invoice is issued to. */
   profileId: string;
   /** Optional contract reference (text FK placeholder, S-04.1.02). */
@@ -205,10 +208,10 @@ export class ManualInvoiceService {
       throw new BadRequestException('dueAt cannot be in the past');
     }
 
-    const pool = getDbPool();
-    const client = await pool.connect();
+    const ownedTransaction = !cmd.transactionClient;
+    const client = cmd.transactionClient ?? (await getDbPool().connect());
     try {
-      await client.query('BEGIN');
+      if (ownedTransaction) await client.query('BEGIN');
       await lockInvoiceProfile(client, 'profile', cmd.profileId);
       await requireStaffMutationPermission(client, cmd.actorUserId, 'invoices:write');
       if (cmd.actorSession) {
@@ -256,7 +259,7 @@ export class ManualInvoiceService {
           const auditId = await this.findIssueAuditId(client, existingId);
 
           if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
-          await client.query('COMMIT');
+          if (ownedTransaction) await client.query('COMMIT');
           return {
             ...replayed,
             auditId,
@@ -365,10 +368,10 @@ export class ManualInvoiceService {
       const excerpt = await this.loadInvoiceExcerpt(client, invoiceId);
 
       if (cmd.actorSession) await requireSessionStepUp(client, cmd.actorSession);
-      await client.query('COMMIT');
+      if (ownedTransaction) await client.query('COMMIT');
       return { ...excerpt, auditId: transition.auditId, transition };
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
+      if (ownedTransaction) await client.query('ROLLBACK').catch(() => {});
       if (
         error instanceof BadRequestException ||
         error instanceof NotFoundException ||
@@ -379,7 +382,7 @@ export class ManualInvoiceService {
       this.logger.error(`Manual invoice creation failed: ${String(error)}`);
       throw error;
     } finally {
-      client.release();
+      if (ownedTransaction) client.release();
     }
   }
 

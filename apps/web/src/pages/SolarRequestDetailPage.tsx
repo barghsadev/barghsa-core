@@ -12,6 +12,9 @@ interface SolarRequest {
   status: string;
   status_reason: string | null;
   support_path: string | null;
+  contract_id: string | null;
+  contract_published: boolean;
+  initial_invoice_id: string | null;
   building_type: string;
   grid_type: string;
   bill_identifier: string | null;
@@ -156,6 +159,28 @@ export function SolarRequestDetailPage() {
               <a className="underline" href={request.support_path}>
                 {copy('solarSupport')}
               </a>
+            )}
+            {request.contract_id && (
+              <div className="flex flex-wrap gap-4 text-sm">
+                {request.contract_published ? (
+                  <a
+                    className="underline"
+                    href={`/contracts?contractId=${encodeURIComponent(request.contract_id)}`}
+                  >
+                    {copy('solarViewContract')}
+                  </a>
+                ) : (
+                  <span>{copy('solarContractAwaitingPublication')}</span>
+                )}
+                {request.initial_invoice_id && (
+                  <a
+                    className="underline"
+                    href={`/invoices/${encodeURIComponent(request.initial_invoice_id)}`}
+                  >
+                    {copy('solarViewInvoice')}
+                  </a>
+                )}
+              </div>
             )}
           </div>
           <section className="space-y-3 rounded-xl border p-5">

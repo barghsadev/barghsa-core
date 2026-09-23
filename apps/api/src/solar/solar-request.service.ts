@@ -141,8 +141,15 @@ export class SolarRequestService {
       await requireCurrentSession(client, actor);
       const request = (
         await client.query<Record<string, unknown>>(
-          `SELECT r.*,a.full_address AS site_address FROM solar_construction_requests r
-           LEFT JOIN addresses a ON a.id=r.site_address_id WHERE r.id=$1`,
+          `SELECT r.*,a.full_address AS site_address,i.id AS initial_invoice_id,
+             EXISTS(SELECT 1 FROM contract_publications cp WHERE cp.contract_id=r.contract_id) AS contract_published
+           FROM solar_construction_requests r
+           LEFT JOIN addresses a ON a.id=r.site_address_id
+           LEFT JOIN LATERAL (
+             SELECT id FROM invoices WHERE contract_id=r.contract_id::text
+             ORDER BY issued_at,id LIMIT 1
+           ) i ON r.contract_id IS NOT NULL
+           WHERE r.id=$1`,
           [id]
         )
       ).rows[0];

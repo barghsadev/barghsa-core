@@ -15,6 +15,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { uuidv7 } from '../types';
 import { addresses } from './addresses';
+import { contracts } from './contracts';
 import { documents } from './documents';
 import { profiles } from './profiles';
 import { users } from './users';
@@ -31,6 +32,7 @@ export const solarConstructionRequests = pgTable(
       .references(() => users.userId, { onDelete: 'restrict' }),
     submissionKey: uuid('submission_key').notNull(),
     status: text('status').notNull().default('submitted'),
+    contractId: uuid('contract_id').references(() => contracts.id, { onDelete: 'restrict' }),
     buildingType: text('building_type').notNull(),
     gridType: text('grid_type').notNull(),
     billIdentifier: varchar('bill_identifier', { length: 13 }),
@@ -58,6 +60,7 @@ export const solarConstructionRequests = pgTable(
     index('solar_requests_profile_idx').on(t.profileId, t.createdAt, t.id),
     index('solar_requests_status_idx').on(t.status, t.createdAt, t.id),
     uniqueIndex('solar_requests_submission_key').on(t.submittedBy, t.submissionKey),
+    uniqueIndex('solar_requests_contract_key').on(t.contractId),
     check(
       'solar_requests_building_type',
       sql`${t.buildingType} IN ('building_apartment','non_household')`

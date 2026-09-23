@@ -120,7 +120,12 @@ function Workspace({ staff }: { staff: boolean }) {
       {staff ? <ContractRefundQueue /> : null}
       {staff ? <ContractCancellationRequestQueue /> : null}
       {staff ? <ContractActivationRules /> : null}
-      <ContractResults key={generation} staff={staff} query={query} initialSelected={createdId} />
+      <ContractResults
+        key={generation}
+        staff={staff}
+        query={query}
+        initialSelected={createdId ?? new URLSearchParams(window.location.search).get('contractId')}
+      />
     </div>
   );
 }

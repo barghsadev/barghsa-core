@@ -610,6 +610,13 @@
       "when": 1791331200069,
       "tag": "0166_solar_document_workflow",
       "breakpoints": true
+    },
+    {
+      "idx": 167,
+      "version": "7",
+      "when": 1791331200070,
+      "tag": "0167_solar_contract_link",
+      "breakpoints": true
     }
   ]
 }

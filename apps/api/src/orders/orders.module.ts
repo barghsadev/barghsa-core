@@ -5,6 +5,7 @@ import { OrdersService } from './orders.service.js';
 import { SessionModule } from '../session/session.module.js';
 import { AdminModule } from '../admin/admin.module.js';
 import { InvoiceModule } from '../invoice/invoice.module.js';
+import { ContractModule } from '../contract/contract.module.js';
 import { ElectricityCalculationService } from '../electricity/electricity-calculation.service.js';
 import { ElectricityOrderService } from '../electricity/electricity-order.service.js';
 import { ElectricityOrderController } from '../electricity/electricity-order.controller.js';
@@ -52,7 +53,7 @@ import { StaffSolarFinalController } from '../solar/solar-final.controller.js';
 import { SolarFinalService } from '../solar/solar-final.service.js';
 
 @Module({
-  imports: [SessionModule, AdminModule, InvoiceModule, DocumentModule],
+  imports: [SessionModule, AdminModule, InvoiceModule, DocumentModule, ContractModule],
   controllers: [
     OrdersController,
     ProductsController,

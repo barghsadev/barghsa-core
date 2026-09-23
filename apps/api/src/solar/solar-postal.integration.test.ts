@@ -82,7 +82,7 @@ beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!, endpoint);
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions)
-     VALUES('postal-review-staff','Postal reviewer','Test reviewer','["orders:read","orders:write","contracts:write","admin:catalogue:edit"]')`
+     VALUES('postal-review-staff','Postal reviewer','Test reviewer','["orders:read","orders:write","contracts:write","invoices:write","admin:catalogue:edit"]')`
   );
   for (const [user, staff] of [
     ['postal-buyer', false],
@@ -141,6 +141,190 @@ beforeAll(async () => {
       .status,
     http.logs()
   ).toBe(200);
+}, 90_000);
+
+it('creates a linked solar draft and invoice atomically, then replays the same command', async () => {
+  const created = await send('postal-buyer', 'solar/requests', 'POST', {
+    profileId,
+    submissionKey: randomUUID(),
+    buildingType: 'building_apartment',
+    propertyForm: 'villa',
+    structuralFrame: 'steel',
+    buildingCompletionDate: '2019-01-01',
+    gridType: 'off_grid',
+    agreementAccepted: true,
+  });
+  expect(created.status, http.logs()).toBe(201);
+  const id = ((await created.json()) as { requestId: string }).requestId;
+  const templateId = randomUUID(),
+    versionId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO contract_templates(id,name,status,created_by)
+     VALUES($1,$2,'active','postal-reviewer')`,
+    [templateId, `Solar template ${templateId}`]
+  );
+  await http.pool.query(
+    `INSERT INTO contract_template_versions(id,template_id,version_number,storage_key,file_name,created_by)
+     VALUES($1,$2,1,$3,'solar.txt','postal-reviewer')`,
+    [versionId, templateId, `contract-templates/${versionId}.txt`]
+  );
+  const input = {
+    profileId,
+    idempotencyKey: randomUUID(),
+    title: 'Solar construction agreement',
+    text: 'The parties agree to construct the station under these terms.',
+    changeDescription: 'Initial solar draft',
+    source: { kind: 'template', templateVersionId: versionId },
+    invoiceLines: [
+      {
+        description: 'Construction deposit',
+        quantity: 1,
+        unitPrice: '100000',
+        vatRate: 0,
+        isTaxable: false,
+      },
+    ],
+  };
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', input))
+      .status
+  ).toBe(409);
+  expect(
+    (
+      await send('postal-buyer', `solar/requests/${id}/documents/complete`, 'POST', {
+        allDocumentsUploaded: true,
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/documents/advance`, 'POST')).status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (
+      await send('postal-buyer', `solar/requests/${id}/postal/shipment`, 'POST', {
+        courier: 'Parcel Co',
+        trackingNumber: 'NEW-123',
+        sendDate: '2026-01-02',
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/postal/confirm-received`, 'POST'))
+      .status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (await send('postal-reviewer', `admin/solar/requests/${id}/final-approve`, 'POST')).status,
+    http.logs()
+  ).toBe(200);
+  const options = await send('postal-reviewer', `admin/solar/requests/${id}/contract-options`);
+  expect(options.status, http.logs()).toBe(200);
+  expect(await options.json()).toMatchObject({ templates: [{ version_id: versionId }] });
+  const bad = await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', {
+    ...input,
+    idempotencyKey: randomUUID(),
+    invoiceLines: [{ ...input.invoiceLines[0], unitPrice: '0' }],
+  });
+  expect(bad.status, http.logs()).toBe(400);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT count(*)::int AS count FROM contracts WHERE profile_id=$1 AND service_type='solar'",
+        [profileId]
+      )
+    ).rows[0]!.count
+  ).toBe(0);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT status,contract_id FROM solar_construction_requests WHERE id=$1',
+        [id]
+      )
+    ).rows[0]
+  ).toMatchObject({ status: 'approved', contract_id: null });
+  const contract = await send(
+    'postal-reviewer',
+    `admin/solar/requests/${id}/create-contract`,
+    'POST',
+    input
+  );
+  expect(contract.status, http.logs()).toBe(200);
+  const result = (await contract.json()) as {
+    contractId: string;
+    invoiceIds: string[];
+    status: string;
+  };
+  expect(result.status).toBe('contract_created');
+  expect(result.invoiceIds).toHaveLength(1);
+  expect(
+    await (
+      await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', input)
+    ).json()
+  ).toEqual(result);
+  expect(
+    (
+      await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', {
+        ...input,
+        idempotencyKey: randomUUID(),
+      })
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await http.pool.query('SELECT state,service_type FROM contracts WHERE id=$1', [
+        result.contractId,
+      ])
+    ).rows[0]
+  ).toMatchObject({ state: 'Draft', service_type: 'solar' });
+  expect(
+    (
+      await http.pool.query('SELECT state,total_amount,contract_id FROM invoices WHERE id=$1', [
+        result.invoiceIds[0],
+      ])
+    ).rows[0]
+  ).toMatchObject({ state: 'Unpaid', total_amount: '100000', contract_id: result.contractId });
+  expect(await (await send('postal-buyer', `solar/requests/${id}`)).json()).toMatchObject({
+    request: {
+      status: 'contract_created',
+      contract_id: result.contractId,
+      initial_invoice_id: result.invoiceIds[0],
+      contract_published: false,
+    },
+  });
+  expect((await send('postal-buyer', `contracts/${result.contractId}`)).status).toBe(404);
+  const contractVersionId = (
+    await http.pool.query<{ current_version_id: string }>(
+      'SELECT current_version_id FROM contracts WHERE id=$1',
+      [result.contractId]
+    )
+  ).rows[0]!.current_version_id;
+  expect(
+    (
+      await send('postal-reviewer', `admin/contracts/${result.contractId}/submit`, 'POST', {
+        expectedVersionId: contractVersionId,
+        idempotencyKey: randomUUID(),
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (
+      await send('postal-reviewer', `admin/contracts/${result.contractId}/publish`, 'POST', {
+        expectedVersionId: contractVersionId,
+        idempotencyKey: randomUUID(),
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  expect((await send('postal-buyer', `contracts/${result.contractId}`)).status, http.logs()).toBe(
+    200
+  );
+  expect(await (await send('postal-buyer', `solar/requests/${id}`)).json()).toMatchObject({
+    request: { contract_published: true },
+  });
 }, 90_000);
 
 afterAll(async () => {
@@ -309,12 +493,11 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
   expect(await approved.json()).toMatchObject({ status: 'approved' });
   expect(
     (
-      await http.pool.query(
-        "SELECT count(*)::int AS count FROM contracts WHERE profile_id=$1 AND service_type='solar'",
-        [profileId]
-      )
-    ).rows[0]!.count
-  ).toBe(0);
+      await http.pool.query('SELECT contract_id FROM solar_construction_requests WHERE id=$1', [
+        requestId,
+      ])
+    ).rows[0]!.contract_id
+  ).toBeNull();
   expect(
     (await send('postal-reviewer', `admin/solar/requests/${requestId}/final-approve`, 'POST'))
       .status
@@ -344,7 +527,8 @@ it('handles guidance, receipt upload, shipment issues, resubmission and staff re
   expect(
     (
       await http.pool.query(
-        "SELECT count(*)::int AS count FROM audit_log WHERE event IN ('solar.final.approve','solar.final.close-no-contract')"
+        "SELECT count(*)::int AS count FROM audit_log WHERE event IN ('solar.final.approve','solar.final.close-no-contract') AND metadata::jsonb->>'requestId'=$1",
+        [requestId]
       )
     ).rows[0]!.count
   ).toBe(2);

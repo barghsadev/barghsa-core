@@ -17,6 +17,11 @@ import {
 } from './contract-transactions.js';
 import { notifyContractReview } from './contract-review-notifications.js';
 import { readCancellationSnapshot } from './contract-cancellation-snapshot.js';
+import { ManualInvoiceService } from '../invoice/manual-invoice.service.js';
+import { NotificationsService } from '../notifications/notifications.service.js';
+import type { SolarContractInput } from '../solar/solar-contract.validation.js';
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
 const versionDto = (row: typeof contractVersions.$inferSelect) => ({
   ...row,
   createdAt: row.createdAt.toISOString(),
@@ -24,6 +29,8 @@ const versionDto = (row: typeof contractVersions.$inferSelect) => ({
 });
 @Injectable()
 export class ContractService {
+  constructor(private readonly manualInvoices: ManualInvoiceService) {}
+
   cancellationPreview(id: string) {
     return readCancellationSnapshot(getDbPool(), id);
   }
@@ -163,6 +170,179 @@ export class ContractService {
         return this.get(id, client);
       });
     });
+  }
+
+  async createSolar(input: SolarContractInput, actor: Actor, ip: string) {
+    return staffContractMutation(
+      input.profileId,
+      actor,
+      async (client, archived) => {
+        return contractIdempotency(client, 'solar_contract_create', input, actor, async () => {
+          if (archived) throw new ConflictException('Profile is archived');
+          const request = (
+            await client.query<{
+              status: string;
+              submitted_by: string;
+              contract_id: string | null;
+            }>(
+              `SELECT status,submitted_by,contract_id FROM solar_construction_requests
+           WHERE id=$1 AND profile_id=$2 FOR UPDATE`,
+              [input.requestId, input.profileId]
+            )
+          ).rows[0];
+          if (!request) throw new NotFoundException('Solar request not found');
+          if (request.status !== 'approved' || request.contract_id)
+            throw new ConflictException('Solar request is not awaiting a contract');
+          if (input.source.kind === 'template') {
+            const source = (
+              await client.query(
+                `SELECT 1 FROM contract_template_versions v
+             JOIN contract_templates t ON t.id=v.template_id
+             WHERE v.id=$1 AND t.status='active'`,
+                [input.source.templateVersionId]
+              )
+            ).rows[0];
+            if (!source) throw new ConflictException('Select an active contract template version');
+          } else {
+            const source = (
+              await client.query(
+                `SELECT 1 FROM documents WHERE id=$1 AND profile_id=$2
+             AND business_record_type='solar_request' AND business_record_id=$3
+             AND category='document' AND state IN ('Available','Approved')`,
+                [input.source.documentId, input.profileId, input.requestId]
+              )
+            ).rows[0];
+            if (!source)
+              throw new ConflictException('Select an available uploaded contract document');
+          }
+          const id = uuidv7(),
+            versionId = uuidv7();
+          await client.query(
+            `INSERT INTO contracts(id,profile_id,service_type,current_version_id)
+           VALUES($1,$2,'solar',$3)`,
+            [id, input.profileId, versionId]
+          );
+          await this.insertVersion(
+            client,
+            id,
+            versionId,
+            1,
+            {
+              content: {
+                title: input.title,
+                text: input.text,
+                solarRequestId: input.requestId,
+                solarSource: input.source,
+              },
+              changeDescription: input.changeDescription,
+            },
+            actor
+          );
+          await auditContract(client, id, versionId, 'contract.created', actor, ip, {
+            solarRequestId: input.requestId,
+            source: input.source,
+          });
+          const invoice = await this.manualInvoices.createManualInvoice({
+            transactionClient: client,
+            profileId: input.profileId,
+            contractId: id,
+            idempotencyKey: input.idempotencyKey,
+            lines: input.invoiceLines.map((line) => ({
+              ...line,
+              unitPrice: BigInt(line.unitPrice),
+            })),
+            actorUserId: actor.userId,
+            actorSession: actor,
+            ip,
+            reason: 'Solar construction contract invoice',
+          });
+          await client.query(
+            `UPDATE solar_construction_requests
+           SET contract_id=$2,status='contract_created',updated_at=NOW() WHERE id=$1`,
+            [input.requestId, id]
+          );
+          await new NotificationsService().create(
+            {
+              userId: request.submitted_by,
+              profileId: input.profileId,
+              type: 'general',
+              title: 'Solar invoice issued',
+              localizedContent: {
+                fa: {
+                  title: 'قرارداد نیروگاه خورشیدی',
+                  body: 'فاکتور اولیه صادر شد. قرارداد پس از انتشار توسط کارشناس قابل مشاهده خواهد بود.',
+                },
+                en: {
+                  title: 'Solar contract',
+                  body: 'The initial invoice was issued. The contract will appear after staff publishes it.',
+                },
+              },
+            },
+            client
+          );
+          await client.query(
+            `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+           VALUES($1,$2,'solar.contract.created',$3::jsonb,$4,$5)`,
+            [
+              uuidv7(),
+              actor.userId,
+              JSON.stringify({
+                requestId: input.requestId,
+                contractId: id,
+                invoiceId: invoice.invoiceId,
+                previousStatus: 'approved',
+                status: 'contract_created',
+              }),
+              uuidv7(),
+              ip,
+            ]
+          );
+          return { status: 'contract_created', contractId: id, invoiceIds: [invoice.invoiceId] };
+        });
+      },
+      { financialReview: true }
+    );
+  }
+  async solarOptions(requestId: string, actor: Actor) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'contracts:write');
+      await requireCurrentSession(client, actor);
+      const request = (
+        await client.query<{ status: string }>(
+          'SELECT status FROM solar_construction_requests WHERE id=$1',
+          [requestId]
+        )
+      ).rows[0];
+      if (!request) throw new NotFoundException('Solar request not found');
+      if (request.status !== 'approved')
+        throw new ConflictException('Solar request is not awaiting a contract');
+      const templates = (
+        await client.query(
+          `SELECT DISTINCT ON (t.id) v.id AS version_id,t.name,v.version_number
+         FROM contract_templates t JOIN contract_template_versions v ON v.template_id=t.id
+         WHERE t.status='active' ORDER BY t.id,v.version_number DESC LIMIT 100`
+        )
+      ).rows;
+      const documents = (
+        await client.query(
+          `SELECT d.id,d.original_name FROM solar_construction_requests r
+         JOIN documents d ON d.profile_id=r.profile_id
+           AND d.business_record_type='solar_request' AND d.business_record_id=r.id
+         WHERE r.id=$1 AND d.category='document' AND d.state IN ('Available','Approved')
+         ORDER BY d.created_at DESC LIMIT 100`,
+          [requestId]
+        )
+      ).rows;
+      await client.query('COMMIT');
+      return { templates, documents };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
   async updateContract(id: string, input: UpdateContractInput, actor: Actor, ip: string) {
     const identity = (

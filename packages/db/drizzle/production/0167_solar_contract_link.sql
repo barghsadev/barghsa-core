@@ -1,0 +1,3 @@
+ALTER TABLE "solar_construction_requests" ADD COLUMN "contract_id" uuid;--> statement-breakpoint
+ALTER TABLE "solar_construction_requests" ADD CONSTRAINT "solar_construction_requests_contract_id_contracts_id_fk" FOREIGN KEY ("contract_id") REFERENCES "public"."contracts"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+CREATE UNIQUE INDEX "solar_requests_contract_key" ON "solar_construction_requests" USING btree ("contract_id");
