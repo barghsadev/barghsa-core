@@ -1103,6 +1103,20 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
     invoice_id: order.invoiceId,
     pricing_snapshot: { totalIrR: '378325', discountIrR: '30000' },
     address_snapshot: { full_address: 'Second installation address' },
+    revisions: [
+      {
+        previousAddress: 'Test installation address',
+        address: 'Second installation address',
+        previousTotalIrR: '278100',
+        totalIrR: '278100',
+      },
+      {
+        previousHardwareTitle: { en: 'Initial device' },
+        hardwareTitle: { en: 'Second device' },
+        previousTotalIrR: '278100',
+        totalIrR: '378325',
+      },
+    ],
   });
   const staffDetail = await request(
     `/api/staff/saving/orders/${order.savingOrderId}`,
@@ -1111,7 +1125,17 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
     staffHeaders
   );
   expect(staffDetail.status, http.logs()).toBe(200);
-  const currentVersion = ((await staffDetail.json()) as { versionId: string }).versionId;
+  const staffOrder = (await staffDetail.json()) as {
+    versionId: string;
+    revisions: Array<Record<string, unknown>>;
+  };
+  expect(staffOrder.revisions).toHaveLength(2);
+  expect(staffOrder.revisions[1]).toMatchObject({
+    previousHardwareTitle: { en: 'Initial device' },
+    hardwareTitle: { en: 'Second device' },
+  });
+  expect(staffOrder.revisions[0]).not.toHaveProperty('request_hash');
+  const currentVersion = staffOrder.versionId;
   const approval = await request(
     `/api/staff/saving/orders/${order.savingOrderId}/approve`,
     'POST',

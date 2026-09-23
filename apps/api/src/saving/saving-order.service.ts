@@ -17,6 +17,7 @@ import { requireCurrentSession } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { calculateSavingTotals, type SavingPriceLine } from './saving-calculation.js';
 import { BillVerificationProvider } from './bill-verification.provider.js';
+import { savingOrderRevisions } from './saving-order-revisions.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 export interface SavingOrderInput {
@@ -489,9 +490,10 @@ export class SavingOrderService {
           [savingOrderId]
         )
       ).rows;
+      const revisions = await savingOrderRevisions(client, savingOrderId);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return { ...row, stages };
+      return { ...row, stages, revisions };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

@@ -11,6 +11,7 @@ import {
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import type { ValidatedSession } from '../session/session.service.js';
+import { savingOrderRevisions } from './saving-order-revisions.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 export const SAVING_STAGES = [
@@ -108,7 +109,8 @@ export class SavingFulfillmentService {
           [id]
         )
       ).rows;
-      return { ...this.present(row), stages, events };
+      const revisions = await savingOrderRevisions(client, id);
+      return { ...this.present(row), stages, events, revisions };
     } finally {
       client.release();
     }

@@ -6,6 +6,10 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { SavingOrderComments } from '../components/SavingOrderComments.js';
 import { SavingOrderDocuments } from '../components/SavingOrderDocuments.js';
+import {
+  SavingOrderRevisionHistory,
+  type SavingOrderRevision,
+} from '../components/SavingOrderRevisionHistory.js';
 import { ContractCancellationRequestQueue } from '../components/ContractCancellationRequestQueue.js';
 
 type StageName =
@@ -49,6 +53,7 @@ interface StageEvent {
 interface Detail extends Order {
   stages: Stage[];
   events: StageEvent[];
+  revisions: SavingOrderRevision[];
 }
 
 export default function AdminSavingOrdersPage() {
@@ -234,6 +239,7 @@ export default function AdminSavingOrdersPage() {
                   <dd>{copy(detail.contractState)}</dd>
                 </div>
               </dl>
+              <SavingOrderRevisionHistory revisions={detail.revisions ?? []} />
               {detail.status === 'awaiting_staff_review' && (
                 <div className="flex flex-wrap gap-2">
                   <Button onClick={() => review('approve')}>{copy('staffApprove')}</Button>

@@ -67,6 +67,9 @@ const en: Record<string, string> = {
   noOrders: 'No saving orders yet.',
   orderDetail: 'Saving order',
   changeOrder: 'Change equipment or address',
+  changeHistory: 'Order change history',
+  beforeChange: 'Before',
+  afterChange: 'After',
   changeOrderHelp:
     'Available until staff review or payment begins. Your invoice will be recalculated before you confirm.',
   previewChange: 'Review new price',
@@ -223,6 +226,9 @@ const fa: Record<string, string> = {
   noOrders: 'هنوز سفارش صرفه‌جویی ثبت نشده است.',
   orderDetail: 'سفارش صرفه‌جویی',
   changeOrder: 'تغییر تجهیزات یا نشانی',
+  changeHistory: 'تاریخچه تغییرات سفارش',
+  beforeChange: 'پیش از تغییر',
+  afterChange: 'پس از تغییر',
   changeOrderHelp:
     'تا پیش از آغاز بررسی کارشناس یا پرداخت می‌توانید سفارش را تغییر دهید. پیش از تأیید، مبلغ فاکتور دوباره محاسبه می‌شود.',
   previewChange: 'بررسی قیمت جدید',

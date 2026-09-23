@@ -7,6 +7,10 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { SavingOrderComments } from '../components/SavingOrderComments.js';
 import { SavingOrderDocuments } from '../components/SavingOrderDocuments.js';
 import { SavingOrderChangePanel } from '../components/SavingOrderChangePanel.js';
+import {
+  SavingOrderRevisionHistory,
+  type SavingOrderRevision,
+} from '../components/SavingOrderRevisionHistory.js';
 import { ContractCancellationPanel } from '../components/ContractCancellationPanel.js';
 import { savingNextAction, type SavingActionContext } from '../lib/saving-next-action.js';
 
@@ -38,6 +42,7 @@ interface Detail extends SavingActionContext {
     explanation: string | null;
     handover_description: string | null;
   }>;
+  revisions: SavingOrderRevision[];
 }
 
 export function SavingOrderDetailPage() {
@@ -188,6 +193,7 @@ export function SavingOrderDetailPage() {
               )}
             </CardContent>
           </Card>
+          <SavingOrderRevisionHistory revisions={detail.revisions ?? []} />
           <Card>
             <CardContent className="space-y-2 pt-6">
               <h2 className="text-xl font-semibold">{copy('contract')}</h2>
