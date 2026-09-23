@@ -267,8 +267,8 @@ export function AdvancedElectricityOrderPage() {
     [quantities, options?.mandatoryGreenEnabled]
   );
   const quantitiesValid =
-    keys.some((key) => /^[1-9]\d*$/.test(quantities[key])) &&
-    keys.every((key) => quantities[key] === '' || /^\d{1,19}$/.test(quantities[key]));
+    keys.some((key) => /^[1-9]\d*$/.test(quantityPayload[key])) &&
+    keys.every((key) => /^\d{1,19}$/.test(quantityPayload[key]));
   const validPeriod = Boolean(
     startAt &&
     endAt &&
@@ -669,7 +669,15 @@ export function AdvancedElectricityOrderPage() {
                 </p>
               )}
               {!quote ? (
-                <p role="status">{t('electricity.order.previewLoading', locale)}</p>
+                !quoteError && (
+                  <p role={validPeriod && quantitiesValid ? 'status' : 'alert'}>
+                    {validPeriod
+                      ? quantitiesValid
+                        ? t('electricity.order.previewLoading', locale)
+                        : t('electricity.order.quantityInvalid', locale)
+                      : t('electricity.advanced.invalidPeriod', locale)}
+                  </p>
+                )
               ) : (
                 <>
                   <p>
