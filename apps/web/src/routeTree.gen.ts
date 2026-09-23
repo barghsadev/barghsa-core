@@ -76,6 +76,7 @@ import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding/complete'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
+import { Route as AppConsultationsIndexRouteImport } from './routes/_app/consultations.index'
 import { Route as AppConsultationsRequestIdRouteImport } from './routes/_app/consultations.$requestId'
 import { Route as AppElectricityIndexRouteImport } from './routes/_app/electricity/index'
 import { Route as AppElectricityAdvancedRouteImport } from './routes/_app/electricity/advanced'
@@ -103,6 +104,7 @@ import { Route as AppElectricityOrdersIndexRouteImport } from './routes/_app/ele
 import { Route as AppElectricityOrdersOrderIdRouteImport } from './routes/_app/electricity/orders.$orderId'
 import { Route as AppSavingsOrdersIndexRouteImport } from './routes/_app/savings.orders.index'
 import { Route as AppSavingsOrdersOrderIdRouteImport } from './routes/_app/savings.orders.$orderId'
+import { Route as AppSolarRequestsIndexRouteImport } from './routes/_app/solar.requests.index'
 import { Route as AppSolarRequestsRequestIdRouteImport } from './routes/_app/solar.requests.$requestId'
 import { Route as AppSolarRequestsNewRouteImport } from './routes/_app/solar.requests.new'
 import { Route as AdminCrmProfilesProfileIdRouteImport } from './routes/admin/crm/profiles.$profileId'
@@ -445,6 +447,11 @@ const RegisterVerifyRoute = RegisterVerifyRouteImport.update({
   path: '/verify',
   getParentRoute: () => RegisterRoute,
 } as any)
+const AppConsultationsIndexRoute = AppConsultationsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppConsultationsRoute,
+} as any)
 const AppConsultationsRequestIdRoute =
   AppConsultationsRequestIdRouteImport.update({
     id: '/$requestId',
@@ -585,6 +592,11 @@ const AppSavingsOrdersOrderIdRoute = AppSavingsOrdersOrderIdRouteImport.update({
   path: '/$orderId',
   getParentRoute: () => AppSavingsOrdersRoute,
 } as any)
+const AppSolarRequestsIndexRoute = AppSolarRequestsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppSolarRequestsRoute,
+} as any)
 const AppSolarRequestsRequestIdRoute =
   AppSolarRequestsRequestIdRouteImport.update({
     id: '/$requestId',
@@ -692,6 +704,7 @@ export interface FileRoutesByFullPath {
   '/admin/crm/corrections': typeof AdminCrmCorrectionsRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
+  '/consultations/': typeof AppConsultationsIndexRoute
   '/electricity/': typeof AppElectricityIndexRoute
   '/invoices/': typeof AppInvoicesIndexRoute
   '/savings/': typeof AppSavingsIndexRoute
@@ -706,6 +719,7 @@ export interface FileRoutesByFullPath {
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
   '/electricity/orders/': typeof AppElectricityOrdersIndexRoute
   '/savings/orders/': typeof AppSavingsOrdersIndexRoute
+  '/solar/requests/': typeof AppSolarRequestsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -717,7 +731,6 @@ export interface FileRoutesByTo {
   '/ai': typeof AppAiRoute
   '/app': typeof AppAppRoute
   '/charts': typeof AppChartsRoute
-  '/consultations': typeof AppConsultationsRouteWithChildren
   '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
@@ -780,10 +793,10 @@ export interface FileRoutesByTo {
   '/settings/team': typeof AppSettingsTeamRoute
   '/settings/timezone': typeof AppSettingsTimezoneRoute
   '/settings/username': typeof AppSettingsUsernameRoute
-  '/solar/requests': typeof AppSolarRequestsRouteWithChildren
   '/admin/crm/corrections': typeof AdminCrmCorrectionsRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
+  '/consultations': typeof AppConsultationsIndexRoute
   '/electricity': typeof AppElectricityIndexRoute
   '/invoices': typeof AppInvoicesIndexRoute
   '/savings': typeof AppSavingsIndexRoute
@@ -798,6 +811,7 @@ export interface FileRoutesByTo {
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
   '/electricity/orders': typeof AppElectricityOrdersIndexRoute
   '/savings/orders': typeof AppSavingsOrdersIndexRoute
+  '/solar/requests': typeof AppSolarRequestsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -885,6 +899,7 @@ export interface FileRoutesById {
   '/admin/crm/corrections': typeof AdminCrmCorrectionsRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
+  '/_app/consultations/': typeof AppConsultationsIndexRoute
   '/_app/electricity/': typeof AppElectricityIndexRoute
   '/_app/invoices/': typeof AppInvoicesIndexRoute
   '/_app/savings/': typeof AppSavingsIndexRoute
@@ -899,6 +914,7 @@ export interface FileRoutesById {
   '/app/crm/profiles/$profileId': typeof AppCrmProfilesProfileIdRoute
   '/_app/electricity/orders/': typeof AppElectricityOrdersIndexRoute
   '/_app/savings/orders/': typeof AppSavingsOrdersIndexRoute
+  '/_app/solar/requests/': typeof AppSolarRequestsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -986,6 +1002,7 @@ export interface FileRouteTypes {
     | '/admin/crm/corrections'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
+    | '/consultations/'
     | '/electricity/'
     | '/invoices/'
     | '/savings/'
@@ -1000,6 +1017,7 @@ export interface FileRouteTypes {
     | '/app/crm/profiles/$profileId'
     | '/electricity/orders/'
     | '/savings/orders/'
+    | '/solar/requests/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1011,7 +1029,6 @@ export interface FileRouteTypes {
     | '/ai'
     | '/app'
     | '/charts'
-    | '/consultations'
     | '/contracts'
     | '/dashboard'
     | '/documents'
@@ -1074,10 +1091,10 @@ export interface FileRouteTypes {
     | '/settings/team'
     | '/settings/timezone'
     | '/settings/username'
-    | '/solar/requests'
     | '/admin/crm/corrections'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
+    | '/consultations'
     | '/electricity'
     | '/invoices'
     | '/savings'
@@ -1092,6 +1109,7 @@ export interface FileRouteTypes {
     | '/app/crm/profiles/$profileId'
     | '/electricity/orders'
     | '/savings/orders'
+    | '/solar/requests'
   id:
     | '__root__'
     | '/'
@@ -1178,6 +1196,7 @@ export interface FileRouteTypes {
     | '/admin/crm/corrections'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
+    | '/_app/consultations/'
     | '/_app/electricity/'
     | '/_app/invoices/'
     | '/_app/savings/'
@@ -1192,6 +1211,7 @@ export interface FileRouteTypes {
     | '/app/crm/profiles/$profileId'
     | '/_app/electricity/orders/'
     | '/_app/savings/orders/'
+    | '/_app/solar/requests/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1680,6 +1700,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterVerifyRouteImport
       parentRoute: typeof RegisterRoute
     }
+    '/_app/consultations/': {
+      id: '/_app/consultations/'
+      path: '/'
+      fullPath: '/consultations/'
+      preLoaderRoute: typeof AppConsultationsIndexRouteImport
+      parentRoute: typeof AppConsultationsRoute
+    }
     '/_app/consultations/$requestId': {
       id: '/_app/consultations/$requestId'
       path: '/$requestId'
@@ -1869,6 +1896,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSavingsOrdersOrderIdRouteImport
       parentRoute: typeof AppSavingsOrdersRoute
     }
+    '/_app/solar/requests/': {
+      id: '/_app/solar/requests/'
+      path: '/'
+      fullPath: '/solar/requests/'
+      preLoaderRoute: typeof AppSolarRequestsIndexRouteImport
+      parentRoute: typeof AppSolarRequestsRoute
+    }
     '/_app/solar/requests/$requestId': {
       id: '/_app/solar/requests/$requestId'
       path: '/$requestId'
@@ -1902,10 +1936,12 @@ declare module '@tanstack/react-router' {
 
 interface AppConsultationsRouteChildren {
   AppConsultationsRequestIdRoute: typeof AppConsultationsRequestIdRoute
+  AppConsultationsIndexRoute: typeof AppConsultationsIndexRoute
 }
 
 const AppConsultationsRouteChildren: AppConsultationsRouteChildren = {
   AppConsultationsRequestIdRoute: AppConsultationsRequestIdRoute,
+  AppConsultationsIndexRoute: AppConsultationsIndexRoute,
 }
 
 const AppConsultationsRouteWithChildren =
@@ -1956,11 +1992,13 @@ const AppElectricityOrdersRouteWithChildren =
 interface AppSolarRequestsRouteChildren {
   AppSolarRequestsRequestIdRoute: typeof AppSolarRequestsRequestIdRoute
   AppSolarRequestsNewRoute: typeof AppSolarRequestsNewRoute
+  AppSolarRequestsIndexRoute: typeof AppSolarRequestsIndexRoute
 }
 
 const AppSolarRequestsRouteChildren: AppSolarRequestsRouteChildren = {
   AppSolarRequestsRequestIdRoute: AppSolarRequestsRequestIdRoute,
   AppSolarRequestsNewRoute: AppSolarRequestsNewRoute,
+  AppSolarRequestsIndexRoute: AppSolarRequestsIndexRoute,
 }
 
 const AppSolarRequestsRouteWithChildren =

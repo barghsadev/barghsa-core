@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { SolarRequestPage } from './SolarRequestPage.js';
 
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => () => Promise.resolve(),
+}));
+
 afterEach(() => vi.unstubAllGlobals());
 
 it.each(['fa', 'en'] as const)(

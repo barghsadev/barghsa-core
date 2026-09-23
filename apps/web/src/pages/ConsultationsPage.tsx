@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { Button } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { useLocale } from '../hooks/useLocale.js';
@@ -20,6 +21,7 @@ interface RequestRow {
 }
 
 export function ConsultationsPage() {
+  const navigate = useNavigate();
   const locale = useLocale();
   const copy = (key: string) => tConsultation(key, locale);
   const [profile, setProfile] = useState<SwitcherProfile | null>(null);
@@ -93,7 +95,10 @@ export function ConsultationsPage() {
       });
       if (!response.ok) throw new Error('submit');
       const result = (await response.json()) as { requestId: string };
-      window.location.assign(`/consultations/${result.requestId}`);
+      void navigate({
+        to: '/consultations/$requestId',
+        params: { requestId: result.requestId },
+      });
     } catch {
       setSubmitError(true);
       setSubmitting(false);
@@ -185,8 +190,9 @@ export function ConsultationsPage() {
             <ul className="space-y-3">
               {requests.map((request) => (
                 <li key={request.id}>
-                  <a
-                    href={`/consultations/${request.id}`}
+                  <Link
+                    to="/consultations/$requestId"
+                    params={{ requestId: request.id }}
                     className="block rounded-xl border bg-card p-4 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
                   >
                     <span className="block font-semibold" dir="auto">
@@ -204,7 +210,7 @@ export function ConsultationsPage() {
                     >
                       {new Intl.DateTimeFormat(locale).format(new Date(request.submitted_at))}
                     </time>
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

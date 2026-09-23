@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
@@ -14,6 +15,7 @@ type BuildingType = 'building_apartment' | 'non_household';
 type GridType = 'on_grid' | 'off_grid';
 
 export function SolarRequestPage() {
+  const navigate = useNavigate();
   const locale = useLocale();
   const copy = (key: string) => tSolar(key, locale);
   const [profileId, setProfileId] = useState('');
@@ -120,7 +122,10 @@ export function SolarRequestPage() {
       });
       if (!response.ok) throw new Error('submit');
       const result = (await response.json()) as { requestId: string };
-      window.location.assign(`/solar/requests/${result.requestId}`);
+      void navigate({
+        to: '/solar/requests/$requestId',
+        params: { requestId: result.requestId },
+      });
     } catch {
       setSubmitError(true);
       setSubmitting(false);

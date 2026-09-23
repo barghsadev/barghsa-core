@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
 
@@ -48,20 +49,21 @@ export function SolarRequestsPage() {
   return (
     <main className="mx-auto max-w-3xl space-y-5 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('myRequests')}</h1>
-      <a
-        href="/solar/requests/new"
+      <Link
+        to="/solar/requests/new"
         className="inline-block rounded-md bg-primary px-4 py-2 text-primary-foreground"
       >
         {copy('submit')}
-      </a>
+      </Link>
       {loading && <p role="status">{copy('loading')}</p>}
       {error && <p role="alert">{copy('notFound')}</p>}
       {!loading && !error && !rows.length && <p>{copy('none')}</p>}
       <ul className="space-y-3">
         {rows.map((row) => (
           <li key={row.id}>
-            <a
-              href={`/solar/requests/${row.id}`}
+            <Link
+              to="/solar/requests/$requestId"
+              params={{ requestId: row.id }}
               className="block rounded-xl border p-4 hover:border-primary"
             >
               <span className="font-medium">
@@ -76,7 +78,7 @@ export function SolarRequestsPage() {
               <time className="text-sm text-muted-foreground" dateTime={row.submitted_at}>
                 {new Intl.DateTimeFormat(locale).format(new Date(row.submitted_at))}
               </time>
-            </a>
+            </Link>
           </li>
         ))}
       </ul>
