@@ -16,6 +16,11 @@ interface IncreaseRequest {
   periodEnd: string;
   createdAt: string;
   contractState: string;
+  status: string;
+  adjustmentInvoiceId: string | null;
+  adjustmentInvoiceState: string | null;
+  adjustmentPaidAmount: string | null;
+  financialFollowUp: boolean;
 }
 
 export default function AdminElectricityIncreasesPage() {
@@ -25,6 +30,7 @@ export default function AdminElectricityIncreasesPage() {
   const [requests, setRequests] = useState<IncreaseRequest[]>([]);
   const [nextBefore, setNextBefore] = useState<string | null>(null);
   const [before, setBefore] = useState<string | null>(null);
+  const [view, setView] = useState<'pending' | 'expired'>('pending');
   const [revision, setRevision] = useState(0);
   const [reason, setReason] = useState<Record<string, string>>({});
   const [effectiveDate, setEffectiveDate] = useState<Record<string, string>>({});
@@ -39,8 +45,8 @@ export default function AdminElectricityIncreasesPage() {
     setError(false);
     setDenied(false);
     const path =
-      '/api/staff/electricity/increase-requests' +
-      (before ? `?before=${encodeURIComponent(before)}` : '');
+      `/api/staff/electricity/increase-requests?status=${view}` +
+      (before ? `&before=${encodeURIComponent(before)}` : '');
     void fetch(path, { credentials: 'include', signal: controller.signal })
       .then(async (response) => {
         if (response.status === 403) {
@@ -66,7 +72,7 @@ export default function AdminElectricityIncreasesPage() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [before, revision]);
+  }, [before, revision, view]);
 
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -85,10 +91,26 @@ export default function AdminElectricityIncreasesPage() {
           {copy('refresh')}
         </Button>
       </header>
+      <div className="flex gap-2" role="group" aria-label={copy('viewLabel')}>
+        {(['pending', 'expired'] as const).map((status) => (
+          <Button
+            key={status}
+            variant={view === status ? 'default' : 'outline'}
+            onClick={() => {
+              setView(status);
+              setBefore(null);
+            }}
+          >
+            {copy(`${status}Tab`)}
+          </Button>
+        ))}
+      </div>
       {loading ? <p role="status">{copy('loading')}</p> : null}
       {denied ? <p role="alert">{copy('forbidden')}</p> : null}
       {error ? <p role="alert">{copy('error')}</p> : null}
-      {!loading && !denied && !error && requests.length === 0 ? <p>{copy('empty')}</p> : null}
+      {!loading && !denied && !error && requests.length === 0 ? (
+        <p>{copy(view === 'pending' ? 'empty' : 'emptyExpired')}</p>
+      ) : null}
       <div className="grid gap-4 lg:grid-cols-2">
         {requests.map((request) => (
           <Card key={request.requestId}>
@@ -129,81 +151,104 @@ export default function AdminElectricityIncreasesPage() {
                   `state.${['Active', 'Completed', 'Cancelled'].includes(request.contractState) ? request.contractState : 'other'}`
                 )}
               </p>
-              <div className="space-y-2">
-                <Label htmlFor={`increase-effective-${request.requestId}`}>
-                  {copy('approveDate')}
-                </Label>
-                <Input
-                  id={`increase-effective-${request.requestId}`}
-                  type="datetime-local"
-                  value={effectiveDate[request.requestId] ?? ''}
-                  onChange={(event) =>
-                    setEffectiveDate((current) => ({
-                      ...current,
-                      [request.requestId]: event.target.value,
-                    }))
-                  }
-                />
-                <p className="text-muted-foreground">{copy('approveDateHelp')}</p>
-                <Button
-                  onClick={() =>
-                    setAction({
-                      title: copy('approve'),
-                      description: copy('approveConfirm'),
-                      path: `/api/staff/electricity/increase-requests/${request.requestId}/approve`,
-                      method: 'POST',
-                      body: {
-                        ...(effectiveDate[request.requestId]
-                          ? {
-                              effectiveFrom: new Date(
-                                effectiveDate[request.requestId]!
-                              ).toISOString(),
-                            }
-                          : {}),
-                        idempotencyKey: crypto.randomUUID(),
-                      },
-                      conflictMessage: copy('conflict'),
-                      forbiddenMessage: copy('forbidden'),
-                    })
-                  }
-                >
-                  {copy('approve')}
-                </Button>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor={`increase-reason-${request.requestId}`}>{copy('reason')}</Label>
-                <Input
-                  id={`increase-reason-${request.requestId}`}
-                  maxLength={1000}
-                  value={reason[request.requestId] ?? ''}
-                  onChange={(event) =>
-                    setReason((current) => ({
-                      ...current,
-                      [request.requestId]: event.target.value,
-                    }))
-                  }
-                />
-                <Button
-                  variant="destructive"
-                  disabled={!(reason[request.requestId] ?? '').trim()}
-                  onClick={() =>
-                    setAction({
-                      title: copy('reject'),
-                      description: copy('confirm'),
-                      path: `/api/staff/electricity/increase-requests/${request.requestId}/reject`,
-                      method: 'POST',
-                      body: {
-                        reason: reason[request.requestId]?.trim(),
-                        idempotencyKey: crypto.randomUUID(),
-                      },
-                      conflictMessage: copy('conflict'),
-                      forbiddenMessage: copy('forbidden'),
-                    })
-                  }
-                >
-                  {copy('reject')}
-                </Button>
-              </div>
+              {view === 'expired' ? (
+                <div className="space-y-1 rounded-md border p-3">
+                  <p>
+                    {copy('invoiceState')}:{' '}
+                    {request.adjustmentInvoiceState
+                      ? copy(`invoice.${request.adjustmentInvoiceState}`)
+                      : copy('notIssued')}
+                  </p>
+                  {request.adjustmentInvoiceId ? (
+                    <p className="break-all">{request.adjustmentInvoiceId}</p>
+                  ) : null}
+                  {request.adjustmentPaidAmount ? (
+                    <p>
+                      {copy('paidAmount')}: {numbers.irrDigits(request.adjustmentPaidAmount)} IRR
+                    </p>
+                  ) : null}
+                  <p>{copy(request.financialFollowUp ? 'financeFollowUp' : 'expiredClosed')}</p>
+                </div>
+              ) : null}
+              {view === 'pending' ? (
+                <div className="space-y-2">
+                  <Label htmlFor={`increase-effective-${request.requestId}`}>
+                    {copy('approveDate')}
+                  </Label>
+                  <Input
+                    id={`increase-effective-${request.requestId}`}
+                    type="datetime-local"
+                    value={effectiveDate[request.requestId] ?? ''}
+                    onChange={(event) =>
+                      setEffectiveDate((current) => ({
+                        ...current,
+                        [request.requestId]: event.target.value,
+                      }))
+                    }
+                  />
+                  <p className="text-muted-foreground">{copy('approveDateHelp')}</p>
+                  <Button
+                    onClick={() =>
+                      setAction({
+                        title: copy('approve'),
+                        description: copy('approveConfirm'),
+                        path: `/api/staff/electricity/increase-requests/${request.requestId}/approve`,
+                        method: 'POST',
+                        body: {
+                          ...(effectiveDate[request.requestId]
+                            ? {
+                                effectiveFrom: new Date(
+                                  effectiveDate[request.requestId]!
+                                ).toISOString(),
+                              }
+                            : {}),
+                          idempotencyKey: crypto.randomUUID(),
+                        },
+                        conflictMessage: copy('conflict'),
+                        forbiddenMessage: copy('forbidden'),
+                      })
+                    }
+                  >
+                    {copy('approve')}
+                  </Button>
+                </div>
+              ) : null}
+              {view === 'pending' ? (
+                <div className="space-y-2">
+                  <Label htmlFor={`increase-reason-${request.requestId}`}>{copy('reason')}</Label>
+                  <Input
+                    id={`increase-reason-${request.requestId}`}
+                    maxLength={1000}
+                    value={reason[request.requestId] ?? ''}
+                    onChange={(event) =>
+                      setReason((current) => ({
+                        ...current,
+                        [request.requestId]: event.target.value,
+                      }))
+                    }
+                  />
+                  <Button
+                    variant="destructive"
+                    disabled={!(reason[request.requestId] ?? '').trim()}
+                    onClick={() =>
+                      setAction({
+                        title: copy('reject'),
+                        description: copy('confirm'),
+                        path: `/api/staff/electricity/increase-requests/${request.requestId}/reject`,
+                        method: 'POST',
+                        body: {
+                          reason: reason[request.requestId]?.trim(),
+                          idempotencyKey: crypto.randomUUID(),
+                        },
+                        conflictMessage: copy('conflict'),
+                        forbiddenMessage: copy('forbidden'),
+                      })
+                    }
+                  >
+                    {copy('reject')}
+                  </Button>
+                </div>
+              ) : null}
             </CardContent>
           </Card>
         ))}

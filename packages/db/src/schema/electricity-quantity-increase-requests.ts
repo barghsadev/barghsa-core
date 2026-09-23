@@ -66,6 +66,7 @@ export const electricityQuantityIncreaseRequests = pgTable(
       onDelete: 'restrict',
     }),
     effectiveAt: timestamptz('effective_at'),
+    expiredAt: timestamptz('expired_at'),
     createdAt: timestamptz('created_at').defaultNow().notNull(),
   },
   (t) => [
@@ -96,15 +97,19 @@ export const electricityQuantityIncreaseRequests = pgTable(
     ),
     check(
       'electricity_quantity_increase_review_check',
-      sql`(${t.status}='pending' AND ${t.reviewedBy} IS NULL AND ${t.reviewReason} IS NULL AND ${t.reviewedAt} IS NULL) OR (${t.status}<>'pending' AND ${t.reviewedBy} IS NOT NULL AND ${t.reviewedAt} IS NOT NULL)`
+      sql`(${t.status} IN ('pending','expired') AND ${t.reviewedBy} IS NULL AND ${t.reviewReason} IS NULL AND ${t.reviewedAt} IS NULL) OR (${t.status}<>'pending' AND ${t.reviewedBy} IS NOT NULL AND ${t.reviewedAt} IS NOT NULL)`
     ),
     check(
       'electricity_quantity_increase_amendment_check',
-      sql`(${t.amendmentDocument} IS NULL AND ${t.amendmentSha256} IS NULL AND ${t.status} IN ('pending','rejected')) OR (${t.amendmentDocument} IS NOT NULL AND ${t.amendmentSha256} ~ '^[0-9a-f]{64}$' AND ${t.status} NOT IN ('pending','rejected'))`
+      sql`(${t.amendmentDocument} IS NULL AND ${t.amendmentSha256} IS NULL AND ${t.status} IN ('pending','rejected','expired')) OR (${t.amendmentDocument} IS NOT NULL AND ${t.amendmentSha256} ~ '^[0-9a-f]{64}$' AND ${t.status} NOT IN ('pending','rejected'))`
     ),
     check(
       'electricity_quantity_increase_signature_check',
-      sql`(${t.status} IN ('pending','rejected','awaiting_signature') AND ${t.signatureEvidence} IS NULL AND ${t.signedAt} IS NULL AND ${t.pricingSnapshot} IS NULL AND ${t.adjustmentAmount} IS NULL AND ${t.adjustmentInvoiceId} IS NULL AND ${t.effectiveAt} IS NULL) OR (${t.status} IN ('awaiting_payment','effective') AND ${t.signatureEvidence} IS NOT NULL AND ${t.signedAt} IS NOT NULL AND ${t.pricingSnapshot} IS NOT NULL AND ${t.adjustmentAmount}>0 AND ${t.adjustmentInvoiceId} IS NOT NULL)`
+      sql`((${t.status} IN ('pending','rejected','awaiting_signature') OR (${t.status}='expired' AND ${t.signedAt} IS NULL)) AND ${t.signatureEvidence} IS NULL AND ${t.signedAt} IS NULL AND ${t.pricingSnapshot} IS NULL AND ${t.adjustmentAmount} IS NULL AND ${t.adjustmentInvoiceId} IS NULL AND ${t.effectiveAt} IS NULL) OR ((${t.status} IN ('awaiting_payment','effective') OR (${t.status}='expired' AND ${t.signedAt} IS NOT NULL)) AND ${t.signatureEvidence} IS NOT NULL AND ${t.signedAt} IS NOT NULL AND ${t.pricingSnapshot} IS NOT NULL AND ${t.adjustmentAmount}>0 AND ${t.adjustmentInvoiceId} IS NOT NULL)`
+    ),
+    check(
+      'electricity_quantity_increase_expired_at_check',
+      sql`(${t.status}='expired') = (${t.expiredAt} IS NOT NULL)`
     ),
   ]
 );

@@ -19,9 +19,15 @@ export const fa: I18nDictionary = {
   'electricity.increase.activationRule':
     'افزایش مقدار فقط پس از امضای شما و پرداخت کامل فاکتور تعدیل و زودتر نبودن از تاریخ شروع اعمال می‌شود.',
   'electricity.increase.adjustment': 'مبلغ فاکتور تعدیل در زمان امضا',
+  'electricity.increase.priceBegins': 'شروع دوره قیمت‌گذاری و اعمال افزایش',
   'electricity.increase.agree': 'الحاقیه، مبلغ تعدیل و شرایط اعمال افزایش را بررسی و قبول می‌کنم.',
   'electricity.increase.sign': 'امضای الحاقیه و صدور فاکتور',
   'electricity.increase.payInvoice': 'مشاهده یا پرداخت فاکتور تعدیل',
+  'electricity.increase.cancelledInvoice': 'مشاهده فاکتور تعدیل لغوشده',
+  'electricity.increase.noPaymentDue':
+    'این فاکتور لغو شد و پرداختی برای افزایش منقضی‌شده لازم نیست.',
+  'electricity.increase.financeFollowUp':
+    'رسید یا مبلغ پرداخت‌شده این درخواست منقضی‌شده نیازمند بررسی مالی است.',
   'electricity.increase.signFailed':
     'امضای الحاقیه انجام نشد. مبلغ و وضعیت قرارداد را دوباره بررسی کنید.',
   'electricity.increase.currentQuantity': 'مقدار فعلی قرارداد پس از الحاقیه',
@@ -1106,10 +1112,16 @@ export const en: I18nDictionary = {
   'electricity.increase.activationRule':
     'The increase takes effect only after your signature and full adjustment payment, no earlier than its start date.',
   'electricity.increase.adjustment': 'Adjustment invoice amount at signature',
+  'electricity.increase.priceBegins': 'Pricing and activation start',
   'electricity.increase.agree':
     'I have reviewed and accept the amendment, adjustment amount, and activation terms.',
   'electricity.increase.sign': 'Sign amendment and issue invoice',
   'electricity.increase.payInvoice': 'View or pay adjustment invoice',
+  'electricity.increase.cancelledInvoice': 'View cancelled adjustment invoice',
+  'electricity.increase.noPaymentDue':
+    'This invoice was cancelled; no payment is due for the expired increase.',
+  'electricity.increase.financeFollowUp':
+    'A receipt or confirmed payment on this expired request needs finance review.',
   'electricity.increase.signFailed':
     'Could not sign the amendment. Review the amount and contract status again.',
   'electricity.increase.currentQuantity': 'Current contractual quantity after amendment',

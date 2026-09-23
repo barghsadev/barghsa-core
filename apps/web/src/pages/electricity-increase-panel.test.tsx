@@ -135,3 +135,48 @@ it('shows approved amendment terms before the customer signs', async () => {
     container.remove();
   }
 });
+
+it.each([
+  ['Cancelled', false, 'no payment is due for the expired increase'],
+  ['Paid', true, 'finance review'],
+] as const)(
+  'explains an expired %s adjustment to the customer',
+  async (invoiceState, followUp, message) => {
+    document.documentElement.lang = 'en';
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async () =>
+          new Response(
+            JSON.stringify({
+              request: {
+                requestedKwh: '120',
+                status: 'expired',
+                reviewReason: null,
+                adjustmentInvoiceId: 'invoice-1',
+                adjustmentInvoiceState: invoiceState,
+                financialFollowUp: followUp,
+              },
+              maxPercentage: 20,
+              originalKwh: '100',
+              canRequest: false,
+            })
+          )
+      )
+    );
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    try {
+      await act(async () =>
+        root.render(<ElectricityIncreasePanel contractId="contract-1" versionId="version-1" />)
+      );
+      expect(container.textContent).toContain(message);
+      expect(container.querySelector('input')).toBeNull();
+    } finally {
+      await act(async () => root.unmount());
+      container.remove();
+    }
+  }
+);

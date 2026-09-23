@@ -77,6 +77,9 @@ const requestSelect = `SELECT r.id AS "requestId",r.contract_id AS "contractId",
  r.signature_evidence AS "signatureEvidence",r.signed_at AS "signedAt",
  r.pricing_snapshot AS "pricingSnapshot",r.adjustment_amount::text AS "adjustmentAmount",
  r.adjustment_invoice_id AS "adjustmentInvoiceId",r.effective_at AS "effectiveAt",
+ r.expired_at AS "expiredAt",ai.state AS "adjustmentInvoiceState",
+ ai.paid_amount::text AS "adjustmentPaidAmount",
+ (r.status='expired' AND ai.id IS NOT NULL AND ai.state NOT IN ('Cancelled','Refunded')) AS "financialFollowUp",
  c.state AS "contractState" FROM electricity_quantity_increase_requests r
  JOIN contracts c ON c.id=r.contract_id
  LEFT JOIN invoices ai ON ai.id=r.adjustment_invoice_id`;
@@ -120,6 +123,13 @@ export function quoteIncreaseAdjustment(input: {
   if (amount <= 0n || amount > 9_223_372_036_854_775_807n)
     throw new ConflictException('Adjustment amount is outside the payable range');
   return { amount, eligibleStart, remainingMs, periodMs };
+}
+
+/** Hold a reviewed quote stable until the next five-minute delivery boundary. */
+export function nextIncreasePricingInstant(now: Date) {
+  const value = now.getTime();
+  if (!Number.isSafeInteger(value)) throw new RangeError('Invalid pricing instant');
+  return new Date(Math.ceil(value / 300_000) * 300_000);
 }
 
 function translateConcurrentChange(error: unknown): never {
@@ -200,17 +210,20 @@ export class ElectricityIncreaseService {
       const request = await this.request(client, id);
       let quote: { adjustmentIrR: string; eligibleFrom: Date } | null = null;
       if (request?.status === 'awaiting_signature' && contract.period_end > new Date()) {
-        const invoice = await this.originalInvoice(client, contract.version_id);
-        const result = quoteIncreaseAdjustment({
-          originalInvoiceIrR: BigInt(invoice.total_amount),
-          originalKwh: BigInt(request.originalKwh),
-          requestedKwh: BigInt(request.requestedKwh),
-          periodStart: contract.period_start,
-          periodEnd: contract.period_end,
-          effectiveFrom: request.effectiveFrom,
-          now: new Date(),
-        });
-        quote = { adjustmentIrR: result.amount.toString(), eligibleFrom: result.eligibleStart };
+        const pricingInstant = nextIncreasePricingInstant(new Date());
+        if (pricingInstant < contract.period_end) {
+          const invoice = await this.originalInvoice(client, contract.version_id);
+          const result = quoteIncreaseAdjustment({
+            originalInvoiceIrR: BigInt(invoice.total_amount),
+            originalKwh: BigInt(request.originalKwh),
+            requestedKwh: BigInt(request.requestedKwh),
+            periodStart: contract.period_start,
+            periodEnd: contract.period_end,
+            effectiveFrom: request.effectiveFrom,
+            now: pricingInstant,
+          });
+          quote = { adjustmentIrR: result.amount.toString(), eligibleFrom: result.eligibleStart };
+        }
       }
       const mayRequest =
         (await client.query<{ id: string }>(activeProfileSql('contracts:sign'), [actor.userId]))
@@ -311,13 +324,13 @@ export class ElectricityIncreaseService {
     }
   }
 
-  async queue(before?: string) {
+  async queue(before?: string, status: 'pending' | 'expired' = 'pending') {
     const rows = (
       await getDbPool().query(
         requestSelect +
-          ` WHERE r.status='pending' AND ($1::uuid IS NULL OR r.id<$1)
+          ` WHERE r.status=$1 AND ($2::uuid IS NULL OR r.id<$2)
         ORDER BY r.id DESC LIMIT 51`,
-        [before ?? null]
+        [status, before ?? null]
       )
     ).rows;
     return {
@@ -506,7 +519,7 @@ export class ElectricityIncreaseService {
                 periodStart: contract.period_start,
                 periodEnd: request.period_end,
                 effectiveFrom: request.effective_from,
-                now,
+                now: nextIncreasePricingInstant(now),
               });
               if (quote.amount.toString() !== input.expectedAdjustmentIrR)
                 throw new ConflictException('Adjustment changed; review the current amount');

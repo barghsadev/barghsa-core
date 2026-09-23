@@ -14,6 +14,10 @@ interface IncreaseRequest {
   adjustmentInvoiceId: string | null;
   adjustmentAmount: string | null;
   effectiveAt: string | null;
+  expiredAt: string | null;
+  adjustmentInvoiceState: string | null;
+  adjustmentPaidAmount: string | null;
+  financialFollowUp: boolean;
   amendmentDocument: {
     originalKwh: string;
     requestedKwh: string;
@@ -211,6 +215,10 @@ export function ElectricityIncreasePanel({
                   {t('electricity.increase.adjustment', locale)}:{' '}
                   {numbers.irrDigits(data.quote.adjustmentIrR)} IRR
                 </p>
+                <p>
+                  {t('electricity.increase.priceBegins', locale)}:{' '}
+                  {new Date(data.quote.eligibleFrom).toLocaleString(locale)}
+                </p>
                 <label className="flex items-start gap-2">
                   <input
                     type="checkbox"
@@ -230,9 +238,21 @@ export function ElectricityIncreasePanel({
                   className="text-primary underline"
                   href={`/invoices/${encodeURIComponent(data.request.adjustmentInvoiceId)}`}
                 >
-                  {t('electricity.increase.payInvoice', locale)}
+                  {t(
+                    data.request.adjustmentInvoiceState === 'Cancelled'
+                      ? 'electricity.increase.cancelledInvoice'
+                      : 'electricity.increase.payInvoice',
+                    locale
+                  )}
                 </a>
               </p>
+            ) : null}
+            {data.request.status === 'expired' &&
+            data.request.adjustmentInvoiceState === 'Cancelled' ? (
+              <p>{t('electricity.increase.noPaymentDue', locale)}</p>
+            ) : null}
+            {data.request.financialFollowUp ? (
+              <p role="status">{t('electricity.increase.financeFollowUp', locale)}</p>
             ) : null}
             {error === 'stepup' ? (
               <p role="alert">

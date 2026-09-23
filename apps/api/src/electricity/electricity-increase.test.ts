@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  nextIncreasePricingInstant,
   quoteIncreaseAdjustment,
   validateIncreaseQuantity,
 } from './electricity-increase.service.js';
@@ -33,6 +34,14 @@ describe('electricity quantity increase limit', () => {
 describe('electricity increase adjustment quote', () => {
   const periodStart = new Date('2026-10-01T00:00:00Z');
   const periodEnd = new Date('2026-10-11T00:00:00Z');
+
+  it('keeps the quote stable within a five-minute window and bills no earlier than that window', () => {
+    const first = nextIncreasePricingInstant(new Date('2026-10-02T12:01:00Z'));
+    const second = nextIncreasePricingInstant(new Date('2026-10-02T12:04:59Z'));
+    expect(first.toISOString()).toBe('2026-10-02T12:05:00.000Z');
+    expect(second).toEqual(first);
+    expect(nextIncreasePricingInstant(first)).toEqual(first);
+  });
 
   it('prices only the additional future share of the original paid invoice', () => {
     const quote = quoteIncreaseAdjustment({

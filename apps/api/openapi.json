@@ -17310,8 +17310,21 @@
           {
             "in": "query",
             "name": "before",
-            "required": true,
+            "required": false,
             "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "enum": [
+                "pending",
+                "expired"
+              ],
               "type": "string"
             }
           }
@@ -17326,7 +17339,7 @@
             "bearer": []
           }
         ],
-        "summary": "List pending electricity quantity increase requests",
+        "summary": "List pending or expired electricity quantity increase requests",
         "tags": [
           "Staff · Electricity contract changes"
         ]

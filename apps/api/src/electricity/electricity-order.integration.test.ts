@@ -793,7 +793,15 @@ it('funds the linked invoice and activates only after customer acceptance', asyn
   expect(parent.status).toBe('CONFIRMED');
 });
 
-it.each(['reject', 'approve_future', 'approve_current'] as const)(
+it.each([
+  'reject',
+  'approve_future',
+  'approve_current',
+  'expire_pending',
+  'expire_unsigned',
+  'expire_unpaid',
+  'expire_review',
+] as const)(
   'accepts one bounded future increase request and lets staff %s it with an audit trail',
   async (decision) => {
     if (decision === 'approve_current') {
@@ -894,7 +902,7 @@ it.each(['reject', 'approve_future', 'approve_current'] as const)(
     expect(overLimit.status, http.logs()).toBe(409);
     const submitted = await fetch(path, { method: 'POST', headers, body: JSON.stringify(request) });
     expect(submitted.status, http.logs()).toBe(201);
-    const result = (await submitted.json()) as { requestId: string };
+    const result = (await submitted.json()) as { requestId: string; periodEnd: string };
     expect(
       (await fetch(path, { method: 'POST', headers, body: JSON.stringify(request) })).status,
       http.logs()
@@ -918,6 +926,24 @@ it.each(['reject', 'approve_future', 'approve_current'] as const)(
     expect((await staffQueue.json()) as { requests: Array<{ requestId: string }> }).toMatchObject({
       requests: [expect.objectContaining({ requestId: result.requestId })],
     });
+    if (decision === 'expire_pending') {
+      const disposition = await http.pool.query<{ disposition: string }>(
+        'SELECT expire_electricity_increase($1,$2) AS disposition',
+        [result.requestId, new Date(new Date(result.periodEnd).getTime() + 60_000)]
+      );
+      expect(disposition.rows[0]?.disposition).toBe('unsigned');
+      expect(await (await fetch(path, { headers })).json()).toMatchObject({
+        request: { status: 'expired', adjustmentInvoiceId: null },
+      });
+      expect(
+        await (
+          await fetch(`${http.base}/api/staff/electricity/increase-requests?status=expired`, {
+            headers: staffHeaders,
+          })
+        ).json()
+      ).toMatchObject({ requests: [expect.objectContaining({ requestId: result.requestId })] });
+      return;
+    }
     if (decision !== 'reject') {
       const approval = { idempotencyKey: randomUUID() };
       const approvePath = `${http.base}/api/staff/electricity/increase-requests/${result.requestId}/approve`;
@@ -980,8 +1006,22 @@ it.each(['reject', 'approve_future', 'approve_current'] as const)(
           [result.requestId]
         )
       ).rejects.toMatchObject({ code: '23514' });
+      const expiredAt = new Date(
+        new Date(amendment.amendmentDocument.periodEnd!).getTime() + 60_000
+      );
+      if (decision === 'expire_unsigned') {
+        const disposition = await http.pool.query<{ disposition: string }>(
+          'SELECT expire_electricity_increase($1,$2) AS disposition',
+          [result.requestId, expiredAt]
+        );
+        expect(disposition.rows[0]?.disposition).toBe('unsigned');
+        expect(await (await fetch(path, { headers })).json()).toMatchObject({
+          request: { status: 'expired', amendmentSha256: amendment.amendmentSha256 },
+        });
+        return;
+      }
       const review = (await (await fetch(path, { headers })).json()) as {
-        quote: { adjustmentIrR: string };
+        quote: { adjustmentIrR: string; eligibleFrom: string };
       };
       if (decision === 'approve_future') expect(review.quote.adjustmentIrR).toBe('200000');
       else expect(BigInt(review.quote.adjustmentIrR)).toBeGreaterThan(0n);
@@ -1088,6 +1128,28 @@ it.each(['reject', 'approve_future', 'approve_current'] as const)(
           ).json()) as { effectiveTotalKwh: string }
         ).effectiveTotalKwh
       ).toBe('10');
+      if (decision === 'expire_unpaid') {
+        const disposition = await http.pool.query<{ disposition: string }>(
+          'SELECT expire_electricity_increase($1,$2) AS disposition',
+          [result.requestId, expiredAt]
+        );
+        expect(disposition.rows[0]?.disposition).toBe('invoice_cancelled');
+        expect(await (await fetch(path, { headers })).json()).toMatchObject({
+          request: {
+            status: 'expired',
+            adjustmentInvoiceState: 'Cancelled',
+            financialFollowUp: false,
+          },
+        });
+        expect(
+          (
+            await http.pool.query('SELECT state FROM invoices WHERE id=$1', [
+              signedRequest.adjustmentInvoiceId,
+            ])
+          ).rows[0].state
+        ).toBe('Cancelled');
+        return;
+      }
       const adjustmentWalletPath = `${http.base}/api/invoices/${signedRequest.adjustmentInvoiceId}/wallet-payment`;
       const adjustmentReview = await fetch(adjustmentWalletPath, { headers });
       expect(adjustmentReview.status, http.logs()).toBe(200);
@@ -1102,21 +1164,46 @@ it.each(['reject', 'approve_future', 'approve_current'] as const)(
         }),
       });
       expect(adjustmentPayment.status, http.logs()).toBe(200);
-      if (decision === 'approve_future') {
+      if (decision === 'expire_review') {
+        const disposition = await http.pool.query<{ disposition: string }>(
+          'SELECT expire_electricity_increase($1,$2) AS disposition',
+          [result.requestId, expiredAt]
+        );
+        expect(disposition.rows[0]?.disposition).toBe('finance_review');
+        expect(await (await fetch(path, { headers })).json()).toMatchObject({
+          request: { status: 'expired', adjustmentInvoiceState: 'Paid', financialFollowUp: true },
+        });
+        expect(
+          await (
+            await fetch(`${http.base}/api/staff/electricity/increase-requests?status=expired`, {
+              headers: staffHeaders,
+            })
+          ).json()
+        ).toMatchObject({ requests: [expect.objectContaining({ requestId: result.requestId })] });
+        expect(
+          (
+            await http.pool.query('SELECT state FROM invoices WHERE id=$1', [
+              signedRequest.adjustmentInvoiceId,
+            ])
+          ).rows[0].state
+        ).toBe('Paid');
+        return;
+      }
+      if (decision === 'approve_future' || decision === 'approve_current') {
         expect(await (await fetch(path, { headers })).json()).toMatchObject({
           request: {
             status: 'awaiting_effective_date',
             adjustmentInvoiceId: signedRequest.adjustmentInvoiceId,
           },
         });
+        const earlyActivation = await http.pool.query<{ activated: boolean }>(
+          'SELECT finalize_paid_electricity_increase($1,$2) AS activated',
+          [result.requestId, new Date(new Date(review.quote.eligibleFrom).getTime() - 1_000)]
+        );
+        expect(earlyActivation.rows[0]?.activated).toBe(false);
         const activation = await http.pool.query<{ activated: boolean }>(
           'SELECT finalize_paid_electricity_increase($1,$2) AS activated',
-          [
-            result.requestId,
-            new Date(
-              new Date(amendment.amendmentDocument.earliestEffectiveFrom!).getTime() + 60_000
-            ),
-          ]
+          [result.requestId, new Date(new Date(review.quote.eligibleFrom).getTime() + 60_000)]
         );
         expect(activation.rows[0]?.activated).toBe(true);
       }

@@ -9,7 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
@@ -87,11 +87,20 @@ export class StaffElectricityIncreaseController {
   constructor(private readonly service: ElectricityIncreaseService) {}
 
   @Get()
-  @ApiOperation({ summary: 'List pending electricity quantity increase requests' })
-  queue(@Req() req: AuthenticatedRequest, @Query('before') before?: string) {
+  @ApiOperation({ summary: 'List pending or expired electricity quantity increase requests' })
+  @ApiQuery({ name: 'before', required: false, format: 'uuid' })
+  @ApiQuery({ name: 'status', required: false, enum: ['pending', 'expired'] })
+  queue(
+    @Req() req: AuthenticatedRequest,
+    @Query('before') before?: string,
+    @Query('status') status?: string
+  ) {
     if (!hasStaffPermission(req, 'contracts:read') && !hasStaffPermission(req, 'contracts:write'))
       throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
-    return this.service.queue(before === undefined ? undefined : parse(idSchema, before));
+    return this.service.queue(
+      before === undefined ? undefined : parse(idSchema, before),
+      status === undefined ? 'pending' : parse(z.enum(['pending', 'expired']), status)
+    );
   }
 
   @Post(':requestId/approve')

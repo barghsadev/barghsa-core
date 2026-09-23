@@ -4,6 +4,7 @@ import { runElectricityIncreaseActivation } from './electricity-increase-runner.
 
 const mocks = vi.hoisted(() => ({
   activate: vi.fn(),
+  expire: vi.fn(),
   success: vi.fn(),
   failure: vi.fn(),
   pool: {},
@@ -11,6 +12,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock('@barghsa/db', () => ({ getDbPool: () => mocks.pool }));
 vi.mock('@barghsa/db/electricity-increase-activation', () => ({
   activateDueElectricityIncreases: mocks.activate,
+  expireDueElectricityIncreases: mocks.expire,
 }));
 vi.mock('../jobs/job-recorder.js', () => ({
   recordJobSuccess: mocks.success,
@@ -20,7 +22,15 @@ beforeEach(() => vi.clearAllMocks());
 
 it('records successful activation polls', async () => {
   mocks.activate.mockResolvedValue({ activated: 2, skipped: 1 });
-  expect(await runElectricityIncreaseActivation()).toEqual({ activated: 2, skipped: 1 });
+  mocks.expire.mockResolvedValue({ expired: 3, cancelled: 2, financeReview: 1, skipped: 0 });
+  expect(await runElectricityIncreaseActivation()).toEqual({
+    activated: 2,
+    activationSkipped: 1,
+    expired: 3,
+    cancelled: 2,
+    financeReview: 1,
+    skipped: 0,
+  });
   expect(mocks.success).toHaveBeenCalledWith('electricity_increase_activation', mocks.pool);
 });
 
