@@ -295,9 +295,22 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
       status: 'contract_created',
       contract_id: result.contractId,
       initial_invoice_id: result.invoiceIds[0],
+      initial_invoice_state: 'Unpaid',
       contract_published: false,
     },
   });
+  const listed = (await (
+    await send('postal-buyer', `solar/requests?profileId=${profileId}`)
+  ).json()) as { requests: Array<Record<string, unknown>> };
+  expect(listed.requests).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        id,
+        initial_invoice_id: result.invoiceIds[0],
+        initial_invoice_state: 'Unpaid',
+      }),
+    ])
+  );
   expect((await send('postal-buyer', `contracts/${result.contractId}`)).status).toBe(404);
   const contractVersionId = (
     await http.pool.query<{ current_version_id: string }>(

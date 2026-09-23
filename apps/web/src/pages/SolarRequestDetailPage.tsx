@@ -17,6 +17,7 @@ interface SolarRequest {
   contract_id: string | null;
   contract_published: boolean;
   initial_invoice_id: string | null;
+  initial_invoice_state: string | null;
   building_type: string;
   grid_type: string;
   bill_identifier: string | null;

@@ -206,11 +206,16 @@ export class SolarRequestService {
       const rows = (
         await client.query(
           `SELECT r.id,r.status,r.building_type,r.grid_type,r.submitted_at,r.contract_id,
-               EXISTS(
-                 SELECT 1 FROM contract_publications cp WHERE cp.contract_id=r.contract_id
-               ) AS contract_published
-               FROM solar_construction_requests r
-               WHERE r.profile_id=$1
+                 i.id AS initial_invoice_id,i.state AS initial_invoice_state,
+                 EXISTS(
+                   SELECT 1 FROM contract_publications cp WHERE cp.contract_id=r.contract_id
+                 ) AS contract_published
+                 FROM solar_construction_requests r
+                 LEFT JOIN LATERAL (
+                   SELECT id,state FROM invoices WHERE contract_id=r.contract_id::text
+                   ORDER BY issued_at,id LIMIT 1
+                 ) i ON r.contract_id IS NOT NULL
+                 WHERE r.profile_id=$1
                  AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) < ($2::timestamptz,$3::uuid))
                ORDER BY r.submitted_at DESC,r.id DESC LIMIT 101`,
           [profileId, cursor?.submitted_at ?? null, before ?? null]
@@ -237,11 +242,12 @@ export class SolarRequestService {
       const request = (
         await client.query<Record<string, unknown>>(
           `SELECT r.*,a.full_address AS site_address,i.id AS initial_invoice_id,
-             EXISTS(SELECT 1 FROM contract_publications cp WHERE cp.contract_id=r.contract_id) AS contract_published
+               i.state AS initial_invoice_state,
+               EXISTS(SELECT 1 FROM contract_publications cp WHERE cp.contract_id=r.contract_id) AS contract_published
            FROM solar_construction_requests r
            LEFT JOIN addresses a ON a.id=r.site_address_id
            LEFT JOIN LATERAL (
-             SELECT id FROM invoices WHERE contract_id=r.contract_id::text
+               SELECT id,state FROM invoices WHERE contract_id=r.contract_id::text
              ORDER BY issued_at,id LIMIT 1
            ) i ON r.contract_id IS NOT NULL
            WHERE r.id=$1`,

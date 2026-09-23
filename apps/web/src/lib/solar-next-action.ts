@@ -6,6 +6,8 @@ export interface SolarActionRequest {
   status: string;
   contract_id: string | null;
   contract_published: boolean;
+  initial_invoice_id?: string | null;
+  initial_invoice_state?: string | null;
 }
 
 export function solarNextAction(
@@ -17,7 +19,18 @@ export function solarNextAction(
     return { text: copy('workflowNextUpload'), owner: 'customer', href: '#solar-documents' };
   if (request.status === 'waiting_for_postal_submission')
     return { text: copy('workflowNextPostal'), owner: 'customer', href: '#solar-postal' };
-  if (request.status === 'contract_created')
+  if (request.status === 'contract_created') {
+    if (
+      request.initial_invoice_id &&
+      ['Unpaid', 'PartiallyFunded', 'Overdue'].includes(request.initial_invoice_state ?? '')
+    )
+      return {
+        text: copy('solarPayInvoice'),
+        owner: 'customer',
+        href: `/invoices/${encodeURIComponent(request.initial_invoice_id)}`,
+      };
+    if (request.initial_invoice_state === 'PaymentUnderReview')
+      return { text: copy('solarInvoiceUnderReview'), owner: 'staff' };
     return request.contract_published && request.contract_id
       ? {
           text: copy('solarViewContract'),
@@ -25,6 +38,7 @@ export function solarNextAction(
           href: `/contracts?contractId=${encodeURIComponent(request.contract_id)}`,
         }
       : { text: copy('solarContractAwaitingPublication'), owner: 'staff' };
+  }
   if (request.status === 'approved')
     return { text: copy('solarContractAwaitingPublication'), owner: 'staff' };
   if (['rejected', 'cancelled'].includes(request.status))

@@ -13,6 +13,8 @@ interface RequestRow {
   submitted_at: string;
   contract_id: string | null;
   contract_published: boolean;
+  initial_invoice_id: string | null;
+  initial_invoice_state: string | null;
 }
 
 export function SolarRequestsPage() {

@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Solar invoice next action](batches/2026-09-24-solar-invoice-next-action.md) connects the issued solar invoice to the customer's next action on request list and detail. Unpaid invoices link to payment, payment review belongs to staff, and a paid published contract returns to customer action. Migrated HTTP and five-browser coverage verify the handoff.
+
 [Solar site-address return](batches/2026-09-24-solar-address-return.md) connects non-household solar intake to address creation and back. It preserves the saved draft and selects the new address; the browser journey covers creation and submission in five projects.
 
 [Advanced electricity address return](batches/2026-09-24-advanced-electricity-address-return.md) saves the review step before a customer opens address settings, then returns them to the restored order with an updated address list. The bilingual browser journey covers this round trip in all five projects.
