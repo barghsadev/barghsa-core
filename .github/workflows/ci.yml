@@ -191,7 +191,7 @@ jobs:
         run: |
           if [ "$FULL_CI" != "true" ]; then
             if [ "${{ github.event_name }}" = "push" ]; then
-              pnpm turbo run test --force --concurrency=2 --filter="...[${{ github.event.before }}]"
+              pnpm turbo run test --force --concurrency=2 --filter="[${{ github.event.before }}]"
             else
               pnpm turbo run test --force --concurrency=2 --filter="...[origin/main]"
             fi
