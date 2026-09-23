@@ -16998,6 +16998,17 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "enum": [
+                "pending"
+              ],
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -19743,6 +19754,17 @@
             "name": "profileId",
             "required": true,
             "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "enum": [
+                "pending"
+              ],
               "type": "string"
             }
           },

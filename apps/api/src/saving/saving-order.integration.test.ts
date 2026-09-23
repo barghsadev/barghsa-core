@@ -339,6 +339,17 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     orders: [{ id: result.savingOrderId, cancellation_pending: false, financial_status: 'unpaid' }],
     nextBefore: null,
   });
+  const pendingList = await request(
+    `/api/saving/orders?profileId=${input.profileId}&status=pending`,
+    'GET'
+  );
+  expect(pendingList.status, http.logs()).toBe(200);
+  expect(await pendingList.json()).toMatchObject({
+    orders: [{ id: result.savingOrderId }],
+  });
+  expect(
+    (await request(`/api/saving/orders?profileId=${input.profileId}&status=active`, 'GET')).status
+  ).toBe(400);
   const afterOrder = await request(
     `/api/saving/orders?profileId=${input.profileId}&before=${result.savingOrderId}`,
     'GET'

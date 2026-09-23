@@ -12,7 +12,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { validatePostalCode } from '@barghsa/shared/validation';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
@@ -227,14 +227,18 @@ export class ElectricityOrderController {
     summary: 'Profile-scoped electricity orders with commercial and financial progress',
   })
   @ApiResponse({ status: 200, description: 'Newest electricity orders and next-page cursor.' })
+  @ApiQuery({ name: 'status', required: false, enum: ['pending'] })
   list(
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
     @Query('before') before: string | undefined,
+    @Query('status') status: string | undefined,
     @Req() req: AuthenticatedRequest
   ) {
     if (before && !z.string().uuid().safeParse(before).success)
       throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
-    return this.service.list(req.session, profileId, before);
+    if (status !== undefined && status !== 'pending')
+      throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
+    return this.service.list(req.session, profileId, before, status);
   }
 
   @Post('orders/:orderId/resubmit-address')

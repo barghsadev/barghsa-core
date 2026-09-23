@@ -2,7 +2,9 @@
 
 ## Current manual batch — September 24, 2026
 
-[Customer dashboard live status](batches/2026-09-24-dashboard-live-status.md) replaces stale legacy counts with current contract, electricity and saving workflow states and gives customers direct routes to both order lists. The remaining list-filter detail is recorded in the batch note.
+[Dashboard pending-order lists](batches/2026-09-24-dashboard-filtered-orders.md) completes filtered navigation from the dashboard count to electricity and saving orders. Both APIs filter before pagination, and both customer pages support the pending view in Persian and English.
+
+[Customer dashboard live status](batches/2026-09-24-dashboard-live-status.md) replaces stale legacy counts with current contract, electricity and saving workflow states and gives customers direct routes to both order lists.
 
 [CI main-run concurrency](batches/2026-09-24-ci-main-concurrency.md) groups checks by workflow and branch so a new direct `main` push cancels an older redundant run while preserving every check on the newest cumulative commit.
 

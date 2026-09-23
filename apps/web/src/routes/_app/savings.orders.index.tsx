@@ -1,8 +1,14 @@
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
+import { SavingOrdersPage } from '../../pages/SavingOrdersPage.js';
+
+function SavingOrdersRoute() {
+  const { status } = Route.useSearch();
+  return <SavingOrdersPage key={status ?? 'all'} pendingOnly={status === 'pending'} />;
+}
 
 export const Route = createFileRoute('/_app/savings/orders/')({
-  component: lazyRouteComponent(
-    () => import('../../pages/SavingOrdersPage.js'),
-    'SavingOrdersPage'
-  ),
+  validateSearch: (search: Record<string, unknown>) => ({
+    status: search.status === 'pending' ? ('pending' as const) : undefined,
+  }),
+  component: SavingOrdersRoute,
 });

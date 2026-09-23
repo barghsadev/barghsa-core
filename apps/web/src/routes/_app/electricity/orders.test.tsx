@@ -9,16 +9,21 @@ vi.mock('@tanstack/react-router', () => ({
     children,
     to,
     params,
+    search,
     ...rest
   }: {
     children: ReactNode;
     to: string;
     params?: Record<string, string>;
+    search?: Record<string, string | undefined>;
   }) => {
-    const href = Object.entries(params ?? {}).reduce(
+    const path = Object.entries(params ?? {}).reduce(
       (path, [key, value]) => path.replace(`$${key}`, encodeURIComponent(value)),
       to
     );
+    const query = new URLSearchParams();
+    for (const [key, value] of Object.entries(search ?? {})) if (value) query.set(key, value);
+    const href = query.size ? `${path}?${query}` : path;
     return (
       <a href={href} {...rest}>
         {children}
@@ -104,6 +109,35 @@ it('keeps earlier profile orders visible when more history loads', async () => {
     expect(container.querySelector('a[href="/electricity/orders/order-1"]')).not.toBeNull();
     expect(container.querySelector('a[href="/electricity/orders/order-2"]')).not.toBeNull();
     expect(container.textContent).toContain('Paid');
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+    vi.unstubAllGlobals();
+  }
+});
+
+it('requests pending orders when opened from the dashboard', async () => {
+  document.documentElement.lang = 'en';
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  const request = vi.fn(async (url: string) =>
+    Response.json(
+      url === '/api/profiles/verification-status'
+        ? { activeProfileId: 'profile-1' }
+        : { orders: [], nextBefore: null }
+    )
+  );
+  vi.stubGlobal('fetch', request);
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<ElectricityOrdersPage pendingOnly />));
+    expect(request).toHaveBeenCalledWith(
+      '/api/electricity/orders?profileId=profile-1&status=pending',
+      expect.any(Object)
+    );
+    expect(container.textContent).toContain('No electricity orders in progress');
+    expect(container.querySelector('a[href="/electricity/orders"]')).not.toBeNull();
   } finally {
     await act(async () => root.unmount());
     container.remove();

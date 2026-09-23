@@ -101,10 +101,18 @@ export function QuickStatusCards({
           <div key={key} className={className}>
             {content}
             <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm font-medium">
-              <Link to="/electricity/orders" className="text-primary underline underline-offset-4">
+              <Link
+                to="/electricity/orders"
+                search={{ status: 'pending' }}
+                className="text-primary underline underline-offset-4"
+              >
                 {t('electricity.orders.title', locale)}
               </Link>
-              <Link to="/savings/orders" className="text-primary underline underline-offset-4">
+              <Link
+                to="/savings/orders"
+                search={{ status: 'pending' }}
+                className="text-primary underline underline-offset-4"
+              >
                 {tSaving('orders', locale)}
               </Link>
             </div>

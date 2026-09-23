@@ -840,6 +840,26 @@ it('lists only the customer profile orders and cancels an unpublished order once
       }),
     ])
   );
+  const pendingList = await fetch(
+    `${http.base}/api/electricity/orders?profileId=${input.profileId}&status=pending`,
+    { headers }
+  );
+  expect(pendingList.status, http.logs()).toBe(200);
+  expect(
+    ((await pendingList.json()) as { orders: Array<{ orderId: string }> }).orders.map(
+      (row) => row.orderId
+    )
+  ).toContain(order.orderId);
+  expect(
+    (
+      await fetch(
+        `${http.base}/api/electricity/orders?profileId=${input.profileId}&status=active`,
+        {
+          headers,
+        }
+      )
+    ).status
+  ).toBe(400);
   const olderPage = await fetch(
     `${http.base}/api/electricity/orders?profileId=${input.profileId}&before=${order.orderId}`,
     { headers }
@@ -878,6 +898,23 @@ it('lists only the customer profile orders and cancels an unpublished order once
       expect.objectContaining({ event: 'electricity.order_cancelled', reason: request.reason }),
     ]),
   });
+  const pendingAfterCancel = await fetch(
+    `${http.base}/api/electricity/orders?profileId=${input.profileId}&status=pending`,
+    { headers }
+  );
+  expect(
+    ((await pendingAfterCancel.json()) as { orders: Array<{ orderId: string }> }).orders.map(
+      (row) => row.orderId
+    )
+  ).not.toContain(order.orderId);
+  expect(
+    (
+      await fetch(
+        `${http.base}/api/electricity/orders?profileId=${input.profileId}&status=pending&before=${order.orderId}`,
+        { headers }
+      )
+    ).status
+  ).toBe(404);
   expect(
     (await http.pool.query('SELECT state FROM invoices WHERE id=$1', [order.invoiceId])).rows[0]
       .state

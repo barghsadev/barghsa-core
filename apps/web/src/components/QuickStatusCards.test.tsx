@@ -5,8 +5,18 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { QuickStatusCards } from './QuickStatusCards.js';
 
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ children, to, className }: { children: ReactNode; to: string; className?: string }) => (
-    <a href={to} className={className}>
+  Link: ({
+    children,
+    to,
+    search,
+    className,
+  }: {
+    children: ReactNode;
+    to: string;
+    search?: { status?: string };
+    className?: string;
+  }) => (
+    <a href={search?.status ? `${to}?status=${search.status}` : to} className={className}>
       {children}
     </a>
   ),
@@ -48,8 +58,8 @@ it.each(['en', 'fa'] as const)(
     const paths = [...container.querySelectorAll('a')].map((link) => link.getAttribute('href'));
     expect(paths).toEqual([
       '/contracts',
-      '/electricity/orders',
-      '/savings/orders',
+      '/electricity/orders?status=pending',
+      '/savings/orders?status=pending',
       '/tickets',
       '/invoices',
     ]);

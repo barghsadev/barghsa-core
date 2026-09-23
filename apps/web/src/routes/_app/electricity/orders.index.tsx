@@ -17,7 +17,7 @@ interface ListedOrder {
   totalIrR: string;
 }
 
-export function ElectricityOrdersPage() {
+export function ElectricityOrdersPage({ pendingOnly = false }: { pendingOnly?: boolean }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const [orders, setOrders] = useState<ListedOrder[]>([]);
@@ -47,6 +47,7 @@ export function ElectricityOrdersPage() {
       }
       const params = new URLSearchParams({ profileId: profile.activeProfileId });
       if (before) params.set('before', before);
+      if (pendingOnly) params.set('status', 'pending');
       const response = await fetch(`/api/electricity/orders?${params}`, {
         credentials: 'include',
         signal: abort.signal,
@@ -73,7 +74,7 @@ export function ElectricityOrdersPage() {
         if (!abort.signal.aborted) setLoading(false);
       });
     return () => abort.abort();
-  }, [before, revision]);
+  }, [before, pendingOnly, revision]);
 
   return (
     <main
@@ -94,6 +95,24 @@ export function ElectricityOrdersPage() {
           {t('electricity.orders.new', locale)}
         </Link>
       </header>
+      <nav className="flex gap-4 text-sm" aria-label={t('electricity.orders.title', locale)}>
+        <Link
+          to="/electricity/orders"
+          search={{ status: undefined }}
+          className="text-primary underline underline-offset-4"
+          aria-current={pendingOnly ? undefined : 'page'}
+        >
+          {t('electricity.orders.all', locale)}
+        </Link>
+        <Link
+          to="/electricity/orders"
+          search={{ status: 'pending' }}
+          className="text-primary underline underline-offset-4"
+          aria-current={pendingOnly ? 'page' : undefined}
+        >
+          {t('electricity.orders.pending', locale)}
+        </Link>
+      </nav>
       {loading ? (
         <p role="status">{t('electricity.orders.loading', locale)}</p>
       ) : error ? (
@@ -104,7 +123,9 @@ export function ElectricityOrdersPage() {
           </Button>
         </div>
       ) : orders.length === 0 ? (
-        <p>{t('electricity.orders.empty', locale)}</p>
+        <p>
+          {t(pendingOnly ? 'electricity.orders.pendingEmpty' : 'electricity.orders.empty', locale)}
+        </p>
       ) : (
         <div className="space-y-3">
           {orders.map((order) => (
@@ -152,6 +173,14 @@ export function ElectricityOrdersPage() {
   );
 }
 
+function ElectricityOrdersRoute() {
+  const { status } = Route.useSearch();
+  return <ElectricityOrdersPage key={status ?? 'all'} pendingOnly={status === 'pending'} />;
+}
+
 export const Route = createFileRoute('/_app/electricity/orders/')({
-  component: ElectricityOrdersPage,
+  validateSearch: (search: Record<string, unknown>) => ({
+    status: search.status === 'pending' ? ('pending' as const) : undefined,
+  }),
+  component: ElectricityOrdersRoute,
 });

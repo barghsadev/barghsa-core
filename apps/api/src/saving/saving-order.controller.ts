@@ -134,15 +134,19 @@ export class SavingOrderController {
   @RateLimit({ namespace: 'saving:order-list:user', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'List saving orders for a customer profile' })
   @ApiQuery({ name: 'before', required: false, format: 'uuid', type: String })
+  @ApiQuery({ name: 'status', required: false, enum: ['pending'] })
   list(
     @Query('profileId', new ParseUUIDPipe()) profileId: string,
     @Query('before') before: string | undefined,
+    @Query('status') status: string | undefined,
     @Req() req: AuthenticatedRequest
   ) {
+    const selectedStatus = parse(z.literal('pending').optional(), status);
     return this.service.list(
       req.session,
       profileId,
-      before === undefined ? undefined : parse(z.string().uuid(), before)
+      before === undefined ? undefined : parse(z.string().uuid(), before),
+      selectedStatus
     );
   }
 

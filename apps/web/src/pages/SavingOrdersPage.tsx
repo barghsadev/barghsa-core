@@ -14,7 +14,7 @@ interface SavingOrderRow extends SavingActionContext {
   total_amount: string;
 }
 
-export function SavingOrdersPage() {
+export function SavingOrdersPage({ pendingOnly = false }: { pendingOnly?: boolean }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
@@ -40,6 +40,7 @@ export function SavingOrdersPage() {
         }
         const params = new URLSearchParams({ profileId: profile.activeProfileId });
         if (before) params.set('before', before);
+        if (pendingOnly) params.set('status', 'pending');
         const response = await fetch(`/api/saving/orders?${params}`, {
           signal: controller.signal,
         });
@@ -62,7 +63,7 @@ export function SavingOrdersPage() {
       }
     })();
     return () => controller.abort();
-  }, [before]);
+  }, [before, pendingOnly]);
   return (
     <main
       className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
@@ -74,9 +75,29 @@ export function SavingOrdersPage() {
         </Link>
         <h1 className="text-3xl font-semibold">{copy('orders')}</h1>
       </header>
+      <nav className="flex gap-4 text-sm" aria-label={copy('orders')}>
+        <Link
+          to="/savings/orders"
+          search={{ status: undefined }}
+          className="text-primary underline underline-offset-4"
+          aria-current={pendingOnly ? undefined : 'page'}
+        >
+          {copy('allOrders')}
+        </Link>
+        <Link
+          to="/savings/orders"
+          search={{ status: 'pending' }}
+          className="text-primary underline underline-offset-4"
+          aria-current={pendingOnly ? 'page' : undefined}
+        >
+          {copy('pendingOrders')}
+        </Link>
+      </nav>
       {state === 'loading' && <p role="status">{copy('loading')}</p>}
       {state === 'error' && <p role="alert">{copy('error')}</p>}
-      {state === 'ready' && orders.length === 0 && <p>{copy('noOrders')}</p>}
+      {state === 'ready' && orders.length === 0 && (
+        <p>{copy(pendingOnly ? 'noPendingOrders' : 'noOrders')}</p>
+      )}
       <div className="space-y-3">
         {orders.map((order) => {
           const action = savingNextAction(order);

@@ -163,8 +163,9 @@ export class ElectricityOrderService {
     }
   }
 
-  async list(actor: Actor, profileId: string, before?: string) {
+  async list(actor: Actor, profileId: string, before?: string, status?: 'pending') {
     const client = await getDbPool().connect();
+    const pendingOnly = status === 'pending';
     try {
       await client.query('BEGIN');
       await this.orders.lockOrderActor(client, actor);
@@ -173,8 +174,10 @@ export class ElectricityOrderService {
       const cursor = before
         ? (
             await client.query<{ submitted_at: string; id: string }>(
-              'SELECT submitted_at::text AS submitted_at,id FROM electricity_orders WHERE id=$1 AND profile_id=$2',
-              [before, profileId]
+              `SELECT submitted_at::text AS submitted_at,id FROM electricity_orders
+               WHERE id=$1 AND profile_id=$2
+                 AND (NOT $3::boolean OR status IN ('submitted','awaiting_staff_review','changes_requested','approved'))`,
+              [before, profileId, pendingOnly]
             )
           ).rows[0]
         : undefined;
@@ -207,8 +210,9 @@ export class ElectricityOrderService {
            JOIN invoices i ON i.id=ar.initial_invoice_id
            WHERE e.profile_id=$1 AND e.submitted_at IS NOT NULL
              AND ($2::timestamptz IS NULL OR (e.submitted_at,e.id)<($2::timestamptz,$3::uuid))
+             AND (NOT $4::boolean OR e.status IN ('submitted','awaiting_staff_review','changes_requested','approved'))
            ORDER BY e.submitted_at DESC,e.id DESC LIMIT 51`,
-          [profileId, cursor?.submitted_at ?? null, cursor?.id ?? null]
+          [profileId, cursor?.submitted_at ?? null, cursor?.id ?? null, pendingOnly]
         )
       ).rows;
       await requireCurrentSession(client, actor);
