@@ -58,7 +58,7 @@ export async function readCancellationSnapshot(client: Pool | PoolClient, id: st
         'id',i.id,'state',i.state,'totalAmount',i.total_amount::text,
         'paidAmount',i.paid_amount::text) ORDER BY i.id)
         FROM saving_hardware_amendments a JOIN invoices i ON i.id=a.adjustment_invoice_id
-        WHERE a.contract_id=c.id), '[]'::jsonb) AS hardware_credits
+        WHERE a.contract_id=c.id AND a.price_delta_irr<0), '[]'::jsonb) AS hardware_credits
     FROM contracts c JOIN profiles p ON p.id=c.profile_id WHERE c.id=$1`,
       [id]
     )

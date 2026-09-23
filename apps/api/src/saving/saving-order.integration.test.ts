@@ -563,18 +563,14 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
         staffHeaders
       )
     ).json()
-  ).toMatchObject({ canAmendHardware: true, hardwareOptions: [{ id: equalHardwareId }] });
+  ).toMatchObject({
+    canAmendHardware: true,
+    hardwareOptions: expect.arrayContaining([
+      expect.objectContaining({ id: equalHardwareId, priceDeltaIrR: '0' }),
+      expect.objectContaining({ id: costlyHardwareId }),
+    ]),
+  });
   expect((await request(hardwarePath, 'POST', hardwareInput)).status).toBe(403);
-  expect(
-    (
-      await request(
-        hardwarePath,
-        'POST',
-        { ...hardwareInput, hardwareProductId: costlyHardwareId },
-        staffHeaders
-      )
-    ).status
-  ).toBe(409);
   expect(
     (
       await request(
@@ -779,6 +775,202 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   await expect(
     http.pool.query('DELETE FROM saving_address_amendments WHERE id=$1', [amendment.amendmentId])
   ).rejects.toMatchObject({ code: '23514' });
+  expect(
+    (
+      await request(
+        `/api/admin/catalogue/hardware/${costlyHardwareId}/inventory`,
+        'PUT',
+        { stockTracking: true, stockCount: 2, reservationMinutes: 30 },
+        staffHeaders
+      )
+    ).status,
+    http.logs()
+  ).toBe(200);
+  const upgradeInput = {
+    idempotencyKey: randomUUID(),
+    expectedVersionId: staffDetail.versionId,
+    expectedHardwareId: input.hardwareProductId,
+    hardwareProductId: costlyHardwareId,
+    reason: 'Customer requested a higher-priced device before delivery',
+  };
+  const requestedUpgrade = await request(hardwarePath, 'POST', upgradeInput, staffHeaders);
+  expect(requestedUpgrade.status, http.logs()).toBe(201);
+  const upgrade = (await requestedUpgrade.json()) as {
+    upgradeId: string;
+    adjustmentInvoiceId: string;
+    priceDeltaIrR: string;
+    status: string;
+  };
+  expect(upgrade.status).toBe('awaiting_payment');
+  expect(BigInt(upgrade.priceDeltaIrR)).toBeGreaterThan(0n);
+  expect((await request(hardwarePath, 'POST', upgradeInput, staffHeaders)).status).toBe(201);
+  expect(
+    (await request(stagePath('product_delivery'), 'POST', stageInput(), staffHeaders)).status
+  ).toBe(409);
+  expect(
+    (
+      await http.pool.query<{ hardware_product_id: string }>(
+        'SELECT hardware_product_id FROM saving_orders WHERE id=$1',
+        [result.savingOrderId]
+      )
+    ).rows[0]?.hardware_product_id
+  ).toBe(input.hardwareProductId);
+  expect(
+    (
+      await http.pool.query<{ reserved_count: number }>(
+        'SELECT reserved_count FROM products WHERE id=$1',
+        [costlyHardwareId]
+      )
+    ).rows[0]?.reserved_count
+  ).toBe(1);
+  expect(
+    await (await request(`/api/saving/orders/${result.savingOrderId}`, 'GET')).json()
+  ).toMatchObject({
+    hardwareUpgrades: [
+      {
+        id: upgrade.upgradeId,
+        status: 'awaiting_payment',
+        adjustmentInvoiceId: upgrade.adjustmentInvoiceId,
+      },
+    ],
+  });
+  expect(
+    await (await request(`/api/saving/orders?profileId=${input.profileId}`, 'GET')).json()
+  ).toMatchObject({
+    orders: expect.arrayContaining([
+      expect.objectContaining({
+        id: result.savingOrderId,
+        pending_upgrade_invoice_id: upgrade.adjustmentInvoiceId,
+        pending_upgrade_invoice_state: 'Unpaid',
+      }),
+    ]),
+  });
+  const cancelUpgradePath = `/api/staff/saving/orders/${result.savingOrderId}/cancel-hardware-upgrade`;
+  const cancelUpgradeInput = {
+    idempotencyKey: randomUUID(),
+    upgradeId: upgrade.upgradeId,
+    reason: 'Customer changed their mind before paying',
+  };
+  const cancelledUpgrade = await request(
+    cancelUpgradePath,
+    'POST',
+    cancelUpgradeInput,
+    staffHeaders
+  );
+  expect(cancelledUpgrade.status, http.logs()).toBe(200);
+  expect((await request(cancelUpgradePath, 'POST', cancelUpgradeInput, staffHeaders)).status).toBe(
+    200
+  );
+  expect(
+    (
+      await http.pool.query<{ status: string }>(
+        'SELECT status FROM saving_hardware_upgrade_requests WHERE id=$1',
+        [upgrade.upgradeId]
+      )
+    ).rows[0]?.status
+  ).toBe('cancelled');
+  expect(
+    (
+      await http.pool.query<{ reserved_count: number }>(
+        'SELECT reserved_count FROM products WHERE id=$1',
+        [costlyHardwareId]
+      )
+    ).rows[0]?.reserved_count
+  ).toBe(0);
+  await expect(
+    http.pool.query("UPDATE invoices SET state='Paid',paid_amount=total_amount WHERE id=$1", [
+      upgrade.adjustmentInvoiceId,
+    ])
+  ).rejects.toMatchObject({ code: '23514' });
+  const expiringRequest = await request(
+    hardwarePath,
+    'POST',
+    { ...upgradeInput, idempotencyKey: randomUUID() },
+    staffHeaders
+  );
+  expect(expiringRequest.status, http.logs()).toBe(201);
+  const expiringUpgrade = (await expiringRequest.json()) as {
+    upgradeId: string;
+    adjustmentInvoiceId: string;
+  };
+  await http.pool.query("UPDATE invoices SET state='Overdue' WHERE id=$1", [
+    expiringUpgrade.adjustmentInvoiceId,
+  ]);
+  expect(
+    (
+      await http.pool.query<{ status: string }>(
+        'SELECT status FROM saving_hardware_upgrade_requests WHERE id=$1',
+        [expiringUpgrade.upgradeId]
+      )
+    ).rows[0]?.status
+  ).toBe('expired');
+  expect(
+    (
+      await http.pool.query<{ reserved_count: number }>(
+        'SELECT reserved_count FROM products WHERE id=$1',
+        [costlyHardwareId]
+      )
+    ).rows[0]?.reserved_count
+  ).toBe(0);
+  await expect(
+    http.pool.query("UPDATE invoices SET state='Paid',paid_amount=total_amount WHERE id=$1", [
+      expiringUpgrade.adjustmentInvoiceId,
+    ])
+  ).rejects.toMatchObject({ code: '23514' });
+  const requestedAgain = await request(
+    hardwarePath,
+    'POST',
+    { ...upgradeInput, idempotencyKey: randomUUID() },
+    staffHeaders
+  );
+  expect(requestedAgain.status, http.logs()).toBe(201);
+  const payableUpgrade = (await requestedAgain.json()) as {
+    upgradeId: string;
+    adjustmentInvoiceId: string;
+    priceDeltaIrR: string;
+  };
+  const upgradePaymentPath = `/api/invoices/${payableUpgrade.adjustmentInvoiceId}/wallet-payment`;
+  const upgradePaymentReview = await request(upgradePaymentPath, 'GET');
+  expect(upgradePaymentReview.status, http.logs()).toBe(200);
+  const upgradePaymentHash = ((await upgradePaymentReview.json()) as { review: { hash: string } })
+    .review.hash;
+  const upgradePaid = await request(upgradePaymentPath, 'POST', {
+    idempotencyKey: randomUUID(),
+    expectedRemainingAmount: payableUpgrade.priceDeltaIrR,
+    expectedReviewHash: upgradePaymentHash,
+  });
+  expect(upgradePaid.status, http.logs()).toBe(200);
+  expect(
+    (
+      await http.pool.query<{ total_amount: string }>(
+        'SELECT total_amount::text FROM invoices WHERE id=$1',
+        [result.invoiceId]
+      )
+    ).rows[0]?.total_amount
+  ).toBe(quote.totalIrR);
+  expect(
+    await (await request(`/api/saving/orders/${result.savingOrderId}`, 'GET')).json()
+  ).toMatchObject({
+    hardware_product_id: costlyHardwareId,
+    current_hardware_title: { en: 'Costlier device' },
+    hardwareUpgrades: expect.arrayContaining([
+      expect.objectContaining({ id: payableUpgrade.upgradeId, status: 'applied' }),
+    ]),
+    hardwareAmendments: expect.arrayContaining([
+      expect.objectContaining({
+        adjustmentInvoiceId: payableUpgrade.adjustmentInvoiceId,
+        priceDeltaIrR: payableUpgrade.priceDeltaIrR,
+      }),
+    ]),
+  });
+  expect(
+    (
+      await http.pool.query<{ stock_count: number; reserved_count: number }>(
+        'SELECT stock_count,reserved_count FROM products WHERE id=$1',
+        [costlyHardwareId]
+      )
+    ).rows[0]
+  ).toMatchObject({ stock_count: 1, reserved_count: 0 });
   const delivered = await request(
     stagePath('product_delivery'),
     'POST',
@@ -1023,7 +1215,7 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
         [input.hardwareProductId]
       )
     ).rows[0]
-  ).toMatchObject({ stock_count: 1, reserved_count: 0 });
+  ).toMatchObject({ stock_count: 2, reserved_count: 0 });
   const cancellationInput = { ...input, billIdentifier: '1234567890128' };
   const cancellationQuoteResponse = await request(
     '/api/saving/orders/quote',
@@ -1190,7 +1382,7 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
         input.hardwareProductId,
       ])
     ).rows[0]
-  ).toMatchObject({ stock_count: 1, reserved_count: 0 });
+  ).toMatchObject({ stock_count: 2, reserved_count: 0 });
   const expiryInput = { ...input, billIdentifier: '1234567890127' };
   const expiryQuoteResponse = await request('/api/saving/orders/quote', 'POST', expiryInput);
   expect(expiryQuoteResponse.status, http.logs()).toBe(201);
@@ -1242,7 +1434,7 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
         [input.hardwareProductId]
       )
     ).rows[0]
-  ).toMatchObject({ stock_count: 0, reserved_count: 0 });
+  ).toMatchObject({ stock_count: 1, reserved_count: 0 });
 }, 150000);
 
 it('revises an unpaid order address and equipment with one invoice, a new contract version, and moved stock', async () => {

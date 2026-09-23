@@ -7,6 +7,9 @@ export interface SavingActionContext {
   contract_id: string | null;
   contract_state: string | null;
   cancellation_pending: boolean;
+  pending_upgrade_invoice_id?: string | null;
+  pending_upgrade_invoice_state?: string | null;
+  hardwareUpgrades?: Array<{ status: string; adjustmentInvoiceId: string; invoiceState?: string }>;
 }
 
 export type SavingNextAction =
@@ -15,6 +18,7 @@ export type SavingNextAction =
   | 'awaitPaymentReview'
   | 'acceptContract'
   | 'payInvoice'
+  | 'payUpgrade'
   | 'awaitFulfillment'
   | 'trackRefund'
   | 'none';
@@ -34,6 +38,19 @@ export function savingNextAction(order: SavingActionContext): {
       : { kind: 'none', href: null };
   if (order.status === 'completed') return { kind: 'none', href: null };
   if (order.cancellation_pending) return { kind: 'awaitCancellation', href: null };
+  const pendingUpgrade = order.hardwareUpgrades?.find(
+    (upgrade) => upgrade.status === 'awaiting_payment'
+  );
+  const pendingUpgradeInvoiceId =
+    pendingUpgrade?.adjustmentInvoiceId ?? order.pending_upgrade_invoice_id;
+  const pendingUpgradeInvoiceState =
+    pendingUpgrade?.invoiceState ?? order.pending_upgrade_invoice_state;
+  if (pendingUpgradeInvoiceId)
+    return {
+      kind:
+        pendingUpgradeInvoiceState === 'PaymentUnderReview' ? 'awaitPaymentReview' : 'payUpgrade',
+      href: `/invoices/${encodeURIComponent(pendingUpgradeInvoiceId)}`,
+    };
   if (['draft', 'submitted', 'awaiting_staff_review'].includes(order.status))
     return { kind: 'awaitReview', href: null };
   if (order.invoice_state === 'PaymentUnderReview')

@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import {
+  boolean,
   check,
   index,
   jsonb,
@@ -317,10 +318,74 @@ export const savingHardwareAmendments = pgTable(
       'saving_hardware_amendments_reason',
       sql`length(trim(${table.reason})) BETWEEN 1 AND 1000`
     ),
-    check('saving_hardware_amendments_nonpositive_delta', sql`${table.priceDeltaIrR}<=0`),
     check(
       'saving_hardware_amendments_adjustment_link',
-      sql`(${table.priceDeltaIrR}=0 AND ${table.adjustmentInvoiceId} IS NULL) OR (${table.priceDeltaIrR}<0 AND ${table.adjustmentInvoiceId} IS NOT NULL)`
+      sql`(${table.priceDeltaIrR}=0 AND ${table.adjustmentInvoiceId} IS NULL) OR (${table.priceDeltaIrR}<>0 AND ${table.adjustmentInvoiceId} IS NOT NULL)`
+    ),
+  ]
+);
+
+export const savingHardwareUpgradeRequests = pgTable(
+  'saving_hardware_upgrade_requests',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    orderId: uuid('order_id')
+      .notNull()
+      .references(() => savingOrders.id, { onDelete: 'restrict' }),
+    contractId: uuid('contract_id')
+      .notNull()
+      .references(() => contracts.id, { onDelete: 'restrict' }),
+    contractVersionId: uuid('contract_version_id')
+      .notNull()
+      .references(() => contractVersions.id, { onDelete: 'restrict' }),
+    actorUserId: text('actor_user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    previousHardwareId: uuid('previous_hardware_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'restrict' }),
+    hardwareId: uuid('hardware_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'restrict' }),
+    previousSnapshot: jsonb('previous_snapshot').notNull(),
+    hardwareSnapshot: jsonb('hardware_snapshot').notNull(),
+    originalInvoiceId: uuid('original_invoice_id')
+      .notNull()
+      .references(() => invoices.id, { onDelete: 'restrict' }),
+    adjustmentInvoiceId: uuid('adjustment_invoice_id')
+      .notNull()
+      .references(() => invoices.id, { onDelete: 'restrict' }),
+    priceDeltaIrR: irrAmount('price_delta_irr').notNull(),
+    stockReserved: boolean('stock_reserved').notNull(),
+    status: text('status').notNull().default('awaiting_payment'),
+    reason: text('reason').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    appliedAt: timestamp('applied_at', { withTimezone: true }),
+    closedAt: timestamp('closed_at', { withTimezone: true }),
+  },
+  (table) => [
+    uniqueIndex('saving_hardware_upgrade_invoice_key').on(table.adjustmentInvoiceId),
+    uniqueIndex('saving_hardware_upgrade_pending_order_key')
+      .on(table.orderId)
+      .where(sql`${table.status}='awaiting_payment'`),
+    index('saving_hardware_upgrade_order_idx').on(table.orderId, table.createdAt, table.id),
+    check('saving_hardware_upgrade_positive_delta', sql`${table.priceDeltaIrR}>0`),
+    check(
+      'saving_hardware_upgrade_distinct',
+      sql`${table.previousHardwareId}<>${table.hardwareId}`
+    ),
+    check(
+      'saving_hardware_upgrade_snapshots',
+      sql`jsonb_typeof(${table.previousSnapshot})='object' AND jsonb_typeof(${table.hardwareSnapshot})='object'`
+    ),
+    check('saving_hardware_upgrade_reason', sql`length(trim(${table.reason})) BETWEEN 1 AND 1000`),
+    check(
+      'saving_hardware_upgrade_status',
+      sql`${table.status} IN ('awaiting_payment','applied','cancelled','expired')`
+    ),
+    check(
+      'saving_hardware_upgrade_terminal_times',
+      sql`(${table.status}='awaiting_payment' AND ${table.appliedAt} IS NULL AND ${table.closedAt} IS NULL) OR (${table.status}='applied' AND ${table.appliedAt} IS NOT NULL AND ${table.closedAt} IS NULL) OR (${table.status} IN ('cancelled','expired') AND ${table.appliedAt} IS NULL AND ${table.closedAt} IS NOT NULL)`
     ),
   ]
 );

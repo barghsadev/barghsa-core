@@ -54,6 +54,13 @@ const hardwareAmendment = z
     reason: z.string().trim().min(1).max(1000),
   })
   .strict();
+const hardwareUpgradeCancellation = z
+  .object({
+    idempotencyKey: z.string().uuid(),
+    upgradeId: z.string().uuid(),
+    reason: z.string().trim().min(1).max(1000),
+  })
+  .strict();
 function parse<T>(schema: z.ZodType<T>, value: unknown): T {
   const result = schema.safeParse(value);
   if (!result.success) throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
@@ -156,7 +163,7 @@ export class SavingFulfillmentController {
   @HttpCode(201)
   @RequiresStepUp()
   @RateLimit({ namespace: 'saving:staff-amend-hardware:user', limit: 20, windowMs: 60_000 })
-  @ApiOperation({ summary: 'Swap equal or lower-priced hardware on a paid order before delivery' })
+  @ApiOperation({ summary: 'Swap paid hardware or issue a charge before a higher-priced swap' })
   @ApiZodBody(hardwareAmendment)
   amendHardware(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -167,6 +174,29 @@ export class SavingFulfillmentController {
     return this.service.amendHardware(
       id,
       parse(hardwareAmendment, body),
+      req.session,
+      req.ip ?? 'unknown',
+      hasStaffPermission(req, 'invoices:write')
+    );
+  }
+
+  @Post(':id/cancel-hardware-upgrade')
+  @HttpCode(200)
+  @RequiresStepUp()
+  @RateLimit({ namespace: 'saving:staff-cancel-upgrade:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Cancel an unpaid hardware upgrade and release its reserved stock' })
+  @ApiZodBody(hardwareUpgradeCancellation)
+  cancelHardwareUpgrade(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.permission(req, true);
+    if (!hasStaffPermission(req, 'invoices:write'))
+      throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
+    return this.service.cancelHardwareUpgrade(
+      id,
+      parse(hardwareUpgradeCancellation, body),
       req.session,
       req.ip ?? 'unknown'
     );

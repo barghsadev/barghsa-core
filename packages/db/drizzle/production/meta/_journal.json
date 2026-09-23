@@ -687,6 +687,13 @@
       "when": 1791331200080,
       "tag": "0177_saving_hardware_credits",
       "breakpoints": true
+    },
+    {
+      "idx": 178,
+      "version": "7",
+      "when": 1791331200081,
+      "tag": "0178_saving_hardware_upgrades",
+      "breakpoints": true
     }
   ]
 }

@@ -1,4 +1,9 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
@@ -15,6 +20,7 @@ import type { ValidatedSession } from '../session/session.service.js';
 import { savingOrderRevisions } from './saving-order-revisions.js';
 import { savingAddressAmendments } from './saving-address-amendments.js';
 import { savingHardwareAmendments } from './saving-hardware-amendments.js';
+import { savingHardwareUpgrades } from './saving-hardware-upgrades.js';
 import { calculateSavingTotals } from './saving-calculation.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
@@ -102,7 +108,7 @@ export class SavingFulfillmentService {
     return { orders: rows.map((row) => this.present(row)) };
   }
 
-  async detail(id: string, allowHardwareCredit = false) {
+  async detail(id: string, allowHardwarePriceAdjustment = false) {
     const client = await getDbPool().connect();
     try {
       const row = (await client.query<ReviewRow>(`${reviewQuery} WHERE s.id=$1`, [id])).rows[0];
@@ -126,6 +132,10 @@ export class SavingFulfillmentService {
       const revisions = await savingOrderRevisions(client, id);
       const addressAmendments = await savingAddressAmendments(client, id);
       const hardwareAmendments = await savingHardwareAmendments(client, id);
+      const hardwareUpgrades = await savingHardwareUpgrades(client, id);
+      const pendingHardwareUpgrade = hardwareUpgrades.find(
+        (upgrade) => upgrade.status === 'awaiting_payment'
+      );
       const addressOptions = (
         await client.query(
           `SELECT id,full_address AS "fullAddress",postal_code AS "postalCode"
@@ -153,7 +163,9 @@ export class SavingFulfillmentService {
               'process_completion',
             ].includes(stage.stage) && stage.status !== 'pending'
         );
-      const hardwareOptions = await this.hardwareOptions(client, row, allowHardwareCredit);
+      const hardwareOptions = pendingHardwareUpgrade
+        ? []
+        : await this.hardwareOptions(client, row, allowHardwarePriceAdjustment);
       const canAmendHardware =
         ['approved', 'in_progress'].includes(row.status) &&
         row.financial_status === 'paid' &&
@@ -162,6 +174,7 @@ export class SavingFulfillmentService {
         BigInt(row.pending_refund_amount) === 0n &&
         ['AwaitingCustomerAcceptance', 'Active'].includes(row.contract_state) &&
         !row.cancellation_pending &&
+        !pendingHardwareUpgrade &&
         stages.some(
           (stage: StageRow) => stage.stage === 'product_delivery' && stage.status === 'in_progress'
         ) &&
@@ -181,6 +194,7 @@ export class SavingFulfillmentService {
         revisions,
         addressAmendments,
         hardwareAmendments,
+        hardwareUpgrades,
         addressOptions,
         hardwareOptions,
         canAmendAddress,
@@ -274,7 +288,7 @@ export class SavingFulfillmentService {
     };
   }
 
-  private async hardwareOptions(client: PoolClient, row: ReviewRow, allowCredit = false) {
+  private async hardwareOptions(client: PoolClient, row: ReviewRow, allowPriceAdjustment = false) {
     const basis = await this.hardwarePricing(client, row);
     if (!basis) return [];
     const options = (
@@ -283,8 +297,12 @@ export class SavingFulfillmentService {
         title: { fa: string; en: string };
         price: string | null;
         vat_rate_bps: number;
+        stock_tracking: boolean;
+        stock_count: number;
+        reserved_count: number;
       }>(
-        `SELECT h.id,h.title,effective_product_price(h.id)::text AS price,
+        `SELECT h.id,h.title,h.stock_tracking,h.stock_count,h.reserved_count,
+          effective_product_price(h.id)::text AS price,
           COALESCE(
             (SELECT vc.rate FROM product_vat_overrides pvo
               JOIN vat_configurations vc ON vc.id=pvo.vat_config_id
@@ -300,7 +318,12 @@ export class SavingFulfillmentService {
       )
     ).rows;
     return options.flatMap((option) => {
-      if (!option.price || !/^\d+$/.test(option.price)) return [];
+      if (
+        !option.price ||
+        !/^\d+$/.test(option.price) ||
+        (option.stock_tracking && option.stock_count <= option.reserved_count)
+      )
+        return [];
       try {
         const totals = calculateSavingTotals(
           [
@@ -316,7 +339,7 @@ export class SavingFulfillmentService {
           basis.discountIrR
         );
         const delta = totals.totalIrR - basis.currentTotalIrR;
-        if (delta > 0n || (delta < 0n && !allowCredit)) return [];
+        if (delta !== 0n && !allowPriceAdjustment) return [];
         return [
           {
             id: option.id,
@@ -726,7 +749,8 @@ export class SavingFulfillmentService {
       reason: string;
     },
     actor: Actor,
-    ip: string
+    ip: string,
+    allowPriceAdjustment = false
   ) {
     const target = (
       await getDbPool().query<{ profile_id: string }>(
@@ -771,6 +795,9 @@ export class SavingFulfillmentService {
                    WHERE f.order_id=$2 AND f.stage IN
                      ('installation_and_document_upload','equipment_handover','process_completion')
                      AND f.status<>'pending'
+                  UNION ALL
+                  SELECT 1 FROM saving_hardware_upgrade_requests u
+                   WHERE u.order_id=$2 AND u.status='awaiting_payment'
                 ) OR NOT EXISTS(
                   SELECT 1 FROM saving_fulfillment_stages f WHERE f.order_id=$2
                     AND f.stage='product_delivery' AND f.status='in_progress'
@@ -780,17 +807,119 @@ export class SavingFulfillmentService {
               ).rows[0]?.blocked;
               if (blocked)
                 throw new ConflictException(
-                  'Delivery, installation or cancellation prevents a swap'
+                  'Delivery, cancellation or a pending hardware charge prevents a swap'
                 );
+              await client.query(
+                'SELECT id FROM products WHERE id IN ($1,$2) ORDER BY id FOR UPDATE',
+                [row.hardware_product_id, input.hardwareProductId]
+              );
               const basis = await this.hardwarePricing(client, row);
               const hardware = (await this.hardwareOptions(client, row, true)).find(
                 (option) => option.id === input.hardwareProductId
               );
               if (!basis || !hardware)
                 throw new ConflictException(
-                  'Choose active hardware with a payable price no higher than the current device'
+                  'Choose available active hardware assigned to this saving plan'
                 );
               const priceDeltaIrR = BigInt(hardware.priceDeltaIrR);
+              if (priceDeltaIrR !== 0n && !allowPriceAdjustment)
+                throw new ForbiddenException(
+                  'Invoice write permission is required for price changes'
+                );
+              const previousSnapshot = {
+                title: row.hardware_title,
+                priceIrR: basis.current.priceIrR,
+                vatRateBps: basis.current.vatRateBps,
+                totalIrR: basis.currentTotalIrR.toString(),
+              };
+              const hardwareSnapshot = {
+                title: hardware.title,
+                priceIrR: hardware.priceIrR,
+                vatRateBps: hardware.vatRateBps,
+                totalIrR: hardware.totalIrR,
+              };
+              if (priceDeltaIrR > 0n) {
+                const targetProduct = (
+                  await client.query<{ stock_tracking: boolean }>(
+                    'SELECT stock_tracking FROM products WHERE id=$1',
+                    [hardware.id]
+                  )
+                ).rows[0]!;
+                const adjustment = await this.invoiceAdjustments.createAdjustmentInvoice(
+                  {
+                    originalInvoiceId: row.invoice_id,
+                    amount: priceDeltaIrR,
+                    reason: input.reason,
+                    actorUserId: actor.userId,
+                    actorSession: actor,
+                    idempotencyKey: input.idempotencyKey,
+                    ip,
+                  },
+                  client
+                );
+                if (targetProduct.stock_tracking) {
+                  const reserved = await client.query(
+                    `UPDATE products SET reserved_count=reserved_count+1
+                     WHERE id=$1 AND stock_count>reserved_count RETURNING id`,
+                    [hardware.id]
+                  );
+                  if (reserved.rowCount !== 1)
+                    throw new ConflictException('Selected saving hardware is out of stock');
+                }
+                const upgradeId = uuidv7();
+                await client.query(
+                  `INSERT INTO saving_hardware_upgrade_requests(
+                    id,order_id,contract_id,contract_version_id,actor_user_id,
+                    previous_hardware_id,hardware_id,previous_snapshot,hardware_snapshot,
+                    original_invoice_id,adjustment_invoice_id,price_delta_irr,stock_reserved,reason)
+                   VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9::jsonb,$10,$11,$12,$13,$14)`,
+                  [
+                    upgradeId,
+                    id,
+                    row.contract_id,
+                    row.version_id,
+                    actor.userId,
+                    row.hardware_product_id,
+                    hardware.id,
+                    JSON.stringify(previousSnapshot),
+                    JSON.stringify(hardwareSnapshot),
+                    row.invoice_id,
+                    adjustment.adjustmentInvoiceId,
+                    hardware.priceDeltaIrR,
+                    targetProduct.stock_tracking,
+                    input.reason,
+                  ]
+                );
+                await auditContract(
+                  client,
+                  row.contract_id,
+                  row.version_id,
+                  'saving.hardware_upgrade_requested',
+                  actor,
+                  ip,
+                  {
+                    savingOrderId: id,
+                    upgradeId,
+                    hardwareProductId: hardware.id,
+                    chargeInvoiceId: adjustment.adjustmentInvoiceId,
+                    priceDeltaIrR: hardware.priceDeltaIrR,
+                  }
+                );
+                await this.notify(
+                  client,
+                  row,
+                  'تعویض تجهیز سفارش شما در انتظار پرداخت مابه‌التفاوت است. فاکتور جدید را بررسی کنید.',
+                  'Your equipment change is waiting for the additional payment. Review the new invoice.'
+                );
+                return {
+                  upgradeId,
+                  savingOrderId: id,
+                  hardwareProductId: hardware.id,
+                  priceDeltaIrR: hardware.priceDeltaIrR,
+                  adjustmentInvoiceId: adjustment.adjustmentInvoiceId,
+                  status: 'awaiting_payment',
+                };
+              }
               const amendmentId = uuidv7();
               const adjustment =
                 priceDeltaIrR < 0n
@@ -821,18 +950,8 @@ export class SavingFulfillmentService {
                   actor.userId,
                   row.hardware_product_id,
                   hardware.id,
-                  JSON.stringify({
-                    title: row.hardware_title,
-                    priceIrR: basis.current.priceIrR,
-                    vatRateBps: basis.current.vatRateBps,
-                    totalIrR: basis.currentTotalIrR.toString(),
-                  }),
-                  JSON.stringify({
-                    title: hardware.title,
-                    priceIrR: hardware.priceIrR,
-                    vatRateBps: hardware.vatRateBps,
-                    totalIrR: hardware.totalIrR,
-                  }),
+                  JSON.stringify(previousSnapshot),
+                  JSON.stringify(hardwareSnapshot),
                   row.invoice_id,
                   adjustment?.adjustmentInvoiceId ?? null,
                   hardware.priceDeltaIrR,
@@ -891,6 +1010,96 @@ export class SavingFulfillmentService {
     }
   }
 
+  async cancelHardwareUpgrade(
+    id: string,
+    input: { idempotencyKey: string; upgradeId: string; reason: string },
+    actor: Actor,
+    ip: string
+  ) {
+    const target = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM saving_orders WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!target) throw new NotFoundException('Saving order not found');
+    return staffContractMutation(
+      target.profile_id,
+      actor,
+      (client, archived) =>
+        contractIdempotency(
+          client,
+          'saving_hardware_upgrade_cancel',
+          { ...input, orderId: id },
+          actor,
+          async () => {
+            if (archived) throw new ConflictException('Profile is archived');
+            const invoiceId = (
+              await client.query<{ adjustment_invoice_id: string }>(
+                'SELECT adjustment_invoice_id FROM saving_hardware_upgrade_requests WHERE id=$1 AND order_id=$2',
+                [input.upgradeId, id]
+              )
+            ).rows[0]?.adjustment_invoice_id;
+            if (!invoiceId) throw new ConflictException('Hardware upgrade was not found');
+            // Payment owns the invoice lock before its settlement trigger locks the request.
+            await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [invoiceId]);
+            const upgrade = (
+              await client.query<{
+                id: string;
+                contract_id: string;
+                contract_version_id: string;
+                adjustment_invoice_id: string;
+                state: string;
+                total_amount: string;
+                paid_amount: string;
+              }>(
+                `SELECT u.id,u.contract_id,u.contract_version_id,u.adjustment_invoice_id,
+                        i.state,i.total_amount::text,i.paid_amount::text
+                   FROM saving_hardware_upgrade_requests u
+                   JOIN invoices i ON i.id=u.adjustment_invoice_id
+                  WHERE u.id=$1 AND u.order_id=$2 AND u.status='awaiting_payment'
+                  FOR UPDATE OF u`,
+                [input.upgradeId, id]
+              )
+            ).rows[0];
+            if (
+              !upgrade ||
+              !['Unpaid', 'Overdue'].includes(upgrade.state) ||
+              BigInt(upgrade.paid_amount) !== 0n
+            )
+              throw new ConflictException('Resolve the charge payment before cancelling');
+            await this.invoices.transition(
+              upgrade.adjustment_invoice_id,
+              upgrade.state as 'Unpaid' | 'Overdue',
+              'Cancelled',
+              {
+                actorUserId: actor.userId,
+                reason: input.reason,
+                ip,
+                client,
+                financials: {
+                  paidAmount: 0n,
+                  refundedAmount: 0n,
+                  totalAmount: BigInt(upgrade.total_amount),
+                },
+              }
+            );
+            await auditContract(
+              client,
+              upgrade.contract_id,
+              upgrade.contract_version_id,
+              'saving.hardware_upgrade_cancelled',
+              actor,
+              ip,
+              { savingOrderId: id, upgradeId: upgrade.id, reason: input.reason }
+            );
+            return { savingOrderId: id, upgradeId: upgrade.id, status: 'cancelled' };
+          }
+        ),
+      { financialReview: true }
+    );
+  }
+
   async advance(
     id: string,
     stage: SavingStage,
@@ -929,6 +1138,17 @@ export class SavingFulfillmentService {
             throw new ConflictException('Invalid fulfillment stage action');
           if (stage === 'product_delivery' && row.invoice_state !== 'Paid')
             throw new ConflictException('Payment is required before delivering equipment');
+          if (
+            stage === 'product_delivery' &&
+            (
+              await client.query(
+                `SELECT 1 FROM saving_hardware_upgrade_requests
+                   WHERE order_id=$1 AND status='awaiting_payment'`,
+                [id]
+              )
+            ).rowCount
+          )
+            throw new ConflictException('Resolve the pending hardware charge before delivery');
           if (
             stage === 'process_completion' &&
             (row.invoice_state !== 'Paid' || !['Active', 'Completed'].includes(row.contract_state))

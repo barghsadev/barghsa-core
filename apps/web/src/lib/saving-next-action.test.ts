@@ -21,6 +21,26 @@ it('shows the next customer step and links the matching record', () => {
     kind: 'acceptContract',
     href: '/contracts?contractId=contract-id',
   });
+  expect(
+    savingNextAction({
+      ...order,
+      hardwareUpgrades: [{ status: 'awaiting_payment', adjustmentInvoiceId: 'upgrade-id' }],
+    })
+  ).toEqual({
+    kind: 'payUpgrade',
+    href: '/invoices/upgrade-id',
+  });
+  expect(savingNextAction({ ...order, pending_upgrade_invoice_id: 'list-upgrade-id' })).toEqual({
+    kind: 'payUpgrade',
+    href: '/invoices/list-upgrade-id',
+  });
+  expect(
+    savingNextAction({
+      ...order,
+      pending_upgrade_invoice_id: 'list-upgrade-id',
+      pending_upgrade_invoice_state: 'PaymentUnderReview',
+    })
+  ).toEqual({ kind: 'awaitPaymentReview', href: '/invoices/list-upgrade-id' });
   expect(savingNextAction({ ...order, contract_state: 'Active' })).toEqual({
     kind: 'payInvoice',
     href: '/invoices/invoice-id',

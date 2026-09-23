@@ -45,8 +45,20 @@ export function SavingHardwareAmendmentHistory({
               </p>
               {amendment.adjustmentInvoiceId ? (
                 <p className="text-muted-foreground">
-                  {copy('hardwareCreditIssued')}:{' '}
-                  <bdi>{numbers.money((-BigInt(amendment.priceDeltaIrR)).toString())}</bdi>{' '}
+                  {copy(
+                    BigInt(amendment.priceDeltaIrR) > 0n
+                      ? 'hardwareAdditionalCharge'
+                      : 'hardwareCreditIssued'
+                  )}
+                  :{' '}
+                  <bdi>
+                    {numbers.money(
+                      (BigInt(amendment.priceDeltaIrR) < 0n
+                        ? -BigInt(amendment.priceDeltaIrR)
+                        : BigInt(amendment.priceDeltaIrR)
+                      ).toString()
+                    )}
+                  </bdi>{' '}
                   <Link
                     to="/invoices/$invoiceId"
                     params={{ invoiceId: amendment.adjustmentInvoiceId }}

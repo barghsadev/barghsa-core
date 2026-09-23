@@ -20,6 +20,10 @@ import {
   type SavingHardwareAmendment,
 } from '../components/SavingHardwareAmendmentHistory.js';
 import { ContractCancellationPanel } from '../components/ContractCancellationPanel.js';
+import {
+  SavingHardwareUpgradeHistory,
+  type SavingHardwareUpgrade,
+} from '../components/SavingHardwareUpgradeHistory.js';
 import { savingNextAction, type SavingActionContext } from '../lib/saving-next-action.js';
 
 interface Detail extends SavingActionContext {
@@ -54,6 +58,7 @@ interface Detail extends SavingActionContext {
   revisions: SavingOrderRevision[];
   addressAmendments: SavingAddressAmendment[];
   hardwareAmendments: SavingHardwareAmendment[];
+  hardwareUpgrades: SavingHardwareUpgrade[];
 }
 
 export function SavingOrderDetailPage() {
@@ -207,6 +212,7 @@ export function SavingOrderDetailPage() {
           <SavingOrderRevisionHistory revisions={detail.revisions ?? []} />
           <SavingAddressAmendmentHistory amendments={detail.addressAmendments ?? []} />
           <SavingHardwareAmendmentHistory amendments={detail.hardwareAmendments ?? []} />
+          <SavingHardwareUpgradeHistory upgrades={detail.hardwareUpgrades ?? []} />
           <Card>
             <CardContent className="space-y-2 pt-6">
               <h2 className="text-xl font-semibold">{copy('contract')}</h2>

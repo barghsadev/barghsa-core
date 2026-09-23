@@ -20,6 +20,7 @@ import { BillVerificationProvider } from './bill-verification.provider.js';
 import { savingOrderRevisions } from './saving-order-revisions.js';
 import { savingAddressAmendments } from './saving-address-amendments.js';
 import { savingHardwareAmendments } from './saving-hardware-amendments.js';
+import { savingHardwareUpgrades } from './saving-hardware-upgrades.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 export interface SavingOrderInput {
@@ -436,6 +437,11 @@ export class SavingOrderService {
                 p.title AS plan_title,h.title AS hardware_title,
                 i.id AS invoice_id,i.state AS invoice_state,i.total_amount::text AS total_amount,
                 c.id AS contract_id,c.state AS contract_state,
+                (SELECT u.adjustment_invoice_id FROM saving_hardware_upgrade_requests u
+                  WHERE u.order_id=s.id AND u.status='awaiting_payment') AS pending_upgrade_invoice_id,
+                (SELECT charge.state FROM saving_hardware_upgrade_requests u
+                  JOIN invoices charge ON charge.id=u.adjustment_invoice_id
+                  WHERE u.order_id=s.id AND u.status='awaiting_payment') AS pending_upgrade_invoice_state,
                 EXISTS(SELECT 1 FROM contract_cancellation_requests r
                   WHERE r.contract_id=c.id AND r.status='Pending') AS cancellation_pending
            FROM saving_orders s
@@ -519,9 +525,10 @@ export class SavingOrderService {
       const revisions = await savingOrderRevisions(client, savingOrderId);
       const addressAmendments = await savingAddressAmendments(client, savingOrderId);
       const hardwareAmendments = await savingHardwareAmendments(client, savingOrderId);
+      const hardwareUpgrades = await savingHardwareUpgrades(client, savingOrderId);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return { ...row, stages, revisions, addressAmendments, hardwareAmendments };
+      return { ...row, stages, revisions, addressAmendments, hardwareAmendments, hardwareUpgrades };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

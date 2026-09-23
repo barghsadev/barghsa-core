@@ -19,6 +19,10 @@ import {
   type SavingHardwareAmendment,
 } from '../components/SavingHardwareAmendmentHistory.js';
 import { ContractCancellationRequestQueue } from '../components/ContractCancellationRequestQueue.js';
+import {
+  SavingHardwareUpgradeHistory,
+  type SavingHardwareUpgrade,
+} from '../components/SavingHardwareUpgradeHistory.js';
 
 type StageName =
   | 'request_confirmation'
@@ -68,6 +72,7 @@ interface Detail extends Order {
   revisions: SavingOrderRevision[];
   addressAmendments: SavingAddressAmendment[];
   hardwareAmendments: SavingHardwareAmendment[];
+  hardwareUpgrades: SavingHardwareUpgrade[];
   addressOptions: Array<{ id: string; fullAddress: string; postalCode: string }>;
   hardwareOptions: Array<{
     id: string;
@@ -225,6 +230,23 @@ export default function AdminSavingOrdersPage() {
     });
   }
 
+  function cancelHardwareUpgrade(upgrade: SavingHardwareUpgrade, reason: string) {
+    if (!detail || !reason) return;
+    setAction({
+      title: copy('hardwareUpgradeCancel'),
+      description: copy('staffConfirm'),
+      method: 'POST',
+      path: `/api/staff/saving/orders/${detail.id}/cancel-hardware-upgrade`,
+      body: {
+        idempotencyKey: crypto.randomUUID(),
+        upgradeId: upgrade.id,
+        reason,
+      },
+      conflictMessage: copy('staffConflict'),
+      forbiddenMessage: copy('staffForbidden'),
+    });
+  }
+
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="flex flex-wrap items-start justify-between gap-3">
@@ -314,6 +336,10 @@ export default function AdminSavingOrdersPage() {
               <SavingOrderRevisionHistory revisions={detail.revisions ?? []} />
               <SavingAddressAmendmentHistory amendments={detail.addressAmendments ?? []} />
               <SavingHardwareAmendmentHistory amendments={detail.hardwareAmendments ?? []} />
+              <SavingHardwareUpgradeHistory
+                upgrades={detail.hardwareUpgrades ?? []}
+                onCancel={cancelHardwareUpgrade}
+              />
               {detail.canAmendAddress && (
                 <div className="space-y-3 rounded-md border p-4">
                   <h3 className="font-semibold">{copy('staffAmendAddress')}</h3>
@@ -365,7 +391,9 @@ export default function AdminSavingOrdersPage() {
                         {hardware.title[locale]}
                         {BigInt(hardware.priceDeltaIrR) < 0n
                           ? ` · ${copy('hardwareCreditIssued')}: ${money.money((-BigInt(hardware.priceDeltaIrR)).toString())}`
-                          : ''}
+                          : BigInt(hardware.priceDeltaIrR) > 0n
+                            ? ` · ${copy('hardwareAdditionalCharge')}: ${money.money(hardware.priceDeltaIrR)}`
+                            : ''}
                       </option>
                     ))}
                   </select>
