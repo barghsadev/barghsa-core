@@ -136,6 +136,7 @@ test('simple electricity order moves from reviewed quote through payment and con
     route.fulfill({
       json: {
         activeProfileId: profileId,
+        activeProfileName: 'Buyer Legal Ltd',
         profileStatus: 'ACTIVE',
         verificationRequired: true,
         isVerified: true,
@@ -494,6 +495,7 @@ test('simple electricity order moves from reviewed quote through payment and con
   await expect(page.locator('main')).toContainText('1,200,000');
   await next.click();
   await next.click();
+  await expect(page.getByText('Buyer Legal Ltd', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Submit Order', exact: true }).click();
   await expect(page).toHaveURL(new RegExp(`/electricity/orders/${orderId}$`));
   expect(orderSubmissions).toHaveLength(1);

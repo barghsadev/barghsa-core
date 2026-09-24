@@ -23,6 +23,7 @@ type AddressActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
 
 export interface ProfileRow {
   id: string;
+  displayName: string;
   userId: string;
   profileType: 'INDIVIDUAL' | 'LEGAL';
   isDefault: boolean;
@@ -53,6 +54,7 @@ export interface AddressRow {
 
 export interface ProfileDto {
   id: string;
+  displayName: string;
   profileType: 'INDIVIDUAL' | 'LEGAL';
   isDefault: boolean;
   status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED';
@@ -72,6 +74,7 @@ export interface ProfilesResponseDto {
 
 export interface VerificationStatusDto {
   activeProfileId: string | null;
+  activeProfileName: string | null;
   profileStatus: string | null;
   isVerified: boolean;
   verificationRequired: boolean;
@@ -86,6 +89,13 @@ export interface VerificationStatusDto {
 function mapRow(row: Record<string, unknown>): ProfileRow {
   return {
     id: row.id as string,
+    displayName:
+      (row.display_name as string | undefined)?.trim() ||
+      [row.title, row.first_name, row.last_name]
+        .filter((part): part is string => typeof part === 'string' && Boolean(part.trim()))
+        .join(' ')
+        .trim() ||
+      (row.id as string),
     userId: row.user_id as string,
     profileType: row.profile_type as 'INDIVIDUAL' | 'LEGAL',
     isDefault: row.is_default as boolean,
@@ -102,6 +112,7 @@ function mapRow(row: Record<string, unknown>): ProfileRow {
 function mapToDto(row: ProfileRow): ProfileDto {
   return {
     id: row.id,
+    displayName: row.displayName,
     profileType: row.profileType,
     isDefault: row.isDefault,
     status: row.status,
@@ -153,8 +164,11 @@ export class ProfilesService {
     const result = await pool.query(
       `SELECT p.id,p.user_id,p.profile_type,(p.user_id=$1 AND p.is_default) AS is_default,
               p.status,p.title,p.first_name,p.last_name,p.national_id,p.created_at,p.updated_at,
+              COALESCE(NULLIF(TRIM(lp.legal_name),''),
+                NULLIF(TRIM(CONCAT_WS(' ',p.title,p.first_name,p.last_name)),''),p.id::text) AS display_name,
               CASE WHEN c.user_id IS NULL THEN p.user_id=$1 AND p.is_default ELSE p.id=c.profile_id END AS is_active
-       FROM profiles p LEFT JOIN user_profile_contexts c ON c.user_id=$1
+       FROM profiles p LEFT JOIN legal_profiles lp ON lp.id=p.id
+       LEFT JOIN user_profile_contexts c ON c.user_id=$1
        WHERE NOT p.archived AND (p.user_id=$1 OR (p.profile_type='LEGAL' AND EXISTS (
          SELECT 1 FROM profile_agents pa WHERE pa.profile_id=p.id AND pa.user_id=$1 AND pa.role IN ('Manager','Finance','Legal'))))
        ORDER BY is_active DESC NULLS LAST,p.created_at ASC`,
@@ -289,6 +303,7 @@ export class ProfilesService {
       // No default profile — no verification context
       return {
         activeProfileId: null,
+        activeProfileName: null,
         profileStatus: null,
         isVerified: false,
         verificationRequired: mode !== 'DISABLED',
@@ -335,6 +350,7 @@ export class ProfilesService {
 
     return {
       activeProfileId: defaultProfile.id,
+      activeProfileName: defaultProfile.displayName,
       profileStatus: defaultProfile.status,
       isVerified,
       verificationRequired,

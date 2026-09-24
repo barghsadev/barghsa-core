@@ -165,6 +165,7 @@ function ElectricityOrderPage() {
 
   // Profile & verification
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+  const [activeProfileName, setActiveProfileName] = useState<string | null>(null);
   const verificationGeneration = useRef(0);
   const [verificationError, setVerificationError] = useState(false);
   const [checking, setChecking] = useState(true);
@@ -264,6 +265,7 @@ function ElectricityOrderPage() {
     setChecking(true);
     setBlocked(null);
     setActiveProfileId(null);
+    setActiveProfileName(null);
     setVerificationError(false);
     try {
       const response = await fetch('/api/profiles/verification-status', {
@@ -287,6 +289,11 @@ function ElectricityOrderPage() {
       }
       if (current !== verificationGeneration.current) return;
       setActiveProfileId(data.activeProfileId);
+      setActiveProfileName(
+        typeof data.activeProfileName === 'string' && data.activeProfileName.trim()
+          ? data.activeProfileName.trim()
+          : null
+      );
       setBlocked(
         data.profileStatus === 'DRAFT' ||
           data.profileStatus === 'SUSPENDED' ||
@@ -1854,7 +1861,16 @@ function ElectricityOrderPage() {
                       <span className="text-muted-foreground">
                         {t('electricity.order.profile', locale)}:
                       </span>
-                      <span className="max-w-[60%] break-all font-medium">{activeProfileId}</span>
+                      <span className="max-w-[60%] text-end">
+                        <strong className="block font-medium" dir="auto">
+                          {activeProfileName || activeProfileId}
+                        </strong>
+                        {activeProfileName ? (
+                          <small className="block break-all text-muted-foreground" dir="ltr">
+                            {activeProfileId}
+                          </small>
+                        ) : null}
+                      </span>
                     </div>
                     {/* Selected product */}
                     <div className="flex items-center justify-between gap-2">

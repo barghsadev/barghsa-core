@@ -139,10 +139,28 @@ it('rolls back default profile selection when its audit cannot persist', async (
 });
 
 it('lists selectable agent profiles and switches without changing another user default', async () => {
+  await http.pool.query(
+    "UPDATE profiles SET title='Mr',first_name='Ari',last_name='Buyer' WHERE id=$1",
+    [owned]
+  );
+  await http.pool.query(
+    `INSERT INTO legal_profiles(id,legal_name,national_identifier,registration_number,representative_title,representative_relationship)
+     VALUES ($1,'Finance Buyer Ltd','12345678901','123','CEO','director')`,
+    [finance]
+  );
   const list = await request('profiles'),
-    body = (await list.json()) as { profiles: { id: string }[]; activeProfileId: string };
+    body = (await list.json()) as {
+      profiles: { id: string; displayName: string }[];
+      activeProfileId: string;
+    };
   expect(body.activeProfileId).toBe(owned);
   expect(body.profiles.map((p) => p.id).sort()).toEqual([owned, finance, legal].sort());
+  expect(body.profiles.find((p) => p.id === owned)?.displayName).toBe('Mr Ari Buyer');
+  expect(body.profiles.find((p) => p.id === finance)?.displayName).toBe('Finance Buyer Ltd');
+  expect(await (await request('profiles/verification-status')).json()).toMatchObject({
+    activeProfileId: owned,
+    activeProfileName: 'Mr Ari Buyer',
+  });
   expect((await request(`profiles/switch/${unrelated}`, 'POST')).status).toBe(404);
   expect((await request(`profiles/switch/${finance}`, 'POST')).status).toBe(200);
   expect(await (await request('profiles')).json()).toMatchObject({ activeProfileId: finance });
@@ -156,6 +174,7 @@ it('lists selectable agent profiles and switches without changing another user d
   ).toBe(true);
   expect(await (await request('profiles/verification-status')).json()).toMatchObject({
     activeProfileId: finance,
+    activeProfileName: 'Finance Buyer Ltd',
     isVerified: true,
   });
   expect((await request('v1/notifications/read-all', 'PATCH')).status).toBe(200);

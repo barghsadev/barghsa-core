@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Electricity review profile identity](batches/2026-09-24-electricity-review-profile-name.md) shows the active buyer's readable individual or registered legal name alongside the profile ID before simple-order submission, including agent profile switching.
+
 [Electricity staff review browser handoff](batches/2026-09-24-electricity-staff-review-browser-journey.md) takes the simple customer order through staff review of saved terms and green composition, exact-version approval, payment and activation in one browser journey.
 
 [Staff electricity contract preview](batches/2026-09-24-staff-electricity-contract-preview.md) shows the exact saved template terms and version before staff decide an order, and verifies Active/Paid after customer contract activation.
