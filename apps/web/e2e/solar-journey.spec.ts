@@ -6,13 +6,15 @@ const requestId = '22222222-2222-4222-8222-222222222222';
 const documentId = '33333333-3333-4333-8333-333333333333';
 const submittedAt = '2026-09-23T10:00:00.000Z';
 
-test('solar customer resumes intake, uploads documents, and records postal shipment', async ({
+test('solar request moves from customer upload through staff review and postal receipt', async ({
   page,
   uploadReceiver,
 }) => {
   let draft: Record<string, unknown> | null = null;
   let requestStatus = 'submitted';
   let documentStatus = 'Uploading';
+  let staffDocumentStatus = 'pending';
+  let postalStatus = 'waiting_for_shipment';
   let shipment: Record<string, unknown> | null = null;
   const submissions: Array<Record<string, unknown>> = [];
   const document = {
@@ -160,6 +162,128 @@ test('solar customer resumes intake, uploads documents, and records postal shipm
   await page.route(`**/api/documents/${documentId}`, (route) =>
     route.fulfill({ json: { ...document, state: documentStatus, history: [] } })
   );
+  await page.route('**/api/admin/solar/document-review-queue', (route) =>
+    route.fulfill({
+      json: {
+        documents:
+          requestStatus === 'documents_under_review' && staffDocumentStatus === 'pending'
+            ? [
+                {
+                  id: 'review-1',
+                  request_id: requestId,
+                  document_id: documentId,
+                  file_name: document.originalName,
+                  uploaded_by: 'buyer',
+                  uploaded_by_name: 'Buyer',
+                  uploaded_at: submittedAt,
+                  staff_status: staffDocumentStatus,
+                },
+              ]
+            : [],
+        nextBefore: null,
+      },
+    })
+  );
+  await page.route('**/api/admin/solar/requests', (route) =>
+    route.fulfill({
+      json: {
+        requests: [
+          {
+            id: requestId,
+            profile_id: profileId,
+            profile_name: 'Buyer',
+            status: requestStatus,
+            building_type: 'building_apartment',
+            document_count: 1,
+            created_at: submittedAt,
+          },
+        ],
+        nextBefore: null,
+      },
+    })
+  );
+  await page.route(`**/api/admin/solar/requests/${requestId}/documents`, (route) =>
+    route.fulfill({
+      json: {
+        request: { id: requestId, profile_id: profileId, status: requestStatus },
+        documents: [
+          {
+            id: 'review-1',
+            document_id: documentId,
+            file_name: document.originalName,
+            staff_status: staffDocumentStatus,
+            staff_reason: null,
+            uploaded_by: 'buyer',
+            uploaded_at: submittedAt,
+            state: documentStatus,
+            revision: document.revision,
+          },
+        ],
+        requestedDocuments: [],
+      },
+    })
+  );
+  await page.route('**/api/admin/solar/document-guidance', (route) =>
+    route.fulfill({
+      json: { en: 'Upload a site plan.', fa: 'نقشه سایت را بارگذاری کنید.', suggestions: [] },
+    })
+  );
+  await page.route(
+    `**/api/admin/solar/requests/${requestId}/documents/${documentId}/approve`,
+    (route) => {
+      expect(route.request().postDataJSON()).toEqual({ expectedRevision: document.revision });
+      expect(requestStatus).toBe('documents_under_review');
+      staffDocumentStatus = 'approved';
+      return route.fulfill({ json: { status: staffDocumentStatus } });
+    }
+  );
+  await page.route(`**/api/admin/solar/requests/${requestId}/documents/advance`, (route) => {
+    expect(staffDocumentStatus).toBe('approved');
+    requestStatus = 'waiting_for_postal_submission';
+    return route.fulfill({ json: { status: requestStatus } });
+  });
+  await page.route('**/api/admin/solar/postal-queue?*', (route) =>
+    route.fulfill({
+      json: {
+        requests:
+          postalStatus === 'shipped'
+            ? [
+                {
+                  id: requestId,
+                  profile_id: profileId,
+                  profile_name: 'Buyer',
+                  request_status: requestStatus,
+                  postal_status: postalStatus,
+                  courier: shipment?.courier,
+                  tracking_number: shipment?.trackingNumber,
+                  send_date: shipment?.sendDate,
+                  receipt_image_id: null,
+                  staff_notes: null,
+                  created_at: submittedAt,
+                },
+              ]
+            : [],
+        nextBefore: null,
+      },
+    })
+  );
+  await page.route('**/api/admin/solar/postal-guidance', (route) =>
+    route.fulfill({
+      json: {
+        en: 'Mail the originals.',
+        fa: 'اصل مدارک را پست کنید.',
+        destinationAddress: 'Solar office',
+        contactDetails: '',
+        originals: [],
+      },
+    })
+  );
+  await page.route(`**/api/admin/solar/requests/${requestId}/postal/confirm-received`, (route) => {
+    expect(postalStatus).toBe('shipped');
+    postalStatus = 'received';
+    requestStatus = 'postal_documents_received';
+    return route.fulfill({ json: { status: requestStatus } });
+  });
   await page.route(`**/api/solar/requests/${requestId}/postal`, (route) =>
     route.fulfill({
       json: {
@@ -174,7 +298,7 @@ test('solar customer resumes intake, uploads documents, and records postal shipm
         postal: shipment
           ? {
               ...shipment,
-              status: 'shipped',
+              status: postalStatus,
               courier: shipment.courier,
               tracking_number: shipment.trackingNumber,
               send_date: shipment.sendDate,
@@ -185,6 +309,7 @@ test('solar customer resumes intake, uploads documents, and records postal shipm
   );
   await page.route(`**/api/solar/requests/${requestId}/postal/shipment`, (route) => {
     shipment = route.request().postDataJSON() as Record<string, unknown>;
+    postalStatus = 'shipped';
     return route.fulfill({ json: { status: 'shipped' } });
   });
 
@@ -235,9 +360,19 @@ test('solar customer resumes intake, uploads documents, and records postal shipm
     documents.getByRole('status').filter({ hasText: 'Document set sent for review.' })
   ).toBeVisible();
 
-  // Staff completes document review between the two customer visits.
-  requestStatus = 'waiting_for_postal_submission';
-  await page.reload();
+  await page.goto('/admin/solar-requests');
+  await expect(page.getByRole('heading', { name: 'Solar document review' })).toBeVisible();
+  await page.getByRole('button', { name: /site-plan\.pdf.*Buyer/ }).click();
+  await page.getByRole('button', { name: 'Approve file' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
+  await expect.poll(() => staffDocumentStatus).toBe('approved');
+  await page
+    .getByRole('button', { name: 'Documents sufficient — advance to postal stage' })
+    .click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
+  await expect.poll(() => requestStatus).toBe('waiting_for_postal_submission');
+
+  await page.goto(`/solar/requests/${requestId}`);
   const postal = page.getByRole('region', { name: 'Postal submission of documents' });
   await expect(postal.getByText('Mail the originals.')).toBeVisible();
   await postal.getByLabel('Courier').fill('Post office');
@@ -248,6 +383,17 @@ test('solar customer resumes intake, uploads documents, and records postal shipm
     postal.getByRole('status').filter({ hasText: 'Shipped, awaiting staff confirmation' })
   ).toBeVisible();
   expect(shipment).toMatchObject({ courier: 'Post office', trackingNumber: 'TRACK-123' });
+
+  await page.goto('/admin/solar-postal');
+  await expect(page.getByRole('heading', { name: 'Solar postal review' })).toBeVisible();
+  await page.getByRole('button', { name: /Buyer.*Shipped/ }).click();
+  await expect(page.getByText('TRACK-123')).toBeVisible();
+  await page.getByRole('button', { name: 'Confirm receipt' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
+  await expect.poll(() => requestStatus).toBe('postal_documents_received');
+
+  await page.goto(`/solar/requests/${requestId}`);
+  await expect(page.getByText('Postal originals received').first()).toBeVisible();
 });
 
 test('solar intake returns from address setup with its saved site details', async ({ page }) => {

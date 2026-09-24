@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Solar customer and staff browser handoffs](batches/2026-09-24-solar-browser-journey.md) now follows one submitted request through staff document approval, postal advancement, customer shipment, staff receipt confirmation, and the customer-visible result.
+
 [Customer electricity order line prices](batches/2026-09-24-electricity-order-detail-line-prices.md) labels stored subtotals and shows matching saved discount, VAT and payable line amounts after submission.
 
 [Staff electricity price breakdown](batches/2026-09-24-staff-electricity-price-breakdown.md) exposes the saved product subtotal, discount, net amount and VAT in the approval review table, with honest display for older snapshots.
