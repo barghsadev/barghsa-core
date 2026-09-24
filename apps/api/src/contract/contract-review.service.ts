@@ -24,6 +24,7 @@ interface PublishedRow {
   id: string;
   profile_id: string;
   order_id: string | null;
+  saving_order_id: string | null;
   service_type: string;
   state: string;
   current_version_id: string;
@@ -41,6 +42,7 @@ function customerDto(row: PublishedRow) {
     id: row.id,
     profileId: row.profile_id,
     orderId: row.order_id,
+    savingOrderId: row.saving_order_id,
     serviceType: row.service_type,
     state: row.state,
     canAccept:
@@ -296,10 +298,11 @@ export class ContractReviewService {
   private async published(client: PoolClient, profileId: string, id: string, versionId?: string) {
     const row = (
       await client.query<PublishedRow>(
-        `SELECT c.id,c.profile_id,c.order_id,c.service_type,c.state,c.current_version_id,v.id AS version_id,v.version_number,
-      v.content,v.change_description,v.created_at,p.published_at,a.accepted_at,a.accepted_by
-      FROM contracts c JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
-      LEFT JOIN contract_acceptances a ON a.version_id=v.id
+        `SELECT c.id,c.profile_id,c.order_id,s.id AS saving_order_id,c.service_type,c.state,c.current_version_id,v.id AS version_id,v.version_number,
+        v.content,v.change_description,v.created_at,p.published_at,a.accepted_at,a.accepted_by
+        FROM contracts c JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
+        LEFT JOIN contract_acceptances a ON a.version_id=v.id
+        LEFT JOIN saving_orders s ON s.order_id=c.order_id AND s.profile_id=c.profile_id AND c.service_type='savings'
       WHERE c.id=$1 AND c.profile_id=$2 AND ($3::uuid IS NULL OR v.id=$3) ORDER BY v.version_number DESC LIMIT 1`,
         [id, profileId, versionId ?? null]
       )

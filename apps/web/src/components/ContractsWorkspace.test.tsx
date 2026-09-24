@@ -264,6 +264,29 @@ it.each(['en', 'fa'] as const)(
   }
 );
 it.each(['en', 'fa'] as const)(
+  'opens a linked saving order from the published contract in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    const savingOrderId = '66666666-6666-4666-8666-666666666666';
+    vi.stubGlobal(
+      'fetch',
+      api(
+        detail({
+          serviceType: 'savings',
+          orderId: '55555555-5555-4555-8555-555555555555',
+          savingOrderId,
+        })
+      )
+    );
+    await render(<ContractDetail id={ID} staff={false} onClose={() => {}} onChanged={() => {}} />);
+    expect(container.querySelector(`a[href="/savings/orders/${savingOrderId}"]`)?.textContent).toBe(
+      words.openLinkedSavingOrder
+    );
+    expect(container.querySelector('a[href^="/electricity/orders/"]')).toBeNull();
+  }
+);
+it.each(['en', 'fa'] as const)(
   'renders published terms and exact acceptance in %s',
   async (locale) => {
     harness.locale = locale;

@@ -298,6 +298,7 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
     contractId: string;
     invoiceId: string;
   };
+  expect((await request(`/api/contracts/${result.contractId}`, 'GET')).status).toBe(404);
   const afterDuplicate = await request('/api/saving/orders/duplicate', 'POST', {
     profileId: input.profileId,
     savingPlanId: input.savingPlanId,
@@ -593,6 +594,13 @@ it('quotes net VAT, rejects legal profiles, and atomically submits once', async 
   const approved = await request(approvePath, 'POST', approval, staffHeaders);
   expect(approved.status, http.logs()).toBe(200);
   expect(await approved.json()).toMatchObject({ status: 'approved' });
+  const publishedContract = await request(`/api/contracts/${result.contractId}`, 'GET');
+  expect(publishedContract.status, http.logs()).toBe(200);
+  expect(await publishedContract.json()).toMatchObject({
+    id: result.contractId,
+    orderId: result.orderId,
+    savingOrderId: result.savingOrderId,
+  });
   const fulfillmentQueue = await request(
     '/api/staff/saving/orders?lane=fulfillment',
     'GET',

@@ -212,6 +212,15 @@ export function ContractDetail({
               {word('openLinkedOrder')}
             </Link>
           ) : null}
+          {!staff && data.contract.serviceType === 'savings' && data.contract.savingOrderId ? (
+            <Link
+              to="/savings/orders/$orderId"
+              params={{ orderId: data.contract.savingOrderId }}
+              className="self-start text-sm text-primary underline underline-offset-4"
+            >
+              {word('openLinkedSavingOrder')}
+            </Link>
+          ) : null}
           <div>
             <h3 className="font-semibold">
               {word('version')} {data.version.versionNumber.toLocaleString(locale)}

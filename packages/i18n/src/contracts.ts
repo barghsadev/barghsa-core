@@ -32,6 +32,7 @@ export const en = {
   draftLegal: 'Legal entity',
   draftOrder: 'Linked order',
   openLinkedOrder: 'Open electricity order',
+  openLinkedSavingOrder: 'Open saving order',
   draftNoOrder: 'No linked order',
   draftNoMatches: 'No matching records. Refine the search or choose another profile.',
   draftOptionsError:
@@ -292,6 +293,7 @@ export const fa: Record<keyof typeof en, string> = {
   draftLegal: 'حقوقی',
   draftOrder: 'سفارش مرتبط',
   openLinkedOrder: 'مشاهده سفارش برق',
+  openLinkedSavingOrder: 'مشاهده سفارش پس‌انداز',
   draftNoOrder: 'بدون سفارش مرتبط',
   draftNoMatches: 'موردی پیدا نشد. جست‌وجو را تغییر دهید یا پروفایل دیگری انتخاب کنید.',
   draftOptionsError:
