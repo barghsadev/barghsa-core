@@ -181,6 +181,7 @@ function api(current = detail()) {
           profileTitle: 'Acme Energy',
           acceptedParty: current.acceptedParty,
           orderId: current.orderId,
+          linkedOrderStatus: current.linkedOrderStatus,
           savingOrderId: current.savingOrderId,
           serviceType: current.serviceType,
           state: current.state,
@@ -218,15 +219,19 @@ it.each(['en', 'fa'] as const)(
     harness.locale = locale;
     const words = locale === 'fa' ? fa : en;
     const orderId = '55555555-5555-4555-8555-555555555555';
-    vi.stubGlobal('fetch', api(detail({ orderId })));
+    vi.stubGlobal('fetch', api(detail({ orderId, linkedOrderStatus: 'awaiting_staff_review' })));
     await render(<ContractsPage />);
     expect(container.textContent).toContain(`${words.contractNumber}: 1001`);
+    expect(container.textContent).toContain(
+      `${words.linkedOrderStatus}: ${locale === 'fa' ? 'در انتظار بررسی کارشناسان' : 'Awaiting staff review'}`
+    );
     expect(container.textContent).toContain(`${words.account}: Acme Energy · ${words.draftLegal}`);
     expect(container.querySelector(`a[href="/electricity/orders/${orderId}"]`)?.textContent).toBe(
       words.openLinkedOrder
     );
     await click(`${words.electricity} · ${words.version} ${(2).toLocaleString(locale)}`);
     expect(container.textContent?.split(`${words.contractNumber}: 1001`)).toHaveLength(3);
+    expect(container.textContent?.split(words.linkedOrderStatus)).toHaveLength(3);
   }
 );
 it('links a saving contract to its saved order from the list', async () => {

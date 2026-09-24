@@ -307,6 +307,12 @@ function ContractResults({
                     )}
                   </p>
                 ) : null}
+                {item.serviceType === 'electricity' && item.linkedOrderStatus ? (
+                  <p className="text-sm text-muted-foreground">
+                    {word('linkedOrderStatus')}:{' '}
+                    {appText(`electricity.order.status.${item.linkedOrderStatus}`, locale)}
+                  </p>
+                ) : null}
                 {item.commercialValue ? (
                   <p className="text-sm text-muted-foreground">
                     {word('statedContractValue')}:{' '}

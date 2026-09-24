@@ -3,6 +3,7 @@ import {
   getDbPool,
   contracts,
   contractAcceptances,
+  electricityOrders,
   contractVersions,
   contractActivationRequirements,
   invoices,
@@ -56,6 +57,7 @@ export class ContractService {
         profileFirstName: profiles.firstName,
         profileLastName: profiles.lastName,
         orderId: contracts.orderId,
+        linkedOrderStatus: electricityOrders.status,
         serviceType: contracts.serviceType,
         state: contracts.state,
         versionId: contractVersions.id,
@@ -72,6 +74,14 @@ export class ContractService {
       })
       .from(contracts)
       .innerJoin(profiles, eq(profiles.id, contracts.profileId))
+      .leftJoin(
+        electricityOrders,
+        and(
+          eq(electricityOrders.id, contracts.orderId),
+          eq(electricityOrders.profileId, contracts.profileId),
+          eq(contracts.serviceType, 'electricity')
+        )
+      )
       .innerJoin(
         contractVersions,
         and(
@@ -136,8 +146,23 @@ export class ContractService {
         .from(contractAcceptances)
         .where(eq(contractAcceptances.versionId, row.currentVersionId))
     )[0];
+    const linkedOrderStatus =
+      row.serviceType === 'electricity' && row.orderId
+        ? ((
+            await db
+              .select({ status: electricityOrders.status })
+              .from(electricityOrders)
+              .where(
+                and(
+                  eq(electricityOrders.id, row.orderId),
+                  eq(electricityOrders.profileId, row.profileId)
+                )
+              )
+          )[0]?.status ?? null)
+        : null;
     return {
       ...row,
+      linkedOrderStatus,
       acceptedParty: acceptance?.acceptedParty ?? null,
       contractNumber: row.contractNumber.toString(),
       createdAt: row.createdAt.toISOString(),

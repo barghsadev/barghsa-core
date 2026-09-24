@@ -57,6 +57,7 @@ export interface ContractSummary {
   profileType?: 'INDIVIDUAL' | 'LEGAL';
   profileTitle?: string | null;
   orderId?: string | null;
+  linkedOrderStatus?: string | null;
   savingOrderId?: string | null;
   serviceType: 'electricity' | 'savings' | 'solar';
   state: (typeof contractStates)[number];

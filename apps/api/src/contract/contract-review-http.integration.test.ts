@@ -118,6 +118,10 @@ it('links an authorized invoice to its contract only after publication', async (
 it('shows the published value, service period and initial invoice on customer and staff contract lists', async () => {
   const commercialValue = { kind: 'fixed' as const, amountIrr: '9007199254740993' };
   const f = await fixture('electricity', true, commercialValue);
+  await http.pool.query(
+    "INSERT INTO electricity_orders(id,profile_id,status,settings_snapshot,total_kwh,average_power_kw,green_rule_applied,submitted_by) VALUES($1,$2,'submitted','{}'::jsonb,1,1,false,$3)",
+    [f.orderId, f.profile, f.owner]
+  );
   await http.pool.query("UPDATE profiles SET title='Acme Energy' WHERE id=$1", [f.profile]);
   const invoiceId = randomUUID();
   await http.pool.query(
@@ -132,6 +136,7 @@ it('shows the published value, service period and initial invoice on customer an
   await publish(f);
   expect(await (await customer(f)).json()).toMatchObject({
     contractNumber: f.row.contractNumber,
+    linkedOrderStatus: 'submitted',
     version: { content: { commercialValue } },
   });
   const customerList = await send('contracts', 'GET', undefined, f.owner);
@@ -144,6 +149,7 @@ it('shows the published value, service period and initial invoice on customer an
         profileType: 'LEGAL',
         profileTitle: 'Acme Energy',
         orderId: f.orderId,
+        linkedOrderStatus: 'submitted',
         commercialValue,
         serviceStartsAt: '2026-10-01T00:00:00.000Z',
         serviceEndsAt: '2027-10-01T00:00:00.000Z',
@@ -155,6 +161,9 @@ it('shows the published value, service period and initial invoice on customer an
   });
   const staffList = await send('admin/contracts?profileId=' + f.profile);
   expect(staffList.status).toBe(200);
+  expect(await (await send('admin/contracts/' + f.row.id)).json()).toMatchObject({
+    linkedOrderStatus: 'submitted',
+  });
   expect(await staffList.json()).toMatchObject({
     contracts: [
       {
@@ -163,6 +172,7 @@ it('shows the published value, service period and initial invoice on customer an
         profileType: 'LEGAL',
         profileTitle: 'Acme Energy',
         orderId: f.orderId,
+        linkedOrderStatus: 'submitted',
         commercialValue,
         serviceStartsAt: '2026-10-01T00:00:00.000Z',
         serviceEndsAt: '2027-10-01T00:00:00.000Z',

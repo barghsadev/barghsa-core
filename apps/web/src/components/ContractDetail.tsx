@@ -185,6 +185,12 @@ export function ContractDetail({
             {word(data.contract.contractNumber ? 'contractNumber' : 'contractReference')}:{' '}
             <bdi dir="ltr">{data.contract.contractNumber ?? data.contract.id}</bdi>
           </p>
+          {data.contract.serviceType === 'electricity' && data.contract.linkedOrderStatus ? (
+            <p className="text-sm text-muted-foreground">
+              {word('linkedOrderStatus')}:{' '}
+              {t(`electricity.order.status.${data.contract.linkedOrderStatus}`, locale)}
+            </p>
+          ) : null}
           {data.contract.acceptedParty && isCurrent ? (
             <div className="rounded-lg border p-3 text-sm">
               <h3 className="font-semibold">{word('acceptedParty')}</h3>

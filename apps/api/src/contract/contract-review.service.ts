@@ -26,6 +26,7 @@ interface PublishedRow {
   contract_number: string;
   profile_id: string;
   order_id: string | null;
+  linked_order_status: string | null;
   saving_order_id: string | null;
   service_type: string;
   state: string;
@@ -46,6 +47,7 @@ function customerDto(row: PublishedRow) {
     contractNumber: row.contract_number,
     profileId: row.profile_id,
     orderId: row.order_id,
+    linkedOrderStatus: row.linked_order_status,
     savingOrderId: row.saving_order_id,
     acceptedParty: row.party_snapshot,
     serviceType: row.service_type,
@@ -145,6 +147,7 @@ export class ContractReviewService {
           profile_first_name: string | null;
           profile_last_name: string | null;
           order_id: string | null;
+          linked_order_status: string | null;
           saving_order_id: string | null;
           service_type: string;
           state: string;
@@ -162,7 +165,7 @@ export class ContractReviewService {
         }>(
           `SELECT DISTINCT ON(c.id) c.id,c.contract_number,profile.profile_type,profile.title AS profile_title,
           profile.first_name AS profile_first_name,profile.last_name AS profile_last_name,
-          c.order_id,s.id AS saving_order_id,c.service_type,c.state,v.id AS version_id,v.version_number,
+          c.order_id,e.status AS linked_order_status,s.id AS saving_order_id,c.service_type,c.state,v.id AS version_id,v.version_number,
           v.content->'commercialValue' AS commercial_value,p.published_at,a.accepted_at,a.party_snapshot,
           r.service_starts_at,r.service_ends_at,r.initial_invoice_id,i.total_amount AS initial_invoice_amount,i.state AS initial_invoice_state
           FROM contracts c JOIN profiles profile ON profile.id=c.profile_id
@@ -171,6 +174,7 @@ export class ContractReviewService {
           LEFT JOIN contract_activation_requirements r ON r.version_id=v.id
           LEFT JOIN invoices i ON i.id=r.initial_invoice_id AND i.profile_id=c.profile_id
           LEFT JOIN saving_orders s ON s.order_id=c.order_id AND s.profile_id=c.profile_id AND c.service_type='savings'
+          LEFT JOIN electricity_orders e ON e.id=c.order_id AND e.profile_id=c.profile_id AND c.service_type='electricity'
       WHERE c.profile_id=$1 AND ($2::uuid IS NULL OR c.id<$2)
         AND (NOT $3::boolean OR c.state='Active')
       ORDER BY c.id DESC,v.version_number DESC LIMIT 101`,
@@ -187,6 +191,7 @@ export class ContractReviewService {
             [r.profile_first_name, r.profile_last_name].filter(Boolean).join(' ').trim() ||
             null,
           orderId: r.order_id,
+          linkedOrderStatus: r.linked_order_status,
           savingOrderId: r.saving_order_id,
           acceptedParty: r.party_snapshot,
           serviceType: r.service_type,
@@ -327,11 +332,12 @@ export class ContractReviewService {
   private async published(client: PoolClient, profileId: string, id: string, versionId?: string) {
     const row = (
       await client.query<PublishedRow>(
-        `SELECT c.id,c.contract_number,c.profile_id,c.order_id,s.id AS saving_order_id,c.service_type,c.state,c.current_version_id,v.id AS version_id,v.version_number,
+        `SELECT c.id,c.contract_number,c.profile_id,c.order_id,e.status AS linked_order_status,s.id AS saving_order_id,c.service_type,c.state,c.current_version_id,v.id AS version_id,v.version_number,
         v.content,v.change_description,v.created_at,p.published_at,a.accepted_at,a.accepted_by,a.party_snapshot
         FROM contracts c JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
         LEFT JOIN contract_acceptances a ON a.version_id=v.id
         LEFT JOIN saving_orders s ON s.order_id=c.order_id AND s.profile_id=c.profile_id AND c.service_type='savings'
+        LEFT JOIN electricity_orders e ON e.id=c.order_id AND e.profile_id=c.profile_id AND c.service_type='electricity'
       WHERE c.id=$1 AND c.profile_id=$2 AND ($3::uuid IS NULL OR v.id=$3) ORDER BY v.version_number DESC LIMIT 1`,
         [id, profileId, versionId ?? null]
       )
