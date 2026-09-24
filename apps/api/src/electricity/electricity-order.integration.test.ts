@@ -2150,6 +2150,10 @@ it('tracks an approved contract cancellation and its existing mandatory refund',
 });
 
 it('previews and atomically submits an order, contract, lines and payable invoice once', async () => {
+  await http.pool.query('UPDATE profiles SET title=$2 WHERE id=$1', [
+    input.profileId,
+    'Customer Company',
+  ]);
   const preview = await post('preview/simple', {
     profileId: input.profileId,
     period: input.period,
@@ -2171,6 +2175,10 @@ it('previews and atomically submits an order, contract, lines and payable invoic
   expect(detail.status, http.logs()).toBe(200);
   expect(await detail.json()).toMatchObject({
     orderId: result.orderId,
+    profileName: 'Customer Company',
+    mode: 'simple',
+    submittedAt: expect.any(String),
+    postalCode: '1234567890',
     contractId: result.contractId,
     invoiceId: result.invoiceId,
     totalIrR: '1000000',

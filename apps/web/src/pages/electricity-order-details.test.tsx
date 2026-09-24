@@ -57,6 +57,9 @@ it('loads an order confirmation with its invoice and contract references', async
             : {
                 orderId: 'order-1',
                 profileId: 'profile-1',
+                profileName: 'Customer Company',
+                mode: 'simple',
+                submittedAt: '2026-09-23T08:30:00Z',
                 commercialStatus: 'PENDING',
                 electricityStatus: 'awaiting_staff_review',
                 financialStatus: 'unpaid',
@@ -111,6 +114,13 @@ it('loads an order confirmation with its invoice and contract references', async
     expect(container.textContent).toContain('Current status');
     expect(container.textContent).toContain('Who acts next');
     expect(container.textContent).toContain('Financial status');
+    expect(container.textContent).toContain('Order method');
+    expect(container.textContent).toContain('Simple');
+    expect(container.textContent).toContain('Submitted');
+    expect(container.textContent).toContain('Customer Company');
+    expect(container.textContent).toContain('Postal Code');
+    expect(container.textContent).toContain('1234567890');
+    expect(container.querySelector('time[datetime="2026-09-23T08:30:00Z"]')).not.toBeNull();
     const statuses = [...container.querySelectorAll('dl')].find(
       (item) => item.querySelector('dt')?.textContent === 'Commercial status'
     );

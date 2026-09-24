@@ -21,7 +21,9 @@ const ElectricityOrderRevisionForm = lazy(() =>
 interface ElectricityOrderDetail {
   orderId: string;
   profileId: string;
+  profileName?: string;
   mode: string;
+  submittedAt?: string;
   commercialStatus: string;
   electricityStatus: string;
   financialStatus: string;
@@ -346,9 +348,28 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                 <span>{t('electricity.order.success.order', locale)}</span>
                 <strong className="break-all">{detail.orderId}</strong>
               </p>
+              {['simple', 'advanced'].includes(detail.mode) ? (
+                <p className="flex justify-between gap-3">
+                  <span>{t('electricity.order.detail.mode', locale)}</span>
+                  <span>
+                    {t(
+                      detail.mode === 'advanced'
+                        ? 'electricity.order.detail.mode.advanced'
+                        : 'electricity.order.detail.mode.simple',
+                      locale
+                    )}
+                  </span>
+                </p>
+              ) : null}
+              {detail.submittedAt ? (
+                <p className="flex justify-between gap-3">
+                  <span>{t('electricity.order.detail.submittedAt', locale)}</span>
+                  <time dateTime={detail.submittedAt}>{time.format(detail.submittedAt)}</time>
+                </p>
+              ) : null}
               <p className="flex justify-between gap-3">
                 <span>{t('electricity.order.profile', locale)}</span>
-                <span className="break-all">{detail.profileId}</span>
+                <span>{detail.profileName || detail.profileId}</span>
               </p>
               <p className="flex justify-between gap-3">
                 <span>{t('electricity.order.period.selection', locale)}</span>
@@ -407,6 +428,12 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                 <span>{t('electricity.order.deliveryAddress', locale)}</span>
                 <span>{detail.fullAddress}</span>
               </p>
+              {detail.postalCode ? (
+                <p className="flex justify-between gap-3">
+                  <span>{t('electricity.order.postalCode', locale)}</span>
+                  <span dir="ltr">{detail.postalCode}</span>
+                </p>
+              ) : null}
             </CardContent>
           </Card>
           <Card>

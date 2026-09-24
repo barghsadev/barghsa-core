@@ -282,6 +282,7 @@ export class ElectricityOrderService {
         await client.query<{
           id: string;
           profile_id: string;
+          profile_name: string;
           commercial_status: string;
           electricity_status: string;
           mode: string;
@@ -313,7 +314,11 @@ export class ElectricityOrderService {
           refund_reason: string | null;
           refund_id: string | null;
         }>(
-          `SELECT o.id,o.profile_id,o.status AS commercial_status,
+          `SELECT o.id,o.profile_id,
+           COALESCE(NULLIF(lp.legal_name,''),
+             NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),''),
+             NULLIF(p.title,''),p.id::text) AS profile_name,
+           o.status AS commercial_status,
            e.status AS electricity_status,e.mode,e.period_start,e.period_end,
            e.total_kwh,COALESCE(ir.requested_kwh,e.total_kwh)::text AS effective_total_kwh,
            e.pricing_snapshot,e.settings_snapshot,e.green_rule_applied,
@@ -327,7 +332,9 @@ export class ElectricityOrderService {
            COALESCE((SELECT SUM(r.amount)::text FROM refunds r WHERE r.invoice_id=i.id
              AND r.state NOT IN ('Completed','Rejected','Cancelled')), '0') AS pending_refund_amount,
            ro.status AS refund_status,ro.reason AS refund_reason,ro.refund_id
-         FROM orders o JOIN electricity_orders e ON e.id=o.id
+         FROM orders o JOIN profiles p ON p.id=o.profile_id
+         LEFT JOIN legal_profiles lp ON lp.id=p.id
+         JOIN electricity_orders e ON e.id=o.id
          JOIN electricity_contracts ec ON ec.order_id=o.id
          JOIN contracts c ON c.id=ec.contract_id
          JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
@@ -397,6 +404,7 @@ export class ElectricityOrderService {
       return {
         orderId: detail.id,
         profileId: detail.profile_id,
+        profileName: detail.profile_name,
         commercialStatus: detail.commercial_status,
         electricityStatus: detail.electricity_status,
         financialStatus,
