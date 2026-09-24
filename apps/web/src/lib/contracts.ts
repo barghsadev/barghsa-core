@@ -72,6 +72,7 @@ export interface ContractSummary {
   initialInvoiceId?: string | null;
   initialInvoiceAmount?: string | null;
   initialInvoiceState?: string | null;
+  pendingAmendmentState?: 'Draft' | 'AwaitingCustomerAcceptance' | 'AwaitingSignature' | null;
 }
 export interface ContractDetailData extends Omit<ContractSummary, 'versionId' | 'versionNumber'> {
   profileId: string;

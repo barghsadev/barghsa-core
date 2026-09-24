@@ -2,6 +2,10 @@
 
 ## Current manual batch — September 24, 2026
 
+[Signed contract amendments](batches/2026-09-24-signed-contract-amendments.md) preserve the effective version through customer acceptance and required signing, with exact-version PDF and signed-copy evidence.
+
+[Pending amendment list status](batches/2026-09-24-contract-amendment-list-status.md) makes draft, acceptance and signature work visible beside the effective contract in staff and customer lists.
+
 [Readable customer electricity order snapshot](batches/2026-09-24-electricity-order-snapshot.md) shows the profile name, order method, submission time and saved postal code on customer detail.
 
 [Electricity order financial closure](batches/2026-09-24-electricity-refund-clarity.md) distinguishes remaining refund from remaining payment on terminal orders and explains when no refund is due.

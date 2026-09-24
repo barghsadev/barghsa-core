@@ -197,6 +197,7 @@ function api(current = detail()) {
           initialInvoiceId: current.initialInvoiceId,
           initialInvoiceAmount: current.initialInvoiceAmount,
           initialInvoiceState: current.initialInvoiceState,
+          pendingAmendmentState: current.pendingAmendmentState,
         },
       ],
       nextBefore: null,
@@ -212,6 +213,37 @@ it('opens the customer contract list with the active-state filter', async () => 
       ([raw]) => new URL(raw, 'https://app.test').searchParams.get('state') === 'Active'
     )
   ).toBe(true);
+});
+it.each(['en', 'fa'] as const)(
+  'shows a pending amendment beside the effective customer contract in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    vi.stubGlobal(
+      'fetch',
+      api(detail({ state: 'Active', canAccept: false, pendingAmendmentState: 'AwaitingSignature' }))
+    );
+    await render(<ContractsPage />);
+    expect(container.textContent).toContain(words.Active);
+    expect(container.textContent).toContain(words.amendmentAwaitingSignature);
+  }
+);
+it('shows internal draft amendments only on the staff contract list', async () => {
+  const contractApi = api(detail({ state: 'Active', pendingAmendmentState: 'Draft' }));
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (raw: string) => {
+      if (raw.includes('/wallet-refunds/contract-obligations'))
+        return response({ obligations: [], nextBefore: null });
+      if (raw.includes('/contract-cancellation-requests'))
+        return response({ requests: [], nextBefore: null });
+      if (raw.includes('/contract-activation-rules'))
+        return response({ rules: [], canEdit: false });
+      return contractApi(raw);
+    })
+  );
+  await render(<AdminContractsPage />);
+  expect(container.textContent).toContain(`${en.amendmentPending} · ${en.Draft}`);
 });
 it.each(['en', 'fa'] as const)(
   'identifies contracts and opens their linked electricity order in %s',

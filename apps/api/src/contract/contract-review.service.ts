@@ -230,12 +230,17 @@ export class ContractReviewService {
           initial_invoice_id: string | null;
           initial_invoice_amount: string | null;
           initial_invoice_state: string | null;
+          pending_amendment_state: 'AwaitingCustomerAcceptance' | 'AwaitingSignature' | null;
         }>(
           `SELECT DISTINCT ON(c.id) c.id,c.contract_number,profile.profile_type,profile.title AS profile_title,
           profile.first_name AS profile_first_name,profile.last_name AS profile_last_name,
           c.order_id,e.status AS linked_order_status,s.id AS saving_order_id,c.service_type,c.state,v.id AS version_id,v.version_number,
           v.content->'commercialValue' AS commercial_value,p.published_at,a.accepted_at,a.party_snapshot,
-          r.service_starts_at,r.service_ends_at,r.initial_invoice_id,i.total_amount AS initial_invoice_amount,i.state AS initial_invoice_state
+            r.service_starts_at,r.service_ends_at,r.initial_invoice_id,i.total_amount AS initial_invoice_amount,i.state AS initial_invoice_state,
+            (SELECT amendment.state::text FROM contract_amendments amendment
+             WHERE amendment.contract_id=c.id AND amendment.base_version_id=c.current_version_id
+               AND amendment.state IN ('AwaitingCustomerAcceptance','AwaitingSignature')
+             LIMIT 1) AS pending_amendment_state
           FROM contracts c JOIN profiles profile ON profile.id=c.profile_id
           JOIN contract_versions v ON v.id=c.current_version_id AND v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
           LEFT JOIN contract_acceptances a ON a.version_id=v.id
@@ -274,6 +279,7 @@ export class ContractReviewService {
           initialInvoiceId: r.initial_invoice_id,
           initialInvoiceAmount: r.initial_invoice_amount,
           initialInvoiceState: r.initial_invoice_state,
+          pendingAmendmentState: r.pending_amendment_state,
         })),
         nextBefore: rows.length > 100 ? rows[99]!.id : null,
       };

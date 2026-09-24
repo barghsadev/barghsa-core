@@ -71,6 +71,13 @@ export class ContractService {
         initialInvoiceId: contractActivationRequirements.initialInvoiceId,
         initialInvoiceAmount: invoices.totalAmount,
         initialInvoiceState: invoices.state,
+        pendingAmendmentState: sql<
+          'Draft' | 'AwaitingCustomerAcceptance' | 'AwaitingSignature' | null
+        >`(SELECT amendment.state::text FROM contract_amendments amendment
+            WHERE amendment.contract_id=${contracts.id}
+              AND amendment.base_version_id=${contracts.currentVersionId}
+              AND amendment.state IN ('Draft','AwaitingCustomerAcceptance','AwaitingSignature')
+            LIMIT 1)`,
       })
       .from(contracts)
       .innerJoin(profiles, eq(profiles.id, contracts.profileId))

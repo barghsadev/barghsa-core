@@ -27,6 +27,16 @@ it('links customer signature preparation and recording to the existing panel', (
 
 it('identifies staff waits and terminal states without offering a dead link', () => {
   expect(
+    customerContractNextAction(
+      {
+        state: 'Active',
+        canAccept: false,
+        amendment: { state: 'AwaitingSignature', baseVersionId: 'current-version' },
+      },
+      null
+    )
+  ).toEqual({ key: 'workflow.contract.awaitStaff', owner: 'staff', href: null });
+  expect(
     customerContractNextAction({ state: 'AwaitingStaffReview', canAccept: false }, null)
   ).toEqual({ key: 'workflow.contract.awaitStaff', owner: 'staff', href: null });
   expect(customerContractNextAction({ state: 'Completed', canAccept: false }, null)).toEqual({

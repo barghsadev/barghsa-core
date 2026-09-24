@@ -90,6 +90,12 @@ async function publish(f: Awaited<ReturnType<typeof fixture>>) {
 async function customer(f: Awaited<ReturnType<typeof fixture>>, suffix = '', user = f.owner) {
   return send('contracts/' + f.row.id + suffix, 'GET', undefined, user);
 }
+async function listed(f: Awaited<ReturnType<typeof fixture>>, path: string, user?: string) {
+  const page = (await (await send(path, 'GET', undefined, user)).json()) as {
+    contracts: { id: string; pendingAmendmentState: string | null }[];
+  };
+  return page.contracts.find((item) => item.id === f.row.id);
+}
 it('exposes the linked electricity order only after publication to its authorized customer', async () => {
   const f = await fixture('electricity', true);
   expect((await customer(f)).status).toBe(404);
@@ -232,6 +238,10 @@ it('publishes and accepts an unsigned amendment while the active base remains ef
   });
   expect(draft.status).toBe(201);
   const pending = ((await draft.json()) as ContractDto).pendingAmendment!;
+  expect((await listed(f, 'contracts', f.owner))?.pendingAmendmentState).toBeNull();
+  expect((await listed(f, 'admin/contracts?profileId=' + f.profile))?.pendingAmendmentState).toBe(
+    'Draft'
+  );
   expect(await (await customer(f)).json()).toMatchObject({
     state: 'Active',
     canAccept: false,
@@ -396,6 +406,9 @@ it('keeps the accepted solar version effective while its amendment awaits signin
     version: { id: pending.versionId },
     amendment: { state: 'AwaitingCustomerAcceptance', signatureRequired: true },
   });
+  expect((await listed(f, 'contracts', f.owner))?.pendingAmendmentState).toBe(
+    'AwaitingCustomerAcceptance'
+  );
   expect(
     (await send('contracts/' + f.row.id + '/accept', 'POST', command(pending.versionId), f.owner))
       .status
@@ -411,6 +424,10 @@ it('keeps the accepted solar version effective while its amendment awaits signin
     currentVersionId: f.row.currentVersionId,
     pendingAmendment: { state: 'AwaitingSignature', versionId: pending.versionId },
   });
+  expect((await listed(f, 'contracts', f.owner))?.pendingAmendmentState).toBe('AwaitingSignature');
+  expect((await listed(f, 'admin/contracts?profileId=' + f.profile))?.pendingAmendmentState).toBe(
+    'AwaitingSignature'
+  );
 });
 it('keeps drafts private and publishes only the exact reviewed version', async () => {
   const f = await fixture();

@@ -409,7 +409,22 @@ function ContractResults({
                   </a>
                 ) : null}
               </div>
-              <StatusBadge label={word(item.state)} />
+              <div className="flex flex-wrap gap-2">
+                <StatusBadge label={word(item.state)} />
+                {item.pendingAmendmentState ? (
+                  <StatusBadge
+                    label={
+                      item.pendingAmendmentState === 'Draft'
+                        ? `${word('amendmentPending')} · ${word('Draft')}`
+                        : item.pendingAmendmentState === 'AwaitingCustomerAcceptance'
+                          ? staff
+                            ? `${word('amendmentPending')} · ${word('AwaitingCustomerAcceptance')}`
+                            : word('amendmentAwaitingAcceptance')
+                          : word('amendmentAwaitingSignature')
+                    }
+                  />
+                ) : null}
+              </div>
             </li>
           ))}
         </ul>
