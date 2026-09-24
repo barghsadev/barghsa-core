@@ -204,6 +204,42 @@ it('encrypts tokens, retains masked credentials, clears stale test results and s
   ).not.toContain(input.apiToken);
 });
 
+it('requires a passing test before enabling and invalidates approval when endpoint settings change', async () => {
+  const createdResponse = await request('', 'POST', {
+    ...input,
+    config: { max_tokens: 512, temperature: 0.4 },
+  });
+  expect(createdResponse.status).toBe(201);
+  const created = (await createdResponse.json()) as { id: string };
+  expect(await (await request(`/${created.id}`)).json()).toMatchObject({
+    config: { max_tokens: 512, temperature: 0.4 },
+    isEnabled: false,
+    lastTestLatencyMs: null,
+  });
+  expect((await request(`/${created.id}`, 'PUT', { isEnabled: true })).status).toBe(409);
+  expect(
+    (
+      await request(`/${created.id}`, 'PUT', {
+        config: { max_tokens: 0, temperature: 0 },
+      })
+    ).status
+  ).toBe(400);
+  await http.pool.query(
+    "UPDATE ai_models SET last_test_status='passed',last_tested_at=NOW(),last_test_latency_ms=125 WHERE id=$1",
+    [created.id]
+  );
+  const enabled = await request(`/${created.id}`, 'PUT', { isEnabled: true });
+  expect(enabled.status, http.logs()).toBe(200);
+  expect(await enabled.json()).toMatchObject({ isEnabled: true, lastTestLatencyMs: 125 });
+  const changed = await request(`/${created.id}`, 'PUT', { modelName: 'replacement-model' });
+  expect(changed.status).toBe(200);
+  expect(await changed.json()).toMatchObject({
+    isEnabled: false,
+    status: 'unknown',
+    lastTestLatencyMs: null,
+  });
+});
+
 it('preserves models referenced by an agent and records no deletion audit', async () => {
   const id = await seed();
   const agent = (
@@ -213,7 +249,14 @@ it('preserves models referenced by an agent and records no deletion audit', asyn
     )
   ).rows[0].id;
   try {
-    expect((await request(`/${id}`, 'DELETE')).status).toBe(409);
+    const response = await request(`/${id}`, 'DELETE');
+    expect(response.status).toBe(409);
+    expect(await response.json()).toMatchObject({
+      error: {
+        code: 'AI_MODEL_IN_USE',
+        agents: [{ id: agent, title: 'Dependent agent' }],
+      },
+    });
     expect((await http.pool.query('SELECT id FROM ai_models WHERE id=$1', [id])).rows).toHaveLength(
       1
     );
@@ -274,10 +317,15 @@ it.each(['edit', 'delete', 'revoke', 'audit failure', 'success'] as const)(
       expect(
         (await http.pool.query("SELECT id FROM audit_log WHERE event='ai_model_tested'")).rows
       ).toHaveLength(action === 'success' ? 1 : 0);
-      if (action === 'success')
+      if (action === 'success') {
         expect(await response.json()).toMatchObject({
           test: { ok: true, responsePreview: 'local pong' },
         });
+        const persisted = (
+          await http.pool.query('SELECT last_test_latency_ms FROM ai_models WHERE id=$1', [id])
+        ).rows[0];
+        expect(persisted.last_test_latency_ms).toEqual(expect.any(Number));
+      }
     } finally {
       providerReplies[count]?.end();
       await pending;
@@ -317,6 +365,37 @@ it('does not overwrite a completed competing test', async () => {
     providerReplies[count]?.end();
     providerReplies[count + 1]?.end();
     await Promise.all([first, second]);
+  }
+});
+
+it('disables an active model when its connection test fails', async () => {
+  const id = await seed();
+  await http.pool.query(
+    "UPDATE ai_models SET base_url=$1,is_enabled=true,last_test_status='passed' WHERE id=$2",
+    [providerBase, id]
+  );
+  const count = providerReplies.length;
+  const pending = request(`/${id}/test`, 'POST');
+  try {
+    await expect.poll(() => providerReplies.length).toBe(count + 1);
+    providerReplies[count]!.writeHead(503, { 'content-type': 'application/json' });
+    providerReplies[count]!.end(JSON.stringify({ error: { message: 'temporarily unavailable' } }));
+    const response = await pending;
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({
+      model: { isEnabled: false, status: 'unreachable' },
+      test: { ok: false },
+    });
+    expect(
+      (
+        await http.pool.query('SELECT is_enabled,last_test_latency_ms FROM ai_models WHERE id=$1', [
+          id,
+        ])
+      ).rows[0]
+    ).toMatchObject({ is_enabled: false, last_test_latency_ms: expect.any(Number) });
+  } finally {
+    providerReplies[count]?.end();
+    await pending;
   }
 });
 

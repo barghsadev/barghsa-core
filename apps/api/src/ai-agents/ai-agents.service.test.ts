@@ -24,6 +24,8 @@ function modelRow(over: Record<string, unknown> = {}) {
     title: 'gpt-4o',
     provider_type: 'openai_compatible',
     model_name: 'gpt-4o',
+    is_enabled: true,
+    last_test_status: 'passed',
     ...over,
   };
 }

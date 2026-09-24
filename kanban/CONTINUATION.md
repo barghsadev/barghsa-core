@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[AI model management and connection evidence](batches/2026-09-24-ai-model-management.md) adds tested-before-enable controls, request defaults, saved connection latency and dependent-agent deletion details to the existing admin workflow.
+
 [Resumable multipart upload and orphan cleanup](batches/2026-09-24-multipart-orphan-cleanup.md) add direct part transfer with resume, large-document integration, admin cleanup age, durable provider orphan detection, and a seven-day S3 fallback.
 
 [Approved document destruction](batches/2026-09-24-document-destruction.md) adds legal approval, a nightly worker, exact-version object deletion, audit-preserving anonymization and progress reporting for expired removed documents.

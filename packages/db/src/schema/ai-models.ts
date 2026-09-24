@@ -1,4 +1,4 @@
-import { pgTable, text, index } from 'drizzle-orm/pg-core';
+import { pgTable, text, index, jsonb, boolean, integer } from 'drizzle-orm/pg-core';
 import { uuidv7, timestamptz } from '../types.js';
 import { users } from './users.js';
 
@@ -51,6 +51,15 @@ export const aiModels = pgTable(
     /** Provider API token, encrypted at rest (T-09.11.01). Nullable. */
     apiToken: text('api_token'),
 
+    /** Request defaults used by the agent runtime. */
+    config: jsonb('config')
+      .$type<{ max_tokens: number; temperature: number }>()
+      .notNull()
+      .default({ max_tokens: 256, temperature: 0 }),
+
+    /** Admin intent; a passing test is additionally required for use. */
+    isEnabled: boolean('is_enabled').notNull().default(false),
+
     /** Admin user who created this model. */
     createdBy: text('created_by')
       .notNull()
@@ -68,6 +77,7 @@ export const aiModels = pgTable(
 
     /** Safe, non-secret error from the most recent failed test. */
     lastTestError: text('last_test_error'),
+    lastTestLatencyMs: integer('last_test_latency_ms'),
 
     createdAt: timestamptz('created_at').defaultNow().notNull(),
     updatedAt: timestamptz('updated_at')

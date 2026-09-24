@@ -1,4 +1,5 @@
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex -- The labelled, horizontally scrollable table region must be keyboard-focusable. */
 import { useEffect, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -11,10 +12,13 @@ interface Model {
   providerType: 'openai_compatible' | 'anthropic';
   baseUrl: string;
   modelName: string;
+  config: { max_tokens: number; temperature: number };
+  isEnabled: boolean;
   apiTokenMasked: string;
   status: 'reachable' | 'unreachable' | 'unknown';
   lastTestedAt: string | null;
   lastTestError: string | null;
+  lastTestLatencyMs: number | null;
 }
 interface Draft {
   id?: string;
@@ -22,6 +26,8 @@ interface Draft {
   providerType: Model['providerType'];
   baseUrl: string;
   modelName: string;
+  maxTokens: number;
+  temperature: number;
   apiToken: string;
   tokenChoice: 'keep' | 'replace' | 'clear';
   masked: string;
@@ -31,6 +37,8 @@ const blank = (): Draft => ({
   providerType: 'openai_compatible',
   baseUrl: '',
   modelName: '',
+  maxTokens: 256,
+  temperature: 0,
   apiToken: '',
   tokenChoice: 'replace',
   masked: '',
@@ -39,6 +47,7 @@ export default function AdminAiModelsPage() {
   const time = useAccountTime();
   const locale = useLocale(),
     label = (key: string) => t(`admin.aiModels.${key}`, locale);
+  const numbers = useNumberFormatting(locale);
   const [models, setModels] = useState<Model[]>([]),
     [loading, setLoading] = useState(true),
     [denied, setDenied] = useState(false),
@@ -75,8 +84,15 @@ export default function AdminAiModelsPage() {
   const errors = {
     AI_MODEL_TOKEN_REENTRY_REQUIRED: label('reentry'),
     AI_MODEL_ENCRYPTION_UNAVAILABLE: label('encryption'),
-    AI_MODEL_IN_USE: label('inUse'),
+    AI_MODEL_IN_USE: (response: unknown) => {
+      const agents = (response as { error?: { agents?: Array<{ title: string }> } } | null)?.error
+        ?.agents;
+      return agents?.length
+        ? label('inUseAgents').replace('{agents}', agents.map((agent) => agent.title).join(', '))
+        : label('inUse');
+    },
     AI_MODEL_CHANGED: label('changed'),
+    AI_MODEL_TEST_REQUIRED: label('testRequired'),
     AI_MODEL_TEST_UNAVAILABLE: label('workerUnavailable'),
     AI_MODEL_TEST_EXPIRED: label('workerUnavailable'),
     'VALIDATION:PARSE:ZOD_ERROR': label('invalid'),
@@ -95,6 +111,7 @@ export default function AdminAiModelsPage() {
         providerType: draft.providerType,
         baseUrl: draft.baseUrl.trim(),
         modelName: draft.modelName.trim(),
+        config: { max_tokens: draft.maxTokens, temperature: draft.temperature },
         ...(draft.tokenChoice === 'clear'
           ? { apiToken: '' }
           : draft.tokenChoice === 'replace'
@@ -105,13 +122,16 @@ export default function AdminAiModelsPage() {
       errorMessages: errors,
     });
   }
-  function perform(model: Model, kind: 'test' | 'delete') {
+  function perform(model: Model, kind: 'test' | 'delete' | 'enable' | 'disable') {
     setResult(null);
     setAction({
       title: `${label(kind)}: ${model.title}`,
-      description: label(kind === 'test' ? 'confirmTest' : 'confirmDelete'),
+      description: label(
+        kind === 'test' ? 'confirmTest' : kind === 'delete' ? 'confirmDelete' : 'confirmToggle'
+      ),
       path: `/api/admin/ai-models/${model.id}${kind === 'test' ? '/test' : ''}`,
-      method: kind === 'test' ? 'POST' : 'DELETE',
+      method: kind === 'test' ? 'POST' : kind === 'delete' ? 'DELETE' : 'PUT',
+      ...(['enable', 'disable'].includes(kind) ? { body: { isEnabled: kind === 'enable' } } : {}),
       forbiddenMessage: label('forbidden'),
       errorMessages: errors,
     });
@@ -238,6 +258,38 @@ export default function AdminAiModelsPage() {
               <p id="ai-model-token-help" className="text-sm text-muted-foreground">
                 {label('tokenHelp')}
               </p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="ai-model-max-tokens">{label('maxTokens')}</Label>
+                  <Input
+                    id="ai-model-max-tokens"
+                    type="number"
+                    min={1}
+                    max={4096}
+                    step={1}
+                    required
+                    value={draft.maxTokens}
+                    onChange={(event) =>
+                      setDraft({ ...draft, maxTokens: Number(event.target.value) })
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="ai-model-temperature">{label('temperature')}</Label>
+                  <Input
+                    id="ai-model-temperature"
+                    type="number"
+                    min={0}
+                    max={2}
+                    step="any"
+                    required
+                    value={draft.temperature}
+                    onChange={(event) =>
+                      setDraft({ ...draft, temperature: Number(event.target.value) })
+                    }
+                  />
+                </div>
+              </div>
               <div className="flex gap-3">
                 <Button type="submit">{label('save')}</Button>
                 <Button type="button" variant="outline" onClick={() => setDraft(null)}>
@@ -291,10 +343,18 @@ export default function AdminAiModelsPage() {
                         {model.modelName}
                       </td>
                       <td className="space-y-2 p-4">
+                        <p className="font-medium">
+                          {label(model.isEnabled ? 'enabled' : 'disabled')}
+                        </p>
                         <p>{label(model.status)}</p>
                         {model.lastTestedAt && (
                           <p>
                             {label('lastTest')}: {time.format(model.lastTestedAt)}
+                          </p>
+                        )}
+                        {model.lastTestLatencyMs !== null && (
+                          <p>
+                            {label('latency')}: {numbers.number(model.lastTestLatencyMs)} ms
                           </p>
                         )}
                         {model.lastTestError && (
@@ -315,6 +375,8 @@ export default function AdminAiModelsPage() {
                                 providerType: model.providerType,
                                 baseUrl: model.baseUrl,
                                 modelName: model.modelName,
+                                maxTokens: model.config.max_tokens,
+                                temperature: model.config.temperature,
                                 apiToken: '',
                                 tokenChoice: 'keep',
                                 masked: model.apiTokenMasked,
@@ -326,6 +388,18 @@ export default function AdminAiModelsPage() {
                           </Button>
                           <Button variant="outline" onClick={() => perform(model, 'test')}>
                             {label('test')}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            disabled={!model.isEnabled && model.status !== 'reachable'}
+                            title={
+                              !model.isEnabled && model.status !== 'reachable'
+                                ? label('testRequired')
+                                : undefined
+                            }
+                            onClick={() => perform(model, model.isEnabled ? 'disable' : 'enable')}
+                          >
+                            {label(model.isEnabled ? 'disable' : 'enable')}
                           </Button>
                           <Button variant="outline" onClick={() => perform(model, 'delete')}>
                             {label('delete')}

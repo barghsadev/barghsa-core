@@ -12,9 +12,9 @@ import { promises as dns } from 'node:dns';
  * the wire-protocol family:
  *
  * - `openai_compatible` — POST `{baseUrl}/chat/completions` with
- *   `Authorization: Bearer <token>` and a 1-token completion body.
+ *   `Authorization: Bearer <token>` and a short completion body.
  * - `anthropic` — POST `{baseUrl}/messages` with `x-api-key: <token>` and
- *   `anthropic-version: 2023-06-01`, body `max_tokens: 1`.
+ *   `anthropic-version: 2023-06-01`, body `max_tokens: 32`.
  *
  * Security posture (mirrors the SMTP/Resend/SMS.ir connection testers):
  * - SSRF guard: the base URL host is resolved and checked against
@@ -154,6 +154,7 @@ function buildRequest(input: AiModelTestInput): {
   body: Record<string, unknown>;
 } {
   const base = input.baseUrl.trim().replace(/\/+$/, '');
+  const prompt = `Reply with exactly: OK. Model=${input.modelName}`;
   if (input.providerType === 'anthropic') {
     return {
       url: `${base}/messages`,
@@ -165,8 +166,8 @@ function buildRequest(input: AiModelTestInput): {
       },
       body: {
         model: input.modelName,
-        max_tokens: 1,
-        messages: [{ role: 'user', content: 'ping' }],
+        max_tokens: 32,
+        messages: [{ role: 'user', content: prompt }],
       },
     };
   }
@@ -180,8 +181,8 @@ function buildRequest(input: AiModelTestInput): {
     },
     body: {
       model: input.modelName,
-      messages: [{ role: 'user', content: 'ping' }],
-      max_tokens: 1,
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 32,
       stream: false,
     },
   };

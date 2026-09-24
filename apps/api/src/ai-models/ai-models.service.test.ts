@@ -31,9 +31,12 @@ function makeRow(over: Record<string, unknown> = {}) {
     base_url: 'https://api.openai.com/v1',
     model_name: 'gpt-4o',
     api_token: null as string | null,
+    config: { max_tokens: 256, temperature: 0 },
+    is_enabled: false,
     last_tested_at: null,
     last_test_status: 'pending',
     last_test_error: null,
+    last_test_latency_ms: null,
     created_at: '2026-08-28T00:00:00.000Z',
     updated_at: '2026-08-28T00:00:00.000Z',
     ...over,
@@ -376,6 +379,7 @@ describe('AiModelsService (T-09.11.01)', () => {
       const updateCall = calls.find((c) => String(c[0]).startsWith('UPDATE ai_models'));
       const values = updateCall![1] as unknown[];
       expect(values).toContain('passed');
+      expect(values).toContain(1);
       const auditCall = calls.find((c) => String(c[0]).includes('INSERT INTO audit_log'));
       expect(auditCall).toBeDefined();
       expect(auditCall![1] as unknown[]).toContain('ai_model_tested');

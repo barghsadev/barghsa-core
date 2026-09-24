@@ -100,7 +100,11 @@ describe('AI provider socket transport', () => {
                   apiKey: undefined,
                   path: '/v1/chat/completions',
                 }),
-            body: { model: 'local-test', max_tokens: 1 },
+            body: {
+              model: 'local-test',
+              max_tokens: 32,
+              messages: [{ role: 'user', content: 'Reply with exactly: OK. Model=local-test' }],
+            },
           });
         }
       );

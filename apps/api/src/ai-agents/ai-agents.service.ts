@@ -176,6 +176,8 @@ interface AgentModelRow {
   title: string;
   provider_type: string;
   model_name: string;
+  is_enabled: boolean;
+  last_test_status: string;
 }
 
 const PG_FOREIGN_KEY_VIOLATION = '23503';
@@ -286,7 +288,8 @@ export class AiAgentsService {
       // Validate every reference exists BEFORE writing anything, reusing the
       // resolved model so the response carries its real title. Reads run on
       // the same client as the writes (inside the transaction).
-      const model = await this.requireModel(q, input.modelId);
+      const model = await this.requireModel(q, input.modelId, enabled);
+      if (enabled) this.assertModelReady(model);
       await this.requireKbs(q, input.kbIds);
       await this.requirePolicies(q, input.policyIds);
       await this.requireGroups(q, input.kbGroupIds, 'kb');
@@ -382,16 +385,20 @@ export class AiAgentsService {
         input.policyIds !== undefined ||
         input.kbGroupIds !== undefined ||
         input.policyGroupIds !== undefined;
+      const activating =
+        input.enabled === true ||
+        (input.modelId !== undefined && (input.enabled ?? existing.enabled));
       let model: AgentModelRow | null;
       if (referencesTouched) {
-        model = await this.requireModel(q, effectiveModelId);
+        model = await this.requireModel(q, effectiveModelId, activating);
         await this.requireKbs(q, input.kbIds);
         await this.requirePolicies(q, input.policyIds);
         await this.requireGroups(q, input.kbGroupIds, 'kb');
         await this.requireGroups(q, input.policyGroupIds, 'policy');
       } else {
-        model = await this.findModel(q, effectiveModelId);
+        model = await this.findModel(q, effectiveModelId, activating);
       }
+      if (model && activating) this.assertModelReady(model);
 
       const fields: string[] = [];
       const values: unknown[] = [];
@@ -787,10 +794,22 @@ export class AiAgentsService {
   // ─── Validation / reference helpers ─────────────────────────────────────
 
   /** Assert the model exists and return it (reused for the DTO title). */
-  private async requireModel(q: DbExecutor, id: string): Promise<AgentModelRow> {
-    const model = await this.findModel(q, id);
+  private async requireModel(q: DbExecutor, id: string, lock = false): Promise<AgentModelRow> {
+    const model = await this.findModel(q, id, lock);
     if (!model) throw this.modelNotFound(id);
     return model;
+  }
+
+  private assertModelReady(model: AgentModelRow): void {
+    if (model.is_enabled && model.last_test_status === 'passed') return;
+    throw new HttpException(
+      {
+        statusCode: 409,
+        error: 'AI_MODEL_TEST_REQUIRED',
+        message: 'Enable a successfully tested AI model before activating an agent',
+      },
+      409
+    );
   }
 
   /** Assert every KB id exists. */
@@ -957,9 +976,10 @@ export class AiAgentsService {
     return result.rows[0] ?? null;
   }
 
-  private async findModel(q: DbExecutor, id: string): Promise<AgentModelRow | null> {
+  private async findModel(q: DbExecutor, id: string, lock = false): Promise<AgentModelRow | null> {
     const result = await q.query<AgentModelRow>(
-      `SELECT id, title, provider_type, model_name FROM ai_models WHERE id = $1`,
+      `SELECT id, title, provider_type, model_name,is_enabled,last_test_status
+       FROM ai_models WHERE id = $1${lock ? ' FOR SHARE' : ''}`,
       [id]
     );
     return result.rows[0] ?? null;

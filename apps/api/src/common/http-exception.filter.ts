@@ -132,6 +132,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (httpStatus === 409 && exception instanceof HttpException) {
       const details = exception.getResponse();
+      if (errorCode === 'AI_MODEL_IN_USE' && typeof details === 'object' && details !== null) {
+        const agents = 'agents' in details ? details.agents : null;
+        if (
+          Array.isArray(agents) &&
+          agents.length <= 10 &&
+          agents.every(
+            (agent) =>
+              agent &&
+              typeof agent.id === 'string' &&
+              /^[0-9a-f-]{36}$/i.test(agent.id) &&
+              typeof agent.title === 'string' &&
+              agent.title.length <= 120
+          )
+        )
+          (body.error as Record<string, unknown>).agents = agents;
+      }
       if (typeof details === 'object' && details !== null && 'blocker' in details) {
         const blocker = details.blocker;
         const allowed =

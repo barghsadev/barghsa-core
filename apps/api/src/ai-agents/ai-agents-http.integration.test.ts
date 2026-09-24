@@ -31,7 +31,7 @@ beforeEach(async () => {
   );
   modelId = (
     await http.pool.query(
-      "INSERT INTO ai_models(title,provider_type,base_url,model_name,created_by) VALUES ('Local','openai_compatible','https://example.test','test','slot-admin') RETURNING id"
+      "INSERT INTO ai_models(title,provider_type,base_url,model_name,created_by,is_enabled,last_test_status) VALUES ('Local','openai_compatible','https://example.test','test','slot-admin',true,'passed') RETURNING id"
     )
   ).rows[0].id;
   agentId = (
@@ -122,6 +122,33 @@ it('persists agent CRUD with audit entries', async () => {
       )
     ).rows.map((row) => row.event)
   ).toEqual(['ai_agent_created', 'ai_agent_updated', 'ai_agent_deleted']);
+});
+
+it('keeps agents inactive until their model is enabled and tested', async () => {
+  await http.pool.query(
+    "UPDATE ai_models SET is_enabled=false,last_test_status='pending' WHERE id=$1",
+    [modelId]
+  );
+  expect((await mutation('create')).status).toBe(409);
+  const draft = await fetch(`${http.base}/api/admin/agents`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ title: 'Draft agent', modelId, enabled: false }),
+  });
+  expect(draft.status).toBe(201);
+  const draftId = ((await draft.json()) as { id: string }).id;
+  const activate = () =>
+    fetch(`${http.base}/api/admin/agents/${draftId}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ enabled: true }),
+    });
+  expect((await activate()).status).toBe(409);
+  await http.pool.query(
+    "UPDATE ai_models SET is_enabled=true,last_test_status='passed' WHERE id=$1",
+    [modelId]
+  );
+  expect((await activate()).status).toBe(200);
 });
 
 it('audits the latest enabled state after a concurrent edit', async () => {

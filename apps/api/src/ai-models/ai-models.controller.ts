@@ -48,6 +48,11 @@ const baseUrlSchema = z
     }
   }, 'Base URL must be an http(s) URL');
 
+const modelConfigSchema = z.strictObject({
+  max_tokens: z.number().int().min(1).max(4096),
+  temperature: z.number().min(0).max(2),
+});
+
 export const CreateAiModelSchema = z.strictObject({
   title: z.string().trim().min(1, 'Title is required').max(120),
   providerType: z.enum(AI_MODEL_PROVIDER_TYPES, {
@@ -55,6 +60,7 @@ export const CreateAiModelSchema = z.strictObject({
   }),
   baseUrl: baseUrlSchema,
   modelName: z.string().trim().min(1, 'Model name is required').max(200),
+  config: modelConfigSchema.optional(),
   apiToken: z.string().max(4000).optional(),
 });
 
@@ -64,6 +70,8 @@ export const UpdateAiModelSchema = z
     providerType: z.enum(AI_MODEL_PROVIDER_TYPES).optional(),
     baseUrl: baseUrlSchema.optional(),
     modelName: z.string().trim().min(1).max(200).optional(),
+    config: modelConfigSchema.optional(),
+    isEnabled: z.boolean().optional(),
     apiToken: z.string().max(4000).optional(),
   })
   .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
@@ -144,6 +152,7 @@ export class AiModelsController {
       providerType: parsed.data.providerType,
       baseUrl: parsed.data.baseUrl,
       modelName: parsed.data.modelName,
+      ...(parsed.data.config !== undefined ? { config: parsed.data.config } : {}),
       ...(parsed.data.apiToken !== undefined ? { apiToken: parsed.data.apiToken } : {}),
       actorUserId: req.session.userId,
       session: req.session,
@@ -178,6 +187,8 @@ export class AiModelsController {
       ...(parsed.data.providerType !== undefined ? { providerType: parsed.data.providerType } : {}),
       ...(parsed.data.baseUrl !== undefined ? { baseUrl: parsed.data.baseUrl } : {}),
       ...(parsed.data.modelName !== undefined ? { modelName: parsed.data.modelName } : {}),
+      ...(parsed.data.config !== undefined ? { config: parsed.data.config } : {}),
+      ...(parsed.data.isEnabled !== undefined ? { isEnabled: parsed.data.isEnabled } : {}),
       ...(parsed.data.apiToken !== undefined ? { apiToken: parsed.data.apiToken } : {}),
       actorUserId: req.session.userId,
       session: req.session,

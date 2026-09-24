@@ -30,7 +30,7 @@ beforeEach(async () => {
   );
   const model = (
     await http.pool.query(
-      "INSERT INTO ai_models(title,provider_type,base_url,model_name,created_by) VALUES ('Local','openai_compatible','https://example.test','test','slot-admin') RETURNING id"
+      "INSERT INTO ai_models(title,provider_type,base_url,model_name,created_by,is_enabled,last_test_status) VALUES ('Local','openai_compatible','https://example.test','test','slot-admin',true,'passed') RETURNING id"
     )
   ).rows[0].id;
   agentId = (

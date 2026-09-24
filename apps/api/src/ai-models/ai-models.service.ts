@@ -43,21 +43,32 @@ export interface AiModelDto {
   providerType: AiModelProviderType;
   baseUrl: string;
   modelName: string;
+  config: AiModelConfig;
+  isEnabled: boolean;
   /** Masked token display value (`********1234`), '' when none stored. */
   apiTokenMasked: string;
   /** Derived UI status: reachable / unreachable / unknown (never tested). */
   status: 'reachable' | 'unreachable' | 'unknown';
   lastTestedAt: string | null;
   lastTestError: string | null;
+  lastTestLatencyMs: number | null;
   createdAt: string;
   updatedAt: string;
 }
+
+export interface AiModelConfig {
+  max_tokens: number;
+  temperature: number;
+}
+
+const DEFAULT_MODEL_CONFIG: AiModelConfig = { max_tokens: 256, temperature: 0 };
 
 export interface CreateAiModelInput {
   title: string;
   providerType: AiModelProviderType;
   baseUrl: string;
   modelName: string;
+  config?: AiModelConfig;
   /** Plaintext token to encrypt. Omit for token-less local endpoints. */
   apiToken?: string;
   actorUserId: string;
@@ -70,6 +81,8 @@ export interface UpdateAiModelInput {
   providerType?: AiModelProviderType;
   baseUrl?: string;
   modelName?: string;
+  config?: AiModelConfig;
+  isEnabled?: boolean;
   /** Plaintext new token, or a masked placeholder to preserve the stored one. */
   apiToken?: string;
   actorUserId: string;
@@ -89,10 +102,13 @@ interface AiModelRow {
   provider_type: AiModelProviderType;
   base_url: string;
   model_name: string;
+  config: AiModelConfig;
+  is_enabled: boolean;
   api_token: string | null;
   last_tested_at: string | null;
   last_test_status: 'pending' | 'passed' | 'failed';
   last_test_error: string | null;
+  last_test_latency_ms: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -114,7 +130,8 @@ export class AiModelsService {
   async list(): Promise<AiModelDto[]> {
     const result = await getDbPool().query<AiModelRow>(
       `SELECT id, title, provider_type, base_url, model_name, api_token,
-              last_tested_at, last_test_status, last_test_error, created_at, updated_at
+              config,is_enabled,last_tested_at,last_test_status,last_test_error,
+              last_test_latency_ms,created_at,updated_at
          FROM ai_models
         ORDER BY created_at DESC`
     );
@@ -139,10 +156,11 @@ export class AiModelsService {
     return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const result = await client.query<AiModelRow>(
         `INSERT INTO ai_models
-         (id, title, provider_type, base_url, model_name, api_token, created_by, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8)
+         (id, title, provider_type, base_url, model_name, api_token, config, created_by, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, $8, $9, $9)
        RETURNING id, title, provider_type, base_url, model_name, api_token,
-                 last_tested_at, last_test_status, last_test_error, created_at, updated_at`,
+                 config,is_enabled,last_tested_at,last_test_status,last_test_error,
+                 last_test_latency_ms,created_at,updated_at`,
         [
           id,
           input.title,
@@ -150,6 +168,7 @@ export class AiModelsService {
           input.baseUrl,
           input.modelName,
           token,
+          JSON.stringify(input.config ?? DEFAULT_MODEL_CONFIG),
           input.actorUserId,
           now,
         ]
@@ -219,22 +238,39 @@ export class AiModelsService {
       if (input.providerType !== undefined) push('provider_type', input.providerType);
       if (input.baseUrl !== undefined) push('base_url', input.baseUrl);
       if (input.modelName !== undefined) push('model_name', input.modelName);
-      if (input.apiToken !== undefined) {
-        push('api_token', this.prepareTokenForStore(input.apiToken, existing.api_token));
-      }
+      if (input.config !== undefined) push('config', JSON.stringify(input.config));
+      const nextToken =
+        input.apiToken === undefined
+          ? undefined
+          : this.prepareTokenForStore(input.apiToken, existing.api_token);
+      if (nextToken !== undefined) push('api_token', nextToken);
+      const connectionChanged =
+        (input.providerType !== undefined && input.providerType !== existing.provider_type) ||
+        (input.baseUrl !== undefined && input.baseUrl !== existing.base_url) ||
+        (input.modelName !== undefined && input.modelName !== existing.model_name) ||
+        (nextToken !== undefined && nextToken !== existing.api_token) ||
+        (input.config !== undefined &&
+          JSON.stringify(input.config) !== JSON.stringify(existing.config));
+      if (input.isEnabled === true && (connectionChanged || existing.last_test_status !== 'passed'))
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'AI_MODEL_TEST_REQUIRED',
+            message: 'Test this model before enabling it',
+          },
+          409
+        );
+      if (input.isEnabled !== undefined) push('is_enabled', input.isEnabled);
 
       if (fields.length === 0) return this.toDto(existing);
 
-      if (
-        input.baseUrl !== undefined ||
-        input.providerType !== undefined ||
-        input.modelName !== undefined ||
-        input.apiToken !== undefined
-      ) {
+      if (connectionChanged) {
         fields.push(
           'last_tested_at = NULL',
           "last_test_status = 'pending'",
-          'last_test_error = NULL'
+          'last_test_error = NULL',
+          'last_test_latency_ms = NULL',
+          'is_enabled = false'
         );
       }
 
@@ -246,7 +282,8 @@ export class AiModelsService {
         `UPDATE ai_models SET ${fields.join(', ')}
         WHERE id = $${param}
         RETURNING id, title, provider_type, base_url, model_name, api_token,
-                  last_tested_at, last_test_status, last_test_error, created_at, updated_at`,
+                  config,is_enabled,last_tested_at,last_test_status,last_test_error,
+                  last_test_latency_ms,created_at,updated_at`,
         values
       );
 
@@ -278,6 +315,21 @@ export class AiModelsService {
     return this.withTransaction(actorUserId, session, async (client, verifiedAt) => {
       const existing = await this.findRow(id, client);
       if (!existing) throw this.notFound(id);
+
+      const dependents = await client.query<{ id: string; title: string }>(
+        'SELECT id,title FROM ai_agents WHERE model_id=$1 ORDER BY title,id LIMIT 10',
+        [id]
+      );
+      if (dependents.rows.length)
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'AI_MODEL_IN_USE',
+            message: 'AI model is referenced by AI agents and cannot be deleted',
+            agents: dependents.rows,
+          },
+          409
+        );
 
       try {
         await client.query('DELETE FROM ai_models WHERE id = $1', [id]);
@@ -346,11 +398,14 @@ export class AiModelsService {
             SET last_tested_at = $1,
                 last_test_status = $2,
                 last_test_error = $3,
+                last_test_latency_ms = $5,
+                is_enabled = CASE WHEN $2='passed' THEN is_enabled ELSE false END,
                 updated_at = $1
           WHERE id = $4
           RETURNING id, title, provider_type, base_url, model_name, api_token,
-                    last_tested_at, last_test_status, last_test_error, created_at, updated_at`,
-        [now, result.ok ? 'passed' : 'failed', result.error ?? null, id]
+                    config,is_enabled,last_tested_at,last_test_status,last_test_error,
+                    last_test_latency_ms,created_at,updated_at`,
+        [now, result.ok ? 'passed' : 'failed', result.error ?? null, id, result.latencyMs]
       );
       const row = updated.rows[0];
       if (!row) throw this.notFound(id);
@@ -406,7 +461,8 @@ export class AiModelsService {
   ): Promise<(AiModelRow & { revision: string }) | null> {
     const result = await (client ?? getDbPool()).query<AiModelRow & { revision: string }>(
       `SELECT xmin::text AS revision, id, title, provider_type, base_url, model_name, api_token,
-              last_tested_at, last_test_status, last_test_error, created_at, updated_at
+              config,is_enabled,last_tested_at,last_test_status,last_test_error,
+              last_test_latency_ms,created_at,updated_at
          FROM ai_models
         WHERE id = $1${client ? ' FOR UPDATE' : ''}`,
       [id]
@@ -427,10 +483,13 @@ export class AiModelsService {
       providerType: row.provider_type,
       baseUrl: row.base_url,
       modelName: row.model_name,
+      config: row.config ?? DEFAULT_MODEL_CONFIG,
+      isEnabled: row.is_enabled ?? false,
       apiTokenMasked: row.api_token === null ? '' : this.secrets.maskToken(row.api_token),
       status,
       lastTestedAt: row.last_tested_at,
       lastTestError: row.last_test_error,
+      lastTestLatencyMs: row.last_test_latency_ms ?? null,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     };
