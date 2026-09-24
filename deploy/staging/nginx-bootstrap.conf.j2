@@ -1,0 +1,7 @@
+server {
+    listen 80;
+    server_name {{ app_domain }} {{ s3_domain }};
+    root /var/www/barghsa-acme;
+    location ^~ /.well-known/acme-challenge/ { try_files $uri =404; }
+    location / { return 503; }
+}

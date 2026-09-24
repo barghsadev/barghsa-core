@@ -1,0 +1,82 @@
+name: Publish staging images
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate staging deployment files
+        run: python3 deploy/staging/test_staging.py
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and publish API/worker image
+        id: app
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.base
+          target: production
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/barghsa-app:sha-${{ github.sha }}
+          cache-from: type=gha,scope=app
+          cache-to: type=gha,scope=app,mode=max
+      - name: Build and publish web image
+        id: web
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.web
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/barghsa-web:sha-${{ github.sha }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,scope=web,mode=max
+      - name: Build and publish PostgreSQL image
+        id: postgres
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: packages/db/scripts/backup/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/barghsa-postgres:sha-${{ github.sha }}
+          cache-from: type=gha,scope=postgres
+          cache-to: type=gha,scope=postgres,mode=max
+      - name: Build and publish ClamAV image
+        id: clamav
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/clamav/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/barghsa-clamav:sha-${{ github.sha }}
+          cache-from: type=gha,scope=clamav
+          cache-to: type=gha,scope=clamav,mode=max
+      - name: Write immutable release manifest
+        run: |
+          cat > "$RUNNER_TEMP/images.env" <<EOF
+          BARGHSA_APP_IMAGE=ghcr.io/${{ github.repository_owner }}/barghsa-app@${{ steps.app.outputs.digest }}
+          BARGHSA_WEB_IMAGE=ghcr.io/${{ github.repository_owner }}/barghsa-web@${{ steps.web.outputs.digest }}
+          BARGHSA_POSTGRES_IMAGE=ghcr.io/${{ github.repository_owner }}/barghsa-postgres@${{ steps.postgres.outputs.digest }}
+          BARGHSA_CLAMAV_IMAGE=ghcr.io/${{ github.repository_owner }}/barghsa-clamav@${{ steps.clamav.outputs.digest }}
+          EOF
+          cat deploy/staging/infrastructure-images.env >> "$RUNNER_TEMP/images.env"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: staging-images-${{ github.sha }}
+          path: ${{ runner.temp }}/images.env
+          retention-days: 30

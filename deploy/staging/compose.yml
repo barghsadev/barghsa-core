@@ -1,0 +1,167 @@
+name: barghsa-staging
+
+# Self-contained staging stack. No development Compose file is loaded.
+# Runtime secrets live in /etc/barghsa/staging/runtime.env on the VPS.
+services:
+  postgres:
+    image: ${BARGHSA_POSTGRES_IMAGE:?Set the released PostgreSQL image}
+    command: [postgres, -c, config_file=/etc/postgresql/barghsa.conf]
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres.conf:/etc/postgresql/barghsa.conf:ro
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    mem_limit: 1280m
+    networks: [private]
+
+  redis:
+    image: ${BARGHSA_REDIS_IMAGE:?Set the released Redis image}
+    command: [redis-server, --appendonly, 'yes', --save, '60', '1000']
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    mem_limit: 256m
+    networks: [private]
+
+  objectstore:
+    image: ${BARGHSA_OBJECTSTORE_IMAGE:?Set the released object storage image}
+    environment:
+      AWS_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?Set S3_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?Set S3_SECRET_ACCESS_KEY}
+      S3_BUCKET: ${S3_BUCKET:?Set S3_BUCKET}
+    volumes:
+      - objectdata:/data
+    ports:
+      - '127.0.0.1:8333:8333'
+    healthcheck:
+      test: [CMD-SHELL, 'code=$$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8333/); test "$$code" = 403']
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 15
+    restart: unless-stopped
+    mem_limit: 768m
+    networks: [private]
+
+  clamav:
+    image: ${BARGHSA_CLAMAV_IMAGE:?Set the released ClamAV image}
+    volumes:
+      - clamavdata:/var/lib/clamav
+    healthcheck:
+      test: [CMD, /usr/local/bin/barghsa-clamav-healthcheck]
+      interval: 30s
+      timeout: 10s
+      start_period: 180s
+      retries: 5
+    restart: unless-stopped
+    mem_limit: 3500m
+    networks: [private]
+
+  api:
+    image: ${BARGHSA_APP_IMAGE:?Set the released API/worker image}
+    env_file: ${BARGHSA_RUNTIME_ENV_FILE:-/etc/barghsa/staging/runtime.env}
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=512
+      PORT: '4000'
+      API_TRUSTED_PROXY_IPS: ${BARGHSA_PROXY_IPS:-}
+      DOCUMENT_CLAMAV_HOST: clamav
+      DOCUMENT_CLAMAV_PORT: '3310'
+    ports:
+      - '127.0.0.1:4000:4000'
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      objectstore: {condition: service_healthy}
+      clamav: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, healthcheck-runtime.cjs]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+    read_only: true
+    tmpfs: [/tmp:size=64m,mode=1777]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    stop_grace_period: 40s
+    restart: unless-stopped
+    mem_limit: 768m
+    networks: [private]
+
+  worker:
+    image: ${BARGHSA_APP_IMAGE:?Set the released API/worker image}
+    command: [node, worker/dist/main.js]
+    env_file: ${BARGHSA_RUNTIME_ENV_FILE:-/etc/barghsa/staging/runtime.env}
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=512
+      WORKER_PORT: '9090'
+      DOCUMENT_CLAMAV_HOST: clamav
+      DOCUMENT_CLAMAV_PORT: '3310'
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      objectstore: {condition: service_healthy}
+      clamav: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, healthcheck-runtime.cjs]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+    read_only: true
+    tmpfs: [/tmp:size=64m,mode=1777]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    stop_grace_period: 40s
+    restart: unless-stopped
+    mem_limit: 768m
+    networks: [private]
+
+  web:
+    image: ${BARGHSA_WEB_IMAGE:?Set the released web image}
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=256
+      PORT: '3000'
+    ports:
+      - '127.0.0.1:3000:3000'
+    depends_on:
+      api: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, healthcheck.js]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+    read_only: true
+    tmpfs: [/tmp:size=64m,mode=1777]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    mem_limit: 384m
+    networks: [private]
+
+networks:
+  private:
+    name: barghsa-staging-private
+
+volumes:
+  pgdata:
+  redisdata:
+  objectdata:
+  clamavdata:

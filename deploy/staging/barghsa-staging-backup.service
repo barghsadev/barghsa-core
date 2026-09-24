@@ -1,0 +1,8 @@
+[Unit]
+Description=Barghsa staging encrypted PostgreSQL backup
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/flock -w 3600 /run/lock/barghsa-staging-release.lock /usr/local/sbin/barghsa-staging-backup

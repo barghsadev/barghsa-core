@@ -1,0 +1,154 @@
+---
+- name: Prepare Barghsa staging VPS
+  hosts: staging
+  become: true
+  vars:
+    app_domain: app.barghsa.com
+    s3_domain: s3.barghsa.com
+    letsencrypt_email: ''
+    staging_source: "{{ playbook_dir }}/.."
+  tasks:
+    - name: Require supported host and certificate contact
+      ansible.builtin.assert:
+        that:
+          - ansible_distribution == 'Ubuntu'
+          - ansible_distribution_version == '24.04'
+          - ansible_architecture == 'x86_64'
+          - letsencrypt_email | length > 3
+          - app_domain != s3_domain
+
+    - name: Install base packages
+      ansible.builtin.apt:
+        name: [ca-certificates, curl, gnupg, python3-debian, nginx, certbot, awscli, rclone]
+        state: present
+        update_cache: true
+
+    - name: Configure Docker apt repository
+      ansible.builtin.deb822_repository:
+        name: docker
+        types: [deb]
+        uris: https://download.docker.com/linux/ubuntu
+        suites: "{{ ansible_distribution_release }}"
+        components: [stable]
+        architectures: "{{ ansible_architecture | replace('x86_64', 'amd64') | replace('aarch64', 'arm64') }}"
+        signed_by: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Install Docker Engine and Compose plugin
+      ansible.builtin.apt:
+        name: [docker-ce, docker-ce-cli, containerd.io, docker-buildx-plugin, docker-compose-plugin]
+        state: present
+        update_cache: true
+
+    - name: Enable Docker
+      ansible.builtin.systemd_service:
+        name: docker
+        enabled: true
+        state: started
+
+    - name: Create deployment and ACME directories
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: directory
+        mode: "{{ item.mode }}"
+      loop:
+        - {path: /opt/barghsa/staging, mode: '0755'}
+        - {path: /etc/barghsa/staging, mode: '0700'}
+        - {path: /var/www/barghsa-acme, mode: '0755'}
+        - {path: /var/backups/barghsa-staging, mode: '0700'}
+        - {path: /etc/letsencrypt/renewal-hooks/deploy, mode: '0755'}
+
+    - name: Install deployment files
+      ansible.builtin.copy:
+        src: "{{ staging_source }}/{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: "{{ item.mode }}"
+      loop:
+        - {src: compose.yml, dest: /opt/barghsa/staging/compose.yml, mode: '0644'}
+        - {src: postgres.conf, dest: /opt/barghsa/staging/postgres.conf, mode: '0644'}
+        - {src: release.sh, dest: /usr/local/sbin/barghsa-staging-release, mode: '0750'}
+        - {src: backup.sh, dest: /usr/local/sbin/barghsa-staging-backup, mode: '0750'}
+        - {src: nginx-api-proxy.conf, dest: /etc/nginx/snippets/barghsa-api-proxy.conf, mode: '0644'}
+        - {src: certbot-reload-nginx.sh, dest: /etc/letsencrypt/renewal-hooks/deploy/barghsa-reload-nginx, mode: '0755'}
+
+    - name: Install example configuration without touching active secrets
+      ansible.builtin.copy:
+        src: "{{ staging_source }}/{{ item }}"
+        dest: "/etc/barghsa/staging/{{ item }}"
+        mode: '0600'
+      loop: [runtime.env.example, images.env.example, backup.env.example]
+
+    - name: Remove distribution default virtual host
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Check existing certificate
+      ansible.builtin.stat:
+        path: "/etc/letsencrypt/live/{{ app_domain }}/fullchain.pem"
+      register: staging_certificate
+
+    - name: Install HTTP bootstrap site for ACME challenge
+      ansible.builtin.template:
+        src: "{{ staging_source }}/nginx-bootstrap.conf.j2"
+        dest: /etc/nginx/conf.d/barghsa-staging.conf
+        mode: '0644'
+      when: not staging_certificate.stat.exists
+
+    - name: Start bootstrap web server
+      ansible.builtin.systemd_service:
+        name: nginx
+        enabled: true
+        state: restarted
+      when: not staging_certificate.stat.exists
+
+    - name: Obtain certificate for app and S3 domains
+      ansible.builtin.command:
+        argv:
+          - certbot
+          - certonly
+          - --webroot
+          - -w
+          - /var/www/barghsa-acme
+          - --non-interactive
+          - --agree-tos
+          - --email
+          - "{{ letsencrypt_email }}"
+          - --cert-name
+          - "{{ app_domain }}"
+          - -d
+          - "{{ app_domain }}"
+          - -d
+          - "{{ s3_domain }}"
+        creates: "/etc/letsencrypt/live/{{ app_domain }}/fullchain.pem"
+
+    - name: Install TLS reverse proxy
+      ansible.builtin.template:
+        src: "{{ staging_source }}/nginx.conf.j2"
+        dest: /etc/nginx/conf.d/barghsa-staging.conf
+        mode: '0644'
+      register: nginx_site
+
+    - name: Validate NGINX configuration
+      ansible.builtin.command: nginx -t
+      changed_when: false
+
+    - name: Reload NGINX
+      ansible.builtin.systemd_service:
+        name: nginx
+        enabled: true
+        state: reloaded
+      when: nginx_site.changed
+
+    - name: Install daily backup systemd units, disabled until backup.env is configured
+      ansible.builtin.copy:
+        src: "{{ staging_source }}/{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: '0644'
+      loop:
+        - {src: barghsa-staging-backup.service, dest: /etc/systemd/system/barghsa-staging-backup.service}
+        - {src: barghsa-staging-backup.timer, dest: /etc/systemd/system/barghsa-staging-backup.timer}
+
+    - name: Reload systemd unit files
+      ansible.builtin.systemd_service:
+        daemon_reload: true
