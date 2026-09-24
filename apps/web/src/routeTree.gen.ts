@@ -54,6 +54,7 @@ import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
 import { Route as AdminGiftCodesRouteImport } from './routes/admin/gift-codes'
 import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
 import { Route as AdminKnowledgeBasesRouteImport } from './routes/admin/knowledge-bases'
+import { Route as AdminMaintenanceRouteImport } from './routes/admin/maintenance'
 import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
 import { Route as AdminPoliciesRouteImport } from './routes/admin/policies'
 import { Route as AdminProvidersRouteImport } from './routes/admin/providers'
@@ -336,6 +337,11 @@ const AdminInvoicesRoute = AdminInvoicesRouteImport.update({
 const AdminKnowledgeBasesRoute = AdminKnowledgeBasesRouteImport.update({
   id: '/knowledge-bases',
   path: '/knowledge-bases',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMaintenanceRoute = AdminMaintenanceRouteImport.update({
+  id: '/maintenance',
+  path: '/maintenance',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
@@ -670,6 +676,7 @@ export interface FileRoutesByFullPath {
   '/admin/gift-codes': typeof AdminGiftCodesRoute
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
+  '/admin/maintenance': typeof AdminMaintenanceRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/policies': typeof AdminPoliciesRoute
   '/admin/providers': typeof AdminProvidersRoute
@@ -766,6 +773,7 @@ export interface FileRoutesByTo {
   '/admin/gift-codes': typeof AdminGiftCodesRoute
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
+  '/admin/maintenance': typeof AdminMaintenanceRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/policies': typeof AdminPoliciesRoute
   '/admin/providers': typeof AdminProvidersRoute
@@ -867,6 +875,7 @@ export interface FileRoutesById {
   '/admin/gift-codes': typeof AdminGiftCodesRoute
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
+  '/admin/maintenance': typeof AdminMaintenanceRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/policies': typeof AdminPoliciesRoute
   '/admin/providers': typeof AdminProvidersRoute
@@ -971,6 +980,7 @@ export interface FileRouteTypes {
     | '/admin/gift-codes'
     | '/admin/invoices'
     | '/admin/knowledge-bases'
+    | '/admin/maintenance'
     | '/admin/notifications'
     | '/admin/policies'
     | '/admin/providers'
@@ -1067,6 +1077,7 @@ export interface FileRouteTypes {
     | '/admin/gift-codes'
     | '/admin/invoices'
     | '/admin/knowledge-bases'
+    | '/admin/maintenance'
     | '/admin/notifications'
     | '/admin/policies'
     | '/admin/providers'
@@ -1167,6 +1178,7 @@ export interface FileRouteTypes {
     | '/admin/gift-codes'
     | '/admin/invoices'
     | '/admin/knowledge-bases'
+    | '/admin/maintenance'
     | '/admin/notifications'
     | '/admin/policies'
     | '/admin/providers'
@@ -1556,6 +1568,13 @@ declare module '@tanstack/react-router' {
       path: '/knowledge-bases'
       fullPath: '/admin/knowledge-bases'
       preLoaderRoute: typeof AdminKnowledgeBasesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/maintenance': {
+      id: '/admin/maintenance'
+      path: '/maintenance'
+      fullPath: '/admin/maintenance'
+      preLoaderRoute: typeof AdminMaintenanceRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/notifications': {
@@ -2124,6 +2143,7 @@ interface AdminRouteChildren {
   AdminGiftCodesRoute: typeof AdminGiftCodesRoute
   AdminInvoicesRoute: typeof AdminInvoicesRoute
   AdminKnowledgeBasesRoute: typeof AdminKnowledgeBasesRoute
+  AdminMaintenanceRoute: typeof AdminMaintenanceRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminPoliciesRoute: typeof AdminPoliciesRoute
   AdminProvidersRoute: typeof AdminProvidersRoute
@@ -2168,6 +2188,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminGiftCodesRoute: AdminGiftCodesRoute,
   AdminInvoicesRoute: AdminInvoicesRoute,
   AdminKnowledgeBasesRoute: AdminKnowledgeBasesRoute,
+  AdminMaintenanceRoute: AdminMaintenanceRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminPoliciesRoute: AdminPoliciesRoute,
   AdminProvidersRoute: AdminProvidersRoute,

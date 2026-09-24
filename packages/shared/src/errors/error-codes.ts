@@ -51,6 +51,14 @@ export const ErrorCodes = {
     messageKey: 'error.provider.unavailable',
     severity: 'error' as ErrorSeverity,
   },
+  MAINTENANCE_ACTIVE: {
+    code: 'MAINTENANCE:ACTIVE',
+    httpStatus: 503,
+    title: 'This service is temporarily paused',
+    retryable: true,
+    messageKey: 'error.maintenance.active',
+    severity: 'info' as ErrorSeverity,
+  },
   // ── Validation ──────────────────────────────────────────
   VALIDATION_PAYLOAD_TOO_LARGE: {
     code: 'VALIDATION:INPUT:PAYLOAD_TOO_LARGE',

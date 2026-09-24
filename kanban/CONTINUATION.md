@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Capability maintenance controls](batches/2026-09-24-capability-maintenance.md) let staff pause new actions by service with audited settings, clear customer notices, and unaffected health and existing workflows.
+
 [Saving invoice detail clarity](batches/2026-09-24-saving-invoice-detail-clarity.md) names partial funding in both languages, links only customer-visible invoices, and keeps payment wording accurate. The five-project saving journey passes.
 
 [Saving order payment next actions](batches/2026-09-24-saving-payment-next-actions.md) keeps the remaining invoice payment visible after partial funding and distinguishes an invoice still being prepared from customer payment or staff fulfillment. The customer list/detail journey passes across all five browser projects.

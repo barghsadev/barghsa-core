@@ -8343,6 +8343,58 @@
         ]
       }
     },
+    "/api/admin/maintenance": {
+      "get": {
+        "operationId": "AdminMaintenanceController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Maintenance settings and versions"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List capability maintenance flags and responsible owners",
+        "tags": [
+          "Admin · Maintenance"
+        ]
+      }
+    },
+    "/api/admin/maintenance/{capability}": {
+      "put": {
+        "operationId": "AdminMaintenanceController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "capability",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated maintenance setting and version"
+          },
+          "409": {
+            "description": "The setting changed since it was read"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Activate or deactivate maintenance for one capability",
+        "tags": [
+          "Admin · Maintenance"
+        ]
+      }
+    },
     "/api/admin/notifications/customer-corrections": {
       "get": {
         "operationId": "CustomerCorrectionsController_list",
@@ -19152,6 +19204,21 @@
         "summary": "Pay the confirmed remaining invoice amount in one atomic wallet debit",
         "tags": [
           "Invoices"
+        ]
+      }
+    },
+    "/api/maintenance": {
+      "get": {
+        "operationId": "PublicMaintenanceController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current status for each supported capability"
+          }
+        },
+        "summary": "Current customer-facing maintenance status by capability",
+        "tags": [
+          "Maintenance"
         ]
       }
     },

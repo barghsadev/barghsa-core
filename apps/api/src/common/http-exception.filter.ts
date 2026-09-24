@@ -99,6 +99,37 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     }
 
+    if (errorCode === ErrorCodes.MAINTENANCE_ACTIVE.code && exception instanceof HttpException) {
+      const details = exception.getResponse();
+      if (typeof details === 'object' && details !== null) {
+        const payload = details as Record<string, unknown>;
+        const allowed = new Set([
+          'electricity_checkout',
+          'saving_orders',
+          'solar_requests',
+          'wallet_topup',
+          'ai_chat',
+        ]);
+        if (typeof payload.capability === 'string' && allowed.has(payload.capability)) {
+          const error = body.error as Record<string, unknown>;
+          error.capability = payload.capability;
+          error.supportUrl = '/tickets';
+          const reason = payload.reason;
+          if (
+            reason &&
+            typeof reason === 'object' &&
+            'fa' in reason &&
+            'en' in reason &&
+            typeof reason.fa === 'string' &&
+            typeof reason.en === 'string'
+          )
+            error.reason = reason[locale];
+          if (typeof payload.estimatedUntil === 'string')
+            error.estimatedUntil = payload.estimatedUntil;
+        }
+      }
+    }
+
     if (httpStatus === 409 && exception instanceof HttpException) {
       const details = exception.getResponse();
       if (typeof details === 'object' && details !== null && 'blocker' in details) {
@@ -210,7 +241,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
   ): void {
     // URLs and exception stacks can include passwords, reset tokens or session IDs.
     const route = typeof request.route?.path === 'string' ? request.route.path : 'unmatched';
-    if (httpStatus < 500) {
+    if (httpStatus < 500 || errorCode === ErrorCodes.MAINTENANCE_ACTIVE.code) {
       // 4xx — debug level (client errors, not actionable)
       this.logger.debug(
         `Client error: ${errorCode} — ${httpStatus} ${request.method} ${route} | correlationId=${correlationId ?? 'none'} | ip=${request.ip}`

@@ -12,6 +12,7 @@ import { RateLimitModule } from './rate-limit/index.js';
 import { StorageModule } from './storage/index.js';
 import { UploadModule } from './upload/index.js';
 import { CspReportModule } from './csp-report/csp-report.module.js';
+import { MaintenanceModule } from './maintenance/maintenance.module.js';
 
 import { AuthModule } from './auth/index.js';
 import { SessionModule } from './session/index.js';
@@ -47,6 +48,7 @@ import { PublicModule } from './public/public.module.js';
     StorageModule,
     UploadModule,
     CspReportModule,
+    MaintenanceModule,
     AuthModule,
     SessionModule,
     ProfilesModule,

@@ -18,6 +18,7 @@ import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { SolarRequestService } from './solar-request.service.js';
 import { solarDraftInput, solarSubmission } from './solar-request.validation.js';
+import { RequiresCapability } from '../maintenance/maintenance.guard.js';
 
 @ApiTags('Solar construction requests')
 @ApiBearerAuth()
@@ -47,6 +48,7 @@ export class SolarRequestController {
   }
 
   @Post()
+  @RequiresCapability('solar_requests')
   @RateLimit({ namespace: 'solar:submit:user', limit: 60, windowMs: 60_000, scope: 'user' })
   @ApiOperation({
     summary: 'Submit a solar construction request without creating a contract or invoice',

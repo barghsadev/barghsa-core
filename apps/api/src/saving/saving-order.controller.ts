@@ -18,6 +18,7 @@ import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { SavingOrderService } from './saving-order.service.js';
 import { SavingCustomerDraftService } from './saving-customer-draft.service.js';
+import { RequiresCapability } from '../maintenance/maintenance.guard.js';
 
 const quoteInput = z
   .object({
@@ -206,6 +207,7 @@ export class SavingOrderController {
   }
 
   @Post()
+  @RequiresCapability('saving_orders')
   @RateLimit({ namespace: 'saving:submit:user', limit: 60, windowMs: 60_000, scope: 'user' })
   @ApiOperation({ summary: 'Atomically submit saving order, contract and unpaid invoice' })
   @ApiZodBody(submissionInput)

@@ -7,6 +7,7 @@ export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
   'error.validation.unsupported_media_type': 'نوع محتوای درخواست پشتیبانی نمی‌شود',
   'error.provider.unavailable': 'یکی از سرویس‌های مورد نیاز در حال حاضر در دسترس نیست',
+  'error.maintenance.active': 'این خدمت موقتاً در دسترس نیست',
   'auth.otp.error.alreadyConsumed': 'این کد تأیید قبلاً استفاده شده است. کد جدیدی درخواست کنید.',
   'crm.profile.deletion.blocked': 'این پروفایل دارای سوابق وابسته است و نمی‌توان آن را حذف کرد.',
   'crm.profile.already_archived': 'این پروفایل قبلاً بایگانی شده است.',
@@ -191,6 +192,7 @@ export const fa: I18nDictionary = {
 export const en: I18nDictionary = {
   'error.validation.unsupported_media_type': 'Unsupported request content type',
   'error.provider.unavailable': 'A required service is temporarily unavailable',
+  'error.maintenance.active': 'This service is temporarily unavailable',
   'auth.otp.error.alreadyConsumed':
     'This verification code has already been used. Request a new code.',
   'crm.profile.deletion.blocked': 'This profile has linked records that prevent deletion.',

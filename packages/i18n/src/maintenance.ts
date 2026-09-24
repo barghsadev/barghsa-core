@@ -1,0 +1,73 @@
+import { lookup } from './lookup.js';
+
+const en: Record<string, string> = {
+  title: 'Service temporarily unavailable',
+  description: 'New requests are paused while the team works on this service.',
+  until: 'Estimated return',
+  support: 'Contact support',
+  back: 'Return to dashboard',
+  active: 'Paused',
+  inactive: 'Available',
+  electricity_checkout: 'Electricity checkout',
+  saving_orders: 'New saving orders',
+  solar_requests: 'New solar requests',
+  wallet_topup: 'Wallet top-ups',
+  ai_chat: 'AI chat',
+  adminTitle: 'Service maintenance',
+  adminDescription:
+    'Pause new actions by service. Existing orders, invoices, refunds and support remain available.',
+  refresh: 'Refresh',
+  loading: 'Loading maintenance status…',
+  save: 'Save change',
+  manage: 'Manage',
+  status: 'Status',
+  noActive: 'All customer services are available.',
+  deviceTime: 'Time on this device',
+  reasonEn: 'Customer message in English',
+  reasonFa: 'Customer message in Persian',
+  owner: 'Responsible team or person',
+  estimatedUntil: 'Estimated return time',
+  confirm: 'Apply this maintenance change?',
+  saved: 'Maintenance setting saved.',
+  denied: 'You cannot manage maintenance settings.',
+  loadError: 'Maintenance settings could not be loaded.',
+  versionConflict: 'This setting changed. Refresh before saving.',
+};
+
+const fa: Record<string, string> = {
+  title: 'این خدمت موقتاً در دسترس نیست',
+  description: 'ثبت درخواست جدید تا پایان بررسی کارشناسان متوقف شده است.',
+  until: 'زمان تخمینی بازگشت',
+  support: 'تماس با پشتیبانی',
+  back: 'بازگشت به داشبورد',
+  active: 'متوقف‌شده',
+  inactive: 'در دسترس',
+  electricity_checkout: 'ثبت سفارش برق',
+  saving_orders: 'سفارش جدید صرفه‌جویی',
+  solar_requests: 'درخواست جدید نیروگاه خورشیدی',
+  wallet_topup: 'افزایش موجودی کیف پول',
+  ai_chat: 'گفت‌وگو با هوش مصنوعی',
+  adminTitle: 'توقف موقت خدمات',
+  adminDescription:
+    'ثبت درخواست جدید هر خدمت را جداگانه متوقف کنید. سفارش‌ها، فاکتورها، بازپرداخت‌ها و پشتیبانی در دسترس می‌مانند.',
+  refresh: 'بازخوانی',
+  loading: 'در حال بارگذاری وضعیت خدمات…',
+  save: 'ذخیره تغییر',
+  manage: 'مدیریت',
+  status: 'وضعیت',
+  noActive: 'همه خدمات مشتریان در دسترس هستند.',
+  deviceTime: 'زمان این دستگاه',
+  reasonEn: 'پیام مشتری به انگلیسی',
+  reasonFa: 'پیام مشتری به فارسی',
+  owner: 'فرد یا تیم مسئول',
+  estimatedUntil: 'زمان تخمینی بازگشت',
+  confirm: 'این تغییر را اعمال می‌کنید؟',
+  saved: 'وضعیت خدمت ذخیره شد.',
+  denied: 'دسترسی مدیریت وضعیت خدمات را ندارید.',
+  loadError: 'وضعیت خدمات بارگذاری نشد.',
+  versionConflict: 'وضعیت تغییر کرده است. پیش از ذخیره دوباره بارگذاری کنید.',
+};
+
+export function tMaintenance(key: string, locale: 'fa' | 'en'): string {
+  return lookup(locale === 'fa' ? fa : en, key) ?? key;
+}

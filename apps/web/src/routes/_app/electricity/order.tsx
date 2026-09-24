@@ -8,6 +8,7 @@ import { Button, Card, CardContent, Dialog, DialogContent, DialogTitle } from '@
 import { withCsrf } from '../../../lib/csrf.js';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { FormWizard } from '../../../components/FormWizard.js';
+import { MaintenanceBoundary } from '../../../components/MaintenanceNotice.js';
 import { WalletFundingPrompt } from '../../../components/WalletFundingPrompt.js';
 import { ElectricityQuoteErrorNotice } from '../../../components/ElectricityQuoteErrorNotice.js';
 import {
@@ -20,7 +21,11 @@ import {
 } from '../../../lib/electricity-quote-error.js';
 
 export const Route = createFileRoute('/_app/electricity/order')({
-  component: ElectricityOrderPage,
+  component: () => (
+    <MaintenanceBoundary capability="electricity_checkout">
+      <ElectricityOrderPage />
+    </MaintenanceBoundary>
+  ),
 });
 
 // ─── Types ────────────────────────────────────────────────────────────

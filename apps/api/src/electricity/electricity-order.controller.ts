@@ -22,6 +22,7 @@ import { ElectricityOrderService } from './electricity-order.service.js';
 import { simplePeriodOptions } from './electricity-order.service.js';
 import { ElectricityBillDataService } from './electricity-bill-data.service.js';
 import { ElectricityDraftService } from './electricity-draft.service.js';
+import { RequiresCapability } from '../maintenance/maintenance.guard.js';
 
 const simpleInput = z
   .object({
@@ -341,6 +342,7 @@ export class ElectricityOrderController {
   }
 
   @Post('orders/simple')
+  @RequiresCapability('electricity_checkout')
   @HttpCode(201)
   @RateLimit({ namespace: 'electricity:submit:user', limit: 60, windowMs: 60_000, scope: 'user' })
   @ApiOperation({
@@ -372,6 +374,7 @@ export class ElectricityOrderController {
   }
 
   @Post('orders/advanced')
+  @RequiresCapability('electricity_checkout')
   @HttpCode(201)
   @RateLimit({ namespace: 'electricity:submit:user', limit: 60, windowMs: 60_000, scope: 'user' })
   @ApiOperation({ summary: 'Submit an advanced bundle with contract and invoice atomically' })

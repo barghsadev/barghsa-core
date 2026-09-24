@@ -20,6 +20,9 @@ import {
   utcTodayIso,
 } from '../lib/invoice-bank-receipt-upload.js';
 import { rememberWalletInvoiceReturn } from '../lib/wallet-invoice-return.js';
+import { useMaintenance } from '../hooks/useMaintenance.js';
+import { MaintenanceNotice } from '../components/MaintenanceNotice.js';
+import { tMaintenance } from '@barghsa/i18n/maintenance';
 
 interface WalletBalance {
   balance: string;
@@ -37,7 +40,14 @@ function advertisedOnlineTopUpLimit(wallet: WalletBalance | null): number | null
 }
 
 type PageError =
-  'no-profile' | 'load' | 'invalid-amount' | 'limit-exceeded' | 'gateway' | 'conflict' | 'generic';
+  | 'no-profile'
+  | 'load'
+  | 'invalid-amount'
+  | 'limit-exceeded'
+  | 'gateway'
+  | 'conflict'
+  | 'maintenance'
+  | 'generic';
 
 type ReceiptError =
   | 'invalid-amount'
@@ -46,6 +56,7 @@ type ReceiptError =
   | 'invalid-file'
   | 'upload'
   | 'conflict'
+  | 'maintenance'
   | 'generic';
 
 function newIdempotencyKey(): string {
@@ -53,6 +64,7 @@ function newIdempotencyKey(): string {
 }
 
 function mapSubmitError(status: number, message: string): PageError {
+  if (status === 503) return 'maintenance';
   if (status === 409) return 'conflict';
   if (status === 502 || status === 504) return 'gateway';
   if (status === 400 && /exceeds/i.test(message)) return 'limit-exceeded';
@@ -72,6 +84,7 @@ function submitErrorMessage(payload: unknown): string {
 }
 
 function mapReceiptSubmitError(status: number): ReceiptError {
+  if (status === 503) return 'maintenance';
   if (status === 409) return 'conflict';
   if (status === 400) return 'generic';
   return 'generic';
@@ -108,6 +121,7 @@ export function WalletPage({
   const uploadReceiptAttachment = useReceiptAttachmentUpload();
   const receiptFileInput = useRef<HTMLInputElement>(null);
   const locale = useLocale();
+  const maintenance = useMaintenance('wallet_topup');
   const numbers = useNumberFormatting(locale);
   const isRtl = locale === 'fa';
 
@@ -185,7 +199,7 @@ export function WalletPage({
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!profileId || submitting) return;
+    if (!profileId || submitting || maintenance?.active) return;
 
     if (amountValue === null || !Number.isSafeInteger(amountValue) || amountValue <= 0) {
       setError('invalid-amount');
@@ -257,7 +271,7 @@ export function WalletPage({
 
   async function handleReceiptSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!profileId || receiptSubmitting) return;
+    if (!profileId || receiptSubmitting || maintenance?.active) return;
 
     if (receiptAmountIrR === null) {
       setReceiptError('invalid-amount');
@@ -335,7 +349,8 @@ export function WalletPage({
   }
 
   const advertisedLimit = advertisedOnlineTopUpLimit(wallet);
-  const onlineSubmitDisabled = submitting || advertisedLimit === null || advertisedLimit === 0;
+  const onlineSubmitDisabled =
+    submitting || maintenance?.active === true || advertisedLimit === null || advertisedLimit === 0;
 
   const errorMessage =
     error === null
@@ -352,7 +367,9 @@ export function WalletPage({
                 ? t('wallet.page.gatewayError', locale)
                 : error === 'conflict'
                   ? t('wallet.page.conflict', locale)
-                  : t('wallet.page.loadError', locale);
+                  : error === 'maintenance'
+                    ? tMaintenance('title', locale)
+                    : t('wallet.page.loadError', locale);
 
   const receiptErrorMessage =
     receiptError === null
@@ -369,7 +386,9 @@ export function WalletPage({
                 ? t('wallet.page.receiptUploadError', locale)
                 : receiptError === 'conflict'
                   ? t('wallet.page.conflict', locale)
-                  : t('wallet.page.receiptGenericError', locale);
+                  : receiptError === 'maintenance'
+                    ? tMaintenance('title', locale)
+                    : t('wallet.page.receiptGenericError', locale);
 
   return (
     <div
@@ -430,7 +449,9 @@ export function WalletPage({
             </div>
           )}
 
-          {profileId && (
+          {maintenance?.active && <MaintenanceNotice setting={maintenance} />}
+
+          {profileId && !maintenance?.active && (
             <form
               onSubmit={handleSubmit}
               className="space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm"
@@ -491,7 +512,7 @@ export function WalletPage({
             </form>
           )}
 
-          {profileId && (
+          {profileId && !maintenance?.active && (
             <form
               onSubmit={handleReceiptSubmit}
               className="space-y-4 rounded-lg bg-card text-card-foreground p-6 shadow-sm"

@@ -35,6 +35,7 @@ import { BankReceiptTopUpService } from './bank-receipt-topup.service.js';
 import { parseWalletHistoryQuery, readWalletHistory } from './wallet-history.js';
 import { activeProfileSql } from '../profiles/profile-context.js';
 import { withCustomerWalletAccess } from './customer-wallet-access.js';
+import { RequiresCapability } from '../maintenance/maintenance.guard.js';
 
 const InitiateBodySchema = z
   .object({
@@ -143,6 +144,7 @@ export class WalletController {
    * redirect URL. The wallet is not credited here.
    */
   @Post(':profileId/top-ups')
+  @RequiresCapability('wallet_topup')
   @HttpCode(201)
   @RateLimit({ namespace: 'wallet:top-up:user', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Start an online wallet top-up and redirect to the payment gateway' })
@@ -220,6 +222,7 @@ export class WalletController {
    * ledger row. The wallet is not credited until staff confirmation.
    */
   @Post(':profileId/bank-receipt-top-ups')
+  @RequiresCapability('wallet_topup')
   @HttpCode(201)
   @RateLimit({ namespace: 'wallet:bank-receipt-top-up:user', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Submit a bank-receipt wallet top-up (Pending until staff confirm)' })
