@@ -240,6 +240,11 @@ export default function AdminInvoicesPage() {
     <div className="max-w-4xl space-y-8">
       <h1 className="text-2xl font-bold">{t('admin.invoices.nav', locale)}</h1>
       <InvoiceLedger
+        initialInvoiceId={
+          typeof window === 'undefined'
+            ? ''
+            : (new URLSearchParams(window.location.search).get('invoiceId') ?? '')
+        }
         onSelectForDueAt={(id) => {
           setInvoiceId(id);
           discardLoadedInvoice();

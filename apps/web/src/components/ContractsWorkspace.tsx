@@ -283,15 +283,25 @@ function ContractResults({
                     {word('serviceEndsAt')}: {time.format(item.serviceEndsAt)}
                   </p>
                 ) : null}
-                {item.initialInvoiceId &&
-                item.initialInvoiceAmount !== null &&
-                item.initialInvoiceAmount !== undefined ? (
+                {item.initialInvoiceId ? (
                   <p className="text-sm text-muted-foreground">
-                    {word('initialInvoiceAmount')}: {numbers.money(item.initialInvoiceAmount)}
+                    {item.initialInvoiceAmount !== null && item.initialInvoiceAmount !== undefined
+                      ? `${word('initialInvoiceAmount')}: ${numbers.money(item.initialInvoiceAmount)}`
+                      : word('initialInvoiceLinked')}
                     {item.initialInvoiceState
                       ? ` · ${appText(`invoices.state.${item.initialInvoiceState}`, locale)}`
                       : ''}
-                    {!staff ? (
+                    {staff ? (
+                      <>
+                        {' · '}
+                        <a
+                          href={`/admin/invoices?invoiceId=${encodeURIComponent(item.initialInvoiceId)}`}
+                          className="text-primary underline underline-offset-4"
+                        >
+                          {word('openInitialInvoice')}
+                        </a>
+                      </>
+                    ) : (
                       <>
                         {' · '}
                         <Link
@@ -302,7 +312,7 @@ function ContractResults({
                           {word('openInitialInvoice')}
                         </Link>
                       </>
-                    ) : null}
+                    )}
                   </p>
                 ) : null}
                 {staff && item.serviceType === 'electricity' ? (

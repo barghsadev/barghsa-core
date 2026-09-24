@@ -160,7 +160,14 @@ export default function AdminElectricityIncreasesPage() {
                       : copy('notIssued')}
                   </p>
                   {request.adjustmentInvoiceId ? (
-                    <p className="break-all">{request.adjustmentInvoiceId}</p>
+                    <p className="break-all">
+                      <a
+                        className="text-primary underline underline-offset-2"
+                        href={`/admin/invoices?invoiceId=${encodeURIComponent(request.adjustmentInvoiceId)}`}
+                      >
+                        {request.adjustmentInvoiceId}
+                      </a>
+                    </p>
                   ) : null}
                   {request.adjustmentPaidAmount ? (
                     <p>

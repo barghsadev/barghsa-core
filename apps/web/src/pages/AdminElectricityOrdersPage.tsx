@@ -10,6 +10,8 @@ import { commercialStatusTone, financialStatusTone } from '../lib/electricity-st
 
 interface ReviewOrder {
   orderId: string;
+  invoiceId: string;
+  invoiceState: string;
   customerName: string;
   commercialStatus: string;
   financialStatus: string;
@@ -292,6 +294,17 @@ export default function AdminElectricityOrdersPage() {
                 <div>
                   <dt className="text-muted-foreground">{copy('paid')}</dt>
                   <dd>{numbers.money(detail.paidIrR)}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">{copy('revision.invoice')}</dt>
+                  <dd>
+                    <a
+                      className="text-primary underline underline-offset-2"
+                      href={`/admin/invoices?invoiceId=${encodeURIComponent(detail.invoiceId)}`}
+                    >
+                      {copy('openInvoice')}
+                    </a>
+                  </dd>
                 </div>
               </dl>
               <p className="text-sm">

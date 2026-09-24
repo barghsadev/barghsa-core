@@ -54,6 +54,7 @@ it('shows expired finance cases in the staff queue without review actions', asyn
     );
     expect(container.textContent).toContain('Finance must resolve this payment or receipt.');
     expect(container.textContent).toContain('Paid');
+    expect(container.querySelector('a[href="/admin/invoices?invoiceId=invoice-1"]')).not.toBeNull();
     expect(container.textContent).not.toContain('Approve increase');
   } finally {
     await act(async () => root.unmount());

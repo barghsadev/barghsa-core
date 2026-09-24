@@ -127,6 +127,18 @@ function rules(canEdit = true) {
     ],
   };
 }
+
+it('opens the linked invoice in the staff ledger from activation requirements', async () => {
+  const invoiceId = '55555555-5555-4555-8555-555555555555';
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () => response(data({ initialInvoiceId: invoiceId })))
+  );
+  await render(<ContractActivationPanel id="contract" versionId="version" staff />);
+  expect(
+    container.querySelector(`a[href="/admin/invoices?invoiceId=${invoiceId}"]`)?.textContent
+  ).toBe(en.openInitialInvoice);
+});
 for (const locale of ['en', 'fa'] as const)
   it(locale + ': shows missing prerequisites and exact-version evidence', async () => {
     harness.locale = locale;

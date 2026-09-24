@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Staff electricity and contract invoice handoffs](batches/2026-09-24-staff-invoice-handoffs.md) deep-links the staff order, adjustment and contract views to exact finance invoice details while retaining invoice permission checks.
+
 [Staff invoice ledger and detail](batches/2026-09-24-staff-invoice-ledger.md) gives finance staff a permission-checked invoice search, paginated list, line/VAT and payment detail, and direct receipt and due-date handoffs.
 
 [Invoice receipt bank name](batches/2026-09-24-invoice-receipt-bank-name.md) stores and shows optional bank metadata on customer and finance receipt views while preserving legacy records.

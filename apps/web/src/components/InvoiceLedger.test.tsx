@@ -122,3 +122,25 @@ it('shows a permission error without exposing ledger rows', async () => {
   expect(container.textContent).toContain('You do not have permission to view invoices.');
   expect(container.querySelector('tbody')).toBeNull();
 });
+
+it('loads an exact invoice from a staff deep link', async () => {
+  const fetcher = vi.fn(
+    async (input: RequestInfo | URL) =>
+      new Response(
+        JSON.stringify(
+          String(input).endsWith(`/${ID}`)
+            ? { ...row, lines: [], activity: { payments: [], bankReceipts: [], refunds: [] } }
+            : { items: [row], nextCursor: null }
+        )
+      )
+  );
+  vi.stubGlobal('fetch', fetcher);
+  await act(async () =>
+    root.render(
+      <InvoiceLedger initialInvoiceId={ID} onSelectForDueAt={vi.fn()} onOpenReceipt={vi.fn()} />
+    )
+  );
+  expect(fetcher.mock.calls.some(([url]) => String(url).includes(`invoiceId=${ID}`))).toBe(true);
+  expect(fetcher.mock.calls.some(([url]) => String(url).endsWith(`/${ID}`))).toBe(true);
+  expect(container.querySelector('#invoice-ledger-detail-title')).not.toBeNull();
+});

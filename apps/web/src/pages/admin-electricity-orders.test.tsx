@@ -12,6 +12,8 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const order = {
     orderId: 'order-1',
+    invoiceId: '11111111-1111-7111-8111-111111111111',
+    invoiceState: 'Unpaid',
     customerName: 'Electricity Buyer',
     commercialStatus: 'awaiting_staff_review',
     financialStatus: 'unpaid',
@@ -121,6 +123,11 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     const statusValues = [...container.querySelectorAll('dl dd')].map((item) => item.textContent);
     expect(statusValues.slice(0, 2)).toEqual(['Awaiting staff review', 'Unpaid']);
     expect(container.textContent).toContain('Thermal electricity');
+    expect(
+      container.querySelector(
+        'a[href="/admin/invoices?invoiceId=11111111-1111-7111-8111-111111111111"]'
+      )?.textContent
+    ).toBe('Open invoice');
     expect(container.textContent).toContain('Review order changes');
     expect(container.textContent).toContain('Increase quantity');
     expect(container.textContent).toContain('Quantity updated');

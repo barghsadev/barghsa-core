@@ -78,7 +78,14 @@ export function ContractActivationPanel({
           {data.initialInvoiceId ? (
             <p className="text-sm">
               {word('initialInvoiceLinked')}{' '}
-              {!staff && (
+              {staff ? (
+                <a
+                  href={`/admin/invoices?invoiceId=${encodeURIComponent(data.initialInvoiceId)}`}
+                  className="text-primary underline underline-offset-4"
+                >
+                  {word('openInitialInvoice')}
+                </a>
+              ) : (
                 <Link
                   to="/invoices/$invoiceId"
                   params={{ invoiceId: data.initialInvoiceId }}

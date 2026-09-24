@@ -284,7 +284,10 @@ export default function AdminElectricityPriceAdjustmentsPage() {
                   {adjustment.adjustmentInvoiceId ? (
                     <p>
                       {copy('invoice')}:{' '}
-                      <a className="text-primary underline" href="/admin/invoices">
+                      <a
+                        className="text-primary underline"
+                        href={`/admin/invoices?invoiceId=${encodeURIComponent(adjustment.adjustmentInvoiceId)}`}
+                      >
                         {adjustment.adjustmentInvoiceId}
                       </a>
                     </p>

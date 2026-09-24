@@ -382,6 +382,11 @@ it('validates staff filters, deduplicates pagination, and recovers list errors',
   expect(container.querySelectorAll('li')).toHaveLength(1);
   expect(container.textContent).toContain(`${en.initialInvoiceAmount}: 125000 IRR`);
   expect(container.querySelector('a[href^="/invoices/"]')).toBeNull();
+  expect(
+    container.querySelector(
+      'a[href="/admin/invoices?invoiceId=55555555-5555-4555-8555-555555555555"]'
+    )?.textContent
+  ).toBe(en.openInitialInvoice);
   await value('#contracts-profile', 'bad');
   await click(en.apply);
   expect(container.textContent).toContain(en.invalidProfile);

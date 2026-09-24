@@ -153,3 +153,54 @@ it('opens a disclosed proposal from the staff contract link and starts finalizat
     container.remove();
   }
 });
+
+it('opens a finalized adjustment invoice in the staff ledger', async () => {
+  document.documentElement.lang = 'en';
+  window.history.replaceState({}, '', '/admin/electricity-price-adjustments?contractId=contract-1');
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            contractId: 'contract-1',
+            versionId: 'version-1',
+            periodEnd: '2026-10-11T00:00:00Z',
+            canPropose: false,
+            canCancel: false,
+            canFinalize: false,
+            blockedByIncrease: false,
+            adjustments: [
+              {
+                adjustmentId: 'price-1',
+                status: 'finalized',
+                effectiveFrom: '2026-10-06T00:00:00Z',
+                percentageBps: '1000',
+                reason: 'Tariff',
+                contractualBasis: 'Clause 7',
+                adjustmentAmountIrR: '50000',
+                calculationSha256: 'a'.repeat(64),
+                adjustmentInvoiceId: '11111111-1111-7111-8111-111111111111',
+                calculation: { quote: { oldFutureIrR: '500000', newFutureIrR: '550000' } },
+              },
+            ],
+          })
+        )
+    )
+  );
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
+    expect(
+      container.querySelector(
+        'a[href="/admin/invoices?invoiceId=11111111-1111-7111-8111-111111111111"]'
+      )
+    ).not.toBeNull();
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+  }
+});

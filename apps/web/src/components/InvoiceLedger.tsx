@@ -78,10 +78,13 @@ async function getJson<T>(path: string, signal: AbortSignal): Promise<T> {
 export function InvoiceLedger({
   onSelectForDueAt,
   onOpenReceipt,
+  initialInvoiceId = '',
 }: {
   onSelectForDueAt: (invoiceId: string) => void;
   onOpenReceipt: (receiptId: string, state: string) => void;
+  initialInvoiceId?: string;
 }) {
+  const deepLinkId = isInvoiceUuid(initialInvoiceId) ? initialInvoiceId : '';
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
@@ -90,13 +93,13 @@ export function InvoiceLedger({
     value === 'manual' || value === 'auto' ? word(`type.${value}`) : (value ?? word('unknown'));
   const activityState = (value: string) => appText(`invoices.activity.state.${value}`, locale);
   const [state, setState] = useState('');
-  const [idInput, setIdInput] = useState('');
-  const [invoiceId, setInvoiceId] = useState('');
+  const [idInput, setIdInput] = useState(deepLinkId);
+  const [invoiceId, setInvoiceId] = useState(deepLinkId);
   const [cursor, setCursor] = useState<Page['nextCursor']>(null);
   const [pages, setPages] = useState<Page[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'forbidden' | 'error'>('loading');
   const [inputError, setInputError] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(deepLinkId || null);
   const [detail, setDetail] = useState<InvoiceDetail | null>(null);
   const [detailStatus, setDetailStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [revision, setRevision] = useState(0);
