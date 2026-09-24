@@ -27,7 +27,10 @@ it('submits a captured multipart action with CSRF and a browser-generated bounda
   const body = new FormData();
   body.set('changeSummary', 'New terms');
   body.append('files', new File(['file'], 'terms.pdf', { type: 'application/pdf' }));
-  const fetcher = vi.fn(async () => new Response(JSON.stringify({ id: 'saved' }), { status: 201 }));
+  const fetcher = vi.fn(
+    async (_input: RequestInfo | URL, _init?: RequestInit) =>
+      new Response(JSON.stringify({ id: 'saved' }), { status: 201 })
+  );
   vi.stubGlobal('fetch', fetcher);
   const onSuccess = vi.fn(async () => {});
   await act(async () =>
@@ -50,7 +53,7 @@ it('submits a captured multipart action with CSRF and a browser-generated bounda
   );
   expect(confirm).toBeDefined();
   await act(async () => confirm!.click());
-  const options = fetcher.mock.calls[0]![1] as RequestInit;
+  const options = fetcher.mock.calls[0]![1]!;
   expect(options.body).toBe(body);
   const headers = options.headers as Headers;
   expect(headers.get('content-type')).toBeNull();

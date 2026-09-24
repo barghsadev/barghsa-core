@@ -121,6 +121,12 @@ export function TeamActionDialog({
         return;
       }
       const multipart = action.body instanceof FormData;
+      const requestBody =
+        action.body === undefined
+          ? undefined
+          : action.body instanceof FormData
+            ? action.body
+            : JSON.stringify(action.body);
       const response = await fetch(action.path, {
         method: action.method,
         credentials: 'include',
@@ -128,9 +134,7 @@ export function TeamActionDialog({
           ...(multipart ? {} : { 'Content-Type': 'application/json' }),
           'Accept-Language': locale,
         }),
-        ...(action.body === undefined
-          ? {}
-          : { body: multipart ? action.body : JSON.stringify(action.body) }),
+        ...(requestBody === undefined ? {} : { body: requestBody }),
       });
       const data = await response.json().catch(() => null);
       const code = typeof data?.error === 'string' ? data.error : data?.error?.code;

@@ -111,7 +111,6 @@ async function pdfText(bytes: Buffer): Promise<string> {
     throw new BadRequestException('Invalid PDF file');
   const loading = getDocument({
     data: new Uint8Array(bytes),
-    isEvalSupported: false,
     useSystemFonts: false,
   });
   const timeout = setTimeout(() => void loading.destroy(), 10_000);
