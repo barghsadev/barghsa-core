@@ -138,6 +138,81 @@ it('loads an order confirmation with its invoice and contract references', async
 
 it.each([
   {
+    status: 'cancelled',
+    paidIrR: '600000',
+    refundedIrR: '200000',
+    financiallyClosed: false,
+    expected: 'Refund remaining400000',
+    settlement: 'Financial settlement remains open until the refund completes.',
+  },
+  {
+    status: 'rejected',
+    paidIrR: '600000',
+    refundedIrR: '600000',
+    financiallyClosed: true,
+    expected: 'Financial settlement completed.',
+    settlement: 'Financial settlement completed.',
+  },
+  {
+    status: 'cancelled',
+    paidIrR: '0',
+    refundedIrR: '0',
+    financiallyClosed: true,
+    expected: 'No payment was collected; no refund is due.',
+    settlement: 'No payment was collected; no refund is due.',
+  },
+])(
+  'shows the correct financial outcome for a $status order with $paidIrR paid',
+  async ({ status, paidIrR, refundedIrR, financiallyClosed, expected, settlement }) => {
+    document.documentElement.lang = 'en';
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async () =>
+          new Response(
+            JSON.stringify({
+              orderId: 'order-1',
+              profileId: 'profile-1',
+              electricityStatus: status,
+              financialStatus: financiallyClosed ? 'refunded' : 'refund_pending',
+              nextAction: financiallyClosed ? 'none' : 'await_refund',
+              periodStart: '2026-09-23T00:00:00Z',
+              periodEnd: '2026-09-30T00:00:00Z',
+              totalKwh: '10',
+              fullAddress: 'Electricity Street',
+              contractId: 'contract-1',
+              contractState: 'Cancelled',
+              versionId: 'version-1',
+              invoiceId: 'invoice-1',
+              totalIrR: '2500000',
+              paidIrR,
+              refundedIrR,
+              financiallyClosed,
+            }),
+            { headers: { 'Content-Type': 'application/json' } }
+          )
+      )
+    );
+    const container = document.createElement('div');
+    document.body.append(container);
+    const root = createRoot(container);
+    try {
+      await act(async () => root.render(<ElectricityOrderDetailsPage orderId="order-1" />));
+      expect(container.textContent).toContain(expected);
+      expect(container.textContent).toContain(settlement);
+      expect(container.textContent).not.toContain('Amount remaining');
+      if (refundedIrR === paidIrR) expect(container.textContent).not.toContain('Refund remaining');
+    } finally {
+      await act(async () => root.unmount());
+      container.remove();
+      vi.unstubAllGlobals();
+    }
+  }
+);
+
+it.each([
+  {
     action: 'pay_invoice',
     status: 'approved',
     financialStatus: 'unpaid',

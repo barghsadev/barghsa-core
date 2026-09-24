@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Electricity order financial closure](batches/2026-09-24-electricity-refund-clarity.md) distinguishes remaining refund from remaining payment on terminal orders and explains when no refund is due.
+
 [Actionable next steps in customer electricity orders](batches/2026-09-24-electricity-order-next-actions.md) links order-list callouts to the invoice, contract or correction detail needed next.
 
 [Wallet balance breakdown on the dashboard](batches/2026-09-24-wallet-balance-breakdown.md) shows exact available, posted and reserved funds and warns when unpaid invoices exceed the available balance.

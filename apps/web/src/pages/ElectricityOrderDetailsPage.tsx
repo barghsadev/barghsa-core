@@ -267,6 +267,9 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
 
   const nextActionLink = detail ? nextActionHref(detail) : null;
   const latestEvent = detail?.timeline?.at(-1);
+  const terminalOrder =
+    detail !== null && ['rejected', 'cancelled'].includes(detail.electricityStatus);
+  const refundRemaining = detail ? BigInt(detail.paidIrR) - BigInt(detail.refundedIrR) : 0n;
   const actionOwner =
     detail?.nextAction === 'none'
       ? 'none'
@@ -385,12 +388,21 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                 <span>{t('electricity.order.refundedAmount', locale)}</span>
                 <span>{numbers.money(detail.refundedIrR)}</span>
               </p>
-              <p className="flex justify-between gap-3">
-                <span>{t('electricity.order.remainingAmount', locale)}</span>
-                <span>
-                  {numbers.money((BigInt(detail.totalIrR) - BigInt(detail.paidIrR)).toString())}
-                </span>
-              </p>
+              {terminalOrder ? (
+                refundRemaining > 0n ? (
+                  <p className="flex justify-between gap-3">
+                    <span>{t('electricity.order.refundRemainingAmount', locale)}</span>
+                    <span>{numbers.money(refundRemaining.toString())}</span>
+                  </p>
+                ) : null
+              ) : (
+                <p className="flex justify-between gap-3">
+                  <span>{t('electricity.order.remainingAmount', locale)}</span>
+                  <span>
+                    {numbers.money((BigInt(detail.totalIrR) - BigInt(detail.paidIrR)).toString())}
+                  </span>
+                </p>
+              )}
               <p className="flex justify-between gap-3">
                 <span>{t('electricity.order.deliveryAddress', locale)}</span>
                 <span>{detail.fullAddress}</span>
@@ -491,11 +503,13 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                   · {detail.refundReason}
                 </p>
               ) : null}
-              {['rejected', 'cancelled'].includes(detail.electricityStatus) ? (
+              {terminalOrder ? (
                 <p>
                   {t(
                     detail.financiallyClosed
-                      ? 'electricity.order.detail.financiallyClosed'
+                      ? detail.paidIrR === '0'
+                        ? 'electricity.order.detail.noRefundRequired'
+                        : 'electricity.order.detail.financiallyClosed'
                       : 'electricity.order.detail.refundPending',
                     locale
                   )}
