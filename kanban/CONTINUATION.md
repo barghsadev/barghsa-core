@@ -2,6 +2,10 @@
 
 ## Current manual batch — September 24, 2026
 
+[Electricity order revisions](batches/2026-09-24-electricity-order-revisions.md) let customers reprice and resubmit simple or advanced orders after staff request changes. The transaction preserves previous lines and contract versions, replaces the unpaid invoice, and returns the order to staff review.
+
+[Staff review of corrected electricity orders](batches/2026-09-24-electricity-staff-revision-review.md) compares the latest correction with the previous version, including the staff reason, customer response, terms, delivery address, product quantities, and invoice. Focused PostgreSQL and the full web suite pass locally. The latest direct-`main` CI run is tracked on GitHub.
+
 [Advanced electricity order review](batches/2026-09-24-advanced-electricity-review.md) completes the final review snapshot with profile, gift code, delivery details and localized cancellation/payment terms before submission.
 
 [Electricity order conversations](batches/2026-09-24-electricity-order-conversations.md) adds customer/staff comments, private staff notes and a post-review conversation queue. It also fixes microsecond cursor pagination for electricity and saving comments.
