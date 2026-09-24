@@ -239,3 +239,46 @@ it('rechecks evidence after candidate selection and skips newly archived profile
   expect(await activateReadyContracts(pool)).toEqual({ activated: 0, skipped: 1 });
   expect((await state(f.id)).state).toBe('Accepted');
 });
+
+it('keeps the accepted active version effective while one amendment is drafted', async () => {
+  const f = await seed();
+  await activate(f);
+  const amendment = randomUUID();
+  const c = await fixture.pool.connect();
+  try {
+    await c.query('BEGIN');
+    await c.query(
+      'INSERT INTO contract_amendments(version_id,contract_id,base_version_id,proposed_by) VALUES($1,$2,$3,$4)',
+      [amendment, f.id, f.version, f.actor]
+    );
+    await c.query(
+      "INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by) VALUES($1,$2,2,$3::jsonb,'Changed terms',$4)",
+      [amendment, f.id, JSON.stringify({ text: 'Amended terms' }), f.actor]
+    );
+    await c.query('COMMIT');
+  } finally {
+    await c.query('ROLLBACK');
+    c.release();
+  }
+  expect(
+    (await fixture.pool.query('SELECT state,current_version_id FROM contracts WHERE id=$1', [f.id]))
+      .rows[0]
+  ).toEqual({ state: 'Active', current_version_id: f.version });
+  expect(
+    (
+      await fixture.pool.query(
+        'SELECT state,base_version_id FROM contract_amendments WHERE version_id=$1',
+        [amendment]
+      )
+    ).rows[0]
+  ).toEqual({ state: 'Draft', base_version_id: f.version });
+  await expect(
+    fixture.pool.query(
+      'INSERT INTO contract_amendments(version_id,contract_id,base_version_id,proposed_by) VALUES($1,$2,$3,$4)',
+      [randomUUID(), f.id, f.version, f.actor]
+    )
+  ).rejects.toMatchObject({ code: '23505' });
+  await expect(
+    fixture.pool.query('UPDATE contracts SET current_version_id=$2 WHERE id=$1', [f.id, amendment])
+  ).rejects.toMatchObject({ code: '23514' });
+});

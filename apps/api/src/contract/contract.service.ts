@@ -160,6 +160,21 @@ export class ContractService {
               )
           )[0]?.status ?? null)
         : null;
+    const pendingAmendment = (
+      await client.query<{
+        version_id: string;
+        base_version_id: string;
+        state: string;
+        proposed_by: string;
+        created_at: Date;
+        published_at: Date | null;
+      }>(
+        `SELECT version_id,base_version_id,state,proposed_by,created_at,published_at
+         FROM contract_amendments WHERE contract_id=$1
+           AND state IN ('Draft','AwaitingCustomerAcceptance','AwaitingSignature')`,
+        [id]
+      )
+    ).rows[0];
     return {
       ...row,
       linkedOrderStatus,
@@ -174,6 +189,16 @@ export class ContractService {
       completedAt: row.completedAt?.toISOString() ?? null,
       cancelledAt: row.cancelledAt?.toISOString() ?? null,
       currentVersion: version,
+      pendingAmendment: pendingAmendment
+        ? {
+            versionId: pendingAmendment.version_id,
+            baseVersionId: pendingAmendment.base_version_id,
+            state: pendingAmendment.state,
+            proposedBy: pendingAmendment.proposed_by,
+            createdAt: pendingAmendment.created_at.toISOString(),
+            publishedAt: pendingAmendment.published_at?.toISOString() ?? null,
+          }
+        : null,
     };
   }
   async version(
@@ -506,6 +531,65 @@ export class ContractService {
         }
       );
     });
+  }
+  async createAmendment(id: string, input: UpdateContractInput, actor: Actor, ip: string) {
+    const identity = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM contracts WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!identity) throw new NotFoundException();
+    return staffContractMutation(identity.profile_id, actor, async (client, archived) =>
+      contractIdempotency(
+        client,
+        'contract_amendment_create',
+        { ...input, contractId: id },
+        actor,
+        async () => {
+          if (archived) throw new ConflictException('Profile is archived');
+          const row = (
+            await client.query<{
+              state: string;
+              current_version_id: string;
+              version_number: number;
+            }>(
+              `SELECT c.state,c.current_version_id,v.version_number FROM contracts c
+               JOIN contract_versions v ON v.id=c.current_version_id
+               WHERE c.id=$1 FOR UPDATE OF c`,
+              [id]
+            )
+          ).rows[0]!;
+          if (
+            !['Accepted', 'Signed', 'Active'].includes(row.state) ||
+            row.current_version_id !== input.expectedVersionId
+          )
+            throw new ConflictException('Contract is not the expected accepted version');
+          if (
+            (
+              await client.query(
+                `SELECT 1 FROM contract_amendments WHERE contract_id=$1
+                 AND state IN ('Draft','AwaitingCustomerAcceptance','AwaitingSignature')`,
+                [id]
+              )
+            ).rowCount
+          )
+            throw new ConflictException('A pending amendment already exists');
+          const versionId = uuidv7();
+          await client.query(
+            `INSERT INTO contract_amendments(version_id,contract_id,base_version_id,proposed_by)
+             VALUES($1,$2,$3,$4)`,
+            [versionId, id, row.current_version_id, actor.userId]
+          );
+          await this.insertVersion(client, id, versionId, row.version_number + 1, input, actor);
+          await this.activationContext(client, versionId, input.activationContext);
+          await auditContract(client, id, versionId, 'contract.amendment_created', actor, ip, {
+            baseVersionId: row.current_version_id,
+          });
+          return this.get(id, client);
+        }
+      )
+    );
   }
   private async activationContext(
     client: PoolClient,

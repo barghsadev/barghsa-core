@@ -35,6 +35,13 @@ export const contractState = pgEnum('contract_state', [
   'Rejected',
   'Cancelled',
 ]);
+export const contractAmendmentState = pgEnum('contract_amendment_state', [
+  'Draft',
+  'AwaitingCustomerAcceptance',
+  'AwaitingSignature',
+  'Applied',
+  'Withdrawn',
+]);
 export const contracts = pgTable(
   'contracts',
   {
@@ -95,8 +102,37 @@ export const contractVersions = pgTable(
     ),
   ]
 );
+export const contractAmendments = pgTable(
+  'contract_amendments',
+  {
+    versionId: uuid('version_id').primaryKey().notNull(),
+    contractId: uuid('contract_id')
+      .notNull()
+      .references(() => contracts.id, { onDelete: 'restrict' }),
+    baseVersionId: uuid('base_version_id')
+      .notNull()
+      .references(() => contractVersions.id, { onDelete: 'restrict' }),
+    state: contractAmendmentState('state').notNull().default('Draft'),
+    proposedBy: text('proposed_by')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
+    createdAt: timestamptz('created_at').defaultNow().notNull(),
+    publishedAt: timestamptz('published_at'),
+    appliedAt: timestamptz('applied_at'),
+    withdrawnAt: timestamptz('withdrawn_at'),
+  },
+  (t) => [
+    uniqueIndex('contract_amendments_one_pending')
+      .on(t.contractId)
+      .where(sql`${t.state} IN ('Draft','AwaitingCustomerAcceptance','AwaitingSignature')`),
+    index('contract_amendments_contract_created_idx').on(t.contractId, t.createdAt),
+    check('contract_amendments_distinct_versions', sql`${t.versionId} <> ${t.baseVersionId}`),
+  ]
+);
 // Keep the circular FK in SQL: Drizzle does not represent DEFERRABLE constraints.
 export type Contract = typeof contracts.$inferSelect;
 export type NewContract = typeof contracts.$inferInsert;
 export type ContractVersion = typeof contractVersions.$inferSelect;
 export type NewContractVersion = typeof contractVersions.$inferInsert;
+export type ContractAmendment = typeof contractAmendments.$inferSelect;
+export type NewContractAmendment = typeof contractAmendments.$inferInsert;

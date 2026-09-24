@@ -260,6 +260,71 @@ it('creates and reads exact full snapshots and immutable version metadata', asyn
     ).rows.map((r) => r.event)
   ).toEqual(['contract.created', 'contract.version_created']);
 });
+it('drafts one idempotent amendment without replacing the active accepted version', async () => {
+  const body = { ...(await input()), serviceType: 'savings' };
+  const base = await create(body);
+  await http.pool.query("UPDATE contracts SET state='AwaitingStaffReview' WHERE id=$1", [base.id]);
+  await http.pool.query(
+    "INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,'contract-legal')",
+    [base.id, base.currentVersionId]
+  );
+  await http.pool.query(
+    "INSERT INTO contract_acceptances(contract_id,version_id,accepted_by) VALUES($1,$2,'contract-legal')",
+    [base.id, base.currentVersionId]
+  );
+  await http.pool.query('INSERT INTO contract_activations(contract_id,version_id) VALUES($1,$2)', [
+    base.id,
+    base.currentVersionId,
+  ]);
+  const draft = {
+    expectedVersionId: base.currentVersionId,
+    content: { price: '300', termMonths: 24 },
+    changeDescription: 'Extend term',
+    idempotencyKey: randomUUID(),
+  };
+  const response = await send('/' + base.id + '/amendments', 'POST', draft);
+  expect(response.status).toBe(201);
+  const result = (await response.json()) as ContractDto;
+  expect(result).toMatchObject({
+    state: 'Active',
+    currentVersionId: base.currentVersionId,
+    pendingAmendment: {
+      baseVersionId: base.currentVersionId,
+      state: 'Draft',
+    },
+  });
+  expect(result.pendingAmendment?.versionId).not.toBe(base.currentVersionId);
+  expect(await (await send('/' + base.id + '/amendments', 'POST', draft)).json()).toEqual(result);
+  expect(
+    (await send('/' + base.id + '/amendments', 'POST', { ...draft, idempotencyKey: randomUUID() }))
+      .status
+  ).toBe(409);
+  expect(
+    (
+      await send('/' + base.id + '/amendments', 'POST', {
+        ...draft,
+        expectedVersionId: randomUUID(),
+        idempotencyKey: randomUUID(),
+      })
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await send(
+        '/' + base.id + '/amendments',
+        'POST',
+        { ...draft, idempotencyKey: randomUUID() },
+        'contract-support'
+      )
+    ).status
+  ).toBe(403);
+  const amendmentVersion = (await (
+    await send('/' + base.id + '/versions/' + result.pendingAmendment!.versionId)
+  ).json()) as { content: unknown };
+  expect(amendmentVersion.content).toEqual(draft.content);
+  const reread = (await (await send('/' + base.id)).json()) as ContractDto;
+  expect(reread.pendingAmendment).toEqual(result.pendingAmendment);
+});
 it('replays concurrent create and edit requests exactly once', async () => {
   const body = await input();
   const responses = await Promise.all([send('', 'POST', body), send('', 'POST', body)]);

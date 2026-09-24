@@ -125,6 +125,34 @@ export class ContractController {
       req.ip ?? '127.0.0.1'
     );
   }
+  @Post(':id/amendments')
+  @RequiresStepUp()
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiOperation({
+    summary: 'Draft one amendment linked to the current accepted contract version',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['expectedVersionId', 'content', 'changeDescription', 'idempotencyKey'],
+      properties: { ...editProperties, expectedVersionId: { type: 'string', format: 'uuid' } },
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Contract with the pending amendment metadata.' })
+  createAmendment(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: unknown
+  ) {
+    this.authorize(req, true);
+    return this.service.createAmendment(
+      parse(contractUuid, id),
+      parse(updateContractSchema, body),
+      req.session,
+      req.ip ?? '127.0.0.1'
+    );
+  }
   @Patch(':id')
   @RequiresStepUp()
   @ApiParam({ name: 'id', format: 'uuid' })
