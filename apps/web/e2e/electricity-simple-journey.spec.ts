@@ -214,6 +214,18 @@ test('simple electricity order moves from reviewed quote through payment and con
         totalIrR: amount,
         paidIrR: paid ? amount : '0',
         refundedIrR: '0',
+        pricingSnapshot: {
+          subtotalIrR: quote.subtotalIrR,
+          discountIrR: quote.discountIrR,
+          vatIrR: quote.vatIrR,
+          lines: quote.lines.map((line) => ({
+            productId: line.productId,
+            subtotalIrR: line.subtotalIrR,
+            discountIrR: line.discountIrR,
+            netIrR: (BigInt(line.subtotalIrR) - BigInt(line.discountIrR)).toString(),
+            vatIrR: line.vatIrR,
+          })),
+        },
         lines: [
           {
             productId: thermal.id,
@@ -511,6 +523,9 @@ test('simple electricity order moves from reviewed quote through payment and con
     expectedQuoteDigest: quote.reviewDigest,
   });
   await expect(page.getByText('Green electricity')).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Energy mix and price' }).locator('..')
+  ).toContainText(/Line total:\s*IRR\s*1,050,000/);
   await expect(page.getByRole('region', { name: 'Status and next action' })).toContainText(
     'Staff are reviewing your order.'
   );

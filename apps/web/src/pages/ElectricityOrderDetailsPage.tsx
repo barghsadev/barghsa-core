@@ -52,6 +52,13 @@ interface ElectricityOrderDetail {
     discountIrR?: string;
     vatIrR?: string;
     requiredGreenKwh?: string;
+    lines?: Array<{
+      productId?: string;
+      subtotalIrR?: string;
+      discountIrR?: string;
+      netIrR?: string;
+      vatIrR?: string;
+    }>;
   };
   greenRuleApplied?: boolean;
   giftDiscountIrR?: string;
@@ -74,6 +81,35 @@ interface ElectricityOrderDetail {
   refundStatus?: string | null;
   refundReason?: string | null;
   financiallyClosed?: boolean;
+}
+
+function savedLineAmounts(
+  snapshot: ElectricityOrderDetail['pricingSnapshot'],
+  productId: string,
+  storedSubtotal: string
+) {
+  const line = Array.isArray(snapshot?.lines)
+    ? snapshot.lines.find((item) => item?.productId === productId)
+    : undefined;
+  if (
+    !line ||
+    line.subtotalIrR !== storedSubtotal ||
+    typeof line.discountIrR !== 'string' ||
+    !/^\d+$/.test(line.discountIrR) ||
+    typeof line.netIrR !== 'string' ||
+    !/^\d+$/.test(line.netIrR) ||
+    typeof line.vatIrR !== 'string' ||
+    !/^\d+$/.test(line.vatIrR)
+  )
+    return null;
+  const discount = BigInt(line.discountIrR);
+  const net = BigInt(line.netIrR);
+  if (discount + net !== BigInt(storedSubtotal)) return null;
+  return {
+    discountIrR: line.discountIrR,
+    vatIrR: line.vatIrR,
+    payableIrR: (net + BigInt(line.vatIrR)).toString(),
+  };
 }
 
 const statusKeys: Record<string, string> = {
@@ -430,21 +466,49 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           <Card>
             <CardContent className="space-y-3 pt-6 text-sm">
               <h2 className="font-semibold">{t('electricity.order.detail.lines', locale)}</h2>
-              {detail.lines?.map((line) => (
-                <div
-                  key={line.productId}
-                  className="flex flex-wrap items-center justify-between gap-2 border-t pt-2"
-                >
-                  <span>
-                    {line.title?.[locale] ?? line.title?.en ?? line.systemKey} ·{' '}
-                    {numbers.irrDigits(line.quantityKwh)} kWh
-                  </span>
-                  <span>
-                    {t('electricity.order.detail.unitPrice', locale)}{' '}
-                    {numbers.money(line.unitPriceIrR)} · {numbers.money(line.lineTotalIrR)}
-                  </span>
-                </div>
-              ))}
+              {detail.lines?.map((line) => {
+                const amounts = savedLineAmounts(
+                  detail.pricingSnapshot,
+                  line.productId,
+                  line.lineTotalIrR
+                );
+                return (
+                  <div
+                    key={line.productId}
+                    className="flex flex-wrap items-start justify-between gap-2 border-t pt-2"
+                  >
+                    <span>
+                      {line.title?.[locale] ?? line.title?.en ?? line.systemKey} ·{' '}
+                      {numbers.irrDigits(line.quantityKwh)} kWh
+                    </span>
+                    <span className="text-end">
+                      <span className="block">
+                        {t('electricity.order.detail.unitPrice', locale)}{' '}
+                        {numbers.money(line.unitPriceIrR)}
+                      </span>
+                      <span className="block">
+                        {t('electricity.order.detail.subtotal', locale)}:{' '}
+                        {numbers.money(line.lineTotalIrR)}
+                      </span>
+                      {amounts ? (
+                        <>
+                          <span className="block">
+                            {t('electricity.order.discount', locale)}:{' '}
+                            {numbers.money(amounts.discountIrR)}
+                          </span>
+                          <span className="block">
+                            {t('electricity.order.vat', locale)}: {numbers.money(amounts.vatIrR)}
+                          </span>
+                          <strong className="block">
+                            {t('electricity.order.lineTotal', locale)}:{' '}
+                            {numbers.money(amounts.payableIrR)}
+                          </strong>
+                        </>
+                      ) : null}
+                    </span>
+                  </div>
+                );
+              })}
               {detail.greenRuleApplied ? (
                 <p>{t('electricity.order.detail.greenRule', locale)}</p>
               ) : null}
