@@ -72,6 +72,8 @@ it('uses a selected immutable source and invoice lines in the create command', a
   await input('Draft description', 'Initial draft');
   await input('Description', 'Deposit');
   await input('Unit price', '100000');
+  await input('Stated contract value', 'fixed');
+  await input('Fixed amount (IRR)', '900000');
   await act(async () => {
     container
       .querySelector('form')!
@@ -81,6 +83,50 @@ it('uses a selected immutable source and invoice lines in the create command', a
   expect(harness.action?.body).toMatchObject({
     profileId,
     source: { kind: 'template', templateVersionId: versionId },
+    commercialValue: { kind: 'fixed', amountIrr: '900000' },
     invoiceLines: [{ description: 'Deposit', quantity: 1, unitPrice: '100000', vatRate: 0 }],
+  });
+});
+
+it('requires an explicit full value and supports a variable pricing rule', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            templates: [{ version_id: versionId, name: 'Solar agreement', version_number: 2 }],
+            documents: [],
+          }),
+          { status: 200 }
+        )
+    )
+  );
+  await act(async () =>
+    root.render(
+      <SolarContractForm requestId={requestId} profileId={profileId} onCreated={() => {}} />
+    )
+  );
+  await input('Contract source', `template:${versionId}`);
+  await input('Contract title', 'Solar agreement');
+  await input('Contract terms', 'Build the station.');
+  await input('Draft description', 'Initial draft');
+  await input('Description', 'Deposit');
+  await input('Unit price', '100000');
+  await act(async () => {
+    container
+      .querySelector('form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  });
+  expect(harness.action).toBeNull();
+  await input('Stated contract value', 'variable');
+  await input('How the amount is determined', 'Final cost follows inspected capacity');
+  await act(async () => {
+    container
+      .querySelector('form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  });
+  expect(harness.action?.body).toMatchObject({
+    commercialValue: { kind: 'variable', description: 'Final cost follows inspected capacity' },
   });
 });

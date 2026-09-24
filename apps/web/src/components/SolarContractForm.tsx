@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { tSolar } from '@barghsa/i18n/solar';
+import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
@@ -33,11 +34,15 @@ export function SolarContractForm({
 }) {
   const locale = useLocale();
   const copy = (key: string) => tSolar(key, locale);
+  const contractCopy = (key: string) => contractText(key, locale);
   const [options, setOptions] = useState<Options | null>(null);
   const [source, setSource] = useState('');
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
   const [changeDescription, setChangeDescription] = useState('');
+  const [valueKind, setValueKind] = useState('');
+  const [fixedAmount, setFixedAmount] = useState('');
+  const [variableDescription, setVariableDescription] = useState('');
   const [lines, setLines] = useState<Line[]>([emptyLine()]);
   const [action, setAction] = useState<TeamAction | null>(null);
   const [error, setError] = useState(false);
@@ -77,12 +82,20 @@ export function SolarContractForm({
         Number(line.vatRate) >= 0 &&
         Number(line.vatRate) <= 10_000
     );
+    const validValue =
+      valueKind === 'fixed'
+        ? /^(0|[1-9][0-9]{0,18})$/.test(fixedAmount) &&
+          BigInt(fixedAmount) <= 9_223_372_036_854_775_807n
+        : valueKind === 'variable' &&
+          variableDescription.trim().length > 0 &&
+          variableDescription.trim().length <= 500;
     if (
       !id ||
       !['template', 'document'].includes(kind!) ||
       !title.trim() ||
       !text.trim() ||
       !changeDescription.trim() ||
+      !validValue ||
       !validLines
     ) {
       setError(true);
@@ -100,6 +113,10 @@ export function SolarContractForm({
         title: title.trim(),
         text: text.trim(),
         changeDescription: changeDescription.trim(),
+        commercialValue:
+          valueKind === 'fixed'
+            ? { kind: 'fixed', amountIrr: fixedAmount }
+            : { kind: 'variable', description: variableDescription.trim() },
         source:
           kind === 'template'
             ? { kind: 'template', templateVersionId: id }
@@ -172,6 +189,46 @@ export function SolarContractForm({
           onChange={(event) => setChangeDescription(event.target.value)}
         />
       </label>
+      <p className="text-sm text-muted-foreground">{contractCopy('commercialValueNotice')}</p>
+      <label className="block">
+        {contractCopy('statedContractValue')}
+        <select
+          required
+          className="mt-1 w-full rounded-md border p-2"
+          value={valueKind}
+          onChange={(event) => setValueKind(event.target.value)}
+        >
+          <option value="">{copy('solarSelectContractValue')}</option>
+          <option value="fixed">{contractCopy('fixedContractValue')}</option>
+          <option value="variable">{contractCopy('variableContractValue')}</option>
+        </select>
+      </label>
+      {valueKind === 'fixed' ? (
+        <label className="block">
+          {contractCopy('fixedContractAmount')}
+          <input
+            required
+            inputMode="numeric"
+            dir="ltr"
+            pattern="(0|[1-9][0-9]*)"
+            className="mt-1 w-full rounded-md border p-2"
+            value={fixedAmount}
+            onChange={(event) => setFixedAmount(event.target.value.trim())}
+          />
+        </label>
+      ) : null}
+      {valueKind === 'variable' ? (
+        <label className="block">
+          {contractCopy('variableContractDescription')}
+          <textarea
+            required
+            maxLength={500}
+            className="mt-1 w-full rounded-md border p-2"
+            value={variableDescription}
+            onChange={(event) => setVariableDescription(event.target.value)}
+          />
+        </label>
+      ) : null}
       <h4 className="font-medium">{copy('solarInvoiceLines')}</h4>
       {lines.map((line, index) => (
         <div key={index} className="grid gap-2 rounded-md border p-3 sm:grid-cols-2">

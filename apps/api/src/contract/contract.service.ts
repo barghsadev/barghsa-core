@@ -288,6 +288,7 @@ export class ContractService {
               content: {
                 title: input.title,
                 text: input.text,
+                commercialValue: input.commercialValue,
                 solarRequestId: input.requestId,
                 solarSource: input.source,
               },

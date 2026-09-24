@@ -10488,6 +10488,50 @@
                     "minLength": 1,
                     "type": "string"
                   },
+                  "commercialValue": {
+                    "oneOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "amountIrr": {
+                            "type": "string"
+                          },
+                          "kind": {
+                            "enum": [
+                              "fixed"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "amountIrr"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "description": {
+                            "maxLength": 500,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "kind": {
+                            "enum": [
+                              "variable"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "description"
+                        ],
+                        "type": "object"
+                      }
+                    ]
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -10601,6 +10645,7 @@
                   "title",
                   "text",
                   "changeDescription",
+                  "commercialValue",
                   "source",
                   "invoiceLines"
                 ],

@@ -174,6 +174,7 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     title: 'Solar construction agreement',
     text: 'The parties agree to construct the station under these terms.',
     changeDescription: 'Initial solar draft',
+    commercialValue: { kind: 'fixed', amountIrr: '900000' },
     source: { kind: 'template', templateVersionId: versionId },
     invoiceLines: [
       {
@@ -233,6 +234,23 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     invoiceLines: [{ ...input.invoiceLines[0], unitPrice: '0' }],
   });
   expect(bad.status, http.logs()).toBe(400);
+  for (const commercialValue of [
+    undefined,
+    { kind: 'fixed', amountIrr: '9223372036854775808' },
+    { kind: 'variable', description: '   ' },
+  ]) {
+    const response = await send(
+      'postal-reviewer',
+      `admin/solar/requests/${id}/create-contract`,
+      'POST',
+      {
+        ...input,
+        idempotencyKey: randomUUID(),
+        commercialValue,
+      }
+    );
+    expect(response.status, http.logs()).toBe(400);
+  }
   expect(
     (
       await http.pool.query(
@@ -263,6 +281,14 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
   };
   expect(result.status).toBe('contract_created');
   expect(result.invoiceIds).toHaveLength(1);
+  expect(
+    (
+      await http.pool.query<{ content: { commercialValue: unknown } }>(
+        'SELECT content FROM contract_versions WHERE contract_id=$1',
+        [result.contractId]
+      )
+    ).rows[0]!.content.commercialValue
+  ).toEqual(input.commercialValue);
   expect(
     await (
       await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', input)
@@ -351,9 +377,16 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     ).status,
     http.logs()
   ).toBe(200);
-  expect((await send('postal-buyer', `contracts/${result.contractId}`)).status, http.logs()).toBe(
-    200
-  );
+  const publishedContract = await send('postal-buyer', `contracts/${result.contractId}`);
+  expect(publishedContract.status, http.logs()).toBe(200);
+  expect(await publishedContract.json()).toMatchObject({
+    version: { content: { commercialValue: input.commercialValue } },
+  });
+  expect(await (await send('postal-buyer', 'contracts')).json()).toMatchObject({
+    contracts: [
+      expect.objectContaining({ id: result.contractId, commercialValue: input.commercialValue }),
+    ],
+  });
   expect(await (await send('postal-buyer', `solar/requests/${id}`)).json()).toMatchObject({
     request: { contract_published: true },
   });

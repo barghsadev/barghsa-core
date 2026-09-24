@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { contractCommercialValueSchema } from '../contract/contract-validation.js';
 
 const uuid = z.string().uuid();
 const irr = z
@@ -12,6 +13,7 @@ export const solarContractSchema = z
     title: z.string().trim().min(1).max(200),
     text: z.string().trim().min(1).max(60_000),
     changeDescription: z.string().trim().min(1).max(1000),
+    commercialValue: contractCommercialValueSchema,
     source: z.discriminatedUnion('kind', [
       z.object({ kind: z.literal('template'), templateVersionId: uuid }).strict(),
       z.object({ kind: z.literal('document'), documentId: uuid }).strict(),
@@ -39,6 +41,7 @@ export const solarContractSchema = z
           title: value.title,
           text: value.text,
           solarSource: value.source,
+          commercialValue: value.commercialValue,
         }),
         'utf8'
       ) <= 65_536
