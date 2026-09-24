@@ -44,6 +44,7 @@ export const BACKGROUND_JOB_TYPES = [
   { key: 'electricity_increase_activation', label: 'Electricity increase activation' },
   { key: 'refund_retry', label: 'Wallet refund retries' },
   { key: 'ai_model_test', label: 'AI model connection tests' },
+  { key: 'knowledge_base_processing', label: 'Knowledge-base processing' },
   { key: 'storage_cleanup', label: 'Storage deletion requests' },
   { key: 'multipart_orphan_cleanup', label: 'Abandoned multipart uploads' },
   { key: 'document_scan', label: 'Document malware scanning' },

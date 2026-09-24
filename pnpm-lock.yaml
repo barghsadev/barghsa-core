@@ -341,12 +341,18 @@ importers:
       nodemailer:
         specifier: 9.1.1
         version: 9.1.1
+      pdfjs-dist:
+        specifier: 6.3.289
+        version: 6.3.289
       pg:
         specifier: ^8.14.0
         version: 8.23.0
       prom-client:
         specifier: 15.1.3
         version: 15.1.3
+      yauzl:
+        specifier: 3.2.1
+        version: 3.2.1
     devDependencies:
       '@barghsa/tsconfig':
         specifier: workspace:*
@@ -357,15 +363,30 @@ importers:
       '@types/nodemailer':
         specifier: 8.0.1
         version: 8.0.1(patch_hash=2baaabc79c51ec5619de38107935553db8835f899ffed0fb1813f3302de6eab4)
+      '@types/pdfkit':
+        specifier: 0.17.6
+        version: 0.17.6
       '@types/pg':
         specifier: ^8.11.0
         version: 8.23.1
+      '@types/yauzl':
+        specifier: 2.10.3
+        version: 2.10.3
+      '@types/yazl':
+        specifier: 3.3.0
+        version: 3.3.0
+      pdfkit:
+        specifier: 0.20.2
+        version: 0.20.2
       testcontainers:
         specifier: 12.1.0
         version: 12.1.0
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
+      yazl:
+        specifier: 3.3.1
+        version: 3.3.1
 
   packages/db:
     dependencies:

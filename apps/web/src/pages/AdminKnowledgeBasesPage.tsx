@@ -5,6 +5,7 @@ import { KnowledgeBaseDocumentPicker } from '../components/KnowledgeBaseDocument
 import { t } from '@barghsa/i18n/admin-ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { withCsrf } from '../lib/csrf.js';
 interface Entry {
   id: string;
   title: string;
@@ -12,6 +13,7 @@ interface Entry {
   sourceType?: 'document' | 'url' | 'api';
   sourceConfig?: { urls?: string[]; apiUrl?: string };
   contentState?: 'empty' | 'processing' | 'ready' | 'error';
+  contentError?: string | null;
   chunkingStrategy?: { size: number; overlap: number };
   vectorEmbeddingModel?: string | null;
   isEnabled?: boolean;
@@ -21,6 +23,13 @@ interface Entry {
 interface Detail extends Entry {
   members?: { id: string; title: string }[];
   documents?: { id: string; fileName: string; storageKey: string; processingStatus: string }[];
+}
+interface QueryResult {
+  id: string;
+  kbId: string;
+  excerpt: string;
+  score: number;
+  metadata: { fileName?: string; url?: string };
 }
 type Kind = 'knowledge-bases' | 'kb-groups';
 type Draft = {
@@ -49,6 +58,18 @@ export default function AdminKnowledgeBasesPage() {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.kb.${key}`, locale);
+  const processingError = (code: string | null | undefined) =>
+    label(
+      (
+        {
+          kb_embedding_not_configured: 'errorProviderMissing',
+          kb_embedding_model_missing: 'errorModelMissing',
+          kb_source_empty: 'errorSourceEmpty',
+          kb_source_unavailable: 'errorSourceUnavailable',
+          kb_unsupported_file_type: 'errorUnsupportedFile',
+        } as Record<string, string>
+      )[code ?? ''] ?? 'errorGeneric'
+    );
   const [kind, setKind] = useState<Kind>('knowledge-bases');
   const [rows, setRows] = useState<Entry[]>([]),
     [kbs, setKbs] = useState<Entry[]>([]);
@@ -60,6 +81,9 @@ export default function AdminKnowledgeBasesPage() {
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'denied'>('loading');
   const [action, setAction] = useState<TeamAction | null>(null),
     [notice, setNotice] = useState(false);
+  const [queryText, setQueryText] = useState('');
+  const [queryState, setQueryState] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [queryResult, setQueryResult] = useState<{ id: string; rows: QueryResult[] } | null>(null);
   useEffect(() => {
     const abort = new AbortController();
     setState('loading');
@@ -67,6 +91,7 @@ export default function AdminKnowledgeBasesPage() {
     setDetail(null);
     setDraft(null);
     setMember('');
+    setQueryResult(null);
     void (async () => {
       try {
         const paths = [
@@ -141,6 +166,26 @@ export default function AdminKnowledgeBasesPage() {
             vectorEmbeddingModel: draft.vectorEmbeddingModel.trim() || null,
           }
     );
+  }
+  async function testQuery(event: FormEvent) {
+    event.preventDefault();
+    if (!detail || !queryText.trim()) return;
+    const targetId = detail.id;
+    setQueryState('loading');
+    setQueryResult(null);
+    try {
+      const response = await fetch(`/api/admin/${kind}/${targetId}/query`, {
+        method: 'POST',
+        headers: withCsrf({ 'content-type': 'application/json' }),
+        body: JSON.stringify({ query: queryText.trim(), limit: 5 }),
+      });
+      if (!response.ok) throw new Error('Query failed');
+      const rows = (await response.json()) as QueryResult[];
+      setQueryResult({ id: targetId, rows });
+      setQueryState('idle');
+    } catch {
+      setQueryState('error');
+    }
   }
   return (
     <div
@@ -394,8 +439,67 @@ export default function AdminKnowledgeBasesPage() {
                   >
                     {label(detail.isEnabled ? 'disable' : 'enable')}
                   </Button>
+                  <Button
+                    variant="outline"
+                    disabled={detail.sourceType === 'document' && !detail.documents?.length}
+                    onClick={() =>
+                      propose(
+                        `/api/admin/knowledge-bases/${detail.id}/reprocess`,
+                        'POST',
+                        label('reprocess'),
+                        label('confirmReprocess')
+                      )
+                    }
+                  >
+                    {label('reprocess')}
+                  </Button>
                 </div>
               )}
+              {kind === 'knowledge-bases' && detail.contentState === 'error' && (
+                <p role="alert">
+                  {label('processingError')}: {processingError(detail.contentError)}
+                </p>
+              )}
+              <form onSubmit={(event) => void testQuery(event)} className="flex flex-col gap-2">
+                <Label htmlFor="kb-test-query">{label('testQuery')}</Label>
+                <div className="flex flex-wrap gap-2">
+                  <Input
+                    id="kb-test-query"
+                    maxLength={500}
+                    required
+                    value={queryText}
+                    onChange={(event) => setQueryText(event.target.value)}
+                  />
+                  <Button
+                    type="submit"
+                    disabled={
+                      queryState === 'loading' ||
+                      (kind === 'knowledge-bases' && detail.contentState !== 'ready')
+                    }
+                  >
+                    {label('runQuery')}
+                  </Button>
+                </div>
+              </form>
+              {queryState === 'loading' && <p role="status">{label('queryLoading')}</p>}
+              {queryState === 'error' && <p role="alert">{label('queryError')}</p>}
+              {queryResult?.id === detail.id &&
+                (queryResult.rows.length ? (
+                  <ol className="divide-y" aria-label={label('queryResults')}>
+                    {queryResult.rows.map((item) => (
+                      <li key={item.id} className="py-3">
+                        <p className="text-sm text-muted-foreground">
+                          {item.metadata.fileName ?? item.metadata.url ?? item.kbId}
+                          {' · '}
+                          {label('relevance')}: {numbers.percent(Math.max(0, item.score))}
+                        </p>
+                        <p className="whitespace-pre-wrap break-words">{item.excerpt}</p>
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p>{label('noMatches')}</p>
+                ))}
               {kind === 'kb-groups' ? (
                 <>
                   <form

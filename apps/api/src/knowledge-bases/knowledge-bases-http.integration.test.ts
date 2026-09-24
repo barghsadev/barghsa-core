@@ -1,11 +1,23 @@
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { createServer } from 'node:http';
 import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>;
 let ids: { kb: string; group: string };
+let embeddingProvider: ReturnType<typeof createServer>;
+const previousEmbeddingBase = process.env.KB_EMBEDDING_BASE_URL;
 beforeAll(async () => {
-  http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  const vector = [1, ...Array(1535).fill(0)];
+  embeddingProvider = createServer((_request, response) => {
+    response.setHeader('content-type', 'application/json');
+    response.end(JSON.stringify({ data: [{ index: 0, embedding: vector }] }));
+  });
+  await new Promise<void>((resolve) => embeddingProvider.listen(0, '127.0.0.1', resolve));
+  const address = embeddingProvider.address();
+  if (!address || typeof address === 'string') throw new Error('Missing provider port');
+  process.env.KB_EMBEDDING_BASE_URL = `http://127.0.0.1:${address.port}/v1`;
+  http = await startHttpFixture(process.env.TEST_DATABASE_URL!, undefined, '', 10, '127.0.0.1');
   await http.pool.query(
     "INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ('kb-editor','KB editor','Test role','[\"admin:ai:kb\"]')"
   );
@@ -27,6 +39,9 @@ beforeAll(async () => {
 }, 30000);
 afterAll(async () => {
   await http?.close();
+  if (previousEmbeddingBase === undefined) delete process.env.KB_EMBEDDING_BASE_URL;
+  else process.env.KB_EMBEDDING_BASE_URL = previousEmbeddingBase;
+  await new Promise<void>((resolve) => embeddingProvider.close(() => resolve()));
 });
 beforeEach(async () => {
   await http.pool.query(
@@ -53,6 +68,71 @@ const entities = [
   { kind: 'kb', table: 'knowledge_bases', path: 'knowledge-bases', title: 'Original KB' },
   { kind: 'group', table: 'kb_groups', path: 'kb-groups', title: 'Original group' },
 ] as const;
+
+it('returns ranked passage excerpts for a KB and an enabled group member', async () => {
+  const vector = [1, ...Array(1535).fill(0)];
+  await http.pool.query(
+    "UPDATE knowledge_bases SET content_state='ready',is_enabled=true,vector_embedding_model='embed-1536' WHERE id=$1",
+    [ids.kb]
+  );
+  await http.pool.query(
+    'INSERT INTO kb_chunks(kb_id,chunk_index,content,embedding,metadata) VALUES($1,0,$2,$3::vector,$4::jsonb)',
+    [
+      ids.kb,
+      'Invoices explain the meter charge.',
+      JSON.stringify(vector),
+      JSON.stringify({ sourceType: 'document' }),
+    ]
+  );
+  for (const path of [`knowledge-bases/${ids.kb}/query`, `kb-groups/${ids.group}/query`]) {
+    const response = await fetch(`${http.base}/api/admin/${path}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ query: 'meter charge', limit: 5 }),
+    });
+    expect(response.status, await response.clone().text()).toBe(200);
+    expect(await response.json()).toMatchObject([
+      { kbId: ids.kb, excerpt: 'Invoices explain the meter charge.', score: 1 },
+    ]);
+  }
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/knowledge-bases/${ids.kb}/query`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ query: '', limit: 99 }),
+      })
+    ).status
+  ).toBe(400);
+});
+
+it('requeues a failed KB through an audited staff action', async () => {
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/knowledge-bases/${ids.kb}/reprocess`, {
+        method: 'POST',
+        headers,
+      })
+    ).status
+  ).toBe(409);
+  await http.pool.query(
+    "UPDATE knowledge_bases SET source_type='url',source_config=$2::jsonb,content_state='error',content_error='kb_processing_failed' WHERE id=$1",
+    [ids.kb, JSON.stringify({ urls: ['https://example.org/guide'] })]
+  );
+  const response = await fetch(`${http.base}/api/admin/knowledge-bases/${ids.kb}/reprocess`, {
+    method: 'POST',
+    headers,
+  });
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject({
+    contentState: 'empty',
+    contentError: null,
+    isEnabled: false,
+  });
+  expect(
+    (await http.pool.query("SELECT event FROM audit_log WHERE event='kb_reprocess_requested'")).rows
+  ).toEqual([{ event: 'kb_reprocess_requested' }]);
+});
 
 it('saves KB source settings, requires ready content to enable, and invalidates chunks after a source change', async () => {
   const create = await fetch(`${http.base}/api/admin/knowledge-bases`, {

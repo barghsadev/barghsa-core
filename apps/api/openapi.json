@@ -6405,6 +6405,7 @@
                 "electricity_increase_activation",
                 "refund_retry",
                 "ai_model_test",
+                "knowledge_base_processing",
                 "storage_cleanup",
                 "multipart_orphan_cleanup",
                 "document_scan",
@@ -8424,6 +8425,35 @@
         ]
       }
     },
+    "/api/admin/kb-groups/{id}/query": {
+      "post": {
+        "operationId": "KbGroupsController_query",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Test passage retrieval across a KB group",
+        "tags": [
+          "Admin · KB Groups"
+        ]
+      }
+    },
     "/api/admin/knowledge-bases": {
       "get": {
         "operationId": "KnowledgeBasesController_list",
@@ -8629,6 +8659,64 @@
           }
         ],
         "summary": "Detach a document from a knowledge base (admin)",
+        "tags": [
+          "Admin · Knowledge Bases"
+        ]
+      }
+    },
+    "/api/admin/knowledge-bases/{id}/query": {
+      "post": {
+        "operationId": "KnowledgeBasesController_query",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Test passage retrieval for a knowledge base",
+        "tags": [
+          "Admin · Knowledge Bases"
+        ]
+      }
+    },
+    "/api/admin/knowledge-bases/{id}/reprocess": {
+      "post": {
+        "operationId": "KnowledgeBasesController_reprocess",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reprocess a knowledge base after a source or provider failure",
         "tags": [
           "Admin · Knowledge Bases"
         ]

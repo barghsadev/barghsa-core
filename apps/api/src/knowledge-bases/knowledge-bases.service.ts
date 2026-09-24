@@ -6,6 +6,7 @@ import { requireStaffMutationPermission } from '../admin/staff-mutation-permissi
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+import { OpenAiEmbeddingClient, type EmbeddingClient } from '@barghsa/shared/ai-models';
 
 type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
@@ -15,13 +16,12 @@ type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToke
  * CRUD for the `knowledge_bases` table plus document linking and KB group
  * orchestration:
  *
- * - KBs are plain admin-curated records (title, description).
+ * - KBs are admin-curated sources with processing and publication state.
  * - Documents are attached by **storage key**: the key must exist in the
  *   shared document system (`storage_records`), and the link row snapshots
  *   the file metadata (name, mime, size) at attach time. The chunk/embed
- *   pipeline state starts at `pending`; the actual processing worker is
- *   supplied by the document-processing epic (E-05, T-05.09/T-05.11+) and
- *   claims rows through `processing_status` — no schema change needed.
+ *   pipeline state starts at `pending`; the worker claims KBs in `empty`
+ *   state and publishes passages only while the source revision is current.
  * - KB groups are named collections of KBs (many-to-many via
  *   `kb_group_members`). Agents (T-09.11.04) reference groups to retrieve
  *   across several curated KBs at once.
@@ -100,6 +100,15 @@ export interface KbGroupDto {
 /** KB group detail: member KBs. */
 export interface KbGroupDetailDto extends KbGroupDto {
   members: KbRefDto[];
+}
+
+export interface KbQueryResult {
+  id: string;
+  kbId: string;
+  documentId: string | null;
+  excerpt: string;
+  score: number;
+  metadata: Record<string, unknown>;
 }
 
 // ─── Mutation inputs ───────────────────────────────────────────────────────
@@ -281,6 +290,168 @@ export class KnowledgeBasesService {
       documents: docs.rows.map((row) => this.docToDto(row)),
       groups: groups.rows,
     };
+  }
+
+  private async searchChunks(
+    kbIds: string[],
+    model: string,
+    query: string,
+    limit: number,
+    embedder: EmbeddingClient
+  ): Promise<KbQueryResult[]> {
+    let vector: number[] | undefined;
+    try {
+      [vector] = await embedder.embed([query], model);
+    } catch {
+      throw new HttpException(
+        {
+          statusCode: 503,
+          error: 'KB_EMBEDDING_UNAVAILABLE',
+          message: 'Embedding provider is unavailable',
+        },
+        503
+      );
+    }
+    if (!vector || vector.length !== 1536 || !vector.every(Number.isFinite))
+      throw new HttpException(
+        {
+          statusCode: 502,
+          error: 'KB_EMBEDDING_INVALID',
+          message: 'Embedding provider returned an invalid vector',
+        },
+        502
+      );
+    const result = await getDbPool().query<{
+      id: string;
+      kb_id: string;
+      document_id: string | null;
+      excerpt: string;
+      score: number;
+      metadata: Record<string, unknown>;
+    }>(
+      `SELECT id,kb_id,document_id,LEFT(content,800) AS excerpt,
+              (1-(embedding <=> $2::vector))::float8 AS score,metadata
+       FROM kb_chunks WHERE kb_id=ANY($1::uuid[]) AND embedding IS NOT NULL
+       ORDER BY embedding <=> $2::vector,id LIMIT $3`,
+      [kbIds, JSON.stringify(vector), limit]
+    );
+    return result.rows.map((row) => ({
+      id: row.id,
+      kbId: row.kb_id,
+      documentId: row.document_id,
+      excerpt: row.excerpt,
+      score: row.score,
+      metadata: row.metadata,
+    }));
+  }
+
+  /** Inspect nearest passages even before a ready KB is enabled for agents. */
+  async queryKb(
+    id: string,
+    query: string,
+    limit = 5,
+    embedder: EmbeddingClient = new OpenAiEmbeddingClient()
+  ): Promise<KbQueryResult[]> {
+    const kb = await this.findKb(id);
+    if (!kb) throw this.kbNotFound(id);
+    if (kb.content_state !== 'ready' || !kb.vector_embedding_model)
+      throw new HttpException(
+        {
+          statusCode: 409,
+          error: 'KB_NOT_READY',
+          message: 'This knowledge base is not ready to search',
+        },
+        409
+      );
+    return this.searchChunks([id], kb.vector_embedding_model, query, limit, embedder);
+  }
+
+  /** Search enabled, ready members using each member's configured embedding model. */
+  async queryGroup(
+    id: string,
+    query: string,
+    limit = 5,
+    embedder: EmbeddingClient = new OpenAiEmbeddingClient()
+  ): Promise<KbQueryResult[]> {
+    if (!(await this.findGroup(id))) throw this.groupNotFound(id);
+    const members = await getDbPool().query<{ id: string; model: string }>(
+      `SELECT kb.id,kb.vector_embedding_model AS model
+       FROM kb_group_members m JOIN knowledge_bases kb ON kb.id=m.kb_id
+       WHERE m.group_id=$1 AND kb.is_enabled=true AND kb.content_state='ready'
+         AND kb.vector_embedding_model IS NOT NULL ORDER BY kb.id`,
+      [id]
+    );
+    const byModel = new Map<string, string[]>();
+    for (const member of members.rows)
+      byModel.set(member.model, [...(byModel.get(member.model) ?? []), member.id]);
+    if (byModel.size > 20)
+      throw new HttpException(
+        {
+          statusCode: 409,
+          error: 'KB_GROUP_TOO_MANY_MODELS',
+          message: 'This group uses too many embedding models',
+        },
+        409
+      );
+    const results = await Promise.all(
+      [...byModel].map(([model, ids]) => this.searchChunks(ids, model, query, limit, embedder))
+    );
+    return results
+      .flat()
+      .sort((a, b) => b.score - a.score || a.id.localeCompare(b.id))
+      .slice(0, limit);
+  }
+
+  /** Invalidate published passages and queue this KB for a fresh worker run. */
+  async reprocessKb(
+    id: string,
+    actorUserId: string,
+    ip: string,
+    session: MutationSession
+  ): Promise<KbDto> {
+    return this.withTransaction(actorUserId, session, async (client, verifiedAt) => {
+      const kb = await this.findKb(id, client);
+      if (!kb) throw this.kbNotFound(id);
+      if (kb.source_type === 'document') {
+        const count = await client.query<{ count: number }>(
+          'SELECT COUNT(*)::int AS count FROM kb_documents WHERE kb_id=$1',
+          [id]
+        );
+        if (!count.rows[0]?.count)
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: 'KB_SOURCE_EMPTY',
+              message: 'Attach a document before processing',
+            },
+            409
+          );
+      }
+      await client.query('DELETE FROM kb_chunks WHERE kb_id=$1', [id]);
+      await client.query(
+        "UPDATE kb_documents SET processing_status='pending',processing_error=NULL WHERE kb_id=$1",
+        [id]
+      );
+      const result = await client.query<KbBaseRow>(
+        "UPDATE knowledge_bases SET content_state='empty',content_error=NULL,is_enabled=false WHERE id=$1 RETURNING *",
+        [id]
+      );
+      await this.recordAudit(
+        verifiedAt,
+        'kb_reprocess_requested',
+        actorUserId,
+        ip,
+        { targetId: id },
+        client
+      );
+      const docs = await this.docsForKb(id, client);
+      const groups = await this.groupRefsForKb(id, client);
+      return this.kbToDto({
+        ...result.rows[0]!,
+        document_count: docs.length,
+        group_count: groups.length,
+      });
+    });
   }
 
   /** Create a KB. */

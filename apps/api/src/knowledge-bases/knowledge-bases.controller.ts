@@ -27,6 +27,7 @@ import {
   type KbDocumentDto,
   type KbGroupDto,
   type KbGroupDetailDto,
+  type KbQueryResult,
 } from './knowledge-bases.service.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
@@ -111,6 +112,13 @@ export const AddGroupMemberSchema = z
   })
   .strict();
 
+export const QueryKnowledgeBaseSchema = z
+  .object({
+    query: z.string().trim().min(1).max(500),
+    limit: z.number().int().min(1).max(20).default(5),
+  })
+  .strict();
+
 function httpError(code: string, message: string, statusCode = 400): never {
   throw new HttpException({ statusCode, error: code, message }, statusCode);
 }
@@ -167,6 +175,33 @@ export class KnowledgeBasesController {
     const parsed = z.string().trim().max(200).optional().safeParse(raw);
     if (!parsed.success) httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid document search');
     return this.service.availableDocuments(req.session.userId, parsed.data ?? '');
+  }
+
+  @Post(':id/query')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Test passage retrieval for a knowledge base' })
+  async query(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: z.input<typeof QueryKnowledgeBaseSchema>
+  ): Promise<KbQueryResult[]> {
+    this.assertKbPermission(req);
+    const parsed = QueryKnowledgeBaseSchema.safeParse(body);
+    if (!parsed.success) httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid query');
+    return this.service.queryKb(id, parsed.data.query, parsed.data.limit);
+  }
+
+  @Post(':id/reprocess')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Reprocess a knowledge base after a source or provider failure' })
+  async reprocess(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string
+  ): Promise<KbDto> {
+    this.assertKbPermission(req);
+    return this.service.reprocessKb(id, req.session.userId, requestIp(req), req.session);
   }
 
   @Get(':id')
@@ -342,6 +377,20 @@ export class KbGroupsController {
   async list(@Req() req: AuthenticatedRequest): Promise<KbGroupDto[]> {
     this.assertKbPermission(req);
     return this.service.listGroups();
+  }
+
+  @Post(':id/query')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Test passage retrieval across a KB group' })
+  async query(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: z.input<typeof QueryKnowledgeBaseSchema>
+  ): Promise<KbQueryResult[]> {
+    this.assertKbPermission(req);
+    const parsed = QueryKnowledgeBaseSchema.safeParse(body);
+    if (!parsed.success) httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid query');
+    return this.service.queryGroup(id, parsed.data.query, parsed.data.limit);
   }
 
   @Get(':id')

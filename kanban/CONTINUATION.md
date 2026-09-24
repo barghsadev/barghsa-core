@@ -2,7 +2,9 @@
 
 ## Current manual batch — September 24, 2026
 
-[Knowledge-base configuration and groups](batches/2026-09-24-knowledge-base-foundation.md) add source and chunk settings, pgvector passage storage, safe invalidation on edits, and ready-before-enable controls. Existing group CRUD and membership flows pass focused API and bilingual browser tests. The extraction and embedding worker remains T-05.17.02.
+[Knowledge-base processing and test queries](batches/2026-09-24-knowledge-base-processing.md) add bounded source extraction, embedding and safe publication, audited retry, and bilingual ranked test queries for bases and groups.
+
+[Knowledge-base configuration and groups](batches/2026-09-24-knowledge-base-foundation.md) add source and chunk settings, pgvector passage storage, safe invalidation on edits, and ready-before-enable controls. Existing group CRUD and membership flows pass focused API and bilingual browser tests.
 
 [AI model management and connection evidence](batches/2026-09-24-ai-model-management.md) adds tested-before-enable controls, request defaults, saved connection latency and dependent-agent deletion details to the existing admin workflow.
 

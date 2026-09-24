@@ -12,6 +12,11 @@ import {
 } from './contracts/electricity-increase-runner.js';
 import { runRefundRetries, REFUND_RETRY_INTERVAL_MS } from './refunds/retry-runner.js';
 import { runAiModelTest } from './ai-models/test-runner.js';
+import {
+  runKnowledgeBaseProcessing,
+  KB_PROCESSING_INTERVAL_MS,
+  KB_PROCESSING_JOB_TYPE,
+} from './knowledge-bases/processing-runner.js';
 import { cleanupStorageObjects, cleanupStorageProvider } from './storage/cleanup.js';
 import { cleanupMultipartOrphans } from './storage/multipart-cleanup.js';
 import {
@@ -362,6 +367,28 @@ async function main(): Promise<void> {
         });
       }
     }, DOCUMENT_SCAN_INTERVAL_MS);
+  }
+
+  if (cleanupProvider) {
+    pollers.every(async () => {
+      if (draining) return;
+      try {
+        const outcome = await runKnowledgeBaseProcessing(getDbPool(), cleanupProvider);
+        if (outcome === 'ready') await recordJobSuccess(KB_PROCESSING_JOB_TYPE);
+        else if (outcome === 'error')
+          await recordJobFailure({
+            jobType: KB_PROCESSING_JOB_TYPE,
+            error: 'knowledge_base_processing_failed',
+            errorCategory: 'provider',
+          });
+      } catch {
+        await recordJobFailure({
+          jobType: KB_PROCESSING_JOB_TYPE,
+          error: 'knowledge_base_processing_unavailable',
+          errorCategory: 'transient',
+        });
+      }
+    }, KB_PROCESSING_INTERVAL_MS);
   }
 
   pollers.every(async () => {

@@ -73,6 +73,83 @@ for (const locale of ['en', 'fa'])
     await expect(page.locator('input')).toHaveCount(0);
   });
 for (const locale of ['en', 'fa'])
+  test(`KB and group test queries show ranked passages (${locale})`, async ({ page, baseURL }) => {
+    const fa = locale === 'fa';
+    const kb = {
+      id: '01900000-0000-7000-8000-000000000001',
+      title: 'Operations',
+      description: '',
+      documentCount: 0,
+      contentState: 'ready',
+      isEnabled: true,
+    };
+    const group = {
+      id: '01900000-0000-7000-8000-000000000002',
+      title: 'Staff knowledge',
+      description: '',
+      memberCount: 1,
+    };
+    const queries: unknown[] = [];
+    await page
+      .context()
+      .addCookies([{ name: 'barghsa_csrf', value: 'kb-query-fixture', url: baseURL! }]);
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockOppositeNumerals(page, locale);
+    await page.route('**/api/admin/**', (route) => {
+      const path = new URL(route.request().url()).pathname;
+      if (path.endsWith('/query')) {
+        queries.push({
+          path,
+          body: route.request().postDataJSON(),
+          csrf: route.request().headers()['x-csrf-token'],
+        });
+        return route.fulfill({
+          json: [
+            {
+              id: 'chunk-1',
+              kbId: kb.id,
+              excerpt: 'Meter charge guidance',
+              score: 0.9,
+              metadata: { fileName: 'Guide.txt' },
+            },
+          ],
+        });
+      }
+      if (path.endsWith('/knowledge-bases')) return route.fulfill({ json: [kb] });
+      if (path.endsWith('/kb-groups')) return route.fulfill({ json: [group] });
+      if (path.endsWith(kb.id))
+        return route.fulfill({ json: { ...kb, documents: [], groups: [] } });
+      if (path.endsWith(group.id)) return route.fulfill({ json: { ...group, members: [kb] } });
+      return route.fulfill({ status: 404, json: {} });
+    });
+    await page.goto('/admin/knowledge-bases');
+    await switchLocale(page, locale);
+    await page.getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Operations` }).click();
+    await page.getByLabel(fa ? 'آزمایش جستجو' : 'Test search').fill('meter charge');
+    await page.getByRole('button', { name: fa ? 'جستجو' : 'Search', exact: true }).click();
+    await expect(page.getByText('Meter charge guidance')).toBeVisible();
+    await expect(page.getByText('Guide.txt', { exact: false })).toBeVisible();
+    await page
+      .getByRole('button', { name: fa ? 'گروه‌های پایگاه دانش' : 'Knowledge-base groups' })
+      .click();
+    await page.getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Staff knowledge` }).click();
+    await page.getByRole('button', { name: fa ? 'جستجو' : 'Search', exact: true }).click();
+    await expect(page.getByText('Meter charge guidance')).toBeVisible();
+    expect(queries).toEqual([
+      {
+        path: `/api/admin/knowledge-bases/${kb.id}/query`,
+        body: { query: 'meter charge', limit: 5 },
+        csrf: 'kb-query-fixture',
+      },
+      {
+        path: `/api/admin/kb-groups/${group.id}/query`,
+        body: { query: 'meter charge', limit: 5 },
+        csrf: 'kb-query-fixture',
+      },
+    ]);
+  });
+
+for (const locale of ['en', 'fa'])
   test(`knowledge-base groups and document status (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     const kb = {
