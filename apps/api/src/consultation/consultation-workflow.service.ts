@@ -154,10 +154,11 @@ export class ConsultationWorkflowService {
       await requireStaffMutationPermission(client, actor.userId, 'orders:read');
       const request = (
         await client.query(
-          `SELECT r.*,p.profile_type,p.user_id AS profile_user_id,
-          COALESCE(NULLIF(lp.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),''),p.id::text) AS profile_name
-         FROM consultation_requests r JOIN profiles p ON p.id=r.profile_id
-         LEFT JOIN legal_profiles lp ON lp.id=p.id WHERE r.id=$1`,
+          `SELECT r.*,i.state AS invoice_state,p.profile_type,p.user_id AS profile_user_id,
+            COALESCE(NULLIF(lp.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),''),p.id::text) AS profile_name
+           FROM consultation_requests r JOIN profiles p ON p.id=r.profile_id
+           LEFT JOIN legal_profiles lp ON lp.id=p.id
+           LEFT JOIN invoices i ON i.id=r.invoice_id WHERE r.id=$1`,
           [id]
         )
       ).rows[0];

@@ -269,6 +269,17 @@ it('issues and atomically replaces an unpaid consultation fee, but refuses a pai
     replaces_invoice_id: firstId,
     consultation_id: requestId,
   });
+  const staffDetail = await fetch(`${http.base}${root}`, { headers: headers.reviewer! });
+  expect(staffDetail.status, http.logs()).toBe(200);
+  expect(await staffDetail.json()).toMatchObject({
+    request: {
+      invoice_id: secondId,
+      invoice_state: 'Unpaid',
+      fee: '600000',
+      scope: firstOffer.scope,
+      deliverables: firstOffer.deliverables,
+    },
+  });
   const detail = await fetch(`${http.base}/api/consultations/requests/${requestId}`, {
     headers: headers.customer!,
   });

@@ -174,6 +174,16 @@ test('customer consultation moves through staff offer, payment handoff, and comp
   await page.getByRole('button', { name: 'Issue fee offer and invoice' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
   await expect.poll(() => status).toBe('offer_pending');
+  const savedOffer = page.getByRole('region', { name: 'Current fee offer' });
+  await expect(savedOffer).toContainText('500,000 IRR');
+  await expect(savedOffer).toContainText('Supply assessment');
+  await expect(savedOffer).toContainText('Written report');
+  await expect(savedOffer.locator('time')).toHaveAttribute('datetime', offer!.validUntil);
+  await expect(savedOffer).toContainText('Awaiting payment');
+  await expect(savedOffer.getByRole('link', { name: 'View invoice' })).toHaveAttribute(
+    'href',
+    `/admin/invoices?invoiceId=${invoiceId}`
+  );
 
   await page.goto(`/consultations/${requestId}`);
   await expect(page.getByText('Supply assessment')).toBeVisible();

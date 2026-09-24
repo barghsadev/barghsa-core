@@ -23,6 +23,7 @@ interface Detail {
     deliverables: string | null;
     fee: string | null;
     invoice_id: string | null;
+    invoice_state: string | null;
     has_paid_invoice: boolean;
     uncovered_credit: string;
     offer_valid_until: string | null;
@@ -345,6 +346,49 @@ export function AdminConsultationsPage() {
                 <p>
                   {copy('nextStep')}: <span dir="auto">{current.expected_next_step}</span>
                 </p>
+              )}
+              {current.fee && (
+                <section
+                  className="space-y-2 rounded-lg border p-4"
+                  aria-label={copy('savedOffer')}
+                >
+                  <h3 className="font-semibold">{copy('savedOffer')}</h3>
+                  <p>
+                    {copy('fee')}: {new Intl.NumberFormat(locale).format(BigInt(current.fee))} IRR
+                  </p>
+                  {current.scope && (
+                    <p>
+                      {copy('scope')}: <span dir="auto">{current.scope}</span>
+                    </p>
+                  )}
+                  {current.deliverables && (
+                    <p>
+                      {copy('deliverables')}: <span dir="auto">{current.deliverables}</span>
+                    </p>
+                  )}
+                  {current.offer_valid_until && (
+                    <p>
+                      {copy('offerValidUntil')}:{' '}
+                      <time dateTime={current.offer_valid_until}>
+                        {time.format(current.offer_valid_until)}
+                      </time>
+                    </p>
+                  )}
+                  {current.invoice_id && (
+                    <p>
+                      {copy('invoiceStatus')}:{' '}
+                      {current.invoice_state
+                        ? copy(`invoice_state_${current.invoice_state}`)
+                        : copy('unknownInvoiceStatus')}{' '}
+                      <a
+                        className="text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
+                        href={`/admin/invoices?invoiceId=${encodeURIComponent(current.invoice_id)}`}
+                      >
+                        {copy('viewInvoice')}
+                      </a>
+                    </p>
+                  )}
+                </section>
               )}
               {(current.status === 'under_review' ||
                 (current.status === 'offer_pending' && !current.has_paid_invoice)) && (
