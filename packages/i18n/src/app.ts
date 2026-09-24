@@ -172,6 +172,7 @@ export const fa: I18nDictionary = {
   'electricity.order.remainingAmount': 'مانده پرداخت',
   'electricity.order.financialReviewLink': 'بررسی مالی و پرداخت فاکتور',
   'electricity.order.contractPending': 'پیش‌نویس قرارداد در انتظار انتشار',
+  'electricity.order.contractStatus': 'وضعیت قرارداد',
   'electricity.order.nextAction.await_activation':
     'پرداخت و پذیرش قرارداد ثبت شده‌اند؛ فعال‌سازی در انتظار تکمیل پیش‌نیازهای قرارداد است.',
   'electricity.order.correction.description':
@@ -1434,6 +1435,7 @@ export const en: I18nDictionary = {
   'electricity.order.remainingAmount': 'Amount remaining',
   'electricity.order.financialReviewLink': 'Invoice financial review and payment',
   'electricity.order.contractPending': 'Contract draft awaiting publication',
+  'electricity.order.contractStatus': 'Contract status',
   'electricity.order.nextAction.await_activation':
     'Payment and acceptance are recorded. Activation is waiting for the contract prerequisites.',
   'electricity.order.correction.description':

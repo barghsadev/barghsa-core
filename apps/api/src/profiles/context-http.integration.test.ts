@@ -251,7 +251,7 @@ it('shows the selected profile name and exact available wallet balance on the da
   });
 });
 
-it('compares available balance with due unpaid invoices for the selected profile only', async () => {
+it('compares available balance with all unpaid invoices for the selected profile only', async () => {
   await http.pool.query(
     'INSERT INTO wallets(profile_id,posted_balance,reserved_balance) VALUES ($1,1000,100)',
     [owned]
@@ -272,7 +272,7 @@ it('compares available balance with due unpaid invoices for the selected profile
     [owned]
   );
   expect(await (await request('dashboard')).json()).toMatchObject({
-    wallet: { lowBalanceWarning: false },
+    wallet: { lowBalanceWarning: true },
   });
 });
 

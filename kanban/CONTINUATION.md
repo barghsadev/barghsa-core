@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Electricity order to active contract browser journey](batches/2026-09-24-electricity-contract-activation-browser-journey.md) verifies customer acceptance and activation after wallet payment, shows the linked contract state on order detail, and corrects the stale dashboard low-balance CI assertion.
+
 [Contract original document lineage](batches/2026-09-24-contract-original-lineage.md) prevents duplicate live originals for one version, preserves idempotent and replacement paths, and hides the extra upload action after automatic electricity PDF creation.
 
 [Invoice and contract status together](batches/2026-09-24-invoice-contract-status.md) shows the authorized linked contract's current state on customer invoice detail while keeping payment status separate.

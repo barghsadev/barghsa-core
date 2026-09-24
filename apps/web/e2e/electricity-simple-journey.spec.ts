@@ -105,14 +105,17 @@ function paymentReview() {
   });
 }
 
-test('simple electricity order moves from reviewed quote through wallet payment to contract tracking', async ({
+test('simple electricity order moves from reviewed quote through payment and contract activation', async ({
   page,
 }) => {
   await page.clock.install({ time: new Date(submittedAt) });
   let reviewComplete = false;
   let paid = false;
+  let accepted = false;
   const orderSubmissions: Array<Record<string, unknown>> = [];
   const payments: Array<Record<string, unknown>> = [];
+  const contractAcceptances: Array<Record<string, unknown>> = [];
+  const contractState = () => (accepted ? 'Active' : 'AwaitingCustomerAcceptance');
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
@@ -182,14 +185,20 @@ test('simple electricity order moves from reviewed quote through wallet payment 
         commercialStatus: reviewComplete ? 'CONFIRMED' : 'PENDING',
         electricityStatus: reviewComplete ? 'approved' : 'awaiting_staff_review',
         financialStatus: paid ? 'paid' : 'unpaid',
-        nextAction: paid ? 'accept_contract' : reviewComplete ? 'pay_invoice' : 'await_review',
+        nextAction: accepted
+          ? 'none'
+          : paid
+            ? 'accept_contract'
+            : reviewComplete
+              ? 'pay_invoice'
+              : 'await_review',
         periodStart,
         periodEnd,
         totalKwh: '11',
         fullAddress: address.fullAddress,
         postalCode: address.postalCode,
         contractId,
-        contractState: paid ? 'AwaitingCustomerAcceptance' : 'AwaitingPayment',
+        contractState: paid ? contractState() : 'AwaitingPayment',
         versionId,
         invoiceId,
         invoiceState: paid ? 'Paid' : 'Unpaid',
@@ -245,6 +254,7 @@ test('simple electricity order moves from reviewed quote through wallet payment 
         originalInvoiceId: invoiceId,
         electricityOrderId: orderId,
         contractId,
+        contractState: contractState(),
         consultationId: null,
         invoice,
         chain: [invoice],
@@ -281,6 +291,132 @@ test('simple electricity order moves from reviewed quote through wallet payment 
       },
     });
   });
+  const contractVersion = () => ({
+    id: versionId,
+    versionNumber: 1,
+    content: { text: 'Published electricity terms', price: amount },
+    changeDescription: 'Initial electricity contract',
+    createdAt: submittedAt,
+    publishedAt: submittedAt,
+    acceptedAt: accepted ? submittedAt : null,
+  });
+  const paymentFacts = paymentReview().data;
+  const { payment: _walletPayment, ...initialInvoiceFacts } = paymentFacts;
+  const financialReview = {
+    schemaVersion: 1,
+    hash: 'c'.repeat(64),
+    scope: { action: 'contract.acceptance', profileId, resourceId: contractId },
+    data: {
+      currency: 'IRR',
+      profile: paymentFacts.profile,
+      contract: {
+        id: contractId,
+        versionId,
+        versionNumber: 1,
+        serviceType: 'electricity',
+        state: 'AwaitingCustomerAcceptance',
+        publishedAt: submittedAt,
+        content: contractVersion().content,
+      },
+      activation: {
+        ruleRevision: 1,
+        signatureRequired: false,
+        paymentRequired: true,
+        serviceStartRequired: true,
+        serviceStartsAt: periodStart,
+        serviceEndsAt: periodEnd,
+        initialInvoiceId: invoiceId,
+      },
+      initialInvoice: {
+        ...initialInvoiceFacts,
+        invoice: {
+          ...paymentFacts.invoice,
+          state: 'Paid',
+          paidAmount: amount,
+          remainingAmount: '0',
+        },
+      },
+      payment: { source: 'none', amount: '0' },
+      cancellationRefund: 'full_wallet',
+      signature: null,
+    },
+  };
+  await page.route('**/api/contracts?*', (route) =>
+    route.fulfill({
+      json: {
+        contracts: [
+          {
+            id: contractId,
+            orderId,
+            serviceType: 'electricity',
+            state: contractState(),
+            versionId,
+            versionNumber: 1,
+            initialInvoiceId: invoiceId,
+            initialInvoiceState: 'Paid',
+          },
+        ],
+        nextBefore: null,
+      },
+    })
+  );
+  await page.route(`**/api/contracts/${contractId}/accept`, (route) => {
+    contractAcceptances.push(route.request().postDataJSON() as Record<string, unknown>);
+    accepted = true;
+    return route.fulfill({ json: { id: contractId, state: contractState(), financialReview } });
+  });
+  await page.route(`**/api/contracts/${contractId}/acceptance-review?*`, (route) =>
+    route.fulfill({ json: financialReview })
+  );
+  await page.route(`**/api/contracts/${contractId}/versions`, (route) =>
+    route.fulfill({ json: { versions: [contractVersion()], nextBefore: null } })
+  );
+  await page.route(`**/api/contracts/${contractId}/activation?*`, (route) =>
+    route.fulfill({
+      json: {
+        contractId,
+        versionId,
+        state: contractState(),
+        isCurrent: true,
+        ready: accepted,
+        ruleRevision: 1,
+        initialInvoiceId: invoiceId,
+        serviceStartsAt: periodStart,
+        serviceEndsAt: periodEnd,
+        evaluatedAt: submittedAt,
+        checks: [
+          { key: 'staffApproval', required: true, status: 'met' },
+          { key: 'customerAcceptance', required: true, status: accepted ? 'met' : 'unmet' },
+          { key: 'signature', required: false, status: 'not_required' },
+          { key: 'initialPayment', required: true, status: 'met' },
+          { key: 'serviceStart', required: true, status: 'met' },
+        ],
+      },
+    })
+  );
+  await page.route(`**/api/contracts/${contractId}/signature?*`, (route) =>
+    route.fulfill({
+      json: { canRequest: false, canRecord: false, request: null, signature: null },
+    })
+  );
+  await page.route(`**/api/contracts/${contractId}`, (route) =>
+    route.fulfill({
+      json: {
+        id: contractId,
+        profileId,
+        orderId,
+        serviceType: 'electricity',
+        state: contractState(),
+        version: contractVersion(),
+        canAccept: !accepted,
+        initialInvoiceId: invoiceId,
+        initialInvoiceState: 'Paid',
+      },
+    })
+  );
+  await page.route('**/api/documents?*', (route) =>
+    route.fulfill({ json: { documents: [], nextBefore: null } })
+  );
 
   await page.goto('/electricity');
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
@@ -348,4 +484,26 @@ test('simple electricity order moves from reviewed quote through wallet payment 
   await page.getByRole('link', { name: 'Review and accept the published contract.' }).click();
   await expect(page).toHaveURL(new RegExp(`/contracts\\?contractId=${contractId}$`));
   await expect(page.getByRole('heading', { name: 'Contracts' })).toBeVisible();
+  await page.getByRole('button', { name: 'Electricity supply · Version 1' }).click();
+  const activation = page.getByRole('region', { name: 'Activation prerequisites' });
+  await expect(activation).toContainText('Customer acceptance');
+  await expect(activation).toContainText('Initial invoice payment');
+  await expect(page.getByRole('region', { name: 'Status and next action' })).toContainText(
+    'Accept this version'
+  );
+  await page.getByRole('checkbox').check();
+  await page.getByRole('button', { name: 'Accept this version' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
+  await expect(activation).toContainText('All activation prerequisites are met.');
+  expect(contractAcceptances).toHaveLength(1);
+  expect(contractAcceptances[0]).toMatchObject({ expectedVersionId: versionId });
+  expect(contractAcceptances[0]).toMatchObject({ expectedReviewHash: financialReview.hash });
+  await page
+    .getByRole('region', { name: 'Contract terms' })
+    .getByRole('link', { name: 'Open electricity order' })
+    .click();
+  await expect(statusPair.locator('dd')).toHaveText(['Approved', 'Paid']);
+  await expect(page.getByText('Contract status', { exact: true }).locator('..')).toContainText(
+    'Active'
+  );
 });

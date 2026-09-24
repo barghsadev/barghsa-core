@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
+import { contractText } from '@barghsa/i18n/contracts';
 import { Button, Card, CardContent, DualStatusDisplay } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -356,6 +357,10 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               <p className="flex justify-between gap-3">
                 <span>{t('electricity.order.profile', locale)}</span>
                 <span>{detail.profileName || detail.profileId}</span>
+              </p>
+              <p className="flex justify-between gap-3">
+                <span>{t('electricity.order.contractStatus', locale)}</span>
+                <span>{contractText(detail.contractState, locale)}</span>
               </p>
               <p className="flex justify-between gap-3">
                 <span>{t('electricity.order.period.selection', locale)}</span>
