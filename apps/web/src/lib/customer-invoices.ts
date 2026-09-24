@@ -73,6 +73,7 @@ export interface CustomerInvoiceDetails {
   viewedInvoiceId: string;
   originalInvoiceId: string;
   consultationId?: string | null;
+  contractId?: string | null;
   electricityOrderId?: string | null;
   savingOrderId?: string | null;
   solarRequestId?: string | null;

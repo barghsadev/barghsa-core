@@ -14,16 +14,19 @@ vi.mock('@tanstack/react-router', () => ({
     children,
     to,
     params,
+    search,
     ...rest
   }: {
     children: ReactNode;
     to: string;
     params?: Record<string, string>;
+    search?: Record<string, string>;
   }) => {
-    const href = Object.entries(params ?? {}).reduce(
+    const path = Object.entries(params ?? {}).reduce(
       (path, [key, value]) => path.replace(`$${key}`, encodeURIComponent(value)),
       to
     );
+    const href = search ? `${path}?${new URLSearchParams(search)}` : path;
     return (
       <a href={href} {...rest}>
         {children}
@@ -214,6 +217,24 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       expect(container.querySelector('[dir]')?.getAttribute('dir')).toBe(
         locale === 'fa' ? 'rtl' : 'ltr'
       );
+    }
+  );
+
+  it.each(['en', 'fa'] as const)(
+    'links a published invoice to its contract in %s',
+    async (locale) => {
+      document.documentElement.lang = locale;
+      const payload = replacementPayload();
+      payload.contractId = 'contract-1';
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async () => ({ ok: true, status: 200, json: async () => payload }))
+      );
+      await act(async () => {
+        root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
+      });
+      const link = container.querySelector('a[href="/contracts?contractId=contract-1"]');
+      expect(link?.textContent).toBe(locale === 'en' ? 'Open contract' : 'مشاهده قرارداد');
     }
   );
 

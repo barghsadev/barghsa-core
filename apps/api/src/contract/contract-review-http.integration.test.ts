@@ -97,6 +97,23 @@ it('exposes the linked electricity order only after publication to its authorize
   const other = await fixture();
   expect((await customer(f, '', other.owner)).status).toBe(404);
 });
+it('links an authorized invoice to its contract only after publication', async () => {
+  const f = await fixture();
+  const invoiceId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO invoices(id,profile_id,contract_id,state,total_amount,issued_at,payable_from) VALUES($1,$2,$3,'Unpaid',100,NOW(),NOW())",
+    [invoiceId, f.profile, f.row.id]
+  );
+  const invoice = (user: string) => send('invoices/' + invoiceId, 'GET', undefined, user);
+  const unpublished = (await (await invoice(f.owner)).json()) as { contractId: string | null };
+  expect(unpublished.contractId).toBeNull();
+  await publish(f);
+  const visible = await invoice(f.owner);
+  expect(visible.status).toBe(200);
+  expect(await visible.json()).toMatchObject({ contractId: f.row.id });
+  const other = await fixture();
+  expect((await invoice(other.owner)).status).toBe(404);
+});
 it('lists an activated contract in the active-only customer view', async () => {
   const f = await fixture('savings');
   await publish(f);

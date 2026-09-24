@@ -79,6 +79,7 @@ export interface CustomerInvoiceDetailsDto extends CustomerInvoiceActivity {
   viewedInvoiceId: string;
   originalInvoiceId: string;
   consultationId?: string | null;
+  contractId?: string | null;
   electricityOrderId?: string | null;
   savingOrderId?: string | null;
   solarRequestId?: string | null;
@@ -459,11 +460,17 @@ export class CustomerInvoiceDetailsService {
       const origin = (
         await client.query<{
           consultation_id: string | null;
+          contract_id: string | null;
           electricity_order_id: string | null;
           saving_order_id: string | null;
           solar_request_id: string | null;
         }>(
           `SELECT COALESCE(viewed.consultation_id,i.consultation_id) AS consultation_id,
+             (SELECT c.id::text FROM contracts c
+              WHERE c.id::text=COALESCE(viewed.contract_id,i.contract_id)
+                AND c.profile_id=i.profile_id
+                AND EXISTS (SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id)
+              LIMIT 1) AS contract_id,
              CASE WHEN EXISTS (
                SELECT 1 FROM electricity_orders e
                WHERE e.id=i.order_id AND e.profile_id=i.profile_id
@@ -483,6 +490,7 @@ export class CustomerInvoiceDetailsService {
       return {
         ...details,
         consultationId: origin?.consultation_id ?? null,
+        contractId: origin?.contract_id ?? null,
         electricityOrderId: origin?.electricity_order_id ?? null,
         savingOrderId: origin?.saving_order_id ?? null,
         solarRequestId: origin?.solar_request_id ?? null,

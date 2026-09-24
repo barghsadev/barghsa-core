@@ -244,6 +244,7 @@ test('simple electricity order moves from reviewed quote through wallet payment 
         viewedInvoiceId: invoiceId,
         originalInvoiceId: invoiceId,
         electricityOrderId: orderId,
+        contractId,
         consultationId: null,
         invoice,
         chain: [invoice],
@@ -326,6 +327,10 @@ test('simple electricity order moves from reviewed quote through wallet payment 
     'Review and pay the linked invoice.'
   );
   await page.getByRole('link', { name: new RegExp(invoiceId) }).click();
+  await expect(page.getByRole('link', { name: 'Open contract' })).toHaveAttribute(
+    'href',
+    `/contracts?contractId=${contractId}`
+  );
   const wallet = page.locator('#wallet-invoice-payment');
   await wallet.getByRole('button', { name: 'Review wallet payment', exact: true }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();

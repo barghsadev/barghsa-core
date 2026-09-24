@@ -92,6 +92,15 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
           {tConsultation('backToRequest', locale)}
         </Link>
       )}
+      {details?.contractId && (
+        <Link
+          className="text-sm text-primary underline"
+          to="/contracts"
+          search={{ contractId: details.contractId }}
+        >
+          {t('invoices.details.openContract', locale)}
+        </Link>
+      )}
       {details?.electricityOrderId && (
         <Link
           className="text-sm text-primary underline"
