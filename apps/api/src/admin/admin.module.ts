@@ -41,6 +41,8 @@ import { ChargebackAlertController } from './chargeback-alert.controller.js';
 import { ServiceDuePeriodController } from './service-due-period.controller.js';
 import { ServiceDuePeriodService } from './service-due-period.service.js';
 import { BusinessWorkCountsController } from './business-work-counts.controller.js';
+import { InvoiceLedgerController } from './invoice-ledger.controller.js';
+import { InvoiceLedgerService } from './invoice-ledger.service.js';
 
 @Module({
   imports: [
@@ -70,6 +72,7 @@ import { BusinessWorkCountsController } from './business-work-counts.controller.
     ChargebackAlertController,
     ServiceDuePeriodController,
     BusinessWorkCountsController,
+    InvoiceLedgerController,
   ],
   providers: [
     VerifiedAttachmentsService,
@@ -90,6 +93,7 @@ import { BusinessWorkCountsController } from './business-work-counts.controller.
     CorrelationIdProvider,
     ReminderOffsetToggleService,
     ServiceDuePeriodService,
+    InvoiceLedgerService,
   ],
   exports: [
     BrandAssetService,

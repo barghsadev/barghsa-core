@@ -49,7 +49,11 @@ async function getJson<T>(url: string, signal: AbortSignal): Promise<T> {
   return (await response.json()) as T;
 }
 
-export function InvoiceBankReceiptQueue() {
+export function InvoiceBankReceiptQueue({
+  initialSelection,
+}: {
+  initialSelection?: { receiptId: string; state: string } | null;
+} = {}) {
   const locale = useLocale();
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
@@ -58,9 +62,15 @@ export function InvoiceBankReceiptQueue() {
   const [listState, setListState] = useState<'loading' | 'ready' | 'forbidden' | 'error'>(
     'loading'
   );
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selectedSource, setSelectedSource] = useState<'pending' | 'history'>('pending');
-  const [historyOpen, setHistoryOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(initialSelection?.receiptId ?? null);
+  const [selectedSource, setSelectedSource] = useState<'pending' | 'history'>(
+    initialSelection?.state === 'Confirmed' || initialSelection?.state === 'Rejected'
+      ? 'history'
+      : 'pending'
+  );
+  const [historyOpen, setHistoryOpen] = useState(
+    initialSelection?.state === 'Confirmed' || initialSelection?.state === 'Rejected'
+  );
   const [detail, setDetail] = useState<Receipt | null>(null);
   const [allocation, setAllocation] = useState<Allocation | null>(null);
   const [detailState, setDetailState] = useState<'loading' | 'ready' | 'error'>('loading');

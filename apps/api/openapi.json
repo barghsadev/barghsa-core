@@ -7205,6 +7205,87 @@
         ]
       }
     },
+    "/api/admin/invoices/ledger": {
+      "get": {
+        "operationId": "InvoiceLedgerController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeId",
+            "required": false,
+            "schema": {
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "beforeAt",
+            "required": false,
+            "schema": {
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
+            "name": "invoiceId",
+            "required": false,
+            "schema": {
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List invoices for finance staff, newest first",
+        "tags": [
+          "Admin · Invoice ledger"
+        ]
+      }
+    },
+    "/api/admin/invoices/ledger/{invoiceId}": {
+      "get": {
+        "operationId": "InvoiceLedgerController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get invoice lines and payment activity for finance staff",
+        "tags": [
+          "Admin · Invoice ledger"
+        ]
+      }
+    },
     "/api/admin/invoices/manual": {
       "post": {
         "operationId": "ManualInvoiceController_create",

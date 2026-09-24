@@ -24,6 +24,7 @@ import ReminderOffsetTogglePanel from '../components/ReminderOffsetTogglePanel.j
 import ManualInvoicePanel from '../components/ManualInvoicePanel.js';
 import ServiceDuePeriodPanel from '../components/ServiceDuePeriodPanel.js';
 import { InvoiceBankReceiptQueue } from '../components/InvoiceBankReceiptQueue.js';
+import { InvoiceLedger } from '../components/InvoiceLedger.js';
 
 /**
  * Staff dueAt override page (T-04.1.03.03).
@@ -69,6 +70,11 @@ export default function AdminInvoicesPage() {
   const locale = useLocale();
   const [invoiceId, setInvoiceId] = useState('');
   const [showReceiptQueue, setShowReceiptQueue] = useState(false);
+  const [receiptSelection, setReceiptSelection] = useState<{
+    receiptId: string;
+    state: string;
+    revision: number;
+  } | null>(null);
   const [invoice, setInvoice] = useState<InvoiceDueAtDto | null>(null);
   const [dueLocal, setDueLocal] = useState('');
   const [reason, setReason] = useState('');
@@ -233,6 +239,22 @@ export default function AdminInvoicesPage() {
   return (
     <div className="max-w-4xl space-y-8">
       <h1 className="text-2xl font-bold">{t('admin.invoices.nav', locale)}</h1>
+      <InvoiceLedger
+        onSelectForDueAt={(id) => {
+          setInvoiceId(id);
+          discardLoadedInvoice();
+          document.getElementById('invoice-deadline-panel')?.scrollIntoView?.({ block: 'start' });
+        }}
+        onOpenReceipt={(receiptId, state) => {
+          setReceiptSelection((current) => ({
+            receiptId,
+            state,
+            revision: (current?.revision ?? 0) + 1,
+          }));
+          setShowReceiptQueue(true);
+          document.getElementById('invoice-receipt-panel')?.scrollIntoView?.({ block: 'start' });
+        }}
+      />
       <ManualInvoicePanel />
       <InvoiceCorrectionsPanel />
       {pendingAction && (
@@ -249,7 +271,7 @@ export default function AdminInvoicesPage() {
       {time.notice}
       <ReminderOffsetTogglePanel />
       <ServiceDuePeriodPanel />
-      <section className="space-y-4">
+      <section id="invoice-receipt-panel" className="space-y-4">
         <button
           type="button"
           className="rounded-md border bg-card px-4 py-2 text-sm font-medium text-foreground"
@@ -258,7 +280,12 @@ export default function AdminInvoicesPage() {
         >
           {t('admin.invoiceReceipts.title', locale)}
         </button>
-        {showReceiptQueue ? <InvoiceBankReceiptQueue /> : null}
+        {showReceiptQueue ? (
+          <InvoiceBankReceiptQueue
+            key={receiptSelection?.revision}
+            initialSelection={receiptSelection}
+          />
+        ) : null}
       </section>
 
       <div id="invoice-deadline-panel" className="max-w-xl space-y-6">

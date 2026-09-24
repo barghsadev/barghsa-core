@@ -77,6 +77,22 @@ afterEach(async () => {
 async function render() {
   await act(async () => root.render(<InvoiceBankReceiptQueue />));
 }
+
+it('opens a receipt selected from an invoice without an unnecessary allocation preview', async () => {
+  const fetcher = api();
+  vi.stubGlobal('fetch', fetcher);
+  await act(async () =>
+    root.render(
+      <InvoiceBankReceiptQueue initialSelection={{ receiptId: RECEIPT, state: 'Confirmed' }} />
+    )
+  );
+  expect(
+    container.querySelector('a[href="https://storage.example.test/receipt.pdf"]')
+  ).not.toBeNull();
+  expect(fetcher.mock.calls.some(([url]) => String(url).endsWith(`/${RECEIPT}/allocation`))).toBe(
+    false
+  );
+});
 async function click(text: string) {
   const button = [...container.querySelectorAll('button')].find(
     (node) => node.textContent === text
