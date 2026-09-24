@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { ElectricityIncreasePanel } from './ElectricityIncreasePanel.js';
@@ -143,6 +144,7 @@ function nextActionHref(detail: ElectricityOrderDetail): string | null {
 
 export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const [detail, setDetail] = useState<ElectricityOrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -289,6 +291,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           {t('electricity.order.detail.description', locale)}
         </p>
       </header>
+      {time.notice}
       {loading ? (
         <p role="status">{t('electricity.order.detailLoading', locale)}</p>
       ) : error || !detail ? (
@@ -332,8 +335,17 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               <p className="flex justify-between gap-3">
                 <span>{t('electricity.order.period.selection', locale)}</span>
                 <span>
-                  {new Date(detail.periodStart).toLocaleDateString(locale)} –{' '}
-                  {new Date(detail.periodEnd).toLocaleDateString(locale)}
+                  {time.format(detail.periodStart, {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                  })}{' '}
+                  –{' '}
+                  {time.format(new Date(new Date(detail.periodEnd).getTime() - 1), {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                  })}
                 </span>
               </p>
               <p className="flex justify-between gap-3">

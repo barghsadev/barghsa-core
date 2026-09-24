@@ -45,39 +45,41 @@ it('keeps earlier profile orders visible when more history loads', async () => {
         JSON.stringify(
           url === '/api/profiles/verification-status'
             ? { activeProfileId: 'profile-1' }
-            : url.includes('before=page-2')
-              ? {
-                  orders: [
-                    {
-                      orderId: 'order-2',
-                      electricityStatus: 'active',
-                      financialStatus: 'paid',
-                      nextAction: 'await_delivery',
-                      submittedAt: '2026-09-22T00:00:00Z',
-                      periodStart: '2026-09-24T00:00:00Z',
-                      periodEnd: '2026-09-30T00:00:00Z',
-                      totalKwh: '20',
-                      totalIrR: '5000000',
-                    },
-                  ],
-                  nextBefore: null,
-                }
-              : {
-                  orders: [
-                    {
-                      orderId: 'order-1',
-                      electricityStatus: 'awaiting_staff_review',
-                      financialStatus: 'unpaid',
-                      nextAction: 'await_review',
-                      submittedAt: '2026-09-23T00:00:00Z',
-                      periodStart: '2026-09-24T00:00:00Z',
-                      periodEnd: '2026-09-30T00:00:00Z',
-                      totalKwh: '10',
-                      totalIrR: '2500000',
-                    },
-                  ],
-                  nextBefore: 'page-2',
-                }
+            : url === '/api/user/settings/timezone'
+              ? { timezone: 'Asia/Tehran' }
+              : url.includes('before=page-2')
+                ? {
+                    orders: [
+                      {
+                        orderId: 'order-2',
+                        electricityStatus: 'active',
+                        financialStatus: 'paid',
+                        nextAction: 'await_delivery',
+                        submittedAt: '2026-09-22T00:00:00Z',
+                        periodStart: '2026-09-24T00:00:00Z',
+                        periodEnd: '2026-09-30T00:00:00Z',
+                        totalKwh: '20',
+                        totalIrR: '5000000',
+                      },
+                    ],
+                    nextBefore: null,
+                  }
+                : {
+                    orders: [
+                      {
+                        orderId: 'order-1',
+                        electricityStatus: 'awaiting_staff_review',
+                        financialStatus: 'unpaid',
+                        nextAction: 'await_review',
+                        submittedAt: '2026-09-23T22:00:00Z',
+                        periodStart: '2026-09-24T00:00:00Z',
+                        periodEnd: '2026-09-30T20:30:00Z',
+                        totalKwh: '10',
+                        totalIrR: '2500000',
+                      },
+                    ],
+                    nextBefore: 'page-2',
+                  }
         ),
         { headers: { 'Content-Type': 'application/json' } }
       )
@@ -96,6 +98,9 @@ it('keeps earlier profile orders visible when more history loads', async () => {
     expect(container.textContent).toContain('Unpaid');
     expect(container.textContent).toContain('2500000');
     expect(container.textContent).toContain('order-1');
+    expect(container.textContent).toContain('09/24/2026');
+    expect(container.textContent).toContain('09/30/2026');
+    expect(container.textContent).not.toContain('10/01/2026');
     expect(container.querySelector('a[href="/electricity/orders/order-1"]')).not.toBeNull();
     const more = Array.from(container.querySelectorAll('button')).find(
       (button) => button.textContent === 'More orders'
@@ -123,7 +128,9 @@ it('requests pending orders when opened from the dashboard', async () => {
     Response.json(
       url === '/api/profiles/verification-status'
         ? { activeProfileId: 'profile-1' }
-        : { orders: [], nextBefore: null }
+        : url === '/api/user/settings/timezone'
+          ? { timezone: 'Asia/Tehran' }
+          : { orders: [], nextBefore: null }
     )
   );
   vi.stubGlobal('fetch', request);

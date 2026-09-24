@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { useLocale } from '../../../hooks/useLocale.js';
+import { useAccountTime } from '../../../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 
 interface ListedOrder {
@@ -19,6 +20,7 @@ interface ListedOrder {
 
 export function ElectricityOrdersPage({ pendingOnly = false }: { pendingOnly?: boolean }) {
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const [orders, setOrders] = useState<ListedOrder[]>([]);
   const [before, setBefore] = useState<string | null>(null);
@@ -113,6 +115,7 @@ export function ElectricityOrdersPage({ pendingOnly = false }: { pendingOnly?: b
           {t('electricity.orders.pending', locale)}
         </Link>
       </nav>
+      {time.notice}
       {loading ? (
         <p role="status">{t('electricity.orders.loading', locale)}</p>
       ) : error ? (
@@ -140,13 +143,26 @@ export function ElectricityOrdersPage({ pendingOnly = false }: { pendingOnly?: b
                     {t('electricity.orders.view', locale)} · {order.orderId}
                   </Link>
                   <span className="text-sm text-muted-foreground">
-                    {new Date(order.submittedAt).toLocaleDateString(locale)}
+                    {time.format(order.submittedAt, {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    })}
                   </span>
                 </div>
                 <p className="text-sm">
-                  {new Date(order.periodStart).toLocaleDateString(locale)} –{' '}
-                  {new Date(order.periodEnd).toLocaleDateString(locale)} ·{' '}
-                  {numbers.irrDigits(order.totalKwh)} kWh · {numbers.money(order.totalIrR)}
+                  {time.format(order.periodStart, {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                  })}{' '}
+                  –{' '}
+                  {time.format(new Date(new Date(order.periodEnd).getTime() - 1), {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                  })}{' '}
+                  · {numbers.irrDigits(order.totalKwh)} kWh · {numbers.money(order.totalIrR)}
                 </p>
                 <div className="flex flex-wrap gap-2 text-sm">
                   <span className="rounded-full border px-3 py-1">

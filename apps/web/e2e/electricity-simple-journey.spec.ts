@@ -284,6 +284,9 @@ test('simple electricity order moves from reviewed quote through wallet payment 
   await page.goto('/electricity');
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await page.getByRole('link', { name: 'Order electricity', exact: true }).click();
+  await expect(page.locator('#electricity-period option[value="current_month"]')).toContainText(
+    'Sep 23, 2026 – Oct 2, 2026'
+  );
   await page.locator('#electricity-period-type').selectOption('weekly');
   await page.locator('#electricity-period').selectOption('next_week');
   const next = page.getByRole('button', { name: 'Continue', exact: true });

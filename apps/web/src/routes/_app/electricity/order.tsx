@@ -128,6 +128,26 @@ function periodDates(option: PeriodOption, locale: 'fa' | 'en') {
   return `${persian.format(start)} – ${persian.format(end)} · ${gregorian.format(start)} – ${gregorian.format(end)}`;
 }
 
+function periodChoiceDate(option: PeriodOption, locale: 'fa' | 'en') {
+  const start = new Date(option.start);
+  if (locale === 'fa') {
+    return new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+      timeZone: 'Asia/Tehran',
+      month: 'long',
+      year: 'numeric',
+      ...(option.key.includes('week') ? { day: 'numeric' } : {}),
+    }).format(start);
+  }
+  const end = new Date(new Date(option.end).getTime() - 1);
+  const format = new Intl.DateTimeFormat('en-US-u-ca-gregory', {
+    timeZone: 'Asia/Tehran',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  return `${format.format(start)} – ${format.format(end)}`;
+}
+
 function estimateDate(value: string, locale: 'fa' | 'en') {
   return new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR-u-ca-persian' : 'en-US', {
     timeZone: 'Asia/Tehran',
@@ -1331,11 +1351,7 @@ function ElectricityOrderPage() {
                           .map((option) => (
                             <option key={option.key} value={option.key}>
                               {t(periodLabels[option.key], locale)} ·{' '}
-                              {new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
-                                timeZone: 'Asia/Tehran',
-                                month: 'long',
-                                year: 'numeric',
-                              }).format(new Date(option.start))}
+                              {periodChoiceDate(option, locale)}
                             </option>
                           ))}
                       </select>

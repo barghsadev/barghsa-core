@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Electricity period dates in the account timezone](batches/2026-09-24-electricity-period-dates.md) keeps order history and detail dates tied to the saved timezone and displays the final included period day. The simple-order English selector now names the actual Gregorian range.
+
 [Localized electricity date and time selection](batches/2026-09-24-localized-electricity-date-time.md) replaces the advanced-order and revision control with a shared Jalali/Gregorian picker and a locale-appropriate clock. It preserves the stored instant and existing saved drafts across language changes; bilingual journey and component browser checks pass.
 
 [Privacy-safe product analytics](batches/2026-09-24-private-analytics.md) adds account consent, anonymous fixed-dimension events, a shared redaction gate, a self-hosted endpoint and an optional Google adapter. The prior CI failure was two historical migration tests comparing entire `users` rows; those assertions now check preservation of the original columns across additive migrations. Google script loading remains unconfigured and off by default.
