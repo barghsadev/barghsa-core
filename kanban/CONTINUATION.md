@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Quarantined contract original recovery](batches/2026-09-24-quarantined-contract-original-recovery.md) lets staff replace a quarantined original without losing its audit or scan history, then issue a new numbered signing request. The contract signature suite and all four S3 API suites pass locally.
+
 [Storage integration test image repair](batches/2026-09-24-storage-test-image.md) replaces the inaccessible pinned Quay image in five S3 fixture suites with an active, digest-pinned community MinIO fork. Product storage code is unchanged.
 
 [Staff consultation offer and invoice review](batches/2026-09-24-staff-consultation-offer-review.md) now shows the saved fee, scope, deliverables, deadline and current invoice state together, with an exact finance invoice handoff for staff with ledger access.

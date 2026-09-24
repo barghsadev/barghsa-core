@@ -314,6 +314,12 @@ export class DocumentService {
             !(
               input.businessRecordType === 'solar_request' &&
               prior.document.state === 'SubmittedForReview'
+            ) &&
+            !(
+              staff &&
+              input.businessRecordType === 'contract' &&
+              input.contractRole === 'original' &&
+              prior.document.state === 'Quarantined'
             )
           )
             throw new ConflictException('Document cannot be replaced in this state');
@@ -605,6 +611,9 @@ export class DocumentService {
               'Approved',
               'Rejected',
               ...(context.kind === 'solar_request' ? ['SubmittedForReview'] : []),
+              ...(staff && context.kind === 'contract' && row.contractRole === 'original'
+                ? ['Quarantined']
+                : []),
             ].includes(previous.document.state)
           )
             throw new ConflictException(

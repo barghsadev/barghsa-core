@@ -834,6 +834,13 @@
       "when": 1791331200101,
       "tag": "0198_accepted_amendment_pdf",
       "breakpoints": true
+    },
+    {
+      "idx": 199,
+      "version": "7",
+      "when": 1791331200102,
+      "tag": "0199_quarantined_contract_original_replacement",
+      "breakpoints": true
     }
   ]
 }

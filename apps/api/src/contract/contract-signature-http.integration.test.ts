@@ -189,7 +189,13 @@ async function contract(
   return { ...f, row };
 }
 type Fixture = Awaited<ReturnType<typeof contract>>;
-async function documentFor(f: Fixture, role: 'original' | 'signed', staff = true, approved = true) {
+async function documentFor(
+  f: Fixture,
+  role: 'original' | 'signed',
+  staff = true,
+  approved = true,
+  supersedesDocumentId?: string
+) {
   const user = staff ? 'signature-legal' : f.user;
   let doc = await confirm(
     await create(
@@ -200,6 +206,7 @@ async function documentFor(f: Fixture, role: 'original' | 'signed', staff = true
         businessRecordId: f.row.id,
         contractVersionId: f.row.currentVersionId,
         contractRole: role,
+        ...(supersedesDocumentId ? { supersedesDocumentId } : {}),
       },
       staff
     ),
@@ -644,7 +651,7 @@ it('uses a new numbered request to recover from a replaced or quarantined origin
     firstOriginal = await documentFor(f, 'original'),
     first = await prepare(f, firstOriginal.id),
     signed = await documentFor(f, 'signed', false);
-  const secondOriginal = await documentFor(f, 'original'),
+  const secondOriginal = await documentFor(f, 'original', true, true, firstOriginal.id),
     second = await prepare(f, secondOriginal.id, first.view.request!.id);
   expect(second.view.request?.requestNumber).toBe(2);
   expect((await record(f, recordInput(f, first.view.request!.id, signed.id))).status).toBe(409);
@@ -666,7 +673,7 @@ it('uses a new numbered request to recover from a replaced or quarantined origin
     'Original must be reviewed again'
   );
   expect((await record(f, recordInput(f, second.view.request!.id, signed.id))).status).toBe(409);
-  const thirdOriginal = await documentFor(f, 'original'),
+  const thirdOriginal = await documentFor(f, 'original', true, true, secondOriginal.id),
     third = await prepare(f, thirdOriginal.id, second.view.request!.id);
   expect(third.view.request?.requestNumber).toBe(3);
   expect((await record(f, recordInput(f, third.view.request!.id, signed.id))).status).toBe(200);
@@ -819,7 +826,6 @@ it('resolves a required solar signature only after recording its approved signed
 it('binds signing confirmation to the selected approved documents and saves its review on retries', async () => {
   const f = await contract();
   const original = await documentFor(f, 'original');
-  const replacement = await documentFor(f, 'original');
   const base = `admin/contracts/${f.row.id}`;
   const input = requestInput(f, original.id);
   const previewResponse = await send(`${base}/signature/review`, 'signature-legal', 'POST', {
@@ -834,6 +840,7 @@ it('binds signing confirmation to the selected approved documents and saves its 
     id: original.id,
     checksum: expect.stringMatching(/^[a-f0-9]{64}$/),
   });
+  const replacement = await documentFor(f, 'original', true, true, original.id);
   const request = { ...input, expectedReviewHash: preview.hash };
   expect(
     (
@@ -851,14 +858,34 @@ it('binds signing confirmation to the selected approved documents and saves its 
       )
     ).rows[0].count
   ).toBe('0');
-  const response = await send(`${base}/signature-request`, 'signature-legal', 'POST', request);
+  expect((await send(`${base}/signature-request`, 'signature-legal', 'POST', request)).status).toBe(
+    409
+  );
+  const currentInput = requestInput(f, replacement.id);
+  const currentPreviewResponse = await send(`${base}/signature/review`, 'signature-legal', 'POST', {
+    action: 'request',
+    expectedVersionId: currentInput.expectedVersionId,
+    originalDocumentId: replacement.id,
+    expectedRequestId: null,
+  });
+  expect(currentPreviewResponse.status).toBe(200);
+  const currentPreview = (await currentPreviewResponse.json()) as ContractFinancialReview;
+  const currentRequest = { ...currentInput, expectedReviewHash: currentPreview.hash };
+  const response = await send(
+    `${base}/signature-request`,
+    'signature-legal',
+    'POST',
+    currentRequest
+  );
   expect(response.status).toBe(200);
   const prepared = (await response.json()) as SignatureView & {
     financialReview: ContractFinancialReview;
   };
-  expect(prepared.financialReview).toEqual(preview);
+  expect(prepared.financialReview).toEqual(currentPreview);
   expect(
-    await (await send(`${base}/signature-request`, 'signature-legal', 'POST', request)).json()
+    await (
+      await send(`${base}/signature-request`, 'signature-legal', 'POST', currentRequest)
+    ).json()
   ).toEqual(prepared);
   const signed = await documentFor(f, 'signed', false);
   const otherSigned = await documentFor(f, 'signed', false);
@@ -892,6 +919,6 @@ it('binds signing confirmation to the selected approved documents and saves its 
       [f.row.id]
     )
   ).rows.map((row) => row.metadata.financialReview);
-  expect(audits).toContainEqual(preview);
+  expect(audits).toContainEqual(currentPreview);
   expect(audits).toContainEqual(recordPreview);
 });

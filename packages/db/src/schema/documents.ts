@@ -114,7 +114,7 @@ export const documents = pgTable(
     ),
     check(
       'documents_ready_content',
-      sql`${t.state} IN ('Uploading','PendingScan','Quarantined','Removed') OR (${t.storageKey} IS NOT NULL AND ${t.detectedMime} IS NOT NULL AND ${t.checksum} IS NOT NULL AND ${t.scanState}='Available')`
+      sql`${t.state} IN ('Uploading','PendingScan','Quarantined','Removed') OR (${t.storageKey} IS NOT NULL AND ${t.detectedMime} IS NOT NULL AND ${t.checksum} IS NOT NULL AND (${t.scanState}='Available' OR (${t.state}='Superseded' AND ${t.scanState}='Quarantined')))`
     ),
   ]
 );
