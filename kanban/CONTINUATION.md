@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Advanced electricity order review](batches/2026-09-24-advanced-electricity-review.md) completes the final review snapshot with profile, gift code, delivery details and localized cancellation/payment terms before submission.
+
 [Electricity order conversations](batches/2026-09-24-electricity-order-conversations.md) adds customer/staff comments, private staff notes and a post-review conversation queue. It also fixes microsecond cursor pagination for electricity and saving comments.
 
 [Dashboard open-ticket list](batches/2026-09-24-dashboard-open-tickets.md) completes the dashboard status-card navigation. It counts the signed-in user's non-terminal tickets on the active profile and opens a matching pre-paginated ticket list with a return to all tickets.

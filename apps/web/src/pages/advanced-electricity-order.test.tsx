@@ -38,6 +38,16 @@ let quantities: Record<string, string>;
 let bootstrapLoadFailures: number;
 let draftLoadFailures: number;
 let savedStepOverride: number | null;
+let quoteSuccess: boolean;
+let giftCode: string;
+let addresses: Array<{
+  id: string;
+  provinceId: string;
+  cityId: string;
+  fullAddress: string;
+  postalCode: string;
+  mainAddress: boolean;
+}>;
 let quoteErrorDetails: Array<{
   code: string;
   systemKey?: string;
@@ -54,6 +64,9 @@ beforeEach(() => {
   bootstrapLoadFailures = 0;
   draftLoadFailures = 0;
   savedStepOverride = null;
+  quoteSuccess = false;
+  giftCode = '';
+  addresses = [];
   quoteErrorDetails = [
     { code: 'PRODUCT_MAX_KWH', systemKey: 'green', requiredKwh: '5', limitKwh: '4' },
   ];
@@ -75,13 +88,13 @@ beforeEach(() => {
         limits: { leadTimeDays: 0, maxContractDuration: 24 },
         mandatoryGreenEnabled: true,
       });
-    if (url === `/api/profiles/${profileId}/addresses`) return reply({ addresses: [] });
+    if (url === `/api/profiles/${profileId}/addresses`) return reply({ addresses });
     if (url === `/api/electricity/drafts/advanced?profileId=${profileId}`) {
       if (draftLoadFailures > 0) {
         draftLoadFailures -= 1;
         return reply({ error: 'Unavailable' }, 503);
       }
-      return reply({ currentStep: step, data: { startAt, endAt, quantities } });
+      return reply({ currentStep: step, data: { startAt, endAt, quantities, giftCode } });
     }
     if (url === '/api/electricity/drafts/advanced') {
       const saved = JSON.parse((init?.body as string) ?? '{}') as {
@@ -90,13 +103,39 @@ beforeEach(() => {
       return reply({ currentStep: savedStepOverride ?? saved.currentStep });
     }
     if (url === '/api/electricity/preview/advanced')
-      return reply(
-        {
-          error: 'ELECTRICITY_QUOTE_INVALID',
-          details: quoteErrorDetails,
-        },
-        400
-      );
+      return quoteSuccess
+        ? reply({
+            reviewDigest: 'review-1',
+            periodStart: startAt,
+            periodEnd: endAt,
+            durationHours: '192',
+            totalKwh: '100',
+            averagePowerKw: '0.52',
+            greenRuleApplies: false,
+            mandatoryGreenEnabled: true,
+            walletBalanceIrR: '1000',
+            lines: [
+              {
+                systemKey: 'thermal',
+                quantityKwh: '100',
+                unitPriceIrR: '100',
+                subtotalIrR: '10000',
+                discountIrR: '1000',
+                vatIrR: '900',
+              },
+            ],
+            subtotalIrR: '10000',
+            discountIrR: '1000',
+            vatIrR: '900',
+            totalIrR: '9900',
+          })
+        : reply(
+            {
+              error: 'ELECTRICITY_QUOTE_INVALID',
+              details: quoteErrorDetails,
+            },
+            400
+          );
     throw new Error(`Unexpected request: ${url}`);
   });
   vi.stubGlobal('fetch', fetchMock);
@@ -221,3 +260,36 @@ it('saves the review step before opening address settings', async () => {
     search: { returnTo: '/electricity/advanced' },
   });
 });
+
+it.each(['en', 'fa'] as const)(
+  'shows the selected profile, address, gift code and cancellation terms before submission in %s',
+  async (locale) => {
+    document.documentElement.lang = locale;
+    step = 5;
+    quantities = { thermal: '100', green: '0', free_market: '0', energy_saving: '0' };
+    quoteSuccess = true;
+    giftCode = 'SAVE10';
+    addresses = [
+      {
+        id: 'address-1',
+        provinceId: 'province-1',
+        cityId: 'city-1',
+        fullAddress: 'Example Street 4',
+        postalCode: '1234567890',
+        mainAddress: true,
+      },
+    ];
+    await mount();
+    await settlePreview();
+
+    expect(container.textContent).toContain(
+      `${t('electricity.order.profile', locale)}: ${profileId}`
+    );
+    expect(container.textContent).toContain('SAVE10');
+    expect(container.textContent).toContain('Example Street 4');
+    expect(container.textContent).toContain('1234567890');
+    expect(container.textContent).toContain(t('electricity.order.cancellationRules', locale));
+    expect(container.textContent).toContain(t('electricity.order.cancellationRulesText', locale));
+    expect(container.textContent).toContain(t('electricity.order.paymentAfterSubmit', locale));
+  }
+);

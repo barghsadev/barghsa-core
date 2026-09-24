@@ -768,15 +768,29 @@ export function AdvancedElectricityOrderPage() {
                   {step === 5 && (
                     <>
                       <p>
+                        {t('electricity.order.profile', locale)}: <span dir="ltr">{profileId}</span>
+                      </p>
+                      <p>
+                        {t('electricity.order.giftCode', locale)}: {giftCode.trim() || '—'}
+                      </p>
+                      <p>
                         {t('electricity.order.deliveryAddress', locale)}:{' '}
                         {selectedAddress?.fullAddress}
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        {t('electricity.order.contractPreviewText', locale)}
+                      <p>
+                        {t('electricity.order.postalCode', locale)}: {selectedAddress?.postalCode}
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        {t('electricity.order.paymentAfterSubmit', locale)}
-                      </p>
+                      <div className="space-y-2 border-t pt-4 text-sm text-muted-foreground">
+                        <h3 className="font-medium text-foreground">
+                          {t('electricity.order.contractPreview', locale)}
+                        </h3>
+                        <p>{t('electricity.order.contractPreviewText', locale)}</p>
+                        <h3 className="font-medium text-foreground">
+                          {t('electricity.order.cancellationRules', locale)}
+                        </h3>
+                        <p>{t('electricity.order.cancellationRulesText', locale)}</p>
+                        <p>{t('electricity.order.paymentAfterSubmit', locale)}</p>
+                      </div>
                     </>
                   )}
                 </>
