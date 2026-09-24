@@ -182,7 +182,7 @@ it('captures current rules for each new draft and protects submitted snapshots',
       first,
       JSON.stringify(newSnapshot),
     ])
-  ).rejects.toThrow(/Submitted electricity snapshot is immutable/);
+  ).rejects.toThrow(/Submitted electricity settings are immutable/);
   await expect(
     http.pool.query("UPDATE electricity_orders SET pricing_snapshot='{}'::jsonb WHERE id=$1", [
       first,

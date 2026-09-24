@@ -6,4 +6,6 @@ The staff order detail now presents the latest correction beside the previous co
 
 The customer correction-flow test now waits for its lazy form to load, resolving the timing failure seen in the previous batch's CI run.
 
+The full CI API suite also exposed an older test that expected the generic snapshot error when a submitted order's settings are edited. The revision guard gives that case a more precise settings-immutability error; the test now checks the specific error while continuing to check that pricing changes are rejected.
+
 Validation: real PostgreSQL tests cover address-only, simple priced, and advanced product-mix revisions; the staff page test covers the comparison. API/web typechecks, changed-file lint, formatting, build, OpenAPI, and kanban validation pass. The route-budget check retains the four existing failures (Login, Register, Password recovery, Electricity ordering).
