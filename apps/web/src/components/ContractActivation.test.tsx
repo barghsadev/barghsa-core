@@ -5,6 +5,22 @@ import { en, fa } from '@barghsa/i18n/contracts';
 import { ContractActivationPanel } from './ContractActivationPanel.js';
 import { ContractActivationRules } from './ContractActivationRules.js';
 import type { TeamAction } from './TeamActionDialog.js';
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({
+    children,
+    to,
+    params,
+    ...props
+  }: {
+    children: ReactNode;
+    to: string;
+    params: Record<string, string>;
+  }) => (
+    <a href={to.replace('$invoiceId', params.invoiceId ?? '')} {...props}>
+      {children}
+    </a>
+  ),
+}));
 const harness = vi.hoisted(() => ({
   locale: 'en' as 'en' | 'fa',
   action: null as TeamAction | null,
@@ -136,6 +152,9 @@ for (const locale of ['en', 'fa'] as const)
     await click(words.refresh);
     expect(container.textContent).toContain(words.historicalRequirements);
     expect(container.textContent).toContain(words.initialInvoiceLinked);
+    expect(container.querySelector('a[href="/invoices/invoice"]')?.textContent).toBe(
+      words.openInitialInvoice
+    );
     expect(container.textContent).toContain('2026-09-22T00:00:00Z');
     result = data({ ready: true, checks: [] });
     await click(words.refresh);

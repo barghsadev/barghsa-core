@@ -6,12 +6,6 @@ for (const locale of ['en', 'fa'] as const) {
     locale + ': staff configures optional prerequisites through password verification',
     async ({ page }) => {
       const words = locale === 'fa' ? fa : en;
-      await page.addInitScript((language) => {
-        if (document.documentElement) document.documentElement.lang = language;
-        new MutationObserver(() => {
-          if (document.documentElement) document.documentElement.lang = language;
-        }).observe(document, { childList: true });
-      }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
       await page.route('**/api/admin/contracts?*', (route) =>
         route.fulfill({ json: { contracts: [], nextBefore: null } })
@@ -62,6 +56,8 @@ for (const locale of ['en', 'fa'] as const) {
         return route.fulfill({ json: { verified: true } });
       });
       await page.goto('/admin/contracts');
+      if (locale === 'en')
+        await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
       await page.getByRole('button', { name: words.activationRules, exact: true }).click();
       const group = page.getByRole('group', { name: words.electricity, exact: true });
       await expect(
@@ -101,12 +97,6 @@ for (const locale of ['en', 'fa'] as const) {
     locale + ': customer sees missing payment separately from accepted contract',
     async ({ page }) => {
       const words = locale === 'fa' ? fa : en;
-      await page.addInitScript((language) => {
-        if (document.documentElement) document.documentElement.lang = language;
-        new MutationObserver(() => {
-          if (document.documentElement) document.documentElement.lang = language;
-        }).observe(document, { childList: true });
-      }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
       const id = '11111111-1111-4111-8111-111111111111',
         version = '22222222-2222-4222-8222-222222222222';
@@ -178,6 +168,8 @@ for (const locale of ['en', 'fa'] as const) {
         });
       });
       await page.goto('/contracts');
+      if (locale === 'en')
+        await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
       await page
         .getByRole('button', {
           name: `${words.electricity} \u00b7 ${words.version} ${(1).toLocaleString(locale)}`,
@@ -186,6 +178,10 @@ for (const locale of ['en', 'fa'] as const) {
         .click();
       const panel = page.getByRole('region', { name: words.activationTitle, exact: true });
       await expect(panel.getByRole('listitem')).toHaveCount(5);
+      await expect(panel.getByRole('link', { name: words.openInitialInvoice })).toHaveAttribute(
+        'href',
+        '/invoices/invoice'
+      );
       await expect(panel.getByText(words['prerequisite.unmet'], { exact: true })).toBeVisible();
       await expect(panel.getByText(words.activationNotice)).toBeVisible();
       paid = true;

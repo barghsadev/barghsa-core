@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from '@tanstack/react-router';
 import { Alert, AlertDescription, Button, PageLoading, StatusBadge } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
@@ -75,7 +76,18 @@ export function ContractActivationPanel({
             ))}
           </ul>
           {data.initialInvoiceId ? (
-            <p className="text-sm">{word('initialInvoiceLinked')}</p>
+            <p className="text-sm">
+              {word('initialInvoiceLinked')}{' '}
+              {!staff && (
+                <Link
+                  to="/invoices/$invoiceId"
+                  params={{ invoiceId: data.initialInvoiceId }}
+                  className="text-primary underline underline-offset-4"
+                >
+                  {word('openInitialInvoice')}
+                </Link>
+              )}
+            </p>
           ) : data.checks.some((item) => item.key === 'initialPayment' && item.required) ? (
             <p className="text-sm text-muted-foreground">{word('initialInvoiceMissing')}</p>
           ) : null}

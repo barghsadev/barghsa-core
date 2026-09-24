@@ -19,6 +19,7 @@ import {
 import { contractText } from '@barghsa/i18n/contracts';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { documentRequest } from '../lib/documents.js';
 import { contractBase, contractStates, type ContractSummary } from '../lib/contracts.js';
@@ -178,6 +179,7 @@ function ContractResults({
   initialSelected: string | null;
 }) {
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const word = (key: string) => contractText(key, locale);
   const [items, setItems] = useState<ContractSummary[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -224,6 +226,7 @@ function ContractResults({
   }
   return (
     <div className="flex flex-col gap-5">
+      {!staff && time.notice}
       <Button className="self-start" variant="outline" onClick={refresh} disabled={loading}>
         {word('refresh')}
       </Button>
@@ -256,6 +259,16 @@ function ContractResults({
                 </Button>
                 {item.changeDescription ? (
                   <p className="text-sm text-muted-foreground">{item.changeDescription}</p>
+                ) : null}
+                {!staff && item.publishedAt ? (
+                  <p className="text-sm text-muted-foreground">
+                    {word('publishedAt')}: {time.format(item.publishedAt)}
+                  </p>
+                ) : null}
+                {!staff && item.acceptedAt ? (
+                  <p className="text-sm text-muted-foreground">
+                    {word('acceptedAt')}: {time.format(item.acceptedAt)}
+                  </p>
                 ) : null}
                 {staff && item.serviceType === 'electricity' ? (
                   <a

@@ -209,6 +209,11 @@ export function ContractDetail({
             </h3>
             <p className="text-sm text-muted-foreground">{data.version.changeDescription}</p>
             <p className="text-sm">{time.format(data.version.createdAt)}</p>
+            {data.version.publishedAt ? (
+              <p className="text-sm">
+                {word('publishedAt')}: {time.format(data.version.publishedAt)}
+              </p>
+            ) : null}
             {staff && data.version.createdBy ? (
               <p className="text-sm">
                 {word('changedBy')}: {data.version.createdBy}
@@ -297,6 +302,16 @@ export function ContractDetail({
                     ? ` · ${word('changedBy')}: ${version.createdBy}`
                     : ''}
                 </p>
+                {version.publishedAt ? (
+                  <p className="text-sm text-muted-foreground">
+                    {word('publishedAt')}: {time.format(version.publishedAt)}
+                  </p>
+                ) : null}
+                {version.acceptedAt ? (
+                  <p className="text-sm text-muted-foreground">
+                    {word('acceptedAt')}: {time.format(version.acceptedAt)}
+                  </p>
+                ) : null}
               </li>
             ))}
           </ol>

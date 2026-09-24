@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Customer contract milestones and invoice handoff](batches/2026-09-24-contract-milestones-invoice-link.md) shows publication and acceptance history and links the activation prerequisite to its initial invoice.
+
 [Customer invoice due date and VAT detail](batches/2026-09-24-invoice-transparency.md) exposes existing API fields in the list and each invoice line. Bilingual tests verify the date, amounts, column labels and accessibility.
 
 [Consultation history and offer deadlines in the account timezone](batches/2026-09-24-consultation-account-time.md) aligns customer and staff timelines and makes staff offer expiry editing use the saved timezone. Focused tests cover the UTC+14 boundary, unchanged instant preservation and a skipped daylight-saving time.

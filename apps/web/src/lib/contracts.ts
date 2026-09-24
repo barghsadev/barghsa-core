@@ -28,6 +28,8 @@ export interface ContractSummary {
   versionId: string;
   versionNumber: number;
   changeDescription?: string;
+  publishedAt?: string;
+  acceptedAt?: string | null;
 }
 export interface ContractDetailData extends Omit<ContractSummary, 'versionId' | 'versionNumber'> {
   profileId: string;

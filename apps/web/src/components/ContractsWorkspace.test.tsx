@@ -63,6 +63,7 @@ const version = (extra: Partial<ContractVersion> = {}): ContractVersion => ({
   content: { price: '9007199254740993', termMonths: 12, text: '<script>never execute</script>' },
   changeDescription: 'Revised price',
   createdAt: '2026-09-21T00:00:00Z',
+  publishedAt: '2026-09-22T00:00:00Z',
   createdBy: 'legal-reviewer',
   acceptedAt: null,
   ...extra,
@@ -136,7 +137,7 @@ function api(current = detail()) {
     if (url.pathname.endsWith('/versions'))
       return response({
         versions: [
-          version(),
+          current.version ?? version(),
           version({ id: OLD, versionNumber: 1, changeDescription: 'Original terms' }),
         ],
         nextBefore: null,
@@ -162,6 +163,8 @@ function api(current = detail()) {
           state: current.state,
           versionId: VERSION,
           versionNumber: 2,
+          publishedAt: current.version?.publishedAt,
+          acceptedAt: current.version?.acceptedAt,
         },
       ],
       nextBefore: null,
@@ -178,6 +181,27 @@ it('opens the customer contract list with the active-state filter', async () => 
     )
   ).toBe(true);
 });
+it.each(['en', 'fa'] as const)(
+  'shows published and accepted contract milestones in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    const fetcher = api(
+      detail({
+        state: 'Accepted',
+        canAccept: false,
+        version: version({ acceptedAt: '2026-09-23T00:00:00Z' }),
+      })
+    );
+    vi.stubGlobal('fetch', fetcher);
+    await render(<ContractsPage />);
+    expect(container.textContent).toContain(`${words.publishedAt}: 2026-09-22T00:00:00Z`);
+    expect(container.textContent).toContain(`${words.acceptedAt}: 2026-09-23T00:00:00Z`);
+    await click(`${words.electricity} · ${words.version} ${(2).toLocaleString(locale)}`);
+    expect(container.textContent).toContain(`${words.publishedAt}: 2026-09-22T00:00:00Z`);
+    expect(container.textContent).toContain(`${words.acceptedAt}: 2026-09-23T00:00:00Z`);
+  }
+);
 it.each(['en', 'fa'] as const)(
   'renders published terms and exact acceptance in %s',
   async (locale) => {
