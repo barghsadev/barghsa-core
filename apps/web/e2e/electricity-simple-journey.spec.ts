@@ -7,7 +7,7 @@ const invoiceId = '33333333-3333-4333-8333-333333333333';
 const contractId = '44444444-4444-4444-8444-444444444444';
 const versionId = '55555555-5555-4555-8555-555555555555';
 const transactionId = '66666666-6666-4666-8666-666666666666';
-const amount = '1200000';
+const amount = '1250000';
 const submittedAt = '2026-09-23T10:00:00.000Z';
 const periodStart = '2026-09-25T20:30:00.000Z';
 const periodEnd = '2026-10-02T20:30:00.000Z';
@@ -72,8 +72,9 @@ const quote = {
       quantityKwh: '10',
       unitPriceIrR: '100000',
       subtotalIrR: '1000000',
-      discountIrR: '0',
-      vatIrR: '0',
+      discountIrR: '50000',
+      vatIrR: '100000',
+      totalIrR: '1050000',
     },
     {
       productId: green.id,
@@ -83,11 +84,12 @@ const quote = {
       subtotalIrR: '200000',
       discountIrR: '0',
       vatIrR: '0',
+      totalIrR: '200000',
     },
   ],
-  subtotalIrR: amount,
-  discountIrR: '0',
-  vatIrR: '0',
+  subtotalIrR: '1200000',
+  discountIrR: '50000',
+  vatIrR: '100000',
   totalIrR: amount,
 };
 
@@ -253,7 +255,7 @@ test('simple electricity order moves from reviewed quote through payment and con
         systemKey: line.systemKey,
         quantityKwh: line.quantityKwh,
         unitPriceIrR: line.unitPriceIrR,
-        netIrR: line.subtotalIrR,
+        netIrR: (BigInt(line.subtotalIrR) - BigInt(line.discountIrR)).toString(),
         vatIrR: line.vatIrR,
       })),
     },
@@ -492,7 +494,8 @@ test('simple electricity order moves from reviewed quote through payment and con
   await page.locator('#electricity-kwh').fill('10');
   await next.click();
   await expect(page.locator('main')).toContainText('Green electricity');
-  await expect(page.locator('main')).toContainText('1,200,000');
+  await expect(page.locator('main')).toContainText('1,250,000');
+  await expect(page.locator('main')).toContainText(/Line total:\s*IRR\s*1,050,000/);
   await next.click();
   await next.click();
   await expect(page.getByText('Buyer Legal Ltd', { exact: true })).toBeVisible();

@@ -2279,7 +2279,12 @@ it('previews and atomically submits an order, contract, lines and payable invoic
   });
   expect(preview.status, http.logs()).toBe(200);
   const quote = (await preview.json()) as Record<string, unknown>;
-  expect(quote).toMatchObject({ totalKwh: '10', subtotalIrR: '1000000', totalIrR: '1000000' });
+  expect(quote).toMatchObject({
+    totalKwh: '10',
+    subtotalIrR: '1000000',
+    totalIrR: '1000000',
+    lines: [{ totalIrR: '1000000' }],
+  });
   const first = await post('orders/simple', input);
   expect(first.status, http.logs()).toBe(201);
   const result = (await first.json()) as {

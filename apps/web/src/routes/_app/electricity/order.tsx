@@ -78,6 +78,7 @@ interface PriceQuote {
     subtotalIrR: string;
     discountIrR: string;
     vatIrR: string;
+    totalIrR: string;
   }>;
   subtotalIrR: string;
   discountIrR: string;
@@ -1818,14 +1819,18 @@ function ElectricityOrderPage() {
                           {line.systemKey === 'thermal'
                             ? t('electricity.order.thermal', locale)
                             : t('electricity.order.green', locale)}{' '}
-                          · {line.quantityKwh} kWh × {numbers.money(line.unitPriceIrR)}
+                          · {numbers.irrDigits(line.quantityKwh)} kWh ×{' '}
+                          {numbers.money(line.unitPriceIrR)}
                         </span>
-                        <span>
-                          {numbers.money(line.subtotalIrR)}
+                        <span className="text-end">
+                          <strong>
+                            {t('electricity.order.lineTotal', locale)}:{' '}
+                            {numbers.money(line.totalIrR)}
+                          </strong>
                           {(line.discountIrR !== '0' || line.vatIrR !== '0') && (
                             <small className="block text-muted-foreground">
-                              −{numbers.money(line.discountIrR)} · +{numbers.money(line.vatIrR)}{' '}
-                              {t('electricity.order.vat', locale)}
+                              {numbers.money(line.subtotalIrR)} · −{numbers.money(line.discountIrR)}{' '}
+                              · +{numbers.money(line.vatIrR)} {t('electricity.order.vat', locale)}
                             </small>
                           )}
                         </span>

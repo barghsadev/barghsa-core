@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Simple electricity review line totals](batches/2026-09-24-simple-review-line-totals.md) shows the server quote's payable amount for each product and distinguishes it from the subtotal when discount or VAT applies.
+
 [Advanced electricity review amounts and buyer](batches/2026-09-24-advanced-review-amounts.md) adds a readable buyer identity and server-calculated per-product payable totals to the final advanced-order review.
 
 [Electricity review profile identity](batches/2026-09-24-electricity-review-profile-name.md) shows the active buyer's readable individual or registered legal name alongside the profile ID before simple-order submission, including agent profile switching.
