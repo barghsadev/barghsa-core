@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Electricity staff review browser handoff](batches/2026-09-24-electricity-staff-review-browser-journey.md) takes the simple customer order through staff review of saved terms and green composition, exact-version approval, payment and activation in one browser journey.
+
 [Staff electricity contract preview](batches/2026-09-24-staff-electricity-contract-preview.md) shows the exact saved template terms and version before staff decide an order, and verifies Active/Paid after customer contract activation.
 
 [Electricity order to active contract browser journey](batches/2026-09-24-electricity-contract-activation-browser-journey.md) verifies customer acceptance and activation after wallet payment, shows the linked contract state on order detail, and corrects the stale dashboard low-balance CI assertion.

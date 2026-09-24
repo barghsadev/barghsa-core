@@ -108,6 +108,7 @@ function paymentReview() {
 test('simple electricity order moves from reviewed quote through payment and contract activation', async ({
   page,
 }) => {
+  test.setTimeout(60_000);
   await page.clock.install({ time: new Date(submittedAt) });
   let reviewComplete = false;
   let paid = false;
@@ -115,6 +116,7 @@ test('simple electricity order moves from reviewed quote through payment and con
   const orderSubmissions: Array<Record<string, unknown>> = [];
   const payments: Array<Record<string, unknown>> = [];
   const contractAcceptances: Array<Record<string, unknown>> = [];
+  const staffApprovals: Array<Record<string, unknown>> = [];
   const contractState = () => (accepted ? 'Active' : 'AwaitingCustomerAcceptance');
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
@@ -230,6 +232,57 @@ test('simple electricity order moves from reviewed quote through payment and con
         timeline: [],
       },
     })
+  );
+  const staffOrder = () => ({
+    orderId,
+    contractId,
+    contractState: reviewComplete ? 'AwaitingPayment' : 'AwaitingStaffReview',
+    invoiceId,
+    invoiceState: 'Unpaid',
+    customerName: 'Buyer',
+    commercialStatus: reviewComplete ? 'approved' : 'awaiting_staff_review',
+    financialStatus: 'unpaid',
+    nextAction: reviewComplete ? 'await_payment' : 'review_order',
+    submittedAt,
+    periodStart,
+    periodEnd,
+    totalKwh: '11',
+    pricingSnapshot: {
+      lines: quote.lines.map((line) => ({
+        systemKey: line.systemKey,
+        quantityKwh: line.quantityKwh,
+        unitPriceIrR: line.unitPriceIrR,
+        netIrR: line.subtotalIrR,
+        vatIrR: line.vatIrR,
+      })),
+    },
+    settingsSnapshot: { simpleGreenRuleEnabled: true },
+    fullAddress: address.fullAddress,
+    contractSnapshot: {
+      orderId,
+      template: {
+        versionNumber: 1,
+        name: 'Electricity supply terms',
+        text: 'Supply begins after invoice payment and customer acceptance.',
+      },
+    },
+    versionId,
+    totalIrR: amount,
+    paidIrR: '0',
+    ageHours: 1,
+    priority: 'normal',
+    timeline: [],
+  });
+  await page.route('**/api/staff/electricity/orders', (route) =>
+    route.fulfill({ json: { orders: reviewComplete ? [] : [staffOrder()], nextAfter: null } })
+  );
+  await page.route(`**/api/staff/electricity/orders/${orderId}/approve`, (route) => {
+    staffApprovals.push(route.request().postDataJSON() as Record<string, unknown>);
+    reviewComplete = true;
+    return route.fulfill({ json: { orderId, status: 'approved' } });
+  });
+  await page.route(`**/api/staff/electricity/orders/${orderId}`, (route) =>
+    route.fulfill({ json: staffOrder() })
   );
   await page.route(`**/api/invoices/${invoiceId}`, (route) => {
     const invoice = {
@@ -460,9 +513,17 @@ test('simple electricity order moves from reviewed quote through payment and con
   await expect(statusPair.locator('dt')).toHaveText(['Commercial status', 'Financial status']);
   await expect(statusPair.locator('dd')).toHaveText(['Awaiting staff review', 'Unpaid']);
 
-  // Staff approval is covered by the API suite; the customer resumes after that transition.
-  reviewComplete = true;
-  await page.reload();
+  await page.goto('/admin/electricity-orders');
+  await page.getByRole('button', { name: new RegExp(`Buyer.*${orderId}`) }).click();
+  await expect(page.getByRole('region', { name: 'Preliminary contract for review' })).toContainText(
+    'Supply begins after invoice payment and customer acceptance.'
+  );
+  await expect(page.getByRole('table')).toContainText('Green electricity');
+  await page.getByRole('button', { name: 'Approve order' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
+  expect(staffApprovals).toHaveLength(1);
+  expect(staffApprovals[0]).toMatchObject({ expectedVersionId: versionId });
+  await page.goto(`/electricity/orders/${orderId}`);
   await expect(page.getByRole('region', { name: 'Status and next action' })).toContainText(
     'Review and pay the linked invoice.'
   );
