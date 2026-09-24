@@ -120,11 +120,17 @@ export function TeamActionDialog({
         await onSuccess({ verified: true });
         return;
       }
+      const multipart = action.body instanceof FormData;
       const response = await fetch(action.path, {
         method: action.method,
         credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json', 'Accept-Language': locale }),
-        ...(action.body === undefined ? {} : { body: JSON.stringify(action.body) }),
+        headers: withCsrf({
+          ...(multipart ? {} : { 'Content-Type': 'application/json' }),
+          'Accept-Language': locale,
+        }),
+        ...(action.body === undefined
+          ? {}
+          : { body: multipart ? action.body : JSON.stringify(action.body) }),
       });
       const data = await response.json().catch(() => null);
       const code = typeof data?.error === 'string' ? data.error : data?.error?.code;

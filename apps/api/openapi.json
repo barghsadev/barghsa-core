@@ -5628,6 +5628,138 @@
         ]
       }
     },
+    "/api/admin/document-templates": {
+      "get": {
+        "operationId": "DocumentTemplateController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DocumentTemplate"
+        ]
+      },
+      "post": {
+        "operationId": "DocumentTemplateController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DocumentTemplate"
+        ]
+      }
+    },
+    "/api/admin/document-templates/{id}": {
+      "get": {
+        "operationId": "DocumentTemplateController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DocumentTemplate"
+        ]
+      },
+      "put": {
+        "operationId": "DocumentTemplateController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DocumentTemplate"
+        ]
+      }
+    },
+    "/api/admin/document-templates/{id}/versions": {
+      "post": {
+        "operationId": "DocumentTemplateController_version",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DocumentTemplate"
+        ]
+      }
+    },
+    "/api/admin/document-templates/{id}/versions/{versionId}/files/{fileId}/download": {
+      "get": {
+        "operationId": "DocumentTemplateController_download",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "versionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "fileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DocumentTemplate"
+        ]
+      }
+    },
     "/api/admin/documents": {
       "get": {
         "operationId": "StaffDocumentController_list",

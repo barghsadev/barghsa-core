@@ -107,6 +107,11 @@
       "import": "./dist/contract-templates.js",
       "default": "./dist/contract-templates.js"
     },
+    "./document-templates": {
+      "types": "./dist/document-templates.d.ts",
+      "import": "./dist/document-templates.js",
+      "default": "./dist/document-templates.js"
+    },
     "./admin-ui": {
       "types": "./dist/admin-ui.d.ts",
       "import": "./dist/admin-ui.js",

@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { documentText } from '@barghsa/i18n/documents';
+import { documentTemplateText } from '@barghsa/i18n/document-templates';
 import { shellText } from '@barghsa/i18n/shell';
 import { tSaving } from '@barghsa/i18n/saving';
 import { tSolar } from '@barghsa/i18n/solar';
@@ -127,6 +128,11 @@ export default function AdminLayout() {
         {
           to: '/admin/contract-templates',
           label: t('admin.templates.title', locale),
+          icon: FileText,
+        },
+        {
+          to: '/admin/document-templates',
+          label: documentTemplateText('title', locale),
           icon: FileText,
         },
         {

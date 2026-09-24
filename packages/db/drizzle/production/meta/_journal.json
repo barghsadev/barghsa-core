@@ -869,6 +869,13 @@
       "when": 1791331200106,
       "tag": "0203_sms_credit_monitoring",
       "breakpoints": true
+    },
+    {
+      "idx": 204,
+      "version": "7",
+      "when": 1791331200107,
+      "tag": "0204_document_templates",
+      "breakpoints": true
     }
   ]
 }

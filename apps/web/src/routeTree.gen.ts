@@ -43,6 +43,7 @@ import { Route as AdminContractLimitsRouteImport } from './routes/admin/contract
 import { Route as AdminContractTemplatesRouteImport } from './routes/admin/contract-templates'
 import { Route as AdminContractsRouteImport } from './routes/admin/contracts'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
+import { Route as AdminDocumentTemplatesRouteImport } from './routes/admin/document-templates'
 import { Route as AdminDocumentsRouteImport } from './routes/admin/documents'
 import { Route as AdminElectricityIncreasesRouteImport } from './routes/admin/electricity-increases'
 import { Route as AdminElectricityOrdersRouteImport } from './routes/admin/electricity-orders'
@@ -279,6 +280,11 @@ const AdminContractsRoute = AdminContractsRouteImport.update({
 const AdminCrmRoute = AdminCrmRouteImport.update({
   id: '/crm',
   path: '/crm',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDocumentTemplatesRoute = AdminDocumentTemplatesRouteImport.update({
+  id: '/document-templates',
+  path: '/document-templates',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminDocumentsRoute = AdminDocumentsRouteImport.update({
@@ -665,6 +671,7 @@ export interface FileRoutesByFullPath {
   '/admin/contract-templates': typeof AdminContractTemplatesRoute
   '/admin/contracts': typeof AdminContractsRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
+  '/admin/document-templates': typeof AdminDocumentTemplatesRoute
   '/admin/documents': typeof AdminDocumentsRoute
   '/admin/electricity-increases': typeof AdminElectricityIncreasesRoute
   '/admin/electricity-orders': typeof AdminElectricityOrdersRoute
@@ -762,6 +769,7 @@ export interface FileRoutesByTo {
   '/admin/contract-limits': typeof AdminContractLimitsRoute
   '/admin/contract-templates': typeof AdminContractTemplatesRoute
   '/admin/contracts': typeof AdminContractsRoute
+  '/admin/document-templates': typeof AdminDocumentTemplatesRoute
   '/admin/documents': typeof AdminDocumentsRoute
   '/admin/electricity-increases': typeof AdminElectricityIncreasesRoute
   '/admin/electricity-orders': typeof AdminElectricityOrdersRoute
@@ -864,6 +872,7 @@ export interface FileRoutesById {
   '/admin/contract-templates': typeof AdminContractTemplatesRoute
   '/admin/contracts': typeof AdminContractsRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
+  '/admin/document-templates': typeof AdminDocumentTemplatesRoute
   '/admin/documents': typeof AdminDocumentsRoute
   '/admin/electricity-increases': typeof AdminElectricityIncreasesRoute
   '/admin/electricity-orders': typeof AdminElectricityOrdersRoute
@@ -969,6 +978,7 @@ export interface FileRouteTypes {
     | '/admin/contract-templates'
     | '/admin/contracts'
     | '/admin/crm'
+    | '/admin/document-templates'
     | '/admin/documents'
     | '/admin/electricity-increases'
     | '/admin/electricity-orders'
@@ -1066,6 +1076,7 @@ export interface FileRouteTypes {
     | '/admin/contract-limits'
     | '/admin/contract-templates'
     | '/admin/contracts'
+    | '/admin/document-templates'
     | '/admin/documents'
     | '/admin/electricity-increases'
     | '/admin/electricity-orders'
@@ -1167,6 +1178,7 @@ export interface FileRouteTypes {
     | '/admin/contract-templates'
     | '/admin/contracts'
     | '/admin/crm'
+    | '/admin/document-templates'
     | '/admin/documents'
     | '/admin/electricity-increases'
     | '/admin/electricity-orders'
@@ -1491,6 +1503,13 @@ declare module '@tanstack/react-router' {
       path: '/crm'
       fullPath: '/admin/crm'
       preLoaderRoute: typeof AdminCrmRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/document-templates': {
+      id: '/admin/document-templates'
+      path: '/document-templates'
+      fullPath: '/admin/document-templates'
+      preLoaderRoute: typeof AdminDocumentTemplatesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/documents': {
@@ -2132,6 +2151,7 @@ interface AdminRouteChildren {
   AdminContractTemplatesRoute: typeof AdminContractTemplatesRoute
   AdminContractsRoute: typeof AdminContractsRoute
   AdminCrmRoute: typeof AdminCrmRouteWithChildren
+  AdminDocumentTemplatesRoute: typeof AdminDocumentTemplatesRoute
   AdminDocumentsRoute: typeof AdminDocumentsRoute
   AdminElectricityIncreasesRoute: typeof AdminElectricityIncreasesRoute
   AdminElectricityOrdersRoute: typeof AdminElectricityOrdersRoute
@@ -2177,6 +2197,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminContractTemplatesRoute: AdminContractTemplatesRoute,
   AdminContractsRoute: AdminContractsRoute,
   AdminCrmRoute: AdminCrmRouteWithChildren,
+  AdminDocumentTemplatesRoute: AdminDocumentTemplatesRoute,
   AdminDocumentsRoute: AdminDocumentsRoute,
   AdminElectricityIncreasesRoute: AdminElectricityIncreasesRoute,
   AdminElectricityOrdersRoute: AdminElectricityOrdersRoute,
