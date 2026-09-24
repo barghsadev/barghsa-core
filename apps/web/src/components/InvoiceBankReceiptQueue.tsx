@@ -31,6 +31,11 @@ interface Receipt {
   confirmedAt: string | null;
   requiresDualApproval: boolean;
   dualApprovalPending: boolean;
+  statusHistory?: Array<{
+    state: 'Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected';
+    occurredAt: string;
+    backfilled: boolean;
+  }>;
 }
 
 interface Allocation {
@@ -312,6 +317,28 @@ export function InvoiceBankReceiptQueue({
                 <p className="text-sm">
                   {word('historyRejectionReason')}: {detail.rejectionReason}
                 </p>
+              ) : null}
+              {detail.statusHistory?.length ? (
+                <section aria-label={word('reviewTimeline')} className="space-y-2 text-sm">
+                  <h4 className="font-medium">{word('reviewTimeline')}</h4>
+                  <ol className="space-y-2 border-s border-border ps-4">
+                    {detail.statusHistory.map((event, index) => (
+                      <li key={`${event.state}-${event.occurredAt}-${index}`}>
+                        <span className="font-medium">
+                          {appText(`invoices.activity.state.${event.state}`, locale)}
+                        </span>{' '}
+                        <time dateTime={event.occurredAt} className="text-muted-foreground">
+                          {time.format(event.occurredAt)}
+                        </time>
+                        {event.backfilled ? (
+                          <span className="block text-xs text-muted-foreground">
+                            {word('historicalTime')}
+                          </span>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ol>
+                </section>
               ) : null}
               {allocation ? (
                 <dl className="grid gap-2 rounded-lg bg-muted p-3 text-sm sm:grid-cols-2">

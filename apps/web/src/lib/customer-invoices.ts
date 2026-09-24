@@ -62,6 +62,12 @@ export interface InvoiceReceiptActivity {
   rejectionReason: string | null;
   confirmedAt: string | null;
   createdAt: string;
+  /** Omitted only while an older API deployment is still serving this page. */
+  statusHistory?: Array<{
+    state: 'Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected';
+    occurredAt: string;
+    backfilled: boolean;
+  }>;
 }
 export interface InvoiceRefundActivity {
   id: string;

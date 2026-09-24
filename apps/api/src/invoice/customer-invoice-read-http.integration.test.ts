@@ -61,6 +61,33 @@ function read(f: Awaited<ReturnType<typeof fixture>>, detail = true, id: string 
   return fetch(`${http.base}/api/invoices${detail ? '/' + id : ''}`, { headers: f.headers });
 }
 
+it('returns the durable receipt review sequence without staff metadata', async () => {
+  const f = await fixture();
+  const receiptId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO bank_receipts
+       (id,invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key)
+     VALUES ($1,$2,$3,500,'2026-09-01','reference',$4)`,
+    [receiptId, f.invoice, f.profile, randomUUID()]
+  );
+  await http.pool.query("UPDATE bank_receipts SET state='UnderReview' WHERE id=$1", [receiptId]);
+  await http.pool.query(
+    "UPDATE bank_receipts SET state='Rejected',rejection_reason='Unreadable' WHERE id=$1",
+    [receiptId]
+  );
+
+  const response = await read(f);
+  expect(response.status, http.logs()).toBe(200);
+  const body = (await response.json()) as CustomerInvoiceDetailsDto;
+  const history = body.bankReceipts.find((row) => row.id === receiptId)?.statusHistory;
+  expect(history?.map((event) => event.state)).toEqual(['Submitted', 'UnderReview', 'Rejected']);
+  expect(
+    history?.every((event) => !event.backfilled && !Number.isNaN(Date.parse(event.occurredAt)))
+  ).toBe(true);
+  expect(JSON.stringify(history)).not.toContain('actorUserId');
+  expect(JSON.stringify(history)).not.toContain('metadata');
+});
+
 it('returns the same invoice for a valid uppercase UUID', async () => {
   const f = await fixture();
   const response = await read(f, true, f.invoice.toUpperCase());

@@ -110,6 +110,11 @@ export interface InvoiceBankReceiptConfirmDto {
   paymentDate: string;
   payerReference: string;
   bankName: string | null;
+  statusHistory?: Array<{
+    state: 'Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected';
+    occurredAt: string;
+    backfilled: boolean;
+  }>;
   attachmentKey: string;
   attachmentUrl: string | null;
   customerNote: string | null;
@@ -332,7 +337,24 @@ export class InvoiceBankReceiptConfirmationService {
     }
     const extra = await this.loadCurrentAllocation(pool, row);
     const dual = await this.loadDualApprovalDtoExtras(pool, row);
-    return this.toDto(row, { ...extra, ...dual });
+    const events = await pool.query<{
+      state: NonNullable<InvoiceBankReceiptConfirmDto['statusHistory']>[number]['state'];
+      occurredAt: Date;
+      backfilled: boolean;
+    }>(
+      `SELECT state, occurred_at AS "occurredAt", backfilled
+         FROM bank_receipt_status_events
+        WHERE receipt_id=$1 ORDER BY occurred_at,id`,
+      [receiptId]
+    );
+    return {
+      ...(await this.toDto(row, { ...extra, ...dual })),
+      statusHistory: events.rows.map((event) => ({
+        state: event.state,
+        occurredAt: event.occurredAt.toISOString(),
+        backfilled: event.backfilled,
+      })),
+    };
   }
 
   async previewAllocation(receiptId: string): Promise<InvoiceBankReceiptAllocationPreviewDto> {

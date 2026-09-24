@@ -6,4 +6,4 @@ The admin invoice receipt panel now has a separate reviewed-history view. Financ
 
 Validation: PostgreSQL integration covers a microsecond page boundary, terminal-state filtering, and invoice isolation. Controller tests cover permission and query validation. Web tests cover history paging, filters, and the terminal detail. Workspace build, typecheck, lint, formatting, OpenAPI and backlog checks run before push; GitHub CI runs on the pushed commit.
 
-Remaining: bank-name metadata is not stored on invoice receipts, so the canonical bank-name column is still pending. The pending queue remains a separate live view.
+Later progress: bank-name metadata and receipt review timelines have been added in subsequent batches. The pending queue remains a separate live view.

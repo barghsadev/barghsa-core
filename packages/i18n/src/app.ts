@@ -989,6 +989,8 @@ export const fa: I18nDictionary = {
   'invoices.activity.receiptId': 'شناسه رسید',
   'invoices.activity.submittedAt': 'زمان ثبت',
   'invoices.activity.confirmedAt': 'زمان تأیید',
+  'invoices.activity.reviewTimeline': 'روند بررسی رسید',
+  'invoices.activity.historicalTime': 'زمان ثبت‌شده برای رسید قدیمی؛ ممکن است تقریبی باشد.',
   'invoices.activity.rejectionReason': 'دلیل رد',
   'invoices.activity.retry': 'تلاش دوباره',
   'invoices.activity.refreshFailed': 'رسید ذخیره شد، اما تازه‌سازی سوابق ناموفق بود.',
@@ -2231,6 +2233,9 @@ export const en: I18nDictionary = {
   'invoices.activity.receiptId': 'Receipt ID',
   'invoices.activity.submittedAt': 'Submitted at',
   'invoices.activity.confirmedAt': 'Confirmed at',
+  'invoices.activity.reviewTimeline': 'Receipt review timeline',
+  'invoices.activity.historicalTime':
+    'Time recovered from an older receipt; it may be approximate.',
   'invoices.activity.rejectionReason': 'Rejection reason',
   'invoices.activity.retry': 'Try again',
   'invoices.activity.refreshFailed': 'Receipt saved, but history could not be refreshed.',

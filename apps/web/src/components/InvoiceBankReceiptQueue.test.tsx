@@ -21,6 +21,7 @@ const receipt = {
   canConfirm: true,
   canReject: true,
   rejectionReason: null,
+  statusHistory: [{ state: 'Submitted', occurredAt: '2026-09-24T00:00:00Z', backfilled: false }],
   invoiceAllocation: null,
   walletCreditAmount: null,
   dualApprovalPending: false,
@@ -128,6 +129,10 @@ it.each(['en', 'fa'] as const)('reviews the allocation and receipt file in %s', 
   expect(container.textContent).toContain('100000 IRR');
   expect(container.textContent).toContain('Bank Mellat');
   expect(container.textContent).toContain('150000 IRR');
+  expect(container.textContent).toContain(
+    locale === 'en' ? 'Receipt review timeline' : 'روند بررسی رسید'
+  );
+  expect(container.querySelector('time[dateTime="2026-09-24T00:00:00Z"]')).not.toBeNull();
   expect(
     container.querySelector('a[href="https://storage.example.test/receipt.pdf"]')
   ).not.toBeNull();

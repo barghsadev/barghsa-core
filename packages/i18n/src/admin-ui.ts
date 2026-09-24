@@ -23,6 +23,8 @@ export const fa: I18nDictionary = {
   'admin.invoiceReceipts.bankName': 'نام بانک',
   'admin.invoiceReceipts.submitted': 'زمان ثبت',
   'admin.invoiceReceipts.confirmed': 'زمان تأیید',
+  'admin.invoiceReceipts.reviewTimeline': 'روند بررسی رسید',
+  'admin.invoiceReceipts.historicalTime': 'زمان ثبت‌شده برای رسید قدیمی؛ ممکن است تقریبی باشد.',
   'admin.invoiceReceipts.attachment': 'مشاهده فایل رسید',
   'admin.invoiceReceipts.attachmentUnavailable':
     'فایل رسید در دسترس نیست؛ پیش از تأیید دوباره تلاش کنید.',
@@ -1224,6 +1226,9 @@ export const en: I18nDictionary = {
   'admin.invoiceReceipts.bankName': 'Bank name',
   'admin.invoiceReceipts.submitted': 'Submitted at',
   'admin.invoiceReceipts.confirmed': 'Confirmed at',
+  'admin.invoiceReceipts.reviewTimeline': 'Receipt review timeline',
+  'admin.invoiceReceipts.historicalTime':
+    'Time recovered from an older receipt; it may be approximate.',
   'admin.invoiceReceipts.attachment': 'View receipt file',
   'admin.invoiceReceipts.attachmentUnavailable':
     'The receipt file is unavailable; retry before confirming.',

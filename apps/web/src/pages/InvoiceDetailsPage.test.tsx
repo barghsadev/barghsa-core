@@ -241,6 +241,44 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     }
   );
 
+  it.each(['en', 'fa'] as const)('shows receipt review events in %s', async (locale) => {
+    document.documentElement.lang = locale;
+    const payload = replacementPayload();
+    payload.bankReceipts = [
+      {
+        id: 'receipt-1',
+        amount: '500',
+        state: 'Rejected',
+        paymentDate: '2026-09-01',
+        payerReference: 'bank-reference',
+        bankName: null,
+        customerNote: null,
+        rejectionReason: 'Unreadable',
+        confirmedAt: null,
+        createdAt: '2026-09-01T12:00:00Z',
+        statusHistory: [
+          { state: 'Submitted', occurredAt: '2026-09-01T12:00:00Z', backfilled: false },
+          { state: 'UnderReview', occurredAt: '2026-09-02T12:00:00Z', backfilled: false },
+          { state: 'Rejected', occurredAt: '2026-09-03T12:00:00Z', backfilled: true },
+        ],
+      },
+    ];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({ ok: true, status: 200, json: async () => payload }))
+    );
+    await act(async () => {
+      root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />);
+    });
+    const timeline = container.querySelector('section[aria-label] ol');
+    expect(timeline?.querySelectorAll('li')).toHaveLength(3);
+    expect(timeline?.textContent).toContain(locale === 'en' ? 'Under review' : 'در حال بررسی');
+    expect(timeline?.textContent).toContain(
+      locale === 'en' ? 'Time recovered from an older receipt' : 'زمان ثبت‌شده برای رسید قدیمی'
+    );
+    expect(container.textContent).not.toContain('invoices.activity.');
+  });
+
   it.each(['en', 'fa'] as const)(
     'links a published invoice to its contract in %s',
     async (locale) => {

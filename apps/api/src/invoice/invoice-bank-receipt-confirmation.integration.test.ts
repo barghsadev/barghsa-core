@@ -186,6 +186,23 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     return result.rows[0]!.state;
   }
 
+  it('returns the receipt state history in staff detail', async () => {
+    const invoiceId = await insertInvoice({ total: 1_000n });
+    const receiptId = await insertReceipt({ invoiceId, amount: 500n, suffix: 'detail-hist' });
+    await ctx.pool.query("UPDATE bank_receipts SET state='UnderReview' WHERE id=$1", [receiptId]);
+    await ctx.pool.query(
+      "UPDATE bank_receipts SET state='Rejected', rejection_reason='Unreadable' WHERE id=$1",
+      [receiptId]
+    );
+    const detail = await service.get(receiptId);
+    expect(detail.statusHistory?.map((event) => event.state)).toEqual([
+      'Submitted',
+      'UnderReview',
+      'Rejected',
+    ]);
+    expect(detail.statusHistory?.every((event) => !event.backfilled)).toBe(true);
+  });
+
   it('pages terminal receipts without leaking pending or other-invoice rows', async () => {
     const invoiceId = await insertInvoice({ total: 100_000n });
     const otherInvoiceId = await insertInvoice({ total: 100_000n, profileId: PROFILE_B });

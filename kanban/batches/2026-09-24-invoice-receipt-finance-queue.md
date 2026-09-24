@@ -6,4 +6,4 @@ Finance staff can open the invoice receipt queue from the admin invoice page, in
 
 Validation: bilingual UI tests cover the queue, allocation, confirm/reject actions, dual-approval handoff, and access denial. Existing PostgreSQL suites verify confirm/reject settlement and dual approval. Workspace build, typecheck, lint, formatting, OpenAPI, and backlog checks run before push; GitHub CI runs on the pushed commit.
 
-Remaining: this queue covers pending receipts; a searchable historical receipt list and bank-name metadata are separate work.
+Later progress: reviewed-receipt history, bank-name metadata, and receipt review timelines have been added in subsequent batches. The pending queue remains a separate live view.

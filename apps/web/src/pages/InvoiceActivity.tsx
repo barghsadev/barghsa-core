@@ -83,14 +83,37 @@ export function InvoiceActivity({
             >
               {label('viewReceiptAttachment')}
             </a>
-            <p className="text-muted-foreground">
-              {label('submittedAt')}: {formatTimestamp(row.createdAt)}
-            </p>
-            {row.confirmedAt ? (
-              <p className="text-muted-foreground">
-                {label('confirmedAt')}: {formatTimestamp(row.confirmedAt)}
-              </p>
-            ) : null}
+            {row.statusHistory?.length ? (
+              <section aria-label={label('reviewTimeline')} className="pt-2">
+                <h3 className="mb-2 font-medium">{label('reviewTimeline')}</h3>
+                <ol className="space-y-2 border-s border-border ps-4">
+                  {row.statusHistory.map((event, index) => (
+                    <li key={`${event.state}-${event.occurredAt}-${index}`} className="text-sm">
+                      <span className="font-medium">{state(event.state)}</span>{' '}
+                      <time dateTime={event.occurredAt} className="text-muted-foreground">
+                        {formatTimestamp(event.occurredAt)}
+                      </time>
+                      {event.backfilled ? (
+                        <span className="block text-xs text-muted-foreground">
+                          {label('historicalTime')}
+                        </span>
+                      ) : null}
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            ) : (
+              <>
+                <p className="text-muted-foreground">
+                  {label('submittedAt')}: {formatTimestamp(row.createdAt)}
+                </p>
+                {row.confirmedAt ? (
+                  <p className="text-muted-foreground">
+                    {label('confirmedAt')}: {formatTimestamp(row.confirmedAt)}
+                  </p>
+                ) : null}
+              </>
+            )}
           </li>
         ))
       )}
