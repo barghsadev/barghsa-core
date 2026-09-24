@@ -77,6 +77,7 @@ for (const locale of ['en', 'fa'] as const) {
       route.fulfill({
         json: {
           activeProfileId: profileId,
+          activeProfileName: 'Advanced Buyer Ltd',
           profileStatus: 'ACTIVE',
           verificationRequired: true,
           isVerified: true,
@@ -165,6 +166,7 @@ for (const locale of ['en', 'fa'] as const) {
           subtotalIrR: String(Number(quantityKwh) * Number(unitPriceIrR)),
           discountIrR: '0',
           vatIrR: '0',
+          totalIrR: String(Number(quantityKwh) * Number(unitPriceIrR)),
         }));
       const total = lines.reduce((sum, line) => sum + Number(line.subtotalIrR), 0);
       reviewedTotal = String(total);
@@ -425,6 +427,10 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page).toHaveURL(/\/electricity\/advanced$/);
     await expect(wizard).toContainText(addedAddress.fullAddress);
     await page.locator('input[name="advanced-address"]').nth(1).check();
+    await expect(wizard.getByText('Advanced Buyer Ltd', { exact: true })).toBeVisible();
+    await expect(
+      wizard.getByText(locale === 'fa' ? /جمع قلم/ : /Line total/).first()
+    ).toBeVisible();
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ثبت سفارش' : 'Submit Order', exact: true })
       .click();

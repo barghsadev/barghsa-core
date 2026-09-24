@@ -50,6 +50,7 @@ type Quote = {
     subtotalIrR: string;
     discountIrR: string;
     vatIrR: string;
+    totalIrR: string;
   }>;
   subtotalIrR: string;
   discountIrR: string;
@@ -120,6 +121,7 @@ export function AdvancedElectricityOrderPage() {
   const numbers = useNumberFormatting(locale);
   const navigate = useNavigate();
   const [profileId, setProfileId] = useState('');
+  const [profileName, setProfileName] = useState<string | null>(null);
   const [blocked, setBlocked] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -212,6 +214,11 @@ export function AdvancedElectricityOrderPage() {
           throw new Error('Invalid data');
         if (abort.signal.aborted) return;
         setProfileId(status.activeProfileId);
+        setProfileName(
+          typeof status.activeProfileName === 'string' && status.activeProfileName.trim()
+            ? status.activeProfileName.trim()
+            : null
+        );
         setBlocked(
           status.profileStatus === 'DRAFT' ||
             status.profileStatus === 'SUSPENDED' ||
@@ -624,16 +631,22 @@ export function AdvancedElectricityOrderPage() {
                   </p>
                   {quote.greenRuleApplies && <p>{t('electricity.order.mandatoryGreen', locale)}</p>}
                   {quote.lines.map((line) => (
-                    <p key={line.systemKey} className="flex justify-between gap-3 border-b py-2">
-                      <span>
-                        {t(`electricity.catalogue.${line.systemKey}`, locale)} · {line.quantityKwh}{' '}
-                        kWh × {numbers.money(line.unitPriceIrR)}
-                      </span>
-                      <span>
+                    <div key={line.systemKey} className="border-b py-2 text-sm">
+                      <div className="flex flex-wrap justify-between gap-2">
+                        <span>
+                          {t(`electricity.catalogue.${line.systemKey}`, locale)} ·{' '}
+                          {numbers.irrDigits(line.quantityKwh)} kWh ×{' '}
+                          {numbers.money(line.unitPriceIrR)}
+                        </span>
+                        <strong>
+                          {t('electricity.order.lineTotal', locale)}: {numbers.money(line.totalIrR)}
+                        </strong>
+                      </div>
+                      <p className="text-muted-foreground">
                         {numbers.money(line.subtotalIrR)} · −{numbers.money(line.discountIrR)} · +
                         {numbers.money(line.vatIrR)}
-                      </span>
-                    </p>
+                      </p>
+                    </div>
                   ))}
                   <p>
                     {t('electricity.order.discount', locale)}: {numbers.money(quote.discountIrR)}
@@ -654,7 +667,13 @@ export function AdvancedElectricityOrderPage() {
                   {step === 5 && (
                     <>
                       <p>
-                        {t('electricity.order.profile', locale)}: <span dir="ltr">{profileId}</span>
+                        {t('electricity.order.profile', locale)}:{' '}
+                        <strong dir="auto">{profileName || profileId}</strong>
+                        {profileName ? (
+                          <small className="ms-2 text-muted-foreground" dir="ltr">
+                            {profileId}
+                          </small>
+                        ) : null}
                       </p>
                       <p>
                         {t('electricity.order.giftCode', locale)}: {giftCode.trim() || '—'}

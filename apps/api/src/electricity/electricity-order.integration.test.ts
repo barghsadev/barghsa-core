@@ -482,6 +482,7 @@ it('submits a four-product advanced bundle once with one contract and invoice', 
       subtotalIrR: string;
       discountIrR: string;
       vatIrR: string;
+      totalIrR: string;
     }>;
     walletBalanceIrR: string;
   };
@@ -492,6 +493,14 @@ it('submits a four-product advanced bundle once with one contract and invoice', 
     'free_market',
     'energy_saving',
   ]);
+  expect(preview.lines.reduce((sum, line) => sum + BigInt(line.totalIrR), 0n).toString()).toBe(
+    preview.totalIrR
+  );
+  for (const line of preview.lines) {
+    expect(BigInt(line.totalIrR)).toBe(
+      BigInt(line.subtotalIrR) - BigInt(line.discountIrR) + BigInt(line.vatIrR)
+    );
+  }
   expect(preview.walletBalanceIrR).toBe('0');
   const shiftedStart = await post('preview/advanced', {
     ...request,
@@ -553,7 +562,14 @@ it('submits a four-product advanced bundle once with one contract and invoice', 
     discountIrR: preview.discountIrR,
     vatIrR: preview.vatIrR,
     totalIrR: preview.totalIrR,
-    lines: preview.lines,
+    lines: preview.lines.map((line) => ({
+      systemKey: line.systemKey,
+      quantityKwh: line.quantityKwh,
+      unitPriceIrR: line.unitPriceIrR,
+      subtotalIrR: line.subtotalIrR,
+      discountIrR: line.discountIrR,
+      vatIrR: line.vatIrR,
+    })),
   });
   expect(saved.pricing_snapshot.lines).toEqual(
     expect.arrayContaining([expect.objectContaining({ minKwh: '0', maxKwh: '0' })])

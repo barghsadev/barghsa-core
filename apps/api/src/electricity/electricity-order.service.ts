@@ -1327,6 +1327,7 @@ export class ElectricityOrderService {
         discountIrR: line.discountIrR.toString(),
         vatRateBasisPoints: line.vatRateBasisPoints,
         vatIrR: line.vatIrR.toString(),
+        totalIrR: (line.subtotalIrR - line.discountIrR + line.vatIrR).toString(),
       })),
       subtotalIrR: quoted.totals.subtotalIrR.toString(),
       discountIrR: quoted.totals.discountIrR.toString(),
