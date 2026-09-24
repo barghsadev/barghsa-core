@@ -59,6 +59,6 @@ import { DocumentModule } from '../documents/document.module.js';
     ContractSignatureService,
     ContractActivationService,
   ],
-  exports: [ContractService],
+  exports: [ContractService, ContractPdfService],
 })
 export class ContractModule {}

@@ -1,5 +1,5 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { getDbPool } from '@barghsa/db';
+import { createDirectDbPool, getDbPool } from '@barghsa/db';
 import type { CreateRecordOptions } from '@barghsa/shared/storage';
 import type { UploadContext } from './upload.types.js';
 
@@ -13,24 +13,32 @@ export async function reserveUpload(options: {
   category: string;
   expiresIn: number;
   context?: UploadContext;
+  independent?: boolean;
 }) {
-  await getDbPool().query(
-    `INSERT INTO storage_records
+  const pool = options.independent
+    ? createDirectDbPool({ poolMax: 1, poolMin: 0 }, { shared: false })
+    : getDbPool();
+  try {
+    await pool.query(
+      `INSERT INTO storage_records
     (storage_key,status,file_name,content_type,file_size,category,metadata,removed_at)
     VALUES ($1,'removed',$2,$3,$4,$5,jsonb_build_object(
       'uploadedBy',$6::text,'provisionalUpload',true,'deletionRequested',true,'scanState','Uploading',
       'uploadExpiresAt',clock_timestamp()+($7::int * INTERVAL '1 second'),'uploadContext',$8::jsonb),NOW())`,
-    [
-      options.key,
-      options.fileName,
-      options.contentType,
-      options.fileSize,
-      options.category,
-      options.userId,
-      options.expiresIn,
-      JSON.stringify(options.context ?? {}),
-    ]
-  );
+      [
+        options.key,
+        options.fileName,
+        options.contentType,
+        options.fileSize,
+        options.category,
+        options.userId,
+        options.expiresIn,
+        JSON.stringify(options.context ?? {}),
+      ]
+    );
+  } finally {
+    if (options.independent) await pool.end();
+  }
 }
 export async function requireOwnedUpload(key: string, userId: string) {
   const row = (

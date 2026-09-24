@@ -12,14 +12,28 @@ let profileId: string;
 let provinceId: string;
 let cityId: string;
 const storageRequests: string[] = [];
+const storedObjects = new Map<string, Buffer>();
+let rejectGeneratedPuts = false;
 
 beforeAll(async () => {
   storage = createServer((request, response) => {
     storageRequests.push(`${request.method} ${request.url}`);
-    if (
-      request.method === 'GET' &&
-      new URL(request.url!, 'http://localhost').pathname.endsWith('/electricity-agreement.txt')
-    ) {
+    const path = new URL(request.url!, 'http://localhost').pathname;
+    if (request.method === 'PUT') {
+      if (rejectGeneratedPuts) {
+        request.resume();
+        response.writeHead(503).end();
+        return;
+      }
+      void (async () => {
+        const chunks: Buffer[] = [];
+        for await (const chunk of request) chunks.push(Buffer.from(chunk));
+        storedObjects.set(path, Buffer.concat(chunks));
+        response.writeHead(200).end();
+      })();
+      return;
+    }
+    if (request.method === 'GET' && path.endsWith('/electricity-agreement.txt')) {
       const text = 'Agreement for {{ customerName }}: {{amount}} IRR on {{date}}.';
       response
         .writeHead(200, {
@@ -27,6 +41,13 @@ beforeAll(async () => {
           'Content-Length': Buffer.byteLength(text),
         })
         .end(text);
+      return;
+    }
+    const stored = storedObjects.get(path);
+    if (request.method === 'GET' && stored) {
+      response
+        .writeHead(200, { 'Content-Type': 'application/pdf', 'Content-Length': stored.length })
+        .end(stored);
       return;
     }
     response.writeHead(404).end();
@@ -50,6 +71,9 @@ beforeAll(async () => {
     if (staff) {
       await http.pool.query(
         "INSERT INTO user_roles(user_id,role_id) VALUES('editor','electricity-template-editor')"
+      );
+      await http.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES('editor','role-legal-contracts')"
       );
     }
     const session = randomUUID();
@@ -128,17 +152,18 @@ it('embeds the selected template version and rendered text in a new preliminary 
   });
   expect(preview.status, http.logs()).toBe(200);
   const quote = (await preview.json()) as { reviewDigest: string; totalIrR: string };
+  const submissionInput = {
+    profileId,
+    period: 'next_week',
+    totalKwh: '10',
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: quote.reviewDigest,
+    address: { provinceId, cityId, fullAddress: 'Electricity Street', postalCode: '1234567890' },
+  };
   const submitted = await fetch(`${http.base}/api/electricity/orders/simple`, {
     method: 'POST',
     headers: buyerHeaders,
-    body: JSON.stringify({
-      profileId,
-      period: 'next_week',
-      totalKwh: '10',
-      idempotencyKey: randomUUID(),
-      expectedQuoteDigest: quote.reviewDigest,
-      address: { provinceId, cityId, fullAddress: 'Electricity Street', postalCode: '1234567890' },
-    }),
+    body: JSON.stringify(submissionInput),
   });
   expect(
     submitted.status,
@@ -158,4 +183,131 @@ it('embeds the selected template version and rendered text in a new preliminary 
   expect(content.template.versionId).toBe(versionId);
   expect(content.template.text).toContain(`Agreement for Ada Example: ${quote.totalIrR} IRR on `);
   expect(content.template.text).not.toContain('{{');
+  const linked = await http.pool.query<{
+    id: string;
+    state: string;
+    revision: number;
+    uploaded_by_type: string;
+    storage_key: string;
+    role: string;
+    contract_version_id: string;
+  }>(
+    `SELECT d.id,d.state,d.revision,d.uploaded_by_type,d.storage_key,cd.role,cd.contract_version_id
+     FROM documents d JOIN contract_documents cd ON cd.document_id=d.id
+     WHERE cd.contract_id=$1`,
+    [contractId]
+  );
+  expect(linked.rows).toHaveLength(1);
+  const document = linked.rows[0]!;
+  expect(document).toMatchObject({
+    state: 'SubmittedForReview',
+    revision: 4,
+    uploaded_by_type: 'system',
+    role: 'original',
+  });
+  const version = await http.pool.query<{ id: string }>(
+    'SELECT id FROM contract_versions WHERE contract_id=$1',
+    [contractId]
+  );
+  expect(document.contract_version_id).toBe(version.rows[0]!.id);
+  const pdfBytes = [...storedObjects].find(([path]) => path.endsWith(document.storage_key))?.[1];
+  expect(pdfBytes?.subarray(0, 5).toString()).toBe('%PDF-');
+  expect(pdfBytes?.length).toBeGreaterThan(1000);
+  const events = await http.pool.query<{ state: string }>(
+    'SELECT state FROM document_events WHERE document_id=$1 ORDER BY revision',
+    [document.id]
+  );
+  expect(events.rows.map((event) => event.state)).toEqual([
+    'Uploading',
+    'PendingScan',
+    'Available',
+    'SubmittedForReview',
+  ]);
+  const approval = await fetch(`${http.base}/api/admin/documents/${document.id}/approve`, {
+    method: 'POST',
+    headers: staffHeaders,
+    body: JSON.stringify({ expectedRevision: 4, idempotencyKey: randomUUID() }),
+  });
+  expect(approval.status, await approval.clone().text()).toBe(200);
+  expect((await approval.json()) as { state: string }).toMatchObject({ state: 'Approved' });
+  const manualRetry = await fetch(
+    `${http.base}/api/admin/contracts/${contractId}/versions/${document.contract_version_id}/generate-pdf`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({ idempotencyKey: document.contract_version_id }),
+    }
+  );
+  expect(manualRetry.status, await manualRetry.clone().text()).toBe(201);
+  expect((await manualRetry.json()) as { id: string }).toMatchObject({ id: document.id });
+  const retry = await fetch(`${http.base}/api/electricity/orders/simple`, {
+    method: 'POST',
+    headers: buyerHeaders,
+    body: JSON.stringify(submissionInput),
+  });
+  expect(retry.status, http.logs()).toBe(201);
+  expect(((await retry.json()) as { contractId: string }).contractId).toBe(contractId);
+  expect(
+    (await http.pool.query('SELECT id FROM contract_documents WHERE contract_id=$1', [contractId]))
+      .rows
+  ).toHaveLength(1);
+});
+
+it('rolls back an order when automatic PDF storage fails and succeeds on retry', async () => {
+  const preview = await fetch(`${http.base}/api/electricity/preview/simple`, {
+    method: 'POST',
+    headers: buyerHeaders,
+    body: JSON.stringify({ profileId, period: 'next_week', totalKwh: '10' }),
+  });
+  expect(preview.status).toBe(200);
+  const quote = (await preview.json()) as { reviewDigest: string };
+  const idempotencyKey = randomUUID();
+  const body = JSON.stringify({
+    profileId,
+    period: 'next_week',
+    totalKwh: '10',
+    idempotencyKey,
+    expectedQuoteDigest: quote.reviewDigest,
+    address: { provinceId, cityId, fullAddress: 'Retry Street', postalCode: '1234567890' },
+  });
+  rejectGeneratedPuts = true;
+  try {
+    const failed = await fetch(`${http.base}/api/electricity/orders/simple`, {
+      method: 'POST',
+      headers: buyerHeaders,
+      body,
+    });
+    expect(failed.status).toBeGreaterThanOrEqual(500);
+  } finally {
+    rejectGeneratedPuts = false;
+  }
+  expect(
+    (
+      await http.pool.query(
+        'SELECT order_id FROM electricity_order_submissions WHERE user_id=$1 AND idempotency_key=$2',
+        ['buyer', idempotencyKey]
+      )
+    ).rows
+  ).toHaveLength(0);
+  const cleanup = await http.pool.query<{ count: string }>(
+    `SELECT count(*) FROM storage_records WHERE status='removed'
+     AND metadata->>'uploadedBy'='buyer' AND metadata->>'provisionalUpload'='true'
+     AND metadata->>'deletionRequested'='true'`
+  );
+  expect(Number(cleanup.rows[0]!.count)).toBeGreaterThanOrEqual(1);
+  const retry = await fetch(`${http.base}/api/electricity/orders/simple`, {
+    method: 'POST',
+    headers: buyerHeaders,
+    body,
+  });
+  expect(retry.status, http.logs()).toBe(201);
+  const { contractId } = (await retry.json()) as { contractId: string };
+  expect(
+    (
+      await http.pool.query(
+        'SELECT d.id FROM documents d JOIN contract_documents cd ON cd.document_id=d.id WHERE cd.contract_id=$1',
+        [contractId]
+      )
+    ).rows
+  ).toHaveLength(1);
 });

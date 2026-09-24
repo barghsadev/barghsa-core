@@ -19,6 +19,7 @@ import { OrdersService } from '../orders/orders.service.js';
 import { GiftCodeService } from '../admin/gift-code.service.js';
 import { DueAtCalculationService } from '../invoice/due-at.service.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
+import { ContractPdfService } from '../contract/contract-pdf.service.js';
 import { ElectricityCalculationService } from './electricity-calculation.service.js';
 import type { ElectricitySystemKey } from './electricity-calculation.js';
 import {
@@ -133,7 +134,7 @@ function hashRequest(input: SubmissionInput): string {
   return createHash('sha256').update(JSON.stringify(request)).digest('hex');
 }
 
-/** All business writes share the caller's transaction; no external side effect can split the order. */
+/** Order, invoice, contract and document rows share one transaction; object writes have cleanup reservations. */
 @Injectable()
 export class ElectricityOrderService {
   constructor(
@@ -142,6 +143,7 @@ export class ElectricityOrderService {
     private readonly giftCodes: GiftCodeService,
     private readonly dueDates: DueAtCalculationService,
     private readonly invoiceStates: InvoiceStateMachineService,
+    private readonly contractPdfs: ContractPdfService,
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider | null
   ) {}
 
@@ -1501,6 +1503,15 @@ export class ElectricityOrderService {
           actor.userId,
         ]
       );
+      if (template)
+        await this.contractPdfs.generateInitial(
+          client,
+          contractId,
+          versionId,
+          input.profileId,
+          actor.userId,
+          ip
+        );
       await client.query(
         "UPDATE contracts SET state='AwaitingStaffReview',submitted_at=$2 WHERE id=$1",
         [contractId, now]

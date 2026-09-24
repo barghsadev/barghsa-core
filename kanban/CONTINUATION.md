@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Automatic electricity contract PDF](batches/2026-09-24-automatic-electricity-contract-pdf.md) creates the reviewable original PDF in the order transaction whenever an admin template is selected, with audited document states and retryable failure handling.
+
 [Electricity contract PDF generation](batches/2026-09-24-electricity-contract-pdf.md) lets staff create a reviewable PDF from saved terms for the exact original or accepted amendment version, with Persian rendering and signature handoff.
 
 [Signed contract amendments](batches/2026-09-24-signed-contract-amendments.md) preserve the effective version through customer acceptance and required signing, with exact-version PDF and signed-copy evidence.

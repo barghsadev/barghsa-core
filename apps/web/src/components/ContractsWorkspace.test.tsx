@@ -230,6 +230,24 @@ it('submits the saved electricity snapshot as a PDF for staff document review', 
     fetcher.mock.calls.some(([raw]) => raw.endsWith(`/versions/${VERSION}/generate-pdf`))
   ).toBe(true);
 });
+it('uses the automatically generated PDF for order-linked electricity contracts', async () => {
+  vi.stubGlobal(
+    'fetch',
+    api(
+      detail({
+        orderId: ID,
+        state: 'Accepted',
+        currentVersionId: VERSION,
+        currentVersion: version({
+          content: { template: { name: 'Electricity agreement', text: 'Saved exact terms' } },
+        }),
+      })
+    )
+  );
+  await render(<ContractDetail id={ID} staff onClose={() => {}} onChanged={() => {}} />);
+  expect(container.textContent).not.toContain(en.generateContractPdf);
+  expect(container.textContent).toContain(en.documents);
+});
 it('opens the customer contract list with the active-state filter', async () => {
   const fetcher = api();
   vi.stubGlobal('fetch', fetcher);

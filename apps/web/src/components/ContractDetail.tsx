@@ -614,6 +614,7 @@ function ContractDocuments({
     staff &&
     canUpload &&
     contract.serviceType === 'electricity' &&
+    (!contract.orderId || isPendingAmendment) &&
     template !== null &&
     typeof template === 'object' &&
     !Array.isArray(template) &&

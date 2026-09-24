@@ -110,11 +110,11 @@ async function load(
   if (!row) throw new NotFoundException();
   return row;
 }
-async function recordEvent(
+export async function recordEvent(
   client: PoolClient,
   document: Document,
   previousState: Document['state'] | null,
-  actor: DocumentActor,
+  actor: Pick<DocumentActor, 'userId'>,
   ip: string,
   reason?: string
 ) {
