@@ -41,6 +41,25 @@ async function shell(page: Page, locale: 'en' | 'fa', baseURL: string) {
 }
 for (const locale of ['en', 'fa'] as const) {
   const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
+  test(`active SMS breaker state is visible to staff (${locale})`, async ({ page, baseURL }) => {
+    await shell(page, locale, baseURL!);
+    await page.route('**/api/admin/sms-providers', (route) =>
+      route.fulfill({
+        json: [
+          {
+            ...provider('sms-active', 'active'),
+            degraded: true,
+            breakerCooldownUntil: '2099-09-24T12:00:00Z',
+            lastFailureAt: '2026-09-24T12:00:00Z',
+          },
+        ],
+      })
+    );
+    await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
+    const row = page.getByRole('row').filter({ hasText: 'sms-active' });
+    await expect(row).toContainText(text('healthPaused'));
+    await expect(row).toContainText(text('healthLastFailure'));
+  });
   test(`SMS locale mappings survive save and cannot be silently dropped (${locale})`, async ({
     page,
     baseURL,

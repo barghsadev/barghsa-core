@@ -16,6 +16,10 @@ const fa = {
   'admin.providers.status.active': 'فعال',
   'admin.providers.status.superseded': 'جایگزین‌شده',
   'admin.providers.status.disabled': 'غیرفعال',
+  'admin.providers.health.healthy': 'ارسال سالم',
+  'admin.providers.health.paused': 'ارسال متوقف تا',
+  'admin.providers.health.probe': 'آزمایش بازیابی آماده است',
+  'admin.providers.health.lastFailure': 'آخرین خطا',
   'admin.providers.transport.smtp': 'SMTP',
   'admin.providers.transport.resend': 'Resend',
   'admin.providers.create.title': 'ایجاد ارائه‌دهنده ایمیل',
@@ -90,6 +94,10 @@ const en: Record<keyof typeof fa, string> = {
   'admin.providers.status.active': 'Active',
   'admin.providers.status.superseded': 'Superseded',
   'admin.providers.status.disabled': 'Disabled',
+  'admin.providers.health.healthy': 'Delivery healthy',
+  'admin.providers.health.paused': 'Delivery paused until',
+  'admin.providers.health.probe': 'Recovery probe ready',
+  'admin.providers.health.lastFailure': 'Last failure',
   'admin.providers.transport.smtp': 'SMTP',
   'admin.providers.transport.resend': 'Resend',
   'admin.providers.create.title': 'Create Email Provider',
@@ -218,6 +226,10 @@ const smsEn = {
   actions: 'Actions',
   status: 'Status',
   lastTest: 'Last test',
+  healthHealthy: 'Delivery healthy',
+  healthPaused: 'Delivery paused until',
+  healthProbe: 'Recovery probe ready',
+  healthLastFailure: 'Last failure',
 };
 const smsFa: Record<keyof typeof smsEn, string> = {
   tabs: 'ارسال اعلان‌ها',
@@ -284,6 +296,10 @@ const smsFa: Record<keyof typeof smsEn, string> = {
   actions: 'عملیات',
   status: 'وضعیت',
   lastTest: 'آخرین آزمایش',
+  healthHealthy: 'ارسال سالم',
+  healthPaused: 'ارسال متوقف تا',
+  healthProbe: 'آزمایش بازیابی آماده است',
+  healthLastFailure: 'آخرین خطا',
 };
 export function smsProviderText(key: keyof typeof smsEn, locale: 'en' | 'fa'): string {
   return (locale === 'fa' ? smsFa : smsEn)[key];

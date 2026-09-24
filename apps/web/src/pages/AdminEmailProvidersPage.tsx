@@ -475,6 +475,13 @@ export default function AdminEmailProvidersPage() {
     return providerText('admin.providers.test.pending', uiLocale);
   }
 
+  function healthLabel(p: EmailProvider): string {
+    if (!p.degraded) return providerText('admin.providers.health.healthy', uiLocale);
+    if (p.breakerCooldownUntil && Date.parse(p.breakerCooldownUntil) > Date.now())
+      return `${providerText('admin.providers.health.paused', uiLocale)} ${time.format(p.breakerCooldownUntil)}`;
+    return providerText('admin.providers.health.probe', uiLocale);
+  }
+
   return (
     <div className="space-y-6">
       {time.notice}
@@ -692,6 +699,21 @@ export default function AdminEmailProvidersPage() {
                         <p className="text-xs text-muted-foreground mt-1">
                           {providerText('admin.providers.supersededNote', uiLocale)}
                         </p>
+                      )}
+                      {p.status === 'active' && (
+                        <>
+                          <p
+                            className={`mt-1 text-xs ${p.degraded ? 'text-destructive' : 'text-muted-foreground'}`}
+                          >
+                            {healthLabel(p)}
+                          </p>
+                          {p.degraded && p.lastFailureAt && (
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              {providerText('admin.providers.health.lastFailure', uiLocale)}:{' '}
+                              {time.format(p.lastFailureAt)}
+                            </p>
+                          )}
+                        </>
                       )}
                     </td>
                     <td className="px-4 py-3">

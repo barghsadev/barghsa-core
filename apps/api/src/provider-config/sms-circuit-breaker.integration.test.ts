@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { createSmsSender, SmsCircuitBreaker } from '@barghsa/shared/notification-delivery';
 import { afterAll, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { SmsProviderConfigService } from './sms-provider-config.service.js';
 
 let fixture: Awaited<ReturnType<typeof startHttpFixture>>;
 let providerId: string;
@@ -60,6 +61,9 @@ it('trips after transient SMS.ir errors, refuses sends, and recovers with one pr
     degraded: true,
     windowFailures: 5,
   });
+  expect(
+    (await new SmsProviderConfigService(fixture.pool).list()).find((row) => row.id === providerId)
+  ).toMatchObject({ degraded: true, degradedReason: 'SMS provider failure threshold reached' });
   await expect(send(message(providerId))).rejects.toThrow('SMS provider circuit is open');
   expect(request).toHaveBeenCalledTimes(5);
 

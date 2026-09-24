@@ -13,6 +13,10 @@ export interface EmailProvider {
   activatedBy?: string | null;
   lastTestAt?: string | null;
   lastTestError?: string | null;
+  degraded?: boolean;
+  breakerOpenedAt?: string | null;
+  breakerCooldownUntil?: string | null;
+  lastFailureAt?: string | null;
   maskedConfig?: unknown;
 }
 export interface TestConnectionOutcome {
@@ -45,7 +49,15 @@ function provider(value: unknown): EmailProvider {
     !['pending', 'passed', 'failed'].includes(row.lastTestStatus)
   )
     throw new ProviderRequestError();
-  for (const field of ['activatedAt', 'lastTestAt']) {
+  if (row.degraded !== undefined && typeof row.degraded !== 'boolean')
+    throw new ProviderRequestError();
+  for (const field of [
+    'activatedAt',
+    'lastTestAt',
+    'breakerOpenedAt',
+    'breakerCooldownUntil',
+    'lastFailureAt',
+  ]) {
     const date = row[field];
     if (
       date !== undefined &&

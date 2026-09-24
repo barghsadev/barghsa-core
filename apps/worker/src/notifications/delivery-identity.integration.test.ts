@@ -965,7 +965,7 @@ it('holds an attempted legacy email without deleting its job or retry evidence',
   });
 });
 
-it('retries explicitly rejected SMS with stable parameters and shares the provider quota with authentication', async () => {
+it('dead-letters explicit SMS rejection without resending and shares quota with authentication', async () => {
   await pool.query(
     "UPDATE notification_outbox SET status='cancelled' WHERE status IN ('queued','scheduled','sending')"
   );
@@ -1036,36 +1036,34 @@ it('retries explicitly rejected SMS with stable parameters and shares the provid
   };
   try {
     expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, failed: 1 });
-    accepted = true;
-    await pool.query(
-      'UPDATE notification_outbox SET payload=\'{"amount":"9000"}\',scheduled_for=NOW()-INTERVAL \'1 second\' WHERE id=$1',
-      [id]
-    );
-    await pool.query(
-      "UPDATE notification_job SET run_after=NOW()-INTERVAL '1 second' WHERE outbox_id=$1",
-      [id]
-    );
-    expect(await runOutboxPoll(options)).toMatchObject({ delivered: 1, failed: 0 });
-    expect(received).toEqual(
-      Array(2).fill({
+    expect(received).toEqual([
+      {
         Mobile: '09121234567',
         TemplateId: 42,
         Parameters: [{ Name: 'AMOUNT', Value: '5000' }],
-      })
-    );
+      },
+    ]);
     expect(
       (
         await pool.query(
-          "SELECT status,provider_ref FROM notification_job WHERE outbox_id=$1 AND channel='sms'",
+          "SELECT status,attempts,provider_ref FROM notification_job WHERE outbox_id=$1 AND channel='sms'",
           [id]
         )
       ).rows[0]
-    ).toEqual({ status: 'done', provider_ref: '987' });
+    ).toEqual({ status: 'dead_letter', attempts: 1, provider_ref: null });
+    expect(await runOutboxPoll(options)).toMatchObject({ leased: 0 });
+    accepted = true;
+    expect(
+      await createAuthSender(
+        pool,
+        request
+      )({ id: 'quota-check', destination: '+989121234567', code: '123456', purpose: 'login' })
+    ).toBe('987');
     await expect(
       createAuthSender(
         pool,
         request
-      )({ id: 'quota-check', destination: '+989121234567', code: '123456', purpose: 'login' })
+      )({ id: 'quota-check-2', destination: '+989121234567', code: '123456', purpose: 'login' })
     ).rejects.toThrow('quota');
     expect(request).toHaveBeenCalledTimes(2);
   } finally {

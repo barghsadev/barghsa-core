@@ -62,6 +62,11 @@ export interface SmsProviderConfigResult {
   lastTestAt: Date | null;
   lastTestStatus: SmsProviderTestStatus;
   lastTestError: string | null;
+  degraded: boolean;
+  degradedReason: string | null;
+  breakerOpenedAt: Date | null;
+  breakerCooldownUntil: Date | null;
+  lastFailureAt: Date | null;
   supersedesId: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -164,6 +169,11 @@ const SELECT_COLUMNS = `id,
     delivery_config_hash = encode(sha256(convert_to(jsonb_build_array(transport, config)::text, 'UTF8')), 'hex'), false)
     THEN 'pending' ELSE last_test_status END AS "lastTestStatus",
   last_test_error AS "lastTestError",
+  degraded,
+  degraded_reason AS "degradedReason",
+  opened_at AS "breakerOpenedAt",
+  cooldown_until AS "breakerCooldownUntil",
+  last_failure_at AS "lastFailureAt",
   supersedes_id AS "supersedesId",
   created_at AS "createdAt",
   updated_at AS "updatedAt",

@@ -126,6 +126,12 @@ export default function AdminSmsProvidersPage() {
   const locale = useLocale(),
     time = useAccountTime();
   const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
+  const healthLabel = (provider: SmsProvider) => {
+    if (!provider.degraded) return text('healthHealthy');
+    if (provider.breakerCooldownUntil && Date.parse(provider.breakerCooldownUntil) > Date.now())
+      return `${text('healthPaused')} ${time.format(provider.breakerCooldownUntil)}`;
+    return text('healthProbe');
+  };
   const [providers, setProviders] = useState<SmsProvider[]>([]),
     [events, setEvents] = useState<string[]>([]);
   const [loading, setLoading] = useState(true),
@@ -359,7 +365,23 @@ export default function AdminSmsProvidersPage() {
               {providers.map((p) => (
                 <tr key={p.id} className="border-t">
                   <td className="p-2">{p.label}</td>
-                  <td>{text(p.status)}</td>
+                  <td className="p-2">
+                    {text(p.status)}
+                    {p.status === 'active' && (
+                      <>
+                        <p
+                          className={`text-xs ${p.degraded ? 'text-destructive' : 'text-muted-foreground'}`}
+                        >
+                          {healthLabel(p)}
+                        </p>
+                        {p.degraded && p.lastFailureAt && (
+                          <p className="text-xs text-muted-foreground">
+                            {text('healthLastFailure')}: {time.format(p.lastFailureAt)}
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </td>
                   <td>
                     {text(
                       p.lastTestStatus === 'passed'

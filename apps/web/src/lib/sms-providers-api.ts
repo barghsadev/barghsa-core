@@ -24,6 +24,9 @@ export interface SmsProvider {
   status: Status;
   lastTestStatus: TestStatus;
   createdAt: string;
+  degraded: boolean;
+  breakerCooldownUntil: string | null;
+  lastFailureAt: string | null;
   keyConfigured: boolean;
   config: SmsConfig;
 }
@@ -50,6 +53,12 @@ function number(value: unknown, fallback: number, min: number, max: number): num
     throw new ProviderRequestError();
   return n;
 }
+function optionalDate(value: unknown): string | null {
+  if (value === undefined || value === null) return null;
+  if (typeof value !== 'string' || !Number.isFinite(Date.parse(value)))
+    throw new ProviderRequestError();
+  return value;
+}
 export function readSmsProvider(
   value: unknown,
   expected?: { status: Status; id?: string }
@@ -66,6 +75,7 @@ export function readSmsProvider(
     createdAt = string(row.createdAt);
   if (
     !Number.isFinite(Date.parse(createdAt)) ||
+    (row.degraded !== undefined && typeof row.degraded !== 'boolean') ||
     (expected &&
       (row.status !== expected.status || (expected.id !== undefined && id !== expected.id)))
   )
@@ -78,6 +88,9 @@ export function readSmsProvider(
     status: row.status as Status,
     lastTestStatus: row.lastTestStatus as TestStatus,
     createdAt,
+    degraded: row.degraded === true,
+    breakerCooldownUntil: optionalDate(row.breakerCooldownUntil),
+    lastFailureAt: optionalDate(row.lastFailureAt),
     // Never copy the masked credential into form state or send it back on update.
     keyConfigured: typeof c.api_key === 'string' && c.api_key.length > 0,
     config: {

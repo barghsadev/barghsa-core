@@ -3,6 +3,34 @@ import { providerText } from '@barghsa/i18n/providers';
 
 for (const locale of ['en', 'fa'] as const) {
   const text = (key: string) => providerText(`admin.providers.${key}`, locale);
+  test(`active email breaker state is visible to staff (${locale})`, async ({ page }) => {
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/admin/email-providers', (route) =>
+      route.fulfill({
+        json: [
+          {
+            id: 'email-active',
+            label: 'Active email',
+            transport: 'resend',
+            status: 'active',
+            lastTestStatus: 'passed',
+            degraded: true,
+            breakerCooldownUntil: '2099-09-24T12:00:00Z',
+            lastFailureAt: '2026-09-24T12:00:00Z',
+            maskedConfig: { api_key: '********live', from_email: 'mail@example.test' },
+          },
+        ],
+      })
+    );
+    await page.route('**/api/admin/sms-providers', (route) => route.fulfill({ json: [] }));
+    await page.goto('/admin/providers');
+    await page.evaluate((lang) => {
+      document.documentElement.lang = lang;
+    }, locale);
+    const row = page.getByRole('row').filter({ hasText: 'Active email' });
+    await expect(row).toContainText(text('health.paused'));
+    await expect(row).toContainText(text('health.lastFailure'));
+  });
   for (const transport of ['smtp', 'resend'] as const) {
     test(`email ${transport} draft preserves saved configuration and write-only credentials (${locale})`, async ({
       page,

@@ -71,6 +71,7 @@ export interface EmailProviderConfigResult {
   degradedReason: string | null;
   breakerOpenedAt: Date | null;
   breakerCooldownUntil: Date | null;
+  lastFailureAt: Date | null;
   /**
    * Masked view of the stored transport config for admin UI display
    * (T-05.06.05): secret fields are replaced with `*` + last 4 characters;
@@ -181,6 +182,7 @@ const SELECT_COLUMNS = `id,
   degraded_reason AS "degradedReason",
   opened_at AS "breakerOpenedAt",
   cooldown_until AS "breakerCooldownUntil",
+  last_failure_at AS "lastFailureAt",
   config`;
 
 @Injectable()
