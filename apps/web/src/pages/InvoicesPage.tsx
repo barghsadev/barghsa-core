@@ -103,6 +103,11 @@ export function InvoicesPage({ unpaidOnly = false }: { unpaidOnly?: boolean }) {
                 <p className="mt-1 text-sm text-muted-foreground">
                   {t('invoices.list.issued', locale)}: {time.format(item.issuedAt)}
                 </p>
+                {item.dueAt && (
+                  <p className="text-sm text-muted-foreground">
+                    {t('invoices.list.due', locale)}: {time.format(item.dueAt)}
+                  </p>
+                )}
                 {item.explanation ? (
                   <p className="mt-2 text-sm text-foreground">{item.explanation}</p>
                 ) : null}

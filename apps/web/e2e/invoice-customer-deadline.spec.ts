@@ -6,14 +6,6 @@ for (const locale of ['fa', 'en'] as const)
   for (const darkMode of [false, true])
     test(`customer sees the deadline reason (${locale}, dark=${darkMode})`, async ({ page }) => {
       const fa = locale === 'fa';
-      await page.addInitScript((locale) => {
-        const apply = () => {
-          document.documentElement.lang = locale;
-          document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
-        };
-        if (document.documentElement) apply();
-        new MutationObserver(apply).observe(document, { childList: true });
-      }, locale);
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
@@ -74,10 +66,15 @@ for (const locale of ['fa', 'en'] as const)
         })
       );
       await page.goto(`/invoices/${invoiceId}`);
+      if (!fa) await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
       const card = page.getByTestId(`invoice-card-${invoiceId}`);
       await expect(card).toBeVisible();
       await expect(page.getByTestId(`invoice-due-reason-${invoiceId}`)).toContainText(reason);
       await expect(card).toContainText(fa ? 'توضیح تغییرات' : 'Explanation of changes');
+      await expect(
+        card.getByRole('columnheader', { name: fa ? 'قیمت واحد' : 'Unit price' })
+      ).toBeVisible();
+      await expect(card.getByRole('columnheader', { name: fa ? 'مالیات' : 'VAT' })).toBeVisible();
       if (!fa) await expect(card).toContainText('Sep 25, 2026, 12:30 PM');
       expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
     });

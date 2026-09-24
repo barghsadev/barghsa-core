@@ -43,3 +43,38 @@ it('loads unpaid invoices and offers the unfiltered list', async () => {
     vi.unstubAllGlobals();
   }
 });
+
+it('shows an invoice due date when the API supplies one', async () => {
+  document.documentElement.lang = 'en';
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () =>
+      Response.json({
+        invoices: [
+          {
+            invoiceId: 'invoice-1',
+            role: 'original',
+            state: 'Unpaid',
+            totalAmount: '109000',
+            issuedAt: '2026-09-23T10:00:00Z',
+            dueAt: '2026-09-30T10:00:00Z',
+            explanation: null,
+          },
+        ],
+      })
+    )
+  );
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<InvoicesPage />));
+    expect(container.textContent).toContain('Issued: 2026-09-23T10:00:00Z');
+    expect(container.textContent).toContain('Due: 2026-09-30T10:00:00Z');
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+    vi.unstubAllGlobals();
+  }
+});

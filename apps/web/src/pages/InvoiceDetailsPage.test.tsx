@@ -326,6 +326,53 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     ).toBeNull();
   });
 
+  it.each(['en', 'fa'] as const)(
+    'shows unit price and VAT for each invoice line in %s',
+    async (locale) => {
+      document.documentElement.lang = locale;
+      const payload = replacementPayload();
+      payload.invoice.lines = [
+        {
+          description: 'Solar work',
+          quantity: 2,
+          unitPrice: '50000',
+          lineTotal: '100000',
+          vatRate: 900,
+          vatAmount: '9000',
+          isTaxable: true,
+        },
+      ];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (input: RequestInfo | URL) =>
+          String(input).endsWith(`/api/invoices/${REPLACEMENT_ID}`)
+            ? { ok: true, status: 200, json: async () => payload }
+            : { ok: false, status: 404, json: async () => ({}) }
+        )
+      );
+
+      await act(async () => root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />));
+
+      const card = container.querySelector(`[data-testid="invoice-card-${REPLACEMENT_ID}"]`)!;
+      const headings = Array.from(card.querySelectorAll('thead th')).map(
+        (cell) => cell.textContent
+      );
+      expect(headings).toEqual(
+        locale === 'en'
+          ? ['Description', 'Qty', 'Unit price', 'Line total', 'VAT']
+          : ['شرح', 'تعداد', 'قیمت واحد', 'جمع خط', 'مالیات']
+      );
+      const cells = Array.from(card.querySelectorAll('tbody tr td')).map(
+        (cell) => cell.textContent
+      );
+      expect(cells[0]).toBe('Solar work');
+      expect(cells[1]).toContain(locale === 'en' ? '2' : '۲');
+      expect(cells[2]).toContain(locale === 'en' ? '50,000' : '۵۰٬۰۰۰');
+      expect(cells[3]).toContain(locale === 'en' ? '100,000' : '۱۰۰٬۰۰۰');
+      expect(cells[4]).toContain(locale === 'en' ? '9,000' : '۹٬۰۰۰');
+    }
+  );
+
   it('shows linked post-payment adjustments with explanations', async () => {
     const payload = adjustmentPayload();
     vi.stubGlobal(

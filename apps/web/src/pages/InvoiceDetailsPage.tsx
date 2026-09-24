@@ -327,31 +327,41 @@ function InvoiceCard({
       </dl>
 
       {node.lines.length > 0 ? (
-        <table className="mt-4 w-full text-sm">
-          <caption className="sr-only">{t('invoices.details.lines', locale)}</caption>
-          <thead>
-            <tr className="border-b text-start text-muted-foreground">
-              <th scope="col" className="py-1 font-medium">
-                {t('invoices.details.line.description', locale)}
-              </th>
-              <th scope="col" className="py-1 font-medium">
-                {t('invoices.details.line.quantity', locale)}
-              </th>
-              <th scope="col" className="py-1 font-medium">
-                {t('invoices.details.line.lineTotal', locale)}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {node.lines.map((line, index) => (
-              <tr key={`${node.invoiceId}-line-${index}`} className="border-b border-border">
-                <td className="py-1">{line.description}</td>
-                <td className="py-1">{line.quantity}</td>
-                <td className="py-1">{numbers.money(line.lineTotal)}</td>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[36rem] text-sm">
+            <caption className="sr-only">{t('invoices.details.lines', locale)}</caption>
+            <thead>
+              <tr className="border-b text-start text-muted-foreground">
+                <th scope="col" className="py-1 font-medium">
+                  {t('invoices.details.line.description', locale)}
+                </th>
+                <th scope="col" className="py-1 font-medium">
+                  {t('invoices.details.line.quantity', locale)}
+                </th>
+                <th scope="col" className="py-1 font-medium">
+                  {t('invoices.details.line.unitPrice', locale)}
+                </th>
+                <th scope="col" className="py-1 font-medium">
+                  {t('invoices.details.line.lineTotal', locale)}
+                </th>
+                <th scope="col" className="py-1 font-medium">
+                  {t('invoices.details.line.vat', locale)}
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {node.lines.map((line, index) => (
+                <tr key={`${node.invoiceId}-line-${index}`} className="border-b border-border">
+                  <td className="py-1">{line.description}</td>
+                  <td className="py-1">{numbers.number(line.quantity)}</td>
+                  <td className="py-1">{numbers.money(line.unitPrice)}</td>
+                  <td className="py-1">{numbers.money(line.lineTotal)}</td>
+                  <td className="py-1">{numbers.money(line.vatAmount)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : null}
 
       {!current ? (
