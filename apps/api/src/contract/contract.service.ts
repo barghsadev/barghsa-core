@@ -1,5 +1,11 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { getDbPool, contracts, contractVersions } from '@barghsa/db';
+import {
+  getDbPool,
+  contracts,
+  contractVersions,
+  contractActivationRequirements,
+  invoices,
+} from '@barghsa/db';
 import { and, desc, eq, lt, createDbClient as drizzle } from '@barghsa/db';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
@@ -47,6 +53,11 @@ export class ContractService {
         changeDescription: contractVersions.changeDescription,
         updatedAt: contracts.updatedAt,
         acceptedAt: contracts.acceptedAt,
+        serviceStartsAt: contractActivationRequirements.serviceStartsAt,
+        serviceEndsAt: contractActivationRequirements.serviceEndsAt,
+        initialInvoiceId: contractActivationRequirements.initialInvoiceId,
+        initialInvoiceAmount: invoices.totalAmount,
+        initialInvoiceState: invoices.state,
       })
       .from(contracts)
       .innerJoin(
@@ -54,6 +65,17 @@ export class ContractService {
         and(
           eq(contractVersions.contractId, contracts.id),
           eq(contractVersions.id, contracts.currentVersionId)
+        )
+      )
+      .leftJoin(
+        contractActivationRequirements,
+        eq(contractActivationRequirements.versionId, contractVersions.id)
+      )
+      .leftJoin(
+        invoices,
+        and(
+          eq(invoices.id, contractActivationRequirements.initialInvoiceId),
+          eq(invoices.profileId, contracts.profileId)
         )
       )
       .where(
@@ -71,6 +93,9 @@ export class ContractService {
         ...row,
         updatedAt: row.updatedAt.toISOString(),
         acceptedAt: row.acceptedAt?.toISOString() ?? null,
+        serviceStartsAt: row.serviceStartsAt?.toISOString() ?? null,
+        serviceEndsAt: row.serviceEndsAt?.toISOString() ?? null,
+        initialInvoiceAmount: row.initialInvoiceAmount?.toString() ?? null,
       })),
       nextBefore: rows.length > input.limit ? rows[input.limit - 1]!.id : null,
     };

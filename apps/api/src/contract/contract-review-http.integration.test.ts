@@ -114,6 +114,53 @@ it('links an authorized invoice to its contract only after publication', async (
   const other = await fixture();
   expect((await invoice(other.owner)).status).toBe(404);
 });
+it('shows the published service period and initial invoice on customer and staff contract lists', async () => {
+  const f = await fixture();
+  const invoiceId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO invoices(id,profile_id,contract_id,state,total_amount,issued_at,payable_from) VALUES($1,$2,$3,'Unpaid',125000,NOW(),NOW())",
+    [invoiceId, f.profile, f.row.id]
+  );
+  await http.pool.query(
+    `UPDATE contract_activation_requirements
+     SET initial_invoice_id=$2,service_starts_at=$3,service_ends_at=$4 WHERE version_id=$1`,
+    [f.row.currentVersionId, invoiceId, '2026-10-01T00:00:00Z', '2027-10-01T00:00:00Z']
+  );
+  await publish(f);
+  const customerList = await send('contracts', 'GET', undefined, f.owner);
+  expect(customerList.status).toBe(200);
+  expect(await customerList.json()).toMatchObject({
+    contracts: [
+      {
+        id: f.row.id,
+        serviceStartsAt: '2026-10-01T00:00:00.000Z',
+        serviceEndsAt: '2027-10-01T00:00:00.000Z',
+        initialInvoiceId: invoiceId,
+        initialInvoiceAmount: '125000',
+        initialInvoiceState: 'Unpaid',
+      },
+    ],
+  });
+  const staffList = await send('admin/contracts?profileId=' + f.profile);
+  expect(staffList.status).toBe(200);
+  expect(await staffList.json()).toMatchObject({
+    contracts: [
+      {
+        id: f.row.id,
+        serviceStartsAt: '2026-10-01T00:00:00.000Z',
+        serviceEndsAt: '2027-10-01T00:00:00.000Z',
+        initialInvoiceId: invoiceId,
+        initialInvoiceAmount: '125000',
+        initialInvoiceState: 'Unpaid',
+      },
+    ],
+  });
+  const other = await fixture();
+  const otherList = await send('contracts', 'GET', undefined, other.owner);
+  expect(
+    ((await otherList.json()) as { contracts: Array<{ id: string }> }).contracts
+  ).not.toContainEqual(expect.objectContaining({ id: f.row.id }));
+});
 it('lists an activated contract in the active-only customer view', async () => {
   const f = await fixture('savings');
   await publish(f);

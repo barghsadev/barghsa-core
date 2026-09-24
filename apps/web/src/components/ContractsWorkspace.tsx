@@ -18,8 +18,10 @@ import {
 } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { t as appText } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { documentRequest } from '../lib/documents.js';
 import { contractBase, contractStates, type ContractSummary } from '../lib/contracts.js';
@@ -180,6 +182,7 @@ function ContractResults({
 }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
+  const numbers = useNumberFormatting(locale);
   const word = (key: string) => contractText(key, locale);
   const [items, setItems] = useState<ContractSummary[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -268,6 +271,38 @@ function ContractResults({
                 {!staff && item.acceptedAt ? (
                   <p className="text-sm text-muted-foreground">
                     {word('acceptedAt')}: {time.format(item.acceptedAt)}
+                  </p>
+                ) : null}
+                {item.serviceStartsAt ? (
+                  <p className="text-sm text-muted-foreground">
+                    {word('serviceStartsAt')}: {time.format(item.serviceStartsAt)}
+                  </p>
+                ) : null}
+                {item.serviceEndsAt ? (
+                  <p className="text-sm text-muted-foreground">
+                    {word('serviceEndsAt')}: {time.format(item.serviceEndsAt)}
+                  </p>
+                ) : null}
+                {item.initialInvoiceId &&
+                item.initialInvoiceAmount !== null &&
+                item.initialInvoiceAmount !== undefined ? (
+                  <p className="text-sm text-muted-foreground">
+                    {word('initialInvoiceAmount')}: {numbers.money(item.initialInvoiceAmount)}
+                    {item.initialInvoiceState
+                      ? ` · ${appText(`invoices.state.${item.initialInvoiceState}`, locale)}`
+                      : ''}
+                    {!staff ? (
+                      <>
+                        {' · '}
+                        <Link
+                          to="/invoices/$invoiceId"
+                          params={{ invoiceId: item.initialInvoiceId }}
+                          className="text-primary underline underline-offset-4"
+                        >
+                          {word('openInitialInvoice')}
+                        </Link>
+                      </>
+                    ) : null}
                   </p>
                 ) : null}
                 {staff && item.serviceType === 'electricity' ? (

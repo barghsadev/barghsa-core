@@ -30,6 +30,11 @@ export interface ContractSummary {
   changeDescription?: string;
   publishedAt?: string;
   acceptedAt?: string | null;
+  serviceStartsAt?: string | null;
+  serviceEndsAt?: string | null;
+  initialInvoiceId?: string | null;
+  initialInvoiceAmount?: string | null;
+  initialInvoiceState?: string | null;
 }
 export interface ContractDetailData extends Omit<ContractSummary, 'versionId' | 'versionNumber'> {
   profileId: string;

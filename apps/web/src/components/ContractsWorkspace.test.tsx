@@ -22,7 +22,10 @@ vi.mock('@tanstack/react-router', () => ({
     params?: Record<string, string>;
     className?: string;
   }) => (
-    <a href={to.replace('$orderId', params?.orderId ?? '$orderId')} className={className}>
+    <a
+      href={to.replace(/\$([A-Za-z]+)/g, (value, key: string) => params?.[key] ?? value)}
+      className={className}
+    >
       {children}
     </a>
   ),
@@ -37,7 +40,10 @@ vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ notice: null, format: (value: string) => value }),
 }));
 vi.mock('../hooks/useNumberFormatting.js', () => ({
-  useNumberFormatting: () => ({ number: (value: number) => String(value) }),
+  useNumberFormatting: () => ({
+    number: (value: number) => String(value),
+    money: (value: string) => `${value} IRR`,
+  }),
 }));
 // Panel tests cover intent selection; the review dialog has its own boundary tests.
 vi.mock('./ContractFinancialReviewDialog.js', async () => {
@@ -175,6 +181,11 @@ function api(current = detail()) {
           versionNumber: 2,
           publishedAt: current.version?.publishedAt,
           acceptedAt: current.version?.acceptedAt,
+          serviceStartsAt: current.serviceStartsAt,
+          serviceEndsAt: current.serviceEndsAt,
+          initialInvoiceId: current.initialInvoiceId,
+          initialInvoiceAmount: current.initialInvoiceAmount,
+          initialInvoiceState: current.initialInvoiceState,
         },
       ],
       nextBefore: null,
@@ -191,6 +202,33 @@ it('opens the customer contract list with the active-state filter', async () => 
     )
   ).toBe(true);
 });
+it.each(['en', 'fa'] as const)(
+  'shows the contract period and payable invoice in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    const invoiceId = '55555555-5555-4555-8555-555555555555';
+    vi.stubGlobal(
+      'fetch',
+      api(
+        detail({
+          serviceStartsAt: '2026-10-01T00:00:00Z',
+          serviceEndsAt: '2027-10-01T00:00:00Z',
+          initialInvoiceId: invoiceId,
+          initialInvoiceAmount: '125000',
+          initialInvoiceState: 'Unpaid',
+        })
+      )
+    );
+    await render(<ContractsPage />);
+    expect(container.textContent).toContain(`${words.serviceStartsAt}: 2026-10-01T00:00:00Z`);
+    expect(container.textContent).toContain(`${words.serviceEndsAt}: 2027-10-01T00:00:00Z`);
+    expect(container.textContent).toContain(`${words.initialInvoiceAmount}: 125000 IRR`);
+    expect(container.querySelector(`a[href="/invoices/${invoiceId}"]`)?.textContent).toBe(
+      words.openInitialInvoice
+    );
+  }
+);
 it.each(['en', 'fa'] as const)(
   'shows published and accepted contract milestones in %s',
   async (locale) => {
@@ -298,7 +336,17 @@ it('validates staff filters, deduplicates pagination, and recovers list errors',
     const url = new URL(raw, 'https://app.test');
     if (failed) return response({}, 403);
     return response({
-      contracts: [{ id: ID, serviceType: 'electricity', state: 'Draft', versionNumber: 2 }],
+      contracts: [
+        {
+          id: ID,
+          serviceType: 'electricity',
+          state: 'Draft',
+          versionNumber: 2,
+          initialInvoiceId: '55555555-5555-4555-8555-555555555555',
+          initialInvoiceAmount: '125000',
+          initialInvoiceState: 'Unpaid',
+        },
+      ],
       nextBefore: url.searchParams.has('before') ? null : ID,
     });
   });
@@ -309,6 +357,8 @@ it('validates staff filters, deduplicates pagination, and recovers list errors',
   await click(en.refresh);
   await click(en.next);
   expect(container.querySelectorAll('li')).toHaveLength(1);
+  expect(container.textContent).toContain(`${en.initialInvoiceAmount}: 125000 IRR`);
+  expect(container.querySelector('a[href^="/invoices/"]')).toBeNull();
   await value('#contracts-profile', 'bad');
   await click(en.apply);
   expect(container.textContent).toContain(en.invalidProfile);

@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Contract service and initial invoice overview](batches/2026-09-24-contract-overview.md) shows the version's service dates and the linked initial invoice amount/status in customer and staff contract lists.
+
 [Invoice to published contract return](batches/2026-09-24-invoice-contract-return.md) connects an authorized invoice directly to its published contract in the customer view.
 
 [Electricity commercial and financial status pair](batches/2026-09-24-electricity-dual-status.md) shows both order and payment progress together in customer and staff detail views.

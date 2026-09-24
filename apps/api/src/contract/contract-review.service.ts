@@ -138,10 +138,18 @@ export class ContractReviewService {
           version_number: number;
           published_at: Date;
           accepted_at: Date | null;
+          service_starts_at: Date | null;
+          service_ends_at: Date | null;
+          initial_invoice_id: string | null;
+          initial_invoice_amount: string | null;
+          initial_invoice_state: string | null;
         }>(
-          `SELECT DISTINCT ON(c.id) c.id,c.service_type,c.state,v.id AS version_id,v.version_number,p.published_at,a.accepted_at
-      FROM contracts c JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
-      LEFT JOIN contract_acceptances a ON a.version_id=v.id
+          `SELECT DISTINCT ON(c.id) c.id,c.service_type,c.state,v.id AS version_id,v.version_number,p.published_at,a.accepted_at,
+        r.service_starts_at,r.service_ends_at,r.initial_invoice_id,i.total_amount AS initial_invoice_amount,i.state AS initial_invoice_state
+        FROM contracts c JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
+        LEFT JOIN contract_acceptances a ON a.version_id=v.id
+        LEFT JOIN contract_activation_requirements r ON r.version_id=v.id
+        LEFT JOIN invoices i ON i.id=r.initial_invoice_id AND i.profile_id=c.profile_id
       WHERE c.profile_id=$1 AND ($2::uuid IS NULL OR c.id<$2)
         AND (NOT $3::boolean OR c.state='Active')
       ORDER BY c.id DESC,v.version_number DESC LIMIT 101`,
@@ -157,6 +165,11 @@ export class ContractReviewService {
           versionNumber: r.version_number,
           publishedAt: r.published_at.toISOString(),
           acceptedAt: r.accepted_at?.toISOString() ?? null,
+          serviceStartsAt: r.service_starts_at?.toISOString() ?? null,
+          serviceEndsAt: r.service_ends_at?.toISOString() ?? null,
+          initialInvoiceId: r.initial_invoice_id,
+          initialInvoiceAmount: r.initial_invoice_amount,
+          initialInvoiceState: r.initial_invoice_state,
         })),
         nextBefore: rows.length > 100 ? rows[99]!.id : null,
       };
