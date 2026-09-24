@@ -264,6 +264,47 @@ it('blocks unsafe preview links and hides mutation controls on customer original
   expect(container.querySelector('[role=alert]')).not.toBeNull();
 });
 
+it.each([
+  { staff: true, role: 'original' as const, canReplace: true },
+  { staff: true, role: 'signed' as const, canReplace: false },
+  { staff: false, role: 'original' as const, canReplace: false },
+])('limits quarantined contract replacement to staff originals: %j', async (case_) => {
+  const replace = vi.fn();
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue(
+      response({
+        ...row({
+          businessRecordType: 'contract',
+          businessRecordId: PROFILE,
+          contractVersionId: DOCUMENT,
+          contractRole: case_.role,
+          state: 'Quarantined',
+          uploadedByType: 'staff',
+        }),
+        history: [],
+      })
+    )
+  );
+  await render(
+    <DocumentDetail
+      id={DOCUMENT}
+      staff={case_.staff}
+      onClose={vi.fn()}
+      onChanged={vi.fn()}
+      onReplace={replace}
+      onPrevious={vi.fn()}
+    />
+  );
+  expect(container.textContent?.includes('Replace document')).toBe(case_.canReplace);
+  if (case_.canReplace) {
+    await click('Replace document');
+    expect(replace).toHaveBeenCalledWith(
+      expect.objectContaining({ id: DOCUMENT, state: 'Quarantined', contractRole: 'original' })
+    );
+  }
+});
+
 it('retries a lost storage response and step-up with the same file and confirmation key', async () => {
   const uploaded = vi.fn();
   const file = new File(['%PDF-1.7'], 'proof.pdf', { type: 'application/pdf' });

@@ -226,7 +226,11 @@ export function DocumentDetail({
                 ['Available', 'SubmittedForReview', 'Approved', 'Rejected'].includes(document.state)
               : savingPreSubmissionOnly
                 ? document.state === 'Available' && document.uploadedByType === 'customer'
-                : ['Available', 'Approved', 'Rejected'].includes(document.state)) ? (
+                : ['Available', 'Approved', 'Rejected'].includes(document.state) ||
+                  (staff &&
+                    document.state === 'Quarantined' &&
+                    document.businessRecordType === 'contract' &&
+                    document.contractRole === 'original')) ? (
               <Button variant="outline" onClick={() => onReplace(document)}>
                 {word('replace')}
               </Button>
