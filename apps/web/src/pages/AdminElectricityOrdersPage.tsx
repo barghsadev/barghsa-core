@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { Button, Card, CardContent, DualStatusDisplay, Input, Label, Timeline } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
@@ -62,6 +62,7 @@ interface ReviewFacts {
 }
 
 type Decision = 'approve' | 'request-changes' | 'reject';
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function pricingLines(snapshot: Record<string, unknown>) {
   if (!Array.isArray(snapshot.lines)) return [];
   return snapshot.lines.filter(
@@ -99,8 +100,13 @@ export default function AdminElectricityOrdersPage() {
   const [selectedId, setSelectedId] = useState<string | null>(() =>
     new URLSearchParams(window.location.search).get('orderId')
   );
+  const [lookupId, setLookupId] = useState(
+    () => new URLSearchParams(window.location.search).get('orderId') ?? ''
+  );
+  const [lookupInvalid, setLookupInvalid] = useState(false);
   const [queueView, setQueueView] = useState<'review' | 'conversations'>('review');
   const [detail, setDetail] = useState<ReviewOrder | null>(null);
+  const [detailError, setDetailError] = useState(false);
   const [reason, setReason] = useState('');
   const [action, setAction] = useState<TeamAction | null>(null);
   const [revision, setRevision] = useState(0);
@@ -112,8 +118,29 @@ export default function AdminElectricityOrdersPage() {
     setOrders([]);
     setAfter(null);
     setNextAfter(null);
-    setSelectedId(null);
     setRevision((value) => value + 1);
+  }
+
+  function selectOrder(id: string) {
+    setSelectedId(id);
+    setLookupId(id);
+    setLookupInvalid(false);
+    setDetailError(false);
+    setReason('');
+    const url = new URL(window.location.href);
+    url.searchParams.set('orderId', id);
+    window.history.replaceState(window.history.state, '', url.toString());
+    if (id === selectedId) setRevision((value) => value + 1);
+  }
+
+  function lookupOrder(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const id = lookupId.trim();
+    if (!UUID_RE.test(id)) {
+      setLookupInvalid(true);
+      return;
+    }
+    selectOrder(id);
   }
 
   useEffect(() => {
@@ -167,6 +194,7 @@ export default function AdminElectricityOrdersPage() {
     }
     const controller = new AbortController();
     setDetail(null);
+    setDetailError(false);
     void fetch(`/api/staff/electricity/orders/${encodeURIComponent(selectedId)}`, {
       credentials: 'include',
       signal: controller.signal,
@@ -179,7 +207,7 @@ export default function AdminElectricityOrdersPage() {
         if (!controller.signal.aborted) setDetail(value);
       })
       .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+        if (!controller.signal.aborted) setDetailError(true);
       });
     return () => controller.abort();
   }, [selectedId, revision]);
@@ -212,6 +240,28 @@ export default function AdminElectricityOrdersPage() {
           {copy('refresh')}
         </Button>
       </header>
+      <form className="flex flex-wrap items-end gap-3" onSubmit={lookupOrder}>
+        <div className="min-w-64 flex-1 space-y-2">
+          <Label htmlFor="electricity-order-lookup">{copy('lookupOrderId')}</Label>
+          <Input
+            id="electricity-order-lookup"
+            dir="ltr"
+            value={lookupId}
+            onChange={(event) => {
+              setLookupId(event.target.value);
+              setLookupInvalid(false);
+            }}
+            aria-invalid={lookupInvalid}
+            aria-describedby={lookupInvalid ? 'electricity-order-lookup-error' : undefined}
+          />
+        </div>
+        <Button type="submit">{copy('lookup')}</Button>
+        {lookupInvalid ? (
+          <p id="electricity-order-lookup-error" role="alert" className="w-full text-sm">
+            {copy('invalidOrderId')}
+          </p>
+        ) : null}
+      </form>
       <nav className="flex gap-2" aria-label={copy('views')}>
         <Button
           variant={queueView === 'review' ? 'secondary' : 'outline'}
@@ -249,10 +299,7 @@ export default function AdminElectricityOrdersPage() {
               key={order.orderId}
               variant={selectedId === order.orderId ? 'secondary' : 'outline'}
               className="h-auto w-full justify-start whitespace-normal p-4 text-start"
-              onClick={() => {
-                setSelectedId(order.orderId);
-                setReason('');
-              }}
+              onClick={() => selectOrder(order.orderId)}
             >
               <span className="space-y-1">
                 <strong className="block">{order.customerName}</strong>
@@ -271,7 +318,17 @@ export default function AdminElectricityOrdersPage() {
             </Button>
           ) : null}
         </div>
-        {selectedId && !detail ? <p role="status">{copy('loadingDetail')}</p> : null}
+        {selectedId && !detail && !detailError ? (
+          <p role="status">{copy('loadingDetail')}</p>
+        ) : null}
+        {detailError ? (
+          <div role="alert" className="space-y-2 text-sm">
+            <p>{copy('detailError')}</p>
+            <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
+              {copy('retryDetail')}
+            </Button>
+          </div>
+        ) : null}
         {detail ? (
           <Card>
             <CardContent className="space-y-5 pt-6">
