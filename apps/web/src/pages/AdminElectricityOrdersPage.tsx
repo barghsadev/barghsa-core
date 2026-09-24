@@ -454,7 +454,12 @@ export default function AdminElectricityOrdersPage() {
                   {JSON.stringify(detail.contractSnapshot, null, 2)}
                 </pre>
               </details>
-              <ElectricityOrderComments key={detail.orderId} orderId={detail.orderId} staff />
+              <ElectricityOrderComments
+                key={detail.orderId}
+                orderId={detail.orderId}
+                staff
+                formatTimestamp={time.format}
+              />
               {detail.commercialStatus === 'awaiting_staff_review' ? (
                 <div className="space-y-3 border-t pt-4">
                   <div className="space-y-1">

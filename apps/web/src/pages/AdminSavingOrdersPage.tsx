@@ -3,6 +3,7 @@ import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { SavingOrderComments } from '../components/SavingOrderComments.js';
 import { SavingOrderDocuments } from '../components/SavingOrderDocuments.js';
@@ -104,6 +105,7 @@ function stagePrerequisites(stage: StageName, order: Detail) {
 
 export default function AdminSavingOrdersPage() {
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const money = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -312,6 +314,7 @@ export default function AdminSavingOrdersPage() {
           {copy('staffRefresh')}
         </Button>
       </header>
+      {time.notice}
       <div className="flex flex-wrap gap-2" aria-label={copy('staffQueue')}>
         <Button
           variant={lane === 'review' ? 'secondary' : 'outline'}
@@ -415,9 +418,18 @@ export default function AdminSavingOrdersPage() {
                   <dd>{copy(detail.contractState)}</dd>
                 </div>
               </dl>
-              <SavingOrderRevisionHistory revisions={detail.revisions ?? []} />
-              <SavingAddressAmendmentHistory amendments={detail.addressAmendments ?? []} />
-              <SavingHardwareAmendmentHistory amendments={detail.hardwareAmendments ?? []} />
+              <SavingOrderRevisionHistory
+                revisions={detail.revisions ?? []}
+                formatTimestamp={time.format}
+              />
+              <SavingAddressAmendmentHistory
+                amendments={detail.addressAmendments ?? []}
+                formatTimestamp={time.format}
+              />
+              <SavingHardwareAmendmentHistory
+                amendments={detail.hardwareAmendments ?? []}
+                formatTimestamp={time.format}
+              />
               <SavingHardwareUpgradeHistory
                 upgrades={detail.hardwareUpgrades ?? []}
                 onCancel={cancelHardwareUpgrade}
@@ -589,12 +601,7 @@ export default function AdminSavingOrdersPage() {
                         {copy(event.to_status)}
                         <span className="block text-muted-foreground">
                           {event.actor_user_id} ·{' '}
-                          <time dateTime={event.created_at}>
-                            {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-                              dateStyle: 'medium',
-                              timeStyle: 'short',
-                            }).format(new Date(event.created_at))}
-                          </time>
+                          <time dateTime={event.created_at}>{time.format(event.created_at)}</time>
                         </span>
                         <span className="block">{event.explanation}</span>
                       </li>
@@ -603,7 +610,12 @@ export default function AdminSavingOrdersPage() {
                 )}
               </div>
               <SavingOrderDocuments orderId={detail.orderId} profileId={detail.profileId} staff />
-              <SavingOrderComments key={detail.id} orderId={detail.id} staff />
+              <SavingOrderComments
+                key={detail.id}
+                orderId={detail.id}
+                staff
+                formatTimestamp={time.format}
+              />
             </CardContent>
           </Card>
         )}

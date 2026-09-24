@@ -53,7 +53,7 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
     })
   );
   await page.route('**/api/user/settings/timezone', (route) =>
-    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+    route.fulfill({ json: { timezone: 'Pacific/Kiritimati' } })
   );
   await page.route('**/api/saving/plans', (route) =>
     route.fulfill({
@@ -369,6 +369,7 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   await page.getByRole('checkbox', { name: 'Submit for staff review' }).check();
   await page.getByRole('button', { name: 'Submit order', exact: true }).click();
   await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));
+  await expect(page.locator(`time[datetime="${submittedAt}"]`).first()).toHaveText('09/24/2026');
   await expect(page.getByRole('heading', { name: 'Fulfillment' })).toBeVisible();
   await expect(page.getByRole('list', { name: 'Fulfillment' })).toContainText(
     'Request confirmation'
@@ -405,6 +406,7 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   await page.getByRole('link', { name: 'My saving orders' }).click();
   await expect(page.getByRole('heading', { name: 'My saving orders' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Home saving plan' })).toBeVisible();
+  await expect(page.locator(`time[datetime="${submittedAt}"]`).first()).toHaveText('09/24/2026');
   await page.getByRole('button', { name: 'More orders' }).click();
   await expect(page.getByRole('heading', { name: 'Home saving plan' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Older saving plan' })).toBeVisible();

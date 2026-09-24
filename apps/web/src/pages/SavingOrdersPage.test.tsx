@@ -26,7 +26,11 @@ it('requests pending saving orders and offers the full list', async () => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const request = vi.fn(async (url: string) =>
     Response.json(
-      url === '/api/profiles' ? { activeProfileId: 'profile-1' } : { orders: [], nextBefore: null }
+      url === '/api/profiles'
+        ? { activeProfileId: 'profile-1' }
+        : url === '/api/user/settings/timezone'
+          ? { timezone: 'Asia/Tehran' }
+          : { orders: [], nextBefore: null }
     )
   );
   vi.stubGlobal('fetch', request);

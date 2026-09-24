@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { SavingOrderComments } from '../components/SavingOrderComments.js';
 import { SavingOrderDocuments } from '../components/SavingOrderDocuments.js';
@@ -67,6 +68,7 @@ interface Detail extends SavingActionContext {
 export function SavingOrderDetailPage() {
   const { orderId } = useParams({ from: '/_app/savings/orders/$orderId' });
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
   const [detail, setDetail] = useState<Detail | null>(null);
@@ -112,6 +114,7 @@ export function SavingOrderDetailPage() {
         </Link>
         <h1 className="text-3xl font-semibold">{copy('orderDetail')}</h1>
       </header>
+      {time.notice}
       {state === 'loading' && <p role="status">{copy('loading')}</p>}
       {state === 'error' && <p role="alert">{copy('error')}</p>}
       {detail && (
@@ -157,9 +160,11 @@ export function SavingOrderDetailPage() {
                   <dt className="text-muted-foreground">{copy('submittedAt')}</dt>
                   <dd>
                     <time dateTime={detail.submitted_at}>
-                      {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(
-                        new Date(detail.submitted_at)
-                      )}
+                      {time.format(detail.submitted_at, {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                      })}
                     </time>
                   </dd>
                 </div>
@@ -210,9 +215,18 @@ export function SavingOrderDetailPage() {
               )}
             </CardContent>
           </Card>
-          <SavingOrderRevisionHistory revisions={detail.revisions ?? []} />
-          <SavingAddressAmendmentHistory amendments={detail.addressAmendments ?? []} />
-          <SavingHardwareAmendmentHistory amendments={detail.hardwareAmendments ?? []} />
+          <SavingOrderRevisionHistory
+            revisions={detail.revisions ?? []}
+            formatTimestamp={time.format}
+          />
+          <SavingAddressAmendmentHistory
+            amendments={detail.addressAmendments ?? []}
+            formatTimestamp={time.format}
+          />
+          <SavingHardwareAmendmentHistory
+            amendments={detail.hardwareAmendments ?? []}
+            formatTimestamp={time.format}
+          />
           <SavingHardwareUpgradeHistory upgrades={detail.hardwareUpgrades ?? []} />
           <Card>
             <CardContent className="space-y-2 pt-6">
@@ -263,9 +277,11 @@ export function SavingOrderDetailPage() {
                         className="mt-1 block text-xs text-muted-foreground"
                         dateTime={stage.completed_at}
                       >
-                        {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(
-                          new Date(stage.completed_at)
-                        )}
+                        {time.format(stage.completed_at, {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                        })}
                       </time>
                     )}
                     {stage.handover_description && (
@@ -283,7 +299,7 @@ export function SavingOrderDetailPage() {
           </Card>
           <Card>
             <CardContent className="pt-6">
-              <SavingOrderComments orderId={detail.id} />
+              <SavingOrderComments orderId={detail.id} formatTimestamp={time.format} />
             </CardContent>
           </Card>
           <AcceptedSavingAgreement

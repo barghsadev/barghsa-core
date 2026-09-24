@@ -30,6 +30,7 @@ it('loads older review orders and keeps fulfillment separate', async () => {
     'fetch',
     vi.fn(async (url: string) => {
       calls.push(url);
+      if (url === '/api/user/settings/timezone') return Response.json({ timezone: 'Asia/Tehran' });
       const query = new URL(url, 'http://localhost').searchParams;
       const lane = query.get('lane');
       const after = query.get('after');

@@ -14,8 +14,10 @@ export interface SavingAddressAmendment {
 
 export function SavingAddressAmendmentHistory({
   amendments,
+  formatTimestamp,
 }: {
   amendments: SavingAddressAmendment[];
+  formatTimestamp: (value: string) => string;
 }) {
   const locale = useLocale();
   const copy = (key: string) => tSaving(key, locale);
@@ -28,10 +30,7 @@ export function SavingAddressAmendmentHistory({
           {amendments.map((amendment) => (
             <li key={amendment.id} className="border-s-2 border-primary/40 ps-4 text-sm">
               <time className="text-muted-foreground" dateTime={amendment.changedAt}>
-                {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                }).format(new Date(amendment.changedAt))}
+                {formatTimestamp(amendment.changedAt)}
               </time>
               <dl className="mt-2 space-y-2">
                 <div>

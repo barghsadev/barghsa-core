@@ -16,8 +16,10 @@ export interface SavingHardwareAmendment {
 
 export function SavingHardwareAmendmentHistory({
   amendments,
+  formatTimestamp,
 }: {
   amendments: SavingHardwareAmendment[];
+  formatTimestamp: (value: string) => string;
 }) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -31,10 +33,7 @@ export function SavingHardwareAmendmentHistory({
           {amendments.map((amendment) => (
             <li key={amendment.id} className="border-s-2 border-primary/40 ps-4 text-sm">
               <time className="text-muted-foreground" dateTime={amendment.changedAt}>
-                {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                }).format(new Date(amendment.changedAt))}
+                {formatTimestamp(amendment.changedAt)}
               </time>
               <p className="mt-2">
                 <span className="sr-only">{copy('beforeChange')}: </span>

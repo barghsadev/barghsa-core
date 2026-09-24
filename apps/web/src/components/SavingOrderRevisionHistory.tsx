@@ -14,7 +14,13 @@ export interface SavingOrderRevision {
   totalIrR: string | null;
 }
 
-export function SavingOrderRevisionHistory({ revisions }: { revisions: SavingOrderRevision[] }) {
+export function SavingOrderRevisionHistory({
+  revisions,
+  formatTimestamp,
+}: {
+  revisions: SavingOrderRevision[];
+  formatTimestamp: (value: string) => string;
+}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
@@ -27,10 +33,7 @@ export function SavingOrderRevisionHistory({ revisions }: { revisions: SavingOrd
           {revisions.map((revision) => (
             <li key={revision.id} className="border-s-2 border-primary/40 ps-4">
               <time className="text-sm text-muted-foreground" dateTime={revision.changedAt}>
-                {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                }).format(new Date(revision.changedAt))}
+                {formatTimestamp(revision.changedAt)}
               </time>
               <dl className="mt-2 space-y-2 text-sm">
                 {revision.previousHardwareTitle &&

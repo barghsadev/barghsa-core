@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { savingNextAction, type SavingActionContext } from '../lib/saving-next-action.js';
 
@@ -16,6 +17,7 @@ interface SavingOrderRow extends SavingActionContext {
 
 export function SavingOrdersPage({ pendingOnly = false }: { pendingOnly?: boolean }) {
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSaving(key, locale);
   const [orders, setOrders] = useState<SavingOrderRow[]>([]);
@@ -93,6 +95,7 @@ export function SavingOrdersPage({ pendingOnly = false }: { pendingOnly?: boolea
           {copy('pendingOrders')}
         </Link>
       </nav>
+      {time.notice}
       {state === 'loading' && <p role="status">{copy('loading')}</p>}
       {state === 'error' && <p role="alert">{copy('error')}</p>}
       {state === 'ready' && orders.length === 0 && (
@@ -122,9 +125,11 @@ export function SavingOrdersPage({ pendingOnly = false }: { pendingOnly?: boolea
                 <p className="text-sm">
                   <bdi>{order.bill_identifier}</bdi> ·{' '}
                   <time dateTime={order.submitted_at}>
-                    {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(
-                      new Date(order.submitted_at)
-                    )}
+                    {time.format(order.submitted_at, {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    })}
                   </time>
                 </p>
                 <p className="font-medium">

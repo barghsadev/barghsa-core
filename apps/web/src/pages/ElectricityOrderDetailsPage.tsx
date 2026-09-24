@@ -453,7 +453,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
           />
           <Card>
             <CardContent className="pt-6">
-              <ElectricityOrderComments orderId={orderId} />
+              <ElectricityOrderComments orderId={orderId} formatTimestamp={time.format} />
             </CardContent>
           </Card>
           <Card>

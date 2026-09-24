@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Saving history in the account timezone](batches/2026-09-24-saving-history-account-time.md) aligns customer and staff saving timelines, fulfillment, amendments and shared order comments with the saved timezone. The customer browser journey verifies a date-boundary case in UTC+14.
+
 [Electricity workflow timestamps](batches/2026-09-24-electricity-workflow-timestamps.md) applies the saved account timezone to staff order review and customer order changes, including revision comparisons, conversations, timeline, quantity increases and price adjustments.
 
 [Electricity period dates in the account timezone](batches/2026-09-24-electricity-period-dates.md) keeps order history and detail dates tied to the saved timezone and displays the final included period day. The simple-order English selector now names the actual Gregorian range.

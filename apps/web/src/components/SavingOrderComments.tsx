@@ -21,10 +21,12 @@ function OrderComments({
   orderId,
   staff = false,
   kind,
+  formatTimestamp,
 }: {
   orderId: string;
   staff?: boolean;
   kind: 'saving' | 'electricity';
+  formatTimestamp: (value: string) => string;
 }) {
   const locale = useLocale();
   const copy = (key: string) =>
@@ -111,10 +113,7 @@ function OrderComments({
                   : null}
               </strong>
               <time dateTime={comment.createdAt} className="text-muted-foreground">
-                {new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                }).format(new Date(comment.createdAt))}
+                {formatTimestamp(comment.createdAt)}
               </time>
             </div>
             <p className="mt-2 whitespace-pre-wrap break-words text-sm">{comment.body}</p>
@@ -168,10 +167,18 @@ function OrderComments({
   );
 }
 
-export function SavingOrderComments(props: { orderId: string; staff?: boolean }) {
+export function SavingOrderComments(props: {
+  orderId: string;
+  staff?: boolean;
+  formatTimestamp: (value: string) => string;
+}) {
   return <OrderComments {...props} kind="saving" />;
 }
 
-export function ElectricityOrderComments(props: { orderId: string; staff?: boolean }) {
+export function ElectricityOrderComments(props: {
+  orderId: string;
+  staff?: boolean;
+  formatTimestamp: (value: string) => string;
+}) {
   return <OrderComments {...props} kind="electricity" />;
 }
