@@ -74,9 +74,9 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     });
   }
 
-  async function renderPage() {
+  async function renderPage(returnInvoiceId?: string) {
     await act(async () => {
-      root.render(<WalletPage />);
+      root.render(<WalletPage returnInvoiceId={returnInvoiceId} />);
     });
     for (let i = 0; i < 10; i++) {
       await flushFetches();
@@ -98,6 +98,17 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     expect(balance).toContain('IRR');
     expect(container.querySelector('[data-testid="wallet-page"]')?.getAttribute('dir')).toBe('ltr');
     expect(container.querySelector('#top-up-amount-hint')?.textContent).toContain('2,000,000,000');
+  });
+
+  it.each([
+    ['en', 'Return to invoice'],
+    ['fa', 'بازگشت به فاکتور'],
+  ] as const)('keeps the invoice return action visible in %s', async (locale, label) => {
+    const invoiceId = '11111111-1111-7111-8111-111111111111';
+    document.documentElement.lang = locale;
+    await renderPage(invoiceId);
+    const link = [...container.querySelectorAll('a')].find((item) => item.textContent === label);
+    expect(link?.getAttribute('href')).toBe(`/invoices/${invoiceId}`);
   });
 
   it.each(['en', 'fa'] as const)('renders exact large balances in %s', async (locale) => {

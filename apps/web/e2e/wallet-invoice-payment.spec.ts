@@ -228,9 +228,19 @@ for (const locale of ['fa', 'en'] as const)
       await refresh.click();
       await expect(pay).toBeDisabled();
       await expect(panel).toContainText(fa ? 'در حال حاضر پرداخت' : 'cannot be paid');
+      const addFunds = panel.getByRole('link', {
+        name: fa ? 'رفتن به کیف پول' : 'Open wallet',
+      });
+      await expect(addFunds).toHaveAttribute('href', `/wallet?returnInvoiceId=${invoiceId}`);
+      await expect(panel).toContainText(
+        formatCurrencyIrr((BigInt(amount) - 500n).toString(), locale, {
+          numberStyle: fa ? 'persian' : 'western',
+        })
+      );
       quoteStage = 'funded';
       await refresh.click();
       await expect(pay).toBeEnabled();
+      await expect(addFunds).toHaveCount(0);
       await expect(panel).toContainText(money);
       await pay.hover();
       await pay.evaluate(async (element) => {

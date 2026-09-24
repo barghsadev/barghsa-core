@@ -1145,6 +1145,7 @@ export const fa: I18nDictionary = {
   'dashboard.overview.lowBalanceWarning':
     'موجودی کیف پول شما برای پرداخت صورتحساب‌های جاری کافی نیست',
   'wallet.page.title': 'کیف پول',
+  'wallet.page.returnToInvoice': 'بازگشت به فاکتور',
   'wallet.funding.shortfall': 'مبلغ موردنیاز برای شارژ کیف پول',
   'wallet.funding.unknown': 'موجودی کیف پول در دسترس نیست. پیش از پرداخت آن را بررسی کنید.',
   'wallet.funding.methods': 'شارژ آنلاین یا ثبت رسید واریز بانکی در کیف پول در دسترس است.',
@@ -2415,6 +2416,7 @@ export const en: I18nDictionary = {
   'dashboard.overview.supportTicket': 'Support Ticket',
   'dashboard.overview.profileBadge': 'Profile: {name}',
   'wallet.page.title': 'Wallet',
+  'wallet.page.returnToInvoice': 'Return to invoice',
   'wallet.funding.shortfall': 'Wallet top-up needed',
   'wallet.funding.unknown': 'Wallet balance is unavailable. Check it before payment.',
   'wallet.funding.methods':

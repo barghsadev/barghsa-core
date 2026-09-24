@@ -2,7 +2,15 @@ import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 
-export function WalletFundingPrompt({ balance, total }: { balance: string | null; total: string }) {
+export function WalletFundingPrompt({
+  balance,
+  total,
+  returnInvoiceId,
+}: {
+  balance: string | null;
+  total: string;
+  returnInvoiceId?: string;
+}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   let shortfall: bigint | null = null;
@@ -23,7 +31,14 @@ export function WalletFundingPrompt({ balance, total }: { balance: string | null
           : `${t('wallet.funding.shortfall', locale)}: ${numbers.money(shortfall.toString())}`}
       </p>
       <p>{t('wallet.funding.methods', locale)}</p>
-      <a className="font-medium underline" href="/wallet">
+      <a
+        className="font-medium underline"
+        href={
+          returnInvoiceId
+            ? `/wallet?returnInvoiceId=${encodeURIComponent(returnInvoiceId)}`
+            : '/wallet'
+        }
+      >
         {t('wallet.funding.open', locale)}
       </a>
     </div>

@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Invoice wallet shortfall handoff](batches/2026-09-24-invoice-wallet-shortfall-handoff.md) shows the exact amount needed when an invoice cannot be paid from the wallet, links to top-up, and returns customers to the same invoice. The bilingual wallet-payment browser suite passes across all five projects.
+
 [Staff contract original recovery action](batches/2026-09-24-contract-original-recovery-action.md) exposes the new quarantined-original replacement path in the contract document detail. Focused UI coverage verifies the action is limited to staff and the original role.
 
 [Quarantined contract original recovery](batches/2026-09-24-quarantined-contract-original-recovery.md) lets staff replace a quarantined original without losing its audit or scan history, then issue a new numbered signing request. The contract signature suite and all four S3 API suites pass locally.

@@ -6,6 +6,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
 import { parseWalletPaymentReview, type WalletPaymentReview } from '@barghsa/shared/finance';
 import { WalletPaymentReviewSummary } from './WalletPaymentReviewSummary.js';
+import { WalletFundingPrompt } from './WalletFundingPrompt.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 const TeamActionDialog = lazy(() =>
   import('./TeamActionDialog.js').then((module) => ({ default: module.TeamActionDialog }))
@@ -147,6 +148,13 @@ export function WalletInvoicePaymentPanel({
               <>
                 <WalletPaymentReviewSummary review={quote.review} formatDate={time.format} />
                 {!quote.canPay && <p>{text('unavailable')}</p>}
+                {!quote.canPay ? (
+                  <WalletFundingPrompt
+                    balance={quote.availableBalance}
+                    total={quote.remainingAmount}
+                    returnInvoiceId={invoiceId}
+                  />
+                ) : null}
               </>
             )
           )}

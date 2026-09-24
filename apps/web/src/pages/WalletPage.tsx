@@ -102,7 +102,8 @@ function isSafeGatewayRedirectUrl(raw: string): boolean {
  */
 export function WalletPage({
   paymentReturn,
-}: { paymentReturn?: WalletPaymentReturn | undefined } = {}) {
+  returnInvoiceId,
+}: { paymentReturn?: WalletPaymentReturn | undefined; returnInvoiceId?: string | undefined } = {}) {
   const uploadReceiptAttachment = useReceiptAttachmentUpload();
   const receiptFileInput = useRef<HTMLInputElement>(null);
   const locale = useLocale();
@@ -375,6 +376,14 @@ export function WalletPage({
       <header>
         <h1 className="text-2xl font-bold text-foreground">{t('wallet.page.title', locale)}</h1>
         <p className="mt-2 text-muted-foreground">{t('wallet.page.subtitle', locale)}</p>
+        {returnInvoiceId && (
+          <a
+            className="mt-3 inline-block text-sm font-medium text-primary underline"
+            href={`/invoices/${encodeURIComponent(returnInvoiceId)}`}
+          >
+            {t('wallet.page.returnToInvoice', locale)}
+          </a>
+        )}
       </header>
 
       {paymentReturn && (
