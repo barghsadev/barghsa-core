@@ -71,6 +71,7 @@ it('commits a circular initial reference and reads complete typed immutable snap
   expect(contractConfig.foreignKeys.map((f) => f.reference().foreignTable)).toHaveLength(2);
   expect(versionConfig.foreignKeys.map((f) => f.reference().foreignTable)).toHaveLength(2);
   expect(contractConfig.indexes.map((i) => i.config.name)).toEqual([
+    'contracts_contract_number_unique',
     'contracts_profile_created_idx',
     'contracts_order_idx',
     'contracts_state_idx',

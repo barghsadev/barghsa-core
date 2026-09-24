@@ -66,7 +66,9 @@ it('upgrades existing Completed contracts without rewriting or fabricating compl
         .filter((entry: { idx: number }) => entry.idx >= 144)
         .map((entry: { tag: string }) => entry.tag),
     });
-    expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [id])).rows).toEqual(before);
+    const after = (await pool.query('SELECT * FROM contracts WHERE id=$1', [id])).rows;
+    expect(after).toMatchObject(before);
+    expect(after[0]?.contract_number).toMatch(/^[1-9][0-9]*$/);
     expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
     expect((await pool.query('SELECT * FROM contract_completions')).rows).toHaveLength(0);
     await expect(

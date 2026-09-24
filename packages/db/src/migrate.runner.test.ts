@@ -139,6 +139,35 @@ describe('production migration runner', () => {
     }
   });
 
+  it('accepts only the original contract-number checksum alongside its corrected backfill', async () => {
+    const options = fixture();
+    const journalPath = join(options.migrationsFolder, 'meta/_journal.json');
+    const journal = JSON.parse(readFileSync(journalPath, 'utf8'));
+    journal.entries[0].tag = '0192_contract_numbers';
+    writeFileSync(journalPath, JSON.stringify(journal));
+    writeFileSync(
+      join(options.migrationsFolder, '0192_contract_numbers.sql'),
+      readFileSync(join(options.migrationsFolder, '0000_foundation.sql'))
+    );
+    expect((await runMigrations(options)).ok).toBe(true);
+    const pool = new Pool({ connectionString: process.env.TEST_DATABASE_URL });
+    try {
+      await pool.query(`UPDATE "${options.migrationsSchema}".__drizzle_migrations SET hash=$1`, [
+        'f8aa294037d5d2749a007f5e256107316b063dfb8b6b2b1d3f44c5a4dffb6d3b',
+      ]);
+      expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
+      await pool.query(
+        `UPDATE "${options.migrationsSchema}".__drizzle_migrations SET hash='wrong'`
+      );
+      expect(await runMigrations(options)).toMatchObject({
+        ok: false,
+        error: expect.stringContaining('checksum/history mismatch'),
+      });
+    } finally {
+      await pool.end();
+    }
+  });
+
   it('does not disguise connection failures as an empty migration history', async () => {
     const options = fixture();
     options.connection = {

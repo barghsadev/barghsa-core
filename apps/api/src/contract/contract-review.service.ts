@@ -40,6 +40,8 @@ interface PublishedRow {
   accepted_at: Date | null;
   accepted_by: string | null;
   party_snapshot: Record<string, unknown> | null;
+  amendment_state: string | null;
+  base_version_id: string | null;
 }
 function customerDto(row: PublishedRow) {
   return {
@@ -53,7 +55,12 @@ function customerDto(row: PublishedRow) {
     serviceType: row.service_type,
     state: row.state,
     canAccept:
-      row.state === 'AwaitingCustomerAcceptance' && row.current_version_id === row.version_id,
+      (row.state === 'AwaitingCustomerAcceptance' && row.current_version_id === row.version_id) ||
+      (row.amendment_state === 'AwaitingCustomerAcceptance' &&
+        row.base_version_id === row.current_version_id),
+    amendment: row.amendment_state
+      ? { state: row.amendment_state, baseVersionId: row.base_version_id }
+      : null,
     version: {
       id: row.version_id,
       versionNumber: row.version_number,
@@ -69,6 +76,64 @@ function customerDto(row: PublishedRow) {
 @Injectable()
 export class ContractReviewService {
   constructor(private readonly contracts: ContractService) {}
+  async publishAmendment(id: string, input: ContractReviewInput, actor: ContractActor, ip: string) {
+    const identity = (
+      await getDbPool().query<{ profile_id: string }>(
+        'SELECT profile_id FROM contracts WHERE id=$1',
+        [id]
+      )
+    ).rows[0];
+    if (!identity) throw new NotFoundException();
+    return staffContractMutation(identity.profile_id, actor, async (client, archived) =>
+      contractIdempotency(
+        client,
+        'contract_amendment_publish',
+        { ...input, contractId: id },
+        actor,
+        async () => {
+          if (archived) throw new ConflictException('Profile is archived');
+          const row = (
+            await client.query<{
+              state: string;
+              current_version_id: string;
+              amendment_state: string;
+              base_version_id: string;
+              signature_required: boolean;
+            }>(
+              `SELECT c.state,c.current_version_id,a.state AS amendment_state,a.base_version_id,r.signature_required
+               FROM contracts c JOIN contract_amendments a ON a.contract_id=c.id
+               JOIN contract_activation_requirements r ON r.version_id=a.version_id
+               WHERE c.id=$1 AND a.version_id=$2 FOR UPDATE OF c`,
+              [id, input.expectedVersionId]
+            )
+          ).rows[0];
+          if (
+            !row ||
+            !['Accepted', 'Signed', 'Active'].includes(row.state) ||
+            row.amendment_state !== 'Draft' ||
+            row.base_version_id !== row.current_version_id ||
+            row.signature_required
+          )
+            throw new ConflictException('Amendment is not ready for customer publication');
+          await client.query(
+            'INSERT INTO contract_publications(contract_id,version_id,published_by) VALUES($1,$2,$3)',
+            [id, input.expectedVersionId, actor.userId]
+          );
+          await auditContract(
+            client,
+            id,
+            input.expectedVersionId,
+            'contract.amendment_published',
+            actor,
+            ip,
+            { baseVersionId: row.base_version_id }
+          );
+          await notifyContractReview(client, id, 'published');
+          return this.contracts.get(id, client);
+        }
+      )
+    );
+  }
   async act(
     id: string,
     action: ReviewAction,
@@ -169,7 +234,7 @@ export class ContractReviewService {
           v.content->'commercialValue' AS commercial_value,p.published_at,a.accepted_at,a.party_snapshot,
           r.service_starts_at,r.service_ends_at,r.initial_invoice_id,i.total_amount AS initial_invoice_amount,i.state AS initial_invoice_state
           FROM contracts c JOIN profiles profile ON profile.id=c.profile_id
-          JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
+          JOIN contract_versions v ON v.id=c.current_version_id AND v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
           LEFT JOIN contract_acceptances a ON a.version_id=v.id
           LEFT JOIN contract_activation_requirements r ON r.version_id=v.id
           LEFT JOIN invoices i ON i.id=r.initial_invoice_id AND i.profile_id=c.profile_id
@@ -280,16 +345,25 @@ export class ContractReviewService {
           actor,
           async () => {
             const row = (
-              await client.query<{ state: string; current_version_id: string }>(
-                'SELECT state,current_version_id FROM contracts WHERE id=$1 AND profile_id=$2 FOR UPDATE',
-                [id, profileId]
+              await client.query<{
+                state: string;
+                current_version_id: string;
+                amendment_state: string | null;
+                base_version_id: string | null;
+              }>(
+                `SELECT c.state,c.current_version_id,a.state AS amendment_state,a.base_version_id
+                 FROM contracts c LEFT JOIN contract_amendments a ON a.contract_id=c.id AND a.version_id=$3
+                 WHERE c.id=$1 AND c.profile_id=$2 FOR UPDATE OF c`,
+                [id, profileId, input.expectedVersionId]
               )
             ).rows[0];
             if (!row) throw new NotFoundException();
-            if (
-              row.state !== 'AwaitingCustomerAcceptance' ||
-              row.current_version_id !== input.expectedVersionId
-            )
+            if (!(
+              (row.state === 'AwaitingCustomerAcceptance' &&
+                row.current_version_id === input.expectedVersionId) ||
+              (row.amendment_state === 'AwaitingCustomerAcceptance' &&
+                row.base_version_id === row.current_version_id)
+            ))
               throw new ConflictException('Contract is not awaiting acceptance of this version');
             const financialReview =
               input.expectedReviewHash === undefined
@@ -313,7 +387,7 @@ export class ContractReviewService {
               client,
               id,
               input.expectedVersionId,
-              'contract.accepted',
+              row.amendment_state ? 'contract.amendment_accepted' : 'contract.accepted',
               actor,
               ip,
               financialReview ? { financialReview } : {}
@@ -333,9 +407,11 @@ export class ContractReviewService {
     const row = (
       await client.query<PublishedRow>(
         `SELECT c.id,c.contract_number,c.profile_id,c.order_id,e.status AS linked_order_status,s.id AS saving_order_id,c.service_type,c.state,c.current_version_id,v.id AS version_id,v.version_number,
-        v.content,v.change_description,v.created_at,p.published_at,a.accepted_at,a.accepted_by,a.party_snapshot
+        v.content,v.change_description,v.created_at,p.published_at,a.accepted_at,a.accepted_by,a.party_snapshot,
+        amendment.state AS amendment_state,amendment.base_version_id
         FROM contracts c JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
         LEFT JOIN contract_acceptances a ON a.version_id=v.id
+        LEFT JOIN contract_amendments amendment ON amendment.version_id=v.id AND amendment.contract_id=c.id
         LEFT JOIN saving_orders s ON s.order_id=c.order_id AND s.profile_id=c.profile_id AND c.service_type='savings'
         LEFT JOIN electricity_orders e ON e.id=c.order_id AND e.profile_id=c.profile_id AND c.service_type='electricity'
       WHERE c.id=$1 AND c.profile_id=$2 AND ($3::uuid IS NULL OR v.id=$3) ORDER BY v.version_number DESC LIMIT 1`,

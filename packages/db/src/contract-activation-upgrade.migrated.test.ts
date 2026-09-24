@@ -67,7 +67,9 @@ it('upgrades existing Active contracts without rewriting or fabricating activati
         .filter((entry: { idx: number }) => entry.idx >= 143)
         .map((entry: { tag: string }) => entry.tag),
     });
-    expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [id])).rows).toEqual(before);
+    const after = (await pool.query('SELECT * FROM contracts WHERE id=$1', [id])).rows;
+    expect(after).toMatchObject(before);
+    expect(after[0]?.contract_number).toMatch(/^[1-9][0-9]*$/);
     expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
     expect((await pool.query('SELECT * FROM contract_activations')).rows).toHaveLength(0);
     await pool.query('UPDATE contracts SET updated_at=NOW() WHERE id=$1', [id]);

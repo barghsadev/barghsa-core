@@ -29,6 +29,8 @@ interface ContractRow {
   profile_title: string;
   service_type: 'electricity' | 'savings' | 'solar';
   state: ContractFinancialReviewData['contract']['state'];
+  effective_state: 'Accepted' | 'Signed' | 'Active';
+  amendment_base_version_id: string | null;
   version_id: string;
   version_number: number;
   content: ContractFinancialReviewData['contract']['content'];
@@ -59,16 +61,27 @@ export async function readContractFinancialReview(
 ) {
   const row = (
     await client.query(
-      `SELECT c.id,c.profile_id,c.service_type,c.state,p.profile_type,
+      `SELECT c.id,c.profile_id,c.service_type,
+       CASE WHEN amendment.state='AwaitingCustomerAcceptance' AND $4::boolean
+         THEN 'AwaitingCustomerAcceptance'::contract_state ELSE c.state END AS state,
+       c.state AS effective_state,
+       CASE WHEN amendment.state='AwaitingCustomerAcceptance' AND $4::boolean
+         THEN amendment.base_version_id ELSE NULL END AS amendment_base_version_id,
+       p.profile_type,
        COALESCE(NULLIF(p.title,''),NULLIF(concat_ws(' ',p.first_name,p.last_name),''),'') AS profile_title,
        v.id AS version_id,v.version_number,v.content,pub.published_at,r.rule_revision,
        r.signature_required,r.payment_required,r.service_start_required,r.service_starts_at,r.service_ends_at,r.initial_invoice_id
      FROM contracts c JOIN profiles p ON p.id=c.profile_id
-     JOIN contract_versions v ON v.id=c.current_version_id AND v.contract_id=c.id
+     JOIN contract_versions v ON v.contract_id=c.id AND v.id=$3
      JOIN contract_publications pub ON pub.version_id=v.id AND pub.contract_id=c.id
      JOIN contract_activation_requirements r ON r.version_id=v.id AND r.contract_id=c.id
-     WHERE c.id=$1 AND c.profile_id=$2 AND v.id=$3 FOR SHARE OF c,v,r`,
-      [input.contractId, input.profileId, input.versionId]
+     LEFT JOIN contract_amendments amendment ON amendment.version_id=v.id AND amendment.contract_id=c.id
+     WHERE c.id=$1 AND c.profile_id=$2 AND
+       (v.id=c.current_version_id OR ($4::boolean AND EXISTS(
+         SELECT 1 FROM contract_amendments a WHERE a.contract_id=c.id AND a.version_id=v.id
+           AND a.base_version_id=c.current_version_id AND a.state='AwaitingCustomerAcceptance'
+       ))) FOR SHARE OF c,v,r`,
+      [input.contractId, input.profileId, input.versionId, input.action === 'contract.acceptance']
     )
   ).rows[0] as ContractRow | undefined;
   if (!row) throw new NotFoundException();
@@ -123,6 +136,14 @@ export async function readContractFinancialReview(
       versionNumber: row.version_number,
       serviceType: row.service_type,
       state: row.state,
+      ...(row.amendment_base_version_id
+        ? {
+            amendment: {
+              baseVersionId: row.amendment_base_version_id,
+              effectiveState: row.effective_state,
+            },
+          }
+        : {}),
       publishedAt: iso(row.published_at)!,
       content: row.content,
     },

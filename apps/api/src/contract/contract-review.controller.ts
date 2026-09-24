@@ -52,6 +52,27 @@ function parse<T>(schema: z.ZodType<T>, value: unknown): T {
 @Controller('api/admin/contracts')
 export class ContractReviewController {
   constructor(private readonly service: ContractReviewService) {}
+  @Post(':id/amendments/publish')
+  @HttpCode(200)
+  @RequiresStepUp()
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiOperation({ summary: 'Publish a pending amendment for a new customer acceptance cycle' })
+  @ApiBody({ schema: reviewBody })
+  @ApiResponse({ status: 200, description: 'Contract with the published pending amendment.' })
+  publishAmendment(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: unknown
+  ) {
+    if (!hasStaffPermission(req, 'contracts:write'))
+      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    return this.service.publishAmendment(
+      parse(contractUuid, id),
+      parse(contractReviewSchema, body),
+      req.session,
+      req.ip ?? '127.0.0.1'
+    );
+  }
   @Post(':id/:action')
   @HttpCode(200)
   @RequiresStepUp()

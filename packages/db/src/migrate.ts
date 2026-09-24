@@ -52,6 +52,10 @@ interface AppliedMigration {
   created_at: string;
 }
 
+// 0192 was corrected to backfill numbers without firing terminal lifecycle guards.
+// Databases that applied its original SQL already have the same final schema.
+const contractNumberLegacyHash = 'f8aa294037d5d2749a007f5e256107316b063dfb8b6b2b1d3f44c5a4dffb6d3b';
+
 function journal(folder: string): JournalEntry[] {
   const value: unknown = JSON.parse(readFileSync(resolve(folder, 'meta/_journal.json'), 'utf8'));
   const entries = (value as { entries?: unknown })?.entries;
@@ -99,7 +103,12 @@ function verifyHistory(
   for (const entry of entries) {
     const rows = applied.filter((row) => row.created_at === String(entry.when));
     const hash = sqlHash(folder, entry);
-    if (rows.length > 1 || (rows.length === 1 && rows[0]!.hash !== hash)) {
+    if (
+      rows.length > 1 ||
+      (rows.length === 1 &&
+        rows[0]!.hash !== hash &&
+        !(entry.tag === '0192_contract_numbers' && rows[0]!.hash === contractNumberLegacyHash))
+    ) {
       throw new Error(`Applied migration checksum/history mismatch: ${entry.tag}`);
     }
     if (!rows.length && (requireAll || BigInt(entry.when) <= latest)) {

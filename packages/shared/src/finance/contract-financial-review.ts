@@ -24,6 +24,13 @@ const dataSchema = z
         versionNumber: z.number().int().positive(),
         serviceType: z.enum(['electricity', 'savings', 'solar']),
         state: z.enum(['AwaitingCustomerAcceptance', 'Accepted', 'AwaitingSignature']),
+        amendment: z
+          .object({
+            baseVersionId: uuid,
+            effectiveState: z.enum(['Accepted', 'Signed', 'Active']),
+          })
+          .strict()
+          .optional(),
         publishedAt: z.string().datetime(),
         content: z.record(z.string(), z.json()),
       })
@@ -88,6 +95,14 @@ const schema = z
     )
       return false;
     const signature = data.signature;
+    if (data.contract.amendment) {
+      if (
+        scope.action !== 'contract.acceptance' ||
+        data.contract.state !== 'AwaitingCustomerAcceptance' ||
+        data.contract.amendment.baseVersionId === data.contract.versionId
+      )
+        return false;
+    }
     if (scope.action === 'contract.acceptance')
       return data.contract.state === 'AwaitingCustomerAcceptance' && signature === null;
     if (!signature || (signature.requestId === null) !== (signature.requestNumber === null))

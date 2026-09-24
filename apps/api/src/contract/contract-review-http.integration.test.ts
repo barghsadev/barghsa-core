@@ -45,7 +45,7 @@ async function send(path: string, method = 'GET', body?: unknown, user = 'review
   });
 }
 async function fixture(
-  serviceType: 'electricity' | 'savings' = 'electricity',
+  serviceType: 'electricity' | 'savings' | 'solar' = 'electricity',
   linkedOrder = false,
   commercialValue?: { kind: 'fixed'; amountIrr: string }
 ) {
@@ -207,6 +207,130 @@ it('lists an activated contract in the active-only customer view', async () => {
   expect(
     ((await response.json()) as { contracts: Array<{ id: string }> }).contracts.map((row) => row.id)
   ).toContain(f.row.id);
+});
+it('publishes and accepts an unsigned amendment while the active base remains effective until acceptance', async () => {
+  const f = await fixture('savings');
+  await publish(f);
+  expect(
+    (
+      await send(
+        'contracts/' + f.row.id + '/accept',
+        'POST',
+        command(f.row.currentVersionId),
+        f.owner
+      )
+    ).status
+  ).toBe(200);
+  await http.pool.query('INSERT INTO contract_activations(contract_id,version_id) VALUES($1,$2)', [
+    f.row.id,
+    f.row.currentVersionId,
+  ]);
+  const draft = await send('admin/contracts/' + f.row.id + '/amendments', 'POST', {
+    ...command(f.row.currentVersionId),
+    content: { price: '1200', termMonths: 24 },
+    changeDescription: 'Extend the savings term',
+  });
+  expect(draft.status).toBe(201);
+  const pending = ((await draft.json()) as ContractDto).pendingAmendment!;
+  expect(await (await customer(f)).json()).toMatchObject({
+    state: 'Active',
+    canAccept: false,
+    version: { id: f.row.currentVersionId },
+  });
+  await expect(
+    http.pool.query("UPDATE contract_amendments SET state='Applied' WHERE version_id=$1", [
+      pending.versionId,
+    ])
+  ).rejects.toMatchObject({ code: '23514' });
+  const published = await send('admin/contracts/' + f.row.id + '/amendments/publish', 'POST', {
+    ...command(pending.versionId),
+  });
+  expect(published.status).toBe(200);
+  const visible = (await (await customer(f)).json()) as {
+    version: { id: string };
+    canAccept: boolean;
+    amendment: { state: string; baseVersionId: string };
+  };
+  expect(visible).toMatchObject({
+    canAccept: true,
+    amendment: { state: 'AwaitingCustomerAcceptance', baseVersionId: f.row.currentVersionId },
+    version: { id: pending.versionId },
+  });
+  expect(
+    (await (await send('contracts', 'GET', undefined, f.owner)).json()) as {
+      contracts: Array<{ versionId: string }>;
+    }
+  ).toMatchObject({ contracts: [{ versionId: f.row.currentVersionId }] });
+  expect((await (await send('admin/contracts/' + f.row.id)).json()) as ContractDto).toMatchObject({
+    currentVersionId: f.row.currentVersionId,
+  });
+  const review = await customer(f, '/acceptance-review?versionId=' + pending.versionId);
+  expect(review.status, await review.text()).toBe(200);
+  const accepted = await send(
+    'contracts/' + f.row.id + '/accept',
+    'POST',
+    command(pending.versionId),
+    f.owner
+  );
+  const acceptedBody = await accepted.json();
+  expect(accepted.status, JSON.stringify(acceptedBody)).toBe(200);
+  expect(acceptedBody).toMatchObject({
+    state: 'Active',
+    canAccept: false,
+    version: { id: pending.versionId },
+    amendment: { state: 'Applied', baseVersionId: f.row.currentVersionId },
+  });
+  const current = (await (await send('admin/contracts/' + f.row.id)).json()) as ContractDto;
+  expect(current).toMatchObject({
+    state: 'Active',
+    currentVersionId: pending.versionId,
+    pendingAmendment: null,
+  });
+  expect(current.activatedAt).not.toBeNull();
+  const oldVersion = (await (await customer(f, '/versions/' + f.row.currentVersionId)).json()) as {
+    version: { id: string };
+  };
+  expect(oldVersion.version.id).toBe(f.row.currentVersionId);
+});
+it('keeps signature-required amendments private until the signing workflow supports them', async () => {
+  const f = await fixture('solar');
+  await publish(f);
+  expect(
+    (
+      await send(
+        'contracts/' + f.row.id + '/accept',
+        'POST',
+        command(f.row.currentVersionId),
+        f.owner
+      )
+    ).status
+  ).toBe(200);
+  const draft = await send('admin/contracts/' + f.row.id + '/amendments', 'POST', {
+    ...command(f.row.currentVersionId),
+    content: { price: '1200' },
+    changeDescription: 'New terms',
+  });
+  expect(draft.status).toBe(201);
+  const pending = ((await draft.json()) as ContractDto).pendingAmendment!;
+  expect(
+    (
+      await send(
+        'admin/contracts/' + f.row.id + '/amendments/publish',
+        'POST',
+        command(pending.versionId)
+      )
+    ).status
+  ).toBe(409);
+  expect(await (await customer(f)).json()).toMatchObject({
+    version: { id: f.row.currentVersionId },
+  });
+  expect(
+    (
+      await http.pool.query('SELECT 1 FROM contract_publications WHERE version_id=$1', [
+        pending.versionId,
+      ])
+    ).rowCount
+  ).toBe(0);
 });
 it('keeps drafts private and publishes only the exact reviewed version', async () => {
   const f = await fixture();

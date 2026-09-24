@@ -329,9 +329,9 @@ it('upgrades 0140 without inventing evidence for historical signed flags and rer
         .filter((entry: { idx: number }) => entry.idx >= 141)
         .map((entry: { tag: string }) => entry.tag),
     });
-    expect((await pool.query('SELECT * FROM contracts WHERE id=$1', [contract])).rows).toEqual(
-      before
-    );
+    const after = (await pool.query('SELECT * FROM contracts WHERE id=$1', [contract])).rows;
+    expect(after).toMatchObject(before);
+    expect(after[0]?.contract_number).toMatch(/^[1-9][0-9]*$/);
     for (const table of ['contract_signature_requests', 'contract_signatures'])
       expect((await pool.query(`SELECT count(*)::int AS n FROM ${table}`)).rows[0].n).toBe(0);
     expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
