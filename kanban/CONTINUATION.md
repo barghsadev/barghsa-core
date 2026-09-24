@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Storage integration test image repair](batches/2026-09-24-storage-test-image.md) replaces the inaccessible pinned Quay image in five S3 fixture suites with an active, digest-pinned community MinIO fork. Product storage code is unchanged.
+
 [Staff consultation offer and invoice review](batches/2026-09-24-staff-consultation-offer-review.md) now shows the saved fee, scope, deliverables, deadline and current invoice state together, with an exact finance invoice handoff for staff with ledger access.
 
 [Consultation offer and invoice handoff](batches/2026-09-24-consultation-customer-staff-journey.md) links accepted unpaid offers directly to the invoice from the customer list and verifies the customer-to-staff offer and completion journey in all five browser projects.
