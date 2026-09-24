@@ -23,6 +23,7 @@ import {
 import ReminderOffsetTogglePanel from '../components/ReminderOffsetTogglePanel.js';
 import ManualInvoicePanel from '../components/ManualInvoicePanel.js';
 import ServiceDuePeriodPanel from '../components/ServiceDuePeriodPanel.js';
+import { InvoiceBankReceiptQueue } from '../components/InvoiceBankReceiptQueue.js';
 
 /**
  * Staff dueAt override page (T-04.1.03.03).
@@ -67,6 +68,7 @@ export default function AdminInvoicesPage() {
   const canEditTime = time.status === 'ready' && dueTimezone === time.timezone;
   const locale = useLocale();
   const [invoiceId, setInvoiceId] = useState('');
+  const [showReceiptQueue, setShowReceiptQueue] = useState(false);
   const [invoice, setInvoice] = useState<InvoiceDueAtDto | null>(null);
   const [dueLocal, setDueLocal] = useState('');
   const [reason, setReason] = useState('');
@@ -247,6 +249,17 @@ export default function AdminInvoicesPage() {
       {time.notice}
       <ReminderOffsetTogglePanel />
       <ServiceDuePeriodPanel />
+      <section className="space-y-4">
+        <button
+          type="button"
+          className="rounded-md border bg-card px-4 py-2 text-sm font-medium text-foreground"
+          aria-expanded={showReceiptQueue}
+          onClick={() => setShowReceiptQueue((value) => !value)}
+        >
+          {t('admin.invoiceReceipts.title', locale)}
+        </button>
+        {showReceiptQueue ? <InvoiceBankReceiptQueue /> : null}
+      </section>
 
       <div id="invoice-deadline-panel" className="max-w-xl space-y-6">
         <header>

@@ -3,6 +3,45 @@ import type { I18nDictionary, Locale } from './index.js';
 import { t as sharedText } from './crm.js';
 export type { Locale } from './index.js';
 export const fa: I18nDictionary = {
+  'admin.invoiceReceipts.title': 'بررسی رسیدهای صورتحساب',
+  'admin.invoiceReceipts.description':
+    'رسیدهای در انتظار بررسی مالی و سهم صورتحساب و کیف پول را بررسی کنید.',
+  'admin.invoiceReceipts.refresh': 'تازه‌سازی',
+  'admin.invoiceReceipts.loading': 'در حال دریافت رسیدها…',
+  'admin.invoiceReceipts.forbidden': 'دسترسی بررسی رسیدهای صورتحساب را ندارید.',
+  'admin.invoiceReceipts.loadError': 'دریافت صف رسیدها ممکن نشد.',
+  'admin.invoiceReceipts.empty': 'رسیدی در انتظار بررسی نیست.',
+  'admin.invoiceReceipts.open': 'بررسی رسید',
+  'admin.invoiceReceipts.close': 'بستن',
+  'admin.invoiceReceipts.detail': 'جزئیات رسید',
+  'admin.invoiceReceipts.detailError': 'دریافت جزئیات رسید ممکن نشد. دوباره تلاش کنید.',
+  'admin.invoiceReceipts.receipt': 'شناسه رسید',
+  'admin.invoiceReceipts.invoice': 'شناسه صورتحساب',
+  'admin.invoiceReceipts.amount': 'مبلغ رسید',
+  'admin.invoiceReceipts.paymentDate': 'تاریخ انتقال',
+  'admin.invoiceReceipts.reference': 'شماره پیگیری',
+  'admin.invoiceReceipts.submitted': 'زمان ثبت',
+  'admin.invoiceReceipts.confirmed': 'زمان تأیید',
+  'admin.invoiceReceipts.attachment': 'مشاهده فایل رسید',
+  'admin.invoiceReceipts.attachmentUnavailable':
+    'فایل رسید در دسترس نیست؛ پیش از تأیید دوباره تلاش کنید.',
+  'admin.invoiceReceipts.remaining': 'مانده صورتحساب پیش از این رسید',
+  'admin.invoiceReceipts.invoiceAllocation': 'سهم صورتحساب',
+  'admin.invoiceReceipts.walletCredit': 'اعتبار کیف پول از مازاد',
+  'admin.invoiceReceipts.invoiceState': 'وضعیت صورتحساب',
+  'admin.invoiceReceipts.allocationError':
+    'محاسبه سهم پرداخت ممکن نشد؛ پس از تازه‌سازی دوباره تلاش کنید.',
+  'admin.invoiceReceipts.approvalPending': 'رسید در انتظار تأیید شخص دوم است.',
+  'admin.invoiceReceipts.approvalRequired': 'تأیید این رسید به بررسی شخص دوم نیاز دارد.',
+  'admin.invoiceReceipts.openApprovals': 'مشاهده درخواست‌های تأیید',
+  'admin.invoiceReceipts.confirm': 'تأیید رسید',
+  'admin.invoiceReceipts.reject': 'رد رسید',
+  'admin.invoiceReceipts.reason': 'دلیل رد برای مشتری',
+  'admin.invoiceReceipts.confirmNotice':
+    'سهم صورتحساب و اعتبار مازاد کیف پول را پیش از تأیید بررسی کنید. تأیید ممکن است به بررسی شخص دوم نیاز داشته باشد.',
+  'admin.invoiceReceipts.rejectNotice':
+    'دلیل رد به مشتری نشان داده می‌شود و هیچ پرداختی ثبت نمی‌شود.',
+  'admin.invoiceReceipts.conflict': 'رسید یا صورتحساب تغییر کرده است؛ اطلاعات را تازه کنید.',
   'admin.electricityPrice.title': 'تعدیل قیمت برق',
   'admin.electricityPrice.description':
     'پیشنهاد قیمت آینده را برای مشتری منتشر کنید، سپس فاکتور افزایش یا بستانکاری را صادر کنید.',
@@ -1102,6 +1141,45 @@ export const fa: I18nDictionary = {
   'admin.approvals.walletReceipts': 'نمایش رسیدهای کیف پول',
 };
 export const en: I18nDictionary = {
+  'admin.invoiceReceipts.title': 'Review invoice receipts',
+  'admin.invoiceReceipts.description':
+    'Review receipts awaiting finance and the invoice and wallet allocation.',
+  'admin.invoiceReceipts.refresh': 'Refresh',
+  'admin.invoiceReceipts.loading': 'Loading receipts…',
+  'admin.invoiceReceipts.forbidden': 'You do not have access to review invoice receipts.',
+  'admin.invoiceReceipts.loadError': 'Could not load the receipt queue.',
+  'admin.invoiceReceipts.empty': 'No receipts await review.',
+  'admin.invoiceReceipts.open': 'Review receipt',
+  'admin.invoiceReceipts.close': 'Close',
+  'admin.invoiceReceipts.detail': 'Receipt details',
+  'admin.invoiceReceipts.detailError': 'Could not load receipt details. Try again.',
+  'admin.invoiceReceipts.receipt': 'Receipt ID',
+  'admin.invoiceReceipts.invoice': 'Invoice ID',
+  'admin.invoiceReceipts.amount': 'Receipt amount',
+  'admin.invoiceReceipts.paymentDate': 'Transfer date',
+  'admin.invoiceReceipts.reference': 'Tracking reference',
+  'admin.invoiceReceipts.submitted': 'Submitted at',
+  'admin.invoiceReceipts.confirmed': 'Confirmed at',
+  'admin.invoiceReceipts.attachment': 'View receipt file',
+  'admin.invoiceReceipts.attachmentUnavailable':
+    'The receipt file is unavailable; retry before confirming.',
+  'admin.invoiceReceipts.remaining': 'Invoice remaining before this receipt',
+  'admin.invoiceReceipts.invoiceAllocation': 'Invoice allocation',
+  'admin.invoiceReceipts.walletCredit': 'Wallet credit from excess',
+  'admin.invoiceReceipts.invoiceState': 'Invoice status',
+  'admin.invoiceReceipts.allocationError':
+    'Could not preview the allocation; refresh and try again.',
+  'admin.invoiceReceipts.approvalPending': 'This receipt awaits a second reviewer.',
+  'admin.invoiceReceipts.approvalRequired': 'Confirming this receipt requires a second reviewer.',
+  'admin.invoiceReceipts.openApprovals': 'Open approval requests',
+  'admin.invoiceReceipts.confirm': 'Confirm receipt',
+  'admin.invoiceReceipts.reject': 'Reject receipt',
+  'admin.invoiceReceipts.reason': 'Reason shown to customer',
+  'admin.invoiceReceipts.confirmNotice':
+    'Review the invoice allocation and excess wallet credit before confirming. A second reviewer may be required.',
+  'admin.invoiceReceipts.rejectNotice':
+    'The customer will see this reason, and no payment is recorded.',
+  'admin.invoiceReceipts.conflict': 'The receipt or invoice changed; refresh and review it again.',
   'admin.electricityPrice.title': 'Electricity price adjustments',
   'admin.electricityPrice.description':
     'Publish a future price proposal for the customer, then issue the charge or credit.',

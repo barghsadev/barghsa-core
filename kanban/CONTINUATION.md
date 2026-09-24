@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Invoice bank-receipt finance queue](batches/2026-09-24-invoice-receipt-finance-queue.md) gives finance staff a reviewed confirm/reject flow with allocation preview and second-approval handoff.
+
 [Customer bank receipt detail and attachment](batches/2026-09-24-customer-receipt-detail.md) adds a scoped receipt download and submission/confirmation times to invoice detail.
 
 [Saving contract to order return](batches/2026-09-24-saving-contract-order-return.md) links the published customer saving contract back to its saving order using the correct saving-order ID.
