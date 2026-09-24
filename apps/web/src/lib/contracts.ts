@@ -23,6 +23,10 @@ export interface ContractVersion {
 export interface ContractSummary {
   id: string;
   profileId?: string;
+  profileType?: 'INDIVIDUAL' | 'LEGAL';
+  profileTitle?: string | null;
+  orderId?: string | null;
+  savingOrderId?: string | null;
   serviceType: 'electricity' | 'savings' | 'solar';
   state: (typeof contractStates)[number];
   versionId: string;
@@ -38,8 +42,6 @@ export interface ContractSummary {
 }
 export interface ContractDetailData extends Omit<ContractSummary, 'versionId' | 'versionNumber'> {
   profileId: string;
-  orderId?: string | null;
-  savingOrderId?: string | null;
   currentVersionId?: string;
   currentVersion?: ContractVersion;
   version?: ContractVersion;

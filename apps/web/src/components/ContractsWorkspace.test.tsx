@@ -175,7 +175,11 @@ function api(current = detail()) {
       contracts: [
         {
           id: ID,
-          serviceType: 'electricity',
+          profileType: 'LEGAL',
+          profileTitle: 'Acme Energy',
+          orderId: current.orderId,
+          savingOrderId: current.savingOrderId,
+          serviceType: current.serviceType,
           state: current.state,
           versionId: VERSION,
           versionNumber: 2,
@@ -201,6 +205,31 @@ it('opens the customer contract list with the active-state filter', async () => 
       ([raw]) => new URL(raw, 'https://app.test').searchParams.get('state') === 'Active'
     )
   ).toBe(true);
+});
+it.each(['en', 'fa'] as const)(
+  'identifies contracts and opens their linked electricity order in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    const orderId = '55555555-5555-4555-8555-555555555555';
+    vi.stubGlobal('fetch', api(detail({ orderId })));
+    await render(<ContractsPage />);
+    expect(container.textContent).toContain(`${words.contractReference}: ${ID}`);
+    expect(container.textContent).toContain(`${words.account}: Acme Energy · ${words.draftLegal}`);
+    expect(container.querySelector(`a[href="/electricity/orders/${orderId}"]`)?.textContent).toBe(
+      words.openLinkedOrder
+    );
+    await click(`${words.electricity} · ${words.version} ${(2).toLocaleString(locale)}`);
+    expect(container.textContent?.split(`${words.contractReference}: ${ID}`)).toHaveLength(3);
+  }
+);
+it('links a saving contract to its saved order from the list', async () => {
+  const savingOrderId = '66666666-6666-4666-8666-666666666666';
+  vi.stubGlobal('fetch', api(detail({ serviceType: 'savings', savingOrderId })));
+  await render(<ContractsPage />);
+  expect(container.querySelector(`a[href="/savings/orders/${savingOrderId}"]`)?.textContent).toBe(
+    en.openLinkedSavingOrder
+  );
 });
 it.each(['en', 'fa'] as const)(
   'shows the contract period and payable invoice in %s',

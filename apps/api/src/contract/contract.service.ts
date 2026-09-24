@@ -5,6 +5,7 @@ import {
   contractVersions,
   contractActivationRequirements,
   invoices,
+  profiles,
 } from '@barghsa/db';
 import { and, desc, eq, lt, createDbClient as drizzle } from '@barghsa/db';
 import type { PoolClient } from 'pg';
@@ -46,6 +47,11 @@ export class ContractService {
       .select({
         id: contracts.id,
         profileId: contracts.profileId,
+        profileType: profiles.profileType,
+        profileTitle: profiles.title,
+        profileFirstName: profiles.firstName,
+        profileLastName: profiles.lastName,
+        orderId: contracts.orderId,
         serviceType: contracts.serviceType,
         state: contracts.state,
         versionId: contractVersions.id,
@@ -60,6 +66,7 @@ export class ContractService {
         initialInvoiceState: invoices.state,
       })
       .from(contracts)
+      .innerJoin(profiles, eq(profiles.id, contracts.profileId))
       .innerJoin(
         contractVersions,
         and(
@@ -89,14 +96,20 @@ export class ContractService {
       .orderBy(desc(contracts.id))
       .limit(input.limit + 1);
     return {
-      contracts: rows.slice(0, input.limit).map((row) => ({
-        ...row,
-        updatedAt: row.updatedAt.toISOString(),
-        acceptedAt: row.acceptedAt?.toISOString() ?? null,
-        serviceStartsAt: row.serviceStartsAt?.toISOString() ?? null,
-        serviceEndsAt: row.serviceEndsAt?.toISOString() ?? null,
-        initialInvoiceAmount: row.initialInvoiceAmount?.toString() ?? null,
-      })),
+      contracts: rows
+        .slice(0, input.limit)
+        .map(({ profileFirstName, profileLastName, ...row }) => ({
+          ...row,
+          profileTitle:
+            row.profileTitle?.trim() ||
+            [profileFirstName, profileLastName].filter(Boolean).join(' ').trim() ||
+            null,
+          updatedAt: row.updatedAt.toISOString(),
+          acceptedAt: row.acceptedAt?.toISOString() ?? null,
+          serviceStartsAt: row.serviceStartsAt?.toISOString() ?? null,
+          serviceEndsAt: row.serviceEndsAt?.toISOString() ?? null,
+          initialInvoiceAmount: row.initialInvoiceAmount?.toString() ?? null,
+        })),
       nextBefore: rows.length > input.limit ? rows[input.limit - 1]!.id : null,
     };
   }

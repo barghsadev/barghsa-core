@@ -115,7 +115,8 @@ it('links an authorized invoice to its contract only after publication', async (
   expect((await invoice(other.owner)).status).toBe(404);
 });
 it('shows the published service period and initial invoice on customer and staff contract lists', async () => {
-  const f = await fixture();
+  const f = await fixture('electricity', true);
+  await http.pool.query("UPDATE profiles SET title='Acme Energy' WHERE id=$1", [f.profile]);
   const invoiceId = randomUUID();
   await http.pool.query(
     "INSERT INTO invoices(id,profile_id,contract_id,state,total_amount,issued_at,payable_from) VALUES($1,$2,$3,'Unpaid',125000,NOW(),NOW())",
@@ -133,6 +134,9 @@ it('shows the published service period and initial invoice on customer and staff
     contracts: [
       {
         id: f.row.id,
+        profileType: 'LEGAL',
+        profileTitle: 'Acme Energy',
+        orderId: f.orderId,
         serviceStartsAt: '2026-10-01T00:00:00.000Z',
         serviceEndsAt: '2027-10-01T00:00:00.000Z',
         initialInvoiceId: invoiceId,
@@ -147,6 +151,9 @@ it('shows the published service period and initial invoice on customer and staff
     contracts: [
       {
         id: f.row.id,
+        profileType: 'LEGAL',
+        profileTitle: 'Acme Energy',
+        orderId: f.orderId,
         serviceStartsAt: '2026-10-01T00:00:00.000Z',
         serviceEndsAt: '2027-10-01T00:00:00.000Z',
         initialInvoiceId: invoiceId,

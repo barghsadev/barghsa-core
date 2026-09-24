@@ -260,6 +260,18 @@ function ContractResults({
                   {word(item.serviceType)} · {word('version')}{' '}
                   {item.versionNumber.toLocaleString(locale)}
                 </Button>
+                <p className="text-sm text-muted-foreground">
+                  {word('contractReference')}:{' '}
+                  <bdi dir="ltr" className="break-all">
+                    {item.id}
+                  </bdi>
+                </p>
+                {item.profileType ? (
+                  <p className="text-sm text-muted-foreground">
+                    {word('account')}: {item.profileTitle || word('draftUnnamedProfile')} ·{' '}
+                    {word(item.profileType === 'LEGAL' ? 'draftLegal' : 'draftIndividual')}
+                  </p>
+                ) : null}
                 {item.changeDescription ? (
                   <p className="text-sm text-muted-foreground">{item.changeDescription}</p>
                 ) : null}
@@ -314,6 +326,24 @@ function ContractResults({
                       </>
                     )}
                   </p>
+                ) : null}
+                {!staff && item.serviceType === 'electricity' && item.orderId ? (
+                  <Link
+                    to="/electricity/orders/$orderId"
+                    params={{ orderId: item.orderId }}
+                    className="text-sm text-primary underline underline-offset-4"
+                  >
+                    {word('openLinkedOrder')}
+                  </Link>
+                ) : null}
+                {!staff && item.serviceType === 'savings' && item.savingOrderId ? (
+                  <Link
+                    to="/savings/orders/$orderId"
+                    params={{ orderId: item.savingOrderId }}
+                    className="text-sm text-primary underline underline-offset-4"
+                  >
+                    {word('openLinkedSavingOrder')}
+                  </Link>
                 ) : null}
                 {staff && item.serviceType === 'electricity' ? (
                   <a

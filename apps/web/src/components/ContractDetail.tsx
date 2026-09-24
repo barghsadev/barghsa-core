@@ -181,6 +181,9 @@ export function ContractDetail({
       ) : (
         <>
           {time.notice}
+          <p className="text-sm text-muted-foreground">
+            {word('contractReference')}: <bdi dir="ltr">{data.contract.id}</bdi>
+          </p>
           {!staff && isCurrent ? (
             <WorkflowStatusBanner
               locale={locale}
