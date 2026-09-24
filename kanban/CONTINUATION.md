@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Electricity workflow timestamps](batches/2026-09-24-electricity-workflow-timestamps.md) applies the saved account timezone to staff order review and customer order changes, including revision comparisons, conversations, timeline, quantity increases and price adjustments.
+
 [Electricity period dates in the account timezone](batches/2026-09-24-electricity-period-dates.md) keeps order history and detail dates tied to the saved timezone and displays the final included period day. The simple-order English selector now names the actual Gregorian range.
 
 [Localized electricity date and time selection](batches/2026-09-24-localized-electricity-date-time.md) replaces the advanced-order and revision control with a shared Jalali/Gregorian picker and a locale-appropriate clock. It preserves the stored instant and existing saved drafts across language changes; bilingual journey and component browser checks pass.

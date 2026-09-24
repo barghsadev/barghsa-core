@@ -441,9 +441,16 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             </CardContent>
           </Card>
           {detail.contractState === 'Active' ? (
-            <ElectricityIncreasePanel contractId={detail.contractId} versionId={detail.versionId} />
+            <ElectricityIncreasePanel
+              contractId={detail.contractId}
+              versionId={detail.versionId}
+              formatTimestamp={time.format}
+            />
           ) : null}
-          <ElectricityPriceAdjustmentsPanel contractId={detail.contractId} />
+          <ElectricityPriceAdjustmentsPanel
+            contractId={detail.contractId}
+            formatTimestamp={time.format}
+          />
           <Card>
             <CardContent className="pt-6">
               <ElectricityOrderComments orderId={orderId} />
@@ -456,9 +463,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                 <ol className="space-y-3 border-s ps-4">
                   {detail.timeline.map((event) => (
                     <li key={event.id}>
-                      <time className="text-muted-foreground">
-                        {new Date(event.at).toLocaleString(locale)}
-                      </time>
+                      <time className="text-muted-foreground">{time.format(event.at)}</time>
                       <p>
                         {t(
                           timelineKeys[event.event] ?? 'electricity.order.timeline.updated',

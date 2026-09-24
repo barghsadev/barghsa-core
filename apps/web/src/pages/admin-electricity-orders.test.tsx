@@ -16,9 +16,9 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     commercialStatus: 'awaiting_staff_review',
     financialStatus: 'unpaid',
     nextAction: 'review_order',
-    submittedAt: '2026-09-23T00:00:00Z',
+    submittedAt: '2026-09-23T22:00:00Z',
     periodStart: '2026-09-23T00:00:00Z',
-    periodEnd: '2026-09-30T00:00:00Z',
+    periodEnd: '2026-09-30T20:30:00Z',
     totalKwh: '10',
     pricingSnapshot: {
       lines: [
@@ -43,7 +43,7 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
       customerResponse: 'Quantity updated',
       before: {
         periodStart: '2026-09-23T00:00:00Z',
-        periodEnd: '2026-09-30T00:00:00Z',
+        periodEnd: '2026-09-30T20:30:00Z',
         totalKwh: '8',
         totalIrR: '800',
         fullAddress: 'Old Street',
@@ -52,7 +52,7 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
       },
       after: {
         periodStart: '2026-09-23T00:00:00Z',
-        periodEnd: '2026-09-30T00:00:00Z',
+        periodEnd: '2026-09-30T20:30:00Z',
         totalKwh: '10',
         totalIrR: '1000',
         fullAddress: 'Electricity Street',
@@ -67,33 +67,35 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     async (url: string) =>
       new Response(
         JSON.stringify(
-          url.includes('/comments')
-            ? {
-                comments: [
-                  {
-                    id: 'comment-1',
-                    authorName: 'Electricity Buyer',
-                    authorRole: 'customer',
-                    visibility: 'public',
-                    body: 'Please confirm delivery.',
-                    createdAt: '2026-09-23T00:00:00Z',
-                  },
-                ],
-                nextBefore: null,
-              }
-            : url.endsWith('/order-1')
-              ? order
-              : url.includes('/conversations')
-                ? {
-                    orders: [{ ...order, latestCommentAt: '2026-09-23T00:00:00Z' }],
-                    nextAfter: null,
-                  }
-                : url.includes('?after=')
+          url === '/api/user/settings/timezone'
+            ? { timezone: 'Asia/Tehran' }
+            : url.includes('/comments')
+              ? {
+                  comments: [
+                    {
+                      id: 'comment-1',
+                      authorName: 'Electricity Buyer',
+                      authorRole: 'customer',
+                      visibility: 'public',
+                      body: 'Please confirm delivery.',
+                      createdAt: '2026-09-23T00:00:00Z',
+                    },
+                  ],
+                  nextBefore: null,
+                }
+              : url.endsWith('/order-1')
+                ? order
+                : url.includes('/conversations')
                   ? {
-                      orders: [{ ...order, orderId: 'order-2', customerName: 'Later Buyer' }],
+                      orders: [{ ...order, latestCommentAt: '2026-09-23T00:00:00Z' }],
                       nextAfter: null,
                     }
-                  : { orders: [order], nextAfter: 'order-1' }
+                  : url.includes('?after=')
+                    ? {
+                        orders: [{ ...order, orderId: 'order-2', customerName: 'Later Buyer' }],
+                        nextAfter: null,
+                      }
+                    : { orders: [order], nextAfter: 'order-1' }
         ),
         { headers: { 'Content-Type': 'application/json' } }
       )
@@ -120,6 +122,9 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     expect(container.textContent).toContain('Quantity updated');
     expect(container.textContent).toContain('Old Street');
     expect(container.textContent).toContain('invoice-2');
+    expect(container.textContent).toContain('Sep 24, 2026');
+    expect(container.textContent).toContain('09/30/2026');
+    expect(container.textContent).not.toContain('10/01/2026');
     expect(container.textContent).toContain('Approve order');
     expect(container.textContent).toContain('Request changes');
     expect(container.textContent).toContain('Reject order');

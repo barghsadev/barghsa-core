@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/app';
+import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -26,8 +27,16 @@ interface PriceAdjustment {
   };
 }
 
-export function ElectricityPriceAdjustmentsPanel({ contractId }: { contractId: string }) {
+export function ElectricityPriceAdjustmentsPanel({
+  contractId,
+  formatTimestamp,
+}: {
+  contractId: string;
+  formatTimestamp?: (value: string) => string;
+}) {
   const locale = useLocale();
+  const timestamp =
+    formatTimestamp ?? ((value: string) => formatInTimezone(value, 'Asia/Tehran', locale));
   const numbers = useNumberFormatting(locale);
   const [adjustments, setAdjustments] = useState<PriceAdjustment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -98,7 +107,7 @@ export function ElectricityPriceAdjustmentsPanel({ contractId }: { contractId: s
                 </div>
                 <div>
                   <dt className="text-muted-foreground">{copy('effective')}</dt>
-                  <dd>{new Date(adjustment.effectiveFrom).toLocaleString(locale)}</dd>
+                  <dd>{timestamp(adjustment.effectiveFrom)}</dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">{copy('percentage')}</dt>
@@ -129,8 +138,7 @@ export function ElectricityPriceAdjustmentsPanel({ contractId }: { contractId: s
                         {copy('baseValue')}: {numbers.irrDigits(component.basisIrR)} IRR
                       </p>
                       <p>
-                        {copy('componentStart')}:{' '}
-                        {new Date(component.eligibleFrom).toLocaleString(locale)}
+                        {copy('componentStart')}: {timestamp(component.eligibleFrom)}
                       </p>
                       <p>
                         {copy('componentChange')}: {numbers.irrDigits(component.oldFutureIrR)} IRR

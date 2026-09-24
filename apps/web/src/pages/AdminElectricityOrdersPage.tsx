@@ -3,6 +3,7 @@ import { t } from '@barghsa/i18n/admin-ui';
 import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
 
@@ -70,8 +71,13 @@ function pricingLines(snapshot: Record<string, unknown>) {
 
 export default function AdminElectricityOrdersPage() {
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const copy = (key: string) => t(`admin.electricityOrders.${key}`, locale);
+  const periodText = (start: string, end: string) => {
+    const day = { year: 'numeric', month: '2-digit', day: '2-digit' } as const;
+    return `${time.format(start, day)} – ${time.format(new Date(new Date(end).getTime() - 1), day)}`;
+  };
   const [orders, setOrders] = useState<ReviewOrder[]>([]);
   const [after, setAfter] = useState<string | null>(null);
   const [nextAfter, setNextAfter] = useState<string | null>(null);
@@ -209,6 +215,7 @@ export default function AdminElectricityOrdersPage() {
           {copy('conversationView')}
         </Button>
       </nav>
+      {time.notice}
       {loading ? <p role="status">{copy('loading')}</p> : null}
       {denied ? <p role="alert">{copy('forbidden')}</p> : null}
       {error ? <p role="alert">{copy('error')}</p> : null}
@@ -235,7 +242,7 @@ export default function AdminElectricityOrdersPage() {
                 <span className="block text-xs">{order.orderId}</span>
                 <span className="block text-xs">
                   {queueView === 'conversations' && order.latestCommentAt
-                    ? new Date(order.latestCommentAt).toLocaleString(locale)
+                    ? time.format(order.latestCommentAt)
                     : `${copy(`priority.${order.priority ?? 'normal'}`)} · ${numbers.number(order.ageHours ?? 0)} ${copy('hours')}`}
                 </span>
               </span>
@@ -259,14 +266,11 @@ export default function AdminElectricityOrdersPage() {
                 </div>
                 <div>
                   <dt className="text-muted-foreground">{copy('submitted')}</dt>
-                  <dd>{new Date(detail.submittedAt).toLocaleString(locale)}</dd>
+                  <dd>{time.format(detail.submittedAt)}</dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">{copy('period')}</dt>
-                  <dd>
-                    {new Date(detail.periodStart).toLocaleDateString(locale)} –{' '}
-                    {new Date(detail.periodEnd).toLocaleDateString(locale)}
-                  </dd>
+                  <dd>{periodText(detail.periodStart, detail.periodEnd)}</dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">{copy('quantity')}</dt>
@@ -414,13 +418,19 @@ export default function AdminElectricityOrdersPage() {
                           <td className="p-2">
                             {detail.revisionReview.before.periodStart &&
                             detail.revisionReview.before.periodEnd
-                              ? `${new Date(detail.revisionReview.before.periodStart).toLocaleDateString(locale)} – ${new Date(detail.revisionReview.before.periodEnd).toLocaleDateString(locale)}`
+                              ? periodText(
+                                  detail.revisionReview.before.periodStart,
+                                  detail.revisionReview.before.periodEnd
+                                )
                               : '—'}
                           </td>
                           <td className="p-2">
                             {detail.revisionReview.after.periodStart &&
                             detail.revisionReview.after.periodEnd
-                              ? `${new Date(detail.revisionReview.after.periodStart).toLocaleDateString(locale)} – ${new Date(detail.revisionReview.after.periodEnd).toLocaleDateString(locale)}`
+                              ? periodText(
+                                  detail.revisionReview.after.periodStart,
+                                  detail.revisionReview.after.periodEnd
+                                )
                               : '—'}
                           </td>
                         </tr>

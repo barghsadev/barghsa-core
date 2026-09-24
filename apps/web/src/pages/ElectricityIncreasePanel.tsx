@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/app';
+import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -39,11 +40,15 @@ interface IncreaseState {
 export function ElectricityIncreasePanel({
   contractId,
   versionId,
+  formatTimestamp,
 }: {
   contractId: string;
   versionId: string;
+  formatTimestamp?: (value: string) => string;
 }) {
   const locale = useLocale();
+  const timestamp =
+    formatTimestamp ?? ((value: string) => formatInTimezone(value, 'Asia/Tehran', locale));
   const numbers = useNumberFormatting(locale);
   const [data, setData] = useState<IncreaseState | null>(null);
   const [quantity, setQuantity] = useState('');
@@ -194,13 +199,11 @@ export function ElectricityIncreasePanel({
                 </p>
                 <p>
                   {t('electricity.increase.earliest', locale)}:{' '}
-                  {new Date(data.request.amendmentDocument.earliestEffectiveFrom).toLocaleString(
-                    locale
-                  )}
+                  {timestamp(data.request.amendmentDocument.earliestEffectiveFrom)}
                 </p>
                 <p>
                   {t('electricity.increase.end', locale)}:{' '}
-                  {new Date(data.request.amendmentDocument.periodEnd).toLocaleString(locale)}
+                  {timestamp(data.request.amendmentDocument.periodEnd)}
                 </p>
                 <p>{t('electricity.increase.priceRule', locale)}</p>
                 <p>{t('electricity.increase.activationRule', locale)}</p>
@@ -217,7 +220,7 @@ export function ElectricityIncreasePanel({
                 </p>
                 <p>
                   {t('electricity.increase.priceBegins', locale)}:{' '}
-                  {new Date(data.quote.eligibleFrom).toLocaleString(locale)}
+                  {timestamp(data.quote.eligibleFrom)}
                 </p>
                 <label className="flex items-start gap-2">
                   <input
