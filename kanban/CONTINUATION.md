@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Contract original document lineage](batches/2026-09-24-contract-original-lineage.md) prevents duplicate live originals for one version, preserves idempotent and replacement paths, and hides the extra upload action after automatic electricity PDF creation.
+
 [Invoice and contract status together](batches/2026-09-24-invoice-contract-status.md) shows the authorized linked contract's current state on customer invoice detail while keeping payment status separate.
 
 [Contract initial-invoice next action](batches/2026-09-24-contract-invoice-next-action.md) sends customers from an accepted or signed contract to an unpaid initial invoice and distinguishes payments under staff review.

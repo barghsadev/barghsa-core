@@ -420,6 +420,81 @@ it('retries incomplete upload confirmation without duplicating records, events o
   ).toBe(409);
 });
 
+it('serializes original contract uploads and requires replacements to keep the document history', async () => {
+  const f = await owner();
+  const draft = await send('admin/contracts', 'document-legal', 'POST', {
+    profileId: f.profile,
+    serviceType: 'electricity',
+    content: { text: 'Original terms' },
+    changeDescription: 'Initial',
+    idempotencyKey: randomUUID(),
+  });
+  expect(draft.status).toBe(201);
+  const contract = (await draft.json()) as ContractDto;
+  const input = {
+    profileId: f.profile,
+    businessRecordType: 'contract',
+    businessRecordId: contract.id,
+    contractVersionId: contract.currentVersionId,
+    contractRole: 'original',
+    category: 'document',
+    fileName: 'original.pdf',
+    contentType: 'application/pdf',
+    fileSize: pdf.length,
+  };
+  const firstKey = randomUUID();
+  const secondKey = randomUUID();
+  const [first, competing] = await Promise.all([
+    send('admin/documents', 'document-legal', 'POST', { ...input, idempotencyKey: firstKey }),
+    send('admin/documents', 'document-legal', 'POST', {
+      ...input,
+      idempotencyKey: secondKey,
+    }),
+  ]);
+  expect([first.status, competing.status].sort()).toEqual([201, 409]);
+  const created = first.status === 201 ? first : competing;
+  const root = (await created.json()) as Created;
+  expect(
+    (
+      await http.pool.query(
+        `SELECT count(*)::int AS count FROM contract_documents cd
+         JOIN documents d ON d.id=cd.document_id
+         WHERE cd.contract_version_id=$1 AND cd.role='original'
+           AND d.supersedes_document_id IS NULL`,
+        [contract.currentVersionId]
+      )
+    ).rows[0].count
+  ).toBe(1);
+  const replay = await send('admin/documents', 'document-legal', 'POST', {
+    ...input,
+    idempotencyKey: first.status === 201 ? firstKey : secondKey,
+  });
+  expect(replay.status).toBe(201);
+  expect(((await replay.json()) as Created).document.id).toBe(root.document.id);
+  const removed = await send(
+    `admin/documents/${root.document.id}/remove`,
+    'document-legal',
+    'POST',
+    command(1)
+  );
+  expect(removed.status, await removed.clone().text()).toBe(200);
+  const nextRoot = await create('document-legal', input, true);
+  expect(nextRoot.document.id).not.toBe(root.document.id);
+  let original = await confirm(nextRoot, 'document-legal', true);
+  original = await act(original, 'submit', 'document-legal', true);
+  original = await act(original, 'reject', 'document-legal', true, 'Replace this copy');
+  expect(original.state).toBe('Rejected');
+  const replacement = await send('admin/documents', 'document-legal', 'POST', {
+    ...input,
+    idempotencyKey: randomUUID(),
+    supersedesDocumentId: nextRoot.document.id,
+  });
+  expect(replacement.status, await replacement.clone().text()).toBe(201);
+  expect(((await replacement.json()) as Created).document.supersedesDocumentId).toBe(
+    nextRoot.document.id
+  );
+});
+
 it('keeps internal contract documents private through reads, downloads and notifications', async () => {
   const f = await owner();
   const draft = await send('admin/contracts', 'document-legal', 'POST', {

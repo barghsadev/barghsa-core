@@ -267,6 +267,7 @@ export const en = {
   reasonRequired: 'Describe the required changes.',
   documents: 'Documents for this version',
   uploadOriginal: 'Upload original document',
+  replaceOriginalHint: 'To update an existing original, open it below and choose Replace.',
   uploadSigned: 'Upload signed copy',
   uploadAmendment: 'Upload amendment document',
   generateContractPdf: 'Generate PDF from saved terms',
@@ -575,6 +576,8 @@ export const fa: Record<keyof typeof en, string> = {
   reasonRequired: 'اصلاحات لازم را توضیح دهید.',
   documents: 'مدارک این نسخه',
   uploadOriginal: 'بارگذاری اصل قرارداد',
+  replaceOriginalHint:
+    'برای تغییر اصل قرارداد موجود، مدرک را در پایین باز کنید و «جایگزینی» را بزنید.',
   uploadSigned: 'بارگذاری نسخه امضاشده',
   uploadAmendment: 'بارگذاری مدرک الحاقیه',
   generateContractPdf: 'ساخت PDF از مفاد ذخیره‌شده',

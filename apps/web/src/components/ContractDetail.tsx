@@ -610,17 +610,25 @@ function ContractDocuments({
         ? !['Signed', 'Active', 'Completed', 'Cancelled'].includes(contract.state)
         : ['Accepted', 'AwaitingSignature'].includes(contract.state)));
   const template = version.content?.template;
-  const canGenerate =
-    staff &&
-    canUpload &&
-    contract.serviceType === 'electricity' &&
-    (!contract.orderId || isPendingAmendment) &&
+  const hasSavedTemplate =
     template !== null &&
     typeof template === 'object' &&
     !Array.isArray(template) &&
     typeof (template as Record<string, unknown>).name === 'string' &&
     typeof (template as Record<string, unknown>).text === 'string' &&
     Boolean(((template as Record<string, unknown>).text as string).trim());
+  const hasSystemOriginal =
+    contract.serviceType === 'electricity' &&
+    Boolean(contract.orderId) &&
+    version.content?.orderId === contract.orderId &&
+    !isPendingAmendment &&
+    hasSavedTemplate;
+  const canGenerate =
+    staff &&
+    canUpload &&
+    contract.serviceType === 'electricity' &&
+    (!contract.orderId || isPendingAmendment) &&
+    hasSavedTemplate;
   async function generatePdf() {
     setGenerating(true);
     setGenerationError(false);
@@ -641,6 +649,9 @@ function ContractDocuments({
     <section className="flex flex-col gap-4" aria-label={word('documents')}>
       <h3 className="font-semibold">{word('documents')}</h3>
       <p className="text-sm text-muted-foreground">{word('copyNotice')}</p>
+      {staff ? (
+        <p className="text-sm text-muted-foreground">{word('replaceOriginalHint')}</p>
+      ) : null}
       {canGenerate ? (
         <div className="flex flex-wrap items-center gap-3">
           <Button
@@ -672,7 +683,9 @@ function ContractDocuments({
                 : (['signed'] as const)
               : (['amendment'] as const)
             : staff
-              ? (['original', 'signed', 'amendment'] as const)
+              ? hasSystemOriginal
+                ? (['signed', 'amendment'] as const)
+                : (['original', 'signed', 'amendment'] as const)
               : (['signed'] as const)
           ).map((value) => (
             <Button key={value} variant="outline" onClick={() => setRole(value)}>

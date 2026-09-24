@@ -230,7 +230,35 @@ it('submits the saved electricity snapshot as a PDF for staff document review', 
     fetcher.mock.calls.some(([raw]) => raw.endsWith(`/versions/${VERSION}/generate-pdf`))
   ).toBe(true);
 });
-it('uses the automatically generated PDF for order-linked electricity contracts', async () => {
+it.each(['en', 'fa'] as const)(
+  'uses the automatically generated PDF for order-linked electricity contracts in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    vi.stubGlobal(
+      'fetch',
+      api(
+        detail({
+          orderId: ID,
+          state: 'Accepted',
+          currentVersionId: VERSION,
+          currentVersion: version({
+            content: {
+              orderId: ID,
+              template: { name: 'Electricity agreement', text: 'Saved exact terms' },
+            },
+          }),
+        })
+      )
+    );
+    await render(<ContractDetail id={ID} staff onClose={() => {}} onChanged={() => {}} />);
+    expect(container.textContent).not.toContain(words.generateContractPdf);
+    expect(container.textContent).not.toContain(words.uploadOriginal);
+    expect(container.textContent).toContain(words.replaceOriginalHint);
+    expect(container.textContent).toContain(words.documents);
+  }
+);
+it('keeps original upload available for a manually created order-linked contract', async () => {
   vi.stubGlobal(
     'fetch',
     api(
@@ -245,8 +273,7 @@ it('uses the automatically generated PDF for order-linked electricity contracts'
     )
   );
   await render(<ContractDetail id={ID} staff onClose={() => {}} onChanged={() => {}} />);
-  expect(container.textContent).not.toContain(en.generateContractPdf);
-  expect(container.textContent).toContain(en.documents);
+  expect(container.textContent).toContain(en.uploadOriginal);
 });
 it('opens the customer contract list with the active-state filter', async () => {
   const fetcher = api();

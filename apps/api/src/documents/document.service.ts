@@ -182,8 +182,14 @@ export class DocumentService {
       order: 'orders',
       solar_request: 'solar_construction_requests',
     }[input.businessRecordType];
+    const lock =
+      input.businessRecordType === 'contract' &&
+      input.contractRole === 'original' &&
+      !input.supersedesDocumentId
+        ? 'FOR UPDATE'
+        : 'FOR SHARE';
     const record = (
-      await client.query(`SELECT * FROM ${table} WHERE id=$1 AND profile_id=$2 FOR SHARE`, [
+      await client.query(`SELECT * FROM ${table} WHERE id=$1 AND profile_id=$2 ${lock}`, [
         input.businessRecordId,
         profileId,
       ])
@@ -324,6 +330,23 @@ export class DocumentService {
           { ...input, profileId },
           request.session,
           async () => {
+            if (
+              input.businessRecordType === 'contract' &&
+              input.contractRole === 'original' &&
+              !input.supersedesDocumentId
+            ) {
+              const existing = await client.query(
+                `SELECT 1 FROM contract_documents cd
+                 JOIN documents d ON d.id=cd.document_id
+                 WHERE cd.contract_id=$1 AND cd.contract_version_id=$2
+                   AND cd.role='original' AND d.supersedes_document_id IS NULL
+                   AND d.state<>'Removed'
+                 LIMIT 1`,
+                [input.businessRecordId, input.contractVersionId]
+              );
+              if (existing.rows.length)
+                throw new ConflictException('Replace the existing original document');
+            }
             const upload = await this.uploads.getPresignedUrl(
               {
                 fileName: input.fileName,
