@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Invoice return after online wallet top-up](batches/2026-09-24-invoice-return-after-top-up.md) preserves the authorized invoice handoff across the external payment gateway in the same tab, bound to the exact top-up transaction and expiring after a day. The five-project callback browser check passes.
+
 [Invoice wallet shortfall handoff](batches/2026-09-24-invoice-wallet-shortfall-handoff.md) shows the exact amount needed when an invoice cannot be paid from the wallet, links to top-up, and returns customers to the same invoice. The bilingual wallet-payment browser suite passes across all five projects.
 
 [Staff contract original recovery action](batches/2026-09-24-contract-original-recovery-action.md) exposes the new quarantined-original replacement path in the contract document detail. Focused UI coverage verifies the action is limited to staff and the original role.

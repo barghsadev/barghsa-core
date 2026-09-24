@@ -73,6 +73,27 @@ function financialReview(
     hash: createHash('sha256').update(JSON.stringify(data)).digest('hex'),
   };
 }
+
+test('wallet gateway return restores only the invoice bound to its top-up', async ({ page }) => {
+  await shell(page, 'en', false, '100000', () => '0');
+  await page.goto('/wallet');
+  await page.evaluate(
+    ({ topUpId, invoice }) => {
+      window.sessionStorage.setItem(
+        `barghsa.wallet.invoice-return.${topUpId}`,
+        JSON.stringify({ invoiceId: invoice, savedAt: Date.now() })
+      );
+    },
+    { topUpId: transactionId, invoice: invoiceId }
+  );
+  await page.goto(`/wallet?paymentOrderId=${transactionId}&paymentAuthority=auth-return`);
+  const returnLink = page.getByRole('link', { name: 'Return to invoice' });
+  await expect(returnLink).toHaveAttribute('href', `/invoices/${invoiceId}`);
+  await page.goto(
+    `/wallet?paymentOrderId=44444444-4444-7444-8444-444444444444&paymentAuthority=auth-return`
+  );
+  await expect(returnLink).toHaveCount(0);
+});
 async function shell(
   page: Page,
   locale: 'fa' | 'en',

@@ -19,6 +19,7 @@ import {
   normalizeIrrAmountDigits,
   utcTodayIso,
 } from '../lib/invoice-bank-receipt-upload.js';
+import { rememberWalletInvoiceReturn } from '../lib/wallet-invoice-return.js';
 
 interface WalletBalance {
   balance: string;
@@ -211,6 +212,7 @@ export function WalletPage({
         body: JSON.stringify({ amount: amountValue }),
       });
       const payload = (await res.json().catch(() => ({}))) as {
+        transactionId?: unknown;
         redirectUrl?: string;
         message?: string;
         onlineTopUpLimit?: number;
@@ -243,6 +245,8 @@ export function WalletPage({
         setError('gateway');
         return;
       }
+      if (returnInvoiceId && typeof payload.transactionId === 'string')
+        rememberWalletInvoiceReturn(payload.transactionId, returnInvoiceId);
       window.location.assign(payload.redirectUrl);
     } catch {
       setError('gateway');

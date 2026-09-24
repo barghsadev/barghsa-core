@@ -2,8 +2,11 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { WalletPage } from './WalletPage.js';
+import { walletInvoiceReturnFor } from '../lib/wallet-invoice-return.js';
 
 const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
+const TOP_UP_ID = '33333333-3333-7333-8333-333333333333';
+const INVOICE_ID = '11111111-1111-7111-8111-111111111111';
 
 function jsonResponse(body: unknown, status = 200) {
   return {
@@ -32,6 +35,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
   let assign: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
+    window.sessionStorage.clear();
     document.documentElement.lang = 'en';
     container = document.createElement('div');
     document.body.appendChild(container);
@@ -45,7 +49,10 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
         return jsonResponse({ activeProfileId: PROFILE_ID });
       }
       if (url.includes(`/api/wallet/${PROFILE_ID}/top-ups`) && method === 'POST') {
-        return jsonResponse({ redirectUrl: 'https://pay.test/start?authority=abc' }, 201);
+        return jsonResponse(
+          { transactionId: TOP_UP_ID, redirectUrl: 'https://pay.test/start?authority=abc' },
+          201
+        );
       }
       if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
         return jsonResponse({
@@ -104,11 +111,10 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     ['en', 'Return to invoice'],
     ['fa', 'بازگشت به فاکتور'],
   ] as const)('keeps the invoice return action visible in %s', async (locale, label) => {
-    const invoiceId = '11111111-1111-7111-8111-111111111111';
     document.documentElement.lang = locale;
-    await renderPage(invoiceId);
+    await renderPage(INVOICE_ID);
     const link = [...container.querySelectorAll('a')].find((item) => item.textContent === label);
-    expect(link?.getAttribute('href')).toBe(`/invoices/${invoiceId}`);
+    expect(link?.getAttribute('href')).toBe(`/invoices/${INVOICE_ID}`);
   });
 
   it.each(['en', 'fa'] as const)('renders exact large balances in %s', async (locale) => {
@@ -130,7 +136,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
   });
 
   it('posts the amount and redirects the browser to the gateway', async () => {
-    await renderPage();
+    await renderPage(INVOICE_ID);
     const input = container.querySelector('[data-testid="wallet-amount"]') as HTMLInputElement;
     const form = input.closest('form') as HTMLFormElement;
 
@@ -151,6 +157,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     const init = topUpCall![1] as RequestInit;
     expect(JSON.parse(String(init.body))).toEqual({ amount: 250000 });
     expect(new Headers(init.headers).get('Idempotency-Key')).toBeTruthy();
+    expect(walletInvoiceReturnFor(TOP_UP_ID)).toBe(INVOICE_ID);
     expect(assign).toHaveBeenCalledWith('https://pay.test/start?authority=abc');
   });
 
