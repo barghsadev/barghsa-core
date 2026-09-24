@@ -3,6 +3,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import {
   AsyncView,
+  DualStatusDisplay,
   FinancialReviewSummary,
   ProgressStepper,
   StatusBadge,
@@ -107,6 +108,28 @@ it('exposes current step and readable status without relying on color', async ()
   );
   expect(host.textContent).toContain('Awaiting review');
   expect(host.querySelector('[aria-current=step]')?.textContent).toContain('Review');
+});
+it('names commercial and financial states independently', async () => {
+  await act(async () =>
+    root.render(
+      <DualStatusDisplay
+        commercialLabel="Service"
+        commercialStatus="Active"
+        commercialTone="success"
+        financialLabel="Payment"
+        financialStatus="Unpaid"
+        financialTone="warning"
+      />
+    )
+  );
+  expect([...host.querySelectorAll('dt')].map((item) => item.textContent)).toEqual([
+    'Service',
+    'Payment',
+  ]);
+  expect([...host.querySelectorAll('dd')].map((item) => item.textContent)).toEqual([
+    'Active',
+    'Unpaid',
+  ]);
 });
 it('requires exact phrase and resets on reopen', async () => {
   const confirm = vi.fn(),

@@ -116,6 +116,10 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
       '/api/staff/electricity/orders/order-1',
       expect.any(Object)
     );
+    const statusLabels = [...container.querySelectorAll('dl dt')].map((item) => item.textContent);
+    expect(statusLabels.slice(0, 2)).toEqual(['Order status', 'Financial status']);
+    const statusValues = [...container.querySelectorAll('dl dd')].map((item) => item.textContent);
+    expect(statusValues.slice(0, 2)).toEqual(['Awaiting staff review', 'Unpaid']);
     expect(container.textContent).toContain('Thermal electricity');
     expect(container.textContent).toContain('Review order changes');
     expect(container.textContent).toContain('Increase quantity');

@@ -111,6 +111,17 @@ it('loads an order confirmation with its invoice and contract references', async
     expect(container.textContent).toContain('Current status');
     expect(container.textContent).toContain('Who acts next');
     expect(container.textContent).toContain('Financial status');
+    const statuses = [...container.querySelectorAll('dl')].find(
+      (item) => item.querySelector('dt')?.textContent === 'Commercial status'
+    );
+    expect([...statuses!.querySelectorAll('dt')].map((item) => item.textContent)).toEqual([
+      'Commercial status',
+      'Financial status',
+    ]);
+    expect([...statuses!.querySelectorAll('dd')].map((item) => item.textContent)).toEqual([
+      'Awaiting staff review',
+      'Unpaid',
+    ]);
     expect(container.textContent).toContain('Contract draft awaiting publication');
     expect(container.textContent).toContain('Energy mix and price');
     expect(container.textContent).toContain('Order submitted');

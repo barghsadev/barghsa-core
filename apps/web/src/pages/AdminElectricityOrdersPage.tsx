@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Button, Card, CardContent, Input, Label } from '@barghsa/ui';
+import { Button, Card, CardContent, DualStatusDisplay, Input, Label } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
+import { commercialStatusTone, financialStatusTone } from '../lib/electricity-status-tone.js';
 
 interface ReviewOrder {
   orderId: string;
@@ -259,6 +260,14 @@ export default function AdminElectricityOrdersPage() {
           <Card>
             <CardContent className="space-y-5 pt-6">
               <h2 className="text-lg font-semibold">{copy('detail')}</h2>
+              <DualStatusDisplay
+                commercialLabel={copy('commercial')}
+                commercialStatus={copy(`commercial.${detail.commercialStatus}`)}
+                commercialTone={commercialStatusTone(detail.commercialStatus)}
+                financialLabel={copy('financial')}
+                financialStatus={copy(`financial.${detail.financialStatus}`)}
+                financialTone={financialStatusTone(detail.financialStatus)}
+              />
               <dl className="grid gap-3 text-sm sm:grid-cols-2">
                 <div>
                   <dt className="text-muted-foreground">{copy('customer')}</dt>
@@ -283,14 +292,6 @@ export default function AdminElectricityOrdersPage() {
                 <div>
                   <dt className="text-muted-foreground">{copy('paid')}</dt>
                   <dd>{numbers.money(detail.paidIrR)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{copy('financial')}</dt>
-                  <dd>{copy(`financial.${detail.financialStatus}`)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{copy('commercial')}</dt>
-                  <dd>{copy(`commercial.${detail.commercialStatus}`)}</dd>
                 </div>
               </dl>
               <p className="text-sm">

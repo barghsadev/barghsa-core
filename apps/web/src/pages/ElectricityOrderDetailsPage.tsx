@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
-import { Button, Card, CardContent } from '@barghsa/ui';
+import { Button, Card, CardContent, DualStatusDisplay } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -10,6 +10,7 @@ import { ElectricityIncreasePanel } from './ElectricityIncreasePanel.js';
 import { ElectricityPriceAdjustmentsPanel } from './ElectricityPriceAdjustmentsPanel.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
+import { commercialStatusTone, financialStatusTone } from '../lib/electricity-status-tone.js';
 
 const ElectricityOrderRevisionForm = lazy(() =>
   import('./ElectricityOrderRevisionForm.js').then((module) => ({
@@ -322,6 +323,20 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
             owner={actionOwner}
             actionHref={nextActionLink}
           />
+          <DualStatusDisplay
+            commercialLabel={t('electricity.order.commercialStatus', locale)}
+            commercialStatus={t(
+              statusKeys[detail.electricityStatus] ?? 'electricity.order.status.unknown',
+              locale
+            )}
+            commercialTone={commercialStatusTone(detail.electricityStatus)}
+            financialLabel={t('electricity.order.financialStatus', locale)}
+            financialStatus={t(
+              financialKeys[detail.financialStatus] ?? 'electricity.order.status.unknown',
+              locale
+            )}
+            financialTone={financialStatusTone(detail.financialStatus)}
+          />
           <Card>
             <CardContent className="space-y-3 pt-6 text-sm">
               <p className="flex justify-between gap-3">
@@ -379,15 +394,6 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               <p className="flex justify-between gap-3">
                 <span>{t('electricity.order.deliveryAddress', locale)}</span>
                 <span>{detail.fullAddress}</span>
-              </p>
-              <p className="flex justify-between gap-3">
-                <span>{t('electricity.order.financialStatus', locale)}</span>
-                <span>
-                  {t(
-                    financialKeys[detail.financialStatus] ?? 'electricity.order.status.unknown',
-                    locale
-                  )}
-                </span>
               </p>
             </CardContent>
           </Card>

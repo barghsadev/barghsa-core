@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Electricity commercial and financial status pair](batches/2026-09-24-electricity-dual-status.md) shows both order and payment progress together in customer and staff detail views.
+
 [Electricity contract to order return](batches/2026-09-24-electricity-contract-order-return.md) exposes the authorized source order and links published customer contract detail back to that order.
 
 [Customer contract milestones and invoice handoff](batches/2026-09-24-contract-milestones-invoice-link.md) shows publication and acceptance history and links the activation prerequisite to its initial invoice.

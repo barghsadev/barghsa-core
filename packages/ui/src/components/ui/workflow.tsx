@@ -28,6 +28,40 @@ export function StatusBadge({
   );
 }
 
+/** Keep service and payment progress visible as separate, named states. */
+export function DualStatusDisplay({
+  commercialLabel,
+  commercialStatus,
+  commercialTone = 'default',
+  financialLabel,
+  financialStatus,
+  financialTone = 'default',
+}: {
+  commercialLabel: string;
+  commercialStatus: string;
+  commercialTone?: StatusTone;
+  financialLabel: string;
+  financialStatus: string;
+  financialTone?: StatusTone;
+}) {
+  return (
+    <dl className="flex flex-wrap gap-x-6 gap-y-3 text-sm">
+      <div className="flex items-center gap-2">
+        <dt className="text-muted-foreground">{commercialLabel}</dt>
+        <dd>
+          <StatusBadge label={commercialStatus} tone={commercialTone} />
+        </dd>
+      </div>
+      <div className="flex items-center gap-2">
+        <dt className="text-muted-foreground">{financialLabel}</dt>
+        <dd>
+          <StatusBadge label={financialStatus} tone={financialTone} />
+        </dd>
+      </div>
+    </dl>
+  );
+}
+
 export function PageHeader({
   title,
   description,

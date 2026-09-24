@@ -313,6 +313,11 @@ test('simple electricity order moves from reviewed quote through wallet payment 
   await expect(page.getByRole('region', { name: 'Status and next action' })).toContainText(
     'Staff are reviewing your order.'
   );
+  const statusPair = page.locator('dl').filter({
+    has: page.getByText('Commercial status', { exact: true }),
+  });
+  await expect(statusPair.locator('dt')).toHaveText(['Commercial status', 'Financial status']);
+  await expect(statusPair.locator('dd')).toHaveText(['Awaiting staff review', 'Unpaid']);
 
   // Staff approval is covered by the API suite; the customer resumes after that transition.
   reviewComplete = true;
@@ -331,6 +336,7 @@ test('simple electricity order moves from reviewed quote through wallet payment 
     expectedReviewHash: paymentReview().hash,
   });
   await page.getByRole('link', { name: 'Back to electricity order' }).click();
+  await expect(statusPair.locator('dd')).toHaveText(['Approved', 'Paid']);
   await expect(page.getByRole('region', { name: 'Status and next action' })).toContainText(
     'Review and accept the published contract.'
   );
