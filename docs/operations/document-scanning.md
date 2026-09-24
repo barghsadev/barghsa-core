@@ -16,6 +16,14 @@ worker configuration aligned so confirmed documents have a running consumer.
 Configure clamd's stream size limit to at least 50 MiB, matching the upload
 limit, or larger documents will remain pending and raise an admin alert.
 
+The production Compose overlay builds the official ClamAV 1.5 Debian image
+with a 50 MiB stream limit and `AlertExceedsMax` enabled. It keeps signature
+updates in the `clamav-db` volume, publishes no scanner port to the host, and
+starts the API and worker only after ClamAV is healthy. The overlay sets
+`DOCUMENT_CLAMAV_HOST=clamav` for both services. Deploy the database migration
+before starting the updated stack. Allow for a longer first startup while
+ClamAV loads and updates its signatures.
+
 Scanner, storage, or checksum failures leave the document in `PendingScan` and
 retry with exponential backoff (30 seconds up to one hour). The third failed
 attempt sends one in-app alert to each active admin. Check `document_scan_jobs`

@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Production ClamAV runtime](batches/2026-09-24-clamav-runtime.md) supplies a healthy scanner to the API and worker, with a private port, persisted signature updates, and live clean/infected smoke evidence.
+
 [Document scanning integration](batches/2026-09-24-document-scanning.md) keeps configured uploads pending until a verified ClamAV verdict, quarantines malware, retries scanner failures, and alerts active admins.
 
 [Staff document template library](batches/2026-09-24-document-template-library.md) adds versioned PDF/DOCX template files, placeholder extraction and conflict warnings, immutable historical downloads, and a bilingual admin workflow.

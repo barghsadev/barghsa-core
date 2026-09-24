@@ -16,6 +16,16 @@ services:
   pgbouncer:
     profiles: !reset []
 
+  # Private ClamAV daemon for confirmed business documents. No host port is
+  # published; only services on the Compose network can reach TCP 3310.
+  clamav:
+    build:
+      context: .
+      dockerfile: deploy/clamav/Dockerfile
+    volumes:
+      - clamav-db:/var/lib/clamav
+    restart: unless-stopped
+
   # ─────────────────────────────────────────────────────────────
   # API Server (NestJS)
   # ─────────────────────────────────────────────────────────────
@@ -37,10 +47,14 @@ services:
       API_PUBLIC_URL: ${API_PUBLIC_URL:?Set the public API URL for payment callbacks}
       PAYMENT_GATEWAY_MERCHANT_ID: ${PAYMENT_GATEWAY_MERCHANT_ID:?Set the payment merchant ID}
       AUTH_DELIVERY_ENCRYPTION_KEY: ${AUTH_DELIVERY_ENCRYPTION_KEY:?Set the auth delivery encryption key}
+      DOCUMENT_CLAMAV_HOST: clamav
+      DOCUMENT_CLAMAV_PORT: 3310
     depends_on:
       postgres:
         condition: service_healthy
       pgbouncer:
+        condition: service_healthy
+      clamav:
         condition: service_healthy
     healthcheck:
       test: ['CMD', 'node', 'healthcheck-runtime.cjs']
@@ -103,10 +117,14 @@ services:
       NODE_ENV: production
       DATABASE_URL: ${DATABASE_URL:?Set the application database URL}
       AUTH_DELIVERY_ENCRYPTION_KEY: ${AUTH_DELIVERY_ENCRYPTION_KEY:?Set the auth delivery encryption key}
+      DOCUMENT_CLAMAV_HOST: clamav
+      DOCUMENT_CLAMAV_PORT: 3310
     depends_on:
       postgres:
         condition: service_healthy
       pgbouncer:
+        condition: service_healthy
+      clamav:
         condition: service_healthy
     restart: unless-stopped
     stop_grace_period: 40s
@@ -117,3 +135,6 @@ services:
     read_only: true
     security_opt:
       - no-new-privileges:true
+
+volumes:
+  clamav-db:
