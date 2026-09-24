@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Consultation offer and invoice handoff](batches/2026-09-24-consultation-customer-staff-journey.md) links accepted unpaid offers directly to the invoice from the customer list and verifies the customer-to-staff offer and completion journey in all five browser projects.
+
 [Electricity contract terms at checkout](batches/2026-09-24-electricity-contract-terms-preview.md) now shows the selected rendered template in simple and advanced review and binds it to submission, with stale-term recovery.
 
 [Solar customer and staff browser handoffs](batches/2026-09-24-solar-browser-journey.md) now follows one submitted request through staff document approval, postal advancement, customer shipment, staff receipt confirmation, and the customer-visible result.

@@ -276,6 +276,15 @@ export function ConsultationsPage() {
                         })}
                       </time>
                     </Link>
+                    {request.invoice_id && action.href?.startsWith('/invoices/') && (
+                      <Link
+                        to="/invoices/$invoiceId"
+                        params={{ invoiceId: request.invoice_id }}
+                        className="mt-2 inline-block text-sm font-medium text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
+                      >
+                        {copy('viewInvoice')}
+                      </Link>
+                    )}
                   </li>
                 );
               })}
