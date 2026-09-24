@@ -161,6 +161,10 @@ function assertListFilters(raw: {
   search?: string | undefined;
   status?: string | undefined;
   discountType?: string | undefined;
+  eligibility?: string | undefined;
+  expiry?: string | undefined;
+  limit?: string | undefined;
+  before?: string | undefined;
 }): GiftCodeListFilter {
   const out: GiftCodeListFilter = {};
   if (raw.search !== undefined && raw.search !== '') {
@@ -187,6 +191,27 @@ function assertListFilters(raw: {
       );
     }
     out.discountType = parsed.data;
+  }
+  if (raw.eligibility !== undefined) {
+    const parsed = eligibilitySchema.safeParse(raw.eligibility);
+    if (!parsed.success)
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid eligibility', 400);
+    out.eligibility = parsed.data;
+  }
+  if (raw.expiry !== undefined) {
+    const parsed = z.enum(['expired', 'not_expired']).safeParse(raw.expiry);
+    if (!parsed.success) httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid expiry', 400);
+    out.expiry = parsed.data;
+  }
+  if (raw.limit !== undefined) {
+    if (!/^[1-9]\d{0,2}$/.test(raw.limit) || Number(raw.limit) > 100)
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid limit', 400);
+    out.limit = Number(raw.limit);
+  }
+  if (raw.before !== undefined) {
+    if (!z.string().uuid().safeParse(raw.before).success)
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid before cursor', 400);
+    out.before = raw.before;
   }
   return out;
 }
@@ -230,17 +255,38 @@ export class GiftCodeController {
     summary: 'List gift codes (admin)',
     description:
       'Newest first, with derived usage totals. Optional filters: ?search= (normalized ' +
-      'substring on the code), ?status=active|inactive, ?discountType=fixed_irr|percentage.',
+      'substring on the code), ?status=active|inactive, ?discountType=fixed_irr|percentage, ' +
+      '?eligibility=public|profile, ?expiry=expired|not_expired, ?limit=1..100, ' +
+      '?before=<code UUID>. Results use newest-first keyset order.',
   })
   @ApiResponse({ status: 200, description: 'Gift codes with usage totals.' })
+  @ApiQuery({ name: 'search', required: false })
+  @ApiQuery({ name: 'status', required: false })
+  @ApiQuery({ name: 'discountType', required: false })
+  @ApiQuery({ name: 'eligibility', required: false })
+  @ApiQuery({ name: 'expiry', required: false })
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'before', required: false })
   async list(
     @Req() req: AuthenticatedRequest,
     @Query('search') search?: string,
     @Query('status') status?: string,
-    @Query('discountType') discountType?: string
+    @Query('discountType') discountType?: string,
+    @Query('eligibility') eligibility?: string,
+    @Query('expiry') expiry?: string,
+    @Query('limit') limit?: string,
+    @Query('before') before?: string
   ): Promise<GiftCodeDto[]> {
     this.assertPromotionsPermission(req);
-    const filters = assertListFilters({ search, status, discountType });
+    const filters = assertListFilters({
+      search,
+      status,
+      discountType,
+      eligibility,
+      expiry,
+      limit,
+      before,
+    });
     return this.service.list(filters);
   }
 

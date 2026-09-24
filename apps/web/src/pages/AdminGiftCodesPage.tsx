@@ -1,8 +1,14 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Button, DatePicker, datePickerAtTime, Input, Label } from '@barghsa/ui';
 import { tGift } from '@barghsa/i18n/gifts';
-import { GIFT_CODE_CATEGORIES, type GiftCodeDto } from '@barghsa/shared/promotions';
+import {
+  GIFT_CODE_CATEGORIES,
+  type GiftCodeDto,
+  type GiftCodeProfileUsageDto,
+  type GiftCodeRedemptionDto,
+} from '@barghsa/shared/promotions';
+import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
@@ -29,6 +35,18 @@ type Draft = {
   start: DateField;
   end: DateField;
 };
+type GiftCodeStats = {
+  code: GiftCodeDto;
+  perProfile: GiftCodeProfileUsageDto[];
+  recentRedemptions: GiftCodeRedemptionDto[];
+};
+const PAGE_SIZE = 50;
+function listPath(filter: string, before?: GiftCodeDto): string {
+  const params = new URLSearchParams(filter);
+  params.set('limit', String(PAGE_SIZE));
+  if (before) params.set('before', before.id);
+  return `/api/admin/promotions/gift-codes?${params}`;
+}
 function dateField(value: string | null, zone: string): DateField {
   const date = value ? new Date(value) : undefined;
   return {
@@ -83,6 +101,7 @@ export default function AdminGiftCodesPage() {
   const label = (key: string) => tGift(`admin.gifts.${key}`, locale);
   const money = numbers.money;
   const [rows, setRows] = useState<GiftCodeDto[]>([]),
+    [stats, setStats] = useState<GiftCodeStats | null>(null),
     [draft, setDraft] = useState<Draft | null>(null),
     [editor, setEditor] = useState<string | null>(null),
     [revision, setRevision] = useState(0);
@@ -90,53 +109,116 @@ export default function AdminGiftCodesPage() {
     [action, setAction] = useState<TeamAction | null>(null),
     [saved, setSaved] = useState(false),
     [invalidDate, setInvalidDate] = useState(false);
+  const [hasMore, setHasMore] = useState(false),
+    [moreState, setMoreState] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [editorState, setEditorState] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [editorRetry, setEditorRetry] = useState(0);
+  const listRequest = useRef(0);
   const [search, setSearch] = useState(''),
     [status, setStatus] = useState(''),
     [type, setType] = useState(''),
+    [eligibility, setEligibility] = useState(''),
+    [expiry, setExpiry] = useState(''),
     [filter, setFilter] = useState('');
   const zone = preference.timezone;
+  const formatDate = (value: string) =>
+    formatInTimezone(value, zone, locale, { dateStyle: 'medium', timeStyle: 'short' });
+  const profileName = (id: string) =>
+    stats?.perProfile.find((row) => row.profileId === id)?.profileTitle ?? id;
   useEffect(() => {
     if (preference.status !== 'ready') return;
+    ++listRequest.current;
     const abort = new AbortController();
     setState('loading');
     setRows([]);
-    setDraft(null);
-    setInvalidDate(false);
+    setHasMore(false);
+    setMoreState('idle');
     void (async () => {
       try {
-        const paths = [
-          `/api/admin/promotions/gift-codes${filter ? `?${filter}` : ''}`,
-          ...(editor && editor !== 'new'
-            ? [`/api/admin/promotions/gift-codes/${editor}/stats`]
-            : []),
-        ];
-        const responses = await Promise.all(
-          paths.map((path) => fetch(path, { signal: abort.signal }))
-        );
-        if (responses.some((response) => response.status === 403)) {
+        const response = await fetch(listPath(filter), { signal: abort.signal });
+        if (response.status === 403) {
           if (!abort.signal.aborted) setState('denied');
           return;
         }
-        if (responses.some((response) => !response.ok)) throw new Error('Load failed');
-        const data = await Promise.all(responses.map((response) => response.json()));
+        if (!response.ok) throw new Error('Load failed');
+        const page = (await response.json()) as GiftCodeDto[];
         if (abort.signal.aborted) return;
-        setRows(data[0] as GiftCodeDto[]);
-        if (editor)
-          setDraft(
-            draftFrom(editor === 'new' ? undefined : (data[1] as { code: GiftCodeDto }).code, zone)
-          );
+        setRows(page);
+        setHasMore(page.length === PAGE_SIZE);
         setState('ready');
       } catch {
         if (!abort.signal.aborted) setState('error');
       }
     })();
+    return () => {
+      ++listRequest.current;
+      abort.abort();
+    };
+  }, [revision, filter, preference.status]);
+  useEffect(() => {
+    setStats(null);
+    setDraft(null);
+    setInvalidDate(false);
+    if (preference.status !== 'ready' || !editor) {
+      setEditorState('idle');
+      return;
+    }
+    if (editor === 'new') {
+      setDraft(draftFrom(undefined, zone));
+      setEditorState('idle');
+      return;
+    }
+    const abort = new AbortController();
+    setEditorState('loading');
+    void (async () => {
+      try {
+        const response = await fetch(`/api/admin/promotions/gift-codes/${editor}/stats`, {
+          signal: abort.signal,
+        });
+        if (response.status === 403) {
+          if (!abort.signal.aborted) setState('denied');
+          return;
+        }
+        if (!response.ok) throw new Error('Load failed');
+        const detail = (await response.json()) as GiftCodeStats;
+        if (abort.signal.aborted) return;
+        setStats(detail);
+        setDraft(draftFrom(detail.code, zone));
+        setEditorState('idle');
+      } catch {
+        if (!abort.signal.aborted) setEditorState('error');
+      }
+    })();
     return () => abort.abort();
-  }, [editor, revision, filter, zone, preference.status]);
+  }, [editor, editorRetry, revision, zone, preference.status]);
+  async function loadMore() {
+    if (!hasMore || !rows.length || moreState === 'loading') return;
+    const request = listRequest.current;
+    setMoreState('loading');
+    try {
+      const response = await fetch(listPath(filter, rows[rows.length - 1]));
+      if (request !== listRequest.current) return;
+      if (response.status === 403) {
+        setState('denied');
+        setRows([]);
+        return;
+      }
+      if (!response.ok) throw new Error('Load failed');
+      const page = (await response.json()) as GiftCodeDto[];
+      if (request !== listRequest.current) return;
+      setRows((current) => {
+        const known = new Set(current.map((row) => row.id));
+        return [...current, ...page.filter((row) => !known.has(row.id))];
+      });
+      setHasMore(page.length === PAGE_SIZE);
+      setMoreState('idle');
+    } catch {
+      if (request === listRequest.current) setMoreState('error');
+    }
+  }
   function choose(value: string | null) {
     if (preference.status === 'error') preference.retry();
-    setState('loading');
     setEditor(value);
-    setRevision((current) => current + 1);
   }
   function propose(
     path: string,
@@ -212,7 +294,7 @@ export default function AdminGiftCodesPage() {
       <h1 className="text-2xl font-semibold">{label('title')}</h1>
       <form
         aria-label={label('filters')}
-        className="grid items-end gap-3 sm:grid-cols-4"
+        className="grid items-end gap-3 sm:grid-cols-2 lg:grid-cols-3"
         onSubmit={(event) => {
           event.preventDefault();
           setEditor(null);
@@ -222,6 +304,8 @@ export default function AdminGiftCodesPage() {
               ...(search ? { search } : {}),
               ...(status ? { status } : {}),
               ...(type ? { discountType: type } : {}),
+              ...(eligibility ? { eligibility } : {}),
+              ...(expiry ? { expiry } : {}),
             }).toString()
           );
           if (preference.status === 'error') preference.retry();
@@ -263,6 +347,32 @@ export default function AdminGiftCodesPage() {
             <option value="percentage">{label('percentage')}</option>
           </select>
         </div>
+        <div className="flex min-w-0 flex-col gap-2">
+          <Label htmlFor="gift-eligibility-filter">{label('eligibility')}</Label>
+          <select
+            id="gift-eligibility-filter"
+            className="max-w-full rounded-md border bg-background p-2"
+            value={eligibility}
+            onChange={(event) => setEligibility(event.target.value)}
+          >
+            <option value="">{label('all')}</option>
+            <option value="public">{label('public')}</option>
+            <option value="profile">{label('restricted')}</option>
+          </select>
+        </div>
+        <div className="flex min-w-0 flex-col gap-2">
+          <Label htmlFor="gift-expiry-filter">{label('expiry')}</Label>
+          <select
+            id="gift-expiry-filter"
+            className="max-w-full rounded-md border bg-background p-2"
+            value={expiry}
+            onChange={(event) => setExpiry(event.target.value)}
+          >
+            <option value="">{label('all')}</option>
+            <option value="not_expired">{label('notExpired')}</option>
+            <option value="expired">{label('expired')}</option>
+          </select>
+        </div>
         <Button type="submit" variant="outline">
           {label('search')}
         </Button>
@@ -279,6 +389,15 @@ export default function AdminGiftCodesPage() {
           <div>
             <Button onClick={() => choose('new')}>{label('add')}</Button>
           </div>
+          {editorState === 'loading' && <p role="status">{label('loading')}</p>}
+          {editorState === 'error' && (
+            <p role="alert">
+              {label('statsError')}{' '}
+              <Button type="button" variant="outline" onClick={() => setEditorRetry((n) => n + 1)}>
+                {label('retry')}
+              </Button>
+            </p>
+          )}
           {draft && (
             <form
               aria-label={label('editor')}
@@ -531,6 +650,52 @@ export default function AdminGiftCodesPage() {
               </div>
             </form>
           )}
+          {stats && (
+            <section aria-label={label('usageStats')} className="space-y-4 rounded-md border p-4">
+              <h2 className="text-lg font-semibold">
+                {label('usageStats')}: <bdi>{stats.code.code}</bdi>
+              </h2>
+              <div>
+                <h3 className="font-medium">{label('profileUsage')}</h3>
+                {stats.perProfile.length ? (
+                  <ul className="divide-y">
+                    {stats.perProfile.map((item) => (
+                      <li key={item.profileId} className="py-2">
+                        <bdi title={item.profileId}>{item.profileTitle}</bdi>
+                        <span className="block text-sm text-muted-foreground">
+                          {label('consumed')}: {numbers.number(item.consumed)} · {label('released')}
+                          : {numbers.number(item.released)} · {label('totalDiscount')}:{' '}
+                          {money(item.discountIrr)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>{label('noUsage')}</p>
+                )}
+              </div>
+              <div>
+                <h3 className="font-medium">{label('recentRedemptions')}</h3>
+                {stats.recentRedemptions.length ? (
+                  <ul className="divide-y">
+                    {stats.recentRedemptions.map((item) => (
+                      <li key={item.id} className="py-2 text-sm">
+                        <bdi>{profileName(item.profileId)}</bdi> · <span>{label('order')}: </span>
+                        <bdi>{item.orderId}</bdi> · {money(item.discountAmount)}
+                        <span className="block text-muted-foreground">
+                          {label(item.status)} · {formatDate(item.createdAt)}
+                          {item.restoredAt &&
+                            ` · ${label('restoredAt')}: ${formatDate(item.restoredAt)}`}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>{label('noUsage')}</p>
+                )}
+              </div>
+            </section>
+          )}
           {!rows.length && <p>{label('empty')}</p>}
           <ul className="divide-y">
             {rows.map((row) => (
@@ -597,6 +762,19 @@ export default function AdminGiftCodesPage() {
               </li>
             ))}
           </ul>
+          {hasMore && (
+            <div className="space-y-2">
+              {moreState === 'error' && <p role="alert">{label('moreError')}</p>}
+              <Button
+                type="button"
+                variant="outline"
+                disabled={moreState === 'loading'}
+                onClick={() => void loadMore()}
+              >
+                {label(moreState === 'loading' ? 'loading' : 'loadMore')}
+              </Button>
+            </div>
+          )}
         </>
       )}
       {action && (

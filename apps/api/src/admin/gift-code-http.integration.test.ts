@@ -103,6 +103,100 @@ it('persists cancellation restoration settings through create and edit', async (
     ).rows[0]
   ).toEqual({ restore_on_cancel: true, restore_after_payment: true });
 });
+it('filters and pages gift codes without repeating rows', async () => {
+  const profileId = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES ('gift-admin','LEGAL','ACTIVE') RETURNING id"
+    )
+  ).rows[0].id as string;
+  const restrictedId = (
+    await http.pool.query(
+      `INSERT INTO gift_codes(code,discount_type,discount_value,eligibility,valid_from,valid_until,created_at,created_by)
+       VALUES ('RESTRICTED','fixed_irr',1000,'profile','2026-01-01','2027-01-01','2026-06-03','gift-admin') RETURNING id`
+    )
+  ).rows[0].id as string;
+  await http.pool.query('INSERT INTO gift_code_profiles(gift_code_id,profile_id) VALUES($1,$2)', [
+    restrictedId,
+    profileId,
+  ]);
+  await http.pool.query(
+    `INSERT INTO gift_codes(code,discount_type,discount_value,valid_from,created_at,created_by)
+     VALUES ('NEXT','fixed_irr',1000,'2026-01-01','2026-06-04','gift-admin')`
+  );
+  await http.pool.query(
+    `INSERT INTO gift_codes(code,discount_type,discount_value,valid_from,valid_until,created_at,created_by)
+     VALUES ('EXPIRED','fixed_irr',1000,'2026-01-01','2026-02-01','2026-06-02','gift-admin')`
+  );
+  const list = async (params: URLSearchParams) =>
+    fetch(`${http.base}/api/admin/promotions/gift-codes?${params}`, { headers });
+  const first = await list(new URLSearchParams({ limit: '2' }));
+  expect(first.status).toBe(200);
+  const firstRows = (await first.json()) as Array<{ id: string; code: string; createdAt: string }>;
+  expect(firstRows.map((row) => row.code)).toEqual(['ORIGINAL', 'NEXT']);
+  const last = firstRows[1]!;
+  const second = await list(new URLSearchParams({ limit: '2', before: last.id }));
+  expect(second.status).toBe(200);
+  expect(((await second.json()) as Array<{ code: string }>).map((row) => row.code)).toEqual([
+    'RESTRICTED',
+    'EXPIRED',
+  ]);
+  const restricted = await list(new URLSearchParams({ eligibility: 'profile', limit: '2' }));
+  expect(((await restricted.json()) as Array<{ code: string }>).map((row) => row.code)).toEqual([
+    'RESTRICTED',
+  ]);
+  const expired = await list(new URLSearchParams({ expiry: 'expired', limit: '2' }));
+  expect(((await expired.json()) as Array<{ code: string }>).map((row) => row.code)).toEqual([
+    'EXPIRED',
+  ]);
+  expect((await list(new URLSearchParams({ expiry: 'past' }))).status).toBe(400);
+  expect((await list(new URLSearchParams({ limit: '101' }))).status).toBe(400);
+  expect((await list(new URLSearchParams({ before: 'bad-cursor' }))).status).toBe(400);
+});
+it('returns readable per-profile usage and restoration history', async () => {
+  const profileId = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status,title) VALUES ('gift-admin','LEGAL','ACTIVE','Promo Buyer') RETURNING id"
+    )
+  ).rows[0].id as string;
+  const productId = (
+    await http.pool.query(
+      `INSERT INTO products(type,system_key,title,status,price)
+       VALUES ('electricity','thermal','{"en":"Thermal"}','active',1000)
+       ON CONFLICT (system_key) DO UPDATE SET status='active' RETURNING id`
+    )
+  ).rows[0].id as string;
+  const orderId = (
+    await http.pool.query(
+      `INSERT INTO orders(user_id,profile_id,product_id,order_type,snapshot_province_id,
+                          snapshot_city_id,snapshot_full_address,snapshot_postal_code)
+       VALUES ('gift-admin',$1,$2,'electricity','province','city','Street','1234567890') RETURNING id`,
+      [profileId, productId]
+    )
+  ).rows[0].id as string;
+  await http.pool.query(
+    `INSERT INTO gift_code_redemptions(gift_code_id,profile_id,order_id,discount_amount,status,restored_at)
+     VALUES ($1,$2,$3,1000,'released','2026-09-24T01:00:00Z')`,
+    [giftId, profileId, orderId]
+  );
+  try {
+    const response = await fetch(`${http.base}/api/admin/promotions/gift-codes/${giftId}/stats`, {
+      headers,
+    });
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({
+      perProfile: [
+        { profileId, profileTitle: 'Promo Buyer', consumed: 0, released: 1, discountIrr: '0' },
+      ],
+      recentRedemptions: [
+        { orderId, profileId, status: 'released', restoredAt: '2026-09-24T01:00:00.000Z' },
+      ],
+    });
+  } finally {
+    await http.pool.query('DELETE FROM gift_code_redemptions WHERE order_id=$1', [orderId]);
+    await http.pool.query('DELETE FROM orders WHERE id=$1', [orderId]);
+    await http.pool.query('DELETE FROM profiles WHERE id=$1', [profileId]);
+  }
+});
 async function unchanged() {
   expect((await http.pool.query('SELECT id,code,status FROM gift_codes')).rows).toEqual([
     { id: giftId, code: 'ORIGINAL', status: 'active' },

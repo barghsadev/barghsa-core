@@ -67,6 +67,10 @@ export interface GiftCodeListFilter {
   search?: string;
   status?: GiftCodeStatus;
   discountType?: GiftCodeDiscountType;
+  eligibility?: GiftCodeEligibility;
+  expiry?: 'expired' | 'not_expired';
+  limit?: number;
+  before?: string;
 }
 
 export interface CreateGiftCodeInput {
@@ -207,21 +211,33 @@ export class GiftCodeService {
   async list(filter: GiftCodeListFilter = {}): Promise<GiftCodeDto[]> {
     const pool = getDbPool();
     const result = await pool.query<GiftCodeWithUsageRow>(
-      `SELECT gc.id, gc.code, gc.discount_type, gc.discount_value, gc.max_cap_irr,
+      `WITH page AS (
+         SELECT gc.* FROM gift_codes gc
+         WHERE ($1::text IS NULL OR strpos(gc.code, $1) > 0)
+           AND ($2::text IS NULL OR gc.status = $2)
+           AND ($3::text IS NULL OR gc.discount_type = $3)
+           AND ($4::text IS NULL OR gc.eligibility = $4)
+           AND ($5::text IS NULL OR ($5 = 'expired' AND gc.valid_until <= now())
+                OR ($5 = 'not_expired' AND (gc.valid_until IS NULL OR gc.valid_until > now())))
+           AND ($6::uuid IS NULL OR (gc.created_at, gc.id) <
+                (SELECT anchor.created_at, anchor.id FROM gift_codes anchor WHERE anchor.id=$6::uuid))
+         ORDER BY gc.created_at DESC, gc.id DESC
+         LIMIT COALESCE($7::int, 2147483647)
+       )
+       SELECT gc.id, gc.code, gc.discount_type, gc.discount_value, gc.max_cap_irr,
               gc.eligibility, gc.total_limit, gc.per_profile_limit,
               gc.valid_from, gc.valid_until, gc.min_order_amount,
               gc.categories, gc.restore_on_cancel, gc.restore_after_payment,
               gc.status, gc.created_by, gc.created_at, gc.updated_at,
-              COUNT(gcr.id) FILTER (WHERE gcr.status = 'consumed')::int AS consumed,
-              COUNT(gcr.id) FILTER (WHERE gcr.status = 'released')::int AS released,
-              COALESCE(SUM(gcr.discount_amount) FILTER (WHERE gcr.status = 'consumed'), 0) AS total_discount
-         FROM gift_codes gc
-         LEFT JOIN gift_code_redemptions gcr ON gcr.gift_code_id = gc.id
-        WHERE ($1::text IS NULL OR strpos(gc.code, $1) > 0)
-          AND ($2::text IS NULL OR gc.status = $2)
-          AND ($3::text IS NULL OR gc.discount_type = $3)
-        GROUP BY gc.id
-        ORDER BY gc.created_at DESC`,
+              usage.consumed, usage.released, usage.total_discount
+         FROM page gc
+         LEFT JOIN LATERAL (
+           SELECT COUNT(*) FILTER (WHERE gcr.status = 'consumed')::int AS consumed,
+                  COUNT(*) FILTER (WHERE gcr.status = 'released')::int AS released,
+                  COALESCE(SUM(gcr.discount_amount) FILTER (WHERE gcr.status = 'consumed'), 0) AS total_discount
+             FROM gift_code_redemptions gcr WHERE gcr.gift_code_id = gc.id
+         ) usage ON true
+        ORDER BY gc.created_at DESC, gc.id DESC`,
       [
         // Codes are stored normalized (uppercase); normalize the search
         // term defensively and use strpos — no LIKE metacharacters to
@@ -231,6 +247,10 @@ export class GiftCodeService {
           : null,
         filter.status ?? null,
         filter.discountType ?? null,
+        filter.eligibility ?? null,
+        filter.expiry ?? null,
+        filter.before ?? null,
+        filter.limit ?? null,
       ]
     );
     return this.attachProfileIds(pool, result.rows);
@@ -270,18 +290,22 @@ export class GiftCodeService {
 
     const perProfile = await pool.query<{
       profile_id: string;
+      profile_title: string;
       consumed: number;
       released: number;
       discount_irr: string;
     }>(
-      `SELECT profile_id,
-              COUNT(*) FILTER (WHERE status = 'consumed')::int AS consumed,
-              COUNT(*) FILTER (WHERE status = 'released')::int AS released,
-              COALESCE(SUM(discount_amount) FILTER (WHERE status = 'consumed'), 0) AS discount_irr
-         FROM gift_code_redemptions
-        WHERE gift_code_id = $1
-        GROUP BY profile_id
-        ORDER BY consumed DESC, profile_id`,
+      `SELECT gcr.profile_id,
+              COALESCE(NULLIF(p.title, ''), NULLIF(concat_ws(' ', p.first_name, p.last_name), ''),
+                       gcr.profile_id::text) AS profile_title,
+              COUNT(*) FILTER (WHERE gcr.status = 'consumed')::int AS consumed,
+              COUNT(*) FILTER (WHERE gcr.status = 'released')::int AS released,
+              COALESCE(SUM(gcr.discount_amount) FILTER (WHERE gcr.status = 'consumed'), 0) AS discount_irr
+         FROM gift_code_redemptions gcr
+         JOIN profiles p ON p.id = gcr.profile_id
+        WHERE gcr.gift_code_id = $1
+        GROUP BY gcr.profile_id, p.title, p.first_name, p.last_name
+        ORDER BY consumed DESC, gcr.profile_id`,
       [id]
     );
     const recent = await pool.query<RedemptionRow>(
@@ -297,6 +321,7 @@ export class GiftCodeService {
       code: withProfiles[0] as GiftCodeDto,
       perProfile: perProfile.rows.map((row) => ({
         profileId: row.profile_id,
+        profileTitle: row.profile_title,
         consumed: row.consumed,
         released: row.released,
         discountIrr: row.discount_irr,

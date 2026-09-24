@@ -180,7 +180,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       await service.list({ search: 'sale', status: 'active', discountType: 'percentage' });
 
-      expect(seen[0]).toEqual(['SALE', 'active', 'percentage']);
+      expect(seen[0]).toEqual(['SALE', 'active', 'percentage', null, null, null, null]);
     });
   });
 
@@ -189,8 +189,16 @@ describe('GiftCodeService (T-09.12.03)', () => {
       const { pool, router } = makeDb();
       router.on('GROUP BY gc.id', () => ({ rows: [giftRow()] }));
       router.on('ANY($1::uuid[])', () => ({ rows: [] }));
-      router.on('GROUP BY profile_id', () => ({
-        rows: [{ profile_id: PROFILE_ID, consumed: 2, released: 0, discount_irr: '1000000' }],
+      router.on('GROUP BY gcr.profile_id', () => ({
+        rows: [
+          {
+            profile_id: PROFILE_ID,
+            profile_title: 'Customer One',
+            consumed: 2,
+            released: 0,
+            discount_irr: '1000000',
+          },
+        ],
       }));
       router.on('FROM gift_code_redemptions', () => ({ rows: [redemptionRow()] }));
       service = await loadService(pool);
@@ -199,7 +207,13 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       expect(result.code.id).toBe(CODE_ID);
       expect(result.perProfile).toEqual([
-        { profileId: PROFILE_ID, consumed: 2, released: 0, discountIrr: '1000000' },
+        {
+          profileId: PROFILE_ID,
+          profileTitle: 'Customer One',
+          consumed: 2,
+          released: 0,
+          discountIrr: '1000000',
+        },
       ]);
       expect(result.recentRedemptions[0]).toMatchObject({
         orderId: 'ord-1',

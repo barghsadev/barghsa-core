@@ -9316,13 +9316,13 @@
     },
     "/api/admin/promotions/gift-codes": {
       "get": {
-        "description": "Newest first, with derived usage totals. Optional filters: ?search= (normalized substring on the code), ?status=active|inactive, ?discountType=fixed_irr|percentage.",
+        "description": "Newest first, with derived usage totals. Optional filters: ?search= (normalized substring on the code), ?status=active|inactive, ?discountType=fixed_irr|percentage, ?eligibility=public|profile, ?expiry=expired|not_expired, ?limit=1..100, ?before=<code UUID>. Results use newest-first keyset order.",
         "operationId": "GiftCodeController_list",
         "parameters": [
           {
             "in": "query",
             "name": "search",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -9330,7 +9330,7 @@
           {
             "in": "query",
             "name": "status",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -9338,7 +9338,39 @@
           {
             "in": "query",
             "name": "discountType",
-            "required": true,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "eligibility",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "expiry",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
             "schema": {
               "type": "string"
             }

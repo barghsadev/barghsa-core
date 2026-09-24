@@ -337,6 +337,7 @@ export interface GiftCodeRedemptionDto {
 /** Per-profile usage breakdown for the admin stats view. */
 export interface GiftCodeProfileUsageDto {
   profileId: string;
+  profileTitle: string;
   consumed: number;
   released: number;
   discountIrr: string;
