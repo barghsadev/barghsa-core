@@ -1,4 +1,4 @@
-import { foreignKey, index, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { foreignKey, index, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { timestamptz } from '../types';
 import { contractVersions } from './contracts';
 import { users } from './users';
@@ -33,6 +33,13 @@ export const contractAcceptances = pgTable(
       .notNull()
       .references(() => users.userId, { onDelete: 'restrict' }),
     acceptedAt: timestamptz('accepted_at').notNull().defaultNow(),
+    partySnapshot: jsonb('party_snapshot').$type<{
+      profileId: string;
+      profileType: 'INDIVIDUAL' | 'LEGAL';
+      name: string | null;
+      identifier: string | null;
+      registrationNumber: string | null;
+    }>(),
   },
   (t) => [
     foreignKey({

@@ -46,6 +46,13 @@ export function parseContractCommercialValue(value: unknown): ContractCommercial
 export interface ContractSummary {
   id: string;
   contractNumber?: string;
+  acceptedParty?: {
+    profileId: string;
+    profileType: 'INDIVIDUAL' | 'LEGAL';
+    name: string | null;
+    identifier: string | null;
+    registrationNumber: string | null;
+  } | null;
   profileId?: string;
   profileType?: 'INDIVIDUAL' | 'LEGAL';
   profileTitle?: string | null;

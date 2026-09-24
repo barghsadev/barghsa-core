@@ -2,6 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import {
   getDbPool,
   contracts,
+  contractAcceptances,
   contractVersions,
   contractActivationRequirements,
   invoices,
@@ -49,6 +50,7 @@ export class ContractService {
         id: contracts.id,
         contractNumber: contracts.contractNumber,
         profileId: contracts.profileId,
+        acceptedParty: contractAcceptances.partySnapshot,
         profileType: profiles.profileType,
         profileTitle: profiles.title,
         profileFirstName: profiles.firstName,
@@ -77,6 +79,7 @@ export class ContractService {
           eq(contractVersions.id, contracts.currentVersionId)
         )
       )
+      .leftJoin(contractAcceptances, eq(contractAcceptances.versionId, contractVersions.id))
       .leftJoin(
         contractActivationRequirements,
         eq(contractActivationRequirements.versionId, contractVersions.id)
@@ -127,8 +130,15 @@ export class ContractService {
     const row = (await db.select().from(contracts).where(eq(contracts.id, id)))[0];
     if (!row) throw new NotFoundException();
     const version = await this.version(id, row.currentVersionId, client);
+    const acceptance = (
+      await db
+        .select({ acceptedParty: contractAcceptances.partySnapshot })
+        .from(contractAcceptances)
+        .where(eq(contractAcceptances.versionId, row.currentVersionId))
+    )[0];
     return {
       ...row,
+      acceptedParty: acceptance?.acceptedParty ?? null,
       contractNumber: row.contractNumber.toString(),
       createdAt: row.createdAt.toISOString(),
       updatedAt: row.updatedAt.toISOString(),

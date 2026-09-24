@@ -361,6 +361,48 @@ it('accepts once with exact version, actor and timestamp evidence without activa
     ).status
   ).toBe(409);
 });
+it('preserves the legal party at acceptance after the profile changes', async () => {
+  const f = await fixture();
+  await http.pool.query(
+    "INSERT INTO legal_profiles(id,legal_name,national_identifier,registration_number,representative_title,representative_relationship) VALUES($1,'Original Legal Ltd','12345678901','123','CEO','director')",
+    [f.profile]
+  );
+  await publish(f);
+  const accepted = await send(
+    'contracts/' + f.row.id + '/accept',
+    'POST',
+    command(f.row.currentVersionId),
+    f.owner
+  );
+  expect(accepted.status).toBe(200);
+  const snapshot = {
+    profileId: f.profile,
+    profileType: 'LEGAL',
+    name: 'Original Legal Ltd',
+    identifier: '12345678901',
+    registrationNumber: '123',
+  };
+  expect(await accepted.json()).toMatchObject({ acceptedParty: snapshot });
+  await http.pool.query(
+    "UPDATE legal_profiles SET legal_name='Renamed Legal Ltd',national_identifier='10987654321' WHERE id=$1",
+    [f.profile]
+  );
+  expect(await (await customer(f)).json()).toMatchObject({ acceptedParty: snapshot });
+  expect(await (await send('contracts', 'GET', undefined, f.owner)).json()).toMatchObject({
+    contracts: [expect.objectContaining({ id: f.row.id, acceptedParty: snapshot })],
+  });
+  expect(await (await send('admin/contracts/' + f.row.id)).json()).toMatchObject({
+    acceptedParty: snapshot,
+  });
+  expect(await (await send('admin/contracts?profileId=' + f.profile)).json()).toMatchObject({
+    contracts: [expect.objectContaining({ id: f.row.id, acceptedParty: snapshot })],
+  });
+  await expect(
+    http.pool.query('UPDATE contract_acceptances SET party_snapshot=NULL WHERE version_id=$1', [
+      f.row.currentVersionId,
+    ])
+  ).rejects.toMatchObject({ code: '23514' });
+});
 it('makes review retries idempotent and rejects competing publication and change requests', async () => {
   const f = await fixture(),
     body = command(f.row.currentVersionId);

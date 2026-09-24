@@ -296,8 +296,15 @@ function ContractResults({
                 </p>
                 {item.profileType ? (
                   <p className="text-sm text-muted-foreground">
-                    {word('account')}: {item.profileTitle || word('draftUnnamedProfile')} ·{' '}
-                    {word(item.profileType === 'LEGAL' ? 'draftLegal' : 'draftIndividual')}
+                    {word(item.acceptedParty ? 'acceptedParty' : 'account')}:{' '}
+                    {(item.acceptedParty ? item.acceptedParty.name : item.profileTitle) ||
+                      word('draftUnnamedProfile')}{' '}
+                    ·{' '}
+                    {word(
+                      (item.acceptedParty?.profileType ?? item.profileType) === 'LEGAL'
+                        ? 'draftLegal'
+                        : 'draftIndividual'
+                    )}
                   </p>
                 ) : null}
                 {item.commercialValue ? (

@@ -38,6 +38,7 @@ interface PublishedRow {
   published_at: Date;
   accepted_at: Date | null;
   accepted_by: string | null;
+  party_snapshot: Record<string, unknown> | null;
 }
 function customerDto(row: PublishedRow) {
   return {
@@ -46,6 +47,7 @@ function customerDto(row: PublishedRow) {
     profileId: row.profile_id,
     orderId: row.order_id,
     savingOrderId: row.saving_order_id,
+    acceptedParty: row.party_snapshot,
     serviceType: row.service_type,
     state: row.state,
     canAccept:
@@ -151,6 +153,7 @@ export class ContractReviewService {
           commercial_value: unknown;
           published_at: Date;
           accepted_at: Date | null;
+          party_snapshot: Record<string, unknown> | null;
           service_starts_at: Date | null;
           service_ends_at: Date | null;
           initial_invoice_id: string | null;
@@ -160,7 +163,7 @@ export class ContractReviewService {
           `SELECT DISTINCT ON(c.id) c.id,c.contract_number,profile.profile_type,profile.title AS profile_title,
           profile.first_name AS profile_first_name,profile.last_name AS profile_last_name,
           c.order_id,s.id AS saving_order_id,c.service_type,c.state,v.id AS version_id,v.version_number,
-          v.content->'commercialValue' AS commercial_value,p.published_at,a.accepted_at,
+          v.content->'commercialValue' AS commercial_value,p.published_at,a.accepted_at,a.party_snapshot,
           r.service_starts_at,r.service_ends_at,r.initial_invoice_id,i.total_amount AS initial_invoice_amount,i.state AS initial_invoice_state
           FROM contracts c JOIN profiles profile ON profile.id=c.profile_id
           JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
@@ -185,6 +188,7 @@ export class ContractReviewService {
             null,
           orderId: r.order_id,
           savingOrderId: r.saving_order_id,
+          acceptedParty: r.party_snapshot,
           serviceType: r.service_type,
           state: r.state,
           versionId: r.version_id,
@@ -324,7 +328,7 @@ export class ContractReviewService {
     const row = (
       await client.query<PublishedRow>(
         `SELECT c.id,c.contract_number,c.profile_id,c.order_id,s.id AS saving_order_id,c.service_type,c.state,c.current_version_id,v.id AS version_id,v.version_number,
-        v.content,v.change_description,v.created_at,p.published_at,a.accepted_at,a.accepted_by
+        v.content,v.change_description,v.created_at,p.published_at,a.accepted_at,a.accepted_by,a.party_snapshot
         FROM contracts c JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
         LEFT JOIN contract_acceptances a ON a.version_id=v.id
         LEFT JOIN saving_orders s ON s.order_id=c.order_id AND s.profile_id=c.profile_id AND c.service_type='savings'

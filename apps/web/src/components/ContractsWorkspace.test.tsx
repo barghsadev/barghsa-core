@@ -179,6 +179,7 @@ function api(current = detail()) {
           contractNumber: current.contractNumber,
           profileType: 'LEGAL',
           profileTitle: 'Acme Energy',
+          acceptedParty: current.acceptedParty,
           orderId: current.orderId,
           savingOrderId: current.savingOrderId,
           serviceType: current.serviceType,
@@ -236,6 +237,33 @@ it('links a saving contract to its saved order from the list', async () => {
     en.openLinkedSavingOrder
   );
 });
+it.each(['en', 'fa'] as const)(
+  'shows the accepted legal party instead of a changed account name in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    vi.stubGlobal(
+      'fetch',
+      api(
+        detail({
+          acceptedParty: {
+            profileId: PROFILE,
+            profileType: 'LEGAL',
+            name: 'Original Legal Ltd',
+            identifier: '12345678901',
+            registrationNumber: '123',
+          },
+        })
+      )
+    );
+    await render(<ContractsPage />);
+    expect(container.textContent).toContain(`${words.acceptedParty}: Original Legal Ltd`);
+    await click(`${words.electricity} · ${words.version} ${(2).toLocaleString(locale)}`);
+    expect(container.textContent?.split('Original Legal Ltd')).toHaveLength(3);
+    expect(container.textContent).toContain(`${words.legalIdentifier}: 12345678901`);
+    expect(container.textContent).toContain(`${words.registrationNumber}: 123`);
+  }
+);
 it.each(['en', 'fa'] as const)('shows an exact stated contract value in %s', async (locale) => {
   harness.locale = locale;
   const words = locale === 'fa' ? fa : en;

@@ -185,6 +185,35 @@ export function ContractDetail({
             {word(data.contract.contractNumber ? 'contractNumber' : 'contractReference')}:{' '}
             <bdi dir="ltr">{data.contract.contractNumber ?? data.contract.id}</bdi>
           </p>
+          {data.contract.acceptedParty && isCurrent ? (
+            <div className="rounded-lg border p-3 text-sm">
+              <h3 className="font-semibold">{word('acceptedParty')}</h3>
+              <p>
+                {data.contract.acceptedParty.name || word('draftUnnamedProfile')} ·{' '}
+                {word(
+                  data.contract.acceptedParty.profileType === 'LEGAL'
+                    ? 'draftLegal'
+                    : 'draftIndividual'
+                )}
+              </p>
+              {data.contract.acceptedParty.identifier ? (
+                <p>
+                  {word(
+                    data.contract.acceptedParty.profileType === 'LEGAL'
+                      ? 'legalIdentifier'
+                      : 'nationalIdentifier'
+                  )}
+                  : <bdi dir="ltr">{data.contract.acceptedParty.identifier}</bdi>
+                </p>
+              ) : null}
+              {data.contract.acceptedParty.registrationNumber ? (
+                <p>
+                  {word('registrationNumber')}:{' '}
+                  <bdi dir="ltr">{data.contract.acceptedParty.registrationNumber}</bdi>
+                </p>
+              ) : null}
+            </div>
+          ) : null}
           {!staff && isCurrent ? (
             <WorkflowStatusBanner
               locale={locale}

@@ -792,6 +792,13 @@
       "when": 1791331200095,
       "tag": "0192_contract_numbers",
       "breakpoints": true
+    },
+    {
+      "idx": 193,
+      "version": "7",
+      "when": 1791331200096,
+      "tag": "0193_contract_party_snapshot",
+      "breakpoints": true
     }
   ]
 }
