@@ -590,6 +590,15 @@ export class ContractService {
             [versionId, id, row.current_version_id, actor.userId]
           );
           await this.insertVersion(client, id, versionId, row.version_number + 1, input, actor);
+          await client.query(
+            `UPDATE contract_activation_requirements next
+             SET initial_invoice_id=base.initial_invoice_id,
+                 service_starts_at=base.service_starts_at,
+                 service_ends_at=base.service_ends_at
+             FROM contract_activation_requirements base
+             WHERE next.version_id=$1 AND base.version_id=$2`,
+            [versionId, row.current_version_id]
+          );
           await this.activationContext(client, versionId, input.activationContext);
           await auditContract(client, id, versionId, 'contract.amendment_created', actor, ip, {
             baseVersionId: row.current_version_id,

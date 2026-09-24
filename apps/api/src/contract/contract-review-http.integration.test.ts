@@ -295,6 +295,71 @@ it('publishes and accepts an unsigned amendment while the active base remains ef
   };
   expect(oldVersion.version.id).toBe(f.row.currentVersionId);
 });
+it('carries the existing invoice and service period into an electricity amendment', async () => {
+  const f = await fixture('electricity');
+  const invoiceId = randomUUID();
+  await http.pool.query(
+    "INSERT INTO invoices(id,profile_id,contract_id,state,total_amount,issued_at,payable_from) VALUES($1,$2,$3,'Unpaid',100,NOW(),NOW())",
+    [invoiceId, f.profile, f.row.id]
+  );
+  await http.pool.query(
+    'UPDATE contract_activation_requirements SET initial_invoice_id=$2,service_starts_at=$3,service_ends_at=$4 WHERE version_id=$1',
+    [f.row.currentVersionId, invoiceId, '2026-10-01T00:00:00Z', '2027-10-01T00:00:00Z']
+  );
+  await publish(f);
+  expect(
+    (
+      await send(
+        'contracts/' + f.row.id + '/accept',
+        'POST',
+        command(f.row.currentVersionId),
+        f.owner
+      )
+    ).status
+  ).toBe(200);
+  await http.pool.query("UPDATE invoices SET state='Paid',paid_amount=total_amount WHERE id=$1", [
+    invoiceId,
+  ]);
+  await http.pool.query('INSERT INTO contract_activations(contract_id,version_id) VALUES($1,$2)', [
+    f.row.id,
+    f.row.currentVersionId,
+  ]);
+  const draft = await send('admin/contracts/' + f.row.id + '/amendments', 'POST', {
+    ...command(f.row.currentVersionId),
+    content: { price: '9007199254740993', text: 'Clarified service terms' },
+    changeDescription: 'Clarify service terms',
+  });
+  expect(draft.status, await draft.clone().text()).toBe(201);
+  const pendingId = ((await draft.json()) as ContractDto).pendingAmendment!.versionId;
+  expect(
+    (
+      await http.pool.query(
+        'SELECT initial_invoice_id,service_starts_at,service_ends_at FROM contract_activation_requirements WHERE version_id=$1',
+        [pendingId]
+      )
+    ).rows[0]
+  ).toMatchObject({
+    initial_invoice_id: invoiceId,
+    service_starts_at: new Date('2026-10-01T00:00:00Z'),
+    service_ends_at: new Date('2027-10-01T00:00:00Z'),
+  });
+  expect(
+    (await send('admin/contracts/' + f.row.id + '/amendments/publish', 'POST', command(pendingId)))
+      .status
+  ).toBe(200);
+  const review = await customer(f, '/acceptance-review?versionId=' + pendingId);
+  expect(review.status).toBe(200);
+  expect(await review.json()).toMatchObject({
+    data: { activation: { initialInvoiceId: invoiceId } },
+  });
+  expect(
+    (await send('contracts/' + f.row.id + '/accept', 'POST', command(pendingId), f.owner)).status
+  ).toBe(200);
+  expect((await (await send('admin/contracts/' + f.row.id)).json()) as ContractDto).toMatchObject({
+    currentVersionId: pendingId,
+    state: 'Active',
+  });
+});
 it('keeps signature-required amendments private until the signing workflow supports them', async () => {
   const f = await fixture('solar');
   await publish(f);
