@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Localized electricity date and time selection](batches/2026-09-24-localized-electricity-date-time.md) replaces the advanced-order and revision control with a shared Jalali/Gregorian picker and a locale-appropriate clock. It preserves the stored instant and existing saved drafts across language changes; bilingual journey and component browser checks pass.
+
 [Privacy-safe product analytics](batches/2026-09-24-private-analytics.md) adds account consent, anonymous fixed-dimension events, a shared redaction gate, a self-hosted endpoint and an optional Google adapter. The prior CI failure was two historical migration tests comparing entire `users` rows; those assertions now check preservation of the original columns across additive migrations. Google script loading remains unconfigured and off by default.
 
 [Per-user display theme](batches/2026-09-24-user-theme-preference.md) completes `T-06.03.05`: signed-in users can save Default, Light or Dark, with an audited account setting that survives reload and respects the active admin default. PostgreSQL and bilingual browser checks pass.

@@ -70,6 +70,47 @@ for (const mode of ['single', 'range']) {
   });
 }
 
+test('date-time picker changes clock format with locale without changing the instant', async ({
+  page,
+}) => {
+  await page.goto(`${url}?datetime`);
+  const stored = page.getByRole('status', { name: 'Stored date and time' });
+  await expect(stored).toHaveText('2026-03-20T21:00:00.000Z');
+  await expect(page.getByRole('combobox', { name: 'Hour' })).toHaveValue('12');
+  await expect(page.getByRole('combobox', { name: 'Minute' })).toHaveValue('30');
+  await expect(page.getByRole('combobox', { name: 'AM or PM' })).toHaveValue('AM');
+  await page.getByRole('button', { name: 'Switch language' }).click();
+  await expect(stored).toHaveText('2026-03-20T21:00:00.000Z');
+  await expect(page.getByRole('combobox', { name: 'ساعت' })).toHaveValue('0');
+  await expect(page.getByRole('combobox', { name: 'ساعت' }).locator('option:checked')).toHaveText(
+    '۰۰'
+  );
+  await expect(page.getByRole('combobox', { name: 'AM or PM' })).toHaveCount(0);
+  await page.getByRole('combobox', { name: 'ساعت' }).selectOption('13');
+  await expect(stored).toHaveText('2026-03-21T10:00:00.000Z');
+  await page.getByRole('button', { name: 'Switch language' }).click();
+  await expect(page.getByRole('combobox', { name: 'Hour' })).toHaveValue('1');
+  await expect(page.getByRole('combobox', { name: 'AM or PM' })).toHaveValue('PM');
+  await expect(stored).toHaveText('2026-03-21T10:00:00.000Z');
+});
+
+test('date-time picker keeps the selected wall-clock time when the day changes', async ({
+  page,
+}) => {
+  await page.goto(`${url}?datetime`);
+  await page
+    .getByRole('group', { name: 'Delivery' })
+    .getByRole('combobox', { name: 'Delivery date' })
+    .click();
+  await page
+    .getByRole('dialog')
+    .getByRole('button', { name: /March 22nd/ })
+    .click();
+  await expect(page.getByRole('status', { name: 'Stored date and time' })).toHaveText(
+    '2026-03-21T21:00:00.000Z'
+  );
+});
+
 test('locale switches calendar and placeholder without changing stored date', async ({ page }) => {
   await page.goto(url);
   const value = await page.getByRole('status', { name: 'Stored value', exact: true }).textContent();

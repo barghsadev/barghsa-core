@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Button, Card, CardContent } from '@barghsa/ui';
+import { Button, Card, CardContent, DateTimePicker } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { toast } from 'sonner';
 import { FormWizard } from '../components/FormWizard.js';
@@ -101,131 +101,17 @@ export function JalaliTimeInput({
   value: string;
   onChange: (value: string) => void;
 }) {
-  const [calendarOpen, setCalendarOpen] = useState(false);
-  const parts = /^(\d{0,4})-(\d{0,2})-(\d{0,2})T(\d{0,2}):(\d{0,2})$/.exec(value);
-  const values = parts ? parts.slice(1) : ['', '', '', '', ''];
-  const labels = ['Year', 'Month', 'Day', 'Hour', 'Minute'];
-  const fa = ['سال', 'ماه', 'روز', 'ساعت', 'دقیقه'];
   const locale = useLocale();
-  const year = Number(values[0]);
-  const month = Number(values[1]);
-  const monthStart =
-    year >= 1200 && month >= 1 && month <= 12
-      ? parseJalaliDateTime(`${year}-${String(month).padStart(2, '0')}-01T12:00`)
-      : null;
-  const offset = monthStart ? (new Date(monthStart).getUTCDay() + 1) % 7 : 0;
-  const days = monthStart
-    ? Array.from({ length: 31 }, (_, index) => index + 1).filter((day) =>
-        parseJalaliDateTime(
-          `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T12:00`
-        )
-      )
-    : [];
-  const changeMonth = (direction: -1 | 1) => {
-    const nextMonth = month + direction;
-    const nextYear = year + (nextMonth === 0 ? -1 : nextMonth === 13 ? 1 : 0);
-    const normalized = nextMonth === 0 ? 12 : nextMonth === 13 ? 1 : nextMonth;
-    onChange(
-      `${nextYear}-${String(normalized).padStart(2, '0')}-01T${values[3] || '00'}:${values[4] || '00'}`
-    );
-  };
+  const instant = parseJalaliDateTime(value);
   return (
-    <fieldset className="rounded-lg border p-4">
-      <legend className="px-1 text-sm font-medium">{label}</legend>
-      <div className="grid grid-cols-3 gap-2 sm:grid-cols-5" dir="ltr">
-        {values.map((part, index) => (
-          <label key={index} className="text-xs text-muted-foreground">
-            {locale === 'fa' ? fa[index] : labels[index]}
-            <input
-              id={`${id}-${index}`}
-              aria-label={`${label} ${locale === 'fa' ? fa[index] : labels[index]}`}
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              maxLength={index === 0 ? 4 : 2}
-              value={part}
-              className={fieldClass}
-              onChange={(event) => {
-                if (!/^\d*$/.test(event.target.value)) return;
-                const next = [...values];
-                next[index] = event.target.value;
-                onChange(`${next[0]}-${next[1]}-${next[2]}T${next[3]}:${next[4]}`);
-              }}
-            />
-          </label>
-        ))}
-      </div>
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        className="mt-3"
-        aria-expanded={calendarOpen}
-        aria-controls={`${id}-calendar`}
-        onClick={() => setCalendarOpen((open) => !open)}
-      >
-        {t('electricity.advanced.calendar', locale)}
-      </Button>
-      {calendarOpen && monthStart && (
-        <div id={`${id}-calendar`} className="mt-3 max-w-xs rounded-lg border p-3">
-          <div className="mb-2 flex items-center justify-between gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => changeMonth(-1)}
-              aria-label={t('electricity.advanced.previousMonth', locale)}
-            >
-              ‹
-            </Button>
-            <span className="text-sm font-medium">
-              {year} / {String(month).padStart(2, '0')}
-            </span>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => changeMonth(1)}
-              aria-label={t('electricity.advanced.nextMonth', locale)}
-            >
-              ›
-            </Button>
-          </div>
-          <div className="grid grid-cols-7 gap-1 text-center text-xs" dir="ltr">
-            {(locale === 'fa'
-              ? ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج']
-              : ['Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr']
-            ).map((day, index) => (
-              <span key={index} className="py-1 text-muted-foreground">
-                {day}
-              </span>
-            ))}
-            {Array.from({ length: offset }, (_, index) => (
-              <span key={`blank-${index}`} />
-            ))}
-            {days.map((day) => (
-              <button
-                key={day}
-                type="button"
-                className={`rounded-md px-1 py-1.5 hover:bg-muted ${Number(values[2]) === day ? 'bg-primary text-primary-foreground' : ''}`}
-                aria-label={`${year}/${month}/${day}`}
-                onClick={() => {
-                  onChange(
-                    `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${values[3] || '00'}:${values[4] || '00'}`
-                  );
-                  setCalendarOpen(false);
-                }}
-              >
-                {day}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-      <p className="mt-2 text-xs text-muted-foreground">
-        {t('electricity.advanced.jalaliHint', locale)}
-      </p>
-    </fieldset>
+    <DateTimePicker
+      id={id}
+      label={label}
+      locale={locale}
+      timezone="Asia/Tehran"
+      value={instant ? new Date(instant) : undefined}
+      onChange={(date) => onChange(date ? formatJalaliDateTime(date) : '')}
+    />
   );
 }
 

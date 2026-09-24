@@ -50,6 +50,7 @@ export {
 // ─── Base UI widget components ─────────────────────────────────────────────
 export * from './components/base-ui/number-field';
 export * from './components/base-ui/date-picker';
+export * from './components/base-ui/date-time-picker';
 export * from './components/base-ui/combo-box';
 export * from './components/base-ui/multi-select';
 export * from './components/base-ui/data-table';

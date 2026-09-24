@@ -2,6 +2,7 @@ import '@barghsa/ui/styles.css';
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { DatePicker } from '../../../../../packages/ui/src/components/base-ui/date-picker';
+import { DateTimePicker } from '../../../../../packages/ui/src/components/base-ui/date-time-picker';
 
 function Fixture() {
   const params = new URLSearchParams(location.search);
@@ -18,6 +19,9 @@ function Fixture() {
     from: params.has('empty') ? undefined : date,
   });
   const [defaultDate, setDefaultDate] = React.useState<Date | undefined>(
+    new Date('2026-03-20T21:00:00Z')
+  );
+  const [dateTime, setDateTime] = React.useState<Date | undefined>(
     new Date('2026-03-20T21:00:00Z')
   );
   const shared = {
@@ -41,6 +45,21 @@ function Fixture() {
   return (
     <main dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <button onClick={() => setLocale(locale === 'en' ? 'fa' : 'en')}>Switch language</button>
+      {params.has('datetime') && (
+        <>
+          <DateTimePicker
+            id="delivery-time"
+            label="Delivery"
+            locale={locale}
+            timezone="Asia/Tehran"
+            value={dateTime}
+            onChange={setDateTime}
+          />
+          <output aria-label="Stored date and time">
+            {dateTime && new Date(dateTime.getTime()).toISOString()}
+          </output>
+        </>
+      )}
       {params.has('range') ? (
         <DatePicker {...shared} calendarMode="range" value={range} onChange={setRange} />
       ) : (
