@@ -21,6 +21,7 @@ import { VatConfigService } from './vat-config.service.js';
 import { VatConfigController } from './vat-config.controller.js';
 import { GiftCodeService } from './gift-code.service.js';
 import { GiftCodeController } from './gift-code.controller.js';
+import { GiftCodeValidationController } from './gift-code-validation.controller.js';
 import { ContractTemplateService } from './contract-template.service.js';
 import { ContractTemplateController } from './contract-template.controller.js';
 import { UploadPolicyService } from './upload-policy.service.js';
@@ -62,6 +63,7 @@ import { InvoiceLedgerService } from './invoice-ledger.service.js';
     CustomerCorrectionsController,
     VatConfigController,
     GiftCodeController,
+    GiftCodeValidationController,
     ContractTemplateController,
     UploadPolicyController,
     ContractElectricityLimitsController,

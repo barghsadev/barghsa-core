@@ -116,6 +116,11 @@ export interface RedeemGiftCodeInput {
   ip?: string;
 }
 
+export type PreviewGiftCodeInput = Pick<
+  RedeemGiftCodeInput,
+  'giftCode' | 'profileId' | 'orderAmount' | 'category'
+>;
+
 // ─── Internal row types ────────────────────────────────────────────────────
 
 type QueryFn = <T = Record<string, unknown>>(
@@ -664,6 +669,137 @@ export class GiftCodeService {
 
   // ─── Redemption seam (order creation) ──────────────────────────────────
 
+  /** Read-only customer check. Submission still rechecks under a row lock. */
+  async preview(
+    input: PreviewGiftCodeInput,
+    userId: string
+  ): Promise<{
+    valid: true;
+    code: string;
+    discountAmount: string;
+  }> {
+    await this.enforceValidationLimit(userId);
+    const pool = getDbPool();
+    const profile = await pool.query(
+      `SELECT 1 FROM profiles
+        WHERE id = $1 AND user_id = $2 AND status = 'ACTIVE' AND NOT archived`,
+      [input.profileId, userId]
+    );
+    if (profile.rows.length === 0) {
+      throw this.http(404, 'PROFILE_NOT_FOUND', 'Active profile not found');
+    }
+    const code = normalizeGiftCode(input.giftCode);
+    const gift = await this.loadRedeemableGift(pool, code, false);
+    const discountAmount = await this.evaluateGift(pool, gift, code, input);
+    return { valid: true, code, discountAmount };
+  }
+
+  private async loadRedeemableGift(
+    tx: DbExecutor,
+    code: string,
+    lock: boolean
+  ): Promise<GiftCodeRow> {
+    const result = await tx.query<GiftCodeRow>(
+      `SELECT id, code, discount_type, discount_value, max_cap_irr, eligibility,
+              total_limit, per_profile_limit, valid_from, valid_until,
+              min_order_amount, categories, restore_on_cancel, restore_after_payment,
+              status, created_by, created_at, updated_at
+         FROM gift_codes
+        WHERE code = $1${lock ? ' FOR UPDATE' : ''}`,
+      [code]
+    );
+    const gift = result.rows[0];
+    if (!gift) throw this.http(404, GIFT_CODE_NOT_FOUND, `Gift code ${code} not found`);
+    return gift;
+  }
+
+  private async evaluateGift(
+    tx: DbExecutor,
+    gift: GiftCodeRow,
+    code: string,
+    input: PreviewGiftCodeInput
+  ): Promise<string> {
+    if (gift.status !== 'active') {
+      throw this.http(400, GIFT_CODE_INACTIVE, `Gift code ${code} is not active`);
+    }
+    const now = Date.now();
+    if (new Date(gift.valid_from).getTime() > now) {
+      throw this.http(400, GIFT_CODE_NOT_YET_VALID, `Gift code ${code} is not valid yet`);
+    }
+    if (gift.valid_until !== null && new Date(gift.valid_until).getTime() <= now) {
+      throw this.http(400, GIFT_CODE_EXPIRED, `Gift code ${code} has expired`);
+    }
+
+    if (gift.eligibility === 'profile') {
+      const scope = await tx.query(
+        'SELECT 1 FROM gift_code_profiles WHERE gift_code_id = $1 AND profile_id = $2',
+        [gift.id, input.profileId]
+      );
+      if (scope.rows.length === 0) {
+        throw this.http(
+          403,
+          GIFT_CODE_NOT_ELIGIBLE,
+          `Gift code ${code} is not eligible for this profile`
+        );
+      }
+    }
+
+    if (gift.total_limit !== null) {
+      const total = await tx.query<{ n: number }>(
+        `SELECT COUNT(*)::int AS n FROM gift_code_redemptions
+          WHERE gift_code_id = $1 AND status = 'consumed'`,
+        [gift.id]
+      );
+      if ((total.rows[0]?.n ?? 0) >= gift.total_limit) {
+        throw this.http(
+          400,
+          GIFT_CODE_TOTAL_LIMIT_REACHED,
+          `Gift code ${code} usage limit reached`
+        );
+      }
+    }
+    if (gift.per_profile_limit !== null) {
+      const perProfile = await tx.query<{ n: number }>(
+        `SELECT COUNT(*)::int AS n FROM gift_code_redemptions
+          WHERE gift_code_id = $1 AND profile_id = $2 AND status = 'consumed'`,
+        [gift.id, input.profileId]
+      );
+      if ((perProfile.rows[0]?.n ?? 0) >= gift.per_profile_limit) {
+        throw this.http(
+          400,
+          GIFT_CODE_PROFILE_LIMIT_REACHED,
+          `Gift code ${code} limit reached for this profile`
+        );
+      }
+    }
+
+    const orderAmount = BigInt(input.orderAmount);
+    if (orderAmount < 0n) {
+      throw this.http(400, 'GIFT_CODE_INVALID_ORDER', 'orderAmount must be >= 0');
+    }
+    if (orderAmount < BigInt(gift.min_order_amount)) {
+      throw this.http(
+        400,
+        GIFT_CODE_MIN_ORDER_NOT_MET,
+        `Gift code ${code} requires a minimum order of ${gift.min_order_amount} IRR`
+      );
+    }
+    if (gift.categories.length > 0 && !gift.categories.includes(input.category)) {
+      throw this.http(
+        400,
+        GIFT_CODE_CATEGORY_NOT_ELIGIBLE,
+        `Gift code ${code} does not apply to category ${input.category}`
+      );
+    }
+
+    return computeGiftDiscount({
+      discountType: gift.discount_type,
+      discountValue: gift.discount_value,
+      maxCapIrr: gift.max_cap_irr,
+      orderAmount: input.orderAmount,
+    });
+  }
+
   /**
    * Redeem a gift code against an order, ATOMICALLY.
    *
@@ -679,98 +815,8 @@ export class GiftCodeService {
   async redeem(input: RedeemGiftCodeInput, q?: DbExecutor): Promise<GiftCodeRedemptionDto> {
     const code = normalizeGiftCode(input.giftCode);
     const run = async (tx: DbExecutor): Promise<GiftCodeRedemptionDto> => {
-      const lock = await tx.query<GiftCodeRow>(
-        `SELECT id, code, discount_type, discount_value, max_cap_irr, eligibility,
-                total_limit, per_profile_limit, valid_from, valid_until,
-                min_order_amount, categories, restore_on_cancel, restore_after_payment,
-                status, created_by, created_at, updated_at
-           FROM gift_codes
-          WHERE code = $1
-          FOR UPDATE`,
-        [code]
-      );
-      const gift = lock.rows[0];
-      if (!gift) throw this.http(404, GIFT_CODE_NOT_FOUND, `Gift code ${code} not found`);
-
-      if (gift.status !== 'active') {
-        throw this.http(400, GIFT_CODE_INACTIVE, `Gift code ${code} is not active`);
-      }
-      const now = Date.now();
-      if (new Date(gift.valid_from).getTime() > now) {
-        throw this.http(400, GIFT_CODE_NOT_YET_VALID, `Gift code ${code} is not valid yet`);
-      }
-      if (gift.valid_until !== null && new Date(gift.valid_until).getTime() <= now) {
-        throw this.http(400, GIFT_CODE_EXPIRED, `Gift code ${code} has expired`);
-      }
-
-      if (gift.eligibility === 'profile') {
-        const scope = await tx.query(
-          'SELECT 1 FROM gift_code_profiles WHERE gift_code_id = $1 AND profile_id = $2',
-          [gift.id, input.profileId]
-        );
-        if (scope.rows.length === 0) {
-          throw this.http(
-            403,
-            GIFT_CODE_NOT_ELIGIBLE,
-            `Gift code ${code} is not eligible for this profile`
-          );
-        }
-      }
-
-      if (gift.total_limit !== null) {
-        const total = await tx.query<{ n: number }>(
-          `SELECT COUNT(*)::int AS n FROM gift_code_redemptions
-            WHERE gift_code_id = $1 AND status = 'consumed'`,
-          [gift.id]
-        );
-        if ((total.rows[0]?.n ?? 0) >= gift.total_limit) {
-          throw this.http(
-            400,
-            GIFT_CODE_TOTAL_LIMIT_REACHED,
-            `Gift code ${code} usage limit reached`
-          );
-        }
-      }
-      if (gift.per_profile_limit !== null) {
-        const perProfile = await tx.query<{ n: number }>(
-          `SELECT COUNT(*)::int AS n FROM gift_code_redemptions
-            WHERE gift_code_id = $1 AND profile_id = $2 AND status = 'consumed'`,
-          [gift.id, input.profileId]
-        );
-        if ((perProfile.rows[0]?.n ?? 0) >= gift.per_profile_limit) {
-          throw this.http(
-            400,
-            GIFT_CODE_PROFILE_LIMIT_REACHED,
-            `Gift code ${code} limit reached for this profile`
-          );
-        }
-      }
-
-      const orderAmount = BigInt(input.orderAmount);
-      if (orderAmount < 0n) {
-        throw this.http(400, 'GIFT_CODE_INVALID_ORDER', 'orderAmount must be >= 0');
-      }
-      if (orderAmount < BigInt(gift.min_order_amount)) {
-        throw this.http(
-          400,
-          GIFT_CODE_MIN_ORDER_NOT_MET,
-          `Gift code ${code} requires a minimum order of ${gift.min_order_amount} IRR`
-        );
-      }
-      if (gift.categories.length > 0 && !gift.categories.includes(input.category)) {
-        throw this.http(
-          400,
-          GIFT_CODE_CATEGORY_NOT_ELIGIBLE,
-          `Gift code ${code} does not apply to category ${input.category}`
-        );
-      }
-
-      const discountAmount = computeGiftDiscount({
-        discountType: gift.discount_type,
-        discountValue: gift.discount_value,
-        maxCapIrr: gift.max_cap_irr,
-        orderAmount: input.orderAmount,
-      });
+      const gift = await this.loadRedeemableGift(tx, code, true);
+      const discountAmount = await this.evaluateGift(tx, gift, code, input);
 
       const inserted = await tx.query<RedemptionRow>(
         `INSERT INTO gift_code_redemptions

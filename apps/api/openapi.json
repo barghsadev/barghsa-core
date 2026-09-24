@@ -18348,6 +18348,68 @@
         ]
       }
     },
+    "/api/gift-codes/validate": {
+      "post": {
+        "operationId": "GiftCodeValidationController_validate",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "category": {
+                    "enum": [
+                      "consultation",
+                      "electricity",
+                      "hardware",
+                      "saving_plan"
+                    ],
+                    "type": "string"
+                  },
+                  "code": {
+                    "maxLength": 64,
+                    "minLength": 3,
+                    "type": "string"
+                  },
+                  "orderAmount": {
+                    "pattern": "^\\d{1,19}$",
+                    "type": "string"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "profileId",
+                  "orderAmount",
+                  "category"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Normalized code and estimated IRR discount; no slot reserved."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview a gift code for an active customer profile and order",
+        "tags": [
+          "Gift Codes"
+        ]
+      }
+    },
     "/api/health/live": {
       "get": {
         "operationId": "HealthController_liveness",

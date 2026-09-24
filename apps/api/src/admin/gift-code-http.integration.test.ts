@@ -50,6 +50,77 @@ function mutation(action: 'create' | 'update' | 'toggle') {
     }
   );
 }
+it('previews a gift code repeatedly without reserving or consuming it', async () => {
+  const profileId = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES ('gift-admin','LEGAL','ACTIVE') RETURNING id"
+    )
+  ).rows[0].id as string;
+  const body = { code: ' original ', profileId, orderAmount: '1500', category: 'electricity' };
+  try {
+    await http.pool.query('UPDATE gift_codes SET total_limit=1 WHERE id=$1', [giftId]);
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const response = await fetch(`${http.base}/api/gift-codes/validate`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      });
+      expect(response.status).toBe(200);
+      expect(await response.json()).toEqual({
+        valid: true,
+        code: 'ORIGINAL',
+        discountAmount: '1000',
+      });
+    }
+    expect(
+      (await http.pool.query('SELECT count(*)::int AS n FROM gift_code_redemptions')).rows[0].n
+    ).toBe(0);
+
+    const unknownProfile = await fetch(`${http.base}/api/gift-codes/validate`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ ...body, profileId: randomUUID() }),
+    });
+    expect(unknownProfile.status).toBe(404);
+
+    await http.pool.query(
+      "UPDATE gift_codes SET min_order_amount=2000, categories=ARRAY['hardware'] WHERE id=$1",
+      [giftId]
+    );
+    const belowMinimum = await fetch(`${http.base}/api/gift-codes/validate`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
+    expect(belowMinimum.status).toBe(400);
+    expect(await belowMinimum.json()).toMatchObject({
+      error: { code: 'GIFT_CODE_MIN_ORDER_NOT_MET' },
+    });
+    const wrongCategory = await fetch(`${http.base}/api/gift-codes/validate`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ ...body, orderAmount: '2500' }),
+    });
+    expect(wrongCategory.status).toBe(400);
+    expect(await wrongCategory.json()).toMatchObject({
+      error: { code: 'GIFT_CODE_CATEGORY_NOT_ELIGIBLE' },
+    });
+
+    await http.pool.query("UPDATE gift_codes SET status='inactive' WHERE id=$1", [giftId]);
+    const inactive = await fetch(`${http.base}/api/gift-codes/validate`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
+    expect(inactive.status).toBe(400);
+    expect(await inactive.json()).toMatchObject({ error: { code: 'GIFT_CODE_INACTIVE' } });
+    expect(
+      (await http.pool.query('SELECT count(*)::int AS n FROM gift_code_redemptions')).rows[0].n
+    ).toBe(0);
+  } finally {
+    await http.pool.query('DELETE FROM profiles WHERE id=$1', [profileId]);
+  }
+});
 it('persists cancellation restoration settings through create and edit', async () => {
   const invalid = await fetch(`${http.base}/api/admin/promotions/gift-codes`, {
     method: 'POST',
