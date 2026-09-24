@@ -148,6 +148,11 @@ export const bankReceipts = pgTable(
     ),
     invoiceIdIdx: index('idx_bank_receipts_invoice_id').on(table.invoiceId),
     profileIdIdx: index('idx_bank_receipts_profile_id').on(table.profileId),
+    profileNewestIdx: index('idx_bank_receipts_profile_newest').on(
+      table.profileId,
+      table.createdAt.desc(),
+      table.id.desc()
+    ),
     stateIdx: index('idx_bank_receipts_state').on(table.state),
     attachmentUnique: uniqueIndex('uq_bank_receipts_attachment_key').on(table.attachmentKey),
     /**

@@ -1,5 +1,5 @@
 import { t } from '@barghsa/i18n/app';
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import type { CustomerInvoiceDetails } from '../lib/customer-invoices.js';
@@ -12,6 +12,11 @@ export function InvoiceActivity({
   formatTimestamp: (value: string | null) => string;
 }) {
   const locale = useLocale();
+  useEffect(() => {
+    const targetId = window.location.hash.slice(1);
+    if (!details.bankReceipts?.some((receipt) => targetId === `bank-receipt-${receipt.id}`)) return;
+    document.getElementById(targetId)?.scrollIntoView?.({ block: 'start' });
+  }, [details.bankReceipts]);
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`invoices.activity.${key}`, locale);
   const state = (value: string) => label(`state.${value}`);
@@ -49,7 +54,7 @@ export function InvoiceActivity({
       {section(
         'receipts',
         (details.bankReceipts ?? []).map((row) => (
-          <li key={row.id} className={rowClass}>
+          <li key={row.id} id={`bank-receipt-${row.id}`} className={`${rowClass} scroll-mt-24`}>
             <div className="flex flex-wrap justify-between gap-2">
               <span>{state(row.state)}</span>
               <strong>{numbers.money(row.amount)}</strong>

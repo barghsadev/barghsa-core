@@ -457,6 +457,72 @@ export class CustomerInvoiceDetailsService {
     });
   }
 
+  async listBankReceiptsForUser(
+    userId: string,
+    actor: InvoiceReadActor,
+    filter: {
+      state?: 'Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected' | undefined;
+      beforeAt?: string | undefined;
+      beforeId?: string | undefined;
+    } = {}
+  ): Promise<{
+    items: Array<{
+      receiptId: string;
+      invoiceId: string;
+      amount: string;
+      bankName: string | null;
+      state: 'Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected';
+      paymentDate: string;
+      submittedAt: string;
+    }>;
+    nextCursor: { beforeAt: string; beforeId: string } | null;
+  }> {
+    return this.authorizedRead(userId, actor, async (profileId, client) => {
+      const pageSize = 25;
+      const result = await client.query<{
+        receiptId: string;
+        invoiceId: string;
+        amount: string;
+        bankName: string | null;
+        state: 'Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected';
+        paymentDate: string;
+        submittedAt: Date;
+        cursorAt: string;
+      }>(
+        `SELECT r.id AS "receiptId", r.invoice_id AS "invoiceId", r.amount::text AS amount,
+                r.bank_name AS "bankName", r.state,
+                r.payment_date::text AS "paymentDate", r.created_at AS "submittedAt",
+                to_char(r.created_at AT TIME ZONE 'UTC',
+                  'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS "cursorAt"
+           FROM bank_receipts r
+           JOIN invoices i ON i.id=r.invoice_id AND i.profile_id=r.profile_id
+          WHERE r.profile_id=$1::uuid AND i.state <> 'Draft'
+            AND ($2::text IS NULL OR r.state=$2)
+            AND ($3::timestamptz IS NULL OR (r.created_at,r.id) < ($3::timestamptz,$4::uuid))
+          ORDER BY r.created_at DESC,r.id DESC LIMIT $5`,
+        [
+          profileId,
+          filter.state ?? null,
+          filter.beforeAt ?? null,
+          filter.beforeId ?? null,
+          pageSize + 1,
+        ]
+      );
+      const page = result.rows.slice(0, pageSize);
+      const last = page.at(-1);
+      return {
+        items: page.map(({ cursorAt: _cursorAt, submittedAt, ...row }) => ({
+          ...row,
+          submittedAt: submittedAt.toISOString(),
+        })),
+        nextCursor:
+          result.rows.length > pageSize && last
+            ? { beforeAt: last.cursorAt, beforeId: last.receiptId }
+            : null,
+      };
+    });
+  }
+
   async getForUser(
     userId: string,
     invoiceId: string,

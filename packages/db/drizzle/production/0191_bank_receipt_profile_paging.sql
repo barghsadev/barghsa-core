@@ -1,0 +1,1 @@
+CREATE INDEX "idx_bank_receipts_profile_newest" ON "bank_receipts" USING btree ("profile_id","created_at" DESC NULLS LAST,"id" DESC NULLS LAST);

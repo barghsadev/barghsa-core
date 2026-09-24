@@ -68,6 +68,9 @@ export function InvoicesPage({ unpaidOnly = false }: { unpaidOnly?: boolean }) {
         >
           {t('invoices.filter.unpaid', locale)}
         </Link>
+        <Link to="/invoices/receipts" className="text-primary underline underline-offset-4">
+          {t('invoices.receipts.title', locale)}
+        </Link>
       </nav>
 
       {error ? (

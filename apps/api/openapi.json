@@ -18558,6 +18558,62 @@
         ]
       }
     },
+    "/api/invoices/bank-receipts": {
+      "get": {
+        "operationId": "CustomerInvoiceController_listBankReceipts",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeId",
+            "required": false,
+            "schema": {
+              "format": "uuid"
+            }
+          },
+          {
+            "description": "Cursor timestamp from the previous page",
+            "in": "query",
+            "name": "beforeAt",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "enum": [
+                "Submitted",
+                "UnderReview",
+                "Confirmed",
+                "Rejected"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Up to 25 newest receipts and a cursor for older receipts."
+          },
+          "400": {
+            "description": "Invalid state or cursor."
+          },
+          "404": {
+            "description": "No active profile."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List bank receipts across invoices on the active profile",
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
     "/api/invoices/{invoiceId}": {
       "get": {
         "description": "Returns the requested invoice plus the original and every linked replacement or adjustment, each with a customer-visible explanation.",

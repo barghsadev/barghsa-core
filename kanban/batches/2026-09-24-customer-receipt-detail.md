@@ -6,4 +6,4 @@ The invoice payment timeline now shows each bank receipt's ID, submission and co
 
 Validation: PostgreSQL HTTP tests cover foreign-profile, missing, storage-unavailable, and draft-invoice access. A migrated-DB receipt submission test verifies a signed URL for the sealed receipt key. Bilingual invoice UI tests cover the link and timeline. Workspace build, typecheck, lint, formatting, OpenAPI, and backlog checks run before push; GitHub CI runs on the pushed commit.
 
-Later progress: bank name and a durable review-event timeline have been added in subsequent batches. A dedicated cross-invoice bank-receipt list page remains open.
+Later progress: bank name and a durable review-event timeline have been added in subsequent batches. A dedicated cross-invoice bank-receipt list page has been added in `2026-09-24-customer-bank-receipt-list.md`.

@@ -61,6 +61,70 @@ function read(f: Awaited<ReturnType<typeof fixture>>, detail = true, id: string 
   return fetch(`${http.base}/api/invoices${detail ? '/' + id : ''}`, { headers: f.headers });
 }
 
+it('pages receipts across owned invoices at microsecond boundaries and filters status', async () => {
+  const f = await fixture();
+  const foreign = await fixture();
+  const secondInvoice = randomUUID();
+  await http.pool.query(
+    "INSERT INTO invoices(id,profile_id,state,total_amount,issued_at,payable_from) VALUES($1,$2,'Unpaid',1000,NOW(),NOW())",
+    [secondInvoice, f.profile]
+  );
+  const ids: string[] = [];
+  for (let index = 0; index < 27; index += 1) {
+    const receiptId = randomUUID();
+    ids.push(receiptId);
+    await http.pool.query(
+      `INSERT INTO bank_receipts
+         (id,invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key,created_at)
+       VALUES ($1,$2,$3,$4,'2026-09-01','reference',$5,
+               '2026-09-01T00:00:00Z'::timestamptz + ($6::int * interval '1 microsecond'))`,
+      [receiptId, index % 2 ? f.invoice : secondInvoice, f.profile, index + 1, randomUUID(), index]
+    );
+  }
+  await http.pool.query(
+    "UPDATE bank_receipts SET state='Rejected',rejection_reason='Mismatch' WHERE id=$1",
+    [ids[26]]
+  );
+  await http.pool.query(
+    `INSERT INTO bank_receipts(invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key)
+     VALUES($1,$2,999,'2026-09-01','foreign',$3)`,
+    [foreign.invoice, foreign.profile, randomUUID()]
+  );
+
+  const list = (query = '') =>
+    fetch(`${http.base}/api/invoices/bank-receipts${query}`, { headers: f.headers });
+  const first = await list();
+  expect(first.status, http.logs()).toBe(200);
+  const page = (await first.json()) as {
+    items: Array<{ receiptId: string; invoiceId: string; amount: string; state: string }>;
+    nextCursor: { beforeAt: string; beforeId: string } | null;
+  };
+  expect(page.items).toHaveLength(25);
+  expect(page.items[0]).toMatchObject({ receiptId: ids[26], state: 'Rejected', amount: '27' });
+  expect(new Set(page.items.map((item) => item.invoiceId))).toEqual(
+    new Set([f.invoice, secondInvoice])
+  );
+  expect(page.nextCursor).toMatchObject({
+    beforeAt: '2026-09-01T00:00:00.000002Z',
+    beforeId: ids[2],
+  });
+  const second = await list(
+    `?beforeAt=${encodeURIComponent(page.nextCursor!.beforeAt)}&beforeId=${page.nextCursor!.beforeId}`
+  );
+  expect(second.status).toBe(200);
+  const older = (await second.json()) as typeof page;
+  expect(older.items.map((item) => item.receiptId)).toEqual([ids[1], ids[0]]);
+  expect(older.nextCursor).toBeNull();
+
+  const rejected = await list('?state=Rejected');
+  expect(rejected.status).toBe(200);
+  expect(((await rejected.json()) as typeof page).items.map((item) => item.receiptId)).toEqual([
+    ids[26],
+  ]);
+  expect((await list('?beforeAt=2026-09-01T00%3A00%3A00Z')).status).toBe(400);
+  expect((await list('?state=Pending')).status).toBe(400);
+});
+
 it('returns the durable receipt review sequence without staff metadata', async () => {
   const f = await fixture();
   const receiptId = randomUUID();

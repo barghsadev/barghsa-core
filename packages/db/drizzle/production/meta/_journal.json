@@ -778,6 +778,13 @@
       "when": 1791331200093,
       "tag": "0190_bank_receipt_status_events",
       "breakpoints": true
+    },
+    {
+      "idx": 191,
+      "version": "7",
+      "when": 1791331200094,
+      "tag": "0191_bank_receipt_profile_paging",
+      "breakpoints": true
     }
   ]
 }

@@ -114,6 +114,43 @@ export interface CustomerInvoiceList {
   invoices: CustomerInvoiceListItem[];
 }
 
+export interface CustomerBankReceiptListItem {
+  receiptId: string;
+  invoiceId: string;
+  amount: string;
+  bankName: string | null;
+  state: 'Submitted' | 'UnderReview' | 'Confirmed' | 'Rejected';
+  paymentDate: string;
+  submittedAt: string;
+}
+
+export interface CustomerBankReceiptPage {
+  items: CustomerBankReceiptListItem[];
+  nextCursor: { beforeAt: string; beforeId: string } | null;
+}
+
+export async function fetchBankReceiptPage(
+  options: {
+    state?: CustomerBankReceiptListItem['state'];
+    cursor?: CustomerBankReceiptPage['nextCursor'];
+    signal?: AbortSignal;
+  } = {}
+): Promise<CustomerBankReceiptPage> {
+  const query = new URLSearchParams();
+  if (options.state) query.set('state', options.state);
+  if (options.cursor) {
+    query.set('beforeAt', options.cursor.beforeAt);
+    query.set('beforeId', options.cursor.beforeId);
+  }
+  const response = await fetch(`/api/invoices/bank-receipts${query.size ? `?${query}` : ''}`, {
+    credentials: 'include',
+    ...(options.signal ? { signal: options.signal } : {}),
+    headers: { Accept: 'application/json' },
+  });
+  if (!response.ok) throw new InvoiceRequestError(response.status, 'Could not load bank receipts');
+  return (await response.json()) as CustomerBankReceiptPage;
+}
+
 export class InvoiceRequestError extends Error {
   readonly status: number;
 

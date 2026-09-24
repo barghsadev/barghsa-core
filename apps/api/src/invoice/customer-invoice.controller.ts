@@ -58,6 +58,15 @@ const InvoiceBankReceiptBodySchema = z
   })
   .strict();
 
+const BankReceiptListQuerySchema = z
+  .object({
+    state: z.enum(['Submitted', 'UnderReview', 'Confirmed', 'Rejected']).optional(),
+    beforeAt: z.string().datetime({ offset: true }).optional(),
+    beforeId: z.string().uuid().optional(),
+  })
+  .strict()
+  .refine((query) => (query.beforeAt === undefined) === (query.beforeId === undefined));
+
 export interface InvoiceBankReceiptResponse {
   ok: true;
   receiptId: string;
@@ -113,6 +122,33 @@ export class CustomerInvoiceController {
     if (status !== undefined && status !== 'unpaid')
       httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid invoice status filter');
     return this.service.listForUser(req.session.userId, req.session, status === 'unpaid');
+  }
+
+  @Get('bank-receipts')
+  @RateLimit({ namespace: 'invoices:receipt-list:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'List bank receipts across invoices on the active profile' })
+  @ApiQuery({
+    name: 'state',
+    required: false,
+    enum: ['Submitted', 'UnderReview', 'Confirmed', 'Rejected'],
+  })
+  @ApiQuery({
+    name: 'beforeAt',
+    required: false,
+    description: 'Cursor timestamp from the previous page',
+  })
+  @ApiQuery({ name: 'beforeId', required: false, format: 'uuid' })
+  @ApiResponse({
+    status: 200,
+    description: 'Up to 25 newest receipts and a cursor for older receipts.',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid state or cursor.' })
+  @ApiResponse({ status: 404, description: 'No active profile.' })
+  listBankReceipts(@Req() req: AuthenticatedRequest, @Query() rawQuery: unknown) {
+    const parsed = BankReceiptListQuerySchema.safeParse(rawQuery);
+    if (!parsed.success)
+      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid receipt list filter');
+    return this.service.listBankReceiptsForUser(req.session.userId, req.session, parsed.data);
   }
 
   @Get(':invoiceId')

@@ -279,6 +279,47 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     expect(container.textContent).not.toContain('invoices.activity.');
   });
 
+  it('scrolls to the receipt selected from the cross-invoice list', async () => {
+    const payload = replacementPayload();
+    const receiptId = '77777777-7777-4777-8777-777777777777';
+    payload.bankReceipts = [
+      {
+        id: receiptId,
+        amount: '500',
+        state: 'Submitted',
+        paymentDate: '2026-09-01',
+        payerReference: 'reference',
+        bankName: null,
+        customerNote: null,
+        rejectionReason: null,
+        confirmedAt: null,
+        createdAt: '2026-09-01T12:00:00Z',
+      },
+    ];
+    const scroll = vi.fn();
+    const originalScroll = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollIntoView');
+    vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+    Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: scroll,
+    });
+    window.history.replaceState(null, '', `#bank-receipt-${receiptId}`);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({ ok: true, status: 200, json: async () => payload }))
+    );
+    try {
+      await act(async () => root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />));
+      expect(container.querySelector(`#bank-receipt-${receiptId}`)).not.toBeNull();
+      expect(scroll).toHaveBeenCalledWith({ block: 'start' });
+    } finally {
+      window.history.replaceState(null, '', window.location.pathname);
+      if (originalScroll)
+        Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', originalScroll);
+      else Reflect.deleteProperty(HTMLElement.prototype, 'scrollIntoView');
+    }
+  });
+
   it.each(['en', 'fa'] as const)(
     'links a published invoice to its contract in %s',
     async (locale) => {
