@@ -537,6 +537,14 @@ it('submits a four-product advanced bundle once with one contract and invoice', 
   expect(saved.period_end.toISOString()).toBe(endAt);
   expect(saved).toMatchObject({ line_count: 4, invoice_count: 1, contract_count: 1 });
   expect(saved.total_amount).toBe(preview.totalIrR);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT content->'commercialValue' AS value FROM contract_versions WHERE contract_id=$1",
+        [first.contractId]
+      )
+    ).rows[0].value
+  ).toEqual({ kind: 'fixed', amountIrr: preview.totalIrR });
   expect(saved.pricing_snapshot).toMatchObject({
     periodStart: startAt,
     periodEnd: endAt,
@@ -843,6 +851,14 @@ it('requests changes with a reason and returns the order to the customer', async
   expect(result).toMatchObject({ status: 'awaiting_staff_review' });
   expect(result.versionId).not.toBe(versionId);
   expect((await resubmit()).status).toBe(200);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT content->'commercialValue'->>'amountIrr' AS amount FROM contract_versions WHERE contract_id=$1 ORDER BY version_number",
+        [order.contractId]
+      )
+    ).rows.map((row) => row.amount)
+  ).toEqual(['1000000', '1000000']);
   const amended = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
   expect(await amended.json()).toMatchObject({
     electricityStatus: 'awaiting_staff_review',
@@ -981,13 +997,13 @@ it('revises an unpaid order with a new quote, invoice and immutable line history
   expect(
     (
       await http.pool.query(
-        "SELECT version_number,content->'pricing'->>'totalIrR' AS total FROM contract_versions WHERE contract_id=$1 ORDER BY version_number",
+        "SELECT version_number,content->'pricing'->>'totalIrR' AS total,content->'commercialValue'->>'amountIrr' AS contract_value FROM contract_versions WHERE contract_id=$1 ORDER BY version_number",
         [order.contractId]
       )
     ).rows
   ).toEqual([
-    { version_number: 1, total: '1000000' },
-    { version_number: 2, total: '1200000' },
+    { version_number: 1, total: '1000000', contract_value: '1000000' },
+    { version_number: 2, total: '1200000', contract_value: '1200000' },
   ]);
   expect(
     (

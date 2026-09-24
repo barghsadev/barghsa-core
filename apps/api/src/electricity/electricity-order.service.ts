@@ -1027,6 +1027,10 @@ export class ElectricityOrderService {
                 ...row.content,
                 pricing: snapshot,
                 settings: quoted.settings,
+                commercialValue: {
+                  kind: 'fixed',
+                  amountIrr: quoted.totals.totalIrR.toString(),
+                },
                 lineRevision: revision,
                 delivery: {
                   ...input.address,
@@ -1487,6 +1491,10 @@ export class ElectricityOrderService {
             orderId,
             pricing: snapshot,
             settings: quoted.settings,
+            commercialValue: {
+              kind: 'fixed',
+              amountIrr: quoted.totals.totalIrR.toString(),
+            },
             ...(template ? { template } : {}),
           }),
           actor.userId,

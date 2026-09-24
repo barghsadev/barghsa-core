@@ -1793,11 +1793,11 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
   };
   const initialQuote = await request('/api/saving/orders/quote', 'POST', orderInput);
   expect(initialQuote.status, http.logs()).toBe(201);
-  const initialDigest = ((await initialQuote.json()) as { reviewDigest: string }).reviewDigest;
+  const initialTerms = (await initialQuote.json()) as { reviewDigest: string; totalIrR: string };
   const submitted = await request('/api/saving/orders', 'POST', {
     ...orderInput,
     idempotencyKey: randomUUID(),
-    expectedQuoteDigest: initialDigest,
+    expectedQuoteDigest: initialTerms.reviewDigest,
     agreementAccepted: true,
     hardwareConfirmed: true,
     submitForStaffReview: true,
@@ -1885,6 +1885,14 @@ it('revises an unpaid order address and equipment with one invoice, a new contra
     old_reserved: 0,
     new_reserved: 1,
   });
+  expect(
+    (
+      await http.pool.query(
+        "SELECT content->'commercialValue'->>'amountIrr' AS amount FROM contract_versions WHERE contract_id=$1 ORDER BY version_number",
+        [order.contractId]
+      )
+    ).rows.map((row) => row.amount)
+  ).toEqual([initialTerms.totalIrR, addressQuote.totalIrR, equipmentQuote.totalIrR]);
   await expect(
     http.pool.query("UPDATE saving_order_revisions SET request_hash='tampered' WHERE order_id=$1", [
       order.savingOrderId,

@@ -872,6 +872,7 @@ export class SavingOrderService {
           JSON.stringify({
             savingOrderId,
             quote,
+            commercialValue: { kind: 'fixed', amountIrr: totals.totalIrR.toString() },
             agreement: { versionId: agreement.id, title: agreement.title, body: agreement.body },
             address,
           }),
@@ -1121,6 +1122,7 @@ export class SavingOrderService {
           JSON.stringify({
             savingOrderId: savingId,
             quote,
+            commercialValue: { kind: 'fixed', amountIrr: totals.totalIrR.toString() },
             agreement: {
               versionId: agreement.id,
               title: agreement.title,
