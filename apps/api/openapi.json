@@ -7227,6 +7227,22 @@
           },
           {
             "in": "query",
+            "name": "orderId",
+            "required": false,
+            "schema": {
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "profileId",
+            "required": false,
+            "schema": {
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
             "name": "invoiceId",
             "required": false,
             "schema": {

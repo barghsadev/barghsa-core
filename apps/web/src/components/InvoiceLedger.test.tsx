@@ -5,6 +5,7 @@ import { InvoiceLedger } from './InvoiceLedger.js';
 
 const ID = '11111111-1111-7111-8111-111111111111';
 const PROFILE = '22222222-2222-7222-8222-222222222222';
+const ORDER = '33333333-3333-7333-8333-333333333333';
 const row = {
   invoiceId: ID,
   profileId: PROFILE,
@@ -146,4 +147,60 @@ it('loads an exact invoice from a staff deep link', async () => {
   expect(fetcher.mock.calls.some(([url]) => String(url).includes(`invoiceId=${ID}`))).toBe(true);
   expect(fetcher.mock.calls.some(([url]) => String(url).endsWith(`/${ID}`))).toBe(true);
   expect(container.querySelector('#invoice-ledger-detail-title')).not.toBeNull();
+});
+
+it('keeps customer and order filters when loading the next ledger page', async () => {
+  const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+    const path = String(input);
+    return new Response(
+      JSON.stringify({
+        items: [row],
+        nextCursor: path.includes('beforeAt=')
+          ? null
+          : { beforeAt: '2026-09-01T00:00:00.123456Z', beforeId: ID },
+      })
+    );
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await act(async () =>
+    root.render(<InvoiceLedger onSelectForDueAt={vi.fn()} onOpenReceipt={vi.fn()} />)
+  );
+  const labels = [...container.querySelectorAll('label')];
+  const profileInput = labels
+    .find((label) => label.textContent?.includes('Customer profile ID (optional)'))!
+    .querySelector('input')!;
+  const orderInput = labels
+    .find((label) => label.textContent?.includes('Order ID (optional)'))!
+    .querySelector('input')!;
+  const setValue = (input: HTMLInputElement, value: string) => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, value);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  };
+  await act(async () => {
+    setValue(profileInput, PROFILE);
+    setValue(orderInput, 'invalid');
+  });
+  const submit = () =>
+    container
+      .querySelector('form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  const fetchCount = fetcher.mock.calls.length;
+  await act(async () => submit());
+  expect(fetcher).toHaveBeenCalledTimes(fetchCount);
+  expect(container.querySelector('[role="alert"]')?.textContent).toBe('Enter a valid order ID.');
+  await act(async () => setValue(orderInput, ORDER));
+  await act(async () => submit());
+  const filtered = fetcher.mock.calls
+    .map(([url]) => String(url))
+    .find((url) => url.includes('profileId='));
+  expect(filtered).toContain(`profileId=${PROFILE}`);
+  expect(filtered).toContain(`orderId=${ORDER}`);
+  const more = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === 'Load more'
+  );
+  await act(async () => more!.click());
+  const next = fetcher.mock.calls.map(([url]) => String(url)).at(-1)!;
+  expect(next).toContain(`profileId=${PROFILE}`);
+  expect(next).toContain(`orderId=${ORDER}`);
+  expect(next).toContain('beforeAt=');
 });

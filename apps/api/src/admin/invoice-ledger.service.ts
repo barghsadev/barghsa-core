@@ -41,6 +41,8 @@ export interface StaffInvoiceDetail extends StaffInvoiceRow {
 export interface StaffInvoiceFilter {
   state?: string | undefined;
   invoiceId?: string | undefined;
+  profileId?: string | undefined;
+  orderId?: string | undefined;
   beforeAt?: string | undefined;
   beforeId?: string | undefined;
 }
@@ -104,11 +106,15 @@ export class InvoiceLedgerService {
          FROM invoices
          WHERE ($1::text IS NULL OR state::text=$1)
            AND ($2::uuid IS NULL OR id=$2)
-           AND ($3::timestamptz IS NULL OR (created_at,id)<($3::timestamptz,$4::uuid))
+           AND ($3::uuid IS NULL OR profile_id=$3)
+           AND ($4::uuid IS NULL OR order_id=$4)
+           AND ($5::timestamptz IS NULL OR (created_at,id)<($5::timestamptz,$6::uuid))
          ORDER BY created_at DESC,id DESC LIMIT 26`,
         [
           filter.state ?? null,
           filter.invoiceId ?? null,
+          filter.profileId ?? null,
+          filter.orderId ?? null,
           filter.beforeAt ?? null,
           filter.beforeId ?? null,
         ]

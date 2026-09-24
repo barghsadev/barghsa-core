@@ -37,6 +37,12 @@ describe('staff invoice ledger access and filters', () => {
     await expect(controller.list(allowed, { invoiceId: 'bad' })).rejects.toMatchObject({
       status: 400,
     });
+    await expect(controller.list(allowed, { profileId: 'bad' })).rejects.toMatchObject({
+      status: 400,
+    });
+    await expect(controller.list(allowed, { orderId: 'bad' })).rejects.toMatchObject({
+      status: 400,
+    });
     await expect(controller.get(allowed, 'bad')).rejects.toMatchObject({ status: 400 });
     expect(service.list).not.toHaveBeenCalled();
     expect(service.get).not.toHaveBeenCalled();
@@ -44,7 +50,7 @@ describe('staff invoice ledger access and filters', () => {
 
   it('passes permitted filters and detail lookup to the service', async () => {
     const { controller, service } = setup();
-    const filter = { state: 'Unpaid', invoiceId: ID };
+    const filter = { state: 'Unpaid', invoiceId: ID, profileId: ID, orderId: ID };
     await controller.list(allowed, filter);
     await controller.get(allowed, ID);
     expect(service.list).toHaveBeenCalledWith(allowed.session, filter);

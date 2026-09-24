@@ -30,6 +30,8 @@ const QuerySchema = z
       ])
       .optional(),
     invoiceId: z.string().uuid().optional(),
+    profileId: z.string().uuid().optional(),
+    orderId: z.string().uuid().optional(),
     beforeAt: z.string().datetime({ offset: true }).optional(),
     beforeId: z.string().uuid().optional(),
   })
@@ -52,6 +54,8 @@ export class InvoiceLedgerController {
   @ApiOperation({ summary: 'List invoices for finance staff, newest first' })
   @ApiQuery({ name: 'state', required: false })
   @ApiQuery({ name: 'invoiceId', required: false, format: 'uuid' })
+  @ApiQuery({ name: 'profileId', required: false, format: 'uuid' })
+  @ApiQuery({ name: 'orderId', required: false, format: 'uuid' })
   @ApiQuery({ name: 'beforeAt', required: false, format: 'date-time' })
   @ApiQuery({ name: 'beforeId', required: false, format: 'uuid' })
   async list(@Req() req: AuthenticatedRequest, @Query() raw: Record<string, unknown>) {

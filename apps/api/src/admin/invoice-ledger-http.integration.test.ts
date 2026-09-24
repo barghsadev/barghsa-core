@@ -12,6 +12,7 @@ let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const profileId = randomUUID();
 const invoiceId = randomUUID();
 const draftId = randomUUID();
+const orderId = randomUUID();
 const financeSession = randomUUID();
 const otherSession = randomUUID();
 
@@ -29,12 +30,22 @@ beforeAll(async () => {
     "INSERT INTO profiles(id,user_id,is_default) VALUES ($1,'ledger-customer',true)",
     [profileId]
   );
+  const product = await http.pool.query<{ id: string }>(
+    `INSERT INTO products(type,system_key,title,price)
+     VALUES('electricity','thermal','{"en":"Fixture"}',1000) RETURNING id`
+  );
   await http.pool.query(
-    `INSERT INTO invoices(id,profile_id,type,state,total_amount,issued_at,due_at,invoice_calculation_snapshot)
-     VALUES ($1,$3,'manual','Unpaid',109000,'2026-09-01T00:00:00Z','2026-10-01T00:00:00Z',
+    `INSERT INTO orders(id,user_id,profile_id,product_id,order_type,
+       snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code)
+     VALUES ($1,'ledger-customer',$2,$3,'electricity','p','c','address','1234567890')`,
+    [orderId, profileId, product.rows[0]!.id]
+  );
+  await http.pool.query(
+    `INSERT INTO invoices(id,profile_id,order_id,type,state,total_amount,issued_at,due_at,invoice_calculation_snapshot)
+     VALUES ($1,$3,$4,'manual','Unpaid',109000,'2026-09-01T00:00:00Z','2026-10-01T00:00:00Z',
              '{"schemaVersion":1,"totalKwh":"100","periodStart":"2026-10-01T00:00:00Z","periodEnd":"2026-11-01T00:00:00Z"}'::jsonb),
-            ($2,$3,'manual','Draft',200000,NULL,NULL,NULL)`,
-    [invoiceId, draftId, profileId]
+            ($2,$3,NULL,'manual','Draft',200000,NULL,NULL,NULL)`,
+    [invoiceId, draftId, profileId, orderId]
   );
   await http.pool.query(
     `INSERT INTO invoice_lines(id,invoice_id,description,quantity,unit_price,line_total,vat_rate,vat_amount,position)
@@ -84,6 +95,16 @@ it('lets finance staff filter and inspect real invoice lines while hiding the le
   expect((await get('?state=invalid')).status).toBe(400);
   expect((await get(`/${randomUUID()}`)).status).toBe(404);
   expect((await get(`?invoiceId=${draftId}`)).status).toBe(200);
+  const matching = (await (
+    await get(`?state=Unpaid&profileId=${profileId}&orderId=${orderId}`)
+  ).json()) as InvoicePage;
+  expect(matching.items.map((item) => item.invoiceId)).toEqual([invoiceId]);
+  expect(((await (await get(`?profileId=${randomUUID()}`)).json()) as InvoicePage).items).toEqual(
+    []
+  );
+  expect(((await (await get(`?orderId=${randomUUID()}`)).json()) as InvoicePage).items).toEqual([]);
+  expect((await get(`?profileId=${profileId}`, otherSession)).status).toBe(403);
+  expect((await get('?orderId=invalid')).status).toBe(400);
 });
 
 it('does not skip invoices whose creation timestamps share the same millisecond', async () => {

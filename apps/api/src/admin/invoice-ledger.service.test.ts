@@ -56,9 +56,24 @@ it('pages at 25 rows with stable timestamp and ID cursor, retaining exact IRR st
   });
   expect(
     fixture.query.mock.calls.find(([sql]) => String(sql).includes('FROM invoices'))?.[1]
-  ).toEqual(['Unpaid', null, null, null]);
+  ).toEqual(['Unpaid', null, null, null, null, null]);
   expect(fixture.checkSession).toHaveBeenCalledTimes(2);
   expect(fixture.release).toHaveBeenCalledOnce();
+});
+
+it('passes profile and source order filters alongside the stable cursor', async () => {
+  await new InvoiceLedgerService().list(session, {
+    profileId: id(100),
+    orderId: id(200),
+    beforeAt: '2026-09-01T00:00:00.123456Z',
+    beforeId: id(1),
+  });
+  const [sql, params] = fixture.query.mock.calls.find(([query]) =>
+    String(query).includes('FROM invoices')
+  )!;
+  expect(sql).toContain('profile_id=$3');
+  expect(sql).toContain('order_id=$4');
+  expect(params).toEqual([null, null, id(100), id(200), '2026-09-01T00:00:00.123456Z', id(1)]);
 });
 
 it('loads lines and payment activity for the selected invoice only', async () => {

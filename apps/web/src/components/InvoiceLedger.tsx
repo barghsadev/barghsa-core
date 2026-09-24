@@ -98,10 +98,16 @@ export function InvoiceLedger({
   const [state, setState] = useState('');
   const [idInput, setIdInput] = useState(deepLinkId);
   const [invoiceId, setInvoiceId] = useState(deepLinkId);
+  const [profileInput, setProfileInput] = useState('');
+  const [profileId, setProfileId] = useState('');
+  const [orderInput, setOrderInput] = useState('');
+  const [orderId, setOrderId] = useState('');
   const [cursor, setCursor] = useState<Page['nextCursor']>(null);
   const [pages, setPages] = useState<Page[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'forbidden' | 'error'>('loading');
-  const [inputError, setInputError] = useState(false);
+  const [inputError, setInputError] = useState<
+    'invalidId' | 'invalidProfileId' | 'invalidOrderId' | null
+  >(null);
   const [selectedId, setSelectedId] = useState<string | null>(deepLinkId || null);
   const [detail, setDetail] = useState<InvoiceDetail | null>(null);
   const [detailStatus, setDetailStatus] = useState<'loading' | 'ready' | 'error'>('loading');
@@ -112,6 +118,8 @@ export function InvoiceLedger({
     const params = new URLSearchParams();
     if (state) params.set('state', state);
     if (invoiceId) params.set('invoiceId', invoiceId);
+    if (profileId) params.set('profileId', profileId);
+    if (orderId) params.set('orderId', orderId);
     if (cursor) {
       params.set('beforeAt', cursor.beforeAt);
       params.set('beforeId', cursor.beforeId);
@@ -133,7 +141,7 @@ export function InvoiceLedger({
         }
       });
     return () => controller.abort();
-  }, [state, invoiceId, cursor, revision]);
+  }, [state, invoiceId, profileId, orderId, cursor, revision]);
 
   useEffect(() => {
     if (!selectedId) return;
@@ -156,15 +164,26 @@ export function InvoiceLedger({
   function lookup(event: FormEvent) {
     event.preventDefault();
     const id = idInput.trim();
-    if (id && !isInvoiceUuid(id)) {
-      setInputError(true);
-      return;
-    }
-    setInputError(false);
+    const profile = profileInput.trim();
+    const order = orderInput.trim();
+    const invalid = (
+      [
+        [id, 'invalidId'],
+        [profile, 'invalidProfileId'],
+        [order, 'invalidOrderId'],
+      ] as const
+    ).find(([value]) => value && !isInvoiceUuid(value));
+    if (invalid) return setInputError(invalid[1]);
+    setInputError(null);
     setPages([]);
     setCursor(null);
+    setSelectedId(null);
+    setDetail(null);
     setInvoiceId(id);
-    if (id === invoiceId) setRevision((value) => value + 1);
+    setProfileId(profile);
+    setOrderId(order);
+    if (id === invoiceId && profile === profileId && order === orderId && !cursor)
+      setRevision((value) => value + 1);
   }
 
   const current = pages.at(-1);
@@ -191,6 +210,8 @@ export function InvoiceLedger({
             onChange={(event) => {
               setPages([]);
               setCursor(null);
+              setSelectedId(null);
+              setDetail(null);
               setState(event.target.value);
             }}
           >
@@ -210,6 +231,27 @@ export function InvoiceLedger({
               dir="ltr"
               value={idInput}
               onChange={(event) => setIdInput(event.target.value)}
+              aria-invalid={inputError === 'invalidId'}
+            />
+          </label>
+          <label className="grid min-w-60 flex-1 gap-1 text-sm">
+            <span>{word('searchProfileId')}</span>
+            <input
+              className="rounded-md border border-input bg-background px-3 py-2 font-mono text-sm"
+              dir="ltr"
+              value={profileInput}
+              onChange={(event) => setProfileInput(event.target.value)}
+              aria-invalid={inputError === 'invalidProfileId'}
+            />
+          </label>
+          <label className="grid min-w-60 flex-1 gap-1 text-sm">
+            <span>{word('searchOrderId')}</span>
+            <input
+              className="rounded-md border border-input bg-background px-3 py-2 font-mono text-sm"
+              dir="ltr"
+              value={orderInput}
+              onChange={(event) => setOrderInput(event.target.value)}
+              aria-invalid={inputError === 'invalidOrderId'}
             />
           </label>
           <button
@@ -222,7 +264,7 @@ export function InvoiceLedger({
       </div>
       {inputError ? (
         <p role="alert" className="text-sm text-destructive">
-          {word('invalidId')}
+          {word(inputError)}
         </p>
       ) : null}
       {status === 'forbidden' ? <p role="alert">{word('forbidden')}</p> : null}
