@@ -166,15 +166,16 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
           createdAt: '2026-09-01T12:00:00Z',
         },
       ];
+      const receiptId = '77777777-7777-4777-8777-777777777777';
       payload.bankReceipts = ['Submitted', 'UnderReview', 'Confirmed', 'Rejected'].map((state) => ({
-        id: state,
+        id: state === 'Submitted' ? receiptId : state,
         amount: '200',
         state,
         paymentDate: '2026-09-01',
         payerReference: '<img src=x>',
         customerNote: 'Customer note',
         rejectionReason: state === 'Rejected' ? 'Unreadable' : null,
-        confirmedAt: null,
+        confirmedAt: state === 'Confirmed' ? '2026-09-02T12:00:00Z' : null,
         createdAt: '2026-09-01T12:00:00Z',
       }));
       payload.refunds = [
@@ -211,6 +212,15 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       expect(activity.textContent).toContain('Unreadable');
       expect(activity.textContent).not.toContain('invoices.activity.');
       expect(activity.textContent).toContain(locale === 'en' ? 'Bank receipts' : 'رسیدهای بانکی');
+      const receiptLink = activity.querySelector<HTMLAnchorElement>(
+        `a[href="/api/invoices/${ORIGINAL_ID}/bank-receipts/${receiptId}/attachment"]`
+      );
+      expect(receiptLink?.textContent).toBe(
+        locale === 'en' ? 'View receipt attachment' : 'مشاهده فایل رسید'
+      );
+      expect(receiptLink?.getAttribute('rel')).toBe('noopener noreferrer');
+      expect(activity.textContent).toContain(locale === 'en' ? 'Receipt ID' : 'شناسه رسید');
+      expect(activity.textContent).toContain(locale === 'en' ? 'Confirmed at:' : 'زمان تأیید:');
       expect(activity.textContent).toContain(
         locale === 'en' ? '9,007,199,254,740,993' : '۹٬۰۰۷٬۱۹۹٬۲۵۴٬۷۴۰٬۹۹۳'
       );

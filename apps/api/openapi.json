@@ -18386,6 +18386,57 @@
         ]
       }
     },
+    "/api/invoices/{invoiceId}/bank-receipts/{receiptId}/attachment": {
+      "get": {
+        "operationId": "CustomerInvoiceController_receiptAttachment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "receiptId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirects to a short-lived attachment URL."
+          },
+          "400": {
+            "description": "Invoice or receipt ID is invalid."
+          },
+          "401": {
+            "description": "Not authenticated."
+          },
+          "404": {
+            "description": "Invoice or receipt unavailable on this profile."
+          },
+          "503": {
+            "description": "Receipt storage is unavailable."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Open a receipt attachment on an invoice for the active profile",
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
     "/api/invoices/{invoiceId}/wallet-payment": {
       "get": {
         "operationId": "CustomerWalletInvoicePaymentController_context",

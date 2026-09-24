@@ -250,6 +250,19 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
       [attachment]
     );
     expect(claim.rows[0]!.claim_type).toBe('invoice_receipt');
+    const sign = vi.fn(async () => 'https://storage.example.test/receipt.pdf');
+    const reader = new CustomerInvoiceDetailsService({
+      ...memoryStorage(objects),
+      presignedGetUrl: sign,
+    });
+    expect(
+      await reader.receiptAttachmentUrlForUser(ACTOR_ID, INVOICE_A, result.receiptId, {
+        userId: ACTOR_ID,
+        sessionId: SESSION_ID,
+        csrfToken: CSRF_TOKEN,
+      })
+    ).toBe('https://storage.example.test/receipt.pdf');
+    expect(sign).toHaveBeenCalledWith(sealed, 300);
   });
 
   it('rejects a zero amount before insert', async () => {

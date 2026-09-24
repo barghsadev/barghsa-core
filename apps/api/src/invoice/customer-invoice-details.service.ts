@@ -27,8 +27,16 @@ import { activeProfileSql } from '../profiles/profile-context.js';
  * Number cannot carry amounts past `Number.MAX_SAFE_INTEGER`.
  */
 
-import { HttpException, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Inject,
+  Injectable,
+  Optional,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import type { StorageProvider } from '@barghsa/shared/storage';
+import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { UNPAID_CUSTOMER_INVOICE_PREDICATE } from '@barghsa/shared/finance';
 import {
@@ -405,6 +413,10 @@ const INVOICE_SELECT = `id, profile_id, state, total_amount, paid_amount, refund
 
 @Injectable()
 export class CustomerInvoiceDetailsService {
+  constructor(
+    @Optional() @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider | null = null
+  ) {}
+
   /**
    * Resolve the current authorized selection for the required capability.
    * Removed or archived selections never fall through to a different profile.
@@ -496,6 +508,33 @@ export class CustomerInvoiceDetailsService {
         solarRequestId: origin?.solar_request_id ?? null,
         ...(await loadCustomerInvoiceActivity(client, invoiceId, profileId)),
       };
+    });
+  }
+
+  async receiptAttachmentUrlForUser(
+    userId: string,
+    invoiceId: string,
+    receiptId: string,
+    actor?: InvoiceReadActor
+  ): Promise<string> {
+    invoiceId = invoiceId.toLowerCase();
+    return this.authorizedRead(userId, actor, async (profileId, client) => {
+      if (!(await this.loadInvoice(invoiceId, profileId, client)))
+        httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Invoice not found', 404);
+      const receipt = (
+        await client.query<{ attachment_key: string }>(
+          `SELECT attachment_key FROM bank_receipts
+           WHERE id=$1::uuid AND invoice_id=$2::uuid AND profile_id=$3::uuid`,
+          [receiptId, invoiceId, profileId]
+        )
+      ).rows[0];
+      if (!receipt) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Bank receipt not found', 404);
+      if (!this.storage) throw new ServiceUnavailableException('Receipt storage is unavailable');
+      try {
+        return await this.storage.presignedGetUrl(receipt.attachment_key, 300);
+      } catch {
+        throw new ServiceUnavailableException('Receipt attachment is unavailable');
+      }
     });
   }
 

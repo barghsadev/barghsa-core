@@ -56,6 +56,9 @@ export function InvoiceActivity({
             </div>
             <p className="text-muted-foreground">{label(`description.${row.state}`)}</p>
             <p>
+              {label('receiptId')}: <bdi>{row.id}</bdi>
+            </p>
+            <p>
               {label('reference')}: <bdi>{row.payerReference}</bdi>
             </p>
             <p>
@@ -67,7 +70,22 @@ export function InvoiceActivity({
                 {label('rejectionReason')}: {row.rejectionReason}
               </p>
             ) : null}
-            <p className="text-muted-foreground">{formatTimestamp(row.createdAt)}</p>
+            <a
+              href={`/api/invoices/${encodeURIComponent(details.viewedInvoiceId)}/bank-receipts/${encodeURIComponent(row.id)}/attachment`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-primary underline underline-offset-4"
+            >
+              {label('viewReceiptAttachment')}
+            </a>
+            <p className="text-muted-foreground">
+              {label('submittedAt')}: {formatTimestamp(row.createdAt)}
+            </p>
+            {row.confirmedAt ? (
+              <p className="text-muted-foreground">
+                {label('confirmedAt')}: {formatTimestamp(row.confirmedAt)}
+              </p>
+            ) : null}
           </li>
         ))
       )}

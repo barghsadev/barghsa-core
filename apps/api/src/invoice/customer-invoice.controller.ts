@@ -16,12 +16,14 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   HttpCode,
   HttpException,
   HttpStatus,
   Param,
   Post,
   Query,
+  Redirect,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -129,6 +131,36 @@ export class CustomerInvoiceController {
   ): Promise<CustomerInvoiceDetailsDto> {
     assertUuid(invoiceId);
     return this.service.getForUser(req.session.userId, invoiceId, req.session);
+  }
+
+  @Get(':invoiceId/bank-receipts/:receiptId/attachment')
+  @Redirect('', 302)
+  @Header('Cache-Control', 'no-store')
+  @Header('Referrer-Policy', 'no-referrer')
+  @RateLimit({ namespace: 'invoices:receipt-attachment:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Open a receipt attachment on an invoice for the active profile' })
+  @ApiParam({ name: 'invoiceId', format: 'uuid' })
+  @ApiParam({ name: 'receiptId', format: 'uuid' })
+  @ApiResponse({ status: 302, description: 'Redirects to a short-lived attachment URL.' })
+  @ApiResponse({ status: 400, description: 'Invoice or receipt ID is invalid.' })
+  @ApiResponse({ status: 401, description: 'Not authenticated.' })
+  @ApiResponse({ status: 404, description: 'Invoice or receipt unavailable on this profile.' })
+  @ApiResponse({ status: 503, description: 'Receipt storage is unavailable.' })
+  async receiptAttachment(
+    @Req() req: AuthenticatedRequest,
+    @Param('invoiceId') invoiceId: string,
+    @Param('receiptId') receiptId: string
+  ): Promise<{ url: string }> {
+    assertUuid(invoiceId);
+    assertUuid(receiptId, 'receiptId');
+    return {
+      url: await this.service.receiptAttachmentUrlForUser(
+        req.session.userId,
+        invoiceId,
+        receiptId,
+        req.session
+      ),
+    };
   }
 
   /**

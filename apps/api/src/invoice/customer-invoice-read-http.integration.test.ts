@@ -349,3 +349,26 @@ it('returns empty activity and includes unconfirmed receipts only in the receipt
   ]);
   expect(body.bankReceipts[2]!.rejectionReason).toBe('Unreadable receipt');
 });
+
+it('checks the active invoice and receipt before redirecting to its attachment', async () => {
+  const f = await fixture();
+  const other = await fixture();
+  const receiptId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO bank_receipts(id,invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key)
+     VALUES ($1,$2,$3,100,'2026-09-01','reference',$4)`,
+    [receiptId, f.invoice, f.profile, randomUUID()]
+  );
+  const attachment = (user: typeof f, invoiceId: string, id: string) =>
+    fetch(`${http.base}/api/invoices/${invoiceId}/bank-receipts/${id}/attachment`, {
+      headers: user.headers,
+      redirect: 'manual',
+    });
+  expect((await attachment(other, f.invoice, receiptId)).status).toBe(404);
+  expect((await attachment(f, f.invoice, randomUUID())).status).toBe(404);
+  expect((await attachment(f, f.invoice, receiptId)).status).toBe(503);
+  await http.pool.query("UPDATE invoices SET state='Draft',issued_at=NULL WHERE id=$1", [
+    f.invoice,
+  ]);
+  expect((await attachment(f, f.invoice, receiptId)).status).toBe(404);
+});
