@@ -33,6 +33,7 @@ export interface ContractSummary {
 }
 export interface ContractDetailData extends Omit<ContractSummary, 'versionId' | 'versionNumber'> {
   profileId: string;
+  orderId?: string | null;
   currentVersionId?: string;
   currentVersion?: ContractVersion;
   version?: ContractVersion;

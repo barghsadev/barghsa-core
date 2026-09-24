@@ -44,22 +44,40 @@ async function send(path: string, method = 'GET', body?: unknown, user = 'review
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
 }
-async function fixture(serviceType: 'electricity' | 'savings' = 'electricity') {
+async function fixture(
+  serviceType: 'electricity' | 'savings' = 'electricity',
+  linkedOrder = false
+) {
   const owner = await login(randomUUID()),
     profile = randomUUID();
   await http.pool.query(
     "INSERT INTO profiles(id,user_id,is_default,profile_type) VALUES($1,$2,true,'LEGAL')",
     [profile, owner]
   );
+  let orderId: string | null = null;
+  if (linkedOrder) {
+    orderId = randomUUID();
+    const product = (
+      await http.pool.query<{ id: string }>(
+        "INSERT INTO products(type,title) VALUES('hardware',$1::jsonb) RETURNING id",
+        [JSON.stringify({ fa: 'تست', en: 'Test' })]
+      )
+    ).rows[0]!.id;
+    await http.pool.query(
+      "INSERT INTO orders(id,user_id,profile_id,product_id,order_type,snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code) VALUES($1,$2,$3,$4,'electricity','p','c','address','1234567890')",
+      [orderId, owner, profile, product]
+    );
+  }
   const response = await send('admin/contracts', 'POST', {
     profileId: profile,
     serviceType,
+    ...(orderId ? { orderId } : {}),
     content: { price: '9007199254740993' },
     changeDescription: 'Initial',
     idempotencyKey: randomUUID(),
   });
   expect(response.status).toBe(201);
-  return { owner, profile, row: (await response.json()) as ContractDto };
+  return { owner, profile, orderId, row: (await response.json()) as ContractDto };
 }
 const command = (version: string) => ({ expectedVersionId: version, idempotencyKey: randomUUID() });
 const action = (id: string, which: string, body: unknown) =>
@@ -71,6 +89,14 @@ async function publish(f: Awaited<ReturnType<typeof fixture>>) {
 async function customer(f: Awaited<ReturnType<typeof fixture>>, suffix = '', user = f.owner) {
   return send('contracts/' + f.row.id + suffix, 'GET', undefined, user);
 }
+it('exposes the linked electricity order only after publication to its authorized customer', async () => {
+  const f = await fixture('electricity', true);
+  expect((await customer(f)).status).toBe(404);
+  await publish(f);
+  expect(await (await customer(f)).json()).toMatchObject({ orderId: f.orderId });
+  const other = await fixture();
+  expect((await customer(f, '', other.owner)).status).toBe(404);
+});
 it('lists an activated contract in the active-only customer view', async () => {
   const f = await fixture('savings');
   await publish(f);

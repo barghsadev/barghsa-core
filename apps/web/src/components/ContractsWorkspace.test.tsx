@@ -11,8 +11,18 @@ import type { TeamAction } from './TeamActionDialog.js';
 import type { ContractDetailData, ContractVersion } from '../lib/contracts.js';
 import { en, fa } from '@barghsa/i18n/contracts';
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ children, to, className }: { children: ReactNode; to: string; className?: string }) => (
-    <a href={to} className={className}>
+  Link: ({
+    children,
+    to,
+    params,
+    className,
+  }: {
+    children: ReactNode;
+    to: string;
+    params?: Record<string, string>;
+    className?: string;
+  }) => (
+    <a href={to.replace('$orderId', params?.orderId ?? '$orderId')} className={className}>
       {children}
     </a>
   ),
@@ -200,6 +210,19 @@ it.each(['en', 'fa'] as const)(
     await click(`${words.electricity} · ${words.version} ${(2).toLocaleString(locale)}`);
     expect(container.textContent).toContain(`${words.publishedAt}: 2026-09-22T00:00:00Z`);
     expect(container.textContent).toContain(`${words.acceptedAt}: 2026-09-23T00:00:00Z`);
+  }
+);
+it.each(['en', 'fa'] as const)(
+  'opens a linked electricity order from contract detail in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    const orderId = '55555555-5555-4555-8555-555555555555';
+    vi.stubGlobal('fetch', api(detail({ orderId })));
+    await render(<ContractDetail id={ID} staff={false} onClose={() => {}} onChanged={() => {}} />);
+    expect(container.querySelector(`a[href="/electricity/orders/${orderId}"]`)?.textContent).toBe(
+      words.openLinkedOrder
+    );
   }
 );
 it.each(['en', 'fa'] as const)(

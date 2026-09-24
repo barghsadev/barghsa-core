@@ -1,4 +1,5 @@
 import { ContractFinancialReviewDialog } from './ContractFinancialReviewDialog.js';
+import { Link } from '@tanstack/react-router';
 import { ContractCancellationPanel } from './ContractCancellationPanel.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -202,6 +203,15 @@ export function ContractDetail({
           ) : (
             <StatusBadge label={word(data.contract.state)} />
           )}
+          {!staff && data.contract.serviceType === 'electricity' && data.contract.orderId ? (
+            <Link
+              to="/electricity/orders/$orderId"
+              params={{ orderId: data.contract.orderId }}
+              className="self-start text-sm text-primary underline underline-offset-4"
+            >
+              {word('openLinkedOrder')}
+            </Link>
+          ) : null}
           <div>
             <h3 className="font-semibold">
               {word('version')} {data.version.versionNumber.toLocaleString(locale)}

@@ -99,7 +99,8 @@ for (const locale of ['en', 'fa'] as const) {
       const words = locale === 'fa' ? fa : en;
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
       const id = '11111111-1111-4111-8111-111111111111',
-        version = '22222222-2222-4222-8222-222222222222';
+        version = '22222222-2222-4222-8222-222222222222',
+        orderId = '44444444-4444-4444-8444-444444444444';
       await page.route('**/api/contracts?*', (route) =>
         route.fulfill({
           json: {
@@ -118,6 +119,7 @@ for (const locale of ['en', 'fa'] as const) {
       );
       const dto = {
         id,
+        orderId,
         profileId: '33333333-3333-4333-8333-333333333333',
         serviceType: 'electricity',
         state: 'Accepted',
@@ -176,6 +178,10 @@ for (const locale of ['en', 'fa'] as const) {
           exact: true,
         })
         .click();
+      await expect(page.getByRole('link', { name: words.openLinkedOrder })).toHaveAttribute(
+        'href',
+        `/electricity/orders/${orderId}`
+      );
       const panel = page.getByRole('region', { name: words.activationTitle, exact: true });
       await expect(panel.getByRole('listitem')).toHaveCount(5);
       await expect(panel.getByRole('link', { name: words.openInitialInvoice })).toHaveAttribute(
