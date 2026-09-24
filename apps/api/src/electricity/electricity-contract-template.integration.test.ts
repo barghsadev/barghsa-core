@@ -151,7 +151,19 @@ it('embeds the selected template version and rendered text in a new preliminary 
     body: JSON.stringify({ profileId, period: 'next_week', totalKwh: '10' }),
   });
   expect(preview.status, http.logs()).toBe(200);
-  const quote = (await preview.json()) as { reviewDigest: string; totalIrR: string };
+  const quote = (await preview.json()) as {
+    reviewDigest: string;
+    totalIrR: string;
+    contractTemplate: { versionId: string; versionNumber: number; name: string; text: string };
+  };
+  expect(quote.contractTemplate).toMatchObject({
+    versionId,
+    versionNumber: 1,
+    name: 'Electricity agreement',
+  });
+  expect(quote.contractTemplate.text).toContain(
+    `Agreement for Ada Example: ${quote.totalIrR} IRR on `
+  );
   const submissionInput = {
     profileId,
     period: 'next_week',
@@ -160,6 +172,29 @@ it('embeds the selected template version and rendered text in a new preliminary 
     expectedQuoteDigest: quote.reviewDigest,
     address: { provinceId, cityId, fullAddress: 'Electricity Street', postalCode: '1234567890' },
   };
+  const newerVersionId = (
+    await http.pool.query(
+      `INSERT INTO contract_template_versions(template_id,version_number,storage_key,file_name,
+        file_size,placeholders,created_by)
+       VALUES($1,2,'contract-templates/v2/electricity-agreement.txt','electricity-agreement.txt',
+        71,ARRAY['customerName','amount','date']::text[],'editor') RETURNING id`,
+      [templateId]
+    )
+  ).rows[0].id as string;
+  const switchTemplate = async (selectedVersionId: string) =>
+    fetch(`${http.base}/api/admin/config/electricity-contract-template`, {
+      method: 'PUT',
+      headers: staffHeaders,
+      body: JSON.stringify({ versionId: selectedVersionId }),
+    });
+  expect((await switchTemplate(newerVersionId)).status).toBe(200);
+  const staleSubmission = await fetch(`${http.base}/api/electricity/orders/simple`, {
+    method: 'POST',
+    headers: buyerHeaders,
+    body: JSON.stringify(submissionInput),
+  });
+  expect(staleSubmission.status, await staleSubmission.clone().text()).toBe(409);
+  expect((await switchTemplate(versionId)).status).toBe(200);
   const submitted = await fetch(`${http.base}/api/electricity/orders/simple`, {
     method: 'POST',
     headers: buyerHeaders,
@@ -181,7 +216,7 @@ it('embeds the selected template version and rendered text in a new preliminary 
     }>('SELECT content FROM contract_versions WHERE contract_id=$1', [contractId])
   ).rows[0]!.content;
   expect(content.template.versionId).toBe(versionId);
-  expect(content.template.text).toContain(`Agreement for Ada Example: ${quote.totalIrR} IRR on `);
+  expect(content.template.text).toBe(quote.contractTemplate.text);
   expect(content.template.text).not.toContain('{{');
   const linked = await http.pool.query<{
     id: string;

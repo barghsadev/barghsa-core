@@ -11,6 +11,10 @@ import { FormWizard } from '../../../components/FormWizard.js';
 import { WalletFundingPrompt } from '../../../components/WalletFundingPrompt.js';
 import { ElectricityQuoteErrorNotice } from '../../../components/ElectricityQuoteErrorNotice.js';
 import {
+  ElectricityContractTerms,
+  type ElectricityContractTermsSnapshot,
+} from '../../../components/ElectricityContractTerms.js';
+import {
   ElectricityQuotePreviewError,
   electricityQuoteError,
 } from '../../../lib/electricity-quote-error.js';
@@ -65,6 +69,7 @@ interface PeriodOption {
 }
 interface PriceQuote {
   reviewDigest: string;
+  contractTemplate?: ElectricityContractTermsSnapshot | null;
   periodStart: string;
   periodEnd: string;
   durationHours: string;
@@ -978,7 +983,11 @@ function ElectricityOrderPage() {
       });
 
       if (!res.ok) {
-        if (res.status === 409) setQuoteVersion((version) => version + 1);
+        if (res.status === 409) {
+          setQuoteVersion((version) => version + 1);
+          toast.error(t('electricity.order.reviewChanged', locale));
+          return;
+        }
         const errBody = await res.json().catch(() => ({}));
         const message = (errBody as { message?: string }).message;
         toast.error(message || t('electricity.order.error.create', locale));
@@ -1938,7 +1947,7 @@ function ElectricityOrderPage() {
                           </p>
                         </div>
                       )}
-                      <p>{t('electricity.order.contractPreviewText', locale)}</p>
+                      <ElectricityContractTerms template={quote?.contractTemplate} />
                       <h3 className="font-medium text-foreground">
                         {t('electricity.order.cancellationRules', locale)}
                       </h3>

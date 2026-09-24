@@ -30,7 +30,10 @@ import {
 import { persistElectricitySubmissionSnapshot } from './electricity-submission-snapshot.js';
 import { createElectricityRefundObligation } from './electricity-refund-obligation.js';
 import { STORAGE_PROVIDER } from '../storage/index.js';
-import { electricityContractTemplateSnapshot } from './electricity-contract-template.js';
+import {
+  electricityContractTemplateSnapshot,
+  type ElectricityContractTemplateSnapshot,
+} from './electricity-contract-template.js';
 import {
   electricityFinancialStatus,
   electricityNextAction,
@@ -1298,10 +1301,18 @@ export class ElectricityOrderService {
       await client.query('BEGIN');
       await this.authorize(client, actor, input.profileId);
       if (input.giftCode) await this.giftCodes.enforceValidationLimit(actor.userId);
-      const quoted = await this.quote(client, input, new Date());
+      const now = new Date();
+      const quoted = await this.quote(client, input, now);
+      const template = await electricityContractTemplateSnapshot(
+        client,
+        this.storage,
+        input.profileId,
+        quoted.totals.totalIrR,
+        now
+      );
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return this.presentQuote(quoted);
+      return this.presentQuote(quoted, template);
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;
@@ -1310,7 +1321,10 @@ export class ElectricityOrderService {
     }
   }
 
-  private presentQuote(quoted: Awaited<ReturnType<ElectricityOrderService['quote']>>) {
+  private presentQuote(
+    quoted: Awaited<ReturnType<ElectricityOrderService['quote']>>,
+    template?: ElectricityContractTemplateSnapshot | null
+  ) {
     const view = {
       periodStart: quoted.period.start.toISOString(),
       periodEnd: quoted.period.end.toISOString(),
@@ -1345,9 +1359,11 @@ export class ElectricityOrderService {
       discountIrR: view.discountIrR,
       vatIrR: view.vatIrR,
       totalIrR: view.totalIrR,
+      ...(template !== undefined ? { contractTemplate: template } : {}),
     };
     return {
       ...view,
+      ...(template !== undefined ? { contractTemplate: template } : {}),
       ...('walletBalanceIrR' in quoted
         ? {
             walletBalanceIrR: quoted.walletBalanceIrR,
@@ -1386,9 +1402,16 @@ export class ElectricityOrderService {
       await requireAddressGeography(client, input.address.provinceId, input.address.cityId);
       const now = new Date();
       const quoted = await this.quote(client, input, now);
-      if (this.presentQuote(quoted).reviewDigest !== input.expectedQuoteDigest) {
+      const template = await electricityContractTemplateSnapshot(
+        client,
+        this.storage,
+        input.profileId,
+        quoted.totals.totalIrR,
+        now
+      );
+      if (this.presentQuote(quoted, template).reviewDigest !== input.expectedQuoteDigest) {
         throw new ConflictException(
-          'Electricity quote changed; review the current price before submitting'
+          'Electricity quote or contract terms changed; review before submitting'
         );
       }
       const primary =
@@ -1473,13 +1496,6 @@ export class ElectricityOrderService {
       }
       const contractId = uuidv7(),
         versionId = uuidv7();
-      const template = await electricityContractTemplateSnapshot(
-        client,
-        this.storage,
-        input.profileId,
-        quoted.totals.totalIrR,
-        now
-      );
       await client.query(
         `INSERT INTO contracts(id,profile_id,order_id,service_type,state,current_version_id)
          VALUES($1,$2,$3,'electricity','Draft',$4)`,
@@ -1544,7 +1560,7 @@ export class ElectricityOrderService {
         "UPDATE electricity_orders SET status='awaiting_staff_review' WHERE id=$1",
         [orderId]
       );
-      const response = { orderId, contractId, invoiceId, ...this.presentQuote(quoted) };
+      const response = { orderId, contractId, invoiceId, ...this.presentQuote(quoted, template) };
       await client.query(
         `INSERT INTO electricity_order_submissions(user_id,idempotency_key,request_hash,order_id,contract_id,invoice_id,response)
          VALUES($1,$2,$3,$4,$5,$6,$7::jsonb)`,

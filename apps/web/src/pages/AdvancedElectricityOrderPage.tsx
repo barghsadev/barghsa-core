@@ -6,6 +6,10 @@ import { toast } from 'sonner';
 import { FormWizard } from '../components/FormWizard.js';
 import { WalletFundingPrompt } from '../components/WalletFundingPrompt.js';
 import { ElectricityQuoteErrorNotice } from '../components/ElectricityQuoteErrorNotice.js';
+import {
+  ElectricityContractTerms,
+  type ElectricityContractTermsSnapshot,
+} from '../components/ElectricityContractTerms.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -35,6 +39,7 @@ type Address = {
 };
 type Quote = {
   reviewDigest: string;
+  contractTemplate?: ElectricityContractTermsSnapshot | null;
   periodStart: string;
   periodEnd: string;
   durationHours: string;
@@ -137,6 +142,7 @@ export function AdvancedElectricityOrderPage() {
   const [addressId, setAddressId] = useState('');
   const [giftCode, setGiftCode] = useState('');
   const [quote, setQuote] = useState<Quote | null>(null);
+  const [quoteVersion, setQuoteVersion] = useState(0);
   const [quoteError, setQuoteError] = useState('');
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -323,7 +329,16 @@ export function AdvancedElectricityOrderPage() {
       window.clearTimeout(timer);
       abort.abort();
     };
-  }, [profileId, blocked, validPeriod, quantitiesValid, options, previewInput, locale]);
+  }, [
+    profileId,
+    blocked,
+    validPeriod,
+    quantitiesValid,
+    options,
+    previewInput,
+    locale,
+    quoteVersion,
+  ]);
 
   async function saveDraft(next: boolean) {
     if (!profileId) return false;
@@ -394,6 +409,11 @@ export function AdvancedElectricityOrderPage() {
           },
         }),
       });
+      if (response.status === 409) {
+        setQuoteVersion((version) => version + 1);
+        toast.error(t('electricity.order.reviewChanged', locale));
+        return;
+      }
       if (!response.ok) throw new Error('Order failed');
       const result = (await response.json()) as { orderId: string };
       await navigate({ to: '/electricity/orders/$orderId', params: { orderId: result.orderId } });
@@ -689,7 +709,7 @@ export function AdvancedElectricityOrderPage() {
                         <h3 className="font-medium text-foreground">
                           {t('electricity.order.contractPreview', locale)}
                         </h3>
-                        <p>{t('electricity.order.contractPreviewText', locale)}</p>
+                        <ElectricityContractTerms template={quote?.contractTemplate} />
                         <h3 className="font-medium text-foreground">
                           {t('electricity.order.cancellationRules', locale)}
                         </h3>

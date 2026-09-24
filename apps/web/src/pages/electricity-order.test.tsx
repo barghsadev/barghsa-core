@@ -162,6 +162,15 @@ const settlePreview = () =>
   });
 
 it('shows manual entry, period dates and the server price before one submission', async () => {
+  previewReply = async () =>
+    response({
+      ...quote,
+      contractTemplate: {
+        name: 'Electricity agreement',
+        versionNumber: 2,
+        text: 'Agreement for Buyer: 2500000 IRR.',
+      },
+    });
   await mount();
   expect(container.textContent).toContain(t('electricity.order.step1', 'en'));
   await fill('electricity-period-type', 'weekly');
@@ -176,6 +185,8 @@ it('shows manual entry, period dates and the server price before one submission'
   expect(container.textContent).toContain(t('electricity.order.giftCode', 'en'));
   await advance();
   expect(submit().disabled).toBe(false);
+  expect(container.textContent).toContain('Electricity agreement · Template version 2');
+  expect(container.textContent).toContain('Agreement for Buyer: 2500000 IRR.');
   let complete!: (value: Response) => void;
   orderReply = () =>
     new Promise((resolve) => {

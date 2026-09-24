@@ -823,6 +823,9 @@ export const fa: I18nDictionary = {
   'electricity.order.walletBalance': 'موجودی کیف پول',
   'electricity.order.walletUnavailable': 'در دسترس نیست',
   'electricity.order.contractPreview': 'قرارداد',
+  'electricity.order.contractTemplateVersion': 'نسخه قالب',
+  'electricity.order.reviewChanged':
+    'قیمت یا متن قرارداد تغییر کرده است. جزئیات جدید را پیش از ثبت دوباره بررسی کنید.',
   'electricity.order.contractPreviewText':
     'پس از ثبت سفارش، قرارداد این سفارش ایجاد می‌شود و از بخش قراردادها قابل مشاهده است.',
   'electricity.order.cancellationRules': 'لغو و بازپرداخت',
@@ -2087,6 +2090,9 @@ export const en: I18nDictionary = {
   'electricity.order.walletBalance': 'Wallet balance',
   'electricity.order.walletUnavailable': 'Unavailable',
   'electricity.order.contractPreview': 'Contract',
+  'electricity.order.contractTemplateVersion': 'Template version',
+  'electricity.order.reviewChanged':
+    'The price or contract terms changed. Review the updated details before submitting again.',
   'electricity.order.contractPreviewText':
     'The order contract is created after submission and can be viewed under Contracts.',
   'electricity.order.cancellationRules': 'Cancellation and refunds',

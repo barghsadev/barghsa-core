@@ -39,6 +39,8 @@ let bootstrapLoadFailures: number;
 let draftLoadFailures: number;
 let savedStepOverride: number | null;
 let quoteSuccess: boolean;
+let contractTemplate: { name: string; versionNumber: number; text: string } | null;
+let orderConflict: boolean;
 let giftCode: string;
 let addresses: Array<{
   id: string;
@@ -65,6 +67,8 @@ beforeEach(() => {
   draftLoadFailures = 0;
   savedStepOverride = null;
   quoteSuccess = false;
+  contractTemplate = null;
+  orderConflict = false;
   giftCode = '';
   addresses = [];
   quoteErrorDetails = [
@@ -106,6 +110,7 @@ beforeEach(() => {
       return quoteSuccess
         ? reply({
             reviewDigest: 'review-1',
+            contractTemplate,
             periodStart: startAt,
             periodEnd: endAt,
             durationHours: '192',
@@ -136,6 +141,10 @@ beforeEach(() => {
             },
             400
           );
+    if (url === '/api/electricity/orders/advanced' && init?.method === 'POST')
+      return orderConflict
+        ? reply({ message: 'Changed' }, 409)
+        : reply({ orderId: 'order-1' }, 201);
     throw new Error(`Unexpected request: ${url}`);
   });
   vi.stubGlobal('fetch', fetchMock);
@@ -293,3 +302,36 @@ it.each(['en', 'fa'] as const)(
     expect(container.textContent).toContain(t('electricity.order.paymentAfterSubmit', locale));
   }
 );
+
+it('refreshes the advanced contract terms after a submission conflict', async () => {
+  step = 5;
+  quantities = { thermal: '100', green: '0', free_market: '0', energy_saving: '0' };
+  quoteSuccess = true;
+  orderConflict = true;
+  contractTemplate = { name: 'Electricity agreement', versionNumber: 1, text: 'Original terms' };
+  addresses = [
+    {
+      id: 'address-1',
+      provinceId: 'province-1',
+      cityId: 'city-1',
+      fullAddress: 'Example Street 4',
+      postalCode: '1234567890',
+      mainAddress: true,
+    },
+  ];
+  await mount();
+  await settlePreview();
+  expect(container.textContent).toContain('Original terms');
+  contractTemplate = { name: 'Electricity agreement', versionNumber: 2, text: 'Updated terms' };
+  const submit = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.submit', 'en')
+  );
+  await act(async () => submit?.click());
+  await settlePreview();
+  expect(container.textContent).toContain('Updated terms');
+  expect(container.textContent).not.toContain('Original terms');
+  expect(navigateMock).not.toHaveBeenCalled();
+  expect(
+    fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/preview/advanced')
+  ).toHaveLength(2);
+});
