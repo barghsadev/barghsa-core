@@ -50,6 +50,7 @@ const nonAdminReq = {
 
 function makeController() {
   const listPending = vi.fn().mockResolvedValue([DTO]);
+  const listHistory = vi.fn().mockResolvedValue({ items: [], nextCursor: null });
   const get = vi.fn().mockResolvedValue(DTO);
   const confirm = vi.fn().mockResolvedValue({
     ...DTO,
@@ -77,7 +78,7 @@ function makeController() {
     walletCreditAmount: '150000',
     isOverpayment: true,
   });
-  const service = { listPending, get, confirm, reject, previewAllocation };
+  const service = { listPending, listHistory, get, confirm, reject, previewAllocation };
   const correlationId = { getCorrelationId: vi.fn().mockReturnValue('corr-1') };
   const controller = new InvoiceBankReceiptConfirmationController(
     service as never,
@@ -139,6 +140,33 @@ describe('invoice bank-receipt confirmation and rejection permission gate (T-04.
     const result = await controller.list(adminReq);
     expect(result).toEqual({ items: [DTO] });
     expect(service.listPending).toHaveBeenCalledOnce();
+  });
+
+  it('accepts a validated history filter and paired cursor', async () => {
+    const { controller, service } = makeController();
+    await controller.history(adminReq, {
+      state: 'Confirmed',
+      invoiceId: INVOICE_ID,
+      beforeAt: '2026-09-01T10:00:00.000200Z',
+      beforeId: RECEIPT_ID,
+    });
+    expect(service.listHistory).toHaveBeenCalledWith({
+      state: 'Confirmed',
+      invoiceId: INVOICE_ID,
+      beforeAt: '2026-09-01T10:00:00.000200Z',
+      beforeId: RECEIPT_ID,
+    });
+  });
+
+  it('blocks malformed history cursors and unauthorized history reads', async () => {
+    const { controller, service } = makeController();
+    await expect(
+      controller.history(adminReq, { beforeAt: '2026-09-01T10:00:00Z' })
+    ).rejects.toMatchObject({
+      status: 400,
+    });
+    await expect(controller.history(nonAdminReq, {})).rejects.toMatchObject({ status: 403 });
+    expect(service.listHistory).not.toHaveBeenCalled();
   });
 
   it('forwards actor, ip, and correlation id on confirm', async () => {

@@ -186,6 +186,57 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     return result.rows[0]!.state;
   }
 
+  it('pages terminal receipts without leaking pending or other-invoice rows', async () => {
+    const invoiceId = await insertInvoice({ total: 100_000n });
+    const otherInvoiceId = await insertInvoice({ total: 100_000n, profileId: PROFILE_B });
+    const ids: string[] = [];
+    for (let index = 0; index < 27; index++) {
+      const id = await insertReceipt({
+        invoiceId,
+        amount: BigInt(index + 1),
+        suffix: `hist-${index.toString(16).padStart(4, '0')}`,
+      });
+      ids.push(id);
+      await ctx.pool.query(
+        `UPDATE bank_receipts
+            SET state = CASE WHEN $2::int % 2 = 0 THEN 'Confirmed' ELSE 'Rejected' END,
+                confirmed_by = CASE WHEN $2::int % 2 = 0 THEN $3 ELSE NULL END,
+                confirmed_at = CASE WHEN $2::int % 2 = 0 THEN NOW() ELSE NULL END,
+                rejection_reason = CASE WHEN $2::int % 2 = 1 THEN 'Mismatch' ELSE NULL END,
+                created_at = CASE
+                  WHEN $2::int = 1 THEN '2026-09-01T00:00:02.000100Z'::timestamptz
+                  WHEN $2::int = 2 THEN '2026-09-01T00:00:02.000200Z'::timestamptz
+                  ELSE '2026-09-01T00:00:00Z'::timestamptz + ($2::int * interval '1 second')
+                END
+          WHERE id = $1`,
+        [id, index, ACTOR_USER_ID]
+      );
+    }
+    await insertReceipt({ invoiceId, amount: 1n, suffix: 'hist-pending' });
+    const otherReceiptId = await insertReceipt({
+      invoiceId: otherInvoiceId,
+      profileId: PROFILE_B,
+      amount: 1n,
+      suffix: 'hist-other',
+    });
+    await ctx.pool.query(
+      `UPDATE bank_receipts SET state = 'Rejected', rejection_reason = 'Mismatch' WHERE id = $1`,
+      [otherReceiptId]
+    );
+
+    const first = await service.listHistory({ invoiceId });
+    expect(first.items).toHaveLength(25);
+    expect(first.items[0]?.receiptId).toBe(ids[26]);
+    expect(first.nextCursor?.beforeAt).toBe('2026-09-01T00:00:02.000200Z');
+    expect(first.nextCursor).not.toBeNull();
+    const second = await service.listHistory({ invoiceId, ...first.nextCursor! });
+    expect(second.items.map((item) => item.receiptId)).toEqual([ids[1], ids[0]]);
+    expect(second.nextCursor).toBeNull();
+    const rejected = await service.listHistory({ invoiceId, state: 'Rejected' });
+    expect(rejected.items).toHaveLength(13);
+    expect(rejected.items.every((item) => item.state === 'Rejected')).toBe(true);
+  });
+
   it('credits only the excess to the wallet when the receipt exceeds invoice remaining', async () => {
     const invoiceId = await insertInvoice({ total: 1_000_000n, paid: 600_000n, state: 'Unpaid' });
     const receiptId = await insertReceipt({

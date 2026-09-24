@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, AlertDescription, Button, PageLoading, StatusBadge } from '@barghsa/ui';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
@@ -7,6 +7,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { InvoiceBankReceiptHistory } from './InvoiceBankReceiptHistory.js';
 
 const base = '/api/admin/invoices/bank-receipts';
 
@@ -24,6 +25,8 @@ interface Receipt {
   canConfirm: boolean;
   canReject: boolean;
   rejectionReason: string | null;
+  invoiceAllocation: string | null;
+  walletCreditAmount: string | null;
   confirmedAt: string | null;
   requiresDualApproval: boolean;
   dualApprovalPending: boolean;
@@ -55,6 +58,8 @@ export function InvoiceBankReceiptQueue() {
     'loading'
   );
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedSource, setSelectedSource] = useState<'pending' | 'history'>('pending');
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [detail, setDetail] = useState<Receipt | null>(null);
   const [allocation, setAllocation] = useState<Allocation | null>(null);
   const [detailState, setDetailState] = useState<'loading' | 'ready' | 'error'>('loading');
@@ -62,6 +67,11 @@ export function InvoiceBankReceiptQueue() {
   const [reason, setReason] = useState('');
   const [action, setAction] = useState<TeamAction | null>(null);
   const [revision, setRevision] = useState(0);
+  const detailRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (selectedId) detailRef.current?.scrollIntoView?.({ block: 'start' });
+  }, [selectedId, selectedSource]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -94,7 +104,9 @@ export function InvoiceBankReceiptQueue() {
     setAllocationError(false);
     void Promise.allSettled([
       getJson<Receipt>(path, controller.signal),
-      getJson<Allocation>(`${path}/allocation`, controller.signal),
+      selectedSource === 'pending'
+        ? getJson<Allocation>(`${path}/allocation`, controller.signal)
+        : Promise.resolve(null),
     ]).then(([receipt, preview]) => {
       if (controller.signal.aborted) return;
       if (receipt.status === 'fulfilled') {
@@ -104,10 +116,10 @@ export function InvoiceBankReceiptQueue() {
         setDetailState('error');
       }
       if (preview.status === 'fulfilled') setAllocation(preview.value);
-      else setAllocationError(true);
+      else if (selectedSource === 'pending') setAllocationError(true);
     });
     return () => controller.abort();
-  }, [selectedId, revision]);
+  }, [selectedId, selectedSource, revision]);
 
   function refresh() {
     setRevision((value) => value + 1);
@@ -115,7 +127,10 @@ export function InvoiceBankReceiptQueue() {
 
   function review(kind: 'confirm' | 'reject') {
     if (!detail) return;
-    if (kind === 'confirm' && (!detail.canConfirm || detail.dualApprovalPending || !allocation))
+    if (
+      kind === 'confirm' &&
+      (!detail.canConfirm || detail.dualApprovalPending || !allocation || !detail.attachmentUrl)
+    )
       return;
     const rejection = reason.trim();
     if (kind === 'reject' && (!detail.canReject || !rejection)) return;
@@ -167,6 +182,7 @@ export function InvoiceBankReceiptQueue() {
                   variant="outline"
                   onClick={() => {
                     setReason('');
+                    setSelectedSource('pending');
                     setSelectedId(item.receiptId);
                   }}
                 >
@@ -177,8 +193,29 @@ export function InvoiceBankReceiptQueue() {
           ))}
         </ul>
       ) : null}
+      <Button
+        variant="outline"
+        aria-expanded={historyOpen}
+        onClick={() => setHistoryOpen((value) => !value)}
+      >
+        {word('historyTitle')}
+      </Button>
+      {historyOpen ? (
+        <InvoiceBankReceiptHistory
+          revision={revision}
+          onOpen={(receiptId) => {
+            setReason('');
+            setSelectedSource('history');
+            setSelectedId(receiptId);
+          }}
+        />
+      ) : null}
       {selectedId ? (
-        <section className="space-y-4 rounded-lg border p-4" aria-label={word('detail')}>
+        <section
+          ref={detailRef}
+          className="space-y-4 rounded-lg border p-4"
+          aria-label={word('detail')}
+        >
           <div className="flex items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="font-semibold">{word('detail')}</h3>
@@ -246,9 +283,18 @@ export function InvoiceBankReceiptQueue() {
                 </a>
               ) : (
                 <p role="alert" className="text-sm">
-                  {word('attachmentUnavailable')}
+                  {word(
+                    selectedSource === 'history'
+                      ? 'historyAttachmentUnavailable'
+                      : 'attachmentUnavailable'
+                  )}
                 </p>
               )}
+              {detail.rejectionReason ? (
+                <p className="text-sm">
+                  {word('historyRejectionReason')}: {detail.rejectionReason}
+                </p>
+              ) : null}
               {allocation ? (
                 <dl className="grid gap-2 rounded-lg bg-muted p-3 text-sm sm:grid-cols-2">
                   <div>
@@ -273,6 +319,20 @@ export function InvoiceBankReceiptQueue() {
                 <Alert variant="destructive">
                   <AlertDescription>{word('allocationError')}</AlertDescription>
                 </Alert>
+              ) : null}
+              {selectedSource === 'history' &&
+              detail.state === 'Confirmed' &&
+              detail.invoiceAllocation !== null ? (
+                <dl className="grid gap-2 rounded-lg bg-muted p-3 text-sm sm:grid-cols-2">
+                  <div>
+                    <dt>{word('invoiceAllocation')}</dt>
+                    <dd>{numbers.money(detail.invoiceAllocation)}</dd>
+                  </div>
+                  <div>
+                    <dt>{word('walletCredit')}</dt>
+                    <dd>{numbers.money(detail.walletCreditAmount ?? '0')}</dd>
+                  </div>
+                </dl>
               ) : null}
               {detail.dualApprovalPending ? (
                 <p role="status" className="text-sm">

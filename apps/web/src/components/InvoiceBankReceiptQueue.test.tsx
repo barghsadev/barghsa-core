@@ -20,6 +20,8 @@ const receipt = {
   canConfirm: true,
   canReject: true,
   rejectionReason: null,
+  invoiceAllocation: null,
+  walletCreditAmount: null,
   dualApprovalPending: false,
 };
 const allocation = {
@@ -165,4 +167,115 @@ it('shows no receipt data when finance access is denied', async () => {
   await render();
   expect(container.textContent).toContain('You do not have access to review invoice receipts.');
   expect(container.textContent).not.toContain(INVOICE);
+});
+
+it('filters and pages terminal receipts, then opens their historic detail', async () => {
+  const rejected = {
+    ...receipt,
+    state: 'Rejected',
+    canConfirm: false,
+    canReject: false,
+    rejectionReason: 'Reference mismatch',
+  };
+  const fetcher = vi.fn(async (raw: string) => {
+    const url = new URL(raw, 'https://app.example.test');
+    if (url.pathname.endsWith('/history')) {
+      const second = url.searchParams.has('beforeAt');
+      return new Response(
+        JSON.stringify({
+          items: second
+            ? []
+            : [
+                {
+                  receiptId: RECEIPT,
+                  invoiceId: INVOICE,
+                  amount: receipt.amount,
+                  state: 'Rejected',
+                  paymentDate: receipt.paymentDate,
+                  submittedAt: receipt.submittedAt,
+                },
+              ],
+          nextCursor: second ? null : { beforeAt: receipt.submittedAt, beforeId: RECEIPT },
+        })
+      );
+    }
+    if (url.pathname.endsWith(`/${RECEIPT}`)) return new Response(JSON.stringify(rejected));
+    if (url.pathname.endsWith('/allocation'))
+      throw new Error('Historical detail must not preview a new allocation');
+    return new Response(JSON.stringify({ items: [] }));
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await render();
+  await click('Reviewed receipt history');
+  expect(container.textContent).toContain(RECEIPT);
+  const state = container.querySelector('select')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')!.set!.call(
+      state,
+      'Rejected'
+    );
+    state.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  expect(fetcher.mock.calls.some(([url]) => String(url).includes('state=Rejected'))).toBe(true);
+  const invoiceInput = container.querySelector('input')!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      invoiceInput,
+      INVOICE
+    );
+    invoiceInput.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await click('Apply filter');
+  expect(fetcher.mock.calls.some(([url]) => String(url).includes(`invoiceId=${INVOICE}`))).toBe(
+    true
+  );
+  await click('Review receipt');
+  expect(container.textContent).toContain('Reference mismatch');
+  expect(fetcher.mock.calls.some(([url]) => String(url).endsWith('/allocation'))).toBe(false);
+  await click('Next page');
+  expect(container.textContent).toContain('No receipts match these filters.');
+  await click('Previous page');
+  expect(container.textContent).toContain(RECEIPT);
+});
+
+it('shows the settled allocation from a confirmed receipt without recalculating it', async () => {
+  const fetcher = vi.fn(async (raw: string) => {
+    const url = new URL(raw, 'https://app.example.test');
+    if (url.pathname.endsWith('/history'))
+      return new Response(
+        JSON.stringify({
+          items: [
+            {
+              receiptId: RECEIPT,
+              invoiceId: INVOICE,
+              amount: receipt.amount,
+              state: 'Confirmed',
+              paymentDate: receipt.paymentDate,
+              submittedAt: receipt.submittedAt,
+            },
+          ],
+          nextCursor: null,
+        })
+      );
+    if (url.pathname.endsWith(`/${RECEIPT}`))
+      return new Response(
+        JSON.stringify({
+          ...receipt,
+          state: 'Confirmed',
+          canConfirm: false,
+          canReject: false,
+          invoiceAllocation: '100000',
+          walletCreditAmount: '150000',
+        })
+      );
+    if (url.pathname.endsWith('/allocation')) throw new Error('Must use settled allocation');
+    return new Response(JSON.stringify({ items: [] }));
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await render();
+  await click('Reviewed receipt history');
+  await click('Review receipt');
+  expect(container.textContent).toContain('100000 IRR');
+  expect(container.textContent).toContain('150000 IRR');
+  expect(fetcher.mock.calls.some(([url]) => String(url).endsWith('/allocation'))).toBe(false);
 });

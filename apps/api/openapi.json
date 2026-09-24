@@ -6943,6 +6943,69 @@
         ]
       }
     },
+    "/api/admin/invoices/bank-receipts/history": {
+      "get": {
+        "operationId": "InvoiceBankReceiptConfirmationController_history",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeId",
+            "required": false,
+            "schema": {
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "beforeAt",
+            "required": false,
+            "schema": {
+              "format": "date-time"
+            }
+          },
+          {
+            "in": "query",
+            "name": "invoiceId",
+            "required": false,
+            "schema": {
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "enum": [
+                "Confirmed",
+                "Rejected"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "At most 25 receipts and a cursor for the next page."
+          },
+          "400": {
+            "description": "Invalid filters or cursor"
+          },
+          "403": {
+            "description": "Finance permission required"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List confirmed and rejected invoice receipts, newest first",
+        "tags": [
+          "Admin · Invoice bank receipts"
+        ]
+      }
+    },
     "/api/admin/invoices/bank-receipts/{receiptId}": {
       "get": {
         "operationId": "InvoiceBankReceiptConfirmationController_get",

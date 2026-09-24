@@ -9,6 +9,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -34,7 +36,17 @@ import {
   InvoiceBankReceiptConfirmationService,
   type InvoiceBankReceiptAllocationPreviewDto,
   type InvoiceBankReceiptConfirmDto,
+  type InvoiceBankReceiptHistoryPageDto,
 } from '../invoice/invoice-bank-receipt-confirmation.service.js';
+
+const HistoryQuerySchema = z
+  .object({
+    state: z.enum(['Confirmed', 'Rejected']).optional(),
+    invoiceId: z.string().uuid().optional(),
+    beforeAt: z.string().datetime({ offset: true }).optional(),
+    beforeId: z.string().uuid().optional(),
+  })
+  .refine((value) => Boolean(value.beforeAt) === Boolean(value.beforeId));
 
 function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
@@ -104,6 +116,26 @@ export class InvoiceBankReceiptConfirmationController {
     this.assertConfirmPermission(req);
     const items = await this.service.listPending();
     return { items };
+  }
+
+  @Get('history')
+  @ApiOperation({ summary: 'List confirmed and rejected invoice receipts, newest first' })
+  @ApiQuery({ name: 'state', required: false, enum: ['Confirmed', 'Rejected'] })
+  @ApiQuery({ name: 'invoiceId', required: false, format: 'uuid' })
+  @ApiQuery({ name: 'beforeAt', required: false, format: 'date-time' })
+  @ApiQuery({ name: 'beforeId', required: false, format: 'uuid' })
+  @ApiResponse({ status: 200, description: 'At most 25 receipts and a cursor for the next page.' })
+  @ApiResponse({ status: 400, description: 'Invalid filters or cursor' })
+  @ApiResponse({ status: 403, description: 'Finance permission required' })
+  async history(
+    @Req() req: AuthenticatedRequest,
+    @Query() raw: Record<string, unknown>
+  ): Promise<InvoiceBankReceiptHistoryPageDto> {
+    this.assertConfirmPermission(req);
+    const parsed = HistoryQuerySchema.safeParse(raw);
+    if (!parsed.success)
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid receipt history filters');
+    return this.service.listHistory(parsed.data);
   }
 
   @Get(':receiptId/allocation')

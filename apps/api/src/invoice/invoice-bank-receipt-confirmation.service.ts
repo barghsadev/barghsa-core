@@ -131,6 +131,20 @@ export interface InvoiceBankReceiptConfirmDto {
   notificationOutboxId?: string;
 }
 
+export interface InvoiceBankReceiptHistoryItemDto {
+  receiptId: string;
+  invoiceId: string;
+  amount: string;
+  state: 'Confirmed' | 'Rejected';
+  paymentDate: string;
+  submittedAt: string;
+}
+
+export interface InvoiceBankReceiptHistoryPageDto {
+  items: InvoiceBankReceiptHistoryItemDto[];
+  nextCursor: { beforeAt: string; beforeId: string } | null;
+}
+
 export interface InvoiceBankReceiptAllocationPreviewDto {
   receiptId: string;
   invoiceId: string;
@@ -256,6 +270,47 @@ export class InvoiceBankReceiptConfirmationService {
       );
     }
     return items;
+  }
+
+  async listHistory(input: {
+    state?: 'Confirmed' | 'Rejected' | undefined;
+    invoiceId?: string | undefined;
+    beforeAt?: string | undefined;
+    beforeId?: string | undefined;
+  }): Promise<InvoiceBankReceiptHistoryPageDto> {
+    const result = await getDbPool().query(
+      `SELECT id, invoice_id, amount, state, payment_date, created_at,
+              to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS cursor_at
+         FROM bank_receipts
+        WHERE state IN ('Confirmed', 'Rejected')
+          AND ($1::text IS NULL OR state = $1)
+          AND ($2::uuid IS NULL OR invoice_id = $2)
+          AND ($3::timestamptz IS NULL OR (created_at, id) < ($3::timestamptz, $4::uuid))
+        ORDER BY created_at DESC, id DESC
+        LIMIT 26`,
+      [input.state ?? null, input.invoiceId ?? null, input.beforeAt ?? null, input.beforeId ?? null]
+    );
+    const rows = result.rows as Array<
+      Pick<
+        BankReceiptRow,
+        'id' | 'invoice_id' | 'amount' | 'state' | 'payment_date' | 'created_at'
+      > & {
+        cursor_at: string;
+      }
+    >;
+    const page = rows.slice(0, 25);
+    const last = page.at(-1);
+    return {
+      items: page.map((row) => ({
+        receiptId: row.id,
+        invoiceId: row.invoice_id,
+        amount: BigInt(row.amount).toString(),
+        state: row.state as 'Confirmed' | 'Rejected',
+        paymentDate: row.payment_date,
+        submittedAt: toIso(row.created_at),
+      })),
+      nextCursor: rows.length > 25 && last ? { beforeAt: last.cursor_at, beforeId: last.id } : null,
+    };
   }
 
   async get(receiptId: string): Promise<InvoiceBankReceiptConfirmDto> {
