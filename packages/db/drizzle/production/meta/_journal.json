@@ -911,6 +911,13 @@
       "when": 1791331200222,
       "tag": "0209_ai_model_management",
       "breakpoints": true
+    },
+    {
+      "idx": 210,
+      "version": "7",
+      "when": 1791331200223,
+      "tag": "0210_knowledge_base_foundation",
+      "breakpoints": true
     }
   ]
 }

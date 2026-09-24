@@ -22,7 +22,7 @@ export async function startTestPostgres(): Promise<{
   connectionString: string;
   close: () => Promise<void>;
 }> {
-  const started = await new PostgreSqlContainer('postgres:17-alpine')
+  const started = await new PostgreSqlContainer('pgvector/pgvector:pg17')
     .withDatabase('barghsa_test')
     .withUsername('barghsa')
     .withPassword('barghsa_test')
@@ -34,6 +34,7 @@ export async function startTestPostgres(): Promise<{
     const bootstrap = new Pool({ connectionString, max: 1 });
     try {
       await bootstrap.query('CREATE EXTENSION IF NOT EXISTS btree_gist');
+      await bootstrap.query('CREATE EXTENSION IF NOT EXISTS vector');
     } finally {
       await bootstrap.end();
     }

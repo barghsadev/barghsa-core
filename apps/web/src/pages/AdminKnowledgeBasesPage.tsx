@@ -9,6 +9,12 @@ interface Entry {
   id: string;
   title: string;
   description: string;
+  sourceType?: 'document' | 'url' | 'api';
+  sourceConfig?: { urls?: string[]; apiUrl?: string };
+  contentState?: 'empty' | 'processing' | 'ready' | 'error';
+  chunkingStrategy?: { size: number; overlap: number };
+  vectorEmbeddingModel?: string | null;
+  isEnabled?: boolean;
   documentCount?: number;
   memberCount?: number;
 }
@@ -17,6 +23,28 @@ interface Detail extends Entry {
   documents?: { id: string; fileName: string; storageKey: string; processingStatus: string }[];
 }
 type Kind = 'knowledge-bases' | 'kb-groups';
+type Draft = {
+  id?: string;
+  title: string;
+  description: string;
+  sourceType: 'document' | 'url' | 'api';
+  sourceUrl: string;
+  chunkSize: number;
+  chunkOverlap: number;
+  vectorEmbeddingModel: string;
+};
+function draftFor(entry?: Entry): Draft {
+  return {
+    ...(entry ? { id: entry.id } : {}),
+    title: entry?.title ?? '',
+    description: entry?.description ?? '',
+    sourceType: entry?.sourceType ?? 'document',
+    sourceUrl: entry?.sourceConfig?.urls?.join('\n') ?? entry?.sourceConfig?.apiUrl ?? '',
+    chunkSize: entry?.chunkingStrategy?.size ?? 800,
+    chunkOverlap: entry?.chunkingStrategy?.overlap ?? 100,
+    vectorEmbeddingModel: entry?.vectorEmbeddingModel ?? '',
+  };
+}
 export default function AdminKnowledgeBasesPage() {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -26,9 +54,7 @@ export default function AdminKnowledgeBasesPage() {
     [kbs, setKbs] = useState<Entry[]>([]);
   const [selected, setSelected] = useState<string | null>(null),
     [detail, setDetail] = useState<Detail | null>(null);
-  const [draft, setDraft] = useState<{ id?: string; title: string; description: string } | null>(
-    null
-  );
+  const [draft, setDraft] = useState<Draft | null>(null);
   const [member, setMember] = useState(''),
     [revision, setRevision] = useState(0);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'denied'>('loading');
@@ -94,7 +120,26 @@ export default function AdminKnowledgeBasesPage() {
       draft.id ? 'PUT' : 'POST',
       label('save'),
       label('confirmSave'),
-      { title: draft.title.trim(), description: draft.description }
+      kind === 'kb-groups'
+        ? { title: draft.title.trim(), description: draft.description }
+        : {
+            title: draft.title.trim(),
+            description: draft.description,
+            sourceType: draft.sourceType,
+            sourceConfig:
+              draft.sourceType === 'url'
+                ? {
+                    urls: draft.sourceUrl
+                      .split(/\r?\n/)
+                      .map((url) => url.trim())
+                      .filter(Boolean),
+                  }
+                : draft.sourceType === 'api'
+                  ? { apiUrl: draft.sourceUrl.trim() }
+                  : {},
+            chunkingStrategy: { size: draft.chunkSize, overlap: draft.chunkOverlap },
+            vectorEmbeddingModel: draft.vectorEmbeddingModel.trim() || null,
+          }
     );
   }
   return (
@@ -135,7 +180,7 @@ export default function AdminKnowledgeBasesPage() {
       {state === 'ready' && (
         <>
           <div>
-            <Button onClick={() => setDraft({ title: '', description: '' })}>
+            <Button onClick={() => setDraft(draftFor())}>
               {label(kind === 'knowledge-bases' ? 'addKb' : 'addGroup')}
             </Button>
           </div>
@@ -165,6 +210,102 @@ export default function AdminKnowledgeBasesPage() {
                   onChange={(event) => setDraft({ ...draft, description: event.target.value })}
                 />
               </div>
+              {kind === 'knowledge-bases' && (
+                <>
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="kb-source-type">{label('sourceType')}</Label>
+                    <select
+                      id="kb-source-type"
+                      className="rounded-md border bg-background p-2"
+                      value={draft.sourceType}
+                      onChange={(event) =>
+                        setDraft({
+                          ...draft,
+                          sourceType: event.target.value as Draft['sourceType'],
+                        })
+                      }
+                    >
+                      <option value="document">{label('sourceDocument')}</option>
+                      <option value="url">{label('sourceUrl')}</option>
+                      <option value="api">{label('sourceApi')}</option>
+                    </select>
+                  </div>
+                  {draft.sourceType !== 'document' && (
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="kb-source-url">{label('sourceAddress')}</Label>
+                      {draft.sourceType === 'url' ? (
+                        <>
+                          <textarea
+                            id="kb-source-url"
+                            required
+                            maxLength={40960}
+                            rows={3}
+                            className="rounded-md border bg-background p-3"
+                            value={draft.sourceUrl}
+                            onChange={(event) =>
+                              setDraft({ ...draft, sourceUrl: event.target.value })
+                            }
+                          />
+                          <p className="text-sm text-muted-foreground">{label('sourceUrlsHelp')}</p>
+                        </>
+                      ) : (
+                        <Input
+                          id="kb-source-url"
+                          type="url"
+                          required
+                          maxLength={2048}
+                          placeholder="https://"
+                          value={draft.sourceUrl}
+                          onChange={(event) =>
+                            setDraft({ ...draft, sourceUrl: event.target.value })
+                          }
+                        />
+                      )}
+                    </div>
+                  )}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="kb-chunk-size">{label('chunkSize')}</Label>
+                      <Input
+                        id="kb-chunk-size"
+                        type="number"
+                        min={100}
+                        max={4000}
+                        required
+                        value={draft.chunkSize}
+                        onChange={(event) =>
+                          setDraft({ ...draft, chunkSize: Number(event.target.value) })
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="kb-chunk-overlap">{label('chunkOverlap')}</Label>
+                      <Input
+                        id="kb-chunk-overlap"
+                        type="number"
+                        min={0}
+                        max={1000}
+                        required
+                        value={draft.chunkOverlap}
+                        onChange={(event) =>
+                          setDraft({ ...draft, chunkOverlap: Number(event.target.value) })
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="kb-embedding-model">{label('embeddingModel')}</Label>
+                    <Input
+                      id="kb-embedding-model"
+                      maxLength={120}
+                      value={draft.vectorEmbeddingModel}
+                      onChange={(event) =>
+                        setDraft({ ...draft, vectorEmbeddingModel: event.target.value })
+                      }
+                    />
+                  </div>
+                </>
+              )}
               <div className="flex gap-2">
                 <Button type="submit" disabled={!draft.title.trim()}>
                   {label('save')}
@@ -189,6 +330,13 @@ export default function AdminKnowledgeBasesPage() {
                     {label(kind === 'knowledge-bases' ? 'documents' : 'members')}:{' '}
                     {numbers.number(row.documentCount ?? row.memberCount ?? 0)}
                   </p>
+                  {kind === 'knowledge-bases' && (
+                    <p className="text-sm text-muted-foreground">
+                      {label('contentState')}: {label(`state${row.contentState ?? 'empty'}`)}
+                      {' · '}
+                      {label(row.isEnabled ? 'enabled' : 'disabled')}
+                    </p>
+                  )}
                 </div>
                 <div className="flex shrink-0 flex-wrap gap-2">
                   <Button
@@ -200,9 +348,7 @@ export default function AdminKnowledgeBasesPage() {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() =>
-                      setDraft({ id: row.id, title: row.title, description: row.description })
-                    }
+                    onClick={() => setDraft(draftFor(row))}
                     aria-label={`${label('edit')} ${row.title}`}
                   >
                     {label('edit')}
@@ -228,6 +374,28 @@ export default function AdminKnowledgeBasesPage() {
           {detail && (
             <section aria-label={detail.title} className="flex flex-col gap-4 border-t pt-5">
               <h2 className="break-words text-xl font-semibold">{detail.title}</h2>
+              {kind === 'knowledge-bases' && (
+                <div className="flex items-center gap-3">
+                  <span>
+                    {label('contentState')}: {label(`state${detail.contentState ?? 'empty'}`)}
+                  </span>
+                  <Button
+                    variant="outline"
+                    disabled={detail.contentState !== 'ready'}
+                    onClick={() =>
+                      propose(
+                        `/api/admin/knowledge-bases/${detail.id}`,
+                        'PUT',
+                        label(detail.isEnabled ? 'disable' : 'enable'),
+                        label('confirmSave'),
+                        { isEnabled: !detail.isEnabled }
+                      )
+                    }
+                  >
+                    {label(detail.isEnabled ? 'disable' : 'enable')}
+                  </Button>
+                </div>
+              )}
               {kind === 'kb-groups' ? (
                 <>
                   <form

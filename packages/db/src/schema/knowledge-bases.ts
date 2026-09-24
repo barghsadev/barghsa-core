@@ -1,5 +1,16 @@
 import { sql } from 'drizzle-orm';
-import { bigint, index, pgTable, text, unique, uuid } from 'drizzle-orm/pg-core';
+import {
+  bigint,
+  boolean,
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  unique,
+  uuid,
+  vector,
+} from 'drizzle-orm/pg-core';
 import { uuidv7, timestamptz } from '../types.js';
 import { users } from './users.js';
 import { storageRecords } from './storage-record.js';
@@ -33,6 +44,24 @@ export const knowledgeBases = pgTable(
 
     /** Free-text description of the KB's purpose/content. */
     description: text('description').notNull().default(''),
+
+    sourceType: text('source_type', { enum: ['document', 'url', 'api'] })
+      .notNull()
+      .default('document'),
+    sourceConfig: jsonb('source_config')
+      .$type<{ urls?: string[]; apiUrl?: string }>()
+      .notNull()
+      .default({}),
+    contentState: text('content_state', { enum: ['empty', 'processing', 'ready', 'error'] })
+      .notNull()
+      .default('empty'),
+    contentError: text('content_error'),
+    chunkingStrategy: jsonb('chunking_strategy')
+      .$type<{ size: number; overlap: number }>()
+      .notNull()
+      .default({ size: 800, overlap: 100 }),
+    vectorEmbeddingModel: text('vector_embedding_model'),
+    isEnabled: boolean('is_enabled').notNull().default(false),
 
     /** Admin user who created this KB. */
     createdBy: text('created_by')
@@ -124,5 +153,25 @@ export const kbDocuments = pgTable(
     index('idx_kbd_processing_status')
       .on(table.processingStatus)
       .where(sql`processing_status IN ('pending', 'processing', 'failed')`),
+  ]
+);
+
+/** Retrieved passages. Embeddings use the configured 1536-dimensional model. */
+export const kbChunks = pgTable(
+  'kb_chunks',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    kbId: uuid('kb_id')
+      .notNull()
+      .references(() => knowledgeBases.id, { onDelete: 'cascade' }),
+    documentId: uuid('document_id').references(() => kbDocuments.id, { onDelete: 'cascade' }),
+    chunkIndex: integer('chunk_index').notNull(),
+    content: text('content').notNull(),
+    embedding: vector('embedding', { dimensions: 1536 }),
+    metadata: jsonb('metadata').$type<Record<string, unknown>>().notNull().default({}),
+  },
+  (table) => [
+    index('idx_kb_chunks_kb_id').on(table.kbId),
+    index('idx_kb_chunks_document_id').on(table.documentId),
   ]
 );

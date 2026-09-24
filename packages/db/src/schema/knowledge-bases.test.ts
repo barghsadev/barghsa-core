@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { knowledgeBases, kbDocuments } from './knowledge-bases.js';
+import { knowledgeBases, kbDocuments, kbChunks } from './knowledge-bases.js';
 import { kbGroups, kbGroupMembers } from './kb-groups.js';
 
 /**
@@ -21,6 +21,10 @@ const MIGRATION = readFileSync(
   join(__dirname, '../../drizzle', '0043_create_knowledge_bases.sql'),
   'utf8'
 );
+const FOUNDATION_MIGRATION = readFileSync(
+  join(__dirname, '../../drizzle/production', '0210_knowledge_base_foundation.sql'),
+  'utf8'
+);
 
 /** All four tables must be created by migration 0043. */
 const TABLES = ['knowledge_bases', 'kb_documents', 'kb_groups', 'kb_group_members'] as const;
@@ -32,6 +36,22 @@ describe.each(TABLES)('0043 creates %s', (table) => {
 });
 
 describe('knowledge base schema (T-09.11.02)', () => {
+  it('declares the retrieval foundation and pgvector migration', () => {
+    for (const column of [
+      'sourceType',
+      'sourceConfig',
+      'contentState',
+      'chunkingStrategy',
+      'vectorEmbeddingModel',
+      'isEnabled',
+    ])
+      expect(Object.keys(knowledgeBases)).toContain(column);
+    for (const column of ['kbId', 'documentId', 'chunkIndex', 'content', 'embedding', 'metadata'])
+      expect(Object.keys(kbChunks)).toContain(column);
+    expect(FOUNDATION_MIGRATION).toContain('CREATE EXTENSION IF NOT EXISTS vector');
+    expect(FOUNDATION_MIGRATION).toContain('USING hnsw');
+    expect(FOUNDATION_MIGRATION).toContain('kb_enabled_requires_ready');
+  });
   it('declares the domain columns expected by the service layer', () => {
     const kbColumns = Object.keys(knowledgeBases);
     for (const column of ['id', 'title', 'description', 'createdBy', 'createdAt', 'updatedAt']) {

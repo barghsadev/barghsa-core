@@ -33,18 +33,49 @@ import {
 
 const titleSchema = z.string().trim().min(1, 'Title is required').max(120);
 const descriptionSchema = z.string().max(2000).default('');
+const sourceTypeSchema = z.enum(['document', 'url', 'api']);
+const sourceConfigSchema = z
+  .object({
+    urls: z.array(z.string().url().startsWith('https://').max(2048)).max(20).optional(),
+    apiUrl: z.string().url().startsWith('https://').max(2048).optional(),
+  })
+  .strict();
+const chunkingStrategySchema = z
+  .object({
+    size: z.number().int().min(100).max(4000),
+    overlap: z.number().int().min(0).max(1000),
+  })
+  .strict()
+  .refine((value) => value.overlap < value.size);
+const embeddingModelSchema = z.string().trim().min(1).max(120).nullable();
 
 export const CreateKnowledgeBaseSchema = z
   .object({
     title: titleSchema,
     description: descriptionSchema.optional(),
+    sourceType: sourceTypeSchema.default('document'),
+    sourceConfig: sourceConfigSchema.default({}),
+    chunkingStrategy: chunkingStrategySchema.default({ size: 800, overlap: 100 }),
+    vectorEmbeddingModel: embeddingModelSchema.default(null),
   })
-  .strict();
+  .strict()
+  .refine(
+    (value) =>
+      value.sourceType === 'document' ||
+      (value.sourceType === 'url' && Boolean(value.sourceConfig.urls?.length)) ||
+      (value.sourceType === 'api' && Boolean(value.sourceConfig.apiUrl)),
+    'A source address is required'
+  );
 
 export const UpdateKnowledgeBaseSchema = z
   .object({
     title: titleSchema.optional(),
     description: z.string().max(2000).optional(),
+    sourceType: sourceTypeSchema.optional(),
+    sourceConfig: sourceConfigSchema.optional(),
+    chunkingStrategy: chunkingStrategySchema.optional(),
+    vectorEmbeddingModel: embeddingModelSchema.optional(),
+    isEnabled: z.boolean().optional(),
   })
   .strict()
   .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
@@ -157,7 +188,7 @@ export class KnowledgeBasesController {
   @ApiResponse({ status: 201, description: 'Knowledge base created.' })
   async create(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateKnowledgeBaseSchema>
+    @Body() body: z.input<typeof CreateKnowledgeBaseSchema>
   ): Promise<KbDto> {
     this.assertKbPermission(req);
     const parsed = CreateKnowledgeBaseSchema.safeParse(body);
@@ -167,6 +198,10 @@ export class KnowledgeBasesController {
     return this.service.createKb({
       title: parsed.data.title,
       description: parsed.data.description ?? '',
+      sourceType: parsed.data.sourceType,
+      sourceConfig: parsed.data.sourceConfig,
+      chunkingStrategy: parsed.data.chunkingStrategy,
+      vectorEmbeddingModel: parsed.data.vectorEmbeddingModel,
       actorUserId: req.session.userId,
       session: req.session,
       ip: requestIp(req),
@@ -192,6 +227,15 @@ export class KnowledgeBasesController {
     return this.service.updateKb(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
       ...(parsed.data.description !== undefined ? { description: parsed.data.description } : {}),
+      ...(parsed.data.sourceType !== undefined ? { sourceType: parsed.data.sourceType } : {}),
+      ...(parsed.data.sourceConfig !== undefined ? { sourceConfig: parsed.data.sourceConfig } : {}),
+      ...(parsed.data.chunkingStrategy !== undefined
+        ? { chunkingStrategy: parsed.data.chunkingStrategy }
+        : {}),
+      ...(parsed.data.vectorEmbeddingModel !== undefined
+        ? { vectorEmbeddingModel: parsed.data.vectorEmbeddingModel }
+        : {}),
+      ...(parsed.data.isEnabled !== undefined ? { isEnabled: parsed.data.isEnabled } : {}),
       actorUserId: req.session.userId,
       session: req.session,
       ip: requestIp(req),

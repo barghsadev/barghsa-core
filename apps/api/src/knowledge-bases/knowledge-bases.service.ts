@@ -39,6 +39,13 @@ export interface KbDto {
   id: string;
   title: string;
   description: string;
+  sourceType: 'document' | 'url' | 'api';
+  sourceConfig: { urls?: string[] | undefined; apiUrl?: string | undefined };
+  contentState: 'empty' | 'processing' | 'ready' | 'error';
+  contentError: string | null;
+  chunkingStrategy: { size: number; overlap: number };
+  vectorEmbeddingModel: string | null;
+  isEnabled: boolean;
   /** Number of attached documents (chunk/embed pending or done). */
   documentCount: number;
   /** Number of KB groups this KB belongs to. */
@@ -100,6 +107,10 @@ export interface KbGroupDetailDto extends KbGroupDto {
 export interface CreateKbInput {
   title: string;
   description: string;
+  sourceType?: 'document' | 'url' | 'api';
+  sourceConfig?: { urls?: string[] | undefined; apiUrl?: string | undefined };
+  chunkingStrategy?: { size: number; overlap: number };
+  vectorEmbeddingModel?: string | null;
   actorUserId: string;
   session: MutationSession;
   ip: string;
@@ -108,6 +119,11 @@ export interface CreateKbInput {
 export interface UpdateKbInput {
   title?: string;
   description?: string;
+  sourceType?: 'document' | 'url' | 'api';
+  sourceConfig?: { urls?: string[] | undefined; apiUrl?: string | undefined };
+  chunkingStrategy?: { size: number; overlap: number };
+  vectorEmbeddingModel?: string | null;
+  isEnabled?: boolean;
   actorUserId: string;
   session: MutationSession;
   ip: string;
@@ -147,20 +163,22 @@ export interface AddGroupMemberInput {
 
 // ─── Internal row shapes (snake_case, as returned by postgres) ─────────────
 
-interface KbRow {
-  id: string;
-  title: string;
-  description: string;
+interface KbRow extends KbBaseRow {
   document_count: number;
   group_count: number;
-  created_at: string;
-  updated_at: string;
 }
 
 interface KbBaseRow {
   id: string;
   title: string;
   description: string;
+  source_type: 'document' | 'url' | 'api';
+  source_config: { urls?: string[]; apiUrl?: string };
+  content_state: 'empty' | 'processing' | 'ready' | 'error';
+  content_error: string | null;
+  chunking_strategy: { size: number; overlap: number };
+  vector_embedding_model: string | null;
+  is_enabled: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -220,7 +238,7 @@ export class KnowledgeBasesService {
   /** List all KBs, newest first, with document and group counts. */
   async listKbs(): Promise<KbDto[]> {
     const result = await getDbPool().query<KbRow>(
-      `SELECT kb.id, kb.title, kb.description, kb.created_at, kb.updated_at,
+      `SELECT kb.*,
               COUNT(DISTINCT d.id)::int  AS document_count,
               COUNT(DISTINCT m.group_id)::int AS group_count
          FROM knowledge_bases kb
@@ -272,10 +290,22 @@ export class KnowledgeBasesService {
       const now = new Date();
 
       const result = await client.query<KbBaseRow>(
-        `INSERT INTO knowledge_bases (id, title, description, created_by, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $5)
-         RETURNING id, title, description, created_at, updated_at`,
-        [id, input.title, input.description, input.actorUserId, now]
+        `INSERT INTO knowledge_bases
+           (id, title, description, source_type, source_config, chunking_strategy,
+            vector_embedding_model, created_by, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5::jsonb, $6::jsonb, $7, $8, $9, $9)
+         RETURNING *`,
+        [
+          id,
+          input.title,
+          input.description,
+          input.sourceType ?? 'document',
+          JSON.stringify(input.sourceConfig ?? {}),
+          JSON.stringify(input.chunkingStrategy ?? { size: 800, overlap: 100 }),
+          input.vectorEmbeddingModel ?? null,
+          input.actorUserId,
+          now,
+        ]
       );
       const row = result.rows[0];
       if (!row) {
@@ -310,6 +340,18 @@ export class KnowledgeBasesService {
       const existing = await this.findKb(id, client);
       if (!existing) throw this.kbNotFound(id);
 
+      const sourceType = input.sourceType ?? existing.source_type;
+      const sourceConfig = input.sourceConfig ?? existing.source_config;
+      if (
+        (sourceType === 'url' && !sourceConfig.urls?.length) ||
+        (sourceType === 'api' && !sourceConfig.apiUrl)
+      ) {
+        throw new HttpException(
+          { statusCode: 400, error: 'KB_SOURCE_REQUIRED', message: 'A source address is required' },
+          400
+        );
+      }
+
       const fields: string[] = [];
       const values: unknown[] = [];
       let param = 1;
@@ -320,6 +362,66 @@ export class KnowledgeBasesService {
 
       if (input.title !== undefined) push('title', input.title);
       if (input.description !== undefined) push('description', input.description);
+      const sourceChanged =
+        (input.sourceType !== undefined && input.sourceType !== existing.source_type) ||
+        (input.sourceConfig !== undefined &&
+          JSON.stringify(input.sourceConfig) !== JSON.stringify(existing.source_config)) ||
+        (input.chunkingStrategy !== undefined &&
+          JSON.stringify(input.chunkingStrategy) !== JSON.stringify(existing.chunking_strategy)) ||
+        (input.vectorEmbeddingModel !== undefined &&
+          input.vectorEmbeddingModel !== existing.vector_embedding_model);
+      if (sourceChanged && input.isEnabled) {
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'KB_REPROCESS_REQUIRED',
+            message: 'Process changed content before enabling this knowledge base',
+          },
+          409
+        );
+      }
+      if (input.sourceType !== undefined && input.sourceType !== existing.source_type)
+        push('source_type', input.sourceType);
+      if (
+        input.sourceConfig !== undefined &&
+        JSON.stringify(input.sourceConfig) !== JSON.stringify(existing.source_config)
+      )
+        push('source_config', JSON.stringify(input.sourceConfig));
+      if (
+        input.chunkingStrategy !== undefined &&
+        JSON.stringify(input.chunkingStrategy) !== JSON.stringify(existing.chunking_strategy)
+      )
+        push('chunking_strategy', JSON.stringify(input.chunkingStrategy));
+      if (
+        input.vectorEmbeddingModel !== undefined &&
+        input.vectorEmbeddingModel !== existing.vector_embedding_model
+      )
+        push('vector_embedding_model', input.vectorEmbeddingModel);
+      if (input.isEnabled !== undefined) {
+        if (input.isEnabled && existing.content_state !== 'ready') {
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: 'KB_NOT_READY',
+              message: 'Process content before enabling this knowledge base',
+            },
+            409
+          );
+        }
+        push('is_enabled', input.isEnabled);
+      }
+      if (sourceChanged) {
+        push('content_state', 'empty');
+        push('content_error', null);
+        push('is_enabled', false);
+        await client.query('DELETE FROM kb_chunks WHERE kb_id=$1', [id]);
+        if (input.sourceType !== undefined && input.sourceType !== 'document')
+          await client.query('DELETE FROM kb_documents WHERE kb_id=$1', [id]);
+        await client.query(
+          "UPDATE kb_documents SET processing_status='pending',processing_error=NULL WHERE kb_id=$1",
+          [id]
+        );
+      }
       if (fields.length === 0) return this.getKb(id, client);
 
       fields.push(`updated_at = $${param++}`);
@@ -329,7 +431,7 @@ export class KnowledgeBasesService {
       const result = await client.query<KbBaseRow>(
         `UPDATE knowledge_bases SET ${fields.join(', ')}
           WHERE id = $${param}
-          RETURNING id, title, description, created_at, updated_at`,
+          RETURNING *`,
         values
       );
       const row = result.rows[0];
@@ -426,6 +528,16 @@ export class KnowledgeBasesService {
     return this.withTransaction(input.actorUserId, input.session, async (client, verifiedAt) => {
       const kb = await this.findKb(input.kbId, client);
       if (!kb) throw this.kbNotFound(input.kbId);
+      if (kb.source_type !== 'document') {
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'KB_SOURCE_MISMATCH',
+            message: 'Only document knowledge bases accept uploaded files',
+          },
+          409
+        );
+      }
 
       const record = await this.findStorageRecord(input.storageKey, client);
       if (!record) {
@@ -489,6 +601,15 @@ export class KnowledgeBasesService {
         ]
       );
       if (result.rows[0]) {
+        await client.query(
+          "UPDATE knowledge_bases SET content_state='empty',content_error=NULL,is_enabled=false WHERE id=$1",
+          [input.kbId]
+        );
+        await client.query('DELETE FROM kb_chunks WHERE kb_id=$1', [input.kbId]);
+        await client.query(
+          "UPDATE kb_documents SET processing_status='pending',processing_error=NULL WHERE kb_id=$1",
+          [input.kbId]
+        );
         await this.recordAudit(
           verifiedAt,
           'kb_document_attached',
@@ -553,6 +674,15 @@ export class KnowledgeBasesService {
         documentId,
         kbId,
       ]);
+      await client.query(
+        "UPDATE knowledge_bases SET content_state='empty',content_error=NULL,is_enabled=false WHERE id=$1",
+        [kbId]
+      );
+      await client.query('DELETE FROM kb_chunks WHERE kb_id=$1', [kbId]);
+      await client.query(
+        "UPDATE kb_documents SET processing_status='pending',processing_error=NULL WHERE kb_id=$1",
+        [kbId]
+      );
       await this.recordAudit(
         verifiedAt,
         'kb_document_detached',
@@ -812,7 +942,7 @@ export class KnowledgeBasesService {
 
   private async findKb(id: string, client?: PoolClient): Promise<KbBaseRow | null> {
     const result = await (client ?? getDbPool()).query<KbBaseRow>(
-      `SELECT id, title, description, created_at, updated_at
+      `SELECT *
          FROM knowledge_bases
         WHERE id = $1${client ? ' FOR UPDATE' : ''}`,
       [id]
@@ -910,6 +1040,13 @@ export class KnowledgeBasesService {
       id: row.id,
       title: row.title,
       description: row.description,
+      sourceType: row.source_type,
+      sourceConfig: row.source_config,
+      contentState: row.content_state,
+      contentError: row.content_error,
+      chunkingStrategy: row.chunking_strategy,
+      vectorEmbeddingModel: row.vector_embedding_model,
+      isEnabled: row.is_enabled,
       documentCount: row.document_count ?? 0,
       groupCount: row.group_count ?? 0,
       createdAt: row.created_at,

@@ -1,17 +1,15 @@
 import AxeBuilder from '@axe-core/playwright';
+import type { Page } from '@playwright/test';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import { test, expect } from './coverage-fixture';
+async function switchLocale(page: Page, locale: string) {
+  if (locale === 'en') await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+}
 for (const locale of ['en', 'fa'])
   test(`Knowledge-base form retries captured input after password verification (${locale})`, async ({
     page,
   }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement) document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
     let failed = true,
       verified = false,
       denied = false;
@@ -34,6 +32,7 @@ for (const locale of ['en', 'fa'])
       return route.fulfill({ status: verified ? 200 : 401, json: {} });
     });
     await page.goto('/admin/knowledge-bases');
+    await switchLocale(page, locale);
     await expect(page.getByRole('alert')).toBeVisible();
     failed = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
@@ -41,6 +40,13 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'افزودن پایگاه دانش' : 'Add knowledge base', exact: true })
       .click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill('Local draft');
+    await page.getByLabel(fa ? 'نوع منبع' : 'Source type').selectOption('url');
+    await page
+      .getByLabel(fa ? 'نشانی امن منبع (HTTPS)' : 'Secure source address (HTTPS)')
+      .fill('https://example.org/guide\nhttps://example.org/faq');
+    await page.getByLabel(fa ? 'اندازه بخش (نویسه)' : 'Chunk size (characters)').fill('600');
+    await page.getByLabel(fa ? 'همپوشانی بخش‌ها' : 'Chunk overlap').fill('60');
+    await page.getByLabel(fa ? 'مدل بردارسازی' : 'Embedding model').fill('embed-1536');
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
     const dialog = page.getByRole('dialog'),
       confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
@@ -55,6 +61,10 @@ for (const locale of ['en', 'fa'])
       Array(2).fill({
         title: 'Local draft',
         description: '',
+        sourceType: 'url',
+        sourceConfig: { urls: ['https://example.org/guide', 'https://example.org/faq'] },
+        chunkingStrategy: { size: 600, overlap: 60 },
+        vectorEmbeddingModel: 'embed-1536',
       })
     );
     await expect(page.getByRole('alert')).toContainText(
@@ -65,12 +75,6 @@ for (const locale of ['en', 'fa'])
 for (const locale of ['en', 'fa'])
   test(`knowledge-base groups and document status (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
-    await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
-    }, locale);
     const kb = {
       id: '01900000-0000-7000-8000-000000000001',
       title: 'Operations',
@@ -138,6 +142,7 @@ for (const locale of ['en', 'fa'])
       return route.fulfill({ status: 404, json: {} });
     });
     await page.goto('/admin/knowledge-bases');
+    await switchLocale(page, locale);
     await expect(page.locator('main')).toContainText(fa ? '1' : '۱');
     await page
       .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Operations`, exact: true })
@@ -215,12 +220,6 @@ for (const locale of ['en', 'fa']) {
     }) => {
       const fa = locale === 'fa',
         key = 'uploads/document/new-guide.pdf';
-      await page.addInitScript((value) => {
-        new MutationObserver(() => (document.documentElement.lang = value)).observe(document, {
-          childList: true,
-        });
-        if (document.documentElement) document.documentElement.lang = value;
-      }, locale);
       await page
         .context()
         .addCookies([{ name: 'barghsa_csrf', value: 'kb-fixture', url: baseURL! }]);
@@ -307,6 +306,7 @@ for (const locale of ['en', 'fa']) {
         return route.fulfill({ status: 200 });
       });
       await page.goto('/admin/knowledge-bases');
+      await switchLocale(page, locale);
       await page
         .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} Operations`, exact: true })
         .click();
