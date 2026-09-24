@@ -5,6 +5,7 @@ import { Menu, X, ChevronRight, ArrowUpRight, type LucideIcon } from 'lucide-rea
 import { shellText } from '@barghsa/i18n/shell';
 import { BrandMark } from './BrandMark.js';
 import { LanguageSwitcher } from './LanguageSwitcher.js';
+import { ThemeSwitcher } from './ThemeSwitcher.js';
 
 export interface NavigationGroup {
   label: string;
@@ -79,6 +80,7 @@ export function AppShell({
           ) : null}
         </div>
         <div className="ms-auto flex shrink-0 items-center gap-1 sm:gap-2">
+          <ThemeSwitcher />
           <LanguageSwitcher />
           {actions}
           <Button

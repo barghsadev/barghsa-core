@@ -2,7 +2,9 @@
 
 ## Current manual batch — September 24, 2026
 
-[Admin theme tokens](batches/2026-09-24-admin-theme-tokens.md) add validated background, font, corner-radius and spacing overrides to the branding draft, preview, public response and applied CSS. The bilingual Chromium branding flow and focused tests pass. Per-user light/dark preference remains the next part of `T-06.03.05`.
+[Per-user display theme](batches/2026-09-24-user-theme-preference.md) completes `T-06.03.05`: signed-in users can save Default, Light or Dark, with an audited account setting that survives reload and respects the active admin default. PostgreSQL and bilingual browser checks pass.
+
+[Admin theme tokens](batches/2026-09-24-admin-theme-tokens.md) add validated background, font, corner-radius and spacing overrides to the branding draft, preview, public response and applied CSS.
 
 [Electricity order revisions](batches/2026-09-24-electricity-order-revisions.md) let customers reprice and resubmit simple or advanced orders after staff request changes. The transaction preserves previous lines and contract versions, replaces the unpaid invoice, and returns the order to staff review.
 

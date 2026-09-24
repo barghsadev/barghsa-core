@@ -38,12 +38,94 @@ const marketingConsentInput = z
   .strict()
   .refine((value) => value.email !== undefined || value.sms !== undefined);
 const OWNED_CONSENT_PROFILE_SQL = `SELECT id FROM (${ACTIVE_PROFILE_SQL}) selected WHERE is_owner`;
+const themeModeInput = z.object({ mode: z.enum(['light', 'dark']).nullable() }).strict();
 
 @ApiTags('User Settings')
 @Controller('api/user/settings')
 @UseGuards(SessionAuthGuard)
 export class UserSettingsController {
   private readonly logger = new Logger(UserSettingsController.name);
+
+  @Get('theme')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'settings:theme:get', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Get the current user theme override' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      properties: { mode: { type: 'string', enum: ['light', 'dark'], nullable: true } },
+    },
+  })
+  async getTheme(@Req() req: AuthenticatedRequest) {
+    const result = await getDbPool().query(
+      'SELECT theme_mode,disabled_at FROM users WHERE user_id=$1',
+      [req.session.userId]
+    );
+    const user = result.rows[0];
+    if (!user || user.disabled_at)
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+    return { mode: user.theme_mode as 'light' | 'dark' | null };
+  }
+
+  @Put('theme')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'settings:theme:put', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Set or clear the current user theme override' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['mode'],
+      properties: { mode: { type: 'string', enum: ['light', 'dark'], nullable: true } },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      properties: { mode: { type: 'string', enum: ['light', 'dark'], nullable: true } },
+    },
+  })
+  async updateTheme(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    const parsed = themeModeInput.safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const account = (
+        await client.query('SELECT theme_mode,disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
+          req.session.userId,
+        ])
+      ).rows[0];
+      if (!account || account.disabled_at)
+        throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+      await requireCurrentSession(client, req.session);
+      await client.query('UPDATE users SET theme_mode=$1,updated_at=NOW() WHERE user_id=$2', [
+        parsed.data.mode,
+        req.session.userId,
+      ]);
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+         VALUES ($1,$2,'theme_mode_changed',$3::jsonb,$4,$5,NOW())`,
+        [
+          uuidv7(),
+          req.session.userId,
+          JSON.stringify({ before: account.theme_mode, after: parsed.data.mode }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+          req.ip ?? null,
+        ]
+      );
+      await requireCurrentSession(client, req.session);
+      await client.query('COMMIT');
+      return { mode: parsed.data.mode };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 
   /**
    * GET /api/user/settings/notifications

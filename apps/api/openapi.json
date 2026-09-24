@@ -23798,6 +23798,91 @@
         ]
       }
     },
+    "/api/user/settings/theme": {
+      "get": {
+        "operationId": "UserSettingsController_getTheme",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "light",
+                        "dark"
+                      ],
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Get the current user theme override",
+        "tags": [
+          "User Settings"
+        ]
+      },
+      "put": {
+        "operationId": "UserSettingsController_updateTheme",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "mode": {
+                    "enum": [
+                      "light",
+                      "dark"
+                    ],
+                    "nullable": true,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "mode"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "light",
+                        "dark"
+                      ],
+                      "nullable": true,
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Set or clear the current user theme override",
+        "tags": [
+          "User Settings"
+        ]
+      }
+    },
     "/api/user/settings/timezone": {
       "get": {
         "operationId": "UserSettingsController_getTimezone",

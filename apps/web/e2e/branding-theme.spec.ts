@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { brandingText } from '@barghsa/i18n/branding';
+import { shellText } from '@barghsa/i18n/shell';
 import { test, expect } from './coverage-fixture';
 
 for (const locale of ['fa', 'en'] as const)
@@ -25,7 +26,14 @@ for (const locale of ['fa', 'en'] as const)
         faviconUrl: null,
         darkMode,
       };
+      let preference: 'light' | 'dark' | null = null;
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await page.route('**/api/user/settings/theme', async (route) => {
+        if (route.request().method() === 'PUT') {
+          preference = (route.request().postDataJSON() as { mode: typeof preference }).mode;
+        }
+        await route.fulfill({ json: { mode: preference } });
+      });
       await page.route('**/api/auth/user', (route) =>
         route.fulfill({ json: { userId: 'owner', requiresTosAcceptance: false } })
       );
@@ -96,6 +104,15 @@ for (const locale of ['fa', 'en'] as const)
       await expect(toggle).toBeChecked({ checked: !darkMode });
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       await scan();
+      const theme = page.getByRole('combobox', { name: shellText('theme', locale) });
+      await expect(theme).toBeEnabled();
+      await theme.selectOption(darkMode ? 'light' : 'dark');
+      await expect(page.locator('html')).toHaveClass(darkMode ? /^(?!.*\bdark\b)/ : /dark/);
+      await page.reload();
+      await expect(theme).toHaveValue(darkMode ? 'light' : 'dark');
+      await expect(page.locator('html')).toHaveClass(darkMode ? /^(?!.*\bdark\b)/ : /dark/);
+      await theme.selectOption('default');
+      await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       await preview.screenshot({ path: `/tmp/r03-branding-preview-${locale}-${darkMode}.png` });
       await page.screenshot({
         path: `/tmp/r03-branding-${locale}-${darkMode}.png`,

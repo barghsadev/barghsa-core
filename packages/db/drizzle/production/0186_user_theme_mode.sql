@@ -1,0 +1,2 @@
+ALTER TABLE "users" ADD COLUMN "theme_mode" text;--> statement-breakpoint
+ALTER TABLE "users" ADD CONSTRAINT "users_theme_mode_check" CHECK ("users"."theme_mode" IS NULL OR "users"."theme_mode" IN ('light', 'dark'));

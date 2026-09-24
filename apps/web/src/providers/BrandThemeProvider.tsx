@@ -46,11 +46,15 @@ const DEFAULT_BRAND_CONFIG: BrandConfig = {
 interface BrandThemeContextValue {
   brandConfig: BrandConfig;
   loading: boolean;
+  userMode: 'light' | 'dark' | null;
+  setUserMode: (mode: 'light' | 'dark' | null) => void;
 }
 
 const BrandThemeContext = createContext<BrandThemeContextValue>({
   brandConfig: DEFAULT_BRAND_CONFIG,
   loading: true,
+  userMode: null,
+  setUserMode: () => {},
 });
 
 /**
@@ -154,6 +158,7 @@ export function parseBrandConfig(value: unknown): BrandConfig | null {
 export function BrandThemeProvider({ children }: { children: ReactNode }) {
   const [brandConfig, setBrandConfig] = useState<BrandConfig>(DEFAULT_BRAND_CONFIG);
   const [loading, setLoading] = useState(true);
+  const [userMode, setUserMode] = useState<'light' | 'dark' | null>(null);
   useEffect(() => {
     const root = document.documentElement;
     const colors = ['primary', 'secondary', 'accent'] as const;
@@ -207,7 +212,6 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       );
       root.style.setProperty('--radius', `${config.borderRadiusRem}rem`);
       root.style.setProperty('--spacing', `${0.25 * config.spacingScale}rem`);
-      root.classList.toggle('dark', config.darkMode);
       document.title = config.appTitle;
       if (config.faviconUrl) {
         if (!icon) {
@@ -253,6 +257,15 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       resetIcon();
     };
   }, []);
-  const value = useMemo(() => ({ brandConfig, loading }), [brandConfig, loading]);
+  useEffect(() => {
+    document.documentElement.classList.toggle(
+      'dark',
+      userMode === null ? brandConfig.darkMode : userMode === 'dark'
+    );
+  }, [brandConfig.darkMode, userMode]);
+  const value = useMemo(
+    () => ({ brandConfig, loading, userMode, setUserMode }),
+    [brandConfig, loading, userMode]
+  );
   return <BrandThemeContext.Provider value={value}>{children}</BrandThemeContext.Provider>;
 }
