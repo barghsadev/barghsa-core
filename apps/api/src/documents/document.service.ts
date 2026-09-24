@@ -504,6 +504,27 @@ export class DocumentService {
     );
   }
 
+  async preview(id: string, actor: DocumentActor, staff: boolean) {
+    const context = await this.context(id);
+    return documentAccess(
+      actor,
+      context.kind,
+      false,
+      staff,
+      context.profileId,
+      async (client, profileId) => {
+        const row = await load(client, id, profileId, staff);
+        if (
+          !row.document.storageKey ||
+          ['Uploading', 'PendingScan', 'Quarantined', 'Removed'].includes(row.document.state)
+        )
+          throw new ConflictException('Document is not available for preview');
+        return this.storage.preview(id, row.document.storageKey, row.document.detectedMime ?? '');
+      },
+      context.businessRecordId ?? undefined
+    );
+  }
+
   private async mutableContract(client: PoolClient, row: LinkedDocument, staff: boolean) {
     if (row.document.businessRecordType !== 'contract') return;
     if (

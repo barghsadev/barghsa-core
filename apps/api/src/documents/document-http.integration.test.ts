@@ -1,8 +1,10 @@
 import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
 import { createHash, randomUUID } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, expect, it } from 'vitest';
+import PDFDocument from 'pdfkit';
 import { GenericContainer, Wait, type StartedTestContainer } from 'testcontainers';
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { ContractService } from '../contract/contract.service.js';
@@ -20,7 +22,8 @@ let minio: StartedTestContainer;
 let s3: InstanceType<typeof S3Client>;
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
-const pdf = Buffer.from('%PDF-1.7\nDocument fixture\n%%EOF');
+let pdf: Buffer;
+const pdfRendererAvailable = spawnSync('pdftoppm', ['-v'], { stdio: 'ignore' }).status === 0;
 type Created = Awaited<ReturnType<DocumentService['create']>>;
 type DocumentDto = Awaited<ReturnType<DocumentService['confirm']>>;
 type DocumentDetail = Awaited<ReturnType<DocumentService['get']>>;
@@ -29,6 +32,15 @@ type DocumentDownload = Awaited<ReturnType<DocumentService['download']>>;
 type ContractDto = Awaited<ReturnType<ContractService['get']>>;
 
 beforeAll(async () => {
+  const pdfDocument = new PDFDocument();
+  const chunks: Buffer[] = [];
+  pdfDocument.on('data', (chunk: Buffer) => chunks.push(chunk));
+  const complete = new Promise<Buffer>((resolve) =>
+    pdfDocument.on('end', () => resolve(Buffer.concat(chunks)))
+  );
+  pdfDocument.text('Document fixture');
+  pdfDocument.end();
+  pdf = await complete;
   minio = await new GenericContainer(
     'pgsty/minio@sha256:b6bfe7239bfc83fb90d31612d9704d86039dd714f7904b3f1ad68f211e602372'
   )
@@ -172,6 +184,12 @@ it('uploads real bytes, reviews a document, preserves replacement history and re
     await send(`documents/${document.id}/download`, f.user)
   ).json()) as DocumentDownload;
   expect(await (await fetch(download.url)).text()).toBe(pdf.toString());
+  if (pdfRendererAvailable) {
+    const preview = (await (
+      await send(`documents/${document.id}/preview`, f.user)
+    ).json()) as DocumentDownload;
+    expect((await fetch(preview.url)).headers.get('content-type')).toContain('image/png');
+  }
   expect(
     (
       await fetch(created.upload.presignedUrl, {
@@ -209,6 +227,7 @@ it('uploads real bytes, reviews a document, preserves replacement history and re
     await send(`admin/documents/${document.id}/download`, 'document-legal')
   ).json()) as DocumentDownload;
   expect(await (await fetch(archive.url)).text()).toBe(pdf.toString());
+  expect((await send(`admin/documents/${document.id}/preview`, 'document-legal')).status).toBe(409);
 });
 
 it('lets a saving customer replace or soft-delete only their available order files', async () => {
@@ -360,6 +379,7 @@ it('isolates profiles, enforces staff capabilities and blocks quarantined downlo
   const document = await confirm(await create(f.user), f.user);
   expect((await send(`documents/${document.id}`, other.user)).status).toBe(404);
   expect((await send(`documents/${document.id}/download`, other.user)).status).toBe(404);
+  expect((await send(`documents/${document.id}/preview`, other.user)).status).toBe(404);
   expect((await send(`admin/documents/${document.id}`, 'document-finance')).status).toBe(403);
   expect(
     (await send(`documents/${document.id}/approve`, f.user, 'POST', command(document.revision)))

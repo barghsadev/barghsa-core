@@ -239,7 +239,7 @@ it('blocks unsafe preview links and hides mutation controls on customer original
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string) =>
-      url.endsWith('/download')
+      url.endsWith('/download') || url.endsWith('/preview')
         ? response({ url: 'javascript:alert(1)' })
         : response({
             ...row({ businessRecordType: 'contract', contractRole: 'original' }),
@@ -260,8 +260,36 @@ it('blocks unsafe preview links and hides mutation controls on customer original
   expect(container.textContent).not.toContain('Submit for review');
   expect(container.textContent).not.toContain('Replace document');
   await click('Get download link');
+  await click('Preview');
   expect(container.querySelector('iframe, img, a')).toBeNull();
   expect(container.querySelector('[role=alert]')).not.toBeNull();
+});
+
+it('shows a source-backed PDF thumbnail from the authorized preview endpoint', async () => {
+  const fetcher = vi.fn(async (url: string) =>
+    url.endsWith('/preview')
+      ? response({ url: 'https://storage.example/previews/document.png' })
+      : response({ ...row(), history: [] })
+  );
+  vi.stubGlobal('fetch', fetcher);
+  await render(
+    <DocumentDetail
+      id={DOCUMENT}
+      staff={false}
+      onClose={vi.fn()}
+      onChanged={vi.fn()}
+      onReplace={vi.fn()}
+      onPrevious={vi.fn()}
+    />
+  );
+  await click('Preview');
+  expect(fetcher).toHaveBeenCalledWith(
+    expect.stringContaining(`/api/documents/${DOCUMENT}/preview`),
+    expect.anything()
+  );
+  expect(container.querySelector('img')?.getAttribute('src')).toBe(
+    'https://storage.example/previews/document.png'
+  );
 });
 
 it.each([

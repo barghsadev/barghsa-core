@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Document preview derivatives](batches/2026-09-24-document-previews.md) add authorized, short-lived image and PDF thumbnails backed by sealed source objects, with bounded rendering and source-key cache invalidation.
+
 [Provider health visibility](batches/2026-09-24-provider-health-visibility.md) shows current email and SMS circuit state, recovery timing and last failure in the bilingual staff provider lists. It also updates the older SMS retry integration expectation to the new permanent dead-letter behavior found by CI.
 
 [Permanent provider failure handling](batches/2026-09-24-permanent-provider-failures.md) carries typed provider outcomes through notification dispatch, dead-letters explicit permanent failures after one attempt, and preserves transient backoff and uncertain-send reconciliation.

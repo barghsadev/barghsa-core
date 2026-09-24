@@ -61,6 +61,10 @@ export class DocumentController {
   download(@Param('id', new ParseUUIDPipe()) id: string, @Req() request: AuthenticatedRequest) {
     return this.documents.download(id, request.session, false);
   }
+  @Get(':id/preview')
+  preview(@Param('id', new ParseUUIDPipe()) id: string, @Req() request: AuthenticatedRequest) {
+    return this.documents.preview(id, request.session, false);
+  }
   @Post(':id/confirm')
   @HttpCode(200)
   confirm(
@@ -120,6 +124,10 @@ export class StaffDocumentController {
   @Get(':id/download')
   download(@Param('id', new ParseUUIDPipe()) id: string, @Req() request: AuthenticatedRequest) {
     return this.documents.download(id, request.session, true);
+  }
+  @Get(':id/preview')
+  preview(@Param('id', new ParseUUIDPipe()) id: string, @Req() request: AuthenticatedRequest) {
+    return this.documents.preview(id, request.session, true);
   }
   @Post(':id/confirm')
   @HttpCode(200)

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -56,12 +56,20 @@ export function DocumentDetail({
   const [reasonMissing, setReasonMissing] = useState(false);
   const [action, setAction] = useState<TeamAction | null>(null);
   const [download, setDownload] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [previewing, setPreviewing] = useState(false);
+  const [previewError, setPreviewError] = useState(false);
+  const previewController = useRef<AbortController | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState(false);
   useEffect(() => {
     const controller = new AbortController();
+    previewController.current?.abort();
     setDocument(null);
     setDownload(null);
+    setPreview(null);
+    setPreviewing(false);
+    setPreviewError(false);
     setError(false);
     void documentRequest<Detail>(`${documentBase(staff)}/${encodeURIComponent(id)}`, {
       signal: controller.signal,
@@ -72,7 +80,10 @@ export function DocumentDetail({
       .catch(() => {
         if (!controller.signal.aborted) setError(true);
       });
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      previewController.current?.abort();
+    };
   }, [id, staff, reload]);
 
   async function getDownload() {
@@ -87,6 +98,23 @@ export function DocumentDetail({
       setDownloadError(true);
     } finally {
       setDownloading(false);
+    }
+  }
+  async function getPreview() {
+    const controller = new AbortController();
+    previewController.current = controller;
+    setPreviewing(true);
+    setPreviewError(false);
+    try {
+      const data = await documentRequest<{ url: string }>(
+        `${documentBase(staff)}/${encodeURIComponent(id)}/preview`,
+        { signal: controller.signal }
+      );
+      if (!controller.signal.aborted) setPreview(documentUrl(data.url));
+    } catch {
+      if (!controller.signal.aborted) setPreviewError(true);
+    } finally {
+      if (!controller.signal.aborted) setPreviewing(false);
     }
   }
   function choose(next: DocumentAction) {
@@ -209,6 +237,15 @@ export function DocumentDetail({
             <p className="text-sm text-muted-foreground">{word('removedNotice')}</p>
           ) : null}
           <div className="flex flex-wrap gap-2">
+            {readable &&
+            document.state !== 'Removed' &&
+            ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'].includes(
+              document.detectedMime ?? ''
+            ) ? (
+              <Button variant="outline" disabled={previewing} onClick={() => void getPreview()}>
+                {word('preview')}
+              </Button>
+            ) : null}
             {readable ? (
               <Button variant="outline" disabled={downloading} onClick={() => void getDownload()}>
                 {word('download')}
@@ -237,6 +274,15 @@ export function DocumentDetail({
             ) : null}
           </div>
           {downloadError ? <p role="alert">{word('error')}</p> : null}
+          {previewError ? <p role="alert">{word('previewUnavailable')}</p> : null}
+          {preview ? (
+            <img
+              src={preview}
+              alt={document.originalName}
+              referrerPolicy="no-referrer"
+              className="max-h-[32rem] max-w-full object-contain"
+            />
+          ) : null}
           {download ? (
             <div className="flex flex-col gap-3">
               <a

@@ -5723,6 +5723,29 @@
         ]
       }
     },
+    "/api/admin/documents/{id}/preview": {
+      "get": {
+        "operationId": "StaffDocumentController_preview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "StaffDocument"
+        ]
+      }
+    },
     "/api/admin/documents/{id}/{action}": {
       "post": {
         "operationId": "StaffDocumentController_act",
@@ -16966,6 +16989,29 @@
     "/api/documents/{id}/download": {
       "get": {
         "operationId": "DocumentController_download",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Document"
+        ]
+      }
+    },
+    "/api/documents/{id}/preview": {
+      "get": {
+        "operationId": "DocumentController_preview",
         "parameters": [
           {
             "in": "path",
