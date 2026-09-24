@@ -22,12 +22,19 @@ export const en = {
   amendmentDraftNotice: 'This amendment is an internal draft and is not visible to the customer.',
   amendmentPublishedNotice:
     'The customer can review this amendment. The accepted version remains effective meanwhile.',
+  amendmentSigningNotice:
+    'The customer accepted the amendment. The accepted version remains effective until the signed copy is recorded.',
   amendmentAwaitingAcceptance: 'Amendment awaiting your acceptance',
+  amendmentAwaitingSignature: 'Amendment awaiting signature',
   amendmentEffectiveNotice:
-    'Your current contract remains effective until you accept the proposed version.',
+    'Your current contract remains effective until the proposed version takes effect.',
   amendmentViewEffective: 'View effective version',
   amendmentAcceptNotice:
     'Accepting this amendment makes the displayed version effective. It does not collect a payment.',
+  amendmentAcceptForSignatureNotice:
+    'Accepting this amendment starts its signing step. Your current contract remains effective until signing is complete.',
+  amendmentSignatureNotice:
+    'The accepted contract remains effective until the approved signed amendment is recorded. This step does not collect a payment.',
   'amendment-publish': 'Send amendment to customer',
   draftSave: 'Save new version',
   draftReview: 'Review draft changes',
@@ -316,11 +323,18 @@ export const fa: Record<keyof typeof en, string> = {
   amendmentDraftNotice: 'این الحاقیه پیش‌نویس داخلی است و مشتری آن را نمی‌بیند.',
   amendmentPublishedNotice:
     'مشتری می‌تواند این الحاقیه را بررسی کند. تا آن زمان نسخه پذیرفته‌شده معتبر می‌ماند.',
+  amendmentSigningNotice:
+    'مشتری الحاقیه را پذیرفته است. نسخه پذیرفته‌شده تا ثبت نسخه امضاشده معتبر می‌ماند.',
   amendmentAwaitingAcceptance: 'الحاقیه در انتظار پذیرش شما',
-  amendmentEffectiveNotice: 'قرارداد فعلی شما تا زمان پذیرش نسخه پیشنهادی معتبر می‌ماند.',
+  amendmentAwaitingSignature: 'الحاقیه در انتظار امضا',
+  amendmentEffectiveNotice: 'قرارداد فعلی شما تا زمان اجرایی‌شدن نسخه پیشنهادی معتبر می‌ماند.',
   amendmentViewEffective: 'مشاهده نسخه معتبر',
   amendmentAcceptNotice:
     'با پذیرش این الحاقیه، نسخه نمایش‌داده‌شده معتبر می‌شود. در این مرحله وجهی دریافت نمی‌شود.',
+  amendmentAcceptForSignatureNotice:
+    'با پذیرش این الحاقیه، مرحله امضا آغاز می‌شود. قرارداد فعلی شما تا تکمیل امضا معتبر می‌ماند.',
+  amendmentSignatureNotice:
+    'قرارداد پذیرفته‌شده تا ثبت الحاقیه امضاشده معتبر می‌ماند. در این مرحله وجهی دریافت نمی‌شود.',
   'amendment-publish': 'ارسال الحاقیه برای مشتری',
   draftSave: 'ذخیره نسخه جدید',
   draftReview: 'بازبینی تغییرات پیش‌نویس',

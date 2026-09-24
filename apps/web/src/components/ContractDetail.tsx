@@ -163,9 +163,21 @@ export function ContractDetail({
   const isPendingAmendment = data
     ? staff
       ? data.contract.pendingAmendment?.versionId === data.version.id
-      : data.contract.amendment?.state === 'AwaitingCustomerAcceptance' &&
-        data.contract.version?.id === data.version.id
+      : ['AwaitingCustomerAcceptance', 'AwaitingSignature'].includes(
+          data.contract.amendment?.state ?? ''
+        ) && data.contract.version?.id === data.version.id
     : false;
+  const pendingState = staff
+    ? data?.contract.pendingAmendment?.state
+    : data?.contract.amendment?.state;
+  const pendingNotice =
+    pendingState === 'AwaitingSignature'
+      ? 'amendmentSignatureNotice'
+      : staff
+        ? 'amendmentPublishedNotice'
+        : data?.contract.amendment?.signatureRequired
+          ? 'amendmentAcceptForSignatureNotice'
+          : 'amendmentAcceptNotice';
   const nextAction = data ? customerContractNextAction(data.contract, signatureStatus) : null;
   return (
     <section
@@ -261,7 +273,9 @@ export function ContractDetail({
                   {word(
                     data.contract.pendingAmendment.state === 'Draft'
                       ? 'amendmentDraftNotice'
-                      : 'amendmentPublishedNotice'
+                      : data.contract.pendingAmendment.state === 'AwaitingSignature'
+                        ? 'amendmentSigningNotice'
+                        : 'amendmentPublishedNotice'
                   )}
                 </p>
               </div>
@@ -273,10 +287,19 @@ export function ContractDetail({
               </Button>
             </div>
           ) : null}
-          {!staff && data.contract.amendment?.state === 'AwaitingCustomerAcceptance' ? (
+          {!staff &&
+          ['AwaitingCustomerAcceptance', 'AwaitingSignature'].includes(
+            data.contract.amendment?.state ?? ''
+          ) ? (
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/40 p-3">
               <div>
-                <p className="font-medium">{word('amendmentAwaitingAcceptance')}</p>
+                <p className="font-medium">
+                  {word(
+                    data.contract.amendment?.state === 'AwaitingSignature'
+                      ? 'amendmentAwaitingSignature'
+                      : 'amendmentAwaitingAcceptance'
+                  )}
+                </p>
                 <p className="text-sm text-muted-foreground">{word('amendmentEffectiveNotice')}</p>
               </div>
               <Button
@@ -371,7 +394,7 @@ export function ContractDetail({
             </p>
           ) : null}
           <p className="text-sm text-muted-foreground">
-            {word(isPendingAmendment ? 'amendmentAcceptNotice' : 'acceptNotice')}
+            {word(isPendingAmendment ? pendingNotice : 'acceptNotice')}
           </p>
           {!staff &&
           data.contract.canAccept &&
@@ -494,7 +517,7 @@ export function ContractDetail({
               }}
             />
           ) : null}
-          {!isPendingAmendment ? (
+          {!isPendingAmendment || pendingState === 'AwaitingSignature' ? (
             <ContractSignaturePanel
               key={'signature:' + data.version.id + ':' + reload}
               id={id}
@@ -575,6 +598,9 @@ function ContractDocuments({
     [contract.profileId, contract.id, version.id]
   );
   const canUpload =
+    (isPendingAmendment &&
+      (staff ? contract.pendingAmendment?.state : contract.amendment?.state) ===
+        'AwaitingSignature') ||
     (staff && isPendingAmendment && contract.pendingAmendment?.state !== 'AwaitingSignature') ||
     (isCurrent &&
       (staff
@@ -587,7 +613,10 @@ function ContractDocuments({
       {canUpload && !role ? (
         <div className="flex flex-wrap gap-2">
           {(isPendingAmendment
-            ? (['amendment'] as const)
+            ? (staff ? contract.pendingAmendment?.state : contract.amendment?.state) ===
+              'AwaitingSignature'
+              ? (['signed'] as const)
+              : (['amendment'] as const)
             : staff
               ? (['original', 'signed', 'amendment'] as const)
               : (['signed'] as const)

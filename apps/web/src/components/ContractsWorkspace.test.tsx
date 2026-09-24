@@ -476,6 +476,43 @@ it.each(['en', 'fa'] as const)(
     expect(container.querySelector('input[type=checkbox]')).not.toBeNull();
   }
 );
+it.each(['en', 'fa'] as const)(
+  'shows signed-copy upload after accepting a signature-required amendment in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    vi.stubGlobal(
+      'fetch',
+      api(
+        detail({
+          state: 'Signed',
+          currentVersionId: OLD,
+          canAccept: false,
+          amendment: { state: 'AwaitingSignature', baseVersionId: OLD, signatureRequired: true },
+        })
+      )
+    );
+    await render(<ContractDetail id={ID} staff={false} onClose={() => {}} onChanged={() => {}} />);
+    expect(container.textContent).toContain(words.amendmentAwaitingSignature);
+    expect(container.textContent).toContain(words.amendmentSignatureNotice);
+    expect(
+      [...container.querySelectorAll('button')].some(
+        (item) => item.textContent === words.uploadSigned
+      )
+    ).toBe(true);
+    expect(container.textContent).not.toContain(words.uploadAmendment);
+    expect(
+      [...container.querySelectorAll('button')].some((item) => item.textContent === words.accept)
+    ).toBe(false);
+    await click(words.amendmentViewEffective);
+    expect(container.textContent).toContain('Earlier terms');
+    expect(
+      [...container.querySelectorAll('button')].some(
+        (item) => item.textContent === words.uploadSigned
+      )
+    ).toBe(false);
+  }
+);
 it('lets staff review and publish the exact draft amendment without changing the effective version', async () => {
   vi.stubGlobal(
     'fetch',

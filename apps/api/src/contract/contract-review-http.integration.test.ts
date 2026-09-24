@@ -360,7 +360,7 @@ it('carries the existing invoice and service period into an electricity amendmen
     state: 'Active',
   });
 });
-it('keeps signature-required amendments private until the signing workflow supports them', async () => {
+it('keeps the accepted solar version effective while its amendment awaits signing', async () => {
   const f = await fixture('solar');
   await publish(f);
   expect(
@@ -381,7 +381,7 @@ it('keeps signature-required amendments private until the signing workflow suppo
   expect(draft.status).toBe(201);
   const pending = ((await draft.json()) as ContractDto).pendingAmendment!;
   expect((await (await send('admin/contracts/' + f.row.id)).json()) as ContractDto).toMatchObject({
-    amendmentSupported: false,
+    amendmentSupported: true,
   });
   expect(
     (
@@ -391,17 +391,26 @@ it('keeps signature-required amendments private until the signing workflow suppo
         command(pending.versionId)
       )
     ).status
-  ).toBe(409);
+  ).toBe(200);
   expect(await (await customer(f)).json()).toMatchObject({
-    version: { id: f.row.currentVersionId },
+    version: { id: pending.versionId },
+    amendment: { state: 'AwaitingCustomerAcceptance', signatureRequired: true },
   });
   expect(
-    (
-      await http.pool.query('SELECT 1 FROM contract_publications WHERE version_id=$1', [
-        pending.versionId,
-      ])
-    ).rowCount
-  ).toBe(0);
+    (await send('contracts/' + f.row.id + '/accept', 'POST', command(pending.versionId), f.owner))
+      .status
+  ).toBe(200);
+  expect(await (await customer(f)).json()).toMatchObject({
+    currentVersionId: f.row.currentVersionId,
+    canAccept: false,
+    amendment: { state: 'AwaitingSignature', signatureRequired: true },
+    version: { id: pending.versionId },
+  });
+  expect((await (await send('admin/contracts/' + f.row.id)).json()) as ContractDto).toMatchObject({
+    state: 'Accepted',
+    currentVersionId: f.row.currentVersionId,
+    pendingAmendment: { state: 'AwaitingSignature', versionId: pending.versionId },
+  });
 });
 it('keeps drafts private and publishes only the exact reviewed version', async () => {
   const f = await fixture();

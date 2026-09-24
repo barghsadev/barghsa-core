@@ -42,6 +42,7 @@ interface PublishedRow {
   party_snapshot: Record<string, unknown> | null;
   amendment_state: string | null;
   base_version_id: string | null;
+  signature_required: boolean;
 }
 function customerDto(row: PublishedRow) {
   return {
@@ -60,7 +61,11 @@ function customerDto(row: PublishedRow) {
       (row.amendment_state === 'AwaitingCustomerAcceptance' &&
         row.base_version_id === row.current_version_id),
     amendment: row.amendment_state
-      ? { state: row.amendment_state, baseVersionId: row.base_version_id }
+      ? {
+          state: row.amendment_state,
+          baseVersionId: row.base_version_id,
+          signatureRequired: row.signature_required,
+        }
       : null,
     version: {
       id: row.version_id,
@@ -99,11 +104,9 @@ export class ContractReviewService {
               current_version_id: string;
               amendment_state: string;
               base_version_id: string;
-              signature_required: boolean;
             }>(
-              `SELECT c.state,c.current_version_id,a.state AS amendment_state,a.base_version_id,r.signature_required
+              `SELECT c.state,c.current_version_id,a.state AS amendment_state,a.base_version_id
                FROM contracts c JOIN contract_amendments a ON a.contract_id=c.id
-               JOIN contract_activation_requirements r ON r.version_id=a.version_id
                WHERE c.id=$1 AND a.version_id=$2 FOR UPDATE OF c`,
               [id, input.expectedVersionId]
             )
@@ -112,8 +115,7 @@ export class ContractReviewService {
             !row ||
             !['Accepted', 'Signed', 'Active'].includes(row.state) ||
             row.amendment_state !== 'Draft' ||
-            row.base_version_id !== row.current_version_id ||
-            row.signature_required
+            row.base_version_id !== row.current_version_id
           )
             throw new ConflictException('Amendment is not ready for customer publication');
           await client.query(
@@ -409,8 +411,9 @@ export class ContractReviewService {
       await client.query<PublishedRow>(
         `SELECT c.id,c.contract_number,c.profile_id,c.order_id,e.status AS linked_order_status,s.id AS saving_order_id,c.service_type,c.state,c.current_version_id,v.id AS version_id,v.version_number,
         v.content,v.change_description,v.created_at,p.published_at,a.accepted_at,a.accepted_by,a.party_snapshot,
-        amendment.state AS amendment_state,amendment.base_version_id
+        amendment.state AS amendment_state,amendment.base_version_id,requirements.signature_required
         FROM contracts c JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
+        JOIN contract_activation_requirements requirements ON requirements.version_id=v.id
         LEFT JOIN contract_acceptances a ON a.version_id=v.id
         LEFT JOIN contract_amendments amendment ON amendment.version_id=v.id AND amendment.contract_id=c.id
         LEFT JOIN saving_orders s ON s.order_id=c.order_id AND s.profile_id=c.profile_id AND c.service_type='savings'

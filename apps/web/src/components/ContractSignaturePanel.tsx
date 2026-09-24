@@ -218,7 +218,8 @@ export function ContractSignaturePanel({
                   {eligible
                     .filter(
                       (item) =>
-                        item.contractRole === 'original' && item.detectedMime === 'application/pdf'
+                        item.contractRole === (data.isAmendment ? 'amendment' : 'original') &&
+                        item.detectedMime === 'application/pdf'
                     )
                     .map((item) => (
                       <option key={item.id} value={item.id}>

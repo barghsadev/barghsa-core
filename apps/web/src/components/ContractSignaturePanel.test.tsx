@@ -243,6 +243,39 @@ it('staff prepares the first request or a numbered replacement using only approv
   await click(en.prepareSignature);
   expect(harness.action?.body).toMatchObject({ expectedRequestId: 'request-2' });
 });
+it('selects the pending amendment PDF for a new signing request', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (raw: string) =>
+      raw.includes('/signature?')
+        ? response(
+            view({
+              isCurrent: false,
+              isAmendment: true,
+              canRequest: true,
+              canRecord: false,
+              request: null,
+            })
+          )
+        : response({
+            documents: [doc('base', 'original'), doc('amendment', 'amendment'), doc('signed')],
+            nextBefore: null,
+          })
+    )
+  );
+  await render(panel(true));
+  expect(
+    [...container.querySelectorAll<HTMLOptionElement>('#signature-original option')].map(
+      (item) => item.value
+    )
+  ).toEqual(['', 'amendment']);
+  await value('#signature-original', 'amendment');
+  await click(en.prepareSignature);
+  expect(harness.action).toMatchObject({
+    path: `/api/admin/contracts/${ID}/signature-request`,
+    body: { originalDocumentId: 'amendment', expectedVersionId: VERSION },
+  });
+});
 it('shows historical evidence with separate recorder and uploader roles without mutation controls', async () => {
   const fetcher = vi.fn(async () =>
     response(

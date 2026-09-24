@@ -177,11 +177,10 @@ export class ContractService {
     ).rows[0];
     const amendmentSupported =
       (
-        await client.query<{ signature_required: boolean }>(
-          'SELECT signature_required FROM contract_activation_rules WHERE service_type=$1',
-          [row.serviceType]
-        )
-      ).rows[0]?.signature_required === false;
+        await client.query('SELECT 1 FROM contract_activation_rules WHERE service_type=$1', [
+          row.serviceType,
+        ])
+      ).rowCount === 1;
     return {
       ...row,
       linkedOrderStatus,

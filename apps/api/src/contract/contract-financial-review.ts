@@ -62,10 +62,13 @@ export async function readContractFinancialReview(
   const row = (
     await client.query(
       `SELECT c.id,c.profile_id,c.service_type,
-       CASE WHEN amendment.state='AwaitingCustomerAcceptance' AND $4::boolean
-         THEN 'AwaitingCustomerAcceptance'::contract_state ELSE c.state END AS state,
+       CASE WHEN amendment.state='AwaitingCustomerAcceptance' AND $4::text='contract.acceptance'
+         THEN 'AwaitingCustomerAcceptance'::contract_state
+         WHEN amendment.state='AwaitingSignature' AND $4::text IN ('contract.signature-request','contract.signature-record')
+         THEN 'AwaitingSignature'::contract_state ELSE c.state END AS state,
        c.state AS effective_state,
-       CASE WHEN amendment.state='AwaitingCustomerAcceptance' AND $4::boolean
+       CASE WHEN (amendment.state='AwaitingCustomerAcceptance' AND $4::text='contract.acceptance')
+         OR (amendment.state='AwaitingSignature' AND $4::text IN ('contract.signature-request','contract.signature-record'))
          THEN amendment.base_version_id ELSE NULL END AS amendment_base_version_id,
        p.profile_type,
        COALESCE(NULLIF(p.title,''),NULLIF(concat_ws(' ',p.first_name,p.last_name),''),'') AS profile_title,
@@ -77,11 +80,13 @@ export async function readContractFinancialReview(
      JOIN contract_activation_requirements r ON r.version_id=v.id AND r.contract_id=c.id
      LEFT JOIN contract_amendments amendment ON amendment.version_id=v.id AND amendment.contract_id=c.id
      WHERE c.id=$1 AND c.profile_id=$2 AND
-       (v.id=c.current_version_id OR ($4::boolean AND EXISTS(
+       (v.id=c.current_version_id OR EXISTS(
          SELECT 1 FROM contract_amendments a WHERE a.contract_id=c.id AND a.version_id=v.id
-           AND a.base_version_id=c.current_version_id AND a.state='AwaitingCustomerAcceptance'
-       ))) FOR SHARE OF c,v,r`,
-      [input.contractId, input.profileId, input.versionId, input.action === 'contract.acceptance']
+           AND a.base_version_id=c.current_version_id AND
+             ((a.state='AwaitingCustomerAcceptance' AND $4::text='contract.acceptance')
+               OR (a.state='AwaitingSignature' AND $4::text IN ('contract.signature-request','contract.signature-record')))
+       )) FOR SHARE OF c,v,r`,
+      [input.contractId, input.profileId, input.versionId, input.action]
     )
   ).rows[0] as ContractRow | undefined;
   if (!row) throw new NotFoundException();
@@ -120,7 +125,12 @@ export async function readContractFinancialReview(
     signature = {
       requestId: request?.id ?? null,
       requestNumber: request?.request_number ?? null,
-      originalDocument: await reviewedDocument(client, input, originalDocumentId, 'original'),
+      originalDocument: await reviewedDocument(
+        client,
+        input,
+        originalDocumentId,
+        row.amendment_base_version_id ? 'amendment' : 'original'
+      ),
       signedDocument:
         input.action === 'contract.signature-record'
           ? await reviewedDocument(client, input, input.signedDocumentId, 'signed')
@@ -174,7 +184,7 @@ async function reviewedDocument(
   client: WalletQueryClient,
   input: ContractFinancialReviewInput,
   documentId: string,
-  role: 'original' | 'signed'
+  role: 'original' | 'signed' | 'amendment'
 ) {
   const row = (
     await client.query(
@@ -182,7 +192,7 @@ async function reviewedDocument(
      FROM documents d JOIN contract_documents cd ON cd.document_id=d.id
      WHERE d.id=$1 AND d.profile_id=$2 AND cd.contract_id=$3 AND cd.contract_version_id=$4 AND cd.role=$5
        AND d.state='Approved' AND d.storage_key IS NOT NULL AND d.checksum IS NOT NULL
-       AND ($5<>'original' OR d.detected_mime='application/pdf') FOR SHARE OF d,cd`,
+       AND ($5='signed' OR d.detected_mime='application/pdf') FOR SHARE OF d,cd`,
       [documentId, input.profileId, input.contractId, input.versionId, role]
     )
   ).rows[0] as

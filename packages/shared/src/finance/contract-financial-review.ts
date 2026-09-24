@@ -97,9 +97,10 @@ const schema = z
     const signature = data.signature;
     if (data.contract.amendment) {
       if (
-        scope.action !== 'contract.acceptance' ||
-        data.contract.state !== 'AwaitingCustomerAcceptance' ||
-        data.contract.amendment.baseVersionId === data.contract.versionId
+        data.contract.amendment.baseVersionId === data.contract.versionId ||
+        (scope.action === 'contract.acceptance'
+          ? data.contract.state !== 'AwaitingCustomerAcceptance'
+          : data.contract.state !== 'AwaitingSignature')
       )
         return false;
     }

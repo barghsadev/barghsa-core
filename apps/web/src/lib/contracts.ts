@@ -89,8 +89,9 @@ export interface ContractDetailData extends Omit<ContractSummary, 'versionId' | 
     publishedAt: string | null;
   } | null;
   amendment?: {
-    state: 'AwaitingCustomerAcceptance' | 'Applied';
+    state: 'AwaitingCustomerAcceptance' | 'AwaitingSignature' | 'Applied';
     baseVersionId: string;
+    signatureRequired?: boolean;
   } | null;
 }
 export const contractBase = (staff: boolean) => (staff ? '/api/admin/contracts' : '/api/contracts');
@@ -100,6 +101,7 @@ export interface ContractSignatureData {
   versionId: string;
   state: string;
   isCurrent: boolean;
+  isAmendment?: boolean;
   canRequest: boolean;
   canRecord: boolean;
   request: {

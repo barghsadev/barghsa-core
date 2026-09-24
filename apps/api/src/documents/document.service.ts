@@ -35,15 +35,22 @@ type LinkedDocument = {
   contractVersionId: string | null;
   contractRole: string | null;
 };
-async function writablePendingAmendment(client: PoolClient, contractId: string, versionId: string) {
+async function writablePendingAmendment(
+  client: PoolClient,
+  contractId: string,
+  versionId: string,
+  role: string,
+  staff: boolean
+) {
   return (
     (
       await client.query(
         `SELECT 1 FROM contract_amendments a JOIN contracts c ON c.id=a.contract_id
-         WHERE a.contract_id=$1 AND a.version_id=$2 AND a.base_version_id=c.current_version_id
-         AND a.state IN ('Draft','AwaitingCustomerAcceptance')
-         AND c.state IN ('Accepted','Signed','Active') FOR SHARE OF c`,
-        [contractId, versionId]
+       WHERE a.contract_id=$1 AND a.version_id=$2 AND a.base_version_id=c.current_version_id
+         AND c.state IN ('Accepted','Signed','Active')
+         AND (($3::text='amendment' AND $4::boolean AND a.state IN ('Draft','AwaitingCustomerAcceptance'))
+           OR ($3::text='signed' AND a.state='AwaitingSignature')) FOR SHARE OF c`,
+        [contractId, versionId, role, staff]
       )
     ).rowCount === 1
   );
@@ -205,10 +212,15 @@ export class DocumentService {
     }
     if (input.businessRecordType !== 'contract') return;
     if (
-      staff &&
-      input.contractRole === 'amendment' &&
+      input.contractRole &&
       input.contractVersionId &&
-      (await writablePendingAmendment(client, input.businessRecordId!, input.contractVersionId))
+      (await writablePendingAmendment(
+        client,
+        input.businessRecordId!,
+        input.contractVersionId,
+        input.contractRole,
+        staff
+      ))
     )
       return;
     if (record.current_version_id !== input.contractVersionId)
@@ -460,11 +472,16 @@ export class DocumentService {
   private async mutableContract(client: PoolClient, row: LinkedDocument, staff: boolean) {
     if (row.document.businessRecordType !== 'contract') return;
     if (
-      staff &&
-      row.contractRole === 'amendment' &&
+      row.contractRole &&
       row.contractVersionId &&
       row.document.businessRecordId &&
-      (await writablePendingAmendment(client, row.document.businessRecordId, row.contractVersionId))
+      (await writablePendingAmendment(
+        client,
+        row.document.businessRecordId,
+        row.contractVersionId,
+        row.contractRole,
+        staff
+      ))
     )
       return;
     const contract = (

@@ -329,6 +329,150 @@ it('records staff-handled copies without changing the customer acceptance actor'
   ).toBe(f.user);
   expect((await record(f, body, true)).status).toBe(200);
 });
+it('applies a solar amendment only after its accepted PDF has an approved signed copy', async () => {
+  const f = await contract(true, 'solar');
+  const baseOriginal = await documentFor(f, 'original');
+  const baseRequest = await prepare(f, baseOriginal.id);
+  const baseSigned = await documentFor(f, 'signed', false);
+  expect(
+    (await record(f, recordInput(f, baseRequest.view.request!.id, baseSigned.id))).status
+  ).toBe(200);
+  const effective = (await (
+    await send(`admin/contracts/${f.row.id}`, 'signature-legal')
+  ).json()) as ContractDto;
+  expect(effective.state).toBe('Signed');
+  const proposed = await send(`admin/contracts/${f.row.id}/amendments`, 'signature-legal', 'POST', {
+    expectedVersionId: f.row.currentVersionId,
+    content: { text: 'Revised solar agreement' },
+    changeDescription: 'Updated completion terms',
+    idempotencyKey: randomUUID(),
+  });
+  expect(proposed.status, await proposed.clone().text()).toBe(201);
+  const pendingVersionId = ((await proposed.json()) as ContractDto).pendingAmendment!.versionId;
+  let amendmentPdf = await confirm(
+    await create(
+      'signature-legal',
+      {
+        profileId: f.profile,
+        businessRecordType: 'contract',
+        businessRecordId: f.row.id,
+        contractVersionId: pendingVersionId,
+        contractRole: 'amendment',
+      },
+      true
+    ),
+    'signature-legal',
+    true
+  );
+  amendmentPdf = await act(amendmentPdf, 'submit', 'signature-legal', true);
+  amendmentPdf = await act(amendmentPdf, 'approve', 'signature-legal', true);
+  expect((await send(`documents/${amendmentPdf.id}`, f.user)).status).toBe(404);
+  expect(
+    (
+      await send(`admin/contracts/${f.row.id}/amendments/publish`, 'signature-legal', 'POST', {
+        expectedVersionId: pendingVersionId,
+        idempotencyKey: randomUUID(),
+      })
+    ).status
+  ).toBe(200);
+  expect(
+    (
+      await send(`contracts/${f.row.id}/accept`, f.user, 'POST', {
+        expectedVersionId: pendingVersionId,
+        idempotencyKey: randomUUID(),
+      })
+    ).status
+  ).toBe(200);
+  await expect(
+    http.pool.query("UPDATE contract_amendments SET state='Applied' WHERE version_id=$1", [
+      pendingVersionId,
+    ])
+  ).rejects.toMatchObject({ code: '23514' });
+  const beforeSignature = (await (
+    await send(`admin/contracts/${f.row.id}`, 'signature-legal')
+  ).json()) as ContractDto;
+  expect(beforeSignature).toMatchObject({
+    state: 'Signed',
+    currentVersionId: f.row.currentVersionId,
+    pendingAmendment: { state: 'AwaitingSignature', versionId: pendingVersionId },
+  });
+  const signingReview = await send(
+    `admin/contracts/${f.row.id}/signature/review`,
+    'signature-legal',
+    'POST',
+    {
+      action: 'request',
+      expectedVersionId: pendingVersionId,
+      originalDocumentId: amendmentPdf.id,
+      expectedRequestId: null,
+    }
+  );
+  expect(signingReview.status, await signingReview.clone().text()).toBe(200);
+  const signing = await send(
+    `admin/contracts/${f.row.id}/signature-request`,
+    'signature-legal',
+    'POST',
+    {
+      expectedVersionId: pendingVersionId,
+      originalDocumentId: amendmentPdf.id,
+      expectedRequestId: null,
+      idempotencyKey: randomUUID(),
+    }
+  );
+  expect(signing.status, await signing.clone().text()).toBe(200);
+  const request = (await signing.json()) as SignatureView;
+  expect(request).toMatchObject({
+    isCurrent: false,
+    isAmendment: true,
+    canRequest: true,
+    request: { originalDocumentId: amendmentPdf.id },
+  });
+  let signedCopy = await confirm(
+    await create(f.user, {
+      profileId: f.profile,
+      businessRecordType: 'contract',
+      businessRecordId: f.row.id,
+      contractVersionId: pendingVersionId,
+      contractRole: 'signed',
+    }),
+    f.user
+  );
+  signedCopy = await act(signedCopy, 'submit', f.user);
+  signedCopy = await act(signedCopy, 'approve', 'signature-legal', true);
+  const signed = await send(`contracts/${f.row.id}/signature`, f.user, 'POST', {
+    expectedVersionId: pendingVersionId,
+    requestId: request.request!.id,
+    signedDocumentId: signedCopy.id,
+    idempotencyKey: randomUUID(),
+  });
+  expect(signed.status, await signed.clone().text()).toBe(200);
+  expect(await signed.json()).toMatchObject({
+    state: 'Signed',
+    isCurrent: true,
+    signature: { signedDocumentId: signedCopy.id, recordedByType: 'customer' },
+  });
+  expect(
+    (await (await send(`admin/contracts/${f.row.id}`, 'signature-legal')).json()) as ContractDto
+  ).toMatchObject({
+    state: 'Signed',
+    currentVersionId: pendingVersionId,
+    pendingAmendment: null,
+  });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT document_id FROM contract_document_locks WHERE contract_version_id=$1',
+        [pendingVersionId]
+      )
+    ).rows
+      .map((row) => row.document_id)
+      .sort()
+  ).toEqual([amendmentPdf.id, signedCopy.id].sort());
+  await http.pool.query('INSERT INTO contract_activations(contract_id,version_id) VALUES($1,$2)', [
+    f.row.id,
+    pendingVersionId,
+  ]);
+});
 it('keeps draft and other-profile signing evidence private and validates commands', async () => {
   const f = await contract(false),
     original = await documentFor(f, 'original');

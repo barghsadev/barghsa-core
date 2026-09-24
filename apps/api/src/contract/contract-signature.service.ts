@@ -68,6 +68,18 @@ export class ContractSignatureService {
       )
     ).rows[0];
   }
+  private async pendingSigning(client: PoolClient, parent: Parent, versionId: string) {
+    if (!['Accepted', 'Signed', 'Active'].includes(parent.state)) return false;
+    return (
+      (
+        await client.query(
+          `SELECT 1 FROM contract_amendments WHERE contract_id=$1 AND version_id=$2
+         AND base_version_id=$3 AND state='AwaitingSignature'`,
+          [parent.id, versionId, parent.current_version_id]
+        )
+      ).rowCount === 1
+    );
+  }
   private async visibleVersion(
     client: PoolClient,
     parent: Parent,
@@ -100,21 +112,23 @@ export class ContractSignatureService {
       )
     ).rows[0];
     const isCurrent = parent.current_version_id === versionId;
+    const isAmendment = await this.pendingSigning(client, parent, versionId);
     return {
       contractId: parent.id,
       versionId,
       state: parent.state,
       isCurrent,
+      isAmendment,
       canRequest:
         staff &&
         canWrite &&
-        isCurrent &&
-        !parent.signed_at &&
-        ['Accepted', 'AwaitingSignature'].includes(parent.state),
+        ((isCurrent &&
+          !parent.signed_at &&
+          ['Accepted', 'AwaitingSignature'].includes(parent.state)) ||
+          isAmendment),
       canRecord:
         canWrite &&
-        isCurrent &&
-        parent.state === 'AwaitingSignature' &&
+        ((isCurrent && parent.state === 'AwaitingSignature') || isAmendment) &&
         request?.document_state === 'Approved' &&
         !signed,
       request: request
@@ -260,10 +274,12 @@ export class ContractSignatureService {
           { ...input, contractId: id },
           actor,
           async () => {
+            const isAmendment = await this.pendingSigning(client, parent, input.expectedVersionId);
             if (
-              parent.current_version_id !== input.expectedVersionId ||
-              parent.signed_at ||
-              !['Accepted', 'AwaitingSignature'].includes(parent.state)
+              !isAmendment &&
+              (parent.current_version_id !== input.expectedVersionId ||
+                parent.signed_at ||
+                !['Accepted', 'AwaitingSignature'].includes(parent.state))
             )
               throw new ConflictException('Contract is not the expected accepted version');
             const previous = await this.latest(client, input.expectedVersionId);
@@ -344,10 +360,12 @@ export class ContractSignatureService {
           { ...input, contractId: id, staff },
           actor,
           async () => {
+            const isAmendment = await this.pendingSigning(client, parent, input.expectedVersionId);
             if (
-              parent.current_version_id !== input.expectedVersionId ||
-              parent.state !== 'AwaitingSignature' ||
-              parent.signed_at
+              !isAmendment &&
+              (parent.current_version_id !== input.expectedVersionId ||
+                parent.state !== 'AwaitingSignature' ||
+                parent.signed_at)
             )
               throw new ConflictException('Contract is not awaiting this signature');
             const latest = await this.latest(client, input.expectedVersionId);

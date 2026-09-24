@@ -73,6 +73,15 @@ describe('contract financial review boundary', () => {
     for (const value of [signing(), signing(true)])
       expect(parseContractFinancialReview(value)).toEqual(value);
   });
+  it('accepts amendment signing reviews while the prior version remains effective', () => {
+    for (const value of [signing(), signing(true)]) {
+      value.data.contract.state = 'AwaitingSignature';
+      value.data.contract.amendment = { baseVersionId: originalId, effectiveState: 'Signed' };
+      expect(parseContractFinancialReview(value)).toEqual(value);
+      value.data.contract.amendment.baseVersionId = versionId;
+      expect(parseContractFinancialReview(value)).toBeNull();
+    }
+  });
   it('preserves exact initial invoice amounts beyond Number precision', () => {
     const value = review();
     value.data.activation.initialInvoiceId = originalId;
