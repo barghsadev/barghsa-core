@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Saving order payment next actions](batches/2026-09-24-saving-payment-next-actions.md) keeps the remaining invoice payment visible after partial funding and distinguishes an invoice still being prepared from customer payment or staff fulfillment. The customer list/detail journey passes across all five browser projects.
+
 [Invoice return after online wallet top-up](batches/2026-09-24-invoice-return-after-top-up.md) preserves the authorized invoice handoff across the external payment gateway in the same tab, bound to the exact top-up transaction and expiring after a day. The five-project callback browser check passes.
 
 [Invoice wallet shortfall handoff](batches/2026-09-24-invoice-wallet-shortfall-handoff.md) shows the exact amount needed when an invoice cannot be paid from the wallet, links to top-up, and returns customers to the same invoice. The bilingual wallet-payment browser suite passes across all five projects.

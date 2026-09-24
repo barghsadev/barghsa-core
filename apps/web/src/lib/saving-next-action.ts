@@ -15,6 +15,7 @@ export interface SavingActionContext {
 export type SavingNextAction =
   | 'awaitCancellation'
   | 'awaitReview'
+  | 'awaitInvoice'
   | 'awaitPaymentReview'
   | 'acceptContract'
   | 'payInvoice'
@@ -58,9 +59,12 @@ export function savingNextAction(order: SavingActionContext): {
   if (order.contract_state === 'AwaitingCustomerAcceptance')
     return { kind: 'acceptContract', href: contractHref };
   if (
-    order.invoice_state &&
-    ['Draft', 'Unpaid', 'Overdue', 'PartiallyPaid'].includes(order.invoice_state)
+    !order.invoice_id ||
+    !order.invoice_state ||
+    ['Draft', 'Cancelled'].includes(order.invoice_state)
   )
+    return { kind: 'awaitInvoice', href: null };
+  if (order.invoice_state && ['Unpaid', 'PartiallyFunded', 'Overdue'].includes(order.invoice_state))
     return { kind: 'payInvoice', href: invoiceHref };
   return { kind: 'awaitFulfillment', href: null };
 }

@@ -45,6 +45,17 @@ it('shows the next customer step and links the matching record', () => {
     kind: 'payInvoice',
     href: '/invoices/invoice-id',
   });
+  expect(
+    savingNextAction({ ...order, contract_state: 'Active', invoice_state: 'PartiallyFunded' })
+  ).toEqual({ kind: 'payInvoice', href: '/invoices/invoice-id' });
+  expect(savingNextAction({ ...order, contract_state: 'Active', invoice_state: 'Draft' })).toEqual({
+    kind: 'awaitInvoice',
+    href: null,
+  });
+  expect(savingNextAction({ ...order, contract_state: 'Active', invoice_id: null })).toEqual({
+    kind: 'awaitInvoice',
+    href: null,
+  });
   expect(savingNextAction({ ...order, invoice_state: 'PaymentUnderReview' })).toEqual({
     kind: 'awaitPaymentReview',
     href: '/invoices/invoice-id',

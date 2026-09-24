@@ -28,6 +28,8 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   const staffActions: Array<{ path: string; body: Record<string, unknown> }> = [];
   let approved = false;
   let stageIndex = -1;
+  let invoiceState = 'Unpaid';
+  let contractState = 'AwaitingCustomerAcceptance';
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
@@ -177,9 +179,9 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
                 status: approved ? 'approved' : 'awaiting_staff_review',
                 financial_status: 'unpaid',
                 invoice_id: invoiceId,
-                invoice_state: 'Unpaid',
-                contract_id: null,
-                contract_state: 'AwaitingStaffReview',
+                invoice_state: invoiceState,
+                contract_id: approved ? contractId : null,
+                contract_state: approved ? contractState : 'AwaitingStaffReview',
                 cancellation_pending: false,
                 bill_identifier: '1234567890123',
                 submitted_at: submittedAt,
@@ -221,9 +223,9 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
         agreement_updated: false,
         contract_version_id: null,
         contract_id: approved ? contractId : null,
-        contract_state: approved ? 'AwaitingCustomerAcceptance' : 'AwaitingStaffReview',
+        contract_state: approved ? contractState : 'AwaitingStaffReview',
         invoice_id: invoiceId,
-        invoice_state: 'Unpaid',
+        invoice_state: invoiceState,
         cancellation_pending: false,
         stages: stageNames.map((stage, index) => ({
           stage,
@@ -419,4 +421,18 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   await page.getByRole('link', { name: 'View contract' }).click();
   await expect(page).toHaveURL(new RegExp(`/contracts\\?contractId=${contractId}$`));
   await expect(page.getByRole('heading', { name: 'Contracts' })).toBeVisible();
+
+  contractState = 'Active';
+  invoiceState = 'PartiallyFunded';
+  await page.goto('/savings/orders');
+  await expect(page.getByRole('link', { name: 'Pay the invoice' })).toHaveAttribute(
+    'href',
+    `/invoices/${invoiceId}`
+  );
+  await page.goto(`/savings/orders/${savingOrderId}`);
+  await expect(
+    page.getByRole('region', { name: 'Status and next action' }).getByRole('link', {
+      name: 'Pay the invoice',
+    })
+  ).toHaveAttribute('href', `/invoices/${invoiceId}`);
 });
