@@ -6274,6 +6274,7 @@
                 "refund_retry",
                 "ai_model_test",
                 "storage_cleanup",
+                "document_scan",
                 "auth_delivery",
                 "service_breach_scan",
                 "service_escalation_scan",

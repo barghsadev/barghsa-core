@@ -750,6 +750,7 @@ export { drizzle as createDbClient } from 'drizzle-orm/node-postgres';
 
 export * from './schema/contract-review';
 export * from './schema/documents';
+export * from './schema/document-scan-jobs';
 export * from './schema/document-templates';
 
 export * from './schema/contract-signatures';

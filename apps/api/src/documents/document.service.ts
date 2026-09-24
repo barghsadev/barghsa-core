@@ -648,20 +648,23 @@ export class DocumentService {
             profileId,
             staff
           );
+          const scannerConfigured = Boolean(process.env['DOCUMENT_CLAMAV_HOST']?.trim());
           const changed = (
             await createDbClient(client)
               .update(documents)
               .set({
-                state: 'Available',
-                scanState: 'Available',
-                scanSkippedReason: 'not_configured',
+                state: scannerConfigured ? 'PendingScan' : 'Available',
+                scanState: scannerConfigured ? 'Pending' : 'Available',
+                scanSkippedReason: scannerConfigured ? null : 'not_configured',
                 ...copy,
               })
               .where(eq(documents.id, id))
               .returning()
           )[0]!;
           await recordEvent(client, changed, 'PendingScan', actor, ip);
-          if (changed.supersedesDocumentId) {
+          if (scannerConfigured) {
+            await client.query('INSERT INTO document_scan_jobs(document_id) VALUES($1)', [id]);
+          } else if (changed.supersedesDocumentId) {
             const replaced = (
               await createDbClient(client)
                 .update(documents)

@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Document scanning integration](batches/2026-09-24-document-scanning.md) keeps configured uploads pending until a verified ClamAV verdict, quarantines malware, retries scanner failures, and alerts active admins.
+
 [Staff document template library](batches/2026-09-24-document-template-library.md) adds versioned PDF/DOCX template files, placeholder extraction and conflict warnings, immutable historical downloads, and a bilingual admin workflow.
 
 [Document preview derivatives](batches/2026-09-24-document-previews.md) add authorized, short-lived image and PDF thumbnails backed by sealed source objects, with bounded rendering and source-key cache invalidation.

@@ -13,6 +13,11 @@ import {
 import { runRefundRetries, REFUND_RETRY_INTERVAL_MS } from './refunds/retry-runner.js';
 import { runAiModelTest } from './ai-models/test-runner.js';
 import { cleanupStorageObjects, cleanupStorageProvider } from './storage/cleanup.js';
+import {
+  DOCUMENT_SCAN_INTERVAL_MS,
+  DOCUMENT_SCAN_JOB_TYPE,
+  runDocumentScans,
+} from './documents/scan-runner.js';
 import { SmsNotificationTransport } from './notifications/sms-transport.js';
 import {
   checkSmsCredit,
@@ -277,6 +282,36 @@ async function main(): Promise<void> {
       });
     }
   }, 60000);
+
+  const scannerHost = process.env['DOCUMENT_CLAMAV_HOST']?.trim();
+  const scannerPort = Number(process.env['DOCUMENT_CLAMAV_PORT'] ?? '3310');
+  if (scannerHost) {
+    if (!Number.isInteger(scannerPort) || scannerPort < 1 || scannerPort > 65535)
+      throw new Error('Invalid document scanner port');
+    pollers.every(async () => {
+      try {
+        if (!cleanupProvider) throw new Error('Document storage is unavailable');
+        const result = await runDocumentScans(getDbPool(), cleanupProvider, {
+          host: scannerHost,
+          port: scannerPort,
+        });
+        if (result.retrying)
+          await recordJobFailure({
+            jobType: DOCUMENT_SCAN_JOB_TYPE,
+            error: 'document_scan_retry_pending',
+            errorCategory: 'transient',
+            payload: result,
+          });
+        else if (result.clean || result.infected) await recordJobSuccess(DOCUMENT_SCAN_JOB_TYPE);
+      } catch {
+        await recordJobFailure({
+          jobType: DOCUMENT_SCAN_JOB_TYPE,
+          error: 'document_scan_unavailable',
+          errorCategory: 'transient',
+        });
+      }
+    }, DOCUMENT_SCAN_INTERVAL_MS);
+  }
 
   pollers.every(async () => {
     const outcome = await runAuthDelivery(getDbPool());

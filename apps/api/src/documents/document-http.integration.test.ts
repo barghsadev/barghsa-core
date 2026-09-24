@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, expect, it } from 'vitest';
+import type { StorageProvider } from '@barghsa/shared/storage';
 import PDFDocument from 'pdfkit';
 import { GenericContainer, Wait, type StartedTestContainer } from 'testcontainers';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -11,6 +12,7 @@ import type { ContractService } from '../contract/contract.service.js';
 import type { DocumentService } from './document.service.js';
 
 const requireShared = createRequire(resolve(__dirname, '../../../../packages/shared/package.json'));
+const requireWorker = createRequire(resolve(__dirname, '../../../worker/package.json'));
 const { S3Client, CreateBucketCommand } = requireShared('@aws-sdk/client-s3') as {
   S3Client: new (config: Record<string, unknown>) => {
     send(command: unknown): Promise<unknown>;
@@ -21,6 +23,7 @@ const { S3Client, CreateBucketCommand } = requireShared('@aws-sdk/client-s3') as
 let minio: StartedTestContainer;
 let s3: InstanceType<typeof S3Client>;
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
+let storageEndpoint: string;
 const headers: Record<string, Record<string, string>> = {};
 let pdf: Buffer;
 const pdfRendererAvailable = spawnSync('pdftoppm', ['-v'], { stdio: 'ignore' }).status === 0;
@@ -50,6 +53,7 @@ beforeAll(async () => {
     .withWaitStrategy(Wait.forHttp('/minio/health/ready', 9000))
     .start();
   const endpoint = `http://${minio.getHost()}:${minio.getMappedPort(9000)}`;
+  storageEndpoint = endpoint;
   s3 = new S3Client({
     endpoint,
     region: 'us-east-1',
@@ -229,6 +233,139 @@ it('uploads real bytes, reviews a document, preserves replacement history and re
   expect(await (await fetch(archive.url)).text()).toBe(pdf.toString());
   expect((await send(`admin/documents/${document.id}/preview`, 'document-legal')).status).toBe(409);
 });
+
+it('holds a configured-scanner upload in PendingScan with a durable worker job', async () => {
+  const { runDocumentScans } = requireWorker('./dist/documents/scan-runner.js') as {
+    runDocumentScans: (
+      pool: typeof http.pool,
+      storage: StorageProvider,
+      endpoint: { host: string; port: number },
+      scan: () => Promise<'clean' | 'infected'>
+    ) => Promise<{ clean: number; infected: number; retrying: number }>;
+  };
+  const original = http;
+  process.env['DOCUMENT_CLAMAV_HOST'] = '127.0.0.1';
+  const configured = await startHttpFixture(process.env.TEST_DATABASE_URL!, storageEndpoint);
+  http = configured;
+  try {
+    const admin = await login();
+    await http.pool.query('UPDATE users SET is_staff=true,is_admin=true WHERE user_id=$1', [admin]);
+    const f = await owner();
+    const created = await create(f.user);
+    const pending = await confirm(created, f.user);
+    expect(pending).toMatchObject({
+      state: 'PendingScan',
+      scanState: 'Pending',
+      scanSkippedReason: null,
+      checksum: createHash('sha256').update(pdf).digest('hex'),
+    });
+    expect((await send(`documents/${pending.id}/download`, f.user)).status).toBe(409);
+    const job = await http.pool.query(
+      'SELECT attempts,completed_at FROM document_scan_jobs WHERE document_id=$1',
+      [pending.id]
+    );
+    expect(job.rows).toMatchObject([{ attempts: 0, completed_at: null }]);
+    const storage = {
+      getObject: async () => ({
+        body: new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.enqueue(pdf);
+            controller.close();
+          },
+        }),
+        contentLength: pdf.length,
+      }),
+    } as unknown as StorageProvider;
+    const endpoint = { host: '127.0.0.1', port: 3310 };
+    expect(await runDocumentScans(http.pool, storage, endpoint, async () => 'clean')).toMatchObject(
+      {
+        clean: 1,
+      }
+    );
+    const available = (await (
+      await send(`documents/${pending.id}`, f.user)
+    ).json()) as DocumentDetail;
+    expect(available).toMatchObject({ state: 'Available', scanState: 'Available' });
+    expect((await send(`documents/${pending.id}/download`, f.user)).status).toBe(200);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT verdict,attempts FROM document_scan_jobs WHERE document_id=$1',
+          [pending.id]
+        )
+      ).rows
+    ).toMatchObject([{ verdict: 'clean', attempts: 1 }]);
+    const successor = await confirm(
+      await create(f.user, { supersedesDocumentId: pending.id }),
+      f.user
+    );
+    expect(await runDocumentScans(http.pool, storage, endpoint, async () => 'clean')).toMatchObject(
+      {
+        clean: 1,
+      }
+    );
+    expect(
+      ((await (await send(`documents/${pending.id}`, f.user)).json()) as DocumentDetail).state
+    ).toBe('Superseded');
+    expect(
+      ((await (await send(`documents/${successor.id}`, f.user)).json()) as DocumentDetail).state
+    ).toBe('Available');
+    const infected = await confirm(await create(f.user), f.user);
+    expect(
+      await runDocumentScans(http.pool, storage, endpoint, async () => 'infected')
+    ).toMatchObject({
+      infected: 1,
+    });
+    const quarantined = (await (
+      await send(`documents/${infected.id}`, f.user)
+    ).json()) as DocumentDetail;
+    expect(quarantined).toMatchObject({ state: 'Quarantined', scanState: 'Quarantined' });
+    expect((await send(`documents/${infected.id}/download`, f.user)).status).toBe(409);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT event_key FROM notification_outbox WHERE user_id=$1 AND event_key='document.quarantined'",
+          [admin]
+        )
+      ).rows
+    ).toHaveLength(1);
+    const retrying = await confirm(await create(f.user), f.user);
+    expect(
+      await runDocumentScans(http.pool, storage, endpoint, async () => {
+        throw new Error('scanner disconnected');
+      })
+    ).toMatchObject({ retrying: 1 });
+    const retryJob = await http.pool.query(
+      'SELECT attempts,completed_at,next_attempt_at>NOW() AS delayed FROM document_scan_jobs WHERE document_id=$1',
+      [retrying.id]
+    );
+    expect(retryJob.rows).toMatchObject([{ attempts: 1, completed_at: null, delayed: true }]);
+    expect((await send(`documents/${retrying.id}/download`, f.user)).status).toBe(409);
+    for (let attempt = 0; attempt < 2; attempt++) {
+      await http.pool.query(
+        "UPDATE document_scan_jobs SET next_attempt_at=NOW()-INTERVAL '1 second' WHERE document_id=$1",
+        [retrying.id]
+      );
+      expect(
+        await runDocumentScans(http.pool, storage, endpoint, async () => {
+          throw new Error('scanner disconnected');
+        })
+      ).toMatchObject({ retrying: 1 });
+    }
+    expect(
+      (
+        await http.pool.query(
+          "SELECT event_key FROM notification_outbox WHERE user_id=$1 AND event_key='document.scan_failed'",
+          [admin]
+        )
+      ).rows
+    ).toHaveLength(1);
+  } finally {
+    http = original;
+    await configured.close();
+    delete process.env['DOCUMENT_CLAMAV_HOST'];
+  }
+}, 60_000);
 
 it('lets a saving customer replace or soft-delete only their available order files', async () => {
   const f = await owner();
