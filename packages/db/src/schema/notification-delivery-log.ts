@@ -31,6 +31,9 @@ export const notificationDeliveryLog = pgTable(
     /** Stable token for a durable external attempt; legacy/local rows have none. */
     sendAttemptToken: uuid('send_attempt_token').unique(),
 
+    /** Immutable provider identity for this attempt, including after config rotation. */
+    providerId: uuid('provider_id'),
+
     /** 1-based history sequence within this channel. */
     attemptNumber: integer('attempt_number').notNull(),
 
@@ -58,5 +61,6 @@ export const notificationDeliveryLog = pgTable(
     // Triaging a channel or an error class across notifications.
     index('idx_ndl_channel_status').on(table.channel, table.status),
     index('idx_ndl_created').on(table.createdAt),
+    index('idx_ndl_provider_created').on(table.providerId, table.createdAt),
   ]
 );

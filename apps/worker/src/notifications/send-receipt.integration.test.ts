@@ -145,17 +145,24 @@ it('retries a proven rejection while preserving provider and occurrence identity
   // No worker bookkeeping ran between attempts, as on a crash after rejection.
   const history = (
     await pool.query(
-      'SELECT status,attempt_number,provider_ref,error_detail,send_attempt_token FROM notification_delivery_log WHERE notification_id=$1 ORDER BY attempt_number',
+      'SELECT status,attempt_number,provider_ref,error_detail,send_attempt_token,provider_id FROM notification_delivery_log WHERE notification_id=$1 ORDER BY attempt_number',
       [id]
     )
   ).rows;
   expect(history).toMatchObject([
-    { status: 'failed', attempt_number: 1, provider_ref: null, error_detail: 'recipient refused' },
+    {
+      status: 'failed',
+      attempt_number: 1,
+      provider_ref: null,
+      error_detail: 'recipient refused',
+      provider_id: provider.id,
+    },
     {
       status: 'delivered',
       attempt_number: 2,
       provider_ref: 'accepted-on-retry',
       error_detail: null,
+      provider_id: provider.id,
     },
   ]);
   expect(new Set(history.map((row) => row.send_attempt_token)).size).toBe(2);

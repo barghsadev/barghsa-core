@@ -58,8 +58,8 @@ export function durableDelivery(
         AND notification_send_receipts.transport=EXCLUDED.transport
         AND notification_send_receipts.idempotency_key=EXCLUDED.idempotency_key
       RETURNING attempt_token,attempt_number)
-      INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,send_attempt_token)
-      SELECT $1,$2,'sending',attempt_number,attempt_token FROM claimed
+      INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,send_attempt_token,provider_id)
+      SELECT $1,$2,'sending',attempt_number,attempt_token,$3 FROM claimed
       RETURNING send_attempt_token AS attempt_token`,
       [outboxId, channel, provider.id, provider.transport, idempotencyKey, token]
     );

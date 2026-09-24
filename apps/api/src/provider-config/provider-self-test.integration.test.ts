@@ -7,6 +7,7 @@ import { SmtpConnectionTesterService } from './smtp-connection-tester.service.js
 import { ResendConnectionTesterService } from './resend-connection-tester.service.js';
 import { SmsirConnectionTesterService } from './smsir-connection-tester.service.js';
 import { ProviderSecretsService } from './provider-secrets.service.js';
+import { readProviderHealthMetrics } from './provider-health-metrics.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const actor = { userId: 'provider-self', sessionId: randomUUID(), csrfToken: randomUUID() };
@@ -57,6 +58,60 @@ beforeEach(async () => {
     "INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ($2,$1,'mobile',NOW()) ON CONFLICT (destination) DO NOTHING",
     [actor.userId, mobile]
   );
+});
+
+it('reports one-hour provider attempts and channel backlog without assigning old attempts to a new provider', async () => {
+  const first = randomUUID(),
+    second = randomUUID(),
+    outbox = randomUUID();
+  const profile = (
+    await http.pool.query("INSERT INTO profiles(user_id) VALUES ('provider-self') RETURNING id")
+  ).rows[0].id as string;
+  await http.pool.query(
+    "INSERT INTO notification_outbox(id,profile_id,event_key,channels,idempotency_key) VALUES ($1::uuid,$2,'invoice.created',ARRAY['email'],$1::uuid::text)",
+    [outbox, profile]
+  );
+  await http.pool.query("INSERT INTO notification_job(outbox_id,channel) VALUES ($1,'email')", [
+    outbox,
+  ]);
+  for (const [providerId, status, latency, age] of [
+    [first, 'delivered', 100, '10 minutes'],
+    [first, 'failed', 300, '5 minutes'],
+    [first, 'failed', 900, '2 hours'],
+    [second, 'delivered', 700, '3 minutes'],
+  ] as const) {
+    await http.pool.query(
+      `INSERT INTO notification_delivery_log(notification_id,channel,status,attempt_number,provider_id,latency_ms,created_at)
+       VALUES ($1,'email',$2,1,$3,$4,NOW()-$5::interval)`,
+      [outbox, status, providerId, latency, age]
+    );
+  }
+  const metrics = await readProviderHealthMetrics(http.pool, [first, second], 'email');
+  expect(metrics.get(first)).toMatchObject({
+    attemptCount: 2,
+    failureCount: 1,
+    averageLatencyMs: 200,
+    p50LatencyMs: 200,
+    p95LatencyMs: 290,
+    p99LatencyMs: 298,
+    queueDepth: 1,
+  });
+  expect(metrics.get(first)?.oldestQueuedAt).toBeInstanceOf(Date);
+  expect(metrics.get(second)).toMatchObject({
+    attemptCount: 1,
+    failureCount: 0,
+    averageLatencyMs: 700,
+    queueDepth: 1,
+  });
+  const sms = await readProviderHealthMetrics(http.pool, [first], 'sms');
+  expect(sms.get(first)?.queueDepth).toBe(0);
+  await http.pool.query(
+    `INSERT INTO email_provider_configs(id,transport,label,config,created_by)
+     VALUES ($1,'smtp','Metrics','{}'::jsonb,$2)`,
+    [first, actor.userId]
+  );
+  const listed = await new EmailProviderConfigService(http.pool).list();
+  expect(listed[0]?.healthMetrics).toMatchObject({ attemptCount: 2, failureCount: 1 });
 });
 
 for (const transport of ['smtp', 'resend', 'smsir'] as const) {

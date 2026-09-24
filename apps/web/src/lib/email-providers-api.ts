@@ -3,6 +3,16 @@ import { withCsrf } from './csrf.js';
 export type Transport = 'smtp' | 'resend';
 export type Status = 'draft' | 'active' | 'superseded' | 'disabled';
 export type TestStatus = 'pending' | 'passed' | 'failed';
+export interface ProviderHealthMetrics {
+  attemptCount: number;
+  failureCount: number;
+  averageLatencyMs: number | null;
+  p50LatencyMs: number | null;
+  p95LatencyMs: number | null;
+  p99LatencyMs: number | null;
+  queueDepth: number;
+  oldestQueuedAt: string | null;
+}
 export interface EmailProvider {
   id: string;
   transport: Transport;
@@ -17,6 +27,7 @@ export interface EmailProvider {
   breakerOpenedAt?: string | null;
   breakerCooldownUntil?: string | null;
   lastFailureAt?: string | null;
+  healthMetrics?: ProviderHealthMetrics;
   maskedConfig?: unknown;
 }
 export interface TestConnectionOutcome {
@@ -33,6 +44,31 @@ function record(value: unknown): Record<string, unknown> | null {
   return value !== null && typeof value === 'object' && !Array.isArray(value)
     ? (value as Record<string, unknown>)
     : null;
+}
+export function readHealthMetrics(value: unknown): ProviderHealthMetrics | undefined {
+  if (value === undefined) return undefined;
+  const metrics = record(value);
+  if (!metrics) throw new ProviderRequestError();
+  for (const key of ['attemptCount', 'failureCount', 'queueDepth']) {
+    if (typeof metrics[key] !== 'number' || !Number.isSafeInteger(metrics[key]) || metrics[key] < 0)
+      throw new ProviderRequestError();
+  }
+  if ((metrics.failureCount as number) > (metrics.attemptCount as number))
+    throw new ProviderRequestError();
+  for (const key of ['averageLatencyMs', 'p50LatencyMs', 'p95LatencyMs', 'p99LatencyMs']) {
+    if (
+      metrics[key] !== null &&
+      (typeof metrics[key] !== 'number' || !Number.isFinite(metrics[key]) || metrics[key] < 0)
+    )
+      throw new ProviderRequestError();
+  }
+  if (
+    metrics.oldestQueuedAt !== null &&
+    (typeof metrics.oldestQueuedAt !== 'string' ||
+      !Number.isFinite(Date.parse(metrics.oldestQueuedAt)))
+  )
+    throw new ProviderRequestError();
+  return metrics as unknown as ProviderHealthMetrics;
 }
 function provider(value: unknown): EmailProvider {
   const row = record(value);
@@ -70,7 +106,12 @@ function provider(value: unknown): EmailProvider {
     if (row[field] !== undefined && row[field] !== null && typeof row[field] !== 'string')
       throw new ProviderRequestError();
   }
-  return row as unknown as EmailProvider;
+  return {
+    ...row,
+    ...(row.healthMetrics === undefined
+      ? {}
+      : { healthMetrics: readHealthMetrics(row.healthMetrics) }),
+  } as unknown as EmailProvider;
 }
 export async function providerRequest(
   path: string,

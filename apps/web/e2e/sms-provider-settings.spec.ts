@@ -2,7 +2,7 @@ import { cookieResponse } from './cookie-response';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
-import { smsProviderText } from '@barghsa/i18n/providers';
+import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 
 function provider(id = 'sms-draft', status = 'draft') {
   return {
@@ -51,6 +51,16 @@ for (const locale of ['en', 'fa'] as const) {
             degraded: true,
             breakerCooldownUntil: '2099-09-24T12:00:00Z',
             lastFailureAt: '2026-09-24T12:00:00Z',
+            healthMetrics: {
+              attemptCount: 2,
+              failureCount: 1,
+              averageLatencyMs: 210,
+              p50LatencyMs: 210,
+              p95LatencyMs: 300,
+              p99LatencyMs: 310,
+              queueDepth: 3,
+              oldestQueuedAt: '2026-09-24T12:00:00Z',
+            },
           },
         ],
       })
@@ -59,6 +69,8 @@ for (const locale of ['en', 'fa'] as const) {
     const row = page.getByRole('row').filter({ hasText: 'sms-active' });
     await expect(row).toContainText(text('healthPaused'));
     await expect(row).toContainText(text('healthLastFailure'));
+    await expect(row).toContainText(providerText('admin.providers.health.failureRate', locale));
+    await expect(row).toContainText(providerText('admin.providers.health.queueDepth', locale));
   });
   test(`SMS locale mappings survive save and cannot be silently dropped (${locale})`, async ({
     page,

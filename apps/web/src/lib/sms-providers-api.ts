@@ -3,6 +3,8 @@ import {
   ProviderRequestError,
   type Status,
   type TestStatus,
+  type ProviderHealthMetrics,
+  readHealthMetrics,
 } from './email-providers-api.js';
 
 export interface SmsMapping {
@@ -27,6 +29,7 @@ export interface SmsProvider {
   degraded: boolean;
   breakerCooldownUntil: string | null;
   lastFailureAt: string | null;
+  healthMetrics: ProviderHealthMetrics | undefined;
   keyConfigured: boolean;
   config: SmsConfig;
 }
@@ -91,6 +94,7 @@ export function readSmsProvider(
     degraded: row.degraded === true,
     breakerCooldownUntil: optionalDate(row.breakerCooldownUntil),
     lastFailureAt: optionalDate(row.lastFailureAt),
+    healthMetrics: readHealthMetrics(row.healthMetrics),
     // Never copy the masked credential into form state or send it back on update.
     keyConfigured: typeof c.api_key === 'string' && c.api_key.length > 0,
     config: {

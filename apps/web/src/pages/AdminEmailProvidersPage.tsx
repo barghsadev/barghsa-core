@@ -1,4 +1,5 @@
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { ProviderHealthMetrics } from '../components/ProviderHealthMetrics.js';
 import { providerText } from '@barghsa/i18n/providers';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -715,6 +716,10 @@ export default function AdminEmailProvidersPage() {
                           )}
                         </>
                       )}
+                      <ProviderHealthMetrics
+                        metrics={p.healthMetrics}
+                        active={p.status === 'active'}
+                      />
                     </td>
                     <td className="px-4 py-3">
                       <span

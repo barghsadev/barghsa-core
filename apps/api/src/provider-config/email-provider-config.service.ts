@@ -12,6 +12,7 @@ import type { ResendConnectionTesterService } from './resend-connection-tester.s
 import { ProviderSecretsService, type ProviderMaskedConfig } from './provider-secrets.service';
 import { EmailCircuitBreakerService } from './email-circuit-breaker.service';
 import { PROVIDER_CONFIG_POOL, type PoolClient, type ProviderPool } from './provider-config.di';
+import { readProviderHealthMetrics, type ProviderHealthMetrics } from './provider-health-metrics';
 
 // Re-export the DI token + pool types for backward compatibility with existing
 // imports (previously defined inline here).
@@ -72,6 +73,7 @@ export interface EmailProviderConfigResult {
   breakerOpenedAt: Date | null;
   breakerCooldownUntil: Date | null;
   lastFailureAt: Date | null;
+  healthMetrics?: ProviderHealthMetrics;
   /**
    * Masked view of the stored transport config for admin UI display
    * (T-05.06.05): secret fields are replaced with `*` + last 4 characters;
@@ -218,9 +220,18 @@ export class EmailProviderConfigService {
     const result = await this.db.query(
       `SELECT ${SELECT_COLUMNS} FROM email_provider_configs ORDER BY created_at DESC`
     );
-    return (result.rows as Array<EmailProviderConfigResult & { config?: ProviderConfigBody }>).map(
-      (row) => this.maskRow(row)
+    const rows = (
+      result.rows as Array<EmailProviderConfigResult & { config?: ProviderConfigBody }>
+    ).map((row) => this.maskRow(row));
+    const metrics = await readProviderHealthMetrics(
+      this.db,
+      rows.map((row) => row.id),
+      'email'
     );
+    return rows.map((row) => {
+      const health = metrics.get(row.id);
+      return { ...row, ...(health ? { healthMetrics: health } : {}) };
+    });
   }
 
   async get(id: string): Promise<EmailProviderConfigResult> {

@@ -13,6 +13,7 @@ import {
   type ProviderTransport,
 } from './provider-secrets.service';
 import { PROVIDER_CONFIG_POOL, type ProviderPool } from './provider-config.di';
+import { readProviderHealthMetrics, type ProviderHealthMetrics } from './provider-health-metrics';
 
 /**
  * SMS provider configuration service (T-09.06.02).
@@ -67,6 +68,7 @@ export interface SmsProviderConfigResult {
   breakerOpenedAt: Date | null;
   breakerCooldownUntil: Date | null;
   lastFailureAt: Date | null;
+  healthMetrics?: ProviderHealthMetrics;
   supersedesId: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -223,9 +225,18 @@ export class SmsProviderConfigService {
     const result = await this.db.query(
       `SELECT ${SELECT_COLUMNS} FROM sms_provider_configs ORDER BY created_at DESC`
     );
-    return (result.rows as Array<SmsProviderConfigResult & { config?: ProviderConfigBody }>).map(
-      (row) => this.maskRow(row)
+    const rows = (
+      result.rows as Array<SmsProviderConfigResult & { config?: ProviderConfigBody }>
+    ).map((row) => this.maskRow(row));
+    const metrics = await readProviderHealthMetrics(
+      this.db,
+      rows.map((row) => row.id),
+      'sms'
     );
+    return rows.map((row) => {
+      const health = metrics.get(row.id);
+      return { ...row, ...(health ? { healthMetrics: health } : {}) };
+    });
   }
 
   async get(id: string): Promise<SmsProviderConfigResult> {

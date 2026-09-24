@@ -17,6 +17,16 @@ for (const locale of ['en', 'fa'] as const) {
             degraded: true,
             breakerCooldownUntil: '2099-09-24T12:00:00Z',
             lastFailureAt: '2026-09-24T12:00:00Z',
+            healthMetrics: {
+              attemptCount: 4,
+              failureCount: 1,
+              averageLatencyMs: 120,
+              p50LatencyMs: 100,
+              p95LatencyMs: 240,
+              p99LatencyMs: 270,
+              queueDepth: 2,
+              oldestQueuedAt: '2026-09-24T12:00:00Z',
+            },
             maskedConfig: { api_key: '********live', from_email: 'mail@example.test' },
           },
         ],
@@ -30,6 +40,9 @@ for (const locale of ['en', 'fa'] as const) {
     const row = page.getByRole('row').filter({ hasText: 'Active email' });
     await expect(row).toContainText(text('health.paused'));
     await expect(row).toContainText(text('health.lastFailure'));
+    await expect(row).toContainText(text('health.failureRate'));
+    await expect(row).toContainText(text('health.latencyPercentiles'));
+    await expect(row).toContainText(text('health.queueDepth'));
   });
   for (const transport of ['smtp', 'resend'] as const) {
     test(`email ${transport} draft preserves saved configuration and write-only credentials (${locale})`, async ({

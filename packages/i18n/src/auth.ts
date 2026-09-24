@@ -192,7 +192,7 @@ export const fa: I18nDictionary = {
 export const en: I18nDictionary = {
   'error.validation.unsupported_media_type': 'Unsupported request content type',
   'error.provider.unavailable': 'A required service is temporarily unavailable',
-  'error.maintenance.active': 'This service is temporarily unavailable',
+  'error.maintenance.active': 'This service is temporarily paused',
   'auth.otp.error.alreadyConsumed':
     'This verification code has already been used. Request a new code.',
   'crm.profile.deletion.blocked': 'This profile has linked records that prevent deletion.',

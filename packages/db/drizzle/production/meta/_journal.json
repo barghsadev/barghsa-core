@@ -848,6 +848,13 @@
       "when": 1791331200103,
       "tag": "0200_sms_provider_circuit_breaker",
       "breakpoints": true
+    },
+    {
+      "idx": 201,
+      "version": "7",
+      "when": 1791331200104,
+      "tag": "0201_notification_provider_attempt_metrics",
+      "breakpoints": true
     }
   ]
 }
