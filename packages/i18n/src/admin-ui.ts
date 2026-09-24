@@ -190,6 +190,10 @@ export const fa: I18nDictionary = {
   'admin.electricityOrders.lineTotal': 'مبلغ خالص',
   'admin.electricityOrders.settingsSnapshot': 'تنظیمات سفارش',
   'admin.electricityOrders.contractSnapshot': 'نسخه قرارداد',
+  'admin.electricityOrders.contractPreview': 'قرارداد اولیه برای بررسی',
+  'admin.electricityOrders.templateVersion': 'نسخه قالب',
+  'admin.electricityOrders.noContractTemplate':
+    'قالب متنی به این سفارش پیوست نشده است. پیش از تصمیم، جزئیات ثبت‌شده قیمت و قرارداد را در بخش پایین بررسی کنید.',
   'admin.electricityOrders.revision.title': 'بررسی اصلاح سفارش',
   'admin.electricityOrders.revision.staffReason': 'درخواست اصلاح کارکنان',
   'admin.electricityOrders.revision.customerResponse': 'پاسخ مشتری',
@@ -1408,6 +1412,10 @@ export const en: I18nDictionary = {
   'admin.electricityOrders.lineTotal': 'Net amount',
   'admin.electricityOrders.settingsSnapshot': 'Order settings',
   'admin.electricityOrders.contractSnapshot': 'Contract version',
+  'admin.electricityOrders.contractPreview': 'Preliminary contract for review',
+  'admin.electricityOrders.templateVersion': 'Template version',
+  'admin.electricityOrders.noContractTemplate':
+    'No text template is attached. Review the saved pricing and contract details below before deciding.',
   'admin.electricityOrders.revision.title': 'Review order changes',
   'admin.electricityOrders.revision.staffReason': 'Staff request',
   'admin.electricityOrders.revision.customerResponse': 'Customer response',

@@ -38,7 +38,16 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     },
     settingsSnapshot: { green: false },
     fullAddress: 'Electricity Street',
-    contractSnapshot: { orderId: 'order-1' },
+    contractSnapshot: {
+      orderId: 'order-1',
+      template: {
+        templateId: 'template-1',
+        versionId: 'template-version-2',
+        versionNumber: 2,
+        name: 'Electricity supply terms',
+        text: 'Supply starts after payment.\nCustomer: Electricity Buyer',
+      },
+    },
     versionId: 'version-1',
     totalIrR: '1000',
     paidIrR: '0',
@@ -145,6 +154,14 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     const statusValues = [...container.querySelectorAll('dl dd')].map((item) => item.textContent);
     expect(statusValues.slice(0, 2)).toEqual(['Awaiting staff review', 'Unpaid']);
     expect(container.textContent).toContain('Thermal electricity');
+    const contractPreview = container.querySelector(
+      '[aria-label="Preliminary contract for review"]'
+    );
+    expect(contractPreview?.textContent).toContain('Electricity supply terms · Template version 2');
+    expect(contractPreview?.textContent).toContain('Supply starts after payment.');
+    expect(contractPreview?.querySelector('[dir="auto"]')?.textContent).toContain(
+      'Customer: Electricity Buyer'
+    );
     expect(
       container.querySelector(
         'a[href="/admin/invoices?invoiceId=11111111-1111-7111-8111-111111111111"]'
@@ -291,6 +308,7 @@ it('opens a linked order directly even when it is no longer in the review queue'
     expect(container.textContent).toContain('Electricity Buyer');
     expect(container.textContent).not.toContain('No orders await review.');
     expect(container.textContent).toContain('Contract and order activated');
+    expect(container.textContent).toContain('No text template is attached.');
     expect(
       container.querySelector(`a[href="/admin/contracts?contractId=${contractId}"]`)?.textContent
     ).toBe('Open contract');

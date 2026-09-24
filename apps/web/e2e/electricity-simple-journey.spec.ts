@@ -183,10 +183,14 @@ test('simple electricity order moves from reviewed quote through payment and con
         orderId,
         profileId,
         commercialStatus: reviewComplete ? 'CONFIRMED' : 'PENDING',
-        electricityStatus: reviewComplete ? 'approved' : 'awaiting_staff_review',
+        electricityStatus: accepted
+          ? 'active'
+          : reviewComplete
+            ? 'approved'
+            : 'awaiting_staff_review',
         financialStatus: paid ? 'paid' : 'unpaid',
         nextAction: accepted
-          ? 'none'
+          ? 'await_delivery'
           : paid
             ? 'accept_contract'
             : reviewComplete
@@ -502,7 +506,7 @@ test('simple electricity order moves from reviewed quote through payment and con
     .getByRole('region', { name: 'Contract terms' })
     .getByRole('link', { name: 'Open electricity order' })
     .click();
-  await expect(statusPair.locator('dd')).toHaveText(['Approved', 'Paid']);
+  await expect(statusPair.locator('dd')).toHaveText(['Active', 'Paid']);
   await expect(page.getByText('Contract status', { exact: true }).locator('..')).toContainText(
     'Active'
   );

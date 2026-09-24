@@ -85,6 +85,20 @@ function pricingLines(snapshot: Record<string, unknown>) {
   );
 }
 
+function contractTemplate(snapshot: Record<string, unknown>) {
+  const value = snapshot.template;
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const template = value as Record<string, unknown>;
+  if (
+    typeof template.name !== 'string' ||
+    typeof template.versionNumber !== 'number' ||
+    !Number.isInteger(template.versionNumber) ||
+    typeof template.text !== 'string'
+  )
+    return null;
+  return { name: template.name, versionNumber: template.versionNumber, text: template.text };
+}
+
 export default function AdminElectricityOrdersPage() {
   const locale = useLocale();
   const time = useAccountTime(locale);
@@ -228,6 +242,8 @@ export default function AdminElectricityOrdersPage() {
       forbiddenMessage: copy('forbidden'),
     });
   }
+
+  const selectedTemplate = detail ? contractTemplate(detail.contractSnapshot) : null;
 
   return (
     <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -558,6 +574,25 @@ export default function AdminElectricityOrdersPage() {
                   </div>
                 </section>
               ) : null}
+              <section
+                className="flex flex-col gap-3 rounded-md border p-4"
+                aria-label={copy('contractPreview')}
+              >
+                <h3 className="font-semibold">{copy('contractPreview')}</h3>
+                {selectedTemplate ? (
+                  <>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedTemplate.name} · {copy('templateVersion')}{' '}
+                      {selectedTemplate.versionNumber}
+                    </p>
+                    <p className="whitespace-pre-wrap break-words text-sm" dir="auto">
+                      {selectedTemplate.text}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-sm text-muted-foreground">{copy('noContractTemplate')}</p>
+                )}
+              </section>
               <details className="rounded-md border p-3 text-sm">
                 <summary className="cursor-pointer font-medium">{copy('snapshots')}</summary>
                 <h3 className="mt-3 font-semibold">{copy('pricingSnapshot')}</h3>
