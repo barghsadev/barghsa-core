@@ -255,6 +255,8 @@ test('simple electricity order moves from reviewed quote through payment and con
         systemKey: line.systemKey,
         quantityKwh: line.quantityKwh,
         unitPriceIrR: line.unitPriceIrR,
+        subtotalIrR: line.subtotalIrR,
+        discountIrR: line.discountIrR,
         netIrR: (BigInt(line.subtotalIrR) - BigInt(line.discountIrR)).toString(),
         vatIrR: line.vatIrR,
       })),
@@ -520,6 +522,26 @@ test('simple electricity order moves from reviewed quote through payment and con
 
   await page.goto('/admin/electricity-orders');
   await page.getByRole('button', { name: new RegExp(`Buyer.*${orderId}`) }).click();
+  const staffProducts = page
+    .getByRole('heading', { name: 'Order products' })
+    .locator('..')
+    .getByRole('table');
+  await expect(staffProducts.getByRole('columnheader')).toContainText([
+    'Product',
+    'Quantity',
+    'Unit price',
+    'Subtotal',
+    'Discount',
+    'Net before VAT',
+    'VAT',
+  ]);
+  const thermalCells = staffProducts
+    .getByRole('row', { name: /Thermal electricity/ })
+    .getByRole('cell');
+  await expect(thermalCells.nth(3)).toContainText(/1,000,000/);
+  await expect(thermalCells.nth(4)).toContainText(/50,000/);
+  await expect(thermalCells.nth(5)).toContainText(/950,000/);
+  await expect(thermalCells.nth(6)).toContainText(/100,000/);
   await expect(page.getByRole('region', { name: 'Preliminary contract for review' })).toContainText(
     'Supply begins after invoice payment and customer acceptance.'
   );

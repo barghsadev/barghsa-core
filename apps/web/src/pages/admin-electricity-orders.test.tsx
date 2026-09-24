@@ -154,6 +154,18 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     const statusValues = [...container.querySelectorAll('dl dd')].map((item) => item.textContent);
     expect(statusValues.slice(0, 2)).toEqual(['Awaiting staff review', 'Unpaid']);
     expect(container.textContent).toContain('Thermal electricity');
+    const thermalRow = [...container.querySelectorAll('tr')].find((row) =>
+      row.textContent?.includes('Thermal electricity')
+    );
+    expect([...thermalRow!.querySelectorAll('td')].map((cell) => cell.textContent)).toEqual([
+      'Thermal electricity',
+      '10 kWh',
+      '100',
+      '—',
+      '—',
+      '1000',
+      '0',
+    ]);
     const contractPreview = container.querySelector(
       '[aria-label="Preliminary contract for review"]'
     );

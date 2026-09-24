@@ -72,6 +72,8 @@ function pricingLines(snapshot: Record<string, unknown>) {
       systemKey: string;
       quantityKwh: string;
       unitPriceIrR: string;
+      subtotalIrR?: string;
+      discountIrR?: string;
       netIrR: string;
       vatIrR: string;
     } =>
@@ -447,7 +449,16 @@ export default function AdminElectricityOrdersPage() {
                         {copy('unitPrice')}
                       </th>
                       <th scope="col" className="p-2 text-start">
+                        {copy('subtotal')}
+                      </th>
+                      <th scope="col" className="p-2 text-start">
+                        {copy('discount')}
+                      </th>
+                      <th scope="col" className="p-2 text-start">
                         {copy('lineTotal')}
+                      </th>
+                      <th scope="col" className="p-2 text-start">
+                        {copy('vat')}
                       </th>
                     </tr>
                   </thead>
@@ -457,7 +468,18 @@ export default function AdminElectricityOrdersPage() {
                         <td className="p-2">{copy(`product.${line.systemKey}`)}</td>
                         <td className="p-2">{line.quantityKwh} kWh</td>
                         <td className="p-2">{numbers.money(line.unitPriceIrR)}</td>
+                        <td className="p-2">
+                          {typeof line.subtotalIrR === 'string'
+                            ? numbers.money(line.subtotalIrR)
+                            : '—'}
+                        </td>
+                        <td className="p-2">
+                          {typeof line.discountIrR === 'string'
+                            ? numbers.money(line.discountIrR)
+                            : '—'}
+                        </td>
                         <td className="p-2">{numbers.money(line.netIrR)}</td>
+                        <td className="p-2">{numbers.money(line.vatIrR)}</td>
                       </tr>
                     ))}
                   </tbody>
