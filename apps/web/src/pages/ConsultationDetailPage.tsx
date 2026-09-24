@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from '@tanstack/react-router';
 import { Button, Label } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { withCsrf } from '../lib/csrf.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { consultationNextAction } from '../lib/consultation-next-action.js';
@@ -44,6 +45,7 @@ export function ConsultationDetailPage() {
   const { requestId } = useParams({ from: '/_app/consultations/$requestId' });
   const navigate = useNavigate();
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const copy = (key: string) => tConsultation(key, locale);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -148,6 +150,7 @@ export function ConsultationDetailPage() {
         {copy('back')}
       </Link>
       <h1 className="text-3xl font-semibold">{copy('details')}</h1>
+      {time.notice}
       {loading && <p role="status">{copy('loading')}</p>}
       {error && <p role="alert">{copy('loadError')}</p>}
       {request && (
@@ -157,7 +160,7 @@ export function ConsultationDetailPage() {
             status={copy(`status_${request.status}`)}
             happened={
               latestEvent?.reason ??
-              `${copy(`status_${latestEvent?.status ?? request.status}`)} · ${new Intl.DateTimeFormat(locale).format(new Date(latestEvent?.created_at ?? request.submitted_at))}`
+              `${copy(`status_${latestEvent?.status ?? request.status}`)} · ${time.format(latestEvent?.created_at ?? request.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}`
             }
             nextAction={action!.text}
             owner={action!.owner}
@@ -170,7 +173,11 @@ export function ConsultationDetailPage() {
             <p>
               {copy('submittedAt')}:{' '}
               <time dateTime={request.submitted_at}>
-                {new Intl.DateTimeFormat(locale).format(new Date(request.submitted_at))}
+                {time.format(request.submitted_at, {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })}
               </time>
             </p>
             <p>
@@ -203,7 +210,7 @@ export function ConsultationDetailPage() {
               <p>
                 {copy('offerValidUntil')}:{' '}
                 <time dateTime={request.offer_valid_until}>
-                  {new Intl.DateTimeFormat(locale).format(new Date(request.offer_valid_until))}
+                  {time.format(request.offer_valid_until)}
                 </time>
               </p>
             )}
@@ -317,10 +324,7 @@ export function ConsultationDetailPage() {
                 >
                   <p className="font-medium">{copy(`status_${event.status}`)}</p>
                   <time className="block text-xs text-muted-foreground" dateTime={event.created_at}>
-                    {new Intl.DateTimeFormat(locale, {
-                      dateStyle: 'medium',
-                      timeStyle: 'short',
-                    }).format(new Date(event.created_at))}
+                    {time.format(event.created_at)}
                   </time>
                   <p className="text-xs text-muted-foreground">
                     {copy('actor')}: {copy(`actor_${event.actor_type}`)}

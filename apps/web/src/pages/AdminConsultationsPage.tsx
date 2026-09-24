@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Button, Label } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
+import { offerInputFromInstant, offerInstantFromInput } from '../lib/consultation-offer-time.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 
 interface RequestRow {
@@ -46,15 +48,9 @@ const statuses = [
   'cancelled',
 ] as const;
 
-function localDateTime(value: string | null): string {
-  if (!value) return '';
-  const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return '';
-  return new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 16);
-}
-
 export function AdminConsultationsPage() {
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const copy = (key: string) => tConsultation(key, locale);
   const [rows, setRows] = useState<RequestRow[]>([]);
   const [after, setAfter] = useState<string | null>(null);
@@ -162,7 +158,6 @@ export function AdminConsultationsPage() {
           setFee(result.request.fee ?? '');
           setScope(result.request.scope ?? '');
           setDeliverables(result.request.deliverables ?? '');
-          setValidUntil(localDateTime(result.request.offer_valid_until));
           setOfferReason('');
         }
       })
@@ -171,6 +166,12 @@ export function AdminConsultationsPage() {
       });
     return () => controller.abort();
   }, [selectedId, revision]);
+
+  useEffect(() => {
+    if (detail && time.status === 'ready') {
+      setValidUntil(offerInputFromInstant(detail.request.offer_valid_until, time.timezone));
+    }
+  }, [detail, time.status, time.timezone]);
 
   function prepare(path: string, title: string, body: Record<string, unknown> = {}) {
     if (!selectedId) return;
@@ -185,6 +186,15 @@ export function AdminConsultationsPage() {
   }
 
   const current = detail?.request;
+  const offerDeadline =
+    time.status === 'ready'
+      ? current?.offer_valid_until &&
+        validUntil === offerInputFromInstant(current.offer_valid_until, time.timezone)
+        ? new Date(current.offer_valid_until)
+        : offerInstantFromInput(validUntil, time.timezone)
+      : undefined;
+  const validOfferDeadline =
+    offerDeadline && Number.isFinite(offerDeadline.getTime()) && offerDeadline > new Date();
   return (
     <main className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <header className="flex flex-wrap items-start justify-between gap-3">
@@ -196,6 +206,7 @@ export function AdminConsultationsPage() {
           {copy('refresh')}
         </Button>
       </header>
+      {time.notice}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <label className="space-y-1 text-sm">
           <span>{copy('filterStatus')}</span>
@@ -293,7 +304,11 @@ export function AdminConsultationsPage() {
               </span>
               <span className="mt-2 block text-sm text-muted-foreground">
                 {copy(`status_${row.status}`)} · {copy(row.priority)} ·{' '}
-                {new Intl.DateTimeFormat(locale).format(new Date(row.submitted_at))}
+                {time.format(row.submitted_at, {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })}
               </span>
             </button>
           ))}
@@ -353,6 +368,7 @@ export function AdminConsultationsPage() {
                         type="datetime-local"
                         value={validUntil}
                         onChange={(event) => setValidUntil(event.target.value)}
+                        disabled={time.status !== 'ready'}
                         className="w-full rounded-md border bg-background p-2"
                       />
                     </label>
@@ -391,9 +407,7 @@ export function AdminConsultationsPage() {
                       !/^[1-9][0-9]{0,18}$/.test(fee) ||
                       !scope.trim() ||
                       !deliverables.trim() ||
-                      !validUntil ||
-                      !Number.isFinite(new Date(validUntil).getTime()) ||
-                      new Date(validUntil) <= new Date() ||
+                      !validOfferDeadline ||
                       (!!current.invoice_id && !offerReason.trim())
                     }
                     onClick={() =>
@@ -402,7 +416,7 @@ export function AdminConsultationsPage() {
                         fee,
                         scope: scope.trim(),
                         deliverables: deliverables.trim(),
-                        validUntil: new Date(validUntil).toISOString(),
+                        validUntil: offerDeadline!.toISOString(),
                         ...(current.invoice_id ? { reason: offerReason.trim() } : {}),
                       })
                     }
@@ -436,6 +450,7 @@ export function AdminConsultationsPage() {
                         type="datetime-local"
                         value={validUntil}
                         onChange={(event) => setValidUntil(event.target.value)}
+                        disabled={time.status !== 'ready'}
                         className="w-full rounded-md border bg-background p-2"
                       />
                     </label>
@@ -454,16 +469,14 @@ export function AdminConsultationsPage() {
                       !/^[1-9][0-9]{0,18}$/.test(fee) ||
                       fee === current.fee ||
                       !offerReason.trim() ||
-                      !validUntil ||
-                      !Number.isFinite(new Date(validUntil).getTime()) ||
-                      new Date(validUntil) <= new Date()
+                      !validOfferDeadline
                     }
                     onClick={() =>
                       prepare('paid-fee', copy('adjustPaidFee'), {
                         idempotencyKey: offerKey,
                         fee,
                         reason: offerReason.trim(),
-                        validUntil: new Date(validUntil).toISOString(),
+                        validUntil: offerDeadline!.toISOString(),
                       })
                     }
                   >
@@ -616,10 +629,7 @@ export function AdminConsultationsPage() {
                         className="block text-xs text-muted-foreground"
                         dateTime={event.created_at}
                       >
-                        {new Intl.DateTimeFormat(locale, {
-                          dateStyle: 'medium',
-                          timeStyle: 'short',
-                        }).format(new Date(event.created_at))}
+                        {time.format(event.created_at)}
                       </time>
                       {event.reason && <p dir="auto">{event.reason}</p>}
                     </li>

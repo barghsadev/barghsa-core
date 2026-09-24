@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Consultation history and offer deadlines in the account timezone](batches/2026-09-24-consultation-account-time.md) aligns customer and staff timelines and makes staff offer expiry editing use the saved timezone. Focused tests cover the UTC+14 boundary, unchanged instant preservation and a skipped daylight-saving time.
+
 [Solar history in the account timezone](batches/2026-09-24-solar-history-account-time.md) aligns customer requests and staff document/postal queues with the saved timezone. The invoice-to-contract browser journey verifies a UTC+14 date boundary.
 
 [Saving history in the account timezone](batches/2026-09-24-saving-history-account-time.md) aligns customer and staff saving timelines, fulfillment, amendments and shared order comments with the saved timezone. The customer browser journey verifies a date-boundary case in UTC+14.

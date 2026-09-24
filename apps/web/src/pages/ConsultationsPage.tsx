@@ -3,6 +3,7 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { Button } from '@barghsa/ui';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { withCsrf } from '../lib/csrf.js';
 import { consultationNextAction } from '../lib/consultation-next-action.js';
 import type { SwitcherProfile } from '../components/ProfileSwitcher.js';
@@ -31,6 +32,7 @@ interface RequestRow {
 export function ConsultationsPage() {
   const navigate = useNavigate();
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const copy = (key: string) => tConsultation(key, locale);
   const [profile, setProfile] = useState<SwitcherProfile | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
@@ -153,6 +155,7 @@ export function ConsultationsPage() {
         <h1 className="text-3xl font-semibold">{copy('title')}</h1>
         <p className="max-w-2xl text-muted-foreground">{copy('intro')}</p>
       </header>
+      {time.notice}
       {loading && <p role="status">{copy('loading')}</p>}
       {loadError && <p role="alert">{copy('loadError')}</p>}
       {!loading && !loadError && !profile && <p role="alert">{copy('profileRequired')}</p>}
@@ -266,7 +269,11 @@ export function ConsultationsPage() {
                         className="mt-2 block text-xs text-muted-foreground"
                         dateTime={request.submitted_at}
                       >
-                        {new Intl.DateTimeFormat(locale).format(new Date(request.submitted_at))}
+                        {time.format(request.submitted_at, {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                        })}
                       </time>
                     </Link>
                   </li>

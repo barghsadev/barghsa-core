@@ -147,6 +147,9 @@ test('solar list shows document and contract next actions, with the current docu
 
 test('consultation list opens its request detail route', async ({ page }) => {
   const submissions: Array<Record<string, unknown>> = [];
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Pacific/Kiritimati' } })
+  );
   await page.route('**/api/consultations/products?*', (route) =>
     route.fulfill({
       json: {
@@ -205,11 +208,15 @@ test('consultation list opens its request detail route', async ({ page }) => {
   await page.goto('/consultations');
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   await expect(page.getByRole('heading', { name: 'Consultations' })).toBeVisible();
+  await expect(page.locator(`a[href="/consultations/${consultationId}"] time`)).toHaveText(
+    '09/24/2026'
+  );
   await page.getByRole('button', { name: 'More requests' }).click();
   await expect(page.locator(`a[href="/consultations/${consultationId}"]`)).toBeVisible();
   await expect(page.locator(`a[href="/consultations/${olderConsultationId}"]`)).toBeVisible();
   await page.locator(`a[href="/consultations/${consultationId}"]`).click();
   await expect(page.getByRole('heading', { name: 'Consultation details' })).toBeVisible();
+  await expect(page.locator('time[datetime="2026-09-23T10:00:00.000Z"]')).toHaveText('09/24/2026');
   await expect(page.getByRole('region', { name: 'Status and next action' })).toBeVisible();
   await page.getByRole('link', { name: 'Back to consultations' }).click();
   await expect(page.getByRole('heading', { name: 'Consultations' })).toBeVisible();
