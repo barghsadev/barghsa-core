@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { solarNextAction } from '../lib/solar-next-action.js';
 
 interface RequestRow {
@@ -19,6 +20,7 @@ interface RequestRow {
 
 export function SolarRequestsPage() {
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
   const [rows, setRows] = useState<RequestRow[]>([]);
   const [before, setBefore] = useState<string | null>(null);
@@ -79,6 +81,7 @@ export function SolarRequestsPage() {
       >
         {copy('submit')}
       </Link>
+      {time.notice}
       {loading && <p role="status">{copy('loading')}</p>}
       {error && <p role="alert">{copy('notFound')}</p>}
       {error && (
@@ -117,7 +120,11 @@ export function SolarRequestsPage() {
                   {t('workflow.owner', locale)}: {t(`workflow.owner.${action.owner}`, locale)}
                 </span>
                 <time className="text-sm text-muted-foreground" dateTime={row.submitted_at}>
-                  {new Intl.DateTimeFormat(locale).format(new Date(row.submitted_at))}
+                  {time.format(row.submitted_at, {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                  })}
                 </time>
               </Link>
             </li>

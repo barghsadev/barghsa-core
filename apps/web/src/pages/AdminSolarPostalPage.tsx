@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { SolarContractForm } from '../components/SolarContractForm.js';
@@ -30,6 +31,7 @@ type PostalLane = 'needs_staff' | 'waiting_customer' | 'all';
 
 export function AdminSolarPostalPage() {
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
   const [rows, setRows] = useState<Row[]>([]);
   const [lane, setLane] = useState<PostalLane>('needs_staff');
@@ -146,6 +148,7 @@ export function AdminSolarPostalPage() {
   return (
     <main className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('postalStaffTitle')}</h1>
+      {time.notice}
       {error && <p role="alert">{copy('postalError')}</p>}
       {createdContractId && (
         <p role="status">
@@ -205,9 +208,7 @@ export function AdminSolarPostalPage() {
                 <span className="block font-medium">{item.profile_name}</span>
                 <span className="block text-sm text-muted-foreground">
                   {copy(`postal_${item.postal_status}`)} ·{' '}
-                  {new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(
-                    new Date(item.created_at)
-                  )}
+                  {time.format(item.created_at, { dateStyle: 'medium' })}
                 </span>
                 <span className="block text-xs text-muted-foreground">
                   {copy('staffRequest')}: <bdi>{item.id}</bdi>

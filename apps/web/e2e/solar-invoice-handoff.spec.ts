@@ -42,7 +42,7 @@ test('solar customer sees invoice payment, review, then published contract hando
     })
   );
   await page.route('**/api/user/settings/timezone', (route) =>
-    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+    route.fulfill({ json: { timezone: 'Pacific/Kiritimati' } })
   );
   await page.route('**/api/solar/requests?*', (route) =>
     route.fulfill({ json: { requests: [request()], nextBefore: null } })
@@ -63,6 +63,7 @@ test('solar customer sees invoice payment, review, then published contract hando
   await page.goto('/solar/requests');
   await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
   const row = page.getByRole('link', { name: /Contract created/ });
+  await expect(row.locator('time')).toHaveText('09/24/2026');
   await expect(row).toContainText('Review and pay the issued invoice.');
   await expect(row).toContainText('Who acts next: You');
   await row.click();
@@ -70,6 +71,7 @@ test('solar customer sees invoice payment, review, then published contract hando
   const summary = page.getByRole('region', { name: 'Status and next action' });
   const history = page.getByRole('region', { name: 'Request history' });
   await expect(history.getByRole('listitem')).toHaveCount(3);
+  await expect(history.locator('time').first()).toContainText('Sep 24, 2026');
   await expect(history).toContainText('Contract and invoice created');
   await page.getByRole('button', { name: 'Switch language to Persian' }).click();
   await expect(page.getByRole('region', { name: 'تاریخچه درخواست' })).toContainText(

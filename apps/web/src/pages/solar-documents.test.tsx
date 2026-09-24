@@ -20,6 +20,7 @@ it('allows an empty solar document set to be sent for review', async () => {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const fetchMock = vi.fn(async (url: string, options?: RequestInit) => {
+    if (url === '/api/user/settings/timezone') return Response.json({ timezone: 'Asia/Tehran' });
     if (url === '/api/solar/requests/request-1' && !options?.method)
       return new Response(
         JSON.stringify({

@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Button, Input, Label } from '@barghsa/ui';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 
@@ -48,6 +49,7 @@ interface Guidance {
 
 export function AdminSolarDocumentsPage() {
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
   const [requests, setRequests] = useState<RequestRow[]>([]);
   const [pendingDocuments, setPendingDocuments] = useState<PendingDocumentRow[]>([]);
@@ -224,6 +226,7 @@ export function AdminSolarDocumentsPage() {
   return (
     <main className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-3xl font-semibold">{copy('staffTitle')}</h1>
+      {time.notice}
       {error && <p role="alert">{copy('documentError')}</p>}
       <section className="space-y-3 rounded-xl border p-5">
         <h2 className="text-xl font-semibold">{copy('staffPendingFiles')}</h2>
@@ -243,11 +246,7 @@ export function AdminSolarDocumentsPage() {
                 <span className="block font-medium">{document.file_name}</span>
                 <span className="block text-sm text-muted-foreground">
                   {copy('staffUploader')}: {document.uploaded_by_name} ·{' '}
-                  {new Intl.DateTimeFormat(locale, {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  }).format(new Date(document.uploaded_at))}{' '}
-                  · {copy('staffPending')}
+                  {time.format(document.uploaded_at)} · {copy('staffPending')}
                 </span>
                 <span className="block text-xs text-muted-foreground">
                   {copy('staffRequest')}: <bdi>{document.request_id}</bdi>
@@ -284,9 +283,7 @@ export function AdminSolarDocumentsPage() {
                 <span className="block text-sm text-muted-foreground">
                   {copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building')} ·{' '}
                   {copy(`status_${row.status}`)} · {row.document_count} ·{' '}
-                  {new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(
-                    new Date(row.created_at)
-                  )}
+                  {time.format(row.created_at, { dateStyle: 'medium' })}
                 </span>
                 <span className="block text-xs text-muted-foreground">
                   {copy('staffRequest')}: <bdi>{row.id}</bdi>
@@ -312,12 +309,8 @@ export function AdminSolarDocumentsPage() {
               <li key={document.id} className="rounded-md border p-3">
                 <p className="font-medium">{document.file_name}</p>
                 <p className="text-sm text-muted-foreground">
-                  {document.uploaded_by} ·{' '}
-                  {new Intl.DateTimeFormat(locale, {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  }).format(new Date(document.uploaded_at))}{' '}
-                  · {document.state} · {document.staff_status}
+                  {document.uploaded_by} · {time.format(document.uploaded_at)} · {document.state} ·{' '}
+                  {document.staff_status}
                 </p>
                 {document.staff_reason && <p>{document.staff_reason}</p>}
                 <div className="mt-2 flex flex-wrap gap-2">

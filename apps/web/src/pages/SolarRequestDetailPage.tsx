@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { withCsrf } from '../lib/csrf.js';
 import { DocumentResults, type DocumentFilters } from '../components/DocumentsWorkspace.js';
 import { SolarPostalPanel } from '../components/SolarPostalPanel.js';
@@ -40,6 +41,7 @@ interface SolarRequest {
 export function SolarRequestDetailPage() {
   const { requestId } = useParams({ from: '/_app/solar/requests/$requestId' });
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const copy = (key: string) => tSolar(key, locale);
   const [request, setRequest] = useState<SolarRequest | null>(null);
   const [history, setHistory] = useState<Array<{ event: string; at: string }>>([]);
@@ -156,6 +158,7 @@ export function SolarRequestDetailPage() {
         {copy('back')}
       </Link>
       <h1 className="text-3xl font-semibold">{copy('details')}</h1>
+      {time.notice}
       {loading && <p role="status">{copy('loading')}</p>}
       {error && <p role="alert">{copy('notFound')}</p>}
       {request && request.id === requestId && (
@@ -165,7 +168,7 @@ export function SolarRequestDetailPage() {
             status={copy(`status_${request.status}`)}
             happened={
               request.status_reason ??
-              `${copy('submitted')}: ${new Intl.DateTimeFormat(locale).format(new Date(request.submitted_at))}`
+              `${copy('submitted')}: ${time.format(request.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}`
             }
             nextAction={action!.text}
             owner={action!.owner}
@@ -227,10 +230,7 @@ export function SolarRequestDetailPage() {
                 <li key={`${item.at}-${index}`} className="border-s-2 border-primary/30 ps-3">
                   <p>{copy(`history_${item.event}`)}</p>
                   <time className="text-sm text-muted-foreground" dateTime={item.at}>
-                    {new Intl.DateTimeFormat(locale, {
-                      dateStyle: 'medium',
-                      timeStyle: 'short',
-                    }).format(new Date(item.at))}
+                    {time.format(item.at)}
                   </time>
                 </li>
               ))}
@@ -398,12 +398,7 @@ export function SolarRequestDetailPage() {
             </div>
             <div>
               <dt>{copy('acceptedAt')}</dt>
-              <dd>
-                {new Intl.DateTimeFormat(locale, {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                }).format(new Date(request.agreement_accepted_at))}
-              </dd>
+              <dd>{time.format(request.agreement_accepted_at)}</dd>
             </div>
             <div>
               <dt>{copy('agreement')}</dt>

@@ -25,6 +25,8 @@ for (const [name, Page, path] of [
       'fetch',
       vi.fn(async (url: string) => {
         calls.push(url);
+        if (url === '/api/user/settings/timezone')
+          return Response.json({ timezone: 'Pacific/Kiritimati' });
         const more = new URL(url, 'http://localhost').searchParams.has('before');
         const id = more ? 'older-work' : 'first-work';
         const payload = url.includes('document-review-queue')
@@ -78,6 +80,7 @@ for (const [name, Page, path] of [
     try {
       await act(async () => root.render(<Page />));
       expect(container.textContent).toContain('first-work');
+      expect(container.textContent).toContain('Sep 24, 2026');
       const button = Array.from(container.querySelectorAll('button')).find(
         (candidate) => candidate.textContent?.trim() === 'More requests'
       );
@@ -115,6 +118,8 @@ it('shows individual pending solar files with uploader, time and another page', 
     'fetch',
     vi.fn(async (url: string) => {
       calls.push(url);
+      if (url === '/api/user/settings/timezone')
+        return Response.json({ timezone: 'Pacific/Kiritimati' });
       const older = new URL(url, 'http://localhost').searchParams.has('before');
       const payload = url.endsWith('/requests/request-1/documents')
         ? {
@@ -153,6 +158,7 @@ it('shows individual pending solar files with uploader, time and another page', 
     await act(async () => root.render(<AdminSolarDocumentsPage />));
     expect(container.textContent).toContain('first.pdf');
     expect(container.textContent).toContain('customer@example.test');
+    expect(container.textContent).toContain('Sep 24, 2026');
     expect(container.textContent).toContain('Pending review');
     const more = Array.from(container.querySelectorAll('button')).find(
       (button) => button.textContent?.trim() === 'More files'
