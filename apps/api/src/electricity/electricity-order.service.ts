@@ -894,7 +894,12 @@ export class ElectricityOrderService {
           await requireAddressGeography(client, input.address.provinceId, input.address.cityId);
           if (input.giftCode) await this.giftCodes.enforceValidationLimit(actor.userId);
           // Releasing inside the transaction makes a one-use code available to this revision.
-          await this.giftCodes.releaseByOrder(orderId, client, { actorUserId: actor.userId, ip });
+          await this.giftCodes.releaseByOrder(
+            orderId,
+            client,
+            { actorUserId: actor.userId, ip },
+            'replacement'
+          );
           const now = new Date();
           const quoted = await this.quote(client, input, now);
           const review = this.presentQuote(quoted);

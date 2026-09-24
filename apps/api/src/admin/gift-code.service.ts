@@ -44,11 +44,8 @@ import { RateLimitService } from '../rate-limit/rate-limit.service.js';
  *   (`computeGiftDiscount`), and inserts the ledger row status
  *   `consumed`. The gift_codes row is locked `FOR UPDATE` so concurrent
  *   redemptions serialize against the limits.
- * - {@link GiftCodeService.releaseByOrder} restores the slot
- *   (status → `released`) when an order is cancelled BEFORE payment —
- *   the default policy (T-09.12.03). After-payment release follows a
- *   policy config that does not exist yet; the ledger model supports it
- *   by keeping rows immutable and only flipping status.
+ * - {@link GiftCodeService.releaseByOrder} restores the slot according
+ *   to the code's cancellation policy, recording `restored_at` once.
  *
  * Redemption is ATOMIC with order creation: the orders module runs its
  * create flow inside one transaction and passes its executor into
@@ -59,9 +56,8 @@ import { RateLimitService } from '../rate-limit/rate-limit.service.js';
  * discount on taxable lines: taxable base = lineTotal − allocated
  * `discount_amount` (see @barghsa/shared/promotions docs).
  *
- * Deferred (UI slice): gift code list with search/filter, create/edit
- * form, usage statistics view, active/inactive toggle, high-value
- * percentage warning, fa/en dicts, RTL/a11y.
+ * The admin UI exposes both pre-payment and post-payment restoration
+ * policy switches alongside the existing code settings.
  */
 
 // ─── Public types ──────────────────────────────────────────────────────────
@@ -90,6 +86,8 @@ export interface CreateGiftCodeInput {
   validUntil: string | null;
   minOrderAmount: string;
   categories: string[];
+  restoreOnCancel?: boolean;
+  restoreAfterPayment?: boolean;
   actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
   ip: string;
 }
@@ -137,6 +135,8 @@ interface GiftCodeRow {
   valid_until: string | null;
   min_order_amount: string;
   categories: string[];
+  restore_on_cancel: boolean;
+  restore_after_payment: boolean;
   status: GiftCodeStatus;
   created_by: string;
   created_at: string;
@@ -156,6 +156,7 @@ interface RedemptionRow {
   order_id: string;
   discount_amount: string;
   status: 'consumed' | 'released';
+  restored_at: string | null;
   created_at: string;
 }
 
@@ -209,7 +210,8 @@ export class GiftCodeService {
       `SELECT gc.id, gc.code, gc.discount_type, gc.discount_value, gc.max_cap_irr,
               gc.eligibility, gc.total_limit, gc.per_profile_limit,
               gc.valid_from, gc.valid_until, gc.min_order_amount,
-              gc.categories, gc.status, gc.created_by, gc.created_at, gc.updated_at,
+              gc.categories, gc.restore_on_cancel, gc.restore_after_payment,
+              gc.status, gc.created_by, gc.created_at, gc.updated_at,
               COUNT(gcr.id) FILTER (WHERE gcr.status = 'consumed')::int AS consumed,
               COUNT(gcr.id) FILTER (WHERE gcr.status = 'released')::int AS released,
               COALESCE(SUM(gcr.discount_amount) FILTER (WHERE gcr.status = 'consumed'), 0) AS total_discount
@@ -283,7 +285,7 @@ export class GiftCodeService {
       [id]
     );
     const recent = await pool.query<RedemptionRow>(
-      `SELECT id, gift_code_id, profile_id, order_id, discount_amount, status, created_at
+      `SELECT id, gift_code_id, profile_id, order_id, discount_amount, status, restored_at, created_at
          FROM gift_code_redemptions
         WHERE gift_code_id = $1
         ORDER BY created_at DESC
@@ -312,6 +314,9 @@ export class GiftCodeService {
    * ONE transaction.
    */
   async create(input: CreateGiftCodeInput): Promise<GiftCodeDto> {
+    if (input.restoreAfterPayment && input.restoreOnCancel === false) {
+      throw this.invalidField('restoreAfterPayment');
+    }
     const code = this.assertNormalizedCode(input.code);
     const validation = validateGiftCodePayload(input);
     if (!validation.ok) {
@@ -358,8 +363,9 @@ export class GiftCodeService {
         `INSERT INTO gift_codes
            (id, code, discount_type, discount_value, max_cap_irr, eligibility,
             total_limit, per_profile_limit, valid_from, valid_until,
-            min_order_amount, categories, status, created_by, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'active', $13, $14, $14)`,
+            min_order_amount, categories, restore_on_cancel, restore_after_payment,
+            status, created_by, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'active', $15, $16, $16)`,
         [
           id,
           code,
@@ -373,6 +379,8 @@ export class GiftCodeService {
           validUntil,
           minOrderAmount,
           categories,
+          input.restoreOnCancel ?? true,
+          input.restoreAfterPayment ?? false,
           input.actor.userId,
           new Date(),
         ]
@@ -399,6 +407,8 @@ export class GiftCodeService {
           validUntil: validUntil !== null ? validUntil.toISOString() : undefined,
           minOrderAmount,
           categories: categories.length > 0 ? categories : undefined,
+          restoreOnCancel: input.restoreOnCancel ?? true,
+          restoreAfterPayment: input.restoreAfterPayment ?? false,
         },
       });
       this.logger.log(`Gift code created: id=${id}, code=${code}, actor=${input.actor.userId}`);
@@ -416,6 +426,12 @@ export class GiftCodeService {
     return this.withAdminTransaction(input.actor, async (q) => {
       const current = await this.findById(q, id, true);
       if (!current) throw this.notFound(id);
+      if (
+        (input.restoreAfterPayment ?? current.restore_after_payment) &&
+        !(input.restoreOnCancel ?? current.restore_on_cancel)
+      ) {
+        throw this.invalidField('restoreAfterPayment');
+      }
 
       const code = input.code !== undefined ? this.assertNormalizedCode(input.code) : current.code;
       if (code !== current.code) {
@@ -515,8 +531,9 @@ export class GiftCodeService {
             SET code = $1, discount_type = $2, discount_value = $3, max_cap_irr = $4,
                 eligibility = $5, total_limit = $6, per_profile_limit = $7,
                 valid_from = $8, valid_until = $9, min_order_amount = $10,
-                categories = $11, updated_at = $12
-          WHERE id = $13`,
+                categories = $11, restore_on_cancel = $12, restore_after_payment = $13,
+                updated_at = $14
+          WHERE id = $15`,
         [
           code,
           discountType,
@@ -529,6 +546,8 @@ export class GiftCodeService {
           validUntil,
           minOrderAmount,
           categories,
+          input.restoreOnCancel ?? current.restore_on_cancel,
+          input.restoreAfterPayment ?? current.restore_after_payment,
           new Date(),
           id,
         ]
@@ -559,6 +578,12 @@ export class GiftCodeService {
           ...(input.discountValue !== undefined ? { discountValue } : {}),
           ...(input.maxCapIrr !== undefined ? { maxCapIrr } : {}),
           ...(input.eligibility !== undefined ? { eligibility } : {}),
+          ...(input.restoreOnCancel !== undefined
+            ? { restoreOnCancel: input.restoreOnCancel }
+            : {}),
+          ...(input.restoreAfterPayment !== undefined
+            ? { restoreAfterPayment: input.restoreAfterPayment }
+            : {}),
         },
       });
       this.logger.log(`Gift code updated: id=${id}, code=${code}, actor=${input.actor.userId}`);
@@ -632,7 +657,8 @@ export class GiftCodeService {
       const lock = await tx.query<GiftCodeRow>(
         `SELECT id, code, discount_type, discount_value, max_cap_irr, eligibility,
                 total_limit, per_profile_limit, valid_from, valid_until,
-                min_order_amount, categories, status, created_by, created_at, updated_at
+                min_order_amount, categories, restore_on_cancel, restore_after_payment,
+                status, created_by, created_at, updated_at
            FROM gift_codes
           WHERE code = $1
           FOR UPDATE`,
@@ -725,7 +751,7 @@ export class GiftCodeService {
         `INSERT INTO gift_code_redemptions
            (id, gift_code_id, profile_id, order_id, discount_amount, status, created_at)
          VALUES ($1, $2, $3, $4, $5, 'consumed', $6)
-         RETURNING id, gift_code_id, profile_id, order_id, discount_amount, status, created_at`,
+         RETURNING id, gift_code_id, profile_id, order_id, discount_amount, status, restored_at, created_at`,
         [uuidv7(), gift.id, input.profileId, input.orderId, discountAmount, new Date()]
       );
       // The ledger row is the primary trace, mirroring the epic's audit
@@ -769,27 +795,31 @@ export class GiftCodeService {
   }
 
   /**
-   * Restore gift-code slots when an order is cancelled BEFORE payment
-   * (the default policy, T-09.12.03): consumed ledger rows flip to
-   * `released` and stop counting against limits. Idempotent — already
-   * released rows are untouched. Returns the number of slots restored.
+   * Restore consumed slots according to the code's cancellation policy.
+   * Paid cancellations require explicit opt-in. Already released rows are
+   * untouched, so retries cannot restore twice.
    *
-   * When `q` is omitted the service opens its own connection; when a
-   * caller-provided executor is passed (the orders module's cancel flow)
-   * the caller owns the transaction, so the cancellation and the slot
-   * release commit or roll back together — a cancelled order can never
-   * permanently leak a consumed slot because its release failed.
+   * A replacement releases the old redemption before an unpaid order is
+   * repriced, regardless of cancellation policy. The caller can supply a
+   * transaction so the order change and slot release commit together.
    */
   async releaseByOrder(
     orderId: string,
     q?: DbExecutor,
-    audit?: { actorUserId: string; ip: string }
+    audit?: { actorUserId: string; ip: string },
+    reason: 'unpaid_cancellation' | 'paid_cancellation' | 'replacement' = 'unpaid_cancellation'
   ): Promise<{ released: number }> {
     const run = async (tx: DbExecutor): Promise<{ released: number }> => {
       const result = await tx.query(
-        `UPDATE gift_code_redemptions SET status = 'released'
-          WHERE order_id = $1 AND status = 'consumed'`,
-        [orderId]
+        `UPDATE gift_code_redemptions AS redemption
+            SET status = 'released', restored_at = clock_timestamp()
+           FROM gift_codes AS code
+          WHERE redemption.order_id = $1
+            AND redemption.status = 'consumed'
+            AND redemption.gift_code_id = code.id
+            AND ($2::text = 'replacement' OR code.restore_on_cancel)
+            AND ($2::text <> 'paid_cancellation' OR code.restore_after_payment)`,
+        [orderId, reason]
       );
       const released = result.rowCount ?? 0;
       if (released > 0) {
@@ -799,7 +829,7 @@ export class GiftCodeService {
             ip: audit.ip,
             entity: 'gift_code',
             action: 'released',
-            meta: { orderId },
+            meta: { orderId, reason },
           });
         }
         this.logger.log(`Gift code slot(s) released for cancelled order ${orderId}: ${released}`);
@@ -896,6 +926,7 @@ export class GiftCodeService {
       orderId: row.order_id,
       discountAmount: row.discount_amount,
       status: row.status,
+      restoredAt: row.restored_at,
       createdAt: row.created_at,
     };
   }
@@ -915,6 +946,8 @@ export class GiftCodeService {
       validUntil: row.valid_until,
       minOrderAmount: row.min_order_amount,
       categories: row.categories,
+      restoreOnCancel: row.restore_on_cancel,
+      restoreAfterPayment: row.restore_after_payment,
       status: row.status,
       createdBy: row.created_by,
       createdAt: row.created_at,
@@ -951,7 +984,8 @@ export class GiftCodeService {
     const result = await q.query<GiftCodeRow>(
       `SELECT id, code, discount_type, discount_value, max_cap_irr, eligibility,
               total_limit, per_profile_limit, valid_from, valid_until,
-              min_order_amount, categories, status, created_by, created_at, updated_at
+              min_order_amount, categories, restore_on_cancel, restore_after_payment,
+              status, created_by, created_at, updated_at
          FROM gift_codes
         WHERE id = $1${lock ? ' FOR UPDATE' : ''}`,
       [id]
@@ -964,7 +998,8 @@ export class GiftCodeService {
       `SELECT gc.id, gc.code, gc.discount_type, gc.discount_value, gc.max_cap_irr,
               gc.eligibility, gc.total_limit, gc.per_profile_limit,
               gc.valid_from, gc.valid_until, gc.min_order_amount,
-              gc.categories, gc.status, gc.created_by, gc.created_at, gc.updated_at,
+              gc.categories, gc.restore_on_cancel, gc.restore_after_payment,
+              gc.status, gc.created_by, gc.created_at, gc.updated_at,
               COUNT(gcr.id) FILTER (WHERE gcr.status = 'consumed')::int AS consumed,
               COUNT(gcr.id) FILTER (WHERE gcr.status = 'released')::int AS released,
               COALESCE(SUM(gcr.discount_amount) FILTER (WHERE gcr.status = 'consumed'), 0) AS total_discount

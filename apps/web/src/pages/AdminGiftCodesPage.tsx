@@ -24,6 +24,8 @@ type Draft = {
   perProfileLimit: string;
   minimum: string;
   categories: string[];
+  restoreOnCancel: boolean;
+  restoreAfterPayment: boolean;
   start: DateField;
   end: DateField;
 };
@@ -68,6 +70,8 @@ function draftFrom(row: GiftCodeDto | undefined, zone: string): Draft {
     perProfileLimit: row?.perProfileLimit?.toString() ?? '',
     minimum: row?.minOrderAmount ?? '0',
     categories: row?.categories ?? [],
+    restoreOnCancel: row?.restoreOnCancel ?? true,
+    restoreAfterPayment: row?.restoreAfterPayment ?? false,
     start: dateField(row?.validFrom ?? null, zone),
     end: dateField(row?.validUntil ?? null, zone),
   };
@@ -193,6 +197,8 @@ export default function AdminGiftCodesPage() {
         perProfileLimit: draft.perProfileLimit === '' ? null : Number(draft.perProfileLimit),
         minOrderAmount: draft.minimum,
         categories: draft.categories,
+        restoreOnCancel: draft.restoreOnCancel,
+        restoreAfterPayment: draft.restoreAfterPayment,
         ...(start ? { validFrom: start } : {}),
         validUntil: end,
       }
@@ -419,6 +425,34 @@ export default function AdminGiftCodesPage() {
                   ))}
                 </div>
               </fieldset>
+              <fieldset className="rounded-md border p-4">
+                <legend className="px-1 font-semibold">{label('restorationPolicy')}</legend>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={draft.restoreOnCancel}
+                    onChange={(event) =>
+                      setDraft({
+                        ...draft,
+                        restoreOnCancel: event.target.checked,
+                        restoreAfterPayment: event.target.checked && draft.restoreAfterPayment,
+                      })
+                    }
+                  />
+                  {label('restoreOnCancel')}
+                </label>
+                <label className="mt-3 flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={draft.restoreAfterPayment}
+                    disabled={!draft.restoreOnCancel}
+                    onChange={(event) =>
+                      setDraft({ ...draft, restoreAfterPayment: event.target.checked })
+                    }
+                  />
+                  {label('restoreAfterPayment')}
+                </label>
+              </fieldset>
               <p className="text-sm">
                 {label('timezone')}: <bdi>{zone}</bdi>
               </p>
@@ -533,6 +567,15 @@ export default function AdminGiftCodesPage() {
                 <p>
                   {label(row.status)} ·{' '}
                   {label(row.eligibility === 'profile' ? 'restricted' : 'public')}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {label(
+                    !row.restoreOnCancel
+                      ? 'noRestoration'
+                      : row.restoreAfterPayment
+                        ? 'restorePaid'
+                        : 'restoreUnpaid'
+                  )}
                 </p>
                 <p>
                   {row.discountType === 'percentage'

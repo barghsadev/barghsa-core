@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { integer, text, uuid } from 'drizzle-orm/pg-core';
+import { boolean, integer, text, uuid } from 'drizzle-orm/pg-core';
 import { createTable } from '../base-table';
 import { irrAmount, timestamptz } from '../types';
 import { orders } from './orders';
@@ -87,6 +87,12 @@ export const giftCodes = createTable('gift_codes', {
     .notNull()
     .default('active'),
 
+  /** Restore a consumed slot when its order is cancelled before payment. */
+  restoreOnCancel: boolean('restore_on_cancel').notNull().default(true),
+
+  /** Explicit opt-in to restore a slot after a paid order is cancelled. */
+  restoreAfterPayment: boolean('restore_after_payment').notNull().default(false),
+
   /** Admin who created the code. */
   createdBy: text('created_by')
     .notNull()
@@ -116,7 +122,7 @@ export const giftCodeProfiles = createTable('gift_code_profiles', {
  * Redemption ledger (T-09.12.03) — ONE row per redeemed order.
  *
  * - `status` `consumed` counts against `total_limit`/`per_profile_limit`;
- *   `released` was restored (cancellation before payment) and no longer
+ *   `released` was restored under the code's cancellation policy and no longer
  *   counts. Rows are never hard-deleted: the ledger is the audit trail
  *   and the stats source.
  * - `order_id` is UNIQUE (migration 0048): at most one gift code per
@@ -155,6 +161,9 @@ export const giftCodeRedemptions = createTable('gift_code_redemptions', {
   })
     .notNull()
     .default('consumed'),
+
+  /** Set once when a consumed slot is restored; NULL while consumed. */
+  restoredAt: timestamptz('restored_at'),
 });
 
 /** SQL to create the gift_codes table (migration 0048 source). */

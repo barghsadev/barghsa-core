@@ -1050,60 +1050,106 @@ it('revises an unpaid order with a new quote, invoice and immutable line history
   ).toBe(200);
 });
 
-it('releases and reapplies a limited gift code when repricing the same order', async () => {
-  await http.pool.query(
-    `INSERT INTO gift_codes(code,discount_type,discount_value,valid_from,total_limit,created_by)
-     VALUES('ONCE','fixed_irr',100000,'2026-01-01',1,'buyer')`
-  );
-  input.giftCode = 'ONCE';
-  await refreshQuote();
-  const order = await submittedOrder();
-  const detail = (await (
-    await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers })
-  ).json()) as { versionId: string };
-  expect(
-    (
-      await staffPost(order.orderId, 'request-changes', {
-        idempotencyKey: randomUUID(),
+it.each([true, false])(
+  'releases and reapplies a limited gift code when repricing with restore_on_cancel=%s',
+  async (restoreOnCancel) => {
+    await http.pool.query(
+      `INSERT INTO gift_codes(code,discount_type,discount_value,valid_from,total_limit,restore_on_cancel,created_by)
+     VALUES('ONCE','fixed_irr',100000,'2026-01-01',1,$1,'buyer')`,
+      [restoreOnCancel]
+    );
+    input.giftCode = 'ONCE';
+    await refreshQuote();
+    const order = await submittedOrder();
+    const detail = (await (
+      await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers })
+    ).json()) as { versionId: string };
+    expect(
+      (
+        await staffPost(order.orderId, 'request-changes', {
+          idempotencyKey: randomUUID(),
+          expectedVersionId: detail.versionId,
+          reason: 'Please revise the quantity',
+        })
+      ).status
+    ).toBe(200);
+    const terms = {
+      profileId: input.profileId,
+      expectedVersionId: detail.versionId,
+      period: 'next_week',
+      totalKwh: '12',
+      giftCode: 'ONCE',
+    };
+    const preview = await post(`orders/${order.orderId}/revision-preview`, terms);
+    expect(preview.status, http.logs()).toBe(200);
+    const quote = (await preview.json()) as { reviewDigest: string; discountIrR: string };
+    expect(quote.discountIrR).toBe('100000');
+    expect(
+      (
+        await post(`orders/${order.orderId}/resubmit`, {
+          ...terms,
+          idempotencyKey: randomUUID(),
+          expectedQuoteDigest: quote.reviewDigest,
+          address: input.address,
+          responseNote: 'Quantity updated',
+        })
+      ).status,
+      http.logs()
+    ).toBe(200);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT status FROM gift_code_redemptions WHERE order_id=$1 ORDER BY created_at,id',
+          [order.orderId]
+        )
+      ).rows
+        .map((row) => row.status)
+        .sort()
+    ).toEqual(['consumed', 'released']);
+  }
+);
+
+it.each([true, false])(
+  'applies restore_on_cancel=%s atomically and idempotently to an unpaid electricity order',
+  async (restoreOnCancel) => {
+    await http.pool.query(
+      `INSERT INTO gift_codes(code,discount_type,discount_value,total_limit,restore_on_cancel,created_by)
+       VALUES ('CANCELSLOT','fixed_irr',100000,1,$1,'buyer')`,
+      [restoreOnCancel]
+    );
+    input.giftCode = 'CANCELSLOT';
+    await refreshQuote();
+    const order = await submittedOrder();
+    const detail = (await (
+      await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers })
+    ).json()) as { versionId: string };
+    const cancel = () =>
+      post(`orders/${order.orderId}/cancel`, {
+        idempotencyKey: key,
         expectedVersionId: detail.versionId,
-        reason: 'Please revise the quantity',
-      })
-    ).status
-  ).toBe(200);
-  const terms = {
-    profileId: input.profileId,
-    expectedVersionId: detail.versionId,
-    period: 'next_week',
-    totalKwh: '12',
-    giftCode: 'ONCE',
-  };
-  const preview = await post(`orders/${order.orderId}/revision-preview`, terms);
-  expect(preview.status, http.logs()).toBe(200);
-  const quote = (await preview.json()) as { reviewDigest: string; discountIrR: string };
-  expect(quote.discountIrR).toBe('100000');
-  expect(
-    (
-      await post(`orders/${order.orderId}/resubmit`, {
-        ...terms,
-        idempotencyKey: randomUUID(),
-        expectedQuoteDigest: quote.reviewDigest,
-        address: input.address,
-        responseNote: 'Quantity updated',
-      })
-    ).status,
-    http.logs()
-  ).toBe(200);
-  expect(
-    (
-      await http.pool.query(
-        'SELECT status FROM gift_code_redemptions WHERE order_id=$1 ORDER BY created_at,id',
+        reason: 'No longer needed',
+      });
+    const key = randomUUID();
+    expect((await cancel()).status, http.logs()).toBe(200);
+    const first = (
+      await http.pool.query<{ status: string; restored_at: Date | null }>(
+        'SELECT status,restored_at FROM gift_code_redemptions WHERE order_id=$1',
         [order.orderId]
       )
-    ).rows
-      .map((row) => row.status)
-      .sort()
-  ).toEqual(['consumed', 'released']);
-});
+    ).rows[0]!;
+    expect(first.status).toBe(restoreOnCancel ? 'released' : 'consumed');
+    expect(first.restored_at === null).toBe(!restoreOnCancel);
+    expect((await cancel()).status).toBe(200);
+    expect(
+      (
+        await http.pool.query<{ status: string; restored_at: Date | null }>(
+          'SELECT status,restored_at FROM gift_code_redemptions WHERE order_id=$1',
+          [order.orderId]
+        )
+      ).rows[0]
+    ).toEqual(first);
+  }
+);
 
 it('revises an advanced delivery period and composition', async () => {
   const startAt = new Date(Date.now() + 2 * 86_400_000).toISOString();
@@ -2072,82 +2118,103 @@ it.each([
   }
 );
 
-it('tracks an approved contract cancellation and its existing mandatory refund', async () => {
-  const order = await submittedOrder();
-  const versionId = (
-    await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
-      order.contractId,
-    ])
-  ).rows[0].current_version_id as string;
-  expect(
-    (
-      await staffPost(order.orderId, 'approve', {
-        idempotencyKey: randomUUID(),
-        expectedVersionId: versionId,
-      })
-    ).status
-  ).toBe(200);
-  await http.pool.query(
-    "UPDATE invoices SET paid_amount=500000,state='PartiallyFunded' WHERE id=$1",
-    [order.invoiceId]
-  );
-  const previewResponse = await fetch(
-    `${http.base}/api/admin/contracts/${order.contractId}/cancellation-preview`,
-    { headers: staffHeaders }
-  );
-  expect(previewResponse.status, http.logs()).toBe(200);
-  const preview = (await previewResponse.json()) as { fingerprint: string };
-  const prepared = await fetch(
-    `${http.base}/api/admin/contracts/${order.contractId}/cancellations`,
-    {
-      method: 'POST',
-      headers: staffHeaders,
-      body: JSON.stringify({
-        expectedVersionId: versionId,
-        expectedFingerprint: preview.fingerprint,
-        reason: 'Delivery stopped',
-        refundDecision: { mode: 'full_wallet' },
-        idempotencyKey: randomUUID(),
-      }),
-    }
-  );
-  expect(prepared.status, http.logs()).toBe(201);
-  const intent = (await prepared.json()) as { id: string };
-  const executed = await fetch(
-    `${http.base}/api/admin/contracts/${order.contractId}/cancellations/execute`,
-    {
-      method: 'POST',
-      headers: staffHeaders,
-      body: JSON.stringify({ intentId: intent.id, idempotencyKey: randomUUID() }),
-    }
-  );
-  expect(executed.status, http.logs()).toBe(201);
-  const detailResponse = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, {
-    headers,
-  });
-  expect(await detailResponse.json()).toMatchObject({
-    electricityStatus: 'cancelled',
-    financialStatus: 'refund_pending',
-    nextAction: 'await_refund',
-    timeline: expect.arrayContaining([expect.objectContaining({ event: 'contract.cancelled' })]),
-  });
-  expect(
-    (await http.pool.query('SELECT status FROM orders WHERE id=$1', [order.orderId])).rows[0].status
-  ).toBe('CANCELLED');
-  const refund = (
+it.each([false, true])(
+  'tracks a paid contract cancellation and restore_after_payment=%s',
+  async (restoreAfterPayment) => {
     await http.pool.query(
-      'SELECT refund_id FROM contract_refund_obligations WHERE contract_id=$1',
-      [order.contractId]
-    )
-  ).rows[0];
-  expect(await runWalletRefund(http.pool, refund.refund_id)).toBe('completed');
-  const finished = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
-  expect(await finished.json()).toMatchObject({
-    electricityStatus: 'cancelled',
-    financialStatus: 'refunded',
-    financiallyClosed: true,
-  });
-});
+      `INSERT INTO gift_codes(code,discount_type,discount_value,total_limit,restore_after_payment,created_by)
+     VALUES ('PAIDCANCEL','fixed_irr',100000,1,$1,'buyer')`,
+      [restoreAfterPayment]
+    );
+    input.giftCode = 'PAIDCANCEL';
+    await refreshQuote();
+    const order = await submittedOrder();
+    const versionId = (
+      await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [
+        order.contractId,
+      ])
+    ).rows[0].current_version_id as string;
+    expect(
+      (
+        await staffPost(order.orderId, 'approve', {
+          idempotencyKey: randomUUID(),
+          expectedVersionId: versionId,
+        })
+      ).status
+    ).toBe(200);
+    await http.pool.query(
+      "UPDATE invoices SET paid_amount=500000,state='PartiallyFunded' WHERE id=$1",
+      [order.invoiceId]
+    );
+    const previewResponse = await fetch(
+      `${http.base}/api/admin/contracts/${order.contractId}/cancellation-preview`,
+      { headers: staffHeaders }
+    );
+    expect(previewResponse.status, http.logs()).toBe(200);
+    const preview = (await previewResponse.json()) as { fingerprint: string };
+    const prepared = await fetch(
+      `${http.base}/api/admin/contracts/${order.contractId}/cancellations`,
+      {
+        method: 'POST',
+        headers: staffHeaders,
+        body: JSON.stringify({
+          expectedVersionId: versionId,
+          expectedFingerprint: preview.fingerprint,
+          reason: 'Delivery stopped',
+          refundDecision: { mode: 'full_wallet' },
+          idempotencyKey: randomUUID(),
+        }),
+      }
+    );
+    expect(prepared.status, http.logs()).toBe(201);
+    const intent = (await prepared.json()) as { id: string };
+    const executed = await fetch(
+      `${http.base}/api/admin/contracts/${order.contractId}/cancellations/execute`,
+      {
+        method: 'POST',
+        headers: staffHeaders,
+        body: JSON.stringify({ intentId: intent.id, idempotencyKey: randomUUID() }),
+      }
+    );
+    expect(executed.status, http.logs()).toBe(201);
+    const redemption = (
+      await http.pool.query<{ status: string; restored_at: Date | null }>(
+        'SELECT status,restored_at FROM gift_code_redemptions WHERE order_id=$1',
+        [order.orderId]
+      )
+    ).rows[0]!;
+    expect(redemption.status).toBe(restoreAfterPayment ? 'released' : 'consumed');
+    expect(redemption.restored_at === null).toBe(!restoreAfterPayment);
+    const detailResponse = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, {
+      headers,
+    });
+    expect(await detailResponse.json()).toMatchObject({
+      electricityStatus: 'cancelled',
+      financialStatus: 'refund_pending',
+      nextAction: 'await_refund',
+      timeline: expect.arrayContaining([expect.objectContaining({ event: 'contract.cancelled' })]),
+    });
+    expect(
+      (await http.pool.query('SELECT status FROM orders WHERE id=$1', [order.orderId])).rows[0]
+        .status
+    ).toBe('CANCELLED');
+    const refund = (
+      await http.pool.query(
+        'SELECT refund_id FROM contract_refund_obligations WHERE contract_id=$1',
+        [order.contractId]
+      )
+    ).rows[0];
+    expect(await runWalletRefund(http.pool, refund.refund_id)).toBe('completed');
+    const finished = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, {
+      headers,
+    });
+    expect(await finished.json()).toMatchObject({
+      electricityStatus: 'cancelled',
+      financialStatus: 'refunded',
+      financiallyClosed: true,
+    });
+  }
+);
 
 it('previews and atomically submits an order, contract, lines and payable invoice once', async () => {
   await http.pool.query('UPDATE profiles SET title=$2 WHERE id=$1', [

@@ -247,6 +247,8 @@ describe('Gift code validation (T-09.12.03)', () => {
       validUntil: null,
       minOrderAmount: '100000',
       categories: ['electricity'],
+      restoreOnCancel: true,
+      restoreAfterPayment: false,
       actor: adminReq.session,
       ip: '127.0.0.1',
     });

@@ -80,6 +80,8 @@ function giftRow(over: Record<string, unknown> = {}) {
     valid_until: null,
     min_order_amount: '0',
     categories: [],
+    restore_on_cancel: true,
+    restore_after_payment: false,
     status: 'active',
     created_by: 'user-admin-1',
     created_at: '2026-01-01T00:00:00.000Z',
@@ -99,6 +101,7 @@ function redemptionRow(over: Record<string, unknown> = {}) {
     order_id: 'ord-1',
     discount_amount: '500000',
     status: 'consumed',
+    restored_at: null,
     created_at: '2026-01-01T00:00:00.000Z',
     ...over,
   };
@@ -403,7 +406,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
       expect(result.code).toBe('SALE20');
       const update = router.queries('UPDATE gift_codes')[0]!;
       expect(update.values[0]).toBe('SALE20');
-      expect(update.values[12]).toBe(CODE_ID);
+      expect(update.values[14]).toBe(CODE_ID);
     });
 
     it('rejects a rename onto an existing code', async () => {

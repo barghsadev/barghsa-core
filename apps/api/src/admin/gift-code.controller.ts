@@ -74,6 +74,8 @@ const CreateGiftCodeSchema = z
     validUntil: z.union([z.string().datetime({ offset: true }), z.null()]).optional(),
     minOrderAmount: irrSchema.default('0'),
     categories: z.array(categorySchema).default([]),
+    restoreOnCancel: z.boolean().default(true),
+    restoreAfterPayment: z.boolean().default(false),
   })
   .strict()
   .refine(
@@ -112,6 +114,8 @@ const UpdateGiftCodeSchema = z
     validUntil: z.union([z.string().datetime({ offset: true }), z.null()]).optional(),
     minOrderAmount: irrSchema.optional(),
     categories: z.array(categorySchema).optional(),
+    restoreOnCancel: z.boolean().optional(),
+    restoreAfterPayment: z.boolean().optional(),
   })
   .strict()
   .refine(
@@ -200,9 +204,8 @@ function assertListFilters(raw: {
  *   verification via `@RequiresStepUp()` (StepUpGuard) — gift codes
  *   carry financial value and are sensitive writes.
  *
- * The admin web UI slice (list with search/filter, create/edit form,
- * usage statistics view, active/inactive toggle, high-value percentage
- * warning, fa/en dicts, RTL/a11y) is deferred.
+ * The admin web UI includes cancellation restoration policy alongside
+ * code settings, usage and status controls.
  */
 @ApiTags('Admin · Gift Codes')
 @ApiBearerAuth()
@@ -299,7 +302,7 @@ export class GiftCodeController {
   @ApiResponse({ status: 201, description: 'Gift code created.' })
   async create(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateGiftCodeSchema>
+    @Body() body: z.input<typeof CreateGiftCodeSchema>
   ): Promise<GiftCodeDto> {
     this.assertPromotionsPermission(req);
     const parsed = CreateGiftCodeSchema.safeParse(body);
@@ -324,6 +327,8 @@ export class GiftCodeController {
       validUntil: parsed.data.validUntil ?? null,
       minOrderAmount: parsed.data.minOrderAmount,
       categories: parsed.data.categories,
+      restoreOnCancel: parsed.data.restoreOnCancel,
+      restoreAfterPayment: parsed.data.restoreAfterPayment,
       actor: req.session,
       ip: requestIp(req),
     });
@@ -371,6 +376,10 @@ export class GiftCodeController {
       ...(data.validUntil !== undefined ? { validUntil: data.validUntil } : {}),
       ...(data.minOrderAmount !== undefined ? { minOrderAmount: data.minOrderAmount } : {}),
       ...(data.categories !== undefined ? { categories: data.categories } : {}),
+      ...(data.restoreOnCancel !== undefined ? { restoreOnCancel: data.restoreOnCancel } : {}),
+      ...(data.restoreAfterPayment !== undefined
+        ? { restoreAfterPayment: data.restoreAfterPayment }
+        : {}),
       actor: req.session,
       ip: requestIp(req),
     });

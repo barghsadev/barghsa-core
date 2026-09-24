@@ -309,6 +309,10 @@ export interface GiftCodeDto {
   minOrderAmount: string;
   /** Eligible product categories; empty = all. */
   categories: string[];
+  /** Restore usage if an unpaid order is cancelled. */
+  restoreOnCancel: boolean;
+  /** Also restore usage after payment; requires restoreOnCancel. */
+  restoreAfterPayment: boolean;
   status: GiftCodeStatus;
   createdBy: string;
   createdAt: string;
@@ -326,6 +330,7 @@ export interface GiftCodeRedemptionDto {
   discountAmount: string;
   /** 'consumed' counts against limits; 'released' was restored. */
   status: 'consumed' | 'released';
+  restoredAt: string | null;
   createdAt: string;
 }
 

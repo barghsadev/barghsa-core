@@ -13,6 +13,7 @@ import {
 import { v7 as uuidv7 } from 'uuid';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { GiftCodeService } from '../admin/gift-code.service.js';
 import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock.js';
 import { notifyApprovalRequested } from '../admin/approval-notifications.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
@@ -51,7 +52,10 @@ interface Intent {
 
 @Injectable()
 export class ContractCancellationService {
-  constructor(private readonly invoices: InvoiceStateMachineService) {}
+  constructor(
+    private readonly invoices: InvoiceStateMachineService,
+    private readonly giftCodes: GiftCodeService
+  ) {}
 
   async prepare(id: string, input: PrepareCancellationInput, actor: ContractActor, ip: string) {
     const intentId = await this.transaction(id, actor, async (client, archived) =>
@@ -268,6 +272,29 @@ export class ContractCancellationService {
             "UPDATE contracts SET state='Cancelled',cancelled_at=clock_timestamp() WHERE id=$1",
             [id]
           );
+          const giftOrder = (
+            await client.query<{ order_id: string; order_paid: boolean }>(
+              `SELECT c.order_id,
+                      EXISTS (SELECT 1 FROM invoices i
+                               WHERE i.order_id=c.order_id AND i.paid_amount>0) AS order_paid
+                 FROM contracts c WHERE c.id=$1 AND c.order_id IS NOT NULL
+                 AND NOT EXISTS (
+                   SELECT 1 FROM contracts other WHERE other.order_id=c.order_id
+                     AND other.id<>c.id AND other.state NOT IN ('Cancelled','Rejected')
+                 )`,
+              [id]
+            )
+          ).rows[0];
+          if (giftOrder) {
+            await this.giftCodes.releaseByOrder(
+              giftOrder.order_id,
+              client,
+              { actorUserId: actor.userId, ip },
+              BigInt(snapshot.paidAmount) > 0n || giftOrder.order_paid
+                ? 'paid_cancellation'
+                : 'unpaid_cancellation'
+            );
+          }
           await client.query(
             'INSERT INTO contract_cancellations(contract_id,intent_id,executed_by) VALUES($1,$2,$3)',
             [id, intent.id, actor.userId]

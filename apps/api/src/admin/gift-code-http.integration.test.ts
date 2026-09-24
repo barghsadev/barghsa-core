@@ -50,6 +50,59 @@ function mutation(action: 'create' | 'update' | 'toggle') {
     }
   );
 }
+it('persists cancellation restoration settings through create and edit', async () => {
+  const invalid = await fetch(`${http.base}/api/admin/promotions/gift-codes`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      code: 'INVALIDPOLICY',
+      discountType: 'fixed_irr',
+      discountValue: '1000',
+      restoreOnCancel: false,
+      restoreAfterPayment: true,
+    }),
+  });
+  expect(invalid.status).toBe(400);
+  const createdResponse = await fetch(`${http.base}/api/admin/promotions/gift-codes`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      code: 'RESTOREPOLICY',
+      discountType: 'fixed_irr',
+      discountValue: '1000',
+      restoreOnCancel: false,
+      restoreAfterPayment: false,
+    }),
+  });
+  expect(createdResponse.status).toBe(201);
+  const created = (await createdResponse.json()) as {
+    id: string;
+    restoreOnCancel: boolean;
+    restoreAfterPayment: boolean;
+  };
+  expect(created).toMatchObject({ restoreOnCancel: false, restoreAfterPayment: false });
+  const updatedResponse = await fetch(
+    `${http.base}/api/admin/promotions/gift-codes/${created.id}`,
+    {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify({ restoreOnCancel: true, restoreAfterPayment: true }),
+    }
+  );
+  expect(updatedResponse.status).toBe(200);
+  expect(await updatedResponse.json()).toMatchObject({
+    restoreOnCancel: true,
+    restoreAfterPayment: true,
+  });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT restore_on_cancel,restore_after_payment FROM gift_codes WHERE id=$1',
+        [created.id]
+      )
+    ).rows[0]
+  ).toEqual({ restore_on_cancel: true, restore_after_payment: true });
+});
 async function unchanged() {
   expect((await http.pool.query('SELECT id,code,status FROM gift_codes')).rows).toEqual([
     { id: giftId, code: 'ORIGINAL', status: 'active' },

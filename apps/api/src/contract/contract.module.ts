@@ -4,6 +4,7 @@ import {
 } from './contract-cancellation-status.controller.js';
 import { ContractActivationService } from './contract-activation.service.js';
 import { InvoiceModule } from '../invoice/invoice.module.js';
+import { AdminModule } from '../admin/admin.module.js';
 import { ContractCancellationService } from './contract-cancellation.service.js';
 import { ContractCancellationRequestService } from './contract-cancellation-request.service.js';
 import {
@@ -31,7 +32,7 @@ import { SessionModule } from '../session/session.module.js';
 import { ContractController } from './contract.controller.js';
 import { ContractService } from './contract.service.js';
 @Module({
-  imports: [SessionModule, InvoiceModule],
+  imports: [SessionModule, InvoiceModule, AdminModule],
   controllers: [
     CustomerCancellationRequestController,
     StaffCancellationRequestController,
