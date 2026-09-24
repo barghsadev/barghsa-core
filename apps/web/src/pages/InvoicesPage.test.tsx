@@ -57,6 +57,7 @@ it('shows an invoice due date when the API supplies one', async () => {
             role: 'original',
             state: 'Unpaid',
             totalAmount: '109000',
+            paidAmount: '40000',
             issuedAt: '2026-09-23T10:00:00Z',
             dueAt: '2026-09-30T10:00:00Z',
             periodStart: '2026-10-01T00:00:00Z',
@@ -75,6 +76,9 @@ it('shows an invoice due date when the API supplies one', async () => {
     expect(container.textContent).toContain('Issued: 2026-09-23T10:00:00Z');
     expect(container.textContent).toContain('Due: 2026-09-30T10:00:00Z');
     expect(container.textContent).toContain('Electricity service period:');
+    expect(container.textContent).toContain('Invoice reference: invoice-1');
+    expect(container.textContent).toMatch(/Confirmed paid: IRR\s+40,000/);
+    expect(container.querySelector('bdi[dir="ltr"]')?.textContent).toBe('invoice-1');
   } finally {
     await act(async () => root.unmount());
     container.remove();

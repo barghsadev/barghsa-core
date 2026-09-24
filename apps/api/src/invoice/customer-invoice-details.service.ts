@@ -104,6 +104,7 @@ export interface CustomerInvoiceListItemDto {
   role: InvoiceCorrectionRole;
   state: InvoiceState;
   totalAmount: string;
+  paidAmount: string;
   accountingAmount: string | null;
   adjustmentKind: AdjustmentKind | null;
   issuedAt: string | null;
@@ -400,6 +401,7 @@ function toListItem(row: InvoiceFamilyRow): CustomerInvoiceListItemDto {
     }),
     state: isInvoiceState(row.state) ? row.state : 'Unpaid',
     totalAmount: irrString(row.total_amount),
+    paidAmount: irrString(row.paid_amount),
     accountingAmount: irrStringOrNull(row.accounting_amount),
     adjustmentKind: isAdjustmentKind(row.adjustment_kind) ? row.adjustment_kind : null,
     issuedAt: iso(row.issued_at),

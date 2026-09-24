@@ -73,21 +73,28 @@ it('returns the same invoice for a valid uppercase UUID', async () => {
 
 it('exposes the saved electricity period in customer list and detail', async () => {
   const f = await fixture();
-  await http.pool.query(`UPDATE invoices SET invoice_calculation_snapshot=$2::jsonb WHERE id=$1`, [
-    f.invoice,
-    JSON.stringify({
-      schemaVersion: 1,
-      totalKwh: '100',
-      periodStart: '2026-10-01T00:00:00Z',
-      periodEnd: '2026-11-01T00:00:00Z',
-    }),
-  ]);
+  await http.pool.query(
+    `UPDATE invoices SET invoice_calculation_snapshot=$2::jsonb,
+      paid_amount=400,state='PartiallyFunded' WHERE id=$1`,
+    [
+      f.invoice,
+      JSON.stringify({
+        schemaVersion: 1,
+        totalKwh: '100',
+        periodStart: '2026-10-01T00:00:00Z',
+        periodEnd: '2026-11-01T00:00:00Z',
+      }),
+    ]
+  );
   const list = await read(f, false);
   expect(list.status).toBe(200);
-  const listBody = (await list.json()) as { invoices: Array<{ invoiceId: string }> };
+  const listBody = (await list.json()) as {
+    invoices: Array<{ invoiceId: string; paidAmount: string }>;
+  };
   expect(listBody.invoices).toContainEqual(
     expect.objectContaining({
       invoiceId: f.invoice,
+      paidAmount: '400',
       periodStart: '2026-10-01T00:00:00.000Z',
       periodEnd: '2026-11-01T00:00:00.000Z',
     })

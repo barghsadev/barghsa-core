@@ -411,13 +411,14 @@ describe('CustomerInvoiceDetailsService', () => {
         return profilesQueryResult(sql);
       }
       if (sql.includes('FROM invoices')) {
-        return { rows: [row({ id: ORIGINAL_ID })] };
+        return { rows: [row({ id: ORIGINAL_ID, paid_amount: '25000' })] };
       }
       return { rows: [] };
     });
 
     const list = await service.listForUser(USER_ID);
     expect(list.invoices[0]!.invoiceId).toBe(ORIGINAL_ID);
+    expect(list.invoices[0]!.paidAmount).toBe('25000');
     const invoiceParams = mockPool.query.mock.calls[1]![1] as unknown[];
     expect(invoiceParams[0]).toBe(PROFILE_ID);
     expect(invoiceParams[0]).not.toBe(ARCHIVED_DEFAULT_ID);

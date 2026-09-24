@@ -93,6 +93,7 @@ export interface CustomerInvoiceListItem {
   role: InvoiceCorrectionRole;
   state: string;
   totalAmount: string;
+  paidAmount?: string;
   accountingAmount: string | null;
   adjustmentKind: 'charge' | 'credit' | null;
   issuedAt: string | null;

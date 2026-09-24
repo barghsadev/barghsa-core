@@ -219,6 +219,10 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       expect(container.textContent).toContain(
         locale === 'en' ? 'Electricity service period' : 'دوره تأمین برق'
       );
+      expect(container.textContent).toContain(
+        locale === 'en' ? 'Invoice reference' : 'شناسه فاکتور'
+      );
+      expect(container.textContent).toContain(ORIGINAL_ID);
       const receiptLink = activity.querySelector<HTMLAnchorElement>(
         `a[href="/api/invoices/${ORIGINAL_ID}/bank-receipts/${receiptId}/attachment"]`
       );

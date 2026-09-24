@@ -294,7 +294,15 @@ function InvoiceCard({
       }`}
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h3 className="font-semibold text-foreground">{heading}</h3>
+        <div>
+          <h3 className="font-semibold text-foreground">{heading}</h3>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {t('invoices.details.reference', locale)}:{' '}
+            <bdi dir="ltr" className="break-all font-mono">
+              {node.invoiceId}
+            </bdi>
+          </p>
+        </div>
         <p className="text-sm text-muted-foreground">{t(stateI18nKey(node.state), locale)}</p>
       </header>
 

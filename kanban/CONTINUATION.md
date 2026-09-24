@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Customer invoice reference and payment progress](batches/2026-09-24-invoice-reference-payment-progress.md) makes each customer invoice identifiable and shows the confirmed paid amount in the list.
+
 [Electricity service period on invoices](batches/2026-09-24-invoice-service-period.md) shows the immutable service dates on customer and finance invoice list/detail views, including revised invoices, in the account timezone.
 
 [Staff electricity and contract invoice handoffs](batches/2026-09-24-staff-invoice-handoffs.md) deep-links the staff order, adjustment and contract views to exact finance invoice details while retaining invoice permission checks.

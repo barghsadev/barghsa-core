@@ -101,6 +101,17 @@ export function InvoicesPage({ unpaidOnly = false }: { unpaidOnly?: boolean }) {
                 <p className="mt-2 text-lg font-semibold text-foreground">
                   {numbers.money(item.totalAmount)}
                 </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t('invoices.list.reference', locale)}:{' '}
+                  <bdi dir="ltr" className="break-all font-mono">
+                    {item.invoiceId}
+                  </bdi>
+                </p>
+                {item.paidAmount !== undefined ? (
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {t('invoices.list.paid', locale)}: {numbers.money(item.paidAmount)}
+                  </p>
+                ) : null}
                 <p className="mt-1 text-sm text-muted-foreground">
                   {t('invoices.list.issued', locale)}: {time.format(item.issuedAt)}
                 </p>
