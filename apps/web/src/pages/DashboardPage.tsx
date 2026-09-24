@@ -18,7 +18,13 @@ import { QuickStatusCards } from '../components/QuickStatusCards.js';
 
 interface DashboardData {
   profile?: { id: string; name: string };
-  wallet: { balance: string; currency: string; lowBalanceWarning: boolean } | null;
+  wallet: {
+    balance: string;
+    postedBalance: string;
+    reservedBalance: string;
+    currency: string;
+    lowBalanceWarning: boolean;
+  } | null;
   activeOrders: number;
   pendingInvoices: number;
   openTickets: number;
@@ -118,6 +124,8 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
           {data?.wallet ? (
             <WalletBalanceCard
               balance={data.wallet.balance}
+              postedBalance={data.wallet.postedBalance}
+              reservedBalance={data.wallet.reservedBalance}
               currency={data.wallet.currency}
               lowBalanceWarning={data.wallet.lowBalanceWarning}
               pendingInvoices={data.pendingInvoices}

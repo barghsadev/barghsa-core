@@ -19,6 +19,34 @@ describe('DashboardService quick status', () => {
     service = new DashboardService({ getWallet: vi.fn() } as never);
   });
 
+  it('reports exact available, posted and reserved balances against all unpaid invoices', async () => {
+    const wallet = {
+      availableBalance: 20n,
+      postedBalance: 120n,
+      reservedBalance: 100n,
+    };
+    service = new DashboardService({ getWallet: vi.fn().mockResolvedValue(wallet) } as never);
+    mockQuery.mockImplementation(async (query: string) => {
+      if (query.includes('FROM profiles p') && query.includes('JOIN users u'))
+        return { rows: [{ id: 'profile-1', is_owner: true, roles: [] }] };
+      if (query.includes('FROM profiles p')) return { rows: [{ name: 'Customer' }] };
+      if (query.includes('SUM(total_amount-paid_amount)')) return { rows: [{ amount: '50' }] };
+      return { rows: [{ cnt: 0 }] };
+    });
+    const overview = await service.getOverview('customer-1');
+    expect(overview.wallet).toEqual({
+      balance: '20',
+      postedBalance: '120',
+      reservedBalance: '100',
+      currency: 'IRR',
+      lowBalanceWarning: true,
+    });
+    const outstandingQuery = queryFor('SUM(total_amount-paid_amount)');
+    expect(outstandingQuery?.[0]).toContain("state IN ('Unpaid', 'Overdue')");
+    expect(outstandingQuery?.[0]).not.toContain('due_at<=NOW()');
+    expect(outstandingQuery?.[1]).toEqual(['profile-1']);
+  });
+
   it('does not query business data without an active profile', async () => {
     mockQuery.mockResolvedValue({ rows: [] });
     await expect(service.getQuickStatusCounts('missing')).resolves.toEqual({

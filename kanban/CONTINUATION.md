@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Wallet balance breakdown on the dashboard](batches/2026-09-24-wallet-balance-breakdown.md) shows exact available, posted and reserved funds and warns when unpaid invoices exceed the available balance.
+
 [Wallet history presentation and invoice handoff](batches/2026-09-24-wallet-history-handoffs.md) finishes account-timezone transaction display and links wallet payments back to their invoices.
 
 [Staff invoice search by customer and order](batches/2026-09-24-staff-invoice-search.md) lets finance find invoices from a known profile or order, with validated combined filters and stable pagination.

@@ -8,6 +8,10 @@ import { t, type Locale } from '@barghsa/i18n/app';
 export interface WalletBalanceCardProps {
   /** Wallet balance in IRR (Rial). */
   balance: string | number;
+  /** Total posted funds before reservations, in IRR. */
+  postedBalance?: string | number;
+  /** Funds currently held for pending payments, in IRR. */
+  reservedBalance?: string | number;
   /** Currency label, e.g. 'IRR'. */
   currency: string;
   /** Whether balance is low relative to pending invoices. */
@@ -26,6 +30,8 @@ export interface WalletBalanceCardProps {
  */
 export function WalletBalanceCard({
   balance,
+  postedBalance,
+  reservedBalance,
   currency,
   lowBalanceWarning,
   pendingInvoices,
@@ -45,6 +51,12 @@ export function WalletBalanceCard({
       : exactBalance >= 0n
         ? (exactBalance + 5n) / 10n
         : -((-exactBalance + 4n) / 10n);
+  let hasReservation = false;
+  try {
+    hasReservation = reservedBalance !== undefined && exactIrr(reservedBalance) > 0n;
+  } catch {
+    // An invalid optional value should not hide the available balance.
+  }
 
   return (
     <div
@@ -68,6 +80,22 @@ export function WalletBalanceCard({
             tomanAmount === null ? '—' : numbers.irrDigits(tomanAmount)
           )}
         </p>
+        {postedBalance !== undefined || hasReservation ? (
+          <dl className="mt-4 grid gap-2 border-t border-border pt-3 text-sm text-muted-foreground">
+            {postedBalance !== undefined ? (
+              <div className="flex justify-between gap-3">
+                <dt>{t('dashboard.overview.postedBalance', locale)}</dt>
+                <dd className="tabular-nums">{numbers.money(postedBalance)}</dd>
+              </div>
+            ) : null}
+            {hasReservation ? (
+              <div className="flex justify-between gap-3">
+                <dt>{t('dashboard.overview.reservedBalance', locale)}</dt>
+                <dd className="tabular-nums">{numbers.money(reservedBalance!)}</dd>
+              </div>
+            ) : null}
+          </dl>
+        ) : null}
       </div>
 
       {/* Low-balance warning */}

@@ -34,7 +34,7 @@ export class DashboardService {
     const pool = getDbPool();
     const allowed = (permission: AgentPermission) =>
       context.is_owner || hasAnyRolePermission(context.roles, permission);
-    const [profileResult, quickStatus, wallet, dueResult] = await Promise.all([
+    const [profileResult, quickStatus, wallet, outstandingResult] = await Promise.all([
       pool.query<{ name: string }>(
         `SELECT COALESCE(NULLIF(l.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.title,p.first_name,p.last_name)),''),'') AS name
          FROM profiles p LEFT JOIN legal_profiles l ON l.id=p.id WHERE p.id=$1`,
@@ -45,8 +45,7 @@ export class DashboardService {
       allowed('wallet:view') && allowed('invoices:view')
         ? pool.query<{ amount: string }>(
             `SELECT COALESCE(SUM(total_amount-paid_amount),0)::text AS amount FROM invoices
-             WHERE profile_id=$1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}
-               AND (state='Overdue' OR due_at<=NOW())`,
+             WHERE profile_id=$1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}`,
             [context.id]
           )
         : Promise.resolve({ rows: [{ amount: '0' }] }),
@@ -58,8 +57,10 @@ export class DashboardService {
       wallet: allowed('wallet:view')
         ? {
             balance: balance.toString(),
+            postedBalance: (wallet?.postedBalance ?? 0n).toString(),
+            reservedBalance: (wallet?.reservedBalance ?? 0n).toString(),
             currency: 'IRR',
-            lowBalanceWarning: balance < BigInt(dueResult.rows[0]!.amount),
+            lowBalanceWarning: balance < BigInt(outstandingResult.rows[0]!.amount),
           }
         : null,
       activeOrders: quickStatus.pendingOrders,
