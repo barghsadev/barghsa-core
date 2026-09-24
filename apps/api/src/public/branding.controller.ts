@@ -15,6 +15,11 @@ export interface PublicBrandConfigDto {
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
+  backgroundColor: string;
+  darkBackgroundColor: string;
+  fontFamily: 'vazirmatn' | 'tahoma';
+  borderRadiusRem: number;
+  spacingScale: number;
   logoUrl: string | null;
   faviconUrl: string | null;
   darkMode: boolean;
@@ -54,9 +59,15 @@ export class PublicBrandingController {
     return {
       appTitle: (brandConfig.appTitle as string) ?? 'Barghsa',
       slogan: (brandConfig.slogan as string) ?? '',
-      primaryColor: (brandConfig.primaryColor as string) ?? '#2563eb',
-      secondaryColor: (brandConfig.secondaryColor as string) ?? '#64748b',
-      accentColor: (brandConfig.accentColor as string) ?? '#f59e0b',
+      primaryColor: (brandConfig.primaryColor as string) ?? '#176b5b',
+      secondaryColor: (brandConfig.secondaryColor as string) ?? '#547467',
+      accentColor: (brandConfig.accentColor as string) ?? '#d6a74e',
+      backgroundColor: (brandConfig.backgroundColor as string) ?? '#f6f7f4',
+      darkBackgroundColor: (brandConfig.darkBackgroundColor as string) ?? '#15201c',
+      fontFamily: brandConfig.fontFamily === 'tahoma' ? 'tahoma' : 'vazirmatn',
+      borderRadiusRem:
+        typeof brandConfig.borderRadiusRem === 'number' ? brandConfig.borderRadiusRem : 0.75,
+      spacingScale: typeof brandConfig.spacingScale === 'number' ? brandConfig.spacingScale : 1,
       logoUrl: (brandConfig.logoUrl as string | null) ?? null,
       faviconUrl: (brandConfig.faviconUrl as string | null) ?? null,
       darkMode: (brandConfig.darkMode as boolean) ?? false,

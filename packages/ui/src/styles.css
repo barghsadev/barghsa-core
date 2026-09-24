@@ -125,7 +125,7 @@
 
 :root {
   /* Paper, ink and energy. Brand overrides are applied by BrandThemeProvider. */
-  --background: #f6f7f4;
+  --background: var(--brand-light-background, #f6f7f4);
   --foreground: #203631;
   --card: #fdfefb;
   --card-foreground: var(--foreground);
@@ -178,7 +178,7 @@
 }
 
 .dark {
-  --background: #15201c;
+  --background: var(--brand-dark-background, #15201c);
   --foreground: #e7eee6;
   --card: #1d2c25;
   --card-foreground: var(--foreground);

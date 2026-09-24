@@ -716,6 +716,11 @@ const brandConfig = {
   primaryColor: '#2563eb',
   secondaryColor: '#64748b',
   accentColor: '#f59e0b',
+  backgroundColor: '#f6f7f4',
+  darkBackgroundColor: '#15201c',
+  fontFamily: 'vazirmatn',
+  borderRadiusRem: 0.75,
+  spacingScale: 1,
   logoUrl: null,
   faviconUrl: null,
   darkMode: false,
@@ -730,6 +735,50 @@ const brand = {
   createdAt: validTerms.createdAt,
   updatedAt: validTerms.updatedAt,
 };
+it('previews and saves bounded brand layout settings', async () => {
+  const requests = vi.fn(async (_url: string, init?: RequestInit) => {
+    if (init?.method === 'PUT') {
+      const body = JSON.parse(String(init.body)) as { config: typeof brandConfig };
+      return new Response(
+        JSON.stringify({ ...brand, status: 'draft', version: 2, config: body.config })
+      );
+    }
+    return new Response(JSON.stringify(brand));
+  });
+  vi.stubGlobal('fetch', requests);
+  await act(async () => root.render(<AdminBrandingConfig />));
+  await setInput(
+    host.querySelector<HTMLInputElement>('input[aria-label="Light background hex value"]')!,
+    '#eef2e8'
+  );
+  for (const [label, value] of [
+    ['Font family', 'tahoma'],
+    ['Corner radius', '1'],
+    ['Spacing scale', '1.125'],
+  ] as const) {
+    const select = Array.from(host.querySelectorAll('select')).find((element) =>
+      element.parentElement?.textContent?.includes(label)
+    )!;
+    await act(async () => {
+      select.value = value;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  }
+  await clickText('Save Draft');
+  await act(async () =>
+    document
+      .querySelector('[role=dialog] form')!
+      .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  );
+  const saved = requests.mock.calls.find(([, init]) => init?.method === 'PUT');
+  expect(JSON.parse(String(saved?.[1]?.body)).config).toMatchObject({
+    backgroundColor: '#eef2e8',
+    fontFamily: 'tahoma',
+    borderRadiusRem: 1,
+    spacingScale: 1.125,
+  });
+  expect(host.textContent).toContain('Changes saved.');
+});
 it.each(
   [
     null,

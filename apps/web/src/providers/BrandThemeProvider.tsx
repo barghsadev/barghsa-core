@@ -11,6 +11,11 @@ export interface BrandConfig {
   primaryColor: string;
   secondaryColor: string;
   accentColor: string;
+  backgroundColor: string;
+  darkBackgroundColor: string;
+  fontFamily: 'vazirmatn' | 'tahoma';
+  borderRadiusRem: number;
+  spacingScale: number;
   logoUrl: string | null;
   faviconUrl: string | null;
   darkMode: boolean;
@@ -23,6 +28,11 @@ const DEFAULT_BRAND_CONFIG: BrandConfig = {
   primaryColor: '#176b5b',
   secondaryColor: '#547467',
   accentColor: '#d6a74e',
+  backgroundColor: '#f6f7f4',
+  darkBackgroundColor: '#15201c',
+  fontFamily: 'vazirmatn',
+  borderRadiusRem: 0.75,
+  spacingScale: 1,
   logoUrl: null,
   faviconUrl: null,
   darkMode: false,
@@ -61,6 +71,19 @@ export function getContrastForeground(hex: string): string {
   return (luminance + 0.05) / 0.05 >= 1.05 / (luminance + 0.05) ? '#000000' : '#ffffff';
 }
 
+function contrastWith(hex: string, foreground: string): number {
+  const luminance = (color: string) => {
+    const channels = [1, 3, 5].map((start) => {
+      const value = Number.parseInt(color.slice(start, start + 2), 16) / 255;
+      return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    });
+    return channels[0]! * 0.2126 + channels[1]! * 0.7152 + channels[2]! * 0.0722;
+  };
+  const first = luminance(hex),
+    second = luminance(foreground);
+  return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
+}
+
 function validAsset(value: unknown): value is string | null {
   if (value === null) return true;
   if (typeof value !== 'string' || value.length > 2048) return false;
@@ -86,11 +109,45 @@ export function parseBrandConfig(value: unknown): BrandConfig | null {
     return null;
   for (const field of ['primaryColor', 'secondaryColor', 'accentColor'])
     if (typeof data[field] !== 'string' || !/^#[a-f0-9]{6}$/i.test(data[field])) return null;
+  const backgroundColor = data.backgroundColor ?? DEFAULT_BRAND_CONFIG.backgroundColor;
+  const darkBackgroundColor = data.darkBackgroundColor ?? DEFAULT_BRAND_CONFIG.darkBackgroundColor;
+  if (
+    typeof backgroundColor !== 'string' ||
+    !/^#[a-f0-9]{6}$/i.test(backgroundColor) ||
+    contrastWith(backgroundColor, '#203631') < 4.5 ||
+    typeof darkBackgroundColor !== 'string' ||
+    !/^#[a-f0-9]{6}$/i.test(darkBackgroundColor) ||
+    contrastWith(darkBackgroundColor, '#e7eee6') < 4.5
+  )
+    return null;
+  const fontFamily = data.fontFamily ?? DEFAULT_BRAND_CONFIG.fontFamily;
+  const borderRadiusRem = data.borderRadiusRem ?? DEFAULT_BRAND_CONFIG.borderRadiusRem;
+  const spacingScale = data.spacingScale ?? DEFAULT_BRAND_CONFIG.spacingScale;
+  if (
+    (fontFamily !== 'vazirmatn' && fontFamily !== 'tahoma') ||
+    typeof borderRadiusRem !== 'number' ||
+    !Number.isFinite(borderRadiusRem) ||
+    borderRadiusRem < 0 ||
+    borderRadiusRem > 1.5 ||
+    typeof spacingScale !== 'number' ||
+    !Number.isFinite(spacingScale) ||
+    spacingScale < 0.875 ||
+    spacingScale > 1.25
+  )
+    return null;
   if (!validAsset(data.logoUrl) || !validAsset(data.faviconUrl)) return null;
   const numberStyle = data.numberStyle ?? 'locale';
   if (typeof numberStyle !== 'string' || !['locale', 'persian', 'western'].includes(numberStyle))
     return null;
-  return { ...data, numberStyle } as unknown as BrandConfig;
+  return {
+    ...data,
+    backgroundColor,
+    darkBackgroundColor,
+    fontFamily,
+    borderRadiusRem,
+    spacingScale,
+    numberStyle,
+  } as BrandConfig;
 }
 
 /** Apply validated active branding and restore document ownership on unmount. */
@@ -100,12 +157,19 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const root = document.documentElement;
     const colors = ['primary', 'secondary', 'accent'] as const;
-    const properties = colors.flatMap((color) => [
-      `--brand-${color}`,
-      `--brand-${color}-foreground`,
-      `--${color}`,
-      `--${color}-foreground`,
-    ]);
+    const properties = [
+      ...colors.flatMap((color) => [
+        `--brand-${color}`,
+        `--brand-${color}-foreground`,
+        `--${color}`,
+        `--${color}-foreground`,
+      ]),
+      '--brand-light-background',
+      '--brand-dark-background',
+      '--app-font',
+      '--radius',
+      '--spacing',
+    ];
     const previous = properties.map((name) => ({
       name,
       value: root.style.getPropertyValue(name),
@@ -135,6 +199,14 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
         root.style.setProperty(`--${color}`, background);
         root.style.setProperty(`--${color}-foreground`, foreground);
       }
+      root.style.setProperty('--brand-light-background', config.backgroundColor);
+      root.style.setProperty('--brand-dark-background', config.darkBackgroundColor);
+      root.style.setProperty(
+        '--app-font',
+        config.fontFamily === 'tahoma' ? 'Tahoma' : "'Vazirmatn'"
+      );
+      root.style.setProperty('--radius', `${config.borderRadiusRem}rem`);
+      root.style.setProperty('--spacing', `${0.25 * config.spacingScale}rem`);
       root.classList.toggle('dark', config.darkMode);
       document.title = config.appTitle;
       if (config.faviconUrl) {

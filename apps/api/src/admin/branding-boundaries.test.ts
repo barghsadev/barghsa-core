@@ -105,11 +105,44 @@ describe('branding authority and version boundaries', () => {
     { expectedVersion: 0, config: { primaryColor: 'red' } },
     { expectedVersion: 0, config: { numberStyle: 'arbitrary' } },
     { expectedVersion: 0, config: { darkMode: 'false' } },
+    { expectedVersion: 0, config: { backgroundColor: '#15201c' } },
+    { expectedVersion: 0, config: { darkBackgroundColor: '#f6f7f4' } },
+    { expectedVersion: 0, config: { fontFamily: 'remote-font' } },
+    { expectedVersion: 0, config: { borderRadiusRem: 4 } },
+    { expectedVersion: 0, config: { spacingScale: 2 } },
   ])('rejects malformed saved configuration %j', async (body) => {
     const { controller, save } = fixture();
     await expect(controller.upsertBrandConfig(body, request())).rejects.toMatchObject({
       status: 400,
     });
     expect(save).not.toHaveBeenCalled();
+  });
+  it('accepts readable colors and bounded layout choices as a draft', async () => {
+    const { controller, save } = fixture();
+    await controller.upsertBrandConfig(
+      {
+        expectedVersion: 2,
+        config: {
+          backgroundColor: '#eef2e8',
+          darkBackgroundColor: '#101b17',
+          fontFamily: 'tahoma',
+          borderRadiusRem: 1,
+          spacingScale: 1.125,
+        },
+      },
+      request()
+    );
+    expect(save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        backgroundColor: '#eef2e8',
+        darkBackgroundColor: '#101b17',
+        fontFamily: 'tahoma',
+        borderRadiusRem: 1,
+        spacingScale: 1.125,
+      }),
+      'trusted-actor',
+      2,
+      undefined
+    );
   });
 });

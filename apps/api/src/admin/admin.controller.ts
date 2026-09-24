@@ -91,6 +91,18 @@ const assetUrl = z
     }
   }, 'Use a persistent HTTPS asset URL');
 const hexColorRe = /^#[0-9a-fA-F]{6}$/;
+const colorLuminance = (hex: string) => {
+  const channels = [1, 3, 5].map((start) => {
+    const value = Number.parseInt(hex.slice(start, start + 2), 16) / 255;
+    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  });
+  return channels[0]! * 0.2126 + channels[1]! * 0.7152 + channels[2]! * 0.0722;
+};
+const readableBackground = (text: string) => (background: string) => {
+  const light = Math.max(colorLuminance(background), colorLuminance(text));
+  const dark = Math.min(colorLuminance(background), colorLuminance(text));
+  return (light + 0.05) / (dark + 0.05) >= 4.5;
+};
 
 export const UpsertBrandConfigSchema = z.object({
   expectedVersion: z.number().int().min(0).max(2147483647),
@@ -102,17 +114,32 @@ export const UpsertBrandConfigSchema = z.object({
       .string()
       .regex(hexColorRe, 'Must be a valid 6-char hex color')
       .optional()
-      .default('#2563eb'),
+      .default('#176b5b'),
     secondaryColor: z
       .string()
       .regex(hexColorRe, 'Must be a valid 6-char hex color')
       .optional()
-      .default('#64748b'),
+      .default('#547467'),
     accentColor: z
       .string()
       .regex(hexColorRe, 'Must be a valid 6-char hex color')
       .optional()
-      .default('#f59e0b'),
+      .default('#d6a74e'),
+    backgroundColor: z
+      .string()
+      .regex(hexColorRe)
+      .refine(readableBackground('#203631'), 'Background must contrast with light-mode text')
+      .optional()
+      .default('#f6f7f4'),
+    darkBackgroundColor: z
+      .string()
+      .regex(hexColorRe)
+      .refine(readableBackground('#e7eee6'), 'Background must contrast with dark-mode text')
+      .optional()
+      .default('#15201c'),
+    fontFamily: z.enum(['vazirmatn', 'tahoma']).optional().default('vazirmatn'),
+    borderRadiusRem: z.number().min(0).max(1.5).optional().default(0.75),
+    spacingScale: z.number().min(0.875).max(1.25).optional().default(1),
     logoUrl: assetUrl.nullable().optional().default(null),
     faviconUrl: assetUrl.nullable().optional().default(null),
     darkMode: z.boolean().optional().default(false),

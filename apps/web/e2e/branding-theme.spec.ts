@@ -9,19 +9,18 @@ for (const locale of ['fa', 'en'] as const)
     }) => {
       await page.setViewportSize({ width: 390, height: 844 });
       await page.emulateMedia({ reducedMotion: 'reduce' });
-      await page.addInitScript((value) => {
-        const apply = () => {
-          document.documentElement.lang = value;
-        };
-        if (document.documentElement) apply();
-        new MutationObserver(apply).observe(document, { childList: true });
-      }, locale);
+      await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
       const config = {
         appTitle: 'Theme preview',
         slogan: 'Readable slogan',
         primaryColor: '#ffffff',
         secondaryColor: '#777777',
         accentColor: '#f59e0b',
+        backgroundColor: '#f4f7f2',
+        darkBackgroundColor: '#14211a',
+        fontFamily: 'tahoma',
+        borderRadiusRem: 0.5,
+        spacingScale: 1.125,
         logoUrl: null,
         faviconUrl: null,
         darkMode,
@@ -51,6 +50,13 @@ for (const locale of ['fa', 'en'] as const)
       await expect(
         page.getByRole('textbox', { name: brandingText('appTitle', locale), exact: true })
       ).toHaveValue(config.appTitle);
+      await expect(page.locator('html')).toHaveCSS('--app-font', 'Tahoma');
+      await expect(page.locator('html')).toHaveCSS('--radius', '0.5rem');
+      await expect(page.locator('html')).toHaveCSS('--spacing', '0.28125rem');
+      await expect(page.locator('body')).toHaveCSS(
+        'background-color',
+        darkMode ? 'rgb(20, 33, 26)' : 'rgb(244, 247, 242)'
+      );
       const preview = page.locator('section').filter({
         has: page.getByRole('heading', { name: brandingText('preview', locale), exact: true }),
       });

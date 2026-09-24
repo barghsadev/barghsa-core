@@ -9,6 +9,11 @@ const config = {
   primaryColor: '#777777',
   secondaryColor: '#ffffff',
   accentColor: '#000000',
+  backgroundColor: '#eef2e8',
+  darkBackgroundColor: '#101b17',
+  fontFamily: 'tahoma',
+  borderRadiusRem: 1,
+  spacingScale: 1.125,
   logoUrl: null,
   faviconUrl: 'https://example.test/brand.ico',
   darkMode: true,
@@ -29,6 +34,7 @@ async function mount() {
   });
 }
 beforeEach(() => {
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
@@ -57,6 +63,15 @@ it('connects published colors to component tokens and chooses readable foregroun
   );
   expect(document.documentElement.style.getPropertyValue('--secondary-foreground')).toBe('#000000');
   expect(document.documentElement.style.getPropertyValue('--accent-foreground')).toBe('#ffffff');
+  expect(document.documentElement.style.getPropertyValue('--brand-light-background')).toBe(
+    '#eef2e8'
+  );
+  expect(document.documentElement.style.getPropertyValue('--brand-dark-background')).toBe(
+    '#101b17'
+  );
+  expect(document.documentElement.style.getPropertyValue('--app-font')).toBe('Tahoma');
+  expect(document.documentElement.style.getPropertyValue('--radius')).toBe('1rem');
+  expect(document.documentElement.style.getPropertyValue('--spacing')).toBe('0.28125rem');
 });
 it('refreshes after publication and restores the default favicon when removed', async () => {
   const request = vi
@@ -115,6 +130,8 @@ it('restores preexisting document styles, title and icon after a successful moun
   expect(document.title).toBe('Original app');
   expect(document.documentElement.style.getPropertyValue('--primary')).toBe('#123456');
   expect(document.documentElement.style.getPropertyValue('--brand-primary')).toBe('');
+  expect(document.documentElement.style.getPropertyValue('--brand-light-background')).toBe('');
+  expect(document.documentElement.style.getPropertyValue('--spacing')).toBe('');
   expect(document.documentElement.classList.contains('dark')).toBe(false);
   expect(document.querySelector('link[rel="icon"]')?.getAttribute('href')).toBe('/original.ico');
 });
@@ -173,4 +190,30 @@ it('keeps the last validated number preference and accepts legacy locale default
   expect(host.querySelector('p')?.dataset.numberStyle).toBe('western');
   await act(async () => window.dispatchEvent(new Event('barghsa:branding-activated')));
   expect(host.querySelector('p')?.dataset.numberStyle).toBe('western');
+});
+
+it('uses layout defaults for older published branding and rejects unreadable backgrounds', async () => {
+  const legacy = { ...config } as Record<string, unknown>;
+  for (const key of [
+    'backgroundColor',
+    'darkBackgroundColor',
+    'fontFamily',
+    'borderRadiusRem',
+    'spacingScale',
+  ])
+    delete legacy[key];
+  const request = vi
+    .fn()
+    .mockResolvedValueOnce(new Response(JSON.stringify(legacy)))
+    .mockResolvedValueOnce(new Response(JSON.stringify({ ...config, backgroundColor: '#15201c' })));
+  vi.stubGlobal('fetch', request);
+  await mount();
+  expect(document.documentElement.style.getPropertyValue('--brand-light-background')).toBe(
+    '#f6f7f4'
+  );
+  expect(document.documentElement.style.getPropertyValue('--app-font')).toBe("'Vazirmatn'");
+  await act(async () => window.dispatchEvent(new Event('barghsa:branding-activated')));
+  expect(document.documentElement.style.getPropertyValue('--brand-light-background')).toBe(
+    '#f6f7f4'
+  );
 });

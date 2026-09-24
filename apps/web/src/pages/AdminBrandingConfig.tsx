@@ -1,7 +1,11 @@
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { Button } from '@barghsa/ui';
-import { getContrastForeground, parseBrandConfig } from '../providers/BrandThemeProvider.js';
-import { formatCurrencyIrr, type NumberStyle } from '@barghsa/i18n/numbers';
+import {
+  getContrastForeground,
+  parseBrandConfig,
+  type BrandConfig,
+} from '../providers/BrandThemeProvider.js';
+import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { uploadBrandingLogo } from '../lib/branding-logo-upload.js';
 import { useState, useEffect, useCallback, useId, useRef } from 'react';
 import { brandingText } from '@barghsa/i18n/branding';
@@ -13,18 +17,6 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-
-interface BrandConfig {
-  appTitle: string;
-  slogan: string;
-  primaryColor: string;
-  secondaryColor: string;
-  accentColor: string;
-  logoUrl: string | null;
-  faviconUrl: string | null;
-  darkMode: boolean;
-  numberStyle: NumberStyle;
-}
 
 interface BrandConfigDto {
   id: string;
@@ -43,9 +35,14 @@ interface BrandConfigDto {
 const DEFAULT_CONFIG: BrandConfig = {
   appTitle: 'Barghsa',
   slogan: '',
-  primaryColor: '#2563eb',
-  secondaryColor: '#64748b',
-  accentColor: '#f59e0b',
+  primaryColor: '#176b5b',
+  secondaryColor: '#547467',
+  accentColor: '#d6a74e',
+  backgroundColor: '#f6f7f4',
+  darkBackgroundColor: '#15201c',
+  fontFamily: 'vazirmatn',
+  borderRadiusRem: 0.75,
+  spacingScale: 1,
   logoUrl: null,
   faviconUrl: null,
   darkMode: false,
@@ -186,9 +183,12 @@ export default function AdminBrandingConfig() {
     };
   }, [revision]);
 
-  const updateConfig = useCallback((key: keyof BrandConfig, value: string | boolean | null) => {
-    setConfig((prev) => ({ ...prev, [key]: value }));
-  }, []);
+  const updateConfig = useCallback(
+    (key: keyof BrandConfig, value: string | number | boolean | null) => {
+      setConfig((prev) => ({ ...prev, [key]: value }));
+    },
+    []
+  );
 
   const handleSave = () => {
     if (!activeConfig) return;
@@ -256,6 +256,7 @@ export default function AdminBrandingConfig() {
     (activeConfig && activeConfig.version > 0
       ? JSON.stringify(config) !== JSON.stringify({ ...DEFAULT_CONFIG, ...activeConfig.config })
       : true);
+  const validConfig = parseBrandConfig(config) !== null;
 
   const previewColors = (['primary', 'secondary', 'accent'] as const).map((key) => {
     const field = `${key}Color` as const;
@@ -432,6 +433,65 @@ export default function AdminBrandingConfig() {
           value={config.accentColor}
           onChange={(v) => updateConfig('accentColor', v)}
         />
+        <ColorInput
+          label={text('background')}
+          value={config.backgroundColor}
+          onChange={(v) => updateConfig('backgroundColor', v)}
+        />
+        <ColorInput
+          label={text('darkBackground')}
+          value={config.darkBackgroundColor}
+          onChange={(v) => updateConfig('darkBackgroundColor', v)}
+        />
+        <p className="text-xs text-muted-foreground">{text('backgroundHint')}</p>
+      </section>
+
+      <section className="bg-background rounded-lg border border-border p-6 space-y-4">
+        <h2 className="text-lg font-semibold text-foreground">{text('shapeAndType')}</h2>
+        <label className="block space-y-1 text-sm font-medium">
+          <span>{text('fontFamily')}</span>
+          <select
+            value={config.fontFamily}
+            onChange={(event) => updateConfig('fontFamily', event.target.value)}
+            className="block w-full rounded border border-input px-3 py-2"
+          >
+            <option value="vazirmatn">Vazirmatn</option>
+            <option value="tahoma">Tahoma</option>
+          </select>
+        </label>
+        <label className="block space-y-1 text-sm font-medium">
+          <span>{text('borderRadius')}</span>
+          <select
+            value={config.borderRadiusRem}
+            onChange={(event) => updateConfig('borderRadiusRem', Number(event.target.value))}
+            className="block w-full rounded border border-input px-3 py-2"
+          >
+            {[0, 0.25, 0.5, 0.75, 1, 1.25, 1.5].map((value) => (
+              <option key={value} value={value}>
+                {value} rem
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="block space-y-1 text-sm font-medium">
+          <span>{text('spacingScale')}</span>
+          <select
+            value={config.spacingScale}
+            onChange={(event) => updateConfig('spacingScale', Number(event.target.value))}
+            className="block w-full rounded border border-input px-3 py-2"
+          >
+            {[0.875, 1, 1.125, 1.25].map((value) => (
+              <option key={value} value={value}>
+                {Math.round(value * 100)}%
+              </option>
+            ))}
+          </select>
+        </label>
+        {!validConfig && (
+          <p role="alert" className="text-sm text-destructive">
+            {text('invalidTheme')}
+          </p>
+        )}
       </section>
 
       {/* ── Logo ──────────────────────────────────────────────────────── */}
@@ -552,9 +612,13 @@ export default function AdminBrandingConfig() {
         <div
           className="rounded-lg p-6 border"
           style={{
-            backgroundColor: config.darkMode ? 'oklch(0.141 0.005 285.823)' : '#ffffff',
-            color: config.darkMode ? 'oklch(0.985 0 0)' : 'oklch(0.141 0.005 285.823)',
+            backgroundColor: config.darkMode ? config.darkBackgroundColor : config.backgroundColor,
+            color: config.darkMode ? '#e7eee6' : '#203631',
             borderColor: previewColors[0]!.color,
+            borderRadius: `${config.borderRadiusRem}rem`,
+            padding: `${1.5 * config.spacingScale}rem`,
+            fontFamily:
+              config.fontFamily === 'tahoma' ? 'Tahoma, sans-serif' : 'Vazirmatn, sans-serif',
           }}
         >
           <div className="flex items-center gap-4 mb-4">
@@ -569,7 +633,12 @@ export default function AdminBrandingConfig() {
               <Button
                 key={key}
                 type="button"
-                style={{ backgroundColor: color, color: getContrastForeground(color) }}
+                style={{
+                  backgroundColor: color,
+                  color: getContrastForeground(color),
+                  borderRadius: `${config.borderRadiusRem}rem`,
+                  paddingInline: `${1 * config.spacingScale}rem`,
+                }}
               >
                 {text(key)}
               </Button>
@@ -583,7 +652,7 @@ export default function AdminBrandingConfig() {
         <Button
           type="button"
           onClick={handleSave}
-          disabled={uploading || action !== null || !activeConfig || !isDirty}
+          disabled={uploading || action !== null || !activeConfig || !isDirty || !validConfig}
         >
           {text('save')}
         </Button>

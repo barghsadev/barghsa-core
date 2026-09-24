@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Admin theme tokens](batches/2026-09-24-admin-theme-tokens.md) add validated background, font, corner-radius and spacing overrides to the branding draft, preview, public response and applied CSS. The bilingual Chromium branding flow and focused tests pass. Per-user light/dark preference remains the next part of `T-06.03.05`.
+
 [Electricity order revisions](batches/2026-09-24-electricity-order-revisions.md) let customers reprice and resubmit simple or advanced orders after staff request changes. The transaction preserves previous lines and contract versions, replaces the unpaid invoice, and returns the order to staff review.
 
 [Staff review of corrected electricity orders](batches/2026-09-24-electricity-staff-revision-review.md) compares the latest correction with the previous version, including the staff reason, customer response, terms, delivery address, product quantities, and invoice. Focused PostgreSQL and the full web suite pass locally. The latest direct-`main` CI run is tracked on GitHub.
