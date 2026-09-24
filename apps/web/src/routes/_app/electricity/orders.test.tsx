@@ -151,3 +151,75 @@ it('requests pending orders when opened from the dashboard', async () => {
     vi.unstubAllGlobals();
   }
 });
+
+it('opens the next invoice, contract or correction step from the order list', async () => {
+  document.documentElement.lang = 'en';
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  const invoiceId = '11111111-1111-7111-8111-111111111111';
+  const contractId = '22222222-2222-7222-8222-222222222222';
+  const base = {
+    invoiceId,
+    contractId,
+    electricityStatus: 'approved',
+    financialStatus: 'unpaid',
+    submittedAt: '2026-09-23T22:00:00Z',
+    periodStart: '2026-09-24T00:00:00Z',
+    periodEnd: '2026-09-30T00:00:00Z',
+    totalKwh: '10',
+    totalIrR: '2500000',
+  };
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) =>
+      Response.json(
+        url === '/api/profiles/verification-status'
+          ? { activeProfileId: 'profile-1' }
+          : url === '/api/user/settings/timezone'
+            ? { timezone: 'Asia/Tehran' }
+            : {
+                orders: [
+                  { ...base, orderId: 'order-pay', nextAction: 'pay_invoice' },
+                  { ...base, orderId: 'order-contract', nextAction: 'accept_contract' },
+                  { ...base, orderId: 'order-correct', nextAction: 'resubmit_changes' },
+                  {
+                    ...base,
+                    invoiceId: 'invalid',
+                    orderId: 'order-no-link',
+                    nextAction: 'pay_invoice',
+                  },
+                  {
+                    ...base,
+                    invoiceId: undefined,
+                    orderId: 'order-missing-ref',
+                    nextAction: 'pay_invoice',
+                  },
+                ],
+                nextBefore: null,
+              }
+      )
+    )
+  );
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<ElectricityOrdersPage />));
+    expect(container.querySelector(`a[href="/invoices/${invoiceId}"]`)?.textContent).toBe(
+      'View and pay invoice'
+    );
+    expect(
+      container.querySelector(`a[href="/contracts?contractId=${contractId}"]`)?.textContent
+    ).toBe('Review contract');
+    expect(
+      [...container.querySelectorAll('a[href="/electricity/orders/order-correct"]')].some(
+        (link) => link.textContent === 'Review requested changes'
+      )
+    ).toBe(true);
+    expect(container.querySelector('a[href="/invoices/invalid"]')).toBeNull();
+    expect(container.querySelector('a[href="/invoices/undefined"]')).toBeNull();
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+    vi.unstubAllGlobals();
+  }
+});

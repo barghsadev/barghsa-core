@@ -1281,12 +1281,20 @@ it('lists only the customer profile orders and cancels an unpublished order once
   });
   expect(response.status, http.logs()).toBe(200);
   const listing = (await response.json()) as {
-    orders: Array<{ orderId: string; financialStatus: string; nextAction: string }>;
+    orders: Array<{
+      orderId: string;
+      contractId: string;
+      invoiceId: string;
+      financialStatus: string;
+      nextAction: string;
+    }>;
   };
   expect(listing.orders).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
         orderId: order.orderId,
+        contractId: order.contractId,
+        invoiceId: order.invoiceId,
         financialStatus: 'unpaid',
         nextAction: 'await_review',
       }),

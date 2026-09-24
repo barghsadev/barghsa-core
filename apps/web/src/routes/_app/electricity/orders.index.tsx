@@ -5,9 +5,12 @@ import { Button, Card, CardContent } from '@barghsa/ui';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { useAccountTime } from '../../../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
+import { isInvoiceUuid } from '../../../lib/due-at-override.js';
 
 interface ListedOrder {
   orderId: string;
+  invoiceId: string;
+  contractId: string;
   electricityStatus: string;
   financialStatus: string;
   nextAction: string;
@@ -16,6 +19,44 @@ interface ListedOrder {
   periodEnd: string;
   totalKwh: string;
   totalIrR: string;
+}
+
+function nextActionLink(order: ListedOrder): { href: string; label: string } | null {
+  switch (order.nextAction) {
+    case 'pay_invoice':
+    case 'await_payment_review':
+    case 'await_refund':
+      return typeof order.invoiceId === 'string' && isInvoiceUuid(order.invoiceId)
+        ? {
+            href: `/invoices/${encodeURIComponent(order.invoiceId)}`,
+            label:
+              order.nextAction === 'pay_invoice'
+                ? 'electricity.orders.payInvoice'
+                : 'electricity.orders.viewInvoice',
+          }
+        : null;
+    case 'accept_contract':
+      return typeof order.contractId === 'string' && isInvoiceUuid(order.contractId)
+        ? {
+            href: `/contracts?contractId=${encodeURIComponent(order.contractId)}`,
+            label: 'electricity.orders.reviewContract',
+          }
+        : null;
+    case 'resubmit_changes':
+      return {
+        href: `/electricity/orders/${encodeURIComponent(order.orderId)}`,
+        label: 'electricity.orders.reviewChanges',
+      };
+    case 'continue_order':
+      return { href: '/electricity/order', label: 'electricity.orders.continueOrder' };
+    case 'await_delivery':
+      return {
+        href: `/electricity/orders/${encodeURIComponent(order.orderId)}`,
+        label: 'electricity.orders.trackOrder',
+      };
+    default:
+      return null;
+  }
 }
 
 export function ElectricityOrdersPage({ pendingOnly = false }: { pendingOnly?: boolean }) {
@@ -131,53 +172,66 @@ export function ElectricityOrdersPage({ pendingOnly = false }: { pendingOnly?: b
         </p>
       ) : (
         <div className="space-y-3">
-          {orders.map((order) => (
-            <Card key={order.orderId}>
-              <CardContent className="space-y-3 pt-6">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Link
-                    to="/electricity/orders/$orderId"
-                    params={{ orderId: order.orderId }}
-                    className="font-semibold text-primary underline underline-offset-4"
-                  >
-                    {t('electricity.orders.view', locale)} · {order.orderId}
-                  </Link>
-                  <span className="text-sm text-muted-foreground">
-                    {time.format(order.submittedAt, {
+          {orders.map((order) => {
+            const action = nextActionLink(order);
+            return (
+              <Card key={order.orderId}>
+                <CardContent className="space-y-3 pt-6">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <Link
+                      to="/electricity/orders/$orderId"
+                      params={{ orderId: order.orderId }}
+                      className="font-semibold text-primary underline underline-offset-4"
+                    >
+                      {t('electricity.orders.view', locale)} · {order.orderId}
+                    </Link>
+                    <span className="text-sm text-muted-foreground">
+                      {time.format(order.submittedAt, {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                      })}
+                    </span>
+                  </div>
+                  <p className="text-sm">
+                    {time.format(order.periodStart, {
                       year: 'numeric',
                       month: '2-digit',
                       day: '2-digit',
-                    })}
-                  </span>
-                </div>
-                <p className="text-sm">
-                  {time.format(order.periodStart, {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                  })}{' '}
-                  –{' '}
-                  {time.format(new Date(new Date(order.periodEnd).getTime() - 1), {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                  })}{' '}
-                  · {numbers.irrDigits(order.totalKwh)} kWh · {numbers.money(order.totalIrR)}
-                </p>
-                <div className="flex flex-wrap gap-2 text-sm">
-                  <span className="rounded-full border px-3 py-1">
-                    {t(`electricity.order.status.${order.electricityStatus}`, locale)}
-                  </span>
-                  <span className="rounded-full border px-3 py-1">
-                    {t(`electricity.order.financial.${order.financialStatus}`, locale)}
-                  </span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {t(`electricity.order.nextAction.${order.nextAction}`, locale)}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+                    })}{' '}
+                    –{' '}
+                    {time.format(new Date(new Date(order.periodEnd).getTime() - 1), {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                    })}{' '}
+                    · {numbers.irrDigits(order.totalKwh)} kWh · {numbers.money(order.totalIrR)}
+                  </p>
+                  <div className="flex flex-wrap gap-2 text-sm">
+                    <span className="rounded-full border px-3 py-1">
+                      {t(`electricity.order.status.${order.electricityStatus}`, locale)}
+                    </span>
+                    <span className="rounded-full border px-3 py-1">
+                      {t(`electricity.order.financial.${order.financialStatus}`, locale)}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-muted/50 p-3 text-sm">
+                    <p className="text-muted-foreground">
+                      {t(`electricity.order.nextAction.${order.nextAction}`, locale)}
+                    </p>
+                    {action ? (
+                      <a
+                        className="font-medium text-primary underline underline-offset-4"
+                        href={action.href}
+                      >
+                        {t(action.label, locale)}
+                      </a>
+                    ) : null}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
       {nextBefore ? (

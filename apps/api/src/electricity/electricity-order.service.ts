@@ -197,6 +197,8 @@ export class ElectricityOrderService {
           period_end: Date;
           total_kwh: string;
           contract_state: string;
+          contract_id: string;
+          invoice_id: string;
           invoice_state: string;
           total_amount: string;
           paid_amount: string;
@@ -204,7 +206,8 @@ export class ElectricityOrderService {
           pending_refund_amount: string;
         }>(
           `SELECT e.id,e.mode,e.status,e.submitted_at,e.period_start,e.period_end,
-            e.total_kwh,c.state AS contract_state,i.state AS invoice_state,
+            e.total_kwh,c.state AS contract_state,c.id AS contract_id,
+            i.id AS invoice_id,i.state AS invoice_state,
             i.total_amount,i.paid_amount,i.refunded_amount,
             COALESCE((SELECT SUM(r.amount)::text FROM refunds r WHERE r.invoice_id=i.id
               AND r.state NOT IN ('Completed','Rejected','Cancelled')),'0') AS pending_refund_amount
@@ -233,6 +236,8 @@ export class ElectricityOrderService {
           });
           return {
             orderId: row.id,
+            contractId: row.contract_id,
+            invoiceId: row.invoice_id,
             mode: row.mode,
             electricityStatus: row.status,
             financialStatus,
