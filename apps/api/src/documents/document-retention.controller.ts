@@ -131,4 +131,31 @@ export class DocumentRetentionController {
       request.ip ?? ''
     );
   }
+
+  @Get('destruction')
+  async destruction(@Req() request: AuthenticatedRequest) {
+    this.authorize(request);
+    return {
+      ...(await this.retention.listDestruction()),
+      canManage: hasStaffPermission(request, 'legal:write'),
+    };
+  }
+
+  @Post('destruction/:id/approve')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  approveDestruction(
+    @Req() request: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: unknown
+  ) {
+    this.authorize(request, true);
+    return this.retention.approveDestruction(
+      id,
+      parse(releaseSchema, body).note,
+      request.session,
+      request.ip ?? ''
+    );
+  }
 }

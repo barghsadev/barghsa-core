@@ -18,6 +18,11 @@ import {
   DOCUMENT_SCAN_JOB_TYPE,
   runDocumentScans,
 } from './documents/scan-runner.js';
+import {
+  DOCUMENT_DESTRUCTION_JOB_TYPE,
+  DOCUMENT_DESTRUCTION_POLL_INTERVAL_MS,
+  runDocumentDestruction,
+} from './documents/destruction-runner.js';
 import { SmsNotificationTransport } from './notifications/sms-transport.js';
 import {
   checkSmsCredit,
@@ -282,6 +287,27 @@ async function main(): Promise<void> {
       });
     }
   }, 60000);
+
+  pollers.every(async () => {
+    if (draining || new Date().getUTCHours() !== 2) return;
+    try {
+      const result = await runDocumentDestruction(getDbPool(), cleanupProvider);
+      if (result.failed)
+        await recordJobFailure({
+          jobType: DOCUMENT_DESTRUCTION_JOB_TYPE,
+          error: 'document_destruction_retry_required',
+          errorCategory: 'provider',
+          payload: result,
+        });
+      else await recordJobSuccess(DOCUMENT_DESTRUCTION_JOB_TYPE);
+    } catch {
+      await recordJobFailure({
+        jobType: DOCUMENT_DESTRUCTION_JOB_TYPE,
+        error: 'document_destruction_unavailable',
+        errorCategory: 'transient',
+      });
+    }
+  }, DOCUMENT_DESTRUCTION_POLL_INTERVAL_MS);
 
   const scannerHost = process.env['DOCUMENT_CLAMAV_HOST']?.trim();
   const scannerPort = Number(process.env['DOCUMENT_CLAMAV_PORT'] ?? '3310');

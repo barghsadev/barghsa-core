@@ -95,9 +95,35 @@ database predicate checks active direct and profile holds plus the current
 record-type policy hold. The admin workspace shows this result beside each
 document.
 
-These records do not yet run destruction or change S3 tags. T-05.14.03 must
-calculate retention from record closure, check the hold predicate in the same
-locked deletion workflow, require approval, and audit each physical deletion.
+## Approved document destruction
+
+The worker plans up to 25 eligible removed documents during its nightly 02:00
+UTC window. It records an audit manifest and leaves every object untouched
+until legal staff approve that specific manifest, with step-up verification and
+a reason in the admin document workspace. The workspace shows queue counts,
+approval state and retry status. A later nightly pass handles up to 25 approved
+items; a newly active hold or changed policy cancels an unstarted approval and
+requires a fresh manifest.
+
+Retention starts at the later of document removal and parent closure. Current
+closure signals are completed/cancelled/rejected contracts, paid/cancelled/refunded
+invoices, terminal electricity or saving orders, cancelled generic orders,
+rejected/cancelled solar requests and solar requests whose linked contract has
+completed or been cancelled. Standalone uploads start at removal. Other parent
+states have no destruction deadline and are retained. The current policy version supplies the retention years; a
+policy change invalidates an unstarted approval.
+
+The worker records `destroying` before touching storage. New direct/profile
+holds and policy changes for that record type are rejected while destruction
+is in progress; they cannot restore an already deleted version. With the
+profile and document locked, the worker removes every exact-key version and
+delete marker for the sealed copy and the original upload. A provider-held
+version blocks the operation. Missing versions are safe to retry. On success,
+the worker clears file names, MIME types, checksums and storage metadata, keeps
+the document identity and history as a minimal audit trail, and records a
+destruction event. It retries partially completed storage work from the
+durable manifest. Direct S3 deletes outside this workflow remain a separate
+administrative control.
 
 ## Upload association
 

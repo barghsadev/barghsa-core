@@ -6,6 +6,7 @@ import { DocumentDetail } from './DocumentDetail.js';
 import { DocumentUpload } from './DocumentUpload.js';
 import { DocumentRetentionPolicies } from './DocumentRetentionPolicies.js';
 import { DocumentLegalHolds } from './DocumentLegalHolds.js';
+import { DocumentDestructionQueue } from './DocumentDestructionQueue.js';
 import { refreshProfileContext } from '../lib/profile-context.js';
 import type { BusinessDocument } from '../lib/documents.js';
 import type { TeamAction } from './TeamActionDialog.js';
@@ -183,6 +184,40 @@ it('shows a Persian legal hold and binds release to the selected hold', async ()
   expect(harness.action).toMatchObject({
     path: '/api/admin/document-retention/holds/33333333-3333-4333-8333-333333333333/release',
     body: { note: 'Inquiry is complete' },
+  });
+});
+
+it('binds destruction approval to the selected manifest and legal note', async () => {
+  const itemId = '44444444-4444-4444-8444-444444444444';
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () =>
+      response({
+        canManage: true,
+        counts: [{ status: 'pending_approval', count: 1 }],
+        items: [
+          {
+            id: itemId,
+            documentId: DOCUMENT,
+            businessRecordType: 'standalone',
+            retentionDeadline: '2026-09-24T00:00:00Z',
+            status: 'pending_approval',
+            attempts: 0,
+            lastError: null,
+          },
+        ],
+      })
+    )
+  );
+  await render(<DocumentDestructionQueue />);
+  await click('Approve destruction');
+  await value('#destruction-note', 'Approved by legal after record closure');
+  await act(async () =>
+    container.querySelector<HTMLButtonElement>('form button[type=submit]')!.click()
+  );
+  expect(harness.action).toMatchObject({
+    path: `/api/admin/document-retention/destruction/${itemId}/approve`,
+    body: { note: 'Approved by legal after record closure' },
   });
 });
 
@@ -459,6 +494,8 @@ it('lets staff recover a denied queue and restricts upload context to a valid se
   const fetcher = vi.fn(async (url: string) => {
     if (url.includes('/document-retention/policies'))
       return response({ canManage: false, policies: [] });
+    if (url.includes('/document-retention/destruction'))
+      return response({ canManage: false, counts: [], items: [] });
     return fail ? response({}, 403) : response({ documents: [], nextBefore: null });
   });
   vi.stubGlobal('fetch', fetcher);

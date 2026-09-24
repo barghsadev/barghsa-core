@@ -46,6 +46,7 @@ export const BACKGROUND_JOB_TYPES = [
   { key: 'ai_model_test', label: 'AI model connection tests' },
   { key: 'storage_cleanup', label: 'Storage deletion requests' },
   { key: 'document_scan', label: 'Document malware scanning' },
+  { key: 'document_destruction', label: 'Approved document destruction' },
   { key: 'auth_delivery', label: 'Authentication code delivery' },
   { key: 'service_breach_scan', label: 'Service response-target breach scan' },
   { key: 'service_escalation_scan', label: 'Service escalation scan' },

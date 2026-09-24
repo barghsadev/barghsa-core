@@ -77,6 +77,10 @@ export interface StorageProvider {
    * Non-false legal-hold tags are preserved. Does not delete bytes or remove holds.
    */
   scheduleExpiration?(key: string): Promise<{ eligibleVersions: number; heldVersions: number }>;
+  /** Approved document destruction only: remove every exact-key version and delete marker.
+   * Refuse application-held versions and verify that no version remains.
+   */
+  deleteObjectVersions?(key: string): Promise<number>;
   /** Verify bucket access without reading or writing customer objects. */
   checkHealth?(signal?: AbortSignal): Promise<void>;
   /** Close SDK connections after callers have drained. */

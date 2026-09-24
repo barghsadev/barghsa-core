@@ -153,6 +153,78 @@ export class S3StorageProvider implements StorageProvider {
     }
   }
 
+  async deleteObjectVersions(key: string): Promise<number> {
+    if (!key.startsWith('business-documents/') && !key.startsWith('uploads/'))
+      throw new StorageProviderError('Document destruction key is outside approved prefixes');
+    const resolvedKey = this.resolveKey(key);
+    const entries: { versionId: string; marker: boolean }[] = [];
+    let KeyMarker: string | undefined;
+    let VersionIdMarker: string | undefined;
+    const seen = new Set<string>();
+    for (;;) {
+      const page = await this.client.send(
+        new ListObjectVersionsCommand({
+          Bucket: this.bucket,
+          Prefix: resolvedKey,
+          KeyMarker,
+          VersionIdMarker,
+          MaxKeys: 100,
+        })
+      );
+      for (const version of page.Versions ?? []) {
+        if (version.Key !== resolvedKey) continue;
+        if (!version.VersionId)
+          throw new StorageProviderError('Storage returned a version without an ID');
+        const { TagSet = [] } = await this.client.send(
+          new GetObjectTaggingCommand({
+            Bucket: this.bucket,
+            Key: resolvedKey,
+            VersionId: version.VersionId,
+          })
+        );
+        const hold = TagSet.find((tag) => tag.Key === 'legal-hold');
+        if (hold && hold.Value !== 'false')
+          throw new StorageProviderError('Document object version has a provider hold');
+        entries.push({ versionId: version.VersionId, marker: false });
+      }
+      for (const marker of page.DeleteMarkers ?? []) {
+        if (marker.Key !== resolvedKey) continue;
+        if (!marker.VersionId)
+          throw new StorageProviderError('Storage returned a delete marker without an ID');
+        entries.push({ versionId: marker.VersionId, marker: true });
+      }
+      if (!page.IsTruncated) break;
+      KeyMarker = page.NextKeyMarker;
+      VersionIdMarker = page.NextVersionIdMarker;
+      const cursor = JSON.stringify([KeyMarker, VersionIdMarker]);
+      if (!KeyMarker || seen.has(cursor))
+        throw new StorageProviderError('Storage version listing did not advance');
+      seen.add(cursor);
+    }
+    for (const entry of entries)
+      await this.client.send(
+        new DeleteObjectCommand({
+          Bucket: this.bucket,
+          Key: resolvedKey,
+          VersionId: entry.versionId,
+        })
+      );
+    const remaining = await this.client.send(
+      new ListObjectVersionsCommand({ Bucket: this.bucket, Prefix: resolvedKey, MaxKeys: 100 })
+    );
+    if (
+      (remaining.Versions ?? []).some((version) => version.Key === resolvedKey) ||
+      (remaining.DeleteMarkers ?? []).some((marker) => marker.Key === resolvedKey)
+    )
+      throw new StorageProviderError('Document object versions remain after destruction');
+    const current = await this.client.send(
+      new ListObjectsV2Command({ Bucket: this.bucket, Prefix: resolvedKey, MaxKeys: 1 })
+    );
+    if ((current.Contents ?? []).some((object) => object.Key === resolvedKey))
+      throw new StorageProviderError('Document object remains after destruction');
+    return entries.filter((entry) => !entry.marker).length;
+  }
+
   // -----------------------------------------------------------------------
   // Helpers
   // -----------------------------------------------------------------------

@@ -2,7 +2,9 @@
 
 ## Current manual batch — September 24, 2026
 
-[Document retention policies and legal holds](batches/2026-09-24-document-retention-holds.md) add versioned policy defaults and legal staff controls for document and profile holds. Destruction remains the next task.
+[Approved document destruction](batches/2026-09-24-document-destruction.md) adds legal approval, a nightly worker, exact-version object deletion, audit-preserving anonymization and progress reporting for expired removed documents.
+
+[Document retention policies and legal holds](batches/2026-09-24-document-retention-holds.md) add versioned policy defaults and legal staff controls for document and profile holds.
 
 [Production ClamAV runtime](batches/2026-09-24-clamav-runtime.md) supplies a healthy scanner to the API and worker, with a private port, persisted signature updates, and live clean/infected smoke evidence.
 

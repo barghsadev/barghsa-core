@@ -18,6 +18,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { DocumentDetail } from './DocumentDetail.js';
 import { DocumentRetentionPolicies } from './DocumentRetentionPolicies.js';
+import { DocumentDestructionQueue } from './DocumentDestructionQueue.js';
 import {
   DocumentUpload,
   type OrderDocumentAssociation,
@@ -105,6 +106,7 @@ function Workspace({ staff }: { staff: boolean }) {
         description={word(staff ? 'staffDescription' : 'description')}
       />
       {staff ? <DocumentRetentionPolicies /> : null}
+      {staff ? <DocumentDestructionQueue /> : null}
       <form onSubmit={apply} className="flex flex-col gap-4 rounded-xl border bg-card p-5">
         <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Field>

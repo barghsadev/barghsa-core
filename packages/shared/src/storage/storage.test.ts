@@ -199,6 +199,52 @@ describe('S3StorageProvider.deleteObject', () => {
   });
 });
 
+describe('S3StorageProvider.deleteObjectVersions', () => {
+  it('deletes only exact-key versions and markers, then verifies removal', async () => {
+    const [provider, send] = createMockedProvider({ prefix: 'tenant/' });
+    let listings = 0;
+    send.mockImplementation(async (command: { constructor: { name: string } }) => {
+      if (command.constructor.name === 'ListObjectVersionsCommand')
+        return ++listings === 1
+          ? {
+              Versions: [
+                { Key: 'tenant/business-documents/id/hash', VersionId: 'v1' },
+                { Key: 'tenant/business-documents/id/hash-extra', VersionId: 'other' },
+              ],
+              DeleteMarkers: [{ Key: 'tenant/business-documents/id/hash', VersionId: 'marker' }],
+            }
+          : { Versions: [], DeleteMarkers: [] };
+      if (command.constructor.name === 'GetObjectTaggingCommand') return { TagSet: [] };
+      return {};
+    });
+    await expect(provider.deleteObjectVersions('business-documents/id/hash')).resolves.toBe(1);
+    expect(
+      send.mock.calls
+        .filter(([command]) => command.constructor.name === 'DeleteObjectCommand')
+        .map(([command]) => command.input.VersionId)
+    ).toEqual(['v1', 'marker']);
+    expect(listings).toBe(2);
+  });
+
+  it('refuses a held version before deleting any object', async () => {
+    const [provider, send] = createMockedProvider();
+    send.mockImplementation(async (command: { constructor: { name: string } }) => {
+      if (command.constructor.name === 'ListObjectVersionsCommand')
+        return {
+          Versions: [{ Key: 'uploads/file', VersionId: 'v1' }],
+          DeleteMarkers: [],
+        };
+      if (command.constructor.name === 'GetObjectTaggingCommand')
+        return { TagSet: [{ Key: 'legal-hold', Value: 'true' }] };
+      return {};
+    });
+    await expect(provider.deleteObjectVersions('uploads/file')).rejects.toThrow('provider hold');
+    expect(
+      send.mock.calls.some(([command]) => command.constructor.name === 'DeleteObjectCommand')
+    ).toBe(false);
+  });
+});
+
 // ---------------------------------------------------------------------------
 // presignedPutUrl / presignedGetUrl (local signing, no mock needed)
 // ---------------------------------------------------------------------------

@@ -1,5 +1,14 @@
 import { sql } from 'drizzle-orm';
-import { boolean, check, index, integer, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  check,
+  index,
+  integer,
+  pgTable,
+  text,
+  uniqueIndex,
+  uuid,
+} from 'drizzle-orm/pg-core';
 import { timestamptz, uuidv7 } from '../types';
 import { documents } from './documents';
 import { profiles } from './profiles';
@@ -65,3 +74,54 @@ export const documentLegalHolds = pgTable(
     ),
   ]
 );
+
+/** Approval and retry ledger for irreversible, version-aware object destruction. */
+export const documentDestructionItems = pgTable(
+  'document_destruction_items',
+  {
+    id: uuidv7('id').primaryKey().notNull(),
+    documentId: uuid('document_id')
+      .notNull()
+      .references(() => documents.id, { onDelete: 'restrict' }),
+    profileId: uuid('profile_id')
+      .notNull()
+      .references(() => profiles.id, { onDelete: 'restrict' }),
+    policyId: uuid('policy_id')
+      .notNull()
+      .references(() => documentRetentionPolicies.id, { onDelete: 'restrict' }),
+    storageKey: text('storage_key').notNull(),
+    uploadKey: text('upload_key').notNull(),
+    retentionDeadline: timestamptz('retention_deadline').notNull(),
+    status: text('status').notNull().default('pending_approval'),
+    plannedAt: timestamptz('planned_at').defaultNow().notNull(),
+    approvedBy: text('approved_by').references(() => users.userId, { onDelete: 'restrict' }),
+    approvedAt: timestamptz('approved_at'),
+    destructionStartedAt: timestamptz('destruction_started_at'),
+    destroyedAt: timestamptz('destroyed_at'),
+    attempts: integer('attempts').notNull().default(0),
+    lastError: text('last_error'),
+    updatedAt: timestamptz('updated_at').defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex('document_destruction_active_document_unique')
+      .on(t.documentId)
+      .where(sql`${t.status} IN ('pending_approval','approved','destroying')`),
+    index('document_destruction_status_idx').on(t.status, t.plannedAt),
+    index('document_destruction_profile_idx').on(t.profileId, t.status),
+    check(
+      'document_destruction_status',
+      sql`${t.status} IN ('pending_approval','approved','destroying','cancelled','destroyed')`
+    ),
+    check('document_destruction_attempts', sql`${t.attempts} >= 0`),
+    check(
+      'document_destruction_approval',
+      sql`(${t.status} = 'pending_approval' AND ${t.approvedBy} IS NULL AND ${t.approvedAt} IS NULL AND ${t.destructionStartedAt} IS NULL AND ${t.destroyedAt} IS NULL)
+        OR (${t.status} = 'cancelled' AND ${t.destroyedAt} IS NULL)
+        OR (${t.status} = 'approved' AND ${t.approvedBy} IS NOT NULL AND ${t.approvedAt} IS NOT NULL AND ${t.destructionStartedAt} IS NULL AND ${t.destroyedAt} IS NULL)
+        OR (${t.status} = 'destroying' AND ${t.approvedBy} IS NOT NULL AND ${t.approvedAt} IS NOT NULL AND ${t.destructionStartedAt} IS NOT NULL AND ${t.destroyedAt} IS NULL)
+        OR (${t.status} = 'destroyed' AND ${t.approvedBy} IS NOT NULL AND ${t.approvedAt} IS NOT NULL AND ${t.destructionStartedAt} IS NOT NULL AND ${t.destroyedAt} IS NOT NULL)`
+    ),
+  ]
+);
+
+export type DocumentDestructionItem = typeof documentDestructionItems.$inferSelect;

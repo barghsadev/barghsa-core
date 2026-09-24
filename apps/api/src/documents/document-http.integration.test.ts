@@ -485,6 +485,88 @@ it('keeps document and profile legal holds auditable and applies versioned reten
   ).toContain('document_retention_policy_changed');
 }, 60_000);
 
+it('requires legal approval of an eligible destruction manifest and rechecks active holds', async () => {
+  const f = await owner();
+  const policy = await send(
+    'admin/document-retention/policies/standalone',
+    'document-legal',
+    'PUT',
+    { retentionYears: 5, legalHold: false, approvalNote: 'Approved default for closure test' }
+  );
+  expect(policy.status, await policy.clone().text()).toBe(200);
+  const documentId = randomUUID();
+  const uploadKey = `uploads/${documentId}`;
+  const storageKey = `business-documents/${documentId}/hash`;
+  await http.pool.query(
+    `INSERT INTO storage_records(storage_key,status) VALUES($1,'active'),($2,'immutable')`,
+    [uploadKey, storageKey]
+  );
+  const client = await http.pool.connect();
+  try {
+    await client.query('ALTER TABLE documents DISABLE TRIGGER document_lifecycle_guard');
+    await client.query('BEGIN');
+    await client.query(
+      `INSERT INTO documents(id,profile_id,business_record_type,category,state,scan_state,
+        upload_key,storage_key,original_name,size_bytes,uploaded_by,uploaded_by_type,removed_at)
+       VALUES($1,$2,'standalone','document','Removed','Available',$3,$4,'Old proof.pdf',123,$5,'customer',
+         NOW()-INTERVAL '6 years')`,
+      [documentId, f.profile, uploadKey, storageKey, f.user]
+    );
+    await client.query(
+      `INSERT INTO document_events(document_id,revision,state,actor_id,reason)
+       VALUES($1,1,'Removed',$2,'historical_fixture')`,
+      [documentId, f.user]
+    );
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    await client.query('ALTER TABLE documents ENABLE TRIGGER document_lifecycle_guard');
+    client.release();
+  }
+  const manifest = await http.pool.query<{ id: string }>(
+    `INSERT INTO document_destruction_items
+      (document_id,profile_id,policy_id,storage_key,upload_key,retention_deadline)
+     SELECT d.id,d.profile_id,e.policy_id,d.storage_key,d.upload_key,e.retention_deadline
+     FROM documents d CROSS JOIN LATERAL document_retention_eligibility(d.id) e
+     WHERE d.id=$1 RETURNING id`,
+    [documentId]
+  );
+  const itemId = manifest.rows[0]!.id;
+  const path = `admin/document-retention/destruction/${itemId}/approve`;
+  expect((await send(path, f.user, 'POST', { note: 'Unauthorized' })).status).toBe(403);
+  const hold = await send('admin/document-retention/holds', 'document-legal', 'POST', {
+    documentId,
+    reason: 'Preserve during a legal inquiry',
+  });
+  expect(hold.status).toBe(201);
+  expect(
+    (await send(path, 'document-legal', 'POST', { note: 'Legal review complete' })).status
+  ).toBe(409);
+  const holdId = ((await hold.json()) as { id: string }).id;
+  expect(
+    (
+      await send(`admin/document-retention/holds/${holdId}/release`, 'document-legal', 'POST', {
+        note: 'Inquiry closed',
+      })
+    ).status
+  ).toBe(200);
+  const approved = await send(path, 'document-legal', 'POST', {
+    note: 'Expired evidence approved for destruction',
+  });
+  expect(approved.status, await approved.clone().text()).toBe(200);
+  expect((await approved.json()) as object).toMatchObject({ id: itemId, status: 'approved' });
+  expect((await send(path, 'document-legal', 'POST', { note: 'Repeated approval' })).status).toBe(
+    409
+  );
+  const queue = await send('admin/document-retention/destruction', 'document-legal');
+  expect(queue.status).toBe(200);
+  expect((await queue.json()) as { items: Array<{ id: string; status: string }> }).toMatchObject({
+    items: expect.arrayContaining([expect.objectContaining({ id: itemId, status: 'approved' })]),
+  });
+}, 60_000);
+
 it('lets a saving customer replace or soft-delete only their available order files', async () => {
   const f = await owner();
   const products = await http.pool.query<{ id: string; type: string }>(
