@@ -200,6 +200,7 @@ function buildHarness() {
       degradedReason: r.degraded_reason ?? null,
       breakerOpenedAt: r.opened_at ?? null,
       breakerCooldownUntil: r.cooldown_until ?? null,
+      lastFailureAt: r.last_failure_at ?? null,
       // Raw config is included so the service's maskRow() can build the
       // masked view; it is stripped before the API returns the row.
 
