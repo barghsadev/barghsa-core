@@ -3,6 +3,7 @@ import { createSmsSender, SmsCircuitBreaker } from '@barghsa/shared/notification
 import { afterAll, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { SmsProviderConfigService } from './sms-provider-config.service.js';
+import { readProviderAlertHistory } from './provider-alert-history.js';
 
 let fixture: Awaited<ReturnType<typeof startHttpFixture>>;
 let providerId: string;
@@ -63,7 +64,11 @@ it('trips after transient SMS.ir errors, refuses sends, and recovers with one pr
   });
   expect(
     (await new SmsProviderConfigService(fixture.pool).list()).find((row) => row.id === providerId)
-  ).toMatchObject({ degraded: true, degradedReason: 'SMS provider failure threshold reached' });
+  ).toMatchObject({
+    degraded: true,
+    degradedReason: 'SMS provider failure threshold reached',
+    alertHistory: [{ kind: 'circuit_open' }],
+  });
   await expect(send(message(providerId))).rejects.toThrow('SMS provider circuit is open');
   expect(request).toHaveBeenCalledTimes(5);
 
@@ -79,6 +84,12 @@ it('trips after transient SMS.ir errors, refuses sends, and recovers with one pr
     degraded: false,
     windowFailures: 0,
   });
+  expect(
+    (await readProviderAlertHistory(fixture.pool, [providerId], 'sms'))
+      .get(providerId)
+      ?.map((event) => event.kind)
+      .sort()
+  ).toEqual(['circuit_open', 'circuit_recovered']);
 });
 
 it('keeps permanent SMS.ir credential rejection out of the transient breaker', async () => {

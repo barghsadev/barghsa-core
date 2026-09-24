@@ -5,6 +5,7 @@ import { buildSmsTestParameters } from '@barghsa/shared/notifications';
 import { smsProviderText } from '@barghsa/i18n/providers';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { ProviderHealthMetrics } from '../components/ProviderHealthMetrics.js';
+import { ProviderAlertHistory } from '../components/ProviderAlertHistory.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import {
@@ -386,6 +387,7 @@ export default function AdminSmsProvidersPage() {
                       metrics={p.healthMetrics}
                       active={p.status === 'active'}
                     />
+                    <ProviderAlertHistory events={p.alertHistory} />
                   </td>
                   <td>
                     {text(

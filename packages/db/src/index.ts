@@ -685,6 +685,7 @@ export * from './schema/notification-templates';
 export * from './schema/notification-outbox';
 export * from './schema/notification-send-receipts';
 export * from './schema/notification-delivery-log';
+export * from './schema/provider-health-events';
 export * from './schema/notification-dead-letter';
 export * from './schema/in-app-notifications';
 export * from './schema/notification-preferences';

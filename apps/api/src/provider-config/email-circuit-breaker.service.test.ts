@@ -3,6 +3,7 @@ import { afterAll, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { EmailCircuitBreakerService } from './email-circuit-breaker.service.js';
+import { readProviderAlertHistory } from './provider-alert-history.js';
 
 let fixture: Awaited<ReturnType<typeof startHttpFixture>>, provider: string, time: number;
 let service: EmailCircuitBreakerService;
@@ -46,6 +47,9 @@ it('atomically counts concurrent failures and stops at the trip threshold', asyn
     consecutiveFailures: 5,
   });
   expect(await service.decision(provider)).toMatchObject({ allow: false });
+  expect(
+    (await readProviderAlertHistory(fixture.pool, [provider], 'email')).get(provider)
+  ).toMatchObject([{ kind: 'circuit_open' }]);
 });
 it('expires spaced failure windows and resets healthy failures after success', async () => {
   for (let i = 0; i < 5; i++) {
@@ -75,6 +79,12 @@ it('allows exactly one concurrent recovery probe and binds its successful result
   expect(
     await service.recordOutcome(provider, { ok: true, probeToken: probe.probeToken })
   ).toMatchObject({ degraded: false, windowFailures: 0 });
+  expect(
+    (await readProviderAlertHistory(fixture.pool, [provider], 'email'))
+      .get(provider)
+      ?.map((event) => event.kind)
+      .sort()
+  ).toEqual(['circuit_open', 'circuit_recovered']);
 });
 it('ignores expired/replaced probe results and extends cooldown after the current probe fails', async () => {
   await trip();

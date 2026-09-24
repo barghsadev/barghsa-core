@@ -13,6 +13,10 @@ export interface ProviderHealthMetrics {
   queueDepth: number;
   oldestQueuedAt: string | null;
 }
+export interface ProviderAlertEvent {
+  kind: 'circuit_open' | 'circuit_recovered' | 'permanent_failure';
+  createdAt: string;
+}
 export interface EmailProvider {
   id: string;
   transport: Transport;
@@ -28,6 +32,7 @@ export interface EmailProvider {
   breakerCooldownUntil?: string | null;
   lastFailureAt?: string | null;
   healthMetrics?: ProviderHealthMetrics;
+  alertHistory?: ProviderAlertEvent[];
   maskedConfig?: unknown;
 }
 export interface TestConnectionOutcome {
@@ -70,6 +75,21 @@ export function readHealthMetrics(value: unknown): ProviderHealthMetrics | undef
     throw new ProviderRequestError();
   return metrics as unknown as ProviderHealthMetrics;
 }
+export function readAlertHistory(value: unknown): ProviderAlertEvent[] | undefined {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value) || value.length > 5) throw new ProviderRequestError();
+  return value.map((item) => {
+    const event = record(item);
+    if (
+      !event ||
+      !['circuit_open', 'circuit_recovered', 'permanent_failure'].includes(String(event.kind)) ||
+      typeof event.createdAt !== 'string' ||
+      !Number.isFinite(Date.parse(event.createdAt))
+    )
+      throw new ProviderRequestError();
+    return event as unknown as ProviderAlertEvent;
+  });
+}
 function provider(value: unknown): EmailProvider {
   const row = record(value);
   if (
@@ -111,6 +131,7 @@ function provider(value: unknown): EmailProvider {
     ...(row.healthMetrics === undefined
       ? {}
       : { healthMetrics: readHealthMetrics(row.healthMetrics) }),
+    ...(row.alertHistory === undefined ? {} : { alertHistory: readAlertHistory(row.alertHistory) }),
   } as unknown as EmailProvider;
 }
 export async function providerRequest(

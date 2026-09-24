@@ -855,6 +855,13 @@
       "when": 1791331200104,
       "tag": "0201_notification_provider_attempt_metrics",
       "breakpoints": true
+    },
+    {
+      "idx": 202,
+      "version": "7",
+      "when": 1791331200105,
+      "tag": "0202_provider_health_events",
+      "breakpoints": true
     }
   ]
 }

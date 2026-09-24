@@ -5,6 +5,8 @@ import {
   type TestStatus,
   type ProviderHealthMetrics,
   readHealthMetrics,
+  readAlertHistory,
+  type ProviderAlertEvent,
 } from './email-providers-api.js';
 
 export interface SmsMapping {
@@ -30,6 +32,7 @@ export interface SmsProvider {
   breakerCooldownUntil: string | null;
   lastFailureAt: string | null;
   healthMetrics: ProviderHealthMetrics | undefined;
+  alertHistory: ProviderAlertEvent[] | undefined;
   keyConfigured: boolean;
   config: SmsConfig;
 }
@@ -95,6 +98,7 @@ export function readSmsProvider(
     breakerCooldownUntil: optionalDate(row.breakerCooldownUntil),
     lastFailureAt: optionalDate(row.lastFailureAt),
     healthMetrics: readHealthMetrics(row.healthMetrics),
+    alertHistory: readAlertHistory(row.alertHistory),
     // Never copy the masked credential into form state or send it back on update.
     keyConfigured: typeof c.api_key === 'string' && c.api_key.length > 0,
     config: {

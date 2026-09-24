@@ -145,7 +145,7 @@ it('retries a proven rejection while preserving provider and occurrence identity
   // No worker bookkeeping ran between attempts, as on a crash after rejection.
   const history = (
     await pool.query(
-      'SELECT status,attempt_number,provider_ref,error_detail,send_attempt_token,provider_id FROM notification_delivery_log WHERE notification_id=$1 ORDER BY attempt_number',
+      'SELECT status,attempt_number,provider_ref,error_category,error_detail,send_attempt_token,provider_id FROM notification_delivery_log WHERE notification_id=$1 ORDER BY attempt_number',
       [id]
     )
   ).rows;
@@ -154,6 +154,7 @@ it('retries a proven rejection while preserving provider and occurrence identity
       status: 'failed',
       attempt_number: 1,
       provider_ref: null,
+      error_category: 'permanent',
       error_detail: 'recipient refused',
       provider_id: provider.id,
     },

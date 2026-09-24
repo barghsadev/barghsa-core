@@ -61,6 +61,7 @@ for (const locale of ['en', 'fa'] as const) {
               queueDepth: 3,
               oldestQueuedAt: '2026-09-24T12:00:00Z',
             },
+            alertHistory: [{ kind: 'circuit_recovered', createdAt: '2026-09-24T12:00:00Z' }],
           },
         ],
       })
@@ -71,6 +72,10 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(row).toContainText(text('healthLastFailure'));
     await expect(row).toContainText(providerText('admin.providers.health.failureRate', locale));
     await expect(row).toContainText(providerText('admin.providers.health.queueDepth', locale));
+    await expect(row).toContainText(providerText('admin.providers.health.alertHistory', locale));
+    await expect(row).toContainText(
+      providerText('admin.providers.health.alert.circuit_recovered', locale)
+    );
   });
   test(`SMS locale mappings survive save and cannot be silently dropped (${locale})`, async ({
     page,

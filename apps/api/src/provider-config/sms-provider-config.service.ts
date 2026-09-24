@@ -14,6 +14,7 @@ import {
 } from './provider-secrets.service';
 import { PROVIDER_CONFIG_POOL, type ProviderPool } from './provider-config.di';
 import { readProviderHealthMetrics, type ProviderHealthMetrics } from './provider-health-metrics';
+import { readProviderAlertHistory, type ProviderAlertEvent } from './provider-alert-history';
 
 /**
  * SMS provider configuration service (T-09.06.02).
@@ -69,6 +70,7 @@ export interface SmsProviderConfigResult {
   breakerCooldownUntil: Date | null;
   lastFailureAt: Date | null;
   healthMetrics?: ProviderHealthMetrics;
+  alertHistory?: ProviderAlertEvent[];
   supersedesId: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -228,14 +230,18 @@ export class SmsProviderConfigService {
     const rows = (
       result.rows as Array<SmsProviderConfigResult & { config?: ProviderConfigBody }>
     ).map((row) => this.maskRow(row));
-    const metrics = await readProviderHealthMetrics(
-      this.db,
-      rows.map((row) => row.id),
-      'sms'
-    );
+    const ids = rows.map((row) => row.id);
+    const [metrics, alerts] = await Promise.all([
+      readProviderHealthMetrics(this.db, ids, 'sms'),
+      readProviderAlertHistory(this.db, ids, 'sms'),
+    ]);
     return rows.map((row) => {
       const health = metrics.get(row.id);
-      return { ...row, ...(health ? { healthMetrics: health } : {}) };
+      return {
+        ...row,
+        ...(health ? { healthMetrics: health } : {}),
+        alertHistory: alerts.get(row.id) ?? [],
+      };
     });
   }
 

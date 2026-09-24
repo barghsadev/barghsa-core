@@ -8,6 +8,7 @@ import { ResendConnectionTesterService } from './resend-connection-tester.servic
 import { SmsirConnectionTesterService } from './smsir-connection-tester.service.js';
 import { ProviderSecretsService } from './provider-secrets.service.js';
 import { readProviderHealthMetrics } from './provider-health-metrics.js';
+import { readProviderAlertHistory } from './provider-alert-history.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const actor = { userId: 'provider-self', sessionId: randomUUID(), csrfToken: randomUUID() };
@@ -112,6 +113,14 @@ it('reports one-hour provider attempts and channel backlog without assigning old
   );
   const listed = await new EmailProviderConfigService(http.pool).list();
   expect(listed[0]?.healthMetrics).toMatchObject({ attemptCount: 2, failureCount: 1 });
+  await http.pool.query(
+    `UPDATE notification_delivery_log SET error_category='permanent'
+     WHERE provider_id=$1 AND status='failed' AND created_at > NOW()-INTERVAL '1 hour'`,
+    [first]
+  );
+  expect((await readProviderAlertHistory(http.pool, [first], 'email')).get(first)).toMatchObject([
+    { kind: 'permanent_failure' },
+  ]);
 });
 
 for (const transport of ['smtp', 'resend', 'smsir'] as const) {

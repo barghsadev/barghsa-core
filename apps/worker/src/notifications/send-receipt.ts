@@ -94,7 +94,7 @@ export function durableDelivery(
           rejected ? 'rejected' : 'unknown',
           safeError,
           rejected ? 'failed' : 'unknown',
-          classifyDeliveryError(safeError),
+          rejected ? 'permanent' : classifyDeliveryError(safeError),
           latency(),
         ]
       );

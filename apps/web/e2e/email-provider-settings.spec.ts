@@ -27,6 +27,10 @@ for (const locale of ['en', 'fa'] as const) {
               queueDepth: 2,
               oldestQueuedAt: '2026-09-24T12:00:00Z',
             },
+            alertHistory: [
+              { kind: 'circuit_open', createdAt: '2026-09-24T12:00:00Z' },
+              { kind: 'permanent_failure', createdAt: '2026-09-23T12:00:00Z' },
+            ],
             maskedConfig: { api_key: '********live', from_email: 'mail@example.test' },
           },
         ],
@@ -43,6 +47,8 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(row).toContainText(text('health.failureRate'));
     await expect(row).toContainText(text('health.latencyPercentiles'));
     await expect(row).toContainText(text('health.queueDepth'));
+    await expect(row).toContainText(text('health.alertHistory'));
+    await expect(row).toContainText(text('health.alert.circuit_open'));
   });
   for (const transport of ['smtp', 'resend'] as const) {
     test(`email ${transport} draft preserves saved configuration and write-only credentials (${locale})`, async ({
