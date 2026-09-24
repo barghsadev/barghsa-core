@@ -33,6 +33,8 @@ export interface CustomerInvoiceNode {
   issuedAt: string | null;
   payableFrom: string | null;
   dueAt: string | null;
+  periodStart?: string;
+  periodEnd?: string;
   dueAtOverrideReason?: string | null;
   cancelledAt: string | null;
   createdAt: string;
@@ -95,6 +97,8 @@ export interface CustomerInvoiceListItem {
   adjustmentKind: 'charge' | 'credit' | null;
   issuedAt: string | null;
   dueAt: string | null;
+  periodStart?: string;
+  periodEnd?: string;
   createdAt: string;
   explanation: string | null;
 }

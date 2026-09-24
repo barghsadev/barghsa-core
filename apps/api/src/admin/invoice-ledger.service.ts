@@ -4,6 +4,9 @@ import type { PoolClient } from 'pg';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { loadCustomerInvoiceActivity } from '../invoice/customer-invoice-activity.js';
+import { electricityInvoicePeriod } from '../invoice/invoice-service-period.js';
+
+type InvoiceReadSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 export interface StaffInvoiceRow {
   invoiceId: string;
@@ -16,6 +19,8 @@ export interface StaffInvoiceRow {
   refundedAmount: string;
   issuedAt: string | null;
   dueAt: string | null;
+  periodStart?: string;
+  periodEnd?: string;
   createdAt: string;
 }
 
@@ -34,28 +39,35 @@ export interface StaffInvoiceDetail extends StaffInvoiceRow {
 }
 
 export interface StaffInvoiceFilter {
-  state?: string;
-  invoiceId?: string;
-  beforeAt?: string;
-  beforeId?: string;
+  state?: string | undefined;
+  invoiceId?: string | undefined;
+  beforeAt?: string | undefined;
+  beforeId?: string | undefined;
 }
 
-interface InvoiceQueryRow extends StaffInvoiceRow {
+interface InvoiceDbRow extends StaffInvoiceRow {
+  calculationSnapshot: unknown;
+}
+
+interface InvoiceQueryRow extends InvoiceDbRow {
   cursorAt: string;
 }
 
 const invoiceColumns = `id AS "invoiceId", profile_id AS "profileId", order_id AS "orderId",
   type, state, total_amount::text AS "totalAmount", paid_amount::text AS "paidAmount",
   refunded_amount::text AS "refundedAmount", issued_at AS "issuedAt",
-  due_at AS "dueAt", created_at AS "createdAt"`;
+  due_at AS "dueAt", created_at AS "createdAt",
+  invoice_calculation_snapshot AS "calculationSnapshot"`;
 
 function stamp(value: Date | string | null): string | null {
   return value == null ? null : new Date(value).toISOString();
 }
 
-function serialize(row: StaffInvoiceRow): StaffInvoiceRow {
+function serialize(row: InvoiceDbRow): StaffInvoiceRow {
+  const { calculationSnapshot, ...invoice } = row;
   return {
-    ...row,
+    ...invoice,
+    ...electricityInvoicePeriod(calculationSnapshot),
     issuedAt: stamp(row.issuedAt),
     dueAt: stamp(row.dueAt),
     createdAt: stamp(row.createdAt)!,
@@ -65,7 +77,7 @@ function serialize(row: StaffInvoiceRow): StaffInvoiceRow {
 @Injectable()
 export class InvoiceLedgerService {
   private async read<T>(
-    session: ValidatedSession,
+    session: InvoiceReadSession,
     work: (client: PoolClient) => Promise<T>
   ): Promise<T> {
     const client = await getDbPool().connect();
@@ -84,7 +96,7 @@ export class InvoiceLedgerService {
     }
   }
 
-  async list(session: ValidatedSession, filter: StaffInvoiceFilter) {
+  async list(session: InvoiceReadSession, filter: StaffInvoiceFilter) {
     return this.read(session, async (client) => {
       const result = await client.query<InvoiceQueryRow>(
         `SELECT ${invoiceColumns},
@@ -115,9 +127,9 @@ export class InvoiceLedgerService {
     });
   }
 
-  async get(session: ValidatedSession, invoiceId: string): Promise<StaffInvoiceDetail> {
+  async get(session: InvoiceReadSession, invoiceId: string): Promise<StaffInvoiceDetail> {
     return this.read(session, async (client) => {
-      const result = await client.query<StaffInvoiceRow>(
+      const result = await client.query<InvoiceDbRow>(
         `SELECT ${invoiceColumns} FROM invoices WHERE id=$1::uuid`,
         [invoiceId]
       );

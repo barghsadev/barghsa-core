@@ -8,6 +8,7 @@ import { t } from '@barghsa/i18n/app';
 import { canCustomerSubmitInvoiceBankReceipt } from '@barghsa/shared/finance';
 import { ArrowRightIcon, Loader2Icon, ReceiptIcon } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
+import { formatInvoiceServicePeriod } from '../lib/invoice-service-period.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import {
   InvoiceRequestError,
@@ -320,6 +321,12 @@ function InvoiceCard({
           <dt className="text-muted-foreground">{t('invoices.details.issuedAt', locale)}</dt>
           <dd>{formatTimestamp(node.issuedAt)}</dd>
         </div>
+        {node.periodStart && node.periodEnd ? (
+          <div>
+            <dt className="text-muted-foreground">{t('invoices.details.period', locale)}</dt>
+            <dd>{formatInvoiceServicePeriod(node.periodStart, node.periodEnd, formatTimestamp)}</dd>
+          </div>
+        ) : null}
         <div>
           <dt className="text-muted-foreground">{t('invoices.details.dueAt', locale)}</dt>
           <dd>{formatTimestamp(node.dueAt)}</dd>

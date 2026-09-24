@@ -157,6 +157,8 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     async (locale) => {
       document.documentElement.lang = locale;
       const payload = adjustmentPayload();
+      payload.invoice.periodStart = '2026-10-01T00:00:00Z';
+      payload.invoice.periodEnd = '2026-11-01T00:00:00Z';
       payload.payments = [
         {
           id: 'payment',
@@ -214,6 +216,9 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       expect(activity.textContent).toContain('Bank Mellat');
       expect(activity.textContent).not.toContain('invoices.activity.');
       expect(activity.textContent).toContain(locale === 'en' ? 'Bank receipts' : 'رسیدهای بانکی');
+      expect(container.textContent).toContain(
+        locale === 'en' ? 'Electricity service period' : 'دوره تأمین برق'
+      );
       const receiptLink = activity.querySelector<HTMLAnchorElement>(
         `a[href="/api/invoices/${ORIGINAL_ID}/bank-receipts/${receiptId}/attachment"]`
       );
@@ -324,6 +329,10 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
   it('shows the original invoice and the replacement with its explanation', async () => {
     const payload = replacementPayload();
     payload.chain[0]!.dueAtOverrideReason = '<strong>Extra time requested</strong>';
+    payload.chain[0]!.periodStart = '2026-10-01T07:00:00Z';
+    payload.chain[0]!.periodEnd = '2026-11-01T07:00:00Z';
+    payload.invoice.periodStart = '2026-11-01T07:00:00Z';
+    payload.invoice.periodEnd = '2026-12-01T08:00:00Z';
     vi.stubGlobal(
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {
@@ -351,6 +360,12 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     expect(container.textContent).toContain('Corrected usage');
     expect(container.textContent).toContain('Aug 1, 2026, 3:00 AM');
     expect(container.textContent).toContain('Aug 8, 2026, 3:00 AM');
+    expect(
+      container.querySelector(`[data-testid="invoice-card-${ORIGINAL_ID}"]`)?.textContent
+    ).toContain('Electricity service period');
+    expect(
+      container.querySelector(`[data-testid="invoice-card-${REPLACEMENT_ID}"]`)?.textContent
+    ).toContain('Electricity service period');
     const reason = container.querySelector(`[data-testid="invoice-due-reason-${ORIGINAL_ID}"]`);
     expect(reason?.textContent).toContain('<strong>Extra time requested</strong>');
     expect(reason?.querySelector('strong')).toBeNull();

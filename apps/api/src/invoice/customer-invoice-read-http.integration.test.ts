@@ -70,6 +70,37 @@ it('returns the same invoice for a valid uppercase UUID', async () => {
     originalInvoiceId: f.invoice,
   });
 });
+
+it('exposes the saved electricity period in customer list and detail', async () => {
+  const f = await fixture();
+  await http.pool.query(`UPDATE invoices SET invoice_calculation_snapshot=$2::jsonb WHERE id=$1`, [
+    f.invoice,
+    JSON.stringify({
+      schemaVersion: 1,
+      totalKwh: '100',
+      periodStart: '2026-10-01T00:00:00Z',
+      periodEnd: '2026-11-01T00:00:00Z',
+    }),
+  ]);
+  const list = await read(f, false);
+  expect(list.status).toBe(200);
+  const listBody = (await list.json()) as { invoices: Array<{ invoiceId: string }> };
+  expect(listBody.invoices).toContainEqual(
+    expect.objectContaining({
+      invoiceId: f.invoice,
+      periodStart: '2026-10-01T00:00:00.000Z',
+      periodEnd: '2026-11-01T00:00:00.000Z',
+    })
+  );
+  const detail = await read(f);
+  expect(detail.status, http.logs()).toBe(200);
+  const detailBody = (await detail.json()) as CustomerInvoiceDetailsDto;
+  expect(detailBody.invoice).toMatchObject({
+    invoiceId: f.invoice,
+    periodStart: '2026-10-01T00:00:00.000Z',
+    periodEnd: '2026-11-01T00:00:00.000Z',
+  });
+});
 it.each([false, true])(
   'denies expired session after waiting to read (details=%s)',
   async (detail) => {

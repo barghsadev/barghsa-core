@@ -59,6 +59,8 @@ it('shows an invoice due date when the API supplies one', async () => {
             totalAmount: '109000',
             issuedAt: '2026-09-23T10:00:00Z',
             dueAt: '2026-09-30T10:00:00Z',
+            periodStart: '2026-10-01T00:00:00Z',
+            periodEnd: '2026-11-01T00:00:00Z',
             explanation: null,
           },
         ],
@@ -72,6 +74,7 @@ it('shows an invoice due date when the API supplies one', async () => {
     await act(async () => root.render(<InvoicesPage />));
     expect(container.textContent).toContain('Issued: 2026-09-23T10:00:00Z');
     expect(container.textContent).toContain('Due: 2026-09-30T10:00:00Z');
+    expect(container.textContent).toContain('Electricity service period:');
   } finally {
     await act(async () => root.unmount());
     container.remove();

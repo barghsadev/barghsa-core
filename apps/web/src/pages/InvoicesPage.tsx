@@ -5,6 +5,7 @@ import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { Loader2Icon, ReceiptIcon } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
+import { formatInvoiceServicePeriod } from '../lib/invoice-service-period.js';
 import {
   fetchInvoiceList,
   roleI18nKey,
@@ -108,6 +109,12 @@ export function InvoicesPage({ unpaidOnly = false }: { unpaidOnly?: boolean }) {
                     {t('invoices.list.due', locale)}: {time.format(item.dueAt)}
                   </p>
                 )}
+                {item.periodStart && item.periodEnd ? (
+                  <p className="text-sm text-muted-foreground">
+                    {t('invoices.list.period', locale)}:{' '}
+                    {formatInvoiceServicePeriod(item.periodStart, item.periodEnd, time.format)}
+                  </p>
+                ) : null}
                 {item.explanation ? (
                   <p className="mt-2 text-sm text-foreground">{item.explanation}</p>
                 ) : null}

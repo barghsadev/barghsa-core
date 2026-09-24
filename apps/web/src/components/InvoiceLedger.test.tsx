@@ -16,6 +16,8 @@ const row = {
   refundedAmount: '0',
   issuedAt: '2026-09-01T00:00:00Z',
   dueAt: '2026-10-01T00:00:00Z',
+  periodStart: '2026-10-01T00:00:00Z',
+  periodEnd: '2026-11-01T00:00:00Z',
   createdAt: '2026-09-01T00:00:00Z',
 };
 
@@ -95,6 +97,7 @@ it('opens staff invoice detail with line VAT and payment history, then selects i
     root.render(<InvoiceLedger onSelectForDueAt={onSelectForDueAt} onOpenReceipt={onOpenReceipt} />)
   );
   expect(container.textContent).toContain('109000 IRR');
+  expect(container.textContent).toContain('Electricity service period');
   await act(async () => (container.querySelector('tbody button') as HTMLButtonElement).click());
   expect(container.textContent).toContain('Electricity');
   expect(container.textContent).toContain('9000 IRR');

@@ -6,6 +6,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
+import { formatInvoiceServicePeriod } from '../lib/invoice-service-period.js';
 
 interface InvoiceRow {
   invoiceId: string;
@@ -18,6 +19,8 @@ interface InvoiceRow {
   refundedAmount: string;
   issuedAt: string | null;
   dueAt: string | null;
+  periodStart?: string;
+  periodEnd?: string;
   createdAt: string;
 }
 
@@ -252,6 +255,7 @@ export function InvoiceLedger({
                 <th className="p-2 text-start">{word('amount')}</th>
                 <th className="p-2 text-start">{word('paid')}</th>
                 <th className="p-2 text-start">{word('due')}</th>
+                <th className="p-2 text-start">{word('period')}</th>
               </tr>
             </thead>
             <tbody>
@@ -273,6 +277,11 @@ export function InvoiceLedger({
                   <td className="p-2 whitespace-nowrap">{numbers.money(item.totalAmount)}</td>
                   <td className="p-2 whitespace-nowrap">{numbers.money(item.paidAmount)}</td>
                   <td className="p-2 whitespace-nowrap">{time.format(item.dueAt)}</td>
+                  <td className="p-2 whitespace-nowrap">
+                    {item.periodStart && item.periodEnd
+                      ? formatInvoiceServicePeriod(item.periodStart, item.periodEnd, time.format)
+                      : '—'}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -363,6 +372,18 @@ export function InvoiceLedger({
                   <dt className="text-muted-foreground">{word('due')}</dt>
                   <dd>{time.format(detail.dueAt)}</dd>
                 </div>
+                {detail.periodStart && detail.periodEnd ? (
+                  <div>
+                    <dt className="text-muted-foreground">{word('period')}</dt>
+                    <dd>
+                      {formatInvoiceServicePeriod(
+                        detail.periodStart,
+                        detail.periodEnd,
+                        time.format
+                      )}
+                    </dd>
+                  </div>
+                ) : null}
                 {detail.orderId ? (
                   <div>
                     <dt className="text-muted-foreground">{word('order')}</dt>

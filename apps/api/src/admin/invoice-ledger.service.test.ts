@@ -85,6 +85,30 @@ it('loads lines and payment activity for the selected invoice only', async () =>
   expect(fixture.activity).toHaveBeenCalledWith(expect.anything(), id(1), id(100));
 });
 
+it('returns the saved electricity period without exposing its calculation snapshot', async () => {
+  fixture.query.mockImplementation(async (sql: string) =>
+    sql.includes('FROM invoices')
+      ? {
+          rows: [
+            {
+              ...row(1),
+              calculationSnapshot: {
+                schemaVersion: 1,
+                totalKwh: '100',
+                periodStart: '2026-10-01T00:00:00Z',
+                periodEnd: '2026-11-01T00:00:00Z',
+              },
+            },
+          ],
+        }
+      : { rows: [] }
+  );
+  const item = (await new InvoiceLedgerService().list(session, {})).items[0]!;
+  expect(item.periodStart).toBe('2026-10-01T00:00:00.000Z');
+  expect(item.periodEnd).toBe('2026-11-01T00:00:00.000Z');
+  expect(JSON.stringify(item)).not.toContain('calculationSnapshot');
+});
+
 it('returns not found for an unknown invoice', async () => {
   await expect(new InvoiceLedgerService().get(session, id(9))).rejects.toMatchObject({
     status: 404,

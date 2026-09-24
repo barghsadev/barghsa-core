@@ -213,6 +213,43 @@ describe('roleForInvoice', () => {
 });
 
 describe('assembleCustomerInvoiceDetails', () => {
+  it('keeps the original and replacement electricity periods distinct', () => {
+    const snapshot = (periodStart: string, periodEnd: string) => ({
+      schemaVersion: 1,
+      totalKwh: '100',
+      periodStart,
+      periodEnd,
+    });
+    const details = assembleCustomerInvoiceDetails({
+      viewedInvoiceId: REPLACEMENT_ID,
+      originalInvoiceId: ORIGINAL_ID,
+      rows: [
+        row({
+          id: ORIGINAL_ID,
+          invoice_calculation_snapshot: snapshot(
+            '2026-10-01T00:00:00.000Z',
+            '2026-11-01T00:00:00.000Z'
+          ),
+        }),
+        row({
+          id: REPLACEMENT_ID,
+          replaces_invoice_id: ORIGINAL_ID,
+          invoice_calculation_snapshot: snapshot(
+            '2026-11-01T00:00:00.000Z',
+            '2026-12-01T00:00:00.000Z'
+          ),
+        }),
+      ],
+      linesByInvoiceId: new Map(),
+    });
+    expect(details.chain.map(({ periodStart }) => periodStart)).toEqual([
+      '2026-10-01T00:00:00.000Z',
+      '2026-11-01T00:00:00.000Z',
+    ]);
+    expect(details.invoice.periodEnd).toBe('2026-12-01T00:00:00.000Z');
+    expect(JSON.stringify(details)).not.toContain('totalKwh');
+  });
+
   it('puts the original first and attaches explanations to linked invoices', () => {
     const original = row({
       id: ORIGINAL_ID,

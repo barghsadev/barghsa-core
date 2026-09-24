@@ -45,6 +45,7 @@ import {
   type AdjustmentKind,
 } from '@barghsa/shared/finance';
 import { isInvoiceState, type InvoiceState } from './invoice-state.model.js';
+import { electricityInvoicePeriod } from './invoice-service-period.js';
 
 /** How this invoice participates in a correction chain. */
 export type InvoiceCorrectionRole =
@@ -72,6 +73,8 @@ export interface CustomerInvoiceNodeDto {
   issuedAt: string | null;
   payableFrom: string | null;
   dueAt: string | null;
+  periodStart?: string;
+  periodEnd?: string;
   /** Latest public reason for the current deadline; staff identity stays private. */
   dueAtOverrideReason: string | null;
   cancelledAt: string | null;
@@ -105,6 +108,8 @@ export interface CustomerInvoiceListItemDto {
   adjustmentKind: AdjustmentKind | null;
   issuedAt: string | null;
   dueAt: string | null;
+  periodStart?: string;
+  periodEnd?: string;
   createdAt: string;
   explanation: string | null;
 }
@@ -145,6 +150,7 @@ export interface InvoiceFamilyRow {
   replaces_invoice_id: string | null;
   adjustment_for_invoice_id: string | null;
   metadata: unknown;
+  invoice_calculation_snapshot?: unknown;
 }
 
 export interface InvoiceLineRow {
@@ -352,6 +358,7 @@ function toNode(row: InvoiceFamilyRow, lines: InvoiceLineRow[]): CustomerInvoice
     issuedAt: iso(row.issued_at),
     payableFrom: iso(row.payable_from),
     dueAt,
+    ...electricityInvoicePeriod(row.invoice_calculation_snapshot),
     dueAtOverrideReason:
       override && dueAt && new Date(override.dueAt).getTime() === new Date(dueAt).getTime()
         ? override.reason
@@ -397,6 +404,7 @@ function toListItem(row: InvoiceFamilyRow): CustomerInvoiceListItemDto {
     adjustmentKind: isAdjustmentKind(row.adjustment_kind) ? row.adjustment_kind : null,
     issuedAt: iso(row.issued_at),
     dueAt: iso(row.due_at),
+    ...electricityInvoicePeriod(row.invoice_calculation_snapshot),
     createdAt: isoRequired(row.created_at),
     explanation: explanationForCorrection({
       replacesInvoiceId: row.replaces_invoice_id,
@@ -409,7 +417,7 @@ function toListItem(row: InvoiceFamilyRow): CustomerInvoiceListItemDto {
 const INVOICE_SELECT = `id, profile_id, state, total_amount, paid_amount, refunded_amount,
        accounting_amount, adjustment_kind, issued_at, payable_from, due_at,
        cancelled_at, created_at, replaces_invoice_id, adjustment_for_invoice_id,
-       metadata`;
+       metadata, invoice_calculation_snapshot`;
 
 @Injectable()
 export class CustomerInvoiceDetailsService {
@@ -639,7 +647,7 @@ export class CustomerInvoiceDetailsService {
                 n.refunded_amount, n.accounting_amount, n.adjustment_kind,
                 n.issued_at, n.payable_from, n.due_at, n.cancelled_at,
                 n.created_at, n.replaces_invoice_id, n.adjustment_for_invoice_id,
-                n.metadata,
+                n.metadata, n.invoice_calculation_snapshot,
                 f.path || n.id,
                 f.depth + 1
            FROM invoices n

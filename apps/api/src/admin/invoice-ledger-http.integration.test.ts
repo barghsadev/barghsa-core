@@ -1,6 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import type { StaffInvoiceRow } from './invoice-ledger.service.js';
+
+type InvoicePage = {
+  items: StaffInvoiceRow[];
+  nextCursor: { beforeAt: string; beforeId: string } | null;
+};
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const profileId = randomUUID();
@@ -24,9 +30,10 @@ beforeAll(async () => {
     [profileId]
   );
   await http.pool.query(
-    `INSERT INTO invoices(id,profile_id,type,state,total_amount,issued_at,due_at)
-     VALUES ($1,$3,'manual','Unpaid',109000,'2026-09-01T00:00:00Z','2026-10-01T00:00:00Z'),
-            ($2,$3,'manual','Draft',200000,NULL,NULL)`,
+    `INSERT INTO invoices(id,profile_id,type,state,total_amount,issued_at,due_at,invoice_calculation_snapshot)
+     VALUES ($1,$3,'manual','Unpaid',109000,'2026-09-01T00:00:00Z','2026-10-01T00:00:00Z',
+             '{"schemaVersion":1,"totalKwh":"100","periodStart":"2026-10-01T00:00:00Z","periodEnd":"2026-11-01T00:00:00Z"}'::jsonb),
+            ($2,$3,'manual','Draft',200000,NULL,NULL,NULL)`,
     [invoiceId, draftId, profileId]
   );
   await http.pool.query(
@@ -53,9 +60,15 @@ const get = (path: string, session = financeSession) =>
 it('lets finance staff filter and inspect real invoice lines while hiding the ledger from other staff', async () => {
   expect((await get('')).status).toBe(200);
   const listResponse = await get('?state=Unpaid');
-  const list = await listResponse.json();
+  const list = (await listResponse.json()) as InvoicePage;
   expect(list.items).toEqual([
-    expect.objectContaining({ invoiceId, totalAmount: '109000', state: 'Unpaid' }),
+    expect.objectContaining({
+      invoiceId,
+      totalAmount: '109000',
+      state: 'Unpaid',
+      periodStart: '2026-10-01T00:00:00.000Z',
+      periodEnd: '2026-11-01T00:00:00.000Z',
+    }),
   ]);
   expect(list.nextCursor).toBeNull();
   const detailResponse = await get(`/${invoiceId}`);
@@ -63,6 +76,7 @@ it('lets finance staff filter and inspect real invoice lines while hiding the le
   expect(await detailResponse.json()).toMatchObject({
     invoiceId,
     profileId,
+    periodStart: '2026-10-01T00:00:00.000Z',
     lines: [{ description: 'Electricity', lineTotal: '100000', vatAmount: '9000' }],
     activity: { payments: [], bankReceipts: [], refunds: [] },
   });
@@ -81,14 +95,15 @@ it('does not skip invoices whose creation timestamps share the same millisecond'
       [id, profileId]
     );
   }
-  const first = await (await get('?state=Paid')).json();
+  const first = (await (await get('?state=Paid')).json()) as InvoicePage;
   expect(first.items).toHaveLength(25);
-  expect(first.nextCursor.beforeAt).toBe('2026-09-01T00:00:00.123456Z');
-  const query = new URLSearchParams({ state: 'Paid', ...first.nextCursor });
-  const second = await (await get(`?${query}`)).json();
+  const nextCursor = first.nextCursor!;
+  expect(nextCursor.beforeAt).toBe('2026-09-01T00:00:00.123456Z');
+  const query = new URLSearchParams({ state: 'Paid', ...nextCursor });
+  const second = (await (await get(`?${query}`)).json()) as InvoicePage;
   expect(second.items).toHaveLength(1);
   expect(second.nextCursor).toBeNull();
-  expect(
-    new Set([...first.items, ...second.items].map((row: { invoiceId: string }) => row.invoiceId))
-  ).toEqual(new Set(ids));
+  expect(new Set([...first.items, ...second.items].map((row) => row.invoiceId))).toEqual(
+    new Set(ids)
+  );
 });

@@ -4,8 +4,10 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 const ID = '11111111-1111-7111-8111-111111111111';
 const session = { userId: 'staff', sessionId: 'session', csrfToken: 'csrf' };
-const allowed = { session: { ...session, permissions: ['invoices:read'] } } as AuthenticatedRequest;
-const denied = { session: { ...session, permissions: [] } } as AuthenticatedRequest;
+const allowed = {
+  session: { ...session, permissions: ['invoices:read'] },
+} as unknown as AuthenticatedRequest;
+const denied = { session: { ...session, permissions: [] } } as unknown as AuthenticatedRequest;
 
 function setup() {
   const service = {
