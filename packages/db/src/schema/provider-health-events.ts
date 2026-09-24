@@ -9,12 +9,17 @@ export const providerHealthEvents = pgTable(
     id: uuidv7('id').primaryKey().notNull(),
     channel: text('channel', { enum: ['email', 'sms'] }).notNull(),
     providerId: uuid('provider_id').notNull(),
-    kind: text('kind', { enum: ['circuit_open', 'circuit_recovered'] }).notNull(),
+    kind: text('kind', {
+      enum: ['circuit_open', 'circuit_recovered', 'low_credit', 'credit_recovered'],
+    }).notNull(),
     createdAt: timestamptz('created_at').defaultNow().notNull(),
   },
   (table) => [
     check('chk_phe_channel', sql`${table.channel} IN ('email','sms')`),
-    check('chk_phe_kind', sql`${table.kind} IN ('circuit_open','circuit_recovered')`),
+    check(
+      'chk_phe_kind',
+      sql`${table.kind} IN ('circuit_open','circuit_recovered','low_credit','credit_recovered')`
+    ),
     index('idx_phe_provider_created').on(table.channel, table.providerId, table.createdAt),
   ]
 );

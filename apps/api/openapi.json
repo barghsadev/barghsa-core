@@ -6123,6 +6123,7 @@
                 "service_breach_scan",
                 "service_escalation_scan",
                 "notification_outbox_poll",
+                "sms_credit_check",
                 "invoice_overdue_scan",
                 "invoice_reminder_scheduler",
                 "invoice_reminder_sender",

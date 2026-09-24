@@ -14,7 +14,8 @@ export interface ProviderHealthMetrics {
   oldestQueuedAt: string | null;
 }
 export interface ProviderAlertEvent {
-  kind: 'circuit_open' | 'circuit_recovered' | 'permanent_failure';
+  kind:
+    'circuit_open' | 'circuit_recovered' | 'permanent_failure' | 'low_credit' | 'credit_recovered';
   createdAt: string;
 }
 export interface EmailProvider {
@@ -82,7 +83,13 @@ export function readAlertHistory(value: unknown): ProviderAlertEvent[] | undefin
     const event = record(item);
     if (
       !event ||
-      !['circuit_open', 'circuit_recovered', 'permanent_failure'].includes(String(event.kind)) ||
+      ![
+        'circuit_open',
+        'circuit_recovered',
+        'permanent_failure',
+        'low_credit',
+        'credit_recovered',
+      ].includes(String(event.kind)) ||
       typeof event.createdAt !== 'string' ||
       !Number.isFinite(Date.parse(event.createdAt))
     )

@@ -69,6 +69,9 @@ export interface SmsProviderConfigResult {
   breakerOpenedAt: Date | null;
   breakerCooldownUntil: Date | null;
   lastFailureAt: Date | null;
+  lowCreditBalance: number | null;
+  creditCheckedAt: Date | null;
+  lowCreditAlertActive: boolean;
   healthMetrics?: ProviderHealthMetrics;
   alertHistory?: ProviderAlertEvent[];
   supersedesId: string | null;
@@ -178,6 +181,9 @@ const SELECT_COLUMNS = `id,
   opened_at AS "breakerOpenedAt",
   cooldown_until AS "breakerCooldownUntil",
   last_failure_at AS "lastFailureAt",
+  low_credit_balance::float8 AS "lowCreditBalance",
+  credit_checked_at AS "creditCheckedAt",
+  low_credit_alert_active AS "lowCreditAlertActive",
   supersedes_id AS "supersedesId",
   created_at AS "createdAt",
   updated_at AS "updatedAt",

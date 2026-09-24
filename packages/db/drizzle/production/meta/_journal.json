@@ -862,6 +862,13 @@
       "when": 1791331200105,
       "tag": "0202_provider_health_events",
       "breakpoints": true
+    },
+    {
+      "idx": 203,
+      "version": "7",
+      "when": 1791331200106,
+      "tag": "0203_sms_credit_monitoring",
+      "breakpoints": true
     }
   ]
 }

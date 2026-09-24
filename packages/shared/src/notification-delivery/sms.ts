@@ -136,6 +136,16 @@ export function createSmsSender(
           ...(decision.probeToken ? { probeToken: decision.probeToken } : {}),
         })
         .catch(() => {});
+    // SMS.ir's send receipt contains an ID, not a balance. A successful send
+    // brings the next credit check forward, capped to one check per 15 minutes.
+    await pool
+      .query(
+        `UPDATE sms_provider_configs SET credit_next_check_at=NOW()
+         WHERE id=$1 AND credit_checked_at < NOW()-INTERVAL '15 minutes'
+           AND credit_next_check_at>NOW()`,
+        [message.providerId]
+      )
+      .catch(() => {});
     return receipt;
   };
 }

@@ -62,6 +62,9 @@ for (const locale of ['en', 'fa'] as const) {
               oldestQueuedAt: '2026-09-24T12:00:00Z',
             },
             alertHistory: [{ kind: 'circuit_recovered', createdAt: '2026-09-24T12:00:00Z' }],
+            lowCreditBalance: 50,
+            creditCheckedAt: '2026-09-24T12:00:00Z',
+            lowCreditAlertActive: true,
           },
         ],
       })
@@ -76,6 +79,8 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(row).toContainText(
       providerText('admin.providers.health.alert.circuit_recovered', locale)
     );
+    await expect(row).toContainText(text('creditBalance'));
+    await expect(row).toContainText(text('creditLow'));
   });
   test(`SMS locale mappings survive save and cannot be silently dropped (${locale})`, async ({
     page,

@@ -381,6 +381,19 @@ export default function AdminSmsProvidersPage() {
                             {text('healthLastFailure')}: {time.format(p.lastFailureAt)}
                           </p>
                         )}
+                        {p.creditCheckedAt && p.lowCreditBalance !== null && (
+                          <p
+                            className={`text-xs ${p.lowCreditAlertActive ? 'text-destructive' : 'text-muted-foreground'}`}
+                          >
+                            {text('creditBalance')}: {p.lowCreditBalance.toLocaleString(locale)} ·{' '}
+                            {text('creditChecked')}: {time.format(p.creditCheckedAt)}
+                          </p>
+                        )}
+                        {p.lowCreditAlertActive && (
+                          <p className="text-xs font-medium text-destructive">
+                            {text('creditLow')}
+                          </p>
+                        )}
                       </>
                     )}
                     <ProviderHealthMetrics

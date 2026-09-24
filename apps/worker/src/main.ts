@@ -14,6 +14,11 @@ import { runRefundRetries, REFUND_RETRY_INTERVAL_MS } from './refunds/retry-runn
 import { runAiModelTest } from './ai-models/test-runner.js';
 import { cleanupStorageObjects, cleanupStorageProvider } from './storage/cleanup.js';
 import { SmsNotificationTransport } from './notifications/sms-transport.js';
+import {
+  checkSmsCredit,
+  SMS_CREDIT_JOB_TYPE,
+  SMS_CREDIT_POLL_INTERVAL_MS,
+} from './notifications/sms-credit-monitor.js';
 import { EmailNotificationTransport } from './notifications/email-transport.js';
 import { runAuthDelivery } from './auth-delivery/runner.js';
 import { PollerGroup } from './jobs/poller-group.js';
@@ -285,6 +290,20 @@ async function main(): Promise<void> {
       await recordJobSuccess('auth_delivery');
     }
   }, 1000);
+
+  pollers.every(async () => {
+    if (draining) return;
+    try {
+      if ((await checkSmsCredit(getDbPool())) === 'checked')
+        await recordJobSuccess(SMS_CREDIT_JOB_TYPE);
+    } catch {
+      await recordJobFailure({
+        jobType: SMS_CREDIT_JOB_TYPE,
+        error: 'sms_credit_check_failed',
+        errorCategory: 'transient',
+      });
+    }
+  }, SMS_CREDIT_POLL_INTERVAL_MS);
 
   // ── Notification outbox poll loop (E-05, T-05.01.02 / T-05.02.01) ──────
   // Poll for due outbox rows, dispatch channels, and record outcomes.

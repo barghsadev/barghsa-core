@@ -33,6 +33,9 @@ export interface SmsProvider {
   lastFailureAt: string | null;
   healthMetrics: ProviderHealthMetrics | undefined;
   alertHistory: ProviderAlertEvent[] | undefined;
+  lowCreditBalance: number | null;
+  creditCheckedAt: string | null;
+  lowCreditAlertActive: boolean;
   keyConfigured: boolean;
   config: SmsConfig;
 }
@@ -62,6 +65,12 @@ function number(value: unknown, fallback: number, min: number, max: number): num
 function optionalDate(value: unknown): string | null {
   if (value === undefined || value === null) return null;
   if (typeof value !== 'string' || !Number.isFinite(Date.parse(value)))
+    throw new ProviderRequestError();
+  return value;
+}
+function optionalBalance(value: unknown): number | null {
+  if (value === undefined || value === null) return null;
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0)
     throw new ProviderRequestError();
   return value;
 }
@@ -99,6 +108,9 @@ export function readSmsProvider(
     lastFailureAt: optionalDate(row.lastFailureAt),
     healthMetrics: readHealthMetrics(row.healthMetrics),
     alertHistory: readAlertHistory(row.alertHistory),
+    lowCreditBalance: optionalBalance(row.lowCreditBalance),
+    creditCheckedAt: optionalDate(row.creditCheckedAt),
+    lowCreditAlertActive: row.lowCreditAlertActive === true,
     // Never copy the masked credential into form state or send it back on update.
     keyConfigured: typeof c.api_key === 'string' && c.api_key.length > 0,
     config: {

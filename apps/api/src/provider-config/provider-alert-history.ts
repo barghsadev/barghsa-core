@@ -1,7 +1,8 @@
 import type { ProviderPool } from './provider-config.di';
 
 export interface ProviderAlertEvent {
-  kind: 'circuit_open' | 'circuit_recovered' | 'permanent_failure';
+  kind:
+    'circuit_open' | 'circuit_recovered' | 'permanent_failure' | 'low_credit' | 'credit_recovered';
   createdAt: Date;
 }
 

@@ -38,7 +38,7 @@ Scope: SMTP, Resend, and SMS.ir delivery configured at **Admin → Providers**. 
 
 ## SMS.ir
 
-**Timeout and throughput.** The configured request timeout defaults to 15 seconds and the client caps it at 15 seconds. The configured throughput limit defaults to 100 messages per minute and is enforced per active provider in PostgreSQL. Set it no higher than the account's contracted capacity. The low-credit threshold is configurable, but the current sender does not poll balance continuously; check account credit during an incident.
+**Timeout, throughput, and credit.** The configured send timeout defaults to 15 seconds; credit checks have a 15-second cap. The configured throughput limit defaults to 100 messages per minute and is enforced per active provider in PostgreSQL. Set it no higher than the account's contracted capacity. The worker reads credit at least every six hours and moves a stale check forward after a successful send, capped to one check per 15 minutes. The staff page shows the last measured balance and time. Below the configured threshold it shows a low-credit alert until a later reading recovers. A threshold of zero disables the alert.
 
 **Signatures.** HTTP 408, 429, and 5xx are transient. Other HTTP 4xx, including invalid credentials, are permanent. A non-success SMS.ir response status without a receipt is an explicit rejection and is dead-lettered. A conflicting status/receipt or missing receipt is uncertain and must be reconciled. Invalid destination, template ID, sender line, or variable mapping needs a corrected draft.
 

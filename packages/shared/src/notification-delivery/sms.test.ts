@@ -79,6 +79,9 @@ it('executes only after preflight, preserves receipts and distinguishes explicit
   );
   response = { status: 1, data: { messageId: 321 } };
   expect(await createSmsSender(pool, request, execute)(message)).toBe('321');
+  expect(pool.query).toHaveBeenCalledWith(expect.stringContaining('credit_next_check_at=NOW()'), [
+    'sms-provider',
+  ]);
   execute.mockClear();
   request.mockClear();
   const limited = setup(3);

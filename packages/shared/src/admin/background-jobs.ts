@@ -49,6 +49,7 @@ export const BACKGROUND_JOB_TYPES = [
   { key: 'service_breach_scan', label: 'Service response-target breach scan' },
   { key: 'service_escalation_scan', label: 'Service escalation scan' },
   { key: 'notification_outbox_poll', label: 'Notification outbox poll' },
+  { key: 'sms_credit_check', label: 'SMS.ir credit monitoring' },
   { key: 'invoice_overdue_scan', label: 'Invoice overdue scan' },
   { key: 'invoice_reminder_scheduler', label: 'Invoice reminder scheduler' },
   { key: 'invoice_reminder_sender', label: 'Invoice reminder sender' },
