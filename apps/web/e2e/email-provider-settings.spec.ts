@@ -42,6 +42,10 @@ for (const locale of ['en', 'fa'] as const) {
       document.documentElement.lang = lang;
     }, locale);
     const row = page.getByRole('row').filter({ hasText: 'Active email' });
+    await expect(page.getByRole('link', { name: text('runbook') })).toHaveAttribute(
+      'href',
+      `https://github.com/barghsadev/barghsa-core/blob/main/kanban/runbooks/provider-delivery${locale === 'fa' ? '.fa' : ''}.md`
+    );
     await expect(row).toContainText(text('health.paused'));
     await expect(row).toContainText(text('health.lastFailure'));
     await expect(row).toContainText(text('health.failureRate'));
