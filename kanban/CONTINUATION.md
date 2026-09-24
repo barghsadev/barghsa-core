@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Permanent provider failure handling](batches/2026-09-24-permanent-provider-failures.md) carries typed provider outcomes through notification dispatch, dead-letters explicit permanent failures after one attempt, and preserves transient backoff and uncertain-send reconciliation.
+
 [SMS provider circuit breaker](batches/2026-09-24-sms-provider-breaker.md) adds persisted SMS failure state and a single recovery probe to notification and authentication sends, with real PostgreSQL coverage. Provider health and alerting remain separate work.
 
 [Capability maintenance controls](batches/2026-09-24-capability-maintenance.md) let staff pause new actions by service with audited settings, clear customer notices, and unaffected health and existing workflows.

@@ -12,6 +12,10 @@ import { deriveChannelIdempotencyKey } from './outbox-writer.js';
 import type { QueryPool } from './channel-scheduling.js';
 import { recordDeliveryAttempt } from './worker-metrics.js';
 import { DeliveryOutcomeUnknown } from './send-receipt.js';
+import {
+  classifyProviderError,
+  type ProviderErrorKind,
+} from '@barghsa/shared/notification-delivery';
 
 /** Local delivery can share the worker's pinned persistence transaction. */
 export interface WorkerNotificationTransport extends INotificationTransport {
@@ -146,6 +150,8 @@ export interface DispatchOutcome {
   latencyMs: number;
   /** Sanitized failure detail for this channel only. */
   error?: string;
+  /** Structured provider classification preserved after safe message redaction. */
+  providerErrorKind?: ProviderErrorKind;
   /** An uncertain external send must be reconciled before any retry. */
   requiresReconciliation?: boolean;
 }
@@ -207,6 +213,9 @@ export async function dispatchOutbox(
         result: { providerRef: '', status: 'failed' },
         latencyMs: Math.round(performance.now() - startedAt),
         error: sanitizeError(error instanceof Error ? error.message : String(error)),
+        ...(channel === 'email' || channel === 'sms'
+          ? { providerErrorKind: classifyProviderError(error) }
+          : {}),
         ...(error instanceof DeliveryOutcomeUnknown ? { requiresReconciliation: true } : {}),
       });
     }

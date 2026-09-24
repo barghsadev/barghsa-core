@@ -266,6 +266,7 @@ interface DispatchOutcome {
   /** Provider round-trip latency in milliseconds for this attempt. */
   latencyMs: number | null;
   error?: string;
+  providerErrorKind?: 'transient' | 'permanent' | 'unknown';
   requiresReconciliation?: boolean;
 }
 
@@ -398,7 +399,10 @@ async function persistOutcomes(
       const attempts = (job?.attempts ?? row.attempts) + 1;
       const maxAttempts = job?.max_attempts ?? row.maxAttempts;
       const ok = outcome.result.status === 'delivered';
-      const exhausted = outcome.requiresReconciliation === true || attempts >= maxAttempts;
+      const exhausted =
+        outcome.requiresReconciliation === true ||
+        outcome.providerErrorKind === 'permanent' ||
+        attempts >= maxAttempts;
       // Jittered backoff before the next attempt (null when the budget is spent).
       const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, maxAttempts);
       const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs);
@@ -440,7 +444,10 @@ async function persistOutcomes(
             maxAttempts,
             idempotencyKey: row.idempotencyKey,
             cause,
-            errorCategory: classifyDeliveryError(cause),
+            errorCategory:
+              outcome.providerErrorKind && outcome.providerErrorKind !== 'unknown'
+                ? outcome.providerErrorKind
+                : classifyDeliveryError(cause),
           });
         }
       }
@@ -454,6 +461,9 @@ async function persistOutcomes(
         providerRef: ok ? outcome.result.providerRef : null,
         latencyMs: outcome.latencyMs ?? null,
         error: ok ? null : (outcome.error ?? 'delivery failed'),
+        ...(outcome.providerErrorKind && outcome.providerErrorKind !== 'unknown'
+          ? { errorCategory: outcome.providerErrorKind }
+          : {}),
       });
     }
 

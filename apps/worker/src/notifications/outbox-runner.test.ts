@@ -15,9 +15,9 @@ import type {
  * claim-vs-dispatch loop is verified at e2e level.
  */
 
-function makePool() {
+function makePool(channels: Array<'in_app' | 'email' | 'sms'> = ['in_app', 'email']) {
   const updates: Array<{ sql: string; params: unknown[] }> = [];
-  const jobs: Array<Record<string, any>> = ['in_app', 'email'].map((channel) => ({
+  const jobs: Array<Record<string, any>> = channels.map((channel) => ({
     channel,
     status: 'queued',
     run_after: null,
@@ -167,6 +167,67 @@ describe('runOutboxPoll', () => {
       (u) => u.sql.includes('UPDATE notification_outbox') && u.params[1] === 'scheduled'
     );
     expect(outboxUpdate).toBeTruthy();
+  });
+
+  it('dead-letters a permanent SMS provider rejection after one attempt', async () => {
+    const { pool, updates } = makePool(['in_app', 'sms']);
+    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([
+      { ...baseRow, channels: ['in_app', 'sms'] },
+    ]);
+    const sms = {
+      channel: 'sms' as const,
+      send: async () => {
+        throw Object.assign(new Error('SMS.ir request failed'), { httpStatus: 401 });
+      },
+    };
+
+    await runOutboxPoll({
+      pool,
+      transports: { in_app: new FakeTransport('in_app'), sms },
+      availability: fullyAvailable,
+    });
+
+    const smsJob = updates.find(
+      (update) => update.sql.includes('UPDATE notification_job') && update.params[5] === 'sms'
+    );
+    expect(smsJob?.params[1]).toBe('dead_letter');
+    expect(smsJob?.params[3]).toBe(1);
+    expect(smsJob?.params[6]).toBeNull();
+    const smsLog = updates.find(
+      (update) =>
+        update.sql.includes('INSERT INTO notification_delivery_log') && update.params[1] === 'sms'
+    );
+    expect(smsLog?.params[6]).toBe('permanent');
+  });
+
+  it('keeps a transient SMS provider outage on the bounded retry schedule', async () => {
+    const { pool, updates } = makePool(['in_app', 'sms']);
+    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([
+      { ...baseRow, channels: ['in_app', 'sms'] },
+    ]);
+    const sms = {
+      channel: 'sms' as const,
+      send: async () => {
+        throw Object.assign(new Error('SMS.ir request failed'), { httpStatus: 503 });
+      },
+    };
+
+    await runOutboxPoll({
+      pool,
+      transports: { in_app: new FakeTransport('in_app'), sms },
+      availability: fullyAvailable,
+    });
+
+    const smsJob = updates.find(
+      (update) => update.sql.includes('UPDATE notification_job') && update.params[5] === 'sms'
+    );
+    expect(smsJob?.params[1]).toBe('retrying');
+    expect(smsJob?.params[6]).toBeInstanceOf(Date);
+    const smsLog = updates.find(
+      (update) =>
+        update.sql.includes('INSERT INTO notification_delivery_log') && update.params[1] === 'sms'
+    );
+    expect(smsLog?.params[6]).toBe('transient');
   });
 
   it('marks a row failed permanently and dead-letters its jobs when max attempts are exhausted', async () => {
