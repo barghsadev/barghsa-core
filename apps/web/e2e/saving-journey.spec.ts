@@ -414,7 +414,7 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   await expect(page.getByRole('heading', { name: 'Older saving plan' })).toBeVisible();
   await page.getByRole('link', { name: 'Saving order' }).first().click();
   await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));
-  await page.getByRole('link', { name: 'View invoice and payment options' }).click();
+  await page.getByRole('link', { name: 'View invoice' }).click();
   await expect(page.getByRole('heading', { name: 'Invoice details' })).toBeVisible();
   await page.getByRole('link', { name: 'Back to saving order' }).click();
   await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));
@@ -435,4 +435,21 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
       name: 'Pay the invoice',
     })
   ).toHaveAttribute('href', `/invoices/${invoiceId}`);
+  await expect(page.getByText('Partially funded', { exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'View invoice' })).toHaveAttribute(
+    'href',
+    `/invoices/${invoiceId}`
+  );
+
+  invoiceState = 'Draft';
+  await page.goto(`/savings/orders/${savingOrderId}`);
+  await expect(page.getByText('Staff are preparing the invoice.')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'View invoice' })).toHaveCount(0);
+
+  invoiceState = 'Cancelled';
+  await page.goto(`/savings/orders/${savingOrderId}`);
+  await expect(page.getByRole('link', { name: 'View invoice' })).toHaveAttribute(
+    'href',
+    `/invoices/${invoiceId}`
+  );
 });

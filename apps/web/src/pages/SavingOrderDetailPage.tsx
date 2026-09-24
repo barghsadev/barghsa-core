@@ -204,13 +204,13 @@ export function SavingOrderDetailPage() {
               <p className="text-sm text-muted-foreground">
                 {copy('financialStatus')}: {copy('financial.' + detail.financial_status)}
               </p>
-              {detail.invoice_id && (
+              {detail.invoice_id && detail.invoice_state && detail.invoice_state !== 'Draft' && (
                 <Link
                   to="/invoices/$invoiceId"
                   params={{ invoiceId: detail.invoice_id }}
                   className="inline-block text-primary hover:underline"
                 >
-                  {copy('payment')}
+                  {copy('viewInvoice')}
                 </Link>
               )}
             </CardContent>
