@@ -22,7 +22,8 @@ async function smsirRequest(
     },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
-  if (!response.ok) throw new Error('SMS.ir request failed');
+  if (!response.ok)
+    throw Object.assign(new Error('SMS.ir request failed'), { httpStatus: response.status });
   const result = (await response.json()) as {
     status?: number;
     Status?: number;

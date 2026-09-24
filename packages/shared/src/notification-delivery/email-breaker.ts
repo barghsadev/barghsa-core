@@ -57,16 +57,21 @@ const COLUMNS = `degraded,degraded_reason AS "degradedReason",consecutive_failur
   window_failures AS "windowFailures",window_started_at AS "windowStartedAt",last_failure_at AS "lastFailureAt",
   opened_at AS "openedAt",cooldown_until AS "cooldownUntil"`;
 
-/** Atomic counters and one leased recovery probe shared by all send paths. */
-export class EmailCircuitBreaker {
+/** Atomic counters and one leased recovery probe shared by email and SMS. */
+export class ProviderCircuitBreaker {
   constructor(
     private readonly pool: DeliveryPool,
     private readonly config: EmailBreakerConfig = DEFAULT_EMAIL_BREAKER_CONFIG,
-    private readonly clock?: Clock
+    private readonly clock?: Clock,
+    private readonly channel: 'email' | 'sms' = 'email'
   ) {}
+  private get table(): string {
+    // The channel is a closed union, never caller-provided SQL.
+    return this.channel === 'sms' ? 'sms_provider_configs' : 'email_provider_configs';
+  }
   /** Bind all reads, probe claims and outcomes to a caller's held transaction. */
-  using(pool: DeliveryPool): EmailCircuitBreaker {
-    return new EmailCircuitBreaker(pool, this.config, this.clock);
+  using(pool: DeliveryPool): ProviderCircuitBreaker {
+    return new ProviderCircuitBreaker(pool, this.config, this.clock, this.channel);
   }
   private async now(): Promise<Date> {
     if (this.clock) return this.clock.now();
@@ -76,11 +81,9 @@ export class EmailCircuitBreaker {
   }
   async readState(providerId: string): Promise<EmailBreakerState> {
     const row = (
-      await this.pool.query(`SELECT ${COLUMNS} FROM email_provider_configs WHERE id=$1`, [
-        providerId,
-      ])
+      await this.pool.query(`SELECT ${COLUMNS} FROM ${this.table} WHERE id=$1`, [providerId])
     ).rows[0];
-    if (!row) throw new Error('Email provider unavailable');
+    if (!row) throw new Error(`${this.channel === 'sms' ? 'SMS' : 'Email'} provider unavailable`);
     return { ...row, providerId } as unknown as EmailBreakerState;
   }
   async decision(providerId: string): Promise<EmailBreakerDecision> {
@@ -89,7 +92,7 @@ export class EmailCircuitBreaker {
     const now = await this.now();
     const deadline = new Date(now.getTime() + this.config.cooldownMs);
     const claimed = await this.pool.query(
-      `UPDATE email_provider_configs SET cooldown_until=$3
+      `UPDATE ${this.table} SET cooldown_until=$3
       WHERE id=$1 AND degraded=true AND (cooldown_until IS NULL OR cooldown_until <= $2)
       RETURNING ${COLUMNS}`,
       [providerId, now, deadline]
@@ -103,7 +106,8 @@ export class EmailCircuitBreaker {
       allow: false,
       kind: 'open',
       state,
-      degradedReason: state.degradedReason ?? 'Email provider degraded',
+      degradedReason:
+        state.degradedReason ?? `${this.channel === 'sms' ? 'SMS' : 'Email'} provider degraded`,
       cooldownUntil: state.cooldownUntil ?? deadline,
     };
   }
@@ -119,7 +123,7 @@ export class EmailCircuitBreaker {
       (degraded AND cooldown_until=$3::timestamptz AND cooldown_until>$2::timestamptz))`;
     if (outcome.ok || (outcome.transient === false && !token)) {
       await this.pool.query(
-        `UPDATE email_provider_configs SET degraded=false,degraded_reason=NULL,
+        `UPDATE ${this.table} SET degraded=false,degraded_reason=NULL,
         consecutive_failures=0,window_failures=0,recent_failure_times='{}'::timestamptz[],window_started_at=NULL,last_failure_at=NULL,opened_at=NULL,cooldown_until=NULL
         WHERE id=$1 AND ${owned}`,
         [providerId, now, token]
@@ -129,19 +133,19 @@ export class EmailCircuitBreaker {
       const trips = `(degraded OR ${count} >= $5)`;
       await this.pool.query(
         `WITH locked AS MATERIALIZED (
-          SELECT id,recent_failure_times FROM email_provider_configs WHERE id=$1 FOR UPDATE
+          SELECT id,recent_failure_times FROM ${this.table} WHERE id=$1 FOR UPDATE
         ), recent AS (
           SELECT id,ARRAY(
             SELECT at FROM unnest(recent_failure_times || ARRAY[$2::timestamptz]) at
             WHERE at >= $2::timestamptz - ($4 * interval '1 millisecond')
             ORDER BY at DESC LIMIT $5
           ) AS failures FROM locked
-        ) UPDATE email_provider_configs p SET
+        ) UPDATE ${this.table} p SET
         consecutive_failures=consecutive_failures+1, window_failures=${count},
         recent_failure_times=recent.failures,
         window_started_at=(SELECT min(at) FROM unnest(recent.failures) at),
         last_failure_at=$2, degraded=${trips},
-        degraded_reason=CASE WHEN ${trips} THEN 'Email provider failure threshold reached' ELSE degraded_reason END,
+        degraded_reason=CASE WHEN ${trips} THEN $7 ELSE degraded_reason END,
         opened_at=CASE WHEN ${trips} THEN COALESCE(opened_at,$2) ELSE opened_at END,
         cooldown_until=CASE WHEN ${trips} THEN $2::timestamptz + ($6 * interval '1 millisecond') ELSE cooldown_until END
         FROM recent WHERE p.id=recent.id AND ${owned}`,
@@ -152,9 +156,23 @@ export class EmailCircuitBreaker {
           this.config.windowMs,
           this.config.threshold,
           this.config.cooldownMs,
+          `${this.channel === 'sms' ? 'SMS' : 'Email'} provider failure threshold reached`,
         ]
       );
     }
     return this.readState(providerId);
+  }
+}
+
+export class EmailCircuitBreaker extends ProviderCircuitBreaker {
+  constructor(pool: DeliveryPool, config?: EmailBreakerConfig, clock?: Clock) {
+    super(pool, config, clock, 'email');
+  }
+}
+
+/** SMS shares the same persisted, leased recovery state machine as email. */
+export class SmsCircuitBreaker extends ProviderCircuitBreaker {
+  constructor(pool: DeliveryPool, config?: EmailBreakerConfig, clock?: Clock) {
+    super(pool, config, clock, 'sms');
   }
 }

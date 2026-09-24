@@ -841,6 +841,13 @@
       "when": 1791331200102,
       "tag": "0199_quarantined_contract_original_replacement",
       "breakpoints": true
+    },
+    {
+      "idx": 200,
+      "version": "7",
+      "when": 1791331200103,
+      "tag": "0200_sms_provider_circuit_breaker",
+      "breakpoints": true
     }
   ]
 }

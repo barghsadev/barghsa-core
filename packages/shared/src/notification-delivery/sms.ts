@@ -6,6 +6,8 @@ import {
 import { resolvePath } from '../notifications/template-engine.js';
 import { PostgresRateLimiterStore } from '../rate-limit/index.js';
 import type { DeliveryPool } from './email.js';
+import { SmsCircuitBreaker, type EmailBreakerOutcome } from './email-breaker.js';
+import { isTransientProviderError } from './email-errors.js';
 import type { DeliveryExecutor } from './execution.js';
 
 export interface SmsMessage {
@@ -87,17 +89,53 @@ export function createSmsSender(
     if (!quota.allowed) throw new Error('SMS provider quota reached');
     signal?.throwIfAborted();
     const apiKey = decryptProviderSecret(config.api_key);
-    const send = () =>
-      sendSmsirVerification(
-        apiKey,
-        process.env.SMSIR_API_BASE || 'https://api.sms.ir',
-        message.destination,
-        message.templateId,
-        message.parameters,
-        request,
-        config.timeout * 1000,
-        signal
-      );
-    return execute ? execute({ id: message.providerId, transport: 'smsir' }, send) : send();
+    const breaker = new SmsCircuitBreaker(pool);
+    const decision = await breaker.decision(message.providerId);
+    if (!decision.allow) throw new Error('SMS provider circuit is open');
+    let providerOutcome: EmailBreakerOutcome | undefined;
+    const send = async () => {
+      try {
+        const receipt = await sendSmsirVerification(
+          apiKey,
+          process.env.SMSIR_API_BASE || 'https://api.sms.ir',
+          message.destination,
+          message.templateId,
+          message.parameters,
+          request,
+          config.timeout * 1000,
+          signal
+        );
+        providerOutcome = { ok: true };
+        return receipt;
+      } catch (error) {
+        // An owner-requested cancellation is not a provider-health failure.
+        if (!signal?.aborted)
+          providerOutcome = { ok: false, transient: isTransientProviderError(error) };
+        throw error;
+      }
+    };
+    let receipt: string;
+    try {
+      receipt = execute
+        ? await execute({ id: message.providerId, transport: 'smsir' }, send)
+        : await send();
+    } catch (error) {
+      if (providerOutcome)
+        await breaker
+          .recordOutcome(message.providerId, {
+            ...providerOutcome,
+            ...(decision.probeToken ? { probeToken: decision.probeToken } : {}),
+          })
+          .catch(() => {});
+      throw error;
+    }
+    if (providerOutcome)
+      await breaker
+        .recordOutcome(message.providerId, {
+          ...providerOutcome,
+          ...(decision.probeToken ? { probeToken: decision.probeToken } : {}),
+        })
+        .catch(() => {});
+    return receipt;
   };
 }

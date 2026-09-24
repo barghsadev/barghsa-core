@@ -1,18 +1,14 @@
 import {
   createEmailSender,
+  createSmsSender,
   loadEmailBranding,
   normalizeEmailBranding,
   renderBrandedEmail,
   type EmailBranding,
 } from '@barghsa/shared/notification-delivery';
 import { escapeHtml } from '@barghsa/shared/notifications';
-import { PostgresRateLimiterStore } from '@barghsa/shared/rate-limit';
 import type { Pool } from 'pg';
-import {
-  decryptProviderSecret,
-  SmsirConfigSchema,
-  sendSmsirVerification,
-} from '@barghsa/shared/auth-delivery';
+import { SmsirConfigSchema } from '@barghsa/shared/auth-delivery';
 
 export interface AuthMessage {
   /** Worker diagnostics only; never part of a customer message. */
@@ -99,19 +95,15 @@ ${message.activationUrl}`
       }
       const mobile = message.destination.replace(/^\+98/, '0');
       if (!/^09\d{9}$/.test(mobile)) throw new Error('Invalid SMS destination');
-      const quota = await new PostgresRateLimiterStore((sql, params) =>
-        pool.query(sql, params)
-      ).incrementSecurity(`provider:smsir:${provider.id}`, config.throughput_limit, 60_000);
-      if (!quota.allowed) throw new Error('SMS provider quota reached');
-      return sendSmsirVerification(
-        decryptProviderSecret(config.api_key),
-        process.env.SMSIR_API_BASE || 'https://api.sms.ir',
-        mobile,
-        mapping.template_id,
-        [{ name: mapping.variables.code, value: message.code }],
-        request,
-        config.timeout * 1000
-      );
+      return createSmsSender(
+        pool,
+        request
+      )({
+        providerId: provider.id,
+        destination: mobile,
+        templateId: mapping.template_id,
+        parameters: [{ name: mapping.variables.code, value: message.code }],
+      });
     }
     throw new Error('Auth provider transport mismatch');
   };

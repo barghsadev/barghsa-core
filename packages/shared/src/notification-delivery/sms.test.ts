@@ -28,24 +28,39 @@ function setup(count = 1) {
   const query = vi.fn(async (sql: string) => ({
     rows: sql.includes('rate_limit_rolling(')
       ? [{ count, reset_ms: 1000 }]
-      : [
-          {
-            id: 'sms-provider',
-            transport: 'smsir',
-            config: {
-              api_key: 'local-test-only',
-              sender: '3000',
-              throughput_limit: 2,
-              template_mappings: [
-                {
-                  event_key: 'invoice.created',
-                  template_id: '42',
-                  variables: { amount: 'AMOUNT' },
+      : sql.includes('clock_timestamp()')
+        ? [{ now: new Date() }]
+        : sql.includes('degraded_reason AS')
+          ? [
+              {
+                degraded: false,
+                degradedReason: null,
+                consecutiveFailures: 0,
+                windowFailures: 0,
+                windowStartedAt: null,
+                lastFailureAt: null,
+                openedAt: null,
+                cooldownUntil: null,
+              },
+            ]
+          : [
+              {
+                id: 'sms-provider',
+                transport: 'smsir',
+                config: {
+                  api_key: 'local-test-only',
+                  sender: '3000',
+                  throughput_limit: 2,
+                  template_mappings: [
+                    {
+                      event_key: 'invoice.created',
+                      template_id: '42',
+                      variables: { amount: 'AMOUNT' },
+                    },
+                  ],
                 },
-              ],
-            },
-          },
-        ],
+              },
+            ],
   }));
   const request = vi.fn<typeof fetch>(async (_url, options) => fetch(endpoint, options));
   return { pool: { query }, request };

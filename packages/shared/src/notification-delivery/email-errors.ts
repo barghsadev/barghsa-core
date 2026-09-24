@@ -1,5 +1,5 @@
 /** Classify provider health only; this does not authorize a delivery retry. */
-export function isTransientEmailError(error: unknown): boolean {
+export function isTransientProviderError(error: unknown): boolean {
   if (!error || typeof error !== 'object') return false;
   const value = error as {
     httpStatus?: unknown;
@@ -50,3 +50,5 @@ export function isTransientEmailError(error: unknown): boolean {
   }
   return false;
 }
+
+export const isTransientEmailError = isTransientProviderError;
