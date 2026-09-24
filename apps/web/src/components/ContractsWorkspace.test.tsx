@@ -398,6 +398,29 @@ it.each(['en', 'fa'] as const)(
   }
 );
 it.each(['en', 'fa'] as const)(
+  'links the accepted contract next action to its unpaid initial invoice in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    const invoiceId = '55555555-5555-4555-8555-555555555555';
+    vi.stubGlobal(
+      'fetch',
+      api(
+        detail({
+          state: 'Accepted',
+          canAccept: false,
+          initialInvoiceId: invoiceId,
+          initialInvoiceState: 'Unpaid',
+        })
+      )
+    );
+    await render(<ContractDetail id={ID} staff={false} onClose={() => {}} onChanged={() => {}} />);
+    expect(container.querySelector(`a[href="/invoices/${invoiceId}"]`)?.textContent).toBe(
+      words.payInitialInvoice
+    );
+  }
+);
+it.each(['en', 'fa'] as const)(
   'shows published and accepted contract milestones in %s',
   async (locale) => {
     harness.locale = locale;

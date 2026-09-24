@@ -45,3 +45,57 @@ it('identifies staff waits and terminal states without offering a dead link', ()
     href: null,
   });
 });
+
+it.each(['Unpaid', 'PartiallyFunded', 'Overdue'] as const)(
+  'directs a customer with a %s initial invoice to payment',
+  (initialInvoiceState) => {
+    expect(
+      customerContractNextAction(
+        {
+          state: 'Accepted',
+          canAccept: false,
+          initialInvoiceId: 'initial-invoice',
+          initialInvoiceState,
+        },
+        null
+      )
+    ).toEqual({
+      key: 'payInitialInvoice',
+      owner: 'customer',
+      href: '/invoices/initial-invoice',
+    });
+  }
+);
+
+it('shows a staff wait while the initial payment is being reviewed', () => {
+  expect(
+    customerContractNextAction(
+      {
+        state: 'Signed',
+        canAccept: false,
+        initialInvoiceId: 'initial-invoice',
+        initialInvoiceState: 'PaymentUnderReview',
+      },
+      null
+    )
+  ).toEqual({ key: 'initialPaymentUnderReview', owner: 'staff', href: null });
+});
+
+it('keeps acceptance, signature, and completed contracts ahead of invoice guidance', () => {
+  const invoice = { initialInvoiceId: 'initial-invoice', initialInvoiceState: 'Unpaid' } as const;
+  expect(
+    customerContractNextAction(
+      { state: 'AwaitingCustomerAcceptance', canAccept: true, ...invoice },
+      null
+    ).key
+  ).toBe('accept');
+  expect(
+    customerContractNextAction(
+      { state: 'AwaitingSignature', canAccept: false, ...invoice },
+      { canRequest: true, canRecord: false }
+    ).key
+  ).toBe('prepareSignature');
+  expect(
+    customerContractNextAction({ state: 'Completed', canAccept: false, ...invoice }, null)
+  ).toEqual({ key: 'workflow.none', owner: 'none', href: null });
+});
