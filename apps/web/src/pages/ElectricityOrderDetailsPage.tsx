@@ -11,6 +11,7 @@ import { ElectricityPriceAdjustmentsPanel } from './ElectricityPriceAdjustmentsP
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
 import { commercialStatusTone, financialStatusTone } from '../lib/electricity-status-tone.js';
+import { electricityTimelineKeys } from '../lib/electricity-timeline.js';
 
 const ElectricityOrderRevisionForm = lazy(() =>
   import('./ElectricityOrderRevisionForm.js').then((module) => ({
@@ -105,21 +106,6 @@ const actionKeys: Record<string, string> = {
   await_activation: 'electricity.order.nextAction.await_activation',
   continue_order: 'electricity.order.nextAction.continue_order',
   none: 'electricity.order.nextAction.none',
-};
-const timelineKeys: Record<string, string> = {
-  'electricity.order_submitted': 'electricity.order.timeline.submitted',
-  'electricity.order_review.approve': 'electricity.order.timeline.approved',
-  'electricity.order_review.request-changes': 'electricity.order.timeline.changes',
-  'electricity.order_review.reject': 'electricity.order.timeline.rejected',
-  'electricity.order_resubmitted': 'electricity.order.timeline.resubmitted',
-  'electricity.order_cancelled': 'electricity.order.timeline.cancelled',
-  'refund.processing': 'electricity.order.timeline.refundProcessing',
-  'refund.completed': 'electricity.order.timeline.refundCompleted',
-  'refund.failed': 'electricity.order.timeline.refundFailed',
-  'refund.retry_exhausted': 'electricity.order.timeline.refundFailed',
-  'contract.activated': 'electricity.order.timeline.activated',
-  'contract.completed': 'electricity.order.timeline.completed',
-  'contract.cancelled': 'electricity.order.timeline.cancelled',
 };
 const refundKeys: Record<string, string> = {
   pending: 'electricity.order.refund.pending',
@@ -316,7 +302,7 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
               locale
             )}
             happened={t(
-              timelineKeys[latestEvent?.event ?? ''] ??
+              electricityTimelineKeys[latestEvent?.event ?? ''] ??
                 statusKeys[detail.electricityStatus] ??
                 'electricity.order.timeline.updated',
               locale
@@ -511,7 +497,8 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                       <time className="text-muted-foreground">{time.format(event.at)}</time>
                       <p>
                         {t(
-                          timelineKeys[event.event] ?? 'electricity.order.timeline.updated',
+                          electricityTimelineKeys[event.event] ??
+                            'electricity.order.timeline.updated',
                           locale
                         )}
                       </p>

@@ -374,11 +374,12 @@ export class ElectricityOrderService {
           metadata: Record<string, unknown>;
         }>(
           `SELECT id,event,user_id,created_at,metadata::jsonb AS metadata FROM audit_log
-           WHERE (metadata::jsonb->>'orderId'=$1 AND event LIKE 'electricity.%')
+             WHERE (metadata::jsonb->>'orderId'=$1
+                    AND (event LIKE 'electricity.%' OR event='order_created'))
               OR ($2::uuid IS NOT NULL AND metadata::jsonb->>'refundId'=$2::text
                 AND event IN ('refund.processing','refund.completed','refund.failed','refund.retry_exhausted'))
               OR (metadata::jsonb->>'contractId'=$3::text AND event='contract.cancelled')
-           ORDER BY created_at ASC,id ASC LIMIT 100`,
+             ORDER BY created_at DESC,id DESC LIMIT 100`,
           [orderId, detail.refund_id, detail.contract_id]
         )
       ).rows;

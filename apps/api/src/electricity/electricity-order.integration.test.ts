@@ -739,12 +739,28 @@ it('queues the exact order for staff and approves it once with customer notifica
     headers: staffHeaders,
   });
   expect(detailResponse.status, http.logs()).toBe(200);
-  const detail = (await detailResponse.json()) as { versionId: string; contractSnapshot: unknown };
+  const detail = (await detailResponse.json()) as {
+    versionId: string;
+    contractSnapshot: unknown;
+    timeline: Array<{ event: string }>;
+  };
   expect(detail.contractSnapshot).toBeTruthy();
+  expect(detail.timeline).toEqual(
+    expect.arrayContaining([expect.objectContaining({ event: 'order_created' })])
+  );
   const body = { idempotencyKey: randomUUID(), expectedVersionId: detail.versionId };
   const approved = await staffPost(order.orderId, 'approve', body);
   expect(approved.status, http.logs()).toBe(200);
   expect(await approved.json()).toMatchObject({ orderId: order.orderId, status: 'approved' });
+  const approvedDetail = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
+    headers: staffHeaders,
+  });
+  expect(approvedDetail.status, http.logs()).toBe(200);
+  expect(await approvedDetail.json()).toMatchObject({
+    timeline: expect.arrayContaining([
+      expect.objectContaining({ event: 'electricity.order_review.approve' }),
+    ]),
+  });
   const afterApproval = await fetch(
     `${http.base}/api/staff/electricity/orders?after=${order.orderId}`,
     { headers: staffHeaders }
@@ -1398,6 +1414,9 @@ it('lists only the customer profile orders and cancels an unpublished order once
     lines: Array<{ systemKey: string; quantityKwh: string }>;
     timeline: Array<{ event: string }>;
   };
+  expect(detail.timeline).toEqual(
+    expect.arrayContaining([expect.objectContaining({ event: 'order_created' })])
+  );
   expect(detail.lines).toEqual(
     expect.arrayContaining([expect.objectContaining({ systemKey: 'thermal', quantityKwh: '10' })])
   );

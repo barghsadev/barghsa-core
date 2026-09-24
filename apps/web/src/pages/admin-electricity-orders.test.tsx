@@ -66,6 +66,24 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     },
     ageHours: 12,
     priority: 'normal',
+    timeline: [
+      {
+        id: 'event-0',
+        event: 'order_created',
+        at: '2026-09-22T00:00:00Z',
+        actor: 'buyer',
+        reason: null,
+        comment: null,
+      },
+      {
+        id: 'event-1',
+        event: 'electricity.order_review.request-changes',
+        at: '2026-09-23T00:00:00Z',
+        actor: 'staff-1',
+        reason: 'Increase quantity',
+        comment: null,
+      },
+    ],
   };
   const fetchMock = vi.fn(
     async (url: string) =>
@@ -136,6 +154,12 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
       )?.textContent
     ).toBe('Open contract');
     expect(container.textContent).toContain('Review order changes');
+    expect(container.textContent).toContain('Order timeline');
+    expect(container.textContent).toContain('Order submitted');
+    expect(container.textContent).toContain('Changes requested');
+    expect(container.querySelector('ol[aria-label="Order timeline"]')?.textContent).toContain(
+      'Increase quantity'
+    );
     expect(container.textContent).toContain('Increase quantity');
     expect(container.textContent).toContain('Quantity updated');
     expect(container.textContent).toContain('Old Street');
@@ -218,6 +242,16 @@ it('opens a linked order directly even when it is no longer in the review queue'
                   settingsSnapshot: {},
                   contractSnapshot: {},
                   revisionReview: null,
+                  timeline: [
+                    {
+                      id: 'event-2',
+                      event: 'contract.activated',
+                      at: '2026-09-24T00:00:00Z',
+                      actor: null,
+                      reason: null,
+                      comment: null,
+                    },
+                  ],
                 }
               : url.includes('/comments')
                 ? { comments: [], nextBefore: null }
@@ -238,6 +272,7 @@ it('opens a linked order directly even when it is no longer in the review queue'
     );
     expect(container.textContent).toContain('Electricity Buyer');
     expect(container.textContent).not.toContain('No orders await review.');
+    expect(container.textContent).toContain('Contract and order activated');
     expect(
       container.querySelector(`a[href="/admin/contracts?contractId=${contractId}"]`)?.textContent
     ).toBe('Open contract');

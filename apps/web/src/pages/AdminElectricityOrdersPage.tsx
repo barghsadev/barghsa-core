@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
-import { Button, Card, CardContent, DualStatusDisplay, Input, Label } from '@barghsa/ui';
+import { Button, Card, CardContent, DualStatusDisplay, Input, Label, Timeline } from '@barghsa/ui';
+import { t as appText } from '@barghsa/i18n/app';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
 import { commercialStatusTone, financialStatusTone } from '../lib/electricity-status-tone.js';
+import { electricityTimelineKeys } from '../lib/electricity-timeline.js';
 
 interface ReviewOrder {
   orderId: string;
@@ -32,6 +34,14 @@ interface ReviewOrder {
   ageHours?: number;
   priority?: string;
   latestCommentAt?: string;
+  timeline?: Array<{
+    id: string;
+    event: string;
+    at: string;
+    actor: string | null;
+    reason: string | null;
+    comment: string | null;
+  }>;
   revisionReview?: {
     versionNumber: number;
     staffReason: string | null;
@@ -328,6 +338,27 @@ export default function AdminElectricityOrdersPage() {
                 <strong>{copy('address')}: </strong>
                 {detail.fullAddress}
               </p>
+              <section className="space-y-3">
+                <h3 className="font-medium">{copy('timeline')}</h3>
+                {detail.timeline?.length ? (
+                  <Timeline
+                    label={copy('timeline')}
+                    items={detail.timeline.map((event) => ({
+                      id: event.id,
+                      title: appText(
+                        electricityTimelineKeys[event.event] ??
+                          'electricity.order.timeline.updated',
+                        locale
+                      ),
+                      dateTime: event.at,
+                      dateLabel: time.format(event.at),
+                      description: [event.reason, event.comment].filter(Boolean).join(' · '),
+                    }))}
+                  />
+                ) : (
+                  <p className="text-sm text-muted-foreground">{copy('emptyTimeline')}</p>
+                )}
+              </section>
               <div className="overflow-x-auto">
                 <h3 className="mb-2 font-medium">{copy('products')}</h3>
                 <table className="w-full text-sm">

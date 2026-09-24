@@ -249,6 +249,32 @@ export class ElectricityStaffReviewService {
             )
           ).rows[0]?.reason ?? null)
         : null;
+      const activity = (
+        await client.query<{
+          id: string;
+          event: string;
+          user_id: string | null;
+          created_at: Date;
+          metadata: Record<string, unknown>;
+        }>(
+          `SELECT id,event,user_id,created_at,metadata::jsonb AS metadata FROM audit_log
+             WHERE (metadata::jsonb->>'orderId'=$1
+                    AND (event LIKE 'electricity.%' OR event='order_created'))
+                OR (metadata::jsonb->>'contractId'=$2 AND event='contract.cancelled')
+             ORDER BY created_at DESC,id DESC LIMIT 100`,
+          [id, row.contract_id]
+        )
+      ).rows;
+      const lifecycle = (
+        await client.query<{ version_id: string; event: string; at: Date }>(
+          `SELECT version_id,'contract.activated' AS event,activated_at AS at
+             FROM contract_activations WHERE contract_id=$1
+             UNION ALL
+             SELECT version_id,'contract.completed' AS event,completed_at AS at
+             FROM contract_completions WHERE contract_id=$1`,
+          [row.contract_id]
+        )
+      ).rows;
       await client.query('COMMIT');
       const content = row.contract_snapshot;
       const beforePricing = previous?.content.pricing;
@@ -286,6 +312,25 @@ export class ElectricityStaffReviewService {
       };
       return {
         ...present(row),
+        timeline: [
+          ...activity.map((item) => ({
+            id: item.id,
+            event: item.event,
+            at: item.created_at.toISOString(),
+            actor: item.user_id,
+            reason: typeof item.metadata.reason === 'string' ? item.metadata.reason : null,
+            comment:
+              typeof item.metadata.responseNote === 'string' ? item.metadata.responseNote : null,
+          })),
+          ...lifecycle.map((item) => ({
+            id: `${item.version_id}:${item.event}`,
+            event: item.event,
+            at: item.at.toISOString(),
+            actor: null,
+            reason: null,
+            comment: null,
+          })),
+        ].sort((a, b) => a.at.localeCompare(b.at) || a.id.localeCompare(b.id)),
         revisionReview: previous
           ? {
               versionNumber: row.version_number,
