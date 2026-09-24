@@ -16,9 +16,9 @@ import { aiAgents } from './ai-agents.js';
  *   integrations (TEXT PK).
  * - `label` — display label (English for now; fa/en dictionaries land with
  *   the deferred admin web UI slice).
- * - `agentId` — FK ai_agents.id with SET NULL: deleting an agent simply
- *   unassigns it from its slots instead of blocking the delete. One agent
- *   may serve several slots; each slot holds at most one agent.
+ * - `agentId` — FK ai_agents.id with SET NULL for legacy direct writes.
+ *   The admin API requires explicit unassignment before agent deletion.
+ *   One agent may serve several slots; each slot holds at most one agent.
  * - `updatedBy` — last admin who changed the assignment (SET NULL).
  *
  * The CHECK constraints (non-empty label, fixed slot-key set) and the

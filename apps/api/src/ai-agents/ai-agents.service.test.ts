@@ -399,12 +399,13 @@ describe('AiAgentsService (T-09.11.04)', () => {
       mockQuery
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
+        .mockResolvedValueOnce({ rows: [] }) // slot assignments
         .mockResolvedValueOnce({ rows: [] }) // DELETE
         .mockResolvedValueOnce({ rows: [] }) // audit
         .mockResolvedValueOnce({ rows: [] }); // COMMIT
       await service.remove('agent-1', ACTOR, '1.2.3.4', SESSION);
-      expect(String(mockQuery.mock.calls[2]![0])).toContain('DELETE FROM ai_agents');
-      expect(mockQuery.mock.calls[3]![1]).toContain('ai_agent_deleted');
+      expect(String(mockQuery.mock.calls[3]![0])).toContain('DELETE FROM ai_agents');
+      expect(mockQuery.mock.calls[4]![1]).toContain('ai_agent_deleted');
     });
   });
 

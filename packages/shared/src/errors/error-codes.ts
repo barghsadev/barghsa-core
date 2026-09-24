@@ -295,6 +295,14 @@ export const ErrorCodes = {
     messageKey: 'error.conflict.state',
     severity: 'debug' as ErrorSeverity,
   },
+  AI_AGENT_ASSIGNED_TO_SLOTS: {
+    code: 'AI_AGENT_ASSIGNED_TO_SLOTS',
+    httpStatus: 409,
+    title: 'Agent is assigned to a chatbot slot',
+    retryable: false,
+    messageKey: 'error.agent.assigned_to_slots',
+    severity: 'debug' as ErrorSeverity,
+  },
   CONFLICT_VERSION: {
     code: 'CONFLICT:VERSION_CONFLICT',
     httpStatus: 409,

@@ -1,4 +1,13 @@
-import { pgTable, text, uuid, index, boolean, primaryKey } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  text,
+  uuid,
+  index,
+  boolean,
+  primaryKey,
+  integer,
+  doublePrecision,
+} from 'drizzle-orm/pg-core';
 import { desc } from 'drizzle-orm';
 import { uuidv7, timestamptz } from '../types.js';
 import { users } from './users.js';
@@ -42,6 +51,14 @@ export const aiAgents = pgTable(
     modelId: uuid('model_id')
       .notNull()
       .references(() => aiModels.id, { onDelete: 'restrict' }),
+
+    /** Instructions and optional model-default overrides for inference. */
+    systemPrompt: text('system_prompt').notNull().default(''),
+    temperature: doublePrecision('temperature'),
+    maxTokens: integer('max_tokens'),
+    linkMode: text('link_mode', { enum: ['any_kb', 'all_kbs'] } as const)
+      .notNull()
+      .default('any_kb'),
 
     /** Active/inactive flag; drives the list status column. */
     enabled: boolean('enabled').notNull().default(true),

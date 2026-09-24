@@ -124,6 +124,63 @@ it('persists agent CRUD with audit entries', async () => {
   ).toEqual(['ai_agent_created', 'ai_agent_updated', 'ai_agent_deleted']);
 });
 
+it('persists inference settings and returns them to the editor', async () => {
+  const update = await fetch(`${http.base}/api/admin/agents/${agentId}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({
+      systemPrompt: 'Answer only about electricity.',
+      temperature: 0.4,
+      maxTokens: 512,
+      linkMode: 'all_kbs',
+    }),
+  });
+  expect(update.status).toBe(200);
+  const detail = await fetch(`${http.base}/api/admin/agents/${agentId}`, { headers });
+  expect(detail.status).toBe(200);
+  expect(await detail.json()).toMatchObject({
+    systemPrompt: 'Answer only about electricity.',
+    temperature: 0.4,
+    maxTokens: 512,
+    linkMode: 'all_kbs',
+  });
+  expect(
+    (
+      await http.pool.query(
+        'SELECT system_prompt,temperature,max_tokens,link_mode FROM ai_agents WHERE id=$1',
+        [agentId]
+      )
+    ).rows[0]
+  ).toEqual({
+    system_prompt: 'Answer only about electricity.',
+    temperature: 0.4,
+    max_tokens: 512,
+    link_mode: 'all_kbs',
+  });
+  const invalid = await fetch(`${http.base}/api/admin/agents/${agentId}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ temperature: 3 }),
+  });
+  expect(invalid.status).toBe(400);
+});
+
+it('refuses to delete an agent assigned to a slot', async () => {
+  await http.pool.query("UPDATE ai_agent_slots SET agent_id=$1 WHERE slot_key='staff_chatbot'", [
+    agentId,
+  ]);
+  const blocked = await mutation('delete');
+  expect(blocked.status).toBe(409);
+  expect(await blocked.json()).toMatchObject({
+    error: { code: 'AI_AGENT_ASSIGNED_TO_SLOTS', slots: ['staff_chatbot'] },
+  });
+  expect(
+    (await http.pool.query('SELECT id FROM ai_agents WHERE id=$1', [agentId])).rows
+  ).toHaveLength(1);
+  await http.pool.query("UPDATE ai_agent_slots SET agent_id=NULL WHERE slot_key='staff_chatbot'");
+  expect((await mutation('delete')).status).toBe(204);
+});
+
 it('keeps agents inactive until their model is enabled and tested', async () => {
   await http.pool.query(
     "UPDATE ai_models SET is_enabled=false,last_test_status='pending' WHERE id=$1",

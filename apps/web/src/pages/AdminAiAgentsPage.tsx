@@ -14,6 +14,10 @@ interface Agent extends Ref {
   enabled: boolean;
 }
 interface Detail extends Agent {
+  systemPrompt: string;
+  temperature: number | null;
+  maxTokens: number | null;
+  linkMode: 'any_kb' | 'all_kbs';
   kbs: Ref[];
   policies: Ref[];
   kbGroups: Ref[];
@@ -30,6 +34,10 @@ interface Draft {
   title: string;
   description: string;
   modelId: string;
+  systemPrompt: string;
+  temperature: number | null;
+  maxTokens: number | null;
+  linkMode: 'any_kb' | 'all_kbs';
   enabled: boolean;
   kbIds: string[];
   policyIds: string[];
@@ -46,6 +54,10 @@ const blank = (): Draft => ({
   title: '',
   description: '',
   modelId: '',
+  systemPrompt: '',
+  temperature: null,
+  maxTokens: null,
+  linkMode: 'any_kb',
   enabled: true,
   kbIds: [],
   policyIds: [],
@@ -95,6 +107,10 @@ export default function AdminAiAgentsPage() {
             title: row.title,
             description: row.description,
             modelId: row.modelId,
+            systemPrompt: row.systemPrompt ?? '',
+            temperature: row.temperature ?? null,
+            maxTokens: row.maxTokens ?? null,
+            linkMode: row.linkMode ?? 'any_kb',
             enabled: row.enabled,
             kbIds: row.kbs.map((item) => item.id),
             policyIds: row.policies.map((item) => item.id),
@@ -137,6 +153,7 @@ export default function AdminAiAgentsPage() {
         AI_POLICY_NOT_FOUND: label('changed'),
         AI_KB_GROUP_NOT_FOUND: label('changed'),
         AI_POLICY_GROUP_NOT_FOUND: label('changed'),
+        AI_AGENT_ASSIGNED_TO_SLOTS: label('assignedToSlots'),
       },
     });
   }
@@ -219,6 +236,68 @@ export default function AdminAiAgentsPage() {
                     </option>
                   ))}
                 </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="agent-system-prompt">{label('systemPrompt')}</Label>
+                <textarea
+                  id="agent-system-prompt"
+                  className="min-h-40 rounded-md border bg-background p-3"
+                  maxLength={8000}
+                  value={draft.systemPrompt}
+                  onChange={(event) => setDraft({ ...draft, systemPrompt: event.target.value })}
+                />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="agent-temperature">{label('temperature')}</Label>
+                  <Input
+                    id="agent-temperature"
+                    type="number"
+                    min={0}
+                    max={2}
+                    step={0.1}
+                    placeholder={label('modelDefault')}
+                    value={draft.temperature ?? ''}
+                    onChange={(event) =>
+                      setDraft({
+                        ...draft,
+                        temperature: event.target.value === '' ? null : Number(event.target.value),
+                      })
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="agent-max-tokens">{label('maxTokens')}</Label>
+                  <Input
+                    id="agent-max-tokens"
+                    type="number"
+                    min={1}
+                    max={8192}
+                    step={1}
+                    placeholder={label('modelDefault')}
+                    value={draft.maxTokens ?? ''}
+                    onChange={(event) =>
+                      setDraft({
+                        ...draft,
+                        maxTokens: event.target.value === '' ? null : Number(event.target.value),
+                      })
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="agent-link-mode">{label('linkMode')}</Label>
+                  <select
+                    id="agent-link-mode"
+                    className="max-w-full rounded-md border bg-background p-2"
+                    value={draft.linkMode}
+                    onChange={(event) =>
+                      setDraft({ ...draft, linkMode: event.target.value as Draft['linkMode'] })
+                    }
+                  >
+                    <option value="any_kb">{label('anyKb')}</option>
+                    <option value="all_kbs">{label('allKbs')}</option>
+                  </select>
+                </div>
               </div>
               <label className="flex items-center gap-2">
                 <input

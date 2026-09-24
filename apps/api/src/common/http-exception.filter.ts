@@ -132,6 +132,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (httpStatus === 409 && exception instanceof HttpException) {
       const details = exception.getResponse();
+      if (
+        errorCode === ErrorCodes.AI_AGENT_ASSIGNED_TO_SLOTS.code &&
+        typeof details === 'object' &&
+        details !== null
+      ) {
+        const slots = 'slots' in details ? details.slots : null;
+        const allowed = new Set([
+          'individual_chatbot',
+          'legal_entity_chatbot',
+          'staff_chatbot',
+          'website_chatbot',
+          'telegram_chatbot',
+        ]);
+        if (Array.isArray(slots) && slots.length <= 5 && slots.every((slot) => allowed.has(slot)))
+          (body.error as Record<string, unknown>).slots = slots;
+      }
       if (errorCode === 'AI_MODEL_IN_USE' && typeof details === 'object' && details !== null) {
         const agents = 'agents' in details ? details.agents : null;
         if (

@@ -71,6 +71,10 @@ export interface AgentDto {
   modelTitle: string;
   /** Active/inactive flag that drives the list status column. */
   enabled: boolean;
+  systemPrompt: string;
+  temperature: number | null;
+  maxTokens: number | null;
+  linkMode: 'any_kb' | 'all_kbs';
   /** Number of linked knowledge bases. */
   kbCount: number;
   /** Number of linked usage policies. */
@@ -102,6 +106,10 @@ export interface CreateAgentInput {
   kbGroupIds?: string[];
   policyGroupIds?: string[];
   enabled?: boolean;
+  systemPrompt?: string;
+  temperature?: number | null;
+  maxTokens?: number | null;
+  linkMode?: 'any_kb' | 'all_kbs';
 }
 
 export interface UpdateAgentInput {
@@ -109,6 +117,10 @@ export interface UpdateAgentInput {
   description?: string;
   modelId?: string;
   enabled?: boolean;
+  systemPrompt?: string;
+  temperature?: number | null;
+  maxTokens?: number | null;
+  linkMode?: 'any_kb' | 'all_kbs';
   /** Replace the whole KB link set (undefined = leave untouched). */
   kbIds?: string[];
   /** Replace the whole policy link set (undefined = leave untouched). */
@@ -154,6 +166,10 @@ interface AgentRow {
   model_id: string;
   model_title: string;
   enabled: boolean;
+  system_prompt: string;
+  temperature: number | null;
+  max_tokens: number | null;
+  link_mode: 'any_kb' | 'all_kbs';
   kb_count: number;
   policy_count: number;
   created_at: string;
@@ -167,6 +183,10 @@ interface AgentBaseRow {
   model_id: string;
   created_by: string;
   enabled: boolean;
+  system_prompt: string;
+  temperature: number | null;
+  max_tokens: number | null;
+  link_mode: 'any_kb' | 'all_kbs';
   created_at: string;
   updated_at: string;
 }
@@ -192,7 +212,8 @@ export class AiAgentsService {
   /** List all agents, newest first, with link counts and model title. */
   async list(): Promise<AgentDto[]> {
     const result = await getDbPool().query<AgentRow>(
-      `SELECT a.id, a.title, a.description, a.model_id, m.title AS model_title,
+      `SELECT a.id, a.title, a.description, a.model_id, a.system_prompt,
+              a.temperature, a.max_tokens, a.link_mode, m.title AS model_title,
               a.enabled, a.created_at, a.updated_at,
               (SELECT COUNT(*) FROM ai_agent_kbs k WHERE k.agent_id = a.id)::int AS kb_count,
               (SELECT COUNT(*) FROM ai_agent_policies p WHERE p.agent_id = a.id)::int AS policy_count
@@ -300,6 +321,10 @@ export class AiAgentsService {
         title: input.title,
         description: input.description,
         modelId: input.modelId,
+        systemPrompt: input.systemPrompt ?? '',
+        temperature: input.temperature ?? null,
+        maxTokens: input.maxTokens ?? null,
+        linkMode: input.linkMode ?? 'any_kb',
         enabled,
         actorUserId: input.actorUserId,
         now,
@@ -359,6 +384,10 @@ export class AiAgentsService {
         modelId: row.model_id,
         modelTitle: model.title,
         enabled: row.enabled,
+        systemPrompt: row.system_prompt,
+        temperature: row.temperature,
+        maxTokens: row.max_tokens,
+        linkMode: row.link_mode,
         kbCount: kbAdded,
         policyCount: policyAdded,
         createdAt: row.created_at,
@@ -420,6 +449,22 @@ export class AiAgentsService {
         if (input.description !== existing.description) changedFields.push('description');
         push('description', input.description);
       }
+      if (input.systemPrompt !== undefined) {
+        if (input.systemPrompt !== existing.system_prompt) changedFields.push('system_prompt');
+        push('system_prompt', input.systemPrompt);
+      }
+      if (input.temperature !== undefined) {
+        if (input.temperature !== existing.temperature) changedFields.push('temperature');
+        push('temperature', input.temperature);
+      }
+      if (input.maxTokens !== undefined) {
+        if (input.maxTokens !== existing.max_tokens) changedFields.push('max_tokens');
+        push('max_tokens', input.maxTokens);
+      }
+      if (input.linkMode !== undefined) {
+        if (input.linkMode !== existing.link_mode) changedFields.push('link_mode');
+        push('link_mode', input.linkMode);
+      }
       if (input.modelId !== undefined) {
         if (input.modelId !== existing.model_id) changedFields.push('model_id');
         push('model_id', input.modelId);
@@ -436,7 +481,7 @@ export class AiAgentsService {
         const up = await q.query<AgentBaseRow>(
           `UPDATE ai_agents SET ${fields.join(', ')}
             WHERE id = $${param}
-            RETURNING id, title, description, model_id, created_by, enabled, created_at, updated_at`,
+            RETURNING *`,
           values
         );
         if (!up.rows[0]) throw this.agentNotFound(id);
@@ -480,7 +525,7 @@ export class AiAgentsService {
           `UPDATE ai_agents
              SET updated_at = $1
            WHERE id = $2
-           RETURNING id, title, description, model_id, created_by, enabled, created_at, updated_at`,
+           RETURNING *`,
           [new Date(), id]
         );
         if (bump.rows[0]) afterRow = bump.rows[0];
@@ -518,6 +563,10 @@ export class AiAgentsService {
         model_id: effectiveModelId,
         model_title: model?.title ?? '',
         enabled: afterRow.enabled,
+        system_prompt: afterRow.system_prompt,
+        temperature: afterRow.temperature,
+        max_tokens: afterRow.max_tokens,
+        link_mode: afterRow.link_mode,
         kb_count: kbCount,
         policy_count: policyCount,
         created_at: afterRow.created_at,
@@ -531,6 +580,21 @@ export class AiAgentsService {
     return this.withTransaction(actorUserId, session, async (q, verifiedAt) => {
       const existing = await this.findAgent(q, id, true);
       if (!existing) throw this.agentNotFound(id);
+
+      const assigned = await q.query<{ slot_key: string }>(
+        'SELECT slot_key FROM ai_agent_slots WHERE agent_id=$1 ORDER BY slot_key',
+        [id]
+      );
+      if (assigned.rows.length)
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: ErrorCodes.AI_AGENT_ASSIGNED_TO_SLOTS.code,
+            message: 'Unassign this agent from its slots before deleting it',
+            slots: assigned.rows.map((row) => row.slot_key),
+          },
+          409
+        );
 
       await q.query('DELETE FROM ai_agents WHERE id = $1', [id]);
       await this.recordAudit(verifiedAt, q, 'ai_agent_deleted', actorUserId, ip, {
@@ -753,6 +817,10 @@ export class AiAgentsService {
       title: string;
       description: string;
       modelId: string;
+      systemPrompt: string;
+      temperature: number | null;
+      maxTokens: number | null;
+      linkMode: 'any_kb' | 'all_kbs';
       enabled: boolean;
       actorUserId: string;
       now: Date;
@@ -761,14 +829,19 @@ export class AiAgentsService {
     try {
       const result = await q.query<AgentBaseRow>(
         `INSERT INTO ai_agents
-           (id, title, description, model_id, enabled, created_by, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $7)
-         RETURNING id, title, description, model_id, created_by, enabled, created_at, updated_at`,
+           (id, title, description, model_id, system_prompt, temperature,
+            max_tokens, link_mode, enabled, created_by, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $11)
+         RETURNING *`,
         [
           input.id,
           input.title,
           input.description,
           input.modelId,
+          input.systemPrompt,
+          input.temperature,
+          input.maxTokens,
+          input.linkMode,
           input.enabled,
           input.actorUserId,
           input.now,
@@ -968,7 +1041,7 @@ export class AiAgentsService {
 
   private async findAgent(q: DbExecutor, id: string, lock = false): Promise<AgentBaseRow | null> {
     const result = await q.query<AgentBaseRow>(
-      `SELECT id, title, description, model_id, created_by, enabled, created_at, updated_at
+      `SELECT *
          FROM ai_agents
         WHERE id = $1${lock ? ' FOR UPDATE' : ''}`,
       [id]
@@ -1028,6 +1101,10 @@ export class AiAgentsService {
       modelId: row.model_id,
       modelTitle: row.model_title,
       enabled: row.enabled,
+      systemPrompt: row.system_prompt,
+      temperature: row.temperature,
+      maxTokens: row.max_tokens,
+      linkMode: row.link_mode,
       kbCount: row.kb_count,
       policyCount: row.policy_count,
       createdAt: row.created_at,

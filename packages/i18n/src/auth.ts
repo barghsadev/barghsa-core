@@ -73,6 +73,7 @@ export const fa: I18nDictionary = {
   'auth.register.error.passwordsDoNotMatch': 'رمز عبور و تکرار آن مطابقت ندارند',
   'error.conflict.duplicate': 'این مورد از قبل وجود دارد',
   'error.conflict.state': 'وضعیت فعلی امکان انجام این عملیات را نمی‌دهد',
+  'error.agent.assigned_to_slots': 'ابتدا این عامل را از جایگاه‌های گفتگو بردارید',
   'error.conflict.version': 'تغییرات همزمان باعث تداخل شده است',
   'error.rate_limit.exceeded': 'تعداد درخواست‌های شما بیش از حد مجاز است',
   'error.rate_limit.retry_after':
@@ -222,6 +223,7 @@ export const en: I18nDictionary = {
   'error.not_found.route': 'Requested route was not found',
   'error.conflict.duplicate': 'This entry already exists',
   'error.conflict.state': 'Current state does not allow this operation',
+  'error.agent.assigned_to_slots': 'Unassign this agent from its chatbot slots first',
   'error.conflict.version': 'Concurrent modification conflict detected',
   'auth.brand.title': 'Barghsa',
   'auth.brand.slogan': 'Iranian electricity market intelligence platform',

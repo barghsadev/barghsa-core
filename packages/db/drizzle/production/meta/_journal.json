@@ -918,6 +918,13 @@
       "when": 1791331200223,
       "tag": "0210_knowledge_base_foundation",
       "breakpoints": true
+    },
+    {
+      "idx": 211,
+      "version": "7",
+      "when": 1791331200224,
+      "tag": "0211_agent_runtime_configuration",
+      "breakpoints": true
     }
   ]
 }

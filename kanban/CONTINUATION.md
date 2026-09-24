@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Agent configuration completion](batches/2026-09-24-agent-configuration.md) adds system instructions, bounded model overrides and KB link mode to existing agent CRUD, and protects assigned agents from deletion.
+
 [Knowledge-base processing and test queries](batches/2026-09-24-knowledge-base-processing.md) add bounded source extraction, embedding and safe publication, audited retry, and bilingual ranked test queries for bases and groups.
 
 [Knowledge-base configuration and groups](batches/2026-09-24-knowledge-base-foundation.md) add source and chunk settings, pgvector passage storage, safe invalidation on edits, and ready-before-enable controls. Existing group CRUD and membership flows pass focused API and bilingual browser tests.

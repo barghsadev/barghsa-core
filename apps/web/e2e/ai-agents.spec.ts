@@ -5,8 +5,13 @@ for (const locale of ['en', 'fa'])
     await page.addInitScript((value) => {
       if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
-        document.documentElement.lang = value;
-      }).observe(document, { childList: true });
+        if (document.documentElement.lang !== value) document.documentElement.lang = value;
+      }).observe(document, {
+        childList: true,
+        attributes: true,
+        attributeFilter: ['lang'],
+        subtree: true,
+      });
     }, locale);
     const model = '01900000-0000-7000-8000-000000000001',
       kb = '01900000-0000-7000-8000-000000000002',
@@ -49,6 +54,9 @@ for (const locale of ['en', 'fa'])
     await page.getByRole('button', { name: fa ? 'افزودن عامل' : 'Add agent', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill('Local assistant');
     await page.getByLabel(fa ? 'مدل' : 'Model', { exact: true }).selectOption(model);
+    await page.getByLabel(fa ? 'دستورالعمل سیستم' : 'System instructions').fill('Help with energy');
+    await page.getByLabel(fa ? 'دما' : 'Temperature').fill('0.4');
+    await page.getByLabel(fa ? 'حداکثر توکن' : 'Maximum tokens').fill('512');
     await page.getByLabel('Support knowledge', { exact: true }).check();
     await page.getByLabel('Support policies', { exact: true }).check();
     await page.getByRole('button', { name: fa ? 'ذخیره عامل' : 'Save agent', exact: true }).click();
@@ -66,6 +74,10 @@ for (const locale of ['en', 'fa'])
         title: 'Local assistant',
         description: '',
         modelId: model,
+        systemPrompt: 'Help with energy',
+        temperature: 0.4,
+        maxTokens: 512,
+        linkMode: 'any_kb',
         enabled: true,
         kbIds: [],
         policyIds: [],
@@ -76,5 +88,7 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toContainText(
       fa ? 'اجازه مدیریت' : 'permission to manage'
     );
-    await expect(page.locator('input,select')).toHaveCount(0);
+    await expect(
+      page.getByRole('form', { name: fa ? 'تنظیمات عامل' : 'Agent settings' })
+    ).toHaveCount(0);
   });
