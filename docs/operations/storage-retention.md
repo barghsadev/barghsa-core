@@ -30,13 +30,14 @@ The provider enumerates exact-key versions, preserves other tags, and retains
 any existing legal-hold value other than false. Preview generation and document
 supersession must call the same version-aware classification operation only
 after their owning business workflow proves the object disposable. Those
-future document consumers remain unbuilt and are not verified by this repair.
+document consumers are separate from the retention policy described below.
 
 An object tag is an application retention signal, not S3 Object Lock. Tagging
 is a read/modify/write operation: independent manual hold changes must not race
-the worker. A future application hold workflow must share the record lock;
-use provider Object Lock when an independent legal-hold authority needs to
-prevent physical deletion. Direct delete permissions and immutable business
+the worker. The document legal-hold workflow below does not yet coordinate with
+object tagging; the future destruction worker must check holds under a record
+lock before any delete. Use provider Object Lock when an independent legal-hold
+authority needs to prevent physical deletion. Direct delete permissions and immutable business
 copies remain separate controls. A bucket-wide custom expiry can defeat these
 filters and must not coexist with a hold promise. For a configured key prefix,
 pass its exact value using `--prefix tenant/`; no slash is added automatically.
@@ -73,14 +74,30 @@ the browser URL replay path, not provider-level administrative mutation.
 ## Upload inspection and scan state
 
 Reservations record `Uploading`. Successful content inspection records provider
-metadata and a durable `Pending scan` timestamp. Record promotion moves to
-`Available` with `scanSkippedReason=not_configured`, as explicitly allowed by
-T-05.11.02 while no scanner integration exists. This is not a malware scan or a
+metadata and a durable `Pending scan` timestamp. With ClamAV configured, a
+verified clean verdict moves the upload to `Available`; infected files enter
+quarantine. Scanner errors leave the file pending for retry. Without a configured
+scanner, the explicit `not_configured` fallback is recorded. It is not a
 clean-file claim. Repeated verification does not reset an available file.
-Scanner integration, quarantine, document state history and full SHA-256
-recording remain owned by T-05.11.01–03 and T-05.12.01; those future consumers
-must replace the unconfigured fallback before enabling a scanner. An unavailable
-configured scanner must leave files pending, never take this fallback.
+
+## Document policy and legal hold
+
+The `document_retention_policies` table starts with 10-year terms for contracts,
+invoices, payments, refunds and signed documents, and 5-year terms for other
+document types. A legal staff member with document-edit permission, a fresh
+step-up and a legal approval note can append a new effective policy version in
+the admin document workspace. Earlier versions remain for audit.
+
+Legal staff can create document-specific or profile-wide holds with a reason and
+optional expiry, and release them with a recorded reason. The holds are retained
+after release; their scope and reason cannot be edited. The `document_is_held`
+database predicate checks active direct and profile holds plus the current
+record-type policy hold. The admin workspace shows this result beside each
+document.
+
+These records do not yet run destruction or change S3 tags. T-05.14.03 must
+calculate retention from record closure, check the hold predicate in the same
+locked deletion workflow, require approval, and audit each physical deletion.
 
 ## Upload association
 

@@ -367,6 +367,124 @@ it('holds a configured-scanner upload in PendingScan with a durable worker job',
   }
 }, 60_000);
 
+it('keeps document and profile legal holds auditable and applies versioned retention policies', async () => {
+  const f = await owner();
+  const document = await confirm(await create(f.user), f.user);
+  expect((await send('admin/document-retention/policies', f.user)).status).toBe(403);
+  expect(
+    (
+      await send('admin/document-retention/holds', f.user, 'POST', {
+        documentId: document.id,
+        reason: 'Unauthorized hold',
+      })
+    ).status
+  ).toBe(403);
+  const initial = await send('admin/document-retention/policies', 'document-legal');
+  expect(initial.status).toBe(200);
+  const defaults = (await initial.json()) as {
+    canManage: boolean;
+    policies: Array<{ businessRecordType: string; retentionYears: number }>;
+  };
+  expect(defaults.canManage).toBe(true);
+  expect(
+    defaults.policies.find((policy) => policy.businessRecordType === 'standalone')
+  ).toMatchObject({
+    retentionYears: 5,
+  });
+  const createDocumentHold = await send(
+    'admin/document-retention/holds',
+    'document-legal',
+    'POST',
+    {
+      documentId: document.id,
+      reason: 'Litigation preservation request',
+    }
+  );
+  expect(createDocumentHold.status, await createDocumentHold.clone().text()).toBe(201);
+  const directHold = (await createDocumentHold.json()) as { id: string; active: boolean };
+  expect(directHold.active).toBe(true);
+  await expect(
+    http.pool.query('UPDATE document_legal_holds SET reason=$2 WHERE id=$1', [
+      directHold.id,
+      'Changed after creation',
+    ])
+  ).rejects.toThrow('Only a recorded release may change a legal hold');
+  const holdsPath = `admin/document-retention/holds?documentId=${document.id}`;
+  expect((await (await send(holdsPath, 'document-legal')).json()) as object).toMatchObject({
+    held: true,
+  });
+  const release = await send(
+    `admin/document-retention/holds/${directHold.id}/release`,
+    'document-legal',
+    'POST',
+    { note: 'Litigation hold was lifted' }
+  );
+  expect(release.status, await release.clone().text()).toBe(200);
+  expect((await (await send(holdsPath, 'document-legal')).json()) as object).toMatchObject({
+    held: false,
+  });
+  const profileHold = await send('admin/document-retention/holds', 'document-legal', 'POST', {
+    profileId: f.profile,
+    reason: 'Profile-wide regulatory inquiry',
+  });
+  expect(profileHold.status, await profileHold.clone().text()).toBe(201);
+  expect((await (await send(holdsPath, 'document-legal')).json()) as object).toMatchObject({
+    held: true,
+  });
+  const profileHoldId = ((await profileHold.json()) as { id: string }).id;
+  expect(
+    (
+      await send(
+        `admin/document-retention/holds/${profileHoldId}/release`,
+        'document-legal',
+        'POST',
+        {
+          note: 'Inquiry completed',
+        }
+      )
+    ).status
+  ).toBe(200);
+  const change = await send(
+    'admin/document-retention/policies/standalone',
+    'document-legal',
+    'PUT',
+    {
+      retentionYears: 7,
+      legalHold: true,
+      approvalNote: 'Approved by legal for open records',
+    }
+  );
+  expect(change.status, await change.clone().text()).toBe(200);
+  const active = (await (
+    await send('admin/document-retention/policies', 'document-legal')
+  ).json()) as {
+    policies: Array<{ businessRecordType: string; retentionYears: number; legalHold: boolean }>;
+  };
+  expect(
+    active.policies.find((policy) => policy.businessRecordType === 'standalone')
+  ).toMatchObject({
+    retentionYears: 7,
+    legalHold: true,
+  });
+  expect((await (await send(holdsPath, 'document-legal')).json()) as object).toMatchObject({
+    held: true,
+  });
+  expect(
+    (
+      await http.pool.query(
+        "SELECT count(*)::int AS count FROM document_retention_policies WHERE business_record_type='standalone'"
+      )
+    ).rows[0].count
+  ).toBe(2);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT event FROM audit_log WHERE event LIKE 'document_legal_hold_%' OR event='document_retention_policy_changed' ORDER BY created_at DESC LIMIT 5"
+      )
+    ).rows.map((row) => row.event)
+  ).toContain('document_retention_policy_changed');
+}, 60_000);
+
 it('lets a saving customer replace or soft-delete only their available order files', async () => {
   const f = await owner();
   const products = await http.pool.query<{ id: string; type: string }>(

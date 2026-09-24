@@ -4,6 +4,8 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { DocumentsWorkspace } from './DocumentsWorkspace.js';
 import { DocumentDetail } from './DocumentDetail.js';
 import { DocumentUpload } from './DocumentUpload.js';
+import { DocumentRetentionPolicies } from './DocumentRetentionPolicies.js';
+import { DocumentLegalHolds } from './DocumentLegalHolds.js';
 import { refreshProfileContext } from '../lib/profile-context.js';
 import type { BusinessDocument } from '../lib/documents.js';
 import type { TeamAction } from './TeamActionDialog.js';
@@ -117,6 +119,72 @@ async function value(selector: string, text: string) {
     );
   });
 }
+
+it('shows the current policy and binds a legal approval note to the exact policy update', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () =>
+      response({
+        canManage: true,
+        policies: [
+          {
+            id: DOCUMENT,
+            businessRecordType: 'contract',
+            retentionYears: 10,
+            legalHold: false,
+            approvalNote: 'System default',
+            effectiveDate: '2026-09-24T00:00:00Z',
+          },
+        ],
+      })
+    )
+  );
+  await render(<DocumentRetentionPolicies />);
+  expect(container.textContent).toContain('Retention policies');
+  await value('#retention-years', '12');
+  await value('#retention-note', 'Approved by legal team');
+  await act(async () =>
+    container.querySelector<HTMLInputElement>('input[type="checkbox"]')!.click()
+  );
+  await click('Save new policy version');
+  expect(harness.action).toMatchObject({
+    path: '/api/admin/document-retention/policies/contract',
+    body: { retentionYears: 12, legalHold: true, approvalNote: 'Approved by legal team' },
+  });
+});
+
+it('shows a Persian legal hold and binds release to the selected hold', async () => {
+  harness.locale = 'fa';
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () =>
+      response({
+        held: true,
+        canManage: true,
+        holds: [
+          {
+            id: '33333333-3333-4333-8333-333333333333',
+            documentId: DOCUMENT,
+            profileId: null,
+            reason: 'Preserve for inquiry',
+            initiatedAt: '2026-09-24T00:00:00Z',
+            expiresAt: null,
+            releasedAt: null,
+            active: true,
+          },
+        ],
+      })
+    )
+  );
+  await render(<DocumentLegalHolds document={row()} />);
+  expect(container.textContent).toContain('توقف حذف قانونی');
+  await value('#hold-release-note', 'Inquiry is complete');
+  await click('رفع توقف');
+  expect(harness.action).toMatchObject({
+    path: '/api/admin/document-retention/holds/33333333-3333-4333-8333-333333333333/release',
+    body: { note: 'Inquiry is complete' },
+  });
+});
 
 it.each(['en', 'fa'] as const)(
   'loads the selected profile and renders documents in %s',
@@ -388,13 +456,17 @@ it('retries a lost storage response and step-up with the same file and confirmat
 
 it('lets staff recover a denied queue and restricts upload context to a valid selected profile', async () => {
   let fail = true;
-  const fetcher = vi.fn(async () =>
-    fail ? response({}, 403) : response({ documents: [], nextBefore: null })
-  );
+  const fetcher = vi.fn(async (url: string) => {
+    if (url.includes('/document-retention/policies'))
+      return response({ canManage: false, policies: [] });
+    return fail ? response({}, 403) : response({ documents: [], nextBefore: null });
+  });
   vi.stubGlobal('fetch', fetcher);
   await render(<AdminDocumentsPage />);
   expect(container.querySelector('[role=alert]')).not.toBeNull();
-  expect(fetcher.mock.calls).toHaveLength(1);
+  expect(
+    fetcher.mock.calls.filter(([url]) => String(url).startsWith('/api/admin/documents'))
+  ).toHaveLength(1);
   fail = false;
   await click('Refresh');
   expect(container.textContent).toContain('No documents found');

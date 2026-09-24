@@ -883,6 +883,13 @@
       "when": 1791331200108,
       "tag": "0205_document_scanning",
       "breakpoints": true
+    },
+    {
+      "idx": 206,
+      "version": "7",
+      "when": 1791331200109,
+      "tag": "0206_document_retention",
+      "breakpoints": true
     }
   ]
 }

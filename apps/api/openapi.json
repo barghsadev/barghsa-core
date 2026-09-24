@@ -5628,6 +5628,101 @@
         ]
       }
     },
+    "/api/admin/document-retention/holds": {
+      "get": {
+        "operationId": "DocumentRetentionController_holds",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "documentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DocumentRetention"
+        ]
+      },
+      "post": {
+        "operationId": "DocumentRetentionController_createHold",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DocumentRetention"
+        ]
+      }
+    },
+    "/api/admin/document-retention/holds/{id}/release": {
+      "post": {
+        "operationId": "DocumentRetentionController_releaseHold",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DocumentRetention"
+        ]
+      }
+    },
+    "/api/admin/document-retention/policies": {
+      "get": {
+        "operationId": "DocumentRetentionController_policies",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DocumentRetention"
+        ]
+      }
+    },
+    "/api/admin/document-retention/policies/{kind}": {
+      "put": {
+        "operationId": "DocumentRetentionController_replacePolicy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "kind",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DocumentRetention"
+        ]
+      }
+    },
     "/api/admin/document-templates": {
       "get": {
         "operationId": "DocumentTemplateController_list",

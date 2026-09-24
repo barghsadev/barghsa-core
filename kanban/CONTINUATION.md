@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Document retention policies and legal holds](batches/2026-09-24-document-retention-holds.md) add versioned policy defaults and legal staff controls for document and profile holds. Destruction remains the next task.
+
 [Production ClamAV runtime](batches/2026-09-24-clamav-runtime.md) supplies a healthy scanner to the API and worker, with a private port, persisted signature updates, and live clean/infected smoke evidence.
 
 [Document scanning integration](batches/2026-09-24-document-scanning.md) keeps configured uploads pending until a verified ClamAV verdict, quarantines malware, retries scanner failures, and alerts active admins.

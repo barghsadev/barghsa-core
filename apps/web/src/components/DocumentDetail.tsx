@@ -15,6 +15,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { DocumentLegalHolds } from './DocumentLegalHolds.js';
 import {
   documentBase,
   documentRequest,
@@ -34,6 +35,7 @@ export function DocumentDetail({
   savingPreSubmissionOnly = false,
   solarCustomer = false,
   allowReplacement = true,
+  showRetention = false,
 }: {
   id: string;
   staff: boolean;
@@ -44,6 +46,7 @@ export function DocumentDetail({
   savingPreSubmissionOnly?: boolean;
   solarCustomer?: boolean;
   allowReplacement?: boolean;
+  showRetention?: boolean;
 }) {
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
@@ -236,6 +239,7 @@ export function DocumentDetail({
           {document.state === 'Removed' ? (
             <p className="text-sm text-muted-foreground">{word('removedNotice')}</p>
           ) : null}
+          {staff && showRetention ? <DocumentLegalHolds document={document} /> : null}
           <div className="flex flex-wrap gap-2">
             {readable &&
             document.state !== 'Removed' &&

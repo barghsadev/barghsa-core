@@ -6,11 +6,23 @@ import { DocumentService } from './document.service.js';
 import { DocumentStorageService } from './document-storage.service.js';
 import { DocumentTemplateController } from './document-template.controller.js';
 import { DocumentTemplateService } from './document-template.service.js';
+import { DocumentRetentionController } from './document-retention.controller.js';
+import { DocumentRetentionService } from './document-retention.service.js';
 
 @Module({
   imports: [SessionModule, UploadModule],
-  controllers: [DocumentController, StaffDocumentController, DocumentTemplateController],
-  providers: [DocumentService, DocumentStorageService, DocumentTemplateService],
+  controllers: [
+    DocumentController,
+    StaffDocumentController,
+    DocumentTemplateController,
+    DocumentRetentionController,
+  ],
+  providers: [
+    DocumentService,
+    DocumentStorageService,
+    DocumentTemplateService,
+    DocumentRetentionService,
+  ],
   exports: [DocumentService],
 })
 export class DocumentModule {}

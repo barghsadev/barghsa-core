@@ -17,6 +17,7 @@ import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { DocumentDetail } from './DocumentDetail.js';
+import { DocumentRetentionPolicies } from './DocumentRetentionPolicies.js';
 import {
   DocumentUpload,
   type OrderDocumentAssociation,
@@ -103,6 +104,7 @@ function Workspace({ staff }: { staff: boolean }) {
         title={word(staff ? 'staffTitle' : 'title')}
         description={word(staff ? 'staffDescription' : 'description')}
       />
+      {staff ? <DocumentRetentionPolicies /> : null}
       <form onSubmit={apply} className="flex flex-col gap-4 rounded-xl border bg-card p-5">
         <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Field>
@@ -208,6 +210,7 @@ function Workspace({ staff }: { staff: boolean }) {
         <DocumentResults
           key={generation}
           staff={staff}
+          showRetention={staff}
           filters={applied}
           profileId={staff ? applied.profileId : activeProfile!}
         />
@@ -217,11 +220,13 @@ function Workspace({ staff }: { staff: boolean }) {
 }
 export function DocumentResults({
   staff,
+  showRetention = false,
   filters,
   profileId,
   association,
 }: {
   staff: boolean;
+  showRetention?: boolean;
   filters: DocumentFilters;
   profileId: string;
   association?: OrderDocumentAssociation | SolarDocumentAssociation;
@@ -321,6 +326,7 @@ export function DocumentResults({
           key={selected}
           id={selected}
           staff={staff}
+          showRetention={showRetention}
           onClose={() => setSelected(null)}
           onPrevious={setSelected}
           onChanged={reload}
