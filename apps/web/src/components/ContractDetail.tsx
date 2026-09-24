@@ -132,7 +132,9 @@ export function ContractDetail({
       if (!controller.signal.aborted) setLoadingMore(false);
     }
   }
-  function choose(command: 'accept' | 'submit' | 'publish' | 'request-changes') {
+  function choose(
+    command: 'accept' | 'submit' | 'publish' | 'request-changes' | 'amendment-publish'
+  ) {
     if (!data) return;
     if (command === 'request-changes' && !reason.trim()) {
       setReasonMissing(true);
@@ -142,7 +144,10 @@ export function ContractDetail({
     setAction({
       title: word(command),
       description: `${word(data.contract.serviceType)} · ${word('version')} ${data.version.versionNumber.toLocaleString(locale)}`,
-      path: `${contractBase(staff)}/${id}/${command}`,
+      path:
+        command === 'amendment-publish'
+          ? `${contractBase(staff)}/${id}/amendments/publish`
+          : `${contractBase(staff)}/${id}/${command}`,
       method: 'POST',
       body: {
         expectedVersionId: data.version.id,
@@ -155,6 +160,12 @@ export function ContractDetail({
   }
   const currentId = data?.contract.currentVersionId ?? data?.contract.version?.id;
   const isCurrent = data?.version.id === currentId;
+  const isPendingAmendment = data
+    ? staff
+      ? data.contract.pendingAmendment?.versionId === data.version.id
+      : data.contract.amendment?.state === 'AwaitingCustomerAcceptance' &&
+        data.contract.version?.id === data.version.id
+    : false;
   const nextAction = data ? customerContractNextAction(data.contract, signatureStatus) : null;
   return (
     <section
@@ -242,6 +253,46 @@ export function ContractDetail({
           ) : (
             <StatusBadge label={word(data.contract.state)} />
           )}
+          {staff && data.contract.pendingAmendment ? (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/40 p-3">
+              <div>
+                <p className="font-medium">{word('amendmentPending')}</p>
+                <p className="text-sm text-muted-foreground">
+                  {word(
+                    data.contract.pendingAmendment.state === 'Draft'
+                      ? 'amendmentDraftNotice'
+                      : 'amendmentPublishedNotice'
+                  )}
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => setSelectedVersion(data.contract.pendingAmendment!.versionId)}
+              >
+                {word('amendmentReview')}
+              </Button>
+            </div>
+          ) : null}
+          {!staff && data.contract.amendment?.state === 'AwaitingCustomerAcceptance' ? (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/40 p-3">
+              <div>
+                <p className="font-medium">{word('amendmentAwaitingAcceptance')}</p>
+                <p className="text-sm text-muted-foreground">{word('amendmentEffectiveNotice')}</p>
+              </div>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  setSelectedVersion(
+                    isPendingAmendment
+                      ? data.contract.amendment!.baseVersionId
+                      : data.contract.version!.id
+                  )
+                }
+              >
+                {word(isPendingAmendment ? 'amendmentViewEffective' : 'amendmentReview')}
+              </Button>
+            </div>
+          ) : null}
           {!staff && data.contract.serviceType === 'electricity' && data.contract.orderId ? (
             <Link
               to="/electricity/orders/$orderId"
@@ -272,6 +323,7 @@ export function ContractDetail({
             <h3 className="font-semibold">
               {word('version')} {data.version.versionNumber.toLocaleString(locale)}
               {isCurrent ? ` · ${word('current')}` : ''}
+              {isPendingAmendment ? ` · ${word('amendmentPending')}` : ''}
             </h3>
             <p className="text-sm text-muted-foreground">{data.version.changeDescription}</p>
             <p className="text-sm">{time.format(data.version.createdAt)}</p>
@@ -298,13 +350,34 @@ export function ContractDetail({
               }}
             />
           ) : null}
+          {staff &&
+          isCurrent &&
+          data.contract.amendmentSupported &&
+          !data.contract.pendingAmendment &&
+          ['Accepted', 'Signed', 'Active'].includes(data.contract.state) ? (
+            <ContractDraftEditor
+              key={'amendment:' + data.version.id}
+              existing={data}
+              amendment
+              onSaved={() => {
+                setReload((value) => value + 1);
+                onChanged();
+              }}
+            />
+          ) : null}
           {data.version.acceptedAt ? (
             <p role="status">
               {word('acceptedAt')}: {time.format(data.version.acceptedAt)}
             </p>
           ) : null}
-          <p className="text-sm text-muted-foreground">{word('acceptNotice')}</p>
-          {!staff && isCurrent && data.contract.canAccept ? (
+          <p className="text-sm text-muted-foreground">
+            {word(isPendingAmendment ? 'amendmentAcceptNotice' : 'acceptNotice')}
+          </p>
+          {!staff &&
+          data.contract.canAccept &&
+          (data.contract.amendment?.state === 'AwaitingCustomerAcceptance'
+            ? isPendingAmendment
+            : isCurrent) ? (
             <div id="contract-accept" className="flex flex-col gap-3">
               <label className="flex items-start gap-2">
                 <input
@@ -349,6 +422,14 @@ export function ContractDetail({
                 </Button>
               </div>
             </div>
+          ) : null}
+          {staff &&
+          isPendingAmendment &&
+          data.contract.pendingAmendment?.state === 'Draft' &&
+          data.contract.amendmentSupported ? (
+            <Button className="self-start" onClick={() => choose('amendment-publish')}>
+              {word('amendment-publish')}
+            </Button>
           ) : null}
           <h3 className="font-semibold">{word('versions')}</h3>
           <ol className="flex flex-col gap-2">
@@ -399,37 +480,43 @@ export function ContractDetail({
               }}
             />
           ) : null}
-          <ContractActivationPanel
-            key={'activation:' + data.version.id + ':' + reload}
-            id={id}
-            versionId={data.version.id}
-            staff={staff}
-            editableVersion={staff && isCurrent ? data.version : undefined}
-            onChanged={() => {
-              setSelectedVersion(null);
-              setReload((value) => value + 1);
-              onChanged();
-            }}
-          />
-          <ContractSignaturePanel
-            key={'signature:' + data.version.id + ':' + reload}
-            id={id}
-            versionId={data.version.id}
-            profileId={data.contract.profileId}
-            staff={staff}
-            onStatus={setSignatureStatus}
-            onChanged={() => {
-              setReload((value) => value + 1);
-              onChanged();
-            }}
-          />
-          <ContractDocuments
-            key={data.version.id + ':' + reload}
-            contract={data.contract}
-            version={data.version}
-            staff={staff}
-            isCurrent={isCurrent}
-          />
+          {!isPendingAmendment ? (
+            <ContractActivationPanel
+              key={'activation:' + data.version.id + ':' + reload}
+              id={id}
+              versionId={data.version.id}
+              staff={staff}
+              editableVersion={staff && isCurrent ? data.version : undefined}
+              onChanged={() => {
+                setSelectedVersion(null);
+                setReload((value) => value + 1);
+                onChanged();
+              }}
+            />
+          ) : null}
+          {!isPendingAmendment ? (
+            <ContractSignaturePanel
+              key={'signature:' + data.version.id + ':' + reload}
+              id={id}
+              versionId={data.version.id}
+              profileId={data.contract.profileId}
+              staff={staff}
+              onStatus={setSignatureStatus}
+              onChanged={() => {
+                setReload((value) => value + 1);
+                onChanged();
+              }}
+            />
+          ) : null}
+          {!isPendingAmendment ? (
+            <ContractDocuments
+              key={data.version.id + ':' + reload}
+              contract={data.contract}
+              version={data.version}
+              staff={staff}
+              isCurrent={isCurrent}
+            />
+          ) : null}
         </>
       )}
       {action && action.path.endsWith('/accept') && data ? (

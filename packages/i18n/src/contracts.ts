@@ -12,6 +12,23 @@ export const en = {
 
   draftCreate: 'Create contract draft',
   draftEdit: 'Edit draft terms',
+  amendmentCreate: 'Propose an amendment',
+  amendmentCreateNotice:
+    'Create a new version for customer review. The accepted version remains effective until the amendment is accepted.',
+  amendmentBaseNotice:
+    'Other terms are preserved. Review the full replacement version before saving.',
+  amendmentReview: 'Review amendment',
+  amendmentPending: 'Pending amendment',
+  amendmentDraftNotice: 'This amendment is an internal draft and is not visible to the customer.',
+  amendmentPublishedNotice:
+    'The customer can review this amendment. The accepted version remains effective meanwhile.',
+  amendmentAwaitingAcceptance: 'Amendment awaiting your acceptance',
+  amendmentEffectiveNotice:
+    'Your current contract remains effective until you accept the proposed version.',
+  amendmentViewEffective: 'View effective version',
+  amendmentAcceptNotice:
+    'Accepting this amendment makes the displayed version effective. It does not collect a payment.',
+  'amendment-publish': 'Send amendment to customer',
   draftSave: 'Save new version',
   draftReview: 'Review draft changes',
   draftSaveNotice:
@@ -290,6 +307,21 @@ export const fa: Record<keyof typeof en, string> = {
 
   draftCreate: 'ایجاد پیش‌نویس قرارداد',
   draftEdit: 'ویرایش متن پیش‌نویس',
+  amendmentCreate: 'پیشنهاد الحاقیه',
+  amendmentCreateNotice:
+    'نسخه جدیدی برای بررسی مشتری بسازید. نسخه پذیرفته‌شده تا زمان پذیرش الحاقیه معتبر می‌ماند.',
+  amendmentBaseNotice: 'سایر شرایط حفظ می‌شوند. پیش از ذخیره، متن کامل نسخه جایگزین را بررسی کنید.',
+  amendmentReview: 'بررسی الحاقیه',
+  amendmentPending: 'الحاقیه در انتظار',
+  amendmentDraftNotice: 'این الحاقیه پیش‌نویس داخلی است و مشتری آن را نمی‌بیند.',
+  amendmentPublishedNotice:
+    'مشتری می‌تواند این الحاقیه را بررسی کند. تا آن زمان نسخه پذیرفته‌شده معتبر می‌ماند.',
+  amendmentAwaitingAcceptance: 'الحاقیه در انتظار پذیرش شما',
+  amendmentEffectiveNotice: 'قرارداد فعلی شما تا زمان پذیرش نسخه پیشنهادی معتبر می‌ماند.',
+  amendmentViewEffective: 'مشاهده نسخه معتبر',
+  amendmentAcceptNotice:
+    'با پذیرش این الحاقیه، نسخه نمایش‌داده‌شده معتبر می‌شود. در این مرحله وجهی دریافت نمی‌شود.',
+  'amendment-publish': 'ارسال الحاقیه برای مشتری',
   draftSave: 'ذخیره نسخه جدید',
   draftReview: 'بازبینی تغییرات پیش‌نویس',
   draftSaveNotice:

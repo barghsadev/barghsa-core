@@ -10,9 +10,11 @@ import { parseContractCommercialValue } from '../lib/contracts.js';
 type ExistingDraft = { contract: ContractDetailData; version: ContractVersion };
 export function ContractDraftEditor({
   existing,
+  amendment = false,
   onSaved,
 }: {
   existing?: ExistingDraft | undefined;
+  amendment?: boolean;
   onSaved: (id: string) => void;
 }) {
   const locale = useLocale(),
@@ -26,11 +28,12 @@ export function ContractDraftEditor({
         aria-expanded={open}
         onClick={() => setOpen(!open)}
       >
-        {word(existing ? 'draftEdit' : 'draftCreate')}
+        {word(amendment ? 'amendmentCreate' : existing ? 'draftEdit' : 'draftCreate')}
       </Button>
       {open ? (
         <DraftForm
           existing={existing}
+          amendment={amendment}
           onSaved={(id) => {
             setOpen(false);
             onSaved(id);
@@ -43,9 +46,11 @@ export function ContractDraftEditor({
 
 function DraftForm({
   existing,
+  amendment,
   onSaved,
 }: {
   existing?: ExistingDraft | undefined;
+  amendment: boolean;
   onSaved: (id: string) => void;
 }) {
   const locale = useLocale(),
@@ -106,14 +111,20 @@ function DraftForm({
     }
     setInvalid(false);
     setAction({
-      title: word(existing ? 'draftSave' : 'draftCreate'),
+      title: word(amendment ? 'amendmentCreate' : existing ? 'draftSave' : 'draftCreate'),
       description: word(
-        existing?.contract.state === 'ChangesRequested'
-          ? 'contextResubmitNotice'
-          : 'draftSaveNotice'
+        amendment
+          ? 'amendmentCreateNotice'
+          : existing?.contract.state === 'ChangesRequested'
+            ? 'contextResubmitNotice'
+            : 'draftSaveNotice'
       ),
-      path: existing ? `/api/admin/contracts/${existing.contract.id}` : '/api/admin/contracts',
-      method: existing ? 'PATCH' : 'POST',
+      path: amendment
+        ? `/api/admin/contracts/${existing!.contract.id}/amendments`
+        : existing
+          ? `/api/admin/contracts/${existing.contract.id}`
+          : '/api/admin/contracts',
+      method: existing && !amendment ? 'PATCH' : 'POST',
       requiresPassword: true,
       body: {
         ...(existing
@@ -132,11 +143,13 @@ function DraftForm({
       <form
         onSubmit={save}
         className="flex flex-col gap-4 rounded-xl border p-4"
-        aria-label={word(existing ? 'draftEdit' : 'draftCreate')}
+        aria-label={word(amendment ? 'amendmentCreate' : existing ? 'draftEdit' : 'draftCreate')}
       >
-        <p className="text-sm text-muted-foreground">{word('draftSaveNotice')}</p>
+        <p className="text-sm text-muted-foreground">
+          {word(amendment ? 'amendmentCreateNotice' : 'draftSaveNotice')}
+        </p>
         {existing ? (
-          <p>{word('draftPreserveNotice')}</p>
+          <p>{word(amendment ? 'amendmentBaseNotice' : 'draftPreserveNotice')}</p>
         ) : (
           <>
             <ContractDraftChoices
@@ -262,7 +275,7 @@ function DraftForm({
         ) : null}
         {invalid ? <p role="alert">{word('draftInvalid')}</p> : null}
         <Button type="submit" className="self-start" disabled={!changed}>
-          {word('draftReview')}
+          {word(amendment ? 'amendmentReview' : 'draftReview')}
         </Button>
       </form>
       {action ? (

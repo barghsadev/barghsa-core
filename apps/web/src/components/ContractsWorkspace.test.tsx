@@ -440,6 +440,73 @@ it.each(['en', 'fa'] as const)(
     expect(container.querySelector('input[type=checkbox]')).toBeNull();
   }
 );
+it.each(['en', 'fa'] as const)(
+  'shows the effective contract beside a pending amendment and accepts only the proposal in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    vi.stubGlobal(
+      'fetch',
+      api(
+        detail({
+          state: 'Active',
+          currentVersionId: OLD,
+          amendment: { state: 'AwaitingCustomerAcceptance', baseVersionId: OLD },
+        })
+      )
+    );
+    await render(<ContractDetail id={ID} staff={false} onClose={() => {}} onChanged={() => {}} />);
+    expect(container.textContent).toContain(words.amendmentAwaitingAcceptance);
+    expect(container.textContent).toContain(words.amendmentAcceptNotice);
+    await act(async () =>
+      container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click()
+    );
+    await click(words.accept);
+    expect(harness.action?.body).toMatchObject({ expectedVersionId: VERSION });
+    await click('Close confirmation');
+    await click(words.amendmentViewEffective);
+    expect(container.textContent).toContain('Earlier terms');
+    expect(container.textContent).toContain(words.current);
+    expect(container.querySelector('input[type=checkbox]')).toBeNull();
+    expect(
+      [...container.querySelectorAll('button')].some((item) => item.textContent === words.accept)
+    ).toBe(false);
+    await click(words.amendmentReview);
+    expect(container.querySelector('input[type=checkbox]')).not.toBeNull();
+  }
+);
+it('lets staff review and publish the exact draft amendment without changing the effective version', async () => {
+  vi.stubGlobal(
+    'fetch',
+    api(
+      detail({
+        state: 'Active',
+        canAccept: false,
+        currentVersionId: VERSION,
+        currentVersion: version(),
+        amendmentSupported: true,
+        pendingAmendment: {
+          versionId: OLD,
+          baseVersionId: VERSION,
+          state: 'Draft',
+          proposedBy: 'legal-reviewer',
+          createdAt: '2026-09-24T00:00:00Z',
+          publishedAt: null,
+        },
+      })
+    )
+  );
+  await render(<ContractDetail id={ID} staff onClose={() => {}} onChanged={() => {}} />);
+  expect(container.textContent).toContain(en.amendmentDraftNotice);
+  expect(container.textContent).not.toContain(en['amendment-publish']);
+  await click(en.amendmentReview);
+  expect(container.textContent).toContain('Earlier terms');
+  await click(en['amendment-publish']);
+  expect(harness.action).toMatchObject({
+    path: `/api/admin/contracts/${ID}/amendments/publish`,
+    body: { expectedVersionId: OLD, idempotencyKey: expect.any(String) },
+  });
+});
 it('abandons a pending contract response when the active profile changes', async () => {
   let resolve!: (value: Response) => void;
   let staleSignal: AbortSignal | undefined;

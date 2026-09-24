@@ -54,6 +54,7 @@ function customerDto(row: PublishedRow) {
     acceptedParty: row.party_snapshot,
     serviceType: row.service_type,
     state: row.state,
+    currentVersionId: row.current_version_id,
     canAccept:
       (row.state === 'AwaitingCustomerAcceptance' && row.current_version_id === row.version_id) ||
       (row.amendment_state === 'AwaitingCustomerAcceptance' &&

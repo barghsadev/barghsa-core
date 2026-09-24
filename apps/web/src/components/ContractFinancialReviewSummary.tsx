@@ -45,6 +45,11 @@ export function ContractFinancialReviewSummary({
   ];
   return (
     <div className="flex flex-col gap-4">
+      {data.contract.amendment ? (
+        <p role="status" className="text-sm text-muted-foreground">
+          {word('amendmentAcceptNotice')}
+        </p>
+      ) : null}
       <FinancialReviewSummary
         title={word('financialReview')}
         rows={rows}

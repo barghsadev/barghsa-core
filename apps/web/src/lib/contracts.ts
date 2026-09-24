@@ -79,6 +79,19 @@ export interface ContractDetailData extends Omit<ContractSummary, 'versionId' | 
   currentVersion?: ContractVersion;
   version?: ContractVersion;
   canAccept?: boolean;
+  amendmentSupported?: boolean;
+  pendingAmendment?: {
+    versionId: string;
+    baseVersionId: string;
+    state: 'Draft' | 'AwaitingCustomerAcceptance' | 'AwaitingSignature';
+    proposedBy: string;
+    createdAt: string;
+    publishedAt: string | null;
+  } | null;
+  amendment?: {
+    state: 'AwaitingCustomerAcceptance' | 'Applied';
+    baseVersionId: string;
+  } | null;
 }
 export const contractBase = (staff: boolean) => (staff ? '/api/admin/contracts' : '/api/contracts');
 

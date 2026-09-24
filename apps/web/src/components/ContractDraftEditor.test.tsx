@@ -204,6 +204,37 @@ it('preserves opaque imported fields and unchanged whitespace, captures the exac
   expect(harness.action!.body).not.toHaveProperty('activationContext');
   expect(version.content!.text).toBe('Old terms');
 });
+it.each(['en', 'fa'] as const)(
+  'proposes a replacement version with preserved terms and a reason in %s',
+  async (locale) => {
+    harness.locale = locale;
+    await act(async () =>
+      root.render(
+        <ContractDraftEditor
+          existing={{ contract: { ...contract, state: 'Active' }, version }}
+          amendment
+          onSaved={onSaved}
+        />
+      )
+    );
+    await click(words().amendmentCreate);
+    expect(container.textContent).toContain(words().amendmentBaseNotice);
+    await field(words().draftTerms, 'Replacement terms');
+    await field(words().contextReason, 'Extend term');
+    await click(words().amendmentReview);
+    expect(harness.action).toMatchObject({
+      method: 'POST',
+      path: `/api/admin/contracts/${ID}/amendments`,
+      requiresPassword: true,
+      body: {
+        expectedVersionId: version.id,
+        content: { ...version.content, text: 'Replacement terms' },
+        changeDescription: 'Extend term',
+        idempotencyKey: expect.any(String),
+      },
+    });
+  }
+);
 it('preserves structured imported fields and rejects oversized UTF-8 content', async () => {
   await render({
     contract,

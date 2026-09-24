@@ -248,10 +248,12 @@ it('publishes and accepts an unsigned amendment while the active base remains ef
   expect(published.status).toBe(200);
   const visible = (await (await customer(f)).json()) as {
     version: { id: string };
+    currentVersionId: string;
     canAccept: boolean;
     amendment: { state: string; baseVersionId: string };
   };
   expect(visible).toMatchObject({
+    currentVersionId: f.row.currentVersionId,
     canAccept: true,
     amendment: { state: 'AwaitingCustomerAcceptance', baseVersionId: f.row.currentVersionId },
     version: { id: pending.versionId },
@@ -263,6 +265,7 @@ it('publishes and accepts an unsigned amendment while the active base remains ef
   ).toMatchObject({ contracts: [{ versionId: f.row.currentVersionId }] });
   expect((await (await send('admin/contracts/' + f.row.id)).json()) as ContractDto).toMatchObject({
     currentVersionId: f.row.currentVersionId,
+    amendmentSupported: true,
   });
   const review = await customer(f, '/acceptance-review?versionId=' + pending.versionId);
   expect(review.status, await review.text()).toBe(200);
@@ -312,6 +315,9 @@ it('keeps signature-required amendments private until the signing workflow suppo
   });
   expect(draft.status).toBe(201);
   const pending = ((await draft.json()) as ContractDto).pendingAmendment!;
+  expect((await (await send('admin/contracts/' + f.row.id)).json()) as ContractDto).toMatchObject({
+    amendmentSupported: false,
+  });
   expect(
     (
       await send(

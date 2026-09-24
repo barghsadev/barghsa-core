@@ -175,6 +175,13 @@ export class ContractService {
         [id]
       )
     ).rows[0];
+    const amendmentSupported =
+      (
+        await client.query<{ signature_required: boolean }>(
+          'SELECT signature_required FROM contract_activation_rules WHERE service_type=$1',
+          [row.serviceType]
+        )
+      ).rows[0]?.signature_required === false;
     return {
       ...row,
       linkedOrderStatus,
@@ -189,6 +196,7 @@ export class ContractService {
       completedAt: row.completedAt?.toISOString() ?? null,
       cancelledAt: row.cancelledAt?.toISOString() ?? null,
       currentVersion: version,
+      amendmentSupported,
       pendingAmendment: pendingAmendment
         ? {
             versionId: pendingAmendment.version_id,
