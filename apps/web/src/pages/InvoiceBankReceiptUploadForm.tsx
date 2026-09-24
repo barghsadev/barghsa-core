@@ -50,6 +50,7 @@ export function InvoiceBankReceiptUploadForm({
   const [amountInput, setAmountInput] = useState('');
   const [paymentDate, setPaymentDate] = useState('');
   const [payerReference, setPayerReference] = useState('');
+  const [bankName, setBankName] = useState('');
   const [customerNote, setCustomerNote] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -112,6 +113,7 @@ export function InvoiceBankReceiptUploadForm({
         amountIrR,
         paymentDate,
         payerReference: payerReference.trim(),
+        ...(bankName.trim() ? { bankName: bankName.trim() } : {}),
         attachmentKey,
         ...(customerNote.trim() === '' ? {} : { customerNote: customerNote.trim() }),
       });
@@ -124,6 +126,7 @@ export function InvoiceBankReceiptUploadForm({
       if (fileInput.current) fileInput.current.value = '';
       setAmountInput('');
       setPayerReference('');
+      setBankName('');
       setCustomerNote('');
       await onSubmitted?.();
     } catch {
@@ -238,6 +241,27 @@ export function InvoiceBankReceiptUploadForm({
             setPayerReference(event.target.value);
             if (error === 'invalid-payer-ref') setError(null);
           }}
+          className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="invoice-receipt-bank-name"
+          className="block text-sm font-medium text-foreground"
+        >
+          {t('invoices.details.receiptBankNameLabel', locale)}
+        </label>
+        <input
+          id="invoice-receipt-bank-name"
+          data-testid="invoice-receipt-bank-name"
+          name="bankName"
+          type="text"
+          autoComplete="off"
+          maxLength={128}
+          value={bankName}
+          disabled={submitting}
+          onChange={(event) => setBankName(event.target.value)}
           className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>

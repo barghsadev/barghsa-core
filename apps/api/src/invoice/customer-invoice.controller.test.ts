@@ -31,6 +31,7 @@ function makeController() {
     state: 'Submitted',
     paymentDate: '2026-08-15',
     payerReference: 'TRK-1',
+    bankName: 'Bank Mellat',
     attachmentKey: 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
     customerNote: null,
   });
@@ -85,6 +86,7 @@ describe('CustomerInvoiceController bank receipt upload (T-04.3.01.02)', () => {
     amount: '250000',
     paymentDate: '2026-08-15',
     payerReference: 'TRK-1',
+    bankName: 'Bank Mellat',
     attachmentKey: 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
   };
 
@@ -109,6 +111,14 @@ describe('CustomerInvoiceController bank receipt upload (T-04.3.01.02)', () => {
     expect(bankReceiptUpload.submit).not.toHaveBeenCalled();
   });
 
+  it('rejects an oversized bank name before uploading', async () => {
+    const { controller, bankReceiptUpload } = makeController();
+    await expect(
+      controller.submitBankReceipt(req, INVOICE_ID, { ...body, bankName: 'x'.repeat(129) })
+    ).rejects.toMatchObject({ status: 400 });
+    expect(bankReceiptUpload.submit).not.toHaveBeenCalled();
+  });
+
   it('returns a Submitted receipt with amount as a decimal string', async () => {
     const { controller, bankReceiptUpload } = makeController();
     const result = await controller.submitBankReceipt(req, INVOICE_ID, body);
@@ -118,6 +128,7 @@ describe('CustomerInvoiceController bank receipt upload (T-04.3.01.02)', () => {
       amount: '250000',
       paymentDate: '2026-08-15',
       payerReference: 'TRK-1',
+      bankName: 'Bank Mellat',
       attachmentKey: body.attachmentKey,
       customerNote: undefined,
     });
@@ -127,6 +138,7 @@ describe('CustomerInvoiceController bank receipt upload (T-04.3.01.02)', () => {
       amount: '250000',
       currency: 'IRR',
       invoiceId: INVOICE_ID,
+      bankName: 'Bank Mellat',
     });
   });
 });

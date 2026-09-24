@@ -173,6 +173,7 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         state,
         paymentDate: '2026-09-01',
         payerReference: '<img src=x>',
+        bankName: 'Bank Mellat',
         customerNote: 'Customer note',
         rejectionReason: state === 'Rejected' ? 'Unreadable' : null,
         confirmedAt: state === 'Confirmed' ? '2026-09-02T12:00:00Z' : null,
@@ -210,6 +211,7 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       expect(activity.querySelector('img')).toBeNull();
       expect(activity.textContent).toContain('<img src=x>');
       expect(activity.textContent).toContain('Unreadable');
+      expect(activity.textContent).toContain('Bank Mellat');
       expect(activity.textContent).not.toContain('invoices.activity.');
       expect(activity.textContent).toContain(locale === 'en' ? 'Bank receipts' : 'رسیدهای بانکی');
       const receiptLink = activity.querySelector<HTMLAnchorElement>(

@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Invoice receipt bank name](batches/2026-09-24-invoice-receipt-bank-name.md) stores and shows optional bank metadata on customer and finance receipt views while preserving legacy records.
+
 [Invoice bank-receipt finance history](batches/2026-09-24-invoice-receipt-finance-history.md) adds a paginated reviewed-receipt list with outcome and invoice filters, and lets staff reopen terminal details.
 
 [Invoice bank-receipt finance queue](batches/2026-09-24-invoice-receipt-finance-queue.md) gives finance staff a reviewed confirm/reject flow with allocation preview and second-approval handoff.

@@ -1,0 +1,2 @@
+ALTER TABLE "bank_receipts" ADD COLUMN "bank_name" text;--> statement-breakpoint
+ALTER TABLE "bank_receipts" ADD CONSTRAINT "chk_bank_receipts_bank_name_length" CHECK ("bank_receipts"."bank_name" IS NULL OR length(trim("bank_receipts"."bank_name")) BETWEEN 1 AND 128);

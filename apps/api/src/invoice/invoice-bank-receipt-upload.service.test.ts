@@ -55,6 +55,7 @@ function makeReceiptRow(overrides: Record<string, unknown> = {}) {
     amount: AMOUNT.toString(),
     payment_date: RECEIPT.paymentDate,
     payer_reference: RECEIPT.payerReference,
+    bank_name: null,
     attachment_key: ATTACHMENT,
     customer_note: RECEIPT.customerNote,
     state: 'Submitted',
@@ -137,7 +138,7 @@ function scriptClient(opts: ScriptOptions = {}) {
     if (sql.includes('INSERT INTO bank_receipts')) {
       if (opts.insert instanceof Error) throw opts.insert;
       const attachmentKey =
-        Array.isArray(params) && typeof params[5] === 'string' ? params[5] : ATTACHMENT;
+        Array.isArray(params) && typeof params[6] === 'string' ? params[6] : ATTACHMENT;
       return { rows: [opts.insert ?? makeReceiptRow({ attachment_key: attachmentKey })] };
     }
     return { rows: [] };
@@ -257,7 +258,7 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
       String(sql).includes('INSERT INTO bank_receipts')
     );
     expect(insert?.[1]?.[2]).toBe(AMOUNT.toString());
-    expect(insert?.[1]?.[5]).toBe(SEALED);
+    expect(insert?.[1]?.[6]).toBe(SEALED);
     expect(insert?.[0]).toContain("'Submitted'");
     expect(storage.putObject).toHaveBeenCalledWith(
       SEALED,

@@ -139,6 +139,7 @@ it('preserves a failed submission and sends trimmed notes on retry', async () =>
   const onSubmitted = vi.fn().mockResolvedValue(undefined);
   await render(onSubmitted);
   await valid();
+  await change('bank-name', ' Bank Mellat ');
   await change('note', ' customer note ');
   vi.mocked(submitInvoiceBankReceipt).mockResolvedValueOnce({ ok: false, status: 409 });
   await submit();
@@ -151,12 +152,14 @@ it('preserves a failed submission and sends trimmed notes on retry', async () =>
     amountIrR: 100n,
     paymentDate: utcTodayIso(),
     payerReference: 'reference',
+    bankName: 'Bank Mellat',
     attachmentKey: 'attachment-key',
     customerNote: 'customer note',
   });
   expect(onSubmitted).toHaveBeenCalledTimes(1);
   expect(field('amount').value).toBe('');
   expect(field('note').value).toBe('');
+  expect(field('bank-name').value).toBe('');
 });
 
 it('ignores another submit while an upload is pending', async () => {

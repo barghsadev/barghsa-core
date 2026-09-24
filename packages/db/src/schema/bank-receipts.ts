@@ -32,6 +32,7 @@ export type BankReceiptState = (typeof BANK_RECEIPT_STATES)[number];
  *   - `amount` — positive int8 IRR.
  *   - `paymentDate` — calendar date of the bank transfer (`YYYY-MM-DD`).
  *   - `payerReference` — bank slip / tracking reference.
+ *   - `bankName?` — optional bank name from the slip; legacy rows are NULL.
  *   - `attachmentKey` — object-storage key for the uploaded scan.
  *   - `customerNote` — optional customer note.
  *   - `state` — Submitted | UnderReview | Confirmed | Rejected.
@@ -67,6 +68,9 @@ export const bankReceipts = pgTable(
 
     /** Payer / tracking reference from the bank slip. */
     payerReference: text('payer_reference').notNull(),
+
+    /** Customer-provided bank name; NULL for legacy receipts or omitted submissions. */
+    bankName: text('bank_name'),
 
     /**
      * Object-storage key for the uploaded scan. Unique so one file
@@ -104,6 +108,10 @@ export const bankReceipts = pgTable(
     payerReferenceNonblank: check(
       'chk_bank_receipts_payer_reference_nonblank',
       sql`length(trim(${table.payerReference})) > 0`
+    ),
+    bankNameLength: check(
+      'chk_bank_receipts_bank_name_length',
+      sql`${table.bankName} IS NULL OR length(trim(${table.bankName})) BETWEEN 1 AND 128`
     ),
     attachmentKeyNonblank: check(
       'chk_bank_receipts_attachment_key_nonblank',
@@ -186,6 +194,9 @@ export const createBankReceiptsTable = sql`
     payer_reference TEXT NOT NULL
       CONSTRAINT chk_bank_receipts_payer_reference_nonblank
         CHECK (length(trim(payer_reference)) > 0),
+    bank_name TEXT
+      CONSTRAINT chk_bank_receipts_bank_name_length
+        CHECK (bank_name IS NULL OR length(trim(bank_name)) BETWEEN 1 AND 128),
     attachment_key TEXT NOT NULL
       CONSTRAINT chk_bank_receipts_attachment_key_nonblank
         CHECK (length(trim(attachment_key)) > 0),

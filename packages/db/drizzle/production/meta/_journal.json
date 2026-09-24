@@ -757,6 +757,13 @@
       "when": 1791331200090,
       "tag": "0187_analytics_consent_events",
       "breakpoints": true
+    },
+    {
+      "idx": 188,
+      "version": "7",
+      "when": 1791331200091,
+      "tag": "0188_invoice_receipt_bank_name",
+      "breakpoints": true
     }
   ]
 }

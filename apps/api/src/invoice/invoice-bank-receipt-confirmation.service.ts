@@ -67,7 +67,7 @@ const ATTACHMENT_URL_TTL_SECONDS = 15 * 60;
 
 const RECEIPT_SELECT = `id, invoice_id, profile_id, amount,
        to_char(payment_date, 'YYYY-MM-DD') AS payment_date,
-       payer_reference, attachment_key, customer_note, state,
+       payer_reference, bank_name, attachment_key, customer_note, state,
        confirmed_by, confirmed_at, rejection_reason,
        created_at, updated_at`;
 
@@ -78,6 +78,7 @@ interface BankReceiptRow {
   amount: string | number | bigint;
   payment_date: string;
   payer_reference: string;
+  bank_name: string | null;
   attachment_key: string;
   customer_note: string | null;
   state: string;
@@ -108,6 +109,7 @@ export interface InvoiceBankReceiptConfirmDto {
   state: string;
   paymentDate: string;
   payerReference: string;
+  bankName: string | null;
   attachmentKey: string;
   attachmentUrl: string | null;
   customerNote: string | null;
@@ -135,6 +137,7 @@ export interface InvoiceBankReceiptHistoryItemDto {
   receiptId: string;
   invoiceId: string;
   amount: string;
+  bankName: string | null;
   state: 'Confirmed' | 'Rejected';
   paymentDate: string;
   submittedAt: string;
@@ -279,7 +282,7 @@ export class InvoiceBankReceiptConfirmationService {
     beforeId?: string | undefined;
   }): Promise<InvoiceBankReceiptHistoryPageDto> {
     const result = await getDbPool().query(
-      `SELECT id, invoice_id, amount, state, payment_date, created_at,
+      `SELECT id, invoice_id, amount, state, payment_date, bank_name, created_at,
               to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS cursor_at
          FROM bank_receipts
         WHERE state IN ('Confirmed', 'Rejected')
@@ -293,7 +296,7 @@ export class InvoiceBankReceiptConfirmationService {
     const rows = result.rows as Array<
       Pick<
         BankReceiptRow,
-        'id' | 'invoice_id' | 'amount' | 'state' | 'payment_date' | 'created_at'
+        'id' | 'invoice_id' | 'amount' | 'state' | 'payment_date' | 'bank_name' | 'created_at'
       > & {
         cursor_at: string;
       }
@@ -305,6 +308,7 @@ export class InvoiceBankReceiptConfirmationService {
         receiptId: row.id,
         invoiceId: row.invoice_id,
         amount: BigInt(row.amount).toString(),
+        bankName: row.bank_name,
         state: row.state as 'Confirmed' | 'Rejected',
         paymentDate: row.payment_date,
         submittedAt: toIso(row.created_at),
@@ -1632,6 +1636,7 @@ export class InvoiceBankReceiptConfirmationService {
       state: row.state,
       paymentDate: row.payment_date,
       payerReference: row.payer_reference,
+      bankName: row.bank_name ?? null,
       attachmentKey: row.attachment_key,
       attachmentUrl: await this.signAttachmentUrl(row.attachment_key),
       customerNote: row.customer_note,

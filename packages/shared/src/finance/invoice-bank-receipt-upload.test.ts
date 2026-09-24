@@ -191,6 +191,7 @@ describe('parseInvoiceBankReceiptSubmission (T-04.3.01.02)', () => {
       receipt: {
         paymentDate: '2026-08-15',
         payerReference: 'TRK-998877',
+        bankName: null,
         attachmentKey: ATTACHMENT,
         customerNote: 'Branch transfer',
       },
@@ -210,6 +211,21 @@ describe('parseInvoiceBankReceiptSubmission (T-04.3.01.02)', () => {
         TODAY
       )
     ).toMatchObject({ ok: false, field: 'attachmentKey' });
+  });
+
+  it('normalizes an optional bank name and rejects oversized or multiline names', () => {
+    expect(
+      parseInvoiceBankReceiptSubmission(validBody({ bankName: '  بانک ملی  ' }), TODAY)
+    ).toMatchObject({
+      ok: true,
+      receipt: { bankName: 'بانک ملی' },
+    });
+    for (const bankName of ['x'.repeat(129), 'Bank\nName', 123]) {
+      expect(parseInvoiceBankReceiptSubmission(validBody({ bankName }), TODAY)).toMatchObject({
+        ok: false,
+        field: 'bankName',
+      });
+    }
   });
 });
 
@@ -260,6 +276,29 @@ describe('sealedInvoiceBankReceiptAttachmentKey (T-04.3.01.02)', () => {
         }
       )
     ).toBe(true);
+  });
+
+  it('does not reuse an attachment for a different bank name', () => {
+    expect(
+      invoiceBankReceiptDetailsMatch(
+        {
+          amount: 250_000,
+          paymentDate: '2026-08-15',
+          payerReference: 'TRK-998877',
+          bankName: 'Bank A',
+          attachmentKey: `receipts/submitted/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf`,
+          customerNote: 'Branch transfer',
+        },
+        250_000n,
+        {
+          paymentDate: '2026-08-15',
+          payerReference: 'TRK-998877',
+          bankName: 'Bank B',
+          attachmentKey: ATTACHMENT,
+          customerNote: 'Branch transfer',
+        }
+      )
+    ).toBe(false);
   });
 });
 

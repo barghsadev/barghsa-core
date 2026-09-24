@@ -211,6 +211,12 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
           WHERE id = $1`,
         [id, index, ACTOR_USER_ID]
       );
+      if (index === 26) {
+        await ctx.pool.query(`UPDATE bank_receipts SET bank_name = $2 WHERE id = $1`, [
+          id,
+          'Bank Mellat',
+        ]);
+      }
     }
     await insertReceipt({ invoiceId, amount: 1n, suffix: 'hist-pending' });
     const otherReceiptId = await insertReceipt({
@@ -227,6 +233,7 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     const first = await service.listHistory({ invoiceId });
     expect(first.items).toHaveLength(25);
     expect(first.items[0]?.receiptId).toBe(ids[26]);
+    expect(first.items[0]?.bankName).toBe('Bank Mellat');
     expect(first.nextCursor?.beforeAt).toBe('2026-09-01T00:00:02.000200Z');
     expect(first.nextCursor).not.toBeNull();
     const second = await service.listHistory({ invoiceId, ...first.nextCursor! });

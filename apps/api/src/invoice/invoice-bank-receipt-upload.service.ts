@@ -51,9 +51,12 @@ export interface SubmitInvoiceBankReceiptInput extends ReceiptSubmissionActor {
   amount: unknown;
   paymentDate: unknown;
   payerReference: unknown;
+  bankName?: unknown;
   attachmentKey: unknown;
   customerNote?: unknown;
 }
+
+type InvoiceReceiptDetails = BankReceiptTopUpDetails & { bankName: string | null };
 
 export interface SubmitInvoiceBankReceiptResult {
   receiptId: string;
@@ -63,6 +66,7 @@ export interface SubmitInvoiceBankReceiptResult {
   state: 'Submitted';
   paymentDate: string;
   payerReference: string;
+  bankName: string | null;
   attachmentKey: string;
   customerNote: string | null;
 }
@@ -81,6 +85,7 @@ interface BankReceiptRow {
   amount: string | number | bigint;
   payment_date: string;
   payer_reference: string;
+  bank_name: string | null;
   attachment_key: string;
   customer_note: string | null;
   state: string;
@@ -131,6 +136,7 @@ export class InvoiceBankReceiptUploadService {
       amount: input.amount,
       paymentDate: input.paymentDate,
       payerReference: input.payerReference,
+      bankName: input.bankName,
       attachmentKey: input.attachmentKey,
       customerNote: input.customerNote,
     });
@@ -176,7 +182,7 @@ export class InvoiceBankReceiptUploadService {
     profileId: string,
     invoiceId: string,
     amountIrR: bigint,
-    receipt: BankReceiptTopUpDetails
+    receipt: InvoiceReceiptDetails
   ): Promise<BankReceiptRow> {
     const lookupKeys = invoiceBankReceiptLookupKeys(receipt.attachmentKey);
     try {
@@ -217,10 +223,10 @@ export class InvoiceBankReceiptUploadService {
       const inserted = await client.query(
         `INSERT INTO bank_receipts
            (invoice_id, profile_id, amount, payment_date, payer_reference,
-            attachment_key, customer_note, state)
-         VALUES ($1, $2, $3::bigint, $4::date, $5, $6, $7, 'Submitted')
+            bank_name, attachment_key, customer_note, state)
+         VALUES ($1, $2, $3::bigint, $4::date, $5, $6, $7, $8, 'Submitted')
          RETURNING id, invoice_id, profile_id, amount,
-                   to_char(payment_date, 'YYYY-MM-DD') AS payment_date, payer_reference,
+                   to_char(payment_date, 'YYYY-MM-DD') AS payment_date, payer_reference, bank_name,
                    attachment_key, customer_note, state`,
         [
           invoice.id,
@@ -228,6 +234,7 @@ export class InvoiceBankReceiptUploadService {
           amountIrR.toString(),
           receipt.paymentDate,
           receipt.payerReference,
+          receipt.bankName,
           sealed.sealedKey,
           receipt.customerNote,
         ]
@@ -273,7 +280,7 @@ export class InvoiceBankReceiptUploadService {
   ): Promise<BankReceiptRow | null> {
     const result = await client.query(
       `SELECT id, invoice_id, profile_id, amount, to_char(payment_date, 'YYYY-MM-DD') AS payment_date,
-              payer_reference, attachment_key, customer_note, state
+              payer_reference, bank_name, attachment_key, customer_note, state
          FROM bank_receipts
         WHERE attachment_key = ANY($1::text[])${forUpdate ? ' FOR UPDATE' : ''}`,
       [lookupKeys]
@@ -363,7 +370,7 @@ function assertReusableSubmitted(
   invoiceId: string,
   profileId: string,
   amountIrR: bigint,
-  receipt: BankReceiptTopUpDetails
+  receipt: InvoiceReceiptDetails
 ): void {
   const sameReceipt =
     existing.invoice_id === invoiceId &&
@@ -374,6 +381,7 @@ function assertReusableSubmitted(
         amount: existing.amount,
         paymentDate: existing.payment_date,
         payerReference: existing.payer_reference,
+        bankName: existing.bank_name ?? null,
         attachmentKey: existing.attachment_key,
         customerNote: existing.customer_note,
       },
@@ -397,6 +405,7 @@ function mapReceipt(row: BankReceiptRow): SubmitInvoiceBankReceiptResult {
     state: 'Submitted',
     paymentDate: row.payment_date,
     payerReference: row.payer_reference,
+    bankName: row.bank_name ?? null,
     attachmentKey: row.attachment_key,
     customerNote: row.customer_note,
   };

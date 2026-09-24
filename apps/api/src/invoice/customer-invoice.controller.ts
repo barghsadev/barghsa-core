@@ -29,6 +29,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiOperation,
   ApiParam,
   ApiQuery,
@@ -51,6 +52,7 @@ const InvoiceBankReceiptBodySchema = z
     amount: z.union([z.number(), z.string()]),
     paymentDate: z.string().min(1),
     payerReference: z.string().min(1),
+    bankName: z.string().max(128).optional(),
     attachmentKey: z.string().min(1),
     customerNote: z.string().optional(),
   })
@@ -65,6 +67,7 @@ export interface InvoiceBankReceiptResponse {
   state: 'Submitted';
   paymentDate: string;
   payerReference: string;
+  bankName: string | null;
   attachmentKey: string;
 }
 
@@ -177,6 +180,20 @@ export class CustomerInvoiceController {
     summary: 'Submit a bank receipt against an invoice (Submitted until staff confirm)',
   })
   @ApiParam({ name: 'invoiceId', format: 'uuid' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['amount', 'paymentDate', 'payerReference', 'attachmentKey'],
+      properties: {
+        amount: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+        paymentDate: { type: 'string', format: 'date' },
+        payerReference: { type: 'string' },
+        bankName: { type: 'string', maxLength: 128, description: 'Optional bank name on the slip' },
+        attachmentKey: { type: 'string' },
+        customerNote: { type: 'string' },
+      },
+    },
+  })
   @ApiResponse({ status: 201, description: 'Submitted bank receipt created; invoice unchanged.' })
   @ApiResponse({ status: 400, description: 'Invalid amount, date, payer reference, or file' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
@@ -208,6 +225,7 @@ export class CustomerInvoiceController {
       amount: parsed.data.amount,
       paymentDate: parsed.data.paymentDate,
       payerReference: parsed.data.payerReference,
+      bankName: parsed.data.bankName,
       attachmentKey: parsed.data.attachmentKey,
       customerNote: parsed.data.customerNote,
     });
@@ -221,6 +239,7 @@ export class CustomerInvoiceController {
       state: result.state,
       paymentDate: result.paymentDate,
       payerReference: result.payerReference,
+      bankName: result.bankName,
       attachmentKey: result.attachmentKey,
     };
   }

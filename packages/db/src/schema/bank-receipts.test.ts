@@ -60,6 +60,7 @@ describe('bank_receipts schema (T-04.3.01.01)', () => {
       'amount',
       'paymentDate',
       'payerReference',
+      'bankName',
       'attachmentKey',
       'customerNote',
       'state',
@@ -84,6 +85,7 @@ describe('bank_receipts schema (T-04.3.01.01)', () => {
       'amount',
       'payment_date',
       'payer_reference',
+      'bank_name',
       'attachment_key',
       'customer_note',
       'state',
@@ -130,6 +132,7 @@ describe('bank_receipts schema (T-04.3.01.01)', () => {
         'chk_bank_receipts_amount_positive',
         'chk_bank_receipts_state',
         'chk_bank_receipts_payer_reference_nonblank',
+        'chk_bank_receipts_bank_name_length',
         'chk_bank_receipts_attachment_key_nonblank',
         'chk_bank_receipts_state_fields',
       ])

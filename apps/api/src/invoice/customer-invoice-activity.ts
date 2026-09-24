@@ -13,6 +13,7 @@ export interface CustomerInvoiceBankReceipt {
   state: string;
   paymentDate: string;
   payerReference: string;
+  bankName: string | null;
   customerNote: string | null;
   rejectionReason: string | null;
   confirmedAt: string | null;
@@ -67,7 +68,8 @@ export async function loadCustomerInvoiceActivity(
     }
   >(
     `SELECT id, amount::text, state, payment_date::text AS "paymentDate",
-            payer_reference AS "payerReference", customer_note AS "customerNote",
+            payer_reference AS "payerReference", bank_name AS "bankName",
+            customer_note AS "customerNote",
             rejection_reason AS "rejectionReason", confirmed_at AS "confirmedAt",
             created_at AS "createdAt"
      FROM bank_receipts WHERE invoice_id=$1::uuid AND profile_id=$2::uuid

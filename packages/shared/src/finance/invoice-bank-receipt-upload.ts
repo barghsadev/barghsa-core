@@ -2,7 +2,7 @@
  * Customer invoice bank-receipt upload contract (S-04.3.01, T-04.3.01.02).
  *
  * Customers submit a receipt against an invoice (amount, payment date,
- * payer reference, attachment, optional note). The API creates a
+ * payer reference, attachment, optional bank name and note). The API creates a
  * `Submitted` `bank_receipts` row. Finance confirmation, wallet credit,
  * and invoice settlement are later tasks.
  *
@@ -81,12 +81,13 @@ export type InvoiceBankReceiptFileResult = InvoiceBankReceiptFileOk | InvoiceBan
 export interface InvoiceBankReceiptParseSuccess {
   ok: true;
   amountIrR: bigint;
-  receipt: BankReceiptTopUpDetails;
+  receipt: BankReceiptTopUpDetails & { bankName: string | null };
 }
 
 export interface InvoiceBankReceiptParseFailure {
   ok: false;
-  field: 'amount' | 'paymentDate' | 'payerReference' | 'attachmentKey' | 'customerNote';
+  field:
+    'amount' | 'paymentDate' | 'payerReference' | 'bankName' | 'attachmentKey' | 'customerNote';
   message: string;
 }
 
@@ -326,6 +327,15 @@ export function parseInvoiceBankReceiptSubmission(
     };
   }
 
+  const bankName = parseInvoiceBankName(body.bankName);
+  if (bankName === undefined) {
+    return {
+      ok: false,
+      field: 'bankName',
+      message: 'Bank name must be at most 128 characters on one line',
+    };
+  }
+
   const attachmentKey = parseBankReceiptAttachmentKey(body.attachmentKey);
   if (attachmentKey === null) {
     return {
@@ -351,6 +361,7 @@ export function parseInvoiceBankReceiptSubmission(
     receipt: {
       paymentDate,
       payerReference,
+      bankName,
       attachmentKey,
       customerNote,
     },
@@ -371,17 +382,31 @@ export function invoiceBankReceiptDetailsMatch(
     amount: string | number | bigint;
     paymentDate: string;
     payerReference: string;
+    bankName?: string | null;
     attachmentKey: string;
     customerNote: string | null;
   },
   amountIrR: bigint,
-  receipt: BankReceiptTopUpDetails
+  receipt: BankReceiptTopUpDetails & { bankName?: string | null }
 ): boolean {
   return (
     BigInt(row.amount) === amountIrR &&
     row.paymentDate === receipt.paymentDate &&
     row.payerReference === receipt.payerReference &&
+    (row.bankName ?? null) === (receipt.bankName ?? null) &&
     invoiceBankReceiptAttachmentKeysMatch(row.attachmentKey, receipt.attachmentKey) &&
     (row.customerNote ?? null) === receipt.customerNote
   );
+}
+
+function parseInvoiceBankName(value: unknown): string | null | undefined {
+  if (value === undefined || value === null || value === '') return null;
+  if (typeof value !== 'string') return undefined;
+  const name = value.trim();
+  if (!name) return null;
+  for (const character of name) {
+    const code = character.charCodeAt(0);
+    if (code < 32 || code === 127) return undefined;
+  }
+  return name.length <= 128 ? name : undefined;
 }

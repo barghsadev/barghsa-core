@@ -55,6 +55,7 @@ export interface InvoiceReceiptActivity {
   state: string;
   paymentDate: string;
   payerReference: string;
+  bankName: string | null;
   customerNote: string | null;
   rejectionReason: string | null;
   confirmedAt: string | null;

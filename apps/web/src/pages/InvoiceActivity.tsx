@@ -61,6 +61,11 @@ export function InvoiceActivity({
             <p>
               {label('reference')}: <bdi>{row.payerReference}</bdi>
             </p>
+            {row.bankName ? (
+              <p>
+                {label('bankName')}: {row.bankName}
+              </p>
+            ) : null}
             <p>
               {label('paymentDate')}: <bdi>{row.paymentDate}</bdi>
             </p>

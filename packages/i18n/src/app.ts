@@ -970,6 +970,7 @@ export const fa: I18nDictionary = {
   'invoices.activity.bank_receipt': 'رسید بانکی',
   'invoices.activity.external_bank': 'انتقال بانکی',
   'invoices.activity.reference': 'شماره پیگیری',
+  'invoices.activity.bankName': 'نام بانک',
   'invoices.activity.paymentDate': 'تاریخ انتقال',
   'invoices.activity.viewReceiptAttachment': 'مشاهده فایل رسید',
   'invoices.activity.receiptId': 'شناسه رسید',
@@ -1041,6 +1042,7 @@ export const fa: I18nDictionary = {
   'invoices.details.receiptAmountLabel': 'مبلغ واریز (ریال)',
   'invoices.details.receiptDateLabel': 'تاریخ واریز',
   'invoices.details.receiptPayerRefLabel': 'شماره پیگیری / مرجع پرداخت',
+  'invoices.details.receiptBankNameLabel': 'نام بانک (اختیاری)',
   'invoices.details.receiptFileLabel': 'تصویر یا فایل رسید',
   'invoices.details.receiptFileHint':
     'PDF، JPG، PNG یا WebP. سقف ۱۰ مگابایت برای سند و ۲۰ مگابایت برای تصویر.',
@@ -2186,6 +2188,7 @@ export const en: I18nDictionary = {
   'invoices.activity.bank_receipt': 'Bank receipt',
   'invoices.activity.external_bank': 'Bank transfer',
   'invoices.activity.reference': 'Tracking reference',
+  'invoices.activity.bankName': 'Bank name',
   'invoices.activity.paymentDate': 'Transfer date',
   'invoices.activity.viewReceiptAttachment': 'View receipt attachment',
   'invoices.activity.receiptId': 'Receipt ID',
@@ -2258,6 +2261,7 @@ export const en: I18nDictionary = {
   'invoices.details.receiptAmountLabel': 'Transfer amount (IRR)',
   'invoices.details.receiptDateLabel': 'Transfer date',
   'invoices.details.receiptPayerRefLabel': 'Payer / tracking reference',
+  'invoices.details.receiptBankNameLabel': 'Bank name (optional)',
   'invoices.details.receiptFileLabel': 'Receipt image or PDF',
   'invoices.details.receiptFileHint':
     'PDF, JPG, PNG, or WebP. Max 10 MB for documents and 20 MB for images.',

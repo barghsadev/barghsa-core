@@ -11,6 +11,7 @@ interface HistoryItem {
   receiptId: string;
   invoiceId: string;
   amount: string;
+  bankName: string | null;
   state: 'Confirmed' | 'Rejected';
   paymentDate: string;
   submittedAt: string;
@@ -151,6 +152,9 @@ export function InvoiceBankReceiptHistory({
                 </p>
                 <p>
                   {numbers.money(item.amount)} · {time.format(item.submittedAt)}
+                </p>
+                <p className="break-words">
+                  {word('bankName')}: {item.bankName ?? '—'}
                 </p>
                 <p>
                   {word('paymentDate')}: <bdi>{item.paymentDate}</bdi>

@@ -196,6 +196,7 @@ export async function submitInvoiceBankReceipt(input: {
   amountIrR: bigint;
   paymentDate: string;
   payerReference: string;
+  bankName?: string;
   attachmentKey: string;
   customerNote?: string;
 }): Promise<{ ok: true; state: 'Submitted'; amount: bigint } | { ok: false; status: number }> {
@@ -210,6 +211,7 @@ export async function submitInvoiceBankReceipt(input: {
       amount: input.amountIrR.toString(),
       paymentDate: input.paymentDate,
       payerReference: input.payerReference,
+      bankName: input.bankName,
       attachmentKey: input.attachmentKey,
       customerNote: input.customerNote,
     }),

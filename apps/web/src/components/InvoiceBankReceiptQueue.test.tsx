@@ -14,6 +14,7 @@ const receipt = {
   state: 'Submitted',
   paymentDate: '2026-09-24',
   payerReference: 'TRK-123',
+  bankName: 'Bank Mellat',
   customerNote: 'Branch transfer',
   submittedAt: '2026-09-24T00:00:00Z',
   attachmentUrl: 'https://storage.example.test/receipt.pdf',
@@ -109,6 +110,7 @@ it.each(['en', 'fa'] as const)('reviews the allocation and receipt file in %s', 
   await render();
   await click(locale === 'en' ? 'Review receipt' : 'بررسی رسید');
   expect(container.textContent).toContain('100000 IRR');
+  expect(container.textContent).toContain('Bank Mellat');
   expect(container.textContent).toContain('150000 IRR');
   expect(
     container.querySelector('a[href="https://storage.example.test/receipt.pdf"]')
@@ -190,6 +192,7 @@ it('filters and pages terminal receipts, then opens their historic detail', asyn
                   receiptId: RECEIPT,
                   invoiceId: INVOICE,
                   amount: receipt.amount,
+                  bankName: receipt.bankName,
                   state: 'Rejected',
                   paymentDate: receipt.paymentDate,
                   submittedAt: receipt.submittedAt,
@@ -208,6 +211,7 @@ it('filters and pages terminal receipts, then opens their historic detail', asyn
   await render();
   await click('Reviewed receipt history');
   expect(container.textContent).toContain(RECEIPT);
+  expect(container.textContent).toContain('Bank Mellat');
   const state = container.querySelector('select')!;
   await act(async () => {
     Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')!.set!.call(
@@ -249,6 +253,7 @@ it('shows the settled allocation from a confirmed receipt without recalculating 
               receiptId: RECEIPT,
               invoiceId: INVOICE,
               amount: receipt.amount,
+              bankName: receipt.bankName,
               state: 'Confirmed',
               paymentDate: receipt.paymentDate,
               submittedAt: receipt.submittedAt,

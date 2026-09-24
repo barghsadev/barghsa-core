@@ -19,6 +19,7 @@ interface Receipt {
   state: string;
   paymentDate: string;
   payerReference: string;
+  bankName: string | null;
   customerNote: string | null;
   submittedAt: string;
   attachmentUrl: string | null;
@@ -175,6 +176,9 @@ export function InvoiceBankReceiptQueue() {
                 <p>
                   {numbers.money(item.amount)} · {time.format(item.submittedAt)}
                 </p>
+                <p className="break-words">
+                  {word('bankName')}: {item.bankName ?? '—'}
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 <StatusBadge label={appText(`invoices.activity.state.${item.state}`, locale)} />
@@ -259,6 +263,10 @@ export function InvoiceBankReceiptQueue() {
                   <dd className="break-all">
                     <bdi>{detail.payerReference}</bdi>
                   </dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">{word('bankName')}</dt>
+                  <dd className="break-words">{detail.bankName ?? '—'}</dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">{word('submitted')}</dt>

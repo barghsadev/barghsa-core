@@ -209,11 +209,14 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
   it('creates a Submitted receipt and leaves the invoice Unpaid', async () => {
     const attachment = receiptKey('happy0000001');
     await insertReceiptFile(attachment);
-    const result = await service.submit(payload({ attachmentKey: attachment }));
+    const result = await service.submit(
+      payload({ attachmentKey: attachment, bankName: ' Bank Mellat ' })
+    );
 
     expect(result.state).toBe('Submitted');
     expect(result.amount).toBe(250_000n);
     expect(result.invoiceId).toBe(INVOICE_A);
+    expect(result.bankName).toBe('Bank Mellat');
     const sealed = sealedInvoiceBankReceiptAttachmentKey(attachment);
     expect(sealed).toBeTruthy();
     expect(result.attachmentKey).toBe(sealed);
@@ -228,13 +231,15 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
       state: string;
       confirmed_by: string | null;
       attachment_key: string;
-    }>(`SELECT state, confirmed_by, attachment_key FROM bank_receipts WHERE id = $1`, [
+      bank_name: string | null;
+    }>(`SELECT state, confirmed_by, attachment_key, bank_name FROM bank_receipts WHERE id = $1`, [
       result.receiptId,
     ]);
     expect(stored.rows[0]).toMatchObject({
       state: 'Submitted',
       confirmed_by: null,
       attachment_key: sealed,
+      bank_name: 'Bank Mellat',
     });
 
     const storage = await ctx.pool.query<{ storage_key: string; status: string }>(

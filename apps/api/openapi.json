@@ -18421,6 +18421,52 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "amount": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  "attachmentKey": {
+                    "type": "string"
+                  },
+                  "bankName": {
+                    "description": "Optional bank name on the slip",
+                    "maxLength": 128,
+                    "type": "string"
+                  },
+                  "customerNote": {
+                    "type": "string"
+                  },
+                  "payerReference": {
+                    "type": "string"
+                  },
+                  "paymentDate": {
+                    "format": "date",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "amount",
+                  "paymentDate",
+                  "payerReference",
+                  "attachmentKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "201": {
             "description": "Submitted bank receipt created; invoice unchanged."
