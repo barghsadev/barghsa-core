@@ -23591,6 +23591,92 @@
         ]
       }
     },
+    "/api/user/analytics/consent": {
+      "get": {
+        "operationId": "AnalyticsController_getConsent",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "consent": {
+                      "nullable": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Read optional product analytics consent",
+        "tags": [
+          "User Analytics"
+        ]
+      },
+      "put": {
+        "operationId": "AnalyticsController_updateConsent",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "consent": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "consent"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "consent": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Change optional product analytics consent",
+        "tags": [
+          "User Analytics"
+        ]
+      }
+    },
+    "/api/user/analytics/events": {
+      "post": {
+        "operationId": "AnalyticsController_recordEvent",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Event accepted"
+          }
+        },
+        "summary": "Record a consented, redacted product analytics event",
+        "tags": [
+          "User Analytics"
+        ]
+      }
+    },
     "/api/user/settings/marketing-consent": {
       "get": {
         "operationId": "UserSettingsController_getMarketingConsent",

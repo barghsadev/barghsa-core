@@ -170,6 +170,16 @@
         "default": "./dist/cjs/ai-models/index.js"
       }
     },
+    "./analytics": {
+      "import": {
+        "types": "./dist/analytics/index.d.ts",
+        "default": "./dist/analytics/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/analytics/index.d.ts",
+        "default": "./dist/cjs/analytics/index.js"
+      }
+    },
     "./password-hash": {
       "import": {
         "types": "./dist/password-hash.d.ts",

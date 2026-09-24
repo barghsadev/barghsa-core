@@ -6,6 +6,10 @@ import { shellText } from '@barghsa/i18n/shell';
 import { BrandMark } from './BrandMark.js';
 import { LanguageSwitcher } from './LanguageSwitcher.js';
 import { ThemeSwitcher } from './ThemeSwitcher.js';
+import {
+  AnalyticsConsentBanner,
+  AnalyticsConsentProvider,
+} from '../providers/AnalyticsConsentProvider.js';
 
 export interface NavigationGroup {
   label: string;
@@ -51,7 +55,7 @@ export function AppShell({
     )
     .sort((a, b) => b.to.length - a.to.length)[0];
   const title = shellText(area === 'admin' ? 'administration' : 'workspace', locale);
-  return (
+  const shell = (
     <div
       className="flex h-dvh flex-col bg-background text-foreground"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
@@ -60,6 +64,7 @@ export function AppShell({
         {shellText('skip', locale)}
       </a>
       {banners}
+      <AnalyticsConsentBanner />
       <header className="flex min-h-(--topbar-height) shrink-0 items-center gap-3 border-b bg-card px-4 md:px-6">
         <Link
           to={area === 'admin' ? '/admin' : '/dashboard'}
@@ -152,5 +157,10 @@ export function AppShell({
         </main>
       </div>
     </div>
+  );
+  return (
+    <AnalyticsConsentProvider area={area === 'admin' ? 'admin' : 'customer'}>
+      {shell}
+    </AnalyticsConsentProvider>
   );
 }

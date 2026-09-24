@@ -70,6 +70,9 @@ export const users = pgTable(
     /** Null follows the active admin theme; otherwise this user's light/dark override. */
     themeMode: text('theme_mode'),
 
+    /** Optional product analytics; null means the account has not decided. */
+    analyticsConsent: boolean('analytics_consent'),
+
     /** Admin flag — set for bootstrap admin user (T-02.04.03). */
     isAdmin: boolean('is_admin').notNull().default(false),
 

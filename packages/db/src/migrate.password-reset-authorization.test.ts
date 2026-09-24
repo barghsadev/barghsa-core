@@ -50,7 +50,7 @@ it('upgrades existing OTPs without consuming them, enforces grant state and repe
     expect((await pool.query('SELECT * FROM otp_challenges')).rows).toEqual([
       { ...before, reset_token_hash: null, reset_consumed_at: null },
     ]);
-    expect((await pool.query('SELECT * FROM users')).rows).toEqual([
+    expect((await pool.query('SELECT * FROM users')).rows).toMatchObject([
       { ...account, password_reset_challenge_id: null },
     ]);
     for (const update of [

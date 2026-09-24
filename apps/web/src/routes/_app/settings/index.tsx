@@ -19,6 +19,7 @@ import {
 import { Button, Card, CardContent } from '@barghsa/ui';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useLocale } from '../../../hooks/useLocale.js';
+import { AnalyticsConsentSettings } from '../../../providers/AnalyticsConsentProvider.js';
 
 export const Route = createFileRoute('/_app/settings/')({
   component: SettingsIndexPage,
@@ -483,6 +484,13 @@ function SettingsIndexPage() {
                 : t('settings.profile.save', locale)}
             </Button>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Optional product analytics consent */}
+      <Card>
+        <CardContent className="pt-6">
+          <AnalyticsConsentSettings />
         </CardContent>
       </Card>
 

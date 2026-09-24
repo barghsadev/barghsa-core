@@ -750,6 +750,13 @@
       "when": 1791331200089,
       "tag": "0186_user_theme_mode",
       "breakpoints": true
+    },
+    {
+      "idx": 187,
+      "version": "7",
+      "when": 1791331200090,
+      "tag": "0187_analytics_consent_events",
+      "breakpoints": true
     }
   ]
 }

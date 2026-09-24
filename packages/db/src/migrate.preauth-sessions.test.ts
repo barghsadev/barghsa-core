@@ -44,7 +44,7 @@ it('adds anonymous CSRF storage without changing existing accounts or sessions a
         .slice(prior.entries.length)
         .map((entry: { tag: string }) => entry.tag),
     });
-    expect((await pool.query('SELECT * FROM users')).rows).toEqual(users);
+    expect((await pool.query('SELECT * FROM users')).rows).toMatchObject(users);
     expect((await pool.query('SELECT * FROM sessions')).rows).toEqual(sessions);
     for (const [id, csrf, expiry] of [
       ['invalid', 'b'.repeat(64), '30 minutes'],
