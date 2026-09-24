@@ -849,6 +849,19 @@ it('requests changes with a reason and returns the order to the customer', async
     fullAddress: 'Corrected Electricity Street',
     versionId: result.versionId,
   });
+  const staffDetail = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
+    headers: staffHeaders,
+  });
+  expect(staffDetail.status, http.logs()).toBe(200);
+  expect(await staffDetail.json()).toMatchObject({
+    revisionReview: {
+      versionNumber: 2,
+      staffReason: 'Please correct the delivery address',
+      customerResponse: 'I corrected the delivery address',
+      before: { fullAddress: 'Electricity Street', invoiceId: order.invoiceId },
+      after: { fullAddress: 'Corrected Electricity Street', invoiceId: order.invoiceId },
+    },
+  });
   const amendedRequirements = (
     await http.pool.query(
       'SELECT initial_invoice_id,service_starts_at,service_ends_at FROM contract_activation_requirements WHERE version_id=$1',
@@ -923,6 +936,19 @@ it('revises an unpaid order with a new quote, invoice and immutable line history
     totalKwh: '12',
     totalIrR: '1200000',
     lines: [expect.objectContaining({ quantityKwh: '12' })],
+  });
+  const staffDetail = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
+    headers: staffHeaders,
+  });
+  expect(staffDetail.status, http.logs()).toBe(200);
+  expect(await staffDetail.json()).toMatchObject({
+    revisionReview: {
+      versionNumber: 2,
+      staffReason: 'Increase the requested quantity',
+      customerResponse: 'Quantity corrected',
+      before: { totalKwh: '10', totalIrR: '1000000', invoiceId: order.invoiceId },
+      after: { totalKwh: '12', totalIrR: '1200000', invoiceId: result.invoiceId },
+    },
   });
   const invoices = (
     await http.pool.query(
@@ -1142,6 +1168,26 @@ it('revises an advanced delivery period and composition', async () => {
       expect.objectContaining({ systemKey: 'green', quantityKwh: '3' }),
       expect.objectContaining({ systemKey: 'thermal', quantityKwh: '12' }),
     ],
+  });
+  const review = await fetch(`${http.base}/api/staff/electricity/orders/${order.orderId}`, {
+    headers: staffHeaders,
+  });
+  expect(review.status, http.logs()).toBe(200);
+  expect(await review.json()).toMatchObject({
+    revisionReview: {
+      before: {
+        lines: [
+          expect.objectContaining({ systemKey: 'thermal', quantityKwh: '10' }),
+          expect.objectContaining({ systemKey: 'green', quantityKwh: '2' }),
+        ],
+      },
+      after: {
+        lines: [
+          expect.objectContaining({ systemKey: 'thermal', quantityKwh: '12' }),
+          expect.objectContaining({ systemKey: 'green', quantityKwh: '3' }),
+        ],
+      },
+    },
   });
 });
 

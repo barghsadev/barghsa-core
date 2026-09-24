@@ -26,6 +26,23 @@ interface ReviewOrder {
   ageHours?: number;
   priority?: string;
   latestCommentAt?: string;
+  revisionReview?: {
+    versionNumber: number;
+    staffReason: string | null;
+    customerResponse: string | null;
+    before: ReviewFacts;
+    after: ReviewFacts;
+  } | null;
+}
+
+interface ReviewFacts {
+  periodStart: string | null;
+  periodEnd: string | null;
+  totalKwh: string | null;
+  totalIrR: string | null;
+  fullAddress: string | null;
+  invoiceId: string | null;
+  lines: Array<{ systemKey: string; quantityKwh: string }>;
 }
 
 type Decision = 'approve' | 'request-changes' | 'reject';
@@ -307,6 +324,111 @@ export default function AdminElectricityOrdersPage() {
                   </tbody>
                 </table>
               </div>
+              {detail.revisionReview ? (
+                <section
+                  className="space-y-3 rounded-md border p-4"
+                  aria-label={copy('revision.title')}
+                >
+                  <h3 className="font-semibold">
+                    {copy('revision.title')} #{detail.revisionReview.versionNumber}
+                  </h3>
+                  {detail.revisionReview.staffReason ? (
+                    <p>
+                      <strong>{copy('revision.staffReason')}:</strong>{' '}
+                      {detail.revisionReview.staffReason}
+                    </p>
+                  ) : null}
+                  {detail.revisionReview.customerResponse ? (
+                    <p>
+                      <strong>{copy('revision.customerResponse')}:</strong>{' '}
+                      {detail.revisionReview.customerResponse}
+                    </p>
+                  ) : null}
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b">
+                          <th scope="col" className="p-2 text-start">
+                            {copy('revision.field')}
+                          </th>
+                          <th scope="col" className="p-2 text-start">
+                            {copy('revision.previous')}
+                          </th>
+                          <th scope="col" className="p-2 text-start">
+                            {copy('revision.current')}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(
+                          [
+                            ['quantity', 'totalKwh'],
+                            ['price', 'totalIrR'],
+                            ['address', 'fullAddress'],
+                            ['revision.invoice', 'invoiceId'],
+                          ] as const
+                        ).map(([label, field]) => (
+                          <tr key={field} className="border-b">
+                            <th scope="row" className="p-2 text-start font-medium">
+                              {copy(label)}
+                            </th>
+                            <td className="p-2">
+                              {field === 'totalIrR'
+                                ? detail.revisionReview!.before[field]
+                                  ? numbers.money(detail.revisionReview!.before[field]!)
+                                  : '—'
+                                : (detail.revisionReview!.before[field] ?? '—')}
+                            </td>
+                            <td className="p-2">
+                              {field === 'totalIrR'
+                                ? detail.revisionReview!.after[field]
+                                  ? numbers.money(detail.revisionReview!.after[field]!)
+                                  : '—'
+                                : (detail.revisionReview!.after[field] ?? '—')}
+                            </td>
+                          </tr>
+                        ))}
+                        <tr className="border-b">
+                          <th scope="row" className="p-2 text-start font-medium">
+                            {copy('products')}
+                          </th>
+                          {(
+                            [detail.revisionReview.before, detail.revisionReview.after] as const
+                          ).map((facts, index) => (
+                            <td key={index} className="p-2">
+                              {facts.lines.length
+                                ? facts.lines
+                                    .map(
+                                      (line) =>
+                                        `${copy(`product.${line.systemKey}`)}: ${line.quantityKwh} kWh`
+                                    )
+                                    .join(', ')
+                                : '—'}
+                            </td>
+                          ))}
+                        </tr>
+                        <tr className="border-b">
+                          <th scope="row" className="p-2 text-start font-medium">
+                            {copy('period')}
+                          </th>
+                          <td className="p-2">
+                            {detail.revisionReview.before.periodStart &&
+                            detail.revisionReview.before.periodEnd
+                              ? `${new Date(detail.revisionReview.before.periodStart).toLocaleDateString(locale)} – ${new Date(detail.revisionReview.before.periodEnd).toLocaleDateString(locale)}`
+                              : '—'}
+                          </td>
+                          <td className="p-2">
+                            {detail.revisionReview.after.periodStart &&
+                            detail.revisionReview.after.periodEnd
+                              ? `${new Date(detail.revisionReview.after.periodStart).toLocaleDateString(locale)} – ${new Date(detail.revisionReview.after.periodEnd).toLocaleDateString(locale)}`
+                              : '—'}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+              ) : null}
               <details className="rounded-md border p-3 text-sm">
                 <summary className="cursor-pointer font-medium">{copy('snapshots')}</summary>
                 <h3 className="mt-3 font-semibold">{copy('pricingSnapshot')}</h3>

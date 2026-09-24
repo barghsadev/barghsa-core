@@ -37,6 +37,29 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
     versionId: 'version-1',
     totalIrR: '1000',
     paidIrR: '0',
+    revisionReview: {
+      versionNumber: 2,
+      staffReason: 'Increase quantity',
+      customerResponse: 'Quantity updated',
+      before: {
+        periodStart: '2026-09-23T00:00:00Z',
+        periodEnd: '2026-09-30T00:00:00Z',
+        totalKwh: '8',
+        totalIrR: '800',
+        fullAddress: 'Old Street',
+        invoiceId: 'invoice-1',
+        lines: [{ systemKey: 'thermal', quantityKwh: '8' }],
+      },
+      after: {
+        periodStart: '2026-09-23T00:00:00Z',
+        periodEnd: '2026-09-30T00:00:00Z',
+        totalKwh: '10',
+        totalIrR: '1000',
+        fullAddress: 'Electricity Street',
+        invoiceId: 'invoice-2',
+        lines: [{ systemKey: 'thermal', quantityKwh: '10' }],
+      },
+    },
     ageHours: 12,
     priority: 'normal',
   };
@@ -92,6 +115,11 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
       expect.any(Object)
     );
     expect(container.textContent).toContain('Thermal electricity');
+    expect(container.textContent).toContain('Review order changes');
+    expect(container.textContent).toContain('Increase quantity');
+    expect(container.textContent).toContain('Quantity updated');
+    expect(container.textContent).toContain('Old Street');
+    expect(container.textContent).toContain('invoice-2');
     expect(container.textContent).toContain('Approve order');
     expect(container.textContent).toContain('Request changes');
     expect(container.textContent).toContain('Reject order');

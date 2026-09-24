@@ -44,6 +44,7 @@ interface ReviewRow {
   contract_id: string;
   contract_state: string;
   version_id: string;
+  version_number: number;
   contract_snapshot: Record<string, unknown>;
   invoice_id: string;
   activation_invoice_id: string | null;
@@ -59,7 +60,7 @@ const reviewQuery = `SELECT o.id,o.profile_id,p.user_id AS customer_id,
   e.period_start,e.period_end,e.total_kwh,e.pricing_snapshot,e.settings_snapshot,
   o.snapshot_full_address AS full_address,o.snapshot_postal_code AS postal_code,
   o.gift_code_id,ec.contract_id,c.state AS contract_state,
-  c.current_version_id AS version_id,v.content AS contract_snapshot,
+  c.current_version_id AS version_id,v.version_number,v.content AS contract_snapshot,
   i.id AS invoice_id,ar.initial_invoice_id AS activation_invoice_id,
   i.state AS invoice_state,i.total_amount,i.paid_amount,i.refunded_amount,
   COALESCE((SELECT SUM(r.amount)::text FROM refunds r WHERE r.invoice_id=i.id
@@ -99,7 +100,12 @@ function present(row: ReviewRow) {
     periodEnd: row.period_end.toISOString(),
     totalKwh: row.total_kwh,
     pricingSnapshot: row.pricing_snapshot,
-    settingsSnapshot: row.settings_snapshot,
+    settingsSnapshot:
+      row.contract_snapshot.settings &&
+      typeof row.contract_snapshot.settings === 'object' &&
+      !Array.isArray(row.contract_snapshot.settings)
+        ? row.contract_snapshot.settings
+        : row.settings_snapshot,
     fullAddress: row.full_address,
     postalCode: row.postal_code,
     contractId: row.contract_id,
@@ -210,9 +216,102 @@ export class ElectricityStaffReviewService {
   }
 
   async detail(id: string) {
-    const row = (await getDbPool().query<ReviewRow>(`${reviewQuery} WHERE o.id=$1`, [id])).rows[0];
-    if (!row) throw new NotFoundException('Electricity order not found');
-    return present(row);
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY');
+      const row = (await client.query<ReviewRow>(`${reviewQuery} WHERE o.id=$1`, [id])).rows[0];
+      if (!row) throw new NotFoundException('Electricity order not found');
+      const previous =
+        row.version_number > 1
+          ? (
+              await client.query<{
+                id: string;
+                content: Record<string, unknown>;
+                invoice_id: string | null;
+              }>(
+                `SELECT v.id,v.content,ar.initial_invoice_id AS invoice_id
+             FROM contract_versions v
+             LEFT JOIN contract_activation_requirements ar ON ar.version_id=v.id
+             WHERE v.contract_id=$1 AND v.version_number=$2`,
+                [row.contract_id, row.version_number - 1]
+              )
+            ).rows[0]
+          : undefined;
+      const reason = previous
+        ? ((
+            await client.query<{ reason: string | null }>(
+              `SELECT metadata::jsonb->>'reason' AS reason FROM audit_log
+             WHERE event='electricity.order_review.request-changes'
+               AND metadata::jsonb->>'orderId'=$1
+               AND metadata::jsonb->>'versionId'=$2
+             ORDER BY created_at DESC,id DESC LIMIT 1`,
+              [id, previous.id]
+            )
+          ).rows[0]?.reason ?? null)
+        : null;
+      await client.query('COMMIT');
+      const content = row.contract_snapshot;
+      const beforePricing = previous?.content.pricing;
+      const afterPricing = content.pricing;
+      const summary = (value: unknown) => {
+        const facts =
+          value && typeof value === 'object' && !Array.isArray(value)
+            ? (value as Record<string, unknown>)
+            : {};
+        const get = (key: string) =>
+          typeof facts[key] === 'string' ? (facts[key] as string) : null;
+        const lines = Array.isArray(facts.lines)
+          ? facts.lines.flatMap((value: unknown) => {
+              if (!value || typeof value !== 'object' || Array.isArray(value)) return [];
+              const line = value as Record<string, unknown>;
+              return typeof line.systemKey === 'string' && typeof line.quantityKwh === 'string'
+                ? [{ systemKey: line.systemKey, quantityKwh: line.quantityKwh }]
+                : [];
+            })
+          : [];
+        return {
+          periodStart: get('periodStart'),
+          periodEnd: get('periodEnd'),
+          totalKwh: get('totalKwh'),
+          totalIrR: get('totalIrR'),
+          lines,
+        };
+      };
+      const delivery = (value: unknown) => {
+        const facts =
+          value && typeof value === 'object' && !Array.isArray(value)
+            ? (value as Record<string, unknown>)
+            : {};
+        return typeof facts.fullAddress === 'string' ? facts.fullAddress : null;
+      };
+      return {
+        ...present(row),
+        revisionReview: previous
+          ? {
+              versionNumber: row.version_number,
+              staffReason: reason,
+              customerResponse:
+                typeof content.customerResponse === 'string' ? content.customerResponse : null,
+              before: {
+                ...summary(beforePricing),
+                fullAddress:
+                  delivery(content.previousDelivery) ?? delivery(previous.content.delivery),
+                invoiceId: previous.invoice_id,
+              },
+              after: {
+                ...summary(afterPricing),
+                fullAddress: row.full_address,
+                invoiceId: row.invoice_id,
+              },
+            }
+          : null,
+      };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   async decide(

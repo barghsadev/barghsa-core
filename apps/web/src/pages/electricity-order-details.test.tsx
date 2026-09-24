@@ -318,11 +318,12 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
   document.body.append(container);
   const root = createRoot(container);
   try {
+    await import('./ElectricityOrderRevisionForm.js');
     await act(async () => root.render(<ElectricityOrderDetailsPage orderId="order-1" />));
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
-    expect(container.textContent).toContain('Change period, quantity or price');
+    await vi.waitFor(
+      () => expect(container.textContent).toContain('Change period, quantity or price'),
+      { timeout: 5000 }
+    );
     const section = container.querySelector('#electricity-order-correction section')!;
     const form = section.querySelector('form')!;
     const quantity = form.querySelector('input[inputmode="numeric"]') as HTMLInputElement;

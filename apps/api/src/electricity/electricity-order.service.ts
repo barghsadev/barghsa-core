@@ -636,11 +636,15 @@ export class ElectricityOrderService {
               paid_amount: string;
               period_start: Date;
               period_end: Date;
+              previous_full_address: string;
+              previous_postal_code: string;
             }>(
               `SELECT o.profile_id,e.status,ec.contract_id,c.state AS contract_state,
                  c.current_version_id AS version_id,v.version_number,v.content,
                  i.id AS invoice_id,i.state AS invoice_state,i.paid_amount,
-                 e.period_start,e.period_end
+                 e.period_start,e.period_end,
+                 o.snapshot_full_address AS previous_full_address,
+                 o.snapshot_postal_code AS previous_postal_code
                FROM orders o JOIN electricity_orders e ON e.id=o.id
                JOIN electricity_contracts ec ON ec.order_id=o.id
                JOIN contracts c ON c.id=ec.contract_id
@@ -679,6 +683,10 @@ export class ElectricityOrderService {
                 delivery: {
                   fullAddress: input.fullAddress.trim(),
                   postalCode: input.postalCode.trim(),
+                },
+                previousDelivery: {
+                  fullAddress: row.previous_full_address,
+                  postalCode: row.previous_postal_code,
                 },
                 customerResponse: input.responseNote.trim(),
               }),
@@ -824,10 +832,18 @@ export class ElectricityOrderService {
               invoice_id: string;
               invoice_state: string;
               paid_amount: string;
+              previous_full_address: string;
+              previous_postal_code: string;
+              previous_province_id: string;
+              previous_city_id: string;
             }>(
               `SELECT o.profile_id,e.mode,e.status,ec.contract_id,c.state AS contract_state,
                  c.current_version_id AS version_id,v.version_number,v.content,
-                 i.id AS invoice_id,i.state AS invoice_state,i.paid_amount
+                 i.id AS invoice_id,i.state AS invoice_state,i.paid_amount,
+                 o.snapshot_full_address AS previous_full_address,
+                 o.snapshot_postal_code AS previous_postal_code,
+                 o.snapshot_province_id AS previous_province_id,
+                 o.snapshot_city_id AS previous_city_id
                FROM orders o JOIN electricity_orders e ON e.id=o.id
                JOIN electricity_contracts ec ON ec.order_id=o.id
                JOIN contracts c ON c.id=ec.contract_id
@@ -1001,6 +1017,12 @@ export class ElectricityOrderService {
                 },
                 customerResponse: input.responseNote.trim(),
                 previousInvoiceId: row.invoice_id,
+                previousDelivery: {
+                  fullAddress: row.previous_full_address,
+                  postalCode: row.previous_postal_code,
+                  provinceId: row.previous_province_id,
+                  cityId: row.previous_city_id,
+                },
               }),
               'Customer revised electricity order and resubmitted',
               actor.userId,
