@@ -1,5 +1,71 @@
 import { test, expect } from './coverage-fixture';
 for (const locale of ['en', 'fa'])
+  test(`admin can test an agent and inspect response context (${locale})`, async ({ page }) => {
+    const fa = locale === 'fa';
+    await page.addInitScript((value) => {
+      if (document.documentElement) document.documentElement.lang = value;
+      new MutationObserver(() => {
+        if (document.documentElement.lang !== value) document.documentElement.lang = value;
+      }).observe(document, {
+        childList: true,
+        attributes: true,
+        attributeFilter: ['lang'],
+        subtree: true,
+      });
+    }, locale);
+    const agentId = '01900000-0000-7000-8000-000000000011';
+    const sent: unknown[] = [];
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/admin/agents/options', (route) =>
+      route.fulfill({
+        json: { models: [], kbs: [], policies: [], kbGroups: [], policyGroups: [] },
+      })
+    );
+    await page.route('**/api/admin/agents', (route) =>
+      route.fulfill({
+        json: [
+          {
+            id: agentId,
+            title: 'Support',
+            description: '',
+            modelId: agentId,
+            modelTitle: 'Local',
+            enabled: true,
+          },
+        ],
+      })
+    );
+    await page.route('**/api/admin/ai/test-chat', (route) => {
+      sent.push(route.request().postDataJSON());
+      return route.fulfill({
+        json: {
+          conversationId: agentId,
+          reply: 'Power is available.',
+          sources: [{ kbId: agentId, title: 'Tariffs', excerpt: 'Current tariff text' }],
+          policyResults: [
+            { id: agentId, title: 'Concise', type: 'response_style', result: 'applied' },
+          ],
+          tokenUsage: { input: 9, output: 5 },
+          latencyMs: 12,
+          remainingQuota: 9,
+        },
+      });
+    });
+    await page.goto('/admin/agents');
+    const chat = page.getByRole('region', { name: fa ? 'گفت‌وگوی آزمایشی عامل' : 'Test an agent' });
+    await chat.locator('select').selectOption(agentId);
+    await chat.getByLabel(fa ? 'پیام آزمایشی' : 'Test message').fill('Hello');
+    await chat.getByRole('button', { name: fa ? 'ارسال' : 'Send', exact: true }).click();
+    await expect(chat.getByText('Power is available.')).toBeVisible();
+    await chat.locator('summary').first().click();
+    await expect(chat.getByText('9 / 5')).toBeVisible();
+    await expect(chat.getByText('Tariffs')).toBeVisible();
+    expect(sent).toHaveLength(1);
+    expect(sent[0]).toMatchObject({ agentId, message: 'Hello' });
+    await chat.getByRole('button', { name: fa ? 'گفت‌وگوی جدید' : 'New conversation' }).click();
+    await expect(chat.getByText('Power is available.')).toHaveCount(0);
+  });
+for (const locale of ['en', 'fa'])
   test(`agent editor retries captured group selections (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {

@@ -706,6 +706,7 @@ export * from './schema/ai-policy-groups';
 export * from './schema/ai-agents';
 export * from './schema/ai-agent-groups';
 export * from './schema/ai-agent-slots';
+export * from './schema/ai-test-chat-turns';
 export * from './schema/vat-configurations';
 export * from './schema/upload-policies';
 export * from './schema/service-due-periods';

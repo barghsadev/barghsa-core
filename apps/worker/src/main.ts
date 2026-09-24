@@ -166,6 +166,12 @@ async function main(): Promise<void> {
   });
 
   const pollers = new PollerGroup(() => logger.error('Worker job or failure recording failed'));
+  pollers.every(
+    async () => {
+      await getDbPool().query('DELETE FROM ai_test_chat_turns WHERE expires_at < now()');
+    },
+    60 * 60 * 1000
+  );
   pollers.every(async () => {
     await runRefundRetries();
   }, REFUND_RETRY_INTERVAL_MS);

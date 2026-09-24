@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Admin agent test chat](batches/2026-09-24-agent-test-chat.md) adds isolated agent previews with saved model and KB settings, deterministic policy checks, response context, session-scoped replay and a ten-per-minute staff quota.
+
 [Agent configuration completion](batches/2026-09-24-agent-configuration.md) adds system instructions, bounded model overrides and KB link mode to existing agent CRUD, and protects assigned agents from deletion.
 
 [Knowledge-base processing and test queries](batches/2026-09-24-knowledge-base-processing.md) add bounded source extraction, embedding and safe publication, audited retry, and bilingual ranked test queries for bases and groups.

@@ -3,6 +3,7 @@ import { Button, Input, Label } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { AdminAgentTestChat } from '../components/AdminAgentTestChat.js';
 interface Ref {
   id: string;
   title: string;
@@ -388,6 +389,7 @@ export default function AdminAiAgentsPage() {
               </li>
             ))}
           </ul>
+          <AdminAgentTestChat agents={rows} locale={locale} />
         </>
       )}
       {action && (

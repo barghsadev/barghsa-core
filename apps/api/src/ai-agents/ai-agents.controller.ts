@@ -110,8 +110,8 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
  * - All mutation endpoints additionally require recent step-up verification
  *   via `@RequiresStepUp()` (StepUpGuard).
  *
- * The test-chat widget and the slot assignment (T-09.11.05) are later
- * slices; this slice ships the agent records + model/KB/policy links.
+ * This controller owns agent records and model/KB/policy links. Slot
+ * assignment and isolated test chat have separate controllers.
  */
 @ApiTags('Admin · AI Agents')
 @ApiBearerAuth()

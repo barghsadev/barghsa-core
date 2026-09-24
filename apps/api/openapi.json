@@ -504,6 +504,26 @@
         ]
       }
     },
+    "/api/admin/ai/test-chat": {
+      "post": {
+        "operationId": "AiTestChatController_send[0]",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Test a saved AI agent in an isolated admin conversation",
+        "tags": [
+          "Admin · AI test chat"
+        ]
+      }
+    },
     "/api/admin/approval-requests": {
       "get": {
         "operationId": "DualApprovalController_listApprovalRequests",
@@ -25191,6 +25211,26 @@
         "summary": "Update timezone setting",
         "tags": [
           "User Settings"
+        ]
+      }
+    },
+    "/api/v1/admin/ai/test-chat": {
+      "post": {
+        "operationId": "AiTestChatController_send[1]",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Test a saved AI agent in an isolated admin conversation",
+        "tags": [
+          "Admin · AI test chat"
         ]
       }
     },

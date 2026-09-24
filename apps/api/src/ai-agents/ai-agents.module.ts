@@ -4,6 +4,9 @@ import { AgentsController } from './ai-agents.controller.js';
 import { AiAgentsService } from './ai-agents.service.js';
 import { AgentSlotsController } from './ai-agent-slots.controller.js';
 import { AgentSlotsService } from './ai-agent-slots.service.js';
+import { AiModelsModule } from '../ai-models/ai-models.module.js';
+import { AiTestChatController } from './ai-test-chat.controller.js';
+import { AiTestChatService } from './ai-test-chat.service.js';
 
 /**
  * AI agent administration module (S-09.11, T-09.11.04 + T-09.11.05).
@@ -12,13 +15,12 @@ import { AgentSlotsService } from './ai-agent-slots.service.js';
  * orchestration. An agent references exactly one AI model (T-09.11.01) and
  * optionally links knowledge bases (T-09.11.02) and usage policies
  * (T-09.11.03). Slot assignment (T-09.11.05) maps the predefined chatbot
- * slots to agents. The test-chat widget and the admin web UI are later
- * slices of the same epic.
+ * slots to agents. The isolated test chat previews the saved configuration.
  */
 @Module({
-  imports: [SessionModule],
-  controllers: [AgentsController, AgentSlotsController],
-  providers: [AiAgentsService, AgentSlotsService],
+  imports: [SessionModule, AiModelsModule],
+  controllers: [AgentsController, AgentSlotsController, AiTestChatController],
+  providers: [AiAgentsService, AgentSlotsService, AiTestChatService],
   exports: [AiAgentsService, AgentSlotsService],
 })
 export class AiAgentsModule {}
