@@ -82,11 +82,17 @@ async function shell(
 ) {
   await page.addInitScript((locale) => {
     const apply = () => {
-      document.documentElement.lang = locale;
-      document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
+      if (document.documentElement.lang !== locale) document.documentElement.lang = locale;
+      const direction = locale === 'fa' ? 'rtl' : 'ltr';
+      if (document.documentElement.dir !== direction) document.documentElement.dir = direction;
     };
     if (document.documentElement) apply();
-    new MutationObserver(apply).observe(document, { childList: true });
+    new MutationObserver(apply).observe(document, {
+      childList: true,
+      attributes: true,
+      attributeFilter: ['lang', 'dir'],
+      subtree: true,
+    });
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/public/branding/config', (route) =>
@@ -154,20 +160,20 @@ for (const locale of ['fa', 'en'] as const)
       let paid = '0';
       await shell(page, locale, darkMode, amount, () => paid);
       const requests: Array<Record<string, unknown>> = [];
-      let reads = 0,
-        verifications = 0;
+      let quoteStage: 'error' | 'insufficient' | 'funded' = 'error';
+      let verifications = 0;
       await page.route(`**/api/invoices/${invoiceId}/wallet-payment`, async (route) => {
         if (route.request().method() === 'GET') {
-          reads++;
-          if (reads === 1) return route.fulfill({ status: 503, json: {} });
+          if (quoteStage === 'error') return route.fulfill({ status: 503, json: {} });
+          const available = quoteStage === 'insufficient' ? '500' : balance;
           return route.fulfill({
             json: {
               invoiceId,
               profileId,
               remainingAmount: amount,
-              availableBalance: reads === 2 ? '500' : balance,
-              canPay: reads > 2,
-              review: financialReview(amount, reads === 2 ? '500' : balance),
+              availableBalance: available,
+              canPay: quoteStage === 'funded',
+              review: financialReview(amount, available),
             },
           });
         }
@@ -204,7 +210,11 @@ for (const locale of ['fa', 'en'] as const)
           { name: 'barghsa_csrf', value: 'wallet-payment-csrf', url: new URL(page.url()).origin },
         ]);
       const panel = page.locator('#wallet-invoice-payment');
+      const summary = page.locator('#invoice-payment-summary');
+      const money = formatCurrencyIrr(amount, locale, { numberStyle: fa ? 'persian' : 'western' });
       await expect(panel.getByRole('alert')).toBeVisible();
+      await expect(summary.locator('dl').first()).toContainText(money);
+      await expect(summary.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '0');
       const refresh = panel.getByRole('button', {
         name: fa ? 'بررسی مبلغ فعلی' : 'Review latest amount',
         exact: true,
@@ -214,12 +224,13 @@ for (const locale of ['fa', 'en'] as const)
         name: fa ? 'بررسی پرداخت از کیف پول' : 'Review wallet payment',
         exact: true,
       });
+      quoteStage = 'insufficient';
       await refresh.click();
       await expect(pay).toBeDisabled();
       await expect(panel).toContainText(fa ? 'در حال حاضر پرداخت' : 'cannot be paid');
+      quoteStage = 'funded';
       await refresh.click();
       await expect(pay).toBeEnabled();
-      const money = formatCurrencyIrr(amount, locale, { numberStyle: fa ? 'persian' : 'western' });
       await expect(panel).toContainText(money);
       await pay.hover();
       await pay.evaluate(async (element) => {
@@ -228,7 +239,7 @@ for (const locale of ['fa', 'en'] as const)
       expect(
         (
           await new AxeBuilder({ page })
-            .include('#wallet-invoice-payment')
+            .include('#invoice-payment-summary')
             .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
             .analyze()
         ).violations
@@ -283,6 +294,7 @@ for (const locale of ['fa', 'en'] as const)
       await expect(page.getByTestId(`invoice-card-${invoiceId}`)).toContainText(
         fa ? 'پرداخت‌شده' : 'Paid'
       );
+      await expect(summary.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '100');
       expect(requests).toHaveLength(3);
       expect(requests[1]).toEqual(requests[0]);
       expect(requests[2]).toEqual(requests[0]);

@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Customer invoice payment summary](batches/2026-09-24-invoice-payment-summary.md) shows exact payment progress and the existing wallet action together on the viewed invoice.
+
 [Customer invoice reference and payment progress](batches/2026-09-24-invoice-reference-payment-progress.md) makes each customer invoice identifiable and shows the confirmed paid amount in the list.
 
 [Electricity service period on invoices](batches/2026-09-24-invoice-service-period.md) shows the immutable service dates on customer and finance invoice list/detail views, including revised invoices, in the account timezone.

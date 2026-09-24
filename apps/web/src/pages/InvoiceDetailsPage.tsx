@@ -2,7 +2,7 @@ import { InvoiceActivity } from './InvoiceActivity.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useState } from 'react';
-import { WalletInvoicePaymentPanel } from '../components/WalletInvoicePaymentPanel.js';
+import { InvoicePaymentSummary } from '../components/InvoicePaymentSummary.js';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { canCustomerSubmitInvoiceBankReceipt } from '@barghsa/shared/finance';
@@ -243,17 +243,8 @@ function InvoiceDetailsBody({
           </button>
         </p>
       ) : null}
+      <InvoicePaymentSummary invoice={viewed} onRefreshDetails={onRefreshDetails} />
       <InvoiceActivity details={details} formatTimestamp={formatTimestamp} />
-
-      <WalletInvoicePaymentPanel
-        key={viewed.invoiceId}
-        invoiceId={viewed.invoiceId}
-        eligible={
-          viewed.adjustmentKind !== 'credit' &&
-          ['Unpaid', 'PartiallyFunded', 'Overdue'].includes(viewed.state)
-        }
-        onRefreshDetails={onRefreshDetails}
-      />
       {canCustomerSubmitInvoiceBankReceipt({
         state: viewed.state,
         adjustmentKind: viewed.adjustmentKind,
