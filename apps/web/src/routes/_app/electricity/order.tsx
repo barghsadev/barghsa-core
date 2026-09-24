@@ -1819,8 +1819,7 @@ function ElectricityOrderPage() {
                           {line.systemKey === 'thermal'
                             ? t('electricity.order.thermal', locale)
                             : t('electricity.order.green', locale)}{' '}
-                          · {numbers.irrDigits(line.quantityKwh)} kWh ×{' '}
-                          {numbers.money(line.unitPriceIrR)}
+                          · {line.quantityKwh} kWh × {numbers.money(line.unitPriceIrR)}
                         </span>
                         <span className="text-end">
                           <strong>
