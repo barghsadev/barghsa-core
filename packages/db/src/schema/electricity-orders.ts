@@ -135,14 +135,20 @@ export const electricityOrderLines = pgTable(
     productId: uuid('product_id')
       .notNull()
       .references(() => products.id, { onDelete: 'restrict' }),
+    revision: integer('revision').notNull().default(1),
     quantityKwh: pgBigint('quantity_kwh', { mode: 'bigint' }).notNull(),
     unitPrice: pgBigint('unit_price', { mode: 'bigint' }).notNull(),
     lineTotal: pgBigint('line_total', { mode: 'bigint' }).notNull(),
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
   (table) => [
-    uniqueIndex('electricity_order_lines_product_unique').on(table.orderId, table.productId),
-    index('electricity_order_lines_order_idx').on(table.orderId),
+    uniqueIndex('electricity_order_lines_product_unique').on(
+      table.orderId,
+      table.revision,
+      table.productId
+    ),
+    index('electricity_order_lines_order_idx').on(table.orderId, table.revision),
+    check('electricity_order_lines_revision_positive', sql`${table.revision} > 0`),
     check('electricity_order_lines_quantity_positive', sql`${table.quantityKwh} > 0`),
     check(
       'electricity_order_lines_money_nonnegative',

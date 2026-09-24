@@ -242,7 +242,7 @@ export const createGiftCodeRedemptionsTable = sql`
   );
 
   CREATE UNIQUE INDEX IF NOT EXISTS uq_gift_code_redemptions_order_id
-    ON gift_code_redemptions (order_id);
+  ON gift_code_redemptions (order_id) WHERE status = 'consumed';
   CREATE INDEX IF NOT EXISTS idx_gift_code_redemptions_code_status
     ON gift_code_redemptions (gift_code_id, status);
   CREATE INDEX IF NOT EXISTS idx_gift_code_redemptions_code_profile_status

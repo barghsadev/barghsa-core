@@ -90,7 +90,7 @@ function civilDay(date: Date): number {
   return Date.UTC(fields.year!, fields.month! - 1, fields.day!);
 }
 
-function JalaliTimeInput({
+export function JalaliTimeInput({
   id,
   label,
   value,

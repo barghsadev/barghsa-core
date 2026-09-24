@@ -222,3 +222,152 @@ it.each([
     }
   }
 );
+
+it('reviews amended electricity terms before submitting a replacement invoice', async () => {
+  document.documentElement.lang = 'en';
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  let revised = false;
+  const requests: Array<{ url: string; body?: Record<string, unknown> }> = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string, init?: RequestInit) => {
+      const body = init?.body
+        ? (JSON.parse(String(init.body)) as Record<string, unknown>)
+        : undefined;
+      requests.push({ url, ...(body ? { body } : {}) });
+      if (url === '/api/geography/provinces')
+        return new Response(
+          JSON.stringify([{ id: 'province-1', nameFa: 'استان', nameEn: 'Province' }]),
+          { status: 200 }
+        );
+      if (url === '/api/geography/provinces/province-1/cities')
+        return new Response(
+          JSON.stringify([
+            { id: 'city-1', provinceId: 'province-1', nameFa: 'شهر یک', nameEn: 'City one' },
+            { id: 'city-2', provinceId: 'province-1', nameFa: 'شهر دو', nameEn: 'City two' },
+          ]),
+          { status: 200 }
+        );
+      if (url.endsWith('/periods/simple'))
+        return new Response(
+          JSON.stringify({
+            periods: [
+              { key: 'next_week', start: '2026-09-23T00:00:00Z', end: '2026-09-30T00:00:00Z' },
+            ],
+          }),
+          { status: 200 }
+        );
+      if (url.endsWith('/revision-preview'))
+        return new Response(
+          JSON.stringify({
+            reviewDigest: 'a'.repeat(64),
+            totalIrR: '3000000',
+            totalKwh: '12',
+            subtotalIrR: '3000000',
+            discountIrR: '0',
+            vatIrR: '0',
+            lines: [],
+          }),
+          { status: 200 }
+        );
+      if (url.endsWith('/resubmit')) {
+        revised = true;
+        return new Response(JSON.stringify({ status: 'awaiting_staff_review' }), { status: 200 });
+      }
+      if (url.includes('/comments'))
+        return new Response(JSON.stringify({ comments: [], nextBefore: null }), { status: 200 });
+      return new Response(
+        JSON.stringify({
+          orderId: 'order-1',
+          profileId: 'profile-1',
+          mode: 'simple',
+          electricityStatus: revised ? 'awaiting_staff_review' : 'changes_requested',
+          financialStatus: 'unpaid',
+          nextAction: revised ? 'await_review' : 'resubmit_changes',
+          periodStart: '2026-09-23T00:00:00Z',
+          periodEnd: '2026-09-30T00:00:00Z',
+          totalKwh: '10',
+          fullAddress: 'Electricity Street',
+          postalCode: '1234567890',
+          provinceId: 'province-1',
+          cityId: 'city-1',
+          contractId: 'contract-1',
+          contractState: revised ? 'AwaitingStaffReview' : 'ChangesRequested',
+          versionId: revised ? 'version-2' : 'version-1',
+          invoiceId: revised ? 'invoice-2' : 'invoice-1',
+          invoiceState: 'Unpaid',
+          totalIrR: revised ? '3000000' : '2500000',
+          paidIrR: '0',
+          refundedIrR: '0',
+          lines: [
+            {
+              systemKey: 'thermal',
+              title: { en: 'Thermal' },
+              quantityKwh: '10',
+              productId: 'thermal-1',
+              unitPriceIrR: '250000',
+              lineTotalIrR: '2500000',
+            },
+          ],
+        }),
+        { status: 200 }
+      );
+    })
+  );
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<ElectricityOrderDetailsPage orderId="order-1" />));
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    });
+    expect(container.textContent).toContain('Change period, quantity or price');
+    const section = container.querySelector('#electricity-order-correction section')!;
+    const form = section.querySelector('form')!;
+    const quantity = form.querySelector('input[inputmode="numeric"]') as HTMLInputElement;
+    const note = form.querySelector('textarea') as HTMLTextAreaElement;
+    const city = form.querySelectorAll('select')[2]!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+        quantity,
+        '12'
+      );
+      quantity.dispatchEvent(new Event('input', { bubbles: true }));
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
+        note,
+        'Quantity corrected'
+      );
+      note.dispatchEvent(new Event('input', { bubbles: true }));
+      city.value = 'city-2';
+      city.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    await act(async () =>
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    );
+    expect(
+      requests.find((request) => request.url.endsWith('/revision-preview'))?.body
+    ).toMatchObject({
+      profileId: 'profile-1',
+      period: 'next_week',
+      totalKwh: '12',
+      expectedVersionId: 'version-1',
+    });
+    expect(section.textContent).toContain('3000000');
+    const submit = Array.from(section.querySelectorAll('button')).find((button) =>
+      button.textContent?.includes('Resubmit for review')
+    )!;
+    await act(async () => submit.click());
+    expect(requests.find((request) => request.url.endsWith('/resubmit'))?.body).toMatchObject({
+      totalKwh: '12',
+      expectedQuoteDigest: 'a'.repeat(64),
+      address: { provinceId: 'province-1', cityId: 'city-2' },
+      responseNote: 'Quantity corrected',
+    });
+    expect(revised).toBe(true);
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+    vi.unstubAllGlobals();
+  }
+});

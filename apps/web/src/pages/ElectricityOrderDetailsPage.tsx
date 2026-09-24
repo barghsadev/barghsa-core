@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { Button, Card, CardContent } from '@barghsa/ui';
@@ -10,9 +10,16 @@ import { ElectricityPriceAdjustmentsPanel } from './ElectricityPriceAdjustmentsP
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
 import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
 
+const ElectricityOrderRevisionForm = lazy(() =>
+  import('./ElectricityOrderRevisionForm.js').then((module) => ({
+    default: module.ElectricityOrderRevisionForm,
+  }))
+);
+
 interface ElectricityOrderDetail {
   orderId: string;
   profileId: string;
+  mode: string;
   commercialStatus: string;
   electricityStatus: string;
   financialStatus: string;
@@ -23,6 +30,8 @@ interface ElectricityOrderDetail {
   effectiveTotalKwh?: string;
   fullAddress: string;
   postalCode: string;
+  provinceId: string;
+  cityId: string;
   contractId: string;
   contractState: string;
   versionId: string;
@@ -563,6 +572,12 @@ export function ElectricityOrderDetailsPage({ orderId }: { orderId: string }) {
                     {t('electricity.order.correction.submit', locale)}
                   </Button>
                 </form>
+                <Suspense fallback={null}>
+                  <ElectricityOrderRevisionForm
+                    order={detail}
+                    onComplete={() => setRetry((value) => value + 1)}
+                  />
+                </Suspense>
               </CardContent>
             </Card>
           ) : null}

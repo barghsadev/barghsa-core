@@ -23,6 +23,7 @@ import { ElectricityCalculationService } from './electricity-calculation.service
 import type { ElectricitySystemKey } from './electricity-calculation.js';
 import {
   calculateElectricityTotals,
+  electricitySubmissionSnapshot,
   type ElectricityGiftDiscount,
 } from './electricity-calculation.js';
 import { persistElectricitySubmissionSnapshot } from './electricity-submission-snapshot.js';
@@ -72,6 +73,10 @@ export interface AdvancedSubmissionInput extends AdvancedOrderInput {
 }
 type OrderInput = SimpleOrderInput | AdvancedOrderInput;
 type SubmissionInput = SimpleSubmissionInput | AdvancedSubmissionInput;
+export type ElectricityRevisionInput = SubmissionInput & {
+  expectedVersionId: string;
+  responseNote: string;
+};
 export interface ElectricityAddressCorrection {
   idempotencyKey: string;
   expectedVersionId: string;
@@ -288,6 +293,8 @@ export class ElectricityOrderService {
           gift_discount_amount: string | null;
           full_address: string;
           postal_code: string;
+          province_id: string;
+          city_id: string;
           contract_id: string;
           contract_state: string;
           version_id: string;
@@ -308,6 +315,7 @@ export class ElectricityOrderService {
            e.submitted_at,o.gift_code_id,gc.code AS gift_code,o.gift_discount_amount,
            o.snapshot_full_address AS full_address,
            o.snapshot_postal_code AS postal_code,
+           o.snapshot_province_id AS province_id,o.snapshot_city_id AS city_id,
            ec.contract_id,c.state AS contract_state,c.current_version_id AS version_id,
            i.id AS invoice_id,
            i.state AS invoice_state,i.total_amount,i.paid_amount,i.refunded_amount,
@@ -339,7 +347,9 @@ export class ElectricityOrderService {
         }>(
           `SELECT l.product_id,p.system_key,p.title,l.quantity_kwh,l.unit_price,l.line_total
            FROM electricity_order_lines l JOIN products p ON p.id=l.product_id
-           WHERE l.order_id=$1 ORDER BY p.system_key,l.id`,
+           WHERE l.order_id=$1 AND l.revision=(
+             SELECT MAX(revision) FROM electricity_order_lines WHERE order_id=$1
+           ) ORDER BY p.system_key,l.id`,
           [orderId]
         )
       ).rows;
@@ -432,6 +442,8 @@ export class ElectricityOrderService {
         ].sort((a, b) => a.at.localeCompare(b.at) || a.id.localeCompare(b.id)),
         fullAddress: detail.full_address,
         postalCode: detail.postal_code,
+        provinceId: detail.province_id,
+        cityId: detail.city_id,
         contractId: detail.contract_id,
         contractState: detail.contract_state,
         versionId: detail.version_id,
@@ -713,6 +725,335 @@ export class ElectricityOrderService {
             contractId: row.contract_id,
             versionId,
             status: 'awaiting_staff_review',
+          };
+        }
+      );
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async previewRevision(
+    actor: Actor,
+    orderId: string,
+    input: OrderInput & { expectedVersionId: string }
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      const row = (
+        await client.query<{
+          profile_id: string;
+          mode: string;
+          status: string;
+          version_id: string;
+          contract_state: string;
+        }>(
+          `SELECT o.profile_id,e.mode,e.status,c.current_version_id AS version_id,
+             c.state AS contract_state FROM orders o JOIN electricity_orders e ON e.id=o.id
+           JOIN electricity_contracts ec ON ec.order_id=o.id
+           JOIN contracts c ON c.id=ec.contract_id WHERE o.id=$1 FOR UPDATE OF o,e,c`,
+          [orderId]
+        )
+      ).rows[0];
+      if (!row) throw new NotFoundException('Order not found');
+      await this.authorize(client, actor, row.profile_id, true);
+      if (
+        row.profile_id !== input.profileId ||
+        row.mode !== ('startAt' in input ? 'advanced' : 'simple')
+      )
+        throw new BadRequestException('Order profile or mode does not match the revision');
+      if (
+        row.status !== 'changes_requested' ||
+        row.contract_state !== 'ChangesRequested' ||
+        row.version_id !== input.expectedVersionId
+      )
+        throw new ConflictException('Order has changed; reload before reviewing the quote');
+      // This transaction is rolled back: the old redemption remains consumed until submission.
+      await client.query(
+        "UPDATE gift_code_redemptions SET status='released' WHERE order_id=$1 AND status='consumed'",
+        [orderId]
+      );
+      if (input.giftCode) await this.giftCodes.enforceValidationLimit(actor.userId);
+      const review = this.presentQuote(await this.quote(client, input, new Date()));
+      await requireCurrentSession(client, actor);
+      await client.query('ROLLBACK');
+      return review;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  /** Reprice a requested correction while retaining each earlier contract and invoice. */
+  async resubmitRevision(
+    actor: Actor,
+    orderId: string,
+    input: ElectricityRevisionInput,
+    ip: string
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await this.orders.lockOrderActor(client, actor);
+      const result = await idempotentMutation(
+        client,
+        'electricity_order_revision',
+        { ...input, orderId },
+        actor,
+        async () => {
+          const row = (
+            await client.query<{
+              profile_id: string;
+              mode: string;
+              status: string;
+              contract_id: string;
+              contract_state: string;
+              version_id: string;
+              version_number: number;
+              content: Record<string, unknown>;
+              invoice_id: string;
+              invoice_state: string;
+              paid_amount: string;
+            }>(
+              `SELECT o.profile_id,e.mode,e.status,ec.contract_id,c.state AS contract_state,
+                 c.current_version_id AS version_id,v.version_number,v.content,
+                 i.id AS invoice_id,i.state AS invoice_state,i.paid_amount
+               FROM orders o JOIN electricity_orders e ON e.id=o.id
+               JOIN electricity_contracts ec ON ec.order_id=o.id
+               JOIN contracts c ON c.id=ec.contract_id
+               JOIN contract_versions v ON v.id=c.current_version_id
+               JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
+               JOIN invoices i ON i.id=ar.initial_invoice_id
+               WHERE o.id=$1 FOR UPDATE OF o,e,c,i`,
+              [orderId]
+            )
+          ).rows[0];
+          if (!row) throw new NotFoundException('Order not found');
+          await this.authorize(client, actor, row.profile_id, true);
+          if (
+            row.profile_id !== input.profileId ||
+            row.mode !== ('startAt' in input ? 'advanced' : 'simple')
+          )
+            throw new BadRequestException('Order profile or mode does not match the revision');
+          if (
+            row.status !== 'changes_requested' ||
+            row.contract_state !== 'ChangesRequested' ||
+            row.version_id !== input.expectedVersionId
+          )
+            throw new ConflictException('Order has changed; reload before resubmitting');
+          if (
+            !['Draft', 'Unpaid', 'Overdue'].includes(row.invoice_state) ||
+            BigInt(row.paid_amount) !== 0n ||
+            (
+              await client.query(
+                `SELECT 1 FROM bank_receipts WHERE invoice_id=$1 AND state IN ('Submitted','UnderReview') LIMIT 1`,
+                [row.invoice_id]
+              )
+            ).rows.length > 0
+          )
+            throw new ConflictException('Resolve payment activity before amending the order');
+          await requireAddressGeography(client, input.address.provinceId, input.address.cityId);
+          if (input.giftCode) await this.giftCodes.enforceValidationLimit(actor.userId);
+          // Releasing inside the transaction makes a one-use code available to this revision.
+          await this.giftCodes.releaseByOrder(orderId, client, { actorUserId: actor.userId, ip });
+          const now = new Date();
+          const quoted = await this.quote(client, input, now);
+          const review = this.presentQuote(quoted);
+          if (review.reviewDigest !== input.expectedQuoteDigest)
+            throw new ConflictException(
+              'Electricity quote changed; review the current price before submitting'
+            );
+          const primary =
+            quoted.composition.lines.find((line) => line.systemKey === 'thermal') ??
+            quoted.composition.lines[0];
+          if (!primary) throw new BadRequestException('At least one electricity line is required');
+          let giftId: string | null = null;
+          if (input.giftCode && quoted.terms) {
+            const redemption = await this.giftCodes.redeem(
+              {
+                giftCode: input.giftCode,
+                profileId: input.profileId,
+                orderId,
+                orderAmount: quoted.totals.subtotalIrR.toString(),
+                category: 'electricity',
+                actorUserId: actor.userId,
+                ip,
+              },
+              client
+            );
+            if (
+              redemption.giftCodeId !== quoted.terms.id ||
+              BigInt(redemption.discountAmount) !== quoted.totals.discountIrR
+            )
+              throw new ConflictException('Gift code changed during resubmission');
+            giftId = redemption.giftCodeId;
+          }
+          const snapshot = electricitySubmissionSnapshot(
+            quoted.composition,
+            quoted.totals,
+            quoted.terms?.gift,
+            quoted.period,
+            now
+          );
+          const revision = (
+            await client.query<{ revision: number }>(
+              'SELECT COALESCE(MAX(revision),0)::int+1 AS revision FROM electricity_order_lines WHERE order_id=$1',
+              [orderId]
+            )
+          ).rows[0]!.revision;
+          await client.query(
+            `UPDATE orders SET product_id=$2,snapshot_province_id=$3,snapshot_city_id=$4,
+               snapshot_full_address=$5,snapshot_postal_code=$6,gift_code_id=$7,
+               gift_discount_amount=$8,updated_at=NOW() WHERE id=$1`,
+            [
+              orderId,
+              primary.productId,
+              input.address.provinceId,
+              input.address.cityId,
+              input.address.fullAddress.trim(),
+              input.address.postalCode.trim(),
+              giftId,
+              quoted.totals.discountIrR.toString(),
+            ]
+          );
+          await client.query(
+            `UPDATE electricity_orders SET period_start=$2,period_end=$3,submitted_at=$4,
+               pricing_snapshot=$5::jsonb,total_kwh=$6,average_power_kw=$7,
+               green_rule_applied=$8,submitted_by=$9,updated_at=NOW() WHERE id=$1`,
+            [
+              orderId,
+              quoted.period.start,
+              quoted.period.end,
+              now,
+              JSON.stringify(snapshot),
+              quoted.composition.totalKwh.toString(),
+              quoted.composition.averagePowerKw,
+              quoted.composition.greenRuleApplies,
+              actor.userId,
+            ]
+          );
+          for (const line of quoted.totals.lines) {
+            await client.query(
+              `INSERT INTO electricity_order_lines(id,order_id,revision,product_id,quantity_kwh,unit_price,line_total)
+               VALUES($1,$2,$3,$4,$5,$6,$7)`,
+              [
+                uuidv7(),
+                orderId,
+                revision,
+                line.productId,
+                line.quantityKwh.toString(),
+                line.unitPriceIrR.toString(),
+                line.subtotalIrR.toString(),
+              ]
+            );
+          }
+          await this.invoiceStates.transition(
+            row.invoice_id,
+            row.invoice_state as 'Draft' | 'Unpaid' | 'Overdue',
+            'Cancelled',
+            {
+              actorUserId: actor.userId,
+              now,
+              ip,
+              client,
+              reason: 'Customer revised electricity order after staff request',
+            }
+          );
+          const invoiceId = await this.writeInvoice(client, {
+            orderId,
+            contractId: row.contract_id,
+            profileId: row.profile_id,
+            actorUserId: actor.userId,
+            now,
+            ip,
+            snapshot,
+            lines: quoted.totals.lines,
+            totalIrR: quoted.totals.totalIrR,
+            replacesInvoiceId: row.invoice_id,
+          });
+          const versionId = uuidv7();
+          await client.query(
+            `INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by)
+             VALUES($1,$2,$3,$4::jsonb,$5,$6)`,
+            [
+              versionId,
+              row.contract_id,
+              row.version_number + 1,
+              JSON.stringify({
+                ...row.content,
+                pricing: snapshot,
+                settings: quoted.settings,
+                lineRevision: revision,
+                delivery: {
+                  ...input.address,
+                  fullAddress: input.address.fullAddress.trim(),
+                  postalCode: input.address.postalCode.trim(),
+                },
+                customerResponse: input.responseNote.trim(),
+                previousInvoiceId: row.invoice_id,
+              }),
+              'Customer revised electricity order and resubmitted',
+              actor.userId,
+            ]
+          );
+          await client.query('UPDATE contracts SET current_version_id=$2 WHERE id=$1', [
+            row.contract_id,
+            versionId,
+          ]);
+          const requirements = await client.query(
+            `UPDATE contract_activation_requirements SET initial_invoice_id=$2,
+               service_starts_at=$3,service_ends_at=$4 WHERE version_id=$1 AND contract_id=$5`,
+            [versionId, invoiceId, quoted.period.start, quoted.period.end, row.contract_id]
+          );
+          if (requirements.rowCount !== 1)
+            throw new ConflictException('Contract activation requirements are unavailable');
+          await client.query(
+            "UPDATE electricity_orders SET status='submitted',updated_at=NOW() WHERE id=$1",
+            [orderId]
+          );
+          await client.query(
+            "UPDATE electricity_orders SET status='awaiting_staff_review',updated_at=NOW() WHERE id=$1",
+            [orderId]
+          );
+          await client.query(
+            "UPDATE contracts SET state='AwaitingStaffReview',submitted_at=$2 WHERE id=$1",
+            [row.contract_id, now]
+          );
+          await client.query(
+            `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+             VALUES(uuid_generate_v7(),$1,'electricity.order_resubmitted',$2::jsonb,uuid_generate_v7(),$3)`,
+            [
+              actor.userId,
+              JSON.stringify({
+                orderId,
+                contractId: row.contract_id,
+                versionId,
+                previousVersionId: row.version_id,
+                invoiceId,
+                previousInvoiceId: row.invoice_id,
+                lineRevision: revision,
+                responseNote: input.responseNote.trim(),
+              }),
+              ip,
+            ]
+          );
+          return {
+            orderId,
+            contractId: row.contract_id,
+            versionId,
+            invoiceId,
+            status: 'awaiting_staff_review',
+            ...review,
           };
         }
       );
@@ -1192,6 +1533,7 @@ export class ElectricityOrderService {
       snapshot: Record<string, unknown>;
       lines: ReturnType<typeof calculateElectricityTotals>['lines'];
       totalIrR: bigint;
+      replacesInvoiceId?: string;
     }
   ): Promise<string> {
     const due = await this.dueDates.resolve(client, {
@@ -1201,8 +1543,8 @@ export class ElectricityOrderService {
     const invoiceId = uuidv7();
     await client.query(
       `INSERT INTO invoices(id,profile_id,order_id,contract_id,type,state,total_amount,due_at,
-                            metadata,invoice_calculation_snapshot)
-       VALUES($1,$2,$3,$4,'auto','Draft',$5,$6,$7::jsonb,$8::jsonb)`,
+                            metadata,invoice_calculation_snapshot,replaces_invoice_id)
+       VALUES($1,$2,$3,$4,'auto','Draft',$5,$6,$7::jsonb,$8::jsonb,$9)`,
       [
         invoiceId,
         input.profileId,
@@ -1212,6 +1554,7 @@ export class ElectricityOrderService {
         due.dueAt,
         JSON.stringify({ source: 'electricity_order', due }),
         JSON.stringify(input.snapshot),
+        input.replacesInvoiceId ?? null,
       ]
     );
     for (const [index, line] of input.lines.entries()) {

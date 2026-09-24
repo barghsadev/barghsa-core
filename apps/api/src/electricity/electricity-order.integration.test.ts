@@ -874,6 +874,277 @@ it('requests changes with a reason and returns the order to the customer', async
   expect(stale.status).toBe(409);
 });
 
+it('revises an unpaid order with a new quote, invoice and immutable line history', async () => {
+  const order = await submittedOrder();
+  const before = (await (
+    await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers })
+  ).json()) as {
+    versionId: string;
+    totalIrR: string;
+  };
+  expect(
+    (
+      await staffPost(order.orderId, 'request-changes', {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: before.versionId,
+        reason: 'Increase the requested quantity',
+      })
+    ).status
+  ).toBe(200);
+  const terms = {
+    profileId: input.profileId,
+    period: 'next_week',
+    totalKwh: '12',
+    expectedVersionId: before.versionId,
+  };
+  const preview = await post(`orders/${order.orderId}/revision-preview`, terms);
+  expect(preview.status, http.logs()).toBe(200);
+  const quote = (await preview.json()) as { reviewDigest: string; totalIrR: string };
+  expect(quote.totalIrR).toBe('1200000');
+  const amendment = {
+    ...terms,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: quote.reviewDigest,
+    address: input.address,
+    responseNote: 'Quantity corrected',
+  };
+  const resubmit = () => post(`orders/${order.orderId}/resubmit`, amendment);
+  const first = await resubmit();
+  expect(first.status, http.logs()).toBe(200);
+  const result = (await first.json()) as { versionId: string; invoiceId: string; status: string };
+  expect(result).toMatchObject({ status: 'awaiting_staff_review' });
+  expect(result.versionId).not.toBe(before.versionId);
+  expect(result.invoiceId).not.toBe(order.invoiceId);
+  expect(await (await resubmit()).json()).toEqual(result);
+  const detail = await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers });
+  expect(await detail.json()).toMatchObject({
+    versionId: result.versionId,
+    invoiceId: result.invoiceId,
+    totalKwh: '12',
+    totalIrR: '1200000',
+    lines: [expect.objectContaining({ quantityKwh: '12' })],
+  });
+  const invoices = (
+    await http.pool.query(
+      'SELECT id,state,total_amount,replaces_invoice_id FROM invoices WHERE order_id=$1 ORDER BY created_at,id',
+      [order.orderId]
+    )
+  ).rows;
+  expect(invoices).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ id: order.invoiceId, state: 'Cancelled', total_amount: '1000000' }),
+      expect.objectContaining({
+        id: result.invoiceId,
+        state: 'Unpaid',
+        total_amount: '1200000',
+        replaces_invoice_id: order.invoiceId,
+      }),
+    ])
+  );
+  expect(
+    (
+      await http.pool.query(
+        'SELECT revision,quantity_kwh FROM electricity_order_lines WHERE order_id=$1 ORDER BY revision',
+        [order.orderId]
+      )
+    ).rows
+  ).toEqual([
+    { revision: 1, quantity_kwh: '10' },
+    { revision: 2, quantity_kwh: '12' },
+  ]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT version_number,content->'pricing'->>'totalIrR' AS total FROM contract_versions WHERE contract_id=$1 ORDER BY version_number",
+        [order.contractId]
+      )
+    ).rows
+  ).toEqual([
+    { version_number: 1, total: '1000000' },
+    { version_number: 2, total: '1200000' },
+  ]);
+  expect(
+    (
+      await post(`orders/${order.orderId}/resubmit`, {
+        ...amendment,
+        idempotencyKey: randomUUID(),
+        expectedQuoteDigest: '0'.repeat(64),
+      })
+    ).status
+  ).toBe(409);
+  expect(
+    (
+      await staffPost(order.orderId, 'request-changes', {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: result.versionId,
+        reason: 'One more quantity change',
+      })
+    ).status
+  ).toBe(200);
+  const secondTerms = { ...terms, totalKwh: '14', expectedVersionId: result.versionId };
+  const secondQuoteResponse = await post(`orders/${order.orderId}/revision-preview`, secondTerms);
+  expect(secondQuoteResponse.status, http.logs()).toBe(200);
+  const secondQuote = (await secondQuoteResponse.json()) as { reviewDigest: string };
+  const secondResponse = await post(`orders/${order.orderId}/resubmit`, {
+    ...secondTerms,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: secondQuote.reviewDigest,
+    address: input.address,
+    responseNote: 'Final quantity correction',
+  });
+  expect(secondResponse.status, http.logs()).toBe(200);
+  const second = (await secondResponse.json()) as { versionId: string; invoiceId: string };
+  expect(
+    (
+      await http.pool.query(
+        'SELECT revision,quantity_kwh FROM electricity_order_lines WHERE order_id=$1 ORDER BY revision',
+        [order.orderId]
+      )
+    ).rows
+  ).toEqual([
+    { revision: 1, quantity_kwh: '10' },
+    { revision: 2, quantity_kwh: '12' },
+    { revision: 3, quantity_kwh: '14' },
+  ]);
+  expect(
+    (
+      await http.pool.query('SELECT replaces_invoice_id FROM invoices WHERE id=$1', [
+        second.invoiceId,
+      ])
+    ).rows[0].replaces_invoice_id
+  ).toBe(result.invoiceId);
+  expect(
+    (
+      await staffPost(order.orderId, 'approve', {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: second.versionId,
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+});
+
+it('releases and reapplies a limited gift code when repricing the same order', async () => {
+  await http.pool.query(
+    `INSERT INTO gift_codes(code,discount_type,discount_value,valid_from,total_limit,created_by)
+     VALUES('ONCE','fixed_irr',100000,'2026-01-01',1,'buyer')`
+  );
+  input.giftCode = 'ONCE';
+  await refreshQuote();
+  const order = await submittedOrder();
+  const detail = (await (
+    await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers })
+  ).json()) as { versionId: string };
+  expect(
+    (
+      await staffPost(order.orderId, 'request-changes', {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: detail.versionId,
+        reason: 'Please revise the quantity',
+      })
+    ).status
+  ).toBe(200);
+  const terms = {
+    profileId: input.profileId,
+    expectedVersionId: detail.versionId,
+    period: 'next_week',
+    totalKwh: '12',
+    giftCode: 'ONCE',
+  };
+  const preview = await post(`orders/${order.orderId}/revision-preview`, terms);
+  expect(preview.status, http.logs()).toBe(200);
+  const quote = (await preview.json()) as { reviewDigest: string; discountIrR: string };
+  expect(quote.discountIrR).toBe('100000');
+  expect(
+    (
+      await post(`orders/${order.orderId}/resubmit`, {
+        ...terms,
+        idempotencyKey: randomUUID(),
+        expectedQuoteDigest: quote.reviewDigest,
+        address: input.address,
+        responseNote: 'Quantity updated',
+      })
+    ).status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT status FROM gift_code_redemptions WHERE order_id=$1 ORDER BY created_at,id',
+        [order.orderId]
+      )
+    ).rows
+      .map((row) => row.status)
+      .sort()
+  ).toEqual(['consumed', 'released']);
+});
+
+it('revises an advanced delivery period and composition', async () => {
+  const startAt = new Date(Date.now() + 2 * 86_400_000).toISOString();
+  const endAt = new Date(Date.now() + 9 * 86_400_000).toISOString();
+  const terms = {
+    profileId: input.profileId,
+    startAt,
+    endAt,
+    quantities: { thermal: '10', green: '2' },
+  };
+  const originalPreview = await post('preview/advanced', terms);
+  expect(originalPreview.status, http.logs()).toBe(200);
+  const originalQuote = (await originalPreview.json()) as { reviewDigest: string };
+  const original = await post('orders/advanced', {
+    ...terms,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: originalQuote.reviewDigest,
+    address: input.address,
+  });
+  expect(original.status, http.logs()).toBe(201);
+  const order = (await original.json()) as {
+    orderId: string;
+    contractId: string;
+    invoiceId: string;
+  };
+  const detail = (await (
+    await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers })
+  ).json()) as { versionId: string };
+  expect(
+    (
+      await staffPost(order.orderId, 'request-changes', {
+        idempotencyKey: randomUUID(),
+        expectedVersionId: detail.versionId,
+        reason: 'Change the delivery period',
+      })
+    ).status
+  ).toBe(200);
+  const revised = {
+    ...terms,
+    expectedVersionId: detail.versionId,
+    endAt: new Date(Date.now() + 10 * 86_400_000).toISOString(),
+    quantities: { thermal: '12', green: '3' },
+  };
+  const preview = await post(`orders/${order.orderId}/revision-preview`, revised);
+  expect(preview.status, http.logs()).toBe(200);
+  const quote = (await preview.json()) as { reviewDigest: string; totalKwh: string };
+  expect(quote.totalKwh).toBe('15');
+  const response = await post(`orders/${order.orderId}/resubmit`, {
+    ...revised,
+    idempotencyKey: randomUUID(),
+    expectedQuoteDigest: quote.reviewDigest,
+    address: input.address,
+    responseNote: 'Period and products changed',
+  });
+  expect(response.status, http.logs()).toBe(200);
+  expect(
+    await (await fetch(`${http.base}/api/electricity/orders/${order.orderId}`, { headers })).json()
+  ).toMatchObject({
+    mode: 'advanced',
+    totalKwh: '15',
+    lines: [
+      expect.objectContaining({ systemKey: 'green', quantityKwh: '3' }),
+      expect.objectContaining({ systemKey: 'thermal', quantityKwh: '12' }),
+    ],
+  });
+});
+
 it('creates a mandatory refund obligation when a paid order is rejected', async () => {
   const order = await submittedOrder();
   await http.pool.query(
