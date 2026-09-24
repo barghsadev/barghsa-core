@@ -20,6 +20,18 @@ export interface StorageObjectSummary {
   lastModified: Date | undefined;
 }
 
+export interface MultipartPart {
+  partNumber: number;
+  etag: string;
+  size: number;
+}
+
+export interface MultipartUploadSummary {
+  key: string;
+  uploadId: string;
+  initiatedAt: Date;
+}
+
 /** A single object returned from `getObject`. */
 export interface StorageObject {
   /** Readable stream of the object body. */
@@ -73,6 +85,28 @@ export interface Logger {
  * - The factory selects the right implementation based on runtime config.
  */
 export interface StorageProvider {
+  /** Multipart bodies move directly between the browser and object storage. */
+  createMultipartUpload?(key: string, contentType: string): Promise<string>;
+  presignedUploadPartUrl?(
+    key: string,
+    uploadId: string,
+    partNumber: number,
+    expiresIn?: number
+  ): Promise<string>;
+  listMultipartParts?(key: string, uploadId: string): Promise<MultipartPart[]>;
+  completeMultipartUpload?(key: string, uploadId: string, parts: MultipartPart[]): Promise<void>;
+  abortMultipartUpload?(key: string, uploadId: string): Promise<void>;
+  listMultipartUploads?(
+    prefix: string,
+    maxUploads?: number,
+    keyMarker?: string,
+    uploadIdMarker?: string
+  ): Promise<{
+    uploads: MultipartUploadSummary[];
+    isTruncated: boolean;
+    nextKeyMarker?: string | undefined;
+    nextUploadIdMarker?: string | undefined;
+  }>;
   /** Trusted cleanup only: opt disposable versions into configured lifecycle expiry.
    * Non-false legal-hold tags are preserved. Does not delete bytes or remove holds.
    */

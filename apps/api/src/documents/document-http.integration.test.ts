@@ -27,7 +27,9 @@ let storageEndpoint: string;
 const headers: Record<string, Record<string, string>> = {};
 let pdf: Buffer;
 const pdfRendererAvailable = spawnSync('pdftoppm', ['-v'], { stdio: 'ignore' }).status === 0;
-type Created = Awaited<ReturnType<DocumentService['create']>>;
+type Created = Awaited<ReturnType<DocumentService['create']>> & {
+  upload: { presignedUrl: string; headers: Record<string, string> };
+};
 type DocumentDto = Awaited<ReturnType<DocumentService['confirm']>>;
 type DocumentDetail = Awaited<ReturnType<DocumentService['get']>>;
 type DocumentList = Awaited<ReturnType<DocumentService['list']>>;
@@ -166,6 +168,48 @@ async function act(
   expect(response.status, (await response.clone().text()) + http.logs()).toBe(200);
   return (await response.json()) as DocumentDto;
 }
+
+it('resumes a large document upload and confirms the sealed document', async () => {
+  const person = await owner();
+  const bytes = Buffer.alloc(5 * 1024 * 1024 + 83, 65);
+  pdf.copy(bytes, 0, 0, Math.min(pdf.length, bytes.length));
+  const response = await send('documents', person.user, 'POST', {
+    businessRecordType: 'standalone',
+    profileId: person.profile,
+    category: 'document',
+    fileName: 'large.pdf',
+    contentType: 'application/pdf',
+    fileSize: bytes.length,
+    idempotencyKey: randomUUID(),
+  });
+  expect(response.status, await response.clone().text()).toBe(201);
+  const created = (await response.json()) as {
+    document: { id: string };
+    upload: { uploadId: string; partSize: number; partCount: number };
+  };
+  expect(created.upload.partCount).toBe(2);
+  const base = `v1/files/upload/${created.upload.uploadId}`;
+  for (let number = 1; number <= 2; number++) {
+    const part = await send(`${base}/part?partNumber=${number}`, person.user, 'PUT');
+    expect(part.status, await part.clone().text()).toBe(200);
+    const signed = (await part.json()) as { url: string };
+    const start = (number - 1) * created.upload.partSize;
+    const put = await fetch(signed.url, {
+      method: 'PUT',
+      body: bytes.subarray(start, Math.min(bytes.length, start + created.upload.partSize)),
+    });
+    expect(put.status, await put.text()).toBe(200);
+  }
+  expect((await send(`${base}/complete`, person.user, 'POST')).status).toBe(200);
+  const confirmed = await send(
+    `documents/${created.document.id}/confirm`,
+    person.user,
+    'POST',
+    command(1)
+  );
+  expect(confirmed.status, await confirmed.clone().text()).toBe(200);
+  expect(await confirmed.json()).toMatchObject({ state: 'Available' });
+});
 
 it('uploads real bytes, reviews a document, preserves replacement history and retains removed evidence', async () => {
   const f = await owner(),

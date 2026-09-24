@@ -25,7 +25,9 @@ let s3: InstanceType<typeof S3Client>;
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 const pdf = Buffer.from('%PDF-1.7\nDocument fixture\n%%EOF');
-type Created = Awaited<ReturnType<DocumentService['create']>>;
+type Created = Awaited<ReturnType<DocumentService['create']>> & {
+  upload: { presignedUrl: string; headers: Record<string, string> };
+};
 type DocumentDto = Awaited<ReturnType<DocumentService['confirm']>>;
 type ContractDto = Awaited<ReturnType<ContractService['get']>>;
 

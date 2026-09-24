@@ -126,13 +126,13 @@ function buildLifecycleRules(
 
   // ── Incomplete multipart upload cleanup ────────────────────────────────
   //
-  // Bucket-wide: any incomplete multipart upload older than 1 day is aborted.
+  // Bucket-wide safety net; the worker normally aborts at the configured age.
 
   rules.push({
-    ID: 'abort-incomplete-multipart-uploads-1d',
+    ID: 'abort-incomplete-multipart-uploads-7d',
     Status: 'Enabled',
     Filter: { Prefix: '' },
-    AbortIncompleteMultipartUpload: { DaysAfterInitiation: 1 },
+    AbortIncompleteMultipartUpload: { DaysAfterInitiation: 7 },
   });
 
   return rules;

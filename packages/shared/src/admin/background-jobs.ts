@@ -45,6 +45,7 @@ export const BACKGROUND_JOB_TYPES = [
   { key: 'refund_retry', label: 'Wallet refund retries' },
   { key: 'ai_model_test', label: 'AI model connection tests' },
   { key: 'storage_cleanup', label: 'Storage deletion requests' },
+  { key: 'multipart_orphan_cleanup', label: 'Abandoned multipart uploads' },
   { key: 'document_scan', label: 'Document malware scanning' },
   { key: 'document_destruction', label: 'Approved document destruction' },
   { key: 'auth_delivery', label: 'Authentication code delivery' },

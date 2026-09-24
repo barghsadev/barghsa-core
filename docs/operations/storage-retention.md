@@ -8,7 +8,8 @@ This audit has not applied the policy to a deployed bucket.
 Expiry requires both the exact prefix and an explicit object-version tag
 `legal-hold=false`: `tmp/` and `uploads/` after 1 day, `previews/` after 7 days,
 and `superseded/` after 90 days. Noncurrent expiry keeps the five newest
-noncurrent versions. Incomplete multipart uploads are aborted after 1 day.
+noncurrent versions. S3 aborts incomplete multipart uploads after 7 days as a
+safety net for the worker described below.
 Held and unclassified versions are retained. No archive transition is imposed.
 
 The previous policy expired every object in these prefixes. Its separate legal
@@ -34,18 +35,18 @@ document consumers are separate from the retention policy described below.
 
 An object tag is an application retention signal, not S3 Object Lock. Tagging
 is a read/modify/write operation: independent manual hold changes must not race
-the worker. The document legal-hold workflow below does not yet coordinate with
-object tagging; the future destruction worker must check holds under a record
-lock before any delete. Use provider Object Lock when an independent legal-hold
-authority needs to prevent physical deletion. Direct delete permissions and immutable business
-copies remain separate controls. A bucket-wide custom expiry can defeat these
+the worker. The approved destruction worker checks database holds under profile
+and document locks before deletion. Use provider Object Lock when an independent
+legal-hold authority needs to prevent physical deletion. Direct delete
+permissions and immutable business copies remain separate controls. A
+bucket-wide custom expiry can defeat these
 filters and must not coexist with a hold promise. For a configured key prefix,
 pass its exact value using `--prefix tenant/`; no slash is added automatically.
 
 For MinIO, pass `--backend minio`. Its lifecycle API rejects the S3 multipart
 abort action. The command applies the four expiry rules and reports that
 multipart cleanup requires separate server configuration. The local Compose
-service sets `MINIO_API_STALE_UPLOADS_EXPIRY=24h` and
+service sets `MINIO_API_STALE_UPLOADS_EXPIRY=168h` and
 `MINIO_API_STALE_UPLOADS_CLEANUP_INTERVAL=1h`. Verify those settings on every
 deployed server; bucket setup cannot configure them. A completed local setup
 does not prove deployed cleanup or elapsed-day expiry.
@@ -70,6 +71,25 @@ delete marker would allow a conditional create at that key again. Existing
 sealed business copies remain the canonical objects for their own workflows.
 Privileged server credentials can still overwrite objects; this repair closes
 the browser URL replay path, not provider-level administrative mutation.
+
+## Multipart uploads and orphan cleanup
+
+Files larger than 5 MiB use presigned multipart parts. The authenticated API
+reserves a scoped key, starts the provider upload and issues one-hour part URLs.
+The client can list provider-confirmed parts and resume after an interrupted
+transfer. Completion accepts only the server-listed consecutive parts matching
+the originally authorized file size. The completed object still passes normal
+content inspection, scan and recording before it can be attached. Multipart
+reservations expire after 24 hours; abort and completion are idempotent.
+
+The worker lists in-progress provider uploads hourly. By default it aborts
+uploads older than 24 hours, with a bounded scan and a durable cursor so later
+pages are visited. Storage administrators can change the age from 1 to 168
+hours under Storage settings; changes require step-up and are audited. Outcomes
+are stored in `upload_cleanup_log`, and failed provider aborts are retried on a
+later scan. Reapply `pnpm setup:bucket` to install the seven-day S3 fallback
+after reviewing deployed custom rules. MinIO uses its separate stale-upload
+server settings; bucket setup cannot install the S3 abort rule there.
 
 ## Upload inspection and scan state
 

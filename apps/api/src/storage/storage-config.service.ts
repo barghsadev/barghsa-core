@@ -6,6 +6,7 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import { z } from 'zod';
 import {
   STORAGE_CONFIG_KEY,
   storageConfigUpdate,
@@ -20,9 +21,71 @@ import type { ValidatedSession } from '../session/session.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 
 type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
+const multipartCleanupPolicyKey = 'storage.multipart_orphan_hours';
+const multipartCleanupPolicyInput = z
+  .object({ hours: z.number().int().min(1).max(168), version: z.number().int().min(0) })
+  .strict();
 
 @Injectable()
 export class StorageConfigService {
+  async getMultipartCleanupPolicy() {
+    const row = (
+      await getDbPool().query<{ value: { hours: number }; version: number }>(
+        'SELECT value,version FROM app_config WHERE key=$1',
+        [multipartCleanupPolicyKey]
+      )
+    ).rows[0];
+    return { hours: row?.value.hours ?? 24, version: row?.version ?? 0 };
+  }
+
+  async saveMultipartCleanupPolicy(raw: unknown, session: MutationSession) {
+    const parsed = multipartCleanupPolicyInput.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException({ error: 'VALIDATION:INPUT_INVALID' });
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, session.userId, 'admin:storage:edit');
+      await requireSessionStepUp(client, session);
+      await client.query(
+        `INSERT INTO app_config(key,value,version) VALUES($1,'{"hours":24}'::jsonb,0)
+         ON CONFLICT(key) DO NOTHING`,
+        [multipartCleanupPolicyKey]
+      );
+      const current = (
+        await client.query<{ version: number }>(
+          'SELECT version FROM app_config WHERE key=$1 FOR UPDATE',
+          [multipartCleanupPolicyKey]
+        )
+      ).rows[0];
+      if ((current?.version ?? 0) !== parsed.data.version)
+        throw new ConflictException({ error: 'STORAGE:CONFIG_CHANGED' });
+      await client.query(
+        `INSERT INTO app_config(key,value,version) VALUES($1,$2::jsonb,1)
+         ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value,
+           version=app_config.version+1,updated_at=NOW()`,
+        [multipartCleanupPolicyKey, JSON.stringify({ hours: parsed.data.hours })]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata)
+         VALUES(uuid_generate_v7()::text,$1,'storage.multipart_cleanup_policy_updated',$2::jsonb)`,
+        [
+          session.userId,
+          JSON.stringify({
+            hours: parsed.data.hours,
+            previousVersion: parsed.data.version,
+          }),
+        ]
+      );
+      await requireSessionStepUp(client, session);
+      await client.query('COMMIT');
+      return { hours: parsed.data.hours, version: parsed.data.version + 1 };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
   async read() {
     const row = (
       await getDbPool().query<{ value: unknown; version: number }>(

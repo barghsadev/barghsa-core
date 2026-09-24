@@ -52,6 +52,7 @@ export async function requireOwnedUpload(key: string, userId: string) {
     AND metadata->>'uploadedBy'=$2 AND (status='active' OR
       (status='removed' AND metadata->>'provisionalUpload'='true'
        AND metadata->>'deletionRequested'='true'
+       AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
        AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()))`,
       [key, userId]
     )
@@ -78,6 +79,7 @@ export async function recordUploadInspection(
      WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2 AND status='removed'
        AND signed_at IS NULL AND metadata->>'provisionalUpload'='true'
        AND metadata->>'deletionRequested'='true'
+       AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
        AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()`,
     [key, userId, JSON.stringify(metadata)]
   );
@@ -98,6 +100,7 @@ export async function completeUpload(options: CreateRecordOptions) {
     WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2
     AND status='removed' AND signed_at IS NULL
     AND metadata->>'provisionalUpload'='true' AND metadata->>'deletionRequested'='true'
+    AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
     AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()`,
     [
       options.storageKey,

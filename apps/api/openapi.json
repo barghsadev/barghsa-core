@@ -6406,6 +6406,7 @@
                 "refund_retry",
                 "ai_model_test",
                 "storage_cleanup",
+                "multipart_orphan_cleanup",
                 "document_scan",
                 "document_destruction",
                 "auth_delivery",
@@ -12348,6 +12349,32 @@
       },
       "put": {
         "operationId": "StorageAdminController_updateConfig",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "StorageAdmin"
+        ]
+      }
+    },
+    "/api/admin/storage/multipart-cleanup-policy": {
+      "get": {
+        "operationId": "StorageAdminController_getMultipartCleanupPolicy",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "StorageAdmin"
+        ]
+      },
+      "put": {
+        "operationId": "StorageAdminController_updateMultipartCleanupPolicy",
         "parameters": [],
         "responses": {
           "200": {
@@ -25076,6 +25103,120 @@
         "summary": "Update timezone setting",
         "tags": [
           "User Settings"
+        ]
+      }
+    },
+    "/api/v1/files/upload/start": {
+      "post": {
+        "operationId": "MultipartUploadController_start",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "MultipartUpload"
+        ]
+      }
+    },
+    "/api/v1/files/upload/{uploadId}/abort": {
+      "post": {
+        "operationId": "MultipartUploadController_abort",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uploadId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "MultipartUpload"
+        ]
+      }
+    },
+    "/api/v1/files/upload/{uploadId}/complete": {
+      "post": {
+        "operationId": "MultipartUploadController_complete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uploadId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "MultipartUpload"
+        ]
+      }
+    },
+    "/api/v1/files/upload/{uploadId}/part": {
+      "put": {
+        "operationId": "MultipartUploadController_part",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uploadId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "partNumber",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "MultipartUpload"
+        ]
+      }
+    },
+    "/api/v1/files/upload/{uploadId}/parts": {
+      "get": {
+        "operationId": "MultipartUploadController_parts",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uploadId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "MultipartUpload"
         ]
       }
     },

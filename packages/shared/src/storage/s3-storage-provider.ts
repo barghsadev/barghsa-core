@@ -11,6 +11,12 @@ import {
   ListObjectVersionsCommand,
   GetObjectTaggingCommand,
   PutObjectTaggingCommand,
+  CreateMultipartUploadCommand,
+  UploadPartCommand,
+  ListPartsCommand,
+  CompleteMultipartUploadCommand,
+  AbortMultipartUploadCommand,
+  ListMultipartUploadsCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Upload } from '@aws-sdk/lib-storage';
@@ -23,6 +29,8 @@ import type {
   StorageMetadata,
   StorageProviderConfig,
   Logger,
+  MultipartPart,
+  MultipartUploadSummary,
 } from './storage-provider.js';
 import { StorageObjectNotFound, StorageProviderError } from './storage-provider.js';
 
@@ -98,6 +106,123 @@ export class S3StorageProvider implements StorageProvider {
 
   destroy(): void {
     this.client.destroy();
+  }
+
+  async createMultipartUpload(key: string, contentType: string): Promise<string> {
+    const result = await this.client.send(
+      new CreateMultipartUploadCommand({
+        Bucket: this.bucket,
+        Key: this.resolveKey(key),
+        ContentType: contentType,
+      })
+    );
+    if (!result.UploadId) throw new StorageProviderError('Storage did not return a multipart ID');
+    return result.UploadId;
+  }
+
+  presignedUploadPartUrl(key: string, uploadId: string, partNumber: number, expiresIn = 3600) {
+    return getSignedUrl(
+      this.client,
+      new UploadPartCommand({
+        Bucket: this.bucket,
+        Key: this.resolveKey(key),
+        UploadId: uploadId,
+        PartNumber: partNumber,
+      }),
+      { expiresIn }
+    );
+  }
+
+  async listMultipartParts(key: string, uploadId: string): Promise<MultipartPart[]> {
+    const parts: MultipartPart[] = [];
+    let marker: string | undefined;
+    for (;;) {
+      const page = await this.client.send(
+        new ListPartsCommand({
+          Bucket: this.bucket,
+          Key: this.resolveKey(key),
+          UploadId: uploadId,
+          PartNumberMarker: marker,
+          MaxParts: 1000,
+        })
+      );
+      for (const part of page.Parts ?? []) {
+        if (!part.PartNumber || !part.ETag || part.Size === undefined)
+          throw new StorageProviderError('Storage returned an incomplete multipart part');
+        parts.push({ partNumber: part.PartNumber, etag: part.ETag, size: part.Size });
+      }
+      if (!page.IsTruncated) return parts;
+      if (!page.NextPartNumberMarker || page.NextPartNumberMarker === marker)
+        throw new StorageProviderError('Multipart part listing did not advance');
+      marker = page.NextPartNumberMarker;
+    }
+  }
+
+  async completeMultipartUpload(key: string, uploadId: string, parts: MultipartPart[]) {
+    await this.client.send(
+      new CompleteMultipartUploadCommand({
+        Bucket: this.bucket,
+        Key: this.resolveKey(key),
+        UploadId: uploadId,
+        MultipartUpload: {
+          Parts: parts.map((part) => ({ PartNumber: part.partNumber, ETag: part.etag })),
+        },
+      })
+    );
+  }
+
+  async abortMultipartUpload(key: string, uploadId: string) {
+    try {
+      await this.client.send(
+        new AbortMultipartUploadCommand({
+          Bucket: this.bucket,
+          Key: this.resolveKey(key),
+          UploadId: uploadId,
+        })
+      );
+    } catch (error) {
+      if ((error as { name?: string }).name !== 'NoSuchUpload') throw error;
+    }
+  }
+
+  async listMultipartUploads(
+    prefix: string,
+    maxUploads = 100,
+    keyMarker?: string,
+    uploadIdMarker?: string
+  ): Promise<{
+    uploads: MultipartUploadSummary[];
+    isTruncated: boolean;
+    nextKeyMarker?: string | undefined;
+    nextUploadIdMarker?: string | undefined;
+  }> {
+    const page = await this.client.send(
+      new ListMultipartUploadsCommand({
+        Bucket: this.bucket,
+        Prefix: this.resolveKey(prefix),
+        MaxUploads: maxUploads,
+        KeyMarker: keyMarker ? this.resolveKey(keyMarker) : undefined,
+        UploadIdMarker: uploadIdMarker,
+      })
+    );
+    return {
+      uploads: (page.Uploads ?? []).flatMap((upload) =>
+        upload.Key?.startsWith(this.prefix) && upload.UploadId && upload.Initiated
+          ? [
+              {
+                key: upload.Key.slice(this.prefix.length),
+                uploadId: upload.UploadId,
+                initiatedAt: upload.Initiated,
+              },
+            ]
+          : []
+      ),
+      isTruncated: page.IsTruncated ?? false,
+      nextKeyMarker: page.NextKeyMarker?.startsWith(this.prefix)
+        ? page.NextKeyMarker.slice(this.prefix.length)
+        : undefined,
+      nextUploadIdMarker: page.NextUploadIdMarker,
+    };
   }
 
   async checkHealth(signal: AbortSignal = AbortSignal.timeout(1500)): Promise<void> {

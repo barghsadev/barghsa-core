@@ -9,6 +9,19 @@ import { StorageConfigService } from './storage-config.service.js';
 export class StorageAdminController {
   constructor(private readonly config: StorageConfigService) {}
 
+  @Get('multipart-cleanup-policy')
+  getMultipartCleanupPolicy() {
+    return this.config.getMultipartCleanupPolicy();
+  }
+
+  @Put('multipart-cleanup-policy')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @HttpCode(200)
+  updateMultipartCleanupPolicy(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    return this.config.saveMultipartCleanupPolicy(body, req.session);
+  }
+
   @Get('config')
   getConfig() {
     return this.config.get();

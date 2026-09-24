@@ -605,6 +605,11 @@ export const fa: I18nDictionary = {
   'admin.storage.forcePathStyle': 'استفاده از نام مخزن در مسیر نشانی',
   'admin.storage.endpointHelp':
     'نشانی خصوصی و مرورگر در صورت خالی بودن از نشانی پیش‌فرض استفاده می‌کنند. برای AWS S3 استاندارد، همه نشانی‌ها را خالی بگذارید.',
+  'admin.storage.cleanupTitle': 'پاک‌سازی بارگذاری‌های ناتمام',
+  'admin.storage.cleanupDescription':
+    'بارگذاری‌های چندبخشی ناتمام پس از این مدت بررسی و متوقف می‌شوند. قانون مخزن پس از هفت روز پشتیبان این کار است.',
+  'admin.storage.cleanupHours': 'سن بارگذاری ناتمام (ساعت)',
+  'admin.storage.cleanupSave': 'ذخیره زمان پاک‌سازی',
   'admin.jobs.title': 'کارهای ناموفق',
   'admin.jobs.description':
     'خطاهای کارهای دوره‌ای را بررسی کنید، اجرای دوباره بخواهید یا خطا را حل‌شده علامت بزنید.',
@@ -1830,6 +1835,11 @@ export const en: I18nDictionary = {
   'admin.storage.forcePathStyle': 'Use path-style bucket addressing',
   'admin.storage.endpointHelp':
     'Private and browser endpoints fall back to the default endpoint when blank. Leave all endpoints blank for standard AWS S3.',
+  'admin.storage.cleanupTitle': 'Incomplete upload cleanup',
+  'admin.storage.cleanupDescription':
+    'Unfinished multipart uploads are aborted after this age. The bucket rule provides a seven-day fallback.',
+  'admin.storage.cleanupHours': 'Incomplete upload age (hours)',
+  'admin.storage.cleanupSave': 'Save cleanup age',
   'admin.jobs.title': 'Failed jobs',
   'admin.jobs.description':
     'Inspect recurring worker failures, request another attempt, or mark a failure resolved.',

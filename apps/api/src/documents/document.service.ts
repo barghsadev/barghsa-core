@@ -353,17 +353,18 @@ export class DocumentService {
               if (existing.rows.length)
                 throw new ConflictException('Replace the existing original document');
             }
-            const upload = await this.uploads.getPresignedUrl(
-              {
-                fileName: input.fileName,
-                contentType: input.contentType,
-                fileSize: input.fileSize,
-                category: input.category,
-                purpose: staff ? 'staff_business_document' : 'business_document',
-                profileId,
-              },
-              request
-            );
+            const uploadInput = {
+              fileName: input.fileName,
+              contentType: input.contentType,
+              fileSize: input.fileSize,
+              category: input.category,
+              purpose: staff ? 'staff_business_document' : 'business_document',
+              profileId,
+            };
+            const upload =
+              !serverManagedUpload && input.fileSize > 5 * 1024 * 1024
+                ? await this.uploads.getMultipartUpload(uploadInput, request)
+                : await this.uploads.getPresignedUrl(uploadInput, request);
             const document = (
               await createDbClient(client)
                 .insert(documents)

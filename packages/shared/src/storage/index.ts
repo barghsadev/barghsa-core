@@ -4,6 +4,8 @@ export type {
   StorageObjectSummary,
   StorageMetadata,
   StorageProviderConfig,
+  MultipartPart,
+  MultipartUploadSummary,
 } from './storage-provider.js';
 export { StorageObjectNotFound, StorageProviderError } from './storage-provider.js';
 

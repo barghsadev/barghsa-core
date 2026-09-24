@@ -60,7 +60,9 @@ export interface DocumentPage {
 }
 export interface DocumentUpload {
   document: BusinessDocument;
-  upload: { presignedUrl: string; headers: Record<string, string> };
+  upload:
+    | { presignedUrl: string; headers: Record<string, string> }
+    | { uploadId: string; partSize: number; partCount: number };
 }
 export class DocumentRequestError extends Error {
   constructor(
@@ -102,6 +104,34 @@ export async function putDocumentFile(
   file: File,
   signal: AbortSignal
 ) {
+  if ('uploadId' in upload) {
+    const path = `/api/v1/files/upload/${encodeURIComponent(upload.uploadId)}`;
+    const state = await documentRequest<{
+      status: string;
+      parts: Array<{ partNumber: number; size: number }>;
+    }>(`${path}/parts`, { signal });
+    if (state.status === 'completed') return;
+    if (state.status !== 'in_progress') throw new DocumentRequestError(409, null);
+    for (let number = 1; number <= upload.partCount; number++) {
+      const start = (number - 1) * upload.partSize;
+      const end = Math.min(file.size, start + upload.partSize);
+      if (state.parts.some((part) => part.partNumber === number && part.size === end - start))
+        continue;
+      const signed = await documentRequest<{ url: string }>(`${path}/part?partNumber=${number}`, {
+        method: 'PUT',
+        signal,
+      });
+      const part = await fetch(documentUrl(signed.url), {
+        method: 'PUT',
+        credentials: 'omit',
+        body: file.slice(start, end),
+        signal,
+      });
+      if (!part.ok) throw new DocumentRequestError(part.status, null);
+    }
+    await documentRequest(`${path}/complete`, { method: 'POST', signal });
+    return;
+  }
   const response = await fetch(documentUrl(upload.presignedUrl), {
     method: 'PUT',
     credentials: 'omit',

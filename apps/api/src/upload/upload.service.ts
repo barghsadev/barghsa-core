@@ -13,10 +13,12 @@ import {
   recordUploadInspection,
 } from './upload-reservations.js';
 import { randomUUID } from 'node:crypto';
+import { getDbPool } from '@barghsa/db';
+import type { PoolClient } from 'pg';
 import { ProfilesService } from '../profiles/profiles.service.js';
 import { requireUploadContext } from './upload-access.js';
 import { detectDocumentContentType } from './document-content-type.js';
-import type { StorageProvider } from '@barghsa/shared/storage';
+import type { MultipartPart, StorageProvider } from '@barghsa/shared/storage';
 import { StorageObjectNotFound, type ImmutableStorageRecordService } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../storage/index.js';
 import { type AuthenticatedRequest } from '../session/session.guard.js';
@@ -43,6 +45,18 @@ import {
 
 const UPLOAD_PREFIX = 'uploads/';
 const DEFAULT_EXPIRES_IN = 3600; // 1 hour
+const MULTIPART_EXPIRES_IN = 24 * 3600;
+const MULTIPART_PART_SIZE = 5 * 1024 * 1024;
+
+type MultipartRecord = {
+  storage_key: string;
+  file_size: string;
+  content_type: string;
+  metadata: {
+    multipart?: { id: string; providerId: string; status: 'in_progress' | 'completed' | 'aborted' };
+    uploadExpiresAt?: string;
+  };
+};
 
 @Injectable()
 export class UploadService {
@@ -72,6 +86,22 @@ export class UploadService {
   async getPresignedUrl(raw: unknown, actor: AuthenticatedRequest): Promise<PresignedUrlResponse> {
     this.ensureStorageReady();
 
+    const uniqueKey = await this.reserveNewUpload(raw, actor, DEFAULT_EXPIRES_IN);
+    try {
+      const presignedUrl = await this.storage!.presignedPutUrl(uniqueKey, DEFAULT_EXPIRES_IN);
+
+      return {
+        key: uniqueKey,
+        presignedUrl,
+        headers: { 'If-None-Match': '*' },
+        expiresIn: DEFAULT_EXPIRES_IN,
+      };
+    } catch (err) {
+      throw new InternalServerErrorException('Failed to generate presigned URL', { cause: err });
+    }
+  }
+
+  private async reserveNewUpload(raw: unknown, actor: AuthenticatedRequest, expiresIn: number) {
     // Parse and validate request
     const parsed = PresignedUrlRequestSchema.safeParse(raw);
     if (!parsed.success) {
@@ -143,20 +173,220 @@ export class UploadService {
       contentType: req.contentType,
       fileSize: req.fileSize,
       category,
-      expiresIn: DEFAULT_EXPIRES_IN,
+      expiresIn,
       context: { purpose: req.purpose, profileId: req.profileId },
     });
-    try {
-      const presignedUrl = await this.storage!.presignedPutUrl(uniqueKey, DEFAULT_EXPIRES_IN);
+    return uniqueKey;
+  }
 
+  private requireMultipartStorage() {
+    this.ensureStorageReady();
+    if (
+      !this.storage?.createMultipartUpload ||
+      !this.storage.presignedUploadPartUrl ||
+      !this.storage.listMultipartParts ||
+      !this.storage.completeMultipartUpload ||
+      !this.storage.abortMultipartUpload
+    )
+      throw new ServiceUnavailableException('Multipart storage is unavailable');
+    return this.storage;
+  }
+
+  async startMultipart(raw: unknown, actor: AuthenticatedRequest) {
+    return this.getMultipartUpload(raw, actor);
+  }
+
+  async getMultipartUpload(raw: unknown, actor: AuthenticatedRequest) {
+    this.requireMultipartStorage();
+    const parsed = PresignedUrlRequestSchema.safeParse(raw);
+    if (!parsed.success || parsed.data.fileSize <= MULTIPART_PART_SIZE)
+      throw new BadRequestException('Multipart upload requires a file larger than 5 MiB');
+    const key = await this.reserveNewUpload(raw, actor, MULTIPART_EXPIRES_IN);
+    return {
+      ...(await this.startMultipartForKey(key, actor.session.userId)),
+      expiresIn: MULTIPART_EXPIRES_IN,
+    };
+  }
+
+  /** Reuse an existing owned reservation, including document-specific reservations. */
+  async startMultipartForKey(key: string, userId: string) {
+    const storage = this.requireMultipartStorage();
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const row = (
+        await client.query<MultipartRecord>(
+          `SELECT storage_key,file_size,content_type,metadata FROM storage_records
+           WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2 AND status='removed'
+             AND signed_at IS NULL AND metadata->>'provisionalUpload'='true'
+             AND metadata->>'deletionRequested'='true'
+             AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()
+           FOR UPDATE`,
+          [key, userId]
+        )
+      ).rows[0];
+      if (!row) throw new ConflictException('Upload reservation is unavailable');
+      if (Number(row.file_size) <= MULTIPART_PART_SIZE)
+        throw new BadRequestException('Multipart upload requires a file larger than 5 MiB');
+      let multipart = row.metadata.multipart;
+      if (!multipart) {
+        const providerId = await storage.createMultipartUpload!(key, row.content_type);
+        multipart = { id: randomUUID(), providerId, status: 'in_progress' };
+        await client.query(
+          `UPDATE storage_records SET metadata=jsonb_set(metadata,'{multipart}',$2::jsonb,true),
+            updated_at=NOW() WHERE storage_key=$1`,
+          [key, JSON.stringify(multipart)]
+        );
+      }
+      if (multipart.status !== 'in_progress')
+        throw new ConflictException('Multipart upload is no longer active');
+      await client.query('COMMIT');
       return {
-        key: uniqueKey,
-        presignedUrl,
-        headers: { 'If-None-Match': '*' },
-        expiresIn: DEFAULT_EXPIRES_IN,
+        uploadId: multipart.id,
+        key,
+        partSize: MULTIPART_PART_SIZE,
+        partCount: Math.ceil(Number(row.file_size) / MULTIPART_PART_SIZE),
+        expiresAt: row.metadata.uploadExpiresAt,
       };
-    } catch (err) {
-      throw new InternalServerErrorException('Failed to generate presigned URL', { cause: err });
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  private async ownedMultipart(id: string, userId: string, client?: PoolClient) {
+    const row = (
+      await (client ?? getDbPool()).query<MultipartRecord>(
+        `SELECT storage_key,file_size,content_type,metadata FROM storage_records
+         WHERE metadata->'multipart'->>'id'=$1 AND metadata->>'uploadedBy'=$2
+           AND status='removed' AND signed_at IS NULL
+           AND metadata->>'provisionalUpload'='true'
+           AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()
+         ${client ? 'FOR UPDATE' : ''}`,
+        [id, userId]
+      )
+    ).rows[0];
+    if (!row || !row.metadata.multipart)
+      throw new ConflictException('Multipart upload not found or expired');
+    return { row, multipart: row.metadata.multipart };
+  }
+
+  async presignMultipartPart(id: string, number: number, actor: AuthenticatedRequest) {
+    const storage = this.requireMultipartStorage();
+    const { row, multipart } = await this.ownedMultipart(id, actor.session.userId);
+    const count = Math.ceil(Number(row.file_size) / MULTIPART_PART_SIZE);
+    if (multipart.status !== 'in_progress')
+      throw new ConflictException('Multipart upload is no longer active');
+    if (!Number.isSafeInteger(number) || number < 1 || number > count)
+      throw new BadRequestException('Invalid multipart part number');
+    return {
+      partNumber: number,
+      url: await storage.presignedUploadPartUrl!(row.storage_key, multipart.providerId, number),
+      expiresIn: DEFAULT_EXPIRES_IN,
+    };
+  }
+
+  async listMultipartParts(
+    id: string,
+    actor: AuthenticatedRequest
+  ): Promise<{
+    key: string;
+    partSize: number;
+    partCount: number;
+    status: 'in_progress' | 'completed' | 'aborted';
+    parts: MultipartPart[];
+  }> {
+    const storage = this.requireMultipartStorage();
+    const { row, multipart } = await this.ownedMultipart(id, actor.session.userId);
+    return {
+      key: row.storage_key,
+      partSize: MULTIPART_PART_SIZE,
+      partCount: Math.ceil(Number(row.file_size) / MULTIPART_PART_SIZE),
+      status: multipart.status,
+      parts:
+        multipart.status === 'in_progress'
+          ? await storage.listMultipartParts!(row.storage_key, multipart.providerId)
+          : [],
+    };
+  }
+
+  async completeMultipart(id: string, actor: AuthenticatedRequest) {
+    const storage = this.requireMultipartStorage();
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const { row, multipart } = await this.ownedMultipart(id, actor.session.userId, client);
+      if (multipart.status === 'completed') {
+        await client.query('COMMIT');
+        return { key: row.storage_key, status: 'completed' };
+      }
+      if (multipart.status !== 'in_progress')
+        throw new ConflictException('Multipart upload was aborted');
+      const count = Math.ceil(Number(row.file_size) / MULTIPART_PART_SIZE);
+      const expectedLast = Number(row.file_size) - (count - 1) * MULTIPART_PART_SIZE;
+      let parts;
+      try {
+        parts = (await storage.listMultipartParts!(row.storage_key, multipart.providerId)).sort(
+          (a, b) => a.partNumber - b.partNumber
+        );
+      } catch (error) {
+        // A completed S3 call may have succeeded even if the DB response was lost.
+        const object = await storage.getObject(row.storage_key).catch(() => null);
+        if (!object || object.contentLength !== Number(row.file_size)) throw error;
+        await object.body.cancel();
+        parts = null;
+      }
+      if (parts) {
+        if (
+          parts.length !== count ||
+          parts.some(
+            (part, index) =>
+              part.partNumber !== index + 1 ||
+              part.size !== (index === count - 1 ? expectedLast : MULTIPART_PART_SIZE)
+          )
+        )
+          throw new ConflictException('Multipart parts do not match the authorized file size');
+        await storage.completeMultipartUpload!(row.storage_key, multipart.providerId, parts);
+      }
+      await client.query(
+        `UPDATE storage_records SET metadata=jsonb_set(metadata,'{multipart,status}',
+          '"completed"'::jsonb),updated_at=NOW() WHERE storage_key=$1`,
+        [row.storage_key]
+      );
+      await client.query('COMMIT');
+      return { key: row.storage_key, status: 'completed' };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async abortMultipart(id: string, actor: AuthenticatedRequest) {
+    const storage = this.requireMultipartStorage();
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const { row, multipart } = await this.ownedMultipart(id, actor.session.userId, client);
+      if (multipart.status === 'completed')
+        throw new ConflictException('Completed upload cannot be aborted');
+      if (multipart.status === 'in_progress')
+        await storage.abortMultipartUpload!(row.storage_key, multipart.providerId);
+      await client.query(
+        `UPDATE storage_records SET metadata=jsonb_set(metadata,'{multipart,status}',
+          '"aborted"'::jsonb),updated_at=NOW() WHERE storage_key=$1`,
+        [row.storage_key]
+      );
+      await client.query('COMMIT');
+      return { key: row.storage_key, status: 'aborted' };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
     }
   }
 

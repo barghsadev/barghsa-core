@@ -99,7 +99,7 @@ test('bucket setup against real MinIO', { timeout: 90_000 }, async (t) => {
       );
       assert.equal(result.status, 0, result.stderr);
       assert.match(result.stdout, /policy applied/);
-      assert.match(result.stdout, /MINIO_API_STALE_UPLOADS_EXPIRY=24h/);
+      assert.match(result.stdout, /MINIO_API_STALE_UPLOADS_EXPIRY=168h/);
     });
     await t.test('repeat setup preserves versioning and exact safe expiry filters', async () => {
       await setupBucket({ bucket: Bucket, client, backend: 'minio' });

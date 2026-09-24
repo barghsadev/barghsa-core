@@ -15,6 +15,10 @@ interface StorageConfig {
   publicEndpointUrl: string;
   version: number;
 }
+interface MultipartCleanupPolicy {
+  hours: number;
+  version: number;
+}
 const textFields = [
   'endpoint',
   'region',
@@ -28,6 +32,7 @@ export default function AdminStorageConfig() {
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.storage.${key}`, locale);
   const [config, setConfig] = useState<StorageConfig | null>(null);
+  const [cleanupPolicy, setCleanupPolicy] = useState<MultipartCleanupPolicy | null>(null);
   const [secret, setSecret] = useState(''),
     [clearSecret, setClearSecret] = useState(false);
   const [revision, setRevision] = useState(0),
@@ -42,6 +47,7 @@ export default function AdminStorageConfig() {
     setError(false);
     setDenied(false);
     setConfig(null);
+    setCleanupPolicy(null);
     void (async () => {
       try {
         const response = await fetch('/api/admin/storage/config', { signal: controller.signal });
@@ -51,8 +57,14 @@ export default function AdminStorageConfig() {
         }
         if (!response.ok) throw new Error('Unavailable');
         const data = (await response.json()) as StorageConfig;
+        const cleanupResponse = await fetch('/api/admin/storage/multipart-cleanup-policy', {
+          signal: controller.signal,
+        });
+        if (!cleanupResponse.ok) throw new Error('Cleanup policy unavailable');
+        const policy = (await cleanupResponse.json()) as MultipartCleanupPolicy;
         if (!controller.signal.aborted) {
           setConfig(data);
+          setCleanupPolicy(policy);
           setSecret('');
           setClearSecret(false);
         }
@@ -90,6 +102,20 @@ export default function AdminStorageConfig() {
         'STORAGE:ENCRYPTION_UNAVAILABLE': label('encryptionUnavailable'),
         'VALIDATION:INPUT_INVALID': label('invalid'),
       },
+    });
+  }
+  function saveCleanupPolicy(event: FormEvent) {
+    event.preventDefault();
+    if (!cleanupPolicy || !Number.isInteger(cleanupPolicy.hours)) return;
+    setNotice(null);
+    setAction({
+      title: label('cleanupSave'),
+      description: label('cleanupDescription'),
+      path: '/api/admin/storage/multipart-cleanup-policy',
+      method: 'PUT',
+      body: cleanupPolicy,
+      conflictMessage: label('changed'),
+      forbiddenMessage: label('forbidden'),
     });
   }
   return (
@@ -215,6 +241,30 @@ export default function AdminStorageConfig() {
               {label('test')}
             </Button>
           </div>
+        </form>
+      )}
+      {!loading && !error && !denied && cleanupPolicy && (
+        <form onSubmit={saveCleanupPolicy} className="space-y-3 rounded-xl border p-4">
+          <h2 className="font-semibold">{label('cleanupTitle')}</h2>
+          <p className="text-sm text-muted-foreground">{label('cleanupDescription')}</p>
+          <div className="max-w-xs space-y-2">
+            <Label htmlFor="storage-cleanup-hours">{label('cleanupHours')}</Label>
+            <Input
+              id="storage-cleanup-hours"
+              type="number"
+              min={1}
+              max={168}
+              required
+              value={cleanupPolicy.hours}
+              disabled={!!action}
+              onChange={(event) =>
+                setCleanupPolicy({ ...cleanupPolicy, hours: Number(event.target.value) })
+              }
+            />
+          </div>
+          <Button type="submit" disabled={!!action}>
+            {label('cleanupSave')}
+          </Button>
         </form>
       )}
       {action && (

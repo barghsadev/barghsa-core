@@ -75,6 +75,42 @@ async function update(secret?: string): Promise<Record<string, unknown>> {
   return { ...config, ...(secret === undefined ? {} : { secretAccessKey: secret }) };
 }
 
+it('lets a verified storage admin set the orphan cleanup age with optimistic versioning', async () => {
+  const initial = await request('/multipart-cleanup-policy');
+  expect(initial.status).toBe(200);
+  expect(await initial.json()).toEqual({ hours: 24, version: 0 });
+  expect((await request('/multipart-cleanup-policy', 'PUT', { hours: 0, version: 0 })).status).toBe(
+    400
+  );
+  expect(
+    (await request('/multipart-cleanup-policy', 'PUT', { hours: 48, version: 0 }, {})).status
+  ).toBe(401);
+  const saved = await request('/multipart-cleanup-policy', 'PUT', { hours: 48, version: 0 });
+  expect(saved.status, http.logs()).toBe(200);
+  expect(await saved.json()).toEqual({ hours: 48, version: 1 });
+  expect((await request('/multipart-cleanup-policy')).status).toBe(200);
+  expect(
+    (await request('/multipart-cleanup-policy', 'PUT', { hours: 12, version: 0 })).status
+  ).toBe(409);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT event FROM audit_log WHERE event='storage.multipart_cleanup_policy_updated'"
+      )
+    ).rows
+  ).toHaveLength(1);
+});
+
+it('allows only one writer to create the initial cleanup policy version', async () => {
+  await http.pool.query("DELETE FROM app_config WHERE key='storage.multipart_orphan_hours'");
+  const attempts = await Promise.all([
+    request('/multipart-cleanup-policy', 'PUT', { hours: 36, version: 0 }),
+    request('/multipart-cleanup-policy', 'PUT', { hours: 48, version: 0 }),
+  ]);
+  expect(attempts.map((response) => response.status).sort()).toEqual([200, 409]);
+  expect(await (await request('/multipart-cleanup-policy')).json()).toMatchObject({ version: 1 });
+});
+
 it('persists encrypted configuration, activates new signing credentials, and rejects stale saves', async () => {
   const initial = await update('new-secret-never-return');
   const candidate = { ...initial, accessKeyId: 'new-access-key' };

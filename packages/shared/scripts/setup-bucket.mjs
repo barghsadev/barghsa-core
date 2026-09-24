@@ -68,7 +68,7 @@ export async function main(args = process.argv.slice(2), env = process.env) {
     console.log('Bucket versioning enabled; tagged lifecycle policy applied.');
     if (result.multipartCleanup === 'server-config-required') {
       console.log(
-        'MinIO multipart cleanup requires server settings: MINIO_API_STALE_UPLOADS_EXPIRY=24h and MINIO_API_STALE_UPLOADS_CLEANUP_INTERVAL=1h. Verify these separately.'
+        'MinIO multipart cleanup requires server settings: MINIO_API_STALE_UPLOADS_EXPIRY=168h and MINIO_API_STALE_UPLOADS_CLEANUP_INTERVAL=1h. Verify these separately.'
       );
     }
   } finally {

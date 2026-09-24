@@ -13,6 +13,7 @@ import {
 import { runRefundRetries, REFUND_RETRY_INTERVAL_MS } from './refunds/retry-runner.js';
 import { runAiModelTest } from './ai-models/test-runner.js';
 import { cleanupStorageObjects, cleanupStorageProvider } from './storage/cleanup.js';
+import { cleanupMultipartOrphans } from './storage/multipart-cleanup.js';
 import {
   DOCUMENT_SCAN_INTERVAL_MS,
   DOCUMENT_SCAN_JOB_TYPE,
@@ -287,6 +288,30 @@ async function main(): Promise<void> {
       });
     }
   }, 60000);
+
+  pollers.every(
+    async () => {
+      if (draining) return;
+      try {
+        const result = await cleanupMultipartOrphans(getDbPool(), cleanupProvider);
+        if (result.failed)
+          await recordJobFailure({
+            jobType: 'multipart_orphan_cleanup',
+            error: 'multipart_abort_retry_required',
+            errorCategory: 'provider',
+            payload: result,
+          });
+        else if (!result.busy) await recordJobSuccess('multipart_orphan_cleanup');
+      } catch {
+        await recordJobFailure({
+          jobType: 'multipart_orphan_cleanup',
+          error: 'multipart_cleanup_unavailable',
+          errorCategory: 'transient',
+        });
+      }
+    },
+    60 * 60 * 1000
+  );
 
   pollers.every(async () => {
     if (draining || new Date().getUTCHours() !== 2) return;

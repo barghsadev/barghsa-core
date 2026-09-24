@@ -1,6 +1,7 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { createServer } from 'node:http';
 import { S3Client } from '@aws-sdk/client-s3';
+import { S3StorageProvider } from './s3-storage-provider.js';
 import {
   encryptStorageSecret,
   decryptStorageSecret,
@@ -8,7 +9,10 @@ import {
   storageConfigFields,
   environmentStorageConfig,
 } from './runtime-config.js';
-afterEach(() => vi.unstubAllEnvs());
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.restoreAllMocks();
+});
 const fields = {
   endpoint: 'https://default.example.test',
   privateEndpointUrl: 'https://private.example.test',
@@ -91,6 +95,30 @@ it('uses the browser endpoint for scoped URLs and refreshes credentials on every
     )
   ).toContain('second-key/');
   expect(load).toHaveBeenCalledTimes(3);
+});
+it('forwards destruction and multipart operations through the current provider', async () => {
+  vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'test-storage-encryption-key');
+  const deletion = vi
+    .spyOn(S3StorageProvider.prototype, 'deleteObjectVersions')
+    .mockResolvedValue(2);
+  const creation = vi
+    .spyOn(S3StorageProvider.prototype, 'createMultipartUpload')
+    .mockResolvedValue('provider-upload');
+  const provider = runtimeStorageProvider(async () => ({
+    ...fields,
+    encryptedSecret: encryptStorageSecret('secret'),
+  }));
+  expect(await provider.deleteObjectVersions!('business-documents/id/file')).toBe(2);
+  expect(await provider.createMultipartUpload!('uploads/document/id.pdf', 'application/pdf')).toBe(
+    'provider-upload'
+  );
+  const partUrl = new URL(
+    await provider.presignedUploadPartUrl!('uploads/document/id.pdf', 'provider-upload', 1)
+  );
+  expect(partUrl.origin).toBe(fields.publicEndpointUrl);
+  expect(deletion).toHaveBeenCalledWith('business-documents/id/file');
+  expect(creation).toHaveBeenCalledWith('uploads/document/id.pdf', 'application/pdf');
+  provider.destroy!();
 });
 it('does not silently fall back to environment credentials for invalid stored configuration', async () => {
   vi.stubEnv('S3_BUCKET', 'fallback-bucket');

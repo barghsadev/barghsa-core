@@ -69,3 +69,34 @@ it('uploads directly to storage with only the signed headers and no session cred
   fetcher.mockResolvedValue(new Response(null, { status: 412 }));
   await expect(putDocumentFile(upload, file, controller.signal)).resolves.toBeUndefined();
 });
+
+it('resumes a multipart upload from provider-listed parts and completes it', async () => {
+  const calls: string[] = [];
+  const fetcher = vi.fn(async (input: string, init?: RequestInit) => {
+    calls.push(input);
+    if (input.endsWith('/parts'))
+      return Response.json({ status: 'in_progress', parts: [{ partNumber: 1, size: 4 }] });
+    if (input.endsWith('part?partNumber=2'))
+      return Response.json({ url: 'https://storage.example.test/part-2' });
+    if (input.endsWith('/complete')) return Response.json({ status: 'completed' });
+    if (input === 'https://storage.example.test/part-2') {
+      expect(init?.credentials).toBe('omit');
+      expect(init?.method).toBe('PUT');
+      expect((init?.body as Blob).size).toBe(3);
+      return new Response(null, { status: 200 });
+    }
+    throw new Error(`Unexpected request ${input}`);
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await putDocumentFile(
+    { uploadId: 'test-upload', partSize: 4, partCount: 2 },
+    new File(['abcdefg'], 'large.pdf'),
+    new AbortController().signal
+  );
+  expect(calls).toEqual([
+    '/api/v1/files/upload/test-upload/parts',
+    '/api/v1/files/upload/test-upload/part?partNumber=2',
+    'https://storage.example.test/part-2',
+    '/api/v1/files/upload/test-upload/complete',
+  ]);
+});

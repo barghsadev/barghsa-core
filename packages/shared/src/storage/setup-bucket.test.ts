@@ -80,11 +80,11 @@ describe('getStandardLifecycleRules', () => {
 
   // ── Incomplete multipart upload rule ──────────────────────────────────
 
-  it('creates an incomplete multipart upload abort rule at 1 day', () => {
-    const rule = rules.find((r) => r.ID === 'abort-incomplete-multipart-uploads-1d');
+  it('creates a seven-day incomplete multipart upload safety rule', () => {
+    const rule = rules.find((r) => r.ID === 'abort-incomplete-multipart-uploads-7d');
     expect(rule).toBeDefined();
     expect(rule!.Filter?.Prefix).toBe('');
-    expect(rule!.AbortIncompleteMultipartUpload?.DaysAfterInitiation).toBe(1);
+    expect(rule!.AbortIncompleteMultipartUpload?.DaysAfterInitiation).toBe(7);
   });
 
   it('does not transition held files to an offline storage class', () => {

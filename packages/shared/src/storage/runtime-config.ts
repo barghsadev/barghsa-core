@@ -148,6 +148,41 @@ export function runtimeStorageProvider(
       if (!provider.scheduleExpiration) throw unavailable();
       return provider.scheduleExpiration(key);
     },
+    deleteObjectVersions: async (key) => {
+      const provider = (await current()).internal;
+      if (!provider.deleteObjectVersions) throw unavailable();
+      return provider.deleteObjectVersions(key);
+    },
+    createMultipartUpload: async (key, contentType) => {
+      const provider = (await current()).internal;
+      if (!provider.createMultipartUpload) throw unavailable();
+      return provider.createMultipartUpload(key, contentType);
+    },
+    presignedUploadPartUrl: async (key, uploadId, partNumber, expiresIn) => {
+      const provider = (await current()).browser;
+      if (!provider.presignedUploadPartUrl) throw unavailable();
+      return provider.presignedUploadPartUrl(key, uploadId, partNumber, expiresIn);
+    },
+    listMultipartParts: async (key, uploadId) => {
+      const provider = (await current()).internal;
+      if (!provider.listMultipartParts) throw unavailable();
+      return provider.listMultipartParts(key, uploadId);
+    },
+    completeMultipartUpload: async (key, uploadId, parts) => {
+      const provider = (await current()).internal;
+      if (!provider.completeMultipartUpload) throw unavailable();
+      return provider.completeMultipartUpload(key, uploadId, parts);
+    },
+    abortMultipartUpload: async (key, uploadId) => {
+      const provider = (await current()).internal;
+      if (!provider.abortMultipartUpload) throw unavailable();
+      return provider.abortMultipartUpload(key, uploadId);
+    },
+    listMultipartUploads: async (prefix, maxUploads, keyMarker, uploadIdMarker) => {
+      const provider = (await current()).internal;
+      if (!provider.listMultipartUploads) throw unavailable();
+      return provider.listMultipartUploads(prefix, maxUploads, keyMarker, uploadIdMarker);
+    },
     putObject: async (...args) => (await current()).internal.putObject(...args),
     getObject: async (...args) => (await current()).internal.getObject(...args),
     deleteObject: async (...args) => (await current()).internal.deleteObject(...args),
