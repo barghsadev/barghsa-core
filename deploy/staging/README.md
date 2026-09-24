@@ -25,7 +25,7 @@ the same VPS cannot recover a lost VPS.
    variables outside the repository.
 3. Prepare a separate S3-compatible bucket for backups. Enable encryption,
    versioning, retention, and access restricted to this VPS. Create credentials
-   that can upload and read objects. Test provider compatibility with `mc mirror`
+   that can upload and read objects. Test provider compatibility with `rclone copy`
    before relying on the object backup.
 4. Merge this deployment code to `main`. In GitHub Actions, run **Publish
    staging images** against `main`. Download its `staging-images-<sha>` artifact;
@@ -53,17 +53,20 @@ deployed scripts and NGINX configuration without replacing active secrets.
 
 On VPS, as root:
 
-1. Copy `/etc/barghsa/staging/runtime.env.example` to `runtime.env` and
-   `/etc/barghsa/staging/backup.env.example` to `backup.env`. Set `0600`
-   permissions and fill every required value. Keep URLs and credentials aligned:
+1. Copy `/etc/barghsa/staging/runtime.env.example` to `runtime.env`. Set
+   `0600` permissions and fill every required value. Keep URLs and credentials aligned:
    `DATABASE_URL` and `PGDIRECT_URL` must point at `postgres:5432`, Redis at
    `redis:6379`, private S3 endpoint at `http://objectstore:8333`, and public
    endpoint at `https://s3.barghsa.com`. URL-encode special characters in the
    database password inside URLs. `APP_PUBLIC_URL` and `API_PUBLIC_URL` must
    both equal `https://app.barghsa.com`.
-2. Create a strong passphrase in `/etc/barghsa/staging/backup.key` (mode
-   `0600`). Keep a copy outside the VPS; losing this passphrase makes database
-   backups unreadable. Set `BARGHSA_BACKUP_GPG_KEY_FILE` to this path.
+2. For persistent staging, copy `/etc/barghsa/staging/backup.env.example` to
+   `backup.env` and set its offsite bucket settings. Create a strong passphrase
+   in `/etc/barghsa/staging/backup.key` (mode `0600`). Keep a copy outside the
+   VPS; losing this passphrase makes database backups unreadable. Set
+   `BARGHSA_BACKUP_GPG_KEY_FILE` to this path. If the bucket is not ready and
+   all data is disposable, set `BARGHSA_DISPOSABLE=true` in `runtime.env` and
+   defer this step. Do not enable the backup timer in disposable mode.
 3. Upload the workflow's `images.env` artifact to a new file such as
    `/etc/barghsa/staging/candidate-<sha>.env`, owned by root, mode `0600`.
 4. If GHCR packages are private, run `docker login ghcr.io` as root with a
@@ -76,8 +79,9 @@ sudo /usr/local/sbin/barghsa-staging-release \
   /etc/barghsa/staging/candidate-<sha>.env
 ```
 
-Release pulls images, starts stateful services (SeaweedFS creates the S3 bucket), takes
-an encrypted PostgreSQL backup and an offsite object mirror, stops worker,
+Release pulls images, starts stateful services (SeaweedFS creates the S3 bucket),
+takes an encrypted PostgreSQL backup and an offsite object copy unless
+`BARGHSA_DISPOSABLE=true`, stops worker,
 runs migrations once, then replaces API, web, and worker. It waits for container
 health and checks HTTPS endpoints. Successful manifest becomes
 `/etc/barghsa/staging/active-images.env`. If app rollout fails, it restores
