@@ -592,6 +592,45 @@ it('lists staff contract metadata with profile/type/state filters and exclusive 
   }
 });
 
+it('stores variable commercial terms in a version and rejects invalid stated values', async () => {
+  const body = await input();
+  const response = await send('', 'POST', {
+    ...body,
+    content: {
+      ...body.content,
+      commercialValue: { kind: 'variable', description: 'Indexed to delivered kWh' },
+    },
+  });
+  expect(response.status).toBe(201);
+  const contract = (await response.json()) as ContractDto;
+  expect(contract.currentVersion.content.commercialValue).toEqual({
+    kind: 'variable',
+    description: 'Indexed to delivered kWh',
+  });
+  const listed = await send(`?profileId=${body.profileId}`);
+  expect(listed.status).toBe(200);
+  expect(await listed.json()).toMatchObject({
+    contracts: [
+      { id: contract.id, commercialValue: contract.currentVersion.content.commercialValue },
+    ],
+  });
+  for (const commercialValue of [
+    { kind: 'fixed', amountIrr: '1.5' },
+    { kind: 'fixed', amountIrr: '9223372036854775808' },
+    { kind: 'variable', description: '   ' },
+  ]) {
+    expect(
+      (
+        await send('', 'POST', {
+          ...body,
+          idempotencyKey: randomUUID(),
+          content: { ...body.content, commercialValue },
+        })
+      ).status
+    ).toBe(400);
+  }
+});
+
 it('versions activation-context changes even when terms stay the same, and preserves context on later edits', async () => {
   const row = await create(),
     invoice = randomUUID();

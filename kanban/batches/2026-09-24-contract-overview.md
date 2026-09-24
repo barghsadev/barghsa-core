@@ -6,4 +6,4 @@ Customer and staff contract lists now show the version's service start and end w
 
 Validation: PostgreSQL HTTP tests cover customer and staff data plus cross-profile isolation. Bilingual web tests cover period, amount, invoice link, and staff presentation. Workspace build, typecheck, lint, formatting, OpenAPI, and backlog checks pass before push; GitHub CI runs on the pushed commit.
 
-Later progress: `2026-09-24-contract-identity-order-handoff.md` adds the contract reference, current account display and linked-order navigation. A dedicated contract number, immutable legal-party snapshot and full value remain open.
+Later progress: `2026-09-24-contract-identity-order-handoff.md` adds the contract reference, current account display and linked-order navigation. `2026-09-24-contract-commercial-value.md` lets authored versions state an exact fixed value or variable rule. A dedicated contract number, immutable legal-party snapshot and automatic values for system-generated contracts remain open.

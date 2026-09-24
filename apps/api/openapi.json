@@ -4346,7 +4346,7 @@
                   },
                   "content": {
                     "additionalProperties": true,
-                    "description": "Full material snapshot, nonempty and at most 64 KiB. Monetary values should be decimal strings.",
+                    "description": "Full material snapshot, nonempty and at most 64 KiB. Optional commercialValue is {kind:\"fixed\",amountIrr:\"...\"} (whole IRR within signed 64-bit range) or {kind:\"variable\",description:\"...\"}. Do not use an initial invoice amount as the full contract value.",
                     "type": "object"
                   },
                   "idempotencyKey": {
@@ -4528,7 +4528,7 @@
                   },
                   "content": {
                     "additionalProperties": true,
-                    "description": "Full material snapshot, nonempty and at most 64 KiB. Monetary values should be decimal strings.",
+                    "description": "Full material snapshot, nonempty and at most 64 KiB. Optional commercialValue is {kind:\"fixed\",amountIrr:\"...\"} (whole IRR within signed 64-bit range) or {kind:\"variable\",description:\"...\"}. Do not use an initial invoice amount as the full contract value.",
                     "type": "object"
                   },
                   "expectedVersionId": {

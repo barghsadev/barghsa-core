@@ -183,6 +183,9 @@ function api(current = detail()) {
           state: current.state,
           versionId: VERSION,
           versionNumber: 2,
+          commercialValue:
+            current.version?.content?.commercialValue ??
+            current.currentVersion?.content?.commercialValue,
           publishedAt: current.version?.publishedAt,
           acceptedAt: current.version?.acceptedAt,
           serviceStartsAt: current.serviceStartsAt,
@@ -229,6 +232,31 @@ it('links a saving contract to its saved order from the list', async () => {
   await render(<ContractsPage />);
   expect(container.querySelector(`a[href="/savings/orders/${savingOrderId}"]`)?.textContent).toBe(
     en.openLinkedSavingOrder
+  );
+});
+it.each(['en', 'fa'] as const)('shows an exact stated contract value in %s', async (locale) => {
+  harness.locale = locale;
+  const words = locale === 'fa' ? fa : en;
+  const commercialValue = { kind: 'fixed', amountIrr: '9007199254740993' };
+  vi.stubGlobal(
+    'fetch',
+    api(detail({ version: version({ content: { title: 'Terms', commercialValue } }) }))
+  );
+  await render(<ContractsPage />);
+  expect(container.textContent).toContain(`${words.statedContractValue}: 9007199254740993 IRR`);
+  await click(`${words.electricity} · ${words.version} ${(2).toLocaleString(locale)}`);
+  expect(container.textContent?.split(words.statedContractValue)).toHaveLength(3);
+  expect(container.textContent?.split('9007199254740993 IRR')).toHaveLength(3);
+});
+it('labels a variable contract price with its stated rule', async () => {
+  const commercialValue = { kind: 'variable', description: 'Indexed to delivered kWh' };
+  vi.stubGlobal(
+    'fetch',
+    api(detail({ version: version({ content: { title: 'Terms', commercialValue } }) }))
+  );
+  await render(<ContractsPage />);
+  expect(container.textContent).toContain(
+    `${en.statedContractValue}: ${en.variableContractValue}: Indexed to delivered kWh`
   );
 });
 it.each(['en', 'fa'] as const)(

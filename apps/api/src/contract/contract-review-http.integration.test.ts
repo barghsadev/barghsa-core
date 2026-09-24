@@ -46,7 +46,8 @@ async function send(path: string, method = 'GET', body?: unknown, user = 'review
 }
 async function fixture(
   serviceType: 'electricity' | 'savings' = 'electricity',
-  linkedOrder = false
+  linkedOrder = false,
+  commercialValue?: { kind: 'fixed'; amountIrr: string }
 ) {
   const owner = await login(randomUUID()),
     profile = randomUUID();
@@ -72,7 +73,7 @@ async function fixture(
     profileId: profile,
     serviceType,
     ...(orderId ? { orderId } : {}),
-    content: { price: '9007199254740993' },
+    content: { price: '9007199254740993', ...(commercialValue ? { commercialValue } : {}) },
     changeDescription: 'Initial',
     idempotencyKey: randomUUID(),
   });
@@ -114,8 +115,9 @@ it('links an authorized invoice to its contract only after publication', async (
   const other = await fixture();
   expect((await invoice(other.owner)).status).toBe(404);
 });
-it('shows the published service period and initial invoice on customer and staff contract lists', async () => {
-  const f = await fixture('electricity', true);
+it('shows the published value, service period and initial invoice on customer and staff contract lists', async () => {
+  const commercialValue = { kind: 'fixed' as const, amountIrr: '9007199254740993' };
+  const f = await fixture('electricity', true, commercialValue);
   await http.pool.query("UPDATE profiles SET title='Acme Energy' WHERE id=$1", [f.profile]);
   const invoiceId = randomUUID();
   await http.pool.query(
@@ -128,6 +130,9 @@ it('shows the published service period and initial invoice on customer and staff
     [f.row.currentVersionId, invoiceId, '2026-10-01T00:00:00Z', '2027-10-01T00:00:00Z']
   );
   await publish(f);
+  expect(await (await customer(f)).json()).toMatchObject({
+    version: { content: { commercialValue } },
+  });
   const customerList = await send('contracts', 'GET', undefined, f.owner);
   expect(customerList.status).toBe(200);
   expect(await customerList.json()).toMatchObject({
@@ -137,6 +142,7 @@ it('shows the published service period and initial invoice on customer and staff
         profileType: 'LEGAL',
         profileTitle: 'Acme Energy',
         orderId: f.orderId,
+        commercialValue,
         serviceStartsAt: '2026-10-01T00:00:00.000Z',
         serviceEndsAt: '2027-10-01T00:00:00.000Z',
         initialInvoiceId: invoiceId,
@@ -154,6 +160,7 @@ it('shows the published service period and initial invoice on customer and staff
         profileType: 'LEGAL',
         profileTitle: 'Acme Energy',
         orderId: f.orderId,
+        commercialValue,
         serviceStartsAt: '2026-10-01T00:00:00.000Z',
         serviceEndsAt: '2027-10-01T00:00:00.000Z',
         initialInvoiceId: invoiceId,

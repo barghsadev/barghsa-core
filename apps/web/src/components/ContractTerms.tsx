@@ -1,6 +1,8 @@
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
-/** Render the stored snapshot as text, without interpreting monetary units or HTML. */
+import { parseContractCommercialValue } from '../lib/contracts.js';
+import { ContractCommercialValueText } from './ContractCommercialValueText.js';
+/** Render stored terms as text, formatting only the validated top-level commercial value. */
 export function ContractTerms({ value, depth = 0 }: { value: unknown; depth?: number }) {
   const locale = useLocale();
   const word = (key: string) => contractText(key, locale);
@@ -31,16 +33,30 @@ export function ContractTerms({ value, depth = 0 }: { value: unknown; depth?: nu
     );
   return (
     <dl className="flex flex-col gap-3">
-      {Object.entries(value).map(([key, item]) => (
-        <div key={key} className="border-s-2 ps-3">
-          <dt className="text-sm text-muted-foreground">
-            {word(key === 'title' ? 'titleField' : key)}
-          </dt>
-          <dd>
-            <ContractTerms value={item} depth={depth + 1} />
-          </dd>
-        </div>
-      ))}
+      {Object.entries(value).map(([key, item]) => {
+        const commercialValue =
+          depth === 0 && key === 'commercialValue' ? parseContractCommercialValue(item) : null;
+        return (
+          <div key={key} className="border-s-2 ps-3">
+            <dt className="text-sm text-muted-foreground">
+              {word(
+                key === 'title'
+                  ? 'titleField'
+                  : depth === 0 && key === 'commercialValue'
+                    ? 'statedContractValue'
+                    : key
+              )}
+            </dt>
+            <dd>
+              {commercialValue ? (
+                <ContractCommercialValueText value={commercialValue} />
+              ) : (
+                <ContractTerms value={item} depth={depth + 1} />
+              )}
+            </dd>
+          </div>
+        );
+      })}
     </dl>
   );
 }

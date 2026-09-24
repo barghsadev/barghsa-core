@@ -52,7 +52,7 @@ const editProperties = {
     type: 'object' as const,
     additionalProperties: true,
     description:
-      'Full material snapshot, nonempty and at most 64 KiB. Monetary values should be decimal strings.',
+      'Full material snapshot, nonempty and at most 64 KiB. Optional commercialValue is {kind:"fixed",amountIrr:"..."} (whole IRR within signed 64-bit range) or {kind:"variable",description:"..."}. Do not use an initial invoice amount as the full contract value.',
   },
   changeDescription: { type: 'string' as const, minLength: 1, maxLength: 1000 },
   idempotencyKey: { type: 'string' as const, format: 'uuid' },

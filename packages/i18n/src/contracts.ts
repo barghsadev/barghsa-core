@@ -21,8 +21,16 @@ export const en = {
   draftStructuredNotice:
     'An imported title or terms field uses structured content. It is preserved and cannot be replaced by this text editor.',
   draftInvalid:
-    'Choose a profile and enter a title, terms and change reason for a new draft. Edits need a material change and reason. The complete terms must fit within 64 KiB.',
+    'Choose a profile and enter a title, terms and change reason for a new draft. Edits need a material change and reason. A fixed value must be a whole IRR amount; a variable value needs an explanation. The complete terms must fit within 64 KiB.',
   draftTerms: 'Contract terms',
+  statedContractValue: 'Stated contract value',
+  fixedContractValue: 'Fixed amount',
+  fixedContractAmount: 'Fixed amount (IRR)',
+  variableContractValue: 'Variable price',
+  variableContractDescription: 'How the amount is determined',
+  unsupportedContractValue: 'Unsupported saved value — choose a replacement',
+  commercialValueNotice:
+    'Enter only the value stated in the contract terms. An initial invoice is a payment, not the total contract value.',
   draftSearchProfiles: 'Find a profile by name',
   draftProfile: 'Profile',
   draftSearch: 'Search',
@@ -284,8 +292,16 @@ export const fa: Record<keyof typeof en, string> = {
   draftStructuredNotice:
     'عنوان یا متن واردشده ساختار ویژه‌ای دارد. این محتوا حفظ می‌شود و در این ویرایشگر متنی قابل جایگزینی نیست.',
   draftInvalid:
-    'برای پیش‌نویس جدید، پروفایل را انتخاب و عنوان، متن و دلیل تغییر را وارد کنید. ویرایش به تغییر واقعی و دلیل نیاز دارد. حجم کل شرایط باید کمتر از ۶۴ کیلوبایت باشد.',
+    'برای پیش‌نویس جدید، پروفایل را انتخاب و عنوان، متن و دلیل تغییر را وارد کنید. ویرایش به تغییر واقعی و دلیل نیاز دارد. مبلغ ثابت باید عدد صحیح ریالی باشد و مبلغ متغیر به توضیح نیاز دارد. حجم کل شرایط باید کمتر از ۶۴ کیلوبایت باشد.',
   draftTerms: 'متن قرارداد',
+  statedContractValue: 'ارزش مندرج در قرارداد',
+  fixedContractValue: 'مبلغ ثابت',
+  fixedContractAmount: 'مبلغ ثابت (ریال)',
+  variableContractValue: 'قیمت متغیر',
+  variableContractDescription: 'روش تعیین مبلغ',
+  unsupportedContractValue: 'ارزش ذخیره‌شده نامعتبر است؛ جایگزینی انتخاب کنید',
+  commercialValueNotice:
+    'فقط ارزشی را وارد کنید که در متن قرارداد آمده است. صورتحساب اولیه یک پرداخت است، نه ارزش کل قرارداد.',
   draftSearchProfiles: 'جست‌وجوی پروفایل با نام',
   draftProfile: 'پروفایل',
   draftSearch: 'جست‌وجو',

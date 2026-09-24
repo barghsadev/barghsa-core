@@ -28,6 +28,7 @@ import { contractBase, contractStates, type ContractSummary } from '../lib/contr
 import { ContractActivationRules } from './ContractActivationRules.js';
 import { ContractDetail } from './ContractDetail.js';
 import { ContractDraftEditor } from './ContractDraftEditor.js';
+import { ContractCommercialValueText } from './ContractCommercialValueText.js';
 
 export function ContractsWorkspace({
   staff = false,
@@ -270,6 +271,12 @@ function ContractResults({
                   <p className="text-sm text-muted-foreground">
                     {word('account')}: {item.profileTitle || word('draftUnnamedProfile')} ·{' '}
                     {word(item.profileType === 'LEGAL' ? 'draftLegal' : 'draftIndividual')}
+                  </p>
+                ) : null}
+                {item.commercialValue ? (
+                  <p className="text-sm text-muted-foreground">
+                    {word('statedContractValue')}:{' '}
+                    <ContractCommercialValueText value={item.commercialValue} />
                   </p>
                 ) : null}
                 {item.changeDescription ? (

@@ -20,6 +20,29 @@ export interface ContractVersion {
   publishedAt?: string;
   acceptedAt: string | null;
 }
+export type ContractCommercialValue =
+  { kind: 'fixed'; amountIrr: string } | { kind: 'variable'; description: string };
+export function parseContractCommercialValue(value: unknown): ContractCommercialValue | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const row = value as Record<string, unknown>;
+  if (
+    row.kind === 'fixed' &&
+    Object.keys(row).length === 2 &&
+    typeof row.amountIrr === 'string' &&
+    /^(0|[1-9][0-9]{0,18})$/.test(row.amountIrr) &&
+    BigInt(row.amountIrr) <= 9_223_372_036_854_775_807n
+  )
+    return { kind: 'fixed', amountIrr: row.amountIrr };
+  if (
+    row.kind === 'variable' &&
+    Object.keys(row).length === 2 &&
+    typeof row.description === 'string' &&
+    row.description.trim() &&
+    row.description.trim().length <= 500
+  )
+    return { kind: 'variable', description: row.description.trim() };
+  return null;
+}
 export interface ContractSummary {
   id: string;
   profileId?: string;
@@ -31,6 +54,7 @@ export interface ContractSummary {
   state: (typeof contractStates)[number];
   versionId: string;
   versionNumber: number;
+  commercialValue?: ContractCommercialValue | null;
   changeDescription?: string;
   publishedAt?: string;
   acceptedAt?: string | null;

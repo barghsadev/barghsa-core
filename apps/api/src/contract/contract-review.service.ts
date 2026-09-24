@@ -13,6 +13,7 @@ import { activeProfileSql } from '../profiles/profile-context.js';
 import { notifyContractReview } from './contract-review-notifications.js';
 import { readContractFinancialReview } from './contract-financial-review.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
+import { parseContractCommercialValue } from './contract-validation.js';
 export interface ContractReviewInput {
   expectedVersionId: string;
   idempotencyKey: string;
@@ -144,6 +145,7 @@ export class ContractReviewService {
           state: string;
           version_id: string;
           version_number: number;
+          commercial_value: unknown;
           published_at: Date;
           accepted_at: Date | null;
           service_starts_at: Date | null;
@@ -154,7 +156,8 @@ export class ContractReviewService {
         }>(
           `SELECT DISTINCT ON(c.id) c.id,profile.profile_type,profile.title AS profile_title,
           profile.first_name AS profile_first_name,profile.last_name AS profile_last_name,
-          c.order_id,s.id AS saving_order_id,c.service_type,c.state,v.id AS version_id,v.version_number,p.published_at,a.accepted_at,
+          c.order_id,s.id AS saving_order_id,c.service_type,c.state,v.id AS version_id,v.version_number,
+          v.content->'commercialValue' AS commercial_value,p.published_at,a.accepted_at,
           r.service_starts_at,r.service_ends_at,r.initial_invoice_id,i.total_amount AS initial_invoice_amount,i.state AS initial_invoice_state
           FROM contracts c JOIN profiles profile ON profile.id=c.profile_id
           JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
@@ -182,6 +185,7 @@ export class ContractReviewService {
           state: r.state,
           versionId: r.version_id,
           versionNumber: r.version_number,
+          commercialValue: parseContractCommercialValue(r.commercial_value),
           publishedAt: r.published_at.toISOString(),
           acceptedAt: r.accepted_at?.toISOString() ?? null,
           serviceStartsAt: r.service_starts_at?.toISOString() ?? null,

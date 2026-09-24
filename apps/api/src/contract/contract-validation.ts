@@ -3,8 +3,43 @@ export const contractUuid = z
   .string()
   .uuid()
   .transform((value) => value.toLowerCase());
+export const contractCommercialValueSchema = z.discriminatedUnion('kind', [
+  z
+    .object({
+      kind: z.literal('fixed'),
+      amountIrr: z
+        .string()
+        .refine(
+          (value) =>
+            /^(0|[1-9][0-9]{0,18})$/.test(value) && BigInt(value) <= 9_223_372_036_854_775_807n
+        ),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal('variable'),
+      description: z.string().trim().min(1).max(500),
+    })
+    .strict(),
+]);
+export type ContractCommercialValue = z.infer<typeof contractCommercialValueSchema>;
+export function parseContractCommercialValue(value: unknown): ContractCommercialValue | null {
+  const parsed = contractCommercialValueSchema.safeParse(value);
+  return parsed.success ? parsed.data : null;
+}
 const content = z
   .record(z.string(), z.unknown())
+  .superRefine((value, context) => {
+    if (
+      'commercialValue' in value &&
+      !contractCommercialValueSchema.safeParse(value.commercialValue).success
+    )
+      context.addIssue({
+        code: 'custom',
+        message: 'Invalid commercial value',
+        path: ['commercialValue'],
+      });
+  })
   .refine(
     (value) =>
       Object.keys(value).length > 0 && Buffer.byteLength(JSON.stringify(value), 'utf8') <= 65_536,

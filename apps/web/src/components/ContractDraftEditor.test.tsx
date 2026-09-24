@@ -157,6 +157,35 @@ it.each(['en', 'fa'] as const)(
     expect(container.querySelector('form')).toBeNull();
   }
 );
+it.each(['en', 'fa'] as const)(
+  'saves fixed and variable commercial terms without rounding in %s',
+  async (locale) => {
+    harness.locale = locale;
+    await render();
+    await field(words().draftProfile, PROFILE);
+    await field(words().titleField, 'Supply terms');
+    await field(words().draftTerms, 'Customer-approved terms');
+    await field(words().contextReason, 'Initial draft');
+    await field(words().statedContractValue, 'fixed');
+    await field(words().fixedContractAmount, '9223372036854775808');
+    await click(words().draftReview);
+    expect(harness.action).toBeNull();
+    await field(words().fixedContractAmount, '9007199254740993');
+    await click(words().draftReview);
+    expect(harness.action?.body).toMatchObject({
+      content: { commercialValue: { kind: 'fixed', amountIrr: '9007199254740993' } },
+    });
+    await click('Cancel confirmation');
+    await field(words().statedContractValue, 'variable');
+    await field(words().variableContractDescription, 'Indexed to delivered kWh');
+    await click(words().draftReview);
+    expect(harness.action?.body).toMatchObject({
+      content: {
+        commercialValue: { kind: 'variable', description: 'Indexed to delivered kWh' },
+      },
+    });
+  }
+);
 it('preserves opaque imported fields and unchanged whitespace, captures the exact version and resubmission notice', async () => {
   await render({ contract: { ...contract, state: 'ChangesRequested' }, version });
   expect(
@@ -195,6 +224,21 @@ it('preserves structured imported fields and rejects oversized UTF-8 content', a
     content: { title: { fa: 'Imported' }, text: 'Changed', nested: ['keep'] },
   });
 });
+it('requires an explicit replacement for an unsupported imported commercial value', async () => {
+  await render({
+    contract,
+    version: { ...version, content: { ...version.content, commercialValue: { legacy: true } } },
+  });
+  await field(en.draftTerms, 'Updated terms');
+  await field(en.contextReason, 'Correct imported value');
+  await click(en.draftReview);
+  expect(harness.action).toBeNull();
+  await field(en.statedContractValue, 'unstated');
+  await click(en.draftReview);
+  expect((harness.action?.body as { content: Record<string, unknown> }).content).not.toHaveProperty(
+    'commercialValue'
+  );
+});
 it('clears a linked order when its service or profile search changes', async () => {
   await render();
   await field(en.draftProfile, PROFILE);
@@ -203,7 +247,7 @@ it('clears a linked order when its service or profile search changes', async () 
   expect(container.querySelectorAll('select')[2]).toHaveProperty('value', '');
   await field(en.draftSearchProfiles, 'Next');
   await click(en.draftSearch);
-  expect(container.querySelectorAll('select')).toHaveLength(2);
+  expect(container.querySelector(`option[value="${ORDER}"]`)).toBeNull();
   expect(fetch).toHaveBeenLastCalledWith(
     expect.stringContaining('search=Next'),
     expect.any(Object)

@@ -7,7 +7,7 @@ import {
   invoices,
   profiles,
 } from '@barghsa/db';
-import { and, desc, eq, lt, createDbClient as drizzle } from '@barghsa/db';
+import { and, desc, eq, lt, sql, createDbClient as drizzle } from '@barghsa/db';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import type {
@@ -15,6 +15,7 @@ import type {
   UpdateContractInput,
   ContractListInput,
 } from './contract-validation.js';
+import { parseContractCommercialValue } from './contract-validation.js';
 
 import {
   contractIdempotency,
@@ -56,6 +57,7 @@ export class ContractService {
         state: contracts.state,
         versionId: contractVersions.id,
         versionNumber: contractVersions.versionNumber,
+        commercialValue: sql<unknown>`${contractVersions.content}->'commercialValue'`,
         changeDescription: contractVersions.changeDescription,
         updatedAt: contracts.updatedAt,
         acceptedAt: contracts.acceptedAt,
@@ -100,6 +102,7 @@ export class ContractService {
         .slice(0, input.limit)
         .map(({ profileFirstName, profileLastName, ...row }) => ({
           ...row,
+          commercialValue: parseContractCommercialValue(row.commercialValue),
           profileTitle:
             row.profileTitle?.trim() ||
             [profileFirstName, profileLastName].filter(Boolean).join(' ').trim() ||
