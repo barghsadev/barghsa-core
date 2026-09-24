@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Wallet history presentation and invoice handoff](batches/2026-09-24-wallet-history-handoffs.md) finishes account-timezone transaction display and links wallet payments back to their invoices.
+
 [Staff invoice search by customer and order](batches/2026-09-24-staff-invoice-search.md) lets finance find invoices from a known profile or order, with validated combined filters and stable pagination.
 
 [Customer invoice payment summary](batches/2026-09-24-invoice-payment-summary.md) shows exact payment progress and the existing wallet action together on the viewed invoice.

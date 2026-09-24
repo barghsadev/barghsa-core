@@ -1,10 +1,31 @@
 import { useEffect, useId, useState, type FormEvent } from 'react';
 import { Button } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/app';
+import {
+  ArrowDownLeft,
+  ArrowUpRight,
+  LockKeyhole,
+  LockKeyholeOpen,
+  RotateCcw,
+  SlidersHorizontal,
+  Wallet,
+  type LucideIcon,
+} from 'lucide-react';
 import { formatIrr } from '../lib/customer-invoices.js';
+import { isInvoiceUuid } from '../lib/due-at-override.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 
 const types = ['topup', 'payment', 'refund', 'reservation', 'release', 'reversal', 'compensating'];
 const states = ['Pending', 'Reserved', 'Completed', 'Failed', 'Rejected', 'Released', 'Reversed'];
+const typeIcons: Record<string, LucideIcon> = {
+  topup: ArrowDownLeft,
+  payment: ArrowUpRight,
+  refund: RotateCcw,
+  reservation: LockKeyhole,
+  release: LockKeyholeOpen,
+  reversal: RotateCcw,
+  compensating: SlidersHorizontal,
+};
 interface Transaction {
   id: string;
   type: string;
@@ -31,6 +52,7 @@ export function WalletTransactionList({
 }
 function History({ profileId, locale }: { profileId: string; locale: Locale }) {
   const id = useId();
+  const time = useAccountTime(locale);
   const [filters, setFilters] = useState('sort=desc');
   function apply(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -56,6 +78,7 @@ function History({ profileId, locale }: { profileId: string; locale: Locale }) {
       <h2 id={`${id}-title`} className="text-lg font-semibold">
         {label('title')}
       </h2>
+      {time.notice}
       <form onSubmit={apply} className="flex flex-wrap items-end gap-3">
         {(['type', 'state'] as const).map((key) => (
           <label key={key} className="flex flex-col gap-1 text-sm">
@@ -95,7 +118,13 @@ function History({ profileId, locale }: { profileId: string; locale: Locale }) {
           {label('apply')}
         </Button>
       </form>
-      <HistoryPage key={filters} profileId={profileId} locale={locale} filters={filters} />
+      <HistoryPage
+        key={filters}
+        profileId={profileId}
+        locale={locale}
+        filters={filters}
+        formatTime={time.format}
+      />
     </section>
   );
 }
@@ -103,10 +132,12 @@ function HistoryPage({
   profileId,
   locale,
   filters,
+  formatTime,
 }: {
   profileId: string;
   locale: Locale;
   filters: string;
+  formatTime: ReturnType<typeof useAccountTime>['format'];
 }) {
   const [cursors, setCursors] = useState<(string | null)[]>([null]);
   const [page, setPage] = useState<Page | null>(null);
@@ -156,37 +187,61 @@ function HistoryPage({
         <p>{label('empty')}</p>
       ) : (
         <ol className="divide-y divide-border">
-          {page.transactions.map((tx) => (
-            <li key={tx.id} className="flex flex-col gap-2 py-4">
-              <div className="flex flex-wrap justify-between gap-2">
-                <strong>{label(`type.${tx.type}`)}</strong>
-                <bdi className="font-semibold tabular-nums">
-                  {BigInt(tx.amount) > 0n ? '+' : ''}
-                  {formatIrr(tx.amount, locale)} {label('irr')}
-                </bdi>
-              </div>
-              <div className="flex flex-wrap justify-between gap-2 text-sm">
-                <span>{label(`state.${tx.state}`)}</span>
-                <time dateTime={tx.createdAt}>
-                  {new Intl.DateTimeFormat(locale, {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  }).format(new Date(tx.createdAt))}
-                </time>
-              </div>
-              <p className="text-sm text-muted-foreground">{label(`description.${tx.type}`)}</p>
-              {tx.description && (
-                <p className="text-sm" dir="auto">
-                  {tx.description}
-                </p>
-              )}
-              {tx.refId && (
-                <p className="break-all text-sm">
-                  {label('reference')}: <bdi>{tx.refId}</bdi>
-                </p>
-              )}
-            </li>
-          ))}
+          {page.transactions.map((tx) => {
+            const Icon = typeIcons[tx.type] ?? Wallet;
+            const amount = BigInt(tx.amount);
+            const settled = tx.state === 'Completed';
+            const invoiceHref =
+              tx.type === 'payment' && tx.refId && isInvoiceUuid(tx.refId)
+                ? `/invoices/${encodeURIComponent(tx.refId)}`
+                : null;
+            return (
+              <li key={tx.id} className="flex flex-col gap-2 py-4">
+                <div className="flex flex-wrap justify-between gap-2">
+                  <strong className="flex items-center gap-2">
+                    <Icon aria-hidden="true" className="size-4 shrink-0" />
+                    {label(`type.${tx.type}`)}
+                  </strong>
+                  <bdi
+                    className={`font-semibold tabular-nums ${settled && amount > 0n ? 'text-success' : settled && amount < 0n ? 'text-destructive' : 'text-foreground'}`}
+                  >
+                    {amount > 0n ? '+' : ''}
+                    {formatIrr(tx.amount, locale)} {label('irr')}
+                  </bdi>
+                </div>
+                <div className="flex flex-wrap justify-between gap-2 text-sm">
+                  <span
+                    className={`rounded-full border px-2 py-0.5 ${settled ? 'border-success/30 bg-success-soft text-success' : ['Failed', 'Rejected', 'Reversed'].includes(tx.state) ? 'border-destructive/30 bg-danger-soft text-destructive' : 'border-border bg-muted text-foreground'}`}
+                  >
+                    {label(`state.${tx.state}`)}
+                  </span>
+                  <time dateTime={tx.createdAt}>
+                    {formatTime(tx.createdAt, { dateStyle: 'medium', timeStyle: 'short' })}
+                  </time>
+                </div>
+                <p className="text-sm text-muted-foreground">{label(`description.${tx.type}`)}</p>
+                {tx.description && (
+                  <p className="text-sm" dir="auto">
+                    {tx.description}
+                  </p>
+                )}
+                {tx.refId && (
+                  <p className="break-all text-sm">
+                    {label('reference')}:{' '}
+                    {invoiceHref ? (
+                      <a className="text-primary underline underline-offset-2" href={invoiceHref}>
+                        <bdi>
+                          {label('viewInvoice')}: {tx.refId}
+                        </bdi>
+                      </a>
+                    ) : (
+                      <bdi>{tx.refId}</bdi>
+                    )}
+                  </p>
+                )}
+              </li>
+            );
+          })}
         </ol>
       )}
       <div className="flex gap-2">

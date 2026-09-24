@@ -3,6 +3,18 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { WalletTransactionList } from './WalletTransactionList.js';
 
+vi.mock('../hooks/useAccountTime.js', () => ({
+  useAccountTime: () => ({
+    format: (value: string) =>
+      new Intl.DateTimeFormat('en', {
+        timeZone: 'Pacific/Kiritimati',
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      }).format(new Date(value)),
+    notice: null,
+  }),
+}));
+
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
   host = document.createElement('div');
@@ -47,7 +59,34 @@ describe('WalletTransactionList', () => {
     expect(host.textContent).toContain('+9,007,199,254,740,993');
     expect(host.textContent).toContain('Awaiting confirmation');
     expect(host.textContent).toContain('invoice-ref');
+    expect(host.textContent).toContain('Sep 2, 2026');
+    expect(host.querySelector('a[href^="/invoices/"]')).toBeNull();
     expect(button('Next page').disabled).toBe(true);
+  });
+  it('links a wallet payment to its invoice and distinguishes settled debits', async () => {
+    const invoiceId = '11111111-1111-7111-8111-111111111111';
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        response([
+          {
+            ...tx,
+            type: 'payment',
+            amount: '-25000',
+            state: 'Completed',
+            refId: invoiceId,
+            description: null,
+          },
+        ])
+      )
+    );
+    await render();
+    expect(host.querySelector(`a[href="/invoices/${invoiceId}"]`)?.textContent).toContain(
+      invoiceId
+    );
+    expect(host.querySelector('bdi.text-destructive')?.textContent).toContain('-25,000');
+    expect(host.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
+    expect(host.textContent).toContain('Completed');
   });
   it('paginates and resets the cursor when filters change', async () => {
     const fetcher = vi
