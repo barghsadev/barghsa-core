@@ -204,6 +204,32 @@ function api(current = detail()) {
     });
   });
 }
+it('submits the saved electricity snapshot as a PDF for staff document review', async () => {
+  const current = detail({
+    state: 'Accepted',
+    currentVersionId: VERSION,
+    currentVersion: version({
+      content: { template: { name: 'Electricity agreement', text: 'Saved exact terms' } },
+    }),
+  });
+  const base = api(current);
+  const fetcher = vi.fn(async (raw: string, init?: RequestInit) => {
+    if (raw.endsWith(`/versions/${VERSION}/generate-pdf`)) {
+      expect(init?.method).toBe('POST');
+      expect(JSON.parse(String(init?.body))).toEqual({ idempotencyKey: VERSION });
+      return response({ id: 'generated-document', state: 'SubmittedForReview' }, 201);
+    }
+    return base(raw);
+  });
+  vi.stubGlobal('fetch', fetcher);
+  await render(<ContractDetail id={ID} staff onClose={() => {}} onChanged={() => {}} />);
+  await click(en.generateContractPdf);
+  expect(container.textContent).toContain(en.contractPdfSubmitted);
+  expect(button(en.generateContractPdf).disabled).toBe(true);
+  expect(
+    fetcher.mock.calls.some(([raw]) => raw.endsWith(`/versions/${VERSION}/generate-pdf`))
+  ).toBe(true);
+});
 it('opens the customer contract list with the active-state filter', async () => {
   const fetcher = api();
   vi.stubGlobal('fetch', fetcher);

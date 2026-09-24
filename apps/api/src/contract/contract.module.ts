@@ -31,8 +31,10 @@ import { Module } from '@nestjs/common';
 import { SessionModule } from '../session/session.module.js';
 import { ContractController } from './contract.controller.js';
 import { ContractService } from './contract.service.js';
+import { ContractPdfService } from './contract-pdf.service.js';
+import { DocumentModule } from '../documents/document.module.js';
 @Module({
-  imports: [SessionModule, InvoiceModule, AdminModule],
+  imports: [SessionModule, InvoiceModule, AdminModule, DocumentModule],
   controllers: [
     CustomerCancellationRequestController,
     StaffCancellationRequestController,
@@ -52,6 +54,7 @@ import { ContractService } from './contract.service.js';
     ContractCancellationRequestService,
     ContractCancellationService,
     ContractService,
+    ContractPdfService,
     ContractReviewService,
     ContractSignatureService,
     ContractActivationService,

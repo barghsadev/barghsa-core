@@ -26,6 +26,7 @@ import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { authoringQuery, contractAuthoringOptions } from './contract-authoring.js';
 import { ContractService } from './contract.service.js';
+import { ContractPdfService } from './contract-pdf.service.js';
 import {
   contractUuid,
   createContractSchema,
@@ -68,7 +69,10 @@ function parse<T>(schema: z.ZodType<T>, value: unknown): T {
 @UseGuards(SessionAuthGuard, StepUpGuard)
 @Controller('api/admin/contracts')
 export class ContractController {
-  constructor(private readonly service: ContractService) {}
+  constructor(
+    private readonly service: ContractService,
+    private readonly pdf: ContractPdfService
+  ) {}
   private authorize(req: AuthenticatedRequest, write = false) {
     if (!hasStaffPermission(req, write ? 'contracts:write' : 'contracts:read'))
       throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
@@ -240,5 +244,37 @@ export class ContractController {
   ) {
     this.authorize(req);
     return this.service.version(parse(contractUuid, id), parse(contractUuid, versionId));
+  }
+  @Post(':id/versions/:versionId/generate-pdf')
+  @RequiresStepUp()
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiParam({ name: 'versionId', format: 'uuid' })
+  @ApiOperation({
+    summary:
+      'Render the saved electricity template as an exact-version contract PDF for document review',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['idempotencyKey'],
+      properties: { idempotencyKey: { type: 'string', format: 'uuid' } },
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Generated document submitted for staff review.' })
+  generatePdf(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Param('versionId') versionId: string,
+    @Body() body: unknown
+  ) {
+    this.authorize(req, true);
+    const input = parse(z.object({ idempotencyKey: z.string().uuid() }).strict(), body);
+    return this.pdf.generate(
+      parse(contractUuid, id),
+      parse(contractUuid, versionId),
+      input.idempotencyKey,
+      req
+    );
   }
 }

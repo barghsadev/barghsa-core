@@ -827,6 +827,13 @@
       "when": 1791331200100,
       "tag": "0197_signed_contract_amendments",
       "breakpoints": true
+    },
+    {
+      "idx": 198,
+      "version": "7",
+      "when": 1791331200101,
+      "tag": "0198_accepted_amendment_pdf",
+      "breakpoints": true
     }
   ]
 }

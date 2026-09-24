@@ -48,7 +48,7 @@ async function writablePendingAmendment(
         `SELECT 1 FROM contract_amendments a JOIN contracts c ON c.id=a.contract_id
        WHERE a.contract_id=$1 AND a.version_id=$2 AND a.base_version_id=c.current_version_id
          AND c.state IN ('Accepted','Signed','Active')
-         AND (($3::text='amendment' AND $4::boolean AND a.state IN ('Draft','AwaitingCustomerAcceptance'))
+         AND (($3::text='amendment' AND $4::boolean AND a.state IN ('Draft','AwaitingCustomerAcceptance','AwaitingSignature'))
            OR ($3::text='signed' AND a.state='AwaitingSignature')) FOR SHARE OF c`,
         [contractId, versionId, role, staff]
       )
@@ -243,7 +243,13 @@ export class DocumentService {
     }
   }
 
-  async create(input: DocumentCreate, request: AuthenticatedRequest, staff: boolean, ip: string) {
+  async create(
+    input: DocumentCreate,
+    request: AuthenticatedRequest,
+    staff: boolean,
+    ip: string,
+    serverManagedUpload = false
+  ) {
     if (staff && !input.profileId) throw new BadRequestException('Profile is required');
     return documentAccess(
       request.session,
@@ -368,7 +374,7 @@ export class DocumentService {
             };
           }
         );
-        if (Date.parse(result.expiresAt) <= Date.now())
+        if (!serverManagedUpload && Date.parse(result.expiresAt) <= Date.now())
           throw new ConflictException('Upload link expired; start a new upload');
         return result;
       },

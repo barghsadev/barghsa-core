@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Electricity contract PDF generation](batches/2026-09-24-electricity-contract-pdf.md) lets staff create a reviewable PDF from saved terms for the exact original or accepted amendment version, with Persian rendering and signature handoff.
+
 [Signed contract amendments](batches/2026-09-24-signed-contract-amendments.md) preserve the effective version through customer acceptance and required signing, with exact-version PDF and signed-copy evidence.
 
 [Pending amendment list status](batches/2026-09-24-contract-amendment-list-status.md) makes draft, acceptance and signature work visible beside the effective contract in staff and customer lists.

@@ -585,6 +585,9 @@ function ContractDocuments({
   const word = (key: string) => contractText(key, locale);
   const [role, setRole] = useState<ContractDocumentAssociation['contractRole'] | null>(null);
   const [reload, setReload] = useState(0);
+  const [generating, setGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState(false);
+  const [generated, setGenerated] = useState(false);
   const filters = useMemo<DocumentFilters>(
     () => ({
       kind: 'contract',
@@ -606,16 +609,66 @@ function ContractDocuments({
       (staff
         ? !['Signed', 'Active', 'Completed', 'Cancelled'].includes(contract.state)
         : ['Accepted', 'AwaitingSignature'].includes(contract.state)));
+  const template = version.content?.template;
+  const canGenerate =
+    staff &&
+    canUpload &&
+    contract.serviceType === 'electricity' &&
+    template !== null &&
+    typeof template === 'object' &&
+    !Array.isArray(template) &&
+    typeof (template as Record<string, unknown>).name === 'string' &&
+    typeof (template as Record<string, unknown>).text === 'string' &&
+    Boolean(((template as Record<string, unknown>).text as string).trim());
+  async function generatePdf() {
+    setGenerating(true);
+    setGenerationError(false);
+    try {
+      await documentRequest(
+        `${contractBase(true)}/${encodeURIComponent(contract.id)}/versions/${encodeURIComponent(version.id)}/generate-pdf`,
+        { method: 'POST', body: JSON.stringify({ idempotencyKey: version.id }) }
+      );
+      setGenerated(true);
+      setReload((value) => value + 1);
+    } catch {
+      setGenerationError(true);
+    } finally {
+      setGenerating(false);
+    }
+  }
   return (
     <section className="flex flex-col gap-4" aria-label={word('documents')}>
       <h3 className="font-semibold">{word('documents')}</h3>
       <p className="text-sm text-muted-foreground">{word('copyNotice')}</p>
+      {canGenerate ? (
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            variant="outline"
+            disabled={generating || generated}
+            onClick={() => void generatePdf()}
+          >
+            {word(generating ? 'generatingContractPdf' : 'generateContractPdf')}
+          </Button>
+          {generated ? (
+            <p role="status" className="text-sm">
+              {word('contractPdfSubmitted')}
+            </p>
+          ) : null}
+          {generationError ? (
+            <p role="alert" className="text-sm text-destructive">
+              {word('contractPdfError')}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
       {canUpload && !role ? (
         <div className="flex flex-wrap gap-2">
           {(isPendingAmendment
             ? (staff ? contract.pendingAmendment?.state : contract.amendment?.state) ===
               'AwaitingSignature'
-              ? (['signed'] as const)
+              ? staff
+                ? (['amendment', 'signed'] as const)
+                : (['signed'] as const)
               : (['amendment'] as const)
             : staff
               ? (['original', 'signed', 'amendment'] as const)

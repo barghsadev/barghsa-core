@@ -152,12 +152,16 @@ async function act(
   return (await response.json()) as DocumentDto;
 }
 
-async function contract(accepted = true, serviceType = 'electricity') {
+async function contract(
+  accepted = true,
+  serviceType = 'electricity',
+  content: Record<string, unknown> = { text: 'Exact terms' }
+) {
   const f = await owner();
   const response = await send('admin/contracts', 'signature-legal', 'POST', {
     profileId: f.profile,
     serviceType,
-    content: { text: 'Exact terms' },
+    content,
     changeDescription: 'Initial',
     idempotencyKey: randomUUID(),
   });
@@ -239,6 +243,133 @@ function record(f: Fixture, body: ReturnType<typeof recordInput>, staff = false)
     body
   );
 }
+it('generates saved electricity terms for the exact version and resumes the same document', async () => {
+  const f = await contract(true, 'electricity', {
+    template: {
+      name: 'Electricity agreement',
+      text: 'Saved agreement for this customer.\nPrice: 100 IRR.',
+    },
+  });
+  const path = `admin/contracts/${f.row.id}/versions/${f.row.currentVersionId}/generate-pdf`;
+  const body = { idempotencyKey: f.row.currentVersionId };
+  const response = await send(path, 'signature-legal', 'POST', body);
+  expect(response.status, (await response.clone().text()) + http.logs()).toBe(201);
+  const generated = (await response.json()) as DocumentDto;
+  expect(generated).toMatchObject({
+    state: 'SubmittedForReview',
+    contractVersionId: f.row.currentVersionId,
+    contractRole: 'original',
+    originalName: expect.stringMatching(/^contract-.*\.pdf$/),
+  });
+  const download = await send(`admin/documents/${generated.id}/download`, 'signature-legal');
+  expect(download.status).toBe(200);
+  const bytes = await fetch(((await download.json()) as { url: string }).url);
+  expect(bytes.status).toBe(200);
+  const pdfBytes = Buffer.from(await bytes.arrayBuffer());
+  expect(pdfBytes.subarray(0, 5).toString()).toBe('%PDF-');
+  expect(pdfBytes.length).toBeGreaterThan(1000);
+  const retry = await send(path, 'signature-legal', 'POST', body);
+  expect(retry.status).toBe(201);
+  expect(((await retry.json()) as DocumentDto).id).toBe(generated.id);
+  await http.pool.query(
+    `UPDATE idempotency_keys SET response=jsonb_set(response,'{result,expiresAt}',to_jsonb('2000-01-01T00:00:00Z'::text))
+     WHERE entity_type='document_create' AND idempotency_key=$1`,
+    [`signature-legal:${body.idempotencyKey}`]
+  );
+  const lateRetry = await send(path, 'signature-legal', 'POST', body);
+  expect(lateRetry.status).toBe(201);
+  expect(((await lateRetry.json()) as DocumentDto).id).toBe(generated.id);
+  const count = await http.pool.query<{ count: string }>(
+    'SELECT count(*) FROM contract_documents WHERE contract_id=$1 AND contract_version_id=$2',
+    [f.row.id, f.row.currentVersionId]
+  );
+  expect(count.rows[0]?.count).toBe('1');
+  const approved = await act(generated, 'approve', 'signature-legal', true);
+  expect((await prepare(f, approved.id)).view.request?.originalDocumentId).toBe(approved.id);
+});
+
+it('generates an amendment PDF after customer acceptance and makes it signable', async () => {
+  const f = await contract();
+  const baseOriginal = await documentFor(f, 'original');
+  const baseRequest = await prepare(f, baseOriginal.id);
+  const baseSigned = await documentFor(f, 'signed', false);
+  expect(
+    (await record(f, recordInput(f, baseRequest.view.request!.id, baseSigned.id))).status
+  ).toBe(200);
+  const originalRule = await http.pool.query<{ signature_required: boolean }>(
+    "SELECT signature_required FROM contract_activation_rules WHERE service_type='electricity'"
+  );
+  await http.pool.query(
+    "UPDATE contract_activation_rules SET signature_required=true,revision=revision+1 WHERE service_type='electricity'"
+  );
+  try {
+    const proposed = await send(
+      `admin/contracts/${f.row.id}/amendments`,
+      'signature-legal',
+      'POST',
+      {
+        expectedVersionId: f.row.currentVersionId,
+        content: {
+          template: { name: 'Revised agreement', text: 'Revised saved electricity terms.' },
+        },
+        changeDescription: 'Revised agreement',
+        idempotencyKey: randomUUID(),
+      }
+    );
+    expect(proposed.status, await proposed.clone().text()).toBe(201);
+    const pendingVersionId = ((await proposed.json()) as ContractDto).pendingAmendment!.versionId;
+    expect(
+      (
+        await send(`admin/contracts/${f.row.id}/amendments/publish`, 'signature-legal', 'POST', {
+          expectedVersionId: pendingVersionId,
+          idempotencyKey: randomUUID(),
+        })
+      ).status
+    ).toBe(200);
+    expect(
+      (
+        await send(`contracts/${f.row.id}/accept`, f.user, 'POST', {
+          expectedVersionId: pendingVersionId,
+          idempotencyKey: randomUUID(),
+        })
+      ).status
+    ).toBe(200);
+    const generatedResponse = await send(
+      `admin/contracts/${f.row.id}/versions/${pendingVersionId}/generate-pdf`,
+      'signature-legal',
+      'POST',
+      { idempotencyKey: pendingVersionId }
+    );
+    expect(generatedResponse.status, (await generatedResponse.clone().text()) + http.logs()).toBe(
+      201
+    );
+    const generated = (await generatedResponse.json()) as DocumentDto;
+    expect(generated).toMatchObject({
+      state: 'SubmittedForReview',
+      contractRole: 'amendment',
+      contractVersionId: pendingVersionId,
+    });
+    const approved = await act(generated, 'approve', 'signature-legal', true);
+    const signing = await send(
+      `admin/contracts/${f.row.id}/signature-request`,
+      'signature-legal',
+      'POST',
+      {
+        expectedVersionId: pendingVersionId,
+        originalDocumentId: approved.id,
+        expectedRequestId: null,
+        idempotencyKey: randomUUID(),
+      }
+    );
+    expect(signing.status, (await signing.clone().text()) + http.logs()).toBe(200);
+  } finally {
+    await http.pool.query(
+      "UPDATE contract_activation_rules SET signature_required=$1,revision=revision+1 WHERE service_type='electricity'",
+      [originalRule.rows[0]!.signature_required]
+    );
+  }
+});
+
 it('records real approved customer bytes once and preserves recorder, uploader and acceptance identities', async () => {
   const f = await contract(),
     original = await documentFor(f, 'original');
