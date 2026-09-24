@@ -458,6 +458,7 @@ it.each(['en', 'fa'] as const)(
     await render(<ContractDetail id={ID} staff={false} onClose={() => {}} onChanged={() => {}} />);
     expect(container.textContent).toContain(words.amendmentAwaitingAcceptance);
     expect(container.textContent).toContain(words.amendmentAcceptNotice);
+    expect(container.textContent).not.toContain(words.uploadAmendment);
     await act(async () =>
       container.querySelector<HTMLInputElement>('input[type=checkbox]')!.click()
     );
@@ -501,6 +502,8 @@ it('lets staff review and publish the exact draft amendment without changing the
   expect(container.textContent).not.toContain(en['amendment-publish']);
   await click(en.amendmentReview);
   expect(container.textContent).toContain('Earlier terms');
+  expect(container.textContent).toContain(en.uploadAmendment);
+  expect(container.textContent).not.toContain(en.uploadOriginal);
   await click(en['amendment-publish']);
   expect(harness.action).toMatchObject({
     path: `/api/admin/contracts/${ID}/amendments/publish`,

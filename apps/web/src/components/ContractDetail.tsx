@@ -508,15 +508,14 @@ export function ContractDetail({
               }}
             />
           ) : null}
-          {!isPendingAmendment ? (
-            <ContractDocuments
-              key={data.version.id + ':' + reload}
-              contract={data.contract}
-              version={data.version}
-              staff={staff}
-              isCurrent={isCurrent}
-            />
-          ) : null}
+          <ContractDocuments
+            key={data.version.id + ':' + reload}
+            contract={data.contract}
+            version={data.version}
+            staff={staff}
+            isCurrent={isCurrent}
+            isPendingAmendment={isPendingAmendment}
+          />
         </>
       )}
       {action && action.path.endsWith('/accept') && data ? (
@@ -551,11 +550,13 @@ function ContractDocuments({
   version,
   staff,
   isCurrent,
+  isPendingAmendment,
 }: {
   contract: ContractDetailData;
   version: ContractVersion;
   staff: boolean;
   isCurrent: boolean;
+  isPendingAmendment: boolean;
 }) {
   const locale = useLocale();
   const word = (key: string) => contractText(key, locale);
@@ -574,29 +575,33 @@ function ContractDocuments({
     [contract.profileId, contract.id, version.id]
   );
   const canUpload =
-    isCurrent &&
-    (staff
-      ? !['Signed', 'Active', 'Completed', 'Cancelled'].includes(contract.state)
-      : ['Accepted', 'AwaitingSignature'].includes(contract.state));
+    (staff && isPendingAmendment && contract.pendingAmendment?.state !== 'AwaitingSignature') ||
+    (isCurrent &&
+      (staff
+        ? !['Signed', 'Active', 'Completed', 'Cancelled'].includes(contract.state)
+        : ['Accepted', 'AwaitingSignature'].includes(contract.state)));
   return (
     <section className="flex flex-col gap-4" aria-label={word('documents')}>
       <h3 className="font-semibold">{word('documents')}</h3>
       <p className="text-sm text-muted-foreground">{word('copyNotice')}</p>
       {canUpload && !role ? (
         <div className="flex flex-wrap gap-2">
-          {(staff ? (['original', 'signed', 'amendment'] as const) : (['signed'] as const)).map(
-            (value) => (
-              <Button key={value} variant="outline" onClick={() => setRole(value)}>
-                {word(
-                  value === 'original'
-                    ? 'uploadOriginal'
-                    : value === 'signed'
-                      ? 'uploadSigned'
-                      : 'uploadAmendment'
-                )}
-              </Button>
-            )
-          )}
+          {(isPendingAmendment
+            ? (['amendment'] as const)
+            : staff
+              ? (['original', 'signed', 'amendment'] as const)
+              : (['signed'] as const)
+          ).map((value) => (
+            <Button key={value} variant="outline" onClick={() => setRole(value)}>
+              {word(
+                value === 'original'
+                  ? 'uploadOriginal'
+                  : value === 'signed'
+                    ? 'uploadSigned'
+                    : 'uploadAmendment'
+              )}
+            </Button>
+          ))}
         </div>
       ) : null}
       {role ? (

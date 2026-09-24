@@ -625,6 +625,164 @@ it('keeps internal contract documents private through reads, downloads and notif
   ).toEqual([]);
 });
 
+it('attaches an amendment document to the pending version while locking the active base', async () => {
+  const f = await owner();
+  const draft = await send('admin/contracts', 'document-legal', 'POST', {
+    profileId: f.profile,
+    serviceType: 'savings',
+    content: { text: 'Original agreement' },
+    changeDescription: 'Initial',
+    idempotencyKey: randomUUID(),
+  });
+  expect(draft.status).toBe(201);
+  const contract = (await draft.json()) as ContractDto;
+  const baseDocument = await confirm(
+    await create(
+      'document-legal',
+      {
+        profileId: f.profile,
+        businessRecordType: 'contract',
+        businessRecordId: contract.id,
+        contractVersionId: contract.currentVersionId,
+        contractRole: 'original',
+      },
+      true
+    ),
+    'document-legal',
+    true
+  );
+  const versionCommand = (versionId: string) => ({
+    expectedVersionId: versionId,
+    idempotencyKey: randomUUID(),
+  });
+  expect(
+    (
+      await send(
+        `admin/contracts/${contract.id}/submit`,
+        'document-legal',
+        'POST',
+        versionCommand(contract.currentVersionId)
+      )
+    ).status
+  ).toBe(200);
+  expect(
+    (
+      await send(
+        `admin/contracts/${contract.id}/publish`,
+        'document-legal',
+        'POST',
+        versionCommand(contract.currentVersionId)
+      )
+    ).status
+  ).toBe(200);
+  expect(
+    (
+      await send(
+        `contracts/${contract.id}/accept`,
+        f.user,
+        'POST',
+        versionCommand(contract.currentVersionId)
+      )
+    ).status
+  ).toBe(200);
+  await http.pool.query('INSERT INTO contract_activations(contract_id,version_id) VALUES($1,$2)', [
+    contract.id,
+    contract.currentVersionId,
+  ]);
+  expect(
+    (
+      await send('admin/documents', 'document-legal', 'POST', {
+        profileId: f.profile,
+        businessRecordType: 'contract',
+        businessRecordId: contract.id,
+        contractVersionId: contract.currentVersionId,
+        contractRole: 'original',
+        category: 'document',
+        fileName: 'late.pdf',
+        contentType: 'application/pdf',
+        fileSize: pdf.length,
+        idempotencyKey: randomUUID(),
+      })
+    ).status
+  ).toBe(409);
+  const proposal = await send(
+    `admin/contracts/${contract.id}/amendments`,
+    'document-legal',
+    'POST',
+    {
+      ...versionCommand(contract.currentVersionId),
+      content: { text: 'Revised agreement' },
+      changeDescription: 'Updated term',
+    }
+  );
+  expect(proposal.status, await proposal.clone().text()).toBe(201);
+  const pending = ((await proposal.json()) as ContractDto).pendingAmendment!;
+  let amendmentDocument = await confirm(
+    await create(
+      'document-legal',
+      {
+        profileId: f.profile,
+        businessRecordType: 'contract',
+        businessRecordId: contract.id,
+        contractVersionId: pending.versionId,
+        contractRole: 'amendment',
+      },
+      true
+    ),
+    'document-legal',
+    true
+  );
+  amendmentDocument = await act(amendmentDocument, 'submit', 'document-legal', true);
+  amendmentDocument = await act(amendmentDocument, 'approve', 'document-legal', true);
+  expect((await send(`documents/${amendmentDocument.id}`, f.user)).status).toBe(404);
+  expect((await send(`documents/${baseDocument.id}`, f.user)).status).toBe(200);
+  expect(
+    (
+      await send(
+        `admin/contracts/${contract.id}/amendments/publish`,
+        'document-legal',
+        'POST',
+        versionCommand(pending.versionId)
+      )
+    ).status
+  ).toBe(200);
+  expect((await send(`documents/${amendmentDocument.id}`, f.user)).status).toBe(200);
+  expect(
+    (
+      await send(
+        `contracts/${contract.id}/accept`,
+        f.user,
+        'POST',
+        versionCommand(pending.versionId)
+      )
+    ).status
+  ).toBe(200);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT document_id FROM contract_document_locks WHERE document_id=$1',
+        [amendmentDocument.id]
+      )
+    ).rowCount
+  ).toBe(1);
+  expect(
+    (
+      await send('admin/documents', 'document-legal', 'POST', {
+        profileId: f.profile,
+        businessRecordType: 'contract',
+        businessRecordId: contract.id,
+        contractVersionId: pending.versionId,
+        contractRole: 'amendment',
+        category: 'document',
+        fileName: 'late-amendment.pdf',
+        contentType: 'application/pdf',
+        fileSize: pdf.length,
+        idempotencyKey: randomUUID(),
+      })
+    ).status
+  ).toBe(409);
+});
+
 it('filters names and categories across authorized documents without treating search text as a wildcard', async () => {
   const f = await owner();
   const other = await owner();

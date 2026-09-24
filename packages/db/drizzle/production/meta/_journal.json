@@ -813,6 +813,13 @@
       "when": 1791331200098,
       "tag": "0195_contract_amendment_review",
       "breakpoints": true
+    },
+    {
+      "idx": 196,
+      "version": "7",
+      "when": 1791331200099,
+      "tag": "0196_pending_amendment_documents",
+      "breakpoints": true
     }
   ]
 }
