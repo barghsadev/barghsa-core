@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import {
+  bigint,
   check,
   index,
   integer,
@@ -38,6 +39,9 @@ export const contracts = pgTable(
   'contracts',
   {
     ...baseColumns,
+    contractNumber: bigint('contract_number', { mode: 'bigint' })
+      .notNull()
+      .default(sql`nextval('contract_number_seq'::regclass)`),
     profileId: uuid('profile_id')
       .notNull()
       .references(() => profiles.id, { onDelete: 'restrict' }),
@@ -54,6 +58,8 @@ export const contracts = pgTable(
     cancelledAt: timestamptz('cancelled_at'),
   },
   (t) => [
+    uniqueIndex('contracts_contract_number_unique').on(t.contractNumber),
+    check('contracts_contract_number_positive', sql`${t.contractNumber} > 0`),
     index('contracts_profile_created_idx').on(t.profileId, t.createdAt, t.id),
     index('contracts_order_idx').on(t.orderId),
     index('contracts_state_idx').on(t.state),

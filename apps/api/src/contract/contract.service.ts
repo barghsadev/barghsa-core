@@ -47,6 +47,7 @@ export class ContractService {
     const rows = await drizzle(getDbPool())
       .select({
         id: contracts.id,
+        contractNumber: contracts.contractNumber,
         profileId: contracts.profileId,
         profileType: profiles.profileType,
         profileTitle: profiles.title,
@@ -90,6 +91,9 @@ export class ContractService {
       .where(
         and(
           input.profileId ? eq(contracts.profileId, input.profileId) : undefined,
+          input.contractNumber
+            ? eq(contracts.contractNumber, BigInt(input.contractNumber))
+            : undefined,
           input.serviceType ? eq(contracts.serviceType, input.serviceType) : undefined,
           input.state ? eq(contracts.state, input.state) : undefined,
           input.before ? lt(contracts.id, input.before) : undefined
@@ -102,6 +106,7 @@ export class ContractService {
         .slice(0, input.limit)
         .map(({ profileFirstName, profileLastName, ...row }) => ({
           ...row,
+          contractNumber: row.contractNumber.toString(),
           commercialValue: parseContractCommercialValue(row.commercialValue),
           profileTitle:
             row.profileTitle?.trim() ||
@@ -124,6 +129,7 @@ export class ContractService {
     const version = await this.version(id, row.currentVersionId, client);
     return {
       ...row,
+      contractNumber: row.contractNumber.toString(),
       createdAt: row.createdAt.toISOString(),
       updatedAt: row.updatedAt.toISOString(),
       submittedAt: row.submittedAt?.toISOString() ?? null,

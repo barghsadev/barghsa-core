@@ -4282,6 +4282,14 @@
           },
           {
             "in": "query",
+            "name": "contractNumber",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
             "name": "profileId",
             "required": false,
             "schema": {

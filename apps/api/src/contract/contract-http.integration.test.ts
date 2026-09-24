@@ -559,6 +559,10 @@ it('lists staff contract metadata with profile/type/state filters and exclusive 
   const first = await create(body);
   const second = await create({ ...body, idempotencyKey: randomUUID(), serviceType: 'savings' });
   const unrelated = await create();
+  expect(first.contractNumber).toMatch(/^[1-9][0-9]*$/);
+  expect(
+    new Set([first.contractNumber, second.contractNumber, unrelated.contractNumber]).size
+  ).toBe(3);
   const page = await list(`?profileId=${body.profileId}&limit=1`);
   const sorted = [first.id, second.id].sort().reverse();
   expect(page.contracts.map((row: { id: string }) => row.id)).toEqual([sorted[0]]);
@@ -572,10 +576,14 @@ it('lists staff contract metadata with profile/type/state filters and exclusive 
   expect(filtered.contracts).toHaveLength(1);
   expect(filtered.contracts[0]).toMatchObject({
     id: first.id,
+    contractNumber: first.contractNumber,
     versionId: first.currentVersionId,
     versionNumber: 1,
   });
   expect(filtered.contracts.some((row: { id: string }) => row.id === unrelated.id)).toBe(false);
+  expect((await list(`?contractNumber=${first.contractNumber}`)).contracts).toEqual([
+    expect.objectContaining({ id: first.id, contractNumber: first.contractNumber }),
+  ]);
   expect((await list(`?profileId=${body.profileId}&state=Active`)).contracts).toEqual([]);
   expect((await send('', 'GET', undefined, 'contract-support')).status).toBe(403);
   expect((await fetch(http.base + '/api/admin/contracts')).status).toBe(401);
@@ -586,6 +594,9 @@ it('lists staff contract metadata with profile/type/state filters and exclusive 
     'profileId=invalid',
     'state=Invalid',
     'serviceType=Invalid',
+    'contractNumber=0',
+    'contractNumber=abc',
+    'contractNumber=9223372036854775808',
     'extra=true',
   ]) {
     expect((await send('?' + query)).status).toBe(400);

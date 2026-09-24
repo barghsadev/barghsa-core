@@ -55,10 +55,16 @@ function Workspace({
 }) {
   const locale = useLocale();
   const word = (key: string) => contractText(key, locale);
-  const [filters, setFilters] = useState({ profileId: '', state: '', serviceType: '' });
+  const [filters, setFilters] = useState({
+    contractNumber: '',
+    profileId: '',
+    state: '',
+    serviceType: '',
+  });
   const [query, setQuery] = useState(initialState ? 'state=Active' : '');
   const [generation, setGeneration] = useState(0);
   const [invalid, setInvalid] = useState(false);
+  const [invalidNumber, setInvalidNumber] = useState(false);
   const [createdId, setCreatedId] = useState<string | null>(null);
   function apply(event: FormEvent) {
     event.preventDefault();
@@ -70,6 +76,15 @@ function Workspace({
       return;
     }
     setInvalid(false);
+    if (
+      filters.contractNumber &&
+      (!/^[1-9][0-9]{0,18}$/.test(filters.contractNumber) ||
+        BigInt(filters.contractNumber) > 9_223_372_036_854_775_807n)
+    ) {
+      setInvalidNumber(true);
+      return;
+    }
+    setInvalidNumber(false);
     setCreatedId(null);
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) if (value) params.set(key, value);
@@ -104,7 +119,18 @@ function Workspace({
       ) : null}
       {staff ? (
         <form onSubmit={apply} className="flex flex-col gap-4 rounded-xl border bg-card p-5">
-          <FieldGroup className="grid gap-4 sm:grid-cols-3">
+          <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Field>
+              <FieldLabel htmlFor="contracts-number">{word('contractNumber')}</FieldLabel>
+              <Input
+                id="contracts-number"
+                dir="ltr"
+                inputMode="numeric"
+                value={filters.contractNumber}
+                onChange={(e) => setFilters({ ...filters, contractNumber: e.target.value.trim() })}
+                aria-invalid={invalidNumber}
+              />
+            </Field>
             <Field>
               <FieldLabel htmlFor="contracts-profile">{word('profile')}</FieldLabel>
               <Input
@@ -147,6 +173,7 @@ function Workspace({
             </Field>
           </FieldGroup>
           {invalid ? <p role="alert">{word('invalidProfile')}</p> : null}
+          {invalidNumber ? <p role="alert">{word('invalidContractNumber')}</p> : null}
           <Button type="submit" className="self-start">
             {word('apply')}
           </Button>
@@ -262,9 +289,9 @@ function ContractResults({
                   {item.versionNumber.toLocaleString(locale)}
                 </Button>
                 <p className="text-sm text-muted-foreground">
-                  {word('contractReference')}:{' '}
+                  {word(item.contractNumber ? 'contractNumber' : 'contractReference')}:{' '}
                   <bdi dir="ltr" className="break-all">
-                    {item.id}
+                    {item.contractNumber ?? item.id}
                   </bdi>
                 </p>
                 {item.profileType ? (

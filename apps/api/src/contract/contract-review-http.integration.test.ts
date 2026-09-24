@@ -131,6 +131,7 @@ it('shows the published value, service period and initial invoice on customer an
   );
   await publish(f);
   expect(await (await customer(f)).json()).toMatchObject({
+    contractNumber: f.row.contractNumber,
     version: { content: { commercialValue } },
   });
   const customerList = await send('contracts', 'GET', undefined, f.owner);
@@ -139,6 +140,7 @@ it('shows the published value, service period and initial invoice on customer an
     contracts: [
       {
         id: f.row.id,
+        contractNumber: f.row.contractNumber,
         profileType: 'LEGAL',
         profileTitle: 'Acme Energy',
         orderId: f.orderId,
@@ -157,6 +159,7 @@ it('shows the published value, service period and initial invoice on customer an
     contracts: [
       {
         id: f.row.id,
+        contractNumber: f.row.contractNumber,
         profileType: 'LEGAL',
         profileTitle: 'Acme Energy',
         orderId: f.orderId,

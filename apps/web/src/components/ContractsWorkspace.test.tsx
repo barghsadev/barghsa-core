@@ -86,6 +86,7 @@ const version = (extra: Partial<ContractVersion> = {}): ContractVersion => ({
 });
 const detail = (extra: Partial<ContractDetailData> = {}): ContractDetailData => ({
   id: ID,
+  contractNumber: '1001',
   profileId: PROFILE,
   serviceType: 'electricity',
   state: 'AwaitingCustomerAcceptance',
@@ -175,6 +176,7 @@ function api(current = detail()) {
       contracts: [
         {
           id: ID,
+          contractNumber: current.contractNumber,
           profileType: 'LEGAL',
           profileTitle: 'Acme Energy',
           orderId: current.orderId,
@@ -217,13 +219,13 @@ it.each(['en', 'fa'] as const)(
     const orderId = '55555555-5555-4555-8555-555555555555';
     vi.stubGlobal('fetch', api(detail({ orderId })));
     await render(<ContractsPage />);
-    expect(container.textContent).toContain(`${words.contractReference}: ${ID}`);
+    expect(container.textContent).toContain(`${words.contractNumber}: 1001`);
     expect(container.textContent).toContain(`${words.account}: Acme Energy · ${words.draftLegal}`);
     expect(container.querySelector(`a[href="/electricity/orders/${orderId}"]`)?.textContent).toBe(
       words.openLinkedOrder
     );
     await click(`${words.electricity} · ${words.version} ${(2).toLocaleString(locale)}`);
-    expect(container.textContent?.split(`${words.contractReference}: ${ID}`)).toHaveLength(3);
+    expect(container.textContent?.split(`${words.contractNumber}: 1001`)).toHaveLength(3);
   }
 );
 it('links a saving contract to its saved order from the list', async () => {
@@ -448,10 +450,15 @@ it('validates staff filters, deduplicates pagination, and recovers list errors',
   await click(en.apply);
   expect(container.textContent).toContain(en.invalidProfile);
   await value('#contracts-profile', PROFILE);
+  await value('#contracts-number', '0');
+  await click(en.apply);
+  expect(container.textContent).toContain(en.invalidContractNumber);
+  await value('#contracts-number', '1001');
   await value('#contracts-state', 'Draft');
   await value('#contracts-service', 'electricity');
   await click(en.apply);
   expect(fetcher.mock.calls.at(-1)?.[0]).toContain(`profileId=${PROFILE}`);
+  expect(fetcher.mock.calls.at(-1)?.[0]).toContain('contractNumber=1001');
   expect(fetcher.mock.calls.at(-1)?.[0]).toContain('state=Draft');
 });
 it('requires a changes reason and captures the current staff version for review', async () => {

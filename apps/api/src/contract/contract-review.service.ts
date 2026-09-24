@@ -23,6 +23,7 @@ export interface ContractReviewInput {
 type ReviewAction = 'submit' | 'request-changes' | 'publish';
 interface PublishedRow {
   id: string;
+  contract_number: string;
   profile_id: string;
   order_id: string | null;
   saving_order_id: string | null;
@@ -41,6 +42,7 @@ interface PublishedRow {
 function customerDto(row: PublishedRow) {
   return {
     id: row.id,
+    contractNumber: row.contract_number,
     profileId: row.profile_id,
     orderId: row.order_id,
     savingOrderId: row.saving_order_id,
@@ -135,6 +137,7 @@ export class ContractReviewService {
       const rows = (
         await client.query<{
           id: string;
+          contract_number: string;
           profile_type: 'INDIVIDUAL' | 'LEGAL';
           profile_title: string | null;
           profile_first_name: string | null;
@@ -154,7 +157,7 @@ export class ContractReviewService {
           initial_invoice_amount: string | null;
           initial_invoice_state: string | null;
         }>(
-          `SELECT DISTINCT ON(c.id) c.id,profile.profile_type,profile.title AS profile_title,
+          `SELECT DISTINCT ON(c.id) c.id,c.contract_number,profile.profile_type,profile.title AS profile_title,
           profile.first_name AS profile_first_name,profile.last_name AS profile_last_name,
           c.order_id,s.id AS saving_order_id,c.service_type,c.state,v.id AS version_id,v.version_number,
           v.content->'commercialValue' AS commercial_value,p.published_at,a.accepted_at,
@@ -174,6 +177,7 @@ export class ContractReviewService {
       return {
         contracts: rows.slice(0, 100).map((r) => ({
           id: r.id,
+          contractNumber: r.contract_number,
           profileType: r.profile_type,
           profileTitle:
             r.profile_title?.trim() ||
@@ -319,7 +323,7 @@ export class ContractReviewService {
   private async published(client: PoolClient, profileId: string, id: string, versionId?: string) {
     const row = (
       await client.query<PublishedRow>(
-        `SELECT c.id,c.profile_id,c.order_id,s.id AS saving_order_id,c.service_type,c.state,c.current_version_id,v.id AS version_id,v.version_number,
+        `SELECT c.id,c.contract_number,c.profile_id,c.order_id,s.id AS saving_order_id,c.service_type,c.state,c.current_version_id,v.id AS version_id,v.version_number,
         v.content,v.change_description,v.created_at,p.published_at,a.accepted_at,a.accepted_by
         FROM contracts c JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
         LEFT JOIN contract_acceptances a ON a.version_id=v.id

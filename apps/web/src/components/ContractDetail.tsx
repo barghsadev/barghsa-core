@@ -182,7 +182,8 @@ export function ContractDetail({
         <>
           {time.notice}
           <p className="text-sm text-muted-foreground">
-            {word('contractReference')}: <bdi dir="ltr">{data.contract.id}</bdi>
+            {word(data.contract.contractNumber ? 'contractNumber' : 'contractReference')}:{' '}
+            <bdi dir="ltr">{data.contract.contractNumber ?? data.contract.id}</bdi>
           </p>
           {!staff && isCurrent ? (
             <WorkflowStatusBanner

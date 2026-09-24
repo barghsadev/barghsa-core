@@ -785,6 +785,13 @@
       "when": 1791331200094,
       "tag": "0191_bank_receipt_profile_paging",
       "breakpoints": true
+    },
+    {
+      "idx": 192,
+      "version": "7",
+      "when": 1791331200095,
+      "tag": "0192_contract_numbers",
+      "breakpoints": true
     }
   ]
 }

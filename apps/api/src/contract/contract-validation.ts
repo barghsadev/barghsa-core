@@ -99,6 +99,12 @@ export const contractChangesSchema = contractReviewSchema.extend({
 export const contractListSchema = z
   .object({
     profileId: contractUuid.optional(),
+    contractNumber: z
+      .string()
+      .refine(
+        (value) => /^[1-9][0-9]{0,18}$/.test(value) && BigInt(value) <= 9_223_372_036_854_775_807n
+      )
+      .optional(),
     serviceType: z.enum(['electricity', 'savings', 'solar']).optional(),
     state: z
       .enum([

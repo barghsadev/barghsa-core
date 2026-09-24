@@ -76,6 +76,7 @@ export class ContractController {
   @Get()
   @ApiOperation({ summary: 'List staff contract metadata with bounded filters and pagination' })
   @ApiQuery({ name: 'profileId', required: false, type: String })
+  @ApiQuery({ name: 'contractNumber', required: false, type: String })
   @ApiQuery({ name: 'serviceType', required: false, enum: ['electricity', 'savings', 'solar'] })
   @ApiQuery({ name: 'state', required: false, type: String })
   @ApiQuery({ name: 'before', required: false, type: String })
