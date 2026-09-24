@@ -112,12 +112,19 @@ it('links an authorized invoice to its contract only after publication', async (
     [invoiceId, f.profile, f.row.id]
   );
   const invoice = (user: string) => send('invoices/' + invoiceId, 'GET', undefined, user);
-  const unpublished = (await (await invoice(f.owner)).json()) as { contractId: string | null };
-  expect(unpublished.contractId).toBeNull();
+  const unpublished = (await (await invoice(f.owner)).json()) as {
+    contractId: string | null;
+    contractState: string | null;
+  };
+  expect(unpublished).toMatchObject({ contractId: null, contractState: null });
   await publish(f);
   const visible = await invoice(f.owner);
   expect(visible.status).toBe(200);
-  expect(await visible.json()).toMatchObject({ contractId: f.row.id });
+  const publishedContract = (await (await customer(f)).json()) as { state: string };
+  expect(await visible.json()).toMatchObject({
+    contractId: f.row.id,
+    contractState: publishedContract.state,
+  });
   const other = await fixture();
   expect((await invoice(other.owner)).status).toBe(404);
 });

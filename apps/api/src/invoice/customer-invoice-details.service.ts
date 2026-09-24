@@ -91,6 +91,7 @@ export interface CustomerInvoiceDetailsDto extends CustomerInvoiceActivity {
   originalInvoiceId: string;
   consultationId?: string | null;
   contractId?: string | null;
+  contractState?: string | null;
   electricityOrderId?: string | null;
   savingOrderId?: string | null;
   solarRequestId?: string | null;
@@ -549,16 +550,13 @@ export class CustomerInvoiceDetailsService {
         await client.query<{
           consultation_id: string | null;
           contract_id: string | null;
+          contract_state: string | null;
           electricity_order_id: string | null;
           saving_order_id: string | null;
           solar_request_id: string | null;
         }>(
           `SELECT COALESCE(viewed.consultation_id,i.consultation_id) AS consultation_id,
-             (SELECT c.id::text FROM contracts c
-              WHERE c.id::text=COALESCE(viewed.contract_id,i.contract_id)
-                AND c.profile_id=i.profile_id
-                AND EXISTS (SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id)
-              LIMIT 1) AS contract_id,
+               linked_contract.contract_id,linked_contract.contract_state,
              CASE WHEN EXISTS (
                SELECT 1 FROM electricity_orders e
                WHERE e.id=i.order_id AND e.profile_id=i.profile_id
@@ -569,9 +567,17 @@ export class CustomerInvoiceDetailsService {
              (SELECT s.id FROM solar_construction_requests s
               WHERE s.contract_id::text=i.contract_id AND s.profile_id=i.profile_id
               LIMIT 1) AS solar_request_id
-           FROM invoices i
-           LEFT JOIN invoices viewed ON viewed.id=$3 AND viewed.profile_id=i.profile_id
-           WHERE i.id=$1 AND i.profile_id=$2`,
+             FROM invoices i
+             LEFT JOIN invoices viewed ON viewed.id=$3 AND viewed.profile_id=i.profile_id
+             LEFT JOIN LATERAL (
+               SELECT c.id::text AS contract_id,c.state::text AS contract_state
+               FROM contracts c
+               WHERE c.id::text=COALESCE(viewed.contract_id,i.contract_id)
+                 AND c.profile_id=i.profile_id
+                 AND EXISTS (SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id)
+               LIMIT 1
+             ) linked_contract ON TRUE
+             WHERE i.id=$1 AND i.profile_id=$2`,
           [original.id, profileId, invoiceId]
         )
       ).rows[0];
@@ -579,6 +585,7 @@ export class CustomerInvoiceDetailsService {
         ...details,
         consultationId: origin?.consultation_id ?? null,
         contractId: origin?.contract_id ?? null,
+        contractState: origin?.contract_state ?? null,
         electricityOrderId: origin?.electricity_order_id ?? null,
         savingOrderId: origin?.saving_order_id ?? null,
         solarRequestId: origin?.solar_request_id ?? null,

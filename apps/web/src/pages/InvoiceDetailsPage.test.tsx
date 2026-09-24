@@ -326,6 +326,7 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       document.documentElement.lang = locale;
       const payload = replacementPayload();
       payload.contractId = 'contract-1';
+      payload.contractState = 'AwaitingCustomerAcceptance';
       vi.stubGlobal(
         'fetch',
         vi.fn(async () => ({ ok: true, status: 200, json: async () => payload }))
@@ -335,6 +336,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       });
       const link = container.querySelector('a[href="/contracts?contractId=contract-1"]');
       expect(link?.textContent).toBe(locale === 'en' ? 'Open contract' : 'مشاهده قرارداد');
+      expect(container.textContent).toContain(
+        locale === 'en'
+          ? 'Contract status: Awaiting your acceptance'
+          : 'وضعیت قرارداد: در انتظار پذیرش مشتری'
+      );
     }
   );
 

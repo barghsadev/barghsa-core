@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 24, 2026
 
+[Invoice and contract status together](batches/2026-09-24-invoice-contract-status.md) shows the authorized linked contract's current state on customer invoice detail while keeping payment status separate.
+
 [Contract initial-invoice next action](batches/2026-09-24-contract-invoice-next-action.md) sends customers from an accepted or signed contract to an unpaid initial invoice and distinguishes payments under staff review.
 
 [Automatic electricity contract PDF](batches/2026-09-24-automatic-electricity-contract-pdf.md) creates the reviewable original PDF in the order transaction whenever an admin template is selected, with audited document states and retryable failure handling.

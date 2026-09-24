@@ -10,6 +10,7 @@ import { ArrowRightIcon, Loader2Icon, ReceiptIcon } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
 import { formatInvoiceServicePeriod } from '../lib/invoice-service-period.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
+import { contractText } from '@barghsa/i18n/contracts';
 import {
   InvoiceRequestError,
   fetchInvoiceDetails,
@@ -93,15 +94,6 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
           {tConsultation('backToRequest', locale)}
         </Link>
       )}
-      {details?.contractId && (
-        <Link
-          className="text-sm text-primary underline"
-          to="/contracts"
-          search={{ contractId: details.contractId }}
-        >
-          {t('invoices.details.openContract', locale)}
-        </Link>
-      )}
       {details?.electricityOrderId && (
         <Link
           className="text-sm text-primary underline"
@@ -136,6 +128,24 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
           {t('invoices.details.title', locale)}
         </h1>
       </header>
+
+      {details?.contractId && (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+          {details.contractState && (
+            <p>
+              {t('invoices.details.contractStatus', locale)}:{' '}
+              <span className="font-medium">{contractText(details.contractState, locale)}</span>
+            </p>
+          )}
+          <Link
+            className="text-primary underline"
+            to="/contracts"
+            search={{ contractId: details.contractId }}
+          >
+            {t('invoices.details.openContract', locale)}
+          </Link>
+        </div>
+      )}
 
       {loading ? (
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
