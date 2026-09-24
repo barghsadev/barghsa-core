@@ -251,6 +251,14 @@ export function ContractDetail({
               {word('openLinkedOrder')}
             </Link>
           ) : null}
+          {staff && data.contract.serviceType === 'electricity' && data.contract.orderId ? (
+            <a
+              href={`/admin/electricity-orders?orderId=${encodeURIComponent(data.contract.orderId)}`}
+              className="self-start text-sm text-primary underline underline-offset-4"
+            >
+              {word('openLinkedOrder')}
+            </a>
+          ) : null}
           {!staff && data.contract.serviceType === 'savings' && data.contract.savingOrderId ? (
             <Link
               to="/savings/orders/$orderId"

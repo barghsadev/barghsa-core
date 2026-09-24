@@ -356,6 +356,32 @@ it.each(['en', 'fa'] as const)(
   }
 );
 it.each(['en', 'fa'] as const)(
+  'opens a linked electricity order from staff contract list and detail in %s',
+  async (locale) => {
+    harness.locale = locale;
+    const words = locale === 'fa' ? fa : en;
+    const orderId = '55555555-5555-4555-8555-555555555555';
+    const contractApi = api(detail({ orderId, currentVersion: version() }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (raw: string) => {
+        if (raw.includes('/wallet-refunds/contract-obligations'))
+          return response({ obligations: [], nextBefore: null });
+        if (raw.includes('/contract-cancellation-requests'))
+          return response({ requests: [], nextBefore: null });
+        if (raw.includes('/contract-activation-rules'))
+          return response({ rules: [], canEdit: false });
+        return contractApi(raw);
+      })
+    );
+    await render(<AdminContractsPage />);
+    const href = `/admin/electricity-orders?orderId=${orderId}`;
+    expect(container.querySelector(`a[href="${href}"]`)?.textContent).toBe(words.openLinkedOrder);
+    await click(`${words.electricity} · ${words.version} ${(2).toLocaleString(locale)}`);
+    expect(container.querySelectorAll(`a[href="${href}"]`)).toHaveLength(2);
+  }
+);
+it.each(['en', 'fa'] as const)(
   'opens a linked saving order from the published contract in %s',
   async (locale) => {
     harness.locale = locale;

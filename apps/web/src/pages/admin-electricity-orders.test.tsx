@@ -12,6 +12,8 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   const order = {
     orderId: 'order-1',
+    contractId: '22222222-2222-7222-8222-222222222222',
+    contractState: 'AwaitingCustomerAcceptance',
     invoiceId: '11111111-1111-7111-8111-111111111111',
     invoiceState: 'Unpaid',
     customerName: 'Electricity Buyer',
@@ -128,6 +130,11 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
         'a[href="/admin/invoices?invoiceId=11111111-1111-7111-8111-111111111111"]'
       )?.textContent
     ).toBe('Open invoice');
+    expect(
+      container.querySelector(
+        'a[href="/admin/contracts?contractId=22222222-2222-7222-8222-222222222222"]'
+      )?.textContent
+    ).toBe('Open contract');
     expect(container.textContent).toContain('Review order changes');
     expect(container.textContent).toContain('Increase quantity');
     expect(container.textContent).toContain('Quantity updated');
@@ -174,6 +181,70 @@ it('shows the staff queue, order financial facts, product lines and decisions', 
   } finally {
     await act(async () => root.unmount());
     container.remove();
+    vi.unstubAllGlobals();
+  }
+});
+
+it('opens a linked order directly even when it is no longer in the review queue', async () => {
+  document.documentElement.lang = 'en';
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  const orderId = '55555555-5555-4555-8555-555555555555';
+  const contractId = '66666666-6666-4666-8666-666666666666';
+  const previousUrl = window.location.href;
+  window.history.replaceState({}, '', `/admin/electricity-orders?orderId=${orderId}`);
+  const fetchMock = vi.fn(
+    async (url: string) =>
+      new Response(
+        JSON.stringify(
+          url === '/api/user/settings/timezone'
+            ? { timezone: 'Asia/Tehran' }
+            : url === `/api/staff/electricity/orders/${orderId}`
+              ? {
+                  orderId,
+                  contractId,
+                  contractState: 'Active',
+                  invoiceId: '77777777-7777-4777-8777-777777777777',
+                  customerName: 'Electricity Buyer',
+                  commercialStatus: 'approved',
+                  financialStatus: 'paid',
+                  submittedAt: '2026-09-23T22:00:00Z',
+                  periodStart: '2026-09-23T00:00:00Z',
+                  periodEnd: '2026-09-30T20:30:00Z',
+                  totalKwh: '10',
+                  totalIrR: '1000',
+                  paidIrR: '1000',
+                  fullAddress: 'Electricity Street',
+                  pricingSnapshot: { lines: [] },
+                  settingsSnapshot: {},
+                  contractSnapshot: {},
+                  revisionReview: null,
+                }
+              : url.includes('/comments')
+                ? { comments: [], nextBefore: null }
+                : { orders: [], nextAfter: null }
+        ),
+        { headers: { 'Content-Type': 'application/json' } }
+      )
+  );
+  vi.stubGlobal('fetch', fetchMock);
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<AdminElectricityOrdersPage />));
+    expect(fetchMock).toHaveBeenCalledWith(
+      `/api/staff/electricity/orders/${orderId}`,
+      expect.any(Object)
+    );
+    expect(container.textContent).toContain('Electricity Buyer');
+    expect(container.textContent).not.toContain('No orders await review.');
+    expect(
+      container.querySelector(`a[href="/admin/contracts?contractId=${contractId}"]`)?.textContent
+    ).toBe('Open contract');
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+    window.history.replaceState({}, '', previousUrl);
     vi.unstubAllGlobals();
   }
 });

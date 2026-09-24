@@ -383,6 +383,14 @@ function ContractResults({
                     {word('openLinkedOrder')}
                   </Link>
                 ) : null}
+                {staff && item.serviceType === 'electricity' && item.orderId ? (
+                  <a
+                    href={`/admin/electricity-orders?orderId=${encodeURIComponent(item.orderId)}`}
+                    className="text-sm text-primary underline underline-offset-4"
+                  >
+                    {word('openLinkedOrder')}
+                  </a>
+                ) : null}
                 {!staff && item.serviceType === 'savings' && item.savingOrderId ? (
                   <Link
                     to="/savings/orders/$orderId"

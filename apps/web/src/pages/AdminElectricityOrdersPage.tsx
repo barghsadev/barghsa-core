@@ -10,6 +10,8 @@ import { commercialStatusTone, financialStatusTone } from '../lib/electricity-st
 
 interface ReviewOrder {
   orderId: string;
+  contractId: string | null;
+  contractState: string | null;
   invoiceId: string;
   invoiceState: string;
   customerName: string;
@@ -84,7 +86,9 @@ export default function AdminElectricityOrdersPage() {
   const [orders, setOrders] = useState<ReviewOrder[]>([]);
   const [after, setAfter] = useState<string | null>(null);
   const [nextAfter, setNextAfter] = useState<string | null>(null);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(() =>
+    new URLSearchParams(window.location.search).get('orderId')
+  );
   const [queueView, setQueueView] = useState<'review' | 'conversations'>('review');
   const [detail, setDetail] = useState<ReviewOrder | null>(null);
   const [reason, setReason] = useState('');
@@ -222,7 +226,7 @@ export default function AdminElectricityOrdersPage() {
       {loading ? <p role="status">{copy('loading')}</p> : null}
       {denied ? <p role="alert">{copy('forbidden')}</p> : null}
       {error ? <p role="alert">{copy('error')}</p> : null}
-      {!loading && !denied && !error && orders.length === 0 ? (
+      {!loading && !denied && !error && orders.length === 0 && !selectedId ? (
         <p>{copy(queueView === 'conversations' ? 'emptyConversations' : 'empty')}</p>
       ) : null}
       <div className="grid gap-5 xl:grid-cols-[minmax(16rem,1fr)_minmax(24rem,2fr)]">
@@ -306,6 +310,19 @@ export default function AdminElectricityOrdersPage() {
                     </a>
                   </dd>
                 </div>
+                {detail.contractId ? (
+                  <div>
+                    <dt className="text-muted-foreground">{copy('contract')}</dt>
+                    <dd>
+                      <a
+                        className="text-primary underline underline-offset-2"
+                        href={`/admin/contracts?contractId=${encodeURIComponent(detail.contractId)}`}
+                      >
+                        {copy('openContract')}
+                      </a>
+                    </dd>
+                  </div>
+                ) : null}
               </dl>
               <p className="text-sm">
                 <strong>{copy('address')}: </strong>
