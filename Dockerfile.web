@@ -1,8 +1,14 @@
 FROM node:24-bookworm-slim AS deps
 WORKDIR /app
 RUN corepack enable
+COPY .npmrc package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/web/package.json apps/web/package.json
+COPY packages/tsconfig/package.json packages/tsconfig/package.json
+COPY packages/i18n/package.json packages/i18n/package.json
+COPY packages/shared/package.json packages/shared/package.json
+COPY packages/ui/package.json packages/ui/package.json
+RUN pnpm --filter @barghsa/web... install --frozen-lockfile --prod=false
 COPY . .
-RUN pnpm install --frozen-lockfile --prod=false
 
 FROM deps AS build
 RUN pnpm -r --filter @barghsa/web... build

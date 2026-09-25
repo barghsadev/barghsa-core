@@ -1,4 +1,4 @@
-# Build once with the complete workspace dependency graph.
+# Liara builds the final stage and cannot select Dockerfile.base's worker target.
 FROM node:24-bookworm-slim AS deps
 WORKDIR /app
 RUN corepack enable
@@ -17,24 +17,15 @@ RUN pnpm -r --filter @barghsa/api... --filter @barghsa/worker... build
 RUN pnpm --filter @barghsa/api deploy --prod /out/api
 RUN pnpm --filter @barghsa/worker deploy --prod /out/worker
 
-FROM node:24-bookworm-slim AS runtime
+FROM node:24-bookworm-slim AS production
 WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends poppler-utils \
   && rm -rf /var/lib/apt/lists/*
 COPY --from=build /out/api ./
 COPY --from=build /out/worker ./worker/
 COPY scripts/healthcheck-runtime.cjs ./healthcheck-runtime.cjs
-COPY scripts/run-packaged-migrations.cjs ./run-packaged-migrations.cjs
-COPY scripts/run-liara-migrations.cjs ./run-liara-migrations.cjs
 ENV NODE_ENV=production NODE_OPTIONS="--max-old-space-size=512"
 USER node
-EXPOSE 4000 9090
+EXPOSE 9090
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 CMD node healthcheck-runtime.cjs
-
-# Compatibility target; production supports the identical command override.
-FROM runtime AS worker
 CMD ["node", "worker/dist/main.js"]
-
-# Keep the API as the default target for existing build commands.
-FROM runtime AS production
-CMD ["sh", "-c", "if [ \"$BARGHSA_DB_PROFILE\" = liara ]; then node run-liara-migrations.cjs || exit 1; fi; exec node dist/src/main.js"]

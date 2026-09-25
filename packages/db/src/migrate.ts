@@ -233,7 +233,10 @@ export async function verifyMigrationVersion(
 // ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
-  const result = await runMigrations();
+  const options: MigrationOptions = process.env['BARGHSA_MIGRATIONS_FOLDER']
+    ? { migrationsFolder: process.env['BARGHSA_MIGRATIONS_FOLDER'] }
+    : {};
+  const result = await runMigrations(options);
 
   if (!result.ok) {
     console.error(
@@ -262,7 +265,7 @@ async function main(): Promise<void> {
   // Post-migration health check: verify expected migration version.
   const expectedId = process.env['EXPECTED_MIGRATION_ID'];
   if (expectedId) {
-    const versionOk = await verifyMigrationVersion(expectedId);
+    const versionOk = await verifyMigrationVersion(expectedId, options);
     if (!versionOk) {
       console.error(
         JSON.stringify({

@@ -1,0 +1,10 @@
+FROM node:24-bookworm-slim
+WORKDIR /app
+COPY package.json ./
+COPY dist ./dist
+COPY server.js healthcheck.js entry-routes.js ./
+ENV NODE_ENV=production NODE_OPTIONS="--max-old-space-size=256"
+USER node
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 CMD node healthcheck.js
+CMD ["node", "server.js"]
