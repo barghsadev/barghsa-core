@@ -49,3 +49,4 @@ export type {
 export { parseInvoiceReplacementReview } from './invoice-replacement-review.js';
 export * from './bank-receipt-review.js';
 export * from './contract-financial-review.js';
+export * from './electricity-price-adjustment-review.js';

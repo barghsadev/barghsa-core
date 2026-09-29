@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Electricity price adjustment financial review](batches/2026-09-30-electricity-price-financial-review.md) binds staff proposals to an authoritative priced preview and shows the same calculation before publishing or finalizing a charge or credit. The cross-command review tasks remain partial.
+
 [Contract cancellation financial review](batches/2026-09-30-contract-cancellation-financial-review.md) shows the captured contract, invoice balances and refund decision in the shared bilingual confirmation layout before staff save or execute cancellation. Existing server fingerprints still reject changed finances. The cross-command review tasks remain partial.
 
 [Invoice bank-receipt financial review](batches/2026-09-30-invoice-bank-receipt-review-snapshot.md) binds staff confirmation to the current receipt, invoice allocation, wallet excess and approval rule. It also repairs five stale integration fixtures found by the preceding main CI run. Remote CI is pending.

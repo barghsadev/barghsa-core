@@ -1,4 +1,4 @@
-import { act } from 'react';
+import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { ElectricityPriceAdjustmentsPanel } from './ElectricityPriceAdjustmentsPanel.js';
@@ -9,12 +9,28 @@ import AdminElectricityPriceAdjustmentsPage, {
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ irrDigits: String, number: String }),
 }));
+const h = vi.hoisted(() => ({ action: null as { path: string; body?: unknown } | null }));
 vi.mock('../components/TeamActionDialog.js', () => ({
-  TeamActionDialog: ({ action }: { action: { path: string } }) => <p>{action.path}</p>,
+  TeamActionDialog: ({
+    action,
+    summary,
+  }: {
+    action: { path: string; body?: unknown };
+    summary: ReactNode;
+  }) => {
+    h.action = action;
+    return (
+      <div>
+        {action.path}
+        {summary}
+      </div>
+    );
+  },
 }));
 afterEach(() => {
   vi.unstubAllGlobals();
   window.history.replaceState({}, '', '/');
+  h.action = null;
 });
 
 it('converts signed staff percentages exactly and refuses zero or a zero-price decrease', () => {
@@ -102,6 +118,7 @@ it('opens a disclosed proposal from the staff contract link and starts finalizat
       new Response(
         JSON.stringify({
           contractId: 'contract-1',
+          profileId: 'profile-1',
           versionId: 'version-1',
           periodEnd: '2026-10-11T00:00:00Z',
           canPropose: false,
@@ -120,9 +137,25 @@ it('opens a disclosed proposal from the staff contract link and starts finalizat
               calculationSha256: 'a'.repeat(64),
               adjustmentInvoiceId: null,
               calculation: {
+                contractId: 'contract-1',
+                versionId: 'version-1',
+                originalInvoiceId: 'invoice-1',
+                reason: 'Published tariff correction',
+                contractualBasis: 'Clause 7',
                 quote: {
+                  effectiveFrom: '2026-10-06T00:00:00Z',
+                  percentageBps: '1000',
+                  amountIrR: '50000',
                   oldFutureIrR: '500000',
                   newFutureIrR: '550000',
+                  components: [
+                    {
+                      source: 'original_invoice',
+                      invoiceId: 'invoice-1',
+                      basisIrR: '1000000',
+                      changeIrR: '50000',
+                    },
+                  ],
                 },
               },
             },
@@ -148,6 +181,127 @@ it('opens a disclosed proposal from the staff contract link and starts finalizat
     expect(container.textContent).toContain(
       '/api/staff/electricity/price-adjustments/price-1/finalize'
     );
+    expect(container.textContent).toContain('Electricity price financial review');
+    expect(container.textContent).toContain('50,000 IRR');
+    expect(container.textContent).toContain('invoice-1');
+  } finally {
+    await act(async () => root.unmount());
+    container.remove();
+  }
+});
+
+it('reviews the server price before preparing the exact publish command', async () => {
+  const contractId = '11111111-1111-4111-8111-111111111111';
+  const profileId = '22222222-2222-4222-8222-222222222222';
+  const versionId = '33333333-3333-4333-8333-333333333333';
+  const invoiceId = '44444444-4444-4444-8444-444444444444';
+  const orderId = '55555555-5555-4555-8555-555555555555';
+  document.documentElement.lang = 'en';
+  window.history.replaceState(
+    {},
+    '',
+    `/admin/electricity-price-adjustments?contractId=${contractId}`
+  );
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  const fetchMock = vi.fn(async (raw: string, init?: RequestInit) => {
+    if (!raw.endsWith('/review'))
+      return new Response(
+        JSON.stringify({
+          contractId,
+          profileId,
+          versionId,
+          periodEnd: '2027-09-01T00:00:00.000Z',
+          canPropose: true,
+          canFinalize: false,
+          canCancel: false,
+          blockedByIncrease: false,
+          adjustments: [],
+        })
+      );
+    const body = JSON.parse(String(init?.body)) as Record<string, string>;
+    return new Response(
+      JSON.stringify({
+        schemaVersion: 1,
+        hash: 'a'.repeat(64),
+        scope: {
+          action: 'electricity.price-adjustment-proposal',
+          profileId,
+          resourceId: contractId,
+        },
+        data: {
+          currency: 'IRR',
+          profileId,
+          orderId,
+          periodStart: '2026-09-01T00:00:00.000Z',
+          periodEnd: '2027-09-01T00:00:00.000Z',
+          calculation: {
+            schemaVersion: 1,
+            contractId,
+            versionId,
+            originalInvoiceId: invoiceId,
+            reason: body.reason,
+            contractualBasis: body.contractualBasis,
+            quote: {
+              amountIrR: '50000',
+              oldFutureIrR: '500000',
+              newFutureIrR: '550000',
+              kind: 'charge',
+              percentageBps: body.percentageBps,
+              effectiveFrom: body.effectiveFrom,
+              rounding: 'half-up-to-nearest-IRR',
+              components: [
+                {
+                  source: 'original_invoice',
+                  invoiceId,
+                  basisIrR: '1000000',
+                  periodStart: '2026-09-01T00:00:00.000Z',
+                  periodEnd: '2027-09-01T00:00:00.000Z',
+                  eligibleFrom: body.effectiveFrom,
+                  oldFutureIrR: '500000',
+                  changeIrR: '50000',
+                  newFutureIrR: '550000',
+                  remainingMs: '15897600000',
+                  periodMs: '31536000000',
+                },
+              ],
+            },
+          },
+        },
+      })
+    );
+  });
+  vi.stubGlobal('fetch', fetchMock);
+  const container = document.createElement('div');
+  document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<AdminElectricityPriceAdjustmentsPage />));
+    const set = async (selector: string, value: string) => {
+      const input = container.querySelector<HTMLInputElement>(selector)!;
+      await act(async () => {
+        Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+          input,
+          value
+        );
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+    };
+    await set('#price-percent', '10');
+    await set('#price-effective', '2026-10-06T12:00');
+    await set('#price-reason', 'Tariff change');
+    await set('#price-basis', 'Clause 7');
+    await act(async () =>
+      container
+        .querySelectorAll('form')[1]!
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    );
+    expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith('/review'))).toBe(true);
+    expect(h.action?.body).toMatchObject({
+      expectedReviewHash: 'a'.repeat(64),
+      percentageBps: '1000',
+    });
+    expect(container.textContent).toContain('Electricity price financial review');
+    expect(container.textContent).toContain('50,000 IRR');
   } finally {
     await act(async () => root.unmount());
     container.remove();

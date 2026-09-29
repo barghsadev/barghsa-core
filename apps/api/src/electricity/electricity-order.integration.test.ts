@@ -2,6 +2,7 @@ import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import { activateReadyContracts } from '@barghsa/db/contract-activation';
 import { retryDueWalletRefunds, runWalletRefund } from '@barghsa/db/refund-processing';
+import type { ElectricityPriceAdjustmentReview } from '@barghsa/shared/finance';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -87,6 +88,19 @@ const post = (path: string, body: unknown) =>
     headers,
     body: JSON.stringify(body),
   });
+
+async function priceProposalReview(contractId: string, body: Record<string, unknown>) {
+  const response = await fetch(
+    `${http.base}/api/staff/electricity/contracts/${contractId}/price-adjustments/review`,
+    {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify(body),
+    }
+  );
+  expect(response.status, http.logs()).toBe(200);
+  return (await response.json()) as ElectricityPriceAdjustmentReview;
+}
 
 async function refreshQuote() {
   const response = await post('preview/simple', {
@@ -2105,17 +2119,23 @@ it.each([
         const priceStart = new Date(
           (period.period_start.getTime() + period.period_end.getTime()) / 2
         );
+        const proposalInput = {
+          expectedVersionId: versionId,
+          effectiveFrom: priceStart.toISOString(),
+          percentageBps: '1000',
+          reason: 'Future tariff change',
+          contractualBasis: 'Clause 7',
+        };
+        const expectedReviewHash = (await priceProposalReview(order.contractId, proposalInput))
+          .hash;
         const proposal = await fetch(
           `${http.base}/api/staff/electricity/contracts/${order.contractId}/price-adjustments`,
           {
             method: 'POST',
             headers: staffHeaders,
             body: JSON.stringify({
-              expectedVersionId: versionId,
-              effectiveFrom: priceStart.toISOString(),
-              percentageBps: '1000',
-              reason: 'Future tariff change',
-              contractualBasis: 'Clause 7',
+              ...proposalInput,
+              expectedReviewHash,
               idempotencyKey: randomUUID(),
             }),
           }
@@ -2590,14 +2610,28 @@ it.each(['charge', 'credit'] as const)(
     const staffPath = `${http.base}/api/staff/electricity/contracts/${order.contractId}/price-adjustments`;
     const customerPath = `${http.base}/api/electricity/contracts/${order.contractId}/price-adjustments`;
     const percentageBps = kind === 'charge' ? '1000' : '-1000';
-    const proposalBody = {
+    const proposalInput = {
       expectedVersionId: contract.current_version_id,
       effectiveFrom: effectiveFrom.toISOString(),
       percentageBps,
       reason: 'Published future tariff correction',
       contractualBasis: 'Clause 7 of signed electricity contract',
+    };
+    const proposalReview = await priceProposalReview(order.contractId, proposalInput);
+    const proposalBody = {
+      ...proposalInput,
+      expectedReviewHash: proposalReview.hash,
       idempotencyKey: randomUUID(),
     };
+    const staleProposal = await fetch(staffPath, {
+      method: 'POST',
+      headers: staffHeaders,
+      body: JSON.stringify({
+        ...proposalBody,
+        percentageBps: kind === 'charge' ? '1200' : '-1200',
+      }),
+    });
+    expect(staleProposal.status, http.logs()).toBe(409);
     const propose = () =>
       fetch(staffPath, {
         method: 'POST',
@@ -2610,7 +2644,15 @@ it.each(['charge', 'credit'] as const)(
       adjustmentId: string;
       calculationSha256: string;
       adjustmentAmountIrR: string;
+      calculation: ElectricityPriceAdjustmentReview['data']['calculation'];
     };
+    expect(proposed.calculation).toEqual(proposalReview.data.calculation);
+    const reviewAudit = await http.pool.query<{ metadata: { financialReview: { hash: string } } }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.price_proposed'
+       AND metadata::jsonb->>'adjustmentId'=$1`,
+      [proposed.adjustmentId]
+    );
+    expect(reviewAudit.rows[0]?.metadata.financialReview.hash).toBe(proposalReview.hash);
     expect(proposed.adjustmentAmountIrR).toBe(kind === 'charge' ? '50000' : '-50000');
     expect(((await (await propose()).json()) as { adjustmentId: string }).adjustmentId).toBe(
       proposed.adjustmentId
@@ -2666,6 +2708,14 @@ it.each(['charge', 'credit'] as const)(
       status: string;
     };
     expect(finalized.status).toBe('finalized');
+    const finalAudit = await http.pool.query<{
+      metadata: { calculationSha256: string };
+    }>(
+      `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='electricity.price_finalized'
+       AND metadata::jsonb->>'adjustmentId'=$1`,
+      [proposed.adjustmentId]
+    );
+    expect(finalAudit.rows[0]?.metadata.calculationSha256).toBe(proposed.calculationSha256);
     expect(
       (
         (await (
@@ -2718,13 +2768,14 @@ it.each(['charge', 'credit'] as const)(
         proposed.adjustmentId,
       ])
     ).rejects.toMatchObject({ code: '23514' });
+    const secondInput = { ...proposalInput, reason: 'Superseded second proposal' };
     const secondProposal = await fetch(staffPath, {
       method: 'POST',
       headers: staffHeaders,
       body: JSON.stringify({
-        ...proposalBody,
+        ...secondInput,
+        expectedReviewHash: (await priceProposalReview(order.contractId, secondInput)).hash,
         idempotencyKey: randomUUID(),
-        reason: 'Superseded second proposal',
       }),
     });
     expect(secondProposal.status, http.logs()).toBe(201);
