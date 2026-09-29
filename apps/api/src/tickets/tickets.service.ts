@@ -5,7 +5,9 @@ import {
   type TicketActor,
   type TicketAccess,
 } from './ticket-actor.js';
-import { requireCurrentSession } from '../session/session-step-up.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { SessionService } from '../session/session.service.js';
 import {
   SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
   toServiceResponseTargets,
@@ -16,7 +18,7 @@ import { NotificationsService } from '../notifications/notifications.service.js'
 import type { PoolClient } from 'pg';
 import { z } from 'zod';
 import { TicketAttachmentsService } from './ticket-attachments.service.js';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { resolveStaffPermissions } from '../session/staff-permissions.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { getDbPool, loadStoredStorageConfiguration } from '@barghsa/db';
@@ -30,6 +32,11 @@ export interface TicketRow {
   subject: string;
   body: string;
   category: 'general' | 'billing' | 'orders' | 'privacy';
+  privacyRequestType?: PrivacyRequestType | null;
+  privacyClosureCompletedAt?: Date | null;
+  privacyClosureAnonymized?: boolean | null;
+  privacyClosureRetained?: Record<string, number> | null;
+  privacyClosureExportTicketId?: string | null;
   profileId: string | null;
   relatedEntityType: string | null;
   relatedEntityId: string | null;
@@ -99,6 +106,11 @@ export interface ClosureBlocker {
     | 'pendingRefund'
     | 'walletBalance'
     | 'activeContract'
+    | 'activeOrder'
+    | 'pendingVerification'
+    | 'pendingWalletTransaction'
+    | 'activeProductWorkflow'
+    | 'pendingProfileAccess'
     | 'securityReview';
   count: number;
   owner: 'legal' | 'finance' | 'customer' | 'contracts' | 'privacy';
@@ -112,6 +124,11 @@ function mapRow(row: Record<string, unknown>): TicketRow {
     subject: row.subject as string,
     body: row.body as string,
     category: (row.category as TicketRow['category']) ?? 'general',
+    privacyRequestType: (row.privacy_request_type as PrivacyRequestType) ?? null,
+    privacyClosureCompletedAt: (row.privacy_closure_completed_at as Date) ?? null,
+    privacyClosureAnonymized: (row.privacy_closure_anonymized as boolean) ?? null,
+    privacyClosureRetained: (row.privacy_closure_retained as Record<string, number>) ?? null,
+    privacyClosureExportTicketId: (row.privacy_closure_export_ticket_id as string) ?? null,
     profileId: (row.profile_id as string) ?? null,
     relatedEntityType: (row.related_entity_type as string) ?? null,
     relatedEntityId: (row.related_entity_id as string) ?? null,
@@ -149,7 +166,8 @@ export class TicketsService {
     @Inject(STORAGE_PROVIDER)
     private readonly exportStorage: StorageProvider = runtimeStorageProvider(
       loadStoredStorageConfiguration
-    )
+    ),
+    private readonly sessions: SessionService = new SessionService()
   ) {}
 
   private readonly logger = new Logger(TicketsService.name);
@@ -332,6 +350,11 @@ export class TicketsService {
         pending_refunds: number;
         wallet_balances: number;
         active_contracts: number;
+        active_orders: number;
+        pending_verification: number;
+        pending_wallet_transactions: number;
+        active_product_workflows: number;
+        pending_profile_access: number;
       }>(
         `SELECT
           GREATEST(
@@ -350,7 +373,32 @@ export class TicketsService {
           (SELECT count(*)::int FROM wallets WHERE profile_id=$1
            AND (posted_balance<>0 OR reserved_balance<>0)) AS wallet_balances,
           (SELECT count(*)::int FROM contracts WHERE profile_id=$1
-           AND state NOT IN ('Completed','Cancelled')) AS active_contracts`,
+           AND state NOT IN ('Completed','Cancelled')) AS active_contracts,
+          (SELECT count(*)::int FROM orders o WHERE o.profile_id=$1
+           AND (o.status IN ('DRAFT','PENDING') OR
+             (o.status='CONFIRMED' AND NOT EXISTS (
+               SELECT 1 FROM contracts c WHERE c.order_id=o.id
+               AND c.state IN ('Completed','Cancelled'))))) AS active_orders,
+          (SELECT count(*)::int FROM verification_cases WHERE profile_id=$1
+           AND status IN ('Open','Under Review')) AS pending_verification,
+          (SELECT count(*)::int FROM wallet_transactions wt
+           JOIN wallets w ON w.profile_id=wt.wallet_id WHERE w.profile_id=$1
+           AND wt.state IN ('Pending','Reserved')) AS pending_wallet_transactions,
+          (SELECT count(*)::int FROM electricity_orders WHERE profile_id=$1
+           AND status NOT IN ('completed','rejected','cancelled'))
+          + (SELECT count(*)::int FROM saving_orders WHERE profile_id=$1
+             AND status NOT IN ('completed','rejected','cancelled'))
+          + (SELECT count(*)::int FROM solar_construction_requests WHERE profile_id=$1
+             AND status NOT IN ('contract_created','rejected','cancelled'))
+          + (SELECT count(*)::int FROM consultation_requests WHERE profile_id=$1
+             AND status NOT IN ('completed','offer_declined','rejected','cancelled'))
+          + (SELECT count(*)::int FROM electricity_quantity_increase_requests WHERE profile_id=$1
+             AND status NOT IN ('effective','rejected','expired'))
+          + (SELECT count(*)::int FROM electricity_price_adjustments WHERE profile_id=$1
+             AND status='proposed') AS active_product_workflows,
+          (SELECT count(*)::int FROM profile_invitations WHERE profile_id=$1 AND status='Pending')
+          + (SELECT count(*)::int FROM profile_ownership_transfers WHERE profile_id=$1 AND status='Pending')
+            AS pending_profile_access`,
         [profileId]
       )
     ).rows[0]!;
@@ -379,6 +427,36 @@ export class TicketsService {
         count: counts.active_contracts,
         owner: 'contracts',
         nextStep: 'completeContract',
+      },
+      {
+        code: 'activeOrder',
+        count: counts.active_orders,
+        owner: 'contracts',
+        nextStep: 'completeContract',
+      },
+      {
+        code: 'pendingVerification',
+        count: counts.pending_verification,
+        owner: 'privacy',
+        nextStep: 'staffReview',
+      },
+      {
+        code: 'pendingWalletTransaction',
+        count: counts.pending_wallet_transactions,
+        owner: 'finance',
+        nextStep: 'settleWallet',
+      },
+      {
+        code: 'activeProductWorkflow',
+        count: counts.active_product_workflows,
+        owner: 'contracts',
+        nextStep: 'completeContract',
+      },
+      {
+        code: 'pendingProfileAccess',
+        count: counts.pending_profile_access,
+        owner: 'privacy',
+        nextStep: 'staffReview',
       },
       { code: 'securityReview', count: 1, owner: 'privacy', nextStep: 'staffReview' },
     ];
@@ -505,6 +583,222 @@ export class TicketsService {
       return { ticketId, profileId, type, created: true };
     } catch (error) {
       await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  private async closureExecutionPreview(client: PoolClient, ticketId: string) {
+    const request = (
+      await client.query<{
+        id: string;
+        user_id: string;
+        profile_id: string;
+        status: TicketRow['status'];
+        privacy_closure_completed_at: Date | null;
+        privacy_closure_anonymized: boolean | null;
+        profile_type: 'INDIVIDUAL' | 'LEGAL';
+        archived: boolean;
+        profile_updated_at: Date;
+      }>(
+        `SELECT t.id,t.user_id,t.profile_id,t.status,t.privacy_closure_completed_at,
+           t.privacy_closure_anonymized,p.profile_type,p.archived,p.updated_at AS profile_updated_at
+         FROM tickets t JOIN profiles p ON p.id=t.profile_id
+         WHERE t.id=$1 AND t.privacy_request_type='closure'`,
+        [ticketId]
+      )
+    ).rows[0];
+    if (!request) throw new HttpException('Closure request not found', 404);
+    const blockers = await this.closureBlockers(client, request.profile_id);
+    const retained = (
+      await client.query<{
+        orders: number;
+        contracts: number;
+        invoices: number;
+        wallets: number;
+        refunds: number;
+        documents: number;
+        verification_cases: number;
+        electricity_orders: number;
+        saving_orders: number;
+        solar_requests: number;
+        consultations: number;
+        electricity_increases: number;
+        price_adjustments: number;
+      }>(
+        `SELECT
+          (SELECT count(*)::int FROM orders WHERE profile_id=$1) AS orders,
+          (SELECT count(*)::int FROM contracts WHERE profile_id=$1) AS contracts,
+          (SELECT count(*)::int FROM invoices WHERE profile_id=$1) AS invoices,
+          (SELECT count(*)::int FROM wallets WHERE profile_id=$1) AS wallets,
+          (SELECT count(*)::int FROM refunds WHERE profile_id=$1) AS refunds,
+          (SELECT count(*)::int FROM documents WHERE profile_id=$1) AS documents,
+          (SELECT count(*)::int FROM verification_cases WHERE profile_id=$1) AS verification_cases,
+          (SELECT count(*)::int FROM electricity_orders WHERE profile_id=$1) AS electricity_orders,
+          (SELECT count(*)::int FROM saving_orders WHERE profile_id=$1) AS saving_orders,
+          (SELECT count(*)::int FROM solar_construction_requests WHERE profile_id=$1) AS solar_requests,
+          (SELECT count(*)::int FROM consultation_requests WHERE profile_id=$1) AS consultations,
+          (SELECT count(*)::int FROM electricity_quantity_increase_requests WHERE profile_id=$1) AS electricity_increases,
+          (SELECT count(*)::int FROM electricity_price_adjustments WHERE profile_id=$1) AS price_adjustments`,
+        [request.profile_id]
+      )
+    ).rows[0]!;
+    const exportRequest = (
+      await client.query<{ id: string; privacy_export_expires_at: Date | null }>(
+        `SELECT id,privacy_export_expires_at FROM tickets
+         WHERE profile_id=$1 AND user_id=$2 AND privacy_request_type='export'
+         ORDER BY created_at DESC,id DESC LIMIT 1`,
+        [request.profile_id, request.user_id]
+      )
+    ).rows[0];
+    const anonymizeProfile =
+      request.profile_type === 'INDIVIDUAL' &&
+      Object.values(retained).every((count) => count === 0);
+    const eligible =
+      !request.archived &&
+      !request.privacy_closure_completed_at &&
+      !['resolved', 'closed'].includes(request.status) &&
+      blockers.every((blocker) => blocker.code === 'securityReview' || blocker.count === 0);
+    const previewVersion = createHash('sha256')
+      .update(
+        JSON.stringify({
+          ticketId,
+          status: request.status,
+          profileUpdatedAt: request.profile_updated_at,
+          archived: request.archived,
+          blockers,
+          retained,
+          exportTicketId: exportRequest?.id ?? null,
+        })
+      )
+      .digest('hex');
+    return {
+      ticketId,
+      profileId: request.profile_id,
+      ownerUserId: request.user_id,
+      completedAt: request.privacy_closure_completed_at,
+      anonymized: request.privacy_closure_anonymized,
+      eligible,
+      blockers,
+      retained,
+      anonymizeProfile,
+      exportTicketId: exportRequest?.id ?? null,
+      exportExpiresAt: exportRequest?.privacy_export_expires_at ?? null,
+      previewVersion,
+    };
+  }
+
+  async staffClosurePreview(actor: TicketActor, ticketId: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:users:edit');
+      const access = await authorizeTicketAccess(client, actor, actor.userId, 'write');
+      if (!access.canAssignOthers) throw new HttpException('Full ticket access required', 403);
+      const preview = await this.closureExecutionPreview(client, ticketId);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return preview;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async staffExecuteClosure(actor: TicketActor, ticketId: string, previewVersion: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN ISOLATION LEVEL SERIALIZABLE');
+      const request = (
+        await client.query<{ profile_id: string; user_id: string }>(
+          `SELECT profile_id,user_id FROM tickets WHERE id=$1 AND privacy_request_type='closure'`,
+          [ticketId]
+        )
+      ).rows[0];
+      if (!request) throw new HttpException('Closure request not found', 404);
+      if (request.user_id === actor.userId)
+        throw new HttpException('A different staff member must approve this closure', 403);
+      await requireStaffMutationPermission(
+        client,
+        actor.userId,
+        'admin:users:edit',
+        request.user_id
+      );
+      const access = await authorizeTicketAccess(client, actor, actor.userId, 'write');
+      if (!access.canAssignOthers) throw new HttpException('Full ticket access required', 403);
+      await requireSessionStepUp(client, actor);
+      await client.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [request.profile_id]);
+      await client.query('SELECT id FROM tickets WHERE id=$1 FOR UPDATE', [ticketId]);
+      const preview = await this.closureExecutionPreview(client, ticketId);
+      if (preview.completedAt) {
+        await requireSessionStepUp(client, actor);
+        await client.query('COMMIT');
+        return { ...preview, created: false };
+      }
+      if (!preview.eligible || preview.previewVersion !== previewVersion)
+        throw new HttpException('Closure preview changed or blockers remain', 409);
+      const now = new Date();
+      if (preview.anonymizeProfile) {
+        await client.query(
+          `UPDATE profiles SET title=NULL,contact_email=NULL,contact_mobile=NULL,
+             first_name=NULL,last_name=NULL,national_id=NULL,updated_at=$2
+           WHERE id=$1`,
+          [preview.profileId, now]
+        );
+        await client.query(
+          `UPDATE addresses SET full_address='[redacted]',postal_code='0000000000',
+             updated_at=$2 WHERE profile_id=$1`,
+          [preview.profileId, now]
+        );
+      }
+      await client.query(
+        `UPDATE profiles SET archived=true,archived_at=$2,archived_reason='privacy_closure',
+           is_default=false,updated_at=$2 WHERE id=$1`,
+        [preview.profileId, now]
+      );
+      await client.query('UPDATE user_profile_contexts SET profile_id=NULL WHERE profile_id=$1', [
+        preview.profileId,
+      ]);
+      await this.sessions.revokeAllUserSessions(preview.ownerUserId, undefined, client);
+      await client.query(
+        `UPDATE tickets SET status='closed',privacy_closure_completed_at=$2,
+           privacy_closure_actor_id=$3,privacy_closure_anonymized=$4,
+           privacy_closure_retained=$5::jsonb,privacy_closure_export_ticket_id=$6,
+           updated_at=$2 WHERE id=$1`,
+        [
+          ticketId,
+          now,
+          actor.userId,
+          preview.anonymizeProfile,
+          JSON.stringify(preview.retained),
+          preview.exportTicketId,
+        ]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata) VALUES($1,$2,'profile_closure_executed',$3::jsonb)`,
+        [
+          randomUUID(),
+          actor.userId,
+          JSON.stringify({
+            ticketId,
+            profileId: preview.profileId,
+            ownerUserId: preview.ownerUserId,
+            retained: preview.retained,
+            anonymizedProfileFields: preview.anonymizeProfile,
+            exportTicketId: preview.exportTicketId,
+          }),
+        ]
+      );
+      await requireSessionStepUp(client, actor);
+      await client.query('COMMIT');
+      return { ...preview, completedAt: now, anonymized: preview.anonymizeProfile, created: true };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      if (typeof error === 'object' && error !== null && 'code' in error && error.code === '40001')
+        throw new HttpException('Closure changed; refresh the preview', 409);
       throw error;
     } finally {
       client.release();
@@ -886,6 +1180,8 @@ export class TicketsService {
         )
       ).rows[0];
       if (!row) throw new HttpException('Ticket not found', 404);
+      if (row.privacy_closure_completed_at && row.status !== status)
+        throw new HttpException('Completed closure requests cannot be reopened', 409);
       if (row.status === status) {
         if (actor) await requireCurrentSession(client, actor);
         await client.query('COMMIT');

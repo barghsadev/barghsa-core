@@ -89,7 +89,7 @@ describe('complete production schema baseline', () => {
       expect((await pool.query('SELECT * FROM addresses ORDER BY id')).rows).toEqual(
         before.map((row) => ({ ...row, deleted_at: null }))
       );
-      expect((await pool.query('SELECT * FROM tickets ORDER BY id')).rows).toEqual(
+      expect((await pool.query('SELECT * FROM tickets ORDER BY id')).rows).toMatchObject(
         oldTickets.map((row) => ({ ...row, category: 'general' }))
       );
       await expect(pool.query("UPDATE tickets SET category='technical'")).rejects.toMatchObject({

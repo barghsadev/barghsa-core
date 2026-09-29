@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import {
   uuid,
   text,
+  boolean,
   timestamp,
   pgTable,
   jsonb,
@@ -60,6 +61,11 @@ export const tickets = pgTable(
     privacyExportStorageKey: text('privacy_export_storage_key'),
     privacyExportExpiresAt: timestamp('privacy_export_expires_at', { withTimezone: true }),
     privacyExportDownloadedAt: timestamp('privacy_export_downloaded_at', { withTimezone: true }),
+    privacyClosureCompletedAt: timestamp('privacy_closure_completed_at', { withTimezone: true }),
+    privacyClosureActorId: text('privacy_closure_actor_id').references(() => users.userId),
+    privacyClosureAnonymized: boolean('privacy_closure_anonymized'),
+    privacyClosureRetained: jsonb('privacy_closure_retained').$type<Record<string, number>>(),
+    privacyClosureExportTicketId: uuid('privacy_closure_export_ticket_id'),
 
     /** Optional FK to the profile this ticket relates to. */
     profileId: uuid('profile_id').references(() => profiles.id, { onDelete: 'set null' }),
@@ -120,6 +126,15 @@ export const tickets = pgTable(
           AND ${table.privacyExportExpiresAt} IS NULL)
         OR (${table.privacyRequestType}='export' AND ${table.privacyExportJobId} IS NOT NULL
           AND (${table.privacyExportStorageKey} IS NULL OR ${table.privacyExportExpiresAt} IS NOT NULL))`
+    ),
+    check(
+      'tickets_privacy_closure_valid',
+      sql`(${table.privacyClosureCompletedAt} IS NULL AND ${table.privacyClosureActorId} IS NULL
+        AND ${table.privacyClosureAnonymized} IS NULL AND ${table.privacyClosureRetained} IS NULL
+        AND ${table.privacyClosureExportTicketId} IS NULL)
+        OR (${table.privacyRequestType}='closure' AND ${table.privacyClosureCompletedAt} IS NOT NULL
+          AND ${table.privacyClosureActorId} IS NOT NULL AND ${table.privacyClosureAnonymized} IS NOT NULL
+          AND ${table.privacyClosureRetained} IS NOT NULL)`
     ),
     check(
       'tickets_attachments_array',

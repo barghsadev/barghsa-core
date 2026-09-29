@@ -448,6 +448,7 @@ it('reports current read-only capabilities after a staff permission change', asy
       userId: actor.userId,
       canWrite: false,
       canAssignOthers: false,
+      canApproveClosure: false,
     });
   } finally {
     await client.query('ROLLBACK');

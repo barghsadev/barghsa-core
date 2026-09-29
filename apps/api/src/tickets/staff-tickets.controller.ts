@@ -17,11 +17,12 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { TicketsService } from './tickets.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 
 @ApiTags('Staff Tickets')
 @Controller('api/staff/tickets')
@@ -35,6 +36,63 @@ export class StaffTicketsController {
     return hasStaffPermission(req, `tickets:${action}`) || hasStaffPermission(req, 'tickets:*')
       ? undefined
       : req.session.userId;
+  }
+
+  private requireClosureApproval(req: AuthenticatedRequest) {
+    if (
+      !hasStaffPermission(req, 'admin:users:edit') ||
+      (!hasStaffPermission(req, 'tickets:write') && !hasStaffPermission(req, 'tickets:*'))
+    )
+      throw new HttpException(
+        'Profile closure approval requires privacy and ticket permissions',
+        403
+      );
+  }
+
+  @Get(':id/closure-preview')
+  @ApiOperation({ summary: 'Dry-run an owned profile closure request' })
+  async closurePreview(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.requireClosureApproval(req);
+    return this.ticketsService.staffClosurePreview(req.session, id);
+  }
+
+  @Post(':id/execute-closure')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @RateLimit({ namespace: 'staff:tickets:closure', limit: 10, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Execute a reviewed profile closure atomically' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['previewVersion', 'confirmation'],
+      additionalProperties: false,
+      properties: {
+        previewVersion: { type: 'string', pattern: '^[a-f0-9]{64}$' },
+        confirmation: { type: 'string', enum: ['CLOSE_PROFILE'] },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Closure completed or idempotently replayed' })
+  @ApiResponse({ status: 409, description: 'Preview changed or blockers remain' })
+  async executeClosure(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() input: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.requireClosureApproval(req);
+    const parsed = z
+      .object({
+        previewVersion: z.string().regex(/^[a-f0-9]{64}$/),
+        confirmation: z.literal('CLOSE_PROFILE'),
+      })
+      .strict()
+      .safeParse(input);
+    if (!parsed.success) throw new HttpException('Invalid closure confirmation', 400);
+    return this.ticketsService.staffExecuteClosure(req.session, id, parsed.data.previewVersion);
   }
 
   /**
@@ -99,6 +157,9 @@ export class StaffTicketsController {
         userId: req.session.userId,
         canWrite: access.canWrite,
         canAssignOthers: access.canAssignOthers,
+        canApproveClosure:
+          hasStaffPermission(req, 'admin:users:edit') &&
+          (hasStaffPermission(req, 'tickets:write') || hasStaffPermission(req, 'tickets:*')),
       },
     }));
   }

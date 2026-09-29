@@ -24380,6 +24380,30 @@
         ]
       }
     },
+    "/api/staff/tickets/{id}/closure-preview": {
+      "get": {
+        "operationId": "StaffTicketsController_closurePreview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Dry-run an owned profile closure request",
+        "tags": [
+          "Staff Tickets"
+        ]
+      }
+    },
     "/api/staff/tickets/{id}/comments": {
       "get": {
         "operationId": "StaffTicketsController_listComments",
@@ -24436,6 +24460,60 @@
           }
         },
         "summary": "Staff add a comment to a ticket",
+        "tags": [
+          "Staff Tickets"
+        ]
+      }
+    },
+    "/api/staff/tickets/{id}/execute-closure": {
+      "post": {
+        "operationId": "StaffTicketsController_executeClosure",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "confirmation": {
+                    "enum": [
+                      "CLOSE_PROFILE"
+                    ],
+                    "type": "string"
+                  },
+                  "previewVersion": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "previewVersion",
+                  "confirmation"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Closure completed or idempotently replayed"
+          },
+          "409": {
+            "description": "Preview changed or blockers remain"
+          }
+        },
+        "summary": "Execute a reviewed profile closure atomically",
         "tags": [
           "Staff Tickets"
         ]

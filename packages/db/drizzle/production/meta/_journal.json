@@ -1009,6 +1009,13 @@
       "when": 1791331200236,
       "tag": "0223_profile_data_exports",
       "breakpoints": true
+    },
+    {
+      "idx": 224,
+      "version": "7",
+      "when": 1791331200237,
+      "tag": "0224_profile_closure",
+      "breakpoints": true
     }
   ]
 }
