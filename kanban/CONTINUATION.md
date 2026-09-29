@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[Assistant account status shortcut](batches/2026-09-29-assistant-account-status.md) reads wallet and unpaid-invoice status through the authorized dashboard without sending private account data to the knowledge model. Permission-limited and switched-profile responses fail closed; full AI tools and writes remain open. The standalone route-budget check remains over limit on multiple routes and needs a separate performance batch.
+
 [Staff/customer operating contexts](batches/2026-09-29-staff-customer-context.md) add explicit session authority, credential-rotating switches, route/job/upload/export isolation, a bilingual switch, and customer-mode access to onboarding for dual-role users. The first main CI run exposed a legacy migration test that assumed session rows could never gain a column; the follow-up checks preserved credentials and staff/customer backfill directly.
 
 Reviewed profile closure execution is implemented on main. [Portable profile data export](batches/2026-09-29-profile-data-export.md) connects privacy requests to an owner-scoped async ZIP export, visible progress and retries, eligible document bytes, audited short-lived downloads, and 24-hour expiry.

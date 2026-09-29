@@ -34,6 +34,16 @@ for (const locale of ['fa', 'en'] as const) {
         json: { available: true, profileId: 'profile-1', slotKey: 'individual_chatbot' },
       })
     );
+    await page.route('**/api/dashboard', (route) =>
+      route.fulfill({
+        json: {
+          profile: { id: 'profile-1', name: 'Ari Buyer' },
+          access: { wallet: true, invoices: true },
+          wallet: { balance: '1234500', currency: 'IRR' },
+          pendingInvoices: 2,
+        },
+      })
+    );
     const sent: Array<Record<string, unknown>> = [];
     await page.route('**/api/ai/knowledge/questions', async (route) => {
       sent.push(route.request().postDataJSON() as Record<string, unknown>);
@@ -64,10 +74,21 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveAttribute('data-side', locale === 'fa' ? 'left' : 'right');
     await expect(dialog).toContainText(
-      locale === 'fa'
-        ? 'به سفارش‌ها، کیف پول و فاکتورهای شما دسترسی ندارد'
-        : 'cannot access your orders'
+      locale === 'fa' ? 'در اختیار مدل قرار نمی‌گیرد' : 'is not sent to the model'
     );
+    await dialog
+      .getByRole('button', {
+        name: locale === 'fa' ? 'نمایش وضعیت حساب من' : 'Show my account status',
+      })
+      .click();
+    await expect(dialog).toContainText('Ari Buyer');
+    await expect(dialog).toContainText(
+      locale === 'fa' ? 'فاکتورهای پرداخت‌نشده' : 'Unpaid invoices'
+    );
+    await expect(
+      dialog.getByRole('link', { name: locale === 'fa' ? 'مشاهده کیف پول' : 'View wallet' })
+    ).toBeVisible();
+    expect(sent).toHaveLength(0);
     const question = locale === 'fa' ? 'مدارک لازم چیست؟' : 'What documents do I need?';
     const input = dialog.getByLabel(
       locale === 'fa' ? 'پرسش خود را بنویسید' : 'Write your question'
@@ -78,8 +99,7 @@ for (const locale of ['fa', 'en'] as const) {
       locale === 'fa' ? 'راهنمای منتشرشده را بخوانید.' : 'Read the published guide.'
     );
     expect(sent).toHaveLength(1);
-    expect(sent[0]).toMatchObject({ message: question, requestId: expect.any(String) });
-    expect(sent[0]).not.toHaveProperty('profileId');
+    expect(sent[0]).toEqual({ message: question, requestId: expect.any(String) });
     await dialog.getByText(locale === 'fa' ? 'منابع پاسخ' : 'Answer sources').click();
     await expect(dialog.getByText('guide.pdf')).toBeVisible();
     await expect(dialog.getByText(locale === 'fa' ? 'بخش راهنما' : 'Guide excerpt')).toBeVisible();
@@ -106,4 +126,65 @@ test('customer launcher stays hidden when the active profile has no assigned gui
   await page.goto('/app');
   await expect(page.locator('#dashboard-navigation')).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'پرسش از راهنمای برقسا' })).toHaveCount(0);
+});
+
+test('account status hides denied fields and refuses a switched profile response', async ({
+  page,
+}) => {
+  await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
+  let dashboard: Record<string, unknown> = {
+    profile: { id: 'profile-1', name: 'Agent profile' },
+    access: { wallet: false, invoices: false },
+    wallet: null,
+    pendingInvoices: 777,
+  };
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({ json: { userId: 'viewer', isStaff: false, requiresTosAcceptance: false } })
+  );
+  await page.route('**/api/profiles', (route) =>
+    route.fulfill({
+      json: {
+        profiles: [{ id: 'profile-1', profileType: 'LEGAL', isDefault: true, status: 'ACTIVE' }],
+        hasDefault: true,
+        activeProfileId: 'profile-1',
+      },
+    })
+  );
+  await page.route('**/api/ai/knowledge/availability', (route) =>
+    route.fulfill({
+      json: { available: true, profileId: 'profile-1', slotKey: 'legal_entity_chatbot' },
+    })
+  );
+  await page.route('**/api/dashboard', (route) => route.fulfill({ json: dashboard }));
+
+  await page.goto('/app');
+  await page.getByRole('button', { name: 'Ask Barghsa guide' }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('button', { name: 'Show my account status' }).click();
+  await expect(dialog.getByText('Unavailable')).toHaveCount(2);
+  await expect(dialog.getByRole('link', { name: 'View wallet' })).toHaveCount(0);
+  await expect(dialog.getByRole('link', { name: 'View invoices' })).toHaveCount(0);
+  await expect(dialog).not.toContainText('777');
+
+  dashboard = {
+    profile: { id: 'profile-1', name: 'Agent profile' },
+    wallet: { balance: '25', currency: 'IRR' },
+    pendingInvoices: 777,
+  };
+  await dialog.getByRole('button', { name: 'Show my account status' }).click();
+  await expect(dialog.getByRole('link', { name: 'View wallet' })).toBeVisible();
+  await expect(dialog.getByRole('link', { name: 'View invoices' })).toHaveCount(0);
+  await expect(dialog).not.toContainText('777');
+
+  dashboard = {
+    profile: { id: 'profile-2', name: 'Other profile' },
+    access: { wallet: true, invoices: true },
+    wallet: { balance: '999999', currency: 'IRR' },
+    pendingInvoices: 9,
+  };
+  await dialog.getByRole('button', { name: 'Show my account status' }).click();
+  await expect(dialog).toContainText('The active profile changed. Reopen the guide.');
+  await expect(dialog).not.toContainText('Other profile');
+  await expect(dialog).not.toContainText('999999');
 });

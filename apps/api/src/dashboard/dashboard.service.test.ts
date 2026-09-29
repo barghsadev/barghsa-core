@@ -41,6 +41,7 @@ describe('DashboardService quick status', () => {
       currency: 'IRR',
       lowBalanceWarning: true,
     });
+    expect(overview.access).toEqual({ wallet: true, invoices: true });
     const outstandingQuery = queryFor('SUM(total_amount-paid_amount)');
     expect(outstandingQuery?.[0]).toContain("state IN ('Unpaid', 'Overdue')");
     expect(outstandingQuery?.[0]).not.toContain('due_at<=NOW()');
@@ -56,6 +57,25 @@ describe('DashboardService quick status', () => {
       unpaidInvoices: 0,
     });
     expect(mockQuery).toHaveBeenCalledTimes(1);
+  });
+
+  it('reports unavailable account sections without reading them for a legal-only agent', async () => {
+    const getWallet = vi.fn();
+    service = new DashboardService({ getWallet } as never);
+    mockQuery.mockImplementation(async (query: string) => {
+      if (query.includes('FROM profiles p') && query.includes('JOIN users u'))
+        return { rows: [{ id: 'profile-legal', is_owner: false, roles: ['Legal'] }] };
+      if (query.includes('FROM profiles p')) return { rows: [{ name: 'Legal profile' }] };
+      if (query.includes('FROM contracts') || query.includes('FROM tickets'))
+        return { rows: [{ cnt: 0 }] };
+      throw new Error('Unauthorized query');
+    });
+
+    const overview = await service.getOverview('legal-user');
+    expect(overview.access).toEqual({ wallet: false, invoices: false });
+    expect(overview.wallet).toBeNull();
+    expect(getWallet).not.toHaveBeenCalled();
+    expect(queryFor('FROM invoices')).toBeUndefined();
   });
 
   it('counts active contracts and pending workflow orders without duplicate legacy rows', async () => {

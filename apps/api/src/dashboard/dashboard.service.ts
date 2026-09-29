@@ -54,6 +54,10 @@ export class DashboardService {
     const balance = wallet?.availableBalance ?? 0n;
     return {
       profile: { id: context.id, name: profileResult.rows[0].name },
+      access: {
+        wallet: allowed('wallet:view'),
+        invoices: allowed('invoices:view'),
+      },
       wallet: allowed('wallet:view')
         ? {
             balance: balance.toString(),

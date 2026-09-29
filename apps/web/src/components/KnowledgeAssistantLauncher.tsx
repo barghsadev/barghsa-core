@@ -34,7 +34,7 @@ export function KnowledgeAssistantLauncher({ locale }: { locale: Locale }) {
     return () => controller.abort();
   }, [revision]);
 
-  if (!availability?.available || !availability.slotKey) return null;
+  if (!availability?.available || !availability.slotKey || !availability.profileId) return null;
 
   return (
     <>
@@ -57,6 +57,7 @@ export function KnowledgeAssistantLauncher({ locale }: { locale: Locale }) {
           <KnowledgeAssistantPanel
             locale={locale}
             slotKey={availability.slotKey}
+            profileId={availability.profileId}
             open={open}
             onOpenChange={(value) => {
               setOpen(value);
