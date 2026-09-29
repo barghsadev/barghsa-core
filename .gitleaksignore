@@ -1,5 +1,7 @@
 # Exact historical false positives reviewed in audit/archive/secret-scan-triage.json.
 # New commits and new locations remain subject to all default rules.
+# Synthetic internal worker authentication fixture in a unit test, not a deployed credential.
+5b00ffe3a24bae2015001cd30226a04ad1399ba4:apps/worker/src/ai-inference/server.test.ts:generic-api-key:8
 39d1f0ba532e780114d9e78bcc344c588454c0e2:apps/api/src/admin/admin.service.ts:generic-api-key:260
 39d1f0ba532e780114d9e78bcc344c588454c0e2:apps/api/src/ai-models/ai-model-tester.service.test.ts:generic-api-key:102
 39d1f0ba532e780114d9e78bcc344c588454c0e2:apps/api/src/email-webhook/email-webhook.service.test.ts:generic-api-key:15
