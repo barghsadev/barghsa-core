@@ -36,6 +36,7 @@ interface Draft {
   tone: string;
   language: string;
   maxLength: string;
+  requireSources: boolean;
   format: 'plain_text' | 'json_object';
   maxRequests: string;
   windowSeconds: string;
@@ -59,6 +60,7 @@ function draftFor(row?: Entry): Draft {
     tone: typeof rules.tone === 'string' ? rules.tone : '',
     language: typeof rules.language === 'string' ? rules.language : '',
     maxLength: typeof rules.maxLength === 'number' ? String(rules.maxLength) : '',
+    requireSources: rules.requireSources === true,
     format: rules.format === 'json_object' ? 'json_object' : 'plain_text',
     maxRequests: typeof rules.maxRequests === 'number' ? String(rules.maxRequests) : '10',
     windowSeconds: typeof rules.windowSeconds === 'number' ? String(rules.windowSeconds) : '60',
@@ -187,6 +189,7 @@ export default function AdminAiPoliciesPage() {
             tone: draft.tone.trim(),
             ...(draft.language.trim() ? { language: draft.language.trim() } : {}),
             ...(draft.maxLength ? { maxLength: Number(draft.maxLength) } : {}),
+            ...(draft.requireSources ? { requireSources: true } : {}),
           }
         : draft.policyType === 'output_format'
           ? { format: draft.format }
@@ -307,6 +310,7 @@ export default function AdminAiPoliciesPage() {
                           tone: '',
                           language: '',
                           maxLength: '',
+                          requireSources: false,
                         })
                       }
                     >
@@ -366,6 +370,16 @@ export default function AdminAiPoliciesPage() {
                           }
                         />
                       </div>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={draft.requireSources}
+                          onChange={(event) =>
+                            setDraft({ ...draft, requireSources: event.target.checked })
+                          }
+                        />
+                        {label('requireSources')}
+                      </label>
                     </>
                   ) : draft.policyType === 'output_format' ? (
                     <div className="flex flex-col gap-2">

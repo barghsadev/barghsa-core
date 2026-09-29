@@ -150,6 +150,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
           'output_filtered',
           'output_too_long',
           'output_format_invalid',
+          'source_required',
         ]);
         if (typeof payload.reason === 'string' && reasons.has(payload.reason))
           error.reason = payload.reason;

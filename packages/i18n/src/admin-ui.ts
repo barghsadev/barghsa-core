@@ -265,6 +265,9 @@ export const fa: I18nDictionary = {
   'admin.agents.testChat.unknown': 'نامشخص',
   'admin.agents.testChat.latency': 'زمان پاسخ',
   'admin.agents.testChat.sources': 'بخش‌های بازیابی‌شده',
+  'admin.agents.testChat.retrievedContext':
+    'پاسخ با زمینهٔ بازیابی‌شده تولید شد؛ جزئیات منبع را بررسی کنید.',
+  'admin.agents.testChat.generalGuidance': 'بر پایهٔ دانش عمومی — با کارشناسان برقسا بررسی کنید.',
   'admin.agents.testChat.policies': 'سیاست‌های اعمال‌شده',
   'admin.agents.testChat.remaining': 'درخواست‌های باقی‌مانده',
   'admin.agents.testChat.error': 'ارسال پیام انجام نشد. دوباره تلاش کنید.',
@@ -385,6 +388,7 @@ export const fa: I18nDictionary = {
   'admin.policies.tone': 'لحن',
   'admin.policies.language': 'زبان (اختیاری)',
   'admin.policies.maxLength': 'حداکثر طول (اختیاری)',
+  'admin.policies.requireSources': 'پاسخ فقط با منبع بازیابی‌شده مجاز است',
   'admin.policies.itemsHelp': 'هر مورد در یک خط. حداکثر ۲۰۰ مورد و هر مورد حداکثر ۲۰۰ نویسه.',
   'admin.policies.enabled': 'فعال',
   'admin.policies.disabled': 'غیرفعال',
@@ -1584,6 +1588,10 @@ export const en: I18nDictionary = {
   'admin.agents.testChat.unknown': 'Unavailable',
   'admin.agents.testChat.latency': 'Latency',
   'admin.agents.testChat.sources': 'Retrieved passages',
+  'admin.agents.testChat.retrievedContext':
+    'Generated with retrieved context; check the source excerpts.',
+  'admin.agents.testChat.generalGuidance':
+    'Based on general knowledge — verify with Barghsa staff.',
   'admin.agents.testChat.policies': 'Applied policies',
   'admin.agents.testChat.remaining': 'Requests remaining',
   'admin.agents.testChat.error': 'Could not send the message. Try again.',
@@ -1706,6 +1714,7 @@ export const en: I18nDictionary = {
   'admin.policies.tone': 'Tone',
   'admin.policies.language': 'Language (optional)',
   'admin.policies.maxLength': 'Maximum length (optional)',
+  'admin.policies.requireSources': 'Require a retrieved source for answers',
   'admin.policies.itemsHelp': 'One item per line. Up to 200 items, each at most 200 characters.',
   'admin.policies.enabled': 'Enabled',
   'admin.policies.disabled': 'Disabled',

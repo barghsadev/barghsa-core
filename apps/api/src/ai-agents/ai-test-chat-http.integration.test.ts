@@ -10,10 +10,11 @@ let agentId: string;
 let headers: Record<string, string>;
 let completions = 0;
 let providerReply = 'A test answer';
+let lastChatMessages: Array<{ role: string; content: string }> = [];
 const previousEmbeddingBase = process.env.KB_EMBEDDING_BASE_URL;
 
 beforeAll(async () => {
-  provider = createServer((request, response) => {
+  provider = createServer(async (request, response) => {
     if (request.url === '/v1/embeddings') {
       response.setHeader('content-type', 'application/json');
       response.end(JSON.stringify({ data: [{ index: 0, embedding: Array(1536).fill(0.1) }] }));
@@ -23,6 +24,12 @@ beforeAll(async () => {
       response.writeHead(404).end();
       return;
     }
+    const chunks: Buffer[] = [];
+    for await (const chunk of request) chunks.push(Buffer.from(chunk));
+    const payload = JSON.parse(Buffer.concat(chunks).toString()) as {
+      messages: Array<{ role: string; content: string }>;
+    };
+    lastChatMessages = payload.messages;
     completions++;
     response.setHeader('content-type', 'application/json');
     response.end(
@@ -96,6 +103,7 @@ it('isolates a test conversation, replays idempotently, and enforces per-admin q
   expect(result).toMatchObject({
     reply: 'A test answer',
     sources: [],
+    attribution: 'general_guidance',
     tokenUsage: { input: 7, output: 3 },
     remainingQuota: 9,
   });
@@ -139,9 +147,21 @@ it('requires every linked knowledge base in all-KB mode and returns its excerpts
       agentId,
       kbId,
     ]);
+    const storageKey = `test-chat/${randomUUID()}`;
+    await http.pool.query('INSERT INTO storage_records(storage_key,file_name) VALUES ($1,$2)', [
+      storageKey,
+      `Source ${index + 1}.txt`,
+    ]);
+    const documentId = (
+      await http.pool.query<{ id: string }>(
+        `INSERT INTO kb_documents(kb_id,storage_key,file_name,created_by,processing_status)
+         VALUES ($1,$2,$3,'test-chat-admin','ready') RETURNING id`,
+        [kbId, storageKey, `Source ${index + 1}.txt`]
+      )
+    ).rows[0]!.id;
     await http.pool.query(
-      'INSERT INTO kb_chunks(kb_id,chunk_index,content,embedding) VALUES ($1,0,$2,$3::vector)',
-      [kbId, `Excerpt ${index + 1}`, JSON.stringify(Array(1536).fill(0.1))]
+      'INSERT INTO kb_chunks(kb_id,document_id,chunk_index,content,embedding) VALUES ($1,$2,0,$3,$4::vector)',
+      [kbId, documentId, `Excerpt ${index + 1}`, JSON.stringify(Array(1536).fill(0.1))]
     );
   }
   expect((await send({ agentId, requestId: randomUUID(), message: 'Sources?' })).status).toBe(409);
@@ -154,11 +174,20 @@ it('requires every linked knowledge base in all-KB mode and returns its excerpts
   const result = (await response.json()) as TestChatResponse;
   expect(result.sources).toEqual(
     expect.arrayContaining([
-      expect.objectContaining({ kbId: ids[0], excerpt: 'Excerpt 1' }),
-      expect.objectContaining({ kbId: ids[1], excerpt: 'Excerpt 2' }),
+      expect.objectContaining({
+        kbId: ids[0],
+        documentTitle: 'Source 1.txt',
+        excerpt: 'Excerpt 1',
+      }),
+      expect.objectContaining({
+        kbId: ids[1],
+        documentTitle: 'Source 2.txt',
+        excerpt: 'Excerpt 2',
+      }),
     ])
   );
   expect(result.sources).toHaveLength(2);
+  expect(result.attribution).toBe('retrieved_context');
 }, 30000);
 
 it('serves the versioned snake-case contract with session replay', async () => {
@@ -178,6 +207,7 @@ it('serves the versioned snake-case contract with session replay', async () => {
   const result = (await first.json()) as { conversation_id: string; reply: string };
   expect(result).toMatchObject({
     reply: 'A test answer',
+    attribution: 'retrieved_context',
     remaining_quota: 9,
     token_usage: { input: 7, output: 3 },
   });
@@ -185,6 +215,77 @@ it('serves the versioned snake-case contract with session replay', async () => {
   const replay = await request();
   expect(replay.status).toBe(200);
   expect(await replay.json()).toEqual(result);
+}, 30000);
+
+it('redacts prompt, stored turn and returned answer before exposing them', async () => {
+  await http.pool.query(
+    "SELECT rate_limit_rolling_reset(true,'ai:test-chat:user:test-chat-admin')"
+  );
+  await http.pool.query("UPDATE ai_agents SET link_mode='any_kb' WHERE id=$1", [agentId]);
+  await http.pool.query(
+    `UPDATE kb_chunks SET content='Document password: kbsecret'
+      WHERE kb_id=(SELECT kb_id FROM ai_agent_kbs WHERE agent_id=$1 LIMIT 1)`,
+    [agentId]
+  );
+  providerReply = 'Card 6037991234567890';
+  const requestId = randomUUID();
+  const response = await send({ agentId, requestId, message: 'My password is hunter2' });
+  expect(response.status).toBe(200);
+  const result = (await response.json()) as TestChatResponse;
+  expect(result.reply).toBe('Card [REDACTED]');
+  expect(result.sources.some((source) => source.excerpt.includes('[REDACTED]'))).toBe(true);
+  expect(lastChatMessages.at(-1)?.content).toBe('My password is [REDACTED]');
+  expect(lastChatMessages.some((message) => message.content.includes('hunter2'))).toBe(false);
+  expect(lastChatMessages.some((message) => message.content.includes('kbsecret'))).toBe(false);
+  const turn = await http.pool.query<{ user_message: string; reply: string }>(
+    'SELECT user_message,reply FROM ai_test_chat_turns WHERE request_id=$1',
+    [requestId]
+  );
+  expect(turn.rows).toEqual([
+    { user_message: 'My password is [REDACTED]', reply: 'Card [REDACTED]' },
+  ]);
+  const completed = completions;
+  await http.pool.query(
+    `UPDATE ai_test_chat_turns
+        SET reply='Token: oldsecret',
+            response=jsonb_set(response,'{reply}',to_jsonb('Token: oldsecret'::text))
+      WHERE request_id=$1`,
+    [requestId]
+  );
+  const replay = await send({ agentId, requestId, message: 'My password is hunter2' });
+  expect(replay.status).toBe(200);
+  expect(await replay.json()).toMatchObject({ reply: 'Token: [REDACTED]' });
+  expect(completions).toBe(completed);
+  providerReply = 'A test answer';
+}, 30000);
+
+it('requires a retrieved source when a response policy demands one', async () => {
+  await http.pool.query(
+    "SELECT rate_limit_rolling_reset(true,'ai:test-chat:user:test-chat-admin')"
+  );
+  const policyId = randomUUID();
+  await http.pool.query('DELETE FROM ai_agent_kbs WHERE agent_id=$1', [agentId]);
+  await http.pool.query(
+    `INSERT INTO ai_policies(id,title,policy_type,rules,created_by)
+     VALUES ($1,'Source required','response_style','{"tone":"brief","requireSources":true}','test-chat-admin')`,
+    [policyId]
+  );
+  await http.pool.query('INSERT INTO ai_agent_policies(agent_id,policy_id) VALUES ($1,$2)', [
+    agentId,
+    policyId,
+  ]);
+  const before = completions;
+  const response = await send({ agentId, requestId: randomUUID(), message: 'Electricity?' });
+  expect(response.status).toBe(422);
+  expect(await response.json()).toMatchObject({
+    error: { code: 'AI_TEST_CHAT_POLICY_BLOCKED', reason: 'source_required', policyRef: policyId },
+  });
+  expect(completions).toBe(before);
+  await http.pool.query('DELETE FROM ai_agent_policies WHERE agent_id=$1 AND policy_id=$2', [
+    agentId,
+    policyId,
+  ]);
+  await http.pool.query('DELETE FROM ai_policies WHERE id=$1', [policyId]);
 }, 30000);
 
 it('resolves group priority, filters input/output and applies policy rate limits', async () => {

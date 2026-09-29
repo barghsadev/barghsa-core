@@ -11,7 +11,8 @@ interface AgentOption {
 interface Result {
   conversationId: string;
   reply: string;
-  sources: Array<{ kbId: string; title: string; excerpt: string }>;
+  sources: Array<{ kbId: string; title: string; documentTitle: string | null; excerpt: string }>;
+  attribution: 'retrieved_context' | 'general_guidance';
   policyResults: Array<{ id: string; title: string; type: string; result: string }>;
   tokenUsage: { input: number; output: number } | null;
   latencyMs: number;
@@ -144,6 +145,13 @@ export function AdminAgentTestChat({
             <div className="me-auto max-w-[85%] rounded-lg border bg-background p-3 whitespace-pre-wrap break-words">
               {turn.result.reply}
             </div>
+            <p className="text-xs text-muted-foreground">
+              {label(
+                turn.result.attribution === 'retrieved_context'
+                  ? 'retrievedContext'
+                  : 'generalGuidance'
+              )}
+            </p>
             <details className="text-sm">
               <summary className="cursor-pointer">{label('metadata')}</summary>
               <div className="space-y-2 p-2">
@@ -161,7 +169,10 @@ export function AdminAgentTestChat({
                 </p>
                 {turn.result.sources.map((source, sourceIndex) => (
                   <details key={`${source.kbId}-${sourceIndex}`}>
-                    <summary>{source.title}</summary>
+                    <summary>
+                      {source.title}
+                      {source.documentTitle ? ` / ${source.documentTitle}` : ''}
+                    </summary>
                     <p className="whitespace-pre-wrap break-words">{source.excerpt}</p>
                   </details>
                 ))}

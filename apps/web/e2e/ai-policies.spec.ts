@@ -155,12 +155,13 @@ for (const locale of ['en', 'fa'] as const)
     await page.getByLabel(label('tone'), { exact: true }).fill('Concise');
     await page.getByLabel(label('language'), { exact: true }).fill(locale);
     await page.getByLabel(label('maxLength'), { exact: true }).fill('500');
+    await page.getByLabel(label('requireSources'), { exact: true }).check();
     expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
     await click('save');
     await confirm();
     expect(writes.at(-1)).toMatchObject({
       policyType: 'response_style',
-      rules: { tone: 'Concise', language: locale, maxLength: 500 },
+      rules: { tone: 'Concise', language: locale, maxLength: 500, requireSources: true },
     });
     await click('addPolicy');
     await page.getByLabel(label('name'), { exact: true }).fill('Filter');

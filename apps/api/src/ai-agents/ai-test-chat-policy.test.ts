@@ -51,12 +51,24 @@ it('uses effective priority for style and format while composing restrictive rul
   expect(result.instructions).not.toContain('Use this response tone: warm.');
   expect(result.outputFormat).toEqual({ format: 'json_object', policyId: 'high-format' });
   expect(result.maxLength).toBe(40);
+  expect(result.requireSourcesPolicyId).toBeNull();
   expect(evaluatePolicyOutput(result, '{"ok":true}').blocked).toBe(false);
   expect(evaluatePolicyOutput(result, 'not json')).toEqual({
     blocked: true,
     reason: 'output_format_invalid',
     policyRef: 'high-format',
   });
+});
+
+it('uses the highest-priority policy that requires retrieved sources', () => {
+  const result = evaluatePolicies(
+    [
+      policy('lower', 'response_style', { tone: 'clear', requireSources: true }, 20),
+      policy('higher', 'response_style', { tone: 'brief', requireSources: true }, -20),
+    ],
+    'energy'
+  );
+  expect(result.requireSourcesPolicyId).toBe('higher');
 });
 
 it('filters both input and output, and fails closed for invalid stored rules', () => {

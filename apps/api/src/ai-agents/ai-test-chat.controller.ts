@@ -55,8 +55,10 @@ export class AiTestChatController {
         sources: result.sources.map((source) => ({
           kb_id: source.kbId,
           title: source.title,
+          document_title: source.documentTitle,
           excerpt: source.excerpt,
         })),
+        attribution: result.attribution,
         policy_results: result.policyResults,
         token_usage: result.tokenUsage,
         latency_ms: result.latencyMs,

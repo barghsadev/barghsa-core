@@ -26,6 +26,7 @@ export interface PolicyEvaluation {
   scopes: Set<string> | null;
   maxLength: number | null;
   maxLengthPolicyId: string | null;
+  requireSourcesPolicyId: string | null;
   outputFormat: { format: 'plain_text' | 'json_object'; policyId: string } | null;
   outputFilters: Array<{ policyId: string; terms: string[] }>;
   rateLimits: Array<{ policyId: string; maxRequests: number; windowSeconds: number }>;
@@ -44,6 +45,7 @@ export function evaluatePolicies(policies: RuntimePolicy[], message: string): Po
   let scopes: Set<string> | null = null;
   let maxLength: number | null = null;
   let maxLengthPolicyId: string | null = null;
+  let requireSourcesPolicyId: string | null = null;
   let outputFormat: PolicyEvaluation['outputFormat'] = null;
   let toneSelected = false;
   let languageSelected = false;
@@ -98,6 +100,8 @@ export function evaluatePolicies(policies: RuntimePolicy[], message: string): Po
             maxLength = length;
             maxLengthPolicyId = policy.id;
           }
+          if (rules.requireSources === true && requireSourcesPolicyId === null)
+            requireSourcesPolicyId = policy.id;
           break;
         }
         case 'output_format':
@@ -143,6 +147,7 @@ export function evaluatePolicies(policies: RuntimePolicy[], message: string): Po
     scopes,
     maxLength,
     maxLengthPolicyId,
+    requireSourcesPolicyId,
     outputFormat,
     outputFilters,
     rateLimits,

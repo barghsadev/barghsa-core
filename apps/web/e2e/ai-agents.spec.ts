@@ -3,18 +3,11 @@ for (const locale of ['en', 'fa'])
   test(`admin can test an agent and inspect response context (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement.lang !== value) document.documentElement.lang = value;
-      }).observe(document, {
-        childList: true,
-        attributes: true,
-        attributeFilter: ['lang'],
-        subtree: true,
-      });
+      localStorage.setItem('barghsa.locale', value);
     }, locale);
     const agentId = '01900000-0000-7000-8000-000000000011';
     const sent: unknown[] = [];
+    let general = false;
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/admin/agents/options', (route) =>
       route.fulfill({
@@ -41,7 +34,17 @@ for (const locale of ['en', 'fa'])
         json: {
           conversationId: agentId,
           reply: 'Power is available.',
-          sources: [{ kbId: agentId, title: 'Tariffs', excerpt: 'Current tariff text' }],
+          sources: general
+            ? []
+            : [
+                {
+                  kbId: agentId,
+                  title: 'Tariffs',
+                  documentTitle: 'Rates.pdf',
+                  excerpt: 'Current tariff text',
+                },
+              ],
+          attribution: general ? 'general_guidance' : 'retrieved_context',
           policyResults: [
             { id: agentId, title: 'Concise', type: 'response_style', result: 'applied' },
           ],
@@ -59,25 +62,22 @@ for (const locale of ['en', 'fa'])
     await expect(chat.getByText('Power is available.')).toBeVisible();
     await chat.locator('summary').first().click();
     await expect(chat.getByText('9 / 5')).toBeVisible();
-    await expect(chat.getByText('Tariffs')).toBeVisible();
+    await expect(chat.getByText('Tariffs / Rates.pdf')).toBeVisible();
+    await expect(chat.getByText(fa ? /زمینهٔ بازیابی‌شده/ : /retrieved context/)).toBeVisible();
     expect(sent).toHaveLength(1);
     expect(sent[0]).toMatchObject({ agentId, message: 'Hello' });
     await chat.getByRole('button', { name: fa ? 'گفت‌وگوی جدید' : 'New conversation' }).click();
     await expect(chat.getByText('Power is available.')).toHaveCount(0);
+    general = true;
+    await chat.getByLabel(fa ? 'پیام آزمایشی' : 'Test message').fill('General advice');
+    await chat.getByRole('button', { name: fa ? 'ارسال' : 'Send', exact: true }).click();
+    await expect(chat.getByText(fa ? /دانش عمومی/ : /general knowledge/)).toBeVisible();
   });
 for (const locale of ['en', 'fa'])
   test(`agent editor retries captured group selections (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
-      if (document.documentElement) document.documentElement.lang = value;
-      new MutationObserver(() => {
-        if (document.documentElement.lang !== value) document.documentElement.lang = value;
-      }).observe(document, {
-        childList: true,
-        attributes: true,
-        attributeFilter: ['lang'],
-        subtree: true,
-      });
+      localStorage.setItem('barghsa.locale', value);
     }, locale);
     const model = '01900000-0000-7000-8000-000000000001',
       kb = '01900000-0000-7000-8000-000000000002',

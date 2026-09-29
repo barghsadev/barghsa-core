@@ -33,6 +33,7 @@ export const rulesSchemas: Record<PolicyType, z.ZodType> = {
       tone: z.string().trim().min(1, 'tone is required').max(200),
       language: z.string().trim().min(1).max(50).optional(),
       maxLength: z.number().int().positive().max(100000).optional(),
+      requireSources: z.boolean().optional(),
     })
     .strict(),
   content_filter: z.object({ blockedTerms: stringList('blocked term') }).strict(),
