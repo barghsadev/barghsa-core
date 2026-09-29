@@ -1379,6 +1379,7 @@ export const fa: I18nDictionary = {
   'admin.approvals.receiptId': 'شناسه رسید',
   'admin.approvals.invoiceId': 'شناسه فاکتور',
   'admin.approvals.walletId': 'شناسه کیف پول',
+  'admin.approvals.destination': 'مقصد بازپرداخت',
   'admin.approvals.description':
     'کارشناس مالی دیگری باید هر درخواست را تأیید یا رد کند. تأیید به‌تنهایی وجهی منتقل نمی‌کند؛ عملیات رسید یا پرداخت باید جداگانه تکمیل شود.',
   'admin.approvals.pending': 'در انتظار بررسی',
@@ -2805,6 +2806,7 @@ export const en: I18nDictionary = {
   'admin.approvals.receiptId': 'Receipt ID',
   'admin.approvals.invoiceId': 'Invoice ID',
   'admin.approvals.walletId': 'Wallet ID',
+  'admin.approvals.destination': 'Refund destination',
   'admin.approvals.description':
     'A different finance reviewer must approve or reject each request. Approval alone does not transfer funds; complete the receipt or payment action separately.',
   'admin.approvals.pending': 'Pending',

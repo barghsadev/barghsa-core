@@ -3,7 +3,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { APPROVAL_REVIEW_REASON_MAX_LENGTH } from '@barghsa/shared/finance';
-import { Button, Label } from '@barghsa/ui';
+import { Button, FinancialReviewSummary, Label } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import DualApprovalThresholdPanel from '../components/DualApprovalThresholdPanel.js';
@@ -50,6 +50,7 @@ export default function AdminApprovalRequestsPage() {
   const [adjustmentDecision, setAdjustmentDecision] = useState(false);
   const [reasons, setReasons] = useState<Record<string, string>>({});
   const [action, setAction] = useState<TeamAction | null>(null);
+  const [review, setReview] = useState<Request | null>(null);
   const generation = useRef(0);
   const load = useCallback(async () => {
     const current = ++generation.current;
@@ -99,6 +100,7 @@ export default function AdminApprovalRequestsPage() {
     setAdjustmentDecision(
       request.actionType === 'manual_adjustment' && Boolean(request.details?.invoiceAdjustment)
     );
+    setReview(request);
     setAction({
       title: t(`admin.approvals.${decision}`, locale),
       description: `${t('admin.approvals.confirm', locale)} ${request.id} · ${numbers.money(approvalAmount(request))} ${decision === 'reject' ? `· ${reason}` : request.details?.invoiceAdjustment ? tInvoiceCorrections('approvalEffect', locale) : ''}`,
@@ -197,6 +199,21 @@ export default function AdminApprovalRequestsPage() {
                       ? [[t(`admin.approvals.${key}`, locale), request.details[key] as string]]
                       : []
                   ),
+                  ...(request.actionType === 'refund' &&
+                  (request.details?.destination === 'wallet' ||
+                    request.details?.destination === 'external_bank')
+                    ? [
+                        [
+                          t('admin.approvals.destination', locale),
+                          t(
+                            request.details.destination === 'wallet'
+                              ? 'admin.invoices.walletRefunds.title'
+                              : 'admin.invoices.externalRefunds.title',
+                            locale
+                          ),
+                        ],
+                      ]
+                    : []),
                   ...(request.reviewerId
                     ? [
                         [
@@ -274,7 +291,68 @@ export default function AdminApprovalRequestsPage() {
       {action && (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
+          summary={
+            review ? (
+              <FinancialReviewSummary
+                title={t(`admin.approvals.${review.actionType}`, locale)}
+                rows={[
+                  {
+                    id: 'request',
+                    label: t('admin.approvals.requestId', locale),
+                    value: review.id,
+                  },
+                  {
+                    id: 'initiator',
+                    label: t('admin.approvals.initiator', locale),
+                    value: review.initiatorUsername ?? review.initiatorId,
+                  },
+                  {
+                    id: 'reason',
+                    label: t('admin.approvals.reason', locale),
+                    value: review.reason,
+                  },
+                  ...(typeof review.details?.invoiceId === 'string'
+                    ? [
+                        {
+                          id: 'invoice',
+                          label: t('admin.approvals.invoiceId', locale),
+                          value: review.details.invoiceId,
+                        },
+                      ]
+                    : []),
+                  ...(review.actionType === 'refund' &&
+                  (review.details?.destination === 'wallet' ||
+                    review.details?.destination === 'external_bank')
+                    ? [
+                        {
+                          id: 'destination',
+                          label: t('admin.approvals.destination', locale),
+                          value: t(
+                            review.details.destination === 'wallet'
+                              ? 'admin.invoices.walletRefunds.title'
+                              : 'admin.invoices.externalRefunds.title',
+                            locale
+                          ),
+                        },
+                      ]
+                    : []),
+                ]}
+                total={{
+                  label: t('admin.approvals.amount', locale),
+                  value: numbers.money(approvalAmount(review)),
+                }}
+                notice={
+                  review.details?.invoiceAdjustment
+                    ? tInvoiceCorrections('approvalEffect', locale)
+                    : t('admin.approvals.confirm', locale)
+                }
+              />
+            ) : undefined
+          }
+          onClose={() => {
+            setAction(null);
+            setReview(null);
+          }}
           onSuccess={async () => {
             setSaved(true);
             await load();

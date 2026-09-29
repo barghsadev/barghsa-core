@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[Financial approval decision review](batches/2026-09-29-approval-decision-review.md) places the persisted amount, invoice, initiator, reason and refund destination in the shared confirmation layout before a second finance staff member decides. Invoice adjustments retain their distinct issue-on-approval notice.
+
 [Exact approval-request handoff](batches/2026-09-29-approval-request-handoff.md) lets finance staff open a refund's specific approval request directly, even when it is outside the current queue filter or page.
 
 [Operating-context integration fixtures](batches/2026-09-29-operating-context-fixtures.md) update the older HTTP suites to use explicit staff and customer sessions after context isolation. They preserve the production authorization boundary exposed by the previous CI run.

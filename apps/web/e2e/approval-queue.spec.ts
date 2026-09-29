@@ -135,23 +135,63 @@ test('pagination and history expose no decision controls', async ({ page }) => {
 test('a refund approval link loads its exact request beyond the queue page', async ({ page }) => {
   await shell(page);
   const requests: string[] = [];
+  const invoiceId = '22222222-2222-4222-8222-222222222222';
   await page.route(/\/api\/admin\/approval-requests\?/, (route) => {
     requests.push('queue');
     return route.fulfill({ json: [] });
   });
   await page.route(`**/api/admin/approval-requests/${id}`, (route) => {
     requests.push('detail');
-    return route.fulfill({ json: { ...request, actionType: 'refund' } });
+    return route.fulfill({
+      json: {
+        ...request,
+        actionType: 'refund',
+        details: { entityType: 'refund', invoiceId, destination: 'external_bank' },
+      },
+    });
   });
   await page.goto(`/admin/approval-requests?requestId=${id}`);
   await expect(page.getByText('Selected request')).toBeVisible();
   await expect(page.getByText(id)).toHaveCount(2);
   await expect(page.getByRole('button', { name: 'Approve', exact: true })).toBeVisible();
+  await expect(page.getByText('External bank refunds')).toBeVisible();
   await expect(page.getByLabel('Status', { exact: true })).toHaveCount(0);
   expect(requests).not.toContain('queue');
+  await page.getByRole('button', { name: 'Approve', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByRole('region', { name: 'Refund' })).toContainText(invoiceId);
+  await expect(dialog.getByRole('region', { name: 'Refund' })).toContainText(
+    'External bank refunds'
+  );
+  await expect(dialog.getByRole('region', { name: 'Refund' })).toContainText(
+    new Intl.NumberFormat('en', {
+      style: 'currency',
+      currency: 'IRR',
+      currencyDisplay: 'code',
+      maximumFractionDigits: 0,
+    }).format(BigInt(request.amountIrR))
+  );
+  await dialog.getByRole('button', { name: 'Cancel' }).click();
   await page.getByRole('link', { name: 'Back to approval queue' }).click();
   await expect(page.getByText('No requests in this queue.')).toBeVisible();
   expect(requests).toContain('queue');
+});
+test('wallet refund approval confirms its destination in Persian', async ({ page }) => {
+  await shell(page, 'fa');
+  await page.route(`**/api/admin/approval-requests/${id}`, (route) =>
+    route.fulfill({
+      json: {
+        ...request,
+        actionType: 'refund',
+        details: { entityType: 'refund', destination: 'wallet' },
+      },
+    })
+  );
+  await page.goto(`/admin/approval-requests?requestId=${id}`);
+  await page.getByRole('button', { name: 'تأیید', exact: true }).click();
+  const summary = page.getByRole('dialog').getByRole('region', { name: 'بازپرداخت' });
+  await expect(summary).toContainText('مقصد بازپرداخت');
+  await expect(summary).toContainText('بازپرداخت به کیف پول');
 });
 test('an obsolete pending response cannot replace selected history', async ({ page }) => {
   await shell(page);
