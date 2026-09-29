@@ -150,7 +150,9 @@ describe('ProfilesService', () => {
       // No existing default profile
       mockClient.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN (void)
-        .mockResolvedValueOnce({ rows: [] }) // account lock
+        .mockResolvedValueOnce({
+          rows: [{ is_staff: false, is_admin: false, disabled_at: null, has_roles: false }],
+        }) // account lock
         .mockResolvedValueOnce({ rows: [] }) // check existing default
         .mockResolvedValueOnce({
           rows: [
@@ -191,7 +193,9 @@ describe('ProfilesService', () => {
       // Existing default profile found
       mockClient.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN (void)
-        .mockResolvedValueOnce({ rows: [] }) // account lock
+        .mockResolvedValueOnce({
+          rows: [{ is_staff: false, is_admin: false, disabled_at: null, has_roles: false }],
+        }) // account lock
         .mockResolvedValueOnce({ rows: [{ id: 'existing' }] }) // default exists
         .mockResolvedValueOnce({
           rows: [
@@ -222,7 +226,9 @@ describe('ProfilesService', () => {
     it('rolls back on database error', async () => {
       mockClient.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN (void)
-        .mockResolvedValueOnce({ rows: [] }) // account lock
+        .mockResolvedValueOnce({
+          rows: [{ is_staff: false, is_admin: false, disabled_at: null, has_roles: false }],
+        }) // account lock
         .mockRejectedValueOnce(new Error('DB error')) // check fails
         .mockResolvedValueOnce(undefined); // ROLLBACK (void)
 

@@ -161,6 +161,74 @@ it.each(['link', 'tempPassword'] as const)(
   }
 );
 
+it('keeps a staff account on its sole verified profile and preserves authorship after disablement', async () => {
+  const current = await actor();
+  const response = await create(current, staff('tempPassword'));
+  expect(response.status, await response.clone().text()).toBe(201);
+  const { userId } = (await response.json()) as { userId: string };
+  const profiles = (
+    await http.pool.query(`SELECT id,profile_type,status FROM profiles WHERE user_id=$1`, [userId])
+  ).rows;
+  expect(profiles).toHaveLength(1);
+  expect(profiles[0]).toMatchObject({ profile_type: 'INDIVIDUAL', status: 'VERIFIED' });
+  expect(
+    (
+      await http.pool.query(`SELECT count(*)::int AS count FROM addresses WHERE profile_id=$1`, [
+        profiles[0].id,
+      ])
+    ).rows[0].count
+  ).toBe(0);
+
+  await http.pool.query(`UPDATE users SET must_change_password=false WHERE user_id=$1`, [userId]);
+  const sessionId = randomUUID();
+  const csrf = randomUUID();
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+     VALUES($1,$2,$3,$4,now()+interval '1 day',now()+interval '30 minutes')`,
+    [sessionId, userId, csrf, randomUUID()]
+  );
+  const attempted = await fetch(`${http.base}/api/onboarding/start`, {
+    method: 'POST',
+    headers: {
+      Cookie: `barghsa_session=${sessionId}`,
+      'X-CSRF-Token': csrf,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ profileType: 'LEGAL' }),
+  });
+  expect(attempted.status, await attempted.clone().text()).toBe(403);
+  expect(
+    (
+      await http.pool.query(`SELECT count(*)::int AS count FROM profiles WHERE user_id=$1`, [
+        userId,
+      ])
+    ).rows[0].count
+  ).toBe(1);
+
+  const ticketId = (
+    await http.pool.query(
+      `INSERT INTO tickets(user_id,subject,body,profile_id)
+       VALUES($1,'Staff history','Retain author',$2) RETURNING id`,
+      [userId, profiles[0].id]
+    )
+  ).rows[0].id as string;
+  await http.pool.query(
+    `INSERT INTO ticket_comments(ticket_id,author_id,body,visibility)
+     VALUES($1,$2,'Staff authored this','internal')`,
+    [ticketId, userId]
+  );
+  await http.pool.query(`UPDATE users SET disabled_at=now() WHERE user_id=$1`, [userId]);
+  expect(
+    (
+      await http.pool.query(
+        `SELECT c.author_id,p.id AS profile_id FROM ticket_comments c
+         JOIN profiles p ON p.user_id=c.author_id WHERE c.ticket_id=$1`,
+        [ticketId]
+      )
+    ).rows[0]
+  ).toMatchObject({ author_id: userId, profile_id: profiles[0].id });
+});
+
 it.each(['step-up expiry', 'session expiry', 'audit failure'] as const)(
   'staff creation rolls back on %s during persistence',
   async (mode) => {

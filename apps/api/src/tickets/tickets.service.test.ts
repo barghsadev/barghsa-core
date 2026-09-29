@@ -7,6 +7,7 @@ const mockPool = {
 
 vi.mock('@barghsa/db', () => ({
   getDbPool: () => mockPool,
+  loadStoredStorageConfiguration: vi.fn(),
 }));
 
 function makeRow(overrides: Record<string, unknown> = {}) {
