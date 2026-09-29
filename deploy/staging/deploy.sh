@@ -16,13 +16,31 @@ remote="root@$host"
 ssh_args=(-p "$port" -o BatchMode=yes)
 scp_args=(-P "$port" -o BatchMode=yes)
 
+images=("barghsa-app:$tag" "barghsa-web:$tag")
+if ssh "${ssh_args[@]}" "$remote" 'test -r /etc/barghsa/staging/active-images.env'; then
+  stateful=$(ssh "${ssh_args[@]}" "$remote" \
+    "grep -E '^BARGHSA_(POSTGRES|CLAMAV)_IMAGE=' /etc/barghsa/staging/active-images.env")
+  postgres_image=$(printf '%s\n' "$stateful" | sed -n 's/^BARGHSA_POSTGRES_IMAGE=//p')
+  clamav_image=$(printf '%s\n' "$stateful" | sed -n 's/^BARGHSA_CLAMAV_IMAGE=//p')
+  [[ "$postgres_image" =~ ^barghsa-postgres:vps-[a-z0-9._-]+$ &&
+     "$clamav_image" =~ ^barghsa-clamav:vps-[a-z0-9._-]+$ ]] || {
+    echo 'Invalid active stateful image tags on VPS' >&2
+    exit 1
+  }
+  echo 'Keeping the existing PostgreSQL and ClamAV images and volumes' >&2
+else
+  postgres_image="barghsa-postgres:$tag"
+  clamav_image="barghsa-clamav:$tag"
+  docker build --platform linux/amd64 -f packages/db/scripts/backup/Dockerfile -t "$postgres_image" .
+  docker build --platform linux/amd64 -f deploy/clamav/Dockerfile -t "$clamav_image" .
+  images+=("$postgres_image" "$clamav_image")
+fi
+
 docker build --platform linux/amd64 -f Dockerfile.base --target production -t "barghsa-app:$tag" .
 docker build --platform linux/amd64 -f Dockerfile.web --target production -t "barghsa-web:$tag" .
-docker build --platform linux/amd64 -f packages/db/scripts/backup/Dockerfile -t "barghsa-postgres:$tag" .
-docker build --platform linux/amd64 -f deploy/clamav/Dockerfile -t "barghsa-clamav:$tag" .
 
 echo 'Transferring release images over SSH' >&2
-docker save "barghsa-app:$tag" "barghsa-web:$tag" "barghsa-postgres:$tag" "barghsa-clamav:$tag" \
+docker save "${images[@]}" \
   | gzip -1 | ssh "${ssh_args[@]}" "$remote" 'gzip -d | docker load'
 
 ssh "${ssh_args[@]}" "$remote" 'mkdir -p /opt/barghsa/staging /etc/barghsa/staging /etc/nginx/snippets /etc/letsencrypt/renewal-hooks/deploy'
@@ -42,8 +60,8 @@ trap 'rm -f "$manifest"' EXIT
 cat > "$manifest" <<EOF
 BARGHSA_APP_IMAGE=barghsa-app:$tag
 BARGHSA_WEB_IMAGE=barghsa-web:$tag
-BARGHSA_POSTGRES_IMAGE=barghsa-postgres:$tag
-BARGHSA_CLAMAV_IMAGE=barghsa-clamav:$tag
+BARGHSA_POSTGRES_IMAGE=$postgres_image
+BARGHSA_CLAMAV_IMAGE=$clamav_image
 EOF
 candidate="/etc/barghsa/staging/candidate-$tag.env"
 scp "${scp_args[@]}" "$manifest" "$remote:$candidate"

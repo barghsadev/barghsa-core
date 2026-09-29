@@ -41,7 +41,9 @@ access to the VPS:
 deploy/staging/deploy.sh
 ```
 
-The script builds four `linux/amd64` images, transfers them over SSH, uploads
+The first release builds four `linux/amd64` images. Later releases build only
+API/worker and web images, retaining the active PostgreSQL and ClamAV images
+and all Docker volumes. The script transfers images over SSH, uploads
 Compose and NGINX configuration, initializes root-only random staging secrets
 on first deployment, runs the release script, and checks HTTPS plus a private
 S3 write and public signed read. Subsequent
