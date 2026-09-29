@@ -154,6 +154,7 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
       expect(mockCreateKb).toHaveBeenCalledWith({
         title: 'Customer support FAQ',
         description: '',
+        audience: 'admin',
         sourceType: 'document',
         sourceConfig: {},
         chunkingStrategy: { size: 800, overlap: 100 },

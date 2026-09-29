@@ -26,6 +26,7 @@ import { InvitationBanner } from '../components/InvitationBanner.js';
 import { OwnershipBanner } from '../components/OwnershipBanner.js';
 import { NotificationBell } from '../components/NotificationBell.js';
 import { AppShell, type NavigationGroup } from '../components/AppShell.js';
+import { KnowledgeAssistantLauncher } from '../components/KnowledgeAssistantLauncher.js';
 
 export function DashboardLayout({ locale: localeOverride }: { locale?: Locale }) {
   const currentLocale = useLocale();
@@ -74,6 +75,7 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
       }
     >
       <Outlet />
+      <KnowledgeAssistantLauncher locale={locale} />
     </AppShell>
   );
 }

@@ -13853,6 +13853,46 @@
         ]
       }
     },
+    "/api/ai/knowledge/availability": {
+      "get": {
+        "operationId": "AiKnowledgeChatController_availability",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Check whether the active profile has a knowledge assistant",
+        "tags": [
+          "Customer · AI knowledge assistant"
+        ]
+      }
+    },
+    "/api/ai/knowledge/questions": {
+      "post": {
+        "operationId": "AiKnowledgeChatController_ask",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Ask a read-only question using published shared knowledge bases",
+        "tags": [
+          "Customer · AI knowledge assistant"
+        ]
+      }
+    },
     "/api/auth/activate-staff": {
       "post": {
         "operationId": "AuthController_activateStaff",

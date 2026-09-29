@@ -5,6 +5,30 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'assistant.open': 'پرسش از راهنمای برقسا',
+  'assistant.title': 'راهنمای دانش برقسا',
+  'assistant.scope':
+    'پاسخ‌ها فقط از راهنماهای منتشرشده هستند؛ این بخش به سفارش‌ها، کیف پول و فاکتورهای شما دسترسی ندارد.',
+  'assistant.individual': 'پروفایل شخص حقیقی',
+  'assistant.legal': 'پروفایل شخص حقوقی',
+  'assistant.welcome': 'درباره خدمات برقسا چه می‌خواهید بدانید؟ هر پرسش جداگانه بررسی می‌شود.',
+  'assistant.suggestion.documents': 'برای سفارش برق چه مدارکی لازم است؟',
+  'assistant.suggestion.payment': 'روش پرداخت فاکتور چگونه است؟',
+  'assistant.suggestion.support': 'چطور با پشتیبانی تماس بگیرم؟',
+  'assistant.input': 'پرسش خود را بنویسید',
+  'assistant.send': 'ارسال پرسش',
+  'assistant.close': 'بستن راهنما',
+  'assistant.sources': 'منابع پاسخ',
+  'assistant.answer': 'پاسخ راهنما',
+  'assistant.working': 'در حال بررسی راهنماها…',
+  'assistant.retry': 'تلاش دوباره',
+  'assistant.error': 'پاسخی دریافت نشد. دوباره تلاش کنید.',
+  'assistant.noSource':
+    'در راهنماهای منتشرشده پاسخی برای این پرسش پیدا نشد. پرسش را تغییر دهید یا با پشتیبانی تماس بگیرید.',
+  'assistant.busy': 'راهنما اکنون مشغول است. کمی بعد دوباره تلاش کنید.',
+  'assistant.limit': 'تعداد پرسش‌های مجاز شما در این دقیقه تمام شده است. کمی بعد دوباره تلاش کنید.',
+  'assistant.changed': 'تنظیمات راهنما تغییر کرده است. پرسش را دوباره بفرستید.',
+  'assistant.remaining': 'پرسش باقی‌مانده در این دقیقه: {count}',
   'workflow.summary': 'خلاصه وضعیت و اقدام بعدی',
   'workflow.status': 'وضعیت کنونی',
   'workflow.happened': 'چه اتفاقی افتاده است',
@@ -1270,6 +1294,32 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'assistant.open': 'Ask Barghsa guide',
+  'assistant.title': 'Barghsa knowledge guide',
+  'assistant.scope':
+    'Answers use published shared guides only. This guide cannot access your orders, wallet or invoices.',
+  'assistant.individual': 'Individual profile',
+  'assistant.legal': 'Legal-entity profile',
+  'assistant.welcome':
+    'What would you like to know about Barghsa services? Each question is handled separately.',
+  'assistant.suggestion.documents': 'What documents do I need for an electricity order?',
+  'assistant.suggestion.payment': 'How does invoice payment work?',
+  'assistant.suggestion.support': 'How can I contact support?',
+  'assistant.input': 'Write your question',
+  'assistant.send': 'Send question',
+  'assistant.close': 'Close guide',
+  'assistant.sources': 'Answer sources',
+  'assistant.answer': 'Guide answer',
+  'assistant.working': 'Checking the guides…',
+  'assistant.retry': 'Try again',
+  'assistant.error': 'No answer came back. Please try again.',
+  'assistant.noSource':
+    'No published guide matched this question. Try another question or contact support.',
+  'assistant.busy': 'The guide is busy. Please try again shortly.',
+  'assistant.limit':
+    'You have reached the question limit for this minute. Please try again shortly.',
+  'assistant.changed': 'The guide changed while answering. Please send the question again.',
+  'assistant.remaining': 'Questions left this minute: {count}',
   'workflow.summary': 'Status and next action',
   'workflow.status': 'Current status',
   'workflow.happened': 'What happened',
