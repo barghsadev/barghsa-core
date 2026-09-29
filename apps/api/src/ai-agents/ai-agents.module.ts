@@ -10,6 +10,7 @@ import { AiTestChatService } from './ai-test-chat.service.js';
 import { ProfilesModule } from '../profiles/profiles.module.js';
 import { AiKnowledgeChatController } from './ai-knowledge-chat.controller.js';
 import { AiKnowledgeChatService } from './ai-knowledge-chat.service.js';
+import { AiHealthController } from './ai-health.controller.js';
 
 /**
  * AI agent administration module (S-09.11, T-09.11.04 + T-09.11.05).
@@ -27,6 +28,7 @@ import { AiKnowledgeChatService } from './ai-knowledge-chat.service.js';
     AgentSlotsController,
     AiTestChatController,
     AiKnowledgeChatController,
+    AiHealthController,
   ],
   providers: [AiAgentsService, AgentSlotsService, AiTestChatService, AiKnowledgeChatService],
   exports: [AiAgentsService, AgentSlotsService],

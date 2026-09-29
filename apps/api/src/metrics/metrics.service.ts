@@ -7,6 +7,7 @@ import {
 } from '@barghsa/db';
 import promClient from 'prom-client';
 import { createDatabaseTelemetry } from './database-telemetry.js';
+import { aiInferenceQueue } from '../ai-agents/ai-inference-queue.js';
 
 /**
  * NestJS service that registers and updates Prometheus gauges for PostgreSQL
@@ -54,6 +55,23 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     help: 'AI model circuit health (1=closed, 0=open)',
     labelNames: ['model_id'] as const,
   });
+  private readonly aiInferenceActive = new promClient.Gauge({
+    name: 'ai_inference_active_requests',
+    help: 'AI inference requests currently admitted in this API process',
+  });
+  private readonly aiInferencePending = new promClient.Gauge({
+    name: 'ai_inference_queue_depth',
+    help: 'AI inference requests waiting for admission in this API process',
+  });
+  private readonly aiInferenceSaturated = new promClient.Gauge({
+    name: 'ai_inference_saturated',
+    help: 'Whether this API process has filled its AI inference concurrency allowance',
+  });
+  private readonly aiInferenceRejections = new promClient.Counter({
+    name: 'ai_inference_rejections_total',
+    help: 'AI inference requests rejected by this API process after queue overflow or timeout',
+  });
+  private previousInferenceRejections = 0;
 
   // Polling interval (ms).  In production, metrics are updated on each scrape
   // by the controller; the poll interval controls how fresh the cached values
@@ -256,6 +274,12 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
    * text content.  Called by the /metrics controller on each HTTP scrape.
    */
   async collect(): Promise<string> {
+    const queue = aiInferenceQueue.snapshot();
+    this.aiInferenceActive.set(queue.active);
+    this.aiInferencePending.set(queue.pending);
+    this.aiInferenceSaturated.set(queue.saturated ? 1 : 0);
+    this.aiInferenceRejections.inc(Math.max(0, queue.rejected - this.previousInferenceRejections));
+    this.previousInferenceRejections = queue.rejected;
     await this.poll();
     return promClient.register.metrics();
   }

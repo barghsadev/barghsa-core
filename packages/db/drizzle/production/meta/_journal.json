@@ -981,6 +981,13 @@
       "when": 1791331200232,
       "tag": "0219_ai_model_budgets",
       "breakpoints": true
+    },
+    {
+      "idx": 220,
+      "version": "7",
+      "when": 1791331200233,
+      "tag": "0220_ai_model_budget_updated_at",
+      "breakpoints": true
     }
   ]
 }

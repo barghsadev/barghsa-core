@@ -13922,6 +13922,26 @@
         ]
       }
     },
+    "/api/ai/health": {
+      "get": {
+        "operationId": "AiHealthController_health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Inspect AI queue capacity and model circuit status",
+        "tags": [
+          "Admin · AI Health"
+        ]
+      }
+    },
     "/api/ai/knowledge/availability": {
       "get": {
         "operationId": "AiKnowledgeChatController_availability",

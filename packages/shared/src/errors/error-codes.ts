@@ -99,6 +99,14 @@ export const ErrorCodes = {
     messageKey: 'error.ai.model_budget_exhausted',
     severity: 'warning' as ErrorSeverity,
   },
+  AI_INFERENCE_BUSY: {
+    code: 'AI_INFERENCE_BUSY',
+    httpStatus: 503,
+    title: 'AI requests are temporarily busy',
+    retryable: true,
+    messageKey: 'error.ai.inference_busy',
+    severity: 'warning' as ErrorSeverity,
+  },
   MAINTENANCE_ACTIVE: {
     code: 'MAINTENANCE:ACTIVE',
     httpStatus: 503,
