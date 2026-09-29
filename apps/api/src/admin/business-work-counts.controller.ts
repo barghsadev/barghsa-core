@@ -19,7 +19,8 @@ export class BusinessWorkCountsController {
     const invoices = hasStaffPermission(req, 'invoices:read');
     const legal = hasStaffPermission(req, 'legal:read');
     const finance = hasStaffPermission(req, 'admin:financial:edit');
-    if (!orders && !contracts && !invoices && !legal && !finance)
+    const jobs = hasStaffPermission(req, 'admin:jobs:view');
+    if (!orders && !contracts && !invoices && !legal && !finance && !jobs)
       throw new ForbiddenException('Staff dashboard permission required');
     const client = await getDbPool().connect();
     try {
@@ -33,6 +34,8 @@ export class BusinessWorkCountsController {
           document_reviews: number | null;
           refund_obligations: number | null;
           failed_refund_obligations: number | null;
+          failed_jobs: number | null;
+          dead_letter_notifications: number | null;
         }>(
           `SELECT
            CASE WHEN $1::boolean THEN (SELECT count(*)::int FROM consultation_requests
@@ -55,8 +58,12 @@ export class BusinessWorkCountsController {
              LEFT JOIN refund_retry_jobs j ON j.refund_id=r.id
              WHERE r.state<>'Completed' AND (r.state='Failed' OR j.exhausted_at IS NOT NULL)
                AND (EXISTS(SELECT 1 FROM contract_refund_obligations co WHERE co.refund_id=r.id)
-                 OR EXISTS(SELECT 1 FROM refund_obligations eo WHERE eo.refund_id=r.id))) END AS failed_refund_obligations`,
-          [orders, contracts, invoices, legal, finance]
+                 OR EXISTS(SELECT 1 FROM refund_obligations eo WHERE eo.refund_id=r.id))) END AS failed_refund_obligations,
+           CASE WHEN $6::boolean THEN (SELECT count(*)::int FROM background_jobs
+             WHERE status IN ('failed','dead_letter')) END AS failed_jobs,
+           CASE WHEN $6::boolean THEN (SELECT count(*)::int FROM notification_dead_letter
+             WHERE status='open') END AS dead_letter_notifications`,
+          [orders, contracts, invoices, legal, finance, jobs]
         )
       ).rows[0]!;
       await requireCurrentSession(client, req.session);
@@ -68,6 +75,8 @@ export class BusinessWorkCountsController {
         documentReviews: counts.document_reviews,
         refundObligations: counts.refund_obligations,
         failedRefundObligations: counts.failed_refund_obligations,
+        failedJobs: counts.failed_jobs,
+        deadLetterNotifications: counts.dead_letter_notifications,
       };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});

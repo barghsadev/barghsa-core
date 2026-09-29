@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { FailedJobsWidget } from './FailedJobsWidget.js';
 
 interface Counts {
   consultations: number | null;
@@ -11,6 +12,8 @@ interface Counts {
   documentReviews: number | null;
   refundObligations: number | null;
   failedRefundObligations: number | null;
+  failedJobs: number | null;
+  deadLetterNotifications: number | null;
 }
 
 function validCount(value: unknown): value is number | null {
@@ -27,6 +30,9 @@ function parseCounts(value: unknown): Counts {
     !validCount(counts.documentReviews) ||
     !validCount(counts.refundObligations) ||
     !validCount(counts.failedRefundObligations) ||
+    !validCount(counts.failedJobs) ||
+    !validCount(counts.deadLetterNotifications) ||
+    (counts.failedJobs === null) !== (counts.deadLetterNotifications === null) ||
     (counts.refundObligations === null) !== (counts.failedRefundObligations === null) ||
     (counts.refundObligations !== null &&
       counts.failedRefundObligations !== null &&
@@ -126,22 +132,7 @@ export function AdminBusinessWorkCounts() {
           )}
         </div>
       )}
-      {state === 'ready' && counts?.failedRefundObligations ? (
-        <div
-          role="alert"
-          className="rounded-lg border border-destructive/40 bg-danger-soft p-4 text-destructive"
-        >
-          <a
-            href="/admin/contracts#refund-obligations"
-            className="underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-          >
-            {t('dashboard.admin.work.failedRefundObligations', locale).replace(
-              '{count}',
-              numbers.number(counts.failedRefundObligations)
-            )}
-          </a>
-        </div>
-      ) : null}
+      {state === 'ready' && counts && <FailedJobsWidget counts={counts} />}
     </section>
   );
 }

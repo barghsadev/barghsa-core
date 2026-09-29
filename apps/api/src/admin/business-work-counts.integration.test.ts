@@ -11,14 +11,16 @@ beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES
-     ('business-work-all','All business work','Test','["orders:read","contracts:read","invoices:read","legal:read","admin:financial:edit"]'),
+     ('business-work-all','All business work','Test','["orders:read","contracts:read","invoices:read","legal:read","admin:financial:edit","admin:jobs:view"]'),
      ('business-work-contracts','Contracts only','Test','["contracts:read"]'),
-     ('business-work-finance','Finance only','Test','["admin:financial:edit"]')`
+     ('business-work-finance','Finance only','Test','["admin:financial:edit"]'),
+     ('business-work-jobs','Job triage only','Test','["admin:jobs:view"]')`
   );
   for (const [user, role, isStaff] of [
     ['work-admin', 'business-work-all', true],
     ['work-contracts', 'business-work-contracts', true],
     ['work-finance', 'business-work-finance', true],
+    ['work-jobs', 'business-work-jobs', true],
     ['work-customer', null, false],
   ] as const) {
     await http.pool.query(
@@ -89,6 +91,8 @@ it('returns live pending counts and hides categories outside staff permissions',
     documentReviews: 0,
     refundObligations: 0,
     failedRefundObligations: 0,
+    failedJobs: 0,
+    deadLetterNotifications: 0,
   });
   const contracts = await fetch(path, { headers: headers['work-contracts']! });
   expect(contracts.status, http.logs()).toBe(200);
@@ -99,6 +103,8 @@ it('returns live pending counts and hides categories outside staff permissions',
     documentReviews: 0,
     refundObligations: null,
     failedRefundObligations: null,
+    failedJobs: null,
+    deadLetterNotifications: null,
   });
   const finance = await fetch(path, { headers: headers['work-finance']! });
   expect(finance.status, http.logs()).toBe(200);
@@ -109,8 +115,65 @@ it('returns live pending counts and hides categories outside staff permissions',
     documentReviews: null,
     refundObligations: 0,
     failedRefundObligations: 0,
+    failedJobs: null,
+    deadLetterNotifications: null,
+  });
+  const jobs = await fetch(path, { headers: headers['work-jobs']! });
+  expect(jobs.status, http.logs()).toBe(200);
+  expect(await jobs.json()).toEqual({
+    consultations: null,
+    electricityOrders: null,
+    solarRequests: null,
+    documentReviews: null,
+    refundObligations: null,
+    failedRefundObligations: null,
+    failedJobs: 0,
+    deadLetterNotifications: 0,
   });
   expect((await fetch(path, { headers: headers['work-customer']! })).status).toBe(403);
+});
+
+it('counts only unresolved job and delivery failures for authorized triage staff', async () => {
+  const outboxId = randomUUID();
+  const notificationJobId = randomUUID();
+  const failedJobId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO background_jobs(id,job_type,status) VALUES($1,'service_breach_scan','failed')`,
+    [failedJobId]
+  );
+  await http.pool.query(
+    `INSERT INTO notification_outbox(id,profile_id,event_key,payload,channels,idempotency_key,status)
+     VALUES($1::uuid,$2,'invoice.created','{}',ARRAY['email'],$1::text,'failed')`,
+    [outboxId, profileId]
+  );
+  await http.pool.query(
+    `INSERT INTO notification_job(id,outbox_id,channel,status,attempts,delivery_payload)
+     VALUES($1,$2,'email','dead_letter',5,'{}')`,
+    [notificationJobId, outboxId]
+  );
+  const deadLetterId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO notification_dead_letter(id,outbox_id,job_id,channel,event_key,profile_id,idempotency_key)
+     VALUES($1::uuid,$2,$3,'email','invoice.created',$4,$1::text)`,
+    [deadLetterId, outboxId, notificationJobId, profileId]
+  );
+  const path = `${http.base}/api/admin/dashboard/business-work-counts`;
+  expect(await (await fetch(path, { headers: headers['work-jobs']! })).json()).toMatchObject({
+    failedJobs: 1,
+    deadLetterNotifications: 1,
+  });
+  expect(await (await fetch(path, { headers: headers['work-contracts']! })).json()).toMatchObject({
+    failedJobs: null,
+    deadLetterNotifications: null,
+  });
+  await http.pool.query("UPDATE background_jobs SET status='resolved' WHERE id=$1", [failedJobId]);
+  await http.pool.query("UPDATE notification_dead_letter SET status='resolved' WHERE id=$1", [
+    deadLetterId,
+  ]);
+  expect(await (await fetch(path, { headers: headers['work-jobs']! })).json()).toMatchObject({
+    failedJobs: 0,
+    deadLetterNotifications: 0,
+  });
 });
 
 it('counts unresolved obligations and flags failed refunds for finance', async () => {

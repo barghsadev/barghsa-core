@@ -40,7 +40,7 @@ async function renderCounts(value: unknown) {
   });
 }
 
-it('links unresolved refunds to finance work and alerts on failed obligations', async () => {
+it('links unresolved refunds and flags failed work for the permitted staff roles', async () => {
   await renderCounts({
     consultations: 2,
     electricityOrders: 1,
@@ -48,13 +48,24 @@ it('links unresolved refunds to finance work and alerts on failed obligations', 
     documentReviews: 3,
     refundObligations: 4,
     failedRefundObligations: 1,
+    failedJobs: 2,
+    deadLetterNotifications: 3,
   });
   const financeLinks = container.querySelectorAll('a[href="/admin/contracts#refund-obligations"]');
   expect(financeLinks).toHaveLength(2);
   expect(financeLinks[0]?.textContent).toContain('Unresolved refunds');
   expect(financeLinks[0]?.textContent).toContain('4');
-  expect(financeLinks[1]?.closest('[role="alert"]')).toBeTruthy();
-  expect(financeLinks[1]?.textContent).toContain('1 failed refunds');
+  expect(financeLinks[1]?.textContent).toContain('Failed refunds');
+  expect(financeLinks[1]?.textContent).toContain('1');
+  expect(container.querySelector('a[href="/admin/failed-jobs"]')?.textContent).toContain(
+    '2Failed background jobs'
+  );
+  expect(container.querySelector('a[href="/admin/failed-notifications"]')?.textContent).toContain(
+    '3Undelivered notifications'
+  );
+  expect(container.querySelector('a[href="/admin/failed-jobs"]')?.textContent).toContain(
+    'Needs attention'
+  );
 });
 
 it('hides finance widgets when the server withholds their counts', async () => {
@@ -65,7 +76,30 @@ it('hides finance widgets when the server withholds their counts', async () => {
     documentReviews: 0,
     refundObligations: null,
     failedRefundObligations: null,
+    failedJobs: null,
+    deadLetterNotifications: null,
   });
   expect(container.querySelector('a[href="/admin/contracts#refund-obligations"]')).toBeNull();
+  expect(container.querySelector('a[href="/admin/failed-jobs"]')).toBeNull();
   expect(container.querySelector('a[href="/admin/electricity-orders"]')).toBeTruthy();
+});
+
+it('renders the same failure links and counts in Persian', async () => {
+  document.documentElement.lang = 'fa';
+  await renderCounts({
+    consultations: null,
+    electricityOrders: null,
+    solarRequests: null,
+    documentReviews: null,
+    refundObligations: null,
+    failedRefundObligations: null,
+    failedJobs: 1,
+    deadLetterNotifications: 0,
+  });
+  expect(container.querySelector('a[href="/admin/failed-jobs"]')?.textContent).toContain(
+    'وظایف پس‌زمینه ناموفق'
+  );
+  expect(container.querySelector('a[href="/admin/failed-notifications"]')?.textContent).toContain(
+    'اعلان‌های ارسال‌نشده'
+  );
 });
