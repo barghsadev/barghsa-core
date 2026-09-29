@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 30, 2026
 
+[Contract cancellation financial review](batches/2026-09-30-contract-cancellation-financial-review.md) shows the captured contract, invoice balances and refund decision in the shared bilingual confirmation layout before staff save or execute cancellation. Existing server fingerprints still reject changed finances. The cross-command review tasks remain partial.
+
 [Invoice bank-receipt financial review](batches/2026-09-30-invoice-bank-receipt-review-snapshot.md) binds staff confirmation to the current receipt, invoice allocation, wallet excess and approval rule. It also repairs five stale integration fixtures found by the preceding main CI run. Remote CI is pending.
 
 [Unpaid-invoice replacement financial review](batches/2026-09-30-invoice-replacement-review-snapshot.md) binds cancel-and-replace to a server-derived snapshot of the old invoice, proposed lines and due-date rule before cancellation. It also repairs the previous main CI's stale web test fixtures and new transitive `undici` advisories. Remote CI for this combined batch is still pending.

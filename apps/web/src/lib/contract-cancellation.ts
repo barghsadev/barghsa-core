@@ -19,6 +19,8 @@ export interface CancellationStatus {
   >;
 }
 export interface CancellationPreview {
+  contractId: string;
+  profileId: string;
   versionId: string;
   fingerprint: string;
   serviceType: string;

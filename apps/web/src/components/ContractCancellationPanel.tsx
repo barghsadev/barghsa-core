@@ -5,6 +5,7 @@ import {
   Button,
   Field,
   FieldLabel,
+  FinancialReviewSummary,
   Input,
   PageLoading,
   StatusBadge,
@@ -179,6 +180,11 @@ function CancellationEditor({
     >({});
   const [invalid, setInvalid] = useState(false),
     [action, setAction] = useState<TeamAction | null>(null),
+    [review, setReview] = useState<{
+      snapshot: CancellationPreview;
+      decision: CancellationIntent['refundDecision'];
+      reason: string;
+    } | null>(null),
     [phase, setPhase] = useState<'prepare' | 'execute'>('prepare');
   useEffect(() => {
     const controller = new AbortController();
@@ -236,6 +242,22 @@ function CancellationEditor({
       }
     setInvalid(false);
     setPhase('prepare');
+    setReview({
+      snapshot: preview,
+      decision: custom
+        ? { mode: 'custom', refunds }
+        : {
+            mode: 'full_wallet',
+            refunds: preview.invoices
+              .filter((invoice) => BigInt(invoice.refundableAmount) > 0n)
+              .map((invoice) => ({
+                invoiceId: invoice.id,
+                amount: invoice.refundableAmount,
+                destination: 'wallet',
+              })),
+          },
+      reason: reason.trim(),
+    });
     setAction({
       title: word('cancellationSave'),
       description: word('cancellationPrepareNotice'),
@@ -254,8 +276,9 @@ function CancellationEditor({
     });
   }
   function execute() {
-    if (!intent) return;
+    if (!intent || !preview || intent.financialFingerprint !== preview.fingerprint) return;
     setPhase('execute');
+    setReview({ snapshot: preview, decision: intent.refundDecision, reason: intent.reason });
     const amount = intent.refundDecision.refunds
       .reduce((sum, line) => sum + BigInt(line.amount), 0n)
       .toString();
@@ -444,9 +467,14 @@ function CancellationEditor({
       {action ? (
         <TeamActionDialog
           action={action}
-          onClose={() => setAction(null)}
+          summary={review ? <CancellationFinancialReview {...review} /> : null}
+          onClose={() => {
+            setAction(null);
+            setReview(null);
+          }}
           onSuccess={async (result) => {
             setAction(null);
+            setReview(null);
             if (phase === 'execute') onChanged();
             else {
               setIntent(result as CancellationIntent);
@@ -456,5 +484,61 @@ function CancellationEditor({
         />
       ) : null}
     </div>
+  );
+}
+
+function CancellationFinancialReview({
+  snapshot,
+  decision,
+  reason,
+}: {
+  snapshot: CancellationPreview;
+  decision: CancellationIntent['refundDecision'];
+  reason: string;
+}) {
+  const locale = useLocale();
+  const word = (key: string) => contractText(key, locale);
+  const money = (value: string) =>
+    `${new Intl.NumberFormat(locale).format(BigInt(value))} ${word('irr')}`;
+  const total = decision.refunds.reduce((sum, refund) => sum + BigInt(refund.amount), 0n);
+  return (
+    <FinancialReviewSummary
+      title={word('cancellationFinancialReview')}
+      rows={[
+        { id: 'contract', label: word('contractReference'), value: snapshot.contractId },
+        { id: 'profile', label: word('profile'), value: snapshot.profileId },
+        { id: 'version', label: word('version'), value: snapshot.versionId },
+        { id: 'service', label: word('serviceType'), value: word(snapshot.serviceType) },
+        ...snapshot.invoices.flatMap((invoice, index) => [
+          {
+            id: `${invoice.id}-id`,
+            label: `${word('cancellationInvoice')} ${index + 1}`,
+            value: invoice.id,
+          },
+          {
+            id: `${invoice.id}-paid`,
+            label: `${word('cancellationInvoice')} ${index + 1} · ${word('cancellationPaid')}`,
+            value: money(invoice.paidAmount),
+          },
+          {
+            id: `${invoice.id}-returned`,
+            label: `${word('cancellationInvoice')} ${index + 1} · ${word('cancellationAlreadyReturned')}`,
+            value: money(invoice.refundedAmount),
+          },
+          {
+            id: `${invoice.id}-available`,
+            label: `${word('cancellationInvoice')} ${index + 1} · ${word('cancellationAvailable')}`,
+            value: money(invoice.availableRefundAmount),
+          },
+        ]),
+        ...decision.refunds.map((refund) => ({
+          id: `refund-${refund.invoiceId}`,
+          label: `${word('cancellationInvoice')} ${snapshot.invoices.findIndex((invoice) => invoice.id === refund.invoiceId) + 1} · ${word('cancellationReturn')}`,
+          value: `${money(refund.amount)} · ${word(`cancellation.${refund.destination}`)}`,
+        })),
+      ]}
+      total={{ label: word('cancellationReturn'), value: money(total.toString()) }}
+      notice={`${word('cancellationReason')}: ${reason}`}
+    />
   );
 }
