@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends poppler-utils \
 COPY --from=build /out/api ./
 COPY --from=build /out/worker ./worker/
 COPY scripts/healthcheck-runtime.cjs ./healthcheck-runtime.cjs
+COPY scripts/run-packaged-migrations.cjs ./run-packaged-migrations.cjs
 ENV NODE_ENV=production NODE_OPTIONS="--max-old-space-size=512"
 USER node
 EXPOSE 4000 9090
