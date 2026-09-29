@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[Electricity order financial review summary](batches/2026-09-29-electricity-financial-review-summary.md) uses the shared accessible confirmation layout for simple and advanced server quotes while retaining exact quote-digest submission. This covers the electricity-order UI portion of the cross-command financial review task; the other command families remain open.
+
 [Main route payload budget](batches/2026-09-29-main-route-budget.md) removes staff-only date code and finance schemas from the eager customer path, loads toast rendering on feedback, and keeps navigation text in the shared dictionary. Customer purchase routes remain eager. All configured route and interaction budgets pass, including dashboard and electricity ordering; production Chromium electricity, saving and wallet journeys pass with current session fixtures.
 
 [Admin terms interaction budget](batches/2026-09-29-admin-terms-interaction-budget.md) measures the lazy editor, publish preview and version viewer when used, bringing the initial admin terms route under its existing budget without relaxing the interaction limits.

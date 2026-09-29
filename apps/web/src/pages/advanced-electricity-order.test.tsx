@@ -127,6 +127,7 @@ beforeEach(() => {
                 subtotalIrR: '10000',
                 discountIrR: '1000',
                 vatIrR: '900',
+                totalIrR: '9900',
               },
             ],
             subtotalIrR: '10000',
@@ -322,6 +323,7 @@ it('refreshes the advanced contract terms after a submission conflict', async ()
   await mount();
   await settlePreview();
   expect(container.textContent).toContain('Original terms');
+  expect(container.querySelector('[aria-label="Review Order"]')).not.toBeNull();
   contractTemplate = { name: 'Electricity agreement', versionNumber: 2, text: 'Updated terms' };
   const submit = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.submit', 'en')

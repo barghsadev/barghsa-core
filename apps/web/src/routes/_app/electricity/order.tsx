@@ -11,6 +11,7 @@ import { FormWizard } from '../../../components/FormWizard.js';
 import { MaintenanceBoundary } from '../../../components/MaintenanceNotice.js';
 import { WalletFundingPrompt } from '../../../components/WalletFundingPrompt.js';
 import { ElectricityQuoteErrorNotice } from '../../../components/ElectricityQuoteErrorNotice.js';
+import { ElectricityFinancialReviewSummary } from '../../../components/ElectricityFinancialReviewSummary.js';
 import {
   ElectricityContractTerms,
   type ElectricityContractTermsSnapshot,
@@ -1827,32 +1828,55 @@ function ElectricityOrderPage() {
                         {t('electricity.order.mandatoryGreen', locale)}
                       </p>
                     )}
-                    {quote.lines.map((line) => (
-                      <div key={line.systemKey} className="flex flex-wrap justify-between gap-2">
-                        <span>
-                          {line.systemKey === 'thermal'
-                            ? t('electricity.order.thermal', locale)
-                            : t('electricity.order.green', locale)}{' '}
-                          · {line.quantityKwh} kWh × {numbers.money(line.unitPriceIrR)}
-                        </span>
-                        <span className="text-end">
-                          <strong>
-                            {t('electricity.order.lineTotal', locale)}:{' '}
-                            {numbers.money(line.totalIrR)}
-                          </strong>
-                          {(line.discountIrR !== '0' || line.vatIrR !== '0') && (
-                            <small className="block text-muted-foreground">
-                              {numbers.money(line.subtotalIrR)} · −{numbers.money(line.discountIrR)}{' '}
-                              · +{numbers.money(line.vatIrR)} {t('electricity.order.vat', locale)}
-                            </small>
-                          )}
-                        </span>
-                      </div>
-                    ))}
-                    <div className="flex justify-between">
-                      <span>{t('electricity.order.discount', locale)}</span>
-                      <span>{numbers.money(quote.discountIrR)}</span>
-                    </div>
+                    {step === 5 ? (
+                      <ElectricityFinancialReviewSummary
+                        quote={quote}
+                        locale={locale}
+                        formatMoney={numbers.money}
+                        formatQuantity={numbers.irrDigits}
+                      />
+                    ) : (
+                      <>
+                        {quote.lines.map((line) => (
+                          <div
+                            key={line.systemKey}
+                            className="flex flex-wrap justify-between gap-2"
+                          >
+                            <span>
+                              {line.systemKey === 'thermal'
+                                ? t('electricity.order.thermal', locale)
+                                : t('electricity.order.green', locale)}{' '}
+                              · {line.quantityKwh} kWh × {numbers.money(line.unitPriceIrR)}
+                            </span>
+                            <span className="text-end">
+                              <strong>
+                                {t('electricity.order.lineTotal', locale)}:{' '}
+                                {numbers.money(line.totalIrR)}
+                              </strong>
+                              {(line.discountIrR !== '0' || line.vatIrR !== '0') && (
+                                <small className="block text-muted-foreground">
+                                  {numbers.money(line.subtotalIrR)} · −
+                                  {numbers.money(line.discountIrR)} · +{numbers.money(line.vatIrR)}{' '}
+                                  {t('electricity.order.vat', locale)}
+                                </small>
+                              )}
+                            </span>
+                          </div>
+                        ))}
+                        <div className="flex justify-between">
+                          <span>{t('electricity.order.discount', locale)}</span>
+                          <span>{numbers.money(quote.discountIrR)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>{t('electricity.order.vat', locale)}</span>
+                          <span>{numbers.money(quote.vatIrR)}</span>
+                        </div>
+                        <div className="flex justify-between text-base font-semibold">
+                          <span>{t('electricity.order.total', locale)}</span>
+                          <span>{numbers.money(quote.totalIrR)}</span>
+                        </div>
+                      </>
+                    )}
                     {step === 5 && (
                       <div className="flex items-center justify-between gap-2">
                         <span>
@@ -1863,14 +1887,6 @@ function ElectricityOrderPage() {
                         </Button>
                       </div>
                     )}
-                    <div className="flex justify-between">
-                      <span>{t('electricity.order.vat', locale)}</span>
-                      <span>{numbers.money(quote.vatIrR)}</span>
-                    </div>
-                    <div className="flex justify-between text-base font-semibold">
-                      <span>{t('electricity.order.total', locale)}</span>
-                      <span>{numbers.money(quote.totalIrR)}</span>
-                    </div>
                   </div>
                 ) : null}
                 {step === 5 && (
