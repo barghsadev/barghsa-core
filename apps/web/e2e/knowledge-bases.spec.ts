@@ -5,6 +5,13 @@ import { test, expect } from './coverage-fixture';
 async function switchLocale(page: Page, locale: string) {
   if (locale === 'en') await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
 }
+async function mockUnknownApi(page: Page) {
+  await page.route('**/api/**', (route) =>
+    new URL(route.request().url()).pathname === '/api/auth/user'
+      ? route.fulfill({ json: { isStaff: true } })
+      : route.fulfill({ status: 404, json: {} })
+  );
+}
 for (const locale of ['en', 'fa'])
   test(`Knowledge-base form retries captured input after password verification (${locale})`, async ({
     page,
@@ -14,7 +21,7 @@ for (const locale of ['en', 'fa'])
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockUnknownApi(page);
     await mockOppositeNumerals(page, locale);
     await page.route('**/api/admin/knowledge-bases', (route) => {
       if (route.request().method() === 'GET')
@@ -40,6 +47,9 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'افزودن پایگاه دانش' : 'Add knowledge base', exact: true })
       .click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill('Local draft');
+    const audience = page.getByLabel(fa ? 'مخاطب پایگاه دانش' : 'Knowledge-base audience');
+    await expect(audience).toHaveValue('admin');
+    await audience.selectOption('public');
     await page.getByLabel(fa ? 'نوع منبع' : 'Source type').selectOption('url');
     await page
       .getByLabel(fa ? 'نشانی امن منبع (HTTPS)' : 'Secure source address (HTTPS)')
@@ -50,6 +60,7 @@ for (const locale of ['en', 'fa'])
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
     const dialog = page.getByRole('dialog'),
       confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+    await expect(dialog).toContainText(fa ? 'بخش‌های این پایگاه دانش' : 'passages from this base');
     await confirm.click();
     await dialog.locator('input[type="password"]').fill('wrong');
     await confirm.click();
@@ -61,6 +72,7 @@ for (const locale of ['en', 'fa'])
       Array(2).fill({
         title: 'Local draft',
         description: '',
+        audience: 'public',
         sourceType: 'url',
         sourceConfig: { urls: ['https://example.org/guide', 'https://example.org/faq'] },
         chunkingStrategy: { size: 600, overlap: 60 },
@@ -93,7 +105,7 @@ for (const locale of ['en', 'fa'])
     await page
       .context()
       .addCookies([{ name: 'barghsa_csrf', value: 'kb-query-fixture', url: baseURL! }]);
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockUnknownApi(page);
     await mockOppositeNumerals(page, locale);
     await page.route('**/api/admin/**', (route) => {
       const path = new URL(route.request().url()).pathname;
@@ -157,6 +169,7 @@ for (const locale of ['en', 'fa'])
       title: 'Operations',
       description: 'Meter reading guidance',
       documentCount: 1,
+      audience: 'public',
     };
     const group = {
       id: '01900000-0000-7000-8000-000000000002',
@@ -166,7 +179,7 @@ for (const locale of ['en', 'fa'])
     };
     let linked = false;
     let attached = true;
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockUnknownApi(page);
     await mockOppositeNumerals(page, locale);
     await page.route('**/api/admin/**', (route) => {
       const path = new URL(route.request().url()).pathname;
@@ -245,6 +258,9 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'پیوست سند' : 'Attach document', exact: true })
       .click();
+    await expect(page.getByRole('dialog')).toContainText(
+      fa ? 'بخش‌های این پایگاه دانش' : 'passages from this base'
+    );
     await page
       .getByRole('dialog')
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
@@ -311,7 +327,7 @@ for (const locale of ['en', 'fa']) {
         verified = false,
         puts = 0,
         attachments = 0;
-      await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+      await mockUnknownApi(page);
       await mockOppositeNumerals(page, locale);
       await page.route('**/api/admin/knowledge-bases', (route) => route.fulfill({ json: [kb] }));
       await page.route(`**/api/admin/knowledge-bases/${kb.id}`, (route) =>

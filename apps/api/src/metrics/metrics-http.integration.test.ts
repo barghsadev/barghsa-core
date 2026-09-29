@@ -67,7 +67,19 @@ it('serves unavailable metrics through a database outage and recovers without st
       await control.end();
     }
   }
-  const recovered = await scrape();
+  // Reopening the database does not immediately replace terminated pool sockets.
+  // Require an actual fresh collection, with a bound, instead of assuming the
+  // first scrape after ALTER DATABASE is the successful one.
+  let recovered = '';
+  await expect
+    .poll(
+      async () => {
+        recovered = await scrape();
+        return recovered;
+      },
+      { timeout: 10_000, interval: 250 }
+    )
+    .toMatch(/^pg_metrics_collection_success 1$/m);
   expect(recovered).toMatch(/^pg_metrics_collection_success 1$/m);
   expect(recovered).toMatch(/^pg_checkpoints_timed_total \d+/m);
 }, 45_000);

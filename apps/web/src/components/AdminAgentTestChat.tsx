@@ -32,6 +32,7 @@ export function AdminAgentTestChat({
 }) {
   const label = (key: string) => t(`admin.agents.testChat.${key}`, locale);
   const [agentId, setAgentId] = useState('');
+  const [slotKey, setSlotKey] = useState('');
   const [message, setMessage] = useState('');
   const [turns, setTurns] = useState<Turn[]>([]);
   const [conversationId, setConversationId] = useState<string | undefined>();
@@ -39,6 +40,7 @@ export function AdminAgentTestChat({
   const [pending, setPending] = useState<{
     agentId: string;
     message: string;
+    slotKey?: string | undefined;
     conversationId?: string | undefined;
     requestId: string;
   } | null>(null);
@@ -94,6 +96,7 @@ export function AdminAgentTestChat({
     const payload = {
       agentId,
       message: message.trim(),
+      ...(slotKey ? { slotKey } : {}),
       conversationId,
       requestId: crypto.randomUUID(),
     };
@@ -131,6 +134,35 @@ export function AdminAgentTestChat({
               </option>
             ))}
         </select>
+      </div>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="test-chat-slot">{label('slot')}</label>
+        <select
+          id="test-chat-slot"
+          className="rounded-md border bg-background p-2"
+          value={slotKey}
+          disabled={busy}
+          onChange={(event) => {
+            setSlotKey(event.target.value);
+            clear();
+          }}
+        >
+          <option value="">{label('adminScope')}</option>
+          {(
+            [
+              'individual_chatbot',
+              'legal_entity_chatbot',
+              'staff_chatbot',
+              'website_chatbot',
+              'telegram_chatbot',
+            ] as const
+          ).map((key) => (
+            <option key={key} value={key}>
+              {label(key)}
+            </option>
+          ))}
+        </select>
+        <p className="text-xs text-muted-foreground">{label('scopeHelp')}</p>
       </div>
       <div
         aria-live="polite"

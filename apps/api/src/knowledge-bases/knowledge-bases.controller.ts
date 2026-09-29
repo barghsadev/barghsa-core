@@ -34,6 +34,7 @@ import {
 
 const titleSchema = z.string().trim().min(1, 'Title is required').max(120);
 const descriptionSchema = z.string().max(2000).default('');
+const audienceSchema = z.enum(['admin', 'staff', 'customer', 'public']);
 const sourceTypeSchema = z.enum(['document', 'url', 'api']);
 const sourceConfigSchema = z
   .object({
@@ -54,6 +55,7 @@ export const CreateKnowledgeBaseSchema = z
   .object({
     title: titleSchema,
     description: descriptionSchema.optional(),
+    audience: audienceSchema.default('admin'),
     sourceType: sourceTypeSchema.default('document'),
     sourceConfig: sourceConfigSchema.default({}),
     chunkingStrategy: chunkingStrategySchema.default({ size: 800, overlap: 100 }),
@@ -72,6 +74,7 @@ export const UpdateKnowledgeBaseSchema = z
   .object({
     title: titleSchema.optional(),
     description: z.string().max(2000).optional(),
+    audience: audienceSchema.optional(),
     sourceType: sourceTypeSchema.optional(),
     sourceConfig: sourceConfigSchema.optional(),
     chunkingStrategy: chunkingStrategySchema.optional(),
@@ -233,6 +236,7 @@ export class KnowledgeBasesController {
     return this.service.createKb({
       title: parsed.data.title,
       description: parsed.data.description ?? '',
+      audience: parsed.data.audience,
       sourceType: parsed.data.sourceType,
       sourceConfig: parsed.data.sourceConfig,
       chunkingStrategy: parsed.data.chunkingStrategy,
@@ -262,6 +266,7 @@ export class KnowledgeBasesController {
     return this.service.updateKb(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
       ...(parsed.data.description !== undefined ? { description: parsed.data.description } : {}),
+      ...(parsed.data.audience !== undefined ? { audience: parsed.data.audience } : {}),
       ...(parsed.data.sourceType !== undefined ? { sourceType: parsed.data.sourceType } : {}),
       ...(parsed.data.sourceConfig !== undefined ? { sourceConfig: parsed.data.sourceConfig } : {}),
       ...(parsed.data.chunkingStrategy !== undefined

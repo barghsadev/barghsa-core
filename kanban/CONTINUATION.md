@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[AI knowledge-base audiences and slot preview](batches/2026-09-29-ai-kb-audience.md) keeps existing bases admin-only, lets staff explicitly publish shared sources, and tests slot-scoped retrieval without opening production chat. The same batch repairs branding fixtures and the OpenAPI title snapshot after the dashboard merge.
+
 [AI model circuit breaker](batches/2026-09-29-ai-model-circuit.md) shares persisted per-model failure and recovery state across preview inference and the model-test worker, with admin health, metrics and operator alerting. Future production chat/tool calls must use the same gate.
 
 [AI audit foundation and preview integration](batches/2026-09-29-ai-audit.md) adds an append-only audit table and logs authenticated admin preview attempts with redacted payloads, authorization outcomes and correlation IDs. Production chat and tools remain future integrations.

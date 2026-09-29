@@ -10,6 +10,7 @@ interface Entry {
   id: string;
   title: string;
   description: string;
+  audience?: 'admin' | 'staff' | 'customer' | 'public';
   sourceType?: 'document' | 'url' | 'api';
   sourceConfig?: { urls?: string[]; apiUrl?: string };
   contentState?: 'empty' | 'processing' | 'ready' | 'error';
@@ -36,6 +37,7 @@ type Draft = {
   id?: string;
   title: string;
   description: string;
+  audience: 'admin' | 'staff' | 'customer' | 'public';
   sourceType: 'document' | 'url' | 'api';
   sourceUrl: string;
   chunkSize: number;
@@ -47,6 +49,7 @@ function draftFor(entry?: Entry): Draft {
     ...(entry ? { id: entry.id } : {}),
     title: entry?.title ?? '',
     description: entry?.description ?? '',
+    audience: entry?.audience ?? 'admin',
     sourceType: entry?.sourceType ?? 'document',
     sourceUrl: entry?.sourceConfig?.urls?.join('\n') ?? entry?.sourceConfig?.apiUrl ?? '',
     chunkSize: entry?.chunkingStrategy?.size ?? 800,
@@ -144,12 +147,15 @@ export default function AdminKnowledgeBasesPage() {
       `/api/admin/${kind}${draft.id ? `/${draft.id}` : ''}`,
       draft.id ? 'PUT' : 'POST',
       label('save'),
-      label('confirmSave'),
+      kind === 'knowledge-bases' && draft.audience !== 'admin'
+        ? `${label('confirmSave')} ${label('audienceWarning')}`
+        : label('confirmSave'),
       kind === 'kb-groups'
         ? { title: draft.title.trim(), description: draft.description }
         : {
             title: draft.title.trim(),
             description: draft.description,
+            audience: draft.audience,
             sourceType: draft.sourceType,
             sourceConfig:
               draft.sourceType === 'url'
@@ -257,6 +263,24 @@ export default function AdminKnowledgeBasesPage() {
               </div>
               {kind === 'knowledge-bases' && (
                 <>
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="kb-audience">{label('audience')}</Label>
+                    <select
+                      id="kb-audience"
+                      className="rounded-md border bg-background p-2"
+                      value={draft.audience}
+                      onChange={(event) =>
+                        setDraft({ ...draft, audience: event.target.value as Draft['audience'] })
+                      }
+                    >
+                      {(['admin', 'staff', 'customer', 'public'] as const).map((value) => (
+                        <option key={value} value={value}>
+                          {label(`audience${value}`)}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-sm text-muted-foreground">{label('audienceHelp')}</p>
+                  </div>
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="kb-source-type">{label('sourceType')}</Label>
                     <select
@@ -376,11 +400,16 @@ export default function AdminKnowledgeBasesPage() {
                     {numbers.number(row.documentCount ?? row.memberCount ?? 0)}
                   </p>
                   {kind === 'knowledge-bases' && (
-                    <p className="text-sm text-muted-foreground">
-                      {label('contentState')}: {label(`state${row.contentState ?? 'empty'}`)}
-                      {' · '}
-                      {label(row.isEnabled ? 'enabled' : 'disabled')}
-                    </p>
+                    <div className="space-y-1 text-sm text-muted-foreground">
+                      <p>
+                        {label('contentState')}: {label(`state${row.contentState ?? 'empty'}`)}
+                        {' · '}
+                        {label(row.isEnabled ? 'enabled' : 'disabled')}
+                      </p>
+                      <p>
+                        {label('audience')}: {label(`audience${row.audience ?? 'admin'}`)}
+                      </p>
+                    </div>
                   )}
                 </div>
                 <div className="flex shrink-0 flex-wrap gap-2">
@@ -447,7 +476,9 @@ export default function AdminKnowledgeBasesPage() {
                         `/api/admin/knowledge-bases/${detail.id}/reprocess`,
                         'POST',
                         label('reprocess'),
-                        label('confirmReprocess')
+                        detail.audience && detail.audience !== 'admin'
+                          ? `${label('confirmReprocess')} ${label('audienceWarning')}`
+                          : label('confirmReprocess')
                       )
                     }
                   >
@@ -574,7 +605,9 @@ export default function AdminKnowledgeBasesPage() {
                         `/api/admin/knowledge-bases/${detail.id}/documents`,
                         'POST',
                         label('attach'),
-                        label('confirmAttach'),
+                        detail.audience && detail.audience !== 'admin'
+                          ? `${label('confirmAttach')} ${label('audienceWarning')}`
+                          : label('confirmAttach'),
                         { storageKey: key }
                       )
                     }

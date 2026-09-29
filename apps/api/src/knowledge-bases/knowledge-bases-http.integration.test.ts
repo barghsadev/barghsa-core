@@ -69,6 +69,44 @@ const entities = [
   { kind: 'group', table: 'kb_groups', path: 'kb-groups', title: 'Original group' },
 ] as const;
 
+it('keeps existing knowledge bases admin-only and audits explicit audience publication', async () => {
+  const existing = await fetch(`${http.base}/api/admin/knowledge-bases/${ids.kb}`, { headers });
+  expect(existing.status).toBe(200);
+  expect(await existing.json()).toMatchObject({ audience: 'admin' });
+  const invalid = await fetch(`${http.base}/api/admin/knowledge-bases/${ids.kb}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ audience: 'everyone' }),
+  });
+  expect(invalid.status).toBe(400);
+  await expect(
+    http.pool.query("UPDATE knowledge_bases SET audience='everyone' WHERE id=$1", [ids.kb])
+  ).rejects.toMatchObject({ code: '23514' });
+  const published = await fetch(`${http.base}/api/admin/knowledge-bases/${ids.kb}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ audience: 'public' }),
+  });
+  expect(published.status).toBe(200);
+  expect(await published.json()).toMatchObject({ audience: 'public' });
+  expect(
+    (
+      await http.pool.query<{ audience: string }>(
+        'SELECT audience FROM knowledge_bases WHERE id=$1',
+        [ids.kb]
+      )
+    ).rows
+  ).toEqual([{ audience: 'public' }]);
+  expect(
+    (
+      await http.pool.query<{ metadata: { audienceBefore: string; audienceAfter: string } }>(
+        "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='kb_updated' AND metadata::jsonb->>'targetId'=$1",
+        [ids.kb]
+      )
+    ).rows
+  ).toMatchObject([{ metadata: { audienceBefore: 'admin', audienceAfter: 'public' } }]);
+});
+
 it('returns ranked passage excerpts for a KB and an enabled group member', async () => {
   const vector = [1, ...Array(1535).fill(0)];
   await http.pool.query(
