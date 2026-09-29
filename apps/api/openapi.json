@@ -13471,6 +13471,43 @@
       }
     },
     "/api/admin/wallet-refunds": {
+      "get": {
+        "operationId": "WalletRefundController_forInvoice",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read refundable invoice balance and its wallet refund requests",
+        "tags": [
+          "Admin · Wallet refunds"
+        ]
+      },
       "post": {
         "operationId": "WalletRefundController_request",
         "parameters": [],

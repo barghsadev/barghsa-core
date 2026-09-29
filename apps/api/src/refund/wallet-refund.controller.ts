@@ -15,6 +15,7 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -43,6 +44,22 @@ export class WalletRefundController {
     if (!parsed.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
     return this.refunds.contractObligations(parsed.data);
+  }
+  @Get()
+  @ApiOperation({ summary: 'Read refundable invoice balance and its wallet refund requests' })
+  @ApiQuery({ name: 'invoiceId', format: 'uuid' })
+  @ApiQuery({ name: 'before', required: false, format: 'uuid' })
+  async forInvoice(
+    @Req() req: AuthenticatedRequest,
+    @Query('invoiceId') invoiceId: string,
+    @Query('before') before?: string
+  ) {
+    this.authorize(req);
+    const id = refundUuid.safeParse(invoiceId),
+      cursor = refundUuid.optional().safeParse(before);
+    if (!id.success || !cursor.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    return this.refunds.walletRefundsForInvoice(id.data, req.session, cursor.data);
   }
   @Post()
   @RequiresStepUp()

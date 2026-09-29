@@ -80,10 +80,12 @@ async function getJson<T>(path: string, signal: AbortSignal): Promise<T> {
 
 export function InvoiceLedger({
   onSelectForDueAt,
+  onSelectForRefund,
   onOpenReceipt,
   initialInvoiceId = '',
 }: {
   onSelectForDueAt: (invoiceId: string) => void;
+  onSelectForRefund?: (invoiceId: string) => void;
   onOpenReceipt: (receiptId: string, state: string) => void;
   initialInvoiceId?: string;
 }) {
@@ -442,6 +444,15 @@ export function InvoiceLedger({
               >
                 {word('useDueAt')}
               </button>
+              {onSelectForRefund && (
+                <button
+                  type="button"
+                  className="ms-2 rounded-md border border-primary px-3 py-2 text-sm text-primary"
+                  onClick={() => onSelectForRefund(detail.invoiceId)}
+                >
+                  {word('useRefund')}
+                </button>
+              )}
               <div className="overflow-x-auto">
                 <h4 className="mb-2 font-semibold">{word('lines')}</h4>
                 <table className="w-full min-w-[520px] text-sm">

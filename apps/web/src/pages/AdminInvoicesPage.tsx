@@ -25,6 +25,7 @@ import ManualInvoicePanel from '../components/ManualInvoicePanel.js';
 import ServiceDuePeriodPanel from '../components/ServiceDuePeriodPanel.js';
 import { InvoiceBankReceiptQueue } from '../components/InvoiceBankReceiptQueue.js';
 import { InvoiceLedger } from '../components/InvoiceLedger.js';
+import { WalletRefundPanel } from '../components/WalletRefundPanel.js';
 
 /**
  * Staff dueAt override page (T-04.1.03.03).
@@ -69,6 +70,12 @@ export default function AdminInvoicesPage() {
   const canEditTime = time.status === 'ready' && dueTimezone === time.timezone;
   const locale = useLocale();
   const [invoiceId, setInvoiceId] = useState('');
+  const [refundInvoiceId, setRefundInvoiceId] = useState(
+    () =>
+      (typeof window === 'undefined'
+        ? ''
+        : new URLSearchParams(window.location.search).get('invoiceId')) ?? ''
+  );
   const [showReceiptQueue, setShowReceiptQueue] = useState(false);
   const [receiptSelection, setReceiptSelection] = useState<{
     receiptId: string;
@@ -250,6 +257,10 @@ export default function AdminInvoicesPage() {
           discardLoadedInvoice();
           document.getElementById('invoice-deadline-panel')?.scrollIntoView?.({ block: 'start' });
         }}
+        onSelectForRefund={(id) => {
+          setRefundInvoiceId(id);
+          document.getElementById('wallet-refunds-panel')?.scrollIntoView?.({ block: 'start' });
+        }}
         onOpenReceipt={(receiptId, state) => {
           setReceiptSelection((current) => ({
             receiptId,
@@ -262,6 +273,7 @@ export default function AdminInvoicesPage() {
       />
       <ManualInvoicePanel />
       <InvoiceCorrectionsPanel />
+      <WalletRefundPanel selectedInvoiceId={refundInvoiceId} />
       {pendingAction && (
         <TeamActionDialog
           action={pendingAction}

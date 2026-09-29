@@ -20,7 +20,7 @@ import { getDbPool, type RefundTransaction } from '@barghsa/db';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock.js';
 import { notifyApprovalRequested } from '../admin/approval-notifications.js';
-import { requireSessionStepUp } from '../session/session-step-up.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { lockWalletProfile, assertWalletProfileWritable } from '../wallet/profile-lock.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
@@ -89,6 +89,66 @@ export interface RefundDto {
 @Injectable()
 export class RefundService {
   constructor(private readonly invoices: InvoiceStateMachineService) {}
+
+  async walletRefundsForInvoice(invoiceId: string, actor: Actor, before?: string) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
+      await requireCurrentSession(client, actor);
+      const invoice = (
+        await client.query<InvoiceRow & { archived: boolean }>(
+          `SELECT i.id,i.profile_id,i.state,i.adjustment_kind,
+                  i.paid_amount::text AS paid_amount,i.refunded_amount::text AS refunded_amount,
+                  p.archived
+           FROM invoices i JOIN profiles p ON p.id=i.profile_id WHERE i.id=$1`,
+          [invoiceId]
+        )
+      ).rows[0];
+      if (!invoice) throw new NotFoundException('Invoice not found');
+      const reserved = (
+        await client.query<{ amount: string }>(
+          `SELECT COALESCE(SUM(amount),0)::text AS amount FROM refunds
+           WHERE invoice_id=$1 AND state NOT IN ('Completed','Rejected','Cancelled')`,
+          [invoiceId]
+        )
+      ).rows[0]!.amount;
+      const available =
+        BigInt(invoice.paid_amount) - BigInt(invoice.refunded_amount) - BigInt(reserved);
+      const rows = await client.query<RefundRow>(
+        `SELECT * FROM refunds WHERE invoice_id=$1 AND destination='wallet'
+         AND ($2::uuid IS NULL OR id<$2) ORDER BY id DESC LIMIT 51`,
+        [invoiceId, before ?? null]
+      );
+      const refunds: RefundDto[] = [];
+      for (const row of rows.rows.slice(0, 50)) refunds.push(await this.dto(client, row));
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return {
+        invoice: {
+          invoiceId: invoice.id,
+          profileId: invoice.profile_id,
+          state: invoice.state,
+          paidAmount: invoice.paid_amount,
+          refundedAmount: invoice.refunded_amount,
+          reservedAmount: reserved,
+          availableAmount: (available > 0n ? available : 0n).toString(),
+          requestable:
+            !invoice.archived &&
+            invoice.adjustment_kind !== 'credit' &&
+            ['Paid', 'PartiallyRefunded'].includes(invoice.state) &&
+            available > 0n,
+        },
+        refunds,
+        nextBefore: rows.rows.length > 50 ? rows.rows[49]!.id : null,
+      };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 
   async contractObligations(before?: string) {
     const rows = (

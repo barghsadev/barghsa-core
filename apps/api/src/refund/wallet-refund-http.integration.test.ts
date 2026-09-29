@@ -102,6 +102,48 @@ async function balances(f: Awaited<ReturnType<typeof invoice>>) {
   ).rows[0];
 }
 
+it('shows the current refundable balance and resumable wallet requests to finance staff', async () => {
+  const f = await invoice('100');
+  const url = `${http.base}/api/admin/wallet-refunds?invoiceId=${f.id}`;
+  const read = (user = 'refund-finance') => fetch(url, { headers: headers[user]! });
+  expect((await read('refund-support')).status).toBe(403);
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/wallet-refunds?invoiceId=invalid`, {
+        headers: headers['refund-finance']!,
+      })
+    ).status
+  ).toBe(400);
+  const initial = await read();
+  expect(initial.status).toBe(200);
+  expect(await initial.json()).toMatchObject({
+    invoice: {
+      invoiceId: f.id,
+      paidAmount: '100',
+      refundedAmount: '0',
+      reservedAmount: '0',
+      availableAmount: '100',
+      requestable: true,
+    },
+    refunds: [],
+    nextBefore: null,
+  });
+  const refund = await request(requestBody(f.id, '40'));
+  const pending = await read();
+  expect(pending.status).toBe(200);
+  expect(await pending.json()).toMatchObject({
+    invoice: { reservedAmount: '40', availableAmount: '60', requestable: true },
+    refunds: [expect.objectContaining({ id: refund.id, amount: '40', state: 'Requested' })],
+  });
+  expect((await decide(refund.id, 'approve')).status).toBe(200);
+  expect((await decide(refund.id, 'process')).status).toBe(200);
+  const completed = await read();
+  expect(await completed.json()).toMatchObject({
+    invoice: { refundedAmount: '40', reservedAmount: '0', availableAmount: '60' },
+    refunds: [expect.objectContaining({ id: refund.id, state: 'Completed' })],
+  });
+});
+
 it('posts partial and full refunds once and links their original payment evidence', async () => {
   const f = await invoice(),
     body = requestBody(f.id, '40');
