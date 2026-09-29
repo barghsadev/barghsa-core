@@ -1383,6 +1383,7 @@ export const fa: I18nDictionary = {
   'notifications.markAllRead': 'علامت‌گذاری همه به‌عنوان خوانده‌شده',
   'notifications.markAllReadDone': 'همه اعلان‌ها خوانده شدند',
   'notifications.markReadAria': 'علامت‌گذاری این اعلان به‌عنوان خوانده‌شده',
+  'notifications.customerContextLink': 'برای دیدن جزئیات، به حالت مشتری بروید.',
   'notifications.empty.title': 'اعلانی وجود ندارد',
   'notifications.empty.unread': 'اعلان خوانده‌نشده‌ای ندارید',
   'notifications.empty.body':
@@ -2796,6 +2797,7 @@ export const en: I18nDictionary = {
   'notifications.markAllRead': 'Mark all as read',
   'notifications.markAllReadDone': 'All notifications marked as read',
   'notifications.markReadAria': 'Mark this notification as read',
+  'notifications.customerContextLink': 'Switch to customer mode to view details.',
   'notifications.empty.title': 'No notifications',
   'notifications.empty.unread': 'You have no unread notifications',
   'notifications.empty.body': 'When a new event or update occurs, notifications will appear here.',

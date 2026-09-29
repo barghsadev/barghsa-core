@@ -34,7 +34,11 @@ const DROPDOWN_SIZE = 10;
  * into the document title while the tab is backgrounded. Supports RTL and
  * shows a loading skeleton and empty state.
  */
-export function NotificationBell() {
+export function NotificationBell({
+  operatingContext = 'customer',
+}: {
+  operatingContext?: 'staff' | 'customer';
+}) {
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const navigate = useNavigate();
@@ -85,7 +89,7 @@ export function NotificationBell() {
 
   const markRead = async (item?: NotificationItem) => {
     if (writingRef.current) return;
-    const target = item ? toNavigationTarget(item) : null;
+    const target = item ? toNavigationTarget(item, operatingContext) : null;
     const version = ++requestVersion.current;
     const previousItems = items;
     const previousCount = unreadCount;
@@ -204,7 +208,12 @@ export function NotificationBell() {
                   className="flex w-full items-start gap-3 rounded-md px-1.5 py-2 text-start hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   dir={locale === 'fa' ? 'rtl' : 'ltr'}
                 >
-                  <NotificationRow item={item} locale={locale} unread={!item.isRead} />
+                  <NotificationRow
+                    item={item}
+                    locale={locale}
+                    unread={!item.isRead}
+                    operatingContext={operatingContext}
+                  />
                 </button>
               </li>
             ))}
@@ -214,7 +223,7 @@ export function NotificationBell() {
         <DropdownMenuSeparator />
         <div className="px-1.5 py-1">
           <Link
-            to="/notifications"
+            to={operatingContext === 'staff' ? '/admin/inbox' : '/notifications'}
             onClick={() => setOpen(false)}
             className="block rounded-md px-1.5 py-1.5 text-center text-sm font-medium text-foreground hover:bg-primary/5"
           >

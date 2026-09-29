@@ -12,6 +12,7 @@ import {
   formatRelativeTime,
   notificationTypeLabelKey,
   notificationDisplayType,
+  toNavigationTarget,
   type NotificationItem,
 } from '../lib/notifications.js';
 
@@ -36,6 +37,7 @@ export function NotificationRow({
   locale,
   unread,
   muted = false,
+  operatingContext = 'customer',
 }: {
   item: NotificationItem;
   locale: Locale;
@@ -43,12 +45,17 @@ export function NotificationRow({
   unread: boolean;
   /** Reduce visual weight for already-read or compact surfaces. */
   muted?: boolean;
+  operatingContext?: 'staff' | 'customer';
 }) {
   const Icon = TYPE_ICONS[notificationDisplayType(item.type)] ?? InfoIcon;
   const { title, body } = notificationContent(item, locale);
   const typeLabel = t(notificationTypeLabelKey(item.type), locale);
   const timeLabel = formatRelativeTime(item.createdAt, locale);
   const isRtl = locale === 'fa';
+  const customerLinkInStaffMode =
+    operatingContext === 'staff' &&
+    toNavigationTarget(item, 'staff') === null &&
+    toNavigationTarget(item, 'customer') !== null;
 
   return (
     <div className="flex w-full items-start gap-3" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -87,6 +94,11 @@ export function NotificationRow({
           <span aria-hidden="true">·</span>
           <span>{typeLabel}</span>
         </span>
+        {customerLinkInStaffMode && (
+          <span className="mt-1 block text-xs text-muted-foreground">
+            {t('notifications.customerContextLink', locale)}
+          </span>
+        )}
       </span>
     </div>
   );

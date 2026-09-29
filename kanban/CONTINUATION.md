@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[Staff inbox in the admin workspace](batches/2026-09-29-staff-inbox-ui.md) adds a staff bell and full inbox, keeps navigation in the selected operating context, and verifies the bilingual staff/customer journey in five browser projects.
+
 [Notification inbox context isolation](batches/2026-09-29-notification-context-isolation.md) separates staff and customer notices on both APIs, preserves account-security alerts in either mode, and backfills existing notices with a database fallback for older writers. Dual-role HTTP, migration, worker and refund tests pass.
 
 [Assistant account status shortcut](batches/2026-09-29-assistant-account-status.md) reads wallet and unpaid-invoice status through the authorized dashboard without sending private account data to the knowledge model. Permission-limited and switched-profile responses fail closed; full AI tools and writes remain open. The standalone route-budget check remains over limit on multiple routes and needs a separate performance batch.

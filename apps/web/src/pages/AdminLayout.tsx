@@ -37,6 +37,7 @@ import {
   MessagesSquare,
 } from 'lucide-react';
 import { t } from '@barghsa/i18n/admin-ui';
+import { t as appText } from '@barghsa/i18n/app';
 import { documentText } from '@barghsa/i18n/documents';
 import { documentTemplateText } from '@barghsa/i18n/document-templates';
 import { shellText } from '@barghsa/i18n/shell';
@@ -47,13 +48,17 @@ import { TosBanner } from '../components/TosBanner.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { tMaintenance } from '@barghsa/i18n/maintenance';
 import { AppShell, type NavigationGroup } from '../components/AppShell.js';
+import { NotificationBell } from '../components/NotificationBell.js';
 
 export default function AdminLayout() {
   const locale = useLocale();
   const groups: NavigationGroup[] = [
     {
       label: shellText('overview', locale),
-      items: [{ to: '/app', label: t('admin.nav.dashboard', locale), icon: LayoutDashboard }],
+      items: [
+        { to: '/app', label: t('admin.nav.dashboard', locale), icon: LayoutDashboard },
+        { to: '/admin/inbox', label: appText('notifications.nav', locale), icon: Bell },
+      ],
     },
     {
       label: shellText('operations', locale),
@@ -189,7 +194,13 @@ export default function AdminLayout() {
     },
   ];
   return (
-    <AppShell area="admin" locale={locale} groups={groups} banners={<TosBanner locale={locale} />}>
+    <AppShell
+      area="admin"
+      locale={locale}
+      groups={groups}
+      actions={<NotificationBell operatingContext="staff" />}
+      banners={<TosBanner locale={locale} />}
+    >
       <Outlet />
     </AppShell>
   );

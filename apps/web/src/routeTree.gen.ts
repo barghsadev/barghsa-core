@@ -53,6 +53,7 @@ import { Route as AdminFailedJobsRouteImport } from './routes/admin/failed-jobs'
 import { Route as AdminFailedNotificationsRouteImport } from './routes/admin/failed-notifications'
 import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
 import { Route as AdminGiftCodesRouteImport } from './routes/admin/gift-codes'
+import { Route as AdminInboxRouteImport } from './routes/admin/inbox'
 import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
 import { Route as AdminKnowledgeBasesRouteImport } from './routes/admin/knowledge-bases'
 import { Route as AdminMaintenanceRouteImport } from './routes/admin/maintenance'
@@ -334,6 +335,11 @@ const AdminGeographyRoute = AdminGeographyRouteImport.update({
 const AdminGiftCodesRoute = AdminGiftCodesRouteImport.update({
   id: '/gift-codes',
   path: '/gift-codes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminInboxRoute = AdminInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminInvoicesRoute = AdminInvoicesRouteImport.update({
@@ -687,6 +693,7 @@ export interface FileRoutesByFullPath {
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/gift-codes': typeof AdminGiftCodesRoute
+  '/admin/inbox': typeof AdminInboxRoute
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/maintenance': typeof AdminMaintenanceRoute
@@ -786,6 +793,7 @@ export interface FileRoutesByTo {
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/gift-codes': typeof AdminGiftCodesRoute
+  '/admin/inbox': typeof AdminInboxRoute
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/maintenance': typeof AdminMaintenanceRoute
@@ -890,6 +898,7 @@ export interface FileRoutesById {
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/gift-codes': typeof AdminGiftCodesRoute
+  '/admin/inbox': typeof AdminInboxRoute
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/maintenance': typeof AdminMaintenanceRoute
@@ -997,6 +1006,7 @@ export interface FileRouteTypes {
     | '/admin/failed-notifications'
     | '/admin/geography'
     | '/admin/gift-codes'
+    | '/admin/inbox'
     | '/admin/invoices'
     | '/admin/knowledge-bases'
     | '/admin/maintenance'
@@ -1096,6 +1106,7 @@ export interface FileRouteTypes {
     | '/admin/failed-notifications'
     | '/admin/geography'
     | '/admin/gift-codes'
+    | '/admin/inbox'
     | '/admin/invoices'
     | '/admin/knowledge-bases'
     | '/admin/maintenance'
@@ -1199,6 +1210,7 @@ export interface FileRouteTypes {
     | '/admin/failed-notifications'
     | '/admin/geography'
     | '/admin/gift-codes'
+    | '/admin/inbox'
     | '/admin/invoices'
     | '/admin/knowledge-bases'
     | '/admin/maintenance'
@@ -1585,6 +1597,13 @@ declare module '@tanstack/react-router' {
       path: '/gift-codes'
       fullPath: '/admin/gift-codes'
       preLoaderRoute: typeof AdminGiftCodesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/inbox': {
+      id: '/admin/inbox'
+      path: '/inbox'
+      fullPath: '/admin/inbox'
+      preLoaderRoute: typeof AdminInboxRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/invoices': {
@@ -2182,6 +2201,7 @@ interface AdminRouteChildren {
   AdminFailedNotificationsRoute: typeof AdminFailedNotificationsRoute
   AdminGeographyRoute: typeof AdminGeographyRoute
   AdminGiftCodesRoute: typeof AdminGiftCodesRoute
+  AdminInboxRoute: typeof AdminInboxRoute
   AdminInvoicesRoute: typeof AdminInvoicesRoute
   AdminKnowledgeBasesRoute: typeof AdminKnowledgeBasesRoute
   AdminMaintenanceRoute: typeof AdminMaintenanceRoute
@@ -2228,6 +2248,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminFailedNotificationsRoute: AdminFailedNotificationsRoute,
   AdminGeographyRoute: AdminGeographyRoute,
   AdminGiftCodesRoute: AdminGiftCodesRoute,
+  AdminInboxRoute: AdminInboxRoute,
   AdminInvoicesRoute: AdminInvoicesRoute,
   AdminKnowledgeBasesRoute: AdminKnowledgeBasesRoute,
   AdminMaintenanceRoute: AdminMaintenanceRoute,

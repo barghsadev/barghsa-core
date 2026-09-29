@@ -197,12 +197,19 @@ export function isOlderThan(
  * `linkParams`. Returns null when no route is set so callers can render the
  * item as non-navigable.
  */
-export function toNavigationTarget(item: NotificationItem): {
+export function toNavigationTarget(
+  item: NotificationItem,
+  operatingContext: 'staff' | 'customer' = 'customer'
+): {
   to: string;
   search?: Record<string, unknown>;
 } | null {
   const link = notificationLink(item.linkRoute);
   if (!link) return null;
+  const pathname = new URL(link, 'https://barghsa.invalid').pathname;
+  const staffRoute = pathname === '/admin' || pathname.startsWith('/admin/');
+  if (operatingContext === 'staff' && !staffRoute && pathname !== '/app') return null;
+  if (operatingContext === 'customer' && staffRoute) return null;
   const target: { to: string; search?: Record<string, unknown> } = {
     to: link,
   };
