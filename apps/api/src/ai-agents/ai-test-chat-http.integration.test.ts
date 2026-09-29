@@ -128,6 +128,57 @@ it('isolates a test conversation, replays idempotently, and enforces per-admin q
   expect(completions).toBe(10);
 }, 30000);
 
+it('audits staff authorization denials and invalid requests without invoking the model', async () => {
+  const sessionId = randomUUID();
+  const csrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ('test-chat-unprivileged','test-chat-unprivileged@example.test','test-only',true)"
+  );
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+     VALUES ($1,'test-chat-unprivileged',$2,$3,now()+interval '1 day',now()+interval '1 hour')`,
+    [sessionId, csrf, randomUUID()]
+  );
+  const before = completions;
+  const denied = await fetch(`${http.base}/api/admin/ai/test-chat`, {
+    method: 'POST',
+    headers: {
+      cookie: `barghsa_session=${sessionId}`,
+      'x-csrf-token': csrf,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ agentId, requestId: randomUUID(), message: 'password: deniedsecret' }),
+  });
+  expect(denied.status).toBe(403);
+  const deniedAudit = await http.pool.query<{
+    authorization_result: string;
+    input: { message: string; redactionCategories: string[] };
+    output: { status: number };
+    correlation_id: string;
+  }>(
+    "SELECT authorization_result,input,output,correlation_id FROM ai_audit_log WHERE user_id='test-chat-unprivileged'"
+  );
+  expect(deniedAudit.rows).toMatchObject([
+    {
+      authorization_result: 'denied',
+      input: { message: 'password: [REDACTED]', redactionCategories: ['credential'] },
+      output: { status: 403 },
+      correlation_id: denied.headers.get('x-correlation-id'),
+    },
+  ]);
+  const invalid = await send({ agentId: 'invalid', message: 'bad' });
+  expect(invalid.status).toBe(400);
+  expect(
+    (
+      await http.pool.query<{ output: { status: number } }>(
+        `SELECT output FROM ai_audit_log
+         WHERE user_id='test-chat-admin' AND output->>'code'='VALIDATION:PARSE:ZOD_ERROR'`
+      )
+    ).rows
+  ).toMatchObject([{ output: { status: 400 } }]);
+  expect(completions).toBe(before);
+}, 30000);
+
 it('requires every linked knowledge base in all-KB mode and returns its excerpts', async () => {
   await http.pool.query(
     "SELECT rate_limit_rolling_reset(true,'ai:test-chat:user:test-chat-admin')"
@@ -244,6 +295,26 @@ it('redacts prompt, stored turn and returned answer before exposing them', async
   expect(turn.rows).toEqual([
     { user_message: 'My password is [REDACTED]', reply: 'Card [REDACTED]' },
   ]);
+  const audit = await http.pool.query<{
+    input: { message: string; redactionCategories: string[] };
+    output: { reply: string; status: number };
+    authorization_result: string;
+    correlation_id: string;
+    token_usage: { input: number; output: number };
+  }>(
+    `SELECT input,output,authorization_result,correlation_id,token_usage
+       FROM ai_audit_log WHERE input->>'requestId'=$1`,
+    [requestId]
+  );
+  expect(audit.rows).toMatchObject([
+    {
+      input: { message: 'My password is [REDACTED]', redactionCategories: ['credential'] },
+      output: { reply: 'Card [REDACTED]', status: 200 },
+      authorization_result: 'allowed',
+      correlation_id: response.headers.get('x-correlation-id'),
+      token_usage: { input: 7, output: 3 },
+    },
+  ]);
   const completed = completions;
   await http.pool.query(
     `UPDATE ai_test_chat_turns
@@ -256,8 +327,26 @@ it('redacts prompt, stored turn and returned answer before exposing them', async
   expect(replay.status).toBe(200);
   expect(await replay.json()).toMatchObject({ reply: 'Token: [REDACTED]' });
   expect(completions).toBe(completed);
+  expect(
+    (await http.pool.query("SELECT id FROM ai_audit_log WHERE input->>'requestId'=$1", [requestId]))
+      .rows
+  ).toHaveLength(2);
   providerReply = 'A test answer';
 }, 30000);
+
+it('prevents update, delete and truncate of AI audit records', async () => {
+  const id = (await http.pool.query<{ id: string }>('SELECT id FROM ai_audit_log LIMIT 1')).rows[0]!
+    .id;
+  await expect(
+    http.pool.query('UPDATE ai_audit_log SET tool_name=$2 WHERE id=$1', [id, 'changed'])
+  ).rejects.toMatchObject({ code: '55000' });
+  await expect(http.pool.query('DELETE FROM ai_audit_log WHERE id=$1', [id])).rejects.toMatchObject(
+    {
+      code: '55000',
+    }
+  );
+  await expect(http.pool.query('TRUNCATE ai_audit_log')).rejects.toMatchObject({ code: '55000' });
+});
 
 it('requires a retrieved source when a response policy demands one', async () => {
   await http.pool.query(
@@ -275,12 +364,21 @@ it('requires a retrieved source when a response policy demands one', async () =>
     policyId,
   ]);
   const before = completions;
-  const response = await send({ agentId, requestId: randomUUID(), message: 'Electricity?' });
+  const requestId = randomUUID();
+  const response = await send({ agentId, requestId, message: 'Electricity?' });
   expect(response.status).toBe(422);
   expect(await response.json()).toMatchObject({
     error: { code: 'AI_TEST_CHAT_POLICY_BLOCKED', reason: 'source_required', policyRef: policyId },
   });
   expect(completions).toBe(before);
+  expect(
+    (
+      await http.pool.query<{ output: { status: number; code: string } }>(
+        `SELECT output FROM ai_audit_log WHERE input->>'requestId'=$1`,
+        [requestId]
+      )
+    ).rows
+  ).toMatchObject([{ output: { status: 422, code: 'AI_TEST_CHAT_POLICY_BLOCKED' } }]);
   await http.pool.query('DELETE FROM ai_agent_policies WHERE agent_id=$1 AND policy_id=$2', [
     agentId,
     policyId,

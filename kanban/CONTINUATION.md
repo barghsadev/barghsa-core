@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[AI audit foundation and preview integration](batches/2026-09-29-ai-audit.md) adds an append-only audit table and logs authenticated admin preview attempts with redacted payloads, authorization outcomes and correlation IDs. Production chat and tools remain future integrations.
+
 [AI preview redaction and attribution](batches/2026-09-29-ai-redaction-attribution.md) removes common sensitive values from prompts and preview replies, adds document-level source context and labels unsourced guidance. Production chat and tool enforcement remain later work.
 
 [AI policy priority and inference evaluation](batches/2026-09-29-policy-evaluation.md) adds priority and group overrides, new rule types, and input/output enforcement in admin test chat. Production agent slots and tools remain separate work.

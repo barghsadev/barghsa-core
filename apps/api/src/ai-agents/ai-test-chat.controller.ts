@@ -5,6 +5,7 @@ import { v7 as uuidv7 } from 'uuid';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { AiTestChatService } from './ai-test-chat.service.js';
+import { appendAiAudit } from './ai-audit.js';
 
 const TestChatSchema = z
   .object({
@@ -23,6 +24,39 @@ const V1TestChatSchema = z
   })
   .strict();
 
+function auditInput(body: unknown): Record<string, unknown> {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return {};
+  const data = body as Record<string, unknown>;
+  const pick = (camel: string, snake: string) => {
+    const value = data[camel] ?? data[snake];
+    return typeof value === 'string' ? value : null;
+  };
+  return {
+    agentId: pick('agentId', 'agent_id'),
+    requestId: pick('requestId', 'request_id'),
+    conversationId: pick('conversationId', 'conversation_id'),
+    message: pick('message', 'message'),
+  };
+}
+
+function auditFailure(error: unknown): Record<string, unknown> {
+  if (!(error instanceof HttpException)) return { status: 503, code: 'AI_TEST_CHAT_UNAVAILABLE' };
+  const response = error.getResponse();
+  const responseError =
+    response && typeof response === 'object' && 'error' in response ? response.error : undefined;
+  const code =
+    responseError && typeof responseError === 'object' && 'code' in responseError
+      ? responseError.code
+      : responseError;
+  return {
+    status: error.getStatus(),
+    code:
+      typeof code === 'string' && /^[A-Z][A-Z0-9_:]{0,100}$/.test(code)
+        ? code
+        : 'AI_TEST_CHAT_UNAVAILABLE',
+  };
+}
+
 @ApiTags('Admin · AI test chat')
 @ApiBearerAuth()
 @UseGuards(SessionAuthGuard)
@@ -34,21 +68,76 @@ export class AiTestChatController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Test a saved AI agent in an isolated admin conversation' })
   async send(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
-    if (!hasStaffPermission(req, 'admin:ai:agents'))
+    const started = Date.now();
+    const input = auditInput(body);
+    const record = (
+      output: Record<string, unknown>,
+      authorizationResult: 'allowed' | 'denied',
+      tokenUsage?: { input: number; output: number } | null
+    ) =>
+      appendAiAudit({
+        sessionId: req.session.sessionId,
+        userId: req.session.userId,
+        profileId: null,
+        agentSlot: null,
+        toolName: 'admin_test_chat',
+        input,
+        output,
+        authorizationResult,
+        confirmationRequired: false,
+        confirmationResult: 'not_required',
+        tokenUsage: tokenUsage ?? null,
+        latencyMs: Math.max(0, Date.now() - started),
+      });
+    if (!hasStaffPermission(req, 'admin:ai:agents')) {
+      await record({ status: 403, code: 'AUTHZ_FORBIDDEN' }, 'denied');
       throw new HttpException({ statusCode: 403, error: 'AUTHZ_FORBIDDEN' }, 403);
-    if (req.path.startsWith('/api/v1/')) {
+    }
+    const versioned = req.path.startsWith('/api/v1/');
+    let normalized: {
+      agentId: string;
+      message: string;
+      requestId: string;
+      conversationId?: string | undefined;
+    };
+    if (versioned) {
       const parsed = V1TestChatSchema.safeParse(body);
-      if (!parsed.success)
+      if (!parsed.success) {
+        await record({ status: 400, code: 'VALIDATION:PARSE:ZOD_ERROR' }, 'allowed');
         throw new HttpException({ statusCode: 400, error: 'VALIDATION:PARSE:ZOD_ERROR' }, 400);
-      const result = await this.service.send(
-        {
-          agentId: parsed.data.agent_id,
-          message: parsed.data.message,
-          requestId: parsed.data.request_id ?? uuidv7(),
-          ...(parsed.data.conversation_id ? { conversationId: parsed.data.conversation_id } : {}),
-        },
-        req.session
-      );
+      }
+      normalized = {
+        agentId: parsed.data.agent_id,
+        message: parsed.data.message,
+        requestId: parsed.data.request_id ?? uuidv7(),
+        ...(parsed.data.conversation_id ? { conversationId: parsed.data.conversation_id } : {}),
+      };
+    } else {
+      const parsed = TestChatSchema.safeParse(body);
+      if (!parsed.success) {
+        await record({ status: 400, code: 'VALIDATION:PARSE:ZOD_ERROR' }, 'allowed');
+        throw new HttpException({ statusCode: 400, error: 'VALIDATION:PARSE:ZOD_ERROR' }, 400);
+      }
+      normalized = parsed.data;
+    }
+    let result: Awaited<ReturnType<AiTestChatService['send']>>;
+    try {
+      result = await this.service.send(normalized, req.session);
+    } catch (error) {
+      await record(auditFailure(error), 'allowed');
+      throw error;
+    }
+    await record(
+      {
+        status: 200,
+        reply: result.reply,
+        sourceCount: result.sources.length,
+        attribution: result.attribution,
+      },
+      'allowed',
+      result.tokenUsage
+    );
+    if (versioned)
       return {
         conversation_id: result.conversationId,
         reply: result.reply,
@@ -64,16 +153,6 @@ export class AiTestChatController {
         latency_ms: result.latencyMs,
         remaining_quota: result.remainingQuota,
       };
-    }
-    const parsed = TestChatSchema.safeParse(body);
-    if (!parsed.success)
-      throw new HttpException({ statusCode: 400, error: 'VALIDATION:PARSE:ZOD_ERROR' }, 400);
-    return this.service.send(
-      {
-        ...parsed.data,
-        ...(parsed.data.conversationId ? { conversationId: parsed.data.conversationId } : {}),
-      },
-      req.session
-    );
+    return result;
   }
 }
