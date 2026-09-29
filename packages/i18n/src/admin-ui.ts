@@ -561,6 +561,18 @@ export const fa: I18nDictionary = {
   'admin.aiModels.changed': 'مدل هنگام آزمایش تغییر کرد. تازه‌سازی و دوباره آزمایش کنید.',
   'admin.aiModels.invalid':
     'مقادیر را بررسی کنید. نشانی نباید شامل کلید، پارامتر یا بخش پایانی باشد.',
+  'admin.aiModels.budgetTitle': 'بودجه ماهانه',
+  'admin.aiModels.budgetEdit': 'تنظیم بودجه',
+  'admin.aiModels.budgetSave': 'ذخیره بودجه',
+  'admin.aiModels.budgetForm': 'تنظیمات بودجه مدل',
+  'admin.aiModels.budgetNone': 'محدودیتی تنظیم نشده است.',
+  'admin.aiModels.budgetHelp':
+    'برای حذف محدودیت، هر دو سقف را خالی بگذارید. هزینه‌ها به دلار آمریکا هستند و مصرف در آغاز هر ماه UTC صفر می‌شود.',
+  'admin.aiModels.budgetConfirm': 'سقف و قیمت مدل برای درخواست‌های بعدی ذخیره شود؟',
+  'admin.aiModels.budgetTokens': 'توکن مصرف‌شده / سقف',
+  'admin.aiModels.budgetCost': 'هزینه مصرف‌شده / سقف (دلار)',
+  'admin.aiModels.budgetInputPrice': 'هزینه یک میلیون توکن ورودی (دلار)',
+  'admin.aiModels.budgetOutputPrice': 'هزینه یک میلیون توکن خروجی (دلار)',
   'admin.contractLimits.title': 'محدودیت‌های قرارداد برق',
   'admin.contractLimits.description': 'محدودیت‌های ایجاد پیش‌نویس جدید برق را تنظیم کنید.',
   'admin.contractLimits.refresh': 'تازه‌سازی',
@@ -1904,6 +1916,18 @@ export const en: I18nDictionary = {
   'admin.aiModels.changed': 'The model changed during testing. Refresh and test again.',
   'admin.aiModels.invalid':
     'Check the values. The URL must not contain credentials, query parameters or a fragment.',
+  'admin.aiModels.budgetTitle': 'Monthly budget',
+  'admin.aiModels.budgetEdit': 'Configure budget',
+  'admin.aiModels.budgetSave': 'Save budget',
+  'admin.aiModels.budgetForm': 'Model budget settings',
+  'admin.aiModels.budgetNone': 'No limit configured.',
+  'admin.aiModels.budgetHelp':
+    'Leave both limits blank to remove the budget. Costs are in US dollars; usage resets at the start of each UTC month.',
+  'admin.aiModels.budgetConfirm': 'Save this model budget and prices for future requests?',
+  'admin.aiModels.budgetTokens': 'Tokens used / limit',
+  'admin.aiModels.budgetCost': 'Cost used / limit (USD)',
+  'admin.aiModels.budgetInputPrice': 'Input cost per million tokens (USD)',
+  'admin.aiModels.budgetOutputPrice': 'Output cost per million tokens (USD)',
   'admin.contractLimits.title': 'Contract electricity limits',
   'admin.contractLimits.description':
     'Set the limits used when new electricity drafts are created.',

@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[Monthly AI model budgets](batches/2026-09-29-ai-model-budgets.md) give operators configurable token and USD cost limits, actual usage, UTC-month rollover, an 80% notice and fail-closed preflight checks for customer and admin agent completions.
+
 [Customer knowledge assistant](batches/2026-09-29-customer-knowledge-assistant.md) gives signed-in individual and legal profiles a read-only, sourced Q&A panel, with profile-bound slot selection, rate and concurrency limits, replay safety and audit. Profile records, tools, streaming and full worker isolation remain later work.
 
 [AI knowledge-base audiences and slot preview](batches/2026-09-29-ai-kb-audience.md) keeps existing bases admin-only, lets staff explicitly publish shared sources, and tests slot-scoped retrieval without opening production chat. The same batch repairs branding fixtures and the OpenAPI title snapshot after the dashboard merge.

@@ -8,6 +8,7 @@ let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let provider: ReturnType<typeof createServer>;
 let headers: Record<string, string>;
 let agentId: string;
+let modelId: string;
 let individualId: string;
 let legalId: string;
 let customerKbId: string;
@@ -74,7 +75,7 @@ beforeAll(async () => {
       "INSERT INTO profiles(user_id,profile_type,status) VALUES ('knowledge-user','LEGAL','ACTIVE') RETURNING id"
     )
   ).rows[0]!.id;
-  const modelId = (
+  modelId = (
     await http.pool.query<{ id: string }>(
       `INSERT INTO ai_models(title,provider_type,base_url,model_name,created_by,is_enabled,last_test_status)
        VALUES ('Knowledge','openai_compatible',$1,'test','knowledge-admin',true,'passed') RETURNING id`,
@@ -248,5 +249,21 @@ it('limits customer questions per active profile without invoking the model agai
   const limited = await ask({ requestId: randomUUID(), message: 'One more' });
   expect(limited.status).toBe(429);
   expect(limited.headers.get('retry-after')).not.toBeNull();
+  expect(completions).toBe(before);
+}, 30_000);
+
+it('rejects a customer question before provider use when the assigned model budget is exhausted', async () => {
+  await http.pool.query("UPDATE knowledge_bases SET audience='public' WHERE id=$1", [publicKbId]);
+  await http.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
+    `ai:knowledge:user:knowledge-user:profile:${legalId}`,
+  ]);
+  await http.pool.query(
+    'INSERT INTO ai_model_budgets(model_id,monthly_token_limit) VALUES ($1,1)',
+    [modelId]
+  );
+  const before = completions;
+  const denied = await ask({ requestId: randomUUID(), message: 'What is the public guide?' });
+  expect(denied.status).toBe(429);
+  expect(await denied.json()).toMatchObject({ error: { code: 'AI_MODEL_BUDGET_EXHAUSTED' } });
   expect(completions).toBe(before);
 }, 30_000);

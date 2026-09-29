@@ -27,6 +27,7 @@ export const fa: I18nDictionary = {
     'در راهنماهای منتشرشده پاسخی برای این پرسش پیدا نشد. پرسش را تغییر دهید یا با پشتیبانی تماس بگیرید.',
   'assistant.busy': 'راهنما اکنون مشغول است. کمی بعد دوباره تلاش کنید.',
   'assistant.limit': 'تعداد پرسش‌های مجاز شما در این دقیقه تمام شده است. کمی بعد دوباره تلاش کنید.',
+  'assistant.budget': 'بودجه ماهانه این راهنما به پایان رسیده است. لطفاً با پشتیبانی تماس بگیرید.',
   'assistant.changed': 'تنظیمات راهنما تغییر کرده است. پرسش را دوباره بفرستید.',
   'assistant.remaining': 'پرسش باقی‌مانده در این دقیقه: {count}',
   'workflow.summary': 'خلاصه وضعیت و اقدام بعدی',
@@ -1318,6 +1319,7 @@ export const en: I18nDictionary = {
   'assistant.busy': 'The guide is busy. Please try again shortly.',
   'assistant.limit':
     'You have reached the question limit for this minute. Please try again shortly.',
+  'assistant.budget': 'This guide has reached its monthly budget. Please contact support.',
   'assistant.changed': 'The guide changed while answering. Please send the question again.',
   'assistant.remaining': 'Questions left this minute: {count}',
   'workflow.summary': 'Status and next action',

@@ -18,6 +18,7 @@ import {
 } from '../src/common/correlation-id.middleware.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { DomainErrorCodes } from '@barghsa/shared/errors/domain';
+import { t } from '@barghsa/i18n';
 import { ZodError, ZodIssue } from 'zod';
 
 // ---------------------------------------------------------------------------
@@ -224,8 +225,8 @@ describe('HttpExceptionFilter', () => {
         expect.soft(error.code).toBe(definition.code);
         expect.soft(error.message).not.toBe(definition.messageKey);
         expect.soft(error.message).not.toContain('private-catalogue-detail');
-        if (locale === 'en') expect.soft(error.message).toBe(definition.title);
-        else expect.soft(error.message).toMatch(/[\u0600-\u06ff]/);
+        expect.soft(error.message).toBe(t(definition.messageKey, locale));
+        if (locale === 'fa') expect.soft(error.message).toMatch(/[\u0600-\u06ff]/);
       }
     }
   );

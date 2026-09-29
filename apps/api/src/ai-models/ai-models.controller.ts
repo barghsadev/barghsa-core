@@ -14,7 +14,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -24,6 +24,7 @@ import {
   AiModelsService,
   AI_MODEL_PROVIDER_TYPES,
   type AiModelDto,
+  type AiModelBudgetInput,
   type TestAiModelResult,
 } from './ai-models.service.js';
 
@@ -75,6 +76,20 @@ export const UpdateAiModelSchema = z
     apiToken: z.string().max(4000).optional(),
   })
   .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
+
+export const AiModelBudgetSchema = z
+  .strictObject({
+    monthlyTokenLimit: z.number().int().positive().max(1_000_000_000).nullable(),
+    monthlyCostLimitMicros: z.number().int().positive().max(1_000_000_000_000).nullable(),
+    inputPricePerMillionMicros: z.number().int().min(0).max(1_000_000_000),
+    outputPricePerMillionMicros: z.number().int().min(0).max(1_000_000_000),
+  })
+  .refine(
+    (value) =>
+      value.monthlyCostLimitMicros === null ||
+      (value.inputPricePerMillionMicros > 0 && value.outputPricePerMillionMicros > 0),
+    'Both token prices are required for a cost limit'
+  );
 
 function httpError(code: string, message: string, statusCode = 400): never {
   throw new HttpException({ statusCode, error: code, message }, statusCode);
@@ -194,6 +209,45 @@ export class AiModelsController {
       session: req.session,
       ip: requestIp(req),
     });
+  }
+
+  @Put(':id/budget')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Configure monthly token and USD cost limits for an AI model' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: [
+        'monthlyTokenLimit',
+        'monthlyCostLimitMicros',
+        'inputPricePerMillionMicros',
+        'outputPricePerMillionMicros',
+      ],
+      properties: {
+        monthlyTokenLimit: { type: 'integer', nullable: true, minimum: 1, maximum: 1_000_000_000 },
+        monthlyCostLimitMicros: {
+          type: 'integer',
+          nullable: true,
+          minimum: 1,
+          maximum: 1_000_000_000_000,
+        },
+        inputPricePerMillionMicros: { type: 'integer', minimum: 0, maximum: 1_000_000_000 },
+        outputPricePerMillionMicros: { type: 'integer', minimum: 0, maximum: 1_000_000_000 },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Updated model with current budget and usage.' })
+  async setBudget(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: AiModelBudgetInput
+  ): Promise<AiModelDto> {
+    this.assertAiModelsPermission(req);
+    const parsed = AiModelBudgetSchema.safeParse(body);
+    if (!parsed.success) httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid AI budget');
+    return this.service.setBudget(id, parsed.data, req.session.userId, requestIp(req), req.session);
   }
 
   @Delete(':id')

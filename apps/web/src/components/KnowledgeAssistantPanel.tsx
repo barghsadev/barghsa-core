@@ -84,15 +84,21 @@ export default function KnowledgeAssistantPanel({
         setError(
           code === 'AI_KNOWLEDGE_NO_SOURCE'
             ? label('noSource')
-            : code === 'AI_KNOWLEDGE_BUSY'
-              ? label('busy')
-              : response.status === 429
-                ? label('limit')
-                : response.status === 409
-                  ? label('changed')
-                  : label('error')
+            : code === 'AI_MODEL_BUDGET_EXHAUSTED'
+              ? label('budget')
+              : code === 'AI_KNOWLEDGE_BUSY'
+                ? label('busy')
+                : response.status === 429
+                  ? label('limit')
+                  : response.status === 409
+                    ? label('changed')
+                    : label('error')
         );
-        if (response.status >= 500 || response.status === 429) setRetry(payload);
+        if (
+          response.status >= 500 ||
+          (response.status === 429 && code !== 'AI_MODEL_BUDGET_EXHAUSTED')
+        )
+          setRetry(payload);
         return;
       }
       const answer = (await response.json()) as Answer;

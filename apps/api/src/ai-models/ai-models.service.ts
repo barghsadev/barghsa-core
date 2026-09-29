@@ -54,9 +54,30 @@ export interface AiModelDto {
   lastTestLatencyMs: number | null;
   circuitOpen: boolean;
   circuitCooldownUntil: string | null;
+  budget: AiModelBudgetDto | null;
   createdAt: string;
   updatedAt: string;
 }
+
+export interface AiModelBudgetDto {
+  monthlyTokenLimit: number | null;
+  monthlyCostLimitMicros: number | null;
+  inputPricePerMillionMicros: number;
+  outputPricePerMillionMicros: number;
+  usedInputTokens: number;
+  usedOutputTokens: number;
+  usedCostMicros: number;
+  periodStart: string;
+  alertedAt: string | null;
+}
+
+export type AiModelBudgetInput = Pick<
+  AiModelBudgetDto,
+  | 'monthlyTokenLimit'
+  | 'monthlyCostLimitMicros'
+  | 'inputPricePerMillionMicros'
+  | 'outputPricePerMillionMicros'
+>;
 
 export interface AiModelConfig {
   max_tokens: number;
@@ -117,6 +138,19 @@ interface AiModelRow {
   updated_at: string;
 }
 
+interface AiModelBudgetRow {
+  model_id: string;
+  monthly_token_limit: string | null;
+  monthly_cost_limit_micros: string | null;
+  input_price_per_million_micros: string;
+  output_price_per_million_micros: string;
+  used_input_tokens: string;
+  used_output_tokens: string;
+  used_cost_micros: string;
+  period_start: string | Date;
+  alerted_at: string | Date | null;
+}
+
 const PG_FOREIGN_KEY_VIOLATION = '23503';
 
 @Injectable()
@@ -140,7 +174,16 @@ export class AiModelsService {
          FROM ai_models m LEFT JOIN ai_model_circuit_states s ON s.id=m.id
         ORDER BY m.created_at DESC`
     );
-    return Promise.all(result.rows.map((row) => this.toDto(row)));
+    const budgets = result.rows.length
+      ? await getDbPool().query<AiModelBudgetRow>(
+          'SELECT * FROM ai_model_budgets WHERE model_id=ANY($1::uuid[])',
+          [result.rows.map((row) => row.id)]
+        )
+      : { rows: [] };
+    const byId = new Map(budgets.rows.map((row) => [row.model_id, row]));
+    return Promise.all(
+      result.rows.map((row) => this.toDto(row, undefined, byId.get(row.id) ?? null))
+    );
   }
 
   /** Fetch a single model by id, token masked. */
@@ -148,6 +191,55 @@ export class AiModelsService {
     const row = await this.findRow(id);
     if (!row) throw this.notFound(id);
     return this.toDto(row);
+  }
+
+  /** Staff-controlled limits; changing a limit never erases usage for the current month. */
+  async setBudget(
+    id: string,
+    budget: AiModelBudgetInput,
+    actorUserId: string,
+    ip: string,
+    session: MutationSession
+  ): Promise<AiModelDto> {
+    return this.withTransaction(actorUserId, session, async (client, verifiedAt) => {
+      const model = await this.findRow(id, client);
+      if (!model) throw this.notFound(id);
+      if (budget.monthlyTokenLimit === null && budget.monthlyCostLimitMicros === null) {
+        await client.query('DELETE FROM ai_model_budgets WHERE model_id=$1', [id]);
+      } else {
+        await client.query(
+          `INSERT INTO ai_model_budgets
+             (model_id,monthly_token_limit,monthly_cost_limit_micros,
+              input_price_per_million_micros,output_price_per_million_micros)
+           VALUES ($1,$2,$3,$4,$5)
+           ON CONFLICT (model_id) DO UPDATE SET
+             monthly_token_limit=EXCLUDED.monthly_token_limit,
+             monthly_cost_limit_micros=EXCLUDED.monthly_cost_limit_micros,
+             input_price_per_million_micros=EXCLUDED.input_price_per_million_micros,
+             output_price_per_million_micros=EXCLUDED.output_price_per_million_micros,
+             updated_at=now()`,
+          [
+            id,
+            budget.monthlyTokenLimit,
+            budget.monthlyCostLimitMicros,
+            budget.inputPricePerMillionMicros,
+            budget.outputPricePerMillionMicros,
+          ]
+        );
+      }
+      await this.recordAudit(
+        verifiedAt,
+        'ai_model_budget_updated',
+        model,
+        actorUserId,
+        ip,
+        {
+          ...budget,
+        },
+        client
+      );
+      return this.toDto(model, client);
+    });
   }
 
   // ─── Mutations ──────────────────────────────────────────────────────────
@@ -476,7 +568,11 @@ export class AiModelsService {
     return result.rows[0] ?? null;
   }
 
-  private async toDto(row: AiModelRow, client?: PoolClient): Promise<AiModelDto> {
+  private async toDto(
+    row: AiModelRow,
+    client?: PoolClient,
+    budgetRow?: AiModelBudgetRow | null
+  ): Promise<AiModelDto> {
     const circuit =
       row.degraded === undefined
         ? (
@@ -492,6 +588,20 @@ export class AiModelsService {
         : row.last_test_status === 'failed'
           ? 'unreachable'
           : 'unknown';
+    const budget =
+      budgetRow === undefined
+        ? ((
+            await (client ?? getDbPool()).query<AiModelBudgetRow>(
+              'SELECT * FROM ai_model_budgets WHERE model_id=$1',
+              [row.id]
+            )
+          ).rows[0] ?? null)
+        : budgetRow;
+    const currentMonth = new Date();
+    const activePeriod =
+      budget &&
+      new Date(budget.period_start).getUTCFullYear() === currentMonth.getUTCFullYear() &&
+      new Date(budget.period_start).getUTCMonth() === currentMonth.getUTCMonth();
     return {
       id: row.id,
       title: row.title,
@@ -507,6 +617,24 @@ export class AiModelsService {
       lastTestLatencyMs: row.last_test_latency_ms ?? null,
       circuitOpen: circuit?.degraded ?? false,
       circuitCooldownUntil: circuit?.cooldown_until ?? null,
+      budget: budget
+        ? {
+            monthlyTokenLimit:
+              budget.monthly_token_limit === null ? null : Number(budget.monthly_token_limit),
+            monthlyCostLimitMicros:
+              budget.monthly_cost_limit_micros === null
+                ? null
+                : Number(budget.monthly_cost_limit_micros),
+            inputPricePerMillionMicros: Number(budget.input_price_per_million_micros),
+            outputPricePerMillionMicros: Number(budget.output_price_per_million_micros),
+            usedInputTokens: activePeriod ? Number(budget.used_input_tokens) : 0,
+            usedOutputTokens: activePeriod ? Number(budget.used_output_tokens) : 0,
+            usedCostMicros: activePeriod ? Number(budget.used_cost_micros) : 0,
+            periodStart: new Date(budget.period_start).toISOString(),
+            alertedAt:
+              activePeriod && budget.alerted_at ? new Date(budget.alerted_at).toISOString() : null,
+          }
+        : null,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     };

@@ -1,12 +1,20 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/admin-ui';
+async function mockUnknownApi(page: import('@playwright/test').Page) {
+  await page.route('**/api/**', (route) =>
+    new URL(route.request().url()).pathname === '/api/auth/user'
+      ? route.fulfill({ json: { isStaff: true } })
+      : route.fulfill({ status: 404, json: {} })
+  );
+}
 for (const locale of ['en', 'fa'])
   test(`AI model form retries captured input after password verification (${locale})`, async ({
     page,
   }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
+      localStorage.setItem('barghsa.locale', value);
       if (document.documentElement) document.documentElement.lang = value;
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
@@ -16,7 +24,7 @@ for (const locale of ['en', 'fa'])
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockUnknownApi(page);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
     );
@@ -66,6 +74,7 @@ for (const locale of ['en', 'fa'])
         providerType: 'openai_compatible',
         baseUrl: 'http://127.0.0.1/v1',
         modelName: 'local-test',
+        config: { max_tokens: 256, temperature: 0 },
         apiToken: 'test-only-private-token',
       })
     );
@@ -81,6 +90,7 @@ for (const locale of ['en', 'fa'] as const)
   }) => {
     const label = (key: string) => t(`admin.aiModels.${key}`, locale);
     await page.addInitScript((value) => {
+      localStorage.setItem('barghsa.locale', value);
       localStorage.setItem('theme', 'dark');
       const apply = () => {
         document.documentElement.lang = value;
@@ -99,12 +109,14 @@ for (const locale of ['en', 'fa'] as const)
       providerType: 'openai_compatible',
       baseUrl: 'https://model.example.test/v1',
       modelName: 'test',
+      config: { max_tokens: 256, temperature: 0 },
+      isEnabled: false,
       apiTokenMasked: '********1234',
       status: 'unreachable',
       lastTestedAt: null,
       lastTestError: 'Provider unavailable',
     };
-    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockUnknownApi(page);
     await page.route('**/api/user/settings/timezone', (route) =>
       route.fulfill({ json: { timezone: 'UTC' } })
     );
@@ -154,6 +166,7 @@ for (const locale of ['en', 'fa'] as const)
         providerType: model.providerType,
         baseUrl: model.baseUrl,
         modelName: model.modelName,
+        config: { max_tokens: 256, temperature: 0 },
       })
     );
     await page.getByRole('button', { name: label('test'), exact: true }).click();
@@ -167,4 +180,72 @@ for (const locale of ['en', 'fa'] as const)
     await confirm().click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(page.getByText(label('empty'), { exact: true })).toBeVisible();
+  });
+
+for (const locale of ['en', 'fa'] as const)
+  test(`AI model monthly budget can be configured and read back (${locale})`, async ({ page }) => {
+    const label = (key: string) => t(`admin.aiModels.${key}`, locale);
+    await page.addInitScript((value) => {
+      localStorage.setItem('barghsa.locale', value);
+      if (document.documentElement) document.documentElement.lang = value;
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    const model = {
+      id: '01900000-0000-7000-8000-000000000019',
+      title: 'Customer guide model',
+      providerType: 'openai_compatible',
+      baseUrl: 'https://model.example.test/v1',
+      modelName: 'guide',
+      apiTokenMasked: '',
+      status: 'reachable',
+      isEnabled: true,
+      config: { max_tokens: 256, temperature: 0 },
+      lastTestedAt: null,
+      lastTestError: null,
+      lastTestLatencyMs: null,
+      circuitOpen: false,
+      circuitCooldownUntil: null,
+      budget: null as Record<string, unknown> | null,
+    };
+    let saved: unknown = null;
+    await mockUnknownApi(page);
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill({ json: { timezone: 'UTC' } })
+    );
+    await page.route('**/api/admin/ai-models', (route) => route.fulfill({ json: [model] }));
+    await page.route(`**/api/admin/ai-models/${model.id}/budget`, (route) => {
+      saved = route.request().postDataJSON();
+      model.budget = {
+        ...(saved as object),
+        usedInputTokens: 200,
+        usedOutputTokens: 50,
+        usedCostMicros: 125_000,
+        periodStart: '2026-09-01T00:00:00.000Z',
+        alertedAt: null,
+      };
+      return route.fulfill({ json: model });
+    });
+    await page.goto('/admin/ai-models');
+    await page.getByRole('button', { name: label('budgetEdit') }).click();
+    await page.getByLabel(label('budgetTokens'), { exact: true }).fill('10000');
+    await page.getByLabel(label('budgetCost'), { exact: true }).fill('2.5');
+    await page.getByLabel(label('budgetInputPrice'), { exact: true }).fill('0.3');
+    await page.getByLabel(label('budgetOutputPrice'), { exact: true }).fill('0.9');
+    await page.getByRole('button', { name: label('budgetSave'), exact: true }).click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect(saved).toEqual({
+      monthlyTokenLimit: 10_000,
+      monthlyCostLimitMicros: 2_500_000,
+      inputPricePerMillionMicros: 300_000,
+      outputPricePerMillionMicros: 900_000,
+    });
+    await expect(page.getByRole('row', { name: model.title })).toContainText(
+      new Intl.NumberFormat(locale).format(10_000)
+    );
   });

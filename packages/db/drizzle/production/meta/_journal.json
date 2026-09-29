@@ -974,6 +974,13 @@
       "when": 1791331200231,
       "tag": "0218_ai_knowledge_questions",
       "breakpoints": true
+    },
+    {
+      "idx": 219,
+      "version": "7",
+      "when": 1791331200232,
+      "tag": "0219_ai_model_budgets",
+      "breakpoints": true
     }
   ]
 }

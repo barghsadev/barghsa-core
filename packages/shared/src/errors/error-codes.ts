@@ -91,6 +91,14 @@ export const ErrorCodes = {
     messageKey: 'error.ai.knowledge_source_unavailable',
     severity: 'info' as ErrorSeverity,
   },
+  AI_MODEL_BUDGET_EXHAUSTED: {
+    code: 'AI_MODEL_BUDGET_EXHAUSTED',
+    httpStatus: 429,
+    title: 'AI model monthly budget is exhausted',
+    retryable: false,
+    messageKey: 'error.ai.model_budget_exhausted',
+    severity: 'warning' as ErrorSeverity,
+  },
   MAINTENANCE_ACTIVE: {
     code: 'MAINTENANCE:ACTIVE',
     httpStatus: 503,
