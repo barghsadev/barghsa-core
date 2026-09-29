@@ -69,11 +69,11 @@ export BARGHSA_PROXY_IPS
 BARGHSA_PROXY_IPS=$(docker network inspect barghsa-staging-private --format '{{(index .IPAM.Config 0).Gateway}}')
 [[ -n "$BARGHSA_PROXY_IPS" ]] || { echo 'Docker bridge gateway missing' >&2; false; }
 
-if [[ "${BARGHSA_DISPOSABLE:-false}" != true ]]; then
-  /usr/local/sbin/barghsa-staging-backup
-else
-  echo 'Disposable staging: no offsite backup is configured' >&2
-fi
+[[ "${BARGHSA_DISPOSABLE:-false}" == true ]] || {
+  echo 'Offsite backup is not configured; refusing a non-disposable release' >&2
+  false
+}
+echo 'Disposable staging: no offsite backup is configured' >&2
 
 "${dc[@]}" stop worker || true
 "${dc[@]}" run --rm --no-deps api node run-packaged-migrations.cjs
@@ -86,6 +86,9 @@ curl --fail --silent --show-error --max-time 20 "$APP_PUBLIC_URL/" >/dev/null
 [[ $(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 "$S3_PUBLIC_ENDPOINT/$S3_BUCKET/") == 403 ]] || {
   echo 'Public S3 gateway did not return AccessDenied' >&2; false;
 }
+docker run --rm --env-file "$runtime" --network barghsa-staging-private \
+  -v /opt/barghsa/staging/check-s3.py:/tmp/barghsa-check-s3.py:ro \
+  "$BARGHSA_POSTGRES_IMAGE" python /tmp/barghsa-check-s3.py
 
 install -m 0600 "$candidate" "$active"
 trap - ERR
