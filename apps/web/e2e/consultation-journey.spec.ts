@@ -49,7 +49,7 @@ test('customer consultation moves through staff offer, payment handoff, and comp
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { userId: 'buyer', requiresTosAcceptance: false } })
+    route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
   );
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })

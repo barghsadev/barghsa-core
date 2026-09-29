@@ -23,6 +23,10 @@ describe('PublicBrandingController', () => {
         id: 'cfg-1',
         config: {
           appTitle: 'My Brand',
+          appTitleFa: 'برند من',
+          supportEmail: 'help@example.com',
+          supportPhone: '021-12345678',
+          supportMobile: '09121234567',
           slogan: 'My Slogan',
           primaryColor: '#ff0000',
           secondaryColor: '#00ff00',
@@ -48,6 +52,10 @@ describe('PublicBrandingController', () => {
       expect(result).toEqual({
         numberStyle: 'locale',
         appTitle: 'My Brand',
+        appTitleFa: 'برند من',
+        supportEmail: 'help@example.com',
+        supportPhone: '021-12345678',
+        supportMobile: '09121234567',
         slogan: 'My Slogan',
         primaryColor: '#ff0000',
         secondaryColor: '#00ff00',
@@ -87,6 +95,10 @@ describe('PublicBrandingController', () => {
       expect(result).toEqual({
         numberStyle: 'locale',
         appTitle: 'Barghsa',
+        appTitleFa: 'برقسا',
+        supportEmail: 'info@barghsa.com',
+        supportPhone: '021-26658042',
+        supportMobile: '09002550292',
         slogan: '',
         primaryColor: '#176b5b',
         secondaryColor: '#547467',

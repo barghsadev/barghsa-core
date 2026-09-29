@@ -33,9 +33,7 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
   const groups: NavigationGroup[] = [
     {
       label: shellText('overview', locale),
-      items: [
-        { to: '/dashboard', label: t('dashboard.nav.overview', locale), icon: LayoutDashboard },
-      ],
+      items: [{ to: '/app', label: t('dashboard.nav.overview', locale), icon: LayoutDashboard }],
     },
     {
       label: shellText('services', locale),

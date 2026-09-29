@@ -56,6 +56,12 @@ it('lets staff creators select initial roles without granting role-management ac
   );
   await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [userId, roleId]);
   const headers = await session(userId);
+  expect(await (await fetch(`${http.base}/api/auth/user`, { headers })).json()).toMatchObject({
+    isStaff: true,
+  });
+  expect(
+    await (await fetch(`${http.base}/api/auth/user`, { headers: adminHeaders })).json()
+  ).toMatchObject({ isStaff: true });
   const response = await fetch(`${http.base}/api/admin/staff-role-options`, { headers });
   expect(response.status).toBe(200);
   const options = (await response.json()) as {

@@ -75,6 +75,10 @@ export class BrandConfigService {
       id: 'default',
       config: {
         appTitle: 'Barghsa',
+        appTitleFa: 'برقسا',
+        supportEmail: 'info@barghsa.com',
+        supportPhone: '021-26658042',
+        supportMobile: '09002550292',
         slogan: '',
         primaryColor: '#176b5b',
         secondaryColor: '#547467',

@@ -26,11 +26,6 @@ function savedPreference(): Locale | null {
   return null;
 }
 
-function browserPreference(): Locale {
-  const languages = navigator.languages?.length ? navigator.languages : [navigator.language];
-  return languages.map(supported).find((locale) => locale !== null) ?? 'fa';
-}
-
 function applyLocale(locale: Locale): void {
   document.documentElement.lang = locale;
   document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
@@ -61,7 +56,7 @@ export function rememberEntryLocale(): void {
   }
 }
 
-/** Resolve the one-time navigation handoff, saved preference, then browser language before React renders. */
+/** Resolve the one-time navigation handoff, then the saved preference, before React renders. */
 export function restoreEntryLocale(): void {
   let handoff: Locale | null = null;
   try {
@@ -82,7 +77,7 @@ export function restoreEntryLocale(): void {
       }
     }
   } catch {
-    // Continue with the saved or browser preference.
+    // Continue with the saved preference or the Farsi default.
   }
-  applyLocale(handoff ?? savedPreference() ?? browserPreference());
+  applyLocale(handoff ?? savedPreference() ?? 'fa');
 }

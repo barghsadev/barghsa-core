@@ -109,6 +109,18 @@ export const UpsertBrandConfigSchema = z.object({
   logoUploadKey: z.string().max(255).optional(),
   config: z.object({
     appTitle: z.string().min(1).max(100).optional().default('Barghsa'),
+    appTitleFa: z.string().trim().min(1).max(100).optional().default('برقسا'),
+    supportEmail: z.email().max(254).optional().default('info@barghsa.com'),
+    supportPhone: z
+      .string()
+      .regex(/^\+?[0-9 ()-]{7,25}$/)
+      .optional()
+      .default('021-26658042'),
+    supportMobile: z
+      .string()
+      .regex(/^\+?[0-9 ()-]{7,25}$/)
+      .optional()
+      .default('09002550292'),
     slogan: z.string().max(200).optional().default(''),
     primaryColor: z
       .string()

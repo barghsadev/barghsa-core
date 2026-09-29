@@ -41,7 +41,7 @@ test('solar request moves from customer upload through staff review and postal r
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { userId: 'buyer', requiresTosAcceptance: false } })
+    route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
@@ -412,7 +412,7 @@ test('solar intake returns from address setup with its saved site details', asyn
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { userId: 'buyer', requiresTosAcceptance: false } })
+    route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({

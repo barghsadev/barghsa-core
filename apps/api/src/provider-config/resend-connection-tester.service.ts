@@ -172,8 +172,8 @@ export class ResendConnectionTesterService {
       const result = await this.client.sendEmail(config.api_key, {
         from,
         to: recipient,
-        subject: 'Barghsa connection test',
-        text: 'This is a test email from Barghsa to confirm the Resend email provider configuration.',
+        subject: 'Email connection test',
+        text: 'This test email confirms the Resend email provider configuration.',
       });
       if (result.id) return { ok: true };
       const message = redactApiKey(

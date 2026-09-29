@@ -11,6 +11,10 @@ import { BrandConfigService } from '../admin/brand-config.service.js';
  */
 export interface PublicBrandConfigDto {
   appTitle: string;
+  appTitleFa: string;
+  supportEmail: string;
+  supportPhone: string;
+  supportMobile: string;
   slogan: string;
   primaryColor: string;
   secondaryColor: string;
@@ -58,6 +62,10 @@ export class PublicBrandingController {
 
     return {
       appTitle: (brandConfig.appTitle as string) ?? 'Barghsa',
+      appTitleFa: (brandConfig.appTitleFa as string) ?? 'برقسا',
+      supportEmail: (brandConfig.supportEmail as string) ?? 'info@barghsa.com',
+      supportPhone: (brandConfig.supportPhone as string) ?? '021-26658042',
+      supportMobile: (brandConfig.supportMobile as string) ?? '09002550292',
       slogan: (brandConfig.slogan as string) ?? '',
       primaryColor: (brandConfig.primaryColor as string) ?? '#176b5b',
       secondaryColor: (brandConfig.secondaryColor as string) ?? '#547467',

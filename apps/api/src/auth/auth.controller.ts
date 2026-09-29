@@ -881,6 +881,7 @@ export class AuthController {
     mobile: string | null;
     emailVerified: boolean;
     mobileVerified: boolean;
+    isStaff: boolean;
   }> {
     return this.authService.getUser(req.session.userId);
   }

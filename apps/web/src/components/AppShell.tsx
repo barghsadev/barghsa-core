@@ -51,7 +51,7 @@ export function AppShell({
   const current = groups
     .flatMap((group) => group.items)
     .filter(
-      (item) => pathname === item.to || (item.to !== '/admin' && pathname.startsWith(item.to + '/'))
+      (item) => pathname === item.to || (item.to !== '/app' && pathname.startsWith(item.to + '/'))
     )
     .sort((a, b) => b.to.length - a.to.length)[0];
   const title = shellText(area === 'admin' ? 'administration' : 'workspace', locale);
@@ -67,7 +67,7 @@ export function AppShell({
       <AnalyticsConsentBanner />
       <header className="flex min-h-(--topbar-height) shrink-0 items-center gap-3 border-b bg-card px-4 md:px-6">
         <Link
-          to={area === 'admin' ? '/admin' : '/dashboard'}
+          to="/app"
           className="flex min-w-0 items-center text-foreground no-underline md:w-[calc(var(--sidebar-width)-3rem)]"
         >
           <BrandMark />
@@ -138,15 +138,14 @@ export function AppShell({
               </div>
             ))}
           </nav>
-          <div className="mt-6 border-t pt-4">
-            <Link
-              to={area === 'admin' ? '/dashboard' : '/tickets'}
-              className="shell-navigation-link"
-            >
-              <ArrowUpRight className="size-4 shrink-0 rtl:-rotate-90" aria-hidden="true" />
-              {shellText(area === 'admin' ? 'backToWorkspace' : 'support', locale)}
-            </Link>
-          </div>
+          {area === 'dashboard' && (
+            <div className="mt-6 border-t pt-4">
+              <Link to="/tickets" className="shell-navigation-link">
+                <ArrowUpRight className="size-4 shrink-0 rtl:-rotate-90" aria-hidden="true" />
+                {shellText('support', locale)}
+              </Link>
+            </div>
+          )}
         </aside>
         <main
           id={`${area}-content`}

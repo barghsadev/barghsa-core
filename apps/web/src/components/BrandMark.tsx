@@ -1,10 +1,12 @@
 import { Zap } from 'lucide-react';
 import { cn } from '@barghsa/ui';
-import { useBrandConfig } from '../providers/BrandThemeProvider.js';
+import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
+import { useLocale } from '../hooks/useLocale.js';
 
 /** The same mark in every shell; configured logos retain their original colors. */
 export function BrandMark({ inverse = false }: { inverse?: boolean }) {
   const { brandConfig } = useBrandConfig();
+  const locale = useLocale();
   return (
     <span className="inline-flex min-w-0 items-center gap-3">
       {brandConfig.logoUrl ? (
@@ -19,7 +21,9 @@ export function BrandMark({ inverse = false }: { inverse?: boolean }) {
           <Zap className="size-5" strokeWidth={1.8} aria-hidden="true" />
         </span>
       )}
-      <span className="truncate text-xl font-semibold tracking-tight">{brandConfig.appTitle}</span>
+      <span className="truncate text-xl font-semibold tracking-tight">
+        {brandName(brandConfig, locale)}
+      </span>
     </span>
   );
 }

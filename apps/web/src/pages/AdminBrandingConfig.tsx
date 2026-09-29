@@ -33,7 +33,11 @@ interface BrandConfigDto {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_CONFIG: BrandConfig = {
-  appTitle: 'Barghsa',
+  appTitle: '',
+  appTitleFa: '',
+  supportEmail: '',
+  supportPhone: '',
+  supportMobile: '',
   slogan: '',
   primaryColor: '#176b5b',
   secondaryColor: '#547467',
@@ -392,7 +396,21 @@ export default function AdminBrandingConfig() {
             value={config.appTitle}
             onChange={(e) => updateConfig('appTitle', e.target.value)}
             className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm"
-            placeholder="Barghsa"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="branding-title-fa" className="block text-sm font-medium mb-1">
+            {text('appTitleFa')}
+          </label>
+          <input
+            id="branding-title-fa"
+            type="text"
+            dir="rtl"
+            lang="fa"
+            value={config.appTitleFa}
+            onChange={(e) => updateConfig('appTitleFa', e.target.value)}
+            className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm"
           />
         </div>
 
@@ -412,6 +430,25 @@ export default function AdminBrandingConfig() {
             placeholder={text('sloganPlaceholder')}
           />
         </div>
+      </section>
+
+      <section className="bg-background rounded-lg border border-border p-6 space-y-5">
+        <h2 className="text-lg font-semibold text-foreground">{text('supportContacts')}</h2>
+        {(['supportEmail', 'supportPhone', 'supportMobile'] as const).map((field) => (
+          <div key={field}>
+            <label htmlFor={field} className="block text-sm font-medium mb-1">
+              {text(field)}
+            </label>
+            <input
+              id={field}
+              type={field === 'supportEmail' ? 'email' : 'tel'}
+              dir="ltr"
+              value={config[field]}
+              onChange={(e) => updateConfig(field, e.target.value)}
+              className="w-full bg-background text-foreground border border-input rounded-lg px-3 py-2 text-sm"
+            />
+          </div>
+        ))}
       </section>
 
       {/* ── Colors ────────────────────────────────────────────────────── */}
@@ -624,7 +661,9 @@ export default function AdminBrandingConfig() {
           <div className="flex items-center gap-4 mb-4">
             {displayedLogo && <img src={displayedLogo} alt={text('logo')} className="h-10" />}
             <div className="min-w-0 break-words">
-              <h3 className="text-xl font-bold">{config.appTitle || 'Barghsa'}</h3>
+              <h3 className="text-xl font-bold">
+                {locale === 'fa' ? config.appTitleFa : config.appTitle}
+              </h3>
               {config.slogan && <p className="text-sm">{config.slogan}</p>}
             </div>
           </div>

@@ -267,7 +267,7 @@ export const fa: I18nDictionary = {
   'admin.agents.testChat.sources': 'بخش‌های بازیابی‌شده',
   'admin.agents.testChat.retrievedContext':
     'پاسخ با زمینهٔ بازیابی‌شده تولید شد؛ جزئیات منبع را بررسی کنید.',
-  'admin.agents.testChat.generalGuidance': 'بر پایهٔ دانش عمومی — با کارشناسان برقسا بررسی کنید.',
+  'admin.agents.testChat.generalGuidance': 'بر پایهٔ دانش عمومی — با کارشناسان بررسی کنید.',
   'admin.agents.testChat.policies': 'سیاست‌های اعمال‌شده',
   'admin.agents.testChat.remaining': 'درخواست‌های باقی‌مانده',
   'admin.agents.testChat.error': 'ارسال پیام انجام نشد. دوباره تلاش کنید.',
@@ -1592,8 +1592,7 @@ export const en: I18nDictionary = {
   'admin.agents.testChat.sources': 'Retrieved passages',
   'admin.agents.testChat.retrievedContext':
     'Generated with retrieved context; check the source excerpts.',
-  'admin.agents.testChat.generalGuidance':
-    'Based on general knowledge — verify with Barghsa staff.',
+  'admin.agents.testChat.generalGuidance': 'Based on general knowledge — verify with staff.',
   'admin.agents.testChat.policies': 'Applied policies',
   'admin.agents.testChat.remaining': 'Requests remaining',
   'admin.agents.testChat.error': 'Could not send the message. Try again.',

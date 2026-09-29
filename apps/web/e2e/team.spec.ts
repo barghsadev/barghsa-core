@@ -727,7 +727,7 @@ for (const locale of ['en', 'fa']) {
       })
     );
     await page.route('**/api/auth/user', (route) =>
-      route.fulfill({ json: { userId: 'user', requiresTosAcceptance: true } })
+      route.fulfill({ json: { isStaff: false, userId: 'user', requiresTosAcceptance: true } })
     );
     await page.route('**/api/tos/current?*', (route) =>
       route.fulfill({

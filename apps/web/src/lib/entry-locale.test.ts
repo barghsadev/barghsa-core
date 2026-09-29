@@ -12,6 +12,12 @@ afterEach(() => {
   document.documentElement.dir = originalDirection;
 });
 
+it('defaults a new visitor to Farsi', () => {
+  restoreEntryLocale();
+  expect(document.documentElement.lang).toBe('fa');
+  expect(document.documentElement.dir).toBe('rtl');
+});
+
 it('uses a short-lived entry handoff once, then returns to the saved preference', () => {
   setLanguagePreference('fa');
   document.documentElement.lang = 'en';

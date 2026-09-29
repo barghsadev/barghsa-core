@@ -13,7 +13,7 @@ async function setup(page: Page, locale: string) {
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { userId: profileId, requiresTosAcceptance: false } })
+    route.fulfill({ json: { isStaff: false, userId: profileId, requiresTosAcceptance: false } })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({

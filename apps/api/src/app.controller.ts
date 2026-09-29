@@ -6,6 +6,6 @@ export class AppController {
   @Get()
   @Etag()
   root(): { message: string } {
-    return { message: 'Barghsa API' };
+    return { message: 'API' };
   }
 }

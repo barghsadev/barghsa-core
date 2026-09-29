@@ -4,6 +4,7 @@ import { createFileRoute, Link, useSearch } from '@tanstack/react-router';
 import { useEffect, useState, lazy, Suspense } from 'react';
 import { t, type Locale } from '@barghsa/i18n';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
 
 const TosContent = lazy(() => import('../components/TosContent.js'));
 
@@ -44,6 +45,8 @@ export const Route = createFileRoute('/terms')({
 function TermsPage() {
   const { lang, version } = useSearch({ from: '/terms' });
   const locale: Locale = lang ?? 'fa';
+  const { brandConfig } = useBrandConfig();
+  const name = brandName(brandConfig, locale);
   const isRtl = locale === 'fa';
   const BackIcon = isRtl ? ArrowRightIcon : ArrowLeftIcon;
 
@@ -108,7 +111,7 @@ function TermsPage() {
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-xl font-bold text-foreground no-underline"
-          aria-label={t('auth.brand.logo.alt', locale)}
+          aria-label={name}
         >
           <svg
             width="28"
@@ -122,7 +125,7 @@ function TermsPage() {
             <rect width="32" height="32" rx="8" fill="currentColor" />
             <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--primary-foreground)" />
           </svg>
-          <span>{t('auth.brand.title', locale)}</span>
+          <span>{name}</span>
         </Link>
       </div>
 
@@ -131,7 +134,7 @@ function TermsPage() {
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-2xl font-bold text-foreground no-underline"
-          aria-label={t('auth.brand.logo.alt', locale)}
+          aria-label={name}
         >
           <svg
             width="32"
@@ -145,7 +148,7 @@ function TermsPage() {
             <rect width="32" height="32" rx="8" fill="currentColor" />
             <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--primary-foreground)" />
           </svg>
-          <span>{t('auth.brand.title', locale)}</span>
+          <span>{name}</span>
         </Link>
       </aside>
 

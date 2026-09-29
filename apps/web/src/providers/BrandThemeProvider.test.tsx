@@ -5,6 +5,10 @@ import { BrandThemeProvider, useBrandConfig } from './BrandThemeProvider.js';
 let root: Root, host: HTMLDivElement;
 const config = {
   appTitle: 'Saved brand',
+  appTitleFa: 'نام ذخیره‌شده',
+  supportEmail: 'help@example.com',
+  supportPhone: '021-12345678',
+  supportMobile: '09121234567',
   slogan: 'Saved slogan',
   primaryColor: '#777777',
   secondaryColor: '#ffffff',
@@ -35,6 +39,7 @@ async function mount() {
 }
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  document.documentElement.lang = 'fa';
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
@@ -72,6 +77,11 @@ it('connects published colors to component tokens and chooses readable foregroun
   expect(document.documentElement.style.getPropertyValue('--app-font')).toBe('Tahoma');
   expect(document.documentElement.style.getPropertyValue('--radius')).toBe('1rem');
   expect(document.documentElement.style.getPropertyValue('--spacing')).toBe('0.28125rem');
+  expect(document.title).toBe('نام ذخیره‌شده');
+  await act(async () => {
+    document.documentElement.lang = 'en';
+  });
+  expect(document.title).toBe('Saved brand');
 });
 it('refreshes after publication and restores the default favicon when removed', async () => {
   const request = vi
@@ -79,7 +89,13 @@ it('refreshes after publication and restores the default favicon when removed', 
     .mockResolvedValueOnce(new Response(JSON.stringify(config)))
     .mockResolvedValueOnce(
       new Response(
-        JSON.stringify({ ...config, appTitle: 'New brand', faviconUrl: null, darkMode: false })
+        JSON.stringify({
+          ...config,
+          appTitle: 'New brand',
+          appTitleFa: 'نام جدید',
+          faviconUrl: null,
+          darkMode: false,
+        })
       )
     );
   vi.stubGlobal('fetch', request);
@@ -87,7 +103,7 @@ it('refreshes after publication and restores the default favicon when removed', 
   await act(async () => {
     window.dispatchEvent(new Event('barghsa:branding-activated'));
   });
-  expect(document.title).toBe('New brand');
+  expect(document.title).toBe('نام جدید');
   expect(document.querySelector('link[rel="icon"]')?.getAttribute('href')).toBe('/original.ico');
   expect(document.documentElement.classList.contains('dark')).toBe(false);
 });
@@ -120,7 +136,7 @@ it('ignores malformed branding instead of partially applying it', async () => {
   );
   await mount();
   expect(document.title).toBe('Original app');
-  expect(host.textContent).toBe('Barghsa');
+  expect(host.textContent).toBe('');
 });
 
 it('restores preexisting document styles, title and icon after a successful mount', async () => {
@@ -145,7 +161,9 @@ it('ignores an older refresh reply and retains the last valid theme on network f
           old = done;
         })
     )
-    .mockResolvedValueOnce(new Response(JSON.stringify({ ...config, appTitle: 'Latest brand' })))
+    .mockResolvedValueOnce(
+      new Response(JSON.stringify({ ...config, appTitle: 'Latest brand', appTitleFa: 'آخرین نام' }))
+    )
     .mockRejectedValueOnce(new Error('Offline'));
   vi.stubGlobal('fetch', request);
   await mount();
@@ -153,11 +171,11 @@ it('ignores an older refresh reply and retains the last valid theme on network f
     window.dispatchEvent(new Event('barghsa:branding-activated'));
   });
   await act(async () => old(new Response(JSON.stringify(config))));
-  expect(document.title).toBe('Latest brand');
+  expect(document.title).toBe('آخرین نام');
   await act(async () => {
     window.dispatchEvent(new Event('barghsa:branding-activated'));
   });
-  expect(document.title).toBe('Latest brand');
+  expect(document.title).toBe('آخرین نام');
   expect(host.textContent).toBe('Latest brand');
 });
 it('removes a dynamically created icon when the next active config has no icon', async () => {

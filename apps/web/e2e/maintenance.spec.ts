@@ -26,7 +26,7 @@ const settings = [
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { userId: 'customer', requiresTosAcceptance: false } })
+    route.fulfill({ json: { isStaff: false, userId: 'customer', requiresTosAcceptance: false } })
   );
   await page.route('**/api/maintenance', (route) =>
     route.fulfill({ json: { capabilities: settings } })

@@ -712,6 +712,10 @@ it.each([200, 409, 503, 'network'] as const)(
 
 const brandConfig = {
   appTitle: 'Barghsa',
+  appTitleFa: 'برقسا',
+  supportEmail: 'info@barghsa.com',
+  supportPhone: '021-26658042',
+  supportMobile: '09002550292',
   slogan: '',
   primaryColor: '#2563eb',
   secondaryColor: '#64748b',

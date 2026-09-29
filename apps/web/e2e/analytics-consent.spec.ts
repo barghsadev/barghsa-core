@@ -8,7 +8,7 @@ for (const locale of ['fa', 'en'] as const) {
     const events: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
-      route.fulfill({ json: { userId: 'owner', requiresTosAcceptance: false } })
+      route.fulfill({ json: { isStaff: false, userId: 'owner', requiresTosAcceptance: false } })
     );
     await page.route('**/api/profiles', (route) =>
       route.fulfill({

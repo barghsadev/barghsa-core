@@ -55,10 +55,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
-        json: {
-          userId: 'buyer',
-          requiresTosAcceptance: false,
-        },
+        json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false },
       })
     );
     await page.route('**/api/profiles', (route) =>
@@ -500,7 +497,7 @@ test('electricity order, paid invoice and published contract keep the selected l
 }) => {
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { userId: 'buyer', requiresTosAcceptance: false } })
+    route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({

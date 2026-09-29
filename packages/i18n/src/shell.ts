@@ -1,7 +1,7 @@
 import { lookup } from './lookup.js';
 const fa = {
   workspace: 'فضای کاری',
-  administration: 'مدیریت برقسا',
+  administration: 'مدیریت',
   navigation: 'ناوبری اصلی',
   menu: 'فهرست',
   close: 'بستن فهرست',
@@ -37,7 +37,7 @@ const fa = {
   analyticsError: 'ذخیره انتخاب شما ناموفق بود. دوباره تلاش کنید.',
   authEyebrow: 'انرژی، با دید روشن',
   authTitle: 'مدیریت انرژی.\nبا اطمینان بیشتر.',
-  authNote: 'حساب کاربری شما، نقطه شروع خدمات برقسا.',
+  authNote: 'حساب کاربری شما، نقطه شروع خدمات ما.',
   dashboardEyebrow: 'حساب شما در یک نگاه',
   dashboardDescription: 'وضعیت سفارش‌ها، پرداخت‌ها و درخواست‌های پشتیبانی را دنبال کنید.',
   quickActionsDescription: 'دسترسی مستقیم به کارهای روزمره',
@@ -45,7 +45,7 @@ const fa = {
 };
 const en: Record<keyof typeof fa, string> = {
   workspace: 'Workspace',
-  administration: 'Barghsa administration',
+  administration: 'Administration',
   navigation: 'Main navigation',
   menu: 'Menu',
   close: 'Close menu',
@@ -80,7 +80,7 @@ const en: Record<keyof typeof fa, string> = {
   analyticsError: 'Could not save your choice. Please try again.',
   authEyebrow: 'A clearer view of energy',
   authTitle: 'Your energy.\nUnder control.',
-  authNote: 'Your account is the starting point for Barghsa services.',
+  authNote: 'Your account is the starting point for our services.',
   dashboardEyebrow: 'Your account at a glance',
   dashboardDescription: 'Keep track of orders, payments and support requests.',
   quickActionsDescription: 'A shorter path to everyday tasks',

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/auth';
 import { useLocale } from '../hooks/useLocale.js';
+import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
 import { Card, CardContent } from '@barghsa/ui';
 import { MailIcon, PhoneIcon, ClockIcon, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 
@@ -10,6 +11,14 @@ export const Route = createFileRoute('/support')({
 
 function SupportPage() {
   const locale = useLocale();
+  const { brandConfig } = useBrandConfig();
+  const name = brandName(brandConfig, locale);
+  const phoneHref = (value: string) => {
+    const digits = value.replace(/\D/g, '');
+    return `tel:${digits.startsWith('0') ? `+98${digits.slice(1)}` : value.startsWith('+') ? `+${digits}` : digits}`;
+  };
+  const displayPhone = (value: string) =>
+    locale === 'fa' ? value.replace(/[0-9]/g, (digit) => '۰۱۲۳۴۵۶۷۸۹'[Number(digit)]!) : value;
   const isRtl = locale === 'fa';
   const BackIcon = isRtl ? ArrowRightIcon : ArrowLeftIcon;
 
@@ -20,7 +29,7 @@ function SupportPage() {
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-xl font-bold text-primary no-underline"
-          aria-label={t('auth.brand.logo.alt', locale)}
+          aria-label={name}
         >
           <svg
             width="28"
@@ -34,7 +43,7 @@ function SupportPage() {
             <rect width="32" height="32" rx="8" fill="currentColor" />
             <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--primary-foreground)" />
           </svg>
-          <span>{t('auth.brand.title', locale)}</span>
+          <span>{name}</span>
         </Link>
       </div>
 
@@ -43,7 +52,7 @@ function SupportPage() {
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-2xl font-bold text-primary no-underline"
-          aria-label={t('auth.brand.logo.alt', locale)}
+          aria-label={name}
         >
           <svg
             width="32"
@@ -57,7 +66,7 @@ function SupportPage() {
             <rect width="32" height="32" rx="8" fill="currentColor" />
             <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--primary-foreground)" />
           </svg>
-          <span>{t('auth.brand.title', locale)}</span>
+          <span>{name}</span>
         </Link>
       </aside>
 
@@ -87,10 +96,10 @@ function SupportPage() {
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium">{t('auth.support.contactEmail', locale)}</p>
                     <a
-                      href={`mailto:${t('auth.support.emailAddress', locale)}`}
+                      href={`mailto:${brandConfig.supportEmail}`}
                       className="text-sm text-primary underline-offset-4 hover:underline"
                     >
-                      {t('auth.support.emailAddress', locale)}
+                      {brandConfig.supportEmail}
                     </a>
                   </div>
                 </div>
@@ -100,11 +109,11 @@ function SupportPage() {
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium">{t('auth.support.contactPhone', locale)}</p>
                     <a
-                      href="tel:+982126658042"
+                      href={phoneHref(brandConfig.supportPhone)}
                       dir="ltr"
                       className="text-sm text-primary underline-offset-4 hover:underline"
                     >
-                      {t('auth.support.phoneNumber', locale)}
+                      {displayPhone(brandConfig.supportPhone)}
                     </a>
                   </div>
                 </div>
@@ -114,11 +123,11 @@ function SupportPage() {
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium">{t('auth.support.contactMobile', locale)}</p>
                     <a
-                      href="tel:+989002550292"
+                      href={phoneHref(brandConfig.supportMobile)}
                       dir="ltr"
                       className="text-sm text-primary underline-offset-4 hover:underline"
                     >
-                      {t('auth.support.mobileNumber', locale)}
+                      {displayPhone(brandConfig.supportMobile)}
                     </a>
                   </div>
                 </div>
