@@ -382,6 +382,7 @@ export class SolarDocumentsService {
         {
           userId: request.user_id,
           profileId: request.profile_id,
+          operatingContext: 'customer',
           type: 'general',
           title: 'Additional solar documents requested',
           localizedContent: {
@@ -437,6 +438,7 @@ export class SolarDocumentsService {
         {
           userId: request.user_id,
           profileId: request.profile_id,
+          operatingContext: 'customer',
           type: 'general',
           title: 'Solar document set approved',
           localizedContent: {

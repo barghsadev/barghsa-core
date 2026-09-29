@@ -525,6 +525,7 @@ export class ElectricityStaffReviewService {
       {
         userId: row.customer_id,
         profileId: row.profile_id,
+        operatingContext: 'customer',
         type: 'general',
         title: message.en,
         link: `/electricity/orders/${row.id}`,

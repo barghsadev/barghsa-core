@@ -151,6 +151,7 @@ export class SavingCommentsService {
             {
               userId: order.customer_id,
               profileId: order.profile_id,
+              operatingContext: 'customer',
               type: 'general',
               title: 'Saving order reply',
               link: `/savings/orders/${id}`,

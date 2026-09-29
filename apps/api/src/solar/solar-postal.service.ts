@@ -311,6 +311,7 @@ export class SolarPostalService {
         {
           userId: request.user_id,
           profileId: request.profile_id,
+          operatingContext: 'customer',
           type: 'general',
           title:
             decision === 'received'

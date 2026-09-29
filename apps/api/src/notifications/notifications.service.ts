@@ -4,10 +4,12 @@ import { NotificationCenterService, notificationScope } from './notification-cen
 import { Injectable, Logger } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+import type { OperatingContext } from '../session/session.service.js';
 
 export interface CreateNotificationParams {
   userId: string;
   profileId?: string;
+  operatingContext: OperatingContext | 'account';
   type:
     | 'verification_status'
     | 'profile_verified'
@@ -70,13 +72,14 @@ export class NotificationsService {
     const now = new Date();
 
     await pool.query(
-      `INSERT INTO in_app_notifications (id,recipient_user_id,profile_id,type,title_i18n_key,body_i18n_key,localized_content,link_route,is_read,created_at,delivery_key)
-       VALUES ($1::uuid,$2,$3,$4,'notifications.legacy.title','notifications.legacy.body',
-       COALESCE($9::jsonb,jsonb_build_object('original',jsonb_build_object('title',$5::text,'body',COALESCE($6::text,'')))),$7,false,$8,'direct:'||$1::text)`,
+      `INSERT INTO in_app_notifications (id,recipient_user_id,profile_id,operating_context,type,title_i18n_key,body_i18n_key,localized_content,link_route,is_read,created_at,delivery_key)
+       VALUES ($1::uuid,$2,$3,$4,$5,'notifications.legacy.title','notifications.legacy.body',
+       COALESCE($10::jsonb,jsonb_build_object('original',jsonb_build_object('title',$6::text,'body',COALESCE($7::text,'')))),$8,false,$9,'direct:'||$1::text)`,
       [
         id,
         params.userId,
         params.profileId ?? null,
+        params.operatingContext,
         params.type,
         params.title,
         params.body ?? null,
@@ -105,7 +108,7 @@ export class NotificationsService {
 
   /** Queue external verification channels in the caller's status-change transaction. */
   async createVerification(
-    params: CreateNotificationParams & {
+    params: Omit<CreateNotificationParams, 'operatingContext'> & {
       profileId: string;
       profileName: string;
       status: string;
@@ -113,7 +116,7 @@ export class NotificationsService {
     },
     transaction: { query(sql: string, params?: unknown[]): Promise<unknown> }
   ): Promise<NotificationResult> {
-    const notice = await this.create(params, transaction);
+    const notice = await this.create({ ...params, operatingContext: 'customer' }, transaction);
     const outboxId = uuidv7();
     const eventKey = 'profile.verification_status';
     // The inbox entry already exists; external workers enforce current recipients/preferences.
@@ -155,19 +158,20 @@ export class NotificationsService {
   async findByUser(
     userId: string,
     limit: number = 50,
-    offset: number = 0
+    offset: number = 0,
+    context: OperatingContext = 'customer'
   ): Promise<{ notifications: NotificationResult[]; total: number; unreadCount: number }> {
     const pool = getDbPool();
 
     const center = new NotificationCenterService(pool);
-    const profileId = await center.resolveActiveProfileId(userId);
+    const profileId = context === 'customer' ? await center.resolveActiveProfileId(userId) : null;
     const safeLimit = Number.isFinite(limit) ? Math.min(Math.max(Math.trunc(limit), 1), 100) : 50;
     const safeOffset = Number.isFinite(offset) ? Math.max(Math.trunc(offset), 0) : 0;
     const counts = (
       await pool.query(
         `SELECT count(*)::int AS total,
       count(*) FILTER (WHERE NOT is_read)::int AS unread FROM in_app_notifications WHERE ${notificationScope}`,
-        [profileId, userId]
+        [profileId, userId, context]
       )
     ).rows[0];
     const rows = await pool.query(
@@ -175,8 +179,8 @@ export class NotificationsService {
       COALESCE(localized_content->'original'->>'title',localized_content->'fa'->>'title',title_i18n_key) AS title,
       COALESCE(localized_content->'original'->>'body',localized_content->'fa'->>'body',body_i18n_key) AS body,
       link_route AS link,is_read AS read,read_at AS "readAt",created_at AS "createdAt",created_at AS "updatedAt"
-      FROM in_app_notifications WHERE ${notificationScope} ORDER BY created_at DESC,id DESC LIMIT $3 OFFSET $4`,
-      [profileId, userId, safeLimit, safeOffset]
+      FROM in_app_notifications WHERE ${notificationScope} ORDER BY created_at DESC,id DESC LIMIT $4 OFFSET $5`,
+      [profileId, userId, context, safeLimit, safeOffset]
     );
     return {
       notifications: rows.rows.map((row) => ({ ...row, userId })),
@@ -185,19 +189,36 @@ export class NotificationsService {
     };
   }
 
-  async countUnread(userId: string): Promise<number> {
+  async countUnread(userId: string, context: OperatingContext = 'customer'): Promise<number> {
     const center = new NotificationCenterService(getDbPool());
-    return center.countUnread(await center.resolveActiveProfileId(userId), userId);
+    return center.countUnread(
+      context === 'customer' ? await center.resolveActiveProfileId(userId) : null,
+      userId,
+      context
+    );
   }
 
-  async markAsRead(notificationId: string, userId: string): Promise<void> {
+  async markAsRead(
+    notificationId: string,
+    userId: string,
+    context: OperatingContext = 'customer'
+  ): Promise<void> {
     const center = new NotificationCenterService(getDbPool());
-    await center.markRead(await center.resolveActiveProfileId(userId), notificationId, userId);
+    await center.markRead(
+      context === 'customer' ? await center.resolveActiveProfileId(userId) : null,
+      notificationId,
+      userId,
+      context
+    );
   }
 
-  async markAllAsRead(userId: string): Promise<void> {
+  async markAllAsRead(userId: string, context: OperatingContext = 'customer'): Promise<void> {
     const center = new NotificationCenterService(getDbPool());
-    await center.markAllRead(await center.resolveActiveProfileId(userId), userId);
+    await center.markAllRead(
+      context === 'customer' ? await center.resolveActiveProfileId(userId) : null,
+      userId,
+      context
+    );
   }
 
   /**

@@ -54,7 +54,7 @@ beforeEach(async () => {
   );
   for (const id of [owned, finance, legal])
     await http.pool.query(
-      "INSERT INTO in_app_notifications(profile_id,type,title_i18n_key,body_i18n_key) VALUES ($1,'profile_verified','test.title','test.body')",
+      "INSERT INTO in_app_notifications(profile_id,operating_context,type,title_i18n_key,body_i18n_key) VALUES ($1,'customer','profile_verified','test.title','test.body')",
       [id]
     );
 }, 40000);

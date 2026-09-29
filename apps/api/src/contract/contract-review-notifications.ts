@@ -80,8 +80,9 @@ export async function notifyContractReview(
       [id]
     )
   ).rows[0]!;
-  const recipients = new Set<string>();
-  if (event !== 'submitted') recipients.add(profile.user_id);
+  const recipients: Array<{ userId: string; operatingContext: 'customer' | 'staff' }> = [];
+  if (event !== 'submitted')
+    recipients.push({ userId: profile.user_id, operatingContext: 'customer' });
   if (
     [
       'submitted',
@@ -99,15 +100,16 @@ export async function notifyContractReview(
     for (const row of staff.rows) {
       const grants = resolveStaffPermissions(row.permissions);
       if (row.is_admin || grants.includes('*') || grants.includes('contracts:write'))
-        recipients.add(row.user_id);
+        recipients.push({ userId: row.user_id, operatingContext: 'staff' });
     }
   }
   const message = messages[event];
-  for (const userId of recipients)
+  for (const { userId, operatingContext } of recipients)
     await new NotificationsService().create(
       {
         userId,
-        ...(userId === profile.user_id ? { profileId: profile.profile_id } : {}),
+        ...(operatingContext === 'customer' ? { profileId: profile.profile_id } : {}),
+        operatingContext,
         type: 'general',
         title: message.en,
         localizedContent: {

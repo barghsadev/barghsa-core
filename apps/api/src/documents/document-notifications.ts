@@ -60,6 +60,7 @@ export async function notifyDocumentReview(
       {
         userId,
         ...(event !== 'submit' && userId === owner ? { profileId: document.profileId } : {}),
+        operatingContext: event === 'submit' ? 'staff' : 'customer',
         type: 'general',
         title: message.en,
         localizedContent: {

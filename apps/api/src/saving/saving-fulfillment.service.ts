@@ -399,6 +399,7 @@ export class SavingFulfillmentService {
       {
         userId: row.customer_id,
         profileId: row.profile_id,
+        operatingContext: 'customer',
         type: 'general',
         title: 'Saving order',
         link: `/savings/orders/${row.id}`,

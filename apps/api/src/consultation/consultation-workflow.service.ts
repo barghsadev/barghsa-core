@@ -856,6 +856,7 @@ export class ConsultationWorkflowService {
           {
             userId: request.staff_owner_id,
             profileId: request.profile_id,
+            operatingContext: 'staff',
             type: 'general',
             title: 'Consultation information received',
             localizedContent: {
@@ -1167,6 +1168,7 @@ export class ConsultationWorkflowService {
         {
           userId,
           profileId: request.profile_id,
+          operatingContext: 'customer',
           type: 'general',
           title: 'Consultation status changed',
           localizedContent: {

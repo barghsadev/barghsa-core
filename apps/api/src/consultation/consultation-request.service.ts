@@ -130,6 +130,7 @@ export class ConsultationRequestService {
           {
             userId,
             profileId: input.profileId,
+            operatingContext: 'customer',
             type: 'general',
             title: 'Consultation request submitted',
             localizedContent: {

@@ -28,6 +28,7 @@ export async function notifyAgentInvitation(
   await notifications.create(
     {
       userId: input.recipientUserId,
+      operatingContext: 'customer',
       type: 'general',
       ...localizedContent.fa,
       localizedContent,

@@ -199,8 +199,9 @@ export class TicketsService {
     actorId: string,
     event: 'created' | 'status' | 'reply' | 'internal' | 'assigned'
   ) {
-    const recipients = new Map<string, boolean>();
-    if (event !== 'internal' && ticket.userId !== actorId) recipients.set(ticket.userId, false);
+    const recipients: Array<{ userId: string; staff: boolean }> = [];
+    if (event !== 'internal' && ticket.userId !== actorId)
+      recipients.push({ userId: ticket.userId, staff: false });
     if (ticket.assignedTo && ticket.assignedTo !== actorId) {
       const user = (
         await client.query(
@@ -217,7 +218,7 @@ export class TicketsService {
             ['*', 'tickets:*', 'tickets:read', 'tickets:assigned'].includes(permission)
           ))
       )
-        recipients.set(ticket.assignedTo, true);
+        recipients.push({ userId: ticket.assignedTo, staff: true });
     }
     if (!ticket.assignedTo && (event === 'created' || actorId === ticket.userId)) {
       const staff = (
@@ -236,10 +237,10 @@ export class TicketsService {
             ['*', 'tickets:*', 'tickets:read'].includes(permission)
           )
         )
-          recipients.set(user.user_id, true);
+          recipients.push({ userId: user.user_id, staff: true });
       }
     }
-    for (const [userId, staff] of recipients) {
+    for (const { userId, staff } of recipients) {
       const localizedContent = Object.fromEntries(
         (['fa', 'en'] as const).map((locale) => [
           locale,
@@ -253,6 +254,7 @@ export class TicketsService {
       await this.notifications.create(
         {
           userId,
+          operatingContext: staff ? 'staff' : 'customer',
           type: 'general',
           title: localizedContent.en.title,
           body: localizedContent.en.body,

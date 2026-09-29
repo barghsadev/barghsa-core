@@ -72,6 +72,7 @@ export class SolarFinalService {
         {
           userId: request.user_id,
           profileId: request.profile_id,
+          operatingContext: 'customer',
           type: 'general',
           title: 'Solar request in final review',
           localizedContent: {
@@ -173,6 +174,7 @@ export class SolarFinalService {
         {
           userId: request.user_id,
           profileId: request.profile_id,
+          operatingContext: 'customer',
           type: 'general',
           title:
             decision === 'approve'

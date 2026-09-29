@@ -387,6 +387,7 @@ export class ContractService {
             {
               userId: request.submitted_by,
               profileId: input.profileId,
+              operatingContext: 'customer',
               type: 'general',
               title: 'Solar invoice issued',
               localizedContent: {

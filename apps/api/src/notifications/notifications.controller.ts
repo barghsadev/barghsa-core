@@ -51,7 +51,8 @@ export class NotificationsController {
     return this.notificationsService.findByUser(
       req.session.userId,
       limit ? parseInt(limit, 10) : 50,
-      offset ? parseInt(offset, 10) : 0
+      offset ? parseInt(offset, 10) : 0,
+      req.session.operatingContext
     );
   }
 
@@ -64,7 +65,10 @@ export class NotificationsController {
   @ApiOperation({ summary: 'Get unread notification count' })
   @ApiResponse({ status: 200, description: 'Unread notification count.' })
   async countUnread(@Req() req: AuthenticatedRequest) {
-    const count = await this.notificationsService.countUnread(req.session.userId);
+    const count = await this.notificationsService.countUnread(
+      req.session.userId,
+      req.session.operatingContext
+    );
     return { unreadCount: count };
   }
 
@@ -79,7 +83,11 @@ export class NotificationsController {
   @ApiResponse({ status: 200, description: 'Notification marked as read.' })
   @ApiResponse({ status: 404, description: 'Notification not found' })
   async markAsRead(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
-    await this.notificationsService.markAsRead(id, req.session.userId);
+    await this.notificationsService.markAsRead(
+      id,
+      req.session.userId,
+      req.session.operatingContext
+    );
     return { message: 'Notification marked as read' };
   }
 
@@ -93,7 +101,7 @@ export class NotificationsController {
   @ApiOperation({ summary: 'Mark all notifications as read' })
   @ApiResponse({ status: 200, description: 'All notifications marked as read.' })
   async markAllAsRead(@Req() req: AuthenticatedRequest) {
-    await this.notificationsService.markAllAsRead(req.session.userId);
+    await this.notificationsService.markAllAsRead(req.session.userId, req.session.operatingContext);
     return { message: 'All notifications marked as read' };
   }
 }

@@ -77,6 +77,7 @@ async function notifyFinancialStaff(
     await notifications.create(
       {
         userId: row.user_id,
+        operatingContext: 'staff',
         type: 'general',
         ...localizedContent.fa,
         localizedContent,
@@ -132,6 +133,7 @@ export async function notifyApprovalResolved(
   await notifications.create(
     {
       userId: input.initiatorId,
+      operatingContext: 'staff',
       type: 'general',
       ...localizedContent.fa,
       localizedContent,
