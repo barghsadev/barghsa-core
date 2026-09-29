@@ -57,17 +57,28 @@ const COLUMNS = `degraded,degraded_reason AS "degradedReason",consecutive_failur
   window_failures AS "windowFailures",window_started_at AS "windowStartedAt",last_failure_at AS "lastFailureAt",
   opened_at AS "openedAt",cooldown_until AS "cooldownUntil"`;
 
-/** Atomic counters and one leased recovery probe shared by email and SMS. */
+/** Atomic counters and one leased recovery probe shared by providers and AI models. */
 export class ProviderCircuitBreaker {
   constructor(
-    private readonly pool: DeliveryPool,
+    protected readonly pool: DeliveryPool,
     private readonly config: EmailBreakerConfig = DEFAULT_EMAIL_BREAKER_CONFIG,
     private readonly clock?: Clock,
-    private readonly channel: 'email' | 'sms' = 'email'
+    private readonly channel: 'email' | 'sms' | 'ai' = 'email'
   ) {}
   private get table(): string {
     // The channel is a closed union, never caller-provided SQL.
-    return this.channel === 'sms' ? 'sms_provider_configs' : 'email_provider_configs';
+    return this.channel === 'sms'
+      ? 'sms_provider_configs'
+      : this.channel === 'ai'
+        ? 'ai_model_circuit_states'
+        : 'email_provider_configs';
+  }
+  private get subject(): string {
+    return this.channel === 'ai'
+      ? 'AI model'
+      : this.channel === 'sms'
+        ? 'SMS provider'
+        : 'Email provider';
   }
   /** Bind all reads, probe claims and outcomes to a caller's held transaction. */
   using(pool: DeliveryPool): ProviderCircuitBreaker {
@@ -76,14 +87,14 @@ export class ProviderCircuitBreaker {
   private async now(): Promise<Date> {
     if (this.clock) return this.clock.now();
     const row = (await this.pool.query('SELECT clock_timestamp() AS now')).rows[0];
-    if (!(row?.now instanceof Date)) throw new Error('Email breaker clock unavailable');
+    if (!(row?.now instanceof Date)) throw new Error('Circuit breaker clock unavailable');
     return row.now;
   }
   async readState(providerId: string): Promise<EmailBreakerState> {
     const row = (
       await this.pool.query(`SELECT ${COLUMNS} FROM ${this.table} WHERE id=$1`, [providerId])
     ).rows[0];
-    if (!row) throw new Error(`${this.channel === 'sms' ? 'SMS' : 'Email'} provider unavailable`);
+    if (!row) throw new Error(`${this.subject} unavailable`);
     return { ...row, providerId } as unknown as EmailBreakerState;
   }
   async decision(providerId: string): Promise<EmailBreakerDecision> {
@@ -106,8 +117,7 @@ export class ProviderCircuitBreaker {
       allow: false,
       kind: 'open',
       state,
-      degradedReason:
-        state.degradedReason ?? `${this.channel === 'sms' ? 'SMS' : 'Email'} provider degraded`,
+      degradedReason: state.degradedReason ?? `${this.subject} degraded`,
       cooldownUntil: state.cooldownUntil ?? deadline,
     };
   }
@@ -156,7 +166,7 @@ export class ProviderCircuitBreaker {
           this.config.windowMs,
           this.config.threshold,
           this.config.cooldownMs,
-          `${this.channel === 'sms' ? 'SMS' : 'Email'} provider failure threshold reached`,
+          `${this.subject} failure threshold reached`,
         ]
       );
     }
@@ -167,6 +177,26 @@ export class ProviderCircuitBreaker {
 export class EmailCircuitBreaker extends ProviderCircuitBreaker {
   constructor(pool: DeliveryPool, config?: EmailBreakerConfig, clock?: Clock) {
     super(pool, config, clock, 'email');
+  }
+}
+
+/** The same persisted, single-probe breaker used by delivery providers. */
+export class AiModelCircuitBreaker extends ProviderCircuitBreaker {
+  constructor(pool: DeliveryPool, config?: EmailBreakerConfig, clock?: Clock) {
+    super(pool, config, clock, 'ai');
+  }
+
+  /** An authorized connection test is an explicit probe, even during cooldown. */
+  async recordConnectionTest(modelId: string, ok: boolean): Promise<EmailBreakerState> {
+    if (!ok) return this.recordOutcome(modelId, { ok: false, transient: true });
+    await this.pool.query(
+      `UPDATE ai_model_circuit_states SET degraded=false,degraded_reason=NULL,
+       consecutive_failures=0,window_failures=0,recent_failure_times='{}'::timestamptz[],
+       window_started_at=NULL,last_failure_at=NULL,opened_at=NULL,cooldown_until=NULL
+       WHERE id=$1`,
+      [modelId]
+    );
+    return this.readState(modelId);
   }
 }
 

@@ -7,9 +7,12 @@ import type { TestChatResponse } from './ai-test-chat.service.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let provider: ReturnType<typeof createServer>;
 let agentId: string;
+let modelId: string;
 let headers: Record<string, string>;
 let completions = 0;
 let providerReply = 'A test answer';
+let providerFailure = false;
+let failCompletionMessage: string | null = null;
 let lastChatMessages: Array<{ role: string; content: string }> = [];
 const previousEmbeddingBase = process.env.KB_EMBEDDING_BASE_URL;
 
@@ -31,6 +34,11 @@ beforeAll(async () => {
     };
     lastChatMessages = payload.messages;
     completions++;
+    if (providerFailure || payload.messages.at(-1)?.content === failCompletionMessage) {
+      response.writeHead(503, { 'content-type': 'application/json' });
+      response.end(JSON.stringify({ error: 'temporarily unavailable' }));
+      return;
+    }
     response.setHeader('content-type', 'application/json');
     response.end(
       JSON.stringify({
@@ -63,7 +71,7 @@ beforeAll(async () => {
     'x-csrf-token': csrf,
     'content-type': 'application/json',
   };
-  const modelId = (
+  modelId = (
     await http.pool.query<{ id: string }>(
       `INSERT INTO ai_models(title,provider_type,base_url,model_name,created_by,is_enabled,last_test_status)
      VALUES ('Local','openai_compatible',$1,'test','test-chat-admin',true,'passed') RETURNING id`,
@@ -347,6 +355,80 @@ it('prevents update, delete and truncate of AI audit records', async () => {
   );
   await expect(http.pool.query('TRUNCATE ai_audit_log')).rejects.toMatchObject({ code: '55000' });
 });
+
+it('opens a per-model circuit after provider failures and recovers with one probe', async () => {
+  providerFailure = true;
+  try {
+    for (let attempt = 0; attempt < 5; attempt++) {
+      await http.pool.query(
+        "SELECT rate_limit_rolling_reset(true,'ai:test-chat:user:test-chat-admin')"
+      );
+      const response = await send({ agentId, requestId: randomUUID(), message: 'Check model' });
+      expect(response.status).toBe(503);
+    }
+    expect(
+      (
+        await http.pool.query(
+          'SELECT degraded,window_failures FROM ai_model_circuit_states WHERE id=$1',
+          [modelId]
+        )
+      ).rows[0]
+    ).toMatchObject({ degraded: true, window_failures: 5 });
+    const attempts = completions;
+    const blocked = await send({ agentId, requestId: randomUUID(), message: 'Still down?' });
+    expect(blocked.status).toBe(503);
+    expect(await blocked.json()).toMatchObject({ error: { code: 'AI_MODEL_CIRCUIT_OPEN' } });
+    expect(completions).toBe(attempts);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT kind FROM provider_health_events WHERE channel='ai' AND provider_id=$1",
+          [modelId]
+        )
+      ).rows
+    ).toEqual([{ kind: 'circuit_open' }]);
+  } finally {
+    providerFailure = false;
+  }
+  await http.pool.query(
+    "UPDATE ai_model_circuit_states SET cooldown_until=NOW()-INTERVAL '1 second' WHERE id=$1",
+    [modelId]
+  );
+  failCompletionMessage = 'Recovery fails';
+  const beforeFailedRecovery = completions;
+  const failedRecovery = await send({
+    agentId,
+    requestId: randomUUID(),
+    message: failCompletionMessage,
+  });
+  expect(failedRecovery.status).toBe(503);
+  expect(completions).toBe(beforeFailedRecovery + 2);
+  expect(
+    (await http.pool.query('SELECT degraded FROM ai_model_circuit_states WHERE id=$1', [modelId]))
+      .rows[0]
+  ).toMatchObject({ degraded: true });
+  failCompletionMessage = null;
+  await http.pool.query(
+    "UPDATE ai_model_circuit_states SET cooldown_until=NOW()-INTERVAL '1 second' WHERE id=$1",
+    [modelId]
+  );
+  const attempts = completions;
+  const recovered = await send({ agentId, requestId: randomUUID(), message: 'Recovered?' });
+  expect(recovered.status).toBe(200);
+  expect(completions).toBe(attempts + 2);
+  expect(
+    (await http.pool.query('SELECT degraded FROM ai_model_circuit_states WHERE id=$1', [modelId]))
+      .rows[0]
+  ).toMatchObject({ degraded: false });
+  expect(
+    (
+      await http.pool.query(
+        "SELECT kind FROM provider_health_events WHERE channel='ai' AND provider_id=$1 ORDER BY created_at,id",
+        [modelId]
+      )
+    ).rows
+  ).toEqual([{ kind: 'circuit_open' }, { kind: 'circuit_recovered' }]);
+}, 30000);
 
 it('requires a retrieved source when a response policy demands one', async () => {
   await http.pool.query(

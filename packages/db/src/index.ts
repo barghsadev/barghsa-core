@@ -699,6 +699,7 @@ export * from './schema/staff-teams';
 export * from './schema/reconciliation-exceptions';
 export * from './schema/background-jobs';
 export * from './schema/ai-models';
+export * from './schema/ai-model-circuit-states';
 export * from './schema/knowledge-bases';
 export * from './schema/kb-groups';
 export * from './schema/ai-policies';

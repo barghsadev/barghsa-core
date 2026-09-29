@@ -7,6 +7,7 @@ import {
   type AiModelTestResult,
 } from '@barghsa/shared/ai-models';
 import { resolveStaffPermissions } from '@barghsa/shared/admin';
+import { AiModelCircuitBreaker } from '@barghsa/shared/notification-delivery';
 import { logDelivery } from '../delivery-log.js';
 
 interface Claim {
@@ -119,5 +120,28 @@ export async function runAiModelTest(
     },
     Number(lease.rows[0].remaining_ms)
   );
-  return finish(result, null);
+  const status = await finish(result, null);
+  if (status === 'completed') {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      const current = await client.query<{ revision: string }>(
+        'SELECT xmin::text AS revision FROM ai_models WHERE id=$1 FOR UPDATE',
+        [job.model_id]
+      );
+      if (current.rows[0]?.revision === job.model_revision) {
+        const breaker = new AiModelCircuitBreaker({
+          query: (sql, params) => client.query(sql, params),
+        });
+        await breaker.recordConnectionTest(job.model_id!, result.ok);
+      }
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => undefined);
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+  return status;
 }

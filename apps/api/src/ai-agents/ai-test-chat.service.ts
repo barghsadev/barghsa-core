@@ -1,13 +1,14 @@
 import { createHash } from 'node:crypto';
 import { Injectable, HttpException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
-import { completeChat, OpenAiEmbeddingClient, type ChatMessage } from '@barghsa/shared/ai-models';
+import { OpenAiEmbeddingClient, type ChatMessage } from '@barghsa/shared/ai-models';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { v7 as uuidv7 } from 'uuid';
 import { AiModelSecretsService } from '../ai-models/ai-model-secrets.service.js';
 import type { RuntimePolicy, PolicyResult } from './ai-test-chat-policy.js';
 import { evaluatePolicies, evaluatePolicyOutput } from './ai-test-chat-policy.js';
 import { redactAiText } from './ai-prompt-redaction.js';
+import { completeChatWithBreaker } from './ai-model-breaker.js';
 
 interface TestChatInput {
   agentId: string;
@@ -20,6 +21,7 @@ interface TestChatSession {
   userId: string;
 }
 interface AgentModelRow {
+  model_id: string;
   system_prompt: string;
   temperature: number | null;
   max_tokens: number | null;
@@ -179,7 +181,7 @@ export class AiTestChatService {
   ): Promise<TestChatResponse> {
     const pool = getDbPool();
     const agents = await pool.query<AgentModelRow>(
-      `SELECT a.system_prompt,a.temperature,a.max_tokens,a.link_mode,
+      `SELECT a.system_prompt,a.temperature,a.max_tokens,a.link_mode,m.id AS model_id,
               m.provider_type,m.base_url,m.model_name,m.api_token,m.config
        FROM ai_agents a JOIN ai_models m ON m.id=a.model_id
        WHERE a.id=$1 AND a.enabled=true AND m.is_enabled=true AND m.last_test_status='passed'`,
@@ -303,7 +305,7 @@ export class AiTestChatService {
     }
     messages.push({ role: 'user', content: safeMessage });
     const apiToken = agent.api_token ? this.secrets.decryptToken(agent.api_token) : null;
-    const completion = await completeChat({
+    const completion = await completeChatWithBreaker(agent.model_id, {
       providerType: agent.provider_type,
       baseUrl: agent.base_url,
       modelName: agent.model_name,

@@ -2,6 +2,7 @@ import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/commo
 import {
   collectPerformanceMetrics,
   collectReplicationLag,
+  getDbPool,
   type DatabaseMetrics,
 } from '@barghsa/db';
 import promClient from 'prom-client';
@@ -48,6 +49,11 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
   private pollInFlight: Promise<void> | null = null;
   private lastReplicationLag: number | null = null;
   private readonly telemetry: ReturnType<typeof createDatabaseTelemetry>;
+  private readonly aiModelHealth = new promClient.Gauge({
+    name: 'ai_model_health',
+    help: 'AI model circuit health (1=closed, 0=open)',
+    labelNames: ['model_id'] as const,
+  });
 
   // Polling interval (ms).  In production, metrics are updated on each scrape
   // by the controller; the poll interval controls how fresh the cached values
@@ -207,6 +213,7 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     this.topQueryDuration.reset();
     this.viewAvailable.reset();
     this.collectionSuccess.set(0);
+    this.aiModelHealth.reset();
   }
 
   constructor() {
@@ -334,6 +341,17 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
       }
       this.lastMetrics = m;
       this.collectionSuccess.set(1);
+      try {
+        const models = await getDbPool().query<{ id: string; degraded: boolean }>(
+          'SELECT id,degraded FROM ai_model_circuit_states'
+        );
+        this.aiModelHealth.reset();
+        for (const model of models.rows)
+          this.aiModelHealth.set({ model_id: model.id }, model.degraded ? 0 : 1);
+      } catch {
+        // Core database metrics must remain available during schema rollout.
+        this.aiModelHealth.reset();
+      }
     } catch (err) {
       this.clearDatabaseMetrics();
       this.logger.error(`Metrics poll error: ${err instanceof Error ? err.message : String(err)}`);

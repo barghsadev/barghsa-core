@@ -9,6 +9,23 @@ afterAll(async () => {
   await fixture?.close();
 });
 
+it('reports each AI model circuit independently', async () => {
+  await fixture.pool.query(
+    "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ('metrics-ai-admin','metrics-ai-admin@example.test','test-only',true)"
+  );
+  const modelId = (
+    await fixture.pool.query<{ id: string }>(
+      "INSERT INTO ai_models(title,provider_type,base_url,model_name,created_by) VALUES ('Metrics','openai_compatible','https://example.test/v1','test','metrics-ai-admin') RETURNING id"
+    )
+  ).rows[0]!.id;
+  const scrape = async () => (await fetch(`${fixture.base}/metrics`)).text();
+  expect(await scrape()).toContain(`ai_model_health{model_id="${modelId}"} 1`);
+  await fixture.pool.query('UPDATE ai_model_circuit_states SET degraded=true WHERE id=$1', [
+    modelId,
+  ]);
+  expect(await scrape()).toContain(`ai_model_health{model_id="${modelId}"} 0`);
+});
+
 it('serves unavailable metrics through a database outage and recovers without stale samples', async () => {
   async function scrape() {
     const response = await fetch(`${fixture.base}/metrics`, {

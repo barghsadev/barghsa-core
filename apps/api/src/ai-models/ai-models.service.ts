@@ -52,6 +52,8 @@ export interface AiModelDto {
   lastTestedAt: string | null;
   lastTestError: string | null;
   lastTestLatencyMs: number | null;
+  circuitOpen: boolean;
+  circuitCooldownUntil: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -109,6 +111,8 @@ interface AiModelRow {
   last_test_status: 'pending' | 'passed' | 'failed';
   last_test_error: string | null;
   last_test_latency_ms: number | null;
+  degraded?: boolean;
+  cooldown_until?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -129,13 +133,14 @@ export class AiModelsService {
   /** List all models, newest first, tokens masked. */
   async list(): Promise<AiModelDto[]> {
     const result = await getDbPool().query<AiModelRow>(
-      `SELECT id, title, provider_type, base_url, model_name, api_token,
-              config,is_enabled,last_tested_at,last_test_status,last_test_error,
-              last_test_latency_ms,created_at,updated_at
-         FROM ai_models
-        ORDER BY created_at DESC`
+      `SELECT m.id,m.title,m.provider_type,m.base_url,m.model_name,m.api_token,
+              m.config,m.is_enabled,m.last_tested_at,m.last_test_status,m.last_test_error,
+              m.last_test_latency_ms,COALESCE(s.degraded,false) AS degraded,
+              s.cooldown_until,m.created_at,m.updated_at
+         FROM ai_models m LEFT JOIN ai_model_circuit_states s ON s.id=m.id
+        ORDER BY m.created_at DESC`
     );
-    return result.rows.map((row) => this.toDto(row));
+    return Promise.all(result.rows.map((row) => this.toDto(row)));
   }
 
   /** Fetch a single model by id, token masked. */
@@ -197,7 +202,7 @@ export class AiModelsService {
       this.logger.log(
         `AI model created: id=${id}, title=${input.title}, actor=${input.actorUserId}`
       );
-      return this.toDto(row);
+      return this.toDto(row, client);
     });
   }
 
@@ -262,7 +267,7 @@ export class AiModelsService {
         );
       if (input.isEnabled !== undefined) push('is_enabled', input.isEnabled);
 
-      if (fields.length === 0) return this.toDto(existing);
+      if (fields.length === 0) return this.toDto(existing, client);
 
       if (connectionChanged) {
         fields.push(
@@ -301,7 +306,7 @@ export class AiModelsService {
         client
       );
       this.logger.log(`AI model updated: id=${id}, actor=${input.actorUserId}`);
-      return this.toDto(row);
+      return this.toDto(row, client);
     });
   }
 
@@ -422,7 +427,7 @@ export class AiModelsService {
         },
         client
       );
-      return { model: this.toDto(row), test: result };
+      return { model: await this.toDto(row, client), test: result };
     });
   }
 
@@ -460,17 +465,27 @@ export class AiModelsService {
     client?: PoolClient
   ): Promise<(AiModelRow & { revision: string }) | null> {
     const result = await (client ?? getDbPool()).query<AiModelRow & { revision: string }>(
-      `SELECT xmin::text AS revision, id, title, provider_type, base_url, model_name, api_token,
-              config,is_enabled,last_tested_at,last_test_status,last_test_error,
-              last_test_latency_ms,created_at,updated_at
-         FROM ai_models
-        WHERE id = $1${client ? ' FOR UPDATE' : ''}`,
+      `SELECT m.xmin::text AS revision,m.id,m.title,m.provider_type,m.base_url,m.model_name,m.api_token,
+              m.config,m.is_enabled,m.last_tested_at,m.last_test_status,m.last_test_error,
+              m.last_test_latency_ms,COALESCE(s.degraded,false) AS degraded,
+              s.cooldown_until,m.created_at,m.updated_at
+         FROM ai_models m LEFT JOIN ai_model_circuit_states s ON s.id=m.id
+        WHERE m.id = $1${client ? ' FOR UPDATE OF m' : ''}`,
       [id]
     );
     return result.rows[0] ?? null;
   }
 
-  private toDto(row: AiModelRow): AiModelDto {
+  private async toDto(row: AiModelRow, client?: PoolClient): Promise<AiModelDto> {
+    const circuit =
+      row.degraded === undefined
+        ? (
+            await (client ?? getDbPool()).query<{
+              degraded: boolean;
+              cooldown_until: string | null;
+            }>('SELECT degraded,cooldown_until FROM ai_model_circuit_states WHERE id=$1', [row.id])
+          ).rows[0]
+        : row;
     const status =
       row.last_test_status === 'passed'
         ? 'reachable'
@@ -490,6 +505,8 @@ export class AiModelsService {
       lastTestedAt: row.last_tested_at,
       lastTestError: row.last_test_error,
       lastTestLatencyMs: row.last_test_latency_ms ?? null,
+      circuitOpen: circuit?.degraded ?? false,
+      circuitCooldownUntil: circuit?.cooldown_until ?? null,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     };

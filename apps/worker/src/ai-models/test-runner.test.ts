@@ -61,6 +61,61 @@ it('claims once across competing workers and stores only a safe result', async (
   });
   expect(JSON.stringify(row)).not.toContain('local-queue-token');
 });
+it('a successful worker connection test clears an open model circuit', async () => {
+  const { model } = await enqueue();
+  await fixture.pool.query(
+    "UPDATE ai_model_circuit_states SET degraded=true,cooldown_until=NOW()+INTERVAL '1 minute' WHERE id=$1",
+    [model]
+  );
+  expect(await runAiModelTest(fixture.pool, tester(), secrets)).toBe('completed');
+  expect(
+    (
+      await fixture.pool.query(
+        'SELECT degraded,consecutive_failures,cooldown_until FROM ai_model_circuit_states WHERE id=$1',
+        [model]
+      )
+    ).rows[0]
+  ).toMatchObject({ degraded: false, consecutive_failures: 0, cooldown_until: null });
+  expect(
+    (
+      await fixture.pool.query(
+        "SELECT kind FROM provider_health_events WHERE channel='ai' AND provider_id=$1 ORDER BY created_at,id",
+        [model]
+      )
+    ).rows
+  ).toEqual([{ kind: 'circuit_open' }, { kind: 'circuit_recovered' }]);
+});
+it('does not clear a circuit when the model changes during its connection test', async () => {
+  const { model } = await enqueue();
+  await fixture.pool.query('UPDATE ai_model_circuit_states SET degraded=true WHERE id=$1', [model]);
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const slow = {
+    test: vi.fn(async () => {
+      await gate;
+      return { ok: true, latencyMs: 1 };
+    }),
+  };
+  const running = runAiModelTest(fixture.pool, slow, secrets);
+  try {
+    await expect.poll(() => slow.test.mock.calls.length).toBe(1);
+    await fixture.pool.query("UPDATE ai_models SET model_name='changed' WHERE id=$1", [model]);
+    release();
+    expect(await running).toBe('completed');
+    expect(
+      (
+        await fixture.pool.query('SELECT degraded FROM ai_model_circuit_states WHERE id=$1', [
+          model,
+        ])
+      ).rows[0]
+    ).toMatchObject({ degraded: true });
+  } finally {
+    release();
+    await running;
+  }
+});
 it('logs the queued request ID without provider credentials or results', async () => {
   const { id } = await enqueue();
   const correlationId = randomUUID();

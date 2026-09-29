@@ -29,6 +29,8 @@ const model = {
   lastTestedAt: '2026-09-24T00:00:00Z',
   lastTestError: null,
   lastTestLatencyMs: 125,
+  circuitOpen: false,
+  circuitCooldownUntil: null,
 };
 let container: HTMLDivElement;
 let root: Root;
@@ -62,6 +64,29 @@ it('shows test evidence and prepares an enabled-state write', async () => {
     path: `/api/admin/ai-models/${model.id}`,
     body: { isEnabled: true },
   });
+});
+
+it('separates an open runtime circuit from the last connection-test result', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify([
+            {
+              ...model,
+              isEnabled: true,
+              circuitOpen: true,
+              circuitCooldownUntil: '2026-09-29T10:00:00Z',
+            },
+          ])
+        )
+    )
+  );
+  await act(async () => root.render(<AdminAiModelsPage />));
+  expect(container.textContent).toContain('Reachable');
+  expect(container.textContent).toContain('Model connection temporarily paused');
+  expect(container.textContent).toContain('Next recovery check: 2026-09-29T10:00:00Z');
 });
 
 it('keeps untested models inactive and includes request settings when editing', async () => {

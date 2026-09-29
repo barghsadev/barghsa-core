@@ -19,6 +19,8 @@ interface Model {
   lastTestedAt: string | null;
   lastTestError: string | null;
   lastTestLatencyMs: number | null;
+  circuitOpen: boolean;
+  circuitCooldownUntil: string | null;
 }
 interface Draft {
   id?: string;
@@ -347,6 +349,16 @@ export default function AdminAiModelsPage() {
                           {label(model.isEnabled ? 'enabled' : 'disabled')}
                         </p>
                         <p>{label(model.status)}</p>
+                        {model.circuitOpen && (
+                          <p className="font-medium text-destructive" role="status">
+                            {label('circuitOpen')}
+                            {model.circuitCooldownUntil && (
+                              <span className="block font-normal">
+                                {label('circuitRetry')}: {time.format(model.circuitCooldownUntil)}
+                              </span>
+                            )}
+                          </p>
+                        )}
                         {model.lastTestedAt && (
                           <p>
                             {label('lastTest')}: {time.format(model.lastTestedAt)}

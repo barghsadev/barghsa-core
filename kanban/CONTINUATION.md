@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[AI model circuit breaker](batches/2026-09-29-ai-model-circuit.md) shares persisted per-model failure and recovery state across preview inference and the model-test worker, with admin health, metrics and operator alerting. Future production chat/tool calls must use the same gate.
+
 [AI audit foundation and preview integration](batches/2026-09-29-ai-audit.md) adds an append-only audit table and logs authenticated admin preview attempts with redacted payloads, authorization outcomes and correlation IDs. Production chat and tools remain future integrations.
 
 [AI preview redaction and attribution](batches/2026-09-29-ai-redaction-attribution.md) removes common sensitive values from prompts and preview replies, adds document-level source context and labels unsourced guidance. Production chat and tool enforcement remain later work.

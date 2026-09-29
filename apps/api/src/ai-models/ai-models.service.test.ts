@@ -37,6 +37,8 @@ function makeRow(over: Record<string, unknown> = {}) {
     last_test_status: 'pending',
     last_test_error: null,
     last_test_latency_ms: null,
+    degraded: false,
+    cooldown_until: null,
     created_at: '2026-08-28T00:00:00.000Z',
     updated_at: '2026-08-28T00:00:00.000Z',
     ...over,

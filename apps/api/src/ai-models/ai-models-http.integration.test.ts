@@ -204,6 +204,22 @@ it('encrypts tokens, retains masked credentials, clears stale test results and s
   ).not.toContain(input.apiToken);
 });
 
+it('shows the runtime circuit independently of the stored connection-test status', async () => {
+  const created = (await (await request('', 'POST', input)).json()) as { id: string };
+  await http.pool.query(
+    "UPDATE ai_model_circuit_states SET degraded=true,cooldown_until=NOW()+INTERVAL '1 minute' WHERE id=$1",
+    [created.id]
+  );
+  expect(await (await request(`/${created.id}`)).json()).toMatchObject({
+    circuitOpen: true,
+    circuitCooldownUntil: expect.any(String),
+    status: 'unknown',
+  });
+  expect(await (await request()).json()).toContainEqual(
+    expect.objectContaining({ id: created.id, circuitOpen: true })
+  );
+}, 30000);
+
 it('requires a passing test before enabling and invalidates approval when endpoint settings change', async () => {
   const createdResponse = await request('', 'POST', {
     ...input,

@@ -24,3 +24,13 @@ groups:
         annotations:
           summary: Notification failures are accumulating
           description: '{{ $value }} notification deliveries remain open in the dead-letter queue. Check provider health, worker errors and delivery history. Do not bulk retry before the cause is fixed.'
+  - name: barghsa-ai-models
+    rules:
+      - alert: AiModelCircuitOpen
+        expr: min without (instance, pod) (ai_model_health) == 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: AI model circuit is open
+          description: 'Model {{ $labels.model_id }} is temporarily unavailable after repeated provider failures. Review the model in admin; a short recovery probe is allowed after cooldown.'

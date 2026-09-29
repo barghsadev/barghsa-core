@@ -51,6 +51,14 @@ export const ErrorCodes = {
     messageKey: 'error.provider.unavailable',
     severity: 'error' as ErrorSeverity,
   },
+  AI_MODEL_CIRCUIT_OPEN: {
+    code: 'AI_MODEL_CIRCUIT_OPEN',
+    httpStatus: 503,
+    title: 'AI model connection temporarily paused',
+    retryable: true,
+    messageKey: 'error.provider.unavailable',
+    severity: 'warning' as ErrorSeverity,
+  },
   MAINTENANCE_ACTIVE: {
     code: 'MAINTENANCE:ACTIVE',
     httpStatus: 503,

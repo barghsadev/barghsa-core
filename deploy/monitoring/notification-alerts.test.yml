@@ -247,5 +247,36 @@
             { 'eval_time': '3m', 'alertname': 'EmailProviderDegraded', 'exp_alerts': [] },
           ],
       },
+      {
+        'name': 'AI model circuit alerts after a sustained open state',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'ai_model_health{job="api",model_id="model-a",instance="a",pod="a"}',
+              'values': '1 0 0 1',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '1m', 'alertname': 'AiModelCircuitOpen', 'exp_alerts': [] },
+            {
+              'eval_time': '2m',
+              'alertname': 'AiModelCircuitOpen',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels': { 'job': 'api', 'model_id': 'model-a', 'severity': 'warning' },
+                    'exp_annotations':
+                      {
+                        'summary': 'AI model circuit is open',
+                        'description': 'Model model-a is temporarily unavailable after repeated provider failures. Review the model in admin; a short recovery probe is allowed after cooldown.',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '3m', 'alertname': 'AiModelCircuitOpen', 'exp_alerts': [] },
+          ],
+      },
     ],
 }
