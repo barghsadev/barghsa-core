@@ -56,6 +56,8 @@ const create = (body: unknown, headers = ownerHeaders) =>
     headers,
     body: JSON.stringify(body),
   });
+const responseBody = async (response: Response): Promise<Record<string, unknown>> =>
+  (await response.json()) as Record<string, unknown>;
 
 it('shows active-profile closure blockers and routes each type to one audited support ticket', async () => {
   await http.pool.query(
@@ -69,7 +71,7 @@ it('shows active-profile closure blockers and routes each type to one audited su
   );
   const before = await preview();
   expect(before.status, http.logs()).toBe(200);
-  const status = await before.json();
+  const status = await responseBody(before);
   expect(status.profileId).toBe(profileId);
   expect(status.blockers).toContainEqual({
     code: 'legalHold',
@@ -92,7 +94,7 @@ it('shows active-profile closure blockers and routes each type to one audited su
   const exportKey = randomUUID();
   const exported = await create({ type: 'export', idempotencyKey: exportKey, locale: 'fa' });
   expect(exported.status, http.logs()).toBe(201);
-  const exportRequest = await exported.json();
+  const exportRequest = await responseBody(exported);
   expect(exportRequest).toMatchObject({ profileId, type: 'export', created: true });
   const repeated = await create({ type: 'export', idempotencyKey: exportKey, locale: 'en' });
   expect(repeated.status, http.logs()).toBe(201);
@@ -107,7 +109,7 @@ it('shows active-profile closure blockers and routes each type to one audited su
   );
   const closed = await create({ type: 'closure', idempotencyKey: randomUUID(), locale: 'en' });
   expect(closed.status, http.logs()).toBe(201);
-  const closureRequest = await closed.json();
+  const closureRequest = await responseBody(closed);
   expect(closureRequest).toMatchObject({ profileId, type: 'closure', created: true });
   const records = await http.pool.query(
     `SELECT id,category,profile_id,privacy_request_type FROM tickets
@@ -137,7 +139,7 @@ it('shows active-profile closure blockers and routes each type to one audited su
      VALUES('lifecycle-owner',$1) ON CONFLICT(user_id) DO UPDATE SET profile_id=EXCLUDED.profile_id`,
     [secondProfileId]
   );
-  const switched = await (await preview()).json();
+  const switched = await responseBody(await preview());
   expect(switched.profileId).toBe(secondProfileId);
   expect(switched.requests).toEqual([]);
   expect((await create({ type: 'export', idempotencyKey: exportKey, locale: 'en' })).status).toBe(
@@ -149,19 +151,19 @@ it('shows active-profile closure blockers and routes each type to one audited su
     locale: 'en',
   });
   expect(secondRequest.status, http.logs()).toBe(201);
-  expect((await secondRequest.json()).profileId).toBe(secondProfileId);
+  expect((await responseBody(secondRequest)).profileId).toBe(secondProfileId);
   await http.pool.query(
     `UPDATE user_profile_contexts SET profile_id=$1 WHERE user_id='lifecycle-owner'`,
     [profileId]
   );
-  expect((await (await preview()).json()).requests).toHaveLength(2);
+  expect((await responseBody(await preview())).requests).toHaveLength(2);
 });
 
 it('rejects requests without an active owned profile and never exposes another profile', async () => {
   const other = await fetch(`${http.base}/api/tickets/lifecycle-preview`, {
     headers: otherHeaders,
   });
-  expect((await other.json()).profileId).toBe(otherProfileId);
+  expect((await responseBody(other)).profileId).toBe(otherProfileId);
   await http.pool.query(`UPDATE profiles SET archived=true WHERE id=$1`, [otherProfileId]);
   expect(
     (await fetch(`${http.base}/api/tickets/lifecycle-preview`, { headers: otherHeaders })).status
