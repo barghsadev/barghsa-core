@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[Refund request financial snapshot](batches/2026-09-29-refund-request-review-snapshot.md) binds both manual refund destinations to an authoritative server preview, exact confirmation hash and persisted audit record. Changed balances or second-approval rules reject stale confirmation; the wider cross-command review work remains partial.
+
 [Approval route boundary follow-up](batches/2026-09-29-approval-route-boundary.md) normalizes exact-request links and restores the standalone admin failure tests after the router-aware approval handoff.
 
 [Refund approval return](batches/2026-09-29-refund-approval-return.md) connects a second-review decision back to the wallet or external-bank refund panel for the same invoice.

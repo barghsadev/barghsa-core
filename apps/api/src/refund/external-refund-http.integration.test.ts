@@ -70,7 +70,30 @@ async function invoice(amount = '100') {
   );
   return { id, profile, owner };
 }
-function post(path: string, body: unknown = {}, user = 'refund-finance') {
+const reviewHashes = new Map<string, string>();
+async function post(path: string, body: unknown = {}, user = 'refund-finance') {
+  if (['wallet-refunds', 'external-refunds'].includes(path) && body && typeof body === 'object') {
+    const input = body as ReturnType<typeof requestBody> & { expectedReviewHash?: string };
+    if (!input.expectedReviewHash && input.idempotencyKey) {
+      const cacheKey = `${path}:${input.idempotencyKey}`;
+      if (!reviewHashes.has(cacheKey)) {
+        const preview = await fetch(`${http.base}/api/admin/${path}/review`, {
+          method: 'POST',
+          headers: headers[user]!,
+          body: JSON.stringify({
+            invoiceId: input.invoiceId,
+            amount: input.amount,
+            reason: input.reason,
+          }),
+        });
+        reviewHashes.set(
+          cacheKey,
+          preview.ok ? ((await preview.json()) as { hash: string }).hash : '0'.repeat(64)
+        );
+      }
+      body = { ...input, expectedReviewHash: reviewHashes.get(cacheKey) };
+    }
+  }
   return fetch(`${http.base}/api/admin/${path}`, {
     method: 'POST',
     headers: headers[user]!,

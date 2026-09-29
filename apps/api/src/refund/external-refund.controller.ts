@@ -25,7 +25,7 @@ import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { RefundService } from './refund.service.js';
-import { refundUuid, refundRequestSchema } from './refund-validation.js';
+import { refundUuid, refundRequestSchema, refundReviewSchema } from './refund-validation.js';
 const decisionSchema = z
   .object({
     reason: z.string().trim().min(1).max(1000).optional(),
@@ -60,6 +60,29 @@ export class ExternalRefundController {
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
     return this.refunds.refundsForInvoice(id.data, req.session, 'external_bank', cursor.data);
   }
+  @Post('review')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Preview the authoritative bank refund request and confirmation hash' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['invoiceId', 'amount', 'reason'],
+      properties: {
+        invoiceId: { type: 'string', format: 'uuid' },
+        amount: { type: 'string', pattern: '^[0-9]{1,19}$' },
+        reason: { type: 'string', minLength: 1, maxLength: 1000 },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Authoritative refund review with confirmation hash' })
+  async review(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    this.authorize(req);
+    const parsed = refundReviewSchema.safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    return this.refunds.reviewRequest(parsed.data, req.session, 'external_bank');
+  }
   @Post()
   @RequiresStepUp()
   @ApiOperation({ summary: 'Request an invoice refund by external bank transfer' })
@@ -67,7 +90,7 @@ export class ExternalRefundController {
     schema: {
       type: 'object',
       additionalProperties: false,
-      required: ['invoiceId', 'amount', 'idempotencyKey', 'reason'],
+      required: ['invoiceId', 'amount', 'idempotencyKey', 'reason', 'expectedReviewHash'],
       properties: {
         invoiceId: { type: 'string', format: 'uuid' },
         amount: {
@@ -77,6 +100,7 @@ export class ExternalRefundController {
         },
         idempotencyKey: { type: 'string', format: 'uuid' },
         reason: { type: 'string', minLength: 1, maxLength: 1000 },
+        expectedReviewHash: { type: 'string', pattern: '^[a-f0-9]{64}$' },
       },
     },
   })

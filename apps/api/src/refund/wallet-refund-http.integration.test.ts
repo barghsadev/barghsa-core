@@ -71,7 +71,30 @@ async function invoice(amount = '100') {
   );
   return { id, profile, owner };
 }
-function post(path: string, body: unknown = {}, user = 'refund-finance') {
+const reviewHashes = new Map<string, string>();
+async function post(path: string, body: unknown = {}, user = 'refund-finance') {
+  if (path === 'wallet-refunds' && body && typeof body === 'object') {
+    const input = body as ReturnType<typeof requestBody> & { expectedReviewHash?: string };
+    if (!input.expectedReviewHash && input.idempotencyKey) {
+      const cacheKey = `${path}:${input.idempotencyKey}`;
+      if (!reviewHashes.has(cacheKey)) {
+        const preview = await fetch(`${http.base}/api/admin/${path}/review`, {
+          method: 'POST',
+          headers: headers[user]!,
+          body: JSON.stringify({
+            invoiceId: input.invoiceId,
+            amount: input.amount,
+            reason: input.reason,
+          }),
+        });
+        reviewHashes.set(
+          cacheKey,
+          preview.ok ? ((await preview.json()) as { hash: string }).hash : '0'.repeat(64)
+        );
+      }
+      body = { ...input, expectedReviewHash: reviewHashes.get(cacheKey) };
+    }
+  }
   return fetch(`${http.base}/api/admin/${path}`, {
     method: 'POST',
     headers: headers[user]!,
@@ -101,6 +124,67 @@ async function balances(f: Awaited<ReturnType<typeof invoice>>) {
     )
   ).rows[0];
 }
+
+it('requires the displayed refund snapshot and rejects a stale balance after another request', async () => {
+  const f = await invoice('100');
+  const body = requestBody(f.id, '60');
+  const preview = await post('wallet-refunds/review', {
+    invoiceId: f.id,
+    amount: body.amount,
+    reason: body.reason,
+  });
+  expect(preview.status).toBe(200);
+  const review = (await preview.json()) as {
+    hash: string;
+    data: { refund: Record<string, unknown> };
+  };
+  expect(review.data.refund).toMatchObject({
+    destination: 'wallet',
+    amount: '60',
+    availableBefore: '100',
+    availableAfter: '40',
+  });
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/wallet-refunds`, {
+        method: 'POST',
+        headers: headers['refund-finance']!,
+        body: JSON.stringify(body),
+      })
+    ).status
+  ).toBe(400);
+  await request(requestBody(f.id, '40'));
+  expect((await post('wallet-refunds', { ...body, expectedReviewHash: review.hash })).status).toBe(
+    409
+  );
+  expect(
+    (
+      await http.pool.query('SELECT count(*)::int AS count FROM refunds WHERE invoice_id=$1', [
+        f.id,
+      ])
+    ).rows[0].count
+  ).toBe(1);
+});
+
+it('rejects a refund confirmation when the second-approval rule changes', async () => {
+  const f = await invoice('100');
+  const body = requestBody(f.id, '40');
+  const preview = await post('wallet-refunds/review', {
+    invoiceId: body.invoiceId,
+    amount: body.amount,
+    reason: body.reason,
+  });
+  expect(preview.status).toBe(200);
+  const review = (await preview.json()) as {
+    hash: string;
+    data: { refund: { approvalRequired: boolean } };
+  };
+  expect(review.data.refund.approvalRequired).toBe(false);
+  await threshold('30');
+  expect((await post('wallet-refunds', { ...body, expectedReviewHash: review.hash })).status).toBe(
+    409
+  );
+});
 
 it('shows the current refundable balance and resumable wallet requests to finance staff', async () => {
   const f = await invoice('100');
@@ -150,6 +234,9 @@ it('posts partial and full refunds once and links their original payment evidenc
   const refund = await request(body),
     replay = await request(body);
   expect(replay.id).toBe(refund.id);
+  expect(
+    (await post('wallet-refunds', { ...body, expectedReviewHash: 'b'.repeat(64) })).status
+  ).toBe(409);
   expect(refund.approvalRequestId).toBeNull();
   expect(refund.transaction).toBeNull();
   expect((await decide(refund.id, 'process')).status).toBe(409);
@@ -192,6 +279,10 @@ it('posts partial and full refunds once and links their original payment evidenc
   expect(audit[0].metadata.paymentSources).toEqual([
     expect.objectContaining({ source: 'bank_receipt', amount: '100' }),
   ]);
+  expect(audit[0].metadata.financialReview).toMatchObject({
+    hash: reviewHashes.get(`wallet-refunds:${body.idempotencyKey}`),
+    data: { refund: { amount: '40', availableBefore: '100', availableAfter: '60' } },
+  });
   const next = await request(requestBody(f.id, '60'));
   expect((await decide(next.id, 'approve')).status).toBe(200);
   expect((await decide(next.id, 'process')).status).toBe(200);

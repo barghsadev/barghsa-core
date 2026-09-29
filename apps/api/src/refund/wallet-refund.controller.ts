@@ -20,7 +20,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { z } from 'zod';
-import { refundUuid, refundRequestSchema, refundDecisionSchema } from './refund-validation.js';
+import {
+  refundUuid,
+  refundRequestSchema,
+  refundReviewSchema,
+  refundDecisionSchema,
+} from './refund-validation.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
@@ -61,13 +66,38 @@ export class WalletRefundController {
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
     return this.refunds.refundsForInvoice(id.data, req.session, 'wallet', cursor.data);
   }
+  @Post('review')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Preview the authoritative wallet refund request and confirmation hash',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['invoiceId', 'amount', 'reason'],
+      properties: {
+        invoiceId: { type: 'string', format: 'uuid' },
+        amount: { type: 'string', pattern: '^[0-9]{1,19}$' },
+        reason: { type: 'string', minLength: 1, maxLength: 1000 },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Authoritative refund review with confirmation hash' })
+  async review(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    this.authorize(req);
+    const parsed = refundReviewSchema.safeParse(body);
+    if (!parsed.success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
+    return this.refunds.reviewRequest(parsed.data, req.session, 'wallet');
+  }
   @Post()
   @RequiresStepUp()
   @ApiOperation({ summary: 'Request an invoice refund to the customer wallet' })
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['invoiceId', 'amount', 'idempotencyKey', 'reason'],
+      required: ['invoiceId', 'amount', 'idempotencyKey', 'reason', 'expectedReviewHash'],
       additionalProperties: false,
       properties: {
         invoiceId: { type: 'string', format: 'uuid' },
@@ -78,6 +108,7 @@ export class WalletRefundController {
         },
         idempotencyKey: { type: 'string', format: 'uuid' },
         reason: { type: 'string', minLength: 1, maxLength: 1000 },
+        expectedReviewHash: { type: 'string', pattern: '^[a-f0-9]{64}$' },
       },
     },
   })

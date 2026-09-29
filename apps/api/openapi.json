@@ -6426,6 +6426,10 @@
                     "pattern": "^[0-9]{1,19}$",
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "type": "string"
@@ -6444,7 +6448,8 @@
                   "invoiceId",
                   "amount",
                   "idempotencyKey",
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -6463,6 +6468,57 @@
           }
         ],
         "summary": "Request an invoice refund by external bank transfer",
+        "tags": [
+          "Admin · External bank refunds"
+        ]
+      }
+    },
+    "/api/admin/external-refunds/review": {
+      "post": {
+        "operationId": "ExternalRefundController_review",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "amount": {
+                    "pattern": "^[0-9]{1,19}$",
+                    "type": "string"
+                  },
+                  "invoiceId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "invoiceId",
+                  "amount",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Authoritative refund review with confirmation hash"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the authoritative bank refund request and confirmation hash",
         "tags": [
           "Admin · External bank refunds"
         ]
@@ -13597,6 +13653,10 @@
                     "pattern": "^[0-9]{1,19}$",
                     "type": "string"
                   },
+                  "expectedReviewHash": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
                   "idempotencyKey": {
                     "format": "uuid",
                     "type": "string"
@@ -13615,7 +13675,8 @@
                   "invoiceId",
                   "amount",
                   "idempotencyKey",
-                  "reason"
+                  "reason",
+                  "expectedReviewHash"
                 ],
                 "type": "object"
               }
@@ -13663,6 +13724,57 @@
           }
         ],
         "summary": "List unresolved contract refund obligations for finance follow-up",
+        "tags": [
+          "Admin · Wallet refunds"
+        ]
+      }
+    },
+    "/api/admin/wallet-refunds/review": {
+      "post": {
+        "operationId": "WalletRefundController_review",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "amount": {
+                    "pattern": "^[0-9]{1,19}$",
+                    "type": "string"
+                  },
+                  "invoiceId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "invoiceId",
+                  "amount",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Authoritative refund review with confirmation hash"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview the authoritative wallet refund request and confirmation hash",
         "tags": [
           "Admin · Wallet refunds"
         ]

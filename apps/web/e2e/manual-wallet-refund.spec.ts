@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { en, fa } from '../../../packages/i18n/src/admin-ui';
 import { t as appText } from '../../../packages/i18n/src/app';
+import { refundReviewFixture } from './refund-review-fixture';
 
 const invoiceId = '11111111-1111-4111-8111-111111111111';
 const refundId = '22222222-2222-4222-8222-222222222222';
@@ -76,12 +77,18 @@ for (const locale of ['en', 'fa'] as const)
         },
       })
     );
+    await page.route('**/api/admin/wallet-refunds/review', (route) => {
+      const body = route.request().postDataJSON();
+      expect(body).toEqual({ invoiceId, amount: '40', reason: 'Customer return' });
+      return route.fulfill({ json: refundReviewFixture(invoiceId, 'wallet', '40', body.reason) });
+    });
     await page.route('**/api/admin/wallet-refunds', (route) => {
       expect(route.request().postDataJSON()).toMatchObject({
         invoiceId,
         amount: '40',
         reason: 'Customer return',
         idempotencyKey: expect.any(String),
+        expectedReviewHash: 'a'.repeat(64),
       });
       state = 'Requested';
       actions.push('request');

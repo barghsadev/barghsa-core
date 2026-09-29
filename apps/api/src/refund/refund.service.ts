@@ -16,6 +16,7 @@ import {
 import { createHash } from 'node:crypto';
 import { v7 as uuidv7 } from 'uuid';
 import type { PoolClient } from 'pg';
+import type { RefundRequestReview, RefundRequestReviewData } from '@barghsa/shared/finance';
 import { getDbPool, type RefundTransaction } from '@barghsa/db';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock.js';
@@ -28,6 +29,8 @@ import { isInvoiceState } from '../invoice/invoice-state.model.js';
 import { loadCustomerInvoiceActivity } from '../invoice/customer-invoice-activity.js';
 import { notifyRefundOutcome } from './refund-notifications.js';
 import { assertRefundTransition, type RefundState } from './refund-state.model.js';
+import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
+import { readInvoiceFinancialDetails } from '../finance/invoice-review.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 interface InvoiceRow {
@@ -55,6 +58,8 @@ export interface RefundRequest {
   amount: string;
   idempotencyKey: string;
   reason: string;
+  /** Required at staff HTTP boundaries; internal automatic refund flows remain transactional. */
+  expectedReviewHash?: string;
 }
 export interface RefundDto {
   id: string;
@@ -88,7 +93,82 @@ export interface RefundDto {
  */
 @Injectable()
 export class RefundService {
-  constructor(private readonly invoices: InvoiceStateMachineService) {}
+  constructor(
+    private readonly invoices: InvoiceStateMachineService,
+    private readonly snapshots: ReviewSnapshotService
+  ) {}
+
+  async reviewRequest(
+    input: Pick<RefundRequest, 'invoiceId' | 'amount' | 'reason'>,
+    actor: Actor,
+    destination: 'wallet' | 'external_bank'
+  ): Promise<RefundRequestReview> {
+    const amount = this.amount(input.amount);
+    const reason = this.reason(input.reason);
+    return this.transaction(
+      input.invoiceId,
+      actor,
+      (client, invoice, archived) =>
+        this.requestReview(client, invoice, archived, amount, reason, destination),
+      undefined,
+      false
+    );
+  }
+
+  private amount(value: string): string {
+    if (!/^\d{1,19}$/.test(value) || BigInt(value) <= 0n || BigInt(value) > 9223372036854775807n)
+      throw new BadRequestException('Refund amount must be positive int8 IRR');
+    return BigInt(value).toString();
+  }
+
+  private async requestReview(
+    client: PoolClient,
+    invoice: InvoiceRow,
+    archived: boolean,
+    amount: string,
+    reason: string,
+    destination: 'wallet' | 'external_bank'
+  ): Promise<RefundRequestReview> {
+    assertWalletProfileWritable({ id: invoice.profile_id, archived });
+    this.refundableInvoice(invoice);
+    const reserved = (
+      await client.query<{ amount: string }>(
+        "SELECT COALESCE(SUM(amount),0)::text AS amount FROM refunds WHERE invoice_id=$1 AND state NOT IN ('Completed','Rejected','Cancelled')",
+        [invoice.id]
+      )
+    ).rows[0]!.amount;
+    const available =
+      BigInt(invoice.paid_amount) - BigInt(invoice.refunded_amount) - BigInt(reserved);
+    if (BigInt(amount) > available)
+      throw new ConflictException('Refund exceeds the available paid balance');
+    const invoiceDetails = await readInvoiceFinancialDetails(
+      client,
+      invoice.id,
+      invoice.profile_id,
+      0n
+    );
+    const data: RefundRequestReviewData = {
+      ...invoiceDetails,
+      refund: {
+        destination,
+        amount,
+        reason,
+        refundedBefore: String(invoice.refunded_amount),
+        reservedBefore: reserved,
+        availableBefore: available.toString(),
+        availableAfter: (available - BigInt(amount)).toString(),
+        approvalRequired: await this.requiresApproval(client, amount),
+      },
+    };
+    return this.snapshots.create(
+      {
+        action: `refund.${destination}.request`,
+        profileId: invoice.profile_id,
+        resourceId: invoice.id,
+      },
+      data
+    );
+  }
 
   async refundsForInvoice(
     invoiceId: string,
@@ -198,13 +278,7 @@ export class RefundService {
     destination: 'wallet' | 'external_bank' = 'wallet',
     transaction?: PoolClient
   ): Promise<RefundDto> {
-    if (
-      !/^\d{1,19}$/.test(input.amount) ||
-      BigInt(input.amount) <= 0n ||
-      BigInt(input.amount) > 9223372036854775807n
-    )
-      throw new BadRequestException('Refund amount must be positive int8 IRR');
-    const amount = BigInt(input.amount).toString();
+    const amount = this.amount(input.amount);
     const reason = this.reason(input.reason);
     const key = `${destination}-refund:${input.idempotencyKey}`;
     const fingerprint = createHash('sha256')
@@ -223,13 +297,21 @@ export class RefundService {
         ).rows[0];
         if (existing) {
           const saved = (
-            await client.query<{ fingerprint: string }>(
-              "SELECT metadata::jsonb->>'fingerprint' AS fingerprint FROM audit_log WHERE event='refund.requested' AND metadata::jsonb->>'refundId'=$1 ORDER BY created_at,id LIMIT 1",
+            await client.query<{
+              metadata: { fingerprint: string; financialReview?: RefundRequestReview };
+            }>(
+              "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='refund.requested' AND metadata::jsonb->>'refundId'=$1 ORDER BY created_at,id LIMIT 1",
               [existing.id]
             )
           ).rows[0];
-          if (saved?.fingerprint !== fingerprint)
+          if (saved?.metadata.fingerprint !== fingerprint)
             throw new ConflictException('Refund idempotency key belongs to a different request');
+          if (input.expectedReviewHash)
+            this.snapshots.assertStored(saved.metadata, input.expectedReviewHash, {
+              action: `refund.${destination}.request`,
+              profileId: invoice.profile_id,
+              resourceId: invoice.id,
+            });
           // A policy change can require a new review for an existing unpaid request.
           if (
             ['Requested', 'Approved'].includes(existing.state) &&
@@ -241,19 +323,16 @@ export class RefundService {
           }
           return this.dto(client, existing);
         }
-        assertWalletProfileWritable({ id: invoice.profile_id, archived });
-        this.refundableInvoice(invoice);
-        const reserved = (
-          await client.query<{ amount: string }>(
-            "SELECT COALESCE(SUM(amount),0)::text AS amount FROM refunds WHERE invoice_id=$1 AND state NOT IN ('Completed','Rejected','Cancelled')",
-            [invoice.id]
-          )
-        ).rows[0]!.amount;
-        if (
-          BigInt(amount) >
-          BigInt(invoice.paid_amount) - BigInt(invoice.refunded_amount) - BigInt(reserved)
-        )
-          throw new ConflictException('Refund exceeds the available paid balance');
+        const financialReview = await this.requestReview(
+          client,
+          invoice,
+          archived,
+          amount,
+          reason,
+          destination
+        );
+        if (input.expectedReviewHash)
+          this.snapshots.assertConfirmed(financialReview, input.expectedReviewHash);
         const row = (
           await client.query<RefundRow>(
             'INSERT INTO refunds(invoice_id,profile_id,amount,destination,staff_id,idempotency_key) VALUES ($1,$2,$3,$6,$4,$5) RETURNING *',
@@ -269,6 +348,7 @@ export class RefundService {
           fingerprint,
           paymentSources,
           legacyPaymentSourcesUnavailable: paymentSources.length === 0,
+          financialReview,
         });
         if (await this.requiresApproval(client, amount))
           await this.createApproval(client, row, actor, ip, reason);
@@ -541,7 +621,8 @@ export class RefundService {
     invoiceId: string,
     actor: Actor,
     work: (client: PoolClient, invoice: InvoiceRow, archived: boolean) => Promise<T>,
-    transaction?: PoolClient
+    transaction?: PoolClient,
+    stepUp = true
   ): Promise<T> {
     const client = transaction ?? (await getDbPool().connect());
     try {
@@ -555,7 +636,8 @@ export class RefundService {
       const profile = await lockWalletProfile(client, 'profile', owner.profile_id);
       await lockDualApprovalThreshold(client, 'read');
       await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
-      await requireSessionStepUp(client, actor);
+      if (stepUp) await requireSessionStepUp(client, actor);
+      else await requireCurrentSession(client, actor);
       const invoice = (
         await client.query<InvoiceRow>(
           'SELECT id,profile_id,state,adjustment_kind,paid_amount,refunded_amount FROM invoices WHERE id=$1 FOR UPDATE',
@@ -565,7 +647,8 @@ export class RefundService {
       if (!invoice || invoice.profile_id !== profile.id)
         throw new ConflictException('Invoice ownership changed');
       const result = await work(client, invoice, profile.archived);
-      await requireSessionStepUp(client, actor);
+      if (stepUp) await requireSessionStepUp(client, actor);
+      else await requireCurrentSession(client, actor);
       if (!transaction) await client.query('COMMIT');
       return result;
     } catch (error) {

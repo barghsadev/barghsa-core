@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
+import { parseRefundRequestReview } from '@barghsa/shared/finance';
 import {
   Button,
   Card,
@@ -14,6 +15,8 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
+import { withCsrf } from '../lib/csrf.js';
+import { invoiceFinancialReviewRows } from './InvoiceFinancialReviewRows.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 interface InvoiceBalance {
@@ -128,6 +131,8 @@ export function RefundPanel({
   const [references, setReferences] = useState<Record<string, string>>({});
   const [action, setAction] = useState<TeamAction | null>(null);
   const [actionSummary, setActionSummary] = useState<React.ReactNode>(null);
+  const [reviewBusy, setReviewBusy] = useState(false);
+  const [reviewError, setReviewError] = useState<'conflict' | 'forbidden' | 'error' | null>(null);
 
   useEffect(() => {
     if (!isInvoiceUuid(selectedInvoiceId)) return;
@@ -193,7 +198,7 @@ export function RefundPanel({
     setRevision((value) => value + 1);
   }
 
-  function request() {
+  async function request() {
     if (
       !invoice?.requestable ||
       !validAmount(amount, invoice.availableAmount) ||
@@ -203,33 +208,100 @@ export function RefundPanel({
       return;
     const requestedAmount = BigInt(amount).toString();
     const requestedReason = reason.trim();
-    setAction({
-      title: word('request'),
-      description: word('confirmRequest'),
-      path: `/api/admin/${path}`,
-      method: 'POST',
-      body: {
-        invoiceId: invoice.invoiceId,
-        amount: requestedAmount,
-        reason: requestedReason,
-        idempotencyKey: crypto.randomUUID(),
-      },
-      conflictMessage: word('conflict'),
-      forbiddenMessage: word('forbidden'),
-    });
-    setActionSummary(
-      <FinancialReviewSummary
-        title={word('review')}
-        rows={[
-          { id: 'invoice', label: word('invoiceId'), value: invoice.invoiceId },
-          { id: 'paid', label: word('paid'), value: numbers.money(invoice.paidAmount) },
-          { id: 'refunded', label: word('refunded'), value: numbers.money(invoice.refundedAmount) },
-          { id: 'reserved', label: word('reserved'), value: numbers.money(invoice.reservedAmount) },
-          { id: 'reason', label: word('reason'), value: requestedReason },
-        ]}
-        total={{ label: word('requestAmount'), value: numbers.money(requestedAmount) }}
-      />
-    );
+    setReviewBusy(true);
+    setReviewError(null);
+    try {
+      const response = await fetch(`/api/admin/${path}/review`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+          invoiceId: invoice.invoiceId,
+          amount: requestedAmount,
+          reason: requestedReason,
+        }),
+      });
+      if (response.status === 403) {
+        setReviewError('forbidden');
+        return;
+      }
+      if (response.status === 409) {
+        setReviewError('conflict');
+        refresh();
+        return;
+      }
+      if (!response.ok) throw new Error('Refund review unavailable');
+      const review = parseRefundRequestReview(await response.json());
+      if (
+        !review ||
+        review.scope.resourceId !== invoice.invoiceId ||
+        review.data.refund.destination !== destination ||
+        review.data.refund.amount !== requestedAmount ||
+        review.data.refund.reason !== requestedReason
+      )
+        throw new Error('Invalid refund review');
+      setAction({
+        title: word('request'),
+        description: word('confirmRequest'),
+        path: `/api/admin/${path}`,
+        method: 'POST',
+        body: {
+          invoiceId: invoice.invoiceId,
+          amount: requestedAmount,
+          reason: requestedReason,
+          idempotencyKey: crypto.randomUUID(),
+          expectedReviewHash: review.hash,
+        },
+        conflictMessage: word('conflict'),
+        forbiddenMessage: word('forbidden'),
+      });
+      setActionSummary(
+        <FinancialReviewSummary
+          title={word('review')}
+          rows={[
+            ...invoiceFinancialReviewRows(review.data, locale, numbers, (value) =>
+              new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              }).format(new Date(value))
+            ),
+            {
+              id: 'refunded',
+              label: word('refunded'),
+              value: numbers.money(review.data.refund.refundedBefore),
+            },
+            {
+              id: 'reserved',
+              label: word('reserved'),
+              value: numbers.money(review.data.refund.reservedBefore),
+            },
+            {
+              id: 'available',
+              label: word('available'),
+              value: numbers.money(review.data.refund.availableBefore),
+            },
+            {
+              id: 'availableAfter',
+              label: word('availableAfter'),
+              value: numbers.money(review.data.refund.availableAfter),
+            },
+            {
+              id: 'approval',
+              label: word('approvalRule'),
+              value: word(
+                review.data.refund.approvalRequired ? 'approvalRequired' : 'approvalNotRequired'
+              ),
+            },
+            { id: 'reason', label: word('reason'), value: review.data.refund.reason },
+          ]}
+          total={{ label: word('requestAmount'), value: numbers.money(review.data.refund.amount) }}
+        />
+      );
+    } catch {
+      setReviewError('error');
+    } finally {
+      setReviewBusy(false);
+    }
   }
 
   function decide(
@@ -345,11 +417,15 @@ export function RefundPanel({
                 />
               </div>
               <Button
-                disabled={!validAmount(amount, invoice.availableAmount) || !reason.trim()}
-                onClick={request}
+                disabled={
+                  reviewBusy || !validAmount(amount, invoice.availableAmount) || !reason.trim()
+                }
+                onClick={() => void request()}
               >
                 {word('request')}
               </Button>
+              {reviewBusy && <p role="status">{word('loading')}</p>}
+              {reviewError && <p role="alert">{word(reviewError)}</p>}
             </div>
           )}
           {!invoice.requestable && <p role="status">{word('notRequestable')}</p>}
