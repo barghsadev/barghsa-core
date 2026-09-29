@@ -82,7 +82,18 @@ jobs:
         run: python3 -m unittest discover -s kanban/scripts -p 'test_*.py'
       - run: pnpm install --frozen-lockfile
       - name: Scan dependencies for high and critical advisories
-        run: pnpm audit --audit-level=high --json > "$RUNNER_TEMP/dependency-audit.json"
+        run: |
+          pnpm audit --audit-level=high --json > "$RUNNER_TEMP/dependency-audit.json" || true
+          node -e '
+            const fs = require("node:fs");
+            const report = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+            const counts = report.metadata?.vulnerabilities;
+            if (!report.advisories || !Number.isInteger(counts?.high) || !Number.isInteger(counts?.critical)) {
+              throw new Error("Dependency audit did not return a valid report");
+            }
+            console.log(`Dependency audit: ${counts.high} high, ${counts.critical} critical`);
+            if (counts.high + counts.critical > 0) process.exitCode = 1;
+          ' "$RUNNER_TEMP/dependency-audit.json"
       - name: Upload dependency scan
         if: always()
         uses: actions/upload-artifact@v4

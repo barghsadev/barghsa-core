@@ -18,11 +18,11 @@ only port 8080.
 3. Set these **Liara app environment variables**. Generate new random values;
    do not commit or paste them in tickets:
 
-   | Variable | Purpose |
-   | --- | --- |
-   | `POSTGRES_PASSWORD` | Local database user password |
-   | `S3_ACCESS_KEY_ID` | Local S3 access key |
-   | `S3_SECRET_ACCESS_KEY` | Local S3 secret key |
+   | Variable                       | Purpose                        |
+   | ------------------------------ | ------------------------------ |
+   | `POSTGRES_PASSWORD`            | Local database user password   |
+   | `S3_ACCESS_KEY_ID`             | Local S3 access key            |
+   | `S3_SECRET_ACCESS_KEY`         | Local S3 secret key            |
    | `AUTH_DELIVERY_ENCRYPTION_KEY` | Existing app encryption secret |
 
    Configure any other required app integrations (payment, SMS, email) in the
