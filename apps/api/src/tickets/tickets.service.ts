@@ -27,7 +27,7 @@ export interface TicketRow {
   userId: string;
   subject: string;
   body: string;
-  category: 'general' | 'billing' | 'orders';
+  category: 'general' | 'billing' | 'orders' | 'privacy';
   profileId: string | null;
   relatedEntityType: string | null;
   relatedEntityId: string | null;
@@ -87,6 +87,20 @@ export interface PaginatedResult<T> {
   page: number;
   limit: number;
   totalPages: number;
+}
+
+export type PrivacyRequestType = 'export' | 'closure';
+export interface ClosureBlocker {
+  code:
+    | 'legalHold'
+    | 'unpaidInvoice'
+    | 'pendingRefund'
+    | 'walletBalance'
+    | 'activeContract'
+    | 'securityReview';
+  count: number;
+  owner: 'legal' | 'finance' | 'customer' | 'contracts' | 'privacy';
+  nextStep: string;
 }
 
 function mapRow(row: Record<string, unknown>): TicketRow {
@@ -290,6 +304,203 @@ export class TicketsService {
       .map((user) => ({ id: user.id as string, name: user.name as string }));
   }
 
+  private async activeOwnedProfile(client: PoolClient, userId: string): Promise<string> {
+    const result = await client.query<{ id: string }>(
+      `SELECT p.id FROM profiles p
+       JOIN users u ON u.user_id=p.user_id AND u.disabled_at IS NULL
+       LEFT JOIN user_profile_contexts c ON c.user_id=u.user_id
+       WHERE p.user_id=$1 AND NOT p.archived
+         AND ((c.user_id IS NULL AND p.is_default) OR p.id=c.profile_id)
+       FOR UPDATE OF p`,
+      [userId]
+    );
+    if (!result.rows[0]) throw new HttpException('Active owned profile required', 403);
+    return result.rows[0].id;
+  }
+
+  private async closureBlockers(client: PoolClient, profileId: string): Promise<ClosureBlocker[]> {
+    const counts = (
+      await client.query<{
+        legal_holds: number;
+        unpaid_invoices: number;
+        pending_refunds: number;
+        wallet_balances: number;
+        active_contracts: number;
+      }>(
+        `SELECT
+          GREATEST(
+            (SELECT count(*)::int FROM document_legal_holds h
+             WHERE h.released_at IS NULL AND (h.expires_at IS NULL OR h.expires_at>now())
+               AND (h.profile_id=$1 OR EXISTS (
+                 SELECT 1 FROM documents d WHERE d.id=h.document_id AND d.profile_id=$1))),
+            (SELECT CASE WHEN EXISTS (
+              SELECT 1 FROM documents d WHERE d.profile_id=$1 AND document_is_held(d.id)
+            ) THEN 1 ELSE 0 END)
+          ) AS legal_holds,
+          (SELECT count(*)::int FROM invoices WHERE profile_id=$1
+           AND state IN ('Unpaid','Overdue','PaymentUnderReview','PartiallyFunded')) AS unpaid_invoices,
+          (SELECT count(*)::int FROM refunds WHERE profile_id=$1
+           AND state IN ('Requested','Approved','Processing','Failed')) AS pending_refunds,
+          (SELECT count(*)::int FROM wallets WHERE profile_id=$1
+           AND (posted_balance<>0 OR reserved_balance<>0)) AS wallet_balances,
+          (SELECT count(*)::int FROM contracts WHERE profile_id=$1
+           AND state NOT IN ('Completed','Cancelled')) AS active_contracts`,
+        [profileId]
+      )
+    ).rows[0]!;
+    return [
+      { code: 'legalHold', count: counts.legal_holds, owner: 'legal', nextStep: 'contactSupport' },
+      {
+        code: 'unpaidInvoice',
+        count: counts.unpaid_invoices,
+        owner: 'finance',
+        nextStep: 'payInvoice',
+      },
+      {
+        code: 'pendingRefund',
+        count: counts.pending_refunds,
+        owner: 'finance',
+        nextStep: 'resolveRefund',
+      },
+      {
+        code: 'walletBalance',
+        count: counts.wallet_balances,
+        owner: 'customer',
+        nextStep: 'settleWallet',
+      },
+      {
+        code: 'activeContract',
+        count: counts.active_contracts,
+        owner: 'contracts',
+        nextStep: 'completeContract',
+      },
+      { code: 'securityReview', count: 1, owner: 'privacy', nextStep: 'staffReview' },
+    ];
+  }
+
+  async lifecyclePreview(actor: TicketActor) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const profileId = await this.activeOwnedProfile(client, actor.userId);
+      const blockers = await this.closureBlockers(client, profileId);
+      const requests = (
+        await client.query<{
+          id: string;
+          privacy_request_type: PrivacyRequestType;
+          status: TicketRow['status'];
+          created_at: Date;
+        }>(
+          `SELECT id,privacy_request_type,status,created_at FROM tickets
+           WHERE profile_id=$1 AND user_id=$2 AND privacy_request_type IS NOT NULL
+           ORDER BY created_at DESC,id DESC LIMIT 10`,
+          [profileId, actor.userId]
+        )
+      ).rows.map((row) => ({
+        ticketId: row.id,
+        type: row.privacy_request_type,
+        status: row.status,
+        createdAt: row.created_at,
+      }));
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return { profileId, blockers, requests };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async createLifecycleRequest(
+    actor: TicketActor,
+    type: PrivacyRequestType,
+    idempotencyKey: string,
+    locale: 'fa' | 'en'
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      const profileId = await this.activeOwnedProfile(client, actor.userId);
+      const previous = (
+        await client.query<{
+          id: string;
+          profile_id: string;
+          privacy_request_type: PrivacyRequestType;
+        }>(
+          `SELECT id,profile_id,privacy_request_type FROM tickets
+           WHERE user_id=$1 AND privacy_request_key=$2`,
+          [actor.userId, idempotencyKey]
+        )
+      ).rows[0];
+      if (previous && (previous.profile_id !== profileId || previous.privacy_request_type !== type))
+        throw new HttpException('Idempotency key belongs to a different request', 409);
+      if (previous) {
+        await requireCurrentSession(client, actor);
+        await client.query('COMMIT');
+        return { ticketId: previous.id, profileId, type, created: false };
+      }
+      const ticketId = randomUUID();
+      const assignment = await this.assignmentService.choose(
+        client,
+        'ticket',
+        ticketId,
+        actor.userId,
+        ['privacy'],
+        [actor.userId]
+      );
+      const ticket = mapRow(
+        (
+          await client.query(
+            `INSERT INTO tickets(id,user_id,profile_id,subject,body,category,priority,status,
+             assigned_to,assigned_team_id,privacy_request_type,privacy_request_key)
+           VALUES($1,$2,$3,$4,$5,'privacy','normal',
+             CASE WHEN $6::text IS NULL THEN 'open' ELSE 'in_progress' END,$6,$7,$8,$9)
+           RETURNING *`,
+            [
+              ticketId,
+              actor.userId,
+              profileId,
+              t(`tickets.privacy.${type}.subject`, locale),
+              t(`tickets.privacy.${type}.body`, locale),
+              assignment?.userId ?? null,
+              assignment?.teamId ?? null,
+              type,
+              idempotencyKey,
+            ]
+          )
+        ).rows[0]
+      );
+      const blockers = type === 'closure' ? await this.closureBlockers(client, profileId) : [];
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata)
+         VALUES($1,$2,'profile_lifecycle_requested',$3::jsonb)`,
+        [
+          randomUUID(),
+          actor.userId,
+          JSON.stringify({
+            ticketId,
+            profileId,
+            type,
+            blockers: blockers
+              .filter((blocker) => blocker.count > 0)
+              .map(({ code, count }) => ({ code, count })),
+          }),
+        ]
+      );
+      await this.notifyTicket(client, ticket, actor.userId, 'created');
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return { ticketId, profileId, type, created: true };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   /**
    * Create a new support ticket.
    *
@@ -306,7 +517,7 @@ export class TicketsService {
       .object({
         subject: z.string().trim().min(1).max(200),
         body: z.string().trim().min(1).max(10000),
-        category: z.enum(['general', 'billing', 'orders']).default('general'),
+        category: z.enum(['general', 'billing', 'orders', 'privacy']).default('general'),
         profileId: z.uuid().nullable().optional(),
         relatedEntityType: z.enum(['order', 'contract', 'invoice']).nullable().optional(),
         relatedEntityId: z.string().trim().min(1).max(512).nullable().optional(),

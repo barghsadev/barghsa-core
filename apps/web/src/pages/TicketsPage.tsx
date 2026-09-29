@@ -15,7 +15,7 @@ interface Ticket {
   id: string;
   subject: string;
   body: string;
-  category?: 'general' | 'billing' | 'orders';
+  category?: 'general' | 'billing' | 'orders' | 'privacy';
   status: Status;
   priority: string;
   profileId: string | null;
@@ -446,7 +446,7 @@ function Tickets({ staff }: { staff: boolean }) {
                 value={category}
                 onChange={(event) => setCategory(event.target.value)}
               >
-                {['general', 'billing', 'orders'].map((value) => (
+                {['general', 'billing', 'orders', 'privacy'].map((value) => (
                   <option key={value} value={value}>
                     {text(`category.${value}`)}
                   </option>

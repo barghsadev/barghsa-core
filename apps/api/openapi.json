@@ -24584,7 +24584,8 @@
                     "enum": [
                       "general",
                       "billing",
-                      "orders"
+                      "orders",
+                      "privacy"
                     ],
                     "type": "string"
                   },
@@ -24647,6 +24648,81 @@
           }
         },
         "summary": "Create a support ticket",
+        "tags": [
+          "Tickets"
+        ]
+      }
+    },
+    "/api/tickets/lifecycle-preview": {
+      "get": {
+        "operationId": "TicketsController_lifecyclePreview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Live blockers and recent requests for the active owned profile"
+          },
+          "403": {
+            "description": "No active owned profile"
+          }
+        },
+        "summary": "Preview closure blockers for the active owned profile",
+        "tags": [
+          "Tickets"
+        ]
+      }
+    },
+    "/api/tickets/lifecycle-requests": {
+      "post": {
+        "operationId": "TicketsController_createLifecycleRequest",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "idempotencyKey": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "locale": {
+                    "default": "fa",
+                    "enum": [
+                      "fa",
+                      "en"
+                    ],
+                    "type": "string"
+                  },
+                  "type": {
+                    "enum": [
+                      "export",
+                      "closure"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "idempotencyKey"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Privacy support request created or replayed"
+          },
+          "403": {
+            "description": "No active owned profile"
+          },
+          "409": {
+            "description": "Idempotency key belongs to another request"
+          }
+        },
+        "summary": "Request a profile data export or closure through support",
         "tags": [
           "Tickets"
         ]

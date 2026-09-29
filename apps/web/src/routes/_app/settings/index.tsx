@@ -372,6 +372,13 @@ function SettingsIndexPage() {
               <MapPinIcon className="h-4 w-4 text-muted-foreground" />
               <span>{t('settings.addresses.title', locale)}</span>
             </a>
+            <a
+              href="/settings/privacy"
+              className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50 transition-colors"
+            >
+              <ShieldAlertIcon className="h-4 w-4 text-muted-foreground" />
+              <span>{t('settings.privacy.title', locale)}</span>
+            </a>
           </div>
         </CardContent>
       </Card>

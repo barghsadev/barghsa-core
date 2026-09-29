@@ -92,6 +92,7 @@ import { Route as AppSavingsOrderRouteImport } from './routes/_app/savings.order
 import { Route as AppSavingsOrdersRouteImport } from './routes/_app/savings.orders'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppSettingsAddressesRouteImport } from './routes/_app/settings/addresses'
+import { Route as AppSettingsPrivacyRouteImport } from './routes/_app/settings/privacy'
 import { Route as AppSettingsProfileRouteImport } from './routes/_app/settings/profile'
 import { Route as AppSettingsSecurityRouteImport } from './routes/_app/settings/security'
 import { Route as AppSettingsTeamRouteImport } from './routes/_app/settings/team'
@@ -531,6 +532,11 @@ const AppSettingsAddressesRoute = AppSettingsAddressesRouteImport.update({
   path: '/settings/addresses',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsPrivacyRoute = AppSettingsPrivacyRouteImport.update({
+  id: '/settings/privacy',
+  path: '/settings/privacy',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsProfileRoute = AppSettingsProfileRouteImport.update({
   id: '/settings/profile',
   path: '/settings/profile',
@@ -716,6 +722,7 @@ export interface FileRoutesByFullPath {
   '/savings/order': typeof AppSavingsOrderRoute
   '/savings/orders': typeof AppSavingsOrdersRouteWithChildren
   '/settings/addresses': typeof AppSettingsAddressesRoute
+  '/settings/privacy': typeof AppSettingsPrivacyRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
   '/settings/team': typeof AppSettingsTeamRoute
@@ -812,6 +819,7 @@ export interface FileRoutesByTo {
   '/invoices/receipts': typeof AppInvoicesReceiptsRoute
   '/savings/order': typeof AppSavingsOrderRoute
   '/settings/addresses': typeof AppSettingsAddressesRoute
+  '/settings/privacy': typeof AppSettingsPrivacyRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
   '/settings/team': typeof AppSettingsTeamRoute
@@ -917,6 +925,7 @@ export interface FileRoutesById {
   '/_app/savings/order': typeof AppSavingsOrderRoute
   '/_app/savings/orders': typeof AppSavingsOrdersRouteWithChildren
   '/_app/settings/addresses': typeof AppSettingsAddressesRoute
+  '/_app/settings/privacy': typeof AppSettingsPrivacyRoute
   '/_app/settings/profile': typeof AppSettingsProfileRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
   '/_app/settings/team': typeof AppSettingsTeamRoute
@@ -1023,6 +1032,7 @@ export interface FileRouteTypes {
     | '/savings/order'
     | '/savings/orders'
     | '/settings/addresses'
+    | '/settings/privacy'
     | '/settings/profile'
     | '/settings/security'
     | '/settings/team'
@@ -1119,6 +1129,7 @@ export interface FileRouteTypes {
     | '/invoices/receipts'
     | '/savings/order'
     | '/settings/addresses'
+    | '/settings/privacy'
     | '/settings/profile'
     | '/settings/security'
     | '/settings/team'
@@ -1223,6 +1234,7 @@ export interface FileRouteTypes {
     | '/_app/savings/order'
     | '/_app/savings/orders'
     | '/_app/settings/addresses'
+    | '/_app/settings/privacy'
     | '/_app/settings/profile'
     | '/_app/settings/security'
     | '/_app/settings/team'
@@ -1848,6 +1860,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsAddressesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/privacy': {
+      id: '/_app/settings/privacy'
+      path: '/settings/privacy'
+      fullPath: '/settings/privacy'
+      preLoaderRoute: typeof AppSettingsPrivacyRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/profile': {
       id: '/_app/settings/profile'
       path: '/settings/profile'
@@ -2080,6 +2099,7 @@ interface AppRouteChildren {
   AppInvoicesInvoiceIdRoute: typeof AppInvoicesInvoiceIdRoute
   AppInvoicesReceiptsRoute: typeof AppInvoicesReceiptsRoute
   AppSettingsAddressesRoute: typeof AppSettingsAddressesRoute
+  AppSettingsPrivacyRoute: typeof AppSettingsPrivacyRoute
   AppSettingsProfileRoute: typeof AppSettingsProfileRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
   AppSettingsTeamRoute: typeof AppSettingsTeamRoute
@@ -2110,6 +2130,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppInvoicesInvoiceIdRoute: AppInvoicesInvoiceIdRoute,
   AppInvoicesReceiptsRoute: AppInvoicesReceiptsRoute,
   AppSettingsAddressesRoute: AppSettingsAddressesRoute,
+  AppSettingsPrivacyRoute: AppSettingsPrivacyRoute,
   AppSettingsProfileRoute: AppSettingsProfileRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,
   AppSettingsTeamRoute: AppSettingsTeamRoute,
