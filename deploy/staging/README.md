@@ -43,7 +43,8 @@ deploy/staging/deploy.sh
 
 The script builds four `linux/amd64` images, transfers them over SSH, uploads
 Compose and NGINX configuration, initializes root-only random staging secrets
-on first deployment, runs the release script, and checks HTTPS. Subsequent
+on first deployment, runs the release script, and checks HTTPS plus a private
+S3 write and public signed read. Subsequent
 releases preserve `/etc/barghsa/staging/runtime.env` and Docker volumes.
 
 On the server, view status and logs with:
@@ -71,8 +72,8 @@ providers also require their own settings in the app's admin UI.
 The initial runtime sets `BARGHSA_DISPOSABLE=true`: this staging server has
 no offsite backup destination. Docker volumes survive container and image
 releases, but losing this VPS loses PostgreSQL and uploaded objects. Do not
-put irreplaceable data here. Add an offsite encrypted backup target and test a
-restore before changing `BARGHSA_DISPOSABLE` to `false`.
+put irreplaceable data here. Add an offsite encrypted backup workflow and test
+a restore before changing the release guard for non-disposable staging.
 
 Check resource use with `docker stats`, `df -h`, and `docker system df`.
 ClamAV may take several minutes to download signatures on first boot. Keep

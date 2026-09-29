@@ -26,7 +26,7 @@ docker save "barghsa-app:$tag" "barghsa-web:$tag" "barghsa-postgres:$tag" "bargh
   | gzip -1 | ssh "${ssh_args[@]}" "$remote" 'gzip -d | docker load'
 
 ssh "${ssh_args[@]}" "$remote" 'mkdir -p /opt/barghsa/staging /etc/barghsa/staging /etc/nginx/snippets /etc/letsencrypt/renewal-hooks/deploy'
-scp "${scp_args[@]}" deploy/staging/compose.yml deploy/staging/postgres.conf "$remote:/opt/barghsa/staging/"
+scp "${scp_args[@]}" deploy/staging/compose.yml deploy/staging/postgres.conf deploy/staging/check-s3.py "$remote:/opt/barghsa/staging/"
 scp "${scp_args[@]}" deploy/staging/release.sh "$remote:/usr/local/sbin/barghsa-staging-release"
 scp "${scp_args[@]}" deploy/staging/init-runtime.sh "$remote:/usr/local/sbin/barghsa-staging-init-runtime"
 scp "${scp_args[@]}" deploy/staging/nginx-api-proxy.conf "$remote:/etc/nginx/snippets/barghsa-api-proxy.conf"
