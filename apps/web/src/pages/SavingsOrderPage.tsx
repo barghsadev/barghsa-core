@@ -1,6 +1,6 @@
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Card, CardContent } from '@barghsa/ui';
+import { Button, Card, CardContent, FinancialReviewSummary } from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { withCsrf } from '../lib/csrf.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
@@ -824,36 +824,38 @@ export function SavingsOrderPage() {
                     </div>
                   )}
                   {quote && (
-                    <div className="rounded-md border">
-                      <dl className="divide-y">
-                        {quote.lines.map((line) => (
-                          <div key={line.type} className="flex justify-between gap-3 p-3">
-                            <dt>{line.title[locale]}</dt>
-                            <dd>
-                              <bdi>{numbers.money(line.amountIrR)}</bdi>
-                            </dd>
-                          </div>
-                        ))}
-                        {(
-                          [
-                            ['subtotal', quote.subtotalIrR],
-                            ['discount', quote.discountIrR],
-                            ['vat', quote.vatIrR],
-                            ['total', quote.totalIrR],
-                          ] as const
-                        ).map(([key, value]) => (
-                          <div
-                            key={key}
-                            className={`flex justify-between gap-3 p-3 ${key === 'total' ? 'font-semibold' : ''}`}
-                          >
-                            <dt>{copy(key)}</dt>
-                            <dd>
-                              <bdi>{numbers.money(value)}</bdi>
-                            </dd>
-                          </div>
-                        ))}
-                      </dl>
-                    </div>
+                    <FinancialReviewSummary
+                      title={copy('stepReview')}
+                      rows={[
+                        ...quote.lines.map((line) => ({
+                          id: line.type,
+                          label: line.title[locale],
+                          value: (
+                            <>
+                              {numbers.money(line.amountIrR)}
+                              {(line.discountIrR !== '0' || line.vatIrR !== '0') && (
+                                <small className="block text-muted-foreground">
+                                  −{numbers.money(line.discountIrR)} · +{numbers.money(line.vatIrR)}{' '}
+                                  {copy('vat')}
+                                </small>
+                              )}
+                            </>
+                          ),
+                        })),
+                        {
+                          id: 'subtotal',
+                          label: copy('subtotal'),
+                          value: numbers.money(quote.subtotalIrR),
+                        },
+                        {
+                          id: 'discount',
+                          label: copy('discount'),
+                          value: numbers.money(quote.discountIrR),
+                        },
+                        { id: 'vat', label: copy('vat'), value: numbers.money(quote.vatIrR) },
+                      ]}
+                      total={{ label: copy('total'), value: numbers.money(quote.totalIrR) }}
+                    />
                   )}
                   <p className="text-sm">
                     {copy('walletBalance')}:{' '}

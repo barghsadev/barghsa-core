@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[Saving order financial review summary](batches/2026-09-29-saving-financial-review-summary.md) adds the shared accessible confirmation layout to the server-quoted saving order while preserving quote-digest submission. The wider cross-command financial review task remains partial.
+
 [Electricity order financial review summary](batches/2026-09-29-electricity-financial-review-summary.md) uses the shared accessible confirmation layout for simple and advanced server quotes while retaining exact quote-digest submission. This covers the electricity-order UI portion of the cross-command financial review task; the other command families remain open.
 
 [Main route payload budget](batches/2026-09-29-main-route-budget.md) removes staff-only date code and finance schemas from the eager customer path, loads toast rendering on feedback, and keeps navigation text in the shared dictionary. Customer purchase routes remain eager. All configured route and interaction budgets pass, including dashboard and electricity ordering; production Chromium electricity, saving and wallet journeys pass with current session fixtures.
