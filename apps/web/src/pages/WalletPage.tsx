@@ -10,7 +10,7 @@ import {
   parseBankReceiptTopUpAmountIrR,
   isValidWalletTopUpLimit,
   readOnlineTopUpLimitFromErrorBody,
-} from '@barghsa/shared/finance';
+} from '@barghsa/shared/finance/browser';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useReceiptAttachmentUpload } from '../hooks/useReceiptAttachmentUpload.js';

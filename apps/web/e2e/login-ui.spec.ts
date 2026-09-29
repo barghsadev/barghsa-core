@@ -16,6 +16,10 @@ for (const locale of ['fa', 'en'])
           route.fulfill({
             json: {
               appTitle: 'Barghsa',
+              appTitleFa: 'برقسا',
+              supportEmail: 'support@example.test',
+              supportPhone: '+982188888888',
+              supportMobile: '+989121234567',
               slogan: 'Account access',
               primaryColor: '#2563eb',
               secondaryColor: '#64748b',

@@ -2,6 +2,7 @@ export default {
   // Keep component module boundaries so consumers can drop unused primitives.
   entry: [
     'src/index.ts',
+    'src/sonner.ts',
     'src/direction-provider.ts',
     'src/components/**/*.tsx',
     '!src/**/*.test.tsx',

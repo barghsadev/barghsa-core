@@ -30,10 +30,19 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   let stageIndex = -1;
   let invoiceState = 'Unpaid';
   let contractState = 'AwaitingCustomerAcceptance';
+  let operatingContext: 'customer' | 'staff' = 'customer';
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
+    route.fulfill({
+      json: {
+        isStaff: true,
+        userId: 'buyer',
+        operatingContext,
+        canSwitchContext: true,
+        requiresTosAcceptance: false,
+      },
+    })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
@@ -387,6 +396,7 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
     submitForStaffReview: true,
   });
 
+  operatingContext = 'staff';
   await page.goto('/admin/saving-orders');
   await page.getByRole('button', { name: /Buyer.*Home saving plan/ }).click();
   await page.getByRole('button', { name: 'Approve request' }).click();
@@ -402,6 +412,7 @@ test('customer saves a saving order, submits the reviewed quote, and tracks fulf
   expect(staffActions).toMatchObject([
     { path: 'approve', body: { expectedVersionId: agreementVersionId } },
   ]);
+  operatingContext = 'customer';
   await page.goto(`/savings/orders/${savingOrderId}`);
   await expect(page.getByRole('list', { name: 'Fulfillment' })).toContainText('Product delivery');
   await expect(page.locator('li[aria-current="step"]')).toContainText('Product delivery');

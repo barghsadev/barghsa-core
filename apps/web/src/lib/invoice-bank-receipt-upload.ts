@@ -12,7 +12,7 @@ import {
   evaluateInvoiceBankReceiptClientFile,
   invoiceBankReceiptContentTypeFromName,
   parseInvoiceBankReceiptAmountIrR,
-} from '@barghsa/shared/finance';
+} from '@barghsa/shared/finance/browser';
 import { withCsrf } from './csrf.js';
 
 export { INVOICE_BANK_RECEIPT_FILE_ACCEPT };

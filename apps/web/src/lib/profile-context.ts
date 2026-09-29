@@ -1,10 +1,13 @@
 import { useSyncExternalStore } from 'react';
+import { toast } from './toast-api.js';
 
 let revision = 0;
 const listeners = new Set<() => void>();
 let channel: BroadcastChannel | undefined;
 
 function invalidate() {
+  // Keep a previous profile's feedback out of the newly scoped workspace.
+  toast.dismiss();
   revision += 1;
   for (const listener of listeners) listener();
 }

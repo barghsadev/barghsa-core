@@ -119,6 +119,16 @@
         "default": "./dist/cjs/finance/index.js"
       }
     },
+    "./finance/browser": {
+      "import": {
+        "types": "./dist/finance/browser.d.ts",
+        "default": "./dist/finance/browser.js"
+      },
+      "require": {
+        "types": "./dist/cjs/finance/browser.d.ts",
+        "default": "./dist/cjs/finance/browser.js"
+      }
+    },
     "./admin": {
       "import": {
         "types": "./dist/admin/index.d.ts",

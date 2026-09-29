@@ -2,7 +2,11 @@
 
 ## Current manual batch — September 29, 2026
 
-[Auth route payload budget](batches/2026-09-29-auth-route-budget.md) gives the production auth entry a small route tree, bringing login, registration, verification and password recovery under 150 KB while preserving the browser flows. Dashboard, electricity ordering and admin terms remain above their separate budgets.
+[Main route payload budget](batches/2026-09-29-main-route-budget.md) removes staff-only date code and finance schemas from the eager customer path, loads toast rendering on feedback, and keeps navigation text in the shared dictionary. Customer purchase routes remain eager. All configured route and interaction budgets pass, including dashboard and electricity ordering; production Chromium electricity, saving and wallet journeys pass with current session fixtures.
+
+[Admin terms interaction budget](batches/2026-09-29-admin-terms-interaction-budget.md) measures the lazy editor, publish preview and version viewer when used, bringing the initial admin terms route under its existing budget without relaxing the interaction limits.
+
+[Auth route payload budget](batches/2026-09-29-auth-route-budget.md) gives the production auth entry a small route tree, bringing login, registration, verification and password recovery under 150 KB while preserving the browser flows. The admin terms and main-route budgets are handled in the following batches.
 
 [Staff inbox in the admin workspace](batches/2026-09-29-staff-inbox-ui.md) adds a staff bell and full inbox, keeps navigation in the selected operating context, and verifies the bilingual staff/customer journey in five browser projects.
 

@@ -2,7 +2,7 @@ import { useAccountTime } from '../../../hooks/useAccountTime.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { createFileRoute } from '@tanstack/react-router';
-import { toast } from 'sonner';
+import { toast } from '../../../lib/toast-api.js';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { trustedDeviceText } from '@barghsa/i18n/trusted-devices';
 import {

@@ -6,11 +6,7 @@ import { datePickerAtTime, datePickerCalendarDate } from '@barghsa/ui';
  * datetime-local values use the saved account timezone; the API expects ISO-8601.
  */
 
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-export function isInvoiceUuid(value: string): boolean {
-  return UUID_RE.test(value.trim());
-}
+export { isInvoiceUuid } from './invoice-uuid.js';
 
 /**
  * True when the lookup field still identifies the invoice currently loaded

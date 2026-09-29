@@ -1,6 +1,6 @@
 import { createFileRoute, useSearch } from '@tanstack/react-router';
 import { WalletPage } from '../../pages/WalletPage.js';
-import { isInvoiceUuid } from '../../lib/due-at-override.js';
+import { isInvoiceUuid } from '../../lib/invoice-uuid.js';
 import { walletInvoiceReturnFor } from '../../lib/wallet-invoice-return.js';
 
 export const Route = createFileRoute('/_app/wallet')({ component: WalletRoute });

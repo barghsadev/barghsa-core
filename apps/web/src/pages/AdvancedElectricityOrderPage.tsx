@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Button, Card, CardContent, DateTimePicker } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
-import { toast } from 'sonner';
+import { toast } from '../lib/toast-api.js';
 import { FormWizard } from '../components/FormWizard.js';
 import { WalletFundingPrompt } from '../components/WalletFundingPrompt.js';
 import { ElectricityQuoteErrorNotice } from '../components/ElectricityQuoteErrorNotice.js';

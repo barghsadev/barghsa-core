@@ -10,7 +10,7 @@ import {
 } from '../lib/auth-responses.js';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
-import { toast } from 'sonner';
+import { toast } from '../lib/toast-api.js';
 import { rememberAuthSuccess } from '../lib/auth-entry-feedback.js';
 import { t, type Locale } from '@barghsa/i18n/auth';
 import { Loader2Icon } from 'lucide-react';

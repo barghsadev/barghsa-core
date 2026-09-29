@@ -120,10 +120,19 @@ test('simple electricity order moves from reviewed quote through payment and con
   const contractAcceptances: Array<Record<string, unknown>> = [];
   const staffApprovals: Array<Record<string, unknown>> = [];
   const contractState = () => (accepted ? 'Active' : 'AwaitingCustomerAcceptance');
+  let operatingContext: 'customer' | 'staff' = 'customer';
 
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
   await page.route('**/api/auth/user', (route) =>
-    route.fulfill({ json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false } })
+    route.fulfill({
+      json: {
+        isStaff: true,
+        userId: 'buyer',
+        operatingContext,
+        canSwitchContext: true,
+        requiresTosAcceptance: false,
+      },
+    })
   );
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
@@ -515,6 +524,7 @@ test('simple electricity order moves from reviewed quote through payment and con
   await expect(page.getByText('Buyer Legal Ltd', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Submit Order', exact: true }).click();
   await expect(page).toHaveURL(new RegExp(`/electricity/orders/${orderId}$`));
+  await expect(page.getByText('Electricity order submitted.')).toBeVisible();
   expect(orderSubmissions).toHaveLength(1);
   expect(orderSubmissions[0]).toMatchObject({
     profileId,
@@ -535,6 +545,7 @@ test('simple electricity order moves from reviewed quote through payment and con
   await expect(statusPair.locator('dt')).toHaveText(['Commercial status', 'Financial status']);
   await expect(statusPair.locator('dd')).toHaveText(['Awaiting staff review', 'Unpaid']);
 
+  operatingContext = 'staff';
   await page.goto('/admin/electricity-orders');
   await page.getByRole('button', { name: new RegExp(`Buyer.*${orderId}`) }).click();
   const staffProducts = page
@@ -565,6 +576,7 @@ test('simple electricity order moves from reviewed quote through payment and con
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
   expect(staffApprovals).toHaveLength(1);
   expect(staffApprovals[0]).toMatchObject({ expectedVersionId: versionId });
+  operatingContext = 'customer';
   await page.goto(`/electricity/orders/${orderId}`);
   await expect(page.getByRole('region', { name: 'Status and next action' })).toContainText(
     'Review and pay the linked invoice.'
