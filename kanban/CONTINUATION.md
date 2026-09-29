@@ -2,6 +2,8 @@
 
 ## Current manual batch — September 29, 2026
 
+[Async jobs backend](batches/2026-09-29-async-jobs-backend.md) adds a durable one-shot job lifecycle, leased worker handler registry, owner-scoped status/result/retry API and focused PostgreSQL/HTTP coverage. Product-specific handlers and the shared progress UI remain next.
+
 [Dedicated AI inference process](batches/2026-09-29-ai-inference-worker.md) moves provider I/O to an authenticated internal worker, re-reads and decrypts the selected model there, and reports worker health separately from core API readiness.
 
 [AI inference queue and health](batches/2026-09-29-ai-inference-queue-health.md) bound concurrent agent completions and queue waits, expose staff-only circuit and queue health plus metrics, and repair the model-budget timestamp trigger.

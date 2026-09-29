@@ -19784,6 +19784,131 @@
         ]
       }
     },
+    "/api/jobs/{id}": {
+      "get": {
+        "operationId": "JobsController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read your async job status",
+        "tags": [
+          "Jobs"
+        ]
+      }
+    },
+    "/api/jobs/{id}/result": {
+      "get": {
+        "operationId": "JobsController_result",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Job is still queued or processing"
+          },
+          "204": {
+            "description": "Job completed without a result URL"
+          },
+          "302": {
+            "description": "Redirect to the completed result"
+          },
+          "409": {
+            "description": "Job failed"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Open your completed async job result",
+        "tags": [
+          "Jobs"
+        ]
+      }
+    },
+    "/api/jobs/{id}/retry": {
+      "post": {
+        "operationId": "JobsController_retry",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Retry your failed async job",
+        "tags": [
+          "Jobs"
+        ]
+      }
+    },
+    "/api/jobs/{id}/status": {
+      "get": {
+        "operationId": "JobsController_status",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read your async job status",
+        "tags": [
+          "Jobs"
+        ]
+      }
+    },
     "/api/maintenance": {
       "get": {
         "operationId": "PublicMaintenanceController_list",

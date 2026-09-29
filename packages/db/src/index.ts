@@ -710,6 +710,7 @@ export * from './schema/ai-agent-slots';
 export * from './schema/ai-test-chat-turns';
 export * from './schema/ai-knowledge-questions';
 export * from './schema/ai-model-budgets';
+export * from './schema/async-jobs';
 export * from './schema/ai-audit-log';
 export * from './schema/vat-configurations';
 export * from './schema/upload-policies';
