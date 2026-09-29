@@ -34,7 +34,7 @@ beforeEach(async () => {
   const staffSession = randomUUID(),
     staffCsrf = randomUUID();
   await http.pool.query(
-    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES($1,'reviewer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())",
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,operating_context) VALUES($1,'reviewer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW(),'staff')",
     [staffSession, staffCsrf, randomUUID()]
   );
   staffHeaders = {
@@ -128,7 +128,7 @@ it('keeps electricity order conversations public or staff-only and reachable aft
   });
   expect(retry.status, http.logs()).toBe(200);
   expect(((await retry.json()) as { id: string }).id).toBe(customerComment.id);
-  expect((await fetch(customerPath, { headers: staffHeaders })).status).toBe(404);
+  expect((await fetch(customerPath, { headers: staffHeaders })).status).toBe(403);
   expect(
     (
       await fetch(customerPath, {
@@ -1784,7 +1784,7 @@ it.each([
     expect(
       (await fetch(`${http.base}/api/staff/electricity/increase-requests`, { headers })).status
     ).toBe(403);
-    expect((await fetch(path, { headers: staffHeaders })).status).toBe(404);
+    expect((await fetch(path, { headers: staffHeaders })).status).toBe(403);
     expect((await staffQueue.json()) as { requests: Array<{ requestId: string }> }).toMatchObject({
       requests: [expect.objectContaining({ requestId: result.requestId })],
     });

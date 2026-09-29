@@ -196,10 +196,21 @@ it.each(['electricity', 'solar'])(
       "INSERT INTO user_roles(user_id,role_id) VALUES($1,'role-legal-contracts')",
       [f.userId]
     );
+    const staffSessionId = randomUUID(),
+      staffCsrf = randomUUID();
+    await http.pool.query(
+      "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,operating_context) VALUES($1,$2,$3,$1,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()-INTERVAL '1 second','staff')",
+      [staffSessionId, f.userId, staffCsrf]
+    );
+    const staffHeaders = {
+      Cookie: `barghsa_session=${staffSessionId}`,
+      'X-CSRF-Token': staffCsrf,
+      'Content-Type': 'application/json',
+    };
     const command = (path: string, body: unknown, method = 'POST') =>
       fetch(http.base + '/api/admin/contracts' + path, {
         method,
-        headers: f.headers,
+        headers: staffHeaders,
         body: JSON.stringify(body),
       });
     const created = await command('', {

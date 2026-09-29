@@ -52,9 +52,9 @@ beforeAll(async () => {
     const id = randomUUID(),
       csrf = randomUUID();
     await http.pool.query(
-      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
-      VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
-      [id, user, csrf, randomUUID()]
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context)
+      VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',$5)`,
+      [id, user, csrf, randomUUID(), user === 'customer' ? 'customer' : 'staff']
     );
     headers[user] = {
       Cookie: `barghsa_session=${id}`,
@@ -62,6 +62,17 @@ beforeAll(async () => {
       'Content-Type': 'application/json',
     };
   }
+  const customerSession = randomUUID(),
+    customerCsrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context) VALUES ($1,'staff',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes','customer')",
+    [customerSession, customerCsrf, randomUUID()]
+  );
+  headers.staffCustomer = {
+    Cookie: `barghsa_session=${customerSession}`,
+    'X-CSRF-Token': customerCsrf,
+    'Content-Type': 'application/json',
+  };
   await http.pool.query(
     "INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ('test-assigned','Assigned support','Test role','[\"tickets:assigned\"]')"
   );
@@ -154,10 +165,10 @@ async function freshActor(admin: boolean, expiresInSeconds = 3600) {
   );
   transientActors.push(userId);
   const session = await http.pool.query(
-    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
-     VALUES ($1,$2,$3,$4,clock_timestamp()+$5*INTERVAL '1 second',NOW()+INTERVAL '30 minutes')
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context)
+     VALUES ($1,$2,$3,$4,clock_timestamp()+$5*INTERVAL '1 second',NOW()+INTERVAL '30 minutes',$6)
      RETURNING expires_at`,
-    [sessionId, userId, csrfToken, randomUUID(), expiresInSeconds]
+    [sessionId, userId, csrfToken, randomUUID(), expiresInSeconds, admin ? 'staff' : 'customer']
   );
   return {
     userId,
@@ -169,6 +180,11 @@ async function freshActor(admin: boolean, expiresInSeconds = 3600) {
       'Content-Type': 'application/json',
     },
   };
+}
+
+async function grantStaffRole(userId: string, roleId: string) {
+  await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [userId, roleId]);
+  await http.pool.query("UPDATE sessions SET operating_context='staff' WHERE user_id=$1", [userId]);
 }
 
 async function blockedOrFinished(blockerPid: number, finished: () => boolean) {
@@ -327,10 +343,7 @@ it.each(['', '/detail', '/comments'] as const)(
        VALUES ($1,$1,'Ticket reader','["tickets:read"]')`,
       [roleId]
     );
-    await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [
-      actor.userId,
-      roleId,
-    ]);
+    await grantStaffRole(actor.userId, roleId);
     await http.pool.query(
       "INSERT INTO ticket_comments(ticket_id,author_id,body,visibility) VALUES ($1,'staff','Private note','internal')",
       [id]
@@ -374,10 +387,7 @@ it.each(['', '/detail', '/comments'] as const)(
       `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$1,'Ticket reader','["tickets:read"]')`,
       [roleId]
     );
-    await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [
-      actor.userId,
-      roleId,
-    ]);
+    await grantStaffRole(actor.userId, roleId);
     const client = await http.pool.connect();
     let response: Promise<Response> | undefined,
       finished = false;
@@ -423,10 +433,7 @@ it('reports current read-only capabilities after a staff permission change', asy
     `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$1,'Ticket reader','["tickets:read","tickets:write"]')`,
     [roleId]
   );
-  await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [
-    actor.userId,
-    roleId,
-  ]);
+  await grantStaffRole(actor.userId, roleId);
   const client = await http.pool.connect();
   let response: Promise<Response> | undefined,
     finished = false;
@@ -551,10 +558,7 @@ it('rejects staff status changes after the current ticket grant is revoked durin
      VALUES ($1,$1,'Test ticket writer','["tickets:write"]')`,
     [roleId]
   );
-  await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [
-    actor.userId,
-    roleId,
-  ]);
+  await grantStaffRole(actor.userId, roleId);
   await http.pool.query("UPDATE tickets SET assigned_to='staff' WHERE id=$1", [id]);
   const client = await http.pool.connect();
   let response: Promise<Response> | undefined,
@@ -604,10 +608,7 @@ it.each(['status', 'comment', 'assignment'] as const)(
        VALUES ($1,$1,'Downgraded ticket writer','["tickets:write"]')`,
       [roleId]
     );
-    await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [
-      actor.userId,
-      roleId,
-    ]);
+    await grantStaffRole(actor.userId, roleId);
     const client = await http.pool.connect();
     let response: Promise<Response> | undefined,
       finished = false;
@@ -901,7 +902,7 @@ it('prevents access to another customer’s ticket and keeps customer endpoints 
   expect((await comment(id, 'Wrong owner', 'public', 'customer')).status).toBe(404);
   expect((await status(id, 'open', 'customer')).status).toBe(404);
   const ownerResponse = await fetch(`${http.base}/api/tickets/${id}/comments`, {
-    headers: headers.staff!,
+    headers: headers.staffCustomer!,
   });
   expect(ownerResponse.status).toBe(200);
   expect(await ownerResponse.text()).not.toContain('Private staff reasoning');
@@ -1008,7 +1009,7 @@ it('persists a fixed attachment copy and releases downloads only to the owner or
   ).toBe(400);
   const response = await createTicket(
     { subject: 'Attachment', body: 'Details', attachments: [key] },
-    'staff'
+    'staffCustomer'
   );
   expect(response.status, http.logs()).toBe(201);
   const row = (await response.json()) as { id: string; attachments: string[] };
@@ -1017,7 +1018,9 @@ it('persists a fixed attachment copy and releases downloads only to the owner or
   expect(
     (await fetch(`${http.base}/api/tickets/${row.id}`, { headers: headers.customer! })).status
   ).toBe(404);
-  const detail = await fetch(`${http.base}/api/tickets/${row.id}`, { headers: headers.staff! });
+  const detail = await fetch(`${http.base}/api/tickets/${row.id}`, {
+    headers: headers.staffCustomer!,
+  });
   expect(detail.status).toBe(200);
   const data = (await detail.json()) as { attachmentDownloadUrls: string[] };
   const url = new URL(data.attachmentDownloadUrls[0]!);
@@ -1035,7 +1038,8 @@ it('rolls back ticket creation when its audit fails and leaves existing tickets 
     CREATE TRIGGER fail_ticket_create_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION fail_ticket_create_audit()`);
   try {
     expect(
-      (await createTicket({ subject: 'Audit failure ticket', body: 'Details' }, 'staff')).status
+      (await createTicket({ subject: 'Audit failure ticket', body: 'Details' }, 'staffCustomer'))
+        .status
     ).toBe(500);
     expect(
       (await http.pool.query("SELECT id FROM tickets WHERE subject='Audit failure ticket'")).rows
@@ -1046,7 +1050,8 @@ it('rolls back ticket creation when its audit fails and leaves existing tickets 
     );
   }
   expect(
-    (await createTicket({ subject: 'Audit failure ticket', body: 'Details' }, 'staff')).status
+    (await createTicket({ subject: 'Audit failure ticket', body: 'Details' }, 'staffCustomer'))
+      .status
   ).toBe(201);
 });
 it('limits assigned-only staff to their current tickets and refuses reassignment to another account', async () => {

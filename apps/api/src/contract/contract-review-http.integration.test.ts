@@ -25,8 +25,8 @@ async function login(user: string, role?: string) {
   const session = randomUUID(),
     csrf = randomUUID();
   await http.pool.query(
-    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()-INTERVAL '1 second')",
-    [session, user, csrf, randomUUID()]
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,operating_context) VALUES($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()-INTERVAL '1 second',$5)",
+    [session, user, csrf, randomUUID(), role ? 'staff' : 'customer']
   );
   headers[user] = {
     Cookie: `barghsa_session=${session}`,
@@ -702,7 +702,7 @@ it('enforces legal customer permission, selected-profile isolation and fresh ste
         'review-legal'
       )
     ).status
-  ).toBe(404);
+  ).toBe(403);
   await http.pool.query(
     "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 day' WHERE user_id=$1",
     [legal]

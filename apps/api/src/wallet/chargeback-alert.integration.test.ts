@@ -215,8 +215,8 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
   it('serves the warning to a non-admin Finance session and enforces current permission and revocation', async () => {
     const sessionId = randomUUID();
     await ctx.pool.query(
-      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
-       VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context)
+       VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes','staff')`,
       [sessionId, FINANCE_USER, randomUUID(), randomUUID()]
     );
     await ctx.pool.query(`INSERT INTO wallet_chargeback_events(event_id,status,raw)
@@ -396,7 +396,7 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
       expect(jobs.rows).toHaveLength(5);
       expect(jobs.rows.every((row) => row.status === 'done')).toBe(true);
       const inbox = new NotificationCenterService(ctx.pool);
-      const page = await inbox.list(null, {}, 'cb-finance');
+      const page = await inbox.list(null, {}, 'cb-finance', 'staff');
       expect(page.data).toHaveLength(1);
       const rows = await ctx.pool.query(
         "SELECT recipient_user_id,profile_id,localized_content,link_route FROM in_app_notifications WHERE type='finance.chargeback_unresolved'"
@@ -413,7 +413,7 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
       ).toBe(true);
       expect((await inbox.list(null, {}, 'cb-other')).data).toHaveLength(0);
       // A selected profile must not hide a staff account alert or reveal it to another account.
-      expect((await inbox.list(OTHER_PROFILE, {}, 'cb-finance')).data).toHaveLength(1);
+      expect((await inbox.list(OTHER_PROFILE, {}, 'cb-finance', 'staff')).data).toHaveLength(1);
       expect((await inbox.list(FINANCE_PROFILE, {}, OTHER_USER)).data).toHaveLength(0);
     } finally {
       client.release();

@@ -26,8 +26,8 @@ beforeEach(async () => {
   const session = randomUUID(),
     csrf = randomUUID();
   await http.pool.query(
-    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
-    VALUES ($1,'archive-staff',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,operating_context)
+    VALUES ($1,'archive-staff',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW(),'staff')`,
     [session, csrf, randomUUID()]
   );
   ownerSession = { sessionId: randomUUID(), csrfToken: randomUUID() };
@@ -360,9 +360,21 @@ it('rejects malformed orders and inactive or mismatched geography before writing
     (await create({ ...validBody, address: { ...validBody.address, provinceId: otherProvince } }))
       .status
   ).toBe(400);
-  expect((await fetch(`${http.base}/api/orders/not-a-uuid`, { headers })).status).toBe(400);
+  const ownerHeaders = {
+    Cookie: `barghsa_session=${ownerSession.sessionId}`,
+    'X-CSRF-Token': ownerSession.csrfToken,
+    'Content-Type': 'application/json',
+  };
   expect(
-    (await fetch(`${http.base}/api/orders/not-a-uuid/cancel`, { method: 'POST', headers })).status
+    (await fetch(`${http.base}/api/orders/not-a-uuid`, { headers: ownerHeaders })).status
+  ).toBe(400);
+  expect(
+    (
+      await fetch(`${http.base}/api/orders/not-a-uuid/cancel`, {
+        method: 'POST',
+        headers: ownerHeaders,
+      })
+    ).status
   ).toBe(400);
   await http.pool.query("UPDATE cities SET status='inactive' WHERE id=$1", [cityId]);
   expect((await create()).status).toBe(400);

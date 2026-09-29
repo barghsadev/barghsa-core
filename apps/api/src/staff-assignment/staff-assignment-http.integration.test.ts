@@ -63,8 +63,8 @@ it('allows staff ticket creation alongside manual assignment to that staff membe
     const session = randomUUID(),
       csrf = randomUUID();
     await http.pool.query(
-      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
-       VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context)
+       VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes','staff')`,
       [session, user, csrf, randomUUID()]
     );
     staffHeaders[user] = {
@@ -73,6 +73,17 @@ it('allows staff ticket creation alongside manual assignment to that staff membe
       'Content-Type': 'application/json',
     };
   }
+  const customerSession = randomUUID(),
+    customerCsrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context) VALUES ($1,'alpha',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes','customer')",
+    [customerSession, customerCsrf, randomUUID()]
+  );
+  const alphaCustomerHeaders = {
+    Cookie: `barghsa_session=${customerSession}`,
+    'X-CSRF-Token': customerCsrf,
+    'Content-Type': 'application/json',
+  };
   await rule('round_robin');
   const blocker = await http.pool.connect();
   let creation: Promise<Response> | undefined, assignment: Promise<Response> | undefined;
@@ -84,7 +95,7 @@ it('allows staff ticket creation alongside manual assignment to that staff membe
     const blockerPid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
     creation = fetch(`${http.base}/api/tickets`, {
       method: 'POST',
-      headers: staffHeaders.alpha!,
+      headers: alphaCustomerHeaders,
       body: JSON.stringify({ subject: 'Staff support question', body: 'Details' }),
     });
     let creatorPid: number | undefined;
@@ -159,8 +170,8 @@ it.each(['automatic', 'manual'] as const)(
     const session = randomUUID(),
       csrf = randomUUID();
     await http.pool.query(
-      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
-     VALUES ($1,'alpha',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context)
+     VALUES ($1,'alpha',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes','staff')`,
       [session, csrf, randomUUID()]
     );
     await http.pool.query(

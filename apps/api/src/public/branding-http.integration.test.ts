@@ -8,6 +8,7 @@ import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>;
+let customerHeaders: Record<string, string>;
 let storage: Server;
 const objects = new Map<string, Buffer>();
 const png = Buffer.from(
@@ -49,12 +50,23 @@ beforeAll(async () => {
   const session = randomUUID(),
     csrf = randomUUID();
   await http.pool.query(
-    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,'branding-review',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())",
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at,operating_context) VALUES ($1,'branding-review',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW(),'staff')",
     [session, csrf, randomUUID()]
   );
   headers = {
     cookie: `barghsa_session=${session}`,
     'x-csrf-token': csrf,
+    'content-type': 'application/json',
+  };
+  const customerSession = randomUUID(),
+    customerCsrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context) VALUES ($1,'branding-review',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour','customer')",
+    [customerSession, customerCsrf, randomUUID()]
+  );
+  customerHeaders = {
+    cookie: `barghsa_session=${customerSession}`,
+    'x-csrf-token': customerCsrf,
     'content-type': 'application/json',
   };
 }, 40_000);
@@ -68,10 +80,15 @@ afterAll(async () => {
   await http?.close();
   await new Promise<void>((done) => storage?.close(() => done()));
 });
-const request = (path: string, method = 'GET', body?: unknown) =>
+const request = (
+  path: string,
+  method = 'GET',
+  body?: unknown,
+  context: 'staff' | 'customer' = 'staff'
+) =>
   fetch(`${http.base}/api/${path}`, {
     method,
-    headers,
+    headers: context === 'staff' ? headers : customerHeaders,
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
 const publicConfig = async () => {
@@ -280,6 +297,7 @@ it('rolls back the draft and history changes if the audit write fails', async ()
 });
 
 async function logoUpload(purpose = 'branding_logo', bytes = png) {
+  const context = purpose === 'branding_logo' ? 'staff' : 'customer';
   const profileId =
     purpose === 'legal_profile_document'
       ? (
@@ -296,7 +314,7 @@ async function logoUpload(purpose = 'branding_logo', bytes = png) {
     fileSize: bytes.length,
     category: 'image',
   };
-  const presigned = await request('upload/presigned-url', 'POST', details);
+  const presigned = await request('upload/presigned-url', 'POST', details, context);
   expect(presigned.status).toBe(200);
   const upload = z
     .object({ key: z.string(), presignedUrl: z.string() })
@@ -311,8 +329,10 @@ async function logoUpload(purpose = 'branding_logo', bytes = png) {
     ).status
   ).toBe(200);
   const path = `upload/${encodeURIComponent(upload.key)}`;
-  expect((await request(`${path}/verify`, 'POST')).status).toBe(200);
-  expect((await request(`${path}/record`, 'POST', { ...details, purpose })).status).toBe(200);
+  expect((await request(`${path}/verify`, 'POST', undefined, context)).status).toBe(200);
+  expect((await request(`${path}/record`, 'POST', { ...details, purpose }, context)).status).toBe(
+    200
+  );
   return upload.key;
 }
 it('seals a verified logo, protects draft previews and retains exact bytes after the source changes', async () => {
@@ -635,16 +655,17 @@ it('distinguishes Word and spreadsheet containers from arbitrary ZIP archives', 
     };
     const issued = z
       .object({ key: z.string(), presignedUrl: z.string() })
-      .parse(await (await request('upload/presigned-url', 'POST', details)).json());
+      .parse(await (await request('upload/presigned-url', 'POST', details, 'customer')).json());
     expect(
       (await fetch(issued.presignedUrl, { method: 'PUT', body: new Uint8Array(bytes) })).status
     ).toBe(200);
     const path = `upload/${encodeURIComponent(issued.key)}`;
-    const verified = await request(`${path}/verify`, 'POST');
+    const verified = await request(`${path}/verify`, 'POST', undefined, 'customer');
     expect(verified.status).toBe(200);
     expect(await verified.json()).toMatchObject({ status: expected });
     expect(
-      (await request(`${path}/record`, 'POST', { ...details, purpose: 'evidence' })).status
+      (await request(`${path}/record`, 'POST', { ...details, purpose: 'evidence' }, 'customer'))
+        .status
     ).toBe(expected === 'type_mismatch' ? 400 : 200);
   }
 });
@@ -669,16 +690,19 @@ it('verifies and records CSV text while rejecting invalid encoding and malformed
     };
     const issued = z
       .object({ key: z.string(), presignedUrl: z.string() })
-      .parse(await (await request('upload/presigned-url', 'POST', details)).json());
+      .parse(await (await request('upload/presigned-url', 'POST', details, 'customer')).json());
     expect(
       (await fetch(issued.presignedUrl, { method: 'PUT', body: new Uint8Array(bytes) })).status
     ).toBe(200);
     const path = `upload/${encodeURIComponent(issued.key)}`;
-    expect(await (await request(`${path}/verify`, 'POST')).json()).toMatchObject({
+    expect(
+      await (await request(`${path}/verify`, 'POST', undefined, 'customer')).json()
+    ).toMatchObject({
       status: valid ? 'confirmed' : 'type_mismatch',
     });
     expect(
-      (await request(`${path}/record`, 'POST', { ...details, purpose: 'evidence' })).status
+      (await request(`${path}/record`, 'POST', { ...details, purpose: 'evidence' }, 'customer'))
+        .status
     ).toBe(valid ? 200 : 400);
   }
 });
@@ -715,16 +739,19 @@ it('requires a recognized video container brand or structured document type', as
     };
     const issued = z
       .object({ key: z.string(), presignedUrl: z.string() })
-      .parse(await (await request('upload/presigned-url', 'POST', details)).json());
+      .parse(await (await request('upload/presigned-url', 'POST', details, 'customer')).json());
     expect(
       (await fetch(issued.presignedUrl, { method: 'PUT', body: new Uint8Array(bytes) })).status
     ).toBe(200);
     const path = `upload/${encodeURIComponent(issued.key)}`;
-    expect(await (await request(`${path}/verify`, 'POST')).json()).toMatchObject({
+    expect(
+      await (await request(`${path}/verify`, 'POST', undefined, 'customer')).json()
+    ).toMatchObject({
       status: valid ? 'confirmed' : 'type_mismatch',
     });
     expect(
-      (await request(`${path}/record`, 'POST', { ...details, purpose: 'evidence' })).status
+      (await request(`${path}/record`, 'POST', { ...details, purpose: 'evidence' }, 'customer'))
+        .status
     ).toBe(valid ? 200 : 400);
   }
 });
