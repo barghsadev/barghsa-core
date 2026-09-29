@@ -56,7 +56,7 @@ export const ErrorCodes = {
     httpStatus: 503,
     title: 'AI model connection temporarily paused',
     retryable: true,
-    messageKey: 'error.provider.unavailable',
+    messageKey: 'error.ai.model_circuit_open',
     severity: 'warning' as ErrorSeverity,
   },
   MAINTENANCE_ACTIVE: {
@@ -306,7 +306,7 @@ export const ErrorCodes = {
   AI_AGENT_ASSIGNED_TO_SLOTS: {
     code: 'AI_AGENT_ASSIGNED_TO_SLOTS',
     httpStatus: 409,
-    title: 'Agent is assigned to a chatbot slot',
+    title: 'Unassign this agent from its chatbot slots first',
     retryable: false,
     messageKey: 'error.agent.assigned_to_slots',
     severity: 'debug' as ErrorSeverity,
